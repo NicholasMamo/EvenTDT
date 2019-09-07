@@ -1,0 +1,136 @@
+Script started on Sat Sep 29 10:30:00 2018
+10:30:03: INFO: Listening for keywords: #WHUMUN, #MUNWHU, #WHU, #MUN, west ham, manchester united
+11:15:06: INFO: 10303 tweets collected
+11:16:45: INFO: Resolved West Ham United to West Ham United W.F.C. (0.297908)
+11:16:46: INFO: Resolved West Ham to West Ham (0.227014)
+11:16:47: INFO: Resolved Manchester United to Manchester United F.C. (0.148212)
+11:16:48: INFO: Resolved Alexis Sanchez to Alexis Snchez (0.116095)
+11:16:51: INFO: Resolved Pogba to Paul Pogba (0.118987)
+11:16:52: INFO: Resolved Mctominay to Scott McTominay (0.110769)
+11:17:50: INFO: Resolved keywords: Paul Pogba, West Ham, Manchester United F.C., Scott McTominay, West Ham United W.F.C., Alexis Sanchez
+11:17:50: INFO: Extrapolated keywords: United States, Anthony Martial, Manchester derby, Chris Smalling, Pablo Zabaleta, Luke Shaw, Mervyn Day, Javier Hernandez, West Ham, Sir Matt Busby Player of the Year, Jesse Lingard, Alexis Sanchez, Andreas Pereira, Paul Pogba, City of Manchester Stadium, England, Ashley Young, Old Trafford, Angel Gomes, Michael Owen, David Moyes, West London derby, West Ham United F.C., Marouane Fellaini, Andy Carroll, Manchester United F.C., Marcus Rashford, Leeds United F.C., Manuel Pellegrini, Jack Wilshere
+11:17:50: INFO: Listening for keywords: #WHUMUN, #MUNWHU, #WHU, #MUN, west ham, manchester united, Paul Pogba, West Ham, Manchester United F.C., Scott McTominay, West Ham United W.F.C., Alexis Sanchez, United States, Anthony Martial, Manchester derby, Chris Smalling, Pablo Zabaleta, Luke Shaw, Mervyn Day, Javier Hernandez, West Ham, Sir Matt Busby Player of the Year, Jesse Lingard, Alexis Sanchez, Andreas Pereira, Paul Pogba, City of Manchester Stadium, England, Ashley Young, Old Trafford, Angel Gomes, Michael Owen, David Moyes, West London derby, West Ham United F.C., Marouane Fellaini, Andy Carroll, Manchester United F.C., Marcus Rashford, Leeds United F.C., Manuel Pellegrini, Jack Wilshere
+11:21	wrote 1000 tweets	4.67 tweets/second
+11:24	wrote 2000 tweets	4.77 tweets/second
+11:28	wrote 3000 tweets	5.08 tweets/second
+11:30	wrote 4000 tweets	6.31 tweets/second
+11:33	wrote 5000 tweets	6.34 tweets/second
+11:35	wrote 6000 tweets	6.68 tweets/second
+11:36	wrote 7000 tweets	17.28 tweets/second
+11:37	wrote 8000 tweets	18.12 tweets/second
+11:38	wrote 9000 tweets	16.46 tweets/second
+11:40	wrote 10000 tweets	13.88 tweets/second
+11:41	wrote 11000 tweets	11.55 tweets/second
+11:42	wrote 12000 tweets	12.39 tweets/second
+11:44	wrote 13000 tweets	10.68 tweets/second
+11:46	wrote 14000 tweets	9.71 tweets/second
+11:47	wrote 15000 tweets	9.63 tweets/second
+11:49	wrote 16000 tweets	9.35 tweets/second
+11:51	wrote 17000 tweets	8.41 tweets/second
+11:53	wrote 18000 tweets	8.69 tweets/second
+11:55	wrote 19000 tweets	9.01 tweets/second
+11:57	wrote 20000 tweets	7.70 tweets/second
+11:59	wrote 21000 tweets	7.08 tweets/second
+12:01	wrote 22000 tweets	7.97 tweets/second
+12:04	wrote 23000 tweets	7.79 tweets/second
+12:06	wrote 24000 tweets	7.25 tweets/second
+12:08	wrote 25000 tweets	7.43 tweets/second
+12:11	wrote 26000 tweets	6.90 tweets/second
+12:13	wrote 27000 tweets	7.94 tweets/second
+12:14	wrote 28000 tweets	17.73 tweets/second
+12:14	wrote 29000 tweets	23.75 tweets/second
+12:15	wrote 30000 tweets	27.91 tweets/second
+12:16	wrote 31000 tweets	27.63 tweets/second
+12:16	wrote 32000 tweets	26.70 tweets/second
+12:17	wrote 33000 tweets	28.76 tweets/second
+12:17	wrote 34000 tweets	29.25 tweets/second
+12:18	wrote 35000 tweets	27.65 tweets/second
+12:19	wrote 36000 tweets	27.49 tweets/second
+12:19	wrote 37000 tweets	23.27 tweets/second
+12:20	wrote 38000 tweets	23.15 tweets/second
+12:21	wrote 39000 tweets	21.95 tweets/second
+12:21	wrote 40000 tweets	22.01 tweets/second
+12:22	wrote 41000 tweets	21.73 tweets/second
+12:23	wrote 42000 tweets	19.19 tweets/second
+12:24	wrote 43000 tweets	17.45 tweets/second
+12:25	wrote 44000 tweets	16.77 tweets/second
+12:26	wrote 45000 tweets	16.65 tweets/second
+12:27	wrote 46000 tweets	15.51 tweets/second
+12:28	wrote 47000 tweets	15.56 tweets/second
+12:29	wrote 48000 tweets	15.14 tweets/second
+12:31	wrote 49000 tweets	13.73 tweets/second
+12:32	wrote 50000 tweets	12.70 tweets/second
+12:33	wrote 51000 tweets	12.70 tweets/second
+12:34	wrote 52000 tweets	12.32 tweets/second
+12:36	wrote 53000 tweets	10.67 tweets/second
+12:37	wrote 54000 tweets	12.13 tweets/second
+12:39	wrote 55000 tweets	12.01 tweets/second
+12:40	wrote 56000 tweets	11.37 tweets/second
+12:42	wrote 57000 tweets	11.89 tweets/second
+12:43	wrote 58000 tweets	10.59 tweets/second
+12:45	wrote 59000 tweets	11.33 tweets/second
+12:46	wrote 60000 tweets	10.68 tweets/second
+12:48	wrote 61000 tweets	10.91 tweets/second
+12:49	wrote 62000 tweets	10.09 tweets/second
+12:51	wrote 63000 tweets	10.01 tweets/second
+12:53	wrote 64000 tweets	9.89 tweets/second
+12:54	wrote 65000 tweets	10.30 tweets/second
+12:56	wrote 66000 tweets	10.00 tweets/second
+12:58	wrote 67000 tweets	10.89 tweets/second
+12:59	wrote 68000 tweets	17.48 tweets/second
+12:59	wrote 69000 tweets	19.64 tweets/second
+13:00	wrote 70000 tweets	16.81 tweets/second
+13:01	wrote 71000 tweets	23.45 tweets/second
+13:02	wrote 72000 tweets	26.03 tweets/second
+13:02	wrote 73000 tweets	25.44 tweets/second
+13:03	wrote 74000 tweets	24.84 tweets/second
+13:04	wrote 75000 tweets	24.38 tweets/second
+13:05	wrote 76000 tweets	22.89 tweets/second
+13:05	wrote 77000 tweets	20.62 tweets/second
+13:06	wrote 78000 tweets	19.91 tweets/second
+13:07	wrote 79000 tweets	18.34 tweets/second
+13:08	wrote 80000 tweets	19.54 tweets/second
+13:09	wrote 81000 tweets	20.07 tweets/second
+13:10	wrote 82000 tweets	18.81 tweets/second
+13:11	wrote 83000 tweets	18.18 tweets/second
+13:12	wrote 84000 tweets	16.44 tweets/second
+13:13	wrote 85000 tweets	14.91 tweets/second
+13:14	wrote 86000 tweets	16.97 tweets/second
+13:15	wrote 87000 tweets	16.09 tweets/second
+13:16	wrote 88000 tweets	14.79 tweets/second
+13:17	wrote 89000 tweets	15.02 tweets/second
+13:18	wrote 90000 tweets	14.68 tweets/second
+13:19	wrote 91000 tweets	15.09 tweets/second
+13:20	wrote 92000 tweets	15.04 tweets/second
+13:21	wrote 93000 tweets	20.55 tweets/second
+13:22	wrote 94000 tweets	28.91 tweets/second
+13:22	wrote 95000 tweets	31.08 tweets/second
+13:23	wrote 96000 tweets	31.81 tweets/second
+13:23	wrote 97000 tweets	29.89 tweets/second
+13:24	wrote 98000 tweets	30.60 tweets/second
+13:24	wrote 99000 tweets	27.72 tweets/second
+13:25	wrote 100000 tweets	27.72 tweets/second
+13:26	wrote 101000 tweets	25.90 tweets/second
+13:26	wrote 102000 tweets	23.75 tweets/second
+13:27	wrote 103000 tweets	23.96 tweets/second
+13:28	wrote 104000 tweets	21.80 tweets/second
+13:29	wrote 105000 tweets	20.97 tweets/second
+13:29	wrote 106000 tweets	20.94 tweets/second
+13:30	wrote 107000 tweets	22.46 tweets/second
+13:31	wrote 108000 tweets	20.53 tweets/second
+13:32	wrote 109000 tweets	19.95 tweets/second
+13:33	wrote 110000 tweets	16.94 tweets/second
+13:34	wrote 111000 tweets	17.24 tweets/second
+13:35	wrote 112000 tweets	15.69 tweets/second
+13:36	wrote 113000 tweets	16.10 tweets/second
+13:37	wrote 114000 tweets	16.13 tweets/second
+13:38	wrote 115000 tweets	15.19 tweets/second
+13:39	wrote 116000 tweets	14.79 tweets/second
+13:40	wrote 117000 tweets	13.21 tweets/second
+13:42	wrote 118000 tweets	13.70 tweets/second
+13:43	wrote 119000 tweets	12.87 tweets/second
+13:44	wrote 120000 tweets	12.10 tweets/second
+13:46	wrote 121000 tweets	11.76 tweets/second
+13:47	wrote 122000 tweets	11.05 tweets/second
+
+Script done on Sat Sep 29 13:47:52 2018

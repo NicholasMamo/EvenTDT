@@ -1,0 +1,11 @@
+Script started on Sat Sep 29 15:00:00 2018
+15:00:02: INFO: Listening for keywords: #CHELIV, #LIVCHE, #CHE, #LIV, liverpool, chelsea
+15:45:05: INFO: 12577 tweets collected
+15:46:54: INFO: Resolved Milner to James Milner (0.137567)
+15:46:55: INFO: Resolved Matip to Matip (0.153193)
+15:46:56: INFO: Resolved Liverpool to Liverpool F.C. (0.109030)
+15:49:39: INFO: Resolved keywords: james milner, liverpool f.c., matip
+15:49:39: INFO: Extrapolated keywords: david luiz, pfa team of the year, david fairclough, chelsea f.c.tottenham hotspur f.c. rivalry, arsenal f.c.chelsea f.c. rivalry, michael owen, xherdan shaqiri, joel matip, chelsea f.c., adam lallana, n'golo kante, liverpool f.c., chris lawler, james milner, joe gomez, andrew robertson, list of liverpool f.c. players, list of liverpool f.c. records and statistics, alf hanson, virgil van dijk, eden hazard, trent alexander-arnold, jordan henderson, daniel sturridge, two-legged tie, alex oxlade-chamberlain, liverpool echo, ross barkley, merseyside derby, nathaniel clyne
+15:49:39: INFO: Listening for keywords: #CHELIV, #LIVCHE, #CHE, #LIV, liverpool, chelsea, james milner, liverpool f.c., matip, david luiz, pfa team of the year, david fairclough, chelsea f.c.tottenham hotspur f.c. rivalry, arsenal f.c.chelsea f.c. rivalry, michael owen, xherdan shaqiri, joel matip, chelsea f.c., adam lallana, n'golo kante, liverpool f.c., chris lawler, james milner, joe gomez, andrew robertson, list of liverpool f.c. players, list of liverpool f.c. records and statistics, alf hanson, virgil van dijk, eden hazard, trent alexander-arnold, jordan henderson, daniel sturridge, two-legged tie, alex oxlade-chamberlain, liverpool echo, ross barkley, merseyside derby, nathaniel clyne
+
+Script done on Sat Sep 29 18:19:47 2018

@@ -1,0 +1,296 @@
+Script started on Sat Sep  1 20:29:33 2018
+20:29:35: INFO: Stream started with pid 10845
+20:29:35: INFO: Consumer started with pid 10847
+20:29:38: INFO: Skipped 15351 tweets
+20:33:24: INFO: Understanding finished
+20:33:24: INFO: Event tracking starting
+20:36:27: INFO: 2018-08-27 18:57:13 (1): Manchester United vs Tottenham Hotspur Live. Manchester United vs Tottenham Hotspur Live Streaming. [[WaTcH-FrEe]] Manchester United vs Tottenham Hotspur Live Stream ... Team news for Man United vs Tottenham live HD TV.
+20:36:27: INFO: 1.1428571428571428 average URLS
+20:37:12: INFO: 2018-08-27 19:00:13 (2): LIVE: Manchester United vs. Tottenham Hotspur. Where can I watch Manchester United vs Tottenham Hotspur Live Stream TV channel, stream ... (Live Here) =. Manchester United v Tottenham Hotspur: Premier League  live!
+20:37:12: INFO: 1.2 average URLS
+20:37:45: INFO: 2018-08-27 19:02:25 (3):  Manchester United vs Tottenham Hotspur. WATCH/FREE{@} Manchester United vs Tottenham Hotspur Live Stream ... (Live Here) = (Live Here) =.
+20:37:45: INFO: 0.8333333333333334 average URLS
+20:38:50: INFO: 2018-08-27 19:06:45 (4): WATCH/FREE{@} Manchester United vs Tottenham Hotspur Live Stream ... (Live Here) = (Live Here) =. Manchester United vs Tottenham Hotspur Live Stream free - Premier League Live (Live Here) = (. Manchester United vs Tottenham Hotspur Live Stream Free - Home ... (Live Here) = (Live Here.
+20:38:50: INFO: 1.2 average URLS
+20:39:30: INFO: 2018-08-27 19:09:25 (5): Manchester United  Tottenham Hotspur  Watch NOW : Premier League MUNTOT. Manchester United vs Tottenham Hotspur English Premier League Live Stream  Live now here  . Manchester United 1-0 Tottenham Hotspur: Premier League ... _|_Live Here===== @livewebtv247 =====Live Here_|_.
+20:39:30: INFO: 1.0 average URLS
+20:39:44: INFO: 2018-08-27 19:10:21 (6): Manchester United Vs Tottenham Hotspur 0 - 0 - (Live).
+20:39:44: INFO: 0.8 average URLS
+20:40:57: INFO: 2018-08-27 19:15:13 (7): Man United vs Tottenham Hotspur Live Stream ... (Live Here) = (Live Here) = . Man United vs Tottenham Hotspur Live Stream, live stream, squad ... (Live Here) = (Live Here). Man United vs Tottenham Hotspur Live Stream Tv.. Watch online, TV, time ... (Live Here) = (.
+20:40:57: INFO: 1.3333333333333333 average URLS
+20:41:20: INFO: 2018-08-27 19:16:45 (8): Man United vs Tottenham Hotspur Live Stream ... (Live Here) = (Live Here) = . Man United vs Tottenham Hotspur Live Stream, live stream, squad ... (Live Here) = (Live Here). Man United vs Tottenham Hotspur Live Stream online ... (Live Here) = (Live Here) = https:/.
+20:41:20: INFO: 1.4 average URLS
+20:41:28: INFO: 2018-08-27 19:17:17 (9): Man United vs Tottenham Hotspur Live Stream ... (Live Here) = (Live Here) = . Man United vs Tottenham Hotspur Live Stream Free Tv.. (Live Here) = (Live Here) = https://. Man United vs Tottenham Hotspur Live Stream Tv.. Watch online, TV, time ... (Live Here) = (.
+20:41:28: INFO: 1.4 average URLS
+20:43:07: INFO: 2018-08-27 19:23:53 (10): Kane don collect yellow card. MUFC MUNTOT. 24 Yellow card Tottenham (Harry Kane).
+20:43:07: INFO: 0.4 average URLS
+20:43:17: INFO: 2018-08-27 19:24:33 (11): Ridiculous yellow card. Whats he supposed to do, not go for the ball? MUNTOT. No way is that a yellow card for Kane, he clearly won the ball MUNTOT. Yellow for winning the ball MUNTOT coys.
+20:43:17: INFO: 0.0 average URLS
+20:44:55: INFO: 2018-08-27 19:31:05 (12): Thats a pen, but its United at home so refs favour them MUNTOT. @SkySportsPL @SkySportsMNF @premierleague @SkySports Fix your shit refs clear pen for spurs. @SoccerAM Not even a foul ! Pen to spurs ref a joke.
+20:44:55: INFO: 0.0 average URLS
+20:45:50: INFO: 2018-08-27 19:34:45 (13): GW1: United Penalty GW2: United Penalty GW3: Tottenham denied a clear Penalty.... vs United That luck index having Un. Spurs denied a penalty at old Trafford MUNTOT.
+20:45:50: INFO: 0.2 average URLS
+20:47:17: INFO: 2018-08-27 19:40:33 (14): Free Live Stream: Manchester United vs Tottenham  MUNTOT. MATCH-DAY Manchester United vs Tottenham Watch MUFC COYS Free Live Stream HD Here:. Manchester United vs Tottenham Watch MUFC COYS Free Live Stream HD Here:.
+20:47:17: INFO: 1.8 average URLS
+20:47:25: INFO: 2018-08-27 19:41:05 (15): Manchester United fans chanting: Hugo Lloris, he drinks when he wants. .  Man Utd fans chanting "Hugo's on the p**s." MUFC MUNTOT.
+20:47:25: INFO: 0.3333333333333333 average URLS
+20:48:47: INFO: 2018-08-27 19:46:33 (16): Half time at Old Trafford: Manchester United 0 - 0 Tottenham Hotspur. MUFC THFC . Half time Man Utd 0:0 Tottenham MUNTOT.
+20:48:47: INFO: 1.0 average URLS
+20:48:55: INFO: 2018-08-27 19:47:05 (17): Half-time: Manchester United 0-0 Tottenham Hotspur. HT Man united 0-0 Tottenham.
+20:48:55: INFO: 1.3333333333333333 average URLS
+20:49:26: INFO: 2018-08-27 19:49:09 (18): Half Time: MU 0-0 Tottenham MUNTOT.
+20:49:26: INFO: 1.2 average URLS
+20:52:58: INFO: 2018-08-27 20:03:17 (19): Luke shaw for man of the match MUNTOT. Luke shaw looking sharp MUNTOT. Can you see the Luke Shaw run MUNTOT.
+20:52:58: INFO: 0.0 average URLS
+20:53:47: INFO: 2018-08-27 20:06:33 (20): 1-0 SPURS! That man Harry Kane! Harry kane come on you spuuuuuuuuuuuuuuuuurs MUNTOT. Ffs harry Kane out of no where  Spurs 1-0 MNUTOT.
+20:53:47: INFO: 0.0 average URLS
+20:53:48: INFO: 2018-08-27 20:06:33 (20): Spurs 1 up. Harry Kane header. Harry Kane !! 1-0 Spurs !!! Harry kane come on you spuuuuuuuuuuuuuuuuurs MUNTOT.
+20:53:48: INFO: 0.0 average URLS
+20:53:50: INFO: 2018-08-27 20:06:33 (20): Spurs 1 up. Harry Kane header. Get in there....!!! August Kane COYS. Harry Kane !! 1-0 Spurs !!!
+20:53:50: INFO: 0.0 average URLS
+20:53:50: INFO: 2018-08-27 20:06:33 (20): Spurs 1 up. Harry Kane header. YEEEESSSSS . . . HARRY FUCKING KANE! COYS. Harry Kane !! 1-0 Spurs !!!
+20:53:50: INFO: 0.0 average URLS
+20:53:51: INFO: 2018-08-27 20:06:33 (20): Spurs 1 up. Harry Kane header. Yesss!!! Harry Kane 1-0 Spurs!!! COYS. GOAL!!!!!! Harry Kane Man Utd 0-1 Spurs THFC.
+20:53:51: INFO: 0.8 average URLS
+20:53:53: INFO: 2018-08-27 20:06:33 (20): Spurs 1 up. Harry Kane header. YEEEESSSSS . . . HARRY FUCKING KANE! COYS. GOAL!!!!!! Harry Kane Man Utd 0-1 Spurs THFC.
+20:53:53: INFO: 0.0 average URLS
+20:53:57: INFO: 2018-08-27 20:06:33 (20): Spurs 1 up. Harry Kane header. Fuck off 0-1 Tottenham Kane. YESSSSSSSSSSSSSSSSS!!! HARRY KANE!!!! 1-0!! COYS.
+20:53:57: INFO: 0.0 average URLS
+20:53:59: INFO: 2018-08-27 20:06:33 (20): Spurs 1 up. Harry Kane header. Fuck off 0-1 Tottenham Kane. YESSSSSSSSSSSSSSSSS!!! HARRY KANE!!!! 1-0!! COYS.
+20:53:59: INFO: 0.0 average URLS
+20:54:03: INFO: 2018-08-27 20:06:33 (20): Spurs 1 up. Harry Kane header. Fuck off 0-1 Tottenham Kane. YESSSSSSSSSSSSSSSSS!!! HARRY KANE!!!! 1-0!! COYS.
+20:54:03: INFO: 0.14285714285714285 average URLS
+20:54:20: INFO: 2018-08-27 20:08:45 (21): Goooooal 2-0 Spurs Moura. Two quick Spurs goals. Moura.
+20:54:20: INFO: 0.2 average URLS
+20:54:21: INFO: 2018-08-27 20:08:45 (21): 2-0 for Spurs. Lucas Moura scores. Two quick Spurs goals. Moura. Goooooal 2-0 Spurs Moura.
+20:54:21: INFO: 0.2857142857142857 average URLS
+20:54:24: INFO: 2018-08-27 20:08:45 (21): 2-0 for Spurs. Lucas Moura scores. GOAL MNF PL Man Utd 0-2 Spurs ( Moura ). Two quick Spurs goals. Moura.
+20:54:24: INFO: 0.16666666666666666 average URLS
+20:54:25: INFO: 2018-08-27 20:08:45 (21): 2-0 for Spurs. Lucas Moura scores. GOAL MNF PL Man Utd 0-2 Spurs ( Moura ). Goooooal 2-0 Spurs Moura.
+20:54:25: INFO: 0.0 average URLS
+20:54:25: INFO: 2018-08-27 20:08:45 (21): 2-0 for Spurs. Lucas Moura scores. GOAL MNF PL Man Utd 0-2 Spurs ( Moura ). Moura  United is being ripped apart now MUNTOT.
+20:54:25: INFO: 0.0 average URLS
+20:54:34: INFO: 2018-08-27 20:09:37 (22): Man Utd ripped apart. Jesus United have been ripped apart. Well played by Spurs . Tottenham is ripping Jose Mourinho apart .
+20:54:34: INFO: 0.0 average URLS
+20:54:36: INFO: 2018-08-27 20:09:37 (22): Man Utd ripped apart. What a start to the second half coys.
+20:54:36: INFO: 0.3333333333333333 average URLS
+20:54:40: INFO: 2018-08-27 20:09:37 (22): What a start to the second half coys. Man Utd ripped apart. Yes yes yes loving that who needs one when you can score 2 COYS.
+20:54:40: INFO: 0.0 average URLS
+20:54:43: INFO: 2018-08-27 20:09:37 (22): What a start to the second half coys. Man Utd ripped apart. Yes yes yes loving that who needs one when you can score 2 COYS.
+20:54:43: INFO: 0.0 average URLS
+20:54:45: INFO: 2018-08-27 20:09:37 (22): What a start to the second half coys. Man Utd ripped apart. Im done with Manchester United HOW THE FUCK DO YOU GO DOWN BY TWO F***ING GOALS IN TWO MINUTES TWO MINUTES .
+20:54:45: INFO: 0.8 average URLS
+20:54:55: INFO: 2018-08-27 20:11:01 (23): Tottenham of to a good start in the second half. MU 0 - 2 TH. THE START TO THIS SECOND HALF HAS BEEN INCREDIBLE TOTTENHAM! Second Half Manchester United  vs  Tottenham Hotspur 0-0 MUNTOT.
+20:54:55: INFO: 0.2 average URLS
+20:55:04: INFO: 2018-08-27 20:11:37 (24): GOOOOOOOAAAAALLLLL!!!! Lucas Moura has just doubled the lead for Spurs just minutes after their first! What a team ta.
+20:55:04: INFO: 0.5 average URLS
+20:55:09: INFO: 2018-08-27 20:11:37 (24): ( 52')  BUUUUTT DE LUCAS !!! Manchester United 0-2 Tottenham. Man United 0-2 Tottenham.
+20:55:09: INFO: 0.9145299145299145 average URLS
+20:55:18: INFO: 2018-08-27 20:12:33 (25): Spurs! What a start to second half. MUNTOT. Tottenham has woken up this second half! COYS. Mourinhos second half tactics: 2+2 =1  MUNTOT.
+20:55:18: INFO: 0.2 average URLS
+20:55:33: INFO: 2018-08-27 20:13:37 (26): Man Utd and Tottenham in the second half. MUNTOT. THE START TO THIS SECOND HALF HAS BEEN INCREDIBLE TOTTENHAM! Spurs ripping apart Utd in the second half.
+20:55:33: INFO: 0.6 average URLS
+20:55:54: INFO: 2018-08-27 20:15:01 (27):  Kane 50  Lucas Moura 52 Two goals in a matter of minutes for Tottenham!  MUNTOT PL.
+20:55:54: INFO: 0.4 average URLS
+20:55:56: INFO: 2018-08-27 20:15:01 (27):  Kane 50  Lucas Moura 52 Two goals in a matter of minutes for Tottenham!  MUNTOT PL.  BUUUUUUUUUUTT DE LUCAS !!! MAN. UNITED 0-2 TOTTENHAM.
+20:55:56: INFO: 0.8 average URLS
+20:56:02: INFO: 2018-08-27 20:15:01 (27): "You're getting sacked in the morning" sing the Spurs fans. Gol de Lucas Moura. Manchester United 0-2 Tottenham Hotspur MUFC. "Sacked in the morning, you're getting sacked in the morning," thfc fans serenade Mourinho. MUNTOT.
+20:56:02: INFO: 0.0 average URLS
+20:56:44: INFO: 2018-08-27 20:18:21 (28):  BUUUUUUUUUUTT DE LUCAS !!! MAN. UNITED 0-2 TOTTENHAM. Lucas makes it 2-0 to Tottenham!  [0-2] MUNTOT PL.
+20:56:44: INFO: 1.0 average URLS
+20:57:15: INFO: 2018-08-27 20:20:25 (29):  BUUUUUUUUUUTT DE LUCAS !!! MAN. UNITED 0-2 TOTTENHAM. Gol de Lucas Moura. Manchester United 0-2 Tottenham Hotspur MUFC. Lucas makes it 2-0 to Tottenham!  [0-2] MUNTOT PL.
+20:57:15: INFO: 0.8 average URLS
+20:57:56: INFO: 2018-08-27 20:23:08 (30): Lucas makes it 2-0 to Tottenham!  [0-2] MUNTOT PL. GOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOLLL DO TOTTENHAM ! Lucas 5'/2 Manchester United 0-2 Tottenham. [PL] MANCHESTER UNITED 0-2 TOTTENHAM  BUUUUUUUUUT DE LUCAS !!! MUNTOT.
+20:57:56: INFO: 0.4 average URLS
+20:58:02: INFO: 2018-08-27 20:23:08 (30): Lucas makes it 2-0 to Tottenham!  [0-2] MUNTOT PL. Id rather have Victor from Big Brother 5 than Victor Lindelof MUNTOT. GOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOLLL DO TOTTENHAM ! Lucas 5'/2 Manchester United 0-2 Tottenham.
+20:58:02: INFO: 0.0 average URLS
+20:58:11: INFO: 2018-08-27 20:24:09 (31): Manchester United fans right now... Man Utd fans right now. MNF MUNTOT.
+20:58:11: INFO: 1.0 average URLS
+20:59:10: INFO: 2018-08-27 20:28:05 (32): Man Utd fans right now. MNF MUNTOT. Manchester United fans right now...
+20:59:10: INFO: 1.0 average URLS
+20:59:26: INFO: 2018-08-27 20:29:08 (33): Phil Jones on Lucas Moura MUNTOT. Does Lucas Moura ever stop running? COYS.  Manchester United vs Tottenham | Lucas Moura (GOAL) 52'.
+20:59:26: INFO: 0.4 average URLS
+20:59:55: INFO: 2018-08-27 20:31:01 (34): Fellaini next to come on. Spurs fans chanting 'You're getting sacked in the morning' and 'You're not special anymore'.. Spurs fans chant: You're getting sacked in the morning Utd fans chant: we fucking hope so.
+20:59:55: INFO: 0.0 average URLS
+20:59:56: INFO: 2018-08-27 20:31:01 (34): Fellaini next to come on. Spurs fans chanting 'You're getting sacked in the morning' and 'You're not special anymore'.. Mourinho - sacked in the morning? spurs MUNTOT. Spurs fans chant: You're getting sacked in the morning Utd fans chant: we fucking hope so.
+20:59:56: INFO: 0.5714285714285714 average URLS
+21:00:16: INFO: 2018-08-27 20:32:29 (35): Phil Jones on Lucas Moura MUNTOT.  Manchester United vs Tottenham | Lucas Moura (GOAL) 52'. Lucas Moura is the player weve always needed COYS.
+21:00:16: INFO: 0.4 average URLS
+21:00:26: INFO: 2018-08-27 20:33:09 (36): Mourinho - sacked in the morning? spurs MUNTOT. "Sacked in the morning, you're getting sacked in the morning," thfc fans serenade Mourinho. MUNTOT. Travelling Spurs fans singing sacked in the morning .
+21:00:26: INFO: 0.5 average URLS
+21:00:26: INFO: 2018-08-27 20:33:09 (36): Mourinho - sacked in the morning? spurs MUNTOT. Phil Jones on Lucas Moura MUNTOT. "Sacked in the morning, you're getting sacked in the morning," thfc fans serenade Mourinho. MUNTOT.
+21:00:26: INFO: 0.6 average URLS
+21:00:35: INFO: 2018-08-27 20:33:45 (37): Mourinho - sacked in the morning? spurs MUNTOT. When the Spurs supporters start singing youre getting sacked in the morning MUNTOT. "You're getting sacked in the morning" rings around the away end at Old Trafford MUNTOT https:.
+21:00:35: INFO: 0.8333333333333334 average URLS
+21:01:44: INFO: 2018-08-27 20:38:21 (38):  Manchester United vs Tottenham | Lucas Moura (GOAL) 52'. Moura has announced himself as a Tottenham player with this game. Welcome Lucas!! Lucas Moura makes it 2-0 to Tottenham. MUFC MUNTOT.
+21:01:44: INFO: 0.4 average URLS
+21:01:48: INFO: 2018-08-27 20:38:21 (38):  Manchester United vs Tottenham | Lucas Moura (GOAL) 52'. Mourinho - sacked in the morning? spurs MUNTOT.
+21:01:48: INFO: 0.5 average URLS
+21:02:01: INFO: 2018-08-27 20:39:29 (39): Breaking | Tottenham Hotspur have agreed a deal with Fenerbahce to send French midfielder Moussa Sissoko on loan for a season. (R. Tottenham Hotspur have agreed a season-long loan deal with Fenerbahe SK for Moussa Sissoko. (@RMCSport). Spurs reportedly agree deal to send Moussa Sissoko on loan to Turkish side Fenerbahce .
+21:02:01: INFO: 0.6 average URLS
+21:02:02: INFO: 2018-08-27 20:39:29 (39): Breaking | Tottenham Hotspur have agreed a deal with Fenerbahce to send French midfielder Moussa Sissoko on loan for a season. (R. Lucas Moura makes it 2-0 to Tottenham. MUFC MUNTOT. Tottenham Hotspur have agreed a season-long loan deal with Fenerbahe SK for Moussa Sissoko. (@RMCSport).
+21:02:02: INFO: 0.2 average URLS
+21:02:08: INFO: 2018-08-27 20:39:29 (39): Breaking | Tottenham Hotspur have agreed a deal with Fenerbahce to send French midfielder Moussa Sissoko on loan for a season. (R. Lucas Moura makes it 2-0 to Tottenham. MUFC MUNTOT. Mourinho - sacked in the morning? spurs MUNTOT.
+21:02:08: INFO: 0.6 average URLS
+21:02:20: INFO: 2018-08-27 20:40:45 (40): How have Manchester United never lost 2-0 at home in the EPL...ever?! Manchester United have never lost 2-0 at home in the Premier League shitecommentatorstatattack. Manchester United has never EVER lost 2-0 at home at Old Trafford in EPL(26th yr) Theyve lost by more then 2-0, just never exactly 2-0.
+21:02:20: INFO: 0.0 average URLS
+21:02:23: INFO: 2018-08-27 20:40:45 (40): @ManUtd have never lost 2-0 at home in the @premierleague ever. MUNTOT. Moura Lucas GOOOOOAL 3-0 Spurs. Manchester United have never lost 2-0 at home in the Premier League shitecommentatorstatattack.
+21:02:23: INFO: 0.0 average URLS
+21:02:29: INFO: 2018-08-27 20:40:45 (40): LUCAS MOURAAAAAA AGAINNN 3-0 SPURS. GOOOOOOOOOAAAAAL MOURA! 3-0 COYS. @ManUtd have never lost 2-0 at home in the @premierleague ever. MUNTOT.
+21:02:29: INFO: 0.4 average URLS
+21:02:30: INFO: 2018-08-27 20:40:45 (40): LUCAS MOURAAAAAA AGAINNN 3-0 SPURS. 3-0 Spurs! Moura with another goal! @ManUtd have never lost 2-0 at home in the @premierleague ever. MUNTOT.
+21:02:30: INFO: 0.0 average URLS
+21:02:31: INFO: 2018-08-27 20:40:45 (40): LUCAS MOURAAAAAA AGAINNN 3-0 SPURS. GOOOOOOOOOOOOOOAAAAAAAAAAAALLLLLLLLLLLLL Moura makes it 3-0 Man Utd 0-3 Tottenham. 3-0 Spurs! Moura with another goal!
+21:02:31: INFO: 0.2 average URLS
+21:02:32: INFO: 2018-08-27 20:40:45 (40): LUCAS MOURAAAAAA AGAINNN 3-0 SPURS. GOOOOOOOOOOOOOOAAAAAAAAAAAALLLLLLLLLLLLL Moura makes it 3-0 Man Utd 0-3 Tottenham. 3-0 Spurs! Moura with another goal!
+21:02:32: INFO: 0.0 average URLS
+21:02:34: INFO: 2018-08-27 20:40:45 (40): LUCAS MOURAAAAAA AGAINNN 3-0 SPURS. GOAL! Manchester United 0-3 Tottenham Hotspur (Moura 85') | LIVE Matchday Goal. 3-0 Spurs! Moura with another goal!
+21:02:34: INFO: 0.5 average URLS
+21:02:38: INFO: 2018-08-27 20:40:45 (40): LUCAS MOURAAAAAA AGAINNN 3-0 SPURS. Moura what a goal United 0-3 Spurs. MOOOOUUURAAAA MOOOUURAAAAAAAAAAAAA MOOOOUUURAAAAAAGGGGGGGOOOOOOAAAAAAALLL GOOOOAAALLL GOOAAAAL 3-0 MUNTOT SPURS SPURS SPURS!!
+21:02:38: INFO: 0.0 average URLS
+21:02:57: INFO: 2018-08-27 20:43:01 (41): Mourinho - sacked in the morning? spurs MUNTOT. Guess who is getting sacked in the morning?  MUNTOT. One more for spurs and Jose is getting the sack in the morning.
+21:02:57: INFO: 0.2857142857142857 average URLS
+21:03:09: INFO: 2018-08-27 20:43:53 (42): GOAL! Man United 0-3 Tottenham (Moura 85) MUFC THFC. GOAL! Lucas Moura breaks away to slot in his second of the night! Man Utd 0-3 Spurs MUNTOT LIVE: .
+21:03:09: INFO: 0.6666666666666666 average URLS
+21:03:16: INFO: 2018-08-27 20:43:53 (42): Mourinho - sacked in the morning? spurs MUNTOT. GOAL! Man United 0-3 Tottenham (Moura 85) MUFC THFC.
+21:03:16: INFO: 0.46153846153846156 average URLS
+21:03:16: INFO: 2018-08-27 20:43:53 (42): Mourinho - sacked in the morning? spurs MUNTOT. United of Manchester 0-3 Tottenham. GOAL! Lucas Moura drives through the heart of Man Utd and gets his second. MUFC 0-3 THFC htt.
+21:03:16: INFO: 0.2 average URLS
+21:03:44: INFO: 2 checkpoints created at time 2018-08-27 20:46:09 (UTC)
+21:03:44: INFO: 1032 documents
+21:03:44: INFO: Reduced to 283 documents
+21:03:45: INFO: 2018-08-27 20:46:09 (43): "Sacked in the morning, you're getting sacked in the morning," thfc fans serenade Mourinho. MUNTOT. Mourinho - sacked in the morning? spurs MUNTOT. Spurs fans signing, Youre getting sacked in the morning. MUNTOT.
+21:03:45: INFO: 0.42857142857142855 average URLS
+21:03:50: INFO: 2018-08-27 20:46:09 (43): "Sacked in the morning, you're getting sacked in the morning," thfc fans serenade Mourinho. MUNTOT. GOAL! Lucas Moura breaks away to slot in his second of the night! Man Utd 0-3 Spurs MUNTOT LIVE: .
+21:03:50: INFO: 1.0 average URLS
+21:03:50: INFO: 2018-08-27 20:46:09 (43): "Sacked in the morning, you're getting sacked in the morning," thfc fans serenade Mourinho. MUNTOT. @BBCMOTD Sacked in The morning sing the Spurs fans?????????? GOAL! Lucas Moura breaks away to slot in his second of the night! Man Utd 0-3 Spurs MUNTOT LIVE: .
+21:03:50: INFO: 0.3 average URLS
+21:03:54: INFO: 2018-08-27 20:46:09 (43): @BBCMOTD Sacked in The morning sing the Spurs fans?????????? "Sacked in the morning, you're getting sacked in the morning," thfc fans serenade Mourinho. MUNTOT. THREE FOR SPURS! Lucas Moura with his second of the night! United 0-3 Tottenham MUNTOT.
+21:03:54: INFO: 1.0 average URLS
+21:03:57: INFO: 2018-08-27 20:46:09 (43): @BBCMOTD Sacked in The morning sing the Spurs fans?????????? THREE FOR SPURS! Lucas Moura with his second of the night! United 0-3 Tottenham MUNTOT. Spurs fans serenade Jose Mourinho with 'you're getting sacked in the morning'.
+21:03:57: INFO: 1.0 average URLS
+21:04:08: INFO: 2018-08-27 20:47:41 (44): "Sacked in the morning, you're getting sacked in the morning," thfc fans serenade Mourinho. MUNTOT.  youre getting sacked in the morning, youre getting sacked in the moooooooorrniiing  COYS MUNTOT. Youre getting sacked in the morning Jose is finished  MUNTOT.
+21:04:08: INFO: 0.7272727272727273 average URLS
+21:04:12: INFO: 2018-08-27 20:47:41 (44): "Sacked in the morning, you're getting sacked in the morning," thfc fans serenade Mourinho. MUNTOT. Manchester United 0-3 Spurs Lucas Moura with his second of the night.  youre getting sacked in the morning, youre getting sacked in the moooooooorrniiing  COYS MUNTOT.
+21:04:12: INFO: 0.8888888888888888 average URLS
+21:04:18: INFO: 2018-08-27 20:48:29 (45): Mourinho - sacked in the morning? spurs MUNTOT. Spurs fans signing, Youre getting sacked in the morning. MUNTOT. Spurs fans chant: You're getting sacked in the morning mufc.
+21:04:18: INFO: 0.5555555555555556 average URLS
+21:04:21: INFO: 2018-08-27 20:48:29 (45): Mourinho - sacked in the morning? spurs MUNTOT. Manchester United 0-3 Tottenham. Spurs fans signing, Youre getting sacked in the morning. MUNTOT.
+21:04:21: INFO: 0.625 average URLS
+21:04:44: INFO: 2018-08-27 20:50:13 (46): Sacked in the morning, Joses sacked in the morning - Spurs fans chanting. Mourinho - sacked in the morning? spurs MUNTOT.
+21:04:44: INFO: 0.5 average URLS
+21:04:46: INFO: 2018-08-27 20:50:13 (46): Sacked in the morning, Joses sacked in the morning - Spurs fans chanting. Manchester United 0-3 Tottenham.
+21:04:46: INFO: 0.8333333333333334 average URLS
+21:04:49: INFO: 2018-08-27 20:50:13 (46): Sacked in the morning, Joses sacked in the morning - Spurs fans chanting. Manchester United 0-3 Tottenham. MUNTOT Spurs fans singing getting sacked in the morning to Mourinho, I fucking hope not .
+21:04:49: INFO: 0.2222222222222222 average URLS
+21:05:01: INFO: 2018-08-27 20:51:13 (47): "Sacked in the morning, you're getting sacked in the morning," thfc fans serenade Mourinho. MUNTOT. Hopefully he does get sacked in the morning. Spurs have been class.
+21:05:01: INFO: 0.4 average URLS
+21:05:08: INFO: 2018-08-27 20:51:13 (47): "Sacked in the morning, you're getting sacked in the morning," thfc fans serenade Mourinho. MUNTOT. Manchester United 0-3 Tottenham MS. Hopefully he does get sacked in the morning. Spurs have been class.
+21:05:08: INFO: 1.0 average URLS
+21:05:14: INFO: 2018-08-27 20:51:13 (47): "Sacked in the morning, you're getting sacked in the morning," thfc fans serenade Mourinho. MUNTOT. Manchester United 0-3 Tottenham MS.
+21:05:14: INFO: 0.8333333333333334 average URLS
+21:05:23: INFO: 2 checkpoints created at time 2018-08-27 20:52:45 (UTC)
+21:05:23: INFO: 685 documents
+21:05:23: INFO: Reduced to 98 documents
+21:05:23: INFO: 2018-08-27 20:52:45 (48): FULL-TIME: Ouch. That has to hurt. Man Utd 0-3 Spurs MUNTOT reaction:. FULL-TIME: MUFC 0-3 Tottenham.
+21:05:23: INFO: 1.0 average URLS
+21:05:31: INFO: 2018-08-27 20:52:45 (48): FULL-TIME: Ouch. That has to hurt. Man Utd 0-3 Spurs MUNTOT reaction:.  Manchester United vs Tottenham | Lucas Moura (GOAL) 84'. FULL-TIME: MUFC 0-3 Tottenham.
+21:05:31: INFO: 0.2727272727272727 average URLS
+21:05:38: INFO: 2018-08-27 20:52:45 (48): FULL-TIME: Ouch. That has to hurt. Man Utd 0-3 Spurs MUNTOT reaction:.  Manchester United vs Tottenham | Lucas Moura (GOAL) 84'. Sacked in the morning You are getting sacked in the morning. Tottenham fans singing to Mourinho MUNTOT.
+21:05:38: INFO: 0.16666666666666666 average URLS
+21:05:48: INFO: 2018-08-27 20:54:17 (49): FINAL: Manchester United 0-3 Tottenham MUNTOT. And its over Man Utd 0-3 Spurs COYS. FT: United 0-3 Spurs. MUFC .
+21:05:48: INFO: 1.0 average URLS
+21:06:00: INFO: 2018-08-27 20:55:01 (50): Mourinho - sacked in the morning? spurs MUNTOT. 51' - Tottenham fans singing 'you're getting sacked in the morning' mulive. Jose Mourhino, YOURE GETTING SACKED IN THE MORNING!!! MUNTOT.
+21:06:00: INFO: 0.375 average URLS
+21:06:04: INFO: 2 checkpoints created at time 2018-08-27 20:55:26 (UTC)
+21:06:04: INFO: 789 documents
+21:06:04: INFO: Reduced to 139 documents
+21:06:10: INFO: 2018-08-27 20:55:53 (51): Lucas Moura makes it 2-0 to Tottenham. MUFC MUNTOT. 50' 1-0 Harry Kane  52' 2-0 Lucas Moura  84' 3-0 Lucas Moura  Manchester United's worst start to a Premier League seaso. What a performance by Lucas Moura tonight  MUNTOT.
+21:06:10: INFO: 0.3125 average URLS
+21:06:10: INFO: 2018-08-27 20:55:53 (51): Lucas Moura makes it 2-0 to Tottenham. MUFC MUNTOT. Manchester United 0-3 Spurs  it's great to see. 50' 1-0 Harry Kane  52' 2-0 Lucas Moura  84' 3-0 Lucas Moura  Manchester United's worst start to a Premier League seaso.
+21:06:10: INFO: 0.5 average URLS
+21:06:12: INFO: 2018-08-27 20:55:53 (51): Lucas Moura makes it 2-0 to Tottenham. MUFC MUNTOT. Manchester United 0-3 Spurs  it's great to see. 50' 1-0 Harry Kane  52' 2-0 Lucas Moura  84' 3-0 Lucas Moura  Manchester United's worst start to a Premier League seaso.
+21:06:12: INFO: 0.0 average URLS
+21:06:15: INFO: 2018-08-27 20:55:53 (51): Lucas Moura makes it 2-0 to Tottenham. MUFC MUNTOT. Man U fans getting selfies with Spurs players. . @NewPops0n Manchester United lost 0-3.
+21:06:15: INFO: 0.0 average URLS
+21:06:22: INFO: 2018-08-27 20:55:53 (51): What am I seeing!?!  united fans having selfies with spurs players . Lucas Moura makes it 2-0 to Tottenham. MUFC MUNTOT. Man Utd 0-3 Spurs. Couldn't even score a goal.
+21:06:22: INFO: 0.6 average URLS
+21:06:26: INFO: 2018-08-27 20:55:53 (51): What am I seeing!?!  united fans having selfies with spurs players .  Manchester United 0-3 Tottenham | Lucas Moura (GOAL) 84'.
+21:06:26: INFO: 1.0 average URLS
+21:06:34: INFO: 2018-08-27 20:55:53 (51): What am I seeing!?!  united fans having selfies with spurs players .  Manchester United 0-3 Tottenham | Lucas Moura (GOAL) 84'. Just been pumped 3-0 a home from Spurs and there's people getting selfies with the boy that scored two goals!! And.
+21:06:34: INFO: 0.14285714285714285 average URLS
+21:06:42: INFO: 2018-08-27 20:55:53 (51): What am I seeing!?!  united fans having selfies with spurs players .  Manchester United 0-3 Tottenham | Lucas Moura (GOAL) 84'. Have I just seen Manchester United asking for Lucas Moura for selfies?
+21:06:42: INFO: 0.3333333333333333 average URLS
+21:06:46: INFO: 2 checkpoints created at time 2018-08-27 20:58:13 (UTC)
+21:06:46: INFO: 1111 documents
+21:06:46: INFO: Reduced to 410 documents
+21:06:48: INFO: 2018-08-27 20:58:13 (52): Manchester United 0-3 Tottenham. Full-Time!!!!! Congratulations @SpursOfficial on your win over @ManUtd Manchester United 0-3 Spurs MUNTOT.
+21:06:48: INFO: 1.1428571428571428 average URLS
+21:06:54: INFO: 2018-08-27 20:58:13 (52): Manchester United 0-3 Tottenham. Full-Time!!!!! Congratulations @SpursOfficial on your win over @ManUtd Manchester United 0-3 Spurs MUNTOT. GOLEADA EN OLD TRAFFORD  Manchester United 0-3 Tottenham.
+21:06:54: INFO: 1.0 average URLS
+21:07:06: INFO: 2 checkpoints created at time 2018-08-27 20:59:29 (UTC)
+21:07:06: INFO: 948 documents
+21:07:06: INFO: Reduced to 263 documents
+21:07:17: INFO: 2018-08-27 21:00:17 (53): Manchester United 0-3 Tottenham. PL  Goal Alert: Man United 0-3* Tottenham *(Moura 84) SSFootball.
+21:07:17: INFO: 0.6 average URLS
+21:07:21: INFO: 2018-08-27 21:00:17 (53): Manchester United 0-3 Tottenham. Lucas Moura - "It's just like watching Brazil..!!"  THFC COYS. PL  Goal Alert: Man United 0-3* Tottenham *(Moura 84) SSFootball.
+21:07:21: INFO: 0.2 average URLS
+21:07:27: INFO: 2018-08-27 21:00:17 (53):  Manchester United 0-3 Tottenham | Lucas Moura (GOAL) 84'. United fans there getting selfies with Spurs Man of the Match, Moura. Ive seen it all now. tourists. Game. Set. Match.  [0-3] MUNTOT PL.
+21:07:27: INFO: 0.6 average URLS
+21:07:32: INFO: 2018-08-27 21:00:17 (53): Manchester United 0-3 Tottenham. United fans getting selfies with Moura. No words. MUNTOT. Lucas Moura has been named the @PremierLeague Man of the Match for his performance against Manchester United. THFC.
+21:07:32: INFO: 0.8 average URLS
+21:07:39: INFO: 2018-08-27 21:01:49 (54): Manchester United 0-3 Tottenham.
+21:07:39: INFO: 0.8333333333333334 average URLS
+21:07:48: INFO: 2018-08-27 21:01:49 (54): Mourinho - sacked in the morning? spurs MUNTOT. Manchester United 0-3 Tottenham.
+21:07:48: INFO: 0.5 average URLS
+21:07:58: INFO: 2018-08-27 21:02:57 (55): Manchester United 0-3 Tottenham.
+21:07:58: INFO: 1.0 average URLS
+^B^[[5~qqqaqq             ^B^[[5~^[[6~q^Bda^B^[[5~^[[5~qaa  ^Bdzx^Bdaaaa aaasdas^[[5Ca^Bqaqaa^Bq21:08:21: INFO: 2018-08-27 21:04:33 (56): Manchester United 0-3 Tottenham MUNTOT. Game. Set. Match.  [0-3] MUNTOT PL.
+21:08:21: INFO: 0.75 average URLS
+21:08:29: INFO: 2018-08-27 21:05:13 (57): Only one man can save Manchester United now  MUNTOT.
+21:08:29: INFO: 0.8333333333333334 average URLS
+21:08:29: INFO: 2018-08-27 21:05:13 (57): Only one man can save Manchester United now  MUNTOT. Only one winner tonight. MUNTOT 0-3.
+21:08:29: INFO: 1.0 average URLS
+21:08:37: INFO: 2018-08-27 21:05:45 (58): 50' 1-0 Harry Kane  52' 2-0 Lucas Moura  84' 3-0 Lucas Moura  Manchester United's worst start to a Premier League seaso. Go on Lucas Moura! His second of the day! MUNTOT. Spurs will finally win at Old Trafford. Lucas Moura will be the difference.
+21:08:37: INFO: 0.2 average URLS
+21:08:46: INFO: 2018-08-27 21:06:18 (59): Man United 0-3 Spurs. Game. Set. Match.  [0-3] MUNTOT PL. Manchester United 0-3 Tottenham.
+21:08:46: INFO: 0.7272727272727273 average URLS
+21:08:51: INFO: 2018-08-27 21:06:18 (59): Breaking | Tottenham Hotspur have agreed a deal with Fenerbahce to send French midfielder Moussa Sissoko on loan for a season. (R. Man United 0-3 Spurs. Spurs reportedly agree deal with Fenerbahce for Moussa Sissoko.
+21:08:51: INFO: 0.7777777777777778 average URLS
+21:08:53: INFO: 2018-08-27 21:06:18 (59): Breaking | Tottenham Hotspur have agreed a deal with Fenerbahce to send French midfielder Moussa Sissoko on loan for a season. (R. Man United 0-3 Spurs. Spurs reportedly agree deal with Fenerbahce for Moussa Sissoko.
+21:08:53: INFO: 1.0 average URLS
+21:08:54: INFO: 2018-08-27 21:06:18 (59): Breaking | Tottenham Hotspur have agreed a deal with Fenerbahce to send French midfielder Moussa Sissoko on loan for a season. (R. Man United 0-3 Spurs. Spurs reportedly agree deal with Fenerbahce for Moussa Sissoko.
+21:08:54: INFO: 0.8333333333333334 average URLS
+21:08:56: INFO: 2018-08-27 21:06:18 (59): Breaking | Tottenham Hotspur have agreed a deal with Fenerbahce to send French midfielder Moussa Sissoko on loan for a season. (R. Man United 0-3 Spurs. Spurs reportedly agree deal with Fenerbahce for Moussa Sissoko.
+21:08:56: INFO: 0.2 average URLS
+21:08:58: INFO: 2018-08-27 21:06:18 (59): Breaking | Tottenham Hotspur have agreed a deal with Fenerbahce to send French midfielder Moussa Sissoko on loan for a season. (R. Man United 0-3 Spurs. Spurs reportedly agree deal with Fenerbahce for Moussa Sissoko.
+21:08:58: INFO: 0.6 average URLS
+21:08:58: INFO: 2018-08-27 21:06:18 (59): Breaking | Tottenham Hotspur have agreed a deal with Fenerbahce to send French midfielder Moussa Sissoko on loan for a season. (R. Man United 0-3 Spurs. Spurs reportedly agree deal with Fenerbahce for Moussa Sissoko.
+21:08:58: INFO: 1.0 average URLS
+21:09:08: INFO: 2018-08-27 21:07:53 (60): Man United 0-3 Spurs. Game. Set. Match.  [0-3] MUNTOT PL. Norwich 0-3 Leeds Scum 0-3 Spurs.
+21:09:08: INFO: 0.8571428571428571 average URLS
+21:09:11: INFO: 2018-08-27 21:07:53 (60): Breaking | Tottenham Hotspur have agreed a deal with Fenerbahce to send French midfielder Moussa Sissoko on loan for a season. (R. Man United 0-3 Spurs. Spurs reportedly agree deal with Fenerbahce for Moussa Sissoko.
+21:09:11: INFO: 0.7142857142857143 average URLS
+21:09:18: INFO: 2018-08-27 21:07:53 (60): Breaking | Tottenham Hotspur have agreed a deal with Fenerbahce to send French midfielder Moussa Sissoko on loan for a season. (R. Man United 0-3 Spurs. Mourinho - sacked in the morning? spurs MUNTOT.
+21:09:18: INFO: 0.4 average URLS
+21:09:19: INFO: 2018-08-27 21:07:53 (60): Breaking | Tottenham Hotspur have agreed a deal with Fenerbahce to send French midfielder Moussa Sissoko on loan for a season. (R. Man United 0-3 Spurs. Mourinho - sacked in the morning? spurs MUNTOT.
+21:09:19: INFO: 1.0 average URLS
+21:09:39: INFO: 2018-08-27 21:09:53 (61): "Sacked in the morning, you're getting sacked in the morning," thfc fans serenade Mourinho. MUNTOT. The Spurs fans, who have been so noisy all match, are singing "You're getting sacked in the morning" to Jose Mourinho.
+21:09:39: INFO: 0.6 average URLS
+21:09:40: INFO: 2018-08-27 21:09:53 (61): "Sacked in the morning, you're getting sacked in the morning," thfc fans serenade Mourinho. MUNTOT. Full Time: Manchester United 0-3 Tottenham Complete capitulation from United in the second half, Lucas Moura was incre. The Spurs fans, who have been so noisy all match, are singing "You're getting sacked in the morning" to Jose Mourinho.
+21:09:40: INFO: 0.6 average URLS
+21:09:52: INFO: 2018-08-27 21:10:49 (62): Jose Mourinho applauds the Manchester United fans after the final whistle. Clearly applauding the real fans who stayed to the end. Imagine leaving before the final whistle, would never be.
+21:09:52: INFO: 0.8 average URLS
+21:10:05: INFO: 2018-08-27 21:11:37 (63): Mourinho - sacked in the morning? spurs MUNTOT. Fellaini coming on as the Spurs fans chant 'You're getting sacked in the morning'  MUNTOT. "You're getting sacked in the morning!" sing the Tottenham fans to Jose Mourinho, while a Manchester United fan is shown.
+21:10:05: INFO: 0.4 average URLS
+21:10:07: INFO: 2018-08-27 21:11:37 (63): Mourinho - sacked in the morning? spurs MUNTOT. Manchester United 0-3 Tottenham. Fellaini coming on as the Spurs fans chant 'You're getting sacked in the morning'  MUNTOT.
+21:10:07: INFO: 1.0 average URLS
+21:10:53: INFO: Stream finished
+21:10:53: INFO: 2018-08-27 21:14:56 (64): Breaking | Tottenham Hotspur have agreed a deal with Fenerbahce to send French midfielder Moussa Sissoko on loan for a season. (R. Spurs reportedly agree deal with Fenerbahce for Moussa Sissoko. Beating United 3-0 at Old Trafford Moussa Sissoko on his way to Fenerbahce on loan Tottenham fans... MUNTOT https://t.c.
+21:10:53: INFO: 0.4 average URLS
+21:10:53: INFO: 2018-08-27 21:14:56 (64): Breaking | Tottenham Hotspur have agreed a deal with Fenerbahce to send French midfielder Moussa Sissoko on loan for a season. (R. Manchester United fans right now... Spurs reportedly agree deal with Fenerbahce for Moussa Sissoko.
+21:10:53: INFO: 0.875 average URLS
+21:10:57: INFO: Last document published at time 2018-08-27 21:14:57 (UTC)
+21:10:57: INFO: Consumer finished
+
+Script done on Sat Sep  1 21:10:58 2018

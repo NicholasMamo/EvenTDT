@@ -1,0 +1,22 @@
+touchdown
+interception
+sack
+first in ten
+
+fourth down
+field goal
+safety
+fumble
+kick-off
+punt
+conversion
+flag on the play
+
+
+SUGGESTIONS:
+
+Full stream
+Limits: summarization, cluster sizes, minimum volume
+Supporter index
+
+Analysis chapter - critical volume for usefulness of research

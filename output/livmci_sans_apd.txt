@@ -1,0 +1,48 @@
+Script started on Tue Oct  9 17:31:51 2018
+17:31:54: INFO: Stream started with pid 6342
+17:31:54: INFO: Understanding started with pid 6343
+17:31:54: INFO: Skipped 0 tweets
+17:33:54: INFO: Stream finished
+17:34:04: INFO: IDF created with 16600 documents
+17:38:56: INFO: Found participants: Vokes, Klopp, Aguero, City of Liverpool F.C., The Super, Belle Vale, Liverpool, City of London, Lovren, Leeds and Liverpool Canal, University of Liverpool, Firmino, Otamendi, Cardiff City F.C., Carragher, Dijk, Keita, Mahrez, Huddersfield Giants, Liverpool F.C., Shaqiri, Chelsea, Massachusetts, Liverpool, New York City, Grimsby Town F.C., Salah, James Milner, Mane, Manchester City F.C., Ramsey, Ryan Kent, Barkley, Gomez, Clyne, Leicester, Neville, Liverpool Hope University, Sarri, Stoke City F.C., Liverpool F.C.Manchester United F.C. rivalry, Guardiola, Bernardo Silva, Henderson, Sane, Arsenal F.C., Mendy, Anfield, Liverpool, Muric, Raheem Sterling, Merseyside derby
+17:38:56: INFO: Extrapolated participants: Matip, Rhian Brewster, Owen, Mignolet, City of Manchester Stadium, Markovic, Maine Road, Everton F.C., Chirivella, Wijnaldum, Kyle Walker, Jamie Vardy, Sturridge, Alexander-Arnold, Lallana, Dijk, Hillsborough disaster, Origi, Anfield, Goodison Park, Birmingham City F.C., Ramsey, Moreno, Oxlade-Chamberlain, Maguire, List of Premier League hat-tricks, Guardiola, Robertson, Stones, Solanke
+17:38:56: INFO: 79 participants found
+17:38:56: INFO: Understanding finished
+17:38:56: INFO: Consumer finished
+17:38:56: INFO: Stream started with pid 6748
+17:38:56: INFO: Understanding started with pid 6750
+17:38:56: INFO: Skipped 0 tweets
+17:38:56: INFO: Event tracking starting
+17:44:24: INFO: 2018-10-07 15:29:23 (2, 1): walk on, walk on with hope in your heart and you'll never walk alone you'll never walk alone.
+17:48:25: INFO: 2018-10-07 15:30:57 (1, 2): ''Others clubs have songs Liverpool have an anthem.'' Wow! Emotional words from Martin Tyler.....
+17:51:22: INFO: 2018-10-07 15:38:59 (1, 3): Its not just about Liverpools pressure when we have the ball. We look uncomfortable under no pressure. Anfield and City dont mix.
+17:57:39: INFO: 2018-10-07 15:44:55 (1, 4): Liverpool fans still booing Sterling after all these years ...classless lots.
+17:58:53: INFO: 2018-10-07 15:57:29 (1, 5): Why does Martin Tyler make up excuses for Liverpool already? Defending them on everything. Sky Sports.
+18:01:27: INFO: 2018-10-07 15:59:57 (1, 6): Naby Keita looks like he's going to come on for the injured James Milner (29 mins).
+18:03:48: INFO: 2018-10-07 16:04:59 (1, 7): This match is starting to get boring. Can Liverpool just score.
+18:07:44: INFO: 2018-10-07 16:10:13 (1, 8): Stay Classy Liverpool.... Man City @paddypower @LFC.
+18:08:44: INFO: 2018-10-07 16:18:13 (1, 9): HT. Liverpool 0-0 Man City. Good half, more to come in the second half.
+18:12:07: INFO: 2018-10-07 16:23:35 (1, 10): Flamengo fan in the 2nd TOYOTA European and South American Cup, Flamengo(Brazil) 3-0 Liverpool(England) at Tokyo in Japan
+18:14:13: INFO: 2018-10-07 16:26:23 (1, 11): Boring 1st half Hope 2nd half is lit.
+18:16:07: INFO: 2018-10-07 16:33:19 (2, 12): Liverpool vs Man. City Live Streaming free.
+18:20:52: INFO: 2018-10-07 16:34:25 (1, 13): BACK UNDERWAY! Let's have some goals please.
+18:24:10: INFO: 2018-10-07 16:49:17 (1, 14): Martin Atkinson having a great game in centre midfield for Liverpool today.
+18:24:53: INFO: 2018-10-07 16:50:31 (1, 15): [Media: Liverpool Echo] Why Liverpool are wearing Seeing is Believing on their shirts against Manchester City - a
+18:27:00: INFO: 2018-10-07 16:51:57 (1, 16): Bit harsh to call Salah a left footed bender. Sky Sports.
+18:29:11: INFO: 2018-10-07 16:57:51 (1, 17): Salah the one season wonder Super Sunday.
+18:30:20: INFO: 2018-10-07 17:00:33 (1, 18): Min. 71 Roberto Firmino coming off for Liverpool and making the way in for Daniel Sturridge. [0-0].
+18:32:08: INFO: 2018-10-07 17:02:49 (1, 19): Liverpool 0 Man City 0 74 mins Lovren with an excellent tackle...
+18:35:56: INFO: 2018-10-07 17:12:39 (1, 20): Penalty to Manchester City: Liverpool v Manchester City: Premier League  live!
+18:37:27: INFO: 2018-10-07 17:14:15 (1, 21): 87: Mahrez has now missed 4 of his last 6 penalties in the Premier League.  0-0 .
+18:38:17: INFO: 2018-10-07 17:16:57 (1, 22): Mahrez has missed 3 out of 5 penalties. Why would you let him take that when you have Jesus, Silva, even Walker or
+18:39:07: INFO: 2018-10-07 17:18:45 (1, 23): Three minutes added time. Still 0-0 at Anfield.
+^[[A^[[A^[[A^[[A^[[A^[[A^[[A^[[A^[[A^[[A^[[A^[[A                              18:40:18: INFO: 2018-10-07 17:21:39 (1, 24): FULL TIME Liverpool 0-0 Manchester City: Premier League  live!
+                  18:40:57: INFO: 2018-10-07 17:22:42 (2, 25): Man City 20pts Chelsea 20pts Liverpool 20pts Game on!!! We're all levelled on points! .
+^X  18:41:54: INFO: 2018-10-07 17:24:03 (1, 26): Man City 20 pts Chelsea 20 pts Liverpool 20 pts @premierleague resumes 20th Oct.
+18:43:41: INFO: 2018-10-07 17:25:57 (1, 27): Man City, Chelsea and Liverpool all on 20 points. Wow.
+18:44:33: INFO: 2018-10-07 17:29:39 (1, 28): Man City 20pts Chelsea 20pts Liverpool 20pts Game on!!! We're all levelled on points! .
+18:46:24: INFO: Stream finished
+18:46:28: INFO: Last document published at time 2018-10-07 17:34:58 (UTC)
+18:46:28: INFO: Consumer finished
+
+Script done on Tue Oct  9 18:46:29 2018

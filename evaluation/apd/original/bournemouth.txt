@@ -1,0 +1,249 @@
+<table border="0">
+
+<tbody><tr>
+<td style="background-color:#FFFFFF;vertical-align:top;" width="48%">
+<table border="0" cellspacing="0" cellpadding="2">
+
+
+<tbody><tr style="background-color:#AAD0FF">
+<th width="1%">No.
+</th>
+<th width="1%">
+</th>
+<th width="1%">Position
+</th>
+<th width="75%">Player
+</th></tr>
+<tr class="vcard agent">
+<td style="text-align: right;">1
+</td>
+<td style="text-align: right;"><span class="flagicon"><a href="/wiki/Poland" title="Poland"><img alt="Poland" src="//upload.wikimedia.org/wikipedia/en/thumb/1/12/Flag_of_Poland.svg/23px-Flag_of_Poland.svg.png" width="23" height="14" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/en/thumb/1/12/Flag_of_Poland.svg/35px-Flag_of_Poland.svg.png 1.5x, //upload.wikimedia.org/wikipedia/en/thumb/1/12/Flag_of_Poland.svg/46px-Flag_of_Poland.svg.png 2x" data-file-width="1280" data-file-height="800"></a></span>
+</td>
+<td style="text-align: center;"><a href="/wiki/Goalkeeper_(association_football)" title="Goalkeeper (association football)">GK</a>
+</td>
+<td><span class="fn"><a href="/wiki/Artur_Boruc" title="Artur Boruc">Artur Boruc</a></span>
+</td></tr>
+<tr class="vcard agent">
+<td style="text-align: right;">2
+</td>
+<td style="text-align: right;"><span class="flagicon"><a href="/wiki/England" title="England"><img alt="England" src="//upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/23px-Flag_of_England.svg.png" width="23" height="14" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/35px-Flag_of_England.svg.png 1.5x, //upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/46px-Flag_of_England.svg.png 2x" data-file-width="800" data-file-height="480"></a></span>
+</td>
+<td style="text-align: center;"><a href="/wiki/Defender_(association_football)" title="Defender (association football)">DF</a>
+</td>
+<td><span class="fn"><a href="/wiki/Simon_Francis_(footballer)" title="Simon Francis (footballer)">Simon Francis</a></span> <i>(<a href="/wiki/Captain_(association_football)" title="Captain (association football)">captain</a>)</i><sup id="cite_ref-captain_33-0" class="reference"><a href="#cite_note-captain-33">[33]</a></sup>
+</td></tr>
+<tr class="vcard agent">
+<td style="text-align: right;">3
+</td>
+<td style="text-align: right;"><span class="flagicon"><a href="/wiki/England" title="England"><img alt="England" src="//upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/23px-Flag_of_England.svg.png" width="23" height="14" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/35px-Flag_of_England.svg.png 1.5x, //upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/46px-Flag_of_England.svg.png 2x" data-file-width="800" data-file-height="480"></a></span>
+</td>
+<td style="text-align: center;"><a href="/wiki/Defender_(association_football)" title="Defender (association football)">DF</a>
+</td>
+<td><span class="fn"><a href="/wiki/Steve_Cook" title="Steve Cook">Steve Cook</a></span> <i>(<a href="/wiki/Captain_(association_football)" title="Captain (association football)">2nd vice-captain</a>)</i>
+</td></tr>
+<tr class="vcard agent">
+<td style="text-align: right;">4
+</td>
+<td style="text-align: right;"><span class="flagicon"><a href="/wiki/England" title="England"><img alt="England" src="//upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/23px-Flag_of_England.svg.png" width="23" height="14" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/35px-Flag_of_England.svg.png 1.5x, //upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/46px-Flag_of_England.svg.png 2x" data-file-width="800" data-file-height="480"></a></span>
+</td>
+<td style="text-align: center;"><a href="/wiki/Midfielder" title="Midfielder">MF</a>
+</td>
+<td><span class="fn"><a href="/wiki/Dan_Gosling" title="Dan Gosling">Dan Gosling</a></span>
+</td></tr>
+<tr class="vcard agent">
+<td style="text-align: right;">5
+</td>
+<td style="text-align: right;"><span class="flagicon"><a href="/wiki/Netherlands" title="Netherlands"><img alt="Netherlands" src="//upload.wikimedia.org/wikipedia/commons/thumb/2/20/Flag_of_the_Netherlands.svg/23px-Flag_of_the_Netherlands.svg.png" width="23" height="15" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/2/20/Flag_of_the_Netherlands.svg/35px-Flag_of_the_Netherlands.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/2/20/Flag_of_the_Netherlands.svg/45px-Flag_of_the_Netherlands.svg.png 2x" data-file-width="900" data-file-height="600"></a></span>
+</td>
+<td style="text-align: center;"><a href="/wiki/Defender_(association_football)" title="Defender (association football)">DF</a>
+</td>
+<td><span class="fn"><a href="/wiki/Nathan_Ak%C3%A9" title="Nathan Aké">Nathan Aké</a></span>
+</td></tr>
+<tr class="vcard agent">
+<td style="text-align: right;">6
+</td>
+<td style="text-align: right;"><span class="flagicon"><a href="/wiki/England" title="England"><img alt="England" src="//upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/23px-Flag_of_England.svg.png" width="23" height="14" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/35px-Flag_of_England.svg.png 1.5x, //upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/46px-Flag_of_England.svg.png 2x" data-file-width="800" data-file-height="480"></a></span>
+</td>
+<td style="text-align: center;"><a href="/wiki/Midfielder" title="Midfielder">MF</a>
+</td>
+<td><span class="fn"><a href="/wiki/Andrew_Surman" title="Andrew Surman">Andrew Surman</a></span> <i>(<a href="/wiki/Captain_(association_football)" title="Captain (association football)">vice-captain</a>)</i><sup id="cite_ref-captain_33-1" class="reference"><a href="#cite_note-captain-33">[33]</a></sup>
+</td></tr>
+<tr class="vcard agent">
+<td style="text-align: right;">7
+</td>
+<td style="text-align: right;"><span class="flagicon"><a href="/wiki/England" title="England"><img alt="England" src="//upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/23px-Flag_of_England.svg.png" width="23" height="14" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/35px-Flag_of_England.svg.png 1.5x, //upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/46px-Flag_of_England.svg.png 2x" data-file-width="800" data-file-height="480"></a></span>
+</td>
+<td style="text-align: center;"><a href="/wiki/Midfielder" title="Midfielder">MF</a>
+</td>
+<td><span class="fn"><a href="/wiki/Marc_Pugh" title="Marc Pugh">Marc Pugh</a></span>
+</td></tr>
+<tr class="vcard agent">
+<td style="text-align: right;">8
+</td>
+<td style="text-align: right;"><span class="flagicon"><a href="/wiki/Colombia" title="Colombia"><img alt="Colombia" src="//upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Colombia.svg/23px-Flag_of_Colombia.svg.png" width="23" height="15" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Colombia.svg/35px-Flag_of_Colombia.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Colombia.svg/45px-Flag_of_Colombia.svg.png 2x" data-file-width="450" data-file-height="300"></a></span>
+</td>
+<td style="text-align: center;"><a href="/wiki/Midfielder" title="Midfielder">MF</a>
+</td>
+<td><span class="fn"><a href="/wiki/Jefferson_Lerma" title="Jefferson Lerma">Jefferson Lerma</a></span>
+</td></tr>
+<tr class="vcard agent">
+<td style="text-align: right;">9
+</td>
+<td style="text-align: right;"><span class="flagicon"><a href="/wiki/France" title="France"><img alt="France" src="//upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/23px-Flag_of_France.svg.png" width="23" height="15" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/35px-Flag_of_France.svg.png 1.5x, //upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/45px-Flag_of_France.svg.png 2x" data-file-width="900" data-file-height="600"></a></span>
+</td>
+<td style="text-align: center;"><a href="/wiki/Forward_(association_football)" title="Forward (association football)">FW</a>
+</td>
+<td><span class="fn"><a href="/wiki/Lys_Mousset" title="Lys Mousset">Lys Mousset</a></span>
+</td></tr>
+<tr class="vcard agent">
+<td style="text-align: right;">10
+</td>
+<td style="text-align: right;"><span class="flagicon"><a href="/wiki/England" title="England"><img alt="England" src="//upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/23px-Flag_of_England.svg.png" width="23" height="14" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/35px-Flag_of_England.svg.png 1.5x, //upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/46px-Flag_of_England.svg.png 2x" data-file-width="800" data-file-height="480"></a></span>
+</td>
+<td style="text-align: center;"><a href="/wiki/Midfielder" title="Midfielder">MF</a>
+</td>
+<td><span class="fn"><a href="/wiki/Jordon_Ibe" title="Jordon Ibe">Jordon Ibe</a></span>
+</td></tr>
+<tr class="vcard agent">
+<td style="text-align: right;">11
+</td>
+<td style="text-align: right;"><span class="flagicon"><a href="/wiki/England" title="England"><img alt="England" src="//upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/23px-Flag_of_England.svg.png" width="23" height="14" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/35px-Flag_of_England.svg.png 1.5x, //upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/46px-Flag_of_England.svg.png 2x" data-file-width="800" data-file-height="480"></a></span>
+</td>
+<td style="text-align: center;"><a href="/wiki/Defender_(association_football)" title="Defender (association football)">DF</a>
+</td>
+<td><span class="fn"><a href="/wiki/Charlie_Daniels_(footballer)" title="Charlie Daniels (footballer)">Charlie Daniels</a></span>
+</td></tr>
+<tr class="vcard agent">
+<td style="text-align: right;">12
+</td>
+<td style="text-align: right;"><span class="flagicon"><a href="/wiki/England" title="England"><img alt="England" src="//upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/23px-Flag_of_England.svg.png" width="23" height="14" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/35px-Flag_of_England.svg.png 1.5x, //upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/46px-Flag_of_England.svg.png 2x" data-file-width="800" data-file-height="480"></a></span>
+</td>
+<td style="text-align: center;"><a href="/wiki/Goalkeeper_(association_football)" title="Goalkeeper (association football)">GK</a>
+</td>
+<td><span class="fn"><a href="/wiki/Aaron_Ramsdale" title="Aaron Ramsdale">Aaron Ramsdale</a></span>
+</td></tr></tbody></table>
+</td>
+<td width="1%">
+</td>
+<td style="background-color:#FFFFFF;vertical-align:top;" width="48%">
+<table border="0" cellspacing="0" cellpadding="2">
+
+
+<tbody><tr style="background-color:#AAD0FF">
+<th width="1%">No.
+</th>
+<th width="1%">
+</th>
+<th width="1%">Position
+</th>
+<th width="75%">Player
+</th></tr>
+<tr class="vcard agent">
+<td style="text-align: right;">13
+</td>
+<td style="text-align: right;"><span class="flagicon"><a href="/wiki/England" title="England"><img alt="England" src="//upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/23px-Flag_of_England.svg.png" width="23" height="14" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/35px-Flag_of_England.svg.png 1.5x, //upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/46px-Flag_of_England.svg.png 2x" data-file-width="800" data-file-height="480"></a></span>
+</td>
+<td style="text-align: center;"><a href="/wiki/Forward_(association_football)" title="Forward (association football)">FW</a>
+</td>
+<td><span class="fn"><a href="/wiki/Callum_Wilson_(English_footballer)" class="mw-redirect" title="Callum Wilson (English footballer)">Callum Wilson</a></span>
+</td></tr>
+<tr class="vcard agent">
+<td style="text-align: right;">15
+</td>
+<td style="text-align: right;"><span class="flagicon"><a href="/wiki/England" title="England"><img alt="England" src="//upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/23px-Flag_of_England.svg.png" width="23" height="14" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/35px-Flag_of_England.svg.png 1.5x, //upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/46px-Flag_of_England.svg.png 2x" data-file-width="800" data-file-height="480"></a></span>
+</td>
+<td style="text-align: center;"><a href="/wiki/Defender_(association_football)" title="Defender (association football)">DF</a>
+</td>
+<td><span class="fn"><a href="/wiki/Adam_Smith_(footballer,_born_1991)" title="Adam Smith (footballer, born 1991)">Adam Smith</a></span>
+</td></tr>
+<tr class="vcard agent">
+<td style="text-align: right;">16
+</td>
+<td style="text-align: right;"><span class="flagicon"><a href="/wiki/England" title="England"><img alt="England" src="//upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/23px-Flag_of_England.svg.png" width="23" height="14" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/35px-Flag_of_England.svg.png 1.5x, //upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/46px-Flag_of_England.svg.png 2x" data-file-width="800" data-file-height="480"></a></span>
+</td>
+<td style="text-align: center;"><a href="/wiki/Midfielder" title="Midfielder">MF</a>
+</td>
+<td><span class="fn"><a href="/wiki/Lewis_Cook_(footballer,_born_1997)" title="Lewis Cook (footballer, born 1997)">Lewis Cook</a></span>
+</td></tr>
+<tr class="vcard agent">
+<td style="text-align: right;">17
+</td>
+<td style="text-align: right;"><span class="flagicon"><a href="/wiki/Norway" title="Norway"><img alt="Norway" src="//upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Flag_of_Norway.svg/21px-Flag_of_Norway.svg.png" width="21" height="15" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Flag_of_Norway.svg/32px-Flag_of_Norway.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Flag_of_Norway.svg/41px-Flag_of_Norway.svg.png 2x" data-file-width="1100" data-file-height="800"></a></span>
+</td>
+<td style="text-align: center;"><a href="/wiki/Forward_(association_football)" title="Forward (association football)">FW</a>
+</td>
+<td><span class="fn"><a href="/wiki/Joshua_King_(footballer)" title="Joshua King (footballer)">Joshua King</a></span>
+</td></tr>
+<tr class="vcard agent">
+<td style="text-align: right;">18
+</td>
+<td style="text-align: right;"><span class="flagicon"><a href="/wiki/England" title="England"><img alt="England" src="//upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/23px-Flag_of_England.svg.png" width="23" height="14" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/35px-Flag_of_England.svg.png 1.5x, //upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/46px-Flag_of_England.svg.png 2x" data-file-width="800" data-file-height="480"></a></span>
+</td>
+<td style="text-align: center;"><a href="/wiki/Forward_(association_football)" title="Forward (association football)">FW</a>
+</td>
+<td><span class="fn"><a href="/wiki/Jermain_Defoe" title="Jermain Defoe">Jermain Defoe</a></span>
+</td></tr>
+<tr class="vcard agent">
+<td style="text-align: right;">19
+</td>
+<td style="text-align: right;"><span class="flagicon"><a href="/wiki/England" title="England"><img alt="England" src="//upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/23px-Flag_of_England.svg.png" width="23" height="14" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/35px-Flag_of_England.svg.png 1.5x, //upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/46px-Flag_of_England.svg.png 2x" data-file-width="800" data-file-height="480"></a></span>
+</td>
+<td style="text-align: center;"><a href="/wiki/Midfielder" title="Midfielder">MF</a>
+</td>
+<td><span class="fn"><a href="/wiki/Junior_Stanislas" title="Junior Stanislas">Junior Stanislas</a></span>
+</td></tr>
+<tr class="vcard agent">
+<td style="text-align: right;">20
+</td>
+<td style="text-align: right;"><span class="flagicon"><a href="/wiki/Wales" title="Wales"><img alt="Wales" src="//upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_Wales_%281959%E2%80%93present%29.svg/23px-Flag_of_Wales_%281959%E2%80%93present%29.svg.png" width="23" height="14" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_Wales_%281959%E2%80%93present%29.svg/35px-Flag_of_Wales_%281959%E2%80%93present%29.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_Wales_%281959%E2%80%93present%29.svg/46px-Flag_of_Wales_%281959%E2%80%93present%29.svg.png 2x" data-file-width="830" data-file-height="498"></a></span>
+</td>
+<td style="text-align: center;"><a href="/wiki/Midfielder" title="Midfielder">MF</a>
+</td>
+<td><span class="fn"><a href="/wiki/David_Brooks_(footballer)" title="David Brooks (footballer)">David Brooks</a></span>
+</td></tr>
+<tr class="vcard agent">
+<td style="text-align: right;">21
+</td>
+<td style="text-align: right;"><span class="flagicon"><a href="/wiki/Spain" title="Spain"><img alt="Spain" src="//upload.wikimedia.org/wikipedia/en/thumb/9/9a/Flag_of_Spain.svg/23px-Flag_of_Spain.svg.png" width="23" height="15" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/en/thumb/9/9a/Flag_of_Spain.svg/35px-Flag_of_Spain.svg.png 1.5x, //upload.wikimedia.org/wikipedia/en/thumb/9/9a/Flag_of_Spain.svg/45px-Flag_of_Spain.svg.png 2x" data-file-width="750" data-file-height="500"></a></span>
+</td>
+<td style="text-align: center;"><a href="/wiki/Defender_(association_football)" title="Defender (association football)">DF</a>
+</td>
+<td><span class="fn"><a href="/wiki/Diego_Rico" title="Diego Rico">Diego Rico</a></span>
+</td></tr>
+<tr class="vcard agent">
+<td style="text-align: right;">24
+</td>
+<td style="text-align: right;"><span class="flagicon"><a href="/wiki/Scotland" title="Scotland"><img alt="Scotland" src="//upload.wikimedia.org/wikipedia/commons/thumb/1/10/Flag_of_Scotland.svg/23px-Flag_of_Scotland.svg.png" width="23" height="14" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/1/10/Flag_of_Scotland.svg/35px-Flag_of_Scotland.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/1/10/Flag_of_Scotland.svg/46px-Flag_of_Scotland.svg.png 2x" data-file-width="1000" data-file-height="600"></a></span>
+</td>
+<td style="text-align: center;"><a href="/wiki/Midfielder" title="Midfielder">MF</a>
+</td>
+<td><span class="fn"><a href="/wiki/Ryan_Fraser" title="Ryan Fraser">Ryan Fraser</a></span>
+</td></tr>
+<tr class="vcard agent">
+<td style="text-align: right;">25
+</td>
+<td style="text-align: right;"><span class="flagicon"><a href="/wiki/England" title="England"><img alt="England" src="//upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/23px-Flag_of_England.svg.png" width="23" height="14" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/35px-Flag_of_England.svg.png 1.5x, //upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/46px-Flag_of_England.svg.png 2x" data-file-width="800" data-file-height="480"></a></span>
+</td>
+<td style="text-align: center;"><a href="/wiki/Defender_(association_football)" title="Defender (association football)">DF</a>
+</td>
+<td><span class="fn"><a href="/wiki/Jack_Simpson_(footballer)" title="Jack Simpson (footballer)">Jack Simpson</a></span>
+</td></tr>
+<tr class="vcard agent">
+<td style="text-align: right;">26
+</td>
+<td style="text-align: right;"><span class="flagicon"><a href="/wiki/England" title="England"><img alt="England" src="//upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/23px-Flag_of_England.svg.png" width="23" height="14" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/35px-Flag_of_England.svg.png 1.5x, //upload.wikimedia.org/wikipedia/en/thumb/b/be/Flag_of_England.svg/46px-Flag_of_England.svg.png 2x" data-file-width="800" data-file-height="480"></a></span>
+</td>
+<td style="text-align: center;"><a href="/wiki/Defender_(association_football)" title="Defender (association football)">DF</a>
+</td>
+<td><span class="fn"><a href="/wiki/Tyrone_Mings" title="Tyrone Mings">Tyrone Mings</a></span>
+</td></tr>
+<tr class="vcard agent">
+<td style="text-align: right;">27
+</td>
+<td style="text-align: right;"><span class="flagicon"><a href="/wiki/Bosnia_and_Herzegovina" title="Bosnia and Herzegovina"><img alt="Bosnia and Herzegovina" src="//upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Flag_of_Bosnia_and_Herzegovina.svg/23px-Flag_of_Bosnia_and_Herzegovina.svg.png" width="23" height="12" class="thumbborder" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Flag_of_Bosnia_and_Herzegovina.svg/35px-Flag_of_Bosnia_and_Herzegovina.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Flag_of_Bosnia_and_Herzegovina.svg/46px-Flag_of_Bosnia_and_Herzegovina.svg.png 2x" data-file-width="800" data-file-height="400"></a></span>
+</td>
+<td style="text-align: center;"><a href="/wiki/Goalkeeper_(association_football)" title="Goalkeeper (association football)">GK</a>
+</td>
+<td><span class="fn"><a href="/wiki/Asmir_Begovi%C4%87" title="Asmir Begović">Asmir Begović</a></span>
+</td></tr></tbody></table>
+</td></tr></tbody></table>

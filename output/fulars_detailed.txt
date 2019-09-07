@@ -1,0 +1,49 @@
+Script started on Mon Oct  8 14:44:10 2018
+14:44:12: INFO: IDF loaded with 11139 documents
+14:44:12: INFO: Stream started with pid 19911
+14:44:12: INFO: Understanding started with pid 19912
+14:44:12: INFO: Event tracking starting
+14:44:12: INFO: Skipped 0 tweets
+14:48:23: INFO: 2018-10-07 10:58:25 (1, 1): Thierry Henry is set to be offered the Aston Villa managers job and take John Terry with him as assistant manager. (S @tammymartinez69 Arsenal vs Fulham Live Stream: What TV channel is Arsenal vs Fulham ? Kick-off time, live stream M
+14:49:05: INFO: 2018-10-07 11:01:01 (1, 2): KICK OFF: Fulham get us underway at Craven Cottage against Arsenal.
+14:49:40: INFO: 2018-10-07 11:02:27 (1, 3): @arishatanzid1 Also watch here HD Arsenal vs Fulham live stream, English Premier League online Watch the live match h
+14:52:14: INFO: 2018-10-07 11:03:37 (1, 4): Ahhh what a save from Leno. Almost instantly a shot which Cech wouldn't have saved.
+15:01:29: INFO: 2018-10-07 11:20:39 (1, 5): I'm hearing Thierry Henry and John Terry are set to become a managerial double act at Villa .
+15:03:46: INFO: 2018-10-07 11:29:17 (2, 6): Lovely from Iwobi, Monreal and, started and finished by, Lacazette. 1-0 to the Arsenal!
+15:04:31: INFO: 2018-10-07 11:31:45 (2, 7): Iwobi with two nutmegs so far, Loving it. .
+15:06:34: INFO: 2018-10-07 11:33:19 (1, 8): Iwobi looks a complete different player from last season, great to see.  Four goals.  Three assists. Alexandre Lacazette is on  this season.
+15:10:17: INFO: 2018-10-07 11:37:25 (1, 9): @UnitedStandMUFC Lacazette's first touch  And Arsenal fans talk About Lukaku's first touch http
+15:10:50: INFO: 2018-10-07 11:44:51 (2, 10): GOAL: Fulham 1-1 Arsenal - Schurrle with the equaliser! Lovely move from there! Handed that to them. Poor, poor piece of work from Monreal.
+15:12:20: INFO: 2018-10-07 11:45:57 (1, 11): 5 - Alexandre Lacazette has been directly involved in five goals in five starts in the Premier League so far this season (3 go
+15:15:16: INFO: 2018-10-07 11:48:57 (1, 12): Monreal gives the ball away out of position which leads to Fulhams goal. The most overrated player at Arsenal. We always play better 2nd half. Come on Arsenal !!
+15:16:22: INFO: 2018-10-07 11:54:49 (1, 13): Half time; Arsenal 1 - Fulham 1. Arsenal in control for most of the half until the end when we started getting slop
+15:18:39: INFO: 2018-10-07 11:57:01 (1, 14): Luciano Vietto has provided four assists in his last three Premier League games for Fulham at Craven Cottage  No
+15:20:20: INFO: 2018-10-07 12:01:35 (1, 15): The second half is underway at Craven Cottage. Fulham 1-1 Arsenal.
+15:22:24: INFO: 2018-10-07 12:04:55 (2, 16): I cant believe these Man Utd fans were comparing Lukaku to Lacazette. Like what!? Good play from Iwobi once again Bellerin shot being denied by a decent save from Bettinelli.
+15:23:17: INFO: 2018-10-07 12:09:01 (1, 17): Lacazette is on fire this season hat trick incoming. Mustafi fucking idiot. What if the ref didn't give the foul? Stop appealing like an idiot and play to the whistle.
+15:27:01: INFO: 2018-10-07 12:10:51 (1, 18): Big fan of the new Torreira song. My club has Alexandre Lacazette, yours doesn't. Have a great day.
+15:28:08: INFO: 2018-10-07 12:18:19 (1, 19): Thierry Henry is set to be offered the Aston Villa managers job and take John Terry with him as assistant manager. (S
+15:29:53: INFO: 2018-10-07 12:20:33 (1, 20): Arsenal sub: Aubameyang on, Welbeck off.
+15:30:39: INFO: 2018-10-07 12:24:03 (2, 21): GOAL! Fulham 1-3 Arsenal Aaron Ramsey scores a delightful back heel.
+15:31:11: INFO: 2018-10-07 12:25:27 (2, 22): Arsenal fans singing 'We've got our Arsenal back' after that third goal.
+15:33:04: INFO: 2018-10-07 12:26:29 (1, 23): Oh My God! Arsenal have just scored one of the best goals I have ever seen! This goal needs to be seen over and over and o @premierleague Unai Emery white red army.
+15:33:40: INFO: 2018-10-07 12:30:23 (2, 24): "We've got our Arsenal back, we've got our Arsenal back" sing the travelling fans. That goal might be better than Wilshere against Norwich uno.
+15:35:11: INFO: 2018-10-07 12:31:37 (1, 25): "He's comes from Uruguay He's only 5 foot high Torreira" Lucas Torreira already having his own song among the Arsena Goal of the month contender? Goal of the season contender? Live:.
+15:36:28: INFO: 2018-10-07 12:35:49 (1, 26): Gooooalll Aubameyang scores to make it 4-1 Bellerin with the assist.
+15:37:35: INFO: 2018-10-07 12:37:13 (1, 27): King Unai Emery. Whoever said be careful what you wish for. I'm happy with my wish. @MrDtAFC I see you going crazy when Aubameyang celebrated lmao .
+15:39:04: INFO: 2018-10-07 12:39:25 (1, 28): Arsenal plays beautiful attacking football. Better then Man U.
+15:40:32: INFO: 2018-10-07 12:44:09 (1, 29): Bellerin has really improved especially with his crosses.
+15:41:30: INFO: 2018-10-07 12:45:21 (1, 30): Chants of Unai Emery's Red Army. Love it!
+15:43:00: INFO: 2018-10-07 12:47:17 (1, 31): Last night the Union won 5-1, this morning Fulham lost 5-1. My life is in balance.
+15:43:44: INFO: 2018-10-07 12:50:09 (2, 32): I just love it when Arsenal score 3+ goals Aubameyang makes it 1-5.
+15:44:21: INFO: 2018-10-07 12:51:39 (2, 33): A five star performance from the Gunners as Aubameyang scores again. Fulham 1-5 Arsenal.
+15:44:55: INFO: 2018-10-07 12:52:53 (2, 34): Arsenal just made my day...job well done.
+15:46:53: INFO: 2018-10-07 12:54:01 (1, 35): Arsenal with their 6 successive league wins after a 5-1 win at the Craven Cottage.
+15:47:28: INFO: 2018-10-07 12:58:01 (1, 36): Name a better bromance than auba and lacazette, ill wait Premier League.
+15:48:12: INFO: 2018-10-07 12:59:11 (1, 37): "He's comes from Uruguay He's only 5 foot high Torreira" Lucas Torreira already having his own song among the Arsena
+15:51:39: INFO: Stream finished
+15:53:01: WARNING: 9 checkpoints created at time 2018-10-07 13:07:35 (UTC)
+15:53:08: INFO: Last document published at time 2018-10-07 13:07:35 (UTC)
+15:53:09: INFO: Consumer finished
+
+Script done on Mon Oct  8 15:53:09 2018

@@ -1,0 +1,134 @@
+Script started on Mon Nov  5 22:37:05 2018
+22:37:07: INFO: IDF loaded with 29787 documents
+22:37:07: INFO: Stream started with pid 20467
+22:37:07: INFO: Consuming started with pid 20468
+22:37:07: INFO: Event tracking starting
+22:37:07: INFO: Skipped 0 tweets
+22:41:06: INFO: 2018-11-03 17:24:13 1: Arsenal vs Liverpool LIVE: Updates from Premier League clash, team line ups confirmed.
+22:41:40: INFO: 2018-11-03 17:25:55 2: Fucking buzzing for Arsenal v Liverpool. Always one of the biggest games of the season! Fuck Liverpool come on Arsenal. Peter Drury on commentary for , it's gonna be an exciting game... mon Liverpool. Big game this. Cmon arsenal get something out of it.
+22:42:32: INFO: 2018-11-03 17:27:01 3: Teams are out at the Emirates. Come on you... purples. English Premier League (EPL) Live Streaming Full Game HD TV Watch Online Streaming Arsenal vs. Liverpool Get Here.
+22:43:17: INFO: 2018-11-03 17:28:47 4: Big Game For The Redmen. Hopefully Come Away With The 3 Pts .
+22:43:52: INFO: 2018-11-03 17:30:15 5: An impeccably observed minute's silence pre-match in memory of the 5 people who died in the Leicester City helicopter ac Arsenal 0 Liverpool 0 1 mins We have kick off...Come On Liverpool! The game of the week in PL is about to start and Im Arsenal today lol. We're underway,coooome on you lads!!! Come on Arsenal let's play some exciting football!
+22:44:31: WARNING: Filtered out document from summary (1.000000): RT @thisisanfield: Teams are out at the Emirates. Come on you... purples
+https://t.co/d8dKUp8ZJy
+22:44:31: INFO: 2018-11-03 17:31:25 6: Respectful moment by both teams to observe a minute of silence for th Leicester City family. . c'mon don't embarrass us today. Come on boyssss!! .
+22:45:31: INFO: 2018-11-03 17:32:45 7: Lovely touch by Arsenal to put foxes on their armbands.
+22:46:06: INFO: 2018-11-03 17:34:43 8: Arsenal is just killing Liverpool. What a start. Almost a goal. They're moving the ball well, Arsenal. Im gonna need arsenal to win this . Come on Liverpool!!!! . Bright start from Arsenal, only if they can sustain it.
+22:46:41: WARNING: EXCLUDED AT 2018-11-03 17:35:53: Go gunners go .
+22:47:22: WARNING: Filtered out document from summary (0.940101): Come on Liverpool !!!!!!! #YNWA
+22:47:22: WARNING: EXCLUDED AT 2018-11-03 17:37:05: 
+22:48:27: WARNING: EXCLUDED AT 2018-11-03 17:38:27: Looks like Aubameyang is up for it today.
+22:49:08: INFO: 2018-11-03 17:40:37 9: how many fouls was that on Salah from Kolasinac? jesus christ ref.
+22:49:40: INFO: 2018-11-03 17:41:59 10: ENGLAND: Premier League (EPL) Live Stream  Click Here:: Arsenal vs Liverpool 12 `1 2` 12` 1 231`23.
+22:50:22: INFO: 2018-11-03 17:43:01 11: Mkitaryan has lost the ball 3 times already, were 12 mins in.
+22:51:07: INFO: 2018-11-03 17:44:25 12: Mustafi has never won a senior trophy. Apart from the world cup... So close come on Arsenal. Amazing dummy by Ozil.
+22:51:45: INFO: 2018-11-03 17:45:55 13: Arsenal look good early! Need to take one of these chances.
+22:52:28: INFO: 2018-11-03 17:47:11 14: liverpool play a decent team and they get exposed. Arsenal dey ball sha o. I cant lie.
+22:53:15: INFO: 2018-11-03 17:48:37 15: Mane mot offside because he's onside when firmino touches the ball...this offside rule needs clearing up! Surely that's a perfectly good goal? Mane was behind the ball when Firmino shot.
+22:53:49: INFO: 2018-11-03 17:50:11 16: Linesman Rob Liverpool but mi glad. Pussy deh Rob we last season. Phases of play we often hear, in the second phase Mane is onside. @LFC Its a new phase when firmino touches the ball and hes behind firmino so its a goal?
+22:54:27: INFO: 2018-11-03 17:51:19 17: Yeah we got lucky. Liverpool should be winning 1-0. That linesman needs to get back to learning the rules of the game, never offside as it was the second stage of that Arsenal really do get all of the luck dont they, goal should have stood.
+22:54:58: INFO: 2018-11-03 17:52:35 18: Liverpool in again but this time Xhaka gets back to make an excellent tackle. what about when he runs towards the ball when its played over the top. clearly runs towards the ball so hes active.
+22:55:29: INFO: 2018-11-03 17:53:37 19: Great defending by xhaka well played. Arsenal are a joke of a football club . How the game is 0-0, I don't know. Arsenal defence is a joke. How did Virgil miss that .
+22:56:13: INFO: 2018-11-03 17:54:41 20: Watching salah dribble makes me want to puke. Salah is on fire.... Hope he scores soon!!!! Kolasinac isnt getting close to salah at all. If Cech was in goal, we could have been down 2:0 easily.
+22:57:12: INFO: 2018-11-03 17:56:07 21: Arsenal keep getting done by the ball over the top... Salah getting into some really good spaces!
+22:58:25: WARNING: EXCLUDED AT 2018-11-03 17:58:07: @markgoldbridge Arsenal are playing well to be fair.
+22:58:59: WARNING: EXCLUDED AT 2018-11-03 18:00:33: Reiss Nelson just scored this for Hoffenheim. .
+22:59:43: INFO: 2018-11-03 18:01:41 22: I complain about BT sport commentator's a lot. But this guy just said Joe Gomez is just as quick as Aubameyang. Wow! I'm loving my team!!
+23:00:21: INFO: 2018-11-03 18:03:07 23: Lucas Torreira is a beast. Looks a brilliant little player.
+23:00:52: INFO: 2018-11-03 18:04:23 24: The intensity of this game. Both teams should have scored. I want arsenal to win. Torreira is bossing the midfield!!!! In an Arsenal dominated pub right now, but FUCK IT.
+23:02:09: INFO: 2018-11-03 18:05:25 25: Torreira bossing that midfield. Great too have a decent defensive centre midfielder again. Are we having the manager cam for the entire game lads ? @btsportfootball. Arsenal playing beautiful football tonight.
+23:02:52: WARNING: EXCLUDED AT 2018-11-03 18:08:01: This ref is shocking. Giving everything to Arsenal. This game needs Iwobi.
+23:03:23: INFO: 2018-11-03 18:09:25 26: That's the OZil you said is missing abi Did you see that flick? Lacazette missing beautiful chances. Close from Lacazette. Should have played it like he did vs Cardiff.
+23:03:55: INFO: 2018-11-03 18:10:29 27: They didn't make it out of the station... again - well done Liverpool! No Pasaran. Wtf is happening with Liverpool? Another disallowed goal. This time it's Arsenal's. Hahaha. Good game . Half of sectors. Arsenal looked more likely, then Liverpool looked more likely now Arsenal looking more likely...
+23:04:26: INFO: 2018-11-03 18:11:31 28: Lacazette has the ball in the net from Mustafi's header across, but the German was flagged offside. Why Liverpool forward Sadio Manes goal against Arsenal should NOT have been disallowed. Arsenal playing some unreal football Like like is this arsenal? Arsenal better not lose with all this pressure.
+23:05:15: INFO: 2018-11-03 18:12:33 29: We are wasting chances. Lacazette and Mhiki wasteful so far. Shame such chances always comes back to hurt us eventually.
+23:06:04: WARNING: EXCLUDED AT 2018-11-03 18:14:13: Arsenal impressing but it is the goal that really counts.
+23:06:37: WARNING: EXCLUDED AT 2018-11-03 18:15:51: Man ! Arsenal is lucky tonight ... Premier League.
+23:07:12: INFO: 2018-11-03 18:16:55 30: Hit the post twice and had a perfect goal disallowed. Just another Liverpool game. Two of the best attacking teams in the premier league giving us a very entertaining first half. That 1st half was fantastic. Probably the best goalless half in a long time.
+23:07:45: INFO: 2018-11-03 18:18:05 31: What a first half of football that was. Gotta score now in the 2nd half, Liverpool all they need is a chance to be ahead! Half-Time  Click My Profile to Live Arsenal 0-0 Liverpool English Premier League (EPL) Arsenal v Li Wait! 0-0 at halftime? So when will the over 3,5 goals come in??
+23:08:21: WARNING: Filtered out document from summary (1.000000): RT @officialdaddymo: Two of the best attacking teams in the premier league giving us a very entertaining first half.
+
+#ARSLIV
+23:08:21: INFO: 2018-11-03 18:19:11 32: Best Ive seen xhaka play for arsenal. And that said Liverpool is a first half team . Well, Arsenal is a 2nd half team. We go chew them. End to end game. Come on liverpool get a goal! Lucas Torreira waiting for Firmino and Salah.
+23:09:03: INFO: 2018-11-03 18:20:23 33: Arsenal having a fantastic game yet Liverpool have hit the woodwork twice and had a goal disallowed. From a neutral Need to drop Mkhi and bring on Iwobi. Very impressed by that first half, more of the same arsenal.
+23:09:42: INFO: 2018-11-03 18:21:47 34: Arsenal have been by far the better team and yet weve hit the post twice and had a goal wrongly disallowed.
+23:10:31: WARNING: EXCLUDED AT 2018-11-03 18:23:05: Lucas Torreira has been solid in the midfield for Arsenal today.
+23:11:11: WARNING: Filtered out document from summary (0.918993): RT @_eli_cyfa: Arsenal is playing some beautiful football here... Whaaaat
+23:11:11: WARNING: EXCLUDED AT 2018-11-03 18:24:44: How I'll be watching @Arsenal Liverpool today .
+23:11:47: INFO: 2018-11-03 18:26:03 35: I thought the offside rule was make a movement towards the ball now, so is Mane not offside first because he spri Reiss Nelson scored this beauty for Hoffenheim today. Yes, I think it's a draw .
+23:12:36: INFO: 2018-11-03 18:27:15 36: Arsenals attack could cause us an L but their defence could give us the win.
+23:13:41: INFO: 2018-11-03 18:28:53 37: Domination counts for nothing in big games if you don't score. No idea how second half will be like.
+23:14:15: INFO: 2018-11-03 18:31:03 38: Arsenal 0 Liverpool 0 46 mins 2nd half underway...Come On Liverpool!
+23:15:45: INFO: 2018-11-03 18:32:11 39:   Arsenal get us back underway for the second-half. The Gunners and Bernd Leno might have g
+23:17:28: WARNING: EXCLUDED AT 2018-11-03 18:37:03: Torreira is so much better than Kante man.
+23:18:24: WARNING: EXCLUDED AT 2018-11-03 18:38:37: Lol.. Mkhitaryan should have squared.
+23:19:02: WARNING: EXCLUDED AT 2018-11-03 18:40:29: Mkhitaryan is costing us this game. Big time!
+23:20:26: INFO: 2018-11-03 18:41:45 40: Its time to pull Mhki and bring in Iwobi or Ramsey in my opinion. Cmon gooners!!!
+23:21:00: WARNING: EXCLUDED AT 2018-11-03 18:44:33: Mustafi is like a playmaker today... Ars Liv.
+23:21:54: INFO: 2018-11-03 18:45:43 41: Yellow for Xhaka ref!!! What kind of ref are you??? This ref let xhaka get away with that.
+23:22:29: INFO: 2018-11-03 18:47:29 42: Goaal! Milner scores for Liverpool. Arsenal are down at the Emirates! Arsenal 0-1 Liverpool. Yessss... Milner! 1-0 Arsenal. Totally against the run of play. Love it!
+23:23:00: INFO: 2018-11-03 18:48:39 43:  Goal scored by James Milner (Liverpool). James Milner (Liverpool) now has 1 goal and has 8 points in total! @1886_blog Fuck off one mistake! Cech endless mistakes every match.
+23:23:31: INFO: 2018-11-03 18:49:41 44: 50 - James Milner's goal was his 50th in the Premier League - 14 of them have been for @LFC, more than any other club he's pla Arsenal carrying on where they left off Alisson save from Torreira. fuck sake, Liverpool scored . Scoring from a mistake, typical liverpool.
+23:24:05: WARNING: Filtered out document from summary (0.724619): 
+Click My Profile to Live
+English Premier League (EPL)
+Arsenal vs. Liverpool: Live stream
+Arsenal v https://t.co/ORaaeyjLUa
+23:24:05: INFO: 2018-11-03 18:50:43 45: Milner scores then gets a broken nose. Ouch. Why was Milner given that much space?! fucking equalize arsenal.
+23:24:44: INFO: 2018-11-03 18:51:51 46: Come on @Arsenal Don't deserve to lose this game @afcstuff @AFTVMedia. Ffs arsenal have been all over them and then that cunt scores. @Stevecaresx Emery has to get Mhki off and bring in Iwobi if they want a chance to win this.
+23:25:25: WARNING: Filtered out document from summary (0.918993): Arsenal play beautiful football.
+23:25:25: INFO: 2018-11-03 18:53:09 47: Quel Match! Premier league, quel championnat! Click My Profile to Live English Premier League (EPL) Arsenal 0-1 Mkhi needs to come off for Welbeck or Iwobi. Mkhitaryan needs to come off man ffs.
+23:26:21: INFO: 2018-11-03 18:54:31 48: Iwobi finally coming on Hopefully for Mkhitaryan. Iwobi coming in, I see an equalizer....
+23:27:14: WARNING: EXCLUDED AT 2018-11-03 18:56:23: Liverpool one more goal please. Firmino should score.
+23:27:45: WARNING: EXCLUDED AT 2018-11-03 18:58:09: Welbeck in, ramsey in, please @arsenal @UnaiEmery_. Welbeck for Aubameyang needed as well.
+23:28:32: INFO: 2018-11-03 18:59:11 49: Dont get the Ramsey sub for Aubameyang when we need a goal. Oh, another big game where Aubameyang didnt score? .
+23:29:20: INFO: 2018-11-03 19:00:47 50: Save. Van Dijk with a powerful header from a corner, Leno tips it over. 1-0, 74 mins. Ramsey for Aubameyang? Thats definitely a Wenger type of substitution.
+23:29:53: WARNING: EXCLUDED AT 2018-11-03 19:02:21: Mad that VVD could have 3 goals by now. .
+23:30:50: INFO: 2018-11-03 19:03:29 51: The Liverpool front three pace . Just get one more damn goal in Liverpool.
+23:31:24: INFO: 2018-11-03 19:05:21 52: No point putting the ball in the box when there's nobody there to get on the end of it . Ozil should have been taken off he is absolutely useless . Lacazettes touch has been awful this game!
+23:32:08: WARNING: EXCLUDED AT 2018-11-03 19:06:31: No way Arsenal is going to score.
+23:32:40: INFO: 2018-11-03 19:07:59 53: Danny Welbeck gets to play in the last 10 minutes of a one goal game but not Aubameyang. Ok then. Lacazette. 81' Arsenal 1-1 Liverpool Premier League.
+23:33:14: INFO: 2018-11-03 19:09:01 54: GOALLLLLL! Arsenal 1-0 Liverpool (Alexandre Lacazette). Iwobi to Lacazette. Amazing composure! Great goal! Goooalll Laca scores to make it 1-1 Iwobi with the assist. What a fucking goal! Take a bow lacazette!
+23:33:46: INFO: 2018-11-03 19:10:09 55: Yessssssss! Get in there!! Brilliant Arsenal, Brilliant finish Lacazette! Game on!! Lacazette Turning the Stew, that Goal Celebration thou...
+23:34:20: INFO: 2018-11-03 19:11:13 56: 84' 1-1 | Top Drawer! Laca delivers a really super finish! A top, top, top footballer!  @Arsenal . Huge Goal from Lacazette, this result would be fantastic for Chelsea. I want a draw or Arsenal win 70% Arsenal 30% draw. YES arsenal thats it...
+23:34:53: INFO: 2018-11-03 19:12:21 57: @LacazetteAlex with superb finish. Arsenal 1-1 Liverpool. Game ON. Premier League.
+23:35:27: INFO: 2018-11-03 19:13:25 58: Commentator on BT Sports in reference to Welbeck coming on: "Danny Welbeck has 5 goals already this season, most o
+23:35:59: INFO: 2018-11-03 19:14:35 59: Bellerin should have done better there. So Unai Emery did turn Iwobi into a serious baller, wow! Iwobi came in and change the game ..what a baller. Bellerin cannot shoot .
+23:36:46: INFO: 2018-11-03 19:15:41 60: Bellerin is so shit man like I can't! Man's a better IG model than a football player. .
+23:37:17: INFO: 2018-11-03 19:17:13 61: 5 mins added time. Arsenal really playing some good shit. Lucas Torreira rightfully motm. Lacazette goal! What a pass by Iwobi!
+23:37:49: INFO: 2018-11-03 19:18:15 62: Arsenal far and away the better team in this. Lovely goal by Arsenal.... 5 minutes. Come on Liverpool!
+23:38:22: INFO: 2018-11-03 19:19:19 63: BUT when you sell the way we sell and the amount we sell.. I cant put everything on the mister. Any club would struggle Salah is fucking shit.
+23:39:25: INFO: 2018-11-03 19:20:25 64: Im done lol Jurgen didnt come to win hows he taking off Salah and bring on Matip? When we need a goal? Mo Salah the greatest one season wonder goes off. How is Salah walking on the pitch. Who let him out of Holding's pocket?
+23:40:02: INFO: 2018-11-03 19:22:31 65: Premier League Na ESPN Fim de jogo Arsenal 1 x 1 Liverpool  Lacazette Milner. Most entertaining premier league game in a while! Excellent performance by Arsenal. Good good performance by Arsenal. We should have won it. But we did great! COYG. Arsenal lucky to get a draw but Id have taken it before the match. We go again.
+23:40:38: INFO: 2018-11-03 19:23:37 66: Good game of football Ars Liv . HAPPY BIRTHDAY UNAI!!! Well deserved point  good performance lads. Terrific game of football. s best performance of the season. Xhaka, Holding,Torreira outstanding. We are shit, arsenal dominated for most, Fabinho is shit, Salah is shit and I dont really know what Alisson was doing.
+23:41:12: INFO: 2018-11-03 19:24:43 67: Paul merson:  arsenal will get hammered by Liverpool Arsenal 1-1 Liverpool Merson right now. James Milner scores his 50th Premier League goal! Good news for Liverpool: His teams are unbeaten in the Premier League when h
+23:41:49: INFO: 2018-11-03 19:25:59 68: A draw against Liverpool aint bad but we easily couldve won that man . Oh my goodness Arsenal actually outplayed Liverpool . salah lost in Rob Holdings pocket.
+23:42:30: INFO: 2018-11-03 19:27:07 69: Best striker in Premier League = Plays for Arsenal 2nd best striker in Premier League = Plays for Arsenal Lacazette  Aubameyang . Proud of this football club @Arsenal. Tbh under wenger we would have lost that game 3-1. Why does Klopp rest and manage his players only to then game manage them in the big games they need to win? @premierleague - Full-Time Arsenal 1-1 Liverpool Milner 61' Lacazette 82' (Iwobi) Based on this performance, wo
+23:42:56: WARNING: EXCLUDED AT 2018-11-03 19:28:15: Arsenal loose the ball Lucas Torreira:. MILNER! A fantastic goal for Liverpool!
+23:43:27: INFO: 2018-11-03 19:29:23 70: Lucas Torreira is the signing of the season, exactly what Arsenal needed. When you realise there's STILL another Premier League game to go... @talkSPORT What a game. Well done to Arsenal but they were lucky. Finally, I agree with you about my club. .
+23:44:18: INFO: 2018-11-03 19:30:31 71: Arsenal fans when they see Paul Merson after he said Liverpool will take Arsenal to the cleaners  Alexandre Lacazette scores late to extend Arsenal's unbeaten run to 14 matches!
+23:44:55: INFO: 2018-11-03 19:32:05 72: @WorldWideChels Sd we went from Morata was better than lukaku and lacazette, then morata and lukaku swapped and now
+23:45:34: INFO: 2018-11-03 19:33:29 73: Paul Merson said it's only a time before we got ripped open by Liverpool or anyone, I can say is fuck off Paul Merson clueless twat. Morata and Lukaku are you watching what it takes to be a brilliant striker?. A lesson from Lacazette. Absolute Class! Arsenal 1-1 Liverpool: Lacazette classy goal cancels Milner strike. Granit Xhaka vs Liverpool  97 Passes  87% Pass Accuracy  5 Tackles  15 Ball Recoveries  1 Chance Created 
+23:46:07: WARNING: Filtered out document from summary (1.000000): RT @EPLStatman: Granit Xhaka vs Liverpool 
+
+ 97 Passes
+ 87% Pass Accuracy
+ 5 Tackles
+ 15 Ball Recoveries 
+ 1 Chance Created 
+
+#Arsenal
+23:46:07: INFO: 2018-11-03 19:34:45 74: @LivEchoLFC A fair result, but Liverpool's early disallowed goal should have stood. Torreira MOTM for me. Was an absolute work horse today. Liverpool were lucky today. Dirty bastards. I agree with this. This game was there to be won and we havent turned up. Disappointing.
+23:47:12: INFO: 2018-11-03 19:35:53 75: Liverpool got away with one there. Very good side but we outplayed them on the day.
+23:48:11: INFO: 2018-11-03 19:38:02 76: @Arsenal @premierleague @LacazetteAlex Here is Lacazettes goal, a world class goal. Follow our main account @goalstv3 WAAAAAAAAA WAAAAA LETSSS FUCKING GOOOOOOOOO ! LACAZETTE !
+23:48:51: WARNING: Filtered out document from summary (0.713742): Has to be between Torreira and Holding #MOTM
+23:48:51: WARNING: EXCLUDED AT 2018-11-03 19:40:21: @Javiii_212 @TheAnfieldPlug Totally agree with you, as a Liverpool supporter.
+23:49:37: WARNING: EXCLUDED AT 2018-11-03 19:41:23: @IamBellaKush @Arsenal u gotta see the beauty from @LacazetteAlex ..
+23:50:21: INFO: 2018-11-03 19:42:55 77: Granit Xhaka made 15 ball recoveries against Liverpool - more than any other player. He also won the most tackles ton
+23:51:00: INFO: 2018-11-03 19:44:23 78: What a game of football that was. Xhaka and Torreira were superb in the midfield, thought Bellerin was very good as well we played well against a big team! @LTorreira34 @Arsenal.
+23:52:06: INFO: Stream finished
+23:52:18: INFO: 2018-11-03 19:45:41 last: @btsportfootball Martin Keown not the brightest. Hes just said Salah not real deal and (top of the league) Liverpo
+23:52:18: INFO: Last document published at time 2018-11-03 19:47:54 (UTC)
+23:52:18: INFO: Consumer finished
+
+Script done on Mon Nov  5 23:52:18 2018

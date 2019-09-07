@@ -1,0 +1,66 @@
+Script started on Mon Oct  1 18:49:01 2018
+18:49:03: INFO: Stream started with pid 29202
+18:49:03: INFO: Understanding started with pid 29203
+18:49:03: INFO: Skipped 0 tweets
+18:50:33: INFO: Stream finished
+18:50:44: INFO: IDF created with 12577 documents
+18:51:24: INFO: Resolved Matip to Jol Matip (0.060277)
+18:51:24: INFO: Resolved Milner to James Milner (0.035916)
+18:51:25: INFO: Resolved Chelsea to Chelsea F.C. (0.014912)
+18:51:26: INFO: Resolved Liverpool to Liverpool F.C. (0.013843)
+18:51:27: INFO: Could not resolve Man to The Man (0.000275)
+4 partitions
+18:54:32: INFO: Found participants: James Milner, Chelsea F.C., Joel Matip, Liverpool F.C.
+18:54:32: INFO: Extrapolated participants: England national football B team, Liverpool F.C.Manchester United F.C. rivalry, Arsenal F.C.Chelsea F.C. rivalry, Striker, Away goals rule, Robertson, Water polo, United Kingdom national football team, Association football, England national football C team, PFA Team of the Year, Eden Hazard, Germany national football team, Henderson, Forward, Australia national cricket team, Lallana, Barkley, Gomez, Two-legged tie, Ice hockey, American football, Sturridge, England national under-21 football team, James Milner, Great Britain Olympic football team, Captain, Shaqiri, Rugby league, Alexander-Arnold
+18:54:32: INFO: 34 participants found
+18:54:32: INFO: Understanding finished
+18:54:32: INFO: Consumer finished
+18:54:32: INFO: Stream started with pid 29333
+18:54:32: INFO: Understanding started with pid 29334
+18:54:32: INFO: Event tracking starting
+18:54:33: INFO: Skipped 5446 tweets
+r 	18:56:27: INFO: 2018-09-29 16:15:16 (1, 1): Chelsea vs Liverpool live WATCH-FREE-Chelsea vs Liverpool Live Stream Watch Chelsea vs Liverpool Live Stream Online Fr
+18:59:31: INFO: 2018-09-29 16:28:00 (1, 2): Peter Drury the Shakespeare of football on commentary. GO LIVERPOOL!
+18:59:54: INFO: 2018-09-29 16:30:24 (2, 3): Kick off! Chelsea gets the game underway at Stamford Bridge.
+19:00:10: INFO: 2018-09-29 16:30:56 (2, 4): Here we go come on @ChelseaFC let's show them how is the best team in the PL. COME ON CHELSEA !!!
+19:00:35: INFO: 2018-09-29 16:32:04 (2, 5): 1 minute in, Chelsea fans singing about Gerrard *acts shocked*.
+19:01:57: INFO: 2018-09-29 16:33:40 (1, 6): Today Live Games: Chelsea vs Liverpool - England. Premier League.
+19:02:55: INFO: 2018-09-29 16:39:12 (1, 7): Chelsea fans holding a justice for Grenfell banner is bizzare they're the most right wing club there is.
+19:06:03: INFO: 2018-09-29 16:52:28 (1, 8): Gotta say this, David Luiz has been ridiculously good with his diagonals passes.
+19:08:05: INFO: 2018-09-29 16:55:12 (1, 9): Goal! Chelsea 1-0 Liverpool (Hazard): Premier League  live!
+19:08:10: WARNING: 2 checkpoints created at time 2018-09-29 17:03:44 (UTC)
+19:08:15: INFO: 2018-09-29 17:03:00 (1, 10):  GOOOAAALLL!!! Hazard gives @ChelseaFC the lead. 1-0 .
+19:08:35: INFO: 2018-09-29 17:04:16 (1, 11): 25 Goooll gol gollll!!! Chelsea 1 - 0 Liverpool Hazardddd.
+19:08:59: INFO: 2018-09-29 17:05:44 (1, 12): Rudiger you absolute tank . what a goal line clearance .
+19:09:28: INFO: 2018-09-29 17:08:00 (1, 13): Eden Hazard vs the top six: Liverpool - 6 goals and 2 assists Man Utd - 5 goals and 5 assists Tottenham - 5 goals and 3
+19:10:16: INFO: 2018-09-29 17:09:40 (1, 14): Eden Hazard is best Player in the Premier League. Period..
+19:11:15: INFO: 2018-09-29 17:15:08 (1, 15): Everton 1-3 West Ham West Ham 0-0 Chelsea West Ham 8-0 Macclesfield West Ham 3-1 Man Utd Amazing two weeks for us  http
+19:11:51: INFO: 2018-09-29 17:17:04 (1, 16): 1-0 in the first half, Im buzzing! Lets keep it up in the second half blues .
+19:12:30: INFO: 2018-09-29 17:19:48 (1, 17): Good First Half. Cmon Chelsea.
+19:13:01: INFO: 2018-09-29 17:21:20 (1, 18): Liverpool fans display 'Justice for Grenfell' banner. Chelsea fans sing 'In your Liverpool slums' .
+19:17:03: INFO: 2018-09-29 17:31:04 (1, 19): @premierleague : 2nd Half Chelsea 1-0 Liverpool Hazard 25' PEEEP! We're back underway.
+19:19:35: INFO: 2018-09-29 17:44:48 (1, 20): 58' Fantastic footwork from Sadio inside the box. Kepa with a big save to deny Mane! [1-0].
+19:19:36: WARNING: 2 checkpoints created at time 2018-09-29 17:49:44 (UTC)
+19:19:45: INFO: 2018-09-29 17:49:08 (1, 21): @TIME How was my new work ?. Are u looking For ? I will make an awesome design for u until ur satisf
+19:19:54: INFO: 2018-09-29 17:50:24 (2, 22): Save! Hazard nearly with his second of the game, but Alisson with a super save to the deny the playmaker! Your Sports Memo.
+19:20:14: INFO: 2018-09-29 17:51:00 (2, 23): 65' First change of the game for the Blues with Alvaro Morata coming on for Olivier Giroud.
+19:20:39: INFO: 2018-09-29 17:52:20 (2, 24): Salah to Chelsea so he isnt a one season wonder make it happen.
+19:21:29: INFO: 2018-09-29 17:54:00 (1, 25): David Luiz has been our best player.
+19:21:52: INFO: 2018-09-29 17:57:20 (1, 26): What a let off for Chelsea. You'd have thought Shaqiri couldn't miss.
+19:22:05: INFO: 2018-09-29 17:58:52 (2, 27): David Luiz right place right time. What a clearance off the line .
+19:22:25: INFO: 2018-09-29 17:59:32 (1, 28): 74' Second change for Chelsea with Victor Moses coming on for Willian.
+19:23:03: INFO: 2018-09-29 18:01:04 (1, 29): Eden Hazard has scored 6 goals from just 8 shots on target in the Premier League this season.  vs Liverpool 
+19:23:25: INFO: 2018-09-29 18:03:36 (1, 30): 77 Yellow card Liverpool (James Milner).
+19:23:44: INFO: 2018-09-29 18:05:32 (2, 31): PREMIER LEAGUE [LIVE] Chelsea vs Liverpool SUBSTITUTION Liverpool (78') OFF: 14 Jordan Henderson ON: 08 Naby Keita.
+19:25:33: INFO: 2018-09-29 18:06:20 (1, 32): Chelsea make their final sub as Ross Barkley comes on for Mateo Kovacic.
+19:25:54: INFO: 2018-09-29 18:13:30 (2, 33): Sorry but Eden Hazard is the best player in the Premier League by a country mile.
+19:26:10: INFO: 2018-09-29 18:15:00 (2, 34): Holy fuck Daniel Sturridge take a bow! Inspired change from Klopp.
+19:26:16: INFO: 2018-09-29 18:15:24 (2, 35): Ross Barkley is fucking horrendous by the way.
+19:26:27: INFO: 2018-09-29 18:16:04 (2, 36): Fitting end to a brilliant game. Take a bow Daniel Sturridge. Beautiful.
+19:26:34: WARNING: 2 checkpoints created at time 2018-09-29 18:17:12 (UTC)
+19:26:42: INFO: 2018-09-29 18:16:28 (1, 37): '90 Premier League Chelsea 1-1 Liverpool Live @OfficialRCTI.
+19:27:02: INFO: Stream finished
+19:27:06: INFO: Last document published at time 2018-09-29 18:19:31 (UTC)
+19:27:06: INFO: Consumer finished
+
+Script done on Mon Oct  1 19:27:07 2018

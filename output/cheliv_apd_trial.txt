@@ -1,0 +1,61 @@
+Script started on Wed Oct  3 21:03:42 2018
+21:03:45: INFO: Stream started with pid 4879
+21:03:45: INFO: Understanding started with pid 4880
+21:03:45: INFO: Skipped 0 tweets
+21:05:15: INFO: Stream finished
+21:05:25: INFO: IDF created with 12577 documents
+21:05:25: INFO: 0 participants found
+21:05:25: INFO: Understanding finished
+21:05:25: INFO: Consumer finished
+21:05:25: INFO: Stream started with pid 4929
+21:05:25: INFO: Understanding started with pid 4931
+21:05:25: INFO: Event tracking starting
+21:05:26: INFO: Skipped 5446 tweets
+21:07:20: INFO: 2018-09-29 16:15:16 (1, 1): Chelsea vs Liverpool live WATCH-FREE-Chelsea vs Liverpool Live Stream Watch Chelsea vs Liverpool Live Stream Online Fr
+21:10:24: INFO: 2018-09-29 16:28:00 (1, 2): Peter Drury the Shakespeare of football on commentary. GO LIVERPOOL!
+21:10:46: INFO: 2018-09-29 16:30:24 (2, 3): Kick off! Chelsea gets the game underway at Stamford Bridge.
+21:11:03: INFO: 2018-09-29 16:30:56 (2, 4): Here we go come on @ChelseaFC let's show them how is the best team in the PL. COME ON CHELSEA !!!
+21:11:28: INFO: 2018-09-29 16:32:04 (2, 5): 1 minute in, Chelsea fans singing about Gerrard *acts shocked*.
+21:12:50: INFO: 2018-09-29 16:33:40 (1, 6): Today Live Games: Chelsea vs Liverpool - England. Premier League.
+21:14:07: INFO: 2018-09-29 16:39:12 (1, 7): Chelsea fans holding a justice for Grenfell banner is bizzare they're the most right wing club there is.
+21:16:55: INFO: 2018-09-29 16:52:28 (1, 8): Gotta say this, David Luiz has been ridiculously good with his diagonals passes.
+21:18:58: INFO: 2018-09-29 16:55:12 (1, 9): GOAL: Chelsea 1 - 0 Liverpool. The best player in the world right now scores. He's just too good. Eden Hazard, take a
+21:19:01: WARNING: 2 checkpoints created at time 2018-09-29 17:03:44 (UTC)
+21:19:03: INFO: 2018-09-29 17:03:08 (2, 10): Wow what a fantastic goal line clearance by the beast himself Rudiger.
+21:19:12: INFO: 2018-09-29 17:03:56 (2, 11): GOAL: Chelsea 1 - 0 Liverpool. The best player in the world right now scores. He's just too good. Eden Hazard, take a
+21:19:28: INFO: 2018-09-29 17:04:28 (1, 12): 25 Goooll gol gollll!!! Chelsea 1 - 0 Liverpool Hazardddd.
+21:20:21: INFO: 2018-09-29 17:08:00 (1, 13): Eden Hazard vs the top six: Liverpool - 6 goals and 2 assists Man Utd - 5 goals and 5 assists Tottenham - 5 goals and 3
+21:21:09: INFO: 2018-09-29 17:10:20 (1, 14): Eden Hazard is unstoppable! Truly world class.
+21:22:08: INFO: 2018-09-29 17:15:08 (2, 15): West Ham 0-0 Chelsea West Ham 8-0 Macclesfield West Ham 3-1 Manchester Utd Incredible week, Manuel Pellegrini has turned
+21:22:51: INFO: 2018-09-29 17:16:24 (1, 16): It's 1-0 to Chelsea at half time. Any changes needed? Who was your player of the half for Liverpool?
+21:22:56: WARNING: 2 checkpoints created at time 2018-09-29 17:19:16 (UTC)
+21:23:17: INFO: 2018-09-29 17:19:56 (1, 17): Good First Half. Cmon Chelsea.
+21:24:20: INFO: 2018-09-29 17:21:00 (1, 18): Liverpool fans display 'Justice for Grenfell' banner. Chelsea fans sing 'In your Liverpool slums' .
+21:27:55: INFO: 2018-09-29 17:31:44 (1, 19): @premierleague : 2nd Half Chelsea 1-0 Liverpool Hazard 25' PEEEP! We're back underway.
+21:30:27: INFO: 2018-09-29 17:44:48 (1, 20): 58' Fantastic footwork from Sadio inside the box. Kepa with a big save to deny Mane! [1-0].
+21:30:28: WARNING: 2 checkpoints created at time 2018-09-29 17:49:44 (UTC)
+21:30:38: INFO: 2018-09-29 17:49:08 (1, 21): @TIME How was my new work ?. Are u looking For ? I will make an awesome design for u until ur satisf
+21:30:47: INFO: 2018-09-29 17:50:24 (2, 22): Sorry but Eden Hazard is the best player in the Premier League by a country mile.
+21:31:07: INFO: 2018-09-29 17:51:00 (2, 23): 65' First change of the game for the Blues with Alvaro Morata coming on for Olivier Giroud.
+21:31:13: INFO: 2018-09-29 17:52:20 (2, 24): Salah to Chelsea so he isnt a one season wonder make it happen.
+21:31:32: INFO: 2018-09-29 17:52:44 (1, 25): Sorry but Eden Hazard is the best player in the Premier League by a country mile.
+21:32:22: INFO: 2018-09-29 17:54:00 (1, 26): David Luiz has been our best player.
+21:32:45: INFO: 2018-09-29 17:57:20 (1, 27): What a let off for Chelsea. You'd have thought Shaqiri couldn't miss.
+21:32:58: INFO: 2018-09-29 17:58:52 (2, 28): David Luiz right place right time. What a clearance off the line .
+21:33:18: INFO: 2018-09-29 17:59:32 (1, 29): 74' Second change for Chelsea with Victor Moses coming on for Willian.
+21:33:56: INFO: 2018-09-29 18:01:04 (1, 30): Eden Hazard has scored 6 goals from just 8 shots on target in the Premier League this season.  vs Liverpool
+21:34:18: INFO: 2018-09-29 18:03:36 (1, 31): 77 Yellow card Liverpool (James Milner).
+21:34:37: INFO: 2018-09-29 18:05:32 (2, 32): How the hell do you bench Naby Keita for Jordan fucking Henderson .
+21:36:26: INFO: 2018-09-29 18:06:20 (1, 33): Chelsea make their final sub as Ross Barkley comes on for Mateo Kovacic.
+21:37:01: INFO: 2018-09-29 18:15:00 (2, 34): Holy fuck Daniel Sturridge take a bow! Inspired change from Klopp.
+21:37:05: INFO: 2018-09-29 18:15:22 (2, 35): Ross Barkley is fucking horrendous by the way.
+21:37:11: INFO: 2018-09-29 18:15:56 (2, 36): What a fuckin goal, what a fuckin man. Daniel Sturridge. Goodnight.
+21:37:16: INFO: 2018-09-29 18:16:28 (2, 37): It's now @ChelseaFC 1-1 @LFC! 88 mins Premier League.
+21:37:24: INFO: 2018-09-29 18:16:51 (2, 38): Oh. Daniel Sturridge. You beauty! Wow! Wow! What a goal. Liverpool aren't going to give this unbeaten streak up eas
+21:37:30: INFO: 2018-09-29 18:17:20 (2, 39): Tremendo ese gol del Liverpool.
+21:37:44: INFO: 2018-09-29 18:17:48 (2, 40): That Sturridge goal . In my head that's how I always strike them.
+21:37:54: INFO: Stream finished
+21:38:00: INFO: Last document published at time 2018-09-29 18:19:31 (UTC)
+21:38:00: INFO: Consumer finished
+
+Script done on Wed Oct  3 21:38:01 2018

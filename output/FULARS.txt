@@ -1,0 +1,4 @@
+Script started on Sun Oct  7 10:50:00 2018
+10:50:02: INFO: Listening for keywords: #FULARS, Fulham, Arsenal
+
+Script done on Sun Oct  7 13:05:02 2018

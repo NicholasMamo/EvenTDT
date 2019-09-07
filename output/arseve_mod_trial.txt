@@ -1,0 +1,131 @@
+Script started on Wed Sep 26 14:09:34 2018
+14:09:36: INFO: Stream started with pid 12197
+14:09:36: INFO: Understanding started with pid 12199
+14:09:36: INFO: Skipped 0 tweets
+14:22:07: INFO: IDF created with 6730 documents
+14:22:07: INFO: Stream finished
+14:22:46: INFO: Resolved Everton to Everton F.C. (0.177586)
+14:22:47: INFO: Resolved Arsenal to Arsenal Stadium (0.411295)
+14:22:48: INFO: Resolved Lucas Torreira to Lucas Torreira (0.377905)
+14:22:48: INFO: Resolved Emirates Stadium to Emirates Stadium (0.448433)
+14:22:49: INFO: Resolved Alexis Sanchez to Alexis Snchez (0.066763)
+14:22:50: INFO: Resolved Granit to Granit Xhaka (0.217059)
+14:22:51: INFO: Resolved Matteo Guendouzi to Matto Guendouzi (0.335599)
+14:22:53: INFO: Resolved Chelsea to Chelsea F.C. (0.112104)
+14:22:54: INFO: Resolved West Ham to West Ham United F.C. (0.024474)
+14:22:54: INFO: Resolved Walcott to Theo Walcott (0.140347)
+14:22:57: INFO: Resolved The Emirates!! to Emirate (0.095675)
+14:22:58: INFO: Resolved Arsene Wenger to Arsne Wenger (0.319508)
+14:22:58: INFO: Resolved Goodison to Goodison Park (0.181433)
+14:23:01: INFO: Resolved Richarlison to Richarlison (0.166996)
+14:23:02: INFO: Resolved Iwobi to Alex Iwobi (0.271453)
+14:23:02: INFO: Resolved Thierry Henry to Thierry Henry (0.024537)
+14:23:03: INFO: Resolved Ramsey to Jalen Ramsey (0.031692)
+14:24:35: INFO: Found participans: Matto Guendouzi, Chelsea F.C., West Ham United F.C., Alex Iwobi, Arsenal Stadium, Emirates Stadium, Alexis Snchez, Jalen Ramsey, Arsne Wenger, Goodison Park, Lucas Torreira, Granit Xhaka, Richarlison, Everton F.C., Thierry Henry, Emirate, Theo Walcott
+14:24:35: INFO: Extrapolated participans: Arsenal F.C., Emirates Cup, Rob Holding, Arsenal Stadium, Aaron Ramsey, Mesut zil, Arsenal F.C.Manchester United F.C. rivalry, Ainsley Maitland-Niles, Stephan Lichtsteiner, Arsenal F.C. Under-23s and Academy, Petr ech, Steve Bould, Nacho Monreal, Matto Guendouzi, Ray Kennedy, North London derby, Carl Jenkinson, Alexandre Lacazette, Tony Woodcock, Henrikh Mkhitaryan, Hctor Bellern, Shkodran Mustafi, The Invincibles, Danny Welbeck, Jimmy Rimmer, Bernd Leno, Arsenal F.C.Chelsea F.C. rivalry, History of Arsenal F.C., Sead Kolainac, Konstantinos Mavropanos
+14:24:35: INFO: 47 participants found
+14:24:35: INFO: Understanding finished
+14:24:35: INFO: Consumer finished
+14:24:35: INFO: Stream started with pid 12230
+14:24:35: INFO: Understanding started with pid 12231
+14:24:35: INFO: Event tracking starting
+14:24:40: INFO: Skipped 17303 tweets
+14:25:49: INFO: 2018-09-23 14:54:33 (1): Arsenal vs Everton live online HD streaming free LIVE TV LINK: WATCH-FREE-Arsenal vs Everto.
+14:25:58: INFO: 2018-09-23 14:54:33 (1): Arsenal vs Everton live online HD streaming free LIVE TV LINK: WATCH-FREE-Arsenal vs Everto.
+14:26:40: INFO: 2018-09-23 14:57:57 (2): Sorry I'm just not having Tom Davies as our captain.
+14:27:28: INFO: 2018-09-23 15:01:09 (3): 1: KICK-OFF! Everton get us underway at the Emirates...
+14:27:34: INFO: 2018-09-23 15:01:09 (3): Is City playing Everton? I can't tell with all those empty seats...
+14:30:25: INFO: 2018-09-23 15:12:57 (5): Watching Arsenal trying to play out of the back....
+14:31:52: INFO: 2018-09-23 15:18:45 (6): That's a big chance - @HectorBellerin puts in a dangerous cross and Pickford does well to keep out @_nachomonreal .
+14:36:59: INFO: 2018-09-23 15:39:13 (7): 38' Arsenal sub: Sokratis off injured. Rob Holding on.
+14:37:12: INFO: 2018-09-23 15:39:13 (7): Sokratis limps off the pitch following an earlier collision - lets go, Rob   Sokratis  @RobHolding95 .
+14:39:20: INFO: 2018-09-23 15:48:37 (8): Cech probably been our best player this first half while Ozil has been a ghost. Been poor so bad first half.
+14:39:24: INFO: 2018-09-23 15:48:37 (8): Cech probably been our best player this first half while Ozil has been a ghost. Been poor so bad first half.
+14:39:27: INFO: 2018-09-23 15:48:37 (8): Cech probably been our best player this first half while Ozil has been a ghost. Been poor so bad first half. HT | Goalless at the break, but not for the want of trying from Marco's men! Richarlison, Walcott and DCL all carving out grea.
+14:39:44: INFO: 2018-09-23 15:50:13 (9): Half time at Emirates Stadium. Arsenal 0-0 Everton.
+14:39:46: INFO: 2018-09-23 15:50:13 (9): Live Stream Football || Premier League || Arsenal vs Everton || Live Stream NOW || Live Today Match Online .
+14:43:10: INFO: 2018-09-23 16:03:57 (10): We're back underway - let's see an improved second half, lads   0-0  (46).
+14:43:27: INFO: 2018-09-23 16:05:05 (11): Second half under way at The Emirates... Will we see any goals???
+14:43:33: INFO: 2018-09-23 16:05:05 (11): Second half under way at The Emirates... Will we see any goals???
+14:46:04: INFO: 2018-09-23 16:15:33 (12): Beautiful goal 1-0 to the.
+14:46:04: INFO: 2018-09-23 16:15:33 (12): FINALLY!!!! Lacazette Arsenal 1-0 Everton 56".
+14:46:06: INFO: 2018-09-23 16:15:33 (12): GOAL! Arsenal 1-0 Everton Lacazette curls one into top corner.
+14:46:12: INFO: 2018-09-23 16:15:33 (12): GOAL! Arsenal 1-0 Everton Lacazette curls one into top corner.
+14:46:22: INFO: 2018-09-23 16:15:33 (12): GOAL! Alexandre Lacazette curls in a beautiful shot to give Arsenal the lead. 1-0.
+14:46:26: INFO: 2018-09-23 16:15:33 (12): GOAL! Alexandre Lacazette curls in a beautiful shot to give Arsenal the lead. 1-0.
+14:46:34: INFO: 2018-09-23 16:15:33 (12): GOAL! Alexandre Lacazette curls in a beautiful shot to give Arsenal the lead. 1-0.
+14:46:42: INFO: 2018-09-23 16:15:33 (12): GOAL! Alexandre Lacazette curls in a beautiful shot to give Arsenal the lead. 1-0.
+14:46:47: INFO: 2018-09-23 16:15:33 (12): Goal! Arsenal 2-0 Everton (Aubameyang): Premier League  live!
+14:46:50: INFO: 2018-09-23 16:15:33 (12): Goal! Arsenal 2-0 Everton (Aubameyang): Premier League  live!
+14:47:15: INFO: 2018-09-23 16:15:33 (12): Lol Aubameyang well offside he loves an offside goal vs Everton lol.
+14:47:22: INFO: 5 checkpoints created at time 2018-09-23 16:20:21 (UTC)
+14:47:22: INFO: 1279 documents
+14:47:22: INFO: Reduced to 13 documents
+14:47:25: INFO: 2018-09-23 16:20:57 (13): It's time for our first clean sheet Arsenal. We can do this.
+14:47:28: INFO: 2018-09-23 16:20:57 (13): Arsenal should keep this clean sheet against Everton.
+14:47:29: INFO: 2018-09-23 16:20:57 (13): GOAL! Arsenal 2-0 Everton (Aubameyang). Keep up to date with all the action from the Emirates as @Arsenal host @Everton l.
+14:47:43: INFO: 2018-09-23 16:20:57 (13): GOAL! Arsenal 2-0 Everton (Aubameyang). Keep up to date with all the action from the Emirates as @Arsenal host @Everton l.
+14:47:52: INFO: 2018-09-23 16:20:57 (13): Goal - AUBAMEYANG Assist - RAMSEY Arsenal 2-0 Everton (59 mins).
+14:48:08: INFO: 2018-09-23 16:20:57 (13): Goal - AUBAMEYANG Assist - RAMSEY Arsenal 2-0 Everton (59 mins).
+14:48:14: INFO: 2018-09-23 16:20:57 (13): Goal - AUBAMEYANG Assist - RAMSEY Arsenal 2-0 Everton (59 mins).
+14:48:20: INFO: 2018-09-23 16:20:57 (13): Goal - AUBAMEYANG Assist - RAMSEY Arsenal 2-0 Everton (59 mins).
+14:48:33: INFO: 2018-09-23 16:20:57 (13): Goal - AUBAMEYANG Assist - RAMSEY Arsenal 2-0 Everton (59 mins).
+14:48:35: INFO: 2 checkpoints created at time 2018-09-23 16:25:29 (UTC)
+14:48:35: INFO: 226 documents
+14:48:35: INFO: Reduced to 75 documents
+a 14:49:08: INFO: 2018-09-23 16:27:49 (14): @IDidTheIggy Arsenal are a mess. They should have been 2-0 down before 10 mins were gone.
+14:49:20: INFO: 2018-09-23 16:27:49 (14): Pls lets keep a clean sheet today!
+14:49:20: INFO: 2018-09-23 16:27:49 (14): Pls lets keep a clean sheet today!
+14:50:02: INFO: 2018-09-23 16:31:25 (16): Arsenal-Everton has now seen more goals (153) than any other fixture in Premier League history. Wrestling top spot back from.
+14:52:54: INFO: 2018-09-23 16:42:53 (19): Goal - AUBAMEYANG Assist - RAMSEY Arsenal 2-0 Everton (59 mins).
+14:53:29: INFO: 2018-09-23 16:45:13 (20): Arsenal please keep a clean sheet.
+14:53:31: INFO: 2018-09-23 16:45:13 (20): Arsenal please keep a clean sheet.
+14:54:12: INFO: 2018-09-23 16:48:05 (21): Could this be...? An Arsenal clean sheet .
+14:54:39: INFO: 2018-09-23 16:49:53 (22): Would have also given Arsenal a penalty so w'll call it even. .
+14:55:27: INFO: 2018-09-23 16:52:05 (23): So Arsenal finally keep a clean sheet after the one defender bought to keep clean sheets doesn't finish the game. Go figure...
+14:55:29: INFO: 2018-09-23 16:52:05 (23): So Arsenal finally keep a clean sheet after the one defender bought to keep clean sheets doesn't finish the game. Go figure...
+14:55:33: INFO: 2018-09-23 16:52:05 (23): So Arsenal finally keep a clean sheet after the one defender bought to keep clean sheets doesn't finish the game. Go figure...
+14:55:33: INFO: 2018-09-23 16:52:05 (23): So Arsenal finally keep a clean sheet after the one defender bought to keep clean sheets doesn't finish the game. Go figure...
+14:55:35: INFO: 2018-09-23 16:52:05 (23): So Arsenal finally keep a clean sheet after the one defender bought to keep clean sheets doesn't finish the game. Go figure...
+14:55:36: INFO: 2018-09-23 16:52:05 (23): So Arsenal finally keep a clean sheet after the one defender bought to keep clean sheets doesn't finish the game. Go figure...
+14:55:57: INFO: 2018-09-23 16:52:05 (23): A clean sheet. Finally, a clean sheet. Didn't think we'd see one this season.
+14:56:07: INFO: 3 checkpoints created at time 2018-09-23 16:55:05 (UTC)
+14:56:07: INFO: 1328 documents
+14:56:07: INFO: Reduced to 92 documents
+14:56:07: INFO: 2018-09-23 16:55:05 (24): Arsenal keeping a clean sheet. What is this nonsense?
+14:56:12: INFO: 2 checkpoints created at time 2018-09-23 16:55:45 (UTC)
+14:56:12: INFO: 726 documents
+14:56:12: INFO: Reduced to 75 documents
+14:56:12: INFO: 2018-09-23 16:55:05 (24): 2 Goals  Clean Sheet  WWWW  Top 6  3 Points  Good day in the office .
+14:56:15: INFO: 2018-09-23 16:55:05 (24): 2 Goals  Clean Sheet  WWWW  Top 6  3 Points  Good day in the office .
+14:56:20: INFO: 2018-09-23 16:55:05 (24): Arsenal keeping a clean sheet. What is this nonsense?
+14:56:32: INFO: 2018-09-23 16:55:05 (24): Arsenal keeping a clean sheet. What is this nonsense?
+14:56:35: INFO: 2 checkpoints created at time 2018-09-23 16:57:25 (UTC)
+14:56:35: INFO: 488 documents
+14:56:35: INFO: Reduced to 56 documents
+14:56:50: INFO: 2018-09-23 16:55:05 (24): 5 wins in a row and finally have kept a clean sheet. Happy Sunday!
+14:56:55: INFO: 3 checkpoints created at time 2018-09-23 16:58:37 (UTC)
+14:56:55: INFO: 759 documents
+14:56:55: INFO: Reduced to 192 documents
+14:58:04: INFO: 2018-09-23 16:55:05 (24): Arsenal keeping a clean sheet. What is this nonsense?
+14:58:24: INFO: 15 checkpoints created at time 2018-09-23 17:03:33 (UTC)
+14:58:24: INFO: 2770 documents
+14:58:24: INFO: Reduced to 97 documents
+14:58:25: INFO: 2018-09-23 17:03:33 (25): 3 points 2 goals 1 clean sheet .
+14:58:29: INFO: 4 checkpoints created at time 2018-09-23 17:04:57 (UTC)
+14:58:29: INFO: 606 documents
+14:58:29: INFO: Reduced to 129 documents
+14:58:30: INFO: 2018-09-23 17:04:57 (26): Arsenal keeping a clean sheet. What is this nonsense?
+14:58:31: INFO: 2018-09-23 17:04:57 (26): 5 wins in a row for Arsenal after Alexandre Lacazette and Pierre-Emerick Aubameyang grab the goals to defeat Everton 2-0.
+14:58:32: INFO: 2 checkpoints created at time 2018-09-23 17:05:21 (UTC)
+14:58:32: INFO: 154 documents
+14:58:32: INFO: Reduced to 6 documents
+14:58:34: INFO: 2018-09-23 17:04:57 (26): 5 wins in a row for Arsenal after Alexandre Lacazette and Pierre-Emerick Aubameyang grab the goals to defeat Everton 2-0.
+14:58:47: INFO: 2018-09-23 17:04:57 (26): 5 wins in a row for Arsenal after Alexandre Lacazette and Pierre-Emerick Aubameyang grab the goals to defeat Everton 2-0.
+14:58:50: INFO: 2018-09-23 17:04:57 (26): 5 wins in a row for Arsenal after Alexandre Lacazette and Pierre-Emerick Aubameyang grab the goals to defeat Everton 2-0.
+14:59:14: INFO: 2018-09-23 17:08:13 (27): First time for Arsenal to win 4 Premier league games in a row since 2016.
+15:00:50: INFO: Stream finished
+15:00:55: INFO: Last document published at time 2018-09-23 17:14:39 (UTC)
+15:00:55: INFO: Consumer finished
+
+Script done on Wed Sep 26 15:00:55 2018

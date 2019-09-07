@@ -1,0 +1,105 @@
+Resolved keywords:
+	Leicester City F.C.
+	Manchester
+	Leroy Sane
+	Bruyne
+	Gabriel Jesus
+	Arsenal F.C.
+	Kyle Walker
+	Guardiola
+	David Silva
+	Bernardo Silva
+	Jamie Vardy
+	Liverpool
+	Super Boxing League
+	Raheem Sterling
+	Torreira
+	The Man and the City
+	Chelsea F.C.
+	Stoke City F.C.
+
+Extrapolated keywords:
+	Manchester City F.C.
+	Stones
+	City of Manchester Stadium
+	Mendy
+	Sandler
+	Mahrez
+	Gundogan
+	Birmingham City F.C.
+	Fernandinho
+	Delph
+	Aguero
+	Laporte
+	Mangala
+	Premier League Player of the Season
+	Oleksandr Zinchenko
+	Foden
+	Diaz
+	Cardiff City F.C.
+	Claudio Bravo
+	Kompany
+	Danilo
+	Otamendi
+	Premier League Player of the Month
+	Moraes
+	Manchester United F.C.
+	Ashley Young
+	Muric
+	Premier League Goal of the Month
+	Pogba
+	PFA Young Player of the Year
+
+Listening for keywords:
+	#LEIMCI
+	Leicester
+	Manchester City
+	Leicester City F.C.
+	Manchester
+	Leroy Sane
+	Bruyne
+	Gabriel Jesus
+	Arsenal F.C.
+	Kyle Walker
+	Guardiola
+	David Silva
+	Bernardo Silva
+	Jamie Vardy
+	Liverpool
+	Super Boxing League
+	Raheem Sterling
+	Torreira
+	The Man and the City
+	Chelsea F.C.
+	Stoke City F.C.
+	Manchester City F.C.
+	Stones
+	City of Manchester Stadium
+	Mendy
+	Sandler
+	Mahrez
+	Gundogan
+	Birmingham City F.C.
+	Fernandinho
+	Delph
+	Aguero
+	Laporte
+	Mangala
+	Premier League Player of the Season
+	Oleksandr Zinchenko
+	Foden
+	Diaz
+	Cardiff City F.C.
+	Claudio Bravo
+	Kompany
+	Danilo
+	Otamendi
+	Premier League Player of the Month
+	Moraes
+	Manchester United F.C.
+	Ashley Young
+	Muric
+	Premier League Goal of the Month
+	Pogba
+	PFA Young Player of the Year
+

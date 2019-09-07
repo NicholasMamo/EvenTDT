@@ -1,0 +1,83 @@
+Script started on Tue Sep 25 18:23:06 2018
+18:23:08: INFO: Stream started with pid 29578
+18:23:08: INFO: Understanding started with pid 29579
+18:23:08: INFO: Skipped 0 tweets
+18:38:08: INFO: IDF created with 9747 documents
+18:38:09: INFO: Stream finished
+18:39:02: INFO: Resolved Everton to Everton F.C. (0.183038)
+18:39:02: INFO: Resolved Arsenal to Arsenal Stadium (0.420964)
+18:39:03: INFO: Resolved Lucas Torreira to Lucas Torreira (0.359954)
+18:39:04: INFO: Resolved Emirates Stadium to Emirates Stadium (0.456732)
+18:39:04: INFO: Resolved Alexis Sanchez to Alexis Snchez (0.061033)
+18:39:07: INFO: Resolved The Emirates!! to Emirate (0.092554)
+18:39:08: INFO: Resolved Chelsea to Chelsea F.C. (0.103259)
+18:39:09: INFO: Resolved Matteo Guendouzi to Matto Guendouzi (0.332168)
+18:39:10: INFO: Resolved Granit to Granit Xhaka (0.211710)
+18:39:10: INFO: Resolved Walcott to Theo Walcott (0.142203)
+18:39:12: INFO: Resolved Richarlison to Richarlison (0.170513)
+18:39:13: INFO: Resolved West Ham to West Ham United F.C. (0.023839)
+18:39:14: INFO: Resolved Arsene Wenger to Arsne Wenger (0.325221)
+18:39:15: INFO: Resolved Goodison to Goodison Park (0.182810)
+18:39:17: INFO: Resolved Iwobi to Alex Iwobi (0.271810)
+18:39:18: INFO: Resolved Thierry Henry to Thierry Henry (0.022747)
+18:40:31: INFO: Found participans: Arsne Wenger, Richarlison, Alex Iwobi, Chelsea F.C., Theo Walcott, Thierry Henry, Emirates Stadium, Everton F.C., Granit Xhaka, Lucas Torreira, West Ham United F.C., Emirate, Goodison Park, Matto Guendouzi, Alexis Snchez, Arsenal Stadium
+18:40:31: INFO: Extrapolated participans: North London derby, Sead Kolainac, Alexandre Lacazette, Bernd Leno, Petr ech, Aaron Ramsey, Nacho Monreal, Danny Welbeck, Laurent Koscielny, Ainsley Maitland-Niles, Rob Holding, Alex Iwobi, Arsenal F.C.Chelsea F.C. rivalry, Arsenal F.C., Sokratis Papastathopoulos, Arsenal F.C.Manchester United F.C. rivalry, Shkodran Mustafi, Pierre-Emerick Aubameyang, Mesut zil, Arsne Wenger, Steve Bould, Emiliano Martnez, Konstantinos Mavropanos, Stephan Lichtsteiner, Carl Jenkinson, History of Arsenal F.C., Henrikh Mkhitaryan, Hctor Bellern, The Invincibles, Tony Woodcock
+18:40:31: INFO: 46 participants found
+18:40:31: INFO: Understanding finished
+18:40:31: INFO: Consumer finished
+18:40:31: INFO: Stream started with pid 29919
+18:40:31: INFO: Understanding started with pid 29920
+18:40:31: INFO: Event tracking starting
+18:40:36: INFO: Skipped 20505 tweets
+18:41:40: INFO: 2018-09-23 15:04:13 (1): **($$$)** Arsenal vs Everton live stream llive stream ~!~! Live Stream - Total SportekHotspur: Probable Lineups,.
+18:44:24: INFO: 2018-09-23 15:15:09 (2): Arsenal vs Everton Soccer Live On Your Iphone or Android or PC - English Premier League - 23-Sep -.
+18:45:40: INFO: 2018-09-23 15:20:13 (3): @MyrtleRDavis1 Arsenal's last home defeat against Everton came in their last match against them without Arsene Wenger in the dugoutas.
+18:45:40: INFO: 2018-09-23 15:20:13 (3): Arsenal versus Everton Soccer Live Streaming - English Premier League - 23-Sep -.
+18:45:50: INFO: 2018-09-23 15:20:13 (3): @MyrtleRDavis1 Arsenal's last home defeat against Everton came in their last match against them without Arsene Wenger in the dugouttryry.
+18:49:24: INFO: 2018-09-23 15:35:09 (4): Arsenal VER Everton Soccer Live Online - English Premier League - 23-Sep -.
+^CTraceback (most recent call last):
+  File "implementation/accelerated_eld.py", line 225, in <module>
+    stream_out = p_stream.join()
+  File "/usr/lib/python3.5/multiprocessing/process.py", line 121, in join
+    res = self._popen.wait(timeout)
+  File "/usr/lib/python3.5/multiprocessing/popen_fork.py", line 51, in wait
+    return self.poll(os.WNOHANG if timeout == 0.0 else 0)
+  File "/usr/lib/python3.5/multiprocessing/popen_fork.py", line 29, in poll
+    pid, sts = os.waitpid(self.pid, flag)
+KeyboardInterrupt
+Process Process-6:
+Traceback (most recent call last):
+  File "/usr/lib/python3.5/multiprocessing/process.py", line 249, in _bootstrap
+    self.run()
+  File "/usr/lib/python3.5/multiprocessing/process.py", line 93, in run
+    self._target(*self._args, **self._kwargs)
+  File "implementation/accelerated_eld.py", line 120, in consume_task
+    loop.run_until_complete(consume_queue(consumer, idf))
+  File "/usr/lib/python3.5/asyncio/base_events.py", line 375, in run_until_complete
+    self.run_forever()
+  File "/usr/lib/python3.5/asyncio/base_events.py", line 345, in run_forever
+    self._run_once()
+  File "/usr/lib/python3.5/asyncio/base_events.py", line 1276, in _run_once
+    event_list = self._selector.select(timeout)
+  File "/usr/lib/python3.5/selectors.py", line 441, in select
+    fd_event_list = self._epoll.poll(timeout, max_ev)
+KeyboardInterrupt
+Process Process-5:
+Traceback (most recent call last):
+  File "/usr/lib/python3.5/multiprocessing/process.py", line 249, in _bootstrap
+    self.run()
+  File "/usr/lib/python3.5/multiprocessing/process.py", line 93, in run
+    self._target(*self._args, **self._kwargs)
+  File "implementation/accelerated_eld.py", line 132, in consume_stream_task
+    loop.run_until_complete(create_stream(EVENT_DURATION, SKIP_TIME + UNDERSTANDING_DURATION))
+  File "/usr/lib/python3.5/asyncio/base_events.py", line 375, in run_until_complete
+    self.run_forever()
+  File "/usr/lib/python3.5/asyncio/base_events.py", line 345, in run_forever
+    self._run_once()
+  File "/usr/lib/python3.5/asyncio/base_events.py", line 1276, in _run_once
+    event_list = self._selector.select(timeout)
+  File "/usr/lib/python3.5/selectors.py", line 441, in select
+    fd_event_list = self._epoll.poll(timeout, max_ev)
+KeyboardInterrupt
+
+Script done on Tue Sep 25 18:49:38 2018

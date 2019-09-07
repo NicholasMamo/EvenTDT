@@ -1,0 +1,268 @@
+Script started on Sun Sep  2 18:33:00 2018
+18:33:02: INFO: Stream started with pid 24142
+18:33:02: INFO: Consumer started with pid 24143
+18:33:06: INFO: Skipped 15351 tweets
+18:36:51: INFO: Understanding finished
+18:36:51: INFO: Event tracking starting
+18:39:50: INFO: 2018-08-27 18:56:57 (1): [[WaTcH-FrEe]] Manchester United vs Tottenham Hotspur Live Stream ... Team news for Man United vs Tottenham live HD TV.
+18:40:15: INFO: 2018-08-27 18:58:34 (2): Manchester United- De Gea, Valencia, Smalling, Shaw, Matic, Herrera, Fred, Pogba, Lingard, Lukaku.
+18:40:36: INFO: 2018-08-27 19:00:01 (3): Am I the only one that is actually excited to watch United's new formation? GLORY GLORY MAN UNITED! MUNTOT.
+18:40:42: INFO: 2018-08-27 19:00:01 (3): MNF Man U v Spurs ..... and kick off!
+18:40:43: INFO: 2018-08-27 19:00:01 (3): LIVE: Manchester United vs. Tottenham Hotspur.
+18:40:53: INFO: 2018-08-27 19:00:01 (3): LIVE: Manchester United vs. Tottenham Hotspur.
+18:41:11: INFO: 2018-08-27 19:02:21 (4):  Manchester United vs Tottenham Hotspur.
+18:42:13: INFO: 2018-08-27 19:06:29 (5): Manchester United vs Tottenham Hotspur Live Stream free - Premier League Live (Live Here) = (.
+18:42:53: INFO: 2018-08-27 19:09:09 (6): Manchester United vs Tottenham Hotspur English Premier League Live Stream  Live now here  .
+18:43:11: INFO: 2018-08-27 19:10:21 (7): Manchester United Vs Tottenham Hotspur 0 - 0 - (Live).
+18:44:38: INFO: 2018-08-27 19:16:09 (8): Watch^^R)()( Manchester United vs Tottenham Hotspurlive stream. Watch this game live and online for free. Premier League: Au.
+18:44:46: INFO: 2018-08-27 19:16:09 (8): Watch^^R)()( Manchester United vs Tottenham Hotspurlive stream. Watch this game live and online for free. Premier League: Au.
+18:44:49: INFO: 2018-08-27 19:16:09 (8): That Lukaku miss is going to come back and haunt us isnt it? MUNTOT.
+18:45:20: INFO: 2018-08-27 19:18:57 (9): Man United vs Tottenham Hotspur Live.
+18:46:34: INFO: 2018-08-27 19:23:53 (10): Kane don collect yellow card. MUFC MUNTOT.
+18:46:42: INFO: 2018-08-27 19:23:53 (10): Kane don collect yellow card. MUFC MUNTOT.
+18:48:12: INFO: 2018-08-27 19:30:25 (11): Stone wall penalty for Spurs.
+18:48:14: INFO: 2018-08-27 19:30:25 (11): Ref bottling it. Defo Pen. MUNTOT. Stone wall penalty for Spurs.
+18:48:15: INFO: 2018-08-27 19:30:25 (11): Wish we had that ref yesterday..that was a stonewall pen for spurs that.
+18:48:16: INFO: 2018-08-27 19:30:25 (11): Wish we had that ref yesterday..that was a stonewall pen for spurs that.
+18:48:21: INFO: 2018-08-27 19:30:25 (11): Wish we had that ref yesterday..that was a stonewall pen for spurs that.
+18:48:22: INFO: 2018-08-27 19:30:25 (11): Wish we had that ref yesterday..that was a stonewall pen for spurs that.
+18:48:30: INFO: 2018-08-27 19:30:25 (11): @SoccerAM Not even a foul ! Pen to spurs ref a joke.
+18:48:33: INFO: 2018-08-27 19:30:25 (11): @ChrisRM22 This ref is shit spurs shouldve had a pen and Kane shouldnt have been booked.
+18:49:04: INFO: 2018-08-27 19:33:53 (12): He made a Pogs ear of that! wow. MUNTOT MNF.
+18:49:12: INFO: 2018-08-27 19:33:53 (12): He made a Pogs ear of that! wow. MUNTOT MNF.
+18:49:44: INFO: 2018-08-27 19:36:33 (13): Lol no attempts on goal for Tottenham.
+18:50:38: INFO: 2018-08-27 19:40:09 (14): Spurs first shot in 39 minutes MNUTOT.
+18:50:52: INFO: 2018-08-27 19:40:09 (14): Manchester United fans chanting: Hugo Lloris, he drinks when he wants. .
+18:52:14: INFO: 2018-08-27 19:46:33 (15): Half time at Old Trafford: Manchester United 0 - 0 Tottenham Hotspur. MUFC THFC .
+18:52:27: INFO: 2018-08-27 19:46:33 (15): Half time at Old Trafford: Manchester United 0 - 0 Tottenham Hotspur. MUFC THFC .
+18:52:37: INFO: 2018-08-27 19:46:33 (15): Half time at Old Trafford: Manchester United 0 - 0 Tottenham Hotspur. MUFC THFC .
+18:52:45: INFO: 2018-08-27 19:46:33 (15): Half time at Old Trafford: Manchester United 0 - 0 Tottenham Hotspur. MUFC THFC .
+18:53:05: INFO: 2018-08-27 19:49:55 (16):  MI-TEMPS ! MAN. UNITED 0-0 TOTTENHAM.
+18:55:39: INFO: 2018-08-27 20:00:12 (17): JOB CLOSES TOMORROW! Unemployed youth are invited for Fitter job-training or learnership by AfriSam, biggest cemen.
+18:56:23: INFO: 2018-08-27 20:03:09 (18): Can you see the Luke Shaw run MUNTOT.
+18:57:14: INFO: 2018-08-27 20:06:33 (19): Spurs 1 up. Harry Kane header.
+18:57:14: INFO: 2018-08-27 20:06:33 (19): Spurs 1 up. Harry Kane header.
+18:57:16: INFO: 2018-08-27 20:06:33 (19): Spurs 1 up. Harry Kane header.
+18:57:17: INFO: 2018-08-27 20:06:33 (19): Spurs 1 up. Harry Kane header.
+18:57:17: INFO: 2018-08-27 20:06:33 (19): Spurs 1 up. Harry Kane header.
+18:57:18: INFO: 2018-08-27 20:06:33 (19): Spurs 1 up. Harry Kane header.
+18:57:27: INFO: 2018-08-27 20:06:33 (19): Spurs 1 up. Harry Kane header.
+18:57:34: INFO: 2018-08-27 20:06:33 (19): Spurs 1 up. Harry Kane header.
+18:57:37: INFO: 3 checkpoints created at time 2018-08-27 20:07:53 (UTC)
+18:57:37: INFO: 797 documents
+18:57:37: INFO: Reduced to 214 documents
+18:57:49: INFO: 2018-08-27 20:06:33 (19): Spurs 1 up. Harry Kane header.
+18:58:01: INFO: 2018-08-27 20:06:33 (19): Spurs 1 up. Harry Kane header.
+18:58:15: INFO: 2018-08-27 20:06:33 (19): Spurs 1 up. Harry Kane header.
+18:58:29: INFO: 8 checkpoints created at time 2018-08-27 20:10:37 (UTC)
+18:58:29: INFO: 3997 documents
+18:58:29: INFO: Reduced to 435 documents
+18:58:37: INFO: 3 checkpoints created at time 2018-08-27 20:11:41 (UTC)
+18:58:37: INFO: 1697 documents
+18:58:37: INFO: Reduced to 494 documents
+18:58:39: INFO: 2018-08-27 20:11:41 (20): 52' Manchester United 0-2 Tottenham.
+18:58:42: INFO: 2 checkpoints created at time 2018-08-27 20:12:13 (UTC)
+18:58:42: INFO: 790 documents
+18:58:42: INFO: Reduced to 294 documents
+18:58:46: INFO: 2018-08-27 20:11:41 (20): 52' Manchester United 0-2 Tottenham.
+18:58:47: INFO: 2018-08-27 20:11:41 (20): 52' Manchester United 0-2 Tottenham.
+18:58:54: INFO: 2018-08-27 20:11:41 (20): 52' Manchester United 0-2 Tottenham.
+18:59:02: INFO: 2018-08-27 20:11:41 (20): 52' Manchester United 0-2 Tottenham.
+18:59:09: INFO: 2018-08-27 20:11:41 (20): ( 52')  BUUUUTT DE LUCAS !!! Manchester United 0-2 Tottenham.
+18:59:19: INFO: 2018-08-27 20:11:41 (20): ( 52')  BUUUUTT DE LUCAS !!! Manchester United 0-2 Tottenham.
+18:59:22: INFO: 2 checkpoints created at time 2018-08-27 20:14:53 (UTC)
+18:59:22: INFO: 826 documents
+18:59:22: INFO: Reduced to 244 documents
+18:59:33: INFO: 2018-08-27 20:11:41 (20): ( 52')  BUUUUTT DE LUCAS !!! Manchester United 0-2 Tottenham.
+18:59:36: INFO: 2 checkpoints created at time 2018-08-27 20:15:49 (UTC)
+18:59:36: INFO: 704 documents
+18:59:36: INFO: Reduced to 158 documents
+18:59:39: INFO: 2018-08-27 20:11:41 (20): ( 52')  BUUUUTT DE LUCAS !!! Manchester United 0-2 Tottenham.
+18:59:43: INFO: 2018-08-27 20:11:41 (20): ( 52')  BUUUUTT DE LUCAS !!! Manchester United 0-2 Tottenham.
+18:59:46: INFO: 2 checkpoints created at time 2018-08-27 20:16:25 (UTC)
+18:59:46: INFO: 821 documents
+18:59:46: INFO: Reduced to 103 documents
+19:00:03: INFO: 2018-08-27 20:11:41 (20): Tottenham fans singing, "You're getting sacked in the morning" to Jose Mourinho at Old Trafford.
+19:00:56: INFO: 2018-08-27 20:11:41 (20): Tottenham fans singing, "You're getting sacked in the morning" to Jose Mourinho at Old Trafford.
+19:01:19: INFO: 14 checkpoints created at time 2018-08-27 20:21:21 (UTC)
+19:01:19: INFO: 4998 documents
+19:01:19: INFO: Reduced to 315 documents
+19:01:20: INFO: 2018-08-27 20:21:21 (21): Spurs fans chant: You're getting sacked in the morning Utd fans chant: we fucking hope so.
+19:01:20: INFO: 2018-08-27 20:21:21 (21): Spurs fans singing 'sacked in the morning' to Mourinho but they won't be singing for long if United take their manager. mufc.
+19:01:26: INFO: 5 checkpoints created at time 2018-08-27 20:22:57 (UTC)
+19:01:26: INFO: 1394 documents
+19:01:26: INFO: Reduced to 265 documents
+19:01:30: INFO: 2 checkpoints created at time 2018-08-27 20:23:25 (UTC)
+19:01:30: INFO: 575 documents
+19:01:30: INFO: Reduced to 79 documents
+19:01:32: INFO: 2018-08-27 20:23:37 (22): Phil Jones on Lucas Moura MUNTOT.
+19:01:32: INFO: 2018-08-27 20:23:37 (22): Phil Jones on Lucas Moura MUNTOT. "Sacked in the morning, you're getting sacked in the morning," thfc fans serenade Mourinho. MUNTOT.
+19:01:38: INFO: 2018-08-27 20:23:37 (22): "Sacked in the morning, you're getting sacked in the morning," thfc fans serenade Mourinho. MUNTOT.
+19:01:39: INFO: 2018-08-27 20:23:37 (22): Lucas Moura makes it 2-0 to Tottenham. MUFC MUNTOT. "Sacked in the morning, you're getting sacked in the morning," thfc fans serenade Mourinho. MUNTOT.
+19:03:13: INFO: 2018-08-27 20:23:37 (22): Manchester United fans right now... Lucas Moura makes it 2-0 to Tottenham. MUFC MUNTOT.
+19:03:34: INFO: 17 checkpoints created at time 2018-08-27 20:30:25 (UTC)
+19:03:34: INFO: 5237 documents
+19:03:34: INFO: Reduced to 61 documents
+19:03:39: INFO: 4 checkpoints created at time 2018-08-27 20:31:53 (UTC)
+19:03:39: INFO: 1357 documents
+19:03:39: INFO: Reduced to 201 documents
+19:03:53: INFO: 2018-08-27 20:33:09 (23): Mourinho - sacked in the morning? spurs MUNTOT.
+19:03:53: INFO: 2018-08-27 20:33:09 (23): Mourinho - sacked in the morning? spurs MUNTOT. Phil Jones on Lucas Moura MUNTOT.
+19:04:03: INFO: 2018-08-27 20:33:09 (23): Mourinho - sacked in the morning? spurs MUNTOT. Phil Jones on Lucas Moura MUNTOT.
+19:04:38: INFO: 2018-08-27 20:36:09 (24): Tottenham fans singing, "You're getting sacked in the morning" to Jose Mourinho at Old Trafford.
+19:05:03: INFO: 2018-08-27 20:37:47 (25): Mourinho - sacked in the morning? spurs MUNTOT.
+19:05:10: INFO: 2018-08-27 20:37:47 (25):  Manchester United vs Tottenham | Lucas Moura (GOAL) 52'. Mourinho - sacked in the morning? spurs MUNTOT.
+19:05:15: INFO: 2018-08-27 20:37:47 (25): Mourinho - sacked in the morning? spurs MUNTOT.  Manchester United vs Tottenham | Lucas Moura (GOAL) 52'.
+19:05:27: INFO: 2018-08-27 20:37:47 (25): Mourinho - sacked in the morning? spurs MUNTOT.  Manchester United vs Tottenham | Lucas Moura (GOAL) 52'.
+19:05:28: INFO: 2018-08-27 20:37:47 (25): Mourinho - sacked in the morning? spurs MUNTOT.  Manchester United vs Tottenham | Lucas Moura (GOAL) 52'.
+19:05:35: INFO: 2018-08-27 20:37:47 (25): Mourinho - sacked in the morning? spurs MUNTOT. Breaking | Tottenham Hotspur have agreed a deal with Fenerbahce to send French midfielder Moussa Sissoko on loan for a season. (R.
+19:06:02: INFO: 2018-08-27 20:37:47 (25): "Sacked in the morning, you're getting sacked in the morning," thfc fans serenade Mourinho. MUNTOT. Breaking | Tottenham Hotspur have agreed a deal with Fenerbahce to send French midfielder Moussa Sissoko on loan for a season. (R.
+19:06:08: INFO: 4 checkpoints created at time 2018-08-27 20:41:45 (UTC)
+19:06:08: INFO: 1583 documents
+19:06:08: INFO: Reduced to 120 documents
+19:06:12: INFO: 2018-08-27 20:42:09 (26): Lucas Moura scores again. 3-0 to Tottenham. MUFC MUNTOT.
+19:06:16: INFO: 2018-08-27 20:42:09 (26): Lucas Moura scores again. 3-0 to Tottenham. MUFC MUNTOT.
+19:06:20: INFO: 2018-08-27 20:42:09 (26): Lucas Moura scores again. 3-0 to Tottenham. MUFC MUNTOT.
+19:06:21: INFO: 2018-08-27 20:42:09 (26): Lucas Moura scores again. 3-0 to Tottenham. MUFC MUNTOT.
+19:06:29: INFO: 2018-08-27 20:42:09 (26): 0-3 Lucas moura like a new signing COYS.
+19:06:33: INFO: 2 checkpoints created at time 2018-08-27 20:43:33 (UTC)
+19:06:33: INFO: 1113 documents
+19:06:33: INFO: Reduced to 387 documents
+19:06:37: INFO: 2018-08-27 20:42:09 (26): 0-3 Lucas moura like a new signing COYS.
+19:06:41: INFO: 2018-08-27 20:42:09 (26): 0-3 Lucas moura like a new signing COYS.
+19:06:45: INFO: 2018-08-27 20:42:09 (26): 0-3 Lucas moura like a new signing COYS.
+19:06:53: INFO: 3 checkpoints created at time 2018-08-27 20:44:37 (UTC)
+19:06:53: INFO: 2243 documents
+19:06:53: INFO: Reduced to 537 documents
+19:06:55: INFO: 2018-08-27 20:44:37 (27): Spurs reportedly agree deal to send Moussa Sissoko on loan to Turkish side Fenerbahce .
+19:06:55: INFO: 2018-08-27 20:44:37 (27): "Sacked in the morning, you're getting sacked in the morning," thfc fans serenade Mourinho. MUNTOT.
+19:07:00: INFO: 2 checkpoints created at time 2018-08-27 20:45:17 (UTC)
+19:07:00: INFO: 1433 documents
+19:07:00: INFO: Reduced to 571 documents
+19:07:03: INFO: 2018-08-27 20:44:37 (27): Tottenham supporters are singing Hes getting sacked in the morning.
+19:07:03: INFO: 2018-08-27 20:44:37 (27): Tottenham supporters are singing Hes getting sacked in the morning.
+19:07:03: INFO: 2018-08-27 20:44:37 (27): Tottenham supporters are singing Hes getting sacked in the morning.
+19:07:07: INFO: 2 checkpoints created at time 2018-08-27 20:45:49 (UTC)
+19:07:07: INFO: 1168 documents
+19:07:07: INFO: Reduced to 299 documents
+19:07:08: INFO: 2018-08-27 20:44:37 (27): Mourinho - sacked in the morning? spurs MUNTOT.
+19:07:08: INFO: 2018-08-27 20:44:37 (27): Mourinho - sacked in the morning? spurs MUNTOT.
+19:07:09: INFO: 2018-08-27 20:44:37 (27): Mourinho - sacked in the morning? spurs MUNTOT.
+19:07:15: INFO: 2018-08-27 20:44:37 (27): Mourinho - sacked in the morning? spurs MUNTOT.
+19:07:23: INFO: 2018-08-27 20:44:37 (27): Mourinho - sacked in the morning? spurs MUNTOT.
+19:07:27: INFO: 2 checkpoints created at time 2018-08-27 20:47:09 (UTC)
+19:07:27: INFO: 1167 documents
+19:07:27: INFO: Reduced to 292 documents
+19:07:34: INFO: 2018-08-27 20:44:37 (27): Mourinho - sacked in the morning? spurs MUNTOT.
+19:07:43: INFO: 2018-08-27 20:44:37 (27): Mourinho - sacked in the morning? spurs MUNTOT.
+19:07:47: INFO: 2018-08-27 20:44:37 (27): Mourinho - sacked in the morning? spurs MUNTOT.
+19:08:07: INFO: 2018-08-27 20:44:37 (27): Manchester United vs Tottenham: Spurs fans serenade Jose Mourinho with 'you're getting sacked in the morning'.
+19:08:23: INFO: 7 checkpoints created at time 2018-08-27 20:50:05 (UTC)
+19:08:23: INFO: 4333 documents
+19:08:23: INFO: Reduced to 119 documents
+19:08:24: INFO: 2018-08-27 20:50:05 (28): There's only one Lucas Moura  Love that! Class away support as always COYS.
+19:08:32: INFO: 3 checkpoints created at time 2018-08-27 20:51:12 (UTC)
+19:08:32: INFO: 2221 documents
+19:08:32: INFO: Reduced to 354 documents
+19:08:34: INFO: 2018-08-27 20:51:12 (29): "Sacked in the morning, you're getting sacked in the morning," thfc fans serenade Mourinho. MUNTOT.
+19:08:34: INFO: 2018-08-27 20:51:12 (29): Hopefully he does get sacked in the morning. Spurs have been class.
+19:08:38: INFO: 2 checkpoints created at time 2018-08-27 20:51:50 (UTC)
+19:08:38: INFO: 1272 documents
+19:08:38: INFO: Reduced to 282 documents
+19:08:44: INFO: 2018-08-27 20:52:13 (30): Manchester United 0-3 Tottenham.
+19:08:44: INFO: 2018-08-27 20:52:13 (30): Manchester United 0-3 Tottenham.
+19:08:52: INFO: 2018-08-27 20:52:13 (30): MS: Manchester United 0-3 Tottenham MUNTOT PL.
+19:08:54: INFO: 2018-08-27 20:52:13 (30): MS: Manchester United 0-3 Tottenham MUNTOT PL.
+19:09:02: INFO: 2018-08-27 20:52:13 (30): Man United 0-3 Tottenham.
+19:09:08: INFO: 2 checkpoints created at time 2018-08-27 20:53:45 (UTC)
+19:09:08: INFO: 1092 documents
+19:09:08: INFO: Reduced to 134 documents
+19:09:15: INFO: 2018-08-27 20:54:25 (31): FULL TIME: Manchester United 0-3 Tottenham Hotspur THFC COYS.
+19:09:19: INFO: 2018-08-27 20:54:25 (31): FULL TIME: Manchester United 0-3 Tottenham Hotspur THFC COYS.
+19:09:23: INFO: 2018-08-27 20:54:25 (31): Tottenham fans singing, "You're getting sacked in the morning" to Jose Mourinho at Old Trafford.
+19:09:26: INFO: 2018-08-27 20:54:25 (31): Tottenham fans singing, "You're getting sacked in the morning" to Jose Mourinho at Old Trafford.
+19:09:38: INFO: 2018-08-27 20:54:25 (31):  Manchester United 0-3 Tottenham | Lucas Moura (GOAL) 84'.
+19:09:40: INFO: 2018-08-27 20:54:25 (31):  Manchester United 0-3 Tottenham | Lucas Moura (GOAL) 84'.
+19:09:45: INFO: 2 checkpoints created at time 2018-08-27 20:56:17 (UTC)
+19:09:45: INFO: 1328 documents
+19:09:45: INFO: Reduced to 565 documents
+19:09:50: INFO: 2018-08-27 20:54:25 (31):  Manchester United 0-3 Tottenham | Lucas Moura (GOAL) 84'.
+19:09:53: INFO: 2018-08-27 20:54:25 (31):  Manchester United 0-3 Tottenham | Lucas Moura (GOAL) 84'.
+19:09:56: INFO: 2018-08-27 20:54:25 (31):  Manchester United 0-3 Tottenham | Lucas Moura (GOAL) 84'.
+19:10:07: INFO: 3 checkpoints created at time 2018-08-27 20:57:21 (UTC)
+19:10:07: INFO: 2231 documents
+19:10:07: INFO: Reduced to 685 documents
+19:10:10: INFO: 2018-08-27 20:57:21 (32): Hes just scored two goals against them however Utd fans getting selfies with Lucas Moura at full time. Youd get t.
+19:10:10: INFO: 2018-08-27 20:57:21 (32): Spurs just pumped united and youve got united fans falling over themselves to get a selfie with a spurs player .
+19:10:10: INFO: 2018-08-27 20:57:21 (32): Spurs just pumped united and youve got united fans falling over themselves to get a selfie with a spurs player .
+19:10:19: INFO: 3 checkpoints created at time 2018-08-27 20:58:17 (UTC)
+19:10:19: INFO: 1963 documents
+19:10:19: INFO: Reduced to 550 documents
+19:10:29: INFO: 3 checkpoints created at time 2018-08-27 20:59:05 (UTC)
+19:10:29: INFO: 1646 documents
+19:10:29: INFO: Reduced to 134 documents
+19:10:35: INFO: 2018-08-27 20:59:33 (33): Go on Lucas Moura! His second of the day! MUNTOT.
+19:10:35: INFO: 2018-08-27 20:59:33 (33): Tottenham fans singing, "You're getting sacked in the morning" to Jose Mourinho at Old Trafford.
+19:10:35: INFO: 2018-08-27 20:59:33 (33): Tottenham fans singing, "You're getting sacked in the morning" to Jose Mourinho at Old Trafford.
+19:10:41: INFO: 2018-08-27 20:59:33 (33):  Manchester United 0-3 Tottenham | Lucas Moura (GOAL) 84'.
+19:10:48: INFO: 2018-08-27 20:59:33 (33): Manchester United 0-3 Tottenham.
+19:10:48: INFO: 2018-08-27 20:59:33 (33):  Manchester United 0-3 Tottenham | Lucas Moura (GOAL) 84'.
+19:10:52: INFO: 2 checkpoints created at time 2018-08-27 21:00:49 (UTC)
+19:10:52: INFO: 949 documents
+19:10:52: INFO: Reduced to 253 documents
+19:11:00: INFO: 2018-08-27 20:59:33 (33): Manchester United 0-3 Tottenham.
+19:11:07: INFO: 2018-08-27 20:59:33 (33): Manchester United 0-3 Tottenham.
+19:11:12: INFO: 2 checkpoints created at time 2018-08-27 21:02:05 (UTC)
+19:11:12: INFO: 876 documents
+19:11:12: INFO: Reduced to 118 documents
+19:11:18: INFO: 2018-08-27 20:59:33 (33):  Manchester United 0-3 Tottenham | Lucas Moura (GOAL) 84'.
+19:11:26: INFO: 2018-08-27 20:59:33 (33):  Manchester United 0-3 Tottenham | Lucas Moura (GOAL) 84'.
+19:11:33: INFO: 2018-08-27 20:59:33 (33):  Manchester United 0-3 Tottenham | Lucas Moura (GOAL) 84'.
+19:11:36: INFO: 2018-08-27 20:59:33 (33):  Manchester United 0-3 Tottenham | Lucas Moura (GOAL) 84'.
+19:11:42: INFO: 2 checkpoints created at time 2018-08-27 21:04:01 (UTC)
+19:11:42: INFO: 1356 documents
+19:11:42: INFO: Reduced to 577 documents
+19:11:48: INFO: 2018-08-27 20:59:33 (33):  Manchester United 0-3 Tottenham | Lucas Moura (GOAL) 84'.
+19:11:53: INFO: 3 checkpoints created at time 2018-08-27 21:04:45 (UTC)
+19:11:53: INFO: 1325 documents
+19:11:53: INFO: Reduced to 109 documents
+19:12:02: INFO: 2018-08-27 21:05:33 (34): Man United 0-3 Spurs.
+19:12:04: INFO: 2018-08-27 21:05:33 (34):  Manchester United 0-3 Tottenham | Lucas Moura (GOAL) 84'.
+19:12:15: INFO: 2018-08-27 21:05:33 (34):  Manchester United 0-3 Tottenham | Lucas Moura (GOAL) 84'.
+19:12:15: INFO: 2018-08-27 21:05:33 (34):  Manchester United 0-3 Tottenham | Lucas Moura (GOAL) 84'.
+19:12:22: INFO: 2018-08-27 21:05:33 (34):  Manchester United 0-3 Tottenham | Lucas Moura (GOAL) 84'. Mourinho - sacked in the morning? spurs MUNTOT.
+19:12:25: INFO: 2 checkpoints created at time 2018-08-27 21:07:05 (UTC)
+19:12:25: INFO: 746 documents
+19:12:25: INFO: Reduced to 109 documents
+19:12:30: INFO: 2018-08-27 21:05:33 (34):  Manchester United 0-3 Tottenham | Lucas Moura (GOAL) 84'.
+19:12:32: INFO: 2018-08-27 21:05:33 (34):  Manchester United 0-3 Tottenham | Lucas Moura (GOAL) 84'.
+19:12:36: INFO: 2 checkpoints created at time 2018-08-27 21:07:45 (UTC)
+19:12:36: INFO: 820 documents
+19:12:36: INFO: Reduced to 134 documents
+19:12:42: INFO: 2018-08-27 21:05:33 (34):  Manchester United 0-3 Tottenham | Lucas Moura (GOAL) 84'.
+19:12:44: INFO: 2018-08-27 21:05:33 (34):  Manchester United 0-3 Tottenham | Lucas Moura (GOAL) 84'.
+19:12:48: INFO: 2 checkpoints created at time 2018-08-27 21:08:33 (UTC)
+19:12:48: INFO: 867 documents
+19:12:48: INFO: Reduced to 306 documents
+19:12:52: INFO: 2018-08-27 21:05:33 (34):  Manchester United 0-3 Tottenham | Lucas Moura (GOAL) 84'.
+19:12:56: INFO: 2 checkpoints created at time 2018-08-27 21:09:05 (UTC)
+19:12:56: INFO: 925 documents
+19:12:56: INFO: Reduced to 107 documents
+19:13:07: INFO: 2018-08-27 21:09:41 (35): Lucas Moura makes it 2-0 to Tottenham. MUFC MUNTOT.
+19:13:11: INFO: 2 checkpoints created at time 2018-08-27 21:10:05 (UTC)
+19:13:11: INFO: 681 documents
+19:13:11: INFO: Reduced to 115 documents
+19:13:15: INFO: 2018-08-27 21:09:41 (35): Lucas Moura scores again. 3-0 to Tottenham. MUFC MUNTOT.
+19:13:32: INFO: 2018-08-27 21:11:37 (36): Mourinho - sacked in the morning? spurs MUNTOT.
+19:13:36: INFO: 2018-08-27 21:11:37 (36): Mourinho - sacked in the morning? spurs MUNTOT. Manchester United 0-3 Tottenham.
+19:13:51: INFO: 2018-08-27 21:11:37 (36): Man United 0-3 Spurs. Mourinho - sacked in the morning? spurs MUNTOT.
+19:14:01: INFO: 2018-08-27 21:11:37 (36): Mourinho - sacked in the morning? spurs MUNTOT. Man United 0-3 Spurs.
+19:14:17: INFO: 2018-08-27 21:14:41 (37): Spurs reportedly agree deal with Fenerbahce for Moussa Sissoko.
+19:14:18: INFO: 2018-08-27 21:14:41 (37): Breaking | Tottenham Hotspur have agreed a deal with Fenerbahce to send French midfielder Moussa Sissoko on loan for a season. (R.
+19:14:20: INFO: Stream finished
+19:14:21: INFO: 2018-08-27 21:14:41 (37): Breaking | Tottenham Hotspur have agreed a deal with Fenerbahce to send French midfielder Moussa Sissoko on loan for a season. (R.
+19:14:22: INFO: 2018-08-27 21:14:41 (37): Beating United 3-0 at Old Trafford Moussa Sissoko on his way to Fenerbahce on loan Tottenham fans... MUNTOT https://t.c.
+19:14:26: INFO: Last document published at time 2018-08-27 21:14:57 (UTC)
+19:14:26: INFO: Consumer finished
+
+Script done on Sun Sep  2 19:14:26 2018
