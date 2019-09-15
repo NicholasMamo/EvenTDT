@@ -81,7 +81,16 @@ def main():
 
 	args = setup_args()
 
+	"""
+	Create the data directory if it does not exist.
+	"""
 
+	output = args.output[0]
+	track = args.track[0]
+	data_dir = os.path.join(output, track[0])
+
+	if not os.path.exists(data_dir):
+		os.makedirs(data_dir)
 
 if __name__ == "__main__":
 	main()
