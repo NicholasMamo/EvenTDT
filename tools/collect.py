@@ -32,10 +32,14 @@ import os
 import sys
 
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
+sys.path.insert(1, os.path.join(sys.path[0], '../libraries'))
 
 import conf
 
+from twitter.twevent.listener import TweetListener
+
 from tweepy import OAuthHandler
+from tweepy import Stream
 
 def setup_args():
 	"""
@@ -100,6 +104,16 @@ def main():
 
 	auth = OAuthHandler(conf.ACCOUNTS[0]['CONSUMER_KEY'], conf.ACCOUNTS[0]['CONSUMER_SECRET'])
 	auth.set_access_token(conf.ACCOUNTS[0]['ACCESS_TOKEN'], conf.ACCOUNTS[0]['ACCESS_TOKEN_SECRET'])
+
+	"""
+	If only the understanding corpus needs to be collected, track normally during the understanding period.
+	"""
+	if args.U:
+		file_name = os.path.join(data_dir, 'understanding.json')
+		with open(file_name, 'w') as file:
+			listener = TweetListener(file, max_time=args.understanding * 60, silent=False)
+			stream = Stream(auth, listener)
+			stream.filter(track=track, languages=["en"])
 
 if __name__ == "__main__":
 	main()
