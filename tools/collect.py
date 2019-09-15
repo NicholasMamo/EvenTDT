@@ -35,6 +35,8 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 import conf
 
+from tweepy import OAuthHandler
+
 def setup_args():
 	"""
 	Set up and get the list of command-line arguments.
@@ -91,6 +93,13 @@ def main():
 
 	if not os.path.exists(data_dir):
 		os.makedirs(data_dir)
+
+	"""
+	Set up the authentication with the Twitter Stream API.
+	"""
+
+	auth = OAuthHandler(conf.ACCOUNTS[0]['CONSUMER_KEY'], conf.ACCOUNTS[0]['CONSUMER_SECRET'])
+	auth.set_access_token(conf.ACCOUNTS[0]['ACCESS_TOKEN'], conf.ACCOUNTS[0]['ACCESS_TOKEN_SECRET'])
 
 if __name__ == "__main__":
 	main()
