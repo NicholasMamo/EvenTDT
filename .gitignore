@@ -1,3 +1,4 @@
-.ftpconfig
+__pycache__
 
+.ftpconfig
 conf.py
