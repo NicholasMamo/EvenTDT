@@ -28,18 +28,21 @@ The implemented modes of operation are:
 """
 
 import argparse
+import json
 import os
 import sys
+import time
 
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 sys.path.insert(1, os.path.join(sys.path[0], '../libraries'))
 
-import conf
-
+from logger import logger
 from twitter.twevent.listener import TweetListener
 
 from tweepy import OAuthHandler
 from tweepy import Stream
+
+import conf
 
 def setup_args():
 	"""
@@ -110,10 +113,28 @@ def main():
 	"""
 	if args.U:
 		file_name = os.path.join(data_dir, 'understanding.json')
+
+		start = time.time()
+		logger.info('Starting to collect understanding corpus')
 		with open(file_name, 'w') as file:
-			listener = TweetListener(file, max_time=args.understanding * 60, silent=False)
+			listener = TweetListener(file, max_time=args.understanding * 60, silent=True)
 			stream = Stream(auth, listener)
 			stream.filter(track=track, languages=["en"])
+		logger.info('Understanding corpus collected')
+		end = time.time()
+
+		"""
+		Save the meta data of the collected file.
+		"""
+		meta_file_name = os.path.join(data_dir, 'understanding.meta.json')
+		with open(meta_file_name, 'w') as meta_file:
+			meta = {
+				'keywords': track,
+				'output': file_name,
+				'start': start,
+				'end': end,
+			}
+			meta_file.write(json.dumps(meta))
 
 if __name__ == "__main__":
 	main()
