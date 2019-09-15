@@ -12,11 +12,13 @@ To run the script, use:
 .. code-block:: bash
 
     ./tools/collect.py \\
-		-t "'#ARSWAT' Arsenal Watford"
+		-t '#ARSWAT' Arsenal Watford \\
+		-o data
 
 Accepted arguments:
 
 	- -t --track		A list of tracking keywords.
+	- -o --output		The data directory where the corpus should be written.
 """
 
 import argparse
@@ -34,6 +36,7 @@ def setup_args():
 	Accepted arguments:
 
 		- -t --track		A list of tracking keywords.
+		- -o --output		The data directory where the corpus should be written.
 
 	:return: The command-line arguments.
 	:rtype: list
@@ -42,6 +45,8 @@ def setup_args():
 	parser = argparse.ArgumentParser(description="Collect a corpus of tweets.")
 	parser.add_argument('-t', '--track', nargs='+', type=str, required=True,
 						action='append', help='<Required> The initial tracking keywords.')
+	parser.add_argument('-o', '--output', nargs='+', type=str, required=True,
+						help='<Required> The data directory where the corpus should be written.')
 
 	args = parser.parse_args()
 	return args
