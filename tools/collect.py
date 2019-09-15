@@ -8,10 +8,6 @@ Each event, described by the first tracking keyword, has its own directory.
 All related corpora are stored together in this directory.
 Each corpus is a JSON file, where each line is one tweet.
 
-The implemented modes of operation are:
-
-- Collect only the understanding period
-
 To run the script, use:
 
 .. code-block:: bash
@@ -25,6 +21,10 @@ Accepted arguments:
 	- -t --track			<Required> A list of tracking keywords.
 	- -o --output			<Required> The data directory where the corpus should be written.
 	- -u --understanding	<Optional> The length of the understanding period in minutes. Defaults to an hour.
+
+The implemented modes of operation are:
+
+	- -U					<Optional> Collect only the understanding corpus.
 """
 
 import argparse
@@ -41,15 +41,21 @@ def setup_args():
 
 	Accepted arguments:
 
-		- -t --track			A list of tracking keywords.
-		- -o --output			The data directory where the corpus should be written.
-		- -u --understanding	The length of the understanding period in minutes. Defaults to an hour.
+		- -t --track			<Required> A list of tracking keywords.
+		- -o --output			<Required> The data directory where the corpus should be written.
+		- -u --understanding	<Optional> The length of the understanding period in minutes. Defaults to an hour.
+		- -U					<Optional> Collect only the understanding corpus.
 
 	:return: The command-line arguments.
 	:rtype: list
 	"""
 
 	parser = argparse.ArgumentParser(description="Collect a corpus of tweets.")
+
+	"""
+	Parameters that define how the corpus should be collected.
+	"""
+
 	parser.add_argument('-t', '--track', nargs='+', type=str, required=True,
 						action='append', help='<Required> The initial tracking keywords.')
 	parser.add_argument('-o', '--output', nargs='+', type=str, required=True,
@@ -58,9 +64,15 @@ def setup_args():
 						default=60, required=False,
 						help='<Optional> The length of the understanding period in minutes. Defaults to an hour.')
 
+	"""
+	The modes of operation.
+	"""
+
+	parser.add_argument('-U', action='store_true',
+						help='<Optional> Collect only the understanding corpus.')
+
 	args = parser.parse_args()
 	return args
-
 
 def main():
 	"""
@@ -68,7 +80,8 @@ def main():
 	"""
 
 	args = setup_args()
-	print(args)
+
+
 
 if __name__ == "__main__":
 	main()
