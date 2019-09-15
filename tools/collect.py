@@ -134,7 +134,7 @@ def main():
 				'start': start,
 				'end': end,
 			}
-			meta_file.write(json.dumps(meta))
+			meta_file.write(json.dumps(meta) + "\n")
 
 if __name__ == "__main__":
 	main()
