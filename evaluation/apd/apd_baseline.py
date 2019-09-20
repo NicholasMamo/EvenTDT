@@ -43,7 +43,7 @@ if len(sys.argv) > 1:
 	"""
 	filename = sys.argv[1]
 
-	with open(os.path.join("/home/memonick/data/idf.json"), "r") as idf_file:
+	with open(os.path.join("/home/memonick/Documents/EvenTDT/data/idf.json"), "r") as idf_file:
 		general_idf = json.loads(idf_file.readline())
 		tokenizer = Tokenizer(stopwords=stopwords.words("english"),
 			normalize_words=True,
@@ -52,7 +52,7 @@ if len(sys.argv) > 1:
 		term_weighting = TFIDF(general_idf)
 
 		corpus = []
-		with open("/mnt/data/twitter/%s" % filename, "r") as f:
+		with open("/home/memonick/Documents/EvenTDT/data/%s/understanding.json" % filename, "r") as f:
 			for tweet in f:
 				tweet = json.loads(tweet)
 				if "retweeted_status" in tweet and "quoted_status" not in tweet:
