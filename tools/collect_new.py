@@ -15,7 +15,7 @@ stream_url = "https://api.twitter.com/labs/1/tweets/stream/filter?format=detaile
 rules_url = "https://api.twitter.com/labs/1/tweets/stream/filter/rules"
 
 sample_rules = [
-	{ 'value': 'barcelona', 'tag': 'single' },
+	{ 'value': 'newcastle', 'tag': 'single' },
 	# { 'value': 'madrid', 'tag': 'single' },
 	# { 'value': 'tottenham', 'tag': 'single' },
 	# { 'value': 'atletico', 'tag': 'single' },
@@ -103,7 +103,7 @@ def stream_connect(auth):
 			if 'data' in response_data:
 				if '…' in response_data['data']['text']:
 					# pprint(response_data)
-					pass
+					print(response_data['data']['text'])
 				else:
 					print(response_data['data']['text'])
 			else:
