@@ -102,10 +102,8 @@ def main():
 	"""
 	Create the data directory if it does not exist.
 	"""
-	output = args.output[0]
-	track = args.track[0]
+	output, track = args.output[0], args.track[0]
 	data_dir = os.path.join(output, track[0])
-
 	if not os.path.exists(data_dir):
 		os.makedirs(data_dir)
 
@@ -149,13 +147,7 @@ def main():
 			'end': end
 		})
 
-	"""
-	Save the meta data of the collected datasets.
-	"""
-	meta_filename = os.path.join(data_dir, 'meta.json')
-	with open(meta_filename, 'w') as meta_file:
-		for collection in meta:
-			meta_file.write(json.dumps(collection) + "\n")
+	save_meta(os.path.join(data_dir, 'meta.json'), meta)
 
 def collect(auth, track, filename, time, lang=None, *args, **kwargs):
 	"""
@@ -181,6 +173,20 @@ def collect(auth, track, filename, time, lang=None, *args, **kwargs):
 		listener = TweetListener(file, max_time=time, *args, **kwargs)
 		stream = Stream(auth, listener)
 		stream.filter(track=track, languages=lang)
+
+def save_meta(filename, meta):
+	"""
+	Save the metadata of the collected datasets.
+
+	:param filename: The filename where to write the metadata.
+	:type filename: str
+	:param meta: The metadata to save.
+	:type meta: list of dict
+	"""
+	meta_filename = os.path.join(filename)
+	with open(meta_filename, 'w') as meta_file:
+		for collection in meta:
+			meta_file.write(json.dumps(collection) + "\n")
 
 if __name__ == "__main__":
 	main()
