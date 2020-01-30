@@ -63,12 +63,18 @@ def augmented_normalize(v, a=0.5):
 		f = a + (1 - a) \\frac{f}{x}
 
 	where :math:`x` is the magnitude of the highest dimension :math:`f` in the vector.
+	:math:`a` is the augmentation, between 0 and 1, inclusive.
 
 	:param v: The vector that will be normalized
 	:type v: :class:`eventdt.vsm.vector.Vector`
 	:param a: The minimum magnitude of each dimension.
 	:type a: float
+
+	:raises: :class:`ValueError`
 	"""
+
+	if not 0 <= a <= 1:
+		raise ValueError(f"The augmentation must be between 0 and 1 inclusive, {a} received")
 
 	n = v.copy()
 

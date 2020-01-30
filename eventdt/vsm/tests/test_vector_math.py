@@ -47,6 +47,17 @@ class TestVectorMath(unittest.TestCase):
 		self.assertEqual({ "x": 0.6, "y": 1, "z": 0.2 }, { dimension: round(value, 5) for dimension, value in augmented_normalize(v, 0.2).dimensions.items() })
 		self.assertEqual({ "x": 0.5, "y": 1, "z": 0 }, { dimension: round(value, 5) for dimension, value in augmented_normalize(v, 0).dimensions.items() })
 
+	def test_augmented_normalization_bounds(self):
+		"""
+		Test that the augmented normalization's augmentation is bound between 0 and 1.
+		"""
+
+		v = Vector({ "x": 1, "y": 2, "z": 0 })
+		augmented_normalize(v, a=0)
+		augmented_normalize(v, a=1)
+		self.assertRaises(ValueError, augmented_normalize, v, a=-0.1)
+		self.assertRaises(ValueError, augmented_normalize, v, a=1.1)
+
 	def test_augmented_normalize_empty_vector(self):
 		"""
 		Test that augmented normalizing an empty vector returns the same empty vector.
