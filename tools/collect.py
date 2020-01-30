@@ -73,7 +73,7 @@ def setup_args():
 
 	parser.add_argument('-t', '--track', nargs='+', type=str, required=True,
 						action='append', help='<Required> The initial tracking keywords.')
-	parser.add_argument('-o', '--output', nargs='+', type=str, required=True,
+	parser.add_argument('-o', '--output', nargs=1, type=str, required=True,
 						help='<Required> The data directory where the corpus should be written.')
 	parser.add_argument('-u', '--understanding', nargs='?', type=int,
 						default=60, required=False,
