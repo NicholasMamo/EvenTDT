@@ -117,6 +117,7 @@ class Vector(Attributable):
 		"""
 		Normalize the vector.
 		"""
+		
 		self._dimensions = vector_math.normalize(self).get_dimensions()
 
 	def copy(self):

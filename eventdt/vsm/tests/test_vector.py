@@ -26,7 +26,7 @@ class TestVector(unittest.TestCase):
 		"""
 
 		v = Vector()
-		self.assertEqual({}, v.get_dimensions())
+		self.assertEqual({ }, v.get_dimensions())
 
 	def test_constructor(self):
 		"""
@@ -56,7 +56,7 @@ class TestVector(unittest.TestCase):
 		Test initializing a dimension that already exists.
 		"""
 
-		v = Vector({"x": 2, "y": 1})
+		v = Vector({"x": 1, "y": 1})
 		v.initialize_dimension("x", 2)
 		self.assertEqual(1, v.get_dimension("x"))
 
@@ -78,7 +78,7 @@ class TestVector(unittest.TestCase):
 
 		v = Vector({"x": 3, "y": 2, "z": 4})
 		v.clear_dimensions()
-		self.assertEqual({}, v.get_dimensions())
+		self.assertEqual({ }, v.get_dimensions())
 
 	def test_clear_nonexisting_dimension(self):
 		"""
@@ -106,6 +106,24 @@ class TestVector(unittest.TestCase):
 		v = Vector({"x": 3, "y": 1.2, "z": -2})
 		v.normalize()
 		self.assertEqual({ "x": 0.789474, "y": 0.315789, "z": -0.526316 }, { key: round(value, 6) for key, value in v.get_dimensions().items() })
+
+	def test_normalize_empty_vector(self):
+		"""
+		Test that when normalizing an empty vector, the resulting vector is also empty.
+		"""
+
+		v = Vector({ })
+		v.normalize()
+		self.assertEqual({ }, v.get_dimensions())
+
+	def test_normalize_zero_length_vector(self):
+		"""
+		Test that when normalizing a vector with a zero length, the resulting vector is also empty.
+		"""
+
+		v = Vector({ 'x': 0 })
+		v.normalize()
+		self.assertEqual({ 'x': 0 }, v.get_dimensions())
 
 	def test_copy(self):
 		"""
