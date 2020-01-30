@@ -14,24 +14,24 @@ apd_tests() {
 	echo "----------"
 	echo "Extractor"
 	echo "----------"
-	python3 -m unittest libraries.apd.extractors.local.tests.test_local_extractors
+	python3 -m unittest eventdt.apd.extractors.local.tests.test_local_extractors
 	echo "----------"
 	echo "Scorer"
 	echo "----------"
-	python3 -m unittest libraries.apd.scorers.local.tests.test_local_scorers
+	python3 -m unittest eventdt.apd.scorers.local.tests.test_local_scorers
 	echo "----------"
 	echo "Resolver"
 	echo "----------"
-	python3 -m unittest libraries.apd.resolvers.local.tests.test_local_resolvers
-	python3 -m unittest libraries.apd.resolvers.external.tests.test_external_resolvers
+	python3 -m unittest eventdt.apd.resolvers.local.tests.test_local_resolvers
+	python3 -m unittest eventdt.apd.resolvers.external.tests.test_external_resolvers
 	echo "----------"
 	echo "Extrapolator"
 	echo "----------"
-	python3 -m unittest libraries.apd.extrapolators.external.tests.test_external_extrapolators
+	python3 -m unittest eventdt.apd.extrapolators.external.tests.test_external_extrapolators
 	echo "----------"
 	echo "Postprocessor"
 	echo "----------"
-	python3 -m unittest libraries.apd.postprocessors.external.tests.test_external_postprocessors
+	python3 -m unittest eventdt.apd.postprocessors.external.tests.test_external_postprocessors
 	return
 }
 
@@ -43,29 +43,29 @@ document_tests() {
 	echo "----------"
 	echo "Term Weighting"
 	echo "----------"
-	python3 -m unittest libraries.vector.nlp.tests.test_term_weighting
+	python3 -m unittest eventdt.vsm.nlp.tests.test_term_weighting
 
 	echo "----------"
 	echo "Document"
 	echo "----------"
-	python3 -m unittest libraries.vector.nlp.tests.test_document
+	python3 -m unittest eventdt.vsm.nlp.tests.test_document
 
 	echo "----------"
 	echo "Tokenizer"
 	echo "----------"
-	python3 -m unittest libraries.vector.nlp.tests.test_tokenizer
+	python3 -m unittest eventdt.vsm.nlp.tests.test_tokenizer
 
 	echo "----------"
 	echo "Cleaning"
 	echo "----------"
-	python3 -m unittest libraries.vector.nlp.cleaners.tests.test_cleaners
+	python3 -m unittest eventdt.vsm.nlp.cleaners.tests.test_cleaners
 }
 
 graph_tests() {
 	echo "=========="
 	echo "Graph"
 	echo "=========="
-	python3 -m unittest libraries.graph.tests.test_graph
+	python3 -m unittest eventdt.graph.tests.test_graph
 }
 
 queue_tests() {
@@ -76,12 +76,12 @@ queue_tests() {
 	echo "----------"
 	echo "Base Queue"
 	echo "----------"
-	python3 -m unittest libraries.queues.tests.test_queue
+	python3 -m unittest eventdt.queues.tests.test_queue
 
 	echo "----------"
 	echo "Filter"
 	echo "----------"
-	python3 -m unittest libraries.queues.consumer.filter.tests.test_filter
+	python3 -m unittest eventdt.queues.consumer.filter.tests.test_filter
 }
 
 summarization_tests() {
@@ -89,15 +89,15 @@ summarization_tests() {
 	echo "Summarization"
 	echo "=========="
 
-	python3 -m unittest libraries.summarization.tests.test_summary
+	python3 -m unittest eventdt.summarization.tests.test_summary
 
-	python3 -m unittest libraries.summarization.algorithms.tests.test_mmr
-	python3 -m unittest libraries.summarization.algorithms.tests.test_graph
+	python3 -m unittest eventdt.summarization.algorithms.tests.test_mmr
+	python3 -m unittest eventdt.summarization.algorithms.tests.test_graph
 
 	echo "----------"
 	echo "Scorer"
 	echo "----------"
-	python3 -m unittest libraries.summarization.scorers.tests.test_scorers
+	python3 -m unittest eventdt.summarization.scorers.tests.test_scorers
 }
 
 topic_detection_tests() {
@@ -108,7 +108,7 @@ topic_detection_tests() {
 	echo "----------"
 	echo "Memory Nutrition Store"
 	echo "----------"
-	python3 -m unittest libraries.topic_detection.nutrition_store.tests.test_memory_nutrition_store
+	python3 -m unittest eventdt.topic_detection.nutrition_store.tests.test_memory_nutrition_store
 
 	echo "----------"
 	echo "Algorithms"
@@ -117,34 +117,34 @@ topic_detection_tests() {
 	echo ""
 	echo "Mamo Algorithms"
 	echo "----------"
-	python3 -m unittest libraries.topic_detection.algorithms.tests.test_mamo
+	python3 -m unittest eventdt.topic_detection.algorithms.tests.test_mamo
 
 	echo ""
 	echo "Cataldi Algorithms"
 	echo "----------"
-	python3 -m unittest libraries.topic_detection.algorithms.tests.test_cataldi
+	python3 -m unittest eventdt.topic_detection.algorithms.tests.test_cataldi
 
 	echo ""
 	echo "Zhao Algorithms"
 	echo "----------"
-	python3 -m unittest libraries.topic_detection.algorithms.tests.test_zhao
+	python3 -m unittest eventdt.topic_detection.algorithms.tests.test_zhao
 }
 
 vector_tests() {
 	echo "=========="
 	echo "Vector"
 	echo "=========="
-	python3 -m unittest libraries.vector.tests.test_attributable
+	python3 -m unittest eventdt.vsm.tests.test_attributable
 
 	echo "----------"
 	echo "Vectors"
 	echo "----------"
-	python3 -m unittest libraries.vector.tests.test_vector
+	python3 -m unittest eventdt.vsm.tests.test_vector
 
 	echo "----------"
 	echo "Vector Math"
 	echo "----------"
-	python3 -m unittest libraries.vector.tests.test_vector_math
+	python3 -m unittest eventdt.vsm.tests.test_vector_math
 
 	echo "----------"
 	echo "Clustering"
@@ -153,12 +153,12 @@ vector_tests() {
 	echo ""
 	echo "Base Cluster"
 	echo "----------"
-	python3 -m unittest libraries.vector.cluster.tests.test_cluster
+	python3 -m unittest eventdt.vsm.cluster.tests.test_cluster
 
 	echo ""
 	echo "Algorithms"
 	echo "----------"
-	python3 -m unittest libraries.vector.cluster.algorithms.tests.test_no_k_means
+	python3 -m unittest eventdt.vsm.cluster.algorithms.tests.test_no_k_means
 }
 
 wikipedia_tests() {
@@ -169,7 +169,7 @@ wikipedia_tests() {
 	echo "----------"
 	echo "Link Collector"
 	echo "----------"
-	python3 -m unittest libraries.wikinterface.tests.test_linkcollector
+	python3 -m unittest eventdt.wikinterface.tests.test_linkcollector
 }
 
 if getopts "t:" o
