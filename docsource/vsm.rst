@@ -23,3 +23,12 @@ Vectors
    :members:
    :private-members:
    :special-members:
+
+===========
+Vector Math
+===========
+
+.. automodule:: eventdt.vsm.vector_math
+   :members:
+   :private-members:
+   :special-members:

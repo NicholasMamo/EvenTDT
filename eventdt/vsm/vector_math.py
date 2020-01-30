@@ -15,9 +15,16 @@ from vsm import vector
 def magnitude(v):
 	"""
 	Get the magnitude of the given vector.
+	The magnitude is computed as:
+
+	.. math::
+
+		||v|| = \\sqrt{\\sum_{n=1}^{V} {v_n^2}}
+
+	where :math:`v` is a vector having :math:`V` dimensions.
 
 	:param v: The vector whose magnitude will be calculated.
-	:type v: :class:`vector.vector.Vector`
+	:type v: :class:`eventdt.vsm.vector.Vector`
 	"""
 
 	return math.sqrt(sum([value ** 2 for value in v.dimensions.values()]))
@@ -25,9 +32,16 @@ def magnitude(v):
 def normalize(v):
 	"""
 	Normalize the given vector.
+	Normalization is computed as:
+
+	.. math::
+
+		f = \\frac{f}{||v||}
+
+	where :math:`f` is a feature in vector :math:`v`.
 
 	:param v: The vector that will be normalized.
-	:type v: :class:`vector.vector.Vector`
+	:type v: :class:`eventdt.vsm.vector.Vector`
 	"""
 
 	n = v.copy()
@@ -42,14 +56,16 @@ def normalize(v):
 
 def augmented_normalize(v, a=0.5):
 	"""
-	Normalize the given vector using the formula: \
+	Normalize the given vector using the formula:
 
-		f_j = a + (1 - a) f_j / x_j \
+	.. math::
 
-	where `x_j` is the highest `f_j` in the vector.
+		f = a + (1 - a) \\frac{f}{x}
+
+	where :math:`x` is the magnitude of the highest dimension :math:`f` in the vector.
 
 	:param v: The vector that will be normalized
-	:type v: :class:`vector.vector.Vector`
+	:type v: :class:`eventdt.vsm.vector.Vector`
 	:param a: The minimum magnitude of each dimension.
 	:type a: float
 	"""
@@ -65,13 +81,19 @@ def augmented_normalize(v, a=0.5):
 def concatenate(vectors):
 	"""
 	Concatenate a list of vectors and return a new vector.
-	This means adding the dimensions together.
+	This means adding the dimensions together:
+
+	.. math::
+
+		f = \\sum_{i=1}^{|V|}{f_i}
+
+	where :math:`f` is the weight of the concatenated vector, and :math:`f_i` is the weight of the same feature `f` in each vector in the set :math:`V`.
 
 	:param vectors: A list of vectors
-	:type vectors: list of :class:`vector.vector.Vector` instances
+	:type vectors: list of :class:`eventdt.vsm.vector.Vector` instances
 
 	:return: A single vector
-	:rtype: :class:`vector.vector.Vector`
+	:rtype: :class:`eventdt.vsm.vector.Vector`
 	"""
 
 	concatenated = { }
@@ -84,11 +106,19 @@ def concatenate(vectors):
 def euclidean(v1, v2):
 	"""
 	Compute similarity using Euclidean distance.
+	The Euclidean distance :math:`e_{p, q}` is computed as:
+
+	.. math::
+
+		e_{p, q} = \\sqrt{ \\sum_{i=1}^{n}{ (q_i - p_i)^2 } }
+
+	Where :math:`q_i` is feature :math:`i` in vector :math:`q`, and :math:`p_i` is the same feature :math:`i` in vector :math:`p`.
+	:math:`n` is the union of features in vectors :math:`q` and :math:`p`.
 
 	:param v1: The first vector.
-	:type v1: :class:`vector.vector.Vector`
+	:type v1: :class:`eventdt.vsm.vector.Vector`
 	:param v2: The second vector.
-	:type v2: :class:`vector.vector.Vector`
+	:type v2: :class:`eventdt.vsm.vector.Vector`
 	"""
 
 	dimensions = list(set(v1.dimensions.keys()).union(v2.dimensions.keys()))
@@ -98,11 +128,19 @@ def euclidean(v1, v2):
 def manhattan(v1, v2):
 	"""
 	Compute similarity using Manhattan distance.
+	The Manhattan distance :math:`m_{p, q}` is computed as:
+
+	.. math::
+
+		m_{p, q} = \\sum_{i=1}^{n}{ |q_i - p_i| }
+
+	Where :math:`q_i` is feature :math:`i` in vector :math:`q`, and :math:`p_i` is the same feature :math:`i` in vector :math:`p`.
+	:math:`n` is the union of features in vectors :math:`q` and :math:`p`.
 
 	:param v1: The first vector.
-	:type v1: :class:`vector.vector.Vector`
+	:type v1: :class:`eventdt.vsm.vector.Vector`
 	:param v2: The second vector.
-	:type v2: :class:`vector.vector.Vector`
+	:type v2: :class:`eventdt.vsm.vector.Vector`
 	"""
 
 	dimensions = list(set(v1.dimensions.keys()).union(v2.dimensions.keys()))
@@ -111,12 +149,20 @@ def manhattan(v1, v2):
 
 def cosine(v1, v2):
 	"""
-	Compute similarity using Cosine similarity.
+	Compute similarity using cosine similarity.
+	The cosine similarity :math:`cos_{p, q}` is computed as:
+
+	.. math::
+
+		cos_{p, q} = \\frac{\\sum_{i=1}^{n}{ q_i \\cdot p_i }}{ ||p|| + ||q|| }
+
+	Where :math:`q_i` is feature :math:`i` in vector :math:`q`, and :math:`p_i` is the same feature :math:`i` in vector :math:`p`.
+	:math:`n` is the intersection of features in vectors :math:`q` and :math:`p`.
 
 	:param v1: The first vector.
-	:type v1: :class:`vector.vector.Vector`
+	:type v1: :class:`eventdt.vsm.vector.Vector`
 	:param v2: The second vector.
-	:type v2: :class:`vector.vector.Vector`
+	:type v2: :class:`eventdt.vsm.vector.Vector`
 	"""
 
 	dimensions = list(set(v1.dimensions.keys()).intersection(v2.dimensions.keys()))
@@ -128,13 +174,21 @@ def cosine(v1, v2):
 
 def cosine_distance(v1, v2):
 	"""
-	Compute the Cosine distance:
-		1 - cosine similarity.
+	Compute the cosine distance.
+	The cosine distance :math:`cosd_{p, q}` is computed as:
+
+	.. math::
+
+		cosd_{p, q} = 1 - cos_{p, q}
+
+	.. warning::
+
+		The cosine distance is not a real distance metric.
 
 	:param v1: The first vector.
-	:type v1: :class:`vector.vector.Vector`
+	:type v1: :class:`eventdt.vsm.vector.Vector`
 	:param v2: The second vector.
-	:type v2: :class:`vector.vector.Vector`
+	:type v2: :class:`eventdt.vsm.vector.Vector`
 	"""
 
 	return 1 - cosine(v1, v2)
