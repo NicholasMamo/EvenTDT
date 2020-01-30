@@ -20,7 +20,7 @@ def magnitude(v):
 	:type v: :class:`vector.vector.Vector`
 	"""
 
-	return math.sqrt(sum([value ** 2 for _, value in v.get_dimensions().items()]))
+	return math.sqrt(sum([value ** 2 for value in v.dimensions.values()]))
 
 def normalize(v):
 	"""
@@ -34,7 +34,7 @@ def normalize(v):
 
 	m = magnitude(n)
 	if m > 0:
-		dimensions = n.get_dimensions()
+		dimensions = n.dimensions
 		dimensions = { dimension: float(value)/m for dimension, value in dimensions.items() }
 		return vector.Vector(dimensions)
 	else:
@@ -43,8 +43,10 @@ def normalize(v):
 def augmented_normalize(v, a=0.5):
 	"""
 	Normalize the given vector using the formula: \
+
 		f_j = a + (1 - a) f_j / x_j \
-	where x_j is the highest f_j in the vector.
+
+	where `x_j` is the highest `f_j` in the vector.
 
 	:param v: The vector that will be normalized
 	:type v: :class:`vector.vector.Vector`
@@ -54,7 +56,7 @@ def augmented_normalize(v, a=0.5):
 
 	n = v.copy()
 
-	dimensions = n.get_dimensions()
+	dimensions = n.dimensions
 	x = max(dimensions.values()) if len(dimensions) > 0 else 1
 	dimensions = { dimension: a + (1 - a) * value / x for dimension, value in dimensions.items() }
 	n.set_dimensions(dimensions)
@@ -74,9 +76,8 @@ def concatenate(vectors):
 
 	concatenated = { }
 	for v in vectors:
-		dimensions = v.get_dimensions()
-		for dimension in dimensions:
-			concatenated[dimension] = concatenated.get(dimension, 0) + dimensions.get(dimension, 0)
+		for dimension in v.dimensions:
+			concatenated[dimension] = concatenated.get(dimension, 0) + v.get_dimension(dimension)
 
 	return vector.Vector(concatenated)
 
@@ -90,7 +91,7 @@ def euclidean(v1, v2):
 	:type v2: :class:`vector.vector.Vector`
 	"""
 
-	dimensions = list(set(v1.get_dimensions().keys()).union(v2.get_dimensions().keys()))
+	dimensions = list(set(v1.dimensions.keys()).union(v2.dimensions.keys()))
 	differences = [ (v1.get_dimension(dimension) - v2.get_dimension(dimension)) ** 2 for dimension in dimensions ]
 	return math.sqrt(sum(differences))
 
@@ -104,7 +105,7 @@ def manhattan(v1, v2):
 	:type v2: :class:`vector.vector.Vector`
 	"""
 
-	dimensions = list(set(v1.get_dimensions().keys()).union(v2.get_dimensions().keys()))
+	dimensions = list(set(v1.dimensions.keys()).union(v2.dimensions.keys()))
 	differences = [ abs(v1.get_dimension(dimension) - v2.get_dimension(dimension)) for dimension in dimensions ]
 	return sum(differences)
 
@@ -118,10 +119,10 @@ def cosine(v1, v2):
 	:type v2: :class:`vector.vector.Vector`
 	"""
 
-	dimensions = list(set(v1.get_dimensions().keys()).intersection(v2.get_dimensions().keys()))
-	products = sum([ v1.get_dimension(dimension) * v2.get_dimension(dimension) for dimension in dimensions ])
+	dimensions = list(set(v1.dimensions.keys()).intersection(v2.dimensions.keys()))
+	products = [ v1.get_dimension(dimension) * v2.get_dimension(dimension) for dimension in dimensions ]
 	if (magnitude(v1) > 0 and magnitude(v2) > 0):
-		return products / (magnitude(v1) * magnitude(v2))
+		return sum(products) / (magnitude(v1) * magnitude(v2))
 	else:
 		return 0
 
