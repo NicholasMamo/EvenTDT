@@ -15,6 +15,7 @@ def magnitude(v):
 	:param v: The vector whose magnitude will be calculated.
 	:type v: :class:`vector.vector.Vector`
 	"""
+
 	return math.sqrt(sum([value ** 2 for _, value in v.get_dimensions().items()]))
 
 def normalize(v):
@@ -24,6 +25,7 @@ def normalize(v):
 	:param v: The vector that will be normalized.
 	:type v: :class:`vector.vector.Vector`
 	"""
+
 	n = v.copy()
 
 	m = magnitude(n)
@@ -45,6 +47,7 @@ def augmented_normalize(v, a=0.5):
 	:param a: The minimum magnitude of each dimension.
 	:type a: float
 	"""
+
 	n = v.copy()
 
 	dimensions = n.get_dimensions()
@@ -82,6 +85,7 @@ def euclidean(v1, v2):
 	:param v2: The second vector.
 	:type v2: :class:`vector.vector.Vector`
 	"""
+
 	dimensions = list(set(v1.get_dimensions().keys()).union(v2.get_dimensions().keys()))
 	differences = [ (v1.get_dimension(dimension) - v2.get_dimension(dimension)) ** 2 for dimension in dimensions ]
 	return math.sqrt(sum(differences))
@@ -95,6 +99,7 @@ def manhattan(v1, v2):
 	:param v2: The second vector.
 	:type v2: :class:`vector.vector.Vector`
 	"""
+
 	dimensions = list(set(v1.get_dimensions().keys()).union(v2.get_dimensions().keys()))
 	differences = [ abs(v1.get_dimension(dimension) - v2.get_dimension(dimension)) for dimension in dimensions ]
 	return sum(differences)
@@ -108,6 +113,7 @@ def cosine(v1, v2):
 	:param v2: The second vector.
 	:type v2: :class:`vector.vector.Vector`
 	"""
+
 	dimensions = list(set(v1.get_dimensions().keys()).intersection(v2.get_dimensions().keys()))
 	products = sum([ v1.get_dimension(dimension) * v2.get_dimension(dimension) for dimension in dimensions ])
 	if (magnitude(v1) > 0 and magnitude(v2) > 0):
@@ -125,4 +131,5 @@ def cosine_distance(v1, v2):
 	:param v2: The second vector.
 	:type v2: :class:`vector.vector.Vector`
 	"""
+
 	return 1 - cosine(v1, v2)
