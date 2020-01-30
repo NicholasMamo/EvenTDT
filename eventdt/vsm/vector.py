@@ -23,19 +23,18 @@ class Vector(Attributable):
 	:vartype _dimensions: dict
 	"""
 
-	def __init__(self, dimensions=None, attributes=None):
+	def __init__(self, dimensions=None, *args, **kwargs):
 		"""
 		By default, the :class:`vsm.vector.Vector` object has no dimensions.
 		The :class:`vsm.vector.Vector` object is represented using an associative array (dictionary).
+		Any additional attributes can be passed as arguments or keyword arguments.
 
 		:param dimensions: The initial dimensions of the :class:`vsm.vector.Vector` object.
 			If none are given, they are initialized to an empty dict.
 		:type dimensions: dict
-		:param attributes: The list of attributes of the :class:`vsm.vector.Vector` object.
-		:type attributes: dict
 		"""
 
-		super(Vector, self).__init__(attributes)
+		super(Vector, self).__init__(*args, **kwargs)
 		self._dimensions = dict() if dimensions is None else dimensions
 
 	def initialize_dimension(self, name, value):
