@@ -36,8 +36,11 @@ import os
 import sys
 import time
 
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
-sys.path.insert(1, os.path.join(sys.path[0], '../libraries'))
+file_path = os.path.dirname(os.path.abspath(__file__))
+root = os.path.join(file_path, '..')
+lib = os.path.join(root, 'eventdt')
+sys.path.insert(-1, root)
+sys.path.insert(-1, lib)
 
 from logger import logger
 from twitter.twevent.listener import TweetListener
