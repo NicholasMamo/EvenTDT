@@ -6,7 +6,11 @@ import math
 import os
 import sys
 
-from . import vector
+path = os.path.join(os.path.dirname(__file__), "..")
+if path not in sys.path:
+    sys.path.append(path)
+
+from vsm import vector
 
 def magnitude(v):
 	"""

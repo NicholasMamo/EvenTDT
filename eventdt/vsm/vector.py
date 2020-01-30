@@ -5,13 +5,13 @@ The :class:`vsm.vector.Vector` class is used in clustering and other application
 import os
 import sys
 
-path = os.path.join(os.path.dirname(__file__), "../")
+path = os.path.join(os.path.dirname(__file__), "..")
 if path not in sys.path:
     sys.path.append(path)
 
 from objects.attributable import Attributable
 from objects.exportable import Exportable
-from . import vector_math
+from vsm import vector_math
 
 class Vector(Attributable):
 	"""

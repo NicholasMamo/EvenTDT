@@ -8,15 +8,12 @@ import sys
 import unittest
 
 path = os.path.dirname(__file__)
-path = os.path.join(path, '../')
+path = os.path.join(path, '..')
 if path not in sys.path:
     sys.path.append(path)
 
-# sys.path.insert(1, os.path.join(sys.path[0], '..'))
-# from vector import Vector
-
-from libraries.vector.vector import Vector
-from libraries.vector.vector_math import *
+from vector import Vector
+from vector_math import *
 
 class TestVector(unittest.TestCase):
 	"""
@@ -29,10 +26,10 @@ class TestVector(unittest.TestCase):
 		"""
 
 		v = Vector()
-		self.assertEqual(v.get_dimensions(), {})
+		self.assertEqual({}, v.get_dimensions())
 
 		v = Vector({"x": 2, "y": 1})
-		self.assertEqual(v.get_dimensions(), {"x": 2, "y": 1})
+		self.assertEqual({"x": 2, "y": 1}, v.get_dimensions())
 
 	def test_dimensions(self):
 		"""
@@ -41,20 +38,20 @@ class TestVector(unittest.TestCase):
 
 		v = Vector({"x": 2, "y": 1})
 		v.set_dimension("x")
-		self.assertEqual(v.get_dimensions(), {"y": 1})
+		self.assertEqual({"y": 1}, v.get_dimensions())
 
 		v.set_dimension("x", 1)
-		self.assertEqual(v.get_dimensions(), {"x": 1, "y": 1})
+		self.assertEqual({"x": 1, "y": 1}, v.get_dimensions())
 
 		v.initialize_dimension("x", 2)
-		self.assertEqual(v.get_dimension("x"), 1)
+		self.assertEqual(1, v.get_dimension("x"))
 
 		v.initialize_dimension("w", 2)
-		self.assertEqual(v.get_dimension("w"), 2)
+		self.assertEqual(2, v.get_dimension("w"))
 
-		self.assertEqual(v.get_dimension("y"), 1)
+		self.assertEqual(1, v.get_dimension("y"))
 
-		self.assertEqual(v.get_dimension("p"), 0)
+		self.assertEqual(0, v.get_dimension("p"))
 
 	def test_clear_dimensions(self):
 		"""
@@ -63,14 +60,14 @@ class TestVector(unittest.TestCase):
 
 		v = Vector({"x": 3, "y": 2, "z": 4})
 		v.clear_dimensions()
-		self.assertEqual(v.get_dimensions(), {})
+		self.assertEqual({}, v.get_dimensions())
 
 		v = Vector({"x": 3, "y": 2, "z": 4})
 		v.clear_dimension("w")
-		self.assertEqual(v.get_dimensions(), {"x": 3, "y": 2, "z": 4})
+		self.assertEqual({"x": 3, "y": 2, "z": 4}, v.get_dimensions())
 
 		v.clear_dimension("x")
-		self.assertEqual(v.get_dimensions(), {"y": 2, "z": 4})
+		self.assertEqual({"y": 2, "z": 4}, v.get_dimensions())
 
 	def test_normalization(self):
 		"""
@@ -79,7 +76,7 @@ class TestVector(unittest.TestCase):
 
 		v = Vector({"x": 3, "y": 1.2, "z": -2})
 		v.normalize()
-		self.assertEqual({ key: round(value, 6) for key, value in v.get_dimensions().items() }, { "x": 0.789474, "y": 0.315789, "z": -0.526316 })
+		self.assertEqual({ "x": 0.789474, "y": 0.315789, "z": -0.526316 }, { key: round(value, 6) for key, value in v.get_dimensions().items() })
 
 	def test_copy(self):
 		"""
@@ -98,8 +95,8 @@ class TestVector(unittest.TestCase):
 		v.set_attribute("y", True)
 
 		v.set_dimension("x", 2)
-		self.assertTrue(v.get_dimension("x") == 2)
-		self.assertTrue(n.get_dimension("x") == 3)
+		self.assertEqual(2, v.get_dimension("x"))
+		self.assertEqual(3, n.get_dimension("x"))
 		v.set_dimension("x", 3)
 
 	def test_export(self):

@@ -32,7 +32,7 @@ apd_tests() {
 	# echo "Postprocessor"
 	# echo "----------"
 	# python3 -m unittest eventdt.apd.postprocessors.external.tests.test_external_postprocessors
-	# return
+	return
 }
 
 document_tests() {
@@ -59,6 +59,7 @@ document_tests() {
 	# echo "Cleaning"
 	# echo "----------"
 	# python3 -m unittest eventdt.vsm.nlp.cleaners.tests.test_cleaners
+	return
 }
 
 graph_tests() {
@@ -66,6 +67,7 @@ graph_tests() {
 	# echo "Graph"
 	# echo "=========="
 	# python3 -m unittest eventdt.graph.tests.test_graph
+	return
 }
 
 queue_tests() {
@@ -82,6 +84,7 @@ queue_tests() {
 	# echo "Filter"
 	# echo "----------"
 	# python3 -m unittest eventdt.queues.consumer.filter.tests.test_filter
+	return
 }
 
 summarization_tests() {
@@ -98,9 +101,10 @@ summarization_tests() {
 	# echo "Scorer"
 	# echo "----------"
 	# python3 -m unittest eventdt.summarization.scorers.tests.test_scorers
+	return
 }
 
-# topic_detection_tests() {
+topic_detection_tests() {
 # 	echo "=========="
 # 	echo "Topic Detection"
 # 	echo "=========="
@@ -128,6 +132,7 @@ summarization_tests() {
 # 	echo "Zhao Algorithms"
 # 	echo "----------"
 # 	python3 -m unittest eventdt.topic_detection.algorithms.tests.test_zhao
+	return
 }
 
 vector_tests() {
@@ -170,6 +175,7 @@ wikipedia_tests() {
 	# echo "Link Collector"
 	# echo "----------"
 	# python3 -m unittest eventdt.wikinterface.tests.test_linkcollector
+	return
 }
 
 if getopts "t:" o
