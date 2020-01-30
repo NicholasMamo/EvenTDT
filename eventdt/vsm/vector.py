@@ -1,5 +1,6 @@
 """
-The :class:`vsm.vector.Vector` class is used in clustering and other applications that adopt the Vector Space Model.
+The :class:`vsm.vector.Vector` is the basis of the Vector Space Model (VSM).
+The class contains is used in clustering and Natural Language Processing (NLP) to represent documents.
 """
 
 import os
@@ -15,7 +16,7 @@ from vsm import vector_math
 
 class Vector(Attributable):
 	"""
-	The :class:`vsm.vector.Vector` class is the smallest building block in the Vector Space Model.
+	The :class:`vsm.vector.Vector` class is the smallest building block in the Vector Space Model (VSM).
 	It is used for tasks such as clustering and to represent documents.
 	Vectors are based on :class:`objects.Attributable` so that they may have additional properties.
 
@@ -117,7 +118,7 @@ class Vector(Attributable):
 		"""
 		Normalize the vector.
 		"""
-		
+
 		self._dimensions = vector_math.normalize(self).get_dimensions()
 
 	def copy(self):
