@@ -2,178 +2,124 @@
 
 # to run sh tests.sh [-t <vector|document|wikipedia>]
 
+# Go to the script directory.
+parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+cd "$parent_path"
+source variables.sh
+
 usage() {
-	echo "Usage: sh $0 [-t <apd|document|graph|queue|summarization|topics|vector|wikipedia>]";
+	echo -e "${HIGHLIGHT}Usage: sh $0 [-t <apd|document|graph|queue|summarization|topics|vector|wikipedia>]"${DEFAULT};
 }
 
 apd_tests() {
-	# echo "=========="
-	# echo "APD"
-	# echo "=========="
+	# echo -e "${HIGHLIGHT}APD${DEFAULT}"
 	#
-	# echo "----------"
-	# echo "Extractor"
-	# echo "----------"
+	# echo -e "${HIGHLIGHT}Extractor${DEFAULT}"
 	# python3 -m unittest eventdt.apd.extractors.local.tests.test_local_extractors
-	# echo "----------"
-	# echo "Scorer"
-	# echo "----------"
+	# echo -e "${HIGHLIGHT}Scorer${DEFAULT}"
 	# python3 -m unittest eventdt.apd.scorers.local.tests.test_local_scorers
-	# echo "----------"
-	# echo "Resolver"
-	# echo "----------"
+	# echo -e "${HIGHLIGHT}Resolver${DEFAULT}"
 	# python3 -m unittest eventdt.apd.resolvers.local.tests.test_local_resolvers
 	# python3 -m unittest eventdt.apd.resolvers.external.tests.test_external_resolvers
-	# echo "----------"
-	# echo "Extrapolator"
-	# echo "----------"
+	# echo -e "${HIGHLIGHT}Extrapolator${DEFAULT}"
 	# python3 -m unittest eventdt.apd.extrapolators.external.tests.test_external_extrapolators
-	# echo "----------"
-	# echo "Postprocessor"
-	# echo "----------"
+	# echo -e "${HIGHLIGHT}Postprocessor${DEFAULT}"
 	# python3 -m unittest eventdt.apd.postprocessors.external.tests.test_external_postprocessors
 	return
 }
 
 document_tests() {
-	# echo "=========="
-	# echo "Document"
-	# echo "=========="
+	# echo -e "${HIGHLIGHT}Document${DEFAULT}"
 	#
-	# echo "----------"
-	# echo "Term Weighting"
-	# echo "----------"
+	# echo -e "${HIGHLIGHT}Term Weighting${DEFAULT}"
 	# python3 -m unittest eventdt.vsm.nlp.tests.test_term_weighting
 	#
-	# echo "----------"
-	# echo "Document"
-	# echo "----------"
+	# echo -e "${HIGHLIGHT}Document${DEFAULT}"
 	# python3 -m unittest eventdt.vsm.nlp.tests.test_document
 	#
-	# echo "----------"
-	# echo "Tokenizer"
-	# echo "----------"
+	# echo -e "${HIGHLIGHT}Tokenizer${DEFAULT}"
 	# python3 -m unittest eventdt.vsm.nlp.tests.test_tokenizer
 	#
-	# echo "----------"
-	# echo "Cleaning"
-	# echo "----------"
+	# echo -e "${HIGHLIGHT}Cleaning${DEFAULT}"
 	# python3 -m unittest eventdt.vsm.nlp.cleaners.tests.test_cleaners
 	return
 }
 
 graph_tests() {
-	# echo "=========="
-	# echo "Graph"
-	# echo "=========="
+	# echo -e "${HIGHLIGHT}Graph${DEFAULT}"
 	# python3 -m unittest eventdt.graph.tests.test_graph
 	return
 }
 
 queue_tests() {
-	# echo "=========="
-	# echo "Queue"
-	# echo "=========="
+	# echo -e "${HIGHLIGHT}Queue${DEFAULT}"
 	#
-	# echo "----------"
-	# echo "Base Queue"
-	# echo "----------"
+	# echo -e "${HIGHLIGHT}Base Queue${DEFAULT}"
 	# python3 -m unittest eventdt.queues.tests.test_queue
 	#
-	# echo "----------"
-	# echo "Filter"
-	# echo "----------"
+	# echo -e "${HIGHLIGHT}Filter${DEFAULT}"
 	# python3 -m unittest eventdt.queues.consumer.filter.tests.test_filter
 	return
 }
 
 summarization_tests() {
-	# echo "=========="
-	# echo "Summarization"
-	# echo "=========="
+	# echo -e "${HIGHLIGHT}Summarization${DEFAULT}"
 	#
 	# python3 -m unittest eventdt.summarization.tests.test_summary
 	#
 	# python3 -m unittest eventdt.summarization.algorithms.tests.test_mmr
 	# python3 -m unittest eventdt.summarization.algorithms.tests.test_graph
 	#
-	# echo "----------"
-	# echo "Scorer"
-	# echo "----------"
+	# echo -e "${HIGHLIGHT}Scorer${DEFAULT}"
 	# python3 -m unittest eventdt.summarization.scorers.tests.test_scorers
 	return
 }
 
 topic_detection_tests() {
-# 	echo "=========="
-# 	echo "Topic Detection"
-# 	echo "=========="
+# 	echo -e "${HIGHLIGHT}Topic Detection${DEFAULT}"
 #
-# 	echo "----------"
-# 	echo "Memory Nutrition Store"
-# 	echo "----------"
+# 	echo -e "${HIGHLIGHT}Memory Nutrition Store${DEFAULT}"
 # 	python3 -m unittest eventdt.topic_detection.nutrition_store.tests.test_memory_nutrition_store
 #
-# 	echo "----------"
-# 	echo "Algorithms"
-# 	echo "----------"
+# 	echo -e "${HIGHLIGHT}Algorithms${DEFAULT}"
 #
-# 	echo ""
-# 	echo "Mamo Algorithms"
-# 	echo "----------"
+# 	echo -e "${HIGHLIGHT}${DEFAULT}"
+# 	echo -e "${HIGHLIGHT}Mamo Algorithms${DEFAULT}"
 # 	python3 -m unittest eventdt.topic_detection.algorithms.tests.test_mamo
 #
-# 	echo ""
-# 	echo "Cataldi Algorithms"
-# 	echo "----------"
+# 	echo -e "${HIGHLIGHT}${DEFAULT}"
+# 	echo -e "${HIGHLIGHT}Cataldi Algorithms${DEFAULT}"
 # 	python3 -m unittest eventdt.topic_detection.algorithms.tests.test_cataldi
 #
-# 	echo ""
-# 	echo "Zhao Algorithms"
-# 	echo "----------"
+# 	echo -e "${HIGHLIGHT}${DEFAULT}"
+# 	echo -e "${HIGHLIGHT}Zhao Algorithms${DEFAULT}"
 # 	python3 -m unittest eventdt.topic_detection.algorithms.tests.test_zhao
 	return
 }
 
 vector_tests() {
-	# echo "=========="
-	# echo "Vector"
-	# echo "=========="
+	# echo -e "${HIGHLIGHT}Vector${DEFAULT}"
 	# python3 -m unittest eventdt.vsm.tests.test_attributable
 
-	echo "----------"
-	echo "Vectors"
-	echo "----------"
+	echo -e "${HIGHLIGHT}Vectors${DEFAULT}"
 	python3 -m unittest eventdt.vsm.tests.test_vector
 
-	# echo "----------"
-	# echo "Vector Math"
-	# echo "----------"
+	# echo -e "${HIGHLIGHT}Vector Math${DEFAULT}"
 	# python3 -m unittest eventdt.vsm.tests.test_vector_math
 	#
-	# echo "----------"
-	# echo "Clustering"
-	# echo "----------"
+	# echo -e "${HIGHLIGHT}Clustering${DEFAULT}"
 	#
-	# echo ""
-	# echo "Base Cluster"
-	# echo "----------"
+	# echo -e "${HIGHLIGHT}Base Cluster${DEFAULT}"
 	# python3 -m unittest eventdt.vsm.cluster.tests.test_cluster
 	#
-	# echo ""
-	# echo "Algorithms"
-	# echo "----------"
+	# echo -e "${HIGHLIGHT}Algorithms${DEFAULT}"
 	# python3 -m unittest eventdt.vsm.cluster.algorithms.tests.test_no_k_means
 }
 
 wikipedia_tests() {
-	# echo "=========="
-	# echo "Wikipedia"
-	# echo "=========="
+	# echo -e "${HIGHLIGHT}Wikipedia${DEFAULT}"
 	#
-	# echo "----------"
-	# echo "Link Collector"
-	# echo "----------"
+	# echo -e "${HIGHLIGHT}Link Collector${DEFAULT}"
 	# python3 -m unittest eventdt.wikinterface.tests.test_linkcollector
 	return
 }
@@ -206,7 +152,7 @@ then
 			wikipedia_tests
 			;;
 		*)
-			echo "Invalid argument"
+			echo -e "${ERROR}Invalid argument${DEFAULT}"
 			usage
 			;;
 	esac
