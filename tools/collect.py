@@ -45,7 +45,7 @@ from twitter.twevent.listener import TweetListener
 from tweepy import OAuthHandler
 from tweepy import Stream
 
-import conf
+from config import conf
 
 def setup_args():
 	"""
