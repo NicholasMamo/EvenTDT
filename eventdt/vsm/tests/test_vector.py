@@ -17,23 +17,28 @@ from vector_math import *
 
 class TestVector(unittest.TestCase):
 	"""
-	Test the Vector class
+	Test the Vector class.
 	"""
 
-	def test_init(self):
+	def test_empty_constructor(self):
 		"""
-		Test the Vector constructor
+		Test providing an empty constructor.
 		"""
 
 		v = Vector()
 		self.assertEqual({}, v.get_dimensions())
+
+	def test_constructor(self):
+		"""
+		Test providing the dimensions to the vector constructor.
+		"""
 
 		v = Vector({"x": 2, "y": 1})
 		self.assertEqual({"x": 2, "y": 1}, v.get_dimensions())
 
 	def test_dimensions(self):
 		"""
-		Test setting and getting dimensions
+		Test setting and getting dimensions.
 		"""
 
 		v = Vector({"x": 2, "y": 1})
@@ -46,32 +51,56 @@ class TestVector(unittest.TestCase):
 		v.initialize_dimension("x", 2)
 		self.assertEqual(1, v.get_dimension("x"))
 
+	def test_initialize_existing_dimension(self):
+		"""
+		Test initializing a dimension that already exists.
+		"""
+
+		v = Vector({"x": 2, "y": 1})
+		v.initialize_dimension("x", 2)
+		self.assertEqual(1, v.get_dimension("x"))
+
+	def test_initialize_dimension(self):
+		"""
+		Test initializing a dimension if it doesn't exist.
+		"""
+
+		v = Vector({"x": 2, "y": 1})
 		v.initialize_dimension("w", 2)
 		self.assertEqual(2, v.get_dimension("w"))
-
 		self.assertEqual(1, v.get_dimension("y"))
-
 		self.assertEqual(0, v.get_dimension("p"))
 
-	def test_clear_dimensions(self):
+	def test_clear_all_dimensions(self):
 		"""
-		Test clearing dimensions
+		Test clearing all dimensions.
 		"""
 
 		v = Vector({"x": 3, "y": 2, "z": 4})
 		v.clear_dimensions()
 		self.assertEqual({}, v.get_dimensions())
 
+	def test_clear_nonexisting_dimension(self):
+		"""
+		Test clearing a dimension that does not exist.
+		"""
+
 		v = Vector({"x": 3, "y": 2, "z": 4})
 		v.clear_dimension("w")
 		self.assertEqual({"x": 3, "y": 2, "z": 4}, v.get_dimensions())
 
+	def test_clear_dimension(self):
+		"""
+		Test clearing a single dimension.
+		"""
+
+		v = Vector({"x": 3, "y": 2, "z": 4})
 		v.clear_dimension("x")
 		self.assertEqual({"y": 2, "z": 4}, v.get_dimensions())
 
 	def test_normalization(self):
 		"""
-		Test normalizing vectors
+		Test normalizing vectors.
 		"""
 
 		v = Vector({"x": 3, "y": 1.2, "z": -2})
@@ -80,7 +109,7 @@ class TestVector(unittest.TestCase):
 
 	def test_copy(self):
 		"""
-		Test copying
+		Test copying.
 		"""
 
 		v = Vector({ "x": 3 }, { "y": True })
