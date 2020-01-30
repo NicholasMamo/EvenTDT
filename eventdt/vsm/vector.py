@@ -1,5 +1,5 @@
 """
-The Vector class, used in clustering and other applications that adopt the Vector Space Model.
+The :class:`vsm.vector.Vector` class is used in clustering and other applications that adopt the Vector Space Model.
 """
 
 import os
@@ -15,23 +15,23 @@ from . import vector_math
 
 class Vector(Attributable):
 	"""
-	The Vector class is routinely used in clustering.
-	It serves as the basic class for documents in the Vector Space Model.
+	The :class:`vsm.vector.Vector` class is the smallest building block in the Vector Space Model.
+	It is used for tasks such as clustering and to represent documents.
 	Vectors are based on :class:`objects.Attributable` so that they may have additional properties.
 
-	:ivar _dimensions: The dimensions - name-value pairs - of the Vector.
+	:ivar _dimensions: The dimensions—name-value pairs—of the Vector.
 	:vartype _dimensions: dict
 	"""
 
 	def __init__(self, dimensions=None, attributes=None):
 		"""
-		By default, the Vector has no dimensions.
-		The Vector is represented using an associative array (dictionary).
+		By default, the :class:`vsm.vector.Vector` object has no dimensions.
+		The :class:`vsm.vector.Vector` object is represented using an associative array (dictionary).
 
-		:param dimensions: The initial dimensions of the Vector.
+		:param dimensions: The initial dimensions of the :class:`vsm.vector.Vector` object.
 			If none are given, they are initialized to an empty dict.
 		:type dimensions: dict
-		:param attributes: The list of attributes of the Vector.
+		:param attributes: The list of attributes of the :class:`vsm.vector.Vector` object.
 		:type attributes: dict
 		"""
 
@@ -124,7 +124,7 @@ class Vector(Attributable):
 		"""
 		Create a copy of the vector.
 
-		:return: A copy of the Vector
+		:return: A copy of the :class:`vsm.vector.Vector` object
 		:rtype: :class:`vector.vector.Vector`
 		"""
 
@@ -156,4 +156,4 @@ class Vector(Attributable):
 		:rtype: :class:`vector.vector.Vector`
 		"""
 
-		return Vector(attributes=array.get("attributes", {}), dimensions=array.get("dimensions", ""))
+		return Vector(attributes=array.get("attributes", {}), dimensions=array.get("dimensions", {}))
