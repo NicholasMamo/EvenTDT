@@ -1,0 +1,25 @@
+***************************
+2. Vector Space Model (VSM)
+***************************
+
+.. meta::
+   :description: The Vector Space Model (VSM) implementation
+   :keywords: Python, TDT, VSM
+
+Most document representation occurs in the Vector Space Model (VSM).
+EvenTDT provides classes to help you work with the VSM.
+Keep reading to learn more about the different VSM classes available in EvenTDT.
+
+.. automodule:: eventdt.vsm
+   :members:
+   :private-members:
+   :special-members:
+
+=======
+Vectors
+=======
+
+.. automodule:: eventdt.vsm.vector
+   :members:
+   :private-members:
+   :special-members:
