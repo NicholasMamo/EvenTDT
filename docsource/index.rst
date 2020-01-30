@@ -11,6 +11,7 @@ Welcome to EvenTDT's documentation!
    :caption: Contents:
 
    tools
+   vsm
 
 Indices and tables
 ==================
