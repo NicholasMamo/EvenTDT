@@ -153,7 +153,8 @@ def main():
 			'end': end
 		})
 
-	save_meta(os.path.join(data_dir, 'meta.json'), meta)
+	if meta:
+		save_meta(os.path.join(data_dir, 'meta.json'), meta)
 
 def collect(auth, track, filename, time, lang=None, *args, **kwargs):
 	"""
