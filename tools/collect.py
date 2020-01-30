@@ -20,8 +20,8 @@ Accepted arguments:
 
 	- -t --track			<Required> A list of tracking keywords.
 	- -o --output			<Required> The data directory where the corpus should be written.
-	- -u --understanding	<Optional> The length of the understanding period in minutes. Defaults to an hour.
-	- -e --event			<Optional> The length of the event period in minutes. Defaults to an hour.
+	- -u --understanding	<Optional> The length of the understanding period in minutes. Defaults to an hour and must be a natural number.
+	- -e --event			<Optional> The length of the event period in minutes. Defaults to an hour and must be a natural number.
 
 The implemented modes of operation are:
 
@@ -55,9 +55,9 @@ def setup_args():
 		- -t --track			<Required> A list of tracking keywords.
 		- -o --output			<Required> The data directory where the corpus should be written.
 		- -U					<Optional> Collect the understanding corpus.
-		- -u --understanding	<Optional> The length of the understanding period in minutes. Defaults to an hour.
+		- -u --understanding	<Optional> The length of the understanding period in minutes. Defaults to an hour and must be a natural number.
 		- -E					<Optional> Collect the event corpus.
-		- -e --event			<Optional> The length of the event period in minutes. Defaults to an hour.
+		- -e --event			<Optional> The length of the event period in minutes. Defaults to an hour and must be a natural number.
 
 	:return: The command-line arguments.
 	:rtype: list
@@ -118,6 +118,9 @@ def main():
 	"""
 	meta = []
 	if args.U:
+		if args.understanding <= 0:
+			raise ValueError("The understanding period must be longer than 0 minutes")
+
 		filename = os.path.join(data_dir, 'understanding.json')
 
 		start = time.time()
@@ -133,6 +136,9 @@ def main():
 		})
 
 	if args.E:
+		if args.event <= 0:
+			raise ValueError("The event period must be longer than 0 minutes")
+
 		filename = os.path.join(data_dir, 'event.json')
 
 		start = time.time()
