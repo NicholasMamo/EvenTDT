@@ -22,6 +22,7 @@ Accepted arguments:
 	- -o --output			<Required> The data directory where the corpus should be written.
 	- -u --understanding	<Optional> The length of the understanding period in minutes. Defaults to an hour and must be a natural number.
 	- -e --event			<Optional> The length of the event period in minutes. Defaults to an hour and must be a natural number.
+	- -a --account			<Optional> The account to use to collect the corpus with, as an index of the configuration's accounts. Defaults to the first account.
 
 The implemented modes of operation are:
 
@@ -58,6 +59,7 @@ def setup_args():
 		- -u --understanding	<Optional> The length of the understanding period in minutes. Defaults to an hour and must be a natural number.
 		- -E					<Optional> Collect the event corpus.
 		- -e --event			<Optional> The length of the event period in minutes. Defaults to an hour and must be a natural number.
+		- -a --account			<Optional> The account to use to collect the corpus with, as an index of the configuration's accounts. Defaults to the first account.
 
 	:return: The command-line arguments.
 	:rtype: list
@@ -79,6 +81,9 @@ def setup_args():
 	parser.add_argument('-e', '--event', nargs='?', type=int,
 						default=60, required=False,
 						help='<Optional> The length of the event period in minutes. Defaults to an hour.')
+	parser.add_argument('-a', '--account', nargs='?', type=int,
+						default=0, required=False,
+						help='<Optional> The account to use to collect the corpus with, as an index of the configuration\'s accounts. Defaults to the first account.')
 
 	"""
 	The modes of operation.
@@ -110,8 +115,9 @@ def main():
 	"""
 	Set up the authentication with the Twitter Stream API.
 	"""
-	auth = OAuthHandler(conf.ACCOUNTS[0]['CONSUMER_KEY'], conf.ACCOUNTS[0]['CONSUMER_SECRET'])
-	auth.set_access_token(conf.ACCOUNTS[0]['ACCESS_TOKEN'], conf.ACCOUNTS[0]['ACCESS_TOKEN_SECRET'])
+	account = conf.ACCOUNTS[args.account]
+	auth = OAuthHandler(account['CONSUMER_KEY'], account['CONSUMER_SECRET'])
+	auth.set_access_token(account['ACCESS_TOKEN'], account['ACCESS_TOKEN_SECRET'])
 
 	"""
 	Start collecting tweets.
