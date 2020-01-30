@@ -20,8 +20,8 @@ class Vector(Attributable):
 	It is used for tasks such as clustering and to represent documents.
 	Vectors are based on :class:`objects.Attributable` so that they may have additional properties.
 
-	:ivar _dimensions: The dimensions—name-value pairs—of the Vector.
-	:vartype _dimensions: dict
+	:ivar dimensions: The dimensions—name-value pairs—of the Vector.
+	:vartype dimensions: dict
 	"""
 
 	def __init__(self, dimensions=None, *args, **kwargs):
@@ -36,7 +36,7 @@ class Vector(Attributable):
 		"""
 
 		super(Vector, self).__init__(*args, **kwargs)
-		self._dimensions = dict() if dimensions is None else dimensions
+		self.dimensions = dict() if dimensions is None else dimensions
 
 	def initialize_dimension(self, name, value):
 		"""
@@ -48,7 +48,7 @@ class Vector(Attributable):
 		:type value: :class:`object`
 		"""
 
-		self._dimensions[name] = self._dimensions.get(name, value)
+		self.dimensions[name] = self.dimensions.get(name, value)
 
 	def set_dimensions(self, dimensions=None):
 		"""
@@ -58,7 +58,7 @@ class Vector(Attributable):
 		:type dimensions: dict
 		"""
 
-		self._dimensions = dict() if dimensions is None else dimensions
+		self.dimensions = dict() if dimensions is None else dimensions
 
 	def set_dimension(self, name, value=None):
 		"""
@@ -72,10 +72,10 @@ class Vector(Attributable):
 		"""
 
 		if value:
-			self._dimensions[name] = value
+			self.dimensions[name] = value
 		else:
-			if name in self._dimensions:
-				del self._dimensions[name]
+			if name in self.dimensions:
+				del self.dimensions[name]
 
 	def get_dimension(self, name):
 		"""
@@ -85,7 +85,7 @@ class Vector(Attributable):
 		:type name: :class:`object`
 		"""
 
-		return self._dimensions.get(name, 0)
+		return self.dimensions.get(name, 0)
 
 	def get_dimensions(self):
 		"""
@@ -95,7 +95,7 @@ class Vector(Attributable):
 		:type: dict
 		"""
 
-		return self._dimensions
+		return self.dimensions
 
 	def clear_dimension(self, name):
 		"""
@@ -119,7 +119,7 @@ class Vector(Attributable):
 		Normalize the vector.
 		"""
 
-		self._dimensions = vector_math.normalize(self).get_dimensions()
+		self.dimensions = vector_math.normalize(self).get_dimensions()
 
 	def copy(self):
 		"""
@@ -129,7 +129,7 @@ class Vector(Attributable):
 		:rtype: :class:`vector.vector.Vector`
 		"""
 
-		return Vector(self._dimensions.copy(), self._attributes.copy())
+		return Vector(self.dimensions.copy(), self._attributes.copy())
 
 	def to_array(self):
 		"""
@@ -141,7 +141,7 @@ class Vector(Attributable):
 
 		array = Attributable.to_array(self)
 		array.update({
-			"dimensions": self._dimensions,
+			"dimensions": self.dimensions,
 		})
 		return array
 

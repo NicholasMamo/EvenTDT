@@ -26,7 +26,7 @@ class TestVector(unittest.TestCase):
 		"""
 
 		v = Vector()
-		self.assertEqual({ }, v.get_dimensions())
+		self.assertEqual({ }, v.dimensions)
 
 	def test_constructor(self):
 		"""
@@ -34,7 +34,7 @@ class TestVector(unittest.TestCase):
 		"""
 
 		v = Vector({"x": 2, "y": 1})
-		self.assertEqual({"x": 2, "y": 1}, v.get_dimensions())
+		self.assertEqual({"x": 2, "y": 1}, v.dimensions)
 
 	def test_dimensions(self):
 		"""
@@ -43,10 +43,10 @@ class TestVector(unittest.TestCase):
 
 		v = Vector({"x": 2, "y": 1})
 		v.set_dimension("x")
-		self.assertEqual({"y": 1}, v.get_dimensions())
+		self.assertEqual({"y": 1}, v.dimensions)
 
 		v.set_dimension("x", 1)
-		self.assertEqual({"x": 1, "y": 1}, v.get_dimensions())
+		self.assertEqual({"x": 1, "y": 1}, v.dimensions)
 
 		v.initialize_dimension("x", 2)
 		self.assertEqual(1, v.get_dimension("x"))
@@ -78,7 +78,7 @@ class TestVector(unittest.TestCase):
 
 		v = Vector({"x": 3, "y": 2, "z": 4})
 		v.clear_dimensions()
-		self.assertEqual({ }, v.get_dimensions())
+		self.assertEqual({ }, v.dimensions)
 
 	def test_clear_nonexisting_dimension(self):
 		"""
@@ -87,7 +87,7 @@ class TestVector(unittest.TestCase):
 
 		v = Vector({"x": 3, "y": 2, "z": 4})
 		v.clear_dimension("w")
-		self.assertEqual({"x": 3, "y": 2, "z": 4}, v.get_dimensions())
+		self.assertEqual({"x": 3, "y": 2, "z": 4}, v.dimensions)
 
 	def test_clear_dimension(self):
 		"""
@@ -96,7 +96,7 @@ class TestVector(unittest.TestCase):
 
 		v = Vector({"x": 3, "y": 2, "z": 4})
 		v.clear_dimension("x")
-		self.assertEqual({"y": 2, "z": 4}, v.get_dimensions())
+		self.assertEqual({"y": 2, "z": 4}, v.dimensions)
 
 	def test_normalization(self):
 		"""
@@ -105,7 +105,7 @@ class TestVector(unittest.TestCase):
 
 		v = Vector({"x": 3, "y": 1.2, "z": -2})
 		v.normalize()
-		self.assertEqual({ "x": 0.789474, "y": 0.315789, "z": -0.526316 }, { key: round(value, 6) for key, value in v.get_dimensions().items() })
+		self.assertEqual({ "x": 0.789474, "y": 0.315789, "z": -0.526316 }, { key: round(value, 6) for key, value in v.dimensions.items() })
 
 	def test_normalize_empty_vector(self):
 		"""
@@ -114,7 +114,7 @@ class TestVector(unittest.TestCase):
 
 		v = Vector({ })
 		v.normalize()
-		self.assertEqual({ }, v.get_dimensions())
+		self.assertEqual({ }, v.dimensions)
 
 	def test_normalize_zero_length_vector(self):
 		"""
@@ -123,7 +123,7 @@ class TestVector(unittest.TestCase):
 
 		v = Vector({ 'x': 0 })
 		v.normalize()
-		self.assertEqual({ 'x': 0 }, v.get_dimensions())
+		self.assertEqual({ 'x': 0 }, v.dimensions)
 
 	def test_copy(self):
 		"""
@@ -134,7 +134,7 @@ class TestVector(unittest.TestCase):
 		n = v.copy()
 
 		self.assertEqual(v.get_attributes(), n.get_attributes())
-		self.assertEqual(v.get_dimensions(), n.get_dimensions())
+		self.assertEqual(v.dimensions, n.get_dimensions())
 
 		v.set_attribute("y", False)
 		self.assertFalse(v.get_attribute("y"))
@@ -154,5 +154,5 @@ class TestVector(unittest.TestCase):
 		v = Vector({ "x": 3 }, { "y": True })
 		e = v.to_array()
 		self.assertEqual(v.get_attributes(), Vector.from_array(e).get_attributes())
-		self.assertEqual(v.get_dimensions(), Vector.from_array(e).get_dimensions())
+		self.assertEqual(v.dimensions, Vector.from_array(e).get_dimensions())
 		self.assertEqual(v.__dict__, Vector.from_array(e).__dict__)
