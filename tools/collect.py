@@ -102,7 +102,6 @@ def main():
 	"""
 	Create the data directory if it does not exist.
 	"""
-
 	output = args.output[0]
 	track = args.track[0]
 	data_dir = os.path.join(output, track[0])
@@ -113,61 +112,75 @@ def main():
 	"""
 	Set up the authentication with the Twitter Stream API.
 	"""
-
 	auth = OAuthHandler(conf.ACCOUNTS[0]['CONSUMER_KEY'], conf.ACCOUNTS[0]['CONSUMER_SECRET'])
 	auth.set_access_token(conf.ACCOUNTS[0]['ACCESS_TOKEN'], conf.ACCOUNTS[0]['ACCESS_TOKEN_SECRET'])
 
 	"""
-	If only the understanding corpus needs to be collected, track normally during the understanding period.
+	Start collecting tweets.
 	"""
+	meta = []
 	if args.U:
-		file_name = os.path.join(data_dir, 'understanding.json')
+		filename = os.path.join(data_dir, 'understanding.json')
 
 		start = time.time()
 		logger.info('Starting to collect understanding corpus')
-		with open(file_name, 'w') as file:
-			listener = TweetListener(file, max_time=args.understanding * 60, silent=True)
-			stream = Stream(auth, listener)
-			stream.filter(track=track, languages=["en"])
+		collect(auth, track, filename, args.understanding * 60, silent=True)
 		logger.info('Understanding corpus collected')
 		end = time.time()
+		meta.append({
+			'keywords': track,
+			'output': filename,
+			'start': start,
+			'end': end
+		})
 
-		"""
-		Save the meta data of the collected file.
-		"""
-		meta_file_name = os.path.join(data_dir, 'understanding.meta.json')
-		with open(meta_file_name, 'w') as meta_file:
-			meta = {
-				'keywords': track,
-				'output': file_name,
-				'start': start,
-				'end': end,
-			}
-			meta_file.write(json.dumps(meta) + "\n")
 	if args.E:
-		file_name = os.path.join(data_dir, 'event.json')
+		filename = os.path.join(data_dir, 'event.json')
 
 		start = time.time()
 		logger.info('Starting to collect event corpus')
-		with open(file_name, 'w') as file:
-			listener = TweetListener(file, max_time=args.event * 60, silent=True)
-			stream = Stream(auth, listener)
-			stream.filter(track=track, languages=["en"])
+		collect(auth, track, filename, args.event * 60, silent=True)
 		logger.info('Event corpus collected')
 		end = time.time()
+		meta.append({
+			'keywords': track,
+			'output': filename,
+			'start': start,
+			'end': end
+		})
 
-		"""
-		Save the meta data of the collected file.
-		"""
-		meta_file_name = os.path.join(data_dir, 'event.meta.json')
-		with open(meta_file_name, 'w') as meta_file:
-			meta = {
-				'keywords': track,
-				'output': file_name,
-				'start': start,
-				'end': end,
-			}
-			meta_file.write(json.dumps(meta) + "\n")
+	"""
+	Save the meta data of the collected datasets.
+	"""
+	meta_filename = os.path.join(data_dir, 'meta.json')
+	with open(meta_filename, 'w') as meta_file:
+		for collection in meta:
+			meta_file.write(json.dumps(collection) + "\n")
+
+def collect(auth, track, filename, time, lang=None, *args, **kwargs):
+	"""
+	Collect tweets and save them to the given file.
+	The tweets are collected synchronously.
+	Any additional arguments or keyword arguments are passed on to the :class:`twitter.twevent.listener.TweetListener` constructor.
+
+	:param auth: The OAuth handler to connect with Twitter's API.
+	:type auth: :class:`tweepy.OAuthHandler`
+	:param track: The tracking keywords:
+	:type track: list of str
+	:param filename: The filename where to save the collected tweets.
+	:type filename: str
+	:param time: The number of seconds to spend collecting tweets.
+	:type time: int
+	:param lang: The tweet collection language, defaults to English.
+	:type lang: list of str
+	"""
+
+	lang = [ 'en' ] if lang is None else lang
+
+	with open(filename, 'w') as file:
+		listener = TweetListener(file, max_time=time, *args, **kwargs)
+		stream = Stream(auth, listener)
+		stream.filter(track=track, languages=lang)
 
 if __name__ == "__main__":
 	main()
