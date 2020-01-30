@@ -13,21 +13,23 @@ To run the script, use:
 .. code-block:: bash
 
     ./tools/collect.py \\
-		-t '#ARSWAT' Arsenal Watford \\
-		-o data
+	    -t '#ARSWAT' Arsenal Watford \\
+	    -o data \\
+	    -U -u 60 \\
+	    -E -e 60
 
 Accepted arguments:
 
-	- -t --track			<Required> A list of tracking keywords.
-	- -o --output			<Required> The data directory where the corpus should be written.
-	- -u --understanding	<Optional> The length of the understanding period in minutes. Defaults to an hour and must be a natural number.
-	- -e --event			<Optional> The length of the event period in minutes. Defaults to an hour and must be a natural number.
-	- -a --account			<Optional> The account to use to collect the corpus with, as an index of the configuration's accounts. Defaults to the first account.
+	- ``-t --track``			*<Required>* A list of tracking keywords.
+	- ``-o --output``			*<Required>* The data directory where the corpus should be written.
+	- ``-u --understanding``	*<Optional>* The length of the understanding period in minutes. Defaults to an hour and must be a natural number.
+	- ``-e --event``			*<Optional>* The length of the event period in minutes. Defaults to an hour and must be a natural number.
+	- ``-a --account``			*<Optional>* The account to use to collect the corpus with, as an index of the configuration's accounts. Defaults to the first account.
 
 The implemented modes of operation are:
 
-	- -U					<Optional> Collect the understanding corpus.
-	- -E					<Optional> Collect the event corpus.
+	- ``-U``					*<Optional>* Collect the understanding corpus.
+	- ``-E``					*<Optional>* Collect the event corpus.
 """
 
 import argparse
@@ -56,13 +58,13 @@ def setup_args():
 
 	Accepted arguments:
 
-		- -t --track			<Required> A list of tracking keywords.
-		- -o --output			<Required> The data directory where the corpus should be written.
-		- -U					<Optional> Collect the understanding corpus.
-		- -u --understanding	<Optional> The length of the understanding period in minutes. Defaults to an hour and must be a natural number.
-		- -E					<Optional> Collect the event corpus.
-		- -e --event			<Optional> The length of the event period in minutes. Defaults to an hour and must be a natural number.
-		- -a --account			<Optional> The account to use to collect the corpus with, as an index of the configuration's accounts. Defaults to the first account.
+		- ``-t --track``			*<Required>* A list of tracking keywords.
+		- ``-o --output``			*<Required>* The data directory where the corpus should be written.
+		- ``-U``					*<Optional>* Collect the understanding corpus.
+		- ``-u --understanding``	*<Optional>* The length of the understanding period in minutes. Defaults to an hour and must be a natural number.
+		- ``-E``					*<Optional>* Collect the event corpus.
+		- ``-e --event``			*<Optional>* The length of the event period in minutes. Defaults to an hour and must be a natural number.
+		- ``-a --account``			*<Optional>* The account to use to collect the corpus with, as an index of the configuration's accounts. Defaults to the first account.
 
 	:return: The command-line arguments.
 	:rtype: list
