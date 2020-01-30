@@ -4,4 +4,4 @@ docs
 notebooks/Experiments
 
 .ftpconfig
-conf.py
+config/conf.py
