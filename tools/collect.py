@@ -21,10 +21,12 @@ Accepted arguments:
 	- -t --track			<Required> A list of tracking keywords.
 	- -o --output			<Required> The data directory where the corpus should be written.
 	- -u --understanding	<Optional> The length of the understanding period in minutes. Defaults to an hour.
+	- -e --event			<Optional> The length of the event period in minutes. Defaults to an hour.
 
 The implemented modes of operation are:
 
 	- -U					<Optional> Collect the understanding corpus.
+	- -E					<Optional> Collect the event corpus.
 """
 
 import argparse
@@ -54,6 +56,8 @@ def setup_args():
 		- -o --output			<Required> The data directory where the corpus should be written.
 		- -U					<Optional> Collect the understanding corpus.
 		- -u --understanding	<Optional> The length of the understanding period in minutes. Defaults to an hour.
+		- -E					<Optional> Collect the event corpus.
+		- -e --event			<Optional> The length of the event period in minutes. Defaults to an hour.
 
 	:return: The command-line arguments.
 	:rtype: list
@@ -72,13 +76,18 @@ def setup_args():
 	parser.add_argument('-u', '--understanding', nargs='?', type=int,
 						default=60, required=False,
 						help='<Optional> The length of the understanding period in minutes. Defaults to an hour.')
+	parser.add_argument('-e', '--event', nargs='?', type=int,
+						default=60, required=False,
+						help='<Optional> The length of the event period in minutes. Defaults to an hour.')
 
 	"""
 	The modes of operation.
 	"""
 
 	parser.add_argument('-U', action='store_true',
-						help='<Optional> Collect only the understanding corpus.')
+						help='<Optional> Collect the understanding corpus.')
+	parser.add_argument('-E', action='store_true',
+						help='<Optional> Collect the event corpus.')
 
 	args = parser.parse_args()
 	return args
@@ -127,6 +136,30 @@ def main():
 		Save the meta data of the collected file.
 		"""
 		meta_file_name = os.path.join(data_dir, 'understanding.meta.json')
+		with open(meta_file_name, 'w') as meta_file:
+			meta = {
+				'keywords': track,
+				'output': file_name,
+				'start': start,
+				'end': end,
+			}
+			meta_file.write(json.dumps(meta) + "\n")
+	if args.E:
+		file_name = os.path.join(data_dir, 'event.json')
+
+		start = time.time()
+		logger.info('Starting to collect event corpus')
+		with open(file_name, 'w') as file:
+			listener = TweetListener(file, max_time=args.event * 60, silent=True)
+			stream = Stream(auth, listener)
+			stream.filter(track=track, languages=["en"])
+		logger.info('Event corpus collected')
+		end = time.time()
+
+		"""
+		Save the meta data of the collected file.
+		"""
+		meta_file_name = os.path.join(data_dir, 'event.meta.json')
 		with open(meta_file_name, 'w') as meta_file:
 			meta = {
 				'keywords': track,
