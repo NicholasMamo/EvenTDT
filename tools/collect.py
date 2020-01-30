@@ -24,7 +24,7 @@ Accepted arguments:
 
 The implemented modes of operation are:
 
-	- -U					<Optional> Collect only the understanding corpus.
+	- -U					<Optional> Collect the understanding corpus.
 """
 
 import argparse
@@ -52,8 +52,8 @@ def setup_args():
 
 		- -t --track			<Required> A list of tracking keywords.
 		- -o --output			<Required> The data directory where the corpus should be written.
+		- -U					<Optional> Collect the understanding corpus.
 		- -u --understanding	<Optional> The length of the understanding period in minutes. Defaults to an hour.
-		- -U					<Optional> Collect only the understanding corpus.
 
 	:return: The command-line arguments.
 	:rtype: list
