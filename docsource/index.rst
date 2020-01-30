@@ -10,7 +10,7 @@ Welcome to EvenTDT's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-
+   tools
 
 Indices and tables
 ==================
