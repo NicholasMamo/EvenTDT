@@ -1,11 +1,11 @@
 """
 A simple local term-weighting scheme that sets the weight of a term to 1 if it appears in the document.
-The weight :math:`bool_{i,d}` of a feature :math:`i` is simply 1 if it appears in a document :math:`d`, 0 otherwise.
+The weight :math:`bool_{t,d}` of a feature :math:`t` is simply 1 if it appears in a document :math:`d`, 0 otherwise.
 
 .. math::
 
-	bool_{i,d} = \\begin{cases}
-				     1 & \\text{if } i \\in d \\\\
+	bool_{t,d} = \\begin{cases}
+				     1 & \\text{if } t \\in d \\\\
 					 0 & \\text{otherwise}
 				 \\end{cases}
 """

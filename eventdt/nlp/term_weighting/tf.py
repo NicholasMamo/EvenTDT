@@ -1,10 +1,10 @@
 """
 The term frequency term-weighting scheme is used when there is no need for a global scheme.
-The term frequency :math:`tf_{i,d}` of a feature :math:`i` is equivalent to its frequency :math:`f_{i,d}` in document :math:`d`:
+The term frequency :math:`tf_{t,d}` of a feature :math:`t` is equivalent to its frequency :math:`f_{t,d}` in document :math:`d`:
 
 .. math::
 
-	tf_{i,d} = f_{i,d}
+	tf_{t,d} = f_{t,d}
 """
 
 import os
