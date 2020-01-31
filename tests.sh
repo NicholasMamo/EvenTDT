@@ -29,11 +29,11 @@ apd_tests() {
 }
 
 document_tests() {
-	# echo -e "${HIGHLIGHT}Term Weighting${DEFAULT}"
-	# python3 -m unittest eventdt.vsm.nlp.tests.test_term_weighting
-	#
-	echo -e "${HIGHLIGHT}Document${DEFAULT}"
-	python3 -m unittest eventdt.nlp.tests.test_document
+	echo -e "${HIGHLIGHT}Term Weighting${DEFAULT}"
+	python3 -m unittest eventdt.nlp.term_weighting.local.tests.test_boolean
+
+	# echo -e "${HIGHLIGHT}Document${DEFAULT}"
+	# python3 -m unittest eventdt.nlp.tests.test_document
 
 	# echo -e "${HIGHLIGHT}Tokenizer${DEFAULT}"
 	# python3 -m unittest eventdt.vsm.nlp.tests.test_tokenizer
