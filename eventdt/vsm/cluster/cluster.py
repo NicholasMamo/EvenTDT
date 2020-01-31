@@ -24,25 +24,22 @@ class Cluster(Attributable):
 	Clusters are based on :class:`objects.Attributable` so that they may have additional properties.
 
 	:ivar vectors: The list of vectors that make up the cluster.
-	:vartype vectors: list of :class:`eventdt.vsm.vector.Vector` instances instances
+	:vartype vectors: list of :class:`eventdt.vsm.vector.Vector` instances
 	:ivar centroid: The centroid of the cluster, representing the average vector.
 	:vartype centroid: :class:`eventdt.vsm.vector.Vector` instances
 	"""
 
 	def __init__(self, vectors=None):
 		"""
-		Initiate the cluster with an empty centroid and a list of vectors.
+		Initialize the cluster with an empty centroid and a list of vectors.
 
 		:param vectors: An initial list of vectors, or a single vector.
 						If `None` is given, an empty list is initialized instead.
-		:type vectors: list of :class:`eventdt.vsm.vector.Vector` or :class:`eventdt.vsm.vector.Vector`
+		:type vectors: list of :class:`eventdt.vsm.vector.Vector` or :class:`eventdt.vsm.vector.Vector` or `None`
 		"""
 
 		super(Cluster, self).__init__()
-		if type(vectors) is not list and vectors is not None:
-			self.set_vectors([ vectors ])
-		else:
-			self.set_vectors(vectors)
+		self.set_vectors(vectors)
 
 	def add_vectors(self, vectors):
 		"""
@@ -127,12 +124,15 @@ class Cluster(Attributable):
 		"""
 		Reset the list of vectors.
 
-		:param vectors: The new list of vectors.
-			If none are given, an empty list is initialized instead.
-		:type vectors: list of :class:`eventdt.vsm.vector.Vector` instances instances
+		:param vectors: The new list of vectors, or a single vector.
+						If `None` is given, an empty list is initialized instead.
+		:type vectors: list of :class:`eventdt.vsm.vector.Vector` or :class:`eventdt.vsm.vector.Vector` or `None`
 		"""
 
 		vectors = list() if vectors is None else vectors
+		if type(vectors) is not list:
+			vectors = [ vectors ]
+
 		self.centroid = Vector()
 		self.vectors = []
 		for vector in vectors:
@@ -150,7 +150,7 @@ class Cluster(Attributable):
 		:type similarity_measure: function
 
 		:return: The representative vectors.
-		:rtype: :class:`eventdt.vsm.vector.Vector` instances or list of :class:`eventdt.vsm.vector.Vector` instances instances
+		:rtype: :class:`eventdt.vsm.vector.Vector` instances or list of :class:`eventdt.vsm.vector.Vector` instances
 		"""
 
 		similarities = [ self.similarity(vector, similarity_measure) for vector in self.vectors ] # calculate the similarities
