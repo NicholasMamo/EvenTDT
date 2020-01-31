@@ -24,9 +24,9 @@ class Cluster(Attributable):
 	Clusters are based on :class:`objects.Attributable` so that they may have additional properties.
 
 	:ivar vectors: The list of vectors that make up the cluster.
-	:vartype vectors: list of :class:`eventdt.vsm.vector.Vector` instances
+	:vartype vectors: list of :class:`eventdt.vsm.vector.Vector`
 	:ivar centroid: The centroid of the cluster, representing the average vector.
-	:vartype centroid: :class:`eventdt.vsm.vector.Vector` instances
+	:vartype centroid: :class:`eventdt.vsm.vector.Vector`
 	"""
 
 	def __init__(self, vectors=None):
@@ -57,7 +57,7 @@ class Cluster(Attributable):
 		Add a vector to the cluster.
 
 		:param vector: The vector to add to the cluster.
-		:type vector: :class:`eventdt.vsm.vector.Vector` instances
+		:type vector: :class:`eventdt.vsm.vector.Vector`
 		"""
 
 		self.vectors.append(vector)
@@ -88,7 +88,7 @@ class Cluster(Attributable):
 		Remove a vector from the cluster.
 
 		:param vector: The vector to remove from the cluster.
-		:type vector: :class:`eventdt.vsm.vector.Vector` instances
+		:type vector: :class:`eventdt.vsm.vector.Vector`
 		"""
 
 		self.vectors.remove(vector)
@@ -109,7 +109,7 @@ class Cluster(Attributable):
 		Calculate the similarity between the given vector and this cluster's centroid.
 
 		:param vector: The vector that will be compared with the centroid.
-		:type vector: :class:`eventdt.vsm.vector.Vector` instances
+		:type vector: :class:`eventdt.vsm.vector.Vector`
 		:param similarity_measure: The similarity function to use to compare the likeliness of the vector with the cluster.
 		:type similarity_measure: func
 
@@ -161,7 +161,7 @@ class Cluster(Attributable):
 		:type similarity_measure: func
 
 		:return: The representative vectors.
-		:rtype: :class:`eventdt.vsm.vector.Vector` or list of :class:`eventdt.vsm.vector.Vector` instances
+		:rtype: :class:`eventdt.vsm.vector.Vector` or list of :class:`eventdt.vsm.vector.Vector`
 		"""
 
 		"""
