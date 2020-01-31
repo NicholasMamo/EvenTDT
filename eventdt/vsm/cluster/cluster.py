@@ -39,7 +39,7 @@ class Cluster(Attributable):
 		"""
 
 		super(Cluster, self).__init__()
-		self.set_vectors(vectors)
+		self.vectors = vectors
 
 	def add_vectors(self, vectors):
 		"""
@@ -119,8 +119,19 @@ class Cluster(Attributable):
 
 		return similarity_measure(self.centroid, vector)
 
-	# TODO: Needs to become a property
-	def set_vectors(self, vectors=None):
+	@property
+	def vectors(self):
+		"""
+		Get the list of vectors in the cluster.
+
+		:return: The list of vectors in the cluster.
+		:rtype: list of :class:`eventdt.vsm.vector.Vector`
+		"""
+
+		return self.__vectors
+
+	@vectors.setter
+	def vectors(self, vectors=None):
 		"""
 		Reset the list of vectors.
 
@@ -134,7 +145,7 @@ class Cluster(Attributable):
 			vectors = [ vectors ]
 
 		self.centroid = Vector()
-		self.vectors = []
+		self.__vectors = []
 		for vector in vectors:
 			self.add_vector(vector)
 

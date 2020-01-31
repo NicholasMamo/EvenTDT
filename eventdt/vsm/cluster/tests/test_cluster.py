@@ -117,7 +117,7 @@ class TestCluster(unittest.TestCase):
 		]
 		c = Cluster()
 		self.assertEqual({}, c.centroid.dimensions)
-		c.set_vectors(v)
+		c.vectors = v
 		self.assertEqual(c.centroid.dimensions, {"a": 1.5, "b": 0.5, "c": 1})
 
 	def test_cluster_similarity(self):
@@ -177,7 +177,7 @@ class TestCluster(unittest.TestCase):
 		c = Cluster(v)
 		self.assertEqual(v, c.vectors)
 
-		c.set_vectors(None)
+		c.vectors = None
 		self.assertEqual([ ], c.vectors)
 		self.assertEqual({ }, c.centroid.dimensions)
 
@@ -194,7 +194,7 @@ class TestCluster(unittest.TestCase):
 		self.assertEqual(v, c.vectors)
 
 		n = Document("", [ 'a' ], scheme=TF())
-		c.set_vectors(n)
+		c.vectors = n
 		self.assertEqual([ n ], c.vectors)
 		self.assertEqual(n.dimensions, c.centroid.dimensions)
 
@@ -213,7 +213,7 @@ class TestCluster(unittest.TestCase):
 			Document("", ["a", "c"], scheme=TF())
 		]
 
-		c.set_vectors(n)
+		c.vectors = n
 		self.assertEqual(n, c.vectors)
 		self.assertEqual({ 'a': 1.5, 'b': 0.5, 'c': 1 }, c.centroid.dimensions)
 
