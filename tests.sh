@@ -35,6 +35,7 @@ document_tests() {
 	python3 -m unittest eventdt.nlp.term_weighting.global_schemes.tests.test_idf
 	python3 -m unittest eventdt.nlp.term_weighting.global_schemes.tests.test_filler
 	python3 -m unittest eventdt.nlp.term_weighting.tests.test_tfidf
+	python3 -m unittest eventdt.nlp.term_weighting.tests.test_tf
 
 	# echo -e "${HIGHLIGHT}Document${DEFAULT}"
 	# python3 -m unittest eventdt.nlp.tests.test_document
