@@ -1,5 +1,5 @@
 """
-Run unit tests on the Document class
+Run unit tests on the :class:`eventdt.nlp.document.Document` class.
 """
 
 import os
@@ -16,35 +16,56 @@ from term_weighting import TF
 
 class TestDocument(unittest.TestCase):
 	"""
-	Test the Document class
+	Test the :class:`eventdt.nlp.document.Document` class.
 	"""
 
-	def test_init(self):
+	def test_empty_document(self):
 		"""
-		Test the Document constructor
+		Test that the document may be created empty.
 		"""
-		tf = TF()
 
 		d = Document()
-		self.assertEqual(d.get_dimensions(), {})
+		self.assertEqual('', d.text)
+		self.assertEqual({ }, d.dimensions)
 
-		d = Document("", {"x": 2}, scheme=tf)
-		self.assertEqual(d.get_dimensions(), {"x": 2})
+	def test_document_constructor(self):
+		"""
+		Test creating a document with text and dimensions.
+		"""
 
-		d = Document("He would never do that", ["he", "would", "never", "do", "that"], scheme=tf)
-		self.assertEqual(d.get_dimensions(), {"he": 1, "would": 1, "never": 1, "do": 1, "that": 1})
+		d = Document('text', { 'text': 1 })
+		self.assertEqual('text', d.text)
+		self.assertEqual({ 'text': 1 }, d.dimensions)
 
-		d = Document("He would never do that, would he?", ["he", "would", "never", "do", "that", "would", "he"], scheme=tf)
-		self.assertEqual(d.get_dimensions(), {"he": 2, "would": 2, "never": 1, "do": 1, "that": 1})
+	def test_document_attributes(self):
+		"""
+		Test creating a document with text, dimensions, and attributes.
+		"""
+
+		d = Document('text', { 'text': 1 }, attributes={ 'label': True })
+		self.assertEqual('text', d.text)
+		self.assertEqual({ 'text': 1 }, d.dimensions)
+		self.assertTrue(d.get_attribute('label'))
+
+	def test_create_document_with_tokens(self):
+		"""
+		Test creating a document with tokens and a term-weighting scheme.
+		"""
+
+		text = 'this is not a pipe'
+		d = Document(text, text.split(), scheme=TF())
+		self.assertEqual({ 'this': 1, 'is': 1, 'not': 1, 'a': 1, 'pipe': 1 }, d.dimensions)
 
 	def test_export(self):
 		"""
 		Test exporting and importing documents.
 		"""
 
-		d = Document("He would never do that", ["he", "would", "never", "do", "that"], attributes={ "timestamp": 0 })
+		text = 'this is not a pipe'
+		d = Document(text, text.split(), attributes={ 'timestamp': 10 })
 		e = d.to_array()
 		self.assertEqual(d.get_attributes(), Document.from_array(e).get_attributes())
 		self.assertEqual(d.get_dimensions(), Document.from_array(e).get_dimensions())
 		self.assertEqual(d.text, Document.from_array(e).text)
+		self.assertEqual(d.get_attribute('timestamp'), Document.from_array(e).get_attribute('timestamp'))
 		self.assertEqual(d.__dict__, Document.from_array(e).__dict__)
