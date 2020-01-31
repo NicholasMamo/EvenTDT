@@ -1,5 +1,10 @@
 """
-The TF scheme is used when there is no need for a global scheme.
+The term frequency term-weighting scheme is used when there is no need for a global scheme.
+The term frequency :math:`tf_{i,d}` of a feature :math:`i` is equivalent to its frequency :math:`f_{i,d}` in document :math:`d`:
+
+.. math::
+
+	tf_{i,d} = f_{i,d}
 """
 
 import os
