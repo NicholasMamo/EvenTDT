@@ -2,6 +2,14 @@
 The Inverse Document Frequency (IDF) global term-weighting scheme penalizes common terms.
 The reasoning is that common terms are not informative.
 Terms that appear often in one document but rarely outside characterize that document.
+
+The IDF :math:`idf_{t}` for term :math:`t` is computed as follows:
+
+.. math::
+
+	idf_{t} = \\log{\\frac{N}{n_t}}
+
+where :math:`N` is the total number of documents and :math:`n_t` is the total number of documents in :math:`N` that contain term :math:`t`.
 """
 
 import math
