@@ -37,8 +37,8 @@ class Document(Vector):
 						   The dimensions are then created from this list using the given scheme.
 		:type dimensions: list or dict
 		:param scheme: The term-weighting scheme that is used to convert the tokens into dimensions.
-					   If `None` is given, the :class:`vector.nlp.TermWeighting.TF` term-weighting scheme is used.
-		:type scheme: None or :class:`vector.nlp.TermWeighting`
+					   If `None` is given, the :class:`eventdt.nlp.term_weighting.TermWeighting.TF` term-weighting scheme is used.
+		:type scheme: None or :class:`eventdt.nlp.term_weighting.TermWeighting`
 		"""
 
 		"""
