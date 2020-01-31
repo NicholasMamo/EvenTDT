@@ -24,3 +24,56 @@ Documents
    :members:
    :private-members:
    :special-members:
+
+==============
+Term-Weighting
+==============
+
+.. automodule:: eventdt.nlp.term_weighting
+   :members:
+   :private-members:
+   :special-members:
+
+.. automodule:: eventdt.nlp.term_weighting.scheme
+   :members:
+   :private-members:
+   :special-members:
+
+Common Term-Weighting Schemes
+-----------------------------
+
+.. automodule:: eventdt.nlp.term_weighting.tf
+   :members:
+   :private-members:
+   :special-members:
+
+.. automodule:: eventdt.nlp.term_weighting.tfidf
+   :members:
+   :private-members:
+   :special-members:
+
+Local Term-Weighting Schemes
+----------------------------
+
+.. automodule:: eventdt.nlp.term_weighting.local_schemes.boolean
+   :members:
+   :private-members:
+   :special-members:
+
+.. automodule:: eventdt.nlp.term_weighting.local_schemes.tf
+   :members:
+   :private-members:
+   :special-members:
+
+Global Term-Weighting Schemes
+-----------------------------
+
+.. automodule:: eventdt.nlp.term_weighting.global_schemes.filler
+   :members:
+   :private-members:
+   :special-members:
+
+.. automodule:: eventdt.nlp.term_weighting.global_schemes.idf
+   :members:
+   :private-members:
+   :special-members:
