@@ -24,7 +24,7 @@ class TestBoolean(unittest.TestCase):
 
 		tokens = []
 		scheme = Boolean()
-		self.assertEquals({ }, scheme.score(tokens))
+		self.assertEqual({ }, scheme.score(tokens))
 
 	def test_list_score(self):
 		"""
@@ -33,7 +33,7 @@ class TestBoolean(unittest.TestCase):
 
 		tokens = [ 'a', 'b' ]
 		scheme = Boolean()
-		self.assertEquals({ 'a': 1, 'b': 1 }, scheme.score(tokens))
+		self.assertEqual({ 'a': 1, 'b': 1 }, scheme.score(tokens))
 
 	def test_repeated_score(self):
 		"""
@@ -42,4 +42,4 @@ class TestBoolean(unittest.TestCase):
 
 		tokens = [ 'a', 'b', 'a' ]
 		scheme = Boolean()
-		self.assertEquals({ 'a': 1, 'b': 1 }, scheme.score(tokens))
+		self.assertEqual({ 'a': 1, 'b': 1 }, scheme.score(tokens))
