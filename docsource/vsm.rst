@@ -32,3 +32,12 @@ Vector Math
    :members:
    :private-members:
    :special-members:
+
+==========
+Clustering
+==========
+
+.. automodule:: eventdt.vsm.clustering.cluster
+   :members:
+   :private-members:
+   :special-members:
