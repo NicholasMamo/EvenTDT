@@ -1,5 +1,13 @@
 """
 A simple local term-weighting scheme that sets the weight of a term to 1 if it appears in the document.
+The weight :math:`bool_{i,d}` of a feature :math:`i` is simply 1 if it appears in a document :math:`d`, 0 otherwise.
+
+.. math::
+
+	bool_{i,d} = \\begin{cases}
+				     1 & \\text{if } i \\in d \\\\
+					 0 & \\text{otherwise}
+				 \\end{cases}
 """
 
 import os
@@ -14,7 +22,7 @@ from scheme import SchemeScorer
 class Boolean(SchemeScorer):
 	"""
 	The boolean term-weighting scheme is one of the simplest term weighting schemes that is used.
-	The weight of a dimension is simply 1 if it appears in a document, 0 otherwise.
+	The weight of a feature is 1 if it appears in a document, 0 otherwise.
 	"""
 
 	def score(self, tokens, *args, **kwargs):
