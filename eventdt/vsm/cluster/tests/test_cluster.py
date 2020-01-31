@@ -36,71 +36,280 @@ class TestCluster(unittest.TestCase):
 
 		v = Document("", ["a", "b", "a", "c"], scheme=TF())
 		c = Cluster(v)
-		self.assertEqual(c.centroid.dimensions, v.dimensions)
+		self.assertEqual(v.dimensions, c.centroid.dimensions)
 
-	def test_init(self):
+	def test_cluster_with_several_vectors(self):
 		"""
-		Test the Cluster constructor
+		Test creating a cluster with several vectors.
 		"""
-
-		tf = TF()
-
-		c = Cluster()
-		e = Vector()
-		self.assertEqual(c.centroid.dimensions, e.dimensions)
 
 		v = [
-			Document("", ["a", "b", "a", "c"], scheme=tf),
-		]
-
-		c = Cluster(v)
-		self.assertEqual(c.centroid.dimensions, v[0].dimensions)
-
-		v = [
-			Document("", ["a", "b", "a", "c"], scheme=tf),
-			Document("", ["a", "c"], scheme=tf),
+			Document("", ["a", "b", "a", "c"], scheme=TF()),
+			Document("", ["a", "c"], scheme=TF()),
 		]
 		c = Cluster(v)
-		self.assertEqual(c.centroid.dimensions, {"a": 1.5, "b": 0.5, "c": 1})
+		self.assertEqual({"a": 1.5, "b": 0.5, "c": 1}, c.centroid.dimensions)
 
-	def test_vector_change(self):
+	def test_vectors_reference(self):
 		"""
-		Test adding and removing Vectors
+		Test that when a vector changes, the same vector in the cluster also changes.
 		"""
 
-		tf = TF()
+		v = Document("", ["a", "b", "a", "c"], scheme=TF())
+		c = Cluster(v)
+		self.assertEqual(v.dimensions, c.centroid.dimensions)
+
+		v.set_dimension("d", 1)
+		self.assertEqual(1, c.vectors[0].get_dimension("d"))
+		self.assertEqual(0, c.centroid.get_dimension("d"))
+		c.recalculate_centroid()
+		self.assertEqual(1, c.vectors[0].get_dimension("d"))
+		self.assertEqual(1, c.centroid.get_dimension("d"))
+
+	def test_add_vectors(self):
+		"""
+		Test adding vectors to a cluster gradually.
+		"""
 
 		c = Cluster()
 		v = [
-			Document("", ["a", "b", "a", "c"], scheme=tf),
-			Document("", ["a", "c"], scheme=tf),
-			Document("", ["b"], scheme=tf),
+			Document("", ["a", "b", "a", "c"], scheme=TF()),
+			Document("", ["a", "c"], scheme=TF())
 		]
 
-		e = Vector()
-
-		self.assertEqual(c.centroid.dimensions, Vector().dimensions)
+		self.assertEqual({}, c.centroid.dimensions)
 
 		c.add_vector(v[0])
-		self.assertEqual(c.centroid.dimensions, v[0].dimensions)
+		self.assertEqual(v[0].dimensions, c.centroid.dimensions)
 
-		v[0].set_dimension("d", 1)
-		self.assertEqual(c.centroid.get_dimension("d"), 0)
 		c.add_vector(v[1])
-		c.recalculate_centroid()
-		self.assertEqual(c.centroid.dimensions, {"a": 1.5, "b": 0.5, "c": 1, "d": 0.5})
+		self.assertEqual({"a": 1.5, "b": 0.5, "c": 1}, c.centroid.dimensions)
 
+	def test_remove_vectors(self):
+		"""
+		Test removing vectors from a cluster gradually.
+		"""
+
+		v = [
+			Document("", ["a", "b", "a", "c"], scheme=TF()),
+			Document("", ["a", "c"], scheme=TF())
+		]
+		c = Cluster(v)
+		self.assertEqual({"a": 1.5, "b": 0.5, "c": 1}, c.centroid.dimensions)
 		c.remove_vector(v[0])
-		self.assertEqual(c.centroid.dimensions, v[1].dimensions)
+		self.assertEqual(v[1].dimensions, c.centroid.dimensions)
 
+		c = Cluster(v)
+		self.assertEqual({"a": 1.5, "b": 0.5, "c": 1}, c.centroid.dimensions)
+		c.remove_vector(v[1])
+		self.assertEqual(v[0].dimensions, c.centroid.dimensions)
+		c.remove_vector(v[0])
+		self.assertEqual({ }, c.centroid.dimensions)
+
+	def test_setting_vectors(self):
+		"""
+		Test setting the vectors manually.
+		"""
+
+		v = [
+			Document("", ["a", "b", "a", "c"], scheme=TF()),
+			Document("", ["a", "c"], scheme=TF())
+		]
+		c = Cluster()
+		self.assertEqual({}, c.centroid.dimensions)
 		c.set_vectors(v)
-		self.assertEqual(c.centroid.dimensions, {"a": 1, "b": 2./3., "c": 2./3., "d": 1./3.})
+		self.assertEqual(c.centroid.dimensions, {"a": 1.5, "b": 0.5, "c": 1})
 
-		n = Document("", ["a", "b"], scheme=tf)
-		self.assertEqual(round(c.similarity(n), 5), round(5./6., 5))
+	def test_cluster_similarity(self):
+		"""
+		Test calculating the similarity between a cluster and a new vector.
+		"""
 
-		c.remove_vector(v[0])
-		self.assertEqual(round(c.similarity(n), 5), round(math.sqrt(2/3), 5))
+		v = [
+			Document("", ["a", "b", "a", "c"], scheme=TF()),
+			Document("", ["a", "c"], scheme=TF())
+		]
+		c = Cluster(v)
+
+		n = Document("", ["a", "b"], scheme=TF())
+		self.assertEqual(round((1.5 + 0.5)/(math.sqrt(2) * math.sqrt(1.5 ** 2 + 0.5 ** 2 + 1)), 5), round(c.similarity(n), 5))
+
+		c.remove_vector(v[1])
+		self.assertEqual(round(3/(math.sqrt(2) * math.sqrt(2**2 + 1 + 1)), 5), round(c.similarity(n), 5))
+
+	def test_empty_cluster_similarity(self):
+		"""
+		Test that when calculating the similarity between a vector and an empty cluster, the similarity is 0.
+		"""
+
+		c = Cluster()
+		v = Document("", ["a", "c"], scheme=TF())
+		self.assertEqual(0, c.similarity(v))
+
+	def test_recalculate_centroid(self):
+		"""
+		Test when a vector changes, and the centroid is re-calculated, it is correct.
+		"""
+
+		v = [ Document("", [ ]), Document("", [ ]) ]
+		c = Cluster(v)
+		self.assertEqual({ }, c.centroid.dimensions)
+
+		v[0].set_dimensions({ 'a': 1, 'b': 1 })
+		self.assertEqual({ }, c.centroid.dimensions)
+		c.recalculate_centroid()
+		self.assertEqual({ 'a': 0.5, 'b': 0.5 }, c.centroid.dimensions)
+
+		v[1].set_dimensions({ 'a': 1 })
+		self.assertEqual({ 'a': 0.5, 'b': 0.5 }, c.centroid.dimensions)
+		c.recalculate_centroid()
+		self.assertEqual({ 'a': 1, 'b': 0.5 }, c.centroid.dimensions)
+
+	def test_set_vectors_none(self):
+		"""
+		Test that setting vectors to `None` overwrites existing vectors.
+		"""
+
+		v = [
+			Document("", ["a", "b", "a", "c"], scheme=TF()),
+			Document("", ["a", "c"], scheme=TF())
+		]
+		c = Cluster(v)
+		self.assertEqual(v, c.vectors)
+
+		c.set_vectors(None)
+		self.assertEqual([ ], c.vectors)
+		self.assertEqual({ }, c.centroid.dimensions)
+
+	def test_set_one_vectors(self):
+		"""
+		Test that setting vectors to a single vector overwrites existing vectors.
+		"""
+
+		v = [
+			Document("", ["a", "b", "a", "c"], scheme=TF()),
+			Document("", ["a", "c"], scheme=TF())
+		]
+		c = Cluster(v)
+		self.assertEqual(v, c.vectors)
+
+		n = Document("", [ 'a' ], scheme=TF())
+		c.set_vectors(n)
+		self.assertEqual([ n ], c.vectors)
+		self.assertEqual(n.dimensions, c.centroid.dimensions)
+
+	def test_set_several_vectors(self):
+		"""
+		Test that setting vectors to several vectors overwrites existing vectors.
+		"""
+
+		v = Document("", [ 'a' ], scheme=TF())
+		c = Cluster(v)
+		self.assertEqual([ v ], c.vectors)
+		self.assertEqual(v.dimensions, c.centroid.dimensions)
+
+		n = [
+			Document("", ["a", "b", "a", "c"], scheme=TF()),
+			Document("", ["a", "c"], scheme=TF())
+		]
+
+		c.set_vectors(n)
+		self.assertEqual(n, c.vectors)
+		self.assertEqual({ 'a': 1.5, 'b': 0.5, 'c': 1 }, c.centroid.dimensions)
+
+	def test_get_representative_vector(self):
+		"""
+		Test ranking the vectors according to their similarity to the cluster.
+		"""
+
+		v = [
+			Document("", [ 'a', 'b', 'c' ], scheme=TF()),
+			Document("", [ 'a', 'a', 'c' ], scheme=TF()),
+			Document("", [ 'p' ], scheme=TF()),
+		]
+		c = Cluster(v)
+		self.assertEqual(Document, type(c.get_representative_vectors(1)))
+		self.assertEqual(v[1], c.get_representative_vectors(1))
+
+	def test_get_representative_vectors(self):
+		"""
+		Test ranking the vectors according to their similarity to the cluster.
+		"""
+
+		v = [
+			Document("", [ 'a', 'b', 'c' ], scheme=TF()),
+			Document("", [ 'a', 'a', 'c' ], scheme=TF()),
+			Document("", [ 'p' ], scheme=TF()),
+		]
+		c = Cluster(v)
+		self.assertEqual(list, type(c.get_representative_vectors(2)))
+		self.assertEqual([ v[1], v[0] ], c.get_representative_vectors(2))
+
+	def test_get_representative_vectors_from_empty_cluster(self):
+		"""
+		Test that when getting the representative vectors from an empty cluster, an empty list is returned.
+		"""
+
+		c = Cluster()
+		self.assertEqual(list, type(c.get_representative_vectors(2)))
+		self.assertEqual([ ], c.get_representative_vectors(2))
+
+	def test_get_representative_vector_from_empty_cluster(self):
+		"""
+		Test that when getting the representative vector from an empty cluster, `None` is returned.
+		"""
+
+		c = Cluster()
+		self.assertEqual(None, c.get_representative_vectors(1))
+
+	def test_intra_similarity_of_empty_cluster(self):
+		"""
+		Test that the intra-similarity of an empty cluster is 0.
+		"""
+
+		c = Cluster()
+		self.assertEqual(0, c.get_intra_similarity())
+
+	def test_intra_similarity_of_cluster_with_single_vector(self):
+		"""
+		Test that the intra-similarity of a cluster with a single vector is equivalent to that vector's similarity with the cluster.
+		"""
+
+		v = Document("", [ 'a', 'b' ], scheme=TF())
+		c = Cluster(v)
+		self.assertEqual(c.similarity(v), c.get_intra_similarity())
+
+	def test_intra_similarity_of_cluster(self):
+		"""
+		Test that the intra-similarity of a cluster with several vectors is equivalent to the average similarity.
+		"""
+
+		v = [
+			Document("", [ 'a', 'b' ], scheme=TF()),
+			Document("", [ 'a', 'a' ], scheme=TF()),
+		]
+		c = Cluster(v)
+		self.assertEqual((c.similarity(v[0]) + c.similarity(v[1]))/2., c.get_intra_similarity())
+
+	def test_size_empty_cluster(self):
+		"""
+		Test that the size of an empty cluster is 0.
+		"""
+
+		c = Cluster()
+		self.assertEqual(0, c.size())
+
+	def test_size(self):
+		"""
+		Test retrieving the size of a cluster.
+		"""
+
+		v = [
+			Document("", [ 'a', 'b' ], scheme=TF()),
+			Document("", [ 'a', 'a' ], scheme=TF()),
+		]
+		c = Cluster(v)
+		self.assertEqual(len(v), c.size())
 
 	def test_export(self):
 		"""
@@ -109,9 +318,9 @@ class TestCluster(unittest.TestCase):
 
 		tf = TF()
 		v = [
-			Document("", ["a", "b", "a", "c"], scheme=tf),
-			Document("", ["a", "c"], scheme=tf),
-			Document("", ["b"], scheme=tf),
+			Document("", ["a", "b", "a", "c"], scheme=TF()),
+			Document("", ["a", "c"], scheme=TF()),
+			Document("", ["b"], scheme=TF()),
 		]
 		c = Cluster(v)
 

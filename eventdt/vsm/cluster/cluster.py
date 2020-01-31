@@ -97,11 +97,11 @@ class Cluster(Attributable):
 		dimensions = list(self.centroid.get_dimensions().keys())
 
 		"""
-		Update the cluster's centroid incrimentally
+		Update the cluster's centroid incrimentally.
 		"""
 		for dimension in dimensions:
 			value = self.centroid.get_dimension(dimension)
-			new_value = (value * (vectors + 1) - copy[dimension]) / max(vectors, 1)
+			new_value = (value * (vectors + 1) - copy.get(dimension, 0)) / max(vectors, 1)
 			self.centroid.set_dimension(dimension, new_value)
 
 	def similarity(self, vector, similarity_measure=vector_math.cosine):
@@ -111,7 +111,7 @@ class Cluster(Attributable):
 		:param vector: The vector that will be compared with the centroid.
 		:type vector: :class:`eventdt.vsm.vector.Vector` instances
 		:param similarity_measure: The similarity function to use to compare the likeliness of the vector with the cluster.
-		:type similarity_measure: function
+		:type similarity_measure: func
 
 		:return: The similarity between the cluster and the vector.
 		:rtype: float
@@ -147,10 +147,15 @@ class Cluster(Attributable):
 		:param vectors: The number of vectors the fetch.
 		:type vectors: int
 		:param similarity_measure: The similarity function to use to compare the likeliness of the vector with the cluster.
-		:type similarity_measure: function
+		:type similarity_measure: func
 
 		:return: The representative vectors.
-		:rtype: :class:`eventdt.vsm.vector.Vector` instances or list of :class:`eventdt.vsm.vector.Vector` instances
+		:rtype: :class:`eventdt.vsm.vector.Vector` or list of :class:`eventdt.vsm.vector.Vector` instances
+		"""
+
+		"""
+		First calculate all the similarities between the centroid and each vector in the cluster.
+		Then, rank all vectors by their similarity score.
 		"""
 
 		similarities = [ self.similarity(vector, similarity_measure) for vector in self.vectors ] # calculate the similarities
@@ -161,23 +166,28 @@ class Cluster(Attributable):
 		If only one vector is needed, just return the vector, not a list of vectors.
 		Otherwise return a list.
 		"""
-		if (vectors == 1):
-			return similarities[0][0]
+		if vectors == 1:
+			return similarities[0][0] if len(similarities) else None
 		else:
-			return [ similarities[i][0] for i in range(0, vectors) ]
+			similarities = similarities[:vectors]
+			return [ similarity[0] for similarity in similarities ]
 
 	def get_intra_similarity(self, similarity_measure=vector_math.cosine):
 		"""
 		Get the average similarity between vectors and the cluster.
 
 		:param similarity_measure: The similarity function to use to compare the likeliness of the vector with the cluster.
-		:type similarity_measure: function
+		:type similarity_measure: func
 
 		:return: The average intra-similarity of the cluster.
 		:rtype: float
 		"""
-		similarities = [ self.similarity(vector, similarity_measure) for vector in self.vectors ] # calculate the similarities
-		return sum(similarities)/len(similarities)
+
+		if self.vectors:
+			similarities = [ self.similarity(vector, similarity_measure) for vector in self.vectors ] # calculate the similarities
+			return sum(similarities)/len(similarities)
+
+		return 0
 
 	def size(self):
 		"""
