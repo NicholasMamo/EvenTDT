@@ -1,5 +1,5 @@
 """
-Run unit tests on the :class:`eventdt.nlp.term_weighting.local.tf.TF` class.
+Run unit tests on the :class:`eventdt.nlp.term_weighting.local_schemes.tf.TF` class.
 """
 
 import os
@@ -14,7 +14,7 @@ from tf import TF
 
 class TestTF(unittest.TestCase):
 	"""
-	Test the :class:`eventdt.nlp.term_weighting.local.tf.TF` class.
+	Test the :class:`eventdt.nlp.term_weighting.local_schemes.tf.TF` class.
 	"""
 
 	def test_empty_list_score(self):

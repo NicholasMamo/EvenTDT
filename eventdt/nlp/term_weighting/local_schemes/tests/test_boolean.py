@@ -1,5 +1,5 @@
 """
-Run unit tests on the :class:`eventdt.nlp.term_weighting.local.boolean.Boolean` class.
+Run unit tests on the :class:`eventdt.nlp.term_weighting.local_schemes.boolean.Boolean` class.
 """
 
 import os
@@ -14,7 +14,7 @@ from boolean import Boolean
 
 class TestBoolean(unittest.TestCase):
 	"""
-	Test the :class:`eventdt.nlp.term_weighting.local.boolean.Boolean` class.
+	Test the :class:`eventdt.nlp.term_weighting.local_schemes.boolean.Boolean` class.
 	"""
 
 	def test_empty_list_score(self):

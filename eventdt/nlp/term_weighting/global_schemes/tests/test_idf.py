@@ -1,5 +1,5 @@
 """
-Run unit tests on the :class:`eventdt.nlp.term_weighting.global.idf.IDF` class.
+Run unit tests on the :class:`eventdt.nlp.term_weighting.global_schemes.idf.IDF` class.
 """
 
 import os
@@ -12,9 +12,9 @@ if path not in sys.path:
 
 from idf import IDF
 
-class TestTF(unittest.TestCase):
+class TestIDF(unittest.TestCase):
 	"""
-	Test the :class:`eventdt.nlp.term_weighting.global.idf.IDF` class.
+	Test the :class:`eventdt.nlp.term_weighting.global_schemes.idf.IDF` class.
 	"""
 
 	def test_high_value(self):
