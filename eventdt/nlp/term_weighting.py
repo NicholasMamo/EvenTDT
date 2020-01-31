@@ -5,8 +5,14 @@ Different term weighting schemes, used by the Document class to create documents
 from abc import ABC, abstractmethod
 
 import math
+import os
+import sys
 
-from .document import Document
+path = os.path.join(os.path.dirname(__file__))
+if path not in sys.path:
+	sys.path.insert(1, path)
+
+from document import Document
 
 class TermWeighting(ABC):
 	"""

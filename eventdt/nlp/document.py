@@ -1,5 +1,6 @@
 """
-The Document class builds on the Vector, but introduces additional document-specific capabilities.
+The :class:`eventdt.nlp.document.Document` class builds on the :class:`eventdt.vsm.vector.Vector` class.
+In addition to the normal VSM functionality, it introduces additional document-specific capabilities.
 """
 
 __metaclass__ = type
@@ -8,12 +9,10 @@ import math
 import os
 import sys
 
-path = os.path.dirname(__file__)
-path = os.path.join(path, '..', '..')
+path = os.path.join(os.path.dirname(__file__), '..')
 if path not in sys.path:
 	sys.path.insert(1, path)
 
-from vsm import nlp
 from vsm.vector import Vector
 
 from logger import logger
@@ -50,7 +49,7 @@ class Document(Vector):
 		This list of tokens is converted into a dictionary representing the dimensions of the Vector.
 		The conversion is carried out by the term weighting scheme.
 		"""
-		from .term_weighting import TF # import located here because of circular dependencies
+		from term_weighting import TF # import located here because of circular dependencies
 
 		if (type(dimensions) == list):
 			scheme = scheme if scheme is not None else TF()

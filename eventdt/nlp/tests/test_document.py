@@ -7,12 +7,12 @@ import sys
 import unittest
 
 path = os.path.dirname(__file__)
-path = os.path.join(path, '../')
+path = os.path.join(path, '..')
 if path not in sys.path:
     sys.path.append(path)
 
-from libraries.vector.nlp.document import Document
-from libraries.vector.nlp.term_weighting import TF
+from document import Document
+from term_weighting import TF
 
 class TestDocument(unittest.TestCase):
 	"""
