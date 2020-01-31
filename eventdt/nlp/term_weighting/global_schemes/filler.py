@@ -1,6 +1,13 @@
 """
 The filler global term-weighting scheme is used when there is no need for a global term-weighting scheme.
-The scheme assigns the same score to all terms: 1.
+The scheme assigns the same score :math:`fill_{i,d}` to all terms :math:`i` if they appear in the document :math:`d`, 0 otherwise:
+
+.. math::
+
+	fill_{i,d} = \\begin{cases}
+				     1 & \\text{if } i \\in d \\\\
+					 0 & \\text{otherwise}
+				 \\end{cases}
 """
 
 import math
