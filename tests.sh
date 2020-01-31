@@ -29,10 +29,11 @@ apd_tests() {
 }
 
 document_tests() {
-	echo -e "${HIGHLIGHT}Term Weighting${DEFAULT}"
+	echo -e "${HIGHLIGHT}Term-weighting schemes${DEFAULT}"
 	python3 -m unittest eventdt.nlp.term_weighting.local.tests.test_boolean
 	python3 -m unittest eventdt.nlp.term_weighting.local.tests.test_tf
-	python3 -m unittest eventdt.nlp.term_weighting.global.tests.test_idf
+	python3 -m unittest eventdt.nlp.term_weighting.global_schemes.tests.test_idf
+	python3 -m unittest eventdt.nlp.term_weighting.tests.test_tfidf
 
 	# echo -e "${HIGHLIGHT}Document${DEFAULT}"
 	# python3 -m unittest eventdt.nlp.tests.test_document
