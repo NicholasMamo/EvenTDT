@@ -33,6 +33,7 @@ document_tests() {
 	python3 -m unittest eventdt.nlp.term_weighting.local_schemes.tests.test_boolean
 	python3 -m unittest eventdt.nlp.term_weighting.local_schemes.tests.test_tf
 	python3 -m unittest eventdt.nlp.term_weighting.global_schemes.tests.test_idf
+	python3 -m unittest eventdt.nlp.term_weighting.global_schemes.tests.test_filler
 	python3 -m unittest eventdt.nlp.term_weighting.tests.test_tfidf
 
 	# echo -e "${HIGHLIGHT}Document${DEFAULT}"
