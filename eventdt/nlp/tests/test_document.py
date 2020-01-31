@@ -11,7 +11,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from document import Document
-from term_weighting import TF
+from term_weighting.tf import TF
 
 class TestDocument(unittest.TestCase):
 	"""

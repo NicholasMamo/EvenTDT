@@ -37,8 +37,8 @@ document_tests() {
 	python3 -m unittest eventdt.nlp.term_weighting.tests.test_tfidf
 	python3 -m unittest eventdt.nlp.term_weighting.tests.test_tf
 
-	# echo -e "${HIGHLIGHT}Document${DEFAULT}"
-	# python3 -m unittest eventdt.nlp.tests.test_document
+	echo -e "${HIGHLIGHT}Document${DEFAULT}"
+	python3 -m unittest eventdt.nlp.tests.test_document
 
 	# echo -e "${HIGHLIGHT}Tokenizer${DEFAULT}"
 	# python3 -m unittest eventdt.vsm.nlp.tests.test_tokenizer
