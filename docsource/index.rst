@@ -12,6 +12,7 @@ Welcome to EvenTDT's documentation!
 
    tools
    vsm
+   nlp
 
 Indices and tables
 ==================
