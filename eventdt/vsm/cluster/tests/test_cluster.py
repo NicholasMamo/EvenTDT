@@ -7,15 +7,14 @@ import os
 import sys
 import unittest
 
-path = os.path.dirname(__file__)
-path = os.path.join(path, '../')
+path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
-from libraries.vector.vector import Vector
-from libraries.vector.nlp.document import Document
-from libraries.vector.nlp.term_weighting import TF
-from libraries.vector.cluster.cluster import Cluster
+from vector import Vector
+from nlp.document import Document
+from nlp.term_weighting import TF
+from cluster.cluster import Cluster
 
 class TestCluster(unittest.TestCase):
 	"""

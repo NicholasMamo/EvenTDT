@@ -8,14 +8,14 @@ import importlib
 import os
 import sys
 
-path = os.path.join(os.path.dirname(__file__), "../../")
+path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
 from objects.attributable import Attributable
 
-from ..vector import Vector
-from ..vector_math import *
+from vsm.vector import Vector
+from vsm.vector_math import *
 
 class Cluster(Attributable):
 	"""

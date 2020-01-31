@@ -9,12 +9,13 @@ import os
 import sys
 
 path = os.path.dirname(__file__)
-path = os.path.join(path, '../../')
+path = os.path.join(path, '..', '..')
+print(path)
 if path not in sys.path:
 	sys.path.insert(1, path)
 
-from vector import nlp
-from ..vector import Vector
+from vsm import nlp
+from vsm.vector import Vector
 
 from logger import logger
 
