@@ -30,21 +30,21 @@ class TestCluster(unittest.TestCase):
 
 		c = Cluster()
 		e = Vector()
-		self.assertEqual(c.get_centroid().get_dimensions(), e.get_dimensions())
+		self.assertEqual(c.centroid.dimensions, e.dimensions)
 
 		v = [
 			Document("", ["a", "b", "a", "c"], scheme=tf),
 		]
 
 		c = Cluster(v)
-		self.assertEqual(c.get_centroid().get_dimensions(), v[0].get_dimensions())
+		self.assertEqual(c.centroid.dimensions, v[0].dimensions)
 
 		v = [
 			Document("", ["a", "b", "a", "c"], scheme=tf),
 			Document("", ["a", "c"], scheme=tf),
 		]
 		c = Cluster(v)
-		self.assertEqual(c.get_centroid().get_dimensions(), {"a": 1.5, "b": 0.5, "c": 1})
+		self.assertEqual(c.centroid.dimensions, {"a": 1.5, "b": 0.5, "c": 1})
 
 	def test_vector_change(self):
 		"""
@@ -62,22 +62,22 @@ class TestCluster(unittest.TestCase):
 
 		e = Vector()
 
-		self.assertEqual(c.get_centroid().get_dimensions(), Vector().get_dimensions())
+		self.assertEqual(c.centroid.dimensions, Vector().dimensions)
 
 		c.add_vector(v[0])
-		self.assertEqual(c.get_centroid().get_dimensions(), v[0].get_dimensions())
+		self.assertEqual(c.centroid.dimensions, v[0].dimensions)
 
 		v[0].set_dimension("d", 1)
-		self.assertEqual(c.get_centroid().get_dimension("d"), 0)
+		self.assertEqual(c.centroid.get_dimension("d"), 0)
 		c.add_vector(v[1])
 		c.recalculate_centroid()
-		self.assertEqual(c.get_centroid().get_dimensions(), {"a": 1.5, "b": 0.5, "c": 1, "d": 0.5})
+		self.assertEqual(c.centroid.dimensions, {"a": 1.5, "b": 0.5, "c": 1, "d": 0.5})
 
 		c.remove_vector(v[0])
-		self.assertEqual(c.get_centroid().get_dimensions(), v[1].get_dimensions())
+		self.assertEqual(c.centroid.dimensions, v[1].dimensions)
 
 		c.set_vectors(v)
-		self.assertEqual(c.get_centroid().get_dimensions(), {"a": 1, "b": 2./3., "c": 2./3., "d": 1./3.})
+		self.assertEqual(c.centroid.dimensions, {"a": 1, "b": 2./3., "c": 2./3., "d": 1./3.})
 
 		n = Document("", ["a", "b"], scheme=tf)
 		self.assertEqual(round(c.similarity(n), 5), round(5./6., 5))
@@ -101,5 +101,5 @@ class TestCluster(unittest.TestCase):
 		e = c.to_array()
 		r = Cluster.from_array(e)
 
-		for i, vector in enumerate(r.get_vectors()):
+		for i, vector in enumerate(r.vectors):
 			self.assertEqual(vector.__dict__, v[i].__dict__)

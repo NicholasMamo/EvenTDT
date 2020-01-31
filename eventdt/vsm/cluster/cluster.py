@@ -1,5 +1,5 @@
 """
-Clusters are used in conjunction with vectors, grouping them together.
+Clusters are used in conjunction with :class:`eventdt.vsm.vector.Vector` instances to group them together.
 Groups are meant to maximize distance between clusters of different subjects.
 Simultaneously, they aim to minimize the distance between vectors in the same clusters.
 """
@@ -15,7 +15,7 @@ if path not in sys.path:
 from objects.attributable import Attributable
 
 from vsm.vector import Vector
-from vsm.vector_math import *
+from vsm import vector_math
 
 class Cluster(Attributable):
 	"""
@@ -23,10 +23,10 @@ class Cluster(Attributable):
 	It also has a centroid.
 	Clusters are based on :class:`objects.Attributable` so that they may have additional properties.
 
-	:ivar _vectors: The list of vectors that make up the cluster.
-	:vartype _vectors: list of :class:`vector.vector.Vector` instances
-	:ivar _centroid: The centroid of the cluster, representing the average vector.
-	:vartype _centroid: :class:`vector.vector.Vector`
+	:ivar vectors: The list of vectors that make up the cluster.
+	:vartype vectors: list of :class:`eventdt.vsm.vector.Vector` instances instances
+	:ivar centroid: The centroid of the cluster, representing the average vector.
+	:vartype centroid: :class:`eventdt.vsm.vector.Vector` instances
 	"""
 
 	def __init__(self, vectors=None):
@@ -35,7 +35,7 @@ class Cluster(Attributable):
 
 		:param vectors: An initial list of vectors.
 			If none are given, an empty list is initialized instead.
-		:type vectors: list of :class:`vector.vector.Vector` instances
+		:type vectors: list of :class:`eventdt.vsm.vector.Vector` instances instances
 		"""
 
 		super(Cluster, self).__init__()
@@ -57,19 +57,19 @@ class Cluster(Attributable):
 		Add a vector to the cluster.
 
 		:param vector: The vector to add to the cluster.
-		:type vector: :class:`vector.vector.Vector`
+		:type vector: :class:`eventdt.vsm.vector.Vector` instances
 		"""
 
-		self._vectors.append(vector)
-		vectors = len(self._vectors)
-		dimensions = vector.get_dimensions().keys() | self._centroid.get_dimensions().keys()
+		self.vectors.append(vector)
+		vectors = len(self.vectors)
+		dimensions = vector.get_dimensions().keys() | self.centroid.get_dimensions().keys()
 
 		"""
 		Update the cluster's centroid incrimentally.
 		"""
 		for dimension in dimensions:
-			new_weight = (self._centroid.get_dimension(dimension) * (vectors - 1) + vector.get_dimension(dimension)) / vectors
-			self._centroid.set_dimension(dimension, new_weight)
+			new_weight = (self.centroid.get_dimension(dimension) * (vectors - 1) + vector.get_dimension(dimension)) / vectors
+			self.centroid.set_dimension(dimension, new_weight)
 
 	def recalculate_centroid(self):
 		"""
@@ -77,9 +77,9 @@ class Cluster(Attributable):
 		This is important if, for example, one of the vector instances change in memory.
 		"""
 
-		self._centroid = Vector()
-		old_vectors = list(self._vectors) # make a copy of the Vectors
-		self._vectors = [] # remove all Vectors
+		self.centroid = Vector()
+		old_vectors = list(self.vectors) # make a copy of the Vectors
+		self.vectors = [] # remove all Vectors
 		for vector in old_vectors:
 			self.add_vector(vector)
 
@@ -88,28 +88,28 @@ class Cluster(Attributable):
 		Remove a vector from the cluster.
 
 		:param vector: The vector to remove from the cluster.
-		:type vector: :class:`vector.vector.Vector`
+		:type vector: :class:`eventdt.vsm.vector.Vector` instances
 		"""
 
-		self._vectors.remove(vector)
-		vectors = len(self._vectors)
+		self.vectors.remove(vector)
+		vectors = len(self.vectors)
 		copy = vector.get_dimensions().copy()
-		dimensions = list(self._centroid.get_dimensions().keys())
+		dimensions = list(self.centroid.get_dimensions().keys())
 
 		"""
 		Update the cluster's centroid incrimentally
 		"""
 		for dimension in dimensions:
-			value = self._centroid.get_dimension(dimension)
+			value = self.centroid.get_dimension(dimension)
 			new_value = (value * (vectors + 1) - copy[dimension]) / max(vectors, 1)
-			self._centroid.set_dimension(dimension, new_value)
+			self.centroid.set_dimension(dimension, new_value)
 
-	def similarity(self, vector, similarity_measure=cosine):
+	def similarity(self, vector, similarity_measure=vector_math.cosine):
 		"""
 		Calculate the similarity between the given vector and this cluster's centroid.
 
 		:param vector: The vector that will be compared with the centroid.
-		:type vector: :class:`vector.vector.Vector`
+		:type vector: :class:`eventdt.vsm.vector.Vector` instances
 		:param similarity_measure: The similarity function to use to compare the likeliness of the vector with the cluster.
 		:type similarity_measure: function
 
@@ -117,34 +117,25 @@ class Cluster(Attributable):
 		:rtype: float
 		"""
 
-		return similarity_measure(self._centroid, vector)
+		return similarity_measure(self.centroid, vector)
 
+	# TODO: Needs to become a property
 	def set_vectors(self, vectors=None):
 		"""
 		Reset the list of vectors.
 
 		:param vectors: The new list of vectors.
 			If none are given, an empty list is initialized instead.
-		:type vectors: list of :class:`vector.vector.Vector` instances
+		:type vectors: list of :class:`eventdt.vsm.vector.Vector` instances instances
 		"""
 
 		vectors = list() if vectors is None else vectors
-		self._centroid = Vector()
-		self._vectors = []
+		self.centroid = Vector()
+		self.vectors = []
 		for vector in vectors:
 			self.add_vector(vector)
 
-	def get_vectors(self):
-		"""
-		Get the list of vectors in the cluster.
-
-		:return: A list of vectors.
-		:type vectors: list of :class:`vector.vector.Vector` instances
-		"""
-
-		return self._vectors
-
-	def get_representative_vectors(self, vectors=1, similarity_measure=cosine):
+	def get_representative_vectors(self, vectors=1, similarity_measure=vector_math.cosine):
 		"""
 		Get the vectors that are closest to the centroid.
 		If the number of vectors that is sought is one, only the vector is returned.
@@ -156,11 +147,11 @@ class Cluster(Attributable):
 		:type similarity_measure: function
 
 		:return: The representative vectors.
-		:rtype: :class:`vector.vector.Vector` or list of :class:`vector.vector.Vector` instances
+		:rtype: :class:`eventdt.vsm.vector.Vector` instances or list of :class:`eventdt.vsm.vector.Vector` instances instances
 		"""
 
-		similarities = [ self.similarity(vector, similarity_measure) for vector in self._vectors ] # calculate the similarities
-		similarities = zip(self._vectors, similarities) # combine the similarities with the vectors
+		similarities = [ self.similarity(vector, similarity_measure) for vector in self.vectors ] # calculate the similarities
+		similarities = zip(self.vectors, similarities) # combine the similarities with the vectors
 		similarities = sorted(similarities, key=lambda x:x[1])[::-1] # sort the vectors in descending order of similarity
 
 		"""
@@ -172,7 +163,7 @@ class Cluster(Attributable):
 		else:
 			return [ similarities[i][0] for i in range(0, vectors) ]
 
-	def get_intra_similarity(self, similarity_measure=cosine):
+	def get_intra_similarity(self, similarity_measure=vector_math.cosine):
 		"""
 		Get the average similarity between vectors and the cluster.
 
@@ -182,7 +173,7 @@ class Cluster(Attributable):
 		:return: The average intra-similarity of the cluster.
 		:rtype: float
 		"""
-		similarities = [ self.similarity(vector, similarity_measure) for vector in self._vectors ] # calculate the similarities
+		similarities = [ self.similarity(vector, similarity_measure) for vector in self.vectors ] # calculate the similarities
 		return sum(similarities)/len(similarities)
 
 	def size(self):
@@ -193,17 +184,7 @@ class Cluster(Attributable):
 		:rtype: int
 		"""
 
-		return len(self._vectors)
-
-	def get_centroid(self):
-		"""
-		Get the cluster's centroid vector.
-
-		:return: The centroid.
-		:rtype: :class:`vector.vector.Vector`
-		"""
-
-		return self._centroid
+		return len(self.vectors)
 
 	def to_array(self):
 		"""
@@ -216,7 +197,7 @@ class Cluster(Attributable):
 
 		array = Attributable.to_array(self)
 		array.update({
-			"vectors": [ vector.to_array() for vector in self._vectors ]
+			"vectors": [ vector.to_array() for vector in self.vectors ]
 		})
 		return array
 
