@@ -3,8 +3,6 @@ The :class:`eventdt.nlp.document.Document` class builds on the :class:`eventdt.v
 In addition to the normal VSM functionality, it introduces additional document-specific capabilities.
 """
 
-__metaclass__ = type
-
 import math
 import os
 import sys
@@ -19,83 +17,43 @@ from logger import logger
 
 class Document(Vector):
 	"""
-	The Document class is based on the Vector Space Model, and is based on the Vector class.
-	A label field is notably added, which is useful when it comes to the evaluation.
+	The :class:`eventdt.nlp.document.Document` class is based on the :class:`eventdt.vsm.vector.Vector` class. class.
+	The main addition is the text field.
+	This field stores the original document text for any later changes.
 
-	:ivar _label: The label of the document.
-	:vartype _label: str
-	:ivar _text: The document's original text.
-	:vartype _text:
+	:ivar text: The document's original text.
+	:vartype text: str
 	"""
 
-	def __init__(self, text="", dimensions=None, attributes=None, label=None, scheme=None):
+	def __init__(self, text='', dimensions=None, scheme=None, *args, **kwargs):
 		"""
-		Initialize the Document with optional dimensions and an optional label.
+		Initialize the document with the text and optional dimensions.
+		Any other arguments or keyword arguments are passed on to the :class:`eventdt.vsm.vector.Vector` constructor.
 
+		:param text: The document's text.
+		:type text: str
 		:param dimensions: The initial dimensions of the document.
-			If a list is provided, it is assumed that they are tokens.
-			The dimensions are then created using the given scheme.
-		:type dimensions: dict
-		:param attributes: The initial attributes of the document.
-		:type attributes: dict
-		:param label: The document's label.
-		:type label: str
-		:param scheme: The scheme that is used to convert the tokens into dimensions.
-		:type scheme: :class:`vector.nlp.TermWeighting`
+						   If a list is provided, it is assumed that they are tokens.
+						   The dimensions are then created from this list using the given scheme.
+		:type dimensions: list or dict
+		:param scheme: The term-weighting scheme that is used to convert the tokens into dimensions.
+					   If `None` is given, the :class:`vector.nlp.TermWeighting.TF` term-weighting scheme is used.
+		:type scheme: None or :class:`vector.nlp.TermWeighting`
 		"""
 
 		"""
 		If a list is provided, assume that it is a list of tokens.
-		This list of tokens is converted into a dictionary representing the dimensions of the Vector.
-		The conversion is carried out by the term weighting scheme.
+		This list of tokens is converted into a dictionary representing the dimensions of the vector.
+		The conversion is carried out by the term-weighting scheme.
 		"""
-		from term_weighting import TF # import located here because of circular dependencies
+		from term_weighting import TF # NOTE: The import is located here because of circular dependencies
 
 		if (type(dimensions) == list):
 			scheme = scheme if scheme is not None else TF()
-			tokens = list(dimensions)
-			dimensions = scheme.create(tokens).get_dimensions()
+			dimensions = scheme.create(dimensions).dimensions
 
-		super(Document, self).__init__(dimensions, attributes)
-		self.set_text(text)
-		self.set_label(label)
-
-	def set_text(self, text):
-		"""
-		Set the text.
-
-		:param text: The document's text.
-		:type text: str
-		"""
-		self._text = text
-
-	def get_text(self):
-		"""
-		Get the document's text.
-
-		:return: The document's text.
-		:rtype: str
-		"""
-
-		return self._text
-
-	def set_label(self, label):
-		"""
-		Set the label.
-
-		:param label: The document's label.
-		:type label: str
-		"""
-		self._label = label
-
-	def get_label(self):
-		"""
-		Get the label.
-
-		:return: The document's label.
-		:rtype: str
-		"""
-		return self._label
+		super(Document, self).__init__(dimensions, *args, **kwargs)
+		self.text = text
 
 	def to_array(self):
 		"""
@@ -108,8 +66,7 @@ class Document(Vector):
 		array = Vector.to_array(self)
 		array.update({
 			"class": str(Document),
-			"text": self.get_text(),
-			"label": self.get_label(),
+			"text": self.text,
 		})
 		return array
 
@@ -128,5 +85,4 @@ class Document(Vector):
 		return Document(text=array.get("text", ""),
 			dimensions=array.get("dimensions", None),
 			attributes=array.get("attributes", {}),
-			label=array.get("label", ""),
 		)
