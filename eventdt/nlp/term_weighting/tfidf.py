@@ -11,7 +11,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from scheme import TermWeightingScheme
-from local.tf import TF
+from local_schemes.tf import TF
 from global_schemes.idf import IDF
 
 class TFIDF(TermWeightingScheme):
