@@ -21,6 +21,23 @@ class TestCluster(unittest.TestCase):
 	Test the Cluster class
 	"""
 
+	def test_empty_cluster(self):
+		"""
+		Test that an empty cluster has a centroid with no dimensions.
+		"""
+
+		c = Cluster()
+		self.assertEqual({}, c.centroid.dimensions)
+
+	def test_cluster_with_one_vector(self):
+		"""
+		Test that the centroid of a cluster with a single vector has an equivalent centroid.
+		"""
+
+		v = Document("", ["a", "b", "a", "c"], scheme=TF())
+		c = Cluster(v)
+		self.assertEqual(c.centroid.dimensions, v.dimensions)
+
 	def test_init(self):
 		"""
 		Test the Cluster constructor

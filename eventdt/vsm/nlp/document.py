@@ -10,7 +10,6 @@ import sys
 
 path = os.path.dirname(__file__)
 path = os.path.join(path, '..', '..')
-print(path)
 if path not in sys.path:
 	sys.path.insert(1, path)
 

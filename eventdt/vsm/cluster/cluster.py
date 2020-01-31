@@ -33,13 +33,16 @@ class Cluster(Attributable):
 		"""
 		Initiate the cluster with an empty centroid and a list of vectors.
 
-		:param vectors: An initial list of vectors.
-			If none are given, an empty list is initialized instead.
-		:type vectors: list of :class:`eventdt.vsm.vector.Vector` instances instances
+		:param vectors: An initial list of vectors, or a single vector.
+						If `None` is given, an empty list is initialized instead.
+		:type vectors: list of :class:`eventdt.vsm.vector.Vector` or :class:`eventdt.vsm.vector.Vector`
 		"""
 
 		super(Cluster, self).__init__()
-		self.set_vectors(vectors)
+		if type(vectors) is not list and vectors is not None:
+			self.set_vectors([ vectors ])
+		else:
+			self.set_vectors(vectors)
 
 	def add_vectors(self, vectors):
 		"""
