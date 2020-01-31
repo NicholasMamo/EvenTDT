@@ -10,6 +10,7 @@ Welcome to EvenTDT's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   config
    tools
    vsm
    nlp
