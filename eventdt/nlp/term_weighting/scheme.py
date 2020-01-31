@@ -1,5 +1,6 @@
 """
 Term-weighting schemes give different weights to different terms in a document.
+Traditionally, term-weighting schemes have at least a local and global component.
 """
 
 from abc import ABC, abstractmethod
@@ -16,6 +17,8 @@ from document import Document
 class TermWeightingScheme(object):
 	"""
 	This class defines a list of properties that all term-weighting schemes must have.
+	The class can be instantiated by providing a local term-weighting scheme and a global term-weighting scheme.
+	The scheme then multiplies the scores of each to :func:`eventdt.nlp.term_weighting.scheme.TermWeightingScheme.create` a :class:`eventdt.nlp.document.Document`.
 
 	:ivar local_scheme: The local term-weighting scheme.
 	:vartype local_scheme: :class:`eventdt.nlp.term_weighting.scheme.Scheme`
