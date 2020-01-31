@@ -1,5 +1,5 @@
 """
-Twitter API-related configuration.
+EvenTDT configuration.
 """
 
 ACCOUNTS = [
@@ -10,3 +10,13 @@ ACCOUNTS = [
 		'CONSUMER_SECRET': 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
 	}
 ]
+"""
+:var ACCOUNTS: The sets of Twitter API credential.
+:vartype ACCOUNTS: list of dict
+"""
+
+LOG_LEVEL = 1
+"""
+:var LOG_LEVEL: The logging level.
+:vartype LOG_LEVEL: int
+"""
