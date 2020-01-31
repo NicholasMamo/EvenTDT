@@ -111,7 +111,7 @@ vector_tests() {
 	python3 -m unittest eventdt.vsm.tests.test_vector_math
 
 	echo -e "${HIGHLIGHT}Clusters${DEFAULT}"
-	python3 -m unittest eventdt.vsm.cluster.tests.test_cluster
+	python3 -m unittest eventdt.vsm.clustering.tests.test_cluster
 
 	# echo -e "${HIGHLIGHT}Algorithms${DEFAULT}"
 	# python3 -m unittest eventdt.vsm.cluster.algorithms.tests.test_no_k_means

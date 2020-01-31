@@ -11,10 +11,10 @@ path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
-from vector import Vector
-from nlp.document import Document
-from nlp.term_weighting import TF
 from clustering.cluster import Cluster
+from nlp.document import Document
+from nlp.term_weighting.tf import TF
+from vector import Vector
 
 class TestCluster(unittest.TestCase):
 	"""
