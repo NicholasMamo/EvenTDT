@@ -182,7 +182,19 @@ class Tokenizer(object):
 
 		tokens = tokenize_pattern.split(text)
 
-		tokens = self._postprocess(tokens)
+		"""
+		Post-process the tokens.
+		"""
+
+		tokens = self._split_tokens(tokens)
+
+		tokens = [token for token in tokens if token not in self.stopword_dict]
+
+		tokens = [token for token in tokens if len(token) >= self.min_length]
+
+		tokens =  self._stem(tokens) if self.stem_tokens else tokens
+
+		return tokens
 
 		return tokens
 
@@ -261,20 +273,3 @@ class Tokenizer(object):
 		split_tokens = [ token.split() for token in split_tokens ]
 		split_tokens = [token for token_list in split_tokens for token in token_list] # flatten the list
 		return split_tokens
-
-	def _postprocess(self, tokens):
-		"""
-		Post-process the tokens.
-
-		:param tokens: The list of tokens to post-process.
-		:type tokens: list
-		"""
-
-		tokens = self._split_tokens(tokens)
-
-		tokens = [token for token in tokens if token not in self.stopword_dict]
-
-		tokens = [token for token in tokens if len(token) >= self.min_length]
-
-		tokens =  self._stem(tokens) if self.stem_tokens else tokens
-		return tokens
