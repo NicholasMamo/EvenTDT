@@ -6,6 +6,7 @@ It is based on, and requires, NLTK.
 from nltk.stem.porter import *
 
 import os
+import string
 import sys
 
 path = os.path.join(os.path.dirname(__file__))
@@ -142,12 +143,12 @@ class Tokenizer(object):
 		self.negation_correction = negation_correction
 		self.normalize_uni = normalize_uni
 
-	def tokenize(self, string):
+	def tokenize(self, text):
 		"""
-		Tokenize the given string.
+		Tokenize the given text.
 
-		:param string: The string to tokenize.
-		:type string: str
+		:param text: The text to tokenize.
+		:type text: str
 
 		:return: A list of tokens.
 		:rtype: list
@@ -162,35 +163,32 @@ class Tokenizer(object):
 		hashtag_pattern = re.compile("#([a-zA-Z0-9_]+)")
 		word_normalization_pattern = re.compile("(.)\\1{%d,}" % (self.character_normalization_count - 1))
 		number_pattern = re.compile("\\b([0-9]{1,3}|[0-9]{5,})\\b") # preserve years
-		punctuation_pattern = re.compile("([^a-zA-Z0-9\-'])") # do not remove apostrophes because of negation
 		tokenize_pattern = re.compile("\s+")
 
-		string = self._process_hashtags(string) if self.split_hashtags else string
+		text = self._process_hashtags(text) if self.split_hashtags else text
 
-		string = string.lower() if self.case_fold else string
+		text = text.lower() if self.case_fold else text
 
-		string = ''.join((c for c in unicodedata.normalize('NFD', string) if unicodedata.category(c) != 'Mn')) if self.normalize_uni else string
+		text = ''.join((c for c in unicodedata.normalize('NFD', text) if unicodedata.category(c) != 'Mn')) if self.normalize_uni else text
 
 		"""
 		Remove illegal components.
 		"""
-		string = url_pattern.sub("", string) if self.remove_urls else string
+		text = url_pattern.sub("", text) if self.remove_urls else text
 
-		string = alt_code_pattern.sub("", string) if self.remove_alt_codes else string
+		text = alt_code_pattern.sub("", text) if self.remove_alt_codes else text
 
-		string = string.encode('ascii', 'ignore').decode("utf-8") if self.remove_unicode_entities else string
+		text = text.encode('ascii', 'ignore').decode("utf-8") if self.remove_unicode_entities else text
 
-		string = word_normalization_pattern.sub("\g<1>", string) if self.normalize_words else string
+		text = word_normalization_pattern.sub("\g<1>", text) if self.normalize_words else text
 
-		string = mention_pattern.sub("", string) if self.remove_mentions else string
+		text = mention_pattern.sub("", text) if self.remove_mentions else text
 
-		string = hashtag_pattern.sub("", string) if self.remove_hashtags else hashtag_pattern.sub("\g<1>", string)
+		text = hashtag_pattern.sub("", text) if self.remove_hashtags else hashtag_pattern.sub("\g<1>", text)
 
-		string = number_pattern.sub("", string) if self.remove_numbers else string
+		text = number_pattern.sub("", text) if self.remove_numbers else text
 
-		string = punctuation_pattern.sub(" \g<1>", string) if self.remove_punctuation else string
-
-		tokens = tokenize_pattern.split(string)
+		tokens = tokenize_pattern.split(text)
 
 		"""
 		Negation precedes stemming and stopword removal because of words like "never" and "not" which could be removed prematurely.
@@ -282,22 +280,34 @@ class Tokenizer(object):
 		stemmed_tokens = list(tokens)
 		return [ self.stemmer.stem(token) for token in stemmed_tokens ]
 
-	def _split_tokens(self, tokens, remove_punctuation=True):
+	def _split_tokens(self, tokens):
 		"""
 		Split the token based on punctuation patterns.
 
-		:param tokens: The list of tokens to stem.
+		:param tokens: The list of tokens to split.
 		:type tokens: list
 
 		:return: The list of split tokens.
 		:rtype: list
 		"""
 
-		punctuation_pattern = re.compile("([^a-zA-Z0-9\-'])") # do not remove apostrophes because of negation
 		tokenize_pattern = re.compile("\s+")
 
 		split_tokens = list(tokens)
-		split_tokens = [tokenize_pattern.split(punctuation_pattern.sub(" ", token.replace("'", " ")) if self.remove_punctuation else token) for token in split_tokens] # remove apostrophes now and re-tokenize
+
+		"""
+		Remove characters that are not in the punctuation list.
+		This removal could create new spaces in tokens.
+		Therefore tokens are split again.
+		The list is finally flattened.
+		"""
+		split_tokens = [
+			''.join([
+				char if char not in string.punctuation else ' ' for char in token
+			]) for token in split_tokens
+		] if self.remove_punctuation else split_tokens
+
+		split_tokens = [ token.split() for token in split_tokens ]
 		split_tokens = [token for token_list in split_tokens for token in token_list] # flatten the list
 		return split_tokens
 
@@ -306,11 +316,11 @@ class Tokenizer(object):
 		Post-process the tokens.
 		This is usually performed after possible negation correction.
 
-		:param tokens: The list of tokens to stem.
+		:param tokens: The list of tokens to post-process.
 		:type tokens: list
 		"""
 
-		tokens = self._split_tokens(tokens, remove_punctuation=self.remove_punctuation)
+		tokens = self._split_tokens(tokens)
 
 		tokens = [token for token in tokens if token not in self.stopword_dict]
 
