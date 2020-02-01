@@ -210,11 +210,25 @@ class Tokenizer(object):
 		:return: The normalized string.
 		:rtype: str
 		"""
-		hashtag_pattern = re.compile("#([a-zA-Z0-9_]+)")
-		camel_case_pattern = re.compile("#?(([a-z]+?)([A-Z]+))")
 
-		for hashtag in hashtag_pattern.findall(string):
-			string = string.replace(hashtag, camel_case_pattern.sub("\g<2> \g<3>", hashtag), 1)
+		hashtag_pattern = re.compile("#([a-zA-Z0-9_]+)")
+		camel_case_pattern = re.compile("(([a-z]+?)([A-Z]+))")
+
+		"""
+		First find all hashtags.
+		Then, split them and replace the hashtag lexeme with the split components.
+		"""
+		hashtags = hashtag_pattern.findall(string)
+		for hashtag in hashtags:
+			components = camel_case_pattern.sub("\g<2> \g<3>", hashtag)
+
+			"""
+			Only split hashtags that have multiple components.
+			If there is only one component, it's just a hashtag.
+			"""
+			if len(components.split()) > 1:
+				string = string.replace(f"#{hashtag}", components)
+
 		return string
 
 	def _correct_negations(self, tokens,
