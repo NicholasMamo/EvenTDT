@@ -59,9 +59,6 @@ class Tokenizer(object):
 	:vartype stopwords: list
 	:ivar stem: A boolean indicating whether the tokens should be stemmed.
 	:vartype stem: bool
-	:ivar negation_correction: A boolean indicating whether negation correction should be performed.
-		This adds a prefix (`NOT`) to words that follow a negation to differentiate them from non-negated counterparts.
-	:vartype negation_correction: bool
 	:ivar normalize_uni: A boolean indicating whether accents should be removed and replaced with simple unicode characters.
 	:vartype normalize_uni: bool
 	"""
@@ -72,8 +69,7 @@ class Tokenizer(object):
 				 remove_numbers=True, remove_urls=True, remove_alt_codes=True,
 				 normalize_words=False, character_normalization_count=3, case_fold=True,
 				 remove_punctuation=True, remove_unicode_entities=False,
-				 min_length=3, stopwords=None, stem=True, negation_correction=False,
-				 normalize_uni=True):
+				 min_length=3, stopwords=None, stem=True, normalize_uni=True):
 		"""
 		Initialize the tokenizer.
 
@@ -113,9 +109,6 @@ class Tokenizer(object):
 		:type stopwords: list
 		:param stem: A boolean indicating whether the tokens should be stemmed.
 		:type stem: bool
-		:param negation_correction: A boolean indicating whether negation correction should be performed.
-			This adds a prefix (`NOT`) to words that follow a negation to differentiate them from non-negated counterparts.
-		:type negation_correction: bool
 		:param normalize_uni: A boolean indicating whether accents should be removed and replaced with simple unicode characters.
 		:type normalize_uni: bool
 		"""
@@ -140,7 +133,6 @@ class Tokenizer(object):
 		self.min_length = min_length
 		self.stopwords = stopwords
 		self.stem_tokens = stem
-		self.negation_correction = negation_correction
 		self.normalize_uni = normalize_uni
 
 	def tokenize(self, text):
@@ -190,10 +182,6 @@ class Tokenizer(object):
 
 		tokens = tokenize_pattern.split(text)
 
-		"""
-		Negation precedes stemming and stopword removal because of words like "never" and "not" which could be removed prematurely.
-		"""
-		tokens = self._correct_negations(tokens) if self.negation_correction else tokens
 		tokens = self._postprocess(tokens)
 
 		return tokens
@@ -228,43 +216,6 @@ class Tokenizer(object):
 				string = string.replace(f"#{hashtag}", components)
 
 		return string
-
-	def _correct_negations(self, tokens,
-			negation_words=["n't", "not", "no", "never"],
-			prefix="NOT"):
-		"""
-		Apply negation correction on the list of tokens.
-
-		:param tokens: The list of tokens to correct.
-		:type tokens: list
-		:param negation_words: The negation words to look oout for.
-		:type negation_words: list
-		:param prefix: The prefix to add to corrected tokens.
-		:type prefix: str
-
-		:return: The list of corrected tokens.
-		:rtype: list
-		"""
-		negation_pattern = re.compile("(" + '|'.join(negation_words) + ")")
-		negations = [True if negation_pattern.findall(token) else False for token in tokens]
-		negated_tokens = list(tokens)
-
-		if (sum(negations) > 0):
-			"""
-			If there are negations, add a prefix up until:
-				1. the end of the sentence
-				2. the next negation word
-			"""
-			negation_indices = [i for i in range(0, len(negations)) if negations[i]]
-			for index in negation_indices:
-				i = index + 1
-				while (i < len(negated_tokens)
-						and i not in negation_indices
-						and negated_tokens[i] not in ['?', '!', '.', "..."]):
-					negated_tokens[i] = prefix + negated_tokens[i]
-					i += 1
-
-		return negated_tokens
 
 	def _stem(self, tokens):
 		"""
@@ -314,7 +265,6 @@ class Tokenizer(object):
 	def _postprocess(self, tokens):
 		"""
 		Post-process the tokens.
-		This is usually performed after possible negation correction.
 
 		:param tokens: The list of tokens to post-process.
 		:type tokens: list

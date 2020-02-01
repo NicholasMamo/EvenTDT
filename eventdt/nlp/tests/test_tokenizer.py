@@ -540,24 +540,3 @@ class TestTokenizer(unittest.TestCase):
 		s = "Toko-Ekambi scores, assisted by Mendes!"
 		t = Tokenizer(stem=False)
 		self.assertEqual([ "toko", "ekambi", "scores", "assisted", "mendes" ], t.tokenize(s))
-
-	def no_test_negation_correction(self):
-		"""
-		Test the negation correction functionality
-		"""
-
-		s = "Reus wouldn't have scored"
-
-		t = Tokenizer(remove_punctuation=False, stem=False)
-		tokens = t.tokenize(s)
-		self.assertEqual(tokens, [ "reus", "wouldn't", "have", "scored" ] )
-
-		t = Tokenizer(remove_punctuation=False, negation_correction=True)
-		self.assertEqual(t._stem(t._correct_negations(tokens)), t.tokenize(s))
-
-		t = Tokenizer(remove_punctuation=True, negation_correction=True)
-		self.assertEqual(t._postprocess(t._correct_negations(tokens)), t.tokenize(s))
-
-		s = "Kroos wouldn't have scored if it weren't for Reus. They wouldn't have had anything to play for."
-		t = Tokenizer(negation_correction=True)
-		self.assertEqual([ "kroo", "wouldn", "nothav", "notscor", "notif", "notit", "weren", "notfor", "notreu", "they", "wouldn", "nothav", "nothad", "notanyth", "notto", "notplay", "notfor" ], t.tokenize(s))
