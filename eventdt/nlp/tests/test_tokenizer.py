@@ -414,18 +414,60 @@ class TestTokenizer(unittest.TestCase):
 		t = Tokenizer(min_length=3, stem=False)
 		self.assertEqual([ 'gelson', 'martins', 'tries', 'shove', 'the', 'referee' ], t.tokenize(s))
 
-	@ignore_warnings # pass the test_stopwords method as a parameter to ignore_warnings (https://stackoverflow.com/questions/6392739/what-does-the-at-symbol-do-in-python)
-	def test_stopwords(self):
+	def test_no_stopwords(self):
 		"""
-		Stopword removal tests
+		Test that when no stopwords are provided, no tokens are removed.
 		"""
-		s = "Kroos scored the winning goal, assisted by Reus!"
 
-		t = Tokenizer()
-		self.assertEqual(["kroo", "score", "the", "win", "goal", "assist", "reu"], t.tokenize(s))
+		s = "Gelson Martins tries to shove the referee."
+		t = Tokenizer(stem=False)
+		self.assertEqual([ 'gelson', 'martins', 'tries', 'shove', 'the', 'referee' ], t.tokenize(s))
 
-		t = Tokenizer(stopwords=list(stopwords.words("english")))
-		self.assertEqual(["kroo", "score", "win", "goal", "assist", "reu"], t.tokenize(s))
+	def test_stopwords_empty_list(self):
+		"""
+		Test that when an empty list of stopwords is provided, no tokens are removed.
+		"""
+
+		s = "Gelson Martins tries to shove the referee."
+		t = Tokenizer(stem=False, stopwords=[])
+		self.assertEqual([ 'gelson', 'martins', 'tries', 'shove', 'the', 'referee' ], t.tokenize(s))
+
+	def test_stopwords_empty_dict(self):
+		"""
+		Test that when an empty dictionary of stopwords is provided, no tokens are removed.
+		"""
+
+		s = "Gelson Martins tries to shove the referee."
+		t = Tokenizer(stem=False, stopwords={})
+		self.assertEqual([ 'gelson', 'martins', 'tries', 'shove', 'the', 'referee' ], t.tokenize(s))
+
+	def test_stopwords_list(self):
+		"""
+		Test that when a list of stopwords is provided, tokens in that list are removed.
+		"""
+
+		s = "Gelson Martins tries to shove the referee."
+		t = Tokenizer(stem=False, stopwords=[ 'tries' ])
+		self.assertEqual([ 'gelson', 'martins', 'shove', 'the', 'referee' ], t.tokenize(s))
+
+	def test_stopwords_dict(self):
+		"""
+		Test that when a dictionary of stopwords is provided, tokens in that dictionary are removed.
+		"""
+
+		s = "Gelson Martins tries to shove the referee."
+		t = Tokenizer(stem=False, stopwords={ 'tries': 1 })
+		self.assertEqual([ 'gelson', 'martins', 'shove', 'the', 'referee' ], t.tokenize(s))
+
+	@ignore_warnings
+	def test_stopwords_nltk(self):
+		"""
+		Test that when the list of NLTK stopwords is provided, the terms are removed.
+		"""
+
+		s = "Gelson Martins tries to shove the referee."
+		t = Tokenizer(stem=False, stopwords=list(stopwords.words("english")))
+		self.assertEqual([ 'gelson', 'martins', 'tries', 'shove', 'referee' ], t.tokenize(s))
 
 	def test_case_folding(self):
 		"""
