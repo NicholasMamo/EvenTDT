@@ -234,6 +234,60 @@ class TestTokenizer(unittest.TestCase):
 		t = Tokenizer(remove_numbers=False, stem=False)
 		self.assertEqual([ "real", "paid", "5000000", "for", "him", "back", "2016" ], t.tokenize(s))
 
+	def test_remove_url(self):
+		"""
+		Test the URL removal functionality.
+		"""
+
+		s = "Thank you @BillGates. It's amazing, almost as incredible as the fact that you use Gmail. https://t.co/drawyFHHQM"
+		t = Tokenizer(remove_urls=True, stem=False)
+		self.assertEqual([ "thank", "you", "amazing", "almost", "incredible", "the", "fact", "that", "you", "use", "gmail" ], t.tokenize(s))
+
+	def test_remove_url_without_protocol(self):
+		"""
+		Test the URL removal functionality when there is no protocol.
+		"""
+
+		s = "Thank you @BillGates. It's amazing, almost as incredible as the fact that you use Gmail. t.co/drawyFHHQM"
+		t = Tokenizer(remove_urls=True, stem=False)
+		self.assertEqual([ "thank", "you", "amazing", "almost", "incredible", "the", "fact", "that", "you", "use", "gmail" ], t.tokenize(s))
+
+	def test_remove_url_with_http_protocol(self):
+		"""
+		Test the URL removal functionality when the protocol is http.
+		"""
+
+		s = "Thank you @BillGates. It's amazing, almost as incredible as the fact that you use Gmail. http://t.co/drawyFHHQM"
+		t = Tokenizer(remove_urls=True, stem=False)
+		self.assertEqual([ "thank", "you", "amazing", "almost", "incredible", "the", "fact", "that", "you", "use", "gmail" ], t.tokenize(s))
+
+	def test_remove_subdomain(self):
+		"""
+		Test that URL removal includes subdomains.
+		"""
+
+		s = "Visit Multiplex's documentation for more information: https://nicholasmamo.github.io/multiplex-plot/"
+		t = Tokenizer(remove_urls=True, stem=False)
+		self.assertEqual([ "visit", "multiplex", "documentation", "for", "more", "information" ], t.tokenize(s))
+
+	def test_remove_subdomain_without_protocol(self):
+		"""
+		Test that URL removal includes subdomains even if they have no protocol.
+		"""
+
+		s = "Visit Multiplex's documentation for more information: nicholasmamo.github.io/multiplex-plot/"
+		t = Tokenizer(remove_urls=True, stem=False)
+		self.assertEqual([ "visit", "multiplex", "documentation", "for", "more", "information" ], t.tokenize(s))
+
+	def test_retain_url(self):
+		"""
+		Test the URL retention functionality.
+		"""
+
+		s = "Thank you @BillGates. It's amazing, almost as incredible as the fact that you use Gmail. https://t.co/drawyFHHQM"
+		t = Tokenizer(remove_urls=False, stem=False)
+		self.assertEqual([ "thank", "you", "amazing", "almost", "incredible", "the", "fact", "that", "you", "use", "gmail", "https", "drawyfhhqm" ], t.tokenize(s))
+
 	@ignore_warnings # pass the test_stopwords method as a parameter to ignore_warnings (https://stackoverflow.com/questions/6392739/what-does-the-at-symbol-do-in-python)
 	def test_stopwords(self):
 		"""
@@ -325,19 +379,6 @@ class TestTokenizer(unittest.TestCase):
 		s = "Kroos wouldn't have scored if it weren't for Reus. They wouldn't have had anything to play for."
 		t = Tokenizer(negation_correction=True)
 		self.assertEqual(["kroo", "wouldn", "nothav", "notscor", "notif", "notit", "weren", "notfor", "notreu", "they", "wouldn", "nothav", "nothad", "notanyth", "notto", "notplay", "notfor"], t.tokenize(s))
-
-	def test_url_removal(self):
-		"""
-		Test the URL removal functionality
-		"""
-
-		s = "Thank you @BillGates. It's amazing, almost as incredible as the fact that you use Gmail. https://t.co/drawyFHHQM"
-
-		t = Tokenizer(remove_urls=False)
-		self.assertEqual(["thank", "you", "amaz", "almost", "incred", "the", "fact", "that", "you", "use", "gmail", "http", "drawyfhhqm"], t.tokenize(s))
-
-		t = Tokenizer(remove_urls=True)
-		self.assertEqual(["thank", "you", "amaz", "almost", "incred", "the", "fact", "that", "you", "use", "gmail"], t.tokenize(s))
 
 	def test_alt_code_removal(self):
 		"""
