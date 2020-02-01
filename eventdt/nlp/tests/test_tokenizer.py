@@ -288,6 +288,24 @@ class TestTokenizer(unittest.TestCase):
 		t = Tokenizer(remove_urls=False, stem=False)
 		self.assertEqual([ "thank", "you", "amazing", "almost", "incredible", "the", "fact", "that", "you", "use", "gmail", "https", "drawyfhhqm" ], t.tokenize(s))
 
+	def test_alt_code_removal(self):
+		"""
+		Test the alt-code removal functionality works as it is supposed to.
+		"""
+
+		s = "Our prediction based on #FIFA Rankings, &amp; Country Risk Ratings"
+		t = Tokenizer(remove_alt_codes=True)
+		self.assertEqual(["our", "predict", "base", "fifa", "rank", "countri", "risk", "rate"], t.tokenize(s))
+
+	def test_retain_alt_codes(self):
+		"""
+		Test that when alt-codes are not set to be removed, they are retained.
+		"""
+
+		s = "Our prediction based on #FIFA Rankings, &amp; Country Risk Ratings"
+		t = Tokenizer(remove_alt_codes=False)
+		self.assertEqual(["our", "predict", "base", "fifa", "rank", "amp", "countri", "risk", "rate"], t.tokenize(s))
+
 	@ignore_warnings # pass the test_stopwords method as a parameter to ignore_warnings (https://stackoverflow.com/questions/6392739/what-does-the-at-symbol-do-in-python)
 	def test_stopwords(self):
 		"""
@@ -379,19 +397,6 @@ class TestTokenizer(unittest.TestCase):
 		s = "Kroos wouldn't have scored if it weren't for Reus. They wouldn't have had anything to play for."
 		t = Tokenizer(negation_correction=True)
 		self.assertEqual(["kroo", "wouldn", "nothav", "notscor", "notif", "notit", "weren", "notfor", "notreu", "they", "wouldn", "nothav", "nothad", "notanyth", "notto", "notplay", "notfor"], t.tokenize(s))
-
-	def test_alt_code_removal(self):
-		"""
-		Test the alt-code removal functionality
-		"""
-
-		s = "Our prediction based on #FIFA Rankings, &amp; Country Risk Ratings"
-
-		t = Tokenizer(remove_alt_codes=False)
-		self.assertEqual(["our", "predict", "base", "fifa", "rank", "amp", "countri", "risk", "rate"], t.tokenize(s))
-
-		t = Tokenizer(remove_alt_codes=True)
-		self.assertEqual(["our", "predict", "base", "fifa", "rank", "countri", "risk", "rate"], t.tokenize(s))
 
 	def test_unicode_removal(self):
 		"""
