@@ -10,12 +10,11 @@ import unittest
 
 import warnings
 
-path = os.path.dirname(__file__)
-path = os.path.join(path, "../")
+path = os.path.join(os.path.dirname(__file__), "..")
 if path not in sys.path:
 	sys.path.append(path)
 
-from libraries.vector.nlp.tokenizer import Tokenizer
+from tokenizer import Tokenizer
 
 class TestTokenizer(unittest.TestCase):
 	"""
@@ -158,10 +157,10 @@ class TestTokenizer(unittest.TestCase):
 		self.assertEqual(tokens, ["reus", "wouldn't", "have", "scored"] )
 
 		t = Tokenizer(remove_punctuation=False, negation_correction=True)
-		self.assertEqual(t.tokenize(s), t.stem(t.correct_negations(tokens)))
+		self.assertEqual(t.tokenize(s), t._stem(t._correct_negations(tokens)))
 
 		t = Tokenizer(remove_punctuation=True, negation_correction=True)
-		self.assertEqual(t.tokenize(s), t.postprocess(t.correct_negations(tokens)))
+		self.assertEqual(t.tokenize(s), t._postprocess(t._correct_negations(tokens)))
 
 		s = "Kroos wouldn't have scored if it weren't for Reus. They wouldn't have had anything to play for."
 		t = Tokenizer(negation_correction=True)

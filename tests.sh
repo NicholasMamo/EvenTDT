@@ -40,11 +40,9 @@ document_tests() {
 	echo -e "${HIGHLIGHT}Document${DEFAULT}"
 	python3 -m unittest eventdt.nlp.tests.test_document
 
-	# echo -e "${HIGHLIGHT}Tokenizer${DEFAULT}"
-	# python3 -m unittest eventdt.vsm.nlp.tests.test_tokenizer
-	#
-	# echo -e "${HIGHLIGHT}Cleaning${DEFAULT}"
-	# python3 -m unittest eventdt.vsm.nlp.cleaners.tests.test_cleaners
+	echo -e "${HIGHLIGHT}Tokenizer${DEFAULT}"
+	python3 -m unittest eventdt.nlp.tests.test_tokenizer
+
 	return
 }
 
@@ -75,6 +73,9 @@ summarization_tests() {
 	#
 	# echo -e "${HIGHLIGHT}Scorer${DEFAULT}"
 	# python3 -m unittest eventdt.summarization.scorers.tests.test_scorers
+	#
+	# echo -e "${HIGHLIGHT}Cleaning${DEFAULT}"
+	# python3 -m unittest eventdt.vsm.nlp.cleaners.tests.test_cleaners
 	return
 }
 
