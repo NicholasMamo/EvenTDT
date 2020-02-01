@@ -100,6 +100,7 @@ class Tokenizer(object):
 		:param remove_punctuation: A boolean indicating whether punctuation should be removed.
 		:type remove_punctuation: bool
 		:param remove_unicode_entities: A boolean indicating whether unicode entities should be removed.
+										Note that this also includes emojis.
 		:type remove_unicode_entities: bool
 		:param min_length: The minimum length of tokens that should be retained.
 		:type min_length: int
@@ -157,7 +158,6 @@ class Tokenizer(object):
 		"""
 		url_pattern = re.compile("(https?:\/\/)?([^\s]+)?\.[a-zA-Z0-9]+?\/?([^\s,\.]+)?")
 		alt_code_pattern = re.compile("&.+?;")
-		unicode_pattern = re.compile("\\\\u[a-zA-Z0-9]{4}")
 		mention_pattern = re.compile("@[a-zA-Z0-9_]+")
 		hashtag_pattern = re.compile("#([a-zA-Z0-9_]+)")
 		word_normalization_pattern = re.compile("(.)\\1{%d,}" % (self.character_normalization_count - 1))
@@ -178,7 +178,7 @@ class Tokenizer(object):
 
 		string = alt_code_pattern.sub("", string) if self.remove_alt_codes else string
 
-		string = unicode_pattern.sub("", string) if self.remove_unicode_entities else string
+		string = string.encode('ascii', 'ignore').decode("utf-8") if self.remove_unicode_entities else string
 
 		string = word_normalization_pattern.sub("\g<1>", string) if self.normalize_words else string
 

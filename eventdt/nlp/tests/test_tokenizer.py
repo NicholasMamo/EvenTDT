@@ -351,6 +351,42 @@ class TestTokenizer(unittest.TestCase):
 		t = Tokenizer(normalize_words=False, character_normalization_count=2, stem=False, min_length=2)
 		self.assertEqual([ "yyyyyeeesssssssss", "ooxxxxxxxxxxxx" ], t.tokenize(s))
 
+	def test_unicode_removal(self):
+		"""
+		Test that the unicode entity removal functionality removes unicode characters.
+		"""
+
+		s = "\u0632\u0648\u062f_\u0641\u0648\u0644\u0648\u0631\u0632_\u0645\u0639_\u0627\u0644\u0645\u0628\u0627\u062d\u062b"
+		t = Tokenizer(remove_unicode_entities=True, stem=False, min_length=1, remove_punctuation=False)
+		self.assertEqual([ '___' ], t.tokenize(s))
+
+	def test_unicode_removal_includes_emojis(self):
+		"""
+		Test that the unicode entity removal functionality also removes emojis.
+		"""
+
+		s = "Je veux 😂😂😂🦁"
+		t = Tokenizer(remove_unicode_entities=True, stem=False, min_length=1, remove_punctuation=False)
+		self.assertEqual([ 'je', 'veux' ], t.tokenize(s))
+
+	def test_retain_unicode(self):
+		"""
+		Test unicode character retention.
+		"""
+
+		s = "\u0632\u0648\u062f_\u0641\u0648\u0644\u0648\u0631\u0632_\u0645\u0639_\u0627\u0644\u0645\u0628\u0627\u062d\u062b"
+		t = Tokenizer(remove_unicode_entities=False, stem=False, min_length=1, remove_punctuation=False)
+		self.assertEqual([ 'زود_فولورز_مع_المباحث' ], t.tokenize(s))
+
+	def test_unicode_retentionl_includes_emojis(self):
+		"""
+		Test that the unicode entity retention also allows emojis.
+		"""
+
+		s = "Je veux 😂😂😂🦁"
+		t = Tokenizer(remove_unicode_entities=False, stem=False, min_length=1, remove_punctuation=False)
+		self.assertEqual([ 'je', 'veux', '😂😂😂🦁' ], t.tokenize(s))
+
 	@ignore_warnings # pass the test_stopwords method as a parameter to ignore_warnings (https://stackoverflow.com/questions/6392739/what-does-the-at-symbol-do-in-python)
 	def test_stopwords(self):
 		"""
@@ -442,16 +478,3 @@ class TestTokenizer(unittest.TestCase):
 		s = "Kroos wouldn't have scored if it weren't for Reus. They wouldn't have had anything to play for."
 		t = Tokenizer(negation_correction=True)
 		self.assertEqual(["kroo", "wouldn", "nothav", "notscor", "notif", "notit", "weren", "notfor", "notreu", "they", "wouldn", "nothav", "nothad", "notanyth", "notto", "notplay", "notfor"], t.tokenize(s))
-
-	def test_unicode_removal(self):
-		"""
-		Test the unicode entity removal functionality
-		"""
-
-		s = "\u0632\u0648\u062f_\u0641\u0648\u0644\u0648\u0631\u0632_\u0645\u0639_\u0627\u0644\u0645\u0628\u0627\u062d\u062b"
-
-		t = Tokenizer(remove_unicode_entities=False)
-		self.assertEqual([], t.tokenize(s))
-
-		t = Tokenizer(remove_unicode_entities=True)
-		self.assertEqual([], t.tokenize(s))
