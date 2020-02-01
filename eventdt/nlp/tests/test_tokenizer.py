@@ -525,16 +525,21 @@ class TestTokenizer(unittest.TestCase):
 
 	def test_stemming(self):
 		"""
-		Test the Porter stemming functionality
+		Test that when stemming is performed, suffixes are removed.
 		"""
 
-		s = "Kroos scored the winning goal, assisted by Reus!"
-
-		t = Tokenizer(stem=False)
-		self.assertEqual([ "kroos", "scored", "the", "winning", "goal", "assisted", "reus" ], t.tokenize(s))
-
+		s = "Toko-Ekambi scores, assisted by Mendes!"
 		t = Tokenizer(stem=True)
-		self.assertEqual([ "kroo", "score", "the", "win", "goal", "assist", "reu" ], t.tokenize(s))
+		self.assertEqual([ "toko", "ekambi", "score", "assist", "mend" ], t.tokenize(s))
+
+	def test_no_stemming(self):
+		"""
+		Test that when there is no stemming, suffixes are retained.
+		"""
+
+		s = "Toko-Ekambi scores, assisted by Mendes!"
+		t = Tokenizer(stem=False)
+		self.assertEqual([ "toko", "ekambi", "scores", "assisted", "mendes" ], t.tokenize(s))
 
 	def no_test_negation_correction(self):
 		"""
