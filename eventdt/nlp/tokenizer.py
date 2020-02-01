@@ -5,7 +5,12 @@ It is based on, and requires, NLTK.
 
 from nltk.stem.porter import *
 
-from .document import Document
+import os
+import sys
+
+path = os.path.join(os.path.dirname(__file__))
+if path not in sys.path:
+	sys.path.insert(1, path)
 
 import re
 import unicodedata
@@ -62,23 +67,12 @@ class Tokenizer(object):
 
 	stemmer = PorterStemmer()
 
-	def __init__(self, remove_mentions=True, # a boolean indicating whether tweet mentions should be removedd
-		remove_hashtags=False, # a boolean indicating whether hashtags should be removed
-		normalize_hashtags=True, # a boolean indicating whether hashtags should be removed
-		remove_numbers=True, # a boolean indicating whether numbers should be removed
-		remove_urls=True, # a boolean indicating whether URLs should be removed
-		remove_alt_codes=True, # a boolean indicating whether alt-codes should be removed
-		normalize_words=False, # a boolean indicating whether words should be normalized by removing repeating characters
-		character_normalization_count=2, # the number of times that a character should repeat if it is to be normalized, used in conjunction with the normalize_words boolean
-		case_fold=True, # a boolean indicating whether the tokens should be converted to lower case
-		remove_punctuation=True, # a boolean indicating whether punctuation should be removed
-		remove_unicode_entities=False, # a boolean indicating whether unicode entities should be removed
-		min_length=3, # the minimum length of tokens
-		stopwords=None, # the list of stopwords to use
-		stem=True, # a boolean indicating whether a Porter stemmer shold be used
-		negation_correction=False, # a boolean indicating whether negation correction should be used
-		normalize_uni=True, # a boolean indicating whether accents should be removed and replaced with simple unicode characters
-		):
+	def __init__(self, remove_mentions=True, remove_hashtags=False, normalize_hashtags=True,
+				 remove_numbers=True, remove_urls=True, remove_alt_codes=True,
+				 normalize_words=False, character_normalization_count=2, case_fold=True,
+				 remove_punctuation=True, remove_unicode_entities=False,
+				 min_length=3, stopwords=None, stem=True, negation_correction=False,
+				 normalize_uni=True):
 		"""
 		Initialize the tokenizer.
 
@@ -109,12 +103,11 @@ class Tokenizer(object):
 		:type remove_unicode_entities: bool
 		:param min_length: The minimum length of tokens that should be retained.
 		:type min_length: int
-		:param stopwords: A list of stopwords.
-			Stopwords are common words that are removed from token lists.
-			This is based on the assumption that they are not very expressive.
-			Normally, stopwords are provided as a list, and then converted into a dict, where the stopwords are the keys.
-			This approach is adopted since Python uses hashing to check whether a key is in a dict.
-			However, they may also be provided as a dict directly.
+		:param stopwords: A list of stopwords: common words that are removed from token lists.
+						  This is based on the assumption that they are not very expressive.
+						  Normally, stopwords are provided as a list, and then converted into a dict, where the stopwords are the keys.
+						  This approach is adopted since Python uses hashing to check whether a key is in a dict.
+						  However, they may also be provided as a dict directly.
 		:type stopwords: list
 		:param stem: A boolean indicating whether the tokens should be stemmed.
 		:type stem: bool
@@ -126,10 +119,10 @@ class Tokenizer(object):
 		"""
 
 		"""
-		Use a dictionary for stopwords
+		Convert the stopword list into a dictionary if need be.
 		"""
 		stopwords = dict() if stopwords is None else stopwords
-		self.stopword_dict = stopwords if type(stopwords) == dict else {stopword: 0 for stopword in stopwords}
+		self.stopword_dict = stopwords if type(stopwords) == dict else { stopword: 0 for stopword in stopwords }
 
 		self.remove_mentions = remove_mentions
 		self.remove_hashtags = remove_hashtags
@@ -148,7 +141,66 @@ class Tokenizer(object):
 		self.negation_correction = negation_correction
 		self.normalize_uni = normalize_uni
 
-	def process_hashtags(self, string):
+	def tokenize(self, string):
+		"""
+		Tokenize the given string.
+
+		:param string: The string to tokenize.
+		:type string: str
+
+		:return: A list of tokens.
+		:rtype: list
+		"""
+
+		"""
+		The list of regular expressions to be used.
+		"""
+		url_pattern = re.compile("(https?:\/\/)?([^\s]+)?\.[a-zA-Z0-9]+?\/?([^\s,\.]+)?")
+		alt_code_pattern = re.compile("&.+?;")
+		unicode_pattern = re.compile("\\\\u[a-zA-Z0-9]{4}")
+		mention_pattern = re.compile("@[a-zA-Z0-9_]+")
+		hashtag_pattern = re.compile("#([a-zA-Z0-9_]+)")
+		word_normalization_pattern = re.compile("(.)\\1{%d,}" % (self.character_normalization_count - 1))
+		number_pattern = re.compile("\b[0-9]{1,3}\b") # preserve years
+		punctuation_pattern = re.compile("([^a-zA-Z0-9\-'])") # do not remove apostrophes because of negation
+		tokenize_pattern = re.compile("\s+")
+
+		string = self._process_hashtags(string) if self.normalize_hashtags else string
+
+		string = string.lower() if self.case_fold else string
+
+		string = ''.join((c for c in unicodedata.normalize('NFD', string) if unicodedata.category(c) != 'Mn')) if self.normalize_uni else string
+
+		"""
+		Remove illegal components.
+		"""
+		string = url_pattern.sub("", string) if self.remove_urls else string
+
+		string = alt_code_pattern.sub("", string) if self.remove_alt_codes else string
+
+		string = unicode_pattern.sub("", string) if self.remove_unicode_entities else string
+
+		string = word_normalization_pattern.sub("\g<1>", string) if self.normalize_words else string
+
+		string = mention_pattern.sub("", string) if self.remove_mentions else string
+
+		string = hashtag_pattern.sub("", string) if self.remove_hashtags else hashtag_pattern.sub("\g<1>", string)
+
+		string = number_pattern.sub("", string) if self.remove_numbers else string
+
+		string = punctuation_pattern.sub(" \g<1>", string) if self.remove_punctuation else string
+
+		tokens = tokenize_pattern.split(string)
+
+		"""
+		Negation precedes stemming and stopword removal because of words like "never" and "not" which could be removed prematurely.
+		"""
+		tokens = self._correct_negations(tokens) if self.negation_correction else tokens
+		tokens = self._postprocess(tokens)
+
+		return tokens
+
+	def _process_hashtags(self, string):
 		"""
 		Normalize the given hashtag, splitting it based on camel case notation.
 
@@ -165,7 +217,7 @@ class Tokenizer(object):
 			string = string.replace(hashtag, camel_case_pattern.sub("\g<2> \g<3>", hashtag), 1)
 		return string
 
-	def correct_negations(self, tokens,
+	def _correct_negations(self, tokens,
 			negation_words=["n't", "not", "no", "never"],
 			prefix="NOT"):
 		"""
@@ -202,7 +254,7 @@ class Tokenizer(object):
 
 		return negated_tokens
 
-	def stem(self, tokens):
+	def _stem(self, tokens):
 		"""
 		Stem the given list of tokens using a Porter Stemmer.
 
@@ -212,10 +264,11 @@ class Tokenizer(object):
 		:return: The list of stemmed tokens.
 		:rtype: list
 		"""
+
 		stemmed_tokens = list(tokens)
 		return [ self.stemmer.stem(token) for token in stemmed_tokens ]
 
-	def split_tokens(self, tokens, remove_punctuation=True):
+	def _split_tokens(self, tokens, remove_punctuation=True):
 		"""
 		Split the token based on punctuation patterns.
 
@@ -225,6 +278,7 @@ class Tokenizer(object):
 		:return: The list of split tokens.
 		:rtype: list
 		"""
+
 		punctuation_pattern = re.compile("([^a-zA-Z0-9\-'])") # do not remove apostrophes because of negation
 		tokenize_pattern = re.compile("\s+")
 
@@ -233,90 +287,20 @@ class Tokenizer(object):
 		split_tokens = [token for token_list in split_tokens for token in token_list] # flatten the list
 		return split_tokens
 
-	def postprocess(self, tokens, remove_punctuation=True,
-			min_length=3,
-			stopword_dict={},
-			stem=True):
+	def _postprocess(self, tokens):
 		"""
 		Post-process the tokens.
 		This is usually performed after possible negation correction.
 
 		:param tokens: The list of tokens to stem.
 		:type tokens: list
-		:param remove_punctuation: A boolean indicating whether punctuation should be removed.
-		:type remove_punctuation: bool
-		:param min_length: The minimum length of tokens that should be retained.
-		:type min_length: int
-		:param stopword_dict: A list of stopwords, stored as keys in a dict.
-			This approach is adopted since Python uses hashing to check whether a key is in a dict.
-		:type stopword_dict: dict
-		:param stem: A boolean indicating whether the tokens should be stemmed.
-		:type stem: bool
 		"""
-		tokens = self.split_tokens(tokens, remove_punctuation=remove_punctuation)
+
+		tokens = self._split_tokens(tokens, remove_punctuation=self.remove_punctuation)
 
 		tokens = [token for token in tokens if token not in self.stopword_dict]
 
 		tokens = [token for token in tokens if len(token) >= self.min_length]
 
-		tokens =  self.stem(tokens) if self.stem_tokens else tokens
-		return tokens
-
-	def tokenize(self, string):
-		"""
-		Tokenize the given string.
-
-		:param string: The string to tokenize.
-		:type string: str
-
-		:return: A list of tokens.
-		:rtype: list
-		"""
-
-		"""
-		The list of regular expressions to be used
-		"""
-		url_pattern = re.compile("(https?:\/\/)?([^\s]+)?\.[a-zA-Z0-9]+?\/?([^\s,\.]+)?")
-		alt_code_pattern = re.compile("&.+?;")
-		unicode_pattern = re.compile("\\\\u[a-zA-Z0-9]{4}")
-		mention_pattern = re.compile("@[a-zA-Z0-9_]+")
-		hashtag_pattern = re.compile("#([a-zA-Z0-9_]+)")
-		word_normalization_pattern = re.compile("(.)\\1{%d,}" % (self.character_normalization_count - 1))
-		number_pattern = re.compile("\b[0-9]{1,3}\b") # preserve years
-		punctuation_pattern = re.compile("([^a-zA-Z0-9\-'])") # do not remove apostrophes because of negation
-		tokenize_pattern = re.compile("\s+")
-
-		string = self.process_hashtags(string) if self.normalize_hashtags else string
-
-		string = string.lower() if self.case_fold else string
-
-		string = ''.join((c for c in unicodedata.normalize('NFD', string) if unicodedata.category(c) != 'Mn')) if self.normalize_uni else string
-
-		"""
-		remove illegal components
-		"""
-		string = url_pattern.sub("", string) if self.remove_urls else string
-
-		string = alt_code_pattern.sub("", string) if self.remove_alt_codes else string
-
-		string = unicode_pattern.sub("", string) if self.remove_unicode_entities else string
-
-		string = word_normalization_pattern.sub("\g<1>", string) if self.normalize_words else string
-
-		string = mention_pattern.sub("", string) if self.remove_mentions else string
-
-		string = hashtag_pattern.sub("", string) if self.remove_hashtags else hashtag_pattern.sub("\g<1>", string)
-
-		string = number_pattern.sub("", string) if self.remove_numbers else string
-
-		string = punctuation_pattern.sub(" \g<1>", string) if self.remove_punctuation else string
-
-		tokens = tokenize_pattern.split(string)
-
-		"""
-		negation precedes stemming and stopword removal because of words like "never" and "not" which could be removed prematurely
-		"""
-		tokens = self.correct_negations(tokens) if self.negation_correction else tokens
-		tokens = self.postprocess(tokens, remove_punctuation=self.remove_punctuation, min_length=self.min_length, stopword_dict=self.stopword_dict, stem=self.stem_tokens)
-
+		tokens =  self._stem(tokens) if self.stem_tokens else tokens
 		return tokens
