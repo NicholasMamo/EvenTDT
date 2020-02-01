@@ -295,7 +295,7 @@ class TestTokenizer(unittest.TestCase):
 
 		s = "Our prediction based on #FIFA Rankings, &amp; Country Risk Ratings"
 		t = Tokenizer(remove_alt_codes=True)
-		self.assertEqual(["our", "predict", "base", "fifa", "rank", "countri", "risk", "rate"], t.tokenize(s))
+		self.assertEqual([ "our", "predict", "base", "fifa", "rank", "countri", "risk", "rate" ], t.tokenize(s))
 
 	def test_retain_alt_codes(self):
 		"""
@@ -304,7 +304,7 @@ class TestTokenizer(unittest.TestCase):
 
 		s = "Our prediction based on #FIFA Rankings, &amp; Country Risk Ratings"
 		t = Tokenizer(remove_alt_codes=False)
-		self.assertEqual(["our", "predict", "base", "fifa", "rank", "amp", "countri", "risk", "rate"], t.tokenize(s))
+		self.assertEqual([ "our", "predict", "base", "fifa", "rank", "amp", "countri", "risk", "rate" ], t.tokenize(s))
 
 	def test_word_normalization(self):
 		"""
@@ -471,19 +471,21 @@ class TestTokenizer(unittest.TestCase):
 
 	def test_case_folding(self):
 		"""
-		Test the case folding functionality
+		Test that when case folding is set, all tokens are set to lower-case.
 		"""
 
-		s = "Great pass, Lemar"
+		s = "#BREAKING Nine illegal miners killed by rival workers in S. Africa say police"
+		t = Tokenizer(case_fold=True, stem=False)
+		self.assertEqual([ "breaking", "nine", "illegal", 'miners', 'killed', 'rival', 'workers', 'africa', 'say', 'police' ], t.tokenize(s))
 
-		t = Tokenizer(case_fold=False)
-		self.assertEqual(["great", "pass", "lemar"], t.tokenize(s))
+	def test_no_case_folding(self):
+		"""
+		Test that when no case folding is set, all tokens are returned as provided.
+		"""
 
+		s = "#BREAKING Nine illegal miners killed by rival workers in S. Africa say police"
 		t = Tokenizer(case_fold=False, stem=False)
-		self.assertEqual(["Great", "pass", "Lemar"], t.tokenize(s))
-
-		t = Tokenizer(case_fold=True)
-		self.assertEqual(["great", "pass", "lemar"], t.tokenize(s))
+		self.assertEqual([ "BREAKING", "Nine", "illegal", 'miners', 'killed', 'rival', 'workers', 'Africa', 'say', 'police' ], t.tokenize(s))
 
 	def test_punctuation(self):
 		"""
@@ -493,13 +495,13 @@ class TestTokenizer(unittest.TestCase):
 		s = "Kroos scored the winning goal, assisted by Reus!"
 
 		t = Tokenizer(remove_punctuation=False)
-		self.assertEqual(["kroo", "score", "the", "win", "goal,", "assist", "reus!"], t.tokenize(s))
+		self.assertEqual([ "kroo", "score", "the", "win", "goal,", "assist", "reus!" ], t.tokenize(s))
 
 		t = Tokenizer(remove_punctuation=True)
-		self.assertEqual(["kroo", "score", "the", "win", "goal", "assist", "reu"], t.tokenize(s))
+		self.assertEqual([ "kroo", "score", "the", "win", "goal", "assist", "reu" ], t.tokenize(s))
 
 		t = Tokenizer(remove_punctuation=True, stem=False)
-		self.assertEqual(["kroos", "scored", "the", "winning", "goal", "assisted", "reus"], t.tokenize(s))
+		self.assertEqual([ "kroos", "scored", "the", "winning", "goal", "assisted", "reus" ], t.tokenize(s))
 
 	def test_token_length(self):
 		"""
@@ -509,10 +511,10 @@ class TestTokenizer(unittest.TestCase):
 		s = "Kroos scored the winning goal, assisted by Reus!"
 
 		t = Tokenizer()
-		self.assertEqual(["kroo", "score", "the", "win", "goal", "assist", "reu"], t.tokenize(s))
+		self.assertEqual([ "kroo", "score", "the", "win", "goal", "assist", "reu" ], t.tokenize(s))
 
 		t = Tokenizer(min_length=4)
-		self.assertEqual(["kroo", "score", "win", "goal", "assist", "reu"], t.tokenize(s))
+		self.assertEqual([ "kroo", "score", "win", "goal", "assist", "reu" ], t.tokenize(s))
 
 	def test_stemming(self):
 		"""
@@ -522,10 +524,10 @@ class TestTokenizer(unittest.TestCase):
 		s = "Kroos scored the winning goal, assisted by Reus!"
 
 		t = Tokenizer(stem=False)
-		self.assertEqual(["kroos", "scored", "the", "winning", "goal", "assisted", "reus"], t.tokenize(s))
+		self.assertEqual([ "kroos", "scored", "the", "winning", "goal", "assisted", "reus" ], t.tokenize(s))
 
 		t = Tokenizer(stem=True)
-		self.assertEqual(["kroo", "score", "the", "win", "goal", "assist", "reu"], t.tokenize(s))
+		self.assertEqual([ "kroo", "score", "the", "win", "goal", "assist", "reu" ], t.tokenize(s))
 
 	def test_negation_correction(self):
 		"""
@@ -536,7 +538,7 @@ class TestTokenizer(unittest.TestCase):
 
 		t = Tokenizer(remove_punctuation=False, stem=False)
 		tokens = t.tokenize(s)
-		self.assertEqual(tokens, ["reus", "wouldn't", "have", "scored"] )
+		self.assertEqual(tokens, [ "reus", "wouldn't", "have", "scored" ] )
 
 		t = Tokenizer(remove_punctuation=False, negation_correction=True)
 		self.assertEqual(t._stem(t._correct_negations(tokens)), t.tokenize(s))
@@ -546,4 +548,4 @@ class TestTokenizer(unittest.TestCase):
 
 		s = "Kroos wouldn't have scored if it weren't for Reus. They wouldn't have had anything to play for."
 		t = Tokenizer(negation_correction=True)
-		self.assertEqual(["kroo", "wouldn", "nothav", "notscor", "notif", "notit", "weren", "notfor", "notreu", "they", "wouldn", "nothav", "nothad", "notanyth", "notto", "notplay", "notfor"], t.tokenize(s))
+		self.assertEqual([ "kroo", "wouldn", "nothav", "notscor", "notif", "notit", "weren", "notfor", "notreu", "they", "wouldn", "nothav", "nothad", "notanyth", "notto", "notplay", "notfor" ], t.tokenize(s))
