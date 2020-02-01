@@ -387,6 +387,33 @@ class TestTokenizer(unittest.TestCase):
 		t = Tokenizer(remove_unicode_entities=False, stem=False, min_length=1, remove_punctuation=False)
 		self.assertEqual([ 'je', 'veux', '😂😂😂🦁' ], t.tokenize(s))
 
+	def test_minimum_length_minimum(self):
+		"""
+		Test that when the minimum length is 1, all non-empty tokens are retained.
+		"""
+
+		s = "Gelson Martins tries to shove the referee."
+		t = Tokenizer(min_length=1, stem=False)
+		self.assertEqual([ 'gelson', 'martins', 'tries', 'to', 'shove', 'the', 'referee' ], t.tokenize(s))
+
+	def test_minimum_length_exact(self):
+		"""
+		Test that the minimum length does not filter tokens with exact length.
+		"""
+
+		s = "Gelson Martins tries to shove the referee."
+		t = Tokenizer(min_length=2, stem=False)
+		self.assertEqual([ 'gelson', 'martins', 'tries', 'to', 'shove', 'the', 'referee' ], t.tokenize(s))
+
+	def test_minimum_length_filter(self):
+		"""
+		Test that the minimum length filters tokens with length less than it.
+		"""
+
+		s = "Gelson Martins tries to shove the referee."
+		t = Tokenizer(min_length=3, stem=False)
+		self.assertEqual([ 'gelson', 'martins', 'tries', 'shove', 'the', 'referee' ], t.tokenize(s))
+
 	@ignore_warnings # pass the test_stopwords method as a parameter to ignore_warnings (https://stackoverflow.com/questions/6392739/what-does-the-at-symbol-do-in-python)
 	def test_stopwords(self):
 		"""
