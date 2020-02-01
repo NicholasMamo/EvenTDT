@@ -1,5 +1,5 @@
 """
-Run unit tests on the Tokenizer
+Run unit tests on the :class:`eventdt.nlp.tokenizer.Tokenizer` class.
 """
 
 from nltk.corpus import stopwords
@@ -18,12 +18,12 @@ from tokenizer import Tokenizer
 
 class TestTokenizer(unittest.TestCase):
 	"""
-	Test the Tokenizer class
+	Run unit tests on the :class:`eventdt.nlp.tokenizer.Tokenizer` class.
 	"""
 
 	def ignore_warnings(test):
 		"""
-		A decorator function used to ignore NLTK warnings
+		A decorator function used to ignore NLTK warnings.
 		From: http://www.neuraldump.net/2017/06/how-to-suppress-python-unittest-warnings/
 		More about decorator functions: https://wiki.python.org/moin/PythonDecorators
 		"""
@@ -32,6 +32,163 @@ class TestTokenizer(unittest.TestCase):
 				warnings.simplefilter("ignore")
 				test(self, *args, **kwargs)
 		return perform_test
+
+	def test_remove_mentions(self):
+		"""
+		Test the mention removal functionality.
+		"""
+
+		s = "@WRenard with the header"
+		t = Tokenizer(remove_mentions=True)
+		self.assertEqual(t.tokenize(s), [ "with", "the", "header" ])
+
+	def test_remove_multiple_mentions(self):
+		"""
+		Test that the mention removal functionality removes multiple mentions.
+		"""
+
+		s = "@WRenard with the header from @AdaStolsmo's cross"
+		t = Tokenizer(remove_mentions=True)
+		self.assertEqual(t.tokenize(s), [ "with", "the", "header", "from", "cross" ])
+
+	def test_keep_mentions(self):
+		"""
+		Test that mentions can be retained by the mention removal functionality.
+		"""
+
+		s = "@WRenard with the header"
+		t = Tokenizer(remove_mentions=False)
+		self.assertEqual(t.tokenize(s), [ "wrenard", "with", "the", "header" ])
+
+	def test_keep_multiple_mentions(self):
+		"""
+		Test that multiple mentions can be retained by the mention removal functionality.
+		"""
+
+		s = "@WRenard with the header from @AdaStolsmo's cross"
+		t = Tokenizer(remove_mentions=False)
+		self.assertEqual(t.tokenize(s), [ "wrenard", "with", "the", "header", "from", "adastolsmo", "cross" ])
+
+	def test_remove_hashtag(self):
+		"""
+		Test that the hashtag removal functionality removes a single hashtag.
+		"""
+
+		s = "The Vardy party has gone very quiet 💤 😢 #FPL"
+		t = Tokenizer(remove_hashtags=True, stem=False)
+		self.assertEqual(t.tokenize(s), [ "the", "vardy", "party", "has", "gone", "very", "quiet" ])
+
+	def test_remove_hashtags(self):
+		"""
+		Test that the hashtag removal functionality removes all hashtags.
+		"""
+
+		s = "The Vardy party has gone very quiet 💤 😢 #FPL #LEICHE"
+		t = Tokenizer(remove_hashtags=True, stem=False)
+		self.assertEqual(t.tokenize(s), [ "the", "vardy", "party", "has", "gone", "very", "quiet" ])
+
+	def test_remove_hashtags_mixed_case(self):
+		"""
+		Test that the hashtag removal functionality removes all hashtags, regardless of the case.
+		"""
+
+		s = "The Vardy party has gone very quiet 💤 😢 #FPL #LeiChe"
+		t = Tokenizer(remove_hashtags=True, split_hashtags=False, stem=False)
+		self.assertEqual(t.tokenize(s), [ "the", "vardy", "party", "has", "gone", "very", "quiet" ])
+
+	def test_retain_hashtags(self):
+		"""
+		Test that the hashtag removal functionality can retain all hashtags.
+		"""
+
+		s = "The Vardy party has gone very quiet 💤 😢 #FPL #LEICHE"
+		t = Tokenizer(remove_hashtags=False, split_hashtags=False, stem=False)
+		self.assertEqual(t.tokenize(s), [ "the", "vardy", "party", "has", "gone", "very", "quiet", 'fpl', 'leiche' ])
+
+	def test_retain_hashtags_mixed_case(self):
+		"""
+		Test that the hashtag removal functionality can retain all hashtags, regardless of the case.
+		"""
+
+		s = "The Vardy party has gone very quiet 💤 😢 #FPL #LeiChe"
+		t = Tokenizer(remove_hashtags=False, split_hashtags=False, stem=False)
+		self.assertEqual(t.tokenize(s), [ "the", "vardy", "party", "has", "gone", "very", "quiet", 'fpl', 'leiche' ])
+
+	def test_retain_hashtags_with_splitting(self):
+		"""
+		Test that when hashtags are removed, split hashtags are retained.
+		"""
+
+		s = "The Vardy party has gone very quiet 💤 😢 #FPL #LeiChe"
+		t = Tokenizer(remove_hashtags=True, split_hashtags=True, stem=False)
+		self.assertEqual(t.tokenize(s), [ "the", "vardy", "party", "has", "gone", "very", "quiet", 'lei', 'che' ])
+
+	def test_split_hashtag(self):
+		"""
+		Test the hashtag splitting functionality.
+		"""
+
+		s = "The Vardy party has gone very quiet 💤 😢 #LeiChe"
+		t = Tokenizer(split_hashtags=True, stem=False)
+		self.assertEqual(t.tokenize(s), [ "the", "vardy", "party", "has", "gone", "very", "quiet", 'lei', 'che' ])
+
+	def test_split_hashtag_all_upper(self):
+		"""
+		Test that trying to split a hashtag that is made up of only uppercase letters does not split it.
+		"""
+
+		s = "The Vardy party has gone very quiet 💤 😢 #FPL"
+		t = Tokenizer(split_hashtags=True, stem=False)
+		self.assertEqual(t.tokenize(s), [ "the", "vardy", "party", "has", "gone", "very", "quiet", 'fpl' ])
+
+	def test_split_hashtag_all_lower(self):
+		"""
+		Test that trying to split a hashtag that is made up of only lowercase letters does not split it.
+		"""
+
+		s = "The Vardy party has gone very quiet 💤 😢 #fpl"
+		t = Tokenizer(split_hashtags=True, stem=False)
+		self.assertEqual(t.tokenize(s), [ "the", "vardy", "party", "has", "gone", "very", "quiet", 'fpl' ])
+
+	def test_split_hashtag_multiple_components(self):
+		"""
+		Test that hashtags with multiple components are split properly
+		"""
+
+		s = "Hello! I'm Harry Styles, I'm sixteen and I work in a bakery #HappyBirthdayHarry"
+		t = Tokenizer(split_hashtags=True, stem=False)
+		self.assertEqual(t.tokenize(s), [ "hello", "harry", "styles", "sixteen", "and", "work", "bakery", 'happy', 'birthday', 'harry' ])
+
+	def test_split_hashtag_repeated(self):
+		"""
+		Test that when a hashtag is repeated, splitting is applied to both.
+		"""
+
+		s = "The Vardy party has gone very quiet 💤 😢 #LeiChe #LeiChe"
+		t = Tokenizer(split_hashtags=True, stem=False)
+		self.assertEqual(t.tokenize(s), [ "the", "vardy", "party", "has", "gone", "very", "quiet", 'lei', 'che', 'lei', 'che' ])
+
+	def test_split_hashtag_with_numbers(self):
+		"""
+		Test that hashtags are treated as words when splitting hashtags.
+		"""
+
+		s = "The Vardy party has gone very quiet 💤 😢 #EPL2020"
+		t = Tokenizer(split_hashtags=True, stem=False)
+		self.assertEqual(t.tokenize(s), [ "the", "vardy", "party", "has", "gone", "very", "quiet", 'epl', '2020' ])
+
+		s = "The Vardy party has gone very quiet 💤 😢 #2020EPL"
+		t = Tokenizer(split_hashtags=True, stem=False)
+		self.assertEqual(t.tokenize(s), [ "the", "vardy", "party", "has", "gone", "very", "quiet", '2020', 'epl' ])
+
+	def test_do_not_split_hashtags(self):
+		"""
+		Test that hashtags aren't split if the flag is not provided.
+		"""
+
+		s = "The Vardy party has gone very quiet 💤 😢 #EPL2020"
+		t = Tokenizer(split_hashtags=False, stem=False)
+		self.assertEqual(t.tokenize(s), [ "the", "vardy", "party", "has", "gone", "very", "quiet", 'epl2020' ])
 
 	@ignore_warnings # pass the test_stopwords method as a parameter to ignore_warnings (https://stackoverflow.com/questions/6392739/what-does-the-at-symbol-do-in-python)
 	def test_stopwords(self):
@@ -61,33 +218,6 @@ class TestTokenizer(unittest.TestCase):
 
 		t = Tokenizer(case_fold=True)
 		self.assertEqual(t.tokenize(s), ["great", "pass", "lemar"])
-
-	def test_mentions(self):
-		"""
-		Test the mention removal functionality
-		"""
-
-		s = "Well said, @memonick"
-
-		t = Tokenizer(remove_mentions=False)
-		self.assertEqual(t.tokenize(s), ["well", "said", "memonick"])
-
-		t = Tokenizer(remove_mentions=True)
-		self.assertEqual(t.tokenize(s), ["well", "said"])
-
-	def test_hashtags(self):
-		"""
-		Test the hashtag removal functionality
-		"""
-
-		s = "Go Germany #KORGER #GER"
-
-		t = Tokenizer(remove_hashtags=False)
-		self.assertEqual(t.tokenize(s), ["germani", "korger", "ger"])
-
-		t = Tokenizer(remove_hashtags=True)
-		self.assertEqual(t.tokenize(s), ["germani"])
-
 
 	def test_numbers(self):
 		"""
@@ -165,19 +295,6 @@ class TestTokenizer(unittest.TestCase):
 		s = "Kroos wouldn't have scored if it weren't for Reus. They wouldn't have had anything to play for."
 		t = Tokenizer(negation_correction=True)
 		self.assertEqual(t.tokenize(s), ["kroo", "wouldn", "nothav", "notscor", "notif", "notit", "weren", "notfor", "notreu", "they", "wouldn", "nothav", "nothad", "notanyth", "notto", "notplay", "notfor"])
-
-	def test_hashtag_normalization(self):
-		"""
-		Test the hashtag normalization functionality
-		"""
-
-		s = "#WorldCupFinal to be played between #FRa and #BEL #FRABEL #WorldCupFraBel"
-
-		t = Tokenizer(normalize_hashtags=False)
-		self.assertEqual(t.tokenize(s), ["worldcupfin", "play", "between", "fra", "and", "bel", "frabel", "worldcupfrabel"])
-
-		t = Tokenizer(normalize_hashtags=True)
-		self.assertEqual(t.tokenize(s), ["world", "cup", "final", "play", "between", "fra", "and", "bel", "frabel", "world", "cup", "fra", "bel"])
 
 	def test_url_removal(self):
 		"""

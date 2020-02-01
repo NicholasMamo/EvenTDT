@@ -212,7 +212,7 @@ class Tokenizer(object):
 		"""
 
 		hashtag_pattern = re.compile("#([a-zA-Z0-9_]+)")
-		camel_case_pattern = re.compile("(([a-z]+?)([A-Z]+))")
+		camel_case_pattern = re.compile("(([a-z]+)?([A-Z]+|[0-9]+))")
 
 		"""
 		First find all hashtags.
