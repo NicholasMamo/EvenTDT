@@ -69,7 +69,7 @@ class Tokenizer(object):
 
 	def __init__(self, remove_mentions=True, remove_hashtags=False, split_hashtags=True,
 				 remove_numbers=True, remove_urls=True, remove_alt_codes=True,
-				 normalize_words=False, character_normalization_count=2, case_fold=True,
+				 normalize_words=False, character_normalization_count=3, case_fold=True,
 				 remove_punctuation=True, remove_unicode_entities=False,
 				 min_length=3, stopwords=None, stem=True, negation_correction=False,
 				 normalize_uni=True):
@@ -90,8 +90,8 @@ class Tokenizer(object):
 		:param remove_alt_codes: A boolean indicating whether ALT-codes should be removed.
 		:type remove_alt_codes: bool
 		:param normalize_words: A boolean indicating whether words should be normalized.
-			This removes repeated characters.
-			The number of repeated characters that are removed is controlled using the `character_normalization_count` parameter.
+								This removes repeated characters.
+								The number of repeated characters that are removed is controlled using the `character_normalization_count` parameter.
 		:type normalize_words: bool
 		:param character_normalization_count: The number of times a character is repeated before they are reduced to one.
 		:type character_normalization_count: int

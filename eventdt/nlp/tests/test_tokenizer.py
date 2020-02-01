@@ -306,6 +306,51 @@ class TestTokenizer(unittest.TestCase):
 		t = Tokenizer(remove_alt_codes=False)
 		self.assertEqual(["our", "predict", "base", "fifa", "rank", "amp", "countri", "risk", "rate"], t.tokenize(s))
 
+	def test_word_normalization(self):
+		"""
+		Test that word normalization reduces normalized characters.
+		"""
+
+		s = "YYYYYEEESSSSSSSSS OOXXXXXXXXXXXX!!!"
+		t = Tokenizer(normalize_words=True, character_normalization_count=2, stem=False, min_length=2)
+		self.assertEqual([ "yes", "ox" ], t.tokenize(s))
+
+	def test_word_normalization_character_limit(self):
+		"""
+		Test that word normalization reduces normalized characters.
+		"""
+
+		s = "YYYYYEEESSSSSSSSS OOXXXXXXXXXXXX!!!"
+		t = Tokenizer(normalize_words=True, character_normalization_count=2, stem=False, min_length=2)
+		self.assertEqual([ "yes", "ox" ], t.tokenize(s))
+
+	def test_word_normalization_character_exact_limit(self):
+		"""
+		Test that word normalization reduces repeated characters if the count is exact.
+		"""
+
+		s = "YYYYYEEESSSSSSSSS OOXXXXXXXXXXXX!!!"
+		t = Tokenizer(normalize_words=True, character_normalization_count=3, stem=False, min_length=2)
+		self.assertEqual([ "yes", "oox" ], t.tokenize(s))
+
+	def test_word_normalization_character_high_limit(self):
+		"""
+		Test that word normalization does not reduce repeated characters if the limit is higher.
+		"""
+
+		s = "YYYYYEEESSSSSSSSS OOXXXXXXXXXXXX!!!"
+		t = Tokenizer(normalize_words=True, character_normalization_count=4, stem=False, min_length=2)
+		self.assertEqual([ "yeees", "oox" ], t.tokenize(s))
+
+	def test_no_word_normalization(self):
+		"""
+		Test that word normalization is not permitted, no words are normalized.
+		"""
+
+		s = "YYYYYEEESSSSSSSSS OOXXXXXXXXXXXX!!!"
+		t = Tokenizer(normalize_words=False, character_normalization_count=2, stem=False, min_length=2)
+		self.assertEqual([ "yyyyyeeesssssssss", "ooxxxxxxxxxxxx" ], t.tokenize(s))
+
 	@ignore_warnings # pass the test_stopwords method as a parameter to ignore_warnings (https://stackoverflow.com/questions/6392739/what-does-the-at-symbol-do-in-python)
 	def test_stopwords(self):
 		"""
@@ -410,19 +455,3 @@ class TestTokenizer(unittest.TestCase):
 
 		t = Tokenizer(remove_unicode_entities=True)
 		self.assertEqual([], t.tokenize(s))
-
-	def test_word_normalization(self):
-		"""
-		Test the word normalization functionality
-		"""
-
-		s = "GOOOOOAAL GRIZIIII"
-
-		t = Tokenizer(normalize_words=False)
-		self.assertEqual(["goooooaal", "griziiii"], t.tokenize(s))
-
-		t = Tokenizer(normalize_words=True)
-		self.assertEqual(["goal", "grizi"], t.tokenize(s))
-
-		t = Tokenizer(normalize_words=True, character_normalization_count=3)
-		self.assertEqual(["goaal", "grizi"], t.tokenize(s))
