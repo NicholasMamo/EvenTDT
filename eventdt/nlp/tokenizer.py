@@ -26,9 +26,9 @@ class Tokenizer(object):
 	:vartype remove_mentions: bool
 	:ivar remove_hashtags: A boolean indicating whether hashtags (#) should be removed.
 	:vartype remove_hashtags: bool
-	:ivar normalize_hashtags: A boolean indicating whether hashtags (#) should be normalized.
+	:ivar split_hashtags: A boolean indicating whether hashtags (#) should be normalized.
 		This converts hashtags of the type #HashTag to `Hash Tag`, based on camel-case.
-	:vartype normalize_hashtags: bool
+	:vartype split_hashtags: bool
 	:ivar remove_numbers: A boolean indicating whether numbers should be removed.
 	:vartype remove_numbers: bool
 	:ivar remove_urls: A boolean indicating whether URLs should be removed.
@@ -67,7 +67,7 @@ class Tokenizer(object):
 
 	stemmer = PorterStemmer()
 
-	def __init__(self, remove_mentions=True, remove_hashtags=False, normalize_hashtags=True,
+	def __init__(self, remove_mentions=True, remove_hashtags=False, split_hashtags=True,
 				 remove_numbers=True, remove_urls=True, remove_alt_codes=True,
 				 normalize_words=False, character_normalization_count=2, case_fold=True,
 				 remove_punctuation=True, remove_unicode_entities=False,
@@ -80,9 +80,9 @@ class Tokenizer(object):
 		:type remove_mentions: bool
 		:param remove_hashtags: A boolean indicating whether hashtags (#) should be removed.
 		:type remove_hashtags: bool
-		:param normalize_hashtags: A boolean indicating whether hashtags (#) should be normalized.
+		:param split_hashtags: A boolean indicating whether hashtags (#) should be normalized.
 			This converts hashtags of the type #HashTag to `Hash Tag`, based on camel-case.
-		:type normalize_hashtags: bool
+		:type split_hashtags: bool
 		:param remove_numbers: A boolean indicating whether numbers should be removed.
 		:type remove_numbers: bool
 		:param remove_urls: A boolean indicating whether URLs should be removed.
@@ -126,7 +126,7 @@ class Tokenizer(object):
 
 		self.remove_mentions = remove_mentions
 		self.remove_hashtags = remove_hashtags
-		self.normalize_hashtags = normalize_hashtags
+		self.split_hashtags = split_hashtags
 		self.remove_numbers = remove_numbers
 		self.remove_urls = remove_urls
 		self.remove_alt_codes = remove_alt_codes
@@ -165,7 +165,7 @@ class Tokenizer(object):
 		punctuation_pattern = re.compile("([^a-zA-Z0-9\-'])") # do not remove apostrophes because of negation
 		tokenize_pattern = re.compile("\s+")
 
-		string = self._process_hashtags(string) if self.normalize_hashtags else string
+		string = self._process_hashtags(string) if self.split_hashtags else string
 
 		string = string.lower() if self.case_fold else string
 
