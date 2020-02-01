@@ -161,7 +161,7 @@ class Tokenizer(object):
 		mention_pattern = re.compile("@[a-zA-Z0-9_]+")
 		hashtag_pattern = re.compile("#([a-zA-Z0-9_]+)")
 		word_normalization_pattern = re.compile("(.)\\1{%d,}" % (self.character_normalization_count - 1))
-		number_pattern = re.compile("\b[0-9]{1,3}\b") # preserve years
+		number_pattern = re.compile("\\b([0-9]{1,3}|[0-9]{5,})\\b") # preserve years
 		punctuation_pattern = re.compile("([^a-zA-Z0-9\-'])") # do not remove apostrophes because of negation
 		tokenize_pattern = re.compile("\s+")
 
