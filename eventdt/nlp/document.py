@@ -1,6 +1,11 @@
 """
+Documents are the basis in NLP tasks.
 The :class:`eventdt.nlp.document.Document` class builds on the :class:`eventdt.vsm.vector.Vector` class.
-In addition to the normal VSM functionality, it introduces additional document-specific capabilities.
+In addition to the normal VSM functionality, it stores the original text for any later changes.
+
+Creating documents is a two-step process.
+First, the text needs to be converted into tokens using the :class:`eventdt.nlp.tokenizer.Tokenizer` class.
+Second, those tokens need to be weighted using a :class:`eventdt.nlp.term_weighting.scheme.TermWeightingScheme`, transforming them into document features, or vector dimensions.
 """
 
 import math
@@ -18,8 +23,7 @@ from logger import logger
 class Document(Vector):
 	"""
 	The :class:`eventdt.nlp.document.Document` class is based on the :class:`eventdt.vsm.vector.Vector` class. class.
-	The main addition is the text field.
-	This field stores the original document text for any later changes.
+	The main addition is the text field for any later changes.
 
 	:ivar text: The document's original text.
 	:vartype text: str

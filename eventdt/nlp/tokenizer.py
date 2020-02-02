@@ -3,7 +3,7 @@ The tokenizer takes plain text and splits it into a list of tokens.
 Tokens are the equivalent of document features, or vector dimensions.
 
 Tokenization is the first of two steps to create a :class:`eventdt.nlp.document.Document`.
-The second step is term-weighting using a :class:`eventdt.nlp.term_weighting.scheme.TermWeightingScheme` instance.
+The second step is term-weighting using a :class:`eventdt.nlp.term_weighting.scheme.TermWeightingScheme`.
 A term-weighting scheme receives tokens and creates a weighted :class:`eventdt.nlp.document.Document` out of them.
 
 The tokenizer takes its settings in the constructor.
