@@ -1,6 +1,24 @@
 """
-The processing file is responsible for tokenizing strings.
-It is based on, and requires, NLTK.
+The tokenizer takes plain text and splits it into a list of tokens.
+Tokens are the equivalent of document features, or vector dimensions.
+
+Tokenization is the first of two steps to create a :class:`eventdt.nlp.document.Document`.
+The second step is term-weighting using a :class:`eventdt.nlp.term_weighting.scheme.TermWeightingScheme` instance.
+A term-weighting scheme receives tokens and creates a weighted :class:`eventdt.nlp.document.Document` out of them.
+
+The tokenizer takes its settings in the constructor.
+All tokenization happens using the :func:`eventdt.nlp.tokenizer.Tokenizer.tokenize` function.
+In this way, all documents are tokenized in the same way.
+Creating and using a tokenizer is very simple:
+
+.. code-block:: python
+
+  t = Tokenizer(stem=True, split_hashtags=True)
+  tokens = t.tokenize()
+
+.. note::
+
+	Stemming is based on, and requires, NLTK.
 """
 
 from nltk.stem.porter import *
@@ -162,7 +180,7 @@ class Tokenizer(object):
 		"""
 		Split hashtags, casefold and remove accents.
 		"""
-		text = self._process_hashtags(text) if self.split_hashtags else text
+		text = self._split_hashtags(text) if self.split_hashtags else text
 		text = text.lower() if self.case_fold else text
 		text = ''.join((c for c in unicodedata.normalize('NFD', text) if unicodedata.category(c) != 'Mn')) if self.normalize_special_characters else text
 
@@ -188,9 +206,9 @@ class Tokenizer(object):
 
 		return tokens
 
-	def _process_hashtags(self, string):
+	def _split_hashtags(self, string):
 		"""
-		Normalize the given hashtag, splitting it based on camel case notation.
+		Split the hashtags in the given string based on camel-case notation.
 
 		:param string: The string to normalize.
 		:type string: str
