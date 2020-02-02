@@ -59,8 +59,8 @@ class Tokenizer(object):
 	:vartype stopwords: list
 	:ivar stem: A boolean indicating whether the tokens should be stemmed.
 	:vartype stem: bool
-	:ivar normalize_uni: A boolean indicating whether accents should be removed and replaced with simple unicode characters.
-	:vartype normalize_uni: bool
+	:ivar normalize_special_characters: A boolean indicating whether accents should be removed and replaced with simple unicode characters.
+	:vartype normalize_special_characters: bool
 	"""
 
 	stemmer = PorterStemmer()
@@ -69,7 +69,7 @@ class Tokenizer(object):
 				 remove_numbers=True, remove_urls=True, remove_alt_codes=True,
 				 normalize_words=False, character_normalization_count=3, case_fold=True,
 				 remove_punctuation=True, remove_unicode_entities=False,
-				 min_length=3, stopwords=None, stem=True, normalize_uni=True):
+				 min_length=3, stopwords=None, stem=True, normalize_special_characters=True):
 		"""
 		Initialize the tokenizer.
 
@@ -109,8 +109,8 @@ class Tokenizer(object):
 		:type stopwords: list
 		:param stem: A boolean indicating whether the tokens should be stemmed.
 		:type stem: bool
-		:param normalize_uni: A boolean indicating whether accents should be removed and replaced with simple unicode characters.
-		:type normalize_uni: bool
+		:param normalize_special_characters: A boolean indicating whether accents should be removed and replaced with simple unicode characters.
+		:type normalize_special_characters: bool
 		"""
 
 		"""
@@ -133,7 +133,7 @@ class Tokenizer(object):
 		self.min_length = min_length
 		self.stopwords = stopwords
 		self.stem_tokens = stem
-		self.normalize_uni = normalize_uni
+		self.normalize_special_characters = normalize_special_characters
 
 	def tokenize(self, text):
 		"""
@@ -161,40 +161,27 @@ class Tokenizer(object):
 
 		text = text.lower() if self.case_fold else text
 
-		text = ''.join((c for c in unicodedata.normalize('NFD', text) if unicodedata.category(c) != 'Mn')) if self.normalize_uni else text
+		text = ''.join((c for c in unicodedata.normalize('NFD', text) if unicodedata.category(c) != 'Mn')) if self.normalize_special_characters else text
 
 		"""
 		Remove illegal components.
 		"""
 		text = url_pattern.sub("", text) if self.remove_urls else text
-
 		text = alt_code_pattern.sub("", text) if self.remove_alt_codes else text
-
 		text = text.encode('ascii', 'ignore').decode("utf-8") if self.remove_unicode_entities else text
-
 		text = word_normalization_pattern.sub("\g<1>", text) if self.normalize_words else text
-
 		text = mention_pattern.sub("", text) if self.remove_mentions else text
-
 		text = hashtag_pattern.sub("", text) if self.remove_hashtags else hashtag_pattern.sub("\g<1>", text)
-
 		text = number_pattern.sub("", text) if self.remove_numbers else text
-
 		tokens = tokenize_pattern.split(text)
 
 		"""
 		Post-process the tokens.
 		"""
-
 		tokens = self._split_tokens(tokens)
-
 		tokens = [token for token in tokens if token not in self.stopword_dict]
-
 		tokens = [token for token in tokens if len(token) >= self.min_length]
-
 		tokens =  self._stem(tokens) if self.stem_tokens else tokens
-
-		return tokens
 
 		return tokens
 
@@ -253,8 +240,6 @@ class Tokenizer(object):
 		:return: The list of split tokens.
 		:rtype: list
 		"""
-
-		tokenize_pattern = re.compile("\s+")
 
 		split_tokens = list(tokens)
 

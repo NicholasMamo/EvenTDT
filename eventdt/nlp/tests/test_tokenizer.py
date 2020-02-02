@@ -540,3 +540,67 @@ class TestTokenizer(unittest.TestCase):
 		s = "Toko-Ekambi scores, assisted by Mendes!"
 		t = Tokenizer(stem=False)
 		self.assertEqual([ "toko", "ekambi", "scores", "assisted", "mendes" ], t.tokenize(s))
+
+	def test_retain_special_characters(self):
+		"""
+		Test that when special_characters are not normalized, they are retained.
+		"""
+
+		s = 'On ne lâche rien'
+		t = Tokenizer(stem=False, min_length=2, normalize_special_characters=False)
+		self.assertEqual([ 'on', 'ne', 'lâche', 'rien' ], t.tokenize(s))
+
+	def test_retain_french_special_characters(self):
+		"""
+		Test that when French special_characters are not normalized, they are retained.
+		"""
+
+		s = 'On ne lâche rien'
+		t = Tokenizer(stem=False, min_length=2, normalize_special_characters=False)
+		self.assertEqual([ 'on', 'ne', 'lâche', 'rien' ], t.tokenize(s))
+
+	def test_normalize_french_special_characters(self):
+		"""
+		Test that when French special_characters are normalized, they are converted to the correct character.
+		"""
+
+		s = 'Il joue très gros... Peut-être sa dernière chance'
+		t = Tokenizer(stem=False, normalize_special_characters=True)
+		self.assertEqual([ 'joue', 'tres', 'gros', 'peut', 'etre', 'derniere', 'chance' ], t.tokenize(s))
+
+	def test_retain_germanic_special_characters(self):
+		"""
+		Test that when Germanic special_characters are not normalized, they are retained.
+		"""
+
+		s = 'Så leker Özil äntligen'
+		t = Tokenizer(stem=False, min_length=2, normalize_special_characters=False)
+		self.assertEqual([ 'så', 'leker', 'özil', 'äntligen' ], t.tokenize(s))
+
+	def test_normalize_germanic_special_characters(self):
+		"""
+		Test that when Germanic special_characters are normalized, they are converted to the correct character.
+		"""
+
+		s = 'Så leker Özil äntligen'
+		t = Tokenizer(stem=False, min_length=2, normalize_special_characters=True)
+		self.assertEqual([ 'sa', 'leker', 'ozil', 'antligen' ], t.tokenize(s))
+
+	def test_retain_maltese_special_characters(self):
+		"""
+		Test that when Maltese special_characters are not normalized, they are retained.
+		"""
+
+		s = 'Ċikku żar lil Ġanni il-Ħamrun'
+		t = Tokenizer(stem=False, normalize_special_characters=False)
+		self.assertEqual([ 'ċikku', 'żar', 'lil', 'ġanni', 'ħamrun' ], t.tokenize(s))
+
+	def test_normalize_maltese_special_characters(self):
+		"""
+		Test that when Maltese special_characters are normalized, they are converted to the correct character.
+		Note that this does not apply to Ħ/ħ.
+		"""
+
+		s = 'Ċikku żar lil Ġanni il-Ħamrun'
+		t = Tokenizer(stem=False, normalize_special_characters=True)
+		self.assertEqual([ 'cikku', 'zar', 'lil', 'ganni', 'ħamrun' ], t.tokenize(s))
