@@ -20,9 +20,8 @@ class Tokenizer(object):
 	"""
 	The tokenizer takes in strings and converts them into tokens.
 
-	:cvar stemmer: Since the stemmer is used often, it is created and shared by the whole class.
+	:ivar stemmer: The Porter Stemmer used by the class.
 	:vartype stemmer: :class:`nltk.stem.porter.PorterStemmer`
-
 	:ivar remove_mentions: A boolean indicating whether mentions (@) should be removed.
 	:vartype remove_mentions: bool
 	:ivar remove_hashtags: A boolean indicating whether hashtags (#) should be removed.
@@ -62,8 +61,6 @@ class Tokenizer(object):
 	:ivar normalize_special_characters: A boolean indicating whether accents should be removed and replaced with simple unicode characters.
 	:vartype normalize_special_characters: bool
 	"""
-
-	stemmer = PorterStemmer()
 
 	def __init__(self, remove_mentions=True, remove_hashtags=False, split_hashtags=True,
 				 remove_numbers=True, remove_urls=True, remove_alt_codes=True,
@@ -121,6 +118,8 @@ class Tokenizer(object):
 		"""
 		stopwords = dict() if stopwords is None else stopwords
 		self.stopword_dict = stopwords if type(stopwords) == dict else { stopword: 0 for stopword in stopwords }
+
+		self.stemmer = PorterStemmer()
 
 		self.remove_mentions = remove_mentions
 		self.remove_hashtags = remove_hashtags
