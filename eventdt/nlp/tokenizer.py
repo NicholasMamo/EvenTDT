@@ -178,7 +178,7 @@ class Tokenizer(object):
 		"""
 		Post-process the tokens.
 		"""
-		tokens = self._split_tokens(tokens)
+		tokens = self._split_tokens(tokens) if self.remove_punctuation else tokens
 		tokens = [token for token in tokens if token not in self.stopword_dict]
 		tokens = [token for token in tokens if len(token) >= self.min_length]
 		tokens = [ self.stemmer.stem(token) for token in tokens ] if self.stem_tokens else tokens
@@ -227,20 +227,17 @@ class Tokenizer(object):
 		:rtype: list
 		"""
 
-		split_tokens = list(tokens)
-
 		"""
 		Remove characters that are not in the punctuation list.
 		This removal could create new spaces in tokens.
 		Therefore tokens are split again.
 		The list is finally flattened.
 		"""
-		split_tokens = [
+		tokens = [
 			''.join([
 				char if char not in string.punctuation else ' ' for char in token
-			]) for token in split_tokens
-		] if self.remove_punctuation else split_tokens
-
-		split_tokens = [ token.split() for token in split_tokens ]
-		split_tokens = [token for token_list in split_tokens for token in token_list] # flatten the list
-		return split_tokens
+			]) for token in tokens
+		]
+		tokens = [ token.split() for token in tokens ]
+		tokens = [token for token_list in tokens for token in token_list]
+		return tokens
