@@ -1,14 +1,12 @@
 #!/bin/bash
 
-# to run sh tests.sh [-t <vector|document|wikipedia>]
-
 # Go to the script directory.
 parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
 cd "$parent_path"
 source variables.sh
 
 usage() {
-	echo -e "${HIGHLIGHT}Usage: sh $0 [-t <apd|document|graph|queue|summarization|topics|vector|wikipedia>]"${DEFAULT};
+	echo -e "${HIGHLIGHT}Usage: sh $0 [-t <apd|nlp|graph|queue|summarization|topics|vector|wikipedia>]"${DEFAULT};
 }
 
 apd_tests() {
@@ -28,7 +26,7 @@ apd_tests() {
 	return
 }
 
-document_tests() {
+nlp_tests() {
 	echo -e "${HIGHLIGHT}Term-weighting schemes${DEFAULT}"
 	python3 -m unittest eventdt.nlp.term_weighting.local_schemes.tests.test_boolean
 	python3 -m unittest eventdt.nlp.term_weighting.local_schemes.tests.test_tf
@@ -132,8 +130,8 @@ then
 		apd)
 			apd_tests
 			;;
-		document)
-			document_tests
+		nlp)
+			nlp_tests
 			;;
 		graph)
 			graph_tests
@@ -160,7 +158,7 @@ then
 	esac
 else
 	apd_tests
-	document_tests
+	nlp_tests
 	graph_tests
 	queue_tests
 	topic_detection_tests
