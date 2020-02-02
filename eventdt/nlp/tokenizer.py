@@ -113,6 +113,9 @@ class Tokenizer(object):
 		:type normalize_special_characters: bool
 		"""
 
+		# TODO: Add number normalization (to remove commas)
+		# TODO: Add number normalization (text to numbers)
+
 		"""
 		Convert the stopword list into a dictionary if need be.
 		"""
@@ -157,10 +160,11 @@ class Tokenizer(object):
 		number_pattern = re.compile("\\b([0-9]{1,3}|[0-9]{5,})\\b") # preserve years
 		tokenize_pattern = re.compile("\s+")
 
+		"""
+		Split hashtags, casefold and remove accents.
+		"""
 		text = self._process_hashtags(text) if self.split_hashtags else text
-
 		text = text.lower() if self.case_fold else text
-
 		text = ''.join((c for c in unicodedata.normalize('NFD', text) if unicodedata.category(c) != 'Mn')) if self.normalize_special_characters else text
 
 		"""
@@ -173,12 +177,12 @@ class Tokenizer(object):
 		text = mention_pattern.sub("", text) if self.remove_mentions else text
 		text = hashtag_pattern.sub("", text) if self.remove_hashtags else hashtag_pattern.sub("\g<1>", text)
 		text = number_pattern.sub("", text) if self.remove_numbers else text
+		text = ''.join([ char if char not in string.punctuation else ' ' for char in text ]) if self.remove_punctuation else text
 		tokens = tokenize_pattern.split(text)
 
 		"""
 		Post-process the tokens.
 		"""
-		tokens = self._split_tokens(tokens) if self.remove_punctuation else tokens
 		tokens = [token for token in tokens if token not in self.stopword_dict]
 		tokens = [token for token in tokens if len(token) >= self.min_length]
 		tokens = [ self.stemmer.stem(token) for token in tokens ] if self.stem_tokens else tokens
@@ -215,29 +219,3 @@ class Tokenizer(object):
 				string = string.replace(f"#{hashtag}", components)
 
 		return string
-
-	def _split_tokens(self, tokens):
-		"""
-		Split the token based on punctuation patterns.
-
-		:param tokens: The list of tokens to split.
-		:type tokens: list
-
-		:return: The list of split tokens.
-		:rtype: list
-		"""
-
-		"""
-		Remove characters that are not in the punctuation list.
-		This removal could create new spaces in tokens.
-		Therefore tokens are split again.
-		The list is finally flattened.
-		"""
-		tokens = [
-			''.join([
-				char if char not in string.punctuation else ' ' for char in token
-			]) for token in tokens
-		]
-		tokens = [ token.split() for token in tokens ]
-		tokens = [token for token_list in tokens for token in token_list]
-		return tokens
