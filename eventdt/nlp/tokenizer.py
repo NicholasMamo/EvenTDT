@@ -181,7 +181,7 @@ class Tokenizer(object):
 		tokens = self._split_tokens(tokens)
 		tokens = [token for token in tokens if token not in self.stopword_dict]
 		tokens = [token for token in tokens if len(token) >= self.min_length]
-		tokens =  self._stem(tokens) if self.stem_tokens else tokens
+		tokens = [ self.stemmer.stem(token) for token in tokens ] if self.stem_tokens else tokens
 
 		return tokens
 
@@ -215,20 +215,6 @@ class Tokenizer(object):
 				string = string.replace(f"#{hashtag}", components)
 
 		return string
-
-	def _stem(self, tokens):
-		"""
-		Stem the given list of tokens using a Porter Stemmer.
-
-		:param tokens: The list of tokens to stem.
-		:type tokens: list
-
-		:return: The list of stemmed tokens.
-		:rtype: list
-		"""
-
-		stemmed_tokens = list(tokens)
-		return [ self.stemmer.stem(token) for token in stemmed_tokens ]
 
 	def _split_tokens(self, tokens):
 		"""
