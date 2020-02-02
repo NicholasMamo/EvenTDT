@@ -25,6 +25,15 @@ Documents
    :private-members:
    :special-members:
 
+============
+Tokenization
+============
+
+.. automodule:: eventdt.nlp.tokenizer
+   :members:
+   :private-members:
+   :special-members:
+
 ==============
 Term-Weighting
 ==============
