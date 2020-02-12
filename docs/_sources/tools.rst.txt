@@ -1,0 +1,24 @@
+********
+1. Tools
+********
+
+.. meta::
+   :description: Tools to collect corpora and create timelines out of events.
+   :keywords: Python, TDT, events, Twitter
+
+EvenTDT comes with tools to help you collect corpora from Twitter and create timelines from them.
+Keep reading to learn more about the different tools available in EvenTDT.
+
+.. automodule:: tools
+   :members:
+   :private-members:
+   :special-members:
+
+===============
+Data Collection
+===============
+
+.. automodule:: tools.collect
+   :members:
+   :private-members:
+   :special-members:

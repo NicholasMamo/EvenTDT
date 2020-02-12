@@ -1,0 +1,791 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta content="The Automatic Participant Detection (APD) library" name="description" />
+<meta content="Python, TDT, APD" name="keywords" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>4. Automatic Participant Detection (APD) &mdash; EvenTDT 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="5. Other" href="other.html" />
+    <link rel="prev" title="3. Natural Language Processing (NLP)" href="nlp.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> EvenTDT
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="config.html">0. Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">1. Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vsm.html">2. Vector Space Model (VSM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nlp.html">3. Natural Language Processing (NLP)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">4. Automatic Participant Detection (APD)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-apd.extractors.extractor">Extractors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-apd.extractors.local.token_extractor">Local</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-apd.scorers.scorer">Scorers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Local</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-apd.filters.filter">Filters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Local</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">5. Other</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">EvenTDT</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>4. Automatic Participant Detection (APD)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/apd.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="automatic-participant-detection-apd">
+<h1>4. Automatic Participant Detection (APD)<a class="headerlink" href="#automatic-participant-detection-apd" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-apd"></span><p>Automatic Participant Detection (APD) is a six-step process:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Extraction</p></li>
+<li><p>Scoring</p></li>
+<li><p>Filtering</p></li>
+<li><p>Resolution</p></li>
+<li><p>Extrapolation</p></li>
+<li><p>Postprocesing</p></li>
+</ol>
+</div></blockquote>
+<p>The APD process revolves around a central class: the <code class="xref py py-class docutils literal notranslate"><span class="pre">apd.participant_detector.ParticipantDetector</span></code>.
+The class constructor accepts classes representing these six steps, and calls their main functions.
+All of the step implementations are separated into local (using the corpus) or external (using a different source).</p>
+<div class="section" id="module-apd.extractors.extractor">
+<span id="extractors"></span><h2>Extractors<a class="headerlink" href="#module-apd.extractors.extractor" title="Permalink to this headline">¶</a></h2>
+<p>The extractor is the first step in the APD process.
+An extractor looks for candidate participants in the corpus of documents.</p>
+<p>The extractor returns all the candidates in each document.
+The functionality revolves around one method: the <a class="reference internal" href="#apd.extractors.extractor.Extractor.extract" title="apd.extractors.extractor.Extractor.extract"><code class="xref py py-meth docutils literal notranslate"><span class="pre">apd.extractors.extractor.Extractor.extract()</span></code></a> method.</p>
+<dl class="class">
+<dt id="apd.extractors.extractor.Extractor">
+<em class="property">class </em><code class="sig-prename descclassname">apd.extractors.extractor.</code><code class="sig-name descname">Extractor</code><a class="headerlink" href="#apd.extractors.extractor.Extractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>The extractor returns any participants that it finds.
+The functionality revolves around one method: the <a class="reference internal" href="#apd.extractors.extractor.Extractor.extract" title="apd.extractors.extractor.Extractor.extract"><code class="xref py py-meth docutils literal notranslate"><span class="pre">apd.extractors.extractor.Extractor.extract()</span></code></a> method.</p>
+<dl class="method">
+<dt id="apd.extractors.extractor.Extractor.extract">
+<em class="property">abstract </em><code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">corpus</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.extractor.Extractor.extract" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract all the potential participants from the given corpus.
+The output is a list of lists.
+Each outer list represents a document.
+Each inner list is the candidates in that document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>corpus</strong> (<em>list</em>) – The corpus of documents from where to extract candidate participants.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of candidates separated by the document in which they were found.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="apd.extractors.extractor.Extractor.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#apd.extractors.extractor.Extractor.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="module-apd.extractors.local.token_extractor">
+<span id="local"></span><h3>Local<a class="headerlink" href="#module-apd.extractors.local.token_extractor" title="Permalink to this headline">¶</a></h3>
+<p>The token extractor considers all the tokens in the corpus to be candidate participants.
+Therefore it does not perform any filtering whatsoever on the corpus.</p>
+<dl class="class">
+<dt id="apd.extractors.local.token_extractor.TokenExtractor">
+<em class="property">class </em><code class="sig-prename descclassname">apd.extractors.local.token_extractor.</code><code class="sig-name descname">TokenExtractor</code><a class="headerlink" href="#apd.extractors.local.token_extractor.TokenExtractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>The token extractor does not perform any filtering whatsoever on the corpus.
+It returns all tokens as potential candidates.</p>
+<dl class="method">
+<dt id="apd.extractors.local.token_extractor.TokenExtractor.extract">
+<code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">corpus</em>, <em class="sig-param">tokenizer=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.local.token_extractor.TokenExtractor.extract" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract all the potential participants from the corpus.
+The output is a list of lists.
+Each outer list represents a document.
+Each inner list is the candidates in that document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpus</strong> (<em>list</em>) – The corpus of documents where to extract candidate participants.</p></li>
+<li><p><strong>tokenizer</strong> (None or <a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.tokenizer.Tokenizer</span></code></a>) – The tokenizer used to extract the tokens anew.
+If it is given, the tokens are extracted anew.
+Otherwise, the document dimensions are used instead.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of candidates separated by the document in which they were found.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-apd.extractors.local.entity_extractor"></span><p>The entity extractor considers only named entities to be candidate participants.
+This extractor requires <a class="reference external" href="http://nltk.org/">NLTK</a> to work.
+It does not distinguish between named entity types.</p>
+<dl class="class">
+<dt id="apd.extractors.local.entity_extractor.EntityExtractor">
+<em class="property">class </em><code class="sig-prename descclassname">apd.extractors.local.entity_extractor.</code><code class="sig-name descname">EntityExtractor</code><a class="headerlink" href="#apd.extractors.local.entity_extractor.EntityExtractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>The entity extractor uses NLTK to extract named entities from a corpus of documents.</p>
+<dl class="method">
+<dt id="apd.extractors.local.entity_extractor.EntityExtractor.extract">
+<code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">corpus</em>, <em class="sig-param">binary=False</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.local.entity_extractor.EntityExtractor.extract" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract all the named entities from the corpus.
+The output is a list of lists.
+Each outer list represents a document.
+Each inner list is the candidates in that document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpus</strong> (<em>list</em>) – The corpus of documents where to extract candidate participants.</p></li>
+<li><p><strong>binary</strong> (<em>bool</em>) – A boolean indicating whether named entity extraction should be binary.
+If true, all named entities have the same type.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of candidates separated by the document in which they were found.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="apd.extractors.local.entity_extractor.EntityExtractor._extract_entities">
+<code class="sig-name descname">_extract_entities</code><span class="sig-paren">(</span><em class="sig-param">sentence</em>, <em class="sig-param">binary</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.local.entity_extractor.EntityExtractor._extract_entities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the named entities from the given sentence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sentence</strong> (<em>str</em>) – The sentence from where to extract named entities.</p></li>
+<li><p><strong>binary</strong> (<em>bool</em>) – A boolean indicating whether named entity extraction should be binary.
+If true, all named entities have the same type.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of chunks, which may be simple strings or named entities.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of str or nltk.tree.Tree</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="apd.extractors.local.entity_extractor.EntityExtractor._combine_adjacent_entities">
+<code class="sig-name descname">_combine_adjacent_entities</code><span class="sig-paren">(</span><em class="sig-param">chunks</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.local.entity_extractor.EntityExtractor._combine_adjacent_entities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combine the chunks appearing in the given list.
+The function assumes that the list represents one sentence.
+If two tokens next to each other have the same type, the function combines them into a single string.
+The function returns only the named entities.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>chunks</strong> (<em>list of str</em><em> or </em><em>nltk.tree.Tree</em>) – The list of chunks.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of named entities.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="module-apd.scorers.scorer">
+<span id="scorers"></span><h2>Scorers<a class="headerlink" href="#module-apd.scorers.scorer" title="Permalink to this headline">¶</a></h2>
+<p>The scorer is the second step of the APD process.
+It is responsible for assigning a score to each candidate that is provided.
+Thus, it pairs up each participant with a score.</p>
+<p>The input candidates should be the product of a <a class="reference internal" href="#apd.extractors.extractor.Extractor" title="apd.extractors.extractor.Extractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.extractors.extractor.Extractor</span></code></a> process.
+In other words, they should be a list, representing documents.
+Each such list contains another list of candidates.</p>
+<p>The functionality revolves around one method: the <a class="reference internal" href="#apd.scorers.scorer.Scorer.score" title="apd.scorers.scorer.Scorer.score"><code class="xref py py-meth docutils literal notranslate"><span class="pre">apd.scorers.scorer.Scorer.score()</span></code></a> method.
+The function returns a dictionary of candidate participants and their scores.</p>
+<p>The scores may be normalized to make them comparable.
+This can be a simple rescaling function.</p>
+<dl class="class">
+<dt id="apd.scorers.scorer.Scorer">
+<em class="property">class </em><code class="sig-prename descclassname">apd.scorers.scorer.</code><code class="sig-name descname">Scorer</code><a class="headerlink" href="#apd.scorers.scorer.Scorer" title="Permalink to this definition">¶</a></dt>
+<dd><p>The scorer returns a score for each candidate participant found in the corpus.</p>
+<dl class="method">
+<dt id="apd.scorers.scorer.Scorer.score">
+<em class="property">abstract </em><code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.scorer.Scorer.score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Score the candidate participants that were found in the corpus.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>candidates</strong> (<em>list</em>) – A list of candidate praticipants separated by the document in which they appeared.
+The input candidates should be the product of a <a class="reference internal" href="#apd.extractors.extractor.Extractor" title="apd.extractors.extractor.Extractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.extractors.extractor.Extractor</span></code></a> process.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary of candidate participants and their associated scores.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="apd.scorers.scorer.Scorer._normalize">
+<code class="sig-name descname">_normalize</code><span class="sig-paren">(</span><em class="sig-param">scores</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.scorer.Scorer._normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize the scores.
+The default function returns the scores as it founds them.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>scores</strong> (<em>dict</em>) – A list of candidate participants and their scores.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary of candidate participants and their associated scores.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="apd.scorers.scorer.Scorer.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#apd.scorers.scorer.Scorer.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="id1">
+<h3>Local<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<span class="target" id="module-apd.scorers.local.df_scorer"></span><p>The document frequency scorer assigns a score to candidates that is proportional to their document frequency.</p>
+<dl class="class">
+<dt id="apd.scorers.local.df_scorer.DFScorer">
+<em class="property">class </em><code class="sig-prename descclassname">apd.scorers.local.df_scorer.</code><code class="sig-name descname">DFScorer</code><a class="headerlink" href="#apd.scorers.local.df_scorer.DFScorer" title="Permalink to this definition">¶</a></dt>
+<dd><p>The basic summation scorer assigns a score to tokens based on document frequency.</p>
+<dl class="method">
+<dt id="apd.scorers.local.df_scorer.DFScorer.score">
+<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">normalize_scores=True</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.df_scorer.DFScorer.score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Score the given candidates based on their relevance within the corpus.
+The score is normalized using the maximum score</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>candidates</strong> (<em>list</em>) – A list of candidates participants that were found earlier.</p></li>
+<li><p><strong>normalize_scores</strong> (<em>bool</em>) – A boolean indicating whether the scores should be normalized.
+Here, normalization means rescaling between 0 and 1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary of participants and their associated scores.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="apd.scorers.local.df_scorer.DFScorer._sum">
+<code class="sig-name descname">_sum</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.df_scorer.DFScorer._sum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Score the given candidates based on the number of times they appear—a simple summation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>candidates</strong> (<em>list</em>) – A list of candidates participants that were found earlier.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary of candidate participants and their scores.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="apd.scorers.local.df_scorer.DFScorer._normalize">
+<code class="sig-name descname">_normalize</code><span class="sig-paren">(</span><em class="sig-param">scores</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.df_scorer.DFScorer._normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize the scores.
+The function rescales them between 0 and 1, where 1 is the maximum score of the candidates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>scores</strong> (<em>dict</em>) – The candidate participants and the number of times that they appeared.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary of candidate participants and their associated, normalized scores.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-apd.scorers.local.log_df_scorer"></span><p>The logarithmic document frequency scorer is based on the document frequency scorer.
+The difference is that it applies a logarithm to decrease the difference between candidates that appear very often and those which do not.</p>
+<dl class="class">
+<dt id="apd.scorers.local.log_df_scorer.LogDFScorer">
+<em class="property">class </em><code class="sig-prename descclassname">apd.scorers.local.log_df_scorer.</code><code class="sig-name descname">LogDFScorer</code><a class="headerlink" href="#apd.scorers.local.log_df_scorer.LogDFScorer" title="Permalink to this definition">¶</a></dt>
+<dd><p>The log scorer is based on normal summation.
+However, the logarithms of the scores are taken.
+In this way, the candidates are not overly-biased towards candidates that appear disproportionately.</p>
+<dl class="method">
+<dt id="apd.scorers.local.log_df_scorer.LogDFScorer.score">
+<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">base=10</em>, <em class="sig-param">normalize_scores=True</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.log_df_scorer.LogDFScorer.score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Score the given candidates based on their relevance within the corpus.
+The score is normalized using the maximum score</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>candidates</strong> (<em>list</em>) – A list of candidates participants that were found earlier.</p></li>
+<li><p><strong>base</strong> (<em>int</em>) – The base of the logarithm.</p></li>
+<li><p><strong>normalize_scores</strong> (<em>bool</em>) – A boolean indicating whether the scores should be normalized.
+Here, normalization means rescaling between 0 and 1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary of participants and their associated scores.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-apd.scorers.local.tf_scorer"></span><p>The term frequency scorer assigns a score to candidates that is proportional to their term frequency.</p>
+<dl class="class">
+<dt id="apd.scorers.local.tf_scorer.TFScorer">
+<em class="property">class </em><code class="sig-prename descclassname">apd.scorers.local.tf_scorer.</code><code class="sig-name descname">TFScorer</code><a class="headerlink" href="#apd.scorers.local.tf_scorer.TFScorer" title="Permalink to this definition">¶</a></dt>
+<dd><p>The basic summation scorer assigns a score to tokens based on term frequency.</p>
+<dl class="method">
+<dt id="apd.scorers.local.tf_scorer.TFScorer.score">
+<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">normalize_scores=True</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.tf_scorer.TFScorer.score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Score the given candidates based on their relevan across all documentsce within the corpus.
+The score is normalized using the maximum score</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>candidates</strong> (<em>list</em>) – A list of candidates participants that were found earlier.</p></li>
+<li><p><strong>normalize_scores</strong> (<em>bool</em>) – A boolean indicating whether the scores should be normalized.
+Here, normalization means rescaling between 0 and 1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary of participants and their associated scores.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="apd.scorers.local.tf_scorer.TFScorer._sum">
+<code class="sig-name descname">_sum</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.tf_scorer.TFScorer._sum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Score the given candidates based on the number of times they appear across all documents—a simple summation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>candidates</strong> (<em>list</em>) – A list of candidates participants that were found earlier.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary of candidate participants and their scores.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="apd.scorers.local.tf_scorer.TFScorer._normalize">
+<code class="sig-name descname">_normalize</code><span class="sig-paren">(</span><em class="sig-param">scores</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.tf_scorer.TFScorer._normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize the scores.
+The function rescales them between 0 and 1, where 1 is the maximum score of the candidates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>scores</strong> (<em>dict</em>) – The candidate participants and the number of times that they appeared.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary of candidate participants and their associated, normalized scores.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-apd.scorers.local.log_tf_scorer"></span><p>The logarithmic term frequency scorer is based on the term frequency scorer.
+The difference is that it applies a logarithm to decrease the difference between candidates that appear very often and those which do not.</p>
+<dl class="class">
+<dt id="apd.scorers.local.log_tf_scorer.LogTFScorer">
+<em class="property">class </em><code class="sig-prename descclassname">apd.scorers.local.log_tf_scorer.</code><code class="sig-name descname">LogTFScorer</code><a class="headerlink" href="#apd.scorers.local.log_tf_scorer.LogTFScorer" title="Permalink to this definition">¶</a></dt>
+<dd><p>The log scorer is based on normal summation.
+However, the logarithms of the scores are taken.
+In this way, the candidates are not overly-biased towards candidates that appear disproportionately.</p>
+<dl class="method">
+<dt id="apd.scorers.local.log_tf_scorer.LogTFScorer.score">
+<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">base=10</em>, <em class="sig-param">normalize_scores=True</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.log_tf_scorer.LogTFScorer.score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Score the given candidates based on their relevance within the corpus.
+The score is normalized using the maximum score</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>candidates</strong> (<em>list</em>) – A list of candidates participants that were found earlier.</p></li>
+<li><p><strong>base</strong> (<em>int</em>) – The base of the logarithm.</p></li>
+<li><p><strong>normalize_scores</strong> (<em>bool</em>) – A boolean indicating whether the scores should be normalized.
+Here, normalization means rescaling between 0 and 1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary of participants and their associated scores.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-apd.scorers.local.tfidf_scorer"></span><p>The TF-IDF scorer assigns a score the candidate participants similarly to the <a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.term_weighting.tfidf.TFIDF</span></code></a> term-weighting scheme.</p>
+<dl class="class">
+<dt id="apd.scorers.local.tfidf_scorer.TFIDFScorer">
+<em class="property">class </em><code class="sig-prename descclassname">apd.scorers.local.tfidf_scorer.</code><code class="sig-name descname">TFIDFScorer</code><span class="sig-paren">(</span><em class="sig-param">idf</em>, <em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.tfidf_scorer.TFIDFScorer" title="Permalink to this definition">¶</a></dt>
+<dd><p>The TF-IDF scorer assigns a score the candidate participants similarly to the <a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.term_weighting.tfidf.TFIDF</span></code></a> term-weighting scheme.
+Therefore the scorer depends on an IDF table, given as a dictionary.</p>
+<dl class="method">
+<dt id="apd.scorers.local.tfidf_scorer.TFIDFScorer.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">idf</em>, <em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.tfidf_scorer.TFIDFScorer.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the term-weighting scheme with the IDF table and the number of documents in that scheme.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>idf</strong> (<em>dict</em>) – The IDF table used in conjunction with term weighting.
+The keys are the terms, and the corresponding values are the number of documents in which they appear.</p></li>
+<li><p><strong>documents</strong> (<em>int</em>) – The number of documents in the IDF table.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – When the document frequency of a term is higher than the number of the IDF documents.</p></li>
+<li><p><strong>ValueError</strong> – When the document frequency of a term is negative.</p></li>
+<li><p><strong>ValueError</strong> – When the number of documents is negative.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="apd.scorers.local.tfidf_scorer.TFIDFScorer.score">
+<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">normalize_scores=True</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.tfidf_scorer.TFIDFScorer.score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Score the given candidates based on their relevance within the corpus.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>candidates</strong> (<em>list</em>) – A list of candidate praticipants separated by document that were found in them earlier.</p></li>
+<li><p><strong>normalize_scores</strong> (<em>bool</em>) – A boolean indicating whether the scores should be normalized.
+Here, normalization means rescaling between 0 and 1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary of participants and their associated scores.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="apd.scorers.local.tfidf_scorer.TFIDFScorer._normalize">
+<code class="sig-name descname">_normalize</code><span class="sig-paren">(</span><em class="sig-param">scores</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.tfidf_scorer.TFIDFScorer._normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize the scores.
+The function rescales them between 0 and 1, where 1 is the maximum score of the candidates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>scores</strong> (<em>dict</em>) – The candidate participants and the number of times that they appeared.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary of candidate participants and their associated, normalized scores.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="module-apd.filters.filter">
+<span id="filters"></span><h2>Filters<a class="headerlink" href="#module-apd.filters.filter" title="Permalink to this headline">¶</a></h2>
+<p>The filter is the third step of the APD process.
+It is responsible for removing candidates that it deems to be invalid.
+The output is still a dictionary of candidate participants and their scores.</p>
+<p>The input candidates should be the product of a <a class="reference internal" href="#apd.scorers.scorer.Scorer" title="apd.scorers.scorer.Scorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.scorers.scorer.Scorer</span></code></a> process.
+In other words, they should be a dictionary, with the keys being the candidates and the values being the score.</p>
+<p>The functionality revolves around one method: the <a class="reference internal" href="#apd.filters.filter.Filter.filter" title="apd.filters.filter.Filter.filter"><code class="xref py py-meth docutils literal notranslate"><span class="pre">apd.filters.filter.Filter.filter()</span></code></a> method.
+The function returns a dictionary of candidate participants and their scores.</p>
+<dl class="class">
+<dt id="apd.filters.filter.Filter">
+<em class="property">class </em><code class="sig-prename descclassname">apd.filters.filter.</code><code class="sig-name descname">Filter</code><a class="headerlink" href="#apd.filters.filter.Filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>The filter goes through candidate participants and removes candidates that are not credible enough.</p>
+<dl class="method">
+<dt id="apd.filters.filter.Filter.filter">
+<em class="property">abstract </em><code class="sig-name descname">filter</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.filters.filter.Filter.filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter candidate participants that are not credible.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>candidates</strong> (<em>dict</em>) – A dictionary of candidate praticipants and their scores.
+The keys are the candidate names, and the values are their scores.
+The input candidates should be the product of a <a class="reference internal" href="#apd.scorers.scorer.Scorer" title="apd.scorers.scorer.Scorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.scorers.scorer.Scorer</span></code></a> process.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary of filtered candidate participants and their associated scores.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="apd.filters.filter.Filter.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#apd.filters.filter.Filter.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="id2">
+<h3>Local<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<span class="target" id="module-apd.filters.local.threshold_filter"></span><p>The threshold filter excludes candidate participants with a score that is lower than a specified threshold.</p>
+<dl class="class">
+<dt id="apd.filters.local.threshold_filter.ThresholdFilter">
+<em class="property">class </em><code class="sig-prename descclassname">apd.filters.local.threshold_filter.</code><code class="sig-name descname">ThresholdFilter</code><a class="headerlink" href="#apd.filters.local.threshold_filter.ThresholdFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>The threshold filter excludes candidate participants with a score that is lower than a specified threshold.</p>
+<dl class="method">
+<dt id="apd.filters.local.threshold_filter.ThresholdFilter.filter">
+<code class="sig-name descname">filter</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">threshold</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.filters.local.threshold_filter.ThresholdFilter.filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter candidate participants that are not credible.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>candidates</strong> (<em>dict</em>) – A dictionary of candidate praticipants and their scores.
+The keys are the candidate names, and the values are their scores.
+The input candidates should be the product of a <a class="reference internal" href="#apd.scorers.scorer.Scorer" title="apd.scorers.scorer.Scorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.scorers.scorer.Scorer</span></code></a> process.</p></li>
+<li><p><strong>threshold</strong> – The threshold below which candidate participants are removed.
+The threshold is applied over the candidate participant scores.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary of filtered candidate participants and their associated scores.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="other.html" class="btn btn-neutral float-right" title="5. Other" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="nlp.html" class="btn btn-neutral float-left" title="3. Natural Language Processing (NLP)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Nicholas Mamo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
