@@ -18,24 +18,6 @@ from apd.scorers.local.tfidf_scorer import TFIDFScorer
 from nlp.document import Document
 from nlp.tokenizer import Tokenizer
 
-def ignore_warnings(test):
-	"""
-	A decorator function used to ignore NLTK warnings
-	From: http://www.neuraldump.net/2017/06/how-to-suppress-python-unittest-warnings/
-	More about decorator functions: https://wiki.python.org/moin/PythonDecorators
-
-	:param test: The test to perform.
-	:type test: func
-
-	:return: The function output.
-	:rtype: obj
-	"""
-	def perform_test(self, *args, **kwargs):
-		with warnings.catch_warnings():
-			warnings.simplefilter("ignore")
-			test(self, *args, **kwargs)
-	return perform_test
-
 class TestTFIDFScorer(unittest.TestCase):
 	"""
 	Test the implementation and results of the TF-IDF scorer.
