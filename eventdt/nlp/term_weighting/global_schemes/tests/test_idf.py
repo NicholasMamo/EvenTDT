@@ -10,7 +10,15 @@ path = os.path.join(os.path.dirname(__file__), '..')
 if path not in sys.path:
     sys.path.append(path)
 
+path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
+if path not in sys.path:
+    sys.path.append(path)
+
+from nltk.corpus import stopwords
+
 from idf import IDF
+from document import Document
+from tokenizer import Tokenizer
 
 class TestIDF(unittest.TestCase):
 	"""
@@ -70,3 +78,67 @@ class TestIDF(unittest.TestCase):
 		idf = IDF(idf, 4)
 		tokens = [ 'c' ]
 		self.assertEqual(0.60206, round(idf.score(tokens)['c'], 5))
+
+	"""
+	IDF table creation.
+	"""
+
+	def test_create_idf(self):
+		"""
+		Test that the IDF correctly counts the document frequency of terms.
+		"""
+
+		"""
+		Create the test corpus.
+		"""
+		tokenizer = Tokenizer(stopwords=stopwords.words("english"), stem=False)
+		posts = [
+			"Manchester United falter against Tottenham Hotspur",
+			"Mourinho under pressure as Manchester United follow with a loss",
+		]
+		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+
+		"""
+		Create the IDF table.
+		"""
+
+		idf = IDF.from_documents(corpus)
+		self.assertEqual(2, idf.get('manchester'))
+		self.assertEqual(2, idf.get('united'))
+		self.assertEqual(1, idf.get('falter'))
+		self.assertEqual(1, idf.get('tottenham'))
+		self.assertEqual(1, idf.get('hotspur'))
+		self.assertEqual(1, idf.get('mourinho'))
+		self.assertEqual(1, idf.get('pressure'))
+		self.assertEqual(1, idf.get('loss'))
+
+	def test_empty_idf(self):
+		"""
+		Test that when no documents are given, the IDF is an empty dictionary.
+		"""
+
+		corpus = [ ]
+
+		idf = IDF.from_documents(corpus)
+		self.assertEqual({ }, idf)
+
+	def test_document_frequency(self):
+		"""
+		Test that the IDF counts the document frequency of terms, not the term frequency.
+		"""
+
+		"""
+		Create the test corpus.
+		"""
+		tokenizer = Tokenizer(stopwords=stopwords.words("english"), stem=False)
+		posts = [
+			"Manchester United win the derby of Manchester against Manchester City"
+		]
+		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+
+		"""
+		Create the IDF table.
+		"""
+
+		idf = IDF.from_documents(corpus)
+		self.assertEqual(1, idf.get('manchester'))
