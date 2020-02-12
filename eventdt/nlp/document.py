@@ -50,7 +50,7 @@ class Document(Vector):
 		This list of tokens is converted into a dictionary representing the dimensions of the vector.
 		The conversion is carried out by the term-weighting scheme.
 		"""
-		if type(dimensions) == list:
+		if type(dimensions) is list:
 			from term_weighting.tf import TF # NOTE: The import is located here because of circular dependencies
 			scheme = scheme if scheme is not None else TF()
 			dimensions = scheme.create(dimensions).dimensions
