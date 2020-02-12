@@ -1,6 +1,5 @@
 """
-Test the functionality of the summation scorer.
-The strategy is to simulate the participant detection process to test the intermediate scoring step.
+Test the functionality of the DF scorer.
 """
 
 import math
@@ -37,15 +36,15 @@ def ignore_warnings(test):
 			test(self, *args, **kwargs)
 	return perform_test
 
-class TestSumScorers(unittest.TestCase):
+class TestDFScorer(unittest.TestCase):
 	"""
-	Test the implementation and results of the summation scorer.
+	Test the implementation and results of the DF scorer.
 	"""
 
 	@ignore_warnings
-	def test_sum_scorer(self):
+	def test_df_scorer(self):
 		"""
-		Test the basic functionality of the sum scorer.
+		Test the basic functionality of the DF scorer.
 		"""
 
 		"""
