@@ -1,5 +1,5 @@
 """
-A scorer that scores the candidates based on the number of times that they appear.
+Summation scorers assign a score to candidates that is proportional to the number of times that they appear.
 """
 
 import math
@@ -8,8 +8,8 @@ from ..scorer import Scorer
 
 class SumScorer(Scorer):
 	"""
-	A scorer that assigns a score to tokens based on the significance of their apperance.
-	This is relative to general discourse.
+	The basic summation scorer assigns a score to tokens based on the significance of their appearance.
+	This scorer rescales the scores of each document to be between 0 and 1.
 	"""
 
 	def score(self, candidates, *args, **kwargs):
@@ -24,72 +24,72 @@ class SumScorer(Scorer):
 		:rtype: dict
 		"""
 
-		candidate_scores = self._sum(candidates, *args, **kwargs)
-
-		return self._normalize(candidate_scores)
+		scores = self._sum(candidates, *args, **kwargs)
+		return self._normalize(scores)
 
 	def _sum(self, candidates, *args, **kwargs):
 		"""
-		Score the given candidates based on the number of times that they appear - a simple summation.
+		Score the given candidates based on the number of times they appear—a simple summation.
 
 		:param candidates: A list of candidates participants that were found earlier.
 		:type candidates: list
 
-		:return: A dictionary of participants and the number of times that they appeared.
+		:return: A dictionary of candidate participants and their scores.
 		:rtype: dict
 		"""
 
-		"""
-		The score function assigns a score to each candidate.
-		The scores are stored in a dictionary.
-		"""
-		candidate_scores = {}
+		scores = {}
 
 		"""
-		Go through each document, and then each of its candidates.
+		Go through each document, and then each of its candidate participants.
 		For all of these instances, increment their score.
 		"""
 		for candidate_set in candidates:
 			for candidate in list(set(candidate_set)):
-				candidate_scores[candidate] = candidate_scores.get(candidate, 0) + 1
+				scores[candidate] = scores.get(candidate, 0) + 1
 
-		return candidate_scores
+		return scores
 
-	def _normalize(self, candidate_scores, *args, **kwargs):
+	def _normalize(self, scores, *args, **kwargs):
 		"""
 		Normalize the scores.
+		The function rescales them between 0 and 1, where 1 is the maximum score of the candidates.
 
-		:param candidate_scores: The candidates and the number of times that they appeared.
-		:type candidate_scores: dict
+		:param scores: The candidate participants and the number of times that they appeared.
+		:type scores: dict
 
-		:return: A dictionary of participants and their associated, normalized scores.
+		:return: A dictionary of candidate participants and their associated, normalized scores.
 		:rtype: dict
 		"""
 
-		max_score = max(candidate_scores.values()) if len(candidate_scores) > 0 else 1
-		candidate_scores = { candidate: score / max_score for candidate, score in candidate_scores.items() }
+		max_score = max(scores.values()) if len(scores) > 0 else 1
+		scores = { candidate: score / max_score for candidate, score in scores.items() }
 
-		return candidate_scores
+		return scores
 
 class LogSumScorer(SumScorer):
 	"""
-	A scorer that is based on normal summation.
-	However, the logarithms (base 10) of the scores are taken.
-	In this way, the candidates are not biased towards candidates that appear disproportionately.
+	The log scorer is based on normal summation.
+	However, the logarithms of the scores are taken.
+	In this way, the candidates are not overly-biased towards candidates that appear disproportionately.
+
+	This scorer rescales the scores of each document to be between 0 and 1.
 	"""
 
-	def score(self, candidates, *args, **kwargs):
+	def score(self, candidates, base=10, *args, **kwargs):
 		"""
 		Score the given candidates based on their relevance within the corpus.
 		The score is normalized using the maximum score
 
 		:param candidates: A list of candidates participants that were found earlier.
 		:type candidates: list
+		:param base: The base of the logarithm.
+		:type base: int
 
 		:return: A dictionary of participants and their associated scores.
 		:rtype: dict
 		"""
 
-		candidate_scores = self._sum(candidates)
-		candidate_scores = { candidate: math.log(score + 1, 10) for candidate, score in candidate_scores.items() } # apply Laplace smoothing
-		return self._normalize(candidate_scores)
+		scores = self._sum(candidates)
+		scores = { candidate: math.log(score + 1, base) for candidate, score in scores.items() } # apply Laplace smoothing
+		return self._normalize(scores)
