@@ -668,6 +668,23 @@ The keys are the terms, and the corresponding values are the number of documents
 </dl>
 </dd></dl>
 
+<dl class="method">
+<dt id="nlp.term_weighting.global_schemes.idf.IDF.from_documents">
+<em class="property">static </em><code class="sig-name descname">from_documents</code><span class="sig-paren">(</span><em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.term_weighting.global_schemes.idf.IDF.from_documents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the IDF table from the given set of documents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>documents</strong> (list of <a class="reference internal" href="#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.document.Document</span></code></a>) – The documents from which the IDF table will be created.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary, where the keys are the document tokens and the values are their document frequency.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>
