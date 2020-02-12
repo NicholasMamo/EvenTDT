@@ -13,6 +13,7 @@ apd_tests() {
 	echo -e "${HIGHLIGHT}APD${DEFAULT}"
 
 	echo -e "${HIGHLIGHT}Extractor${DEFAULT}"
+	python3 -m unittest eventdt.apd.extractors.local.tests.test_entity_extractor
 	python3 -m unittest eventdt.apd.extractors.local.tests.test_token_extractor
 
 	# echo -e "${HIGHLIGHT}Scorer${DEFAULT}"
