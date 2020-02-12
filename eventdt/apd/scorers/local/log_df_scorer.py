@@ -5,6 +5,8 @@ The difference is that it applies a logarithm to decrease the difference between
 
 import math
 
+from .df_scorer import DFScorer
+
 class LogDFScorer(DFScorer):
 	"""
 	The log scorer is based on normal summation.
