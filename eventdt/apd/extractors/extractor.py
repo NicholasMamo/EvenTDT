@@ -1,34 +1,32 @@
 """
+The extractor is the first step in the APD process.
 An extractor looks for candidate participants in the corpus of documents.
 
-The extractor returns all candidates, regardless of their significance.
-No scoring or filtering takes place.
-
-Candidates are separated according to the document in which they are found.
+The extractor returns all the candidates in each document.
+The functionality revolves around one method: the :meth:`apd.extractors.extractor.Extractor.extract` method.
 """
 
 from abc import ABC, abstractmethod
 
 class Extractor(ABC):
 	"""
-	The extractor must return participants, if it finds any.
-	Given a list of documents, it looks within the text or tokens.
+	The extractor returns any participants that it finds.
+	The functionality revolves around one method: the :meth:`apd.extractors.extractor.Extractor.extract` method.
 	"""
 
 	@abstractmethod
-	def extract(self, corpus, token_attribute="tokens", *args, **kwargs):
+	def extract(self, corpus, *args, **kwargs):
 		"""
-		Extract all the potential participants from the corpus.
+		Extract all the potential participants from the given corpus.
 		The output is a list of lists.
-		It should be noted that zipping together this list and the corpus should return a list of documents and associated candidates.
+		Each outer list represents a document.
+		Each inner list is the candidates in that document.
 
-		:param corpus: The corpus of documents where to extract participants.
+		:param corpus: The corpus of documents from where to extract participants.
 		:type corpus: list
-		:param token_attribute: The attribute that contains the tokens.
-		:type token_attribute: str
 
 		:return: A list of candidates separated by the document in which they were found.
-		:rtype: list
+		:rtype: list of list of str
 		"""
 
 		pass

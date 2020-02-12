@@ -22,3 +22,11 @@ Automatic Participant Detection (APD) is a six-step process:
 
 The APD process revolves around a central class: the :class:`apd.participant_detector.ParticipantDetector`.
 The class constructor accepts classes representing these six steps, and calls their main functions.
+
+Extractors
+==========
+
+.. automodule:: apd.extractors.extractor
+   :members:
+   :private-members:
+   :special-members:
