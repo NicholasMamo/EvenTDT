@@ -41,7 +41,9 @@ class IDF(SchemeScorer):
 		:param documents: The number of documents in the IDF table.
 		:type documents: int
 
-		:raises: ValueError
+		:raises ValueError: When the document frequency of a term is higher than the number of the IDF documents.
+		:raises ValueError: When the document frequency of a term is negative.
+		:raises ValueError: When the number of documents is negative.
 		"""
 
 		if max(idf.values()) > documents:
