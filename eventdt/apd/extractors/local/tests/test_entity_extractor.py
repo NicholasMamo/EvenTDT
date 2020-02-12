@@ -142,3 +142,24 @@ class TestExtractors(unittest.TestCase):
 		extractor = EntityExtractor()
 		candidates = extractor.extract(corpus)
 		self.assertEqual(set([ "lyon", "bruno genesio" ]), set(candidates[0]))
+
+	def test_binary_named_entities(self):
+		"""
+		Test that the entity extractor does not consider the entity type when the binary option is turned off.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		tokenizer = Tokenizer(stem=False)
+		posts = [
+			"The downward spiral continues for Lyon. Rudi Garcia under threat.",
+		]
+		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+
+		extractor = EntityExtractor()
+		candidates = extractor.extract(corpus, binary=False)
+		self.assertEqual(set([ "lyon", "rudi", "garcia" ]), set(candidates[0])) # 'Rudi' and 'Garcia' mistakenly have different types
+
+		candidates = extractor.extract(corpus, binary=True)
+		self.assertEqual(set([ "lyon", "rudi garcia" ]), set(candidates[0]))
