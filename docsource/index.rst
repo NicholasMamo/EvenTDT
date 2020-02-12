@@ -14,6 +14,7 @@ Welcome to EvenTDT's documentation!
    tools
    vsm
    nlp
+   apd
    other
 
 Indices and tables
