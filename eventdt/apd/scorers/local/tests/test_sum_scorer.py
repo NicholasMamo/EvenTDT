@@ -14,7 +14,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from apd.extractors.local.token_extractor import TokenExtractor
-from apd.scorers.local.sum_scorer import LogSumScorer, SumScorer
+from apd.scorers.local.df_scorer import LogSumScorer, DFScorer
 
 from nlp.document import Document
 from nlp.tokenizer import Tokenizer
@@ -60,7 +60,7 @@ class TestSumScorers(unittest.TestCase):
 		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
 
 		extractor = TokenExtractor()
-		scorer = SumScorer()
+		scorer = DFScorer()
 		candidates = extractor.extract(corpus)
 		scores = scorer.score(candidates)
 		self.assertEqual(1, scores.get('erdogan', 0))
@@ -85,7 +85,7 @@ class TestSumScorers(unittest.TestCase):
 		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
 
 		extractor = TokenExtractor()
-		scorer = SumScorer()
+		scorer = DFScorer()
 		candidates = extractor.extract(corpus)
 		scores = scorer.score(candidates)
 		self.assertTrue(all( score > 0 for score in scores.values() ))
@@ -108,7 +108,7 @@ class TestSumScorers(unittest.TestCase):
 		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
 
 		extractor = TokenExtractor()
-		scorer = SumScorer()
+		scorer = DFScorer()
 		candidates = extractor.extract(corpus)
 		scores = scorer.score(candidates)
 		self.assertTrue(all( score <= 1 for score in scores.values() ))
@@ -131,7 +131,7 @@ class TestSumScorers(unittest.TestCase):
 		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
 
 		extractor = TokenExtractor()
-		scorer = SumScorer()
+		scorer = DFScorer()
 		candidates = extractor.extract(corpus)
 		scores = scorer.score(candidates)
 		self.assertFalse(scores.get('unknown'))
@@ -154,7 +154,7 @@ class TestSumScorers(unittest.TestCase):
 		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
 
 		extractor = TokenExtractor()
-		scorer = SumScorer()
+		scorer = DFScorer()
 		candidates = extractor.extract(corpus)
 		scores = scorer.score(candidates, normalize_scores=False)
 		self.assertEqual(2, scores.get('erdogan'))
@@ -177,7 +177,7 @@ class TestSumScorers(unittest.TestCase):
 		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
 
 		extractor = TokenExtractor()
-		scorer = SumScorer()
+		scorer = DFScorer()
 		candidates = extractor.extract(corpus)
 		scores = scorer.score(candidates, normalize_scores=False)
 		self.assertEqual(2, scores.get('erdogan'))
@@ -199,7 +199,7 @@ class TestSumScorers(unittest.TestCase):
 		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
 
 		extractor = TokenExtractor()
-		scorer = SumScorer()
+		scorer = DFScorer()
 		candidates = extractor.extract(corpus)
 		scores = scorer.score(candidates, normalize_scores=False)
 		self.assertEqual(1, scores.get('erdogan'))

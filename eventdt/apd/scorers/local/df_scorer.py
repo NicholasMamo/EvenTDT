@@ -6,9 +6,9 @@ import math
 
 from ..scorer import Scorer
 
-class SumScorer(Scorer):
+class DFScorer(Scorer):
 	"""
-	The basic summation scorer assigns a score to tokens based on the significance of their appearance.
+	The basic summation scorer assigns a score to tokens based on document frequency.
 	"""
 
 	def score(self, candidates, normalize_scores=True, *args, **kwargs):
@@ -69,7 +69,7 @@ class SumScorer(Scorer):
 
 		return scores
 
-class LogSumScorer(SumScorer):
+class LogSumScorer(DFScorer):
 	"""
 	The log scorer is based on normal summation.
 	However, the logarithms of the scores are taken.
