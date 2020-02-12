@@ -16,8 +16,9 @@ apd_tests() {
 	python3 -m unittest eventdt.apd.extractors.local.tests.test_entity_extractor
 	python3 -m unittest eventdt.apd.extractors.local.tests.test_token_extractor
 
-	# echo -e "${HIGHLIGHT}Scorer${DEFAULT}"
-	# python3 -m unittest eventdt.apd.scorers.local.tests.test_local_scorers
+	echo -e "${HIGHLIGHT}Scorer${DEFAULT}"
+	python3 -m unittest eventdt.apd.scorers.local.tests.test_sum_scorer
+
 	# echo -e "${HIGHLIGHT}Resolver${DEFAULT}"
 	# python3 -m unittest eventdt.apd.resolvers.local.tests.test_local_resolvers
 	# python3 -m unittest eventdt.apd.resolvers.external.tests.test_external_resolvers
