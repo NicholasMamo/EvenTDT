@@ -41,7 +41,30 @@ class TestTFIDFScorer(unittest.TestCase):
 	Test the implementation and results of the TF-IDF scorer.
 	"""
 
-	@ignore_warnings
+	def test_high_value(self):
+		"""
+		Test that the IDF raises an error when the highest IDF value is higher than the number of documents.
+		"""
+
+		idf = { 'a': 3, 'b': 1 }
+		self.assertRaises(ValueError, TFIDFScorer, idf, 2)
+
+	def test_negative_value(self):
+		"""
+		Test that the IDF raises an error when any IDF value is negative.
+		"""
+
+		idf = { 'a': 3, 'b': -1 }
+		self.assertRaises(ValueError, TFIDFScorer, idf, 3)
+
+	def test_negative_documents(self):
+		"""
+		Test that the IDF raises an error when the number of documents is negative.
+		"""
+
+		idf = { 'a': 3, 'b': 1 }
+		self.assertRaises(ValueError, TFIDFScorer, idf, -1)
+
 	def test_tfidf_scorer(self):
 		"""
 		Test the basic functionality of the TF-IDF scorer.
@@ -66,7 +89,6 @@ class TestTFIDFScorer(unittest.TestCase):
 		self.assertEqual(scores.get('everywhere'), scores.get('disconnected')) # they appear the same number of times
 		self.assertGreater(scores.get('erdogan'), scores.get('threats')) # 'threats' and 'erdogan' appear with the same frequency, but 'threats' has a higher DF
 
-	@ignore_warnings
 	def test_min_score(self):
 		"""
 		Test that the minimum score is greater than 0.
@@ -89,7 +111,6 @@ class TestTFIDFScorer(unittest.TestCase):
 		scores = scorer.score(candidates, normalize_scores=True)
 		self.assertTrue(all( score > 0 for score in scores.values() ))
 
-	@ignore_warnings
 	def test_max_score(self):
 		"""
 		Test that the maximum score is 1 when normalization is enabled.
@@ -112,7 +133,6 @@ class TestTFIDFScorer(unittest.TestCase):
 		scores = scorer.score(candidates, normalize_scores=True)
 		self.assertTrue(all( score <= 1 for score in scores.values() ))
 
-	@ignore_warnings
 	def test_score_of_unknown_token(self):
 		"""
 		Test that the score of an unknown token is 0.
@@ -135,7 +155,6 @@ class TestTFIDFScorer(unittest.TestCase):
 		scores = scorer.score(candidates)
 		self.assertFalse(scores.get('unknown'))
 
-	@ignore_warnings
 	def test_score_across_multiple_documents(self):
 		"""
 		Test that the score is based on document frequency.
@@ -159,7 +178,6 @@ class TestTFIDFScorer(unittest.TestCase):
 		self.assertEqual(3 * math.log(10 / 1, 10), scores.get('erdogan'))
 		self.assertEqual(3 * math.log(10 / 2, 10), scores.get('threats'))
 
-	@ignore_warnings
 	def test_normalization(self):
 		"""
 		Test that when normalization is enabled, the returned scores are integers.
@@ -182,7 +200,6 @@ class TestTFIDFScorer(unittest.TestCase):
 		scores = scorer.score(candidates, normalize_scores=True)
 		self.assertEqual(1, scores.get('erdogan'))
 
-	@ignore_warnings
 	def test_repeated_tokens(self):
 		"""
 		Test that when tokens are repeated, the frequency that is returned is the document frequency.
