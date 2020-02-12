@@ -1,29 +1,31 @@
 """
-A scorer is responsible for assigning a score to each candidate that is provided.
+The scorer is the second step of the APD process.
+It is responsible for assigning a score to each candidate that is provided.
 Thus, it pairs up each participant with a score.
 
 The input candidates should be the product of a :class:`apd.extractors.extractor.Extractor` process.
-In other words, zipping the candidates with the corpus should give a list of documents and associated candidate participants.
+In other words, they should be a list, representing documents.
+Each such list contains another list of candidates.
+
+The functionality revolves around one method: the :meth:`apd.scorers.scorer.Scorer.score` method.
+The function returns a dictionary of candidate participants and their scores.
 """
 
 from abc import ABC, abstractmethod
 
 class Scorer(ABC):
 	"""
-	Any scorer returns a score for each participant.
+	The scorer returns a score for each candidate participant found in the corpus.
 	"""
 
 	@abstractmethod
-	def score(self, candidates, corpus, token_attribute="tokens", *args, **kwargs):
+	def score(self, candidates, *args, **kwargs):
 		"""
-		Score the participants that were found in the corpus.
+		Score the candidate participants that were found in the corpus.
 
-		:param candidates: A list of candidate praticipants separated by document that were found in them earlier.
+		:param candidates: A list of candidate praticipants separated by the document in which they appeared.
+						   The input candidates should be the product of a :class:`apd.extractors.extractor.Extractor` process.
 		:type candidates: list
-		:param corpus: The corpus of documents, which helps to measure the membership of new candidates.
-		:type corpus: list
-		:param token_attribute: The attribute that contains the tokens.
-		:type token_attribute: str
 
 		:return: A dictionary of participants and their associated scores.
 		:rtype: dict

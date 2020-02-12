@@ -32,7 +32,6 @@ Extractors
    :private-members:
    :special-members:
 
-
 Local
 -----
 
@@ -42,6 +41,14 @@ Local
    :special-members:
 
 .. automodule:: apd.extractors.local.entity_extractor
+   :members:
+   :private-members:
+   :special-members:
+
+Scorers
+=======
+
+.. automodule:: apd.scorers.scorer
    :members:
    :private-members:
    :special-members:
