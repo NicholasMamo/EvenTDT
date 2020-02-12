@@ -154,7 +154,7 @@ class TestDFScorer(unittest.TestCase):
 
 		extractor = TokenExtractor()
 		scorer = DFScorer()
-		candidates = extractor.extract(corpus)
+		candidates = extractor.extract(corpus, tokenizer=tokenizer)
 		scores = scorer.score(candidates, normalize_scores=False)
 		self.assertEqual(2, scores.get('erdogan'))
 
@@ -199,6 +199,6 @@ class TestDFScorer(unittest.TestCase):
 
 		extractor = TokenExtractor()
 		scorer = DFScorer()
-		candidates = extractor.extract(corpus)
+		candidates = extractor.extract(corpus, tokenizer=tokenizer)
 		scores = scorer.score(candidates, normalize_scores=False)
 		self.assertEqual(1, scores.get('erdogan'))

@@ -93,3 +93,45 @@ class TestExtractors(unittest.TestCase):
 		self.assertEqual(2, len(candidates))
 		self.assertEqual(set([ "manchester", "united", "falter", "tottenham", "hotspur" ]), set(candidates[0]))
 		self.assertEqual(set([ ]), set(candidates[1]))
+
+	@ignore_warnings
+	def test_extract_with_custom_tokenizer(self):
+		"""
+		Test that when a custom tokenizer is given, it is used instead of the dimensions.
+		"""
+
+		"""
+		Create the test data, which uses stemming.
+		"""
+		tokenizer = Tokenizer(stopwords=stopwords.words("english"), stem=True)
+		posts = [
+			"Manchester United back to winning ways",
+		]
+		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+
+		extractor = TokenExtractor()
+		candidates = extractor.extract(corpus)
+		self.assertEqual(set([ "manchest", "unit", "back", "win", "way" ]), set(candidates[0]))
+		candidates = extractor.extract(corpus, tokenizer=Tokenizer(stopwords=stopwords.words('english'), stem=False))
+		self.assertEqual(set([ "manchester", "united", "back", "winning", "ways" ]), set(candidates[0]))
+
+	@ignore_warnings
+	def test_repeated_tokens_with_custom_tokenizer(self):
+		"""
+		Test that when a custom tokenizer is given, repeated tokenizers appear multiple times.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		tokenizer = Tokenizer(stopwords=stopwords.words("english"), stem=False)
+		posts = [
+			"Manchester United back to winning ways after defeating Manchester City.",
+		]
+		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+
+		extractor = TokenExtractor()
+		candidates = extractor.extract(corpus)
+		self.assertEqual(1, candidates[0].count('manchester'))
+		candidates = extractor.extract(corpus, tokenizer=tokenizer)
+		self.assertEqual(2, candidates[0].count('manchester'))

@@ -154,7 +154,7 @@ class TestLogDFScorer(unittest.TestCase):
 
 		extractor = TokenExtractor()
 		scorer = LogDFScorer()
-		candidates = extractor.extract(corpus)
+		candidates = extractor.extract(corpus, tokenizer=tokenizer)
 		scores = scorer.score(candidates, normalize_scores=False)
 		self.assertEqual(math.log(2 + 1, 10), scores.get('erdogan')) # apply Laplace smoothing
 
@@ -199,7 +199,7 @@ class TestLogDFScorer(unittest.TestCase):
 
 		extractor = TokenExtractor()
 		scorer = LogDFScorer()
-		candidates = extractor.extract(corpus)
+		candidates = extractor.extract(corpus, tokenizer=tokenizer)
 		scores = scorer.score(candidates, normalize_scores=False)
 		self.assertEqual(math.log(1 + 1, 10), scores.get('erdogan')) # apply Laplace smoothing
 
