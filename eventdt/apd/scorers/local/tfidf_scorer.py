@@ -12,23 +12,15 @@ class TFIDFScorer(Scorer):
 	Therefore the scorer depends on an IDF table, given as a dictionary.
 	"""
 
-	def score(self, candidates, idf, normalize_scores=True, *args, **kwargs):
+	def __init__(self, idf, documents):
 		"""
-		Score the given candidates based on their relevance within the corpus.
+		Create the term-weighting scheme with the IDF table and the number of documents in that scheme.
 
-		:param candidates: A list of candidate praticipants separated by document that were found in them earlier.
-		:type candidates: list
-		:param idf: The IDF table, represented as a dictionary.
+		:param idf: The IDF table used in conjunction with term weighting.
 					The keys are the terms, and the corresponding values are the number of documents in which they appear.
 		:type idf: dict
 		:param documents: The number of documents in the IDF table.
 		:type documents: int
-		:param normalize_scores: A boolean indicating whether the scores should be normalized.
-								 Here, normalization means rescaling between 0 and 1.
-		:type normalize_scores: bool
-
-		:return: A dictionary of participants and their associated scores.
-		:rtype: dict
 
 		:raises ValueError: When the document frequency of a term is higher than the number of the IDF documents.
 		:raises ValueError: When the document frequency of a term is negative.
@@ -44,6 +36,23 @@ class TFIDFScorer(Scorer):
 		if documents < 0:
 			raise ValueError("The number of documents in the IDF must be non-negative")
 
+		self.idf = idf
+		self.documents = documents
+
+	def score(self, candidates, normalize_scores=True, *args, **kwargs):
+		"""
+		Score the given candidates based on their relevance within the corpus.
+
+		:param candidates: A list of candidate praticipants separated by document that were found in them earlier.
+		:type candidates: list
+		:param normalize_scores: A boolean indicating whether the scores should be normalized.
+								 Here, normalization means rescaling between 0 and 1.
+		:type normalize_scores: bool
+
+		:return: A dictionary of participants and their associated scores.
+		:rtype: dict
+		"""
+
 		"""
 		Go through each document, and then each of its candidates.
 		For all of these candidates, increment their score by calculating the TF-IDF in that document.
@@ -51,7 +60,7 @@ class TFIDFScorer(Scorer):
 		scores = {}
 		for candidate_set in candidates:
 			for candidate in list(set(candidate_set)):
-				scores[candidate] = scores.get(candidate, 0) + candidate_set.count(candidate) * documents / idf.get(candidate, 1)
+				scores[candidate] = scores.get(candidate, 0) + candidate_set.count(candidate) * math.log(self.documents / self.idf.get(candidate, 1), 10)
 
 		return self._normalize(scores) if normalize_scores else scores
 
