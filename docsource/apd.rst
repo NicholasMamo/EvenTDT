@@ -75,3 +75,8 @@ Local
    :members:
    :private-members:
    :special-members:
+
+.. automodule:: apd.scorers.local.tfidf_scorer
+   :members:
+   :private-members:
+   :special-members:
