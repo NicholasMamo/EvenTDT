@@ -14,7 +14,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from apd.extractors.local.token_extractor import TokenExtractor
-from apd.scorers.local.df_scorer import LogSumScorer, DFScorer
+from apd.scorers.local.df_scorer import DFScorer
 
 from nlp.document import Document
 from nlp.tokenizer import Tokenizer
