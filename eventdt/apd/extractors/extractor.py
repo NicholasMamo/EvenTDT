@@ -22,7 +22,7 @@ class Extractor(ABC):
 		Each outer list represents a document.
 		Each inner list is the candidates in that document.
 
-		:param corpus: The corpus of documents from where to extract participants.
+		:param corpus: The corpus of documents from where to extract candidate participants.
 		:type corpus: list
 
 		:return: A list of candidates separated by the document in which they were found.

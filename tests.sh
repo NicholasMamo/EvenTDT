@@ -10,10 +10,11 @@ usage() {
 }
 
 apd_tests() {
-	# echo -e "${HIGHLIGHT}APD${DEFAULT}"
-	#
-	# echo -e "${HIGHLIGHT}Extractor${DEFAULT}"
-	# python3 -m unittest eventdt.apd.extractors.local.tests.test_local_extractors
+	echo -e "${HIGHLIGHT}APD${DEFAULT}"
+
+	echo -e "${HIGHLIGHT}Extractor${DEFAULT}"
+	python3 -m unittest eventdt.apd.extractors.local.tests.test_token_extractor
+
 	# echo -e "${HIGHLIGHT}Scorer${DEFAULT}"
 	# python3 -m unittest eventdt.apd.scorers.local.tests.test_local_scorers
 	# echo -e "${HIGHLIGHT}Resolver${DEFAULT}"
