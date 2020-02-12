@@ -1,5 +1,5 @@
 """
-Summation scorers assign a score to candidates that is proportional to their document frequency.
+The document frequency scorer assigns a score to candidates that is proportional to their document frequency.
 """
 
 import math
