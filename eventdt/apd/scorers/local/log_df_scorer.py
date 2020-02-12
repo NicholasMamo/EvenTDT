@@ -12,8 +12,6 @@ class LogDFScorer(DFScorer):
 	The log scorer is based on normal summation.
 	However, the logarithms of the scores are taken.
 	In this way, the candidates are not overly-biased towards candidates that appear disproportionately.
-
-	This scorer rescales the scores of each document to be between 0 and 1.
 	"""
 
 	def score(self, candidates, base=10, normalize_scores=True, *args, **kwargs):
