@@ -88,3 +88,11 @@ Filters
    :members:
    :private-members:
    :special-members:
+
+Local
+-----
+
+.. automodule:: apd.filters.local.threshold_filter
+   :members:
+   :private-members:
+   :special-members:
