@@ -20,6 +20,7 @@ apd_tests() {
 	python3 -m unittest eventdt.apd.scorers.local.tests.test_df_scorer
 	python3 -m unittest eventdt.apd.scorers.local.tests.test_log_df_scorer
 	python3 -m unittest eventdt.apd.scorers.local.tests.test_tf_scorer
+	python3 -m unittest eventdt.apd.scorers.local.tests.test_log_tf_scorer
 
 	# echo -e "${HIGHLIGHT}Resolver${DEFAULT}"
 	# python3 -m unittest eventdt.apd.resolvers.local.tests.test_local_resolvers
