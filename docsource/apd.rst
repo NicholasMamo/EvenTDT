@@ -52,3 +52,26 @@ Scorers
    :members:
    :private-members:
    :special-members:
+
+Local
+-----
+
+.. automodule:: apd.scorers.local.df_scorer
+   :members:
+   :private-members:
+   :special-members:
+
+.. automodule:: apd.scorers.local.log_df_scorer
+   :members:
+   :private-members:
+   :special-members:
+
+.. automodule:: apd.scorers.local.tf_scorer
+   :members:
+   :private-members:
+   :special-members:
+
+.. automodule:: apd.scorers.local.log_tf_scorer
+   :members:
+   :private-members:
+   :special-members:
