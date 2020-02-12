@@ -80,3 +80,11 @@ Local
    :members:
    :private-members:
    :special-members:
+
+Filters
+=======
+
+.. automodule:: apd.filters.filter
+   :members:
+   :private-members:
+   :special-members:
