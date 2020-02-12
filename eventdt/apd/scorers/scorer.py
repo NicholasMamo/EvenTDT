@@ -9,6 +9,9 @@ Each such list contains another list of candidates.
 
 The functionality revolves around one method: the :meth:`apd.scorers.scorer.Scorer.score` method.
 The function returns a dictionary of candidate participants and their scores.
+
+The scores may be normalized to make them comparable.
+This can be a simple rescaling function.
 """
 
 from abc import ABC, abstractmethod
@@ -27,8 +30,22 @@ class Scorer(ABC):
 						   The input candidates should be the product of a :class:`apd.extractors.extractor.Extractor` process.
 		:type candidates: list
 
-		:return: A dictionary of participants and their associated scores.
+		:return: A dictionary of candidate participants and their associated scores.
 		:rtype: dict
 		"""
 
 		pass
+
+	def _normalize(self, scores, *args, **kwargs):
+		"""
+		Normalize the scores.
+		The default function returns the scores as it founds them.
+
+		:param scores: A list of candidate participants and their scores.
+		:type scores: dict
+
+		:return: A dictionary of candidate participants and their associated scores.
+		:rtype: dict
+		"""
+
+		return scores
