@@ -11,7 +11,6 @@ class ThresholdFilter(Filter):
 	The threshold filter excludes candidate participants with a score that is lower than a specified threshold.
 	"""
 
-	@abstractmethod
 	def filter(self, candidates, threshold, *args, **kwargs):
 		"""
 		Filter candidate participants that are not credible.
