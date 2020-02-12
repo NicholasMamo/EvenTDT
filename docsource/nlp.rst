@@ -11,7 +11,7 @@ For this reason, EvenTDT's documents are based on the :class:`eventdt.vsm.vector
 EvenTDT adds functionality to make it easier to work with documents, including by storing the original text.
 Keep reading to learn more about the different NLP classes available in EvenTDT.
 
-.. automodule:: eventdt.nlp
+.. automodule:: nlp
    :members:
    :private-members:
    :special-members:
@@ -20,7 +20,7 @@ Keep reading to learn more about the different NLP classes available in EvenTDT.
 Documents
 =========
 
-.. automodule:: eventdt.nlp.document
+.. automodule:: nlp.document
    :members:
    :private-members:
    :special-members:
@@ -29,7 +29,7 @@ Documents
 Tokenization
 ============
 
-.. automodule:: eventdt.nlp.tokenizer
+.. automodule:: nlp.tokenizer
    :members:
    :private-members:
    :special-members:
@@ -38,12 +38,12 @@ Tokenization
 Term-Weighting
 ==============
 
-.. automodule:: eventdt.nlp.term_weighting
+.. automodule:: nlp.term_weighting
    :members:
    :private-members:
    :special-members:
 
-.. automodule:: eventdt.nlp.term_weighting.scheme
+.. automodule:: nlp.term_weighting.scheme
    :members:
    :private-members:
    :special-members:
@@ -51,12 +51,12 @@ Term-Weighting
 Common Term-Weighting Schemes
 -----------------------------
 
-.. automodule:: eventdt.nlp.term_weighting.tf
+.. automodule:: nlp.term_weighting.tf
    :members:
    :private-members:
    :special-members:
 
-.. automodule:: eventdt.nlp.term_weighting.tfidf
+.. automodule:: nlp.term_weighting.tfidf
    :members:
    :private-members:
    :special-members:
@@ -64,12 +64,12 @@ Common Term-Weighting Schemes
 Local Term-Weighting Schemes
 ----------------------------
 
-.. automodule:: eventdt.nlp.term_weighting.local_schemes.boolean
+.. automodule:: nlp.term_weighting.local_schemes.boolean
    :members:
    :private-members:
    :special-members:
 
-.. automodule:: eventdt.nlp.term_weighting.local_schemes.tf
+.. automodule:: nlp.term_weighting.local_schemes.tf
    :members:
    :private-members:
    :special-members:
@@ -77,12 +77,12 @@ Local Term-Weighting Schemes
 Global Term-Weighting Schemes
 -----------------------------
 
-.. automodule:: eventdt.nlp.term_weighting.global_schemes.filler
+.. automodule:: nlp.term_weighting.global_schemes.filler
    :members:
    :private-members:
    :special-members:
 
-.. automodule:: eventdt.nlp.term_weighting.global_schemes.idf
+.. automodule:: nlp.term_weighting.global_schemes.idf
    :members:
    :private-members:
    :special-members:

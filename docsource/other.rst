@@ -12,12 +12,12 @@ EvenTDT offers additional functionality to help you create TDT applications.
 Logger
 ======
 
-.. automodule:: eventdt.logger
+.. automodule:: logger
    :members:
    :private-members:
    :special-members:
 
-.. automodule:: eventdt.logger.logger
+.. automodule:: logger.logger
    :members:
    :private-members:
    :special-members:

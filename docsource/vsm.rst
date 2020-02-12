@@ -10,7 +10,7 @@ Most document representation occurs in the Vector Space Model (VSM).
 EvenTDT provides classes to help you work with the VSM.
 Keep reading to learn more about the different VSM classes available in EvenTDT.
 
-.. automodule:: eventdt.vsm
+.. automodule:: vsm
    :members:
    :private-members:
    :special-members:
@@ -19,7 +19,7 @@ Keep reading to learn more about the different VSM classes available in EvenTDT.
 Vectors
 =======
 
-.. automodule:: eventdt.vsm.vector
+.. automodule:: vsm.vector
    :members:
    :private-members:
    :special-members:
@@ -28,7 +28,7 @@ Vectors
 Vector Math
 ===========
 
-.. automodule:: eventdt.vsm.vector_math
+.. automodule:: vsm.vector_math
    :members:
    :private-members:
    :special-members:
@@ -37,7 +37,7 @@ Vector Math
 Clustering
 ==========
 
-.. automodule:: eventdt.vsm.clustering.cluster
+.. automodule:: vsm.clustering.cluster
    :members:
    :private-members:
    :special-members:
