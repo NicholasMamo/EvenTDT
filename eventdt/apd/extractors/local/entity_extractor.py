@@ -16,7 +16,7 @@ class EntityExtractor(Extractor):
 	The entity extractor uses NLTK to extract named entities from a corpus of documents.
 	"""
 
-	def extract(self, corpus, binary=False, *args, **kwargs):
+	def extract(self, corpus, binary=True, *args, **kwargs):
 		"""
 		Extract all the named entities from the corpus.
 		The output is a list of lists.
@@ -27,6 +27,7 @@ class EntityExtractor(Extractor):
 		:type corpus: list
 		:param binary: A boolean indicating whether named entity extraction should be binary.
 					   If true, all named entities have the same type.
+					   This is enabled by default to minimize false negatives.
 		:type binary: bool
 
 		:return: A list of candidates separated by the document in which they were found.
