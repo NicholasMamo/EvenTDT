@@ -112,3 +112,11 @@ Local
    :members:
    :private-members:
    :special-members:
+
+External
+--------
+
+.. automodule:: apd.resolvers.external.wikipedia_name_resolver
+   :members:
+   :private-members:
+   :special-members:

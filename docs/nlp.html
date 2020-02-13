@@ -239,6 +239,30 @@ If <cite>None</cite> is given, the <code class="xref py py-class docutils litera
 </dl>
 </dd></dl>
 
+<dl class="method">
+<dt id="nlp.document.Document.concatenate">
+<em class="property">static </em><code class="sig-name descname">concatenate</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">tokenizer</em>, <em class="sig-param">scheme=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.document.Document.concatenate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Concatenate all of the documents that are provided as arguments.
+The function first concatenates the text of all the documents.
+Then, it tokenizes the concatenated and creates a document from it.</p>
+<p>Any additional keyword arguments are passed on to the Document constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scheme</strong> (<a class="reference internal" href="#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.term_weighting.scheme.TermWeightingScheme</span></code></a>) – The term-weighting scheme to use to create the concatenated document.</p></li>
+<li><p><strong>tokenizer</strong> (<a class="reference internal" href="#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.tokenizer.Tokenizer</span></code></a>) – The tokenizer to use to construct the concatenated document.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A new document representing the concatenated documents.
+The document is not normalized.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.document.Document</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>

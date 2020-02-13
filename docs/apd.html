@@ -104,6 +104,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-apd.resolvers.resolver">Resolvers</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#id3">Local</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-apd.resolvers.external.wikipedia_name_resolver">External</a></li>
 </ul>
 </li>
 </ul>
@@ -273,7 +274,7 @@ It does not distinguish between named entity types.</p>
 <dd><p>The entity extractor uses NLTK to extract named entities from a corpus of documents.</p>
 <dl class="method">
 <dt id="apd.extractors.local.entity_extractor.EntityExtractor.extract">
-<code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">corpus</em>, <em class="sig-param">binary=False</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.local.entity_extractor.EntityExtractor.extract" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">corpus</em>, <em class="sig-param">binary=True</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.local.entity_extractor.EntityExtractor.extract" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract all the named entities from the corpus.
 The output is a list of lists.
 Each outer list represents a document.
@@ -283,7 +284,8 @@ Each inner list is the candidates in that document.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>corpus</strong> (<em>list</em>) – The corpus of documents where to extract candidate participants.</p></li>
 <li><p><strong>binary</strong> (<em>bool</em>) – A boolean indicating whether named entity extraction should be binary.
-If true, all named entities have the same type.</p></li>
+If true, all named entities have the same type.
+This is enabled by default to minimize false negatives.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -867,6 +869,117 @@ The values are the terms that most-commonly generate the token.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apd.resolvers.external.wikipedia_name_resolver">
+<span id="external"></span><h3>External<a class="headerlink" href="#module-apd.resolvers.external.wikipedia_name_resolver" title="Permalink to this headline">¶</a></h3>
+<p>The Wikipedia name resolver looks to map candidates to pages that include their name.</p>
+<dl class="class">
+<dt id="apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver">
+<em class="property">class </em><code class="sig-prename descclassname">apd.resolvers.external.wikipedia_name_resolver.</code><code class="sig-name descname">WikipediaNameResolver</code><span class="sig-paren">(</span><em class="sig-param">scheme</em>, <em class="sig-param">tokenizer</em>, <em class="sig-param">threshold</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Wikipedia name resolver looks for pages that match the candidate’s name.
+It then maps the candidate to that page by returning the page name instead of the candidate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="nlp.html#module-nlp.term_weighting.scheme" title="nlp.term_weighting.scheme"><strong>scheme</strong></a> (<a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.term_weighting.scheme.TermWeightingScheme</span></code></a>) – The term-weighting scheme to use to create documents from Wikipedia pages.
+These documents are used to compare the similarity with the domain of the candidates.</p></li>
+<li><p><a class="reference internal" href="nlp.html#module-nlp.tokenizer" title="nlp.tokenizer"><strong>tokenizer</strong></a> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.tokenizer.Tokenizer</span></code></a>) – The tokenizer to use to create documents.</p></li>
+<li><p><strong>threshold</strong> (<em>float.</em>) – The threshold below which candidates become unresolved.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">scheme</em>, <em class="sig-param">tokenizer</em>, <em class="sig-param">threshold</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the resolver.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.term_weighting.scheme.TermWeightingScheme</span></code></a>) – The term-weighting scheme to use to create documents from Wikipedia pages.
+These documents are used to compare the similarity with the domain of the candidates.</p></li>
+<li><p><strong>threshold</strong> (<em>float</em>) – The threshold below which candidates become unresolved.</p></li>
+<li><p><strong>tokenizer</strong> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.tokenizer.Tokenizer</span></code></a>) – The tokenizer to use to create documents.</p></li>
+<li><p><strong>threshold</strong> – The similarity threshold beyond which candidate participants are resolved.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver.resolve">
+<code class="sig-name descname">resolve</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">corpus</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver.resolve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resolve the given candidates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>candidates</strong> (<em>dict</em>) – The candidates to resolve.
+The candidates should be in the form of a dictionary.
+The keys should be the candidates, and the values the scores.</p></li>
+<li><p><strong>corpus</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.document.Document</span></code></a>) – The corpus of documents.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A tuple containing the resolved and unresolved candidates respectively.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple of lists</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver._resolve_unambiguous_candidates">
+<code class="sig-name descname">_resolve_unambiguous_candidates</code><span class="sig-paren">(</span><em class="sig-param">candidates</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver._resolve_unambiguous_candidates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resolve the candidates that are unambiguous.
+The function handles three possiblities:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>There are candidates that have a page, and therefore the candidate is resolved to them.</p></li>
+<li><p>Others have a disambiguation page and are thus ambiguous.
+These candidates are resolved elsewhere.</p></li>
+<li><p>Other candidates return an empty result.
+In this case, they are said to be unresolved.</p></li>
+</ol>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>candidates</strong> (<em>dict</em>) – The candidates to resolve.
+The candidates should be in the form of a dictionary.
+The keys should be the candidates, and the values the scores.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A tuple containing the resolved, unresolved and ambiguous candidates respectively.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple of lists</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver._disambiguate">
+<code class="sig-name descname">_disambiguate</code><span class="sig-paren">(</span><em class="sig-param">pages</em>, <em class="sig-param">domain</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver._disambiguate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disambiguate a candidate by finding the link that is most similar to the domain.
+The function returns the link’s page name and the associated score.
+Only one page is returned: the one with the highest score.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pages</strong> (<em>TODO: complete</em>) – A list</p></li>
+<li><p><strong>domain</strong> (<a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.document.Document</span></code></a>) – A document that represents the domain.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A tuple containing the most similar page and its similarity score.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple</p>
 </dd>
 </dl>
 </dd></dl>
