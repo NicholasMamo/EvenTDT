@@ -96,3 +96,11 @@ Local
    :members:
    :private-members:
    :special-members:
+
+Resolvers
+=========
+
+.. automodule:: apd.resolvers.resolver
+   :members:
+   :private-members:
+   :special-members:
