@@ -24,6 +24,8 @@ class Resolver(object):
 		:type candidates: list
 
 		:return: A tuple containing the resolved and unresolved candidates respectively.
+				 The function resolves all candidates.
+				 Therefore unresolved candidates are empty.
 		:rtype: tuple
 		"""
 
