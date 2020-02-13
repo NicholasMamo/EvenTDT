@@ -22,9 +22,9 @@ from apd.resolvers.local.token_resolver import TokenResolver
 from nlp.document import Document
 from nlp.tokenizer import Tokenizer
 
-class TestResolvers(unittest.TestCase):
+class TestTokenResolver(unittest.TestCase):
 	"""
-	Test the implementation and results of the different resolvers.
+	Test the implementation and results of the token resolver.
 	"""
 
 	def test_token_resolver(self):
