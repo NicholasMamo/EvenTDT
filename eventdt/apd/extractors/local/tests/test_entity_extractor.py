@@ -163,3 +163,21 @@ class TestExtractors(unittest.TestCase):
 
 		candidates = extractor.extract(corpus, binary=True)
 		self.assertEqual(set([ "lyon", "rudi garcia" ]), set(candidates[0]))
+
+	def test_comma_separated_entities(self):
+		"""
+		Test that comma-separated named entities are returned individually.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		tokenizer = Tokenizer(stem=False)
+		posts = [
+			"Memphis Depay, Oumar Solet, Leo Dubois and Youssouf Kone all out injured",
+		]
+		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+
+		extractor = EntityExtractor()
+		candidates = extractor.extract(corpus)
+		self.assertEqual(set([ "memphis depay", "oumar solet", 'leo dubois', 'youssouf kone' ]), set(candidates[0]))
