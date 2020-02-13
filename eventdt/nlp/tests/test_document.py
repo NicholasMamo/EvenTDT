@@ -11,6 +11,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from document import Document
+from tokenizer import Tokenizer
 from term_weighting.tf import TF
 
 class TestDocument(unittest.TestCase):
@@ -68,3 +69,65 @@ class TestDocument(unittest.TestCase):
 		self.assertEqual(d.text, Document.from_array(e).text)
 		self.assertEqual(d.get_attribute('timestamp'), Document.from_array(e).get_attribute('timestamp'))
 		self.assertEqual(d.__dict__, Document.from_array(e).__dict__)
+
+	def test_concatenate(self):
+		"""
+		Test that when documents are concatenated, all documents are part of the new document.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		strings = [
+			'this is not a pipe',
+			'this is just a cigarette',
+			'still just as deadly'
+		]
+
+		tokenizer = Tokenizer(stem=False)
+		documents = [
+			Document(string, tokenizer.tokenize(string), scheme=TF()) for string in strings
+		]
+
+		document = Document.concatenate(*documents, tokenizer=tokenizer, scheme=TF())
+		self.assertEqual(2, document.dimensions.get('this'))
+		self.assertEqual(2, document.dimensions.get('just'))
+		self.assertEqual(1, document.dimensions.get('pipe'))
+		self.assertEqual(1, document.dimensions.get('cigarette'))
+		self.assertEqual(1, document.dimensions.get('deadly'))
+		self.assertEqual(' '.join(strings), document.text)
+
+	def test_concatenate_zero_documents(self):
+		"""
+		Test that when no documents are given to be concatenated, an empty document is created.
+		"""
+
+		tokenizer = Tokenizer(stem=False)
+		documents = [ ]
+
+		document = Document.concatenate(*documents, tokenizer=tokenizer, scheme=TF())
+		self.assertFalse(document.dimensions)
+		self.assertEqual('', document.text)
+
+	def test_concatenate_with_attributes(self):
+		"""
+		Test that when attributes are given to the concatentation, they are included in the new document.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		strings = [
+			'this is not a pipe',
+			'this is just a cigarette',
+			'still just as deadly'
+		]
+
+		tokenizer = Tokenizer(stem=False)
+		documents = [
+			Document(string, tokenizer.tokenize(string), scheme=TF()) for string in strings
+		]
+
+		document = Document.concatenate(*documents, tokenizer=tokenizer, scheme=TF(),
+										attributes={ 'attr': True })
+		self.assertTrue(document.get_attribute('attr'))

@@ -89,3 +89,27 @@ class Document(Vector):
 			dimensions=array.get("dimensions", None),
 			attributes=array.get("attributes", {}),
 		)
+
+	@staticmethod
+	def concatenate(*args, tokenizer, scheme=None, **kwargs):
+		"""
+		Concatenate all of the documents that are provided as arguments.
+		The function first concatenates the text of all the documents.
+		Then, it tokenizes the concatenated and creates a document from it.
+
+		Any additional keyword arguments are passed on to the Document constructor.
+
+		:param scheme: The term-weighting scheme to use to create the concatenated document.
+		:type scheme: :class:`nlp.term_weighting.scheme.TermWeightingScheme`
+		:param tokenizer: The tokenizer to use to construct the concatenated document.
+		:type tokenizer: :class:`nlp.tokenizer.Tokenizer`
+
+		:return: A new document representing the concatenated documents.
+				 The document is not normalized.
+		:rtype: :class:`nlp.document.Document`
+		"""
+
+		text = ' '.join([ document.text for document in args ])
+		tokens = tokenizer.tokenize(text)
+		document = Document(text, tokens, scheme=scheme, **kwargs)
+		return document
