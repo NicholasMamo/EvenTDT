@@ -26,9 +26,10 @@ apd_tests() {
 	echo -e "${HIGHLIGHT}Filter${DEFAULT}"
 	python3 -m unittest eventdt.apd.filters.local.tests.test_threshold_filter
 
-	# echo -e "${HIGHLIGHT}Resolver${DEFAULT}"
-	# python3 -m unittest eventdt.apd.resolvers.local.tests.test_local_resolvers
-	# python3 -m unittest eventdt.apd.resolvers.external.tests.test_external_resolvers
+	echo -e "${HIGHLIGHT}Resolver${DEFAULT}"
+	python3 -m unittest eventdt.apd.resolvers.local.tests.test_token_resolver
+	python3 -m unittest eventdt.apd.resolvers.external.tests.test_wikipedia_name_resolver
+
 	# echo -e "${HIGHLIGHT}Extrapolator${DEFAULT}"
 	# python3 -m unittest eventdt.apd.extrapolators.external.tests.test_external_extrapolators
 	# echo -e "${HIGHLIGHT}Postprocessor${DEFAULT}"
