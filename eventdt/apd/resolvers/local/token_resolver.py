@@ -1,6 +1,6 @@
 """
-A resolver that tokenizes the corpus and uses the tokens as a reverse index.
-This reverse index is used to find the word that most likely resulted in a stemmed participant.
+The token resolver tries to map tokens to actual terms.
+It tokenizes words with the given tokenizer and tries to map each candidate to the most common term.
 """
 
 import os
@@ -13,59 +13,116 @@ if path not in sys.path:
 
 from ..resolver import Resolver
 
-from vector.nlp.document import Document
-from vector.nlp.tokenizer import Tokenizer
+from nlp.document import Document
+from nlp.tokenizer import Tokenizer
 
 class TokenResolver(Resolver):
 	"""
-	The resolver looks for the words that were most likely to be stemmed to result in the participants.
+	The token resolver tries to map tokens to actual terms.
 	"""
 
-	def resolve(self, participants, corpus, token_attribute="tokens", *args, **kwargs):
+	def resolve(self, candidates, corpus, tokenizer, *args, **kwargs):
 		"""
-		Resolve the given participants by looking for the original words.
+		Resolve the given candidates by looking for the original words.
 
-		:param participants: The participants to resolve.
-		:type participants: list
-		:param corpus: The corpus of documents, which helps to resolve the participants.
-		:type corpus: list
-		:param token_attribute: The attribute that contains the tokens.
-		:type token_attribute: str
+		:param candidates: The candidates to resolve.
+						   The candidates should be in the form of a dictionary.
+						   The keys should be the candidates, and the values the scores.
+		:type candidates: dict
+		:param corpus: The corpus of documents.
+					   This corpus is used to look for the terms that map to the tokens given as candidates.
+		:type corpus: list of :class:`nlp.document.Document`
+		:param tokenizer: The tokenizer used to extract the tokens anew.
+		:type tokenizer: None or :class:`nlp.tokenizer.Tokenizer`
 
-		:return: A tuple containing the resolved participants, and unresolved ones.
-		:rtype: list
+		:return: A tuple containing the resolved and unresolved candidates respectively.
+		:rtype: tuple of lists
 		"""
 
-		tokenizer = Tokenizer(min_length=0, stem=False)
-		stemmed_tokenizer = Tokenizer(min_length=0, stem=True)
-
-		"""
-		Resolve to a single word.
-		For each stem, find the most common word.
-		"""
-		inverted_index = {}
-		for document in corpus:
-			text = document.get_text()
-			tokens = tokenizer.tokenize(text)
-			stemmed_tokens = stemmed_tokenizer.tokenize(text)
-			for token, stemmed_token in list(zip(tokens, stemmed_tokens)):
-				inverted_index[stemmed_token] = inverted_index.get(stemmed_token, {}) # create an entry if need be
-				inverted_index[stemmed_token][token] = inverted_index.get(stemmed_token, {}).get(token, 0) + 1
+		unresolved_candidates, resolved_candidates = [], []
 
 		"""
-		Use majority voting to find the most common word.
+		Generate the inverted index.
+		Then keep only the most common term that generates each token.
 		"""
-		for stemmed_token in inverted_index:
-			inverted_index[stemmed_token] = max(inverted_index[stemmed_token].items(), key=lambda x: x[1])[0]
+		inverted_index = self._construct_inverted_index(corpus, tokenizer)
+		inverted_index = self._minimize_inverted_index(inverted_index)
 
 		"""
-		Then try to resolve the participants.
+		Try to resolve each candidate.
+		If a candidate has no token, it is not resolved.
 		"""
-		unresolved_participants, resolved_participants = [], []
-		for participant in participants:
-			if participant in inverted_index:
-				resolved_participants.append(inverted_index.get(participant, participant).lower())
+		for candidate in candidates:
+			if candidate in inverted_index:
+				resolved_candidates.append(inverted_index.get(candidate))
 			else:
-				unresolved_participants.append(participant)
+				unresolved_candidates.append(candidate)
 
-		return resolved_participants, unresolved_participants
+		return (resolved_candidates, unresolved_candidates)
+
+	def _construct_inverted_index(self, corpus, tokenizer):
+		"""
+		Construct an inverted index from the given corpus using the tokenizer.
+		The inverted index is a nested dictionary.
+		The topmost level is a list of tokens.
+		Each token is associated with another dictionary.
+		This inner dictionary is a list of terms that generate that token.
+		The values of this inner dictionary is the number of times that the term is tokenized into the token.
+
+		:param corpus: The corpus of documents from which to construct the inverted index.
+		:type corpus: list of :class:`nlp.document.Document`
+		:param tokenizer: The tokenizer to use to generate the tokens.
+		:type tokenizer: :class:`nlp.tokenizer.Tokenizer`
+		"""
+
+		inverted_index = {}
+
+		"""
+		Go through each document and split it into the individual terms.
+		Then, tokenize that term and use it to build the inverted index.
+		"""
+		for document in corpus:
+			terms = document.text.split()
+			for term in terms:
+				tokens = tokenizer.tokenize(term)
+
+				"""
+				Each term can result in multiple tokens.
+				Hashtags, for example, may be split by the tokenizer.
+				So can terms with dashes in them.
+				"""
+
+				for token in tokens:
+					inverted_index[token] = inverted_index.get(token, {})
+					inverted_index[token][term] = inverted_index[token].get(term, 0) + 1
+
+		return inverted_index
+
+	def _minimize_inverted_index(self, inverted_index):
+		"""
+		Minimize the inverted index.
+		This operation retains only the most common term for each token.
+
+		:param inverted_index: The inverted index, with tokens as keys.
+							   Each token is associated with another dictionary.
+							   This dictionary has terms that generate the token.
+							   The values are the number of times that they generate the token.
+		:type inverted_index: dict
+
+		:return: The minimized inverted index as a dictionary.
+				 The tokens remain as the keys.
+				 The values are the terms that most-commonly generate the token.
+		:rtype: dict
+		"""
+
+		"""
+		The inverted index first retains a tuple of the most common term.
+		Then, the term itself is retained.
+		"""
+		inverted_index = {
+			token: max(inverted_index[token].items(), key=lambda x: x[1]) for token in inverted_index
+		}
+
+		inverted_index = { token: term[0] for token, term in inverted_index.items() }
+
+		return inverted_index
