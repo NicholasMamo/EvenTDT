@@ -47,10 +47,10 @@ class TestResolvers(unittest.TestCase):
 		scores = ThresholdFilter().filter(scores, 0)
 		resolved, unresolved = TokenResolver().resolve(scores, corpus, tokenizer)
 
-		self.assertTrue('Manchester' in resolved)
-		self.assertTrue('United' in resolved)
-		self.assertTrue('Tottenham' in resolved)
-		self.assertTrue('Hotspur' in resolved)
+		self.assertTrue('manchester' in resolved)
+		self.assertTrue('united' in resolved)
+		self.assertTrue('tottenham' in resolved)
+		self.assertTrue('hotspur' in resolved)
 
 	def test_reuse_tokenizer(self):
 		"""
@@ -139,3 +139,38 @@ class TestResolvers(unittest.TestCase):
 		scores = ThresholdFilter().filter(scores, 0)
 		resolved, unresolved = TokenResolver().resolve(scores, [ ], tokenizer)
 		self.assertEqual(len(scores), len(unresolved))
+
+	def test_case_folding(self):
+		"""
+		Test that when case-folding is set, the case does not matter.
+		In this test, the stem 'report' can be formed by:
+
+		    #. Reporters - appears twice
+			#. reporters - appears twice
+			#. reports - appears three times
+
+		Without case-folding, 'reports' would be chosen to represent the token 'report'.
+		'reports' appears three times, and 'Reporters' and 'reporters' appear twice.
+		With case-folding, 'reports' still appears three times, but 'reporters' appears four times.
+		"""
+
+		"""
+		Create the test data
+		"""
+		tokenizer = Tokenizer(min_length=1, stem=True)
+		posts = [
+			"Reporters Without Borders issue statement after reporters are harrassed",
+			"Reporters left waiting all night long: reports",
+			"Two reporters injured before gala: reports",
+			"Queen reacts: reports of her falling ill exaggerated"
+		]
+		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+
+		candidates = TokenExtractor().extract(corpus)
+		scores = TFScorer().score(candidates)
+		scores = ThresholdFilter().filter(scores, 0)
+		resolved, unresolved = TokenResolver().resolve(scores, corpus, tokenizer, case_fold=False)
+		self.assertTrue('reports' in resolved)
+
+		resolved, unresolved = TokenResolver().resolve(scores, corpus, tokenizer, case_fold=True)
+		self.assertTrue('reporters' in resolved)

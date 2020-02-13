@@ -21,7 +21,7 @@ class TokenResolver(Resolver):
 	The token resolver tries to map tokens to actual terms.
 	"""
 
-	def resolve(self, candidates, corpus, tokenizer, *args, **kwargs):
+	def resolve(self, candidates, corpus, tokenizer, case_fold=True, *args, **kwargs):
 		"""
 		Resolve the given candidates by looking for the original words.
 
@@ -34,6 +34,8 @@ class TokenResolver(Resolver):
 		:type corpus: list of :class:`nlp.document.Document`
 		:param tokenizer: The tokenizer used to extract the tokens anew.
 		:type tokenizer: None or :class:`nlp.tokenizer.Tokenizer`
+		:param case_fold: A boolean indicating whether terms should be case-folded.
+		:type case_fold: bool
 
 		:return: A tuple containing the resolved and unresolved candidates respectively.
 		:rtype: tuple of lists
@@ -45,7 +47,7 @@ class TokenResolver(Resolver):
 		Generate the inverted index.
 		Then keep only the most common term that generates each token.
 		"""
-		inverted_index = self._construct_inverted_index(corpus, tokenizer)
+		inverted_index = self._construct_inverted_index(corpus, tokenizer, case_fold)
 		inverted_index = self._minimize_inverted_index(inverted_index)
 
 		"""
@@ -60,7 +62,7 @@ class TokenResolver(Resolver):
 
 		return (resolved_candidates, unresolved_candidates)
 
-	def _construct_inverted_index(self, corpus, tokenizer):
+	def _construct_inverted_index(self, corpus, tokenizer, case_fold):
 		"""
 		Construct an inverted index from the given corpus using the tokenizer.
 		The inverted index is a nested dictionary.
@@ -73,6 +75,14 @@ class TokenResolver(Resolver):
 		:type corpus: list of :class:`nlp.document.Document`
 		:param tokenizer: The tokenizer to use to generate the tokens.
 		:type tokenizer: :class:`nlp.tokenizer.Tokenizer`
+		:param case_fold: A boolean indicating whether terms should be case-folded.
+		:type case_fold: bool
+
+		:return: An inverted index as a dictionary.
+				 The tokens are the keys, and the values are dictionaries.
+				 The keys of these inner dictionaries are the terms that generate the tokens.
+				 The values are the frequencies of the terms.
+		:rtype: dict
 		"""
 
 		inverted_index = {}
@@ -84,6 +94,7 @@ class TokenResolver(Resolver):
 		for document in corpus:
 			terms = document.text.split()
 			for term in terms:
+				term = term.lower() if case_fold else term
 				tokens = tokenizer.tokenize(term)
 
 				"""

@@ -104,3 +104,11 @@ Resolvers
    :members:
    :private-members:
    :special-members:
+
+Local
+-----
+
+.. automodule:: apd.resolvers.local.token_resolver
+   :members:
+   :private-members:
+   :special-members:
