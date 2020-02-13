@@ -21,12 +21,12 @@ class Resolver(object):
 		The resolution function returns the same candidates as they were given without making any changes.
 
 		:param candidates: The candidates to resolve.
-		:type candidates: list
+		:type candidates: list of str
 
 		:return: A tuple containing the resolved and unresolved candidates respectively.
 				 The function resolves all candidates.
 				 Therefore unresolved candidates are empty.
-		:rtype: tuple
+		:rtype: tuple of lists
 		"""
 
 		return (candidates, [ ])
