@@ -1,5 +1,5 @@
 """
-The info collector is used to fetch information about Wikipedia pages.
+The info collector fetches information about Wikipedia pages.
 """
 
 from enum import Enum
@@ -8,8 +8,8 @@ import math
 import re
 import urllib.request
 
-from .textcollector import TextCollector
-from .wikicollector import WikiCollector
+from . import *
+from . import text
 
 class ArticleType(Enum):
 	"""
@@ -28,97 +28,115 @@ class ArticleType(Enum):
 	DISAMBIGUATION = 1
 	MISSING = 2
 
-# TODO: Needs testing
-class InfoCollector(WikiCollector):
+def types(titles):
 	"""
-	The information collector collects general information about pages.
-	This includes what kind of page it is.
+	Get the type of page each page title returns.
+
+	:param titles: The titles of the pages whose types are desired.
+	:type titles: list of str or str
+
+	:return: A dictionary with page titles as keys and the types as :class:`wikinterface.info.ArticleType` values.
+	:rtype: dict
 	"""
 
-	def get_type(self, page_titles):
-		"""
-		Get the type of page each page title returns.
+	types = { }
 
-		:param page_titles: The titles of the pages whose types are desired.
-		:type page_titles: list
+	titles = titles if type(titles) is list else [ titles ]
 
-		:return: A dict with page title-type for keys and values respectively.
-		:rtype: dict
-		"""
+	stagger = 20
+	parameters = {
+		'format': 'json',
+		'action': 'query',
+		'prop': 'pageprops',
+		'titles': urllib.parse.quote('|'.join(titles)),
+		'redirects': True, # allow redirects
+		'excontinue': 0, # the page number from where to continue
+	}
 
-		type_map = {
-			"normal": PageType.NORMAL,
-			"disambiguation": PageType.DISAMBIGUATION,
-			"missing": PageType.MISSING
-		}
+	"""
+	When there are many page titles, the GET parameters could become far too long.
+	Therefore in such cases, stagger the process.
+	"""
+	if len(urllib.parse.quote('|'.join(titles))) > 1024:
+		for i in range(0, math.ceil(len(titles) / stagger)):
+			subset = collect(titles[(i * stagger):((i + 1) * stagger)],
+							 introduction_only=introduction_only)
+			types.update(subset)
+		return types
 
-		types = {}
-		stagger = 40
-		endpoint = "format=json&action=query&prop=pageprops&titles=%s&redirects" % urllib.parse.quote('|'.join(page_titles))
+	"""
+	If page titles are given, collect information about them.
+	Pages are returned 20 at a time.
+	When this happens, the response contains a continue marker.
+	The loop continues fetching requests until there are no such markers.
+	"""
+	if len(titles):
+		while parameters['excontinue'] is not None:
+			endpoint = construct_url(parameters)
+			response = urllib.request.urlopen(endpoint)
+			response = json.loads(response.read().decode('utf-8'))
 
-		if len(page_titles) > stagger:
-			for i in range(0, math.ceil(len(page_titles) / stagger)):
-				subset = self.get_type(page_titles[(i*stagger):((i+1)*stagger)])
-				types.update(subset)
-		else:
-			response = urllib.request.urlopen(self.BASE_URL + endpoint)
-			response = json.loads(response.read().decode("utf-8"))
-			pages = response["query"]["pages"]
-			redirects = response["query"]["redirects"] if "redirects" in response["query"] else {}
+			if is_error_response(response):
+				raise RuntimeError(response)
+
+			"""
+			Extract the page types from the responses.
+			"""
+			pages = response['query']['pages']
+			redirects = response['query']['redirects'] if 'redirects' in response['query'] else {}
 
 			"""
 			Go through each page and find its type.
+			By default, pages are normal.
+			If the page has no properties, it is considered to be missing.
+			Otherwise
 			"""
 			for page in pages.values():
-				types[page["title"]] = {
-					"title": page["title"],
-					"type": type_map["normal"],
-				}
+				types[page['title']] = ArticleType.NORMAL
 
 				"""
 				Once a type is found, stop looking.
 				"""
-				if "pageprops" not in page:
-					types[page["title"]]["type"] = type_map["missing"]
-				else:
-					for prop in page["pageprops"]:
-						if prop in type_map:
-							types[page["title"]]["type"] = type_map[prop]
-							break
+				if 'pageprops' not in page:
+					types[page['title']] = ArticleType.MISSING
+				elif 'disambiguation' in page.get('pageprops'):
+					types[page['title']] = ArticleType.DISAMBIGUATION
 
-			"""
-			Put the original page titles as keys.
-			This is useful in case there were any redirects.
-			"""
-			types = self._resolve_redirects(types, redirects)
+			parameters['excontinue'] = response['continue']['excontinue'] if 'continue' in response else None
 
-		return types
-
-	def is_person(self, page_titles):
 		"""
-		Go through each page title and check whether it represents a person.
-		This works by getting the introduction's text and seeing whether there is birth information.
-
-		:param page_titles: The titles of the pages that need to be checked.
-		:type page_titles: list
-
-		:return: A dict with page title-status for keys and values respectively.
-		:rtype: dict
+		Put the original page titles as keys.
+		This is useful in case there were any redirects.
 		"""
+		types = revert_redirects(types, redirects)
 
-		birth_patterns = [
-			re.compile("born [0-9]{1,2} (January|February|March|April|May|June|July|August|September|October|November|December) [0-9]{2,4}"),
-			re.compile("born in [0-9]{1,2} (January|February|March|April|May|June|July|August|September|October|November|December) [0-9]{2,4}"), # NOTE: Returned by API in https://en.wikipedia.org/wiki/Dar%C3%ADo_Benedetto
-			re.compile("born (January|February|March|April|May|June|July|August|September|October|November|December) [0-9]{1,2},? [0-9]{2,4}"),
-			re.compile("born \([0-9]{4}-[0-9]{2}-[0-9]{2}\)(January|February|March|April|May|June|July|August|September|October|November|December) [0-9]{1,2},? [0-9]{2,4}"), # NOTE: Returned by API in https://en.wikipedia.org/wiki/Valentina_Shevchenko_(fighter)
-		]
-		persons = { }
+	return types
 
-		text_collector = TextCollector()
-		text = text_collector.get_plain_text(page_titles, introduction_only=True)
+def is_person(self, titles):
+	"""
+	Go through each page title and check whether it represents a person.
+	This works by getting the introduction's text and seeing whether there is birth information.
 
-		for page, introduction in text.items():
-			# persons[page] = len(birth_pattern.findall(introduction)) != 0
-			persons[page] = any( len(birth_pattern.findall(introduction)) != 0 for birth_pattern in birth_patterns )
+	:param titles: The titles of the pages that need to be checked.
+	:type titles: list
 
-		return persons
+	:return: A dict with page title-status for keys and values respectively.
+	:rtype: dict
+	"""
+
+	birth_patterns = [
+		re.compile("born [0-9]{1,2} (January|February|March|April|May|June|July|August|September|October|November|December) [0-9]{2,4}"),
+		re.compile("born in [0-9]{1,2} (January|February|March|April|May|June|July|August|September|October|November|December) [0-9]{2,4}"), # NOTE: Returned by API in https://en.wikipedia.org/wiki/Dar%C3%ADo_Benedetto
+		re.compile("born (January|February|March|April|May|June|July|August|September|October|November|December) [0-9]{1,2},? [0-9]{2,4}"),
+		re.compile("born \([0-9]{4}-[0-9]{2}-[0-9]{2}\)(January|February|March|April|May|June|July|August|September|October|November|December) [0-9]{1,2},? [0-9]{2,4}"), # NOTE: Returned by API in https://en.wikipedia.org/wiki/Valentina_Shevchenko_(fighter)
+	]
+	persons = { }
+
+	text_collector = TextCollector()
+	text = text_collector.get_plain_text(titles, introduction_only=True)
+
+	for page, introduction in text.items():
+		# persons[page] = len(birth_pattern.findall(introduction)) != 0
+		persons[page] = any( len(birth_pattern.findall(introduction)) != 0 for birth_pattern in birth_patterns )
+
+	return persons
