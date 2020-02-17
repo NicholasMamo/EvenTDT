@@ -9,7 +9,7 @@ import urllib.request
 
 from . import *
 
-def search(terms, limit=10):
+def collect(terms, limit=10):
 	"""
 	Look for pages containing the given terms.
 
