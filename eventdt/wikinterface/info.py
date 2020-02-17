@@ -112,31 +112,38 @@ def types(titles):
 
 	return types
 
-def is_person(self, titles):
+def is_person(titles):
 	"""
 	Go through each page title and check whether it represents a person.
-	This works by getting the introduction's text and seeing whether there is birth information.
+	The function assumes that an article is about a person if it mentions a birth date.
 
 	:param titles: The titles of the pages that need to be checked.
-	:type titles: list
+	:type titles: list of str or str
 
-	:return: A dict with page title-status for keys and values respectively.
+	:return: A dictionary with page titles as keys and booleans as values indicating whether the article represents a person.
 	:rtype: dict
 	"""
 
+	classes = { }
+
+	"""
+	Collect the introductions of the given articles.
+	"""
+	titles = titles if type(titles) is list else [ titles ]
+	extracts = text.collect(titles, introduction_only=True)
+
+	"""
+	An article is about a person if it has a birth date.
+	The function tries to capture this in the text using one of a number of regular expressions.
+	"""
 	birth_patterns = [
 		re.compile("born [0-9]{1,2} (January|February|March|April|May|June|July|August|September|October|November|December) [0-9]{2,4}"),
 		re.compile("born in [0-9]{1,2} (January|February|March|April|May|June|July|August|September|October|November|December) [0-9]{2,4}"), # NOTE: Returned by API in https://en.wikipedia.org/wiki/Dar%C3%ADo_Benedetto
 		re.compile("born (January|February|March|April|May|June|July|August|September|October|November|December) [0-9]{1,2},? [0-9]{2,4}"),
 		re.compile("born \([0-9]{4}-[0-9]{2}-[0-9]{2}\)(January|February|March|April|May|June|July|August|September|October|November|December) [0-9]{1,2},? [0-9]{2,4}"), # NOTE: Returned by API in https://en.wikipedia.org/wiki/Valentina_Shevchenko_(fighter)
 	]
-	persons = { }
 
-	text_collector = TextCollector()
-	text = text_collector.get_plain_text(titles, introduction_only=True)
+	for page, introduction in extracts.items():
+		classes[page] = any(len(birth_pattern.findall(introduction)) for birth_pattern in birth_patterns)
 
-	for page, introduction in text.items():
-		# persons[page] = len(birth_pattern.findall(introduction)) != 0
-		persons[page] = any( len(birth_pattern.findall(introduction)) != 0 for birth_pattern in birth_patterns )
-
-	return persons
+	return classes
