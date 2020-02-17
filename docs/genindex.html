@@ -86,8 +86,9 @@
 <li class="toctree-l1"><a class="reference internal" href="tools.html">1. Tools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="vsm.html">2. Vector Space Model (VSM)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="nlp.html">3. Natural Language Processing (NLP)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="apd.html">4. Automatic Participant Detection (APD)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="other.html">5. Other</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wikinterface.html">4. Wikinterface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="apd.html">5. Automatic Participant Detection (APD)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">6. Other</a></li>
 </ul>
 
             
@@ -176,11 +177,9 @@
 <h2 id="_">_</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="apd.html#apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver.__init__">__init__() (apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver method)</a>
+      <li><a href="apd.html#apd.scorers.local.tfidf_scorer.TFIDFScorer.__init__">__init__() (apd.scorers.local.tfidf_scorer.TFIDFScorer method)</a>
 
       <ul>
-        <li><a href="apd.html#apd.scorers.local.tfidf_scorer.TFIDFScorer.__init__">(apd.scorers.local.tfidf_scorer.TFIDFScorer method)</a>
-</li>
         <li><a href="nlp.html#nlp.document.Document.__init__">(nlp.document.Document method)</a>
 </li>
         <li><a href="nlp.html#nlp.term_weighting.global_schemes.idf.IDF.__init__">(nlp.term_weighting.global_schemes.idf.IDF method)</a>
@@ -220,8 +219,6 @@
 </li>
       <li><a href="apd.html#apd.resolvers.local.token_resolver.TokenResolver._construct_inverted_index">_construct_inverted_index() (apd.resolvers.local.token_resolver.TokenResolver method)</a>
 </li>
-      <li><a href="apd.html#apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver._disambiguate">_disambiguate() (apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver method)</a>
-</li>
       <li><a href="apd.html#apd.extractors.local.entity_extractor.EntityExtractor._extract_entities">_extract_entities() (apd.extractors.local.entity_extractor.EntityExtractor method)</a>
 </li>
       <li><a href="apd.html#apd.resolvers.local.token_resolver.TokenResolver._minimize_inverted_index">_minimize_inverted_index() (apd.resolvers.local.token_resolver.TokenResolver method)</a>
@@ -236,8 +233,6 @@
         <li><a href="apd.html#apd.scorers.scorer.Scorer._normalize">(apd.scorers.scorer.Scorer method)</a>
 </li>
       </ul></li>
-      <li><a href="apd.html#apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver._resolve_unambiguous_candidates">_resolve_unambiguous_candidates() (apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver method)</a>
-</li>
       <li><a href="nlp.html#nlp.tokenizer.Tokenizer._split_hashtags">_split_hashtags() (nlp.tokenizer.Tokenizer method)</a>
 </li>
       <li><a href="apd.html#apd.scorers.local.df_scorer.DFScorer._sum">_sum() (apd.scorers.local.df_scorer.DFScorer method)</a>
@@ -272,8 +267,6 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="apd.html#module-apd.resolvers.external.wikipedia_name_resolver">apd.resolvers.external.wikipedia_name_resolver (module)</a>
-</li>
       <li><a href="apd.html#module-apd.resolvers.local.token_resolver">apd.resolvers.local.token_resolver (module)</a>
 </li>
       <li><a href="apd.html#module-apd.resolvers.resolver">apd.resolvers.resolver (module)</a>
@@ -289,6 +282,8 @@
       <li><a href="apd.html#module-apd.scorers.local.tfidf_scorer">apd.scorers.local.tfidf_scorer (module)</a>
 </li>
       <li><a href="apd.html#module-apd.scorers.scorer">apd.scorers.scorer (module)</a>
+</li>
+      <li><a href="wikinterface.html#wikinterface.API_ENDPOINT">API_ENDPOINT (in module wikinterface)</a>
 </li>
       <li><a href="vsm.html#vsm.vector_math.augmented_normalize">augmented_normalize() (in module vsm.vector_math)</a>
 </li>
@@ -422,11 +417,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="nlp.html#nlp.term_weighting.global_schemes.idf.IDF">IDF (class in nlp.term_weighting.global_schemes.idf)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="other.html#logger.logger.info">info() (in module logger.logger)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="vsm.html#vsm.vector.Vector.initialize_dimension">initialize_dimension() (vsm.vector.Vector method)</a>
+</li>
+      <li><a href="wikinterface.html#wikinterface.is_error_response">is_error_response() (in module wikinterface)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -510,17 +507,17 @@
 </li>
       <li><a href="vsm.html#vsm.clustering.cluster.Cluster.remove_vector">remove_vector() (vsm.clustering.cluster.Cluster method)</a>
 </li>
-      <li><a href="apd.html#apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver.resolve">resolve() (apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver method)</a>
+      <li><a href="apd.html#apd.resolvers.local.token_resolver.TokenResolver.resolve">resolve() (apd.resolvers.local.token_resolver.TokenResolver method)</a>
 
       <ul>
-        <li><a href="apd.html#apd.resolvers.local.token_resolver.TokenResolver.resolve">(apd.resolvers.local.token_resolver.TokenResolver method)</a>
-</li>
         <li><a href="apd.html#apd.resolvers.resolver.Resolver.resolve">(apd.resolvers.resolver.Resolver method)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apd.html#apd.resolvers.resolver.Resolver">Resolver (class in apd.resolvers.resolver)</a>
+</li>
+      <li><a href="wikinterface.html#wikinterface.revert_redirects">revert_redirects() (in module wikinterface)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -646,7 +643,7 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="apd.html#apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver">WikipediaNameResolver (class in apd.resolvers.external.wikipedia_name_resolver)</a>
+      <li><a href="wikinterface.html#module-wikinterface">wikinterface (module)</a>
 </li>
   </ul></td>
 </tr></table>

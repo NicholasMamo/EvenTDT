@@ -1,5 +1,5 @@
 ****************************************
-4. Automatic Participant Detection (APD)
+5. Automatic Participant Detection (APD)
 ****************************************
 
 .. meta::
