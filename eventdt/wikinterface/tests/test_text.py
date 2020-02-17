@@ -32,7 +32,6 @@ class TestText(unittest.TestCase):
 
 		page = 'Olympique Lyon'
 		extracts = text.collect(page)
-		self.assertEqual(1, len(extracts))
 		self.assertTrue(page in extracts)
 
 	def test_get_multiple_full(self):
@@ -40,7 +39,7 @@ class TestText(unittest.TestCase):
 		Test that when multiple full pages are requested, they are all returned, and in full.
 		"""
 
-		pages = [ 'Olympique Lyon', 'Borussia Dortmund' ]
+		pages = [ 'Olympique Lyonnais', 'Borussia Dortmund' ]
 		extracts = text.collect(pages)
 		self.assertEqual(2, len(extracts))
 		self.assertEqual(set(pages), set(list(extracts.keys())))
@@ -61,7 +60,7 @@ class TestText(unittest.TestCase):
 		Test that when multiple introductions are requested, they are all returned.
 		"""
 
-		pages = [ 'Olympique Lyon', 'Borussia Dortmund' ]
+		pages = [ 'Olympique Lyonnais', 'Borussia Dortmund' ]
 		extracts = text.collect(pages, introduction_only=True)
 		self.assertEqual(2, len(extracts))
 		self.assertEqual(set(pages), set(list(extracts.keys())))

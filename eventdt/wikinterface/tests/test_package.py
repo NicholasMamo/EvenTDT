@@ -40,31 +40,6 @@ class TestWikinterface(unittest.TestCase):
 		pages = revert_redirects(results, redirects)
 		self.assertTrue('Inside forward' in pages)
 		self.assertTrue('Striker (association football)' in pages)
-		self.assertFalse('Forward (association football)' in pages)
-
-	def test_keep_redirects(self):
-		"""
-		Test that when keeping redirections, the redirected pages are retained.
-		"""
-
-		"""
-		Create the test data.
-		"""
-		redirects = [
-			{ 'from': 'Striker (association football)' , 'to': 'Forward (association football)' },
-			{ 'from': 'Inside forward' , 'to': 'Forward (association football)' },
-		]
-		results = {
-			'Forward (association football)': ''
-		}
-
-		"""
-		Revert the redirections.
-		"""
-
-		pages = revert_redirects(results, redirects, keep_redirects=True)
-		self.assertTrue('Inside forward' in pages)
-		self.assertTrue('Striker (association football)' in pages)
 		self.assertTrue('Forward (association football)' in pages)
 
 	def test_construct_url_without_parameters(self):

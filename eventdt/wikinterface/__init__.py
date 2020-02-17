@@ -52,7 +52,7 @@ def construct_url(parameters=None):
 
 	return url
 
-def revert_redirects(results, redirects, keep_redirects=False):
+def revert_redirects(results, redirects):
 	"""
 	Revert redirections.
 
@@ -65,8 +65,6 @@ def revert_redirects(results, redirects, keep_redirects=False):
 	:param redirects: The redirects provided by Wikipedia.
 					  This dictionary has keys 'from' and 'to'.
 	:type redirects: dict
-	:param keep_redirects: A boolean indicating whether the redirected pages should be retained.
-	:type keep_redirects: bool
 
 	:return: A new dictionary with redirections.
 	:rtype: dict
@@ -86,12 +84,6 @@ def revert_redirects(results, redirects, keep_redirects=False):
 		"""
 		if page in targets:
 			pages[targets[page]] = pages[page]
-
-			"""
-			If the page was only created because of a redirection, remove it.
-			"""
-			if not keep_redirects:
-				del pages[page]
 
 	"""
 	In some cases, two pages may redirect to the same page.
