@@ -1,70 +1,71 @@
 """
-The search collector is used to look for articles in Wikipedia.
+The search collector is used to look for articles containing a particular list of terms.
 """
 
-import asyncio
 import json
-import math
 import re
 import time
 import urllib.request
 
-from .wikicollector import WikiCollector
+from . import *
 
-class SearchCollector(WikiCollector):
+def search(terms, limit=10):
 	"""
-	The SearchCollector uses the search endpoint to look for articles containing some search terms.
-	"""
+	Look for pages containing the given terms.
 
-	def search(self, terms, limit=10):
-		"""
-		Look for pages containing the given terms.
+	.. warning:
+
 		The search API is often overloaded and fails.
 
-		:param terms: The search terms.
-		:type terms: list
-		:param limit: The number of search results to return.
-			Wikipedia limits the results to 50, but the collector is built to fetch more.
-		:type limit: int
+	:param terms: The search terms.
+	:type terms: list of str or str
+	:param limit: The number of search results to return.
+				  Wikipedia limits the results to 50, but the collector can fetch more.
+	:type limit: int
 
-		:return: A list of search results in the form of page titles.
-			Their content cann be fetched using these titles.
-		:rtype: list
+	:return: A list of search results in the form of page titles.
+			 Their content can be fetched using these titles.
+	:rtype: list of str
+	"""
+
+	articles = [ ]
+
+	terms = terms if type(terms) is list else [ terms ]
+
+	parameters = {
+		'format': 'json',
+		'action': 'query',
+		'list': 'search',
+		'srsearch': urllib.parse.quote(' '.join(terms)),
+		'srlimit': min(50, limit), # the search endpoint retrieves at most 50 at a time
+		'sroffset': 0
+	}
+
+	"""
+	Searching until the number of articles that are required have been found or there are no more results.
+	Keep only the page titles.
+	"""
+	while len(results) < limit and continue:
+		endpoint = construct_url(parameters)
+		response = urllib.request.urlopen(endpoint)
+		response = json.loads(response.read().decode("utf-8"))
+
 		"""
-
-		terms = [ terms ] if type(terms) == str else terms
-
+		Since errors are common, if one is encountered, sleep for a second and then continue.
 		"""
-		Do not get more than 50 - Wikipedia's limit.
-		"""
-		base_endpoint = "action=query&list=search&format=json&srsearch=%s&srlimit=%d" % (urllib.parse.quote(' '.join(terms)), min(50, limit))
-		pages = []
+		if not is_error_response(response):
+			results = response["query"]["search"]
+			articles += [ article["title"] for article in results ]
 
-		srcontinue = True
-		endpoint = base_endpoint + "&sroffset=0" # no offset in the beginning
-		while len(pages) < limit and srcontinue:
 			"""
-			Keep searching until the number of pages that are required have been found or there are more results.
+			Update the endpoint if there are more search results to collect.
+			Otherwise, stop looking immediately.
 			"""
-
-			response = urllib.request.urlopen(self.BASE_URL + endpoint)
-			response = json.loads(response.read().decode("utf-8"))
-			if self.validate(response):
-				results = response["query"]["search"]
-
-				"""
-				Store the page titles
-				"""
-				pages += [ page["title"] for page in results ]
-
-				"""
-				Update the endpoint if there are more pages to collect
-				"""
-				if "continue" in response:
-					endpoint = base_endpoint + "&sroffset=%d" % response["continue"]["sroffset"]
-				else:
-					srcontinue = False
+			if "continue" in response:
+				parameters['sroffset'] = response["continue"]["sroffset"]
 			else:
-				time.sleep(1)
+				break
+		else:
+			time.sleep(1)
 
-		return pages
+	return articles
