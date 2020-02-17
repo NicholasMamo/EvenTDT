@@ -66,3 +66,61 @@ class TestWikinterface(unittest.TestCase):
 		self.assertTrue('Inside forward' in pages)
 		self.assertTrue('Striker (association football)' in pages)
 		self.assertTrue('Forward (association football)' in pages)
+
+	def test_construct_url_without_parameters(self):
+		"""
+		Test that when constructing a URL without parameters, the original endpoint is returned instead.
+		"""
+
+		self.assertEqual(API_ENDPOINT, construct_url())
+
+	def test_construct_url_with_parameters(self):
+		"""
+		Test that when constructing a URL with parameters, they are added at the end of the string.
+		"""
+
+		parameters = {
+			'format': 'json',
+			'action': 'query',
+		}
+
+		self.assertEqual(API_ENDPOINT + "format=json&action=query", construct_url(parameters))
+
+	def test_construct_url_with_boolean_parameters(self):
+		"""
+		Test that when constructing a URL with boolean parameters, they are added without a value.
+		"""
+
+		parameters = {
+			'format': 'json',
+			'action': 'query',
+			'exintro': True,
+		}
+
+		self.assertEqual(API_ENDPOINT + "format=json&action=query&exintro", construct_url(parameters))
+
+	def test_construct_url_with_false_boolean_parameters(self):
+		"""
+		Test that when constructing a URL with `False` boolean parameters, they are excluded.
+		"""
+
+		parameters = {
+			'format': 'json',
+			'action': 'query',
+			'exintro': False,
+		}
+
+		self.assertEqual(API_ENDPOINT + "format=json&action=query", construct_url(parameters))
+
+	def test_construct_url_with_zero_parameter(self):
+		"""
+		Test that when constructing a URL with a parameter that has a value of zero, it is added.
+		"""
+
+		parameters = {
+			'format': 'json',
+			'action': 'query',
+			'limit': 0,
+		}
+
+		self.assertEqual(API_ENDPOINT + "format=json&action=query&limit=0", construct_url(parameters))

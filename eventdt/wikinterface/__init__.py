@@ -22,6 +22,36 @@ def is_error_response(response):
 
 	return 'error' in response
 
+def construct_url(parameters=None):
+	"""
+	Construct the URL using the given parameters.
+
+	:param parameters: The list of GET parameters to send.
+					   The parameter values can be either strings or booleans.
+					   If a parameter is a boolean and `True`, it is added without a value.
+					   If a parameter is a boolean and `False`, it is excluded altogether
+	:type parameters: dict or None
+
+	:return: The URL with any GET parameters provided.
+	:rtype: str
+	"""
+
+	url = f"{API_ENDPOINT}"
+
+	"""
+	If parameters are given, they are filtered for `False` boolean values.
+	Then, they are added as query parameters.
+	"""
+	if parameters:
+		parameters = {
+			key: value for key, value in parameters.items() if type(value) is not bool or value
+		}
+
+		parameter_strings = [ f"{key}" if type(value) is bool else f"{key}={value}" for key, value in parameters.items() ]
+		url = url + '&'.join(parameter_strings)
+
+	return url
+
 def revert_redirects(results, redirects, keep_redirects=False):
 	"""
 	Revert redirections.
