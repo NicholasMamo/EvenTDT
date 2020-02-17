@@ -89,7 +89,10 @@
 <li class="toctree-l1"><a class="reference internal" href="tools.html">1. Tools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="vsm.html">2. Vector Space Model (VSM)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="nlp.html">3. Natural Language Processing (NLP)</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">4. Wikinterface</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">4. Wikinterface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-wikinterface.text">Text</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="apd.html">5. Automatic Participant Detection (APD)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="other.html">6. Other</a></li>
 </ul>
@@ -189,6 +192,26 @@ This module makes it easier to access the API.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="wikinterface.construct_url">
+<code class="sig-prename descclassname">wikinterface.</code><code class="sig-name descname">construct_url</code><span class="sig-paren">(</span><em class="sig-param">parameters=None</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.construct_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct the URL using the given parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>parameters</strong> (<em>dict</em><em> or </em><em>None</em>) – The list of GET parameters to send.
+The parameter values can be either strings or booleans.
+If a parameter is a boolean and <cite>True</cite>, it is added without a value.
+If a parameter is a boolean and <cite>False</cite>, it is excluded altogether</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The URL with any GET parameters provided.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="wikinterface.revert_redirects">
 <code class="sig-prename descclassname">wikinterface.</code><code class="sig-name descname">revert_redirects</code><span class="sig-paren">(</span><em class="sig-param">results</em>, <em class="sig-param">redirects</em>, <em class="sig-param">keep_redirects=False</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.revert_redirects" title="Permalink to this definition">¶</a></dt>
 <dd><p>Revert redirections.</p>
@@ -213,6 +236,31 @@ This dictionary has keys ‘from’ and ‘to’.</p></li>
 </dl>
 </dd></dl>
 
+<div class="section" id="module-wikinterface.text">
+<span id="text"></span><h2>Text<a class="headerlink" href="#module-wikinterface.text" title="Permalink to this headline">¶</a></h2>
+<p>Wikipedia articles are predominantly made up of text.
+This module contains functions to help extract that text from articles.</p>
+<dl class="function">
+<dt id="wikinterface.text.collect">
+<code class="sig-prename descclassname">wikinterface.text.</code><code class="sig-name descname">collect</code><span class="sig-paren">(</span><em class="sig-param">titles</em>, <em class="sig-param">introduction_only=False</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.text.collect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the plain text content of the pages having the given titles.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>titles</strong> (<em>list of str</em><em> or </em><em>str</em>) – The titles of the pages from where to get the plain text.</p></li>
+<li><p><strong>introduction_only</strong> (<em>bool</em>) – A boolean indicating whether to get only the introduction’s text.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary with page titles as keys and the text as values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
 </div>
 
 
