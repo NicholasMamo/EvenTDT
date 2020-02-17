@@ -5,7 +5,6 @@ This module contains functions to help extract that text from articles.
 
 import json
 import math
-import re
 import urllib.request
 
 from . import *
