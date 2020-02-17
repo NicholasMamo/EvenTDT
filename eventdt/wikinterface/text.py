@@ -47,8 +47,8 @@ def collect(titles, introduction_only=False):
 	"""
 	if len(urllib.parse.quote('|'.join(titles))) > 1024:
 		for i in range(0, math.ceil(len(titles) / stagger)):
-			subset = self.get_plain_text(titles[(i * stagger):((i + 1) * stagger)],
-										 introduction_only=introduction_only)
+			subset = collect(titles[(i * stagger):((i + 1) * stagger)],
+							 introduction_only=introduction_only)
 			text.update(subset)
 		return text
 
