@@ -20,11 +20,13 @@ def collect(titles, introduction_only=False):
 
 	:return: A dictionary with page titles as keys and the text as values.
 	:rtype: dict
+
+	:raises RuntimeError: when the request is an error.
 	"""
 
-	titles = titles if type(titles) is list else [ titles ]
-
 	text = { }
+
+	titles = titles if type(titles) is list else [ titles ]
 
 	stagger = 20 if introduction_only else 1
 	parameters = {
@@ -61,6 +63,9 @@ def collect(titles, introduction_only=False):
 			endpoint = construct_url(parameters)
 			response = urllib.request.urlopen(endpoint)
 			response = json.loads(response.read().decode("utf-8"))
+
+			if is_error_response(response);
+				raise RuntimeError(response)
 
 			"""
 			Extract the pages, redirects and the text from the
