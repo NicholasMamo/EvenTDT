@@ -68,7 +68,7 @@ def collect(titles, introduction_only=False):
 				raise RuntimeError(response)
 
 			"""
-			Extract the pages, redirects and the text from the
+			Extract the pages, redirects and the text from the response.
 			Put the original page titles as keys, reverting any redirects.
 			"""
 			pages = response['query']['pages']
