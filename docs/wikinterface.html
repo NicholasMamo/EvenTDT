@@ -90,6 +90,7 @@
 <li class="toctree-l1"><a class="reference internal" href="vsm.html">2. Vector Space Model (VSM)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="nlp.html">3. Natural Language Processing (NLP)</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">4. Wikinterface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-wikinterface.search">Search</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-wikinterface.text">Text</a></li>
 </ul>
 </li>
@@ -236,6 +237,38 @@ This dictionary has keys ‘from’ and ‘to’.</p></li>
 </dl>
 </dd></dl>
 
+<div class="section" id="module-wikinterface.search">
+<span id="search"></span><h2>Search<a class="headerlink" href="#module-wikinterface.search" title="Permalink to this headline">¶</a></h2>
+<p>The search collector is used to look for articles containing a particular list of terms.</p>
+<dl class="function">
+<dt id="wikinterface.search.collect">
+<code class="sig-prename descclassname">wikinterface.search.</code><code class="sig-name descname">collect</code><span class="sig-paren">(</span><em class="sig-param">terms</em>, <em class="sig-param">limit=10</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.search.collect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Look for pages containing the given terms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>terms</strong> (<em>list of str</em><em> or </em><em>str</em>) – The search terms.</p></li>
+<li><p><strong>limit</strong> (<em>int</em>) – The number of search results to return.
+Wikipedia limits the results to 50, but the collector can fetch more.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of search results in the form of page titles.
+Their content can be fetched using these titles.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – when the limit is not a positive number.</p></li>
+<li><p><strong>ValueError</strong> – when the limit is not an integer.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
 <div class="section" id="module-wikinterface.text">
 <span id="text"></span><h2>Text<a class="headerlink" href="#module-wikinterface.text" title="Permalink to this headline">¶</a></h2>
 <p>Wikipedia articles are predominantly made up of text.
@@ -256,6 +289,9 @@ This module contains functions to help extract that text from articles.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dict</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>RuntimeError</strong> – when the request is an error.</p>
 </dd>
 </dl>
 </dd></dl>
