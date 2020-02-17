@@ -132,6 +132,7 @@ wikipedia_tests() {
 
 	python3 -m unittest eventdt.wikinterface.tests.test_package
 	python3 -m unittest eventdt.wikinterface.tests.test_text
+	python3 -m unittest eventdt.wikinterface.tests.test_search
 }
 
 if getopts "t:" o
