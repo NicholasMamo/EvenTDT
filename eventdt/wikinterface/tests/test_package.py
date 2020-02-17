@@ -124,3 +124,16 @@ class TestWikinterface(unittest.TestCase):
 		}
 
 		self.assertEqual(API_ENDPOINT + "format=json&action=query&limit=0", construct_url(parameters))
+
+	def test_construct_url_with_null_parameter(self):
+		"""
+		Test that when constructing a URL with a parameter that has a value of `None`, it is excluded.
+		"""
+
+		parameters = {
+			'format': 'json',
+			'action': 'query',
+			'excontinue': None,
+		}
+
+		self.assertEqual(API_ENDPOINT + "format=json&action=query", construct_url(parameters))

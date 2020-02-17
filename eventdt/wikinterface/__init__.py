@@ -44,7 +44,7 @@ def construct_url(parameters=None):
 	"""
 	if parameters:
 		parameters = {
-			key: value for key, value in parameters.items() if type(value) is not bool or value
+			key: value for key, value in parameters.items() if (type(value) is not bool or value) and value is not None
 		}
 
 		parameter_strings = [ f"{key}" if type(value) is bool else f"{key}={value}" for key, value in parameters.items() ]
