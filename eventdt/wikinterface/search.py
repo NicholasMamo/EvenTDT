@@ -57,7 +57,7 @@ def collect(terms, limit=10):
 	Searching until the number of articles that are required have been found or there are no more results.
 	Keep only the page titles.
 	"""
-	while len(results) < limit and continue:
+	while len(articles) < limit:
 		endpoint = construct_url(parameters)
 		response = urllib.request.urlopen(endpoint)
 		response = json.loads(response.read().decode("utf-8"))
