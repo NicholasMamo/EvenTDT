@@ -40,7 +40,7 @@ function getAwayPlayers() {
 function getHomeSubstitutes() {
 	substitutes = Array();
 	jQuery.each($$(".ply[data-type='home-player-name']"), function(index, element) {
-		substitutes.push($(element).text().trim().substr(4));
+		substitutes.push($(element).text().trim());
 	});
 	return substitutes.slice(0, substitutes.length - 2);
 }
@@ -54,7 +54,7 @@ function getHomeSubstitutes() {
 function getAwaySubstitutes() {
 	substitutes = Array();
 	jQuery.each($$(".ply[data-type='away-player-name']"), function(index, element) {
-		substitutes.push($(element).text().trim().substr(4));
+		substitutes.push($(element).text().trim());
 	});
 	return substitutes.slice(0, substitutes.length - 2);
 }
