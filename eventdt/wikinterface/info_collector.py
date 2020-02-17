@@ -11,14 +11,14 @@ import urllib.request
 from .textcollector import TextCollector
 from .wikicollector import WikiCollector
 
-class PageType(Enum):
+class ArticleType(Enum):
 	"""
-	The type of page.
+	The type of article.
 
 	:cvar NORMAL: A normal article on Wikipedia.
 	:vartype NORMAL: int
 	:cvar DISAMBIGUATION: An article that could not be resolved,
-		These articles contain links to other articles.
+						  These articles contain links to other articles.
 	:vartype NORMAL: int
 	:cvar MISSING: No article exists with the given name.
 	:vartype MISSING: int
