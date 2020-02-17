@@ -26,9 +26,21 @@ def collect(terms, limit=10):
 	:return: A list of search results in the form of page titles.
 			 Their content can be fetched using these titles.
 	:rtype: list of str
+
+	:raises ValueError: when the limit is not a positive number.
+	:raises ValueError: when the limit is not an integer.
 	"""
 
 	articles = [ ]
+
+	"""
+	Validate the inputs.
+	"""
+	if limit <= 0:
+		raise ValueError(f"A positive number of articles must be requested, received {limit}")
+
+	if type(limit) is not int:
+		raise ValueError(f"An integer must be requested, received {limit}")
 
 	terms = terms if type(terms) is list else [ terms ]
 
