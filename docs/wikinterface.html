@@ -90,6 +90,7 @@
 <li class="toctree-l1"><a class="reference internal" href="vsm.html">2. Vector Space Model (VSM)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="nlp.html">3. Natural Language Processing (NLP)</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">4. Wikinterface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-wikinterface.info">Info</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-wikinterface.search">Search</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-wikinterface.text">Text</a></li>
 </ul>
@@ -214,7 +215,7 @@ If a parameter is a boolean and <cite>False</cite>, it is excluded altogether</p
 
 <dl class="function">
 <dt id="wikinterface.revert_redirects">
-<code class="sig-prename descclassname">wikinterface.</code><code class="sig-name descname">revert_redirects</code><span class="sig-paren">(</span><em class="sig-param">results</em>, <em class="sig-param">redirects</em>, <em class="sig-param">keep_redirects=False</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.revert_redirects" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">wikinterface.</code><code class="sig-name descname">revert_redirects</code><span class="sig-paren">(</span><em class="sig-param">results</em>, <em class="sig-param">redirects</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.revert_redirects" title="Permalink to this definition">¶</a></dt>
 <dd><p>Revert redirections.</p>
 <p>The function takes in search results with keys as the page titles.
 The redirections are those retorned by Wikipedia to redirect these keys.</p>
@@ -225,7 +226,6 @@ The redirections are those retorned by Wikipedia to redirect these keys.</p>
 It is assumed that the keys are the page titles.</p></li>
 <li><p><strong>redirects</strong> (<em>dict</em>) – The redirects provided by Wikipedia.
 This dictionary has keys ‘from’ and ‘to’.</p></li>
-<li><p><strong>keep_redirects</strong> (<em>bool</em>) – A boolean indicating whether the redirected pages should be retained.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -237,6 +237,61 @@ This dictionary has keys ‘from’ and ‘to’.</p></li>
 </dl>
 </dd></dl>
 
+<div class="section" id="module-wikinterface.info">
+<span id="info"></span><h2>Info<a class="headerlink" href="#module-wikinterface.info" title="Permalink to this headline">¶</a></h2>
+<p>The info collector fetches information about Wikipedia pages.</p>
+<dl class="class">
+<dt id="wikinterface.info.ArticleType">
+<em class="property">class </em><code class="sig-prename descclassname">wikinterface.info.</code><code class="sig-name descname">ArticleType</code><a class="headerlink" href="#wikinterface.info.ArticleType" title="Permalink to this definition">¶</a></dt>
+<dd><p>The type of article.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>NORMAL</strong> (<em>int</em>) – A normal article on Wikipedia.</p></li>
+<li><p><strong>DISAMBIGUATION</strong> – An article that could not be resolved,
+These articles contain links to other articles.</p></li>
+<li><p><strong>MISSING</strong> (<em>int</em>) – No article exists with the given name.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="wikinterface.info.types">
+<code class="sig-prename descclassname">wikinterface.info.</code><code class="sig-name descname">types</code><span class="sig-paren">(</span><em class="sig-param">titles</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.info.types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the type of page each page title returns.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>titles</strong> (<em>list of str</em><em> or </em><em>str</em>) – The titles of the pages whose types are desired.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary with page titles as keys and the types as <a class="reference internal" href="#wikinterface.info.ArticleType" title="wikinterface.info.ArticleType"><code class="xref py py-class docutils literal notranslate"><span class="pre">wikinterface.info.ArticleType</span></code></a> values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="wikinterface.info.is_person">
+<code class="sig-prename descclassname">wikinterface.info.</code><code class="sig-name descname">is_person</code><span class="sig-paren">(</span><em class="sig-param">titles</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.info.is_person" title="Permalink to this definition">¶</a></dt>
+<dd><p>Go through each page title and check whether it represents a person.
+The function assumes that an article is about a person if it mentions a birth date.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>titles</strong> (<em>list of str</em><em> or </em><em>str</em>) – The titles of the pages that need to be checked.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary with page titles as keys and booleans as values indicating whether the article represents a person.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
 <div class="section" id="module-wikinterface.search">
 <span id="search"></span><h2>Search<a class="headerlink" href="#module-wikinterface.search" title="Permalink to this headline">¶</a></h2>
 <p>The search collector is used to look for articles containing a particular list of terms.</p>

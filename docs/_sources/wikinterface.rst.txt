@@ -13,6 +13,14 @@ Wikinterface is an easy-to-use interface for Wikipedia's API.
    :private-members:
    :special-members:
 
+Info
+====
+
+.. automodule:: wikinterface.info
+   :members:
+   :private-members:
+   :special-members:
+
 Search
 ======
 
