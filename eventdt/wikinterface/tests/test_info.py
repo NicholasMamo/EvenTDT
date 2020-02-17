@@ -90,3 +90,89 @@ class TestInfo(unittest.TestCase):
 		self.assertEqual(len(pages), len(types))
 		self.assertEqual(set(pages), set(list(types.keys())))
 		self.assertEqual(info.ArticleType.DISAMBIGUATION, types['Rafael'])
+
+	def test_is_person_no_articles(self):
+		"""
+		Test that when no articles are given, an empty dictionary is returned.
+		"""
+
+		self.assertFalse(info.is_person([ ]))
+
+	def test_is_person(self):
+		"""
+		Test checking whether an individual article is about a person.
+		"""
+
+		page = 'Rudi Garcia'
+		classes = info.is_person(page)
+		self.assertTrue(classes[page])
+
+	def test_is_person_pattern2(self):
+		"""
+		Test that an article with pattern 2 is correctly captured as a person.
+		"""
+
+		page = 'Dario Benedetto'
+		classes = info.is_person(page)
+		self.assertTrue(classes[page])
+
+	def test_is_person_pattern4(self):
+		"""
+		Test that an article with pattern 2 is correctly captured as a person.
+		"""
+
+		page = 'Valentina Shevchenko (fighter)'
+		classes = info.is_person(page)
+		self.assertTrue(classes[page])
+
+	def test_is_person_multiple_pages(self):
+		"""
+		Test checking whether a number of articles are about persons.
+		"""
+
+		pages = [ 'Lyon', 'Bordeaux' ]
+		classes = info.is_person(pages)
+		self.assertEqual(len(pages), len(classes))
+		self.assertFalse(any(classes[page] for page in pages))
+
+	def test_is_person_with_redirects(self):
+		"""
+		Test checking whether an article that redirects still checks that the subject is a person.
+		"""
+
+		page = 'Messi'
+		classes = info.is_person(page)
+		self.assertTrue(page in classes)
+		self.assertEqual(2, len(classes))
+		self.assertTrue(all(classes.values()))
+
+	def test_is_person_many_pages(self):
+		"""
+		Test checking whether many pages are about persons.
+		"""
+
+		pages = [ 'Anthony Lopes', 'Mapou Yanga-Mbiwa', 'Joachim Andersen (footballer)',
+				  'Rafael (footballer, born 1990)',  'Jason Denayer',
+				  'Houssem Aouar',  'Moussa Dembélé (French_footballer)',
+				  'Memphis Depay', 'Thiago Mendes', 'Léo Dubois', 'Oumar Solet',
+				  'Jeff Reine-Adélaïde', 'Rayan Cherki', 'Bruno Guimarães',
+				  'Amine Gouiri', 'Fernando Marçal', 'Karl Toko Ekambi',
+				  'Kenny Tete', 'Maxence Caqueret', 'Camilo Reijers de Oliveira',
+				  'Maxwel Cornet', 'Youssouf Koné (footballer, born 1995)',
+				  'Ciprian Tătărușanu', 'Boubacar Fofana', 'Bertrand Traoré',
+				  'Martin Terrier', 'Marcelo (footballer, born 1987)',
+				  'Jean Lucas Oliveira', 'Lucas Tousart' ]
+
+		classes = info.is_person(pages)
+		self.assertEqual(len(pages), len(classes))
+		self.assertTrue(all(classes.values()))
+
+	def test_is_person_with_accent(self):
+		"""
+		Test checking whether a page that has an accent in it can still be assessed.
+		"""
+
+		page = 'Jeff Reine-Adélaïde'
+		classes = info.is_person(page)
+		self.assertEqual(1, len(classes))
+		self.assertTrue(all(classes.values()))
