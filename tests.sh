@@ -130,7 +130,7 @@ vector_tests() {
 wikipedia_tests() {
 	echo -e "${HIGHLIGHT}Wikipedia${DEFAULT}"
 
-	python3 -m unittest eventdt.wikinterface.tests.test_module
+	python3 -m unittest eventdt.wikinterface.tests.test_package
 }
 
 if getopts "t:" o

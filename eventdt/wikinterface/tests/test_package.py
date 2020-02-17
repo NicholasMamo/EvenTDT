@@ -1,5 +1,5 @@
 """
-Run unit tests on the :module:`wikinterface` module.
+Run unit tests on the wikinterface package.
 """
 
 import os
@@ -14,7 +14,7 @@ from wikinterface import *
 
 class TestWikinterface(unittest.TestCase):
 	"""
-	Test the :module:`wikinterface` module.
+	Test the wikinterface package.
 	"""
 
 	def test_revert_redirects(self):
