@@ -128,11 +128,9 @@ vector_tests() {
 }
 
 wikipedia_tests() {
-	# echo -e "${HIGHLIGHT}Wikipedia${DEFAULT}"
-	#
-	# echo -e "${HIGHLIGHT}Link Collector${DEFAULT}"
-	# python3 -m unittest eventdt.wikinterface.tests.test_linkcollector
-	return
+	echo -e "${HIGHLIGHT}Wikipedia${DEFAULT}"
+
+	python3 -m unittest eventdt.wikinterface.tests.test_module
 }
 
 if getopts "t:" o
