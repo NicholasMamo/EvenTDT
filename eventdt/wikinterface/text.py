@@ -64,7 +64,7 @@ def collect(titles, introduction_only=False):
 			response = urllib.request.urlopen(endpoint)
 			response = json.loads(response.read().decode("utf-8"))
 
-			if is_error_response(response);
+			if is_error_response(response):
 				raise RuntimeError(response)
 
 			"""
