@@ -4,6 +4,10 @@ This module makes it easier to access the API.
 """
 
 API_ENDPOINT = "https://en.wikipedia.org/w/api.php?"
+"""
+:var API_ENDPOINT: The Wikipedia API endpoint.
+:vartype API_ENDPOINT: str
+"""
 
 def is_error_response(response):
 	"""
