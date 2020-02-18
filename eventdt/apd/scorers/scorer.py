@@ -9,7 +9,6 @@ Each such list contains another list of candidates.
 
 The functionality revolves around one method: the :meth:`apd.scorers.scorer.Scorer.score` method.
 The function returns a dictionary of candidate participants and their scores.
-
 The scores may be normalized to make them comparable.
 This can be a simple rescaling function.
 """

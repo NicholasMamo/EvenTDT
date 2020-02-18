@@ -1,8 +1,9 @@
 """
 The extractor is the first step in the APD process.
 An extractor looks for candidate participants in the corpus of documents.
+All extractors take the corpus as an input.
 
-The extractor returns all the candidates in each document.
+The extractor returns the candidates in each document.
 The functionality revolves around one method: the :meth:`apd.extractors.extractor.Extractor.extract` method.
 """
 

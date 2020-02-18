@@ -24,6 +24,13 @@ The APD process revolves around a central class: the :class:`apd.participant_det
 The class constructor accepts classes representing these six steps, and calls their main functions.
 All of the step implementations are separated into local (using the corpus) or external (using a different source).
 
+Each step is represented by a base class.
+Base classes define the minimum inputs and describe the expected outputs of each step.
+Each base class also has a central function around which processing revolves.
+For example, the :class:`apd.extractors.extractor` class has a :func:`apd.extractors.extractor.extract` function.
+These classes go through the :class:`apd.participant_detector.ParticipantDetector`
+Therefore inherited classes should accept any parameters not specified in these base functions as constructor parameters.
+
 Extractors
 ==========
 
