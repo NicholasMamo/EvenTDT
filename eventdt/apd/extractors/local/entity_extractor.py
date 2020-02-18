@@ -14,9 +14,26 @@ from ..extractor import Extractor
 class EntityExtractor(Extractor):
 	"""
 	The entity extractor uses NLTK to extract named entities from a corpus of documents.
+
+	:ivar binary: A boolean indicating whether named entity extraction should be binary.
+				  If true, all named entities have the same type.
+				  This is enabled by default to minimize false negatives.
+	:vartype binary: bool
 	"""
 
-	def extract(self, corpus, binary=True, *args, **kwargs):
+	def __init__(self, binary=True):
+		"""
+		Create the extractor.
+
+		:param binary: A boolean indicating whether named entity extraction should be binary.
+					   If true, all named entities have the same type.
+					   This is enabled by default to minimize false negatives.
+		:type binary: bool
+		"""
+
+		self.binary = binary
+
+	def extract(self, corpus, *args, **kwargs):
 		"""
 		Extract all the named entities from the corpus.
 		The output is a list of lists.
@@ -25,10 +42,6 @@ class EntityExtractor(Extractor):
 
 		:param corpus: The corpus of documents where to extract candidate participants.
 		:type corpus: list
-		:param binary: A boolean indicating whether named entity extraction should be binary.
-					   If true, all named entities have the same type.
-					   This is enabled by default to minimize false negatives.
-		:type binary: bool
 
 		:return: A list of candidates separated by the document in which they were found.
 		:rtype: list
@@ -44,7 +57,7 @@ class EntityExtractor(Extractor):
 			"""
 			sentences = nltk.sent_tokenize(document.text)
 			for sentence in sentences:
-				chunks = self._extract_entities(sentence, binary)
+				chunks = self._extract_entities(sentence)
 				named_entities = self._combine_adjacent_entities(chunks)
 				document_entities.extend(named_entities)
 
@@ -52,15 +65,12 @@ class EntityExtractor(Extractor):
 
 		return candidates
 
-	def _extract_entities(self, sentence, binary):
+	def _extract_entities(self, sentence):
 		"""
 		Extract the named entities from the given sentence.
 
 		:param sentence: The sentence from where to extract named entities.
 		:type sentence: str
-		:param binary: A boolean indicating whether named entity extraction should be binary.
-					   If true, all named entities have the same type.
-		:type binary: bool
 
 		:return: A list of chunks, which may be simple strings or named entities.
 		:rtype: list of str or nltk.tree.Tree
@@ -68,7 +78,7 @@ class EntityExtractor(Extractor):
 
 		tokens = nltk.word_tokenize(sentence)
 		pos_tags = nltk.pos_tag(tokens)
-		return [ chunk for chunk in nltk.ne_chunk(pos_tags, binary=binary) ]
+		return [ chunk for chunk in nltk.ne_chunk(pos_tags, binary=self.binary) ]
 
 	def _combine_adjacent_entities(self, chunks):
 		"""

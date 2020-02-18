@@ -157,11 +157,12 @@ class TestExtractors(unittest.TestCase):
 		]
 		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
 
-		extractor = EntityExtractor()
-		candidates = extractor.extract(corpus, binary=False)
+		extractor = EntityExtractor(binary=False)
+		candidates = extractor.extract(corpus)
 		self.assertEqual(set([ "lyon", "rudi", "garcia" ]), set(candidates[0])) # 'Rudi' and 'Garcia' mistakenly have different types
 
-		candidates = extractor.extract(corpus, binary=True)
+		extractor = EntityExtractor(binary=True)
+		candidates = extractor.extract(corpus)
 		self.assertEqual(set([ "lyon", "rudi garcia" ]), set(candidates[0]))
 
 	def test_comma_separated_entities(self):
