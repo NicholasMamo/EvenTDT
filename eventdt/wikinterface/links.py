@@ -31,7 +31,7 @@ def collect(titles, separate=True, encoding=None, introduction_only=False):
 	:raises RuntimeError: when the request returns an error response.
 	"""
 
-	links = { } if separate else [ ]
+	links = { }
 
 	titles = titles if type(titles) is list else [ titles ]
 
@@ -39,6 +39,10 @@ def collect(titles, separate=True, encoding=None, introduction_only=False):
 	"""
 	Some parameters are required only when using the introduction to collect links.
 	Similarly, others are required only when all links are required.
+	
+	By default, `plcontinue` is not included.
+	It is added when a valid value is given.
+	When it changes to `None`, the algorithm stops collecting links.
 	"""
 	parameters = {
 		'format': 'json',
@@ -50,7 +54,7 @@ def collect(titles, separate=True, encoding=None, introduction_only=False):
 		'explaintext': introduction_only,
 		'pllimit': 500 if not introduction_only else False,
 		'titles': urllib.parse.quote('|'.join(titles)),
-		'plcontinue': 0,
+		'plcontinue': False,
 	}
 
 	"""
@@ -81,8 +85,8 @@ def collect(titles, separate=True, encoding=None, introduction_only=False):
 			if is_error_response(response):
 				raise RuntimeError(response)
 
-			pages = response["query"]["pages"]
-			redirects = response["query"]["redirects"] if "redirects" in response["query"] else {}
+			pages = response['query']['pages']
+			redirects = response['query']['redirects'] if 'redirects' in response['query'] else {}
 
 			"""
 			Extract the links from each article.
@@ -91,7 +95,7 @@ def collect(titles, separate=True, encoding=None, introduction_only=False):
 			"""
 			for page in pages:
 				internal_links = _get_intro_links(pages[page], encoding=encoding) if introduction_only else _get_all_links(pages[page], encoding=encoding)
-				links[pages[page]["title"]] = links.get(pages[page]["title"], []) + internal_links
+				links[pages[page]['title']] = links.get(pages[page]['title'], []) + internal_links
 
 			links = revert_redirects(links, redirects)
 
@@ -100,7 +104,7 @@ def collect(titles, separate=True, encoding=None, introduction_only=False):
 			If the limit was reached, the collector must have stopped midway
 			Therefore, the endpoint is updated to continue looking from where it left off
 			"""
-			if "continue" in response:
+			if 'continue' in response:
 				parameters['plcontinue'] = response['continue']['plcontinue']
 			else:
 				break
@@ -112,7 +116,7 @@ def collect(titles, separate=True, encoding=None, introduction_only=False):
 	if separate:
 		return { page: list(set(links[page])) for page in links }
 	else:
-		return list(set([ link for link in link_set for link_set in links.values() ]))
+		return list(set([ link for link_set in links for link in link_set ]))
 
 def collect_recursive(titles, level, collected_links=None, separate=True, *args, **kwargs):
 	"""
