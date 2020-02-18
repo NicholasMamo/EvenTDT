@@ -39,7 +39,7 @@ def collect(titles, separate=True, encoding=None, introduction_only=False):
 	"""
 	Some parameters are required only when using the introduction to collect links.
 	Similarly, others are required only when all links are required.
-	
+
 	By default, `plcontinue` is not included.
 	It is added when a valid value is given.
 	When it changes to `None`, the algorithm stops collecting links.
@@ -116,7 +116,7 @@ def collect(titles, separate=True, encoding=None, introduction_only=False):
 	if separate:
 		return { page: list(set(links[page])) for page in links }
 	else:
-		return list(set([ link for link_set in links for link in link_set ]))
+		return list(set([ link for link_set in links.values() for link in link_set ]))
 
 def collect_recursive(titles, level, collected_links=None, separate=True, *args, **kwargs):
 	"""
