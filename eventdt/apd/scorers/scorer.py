@@ -22,13 +22,16 @@ class Scorer(ABC):
 	"""
 
 	@abstractmethod
-	def score(self, candidates, *args, **kwargs):
+	def score(self, candidates, normalize_scores=True, *args, **kwargs):
 		"""
 		Score the candidate participants that were found in the corpus.
 
 		:param candidates: A list of candidate praticipants separated by the document in which they appeared.
 						   The input candidates should be the product of a :class:`apd.extractors.extractor.Extractor` process.
 		:type candidates: list
+		:param normalize_scores: A boolean indicating whether the scores should be normalized.
+								 Here, normalization means rescaling between 0 and 1.
+		:type normalize_scores: bool
 
 		:return: A dictionary of candidate participants and their associated scores.
 		:rtype: dict
