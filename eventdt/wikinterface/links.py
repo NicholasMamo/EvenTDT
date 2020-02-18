@@ -149,6 +149,8 @@ def collect_recursive(titles, level, collected_links=None, separate=True, *args,
 	if type(level) is not int:
 		raise ValueError(f"The level must be an integer; received {level}")
 
+	titles = titles if type(titles) is list else [ titles ]
+
 	collected_links = collected_links or [ ]
 
 	"""
