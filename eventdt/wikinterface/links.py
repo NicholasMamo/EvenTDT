@@ -66,6 +66,7 @@ def collect(titles, separate=True, introduction_only=False):
 								separate=True, introduction_only=introduction_only)
 			for title, link_set in new_links.items():
 				links[title] = links.get(title, []) + link_set
+		return links
 
 	"""
 	If page titles are given, collect their links.
