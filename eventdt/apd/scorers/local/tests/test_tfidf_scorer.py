@@ -63,9 +63,9 @@ class TestTFIDFScorer(unittest.TestCase):
 
 		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
 
-		extractor = TokenExtractor()
+		extractor = TokenExtractor(tokenizer=tokenizer)
 		scorer = TFIDFScorer({ 'erdogan': 1, 'threats': 2 }, 10)
-		candidates = extractor.extract(corpus, tokenizer=tokenizer)
+		candidates = extractor.extract(corpus)
 		scores = scorer.score(candidates)
 		self.assertGreater(scores.get('erdogan'), scores.get('damascus'))
 		self.assertEqual(scores.get('everywhere'), scores.get('disconnected')) # they appear the same number of times
@@ -153,9 +153,9 @@ class TestTFIDFScorer(unittest.TestCase):
 
 		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
 
-		extractor = TokenExtractor()
+		extractor = TokenExtractor(tokenizer=tokenizer)
 		scorer = TFIDFScorer({ 'erdogan': 1, 'threats': 2 }, 10)
-		candidates = extractor.extract(corpus, tokenizer=tokenizer)
+		candidates = extractor.extract(corpus)
 		scores = scorer.score(candidates, normalize_scores=False)
 		self.assertEqual(3 * math.log(10 / 1, 10), scores.get('erdogan'))
 		self.assertEqual(3 * math.log(10 / 2, 10), scores.get('threats'))
@@ -176,9 +176,9 @@ class TestTFIDFScorer(unittest.TestCase):
 
 		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
 
-		extractor = TokenExtractor()
+		extractor = TokenExtractor(tokenizer=tokenizer)
 		scorer = TFIDFScorer({ 'erdogan': 1, 'threats': 2 }, 10)
-		candidates = extractor.extract(corpus, tokenizer=tokenizer)
+		candidates = extractor.extract(corpus)
 		scores = scorer.score(candidates, normalize_scores=True)
 		self.assertEqual(1, scores.get('erdogan'))
 
@@ -197,8 +197,8 @@ class TestTFIDFScorer(unittest.TestCase):
 
 		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
 
-		extractor = TokenExtractor()
+		extractor = TokenExtractor(tokenizer=tokenizer)
 		scorer = TFIDFScorer({ 'erdogan': 3, 'threats': 2 }, 10)
-		candidates = extractor.extract(corpus, tokenizer=tokenizer)
+		candidates = extractor.extract(corpus)
 		scores = scorer.score(candidates, normalize_scores=False)
 		self.assertEqual(2 * math.log(10 / 3, 10), scores.get('erdogan'))

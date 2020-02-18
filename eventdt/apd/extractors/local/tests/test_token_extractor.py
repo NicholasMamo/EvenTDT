@@ -112,7 +112,9 @@ class TestExtractors(unittest.TestCase):
 		extractor = TokenExtractor()
 		candidates = extractor.extract(corpus)
 		self.assertEqual(set([ "manchest", "unit", "back", "win", "way" ]), set(candidates[0]))
-		candidates = extractor.extract(corpus, tokenizer=Tokenizer(stopwords=stopwords.words('english'), stem=False))
+
+		extractor = TokenExtractor(tokenizer=Tokenizer(stopwords=stopwords.words('english'), stem=False))
+		candidates = extractor.extract(corpus)
 		self.assertEqual(set([ "manchester", "united", "back", "winning", "ways" ]), set(candidates[0]))
 
 	@ignore_warnings
@@ -133,5 +135,7 @@ class TestExtractors(unittest.TestCase):
 		extractor = TokenExtractor()
 		candidates = extractor.extract(corpus)
 		self.assertEqual(1, candidates[0].count('manchester'))
-		candidates = extractor.extract(corpus, tokenizer=tokenizer)
+
+		extractor = TokenExtractor(tokenizer=tokenizer)
+		candidates = extractor.extract(corpus)
 		self.assertEqual(2, candidates[0].count('manchester'))

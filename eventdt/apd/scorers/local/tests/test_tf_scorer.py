@@ -129,9 +129,9 @@ class TestTFScorer(unittest.TestCase):
 
 		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
 
-		extractor = TokenExtractor()
+		extractor = TokenExtractor(tokenizer=tokenizer)
 		scorer = TFScorer()
-		candidates = extractor.extract(corpus, tokenizer=tokenizer)
+		candidates = extractor.extract(corpus)
 		scores = scorer.score(candidates, normalize_scores=False)
 		self.assertEqual(3, scores.get('erdogan'))
 
@@ -172,8 +172,8 @@ class TestTFScorer(unittest.TestCase):
 
 		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
 
-		extractor = TokenExtractor()
+		extractor = TokenExtractor(tokenizer=tokenizer)
 		scorer = TFScorer()
-		candidates = extractor.extract(corpus, tokenizer=tokenizer)
+		candidates = extractor.extract(corpus)
 		scores = scorer.score(candidates, normalize_scores=False)
 		self.assertEqual(2, scores.get('erdogan'))

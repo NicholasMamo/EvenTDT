@@ -9,9 +9,26 @@ class TokenExtractor(Extractor):
 	"""
 	The token extractor does not perform any filtering whatsoever on the corpus.
 	It returns all tokens as potential candidates.
+
+	:ivar tokenizer: The tokenizer used to extract the tokens.
+					 If it is given, the tokens are extracted anew.
+					 Otherwise, the document dimensions are used instead.
+	:vartype tokenizer: :class:`nlp.tokenizer.Tokenizer` or None
 	"""
 
-	def extract(self, corpus, tokenizer=None, *args, **kwargs):
+	def __init__(self, tokenizer=None):
+		"""
+		Create the extractor.
+
+		:param tokenizer: The tokenizer used to extract the tokens.
+						  If it is given, the tokens are extracted anew.
+						  Otherwise, the document dimensions are used instead.
+		:type tokenizer: :class:`nlp.tokenizer.Tokenizer` or None
+		"""
+
+		self.tokenizer = tokenizer
+
+	def extract(self, corpus, *args, **kwargs):
 		"""
 		Extract all the potential participants from the corpus.
 		The output is a list of lists.
@@ -20,16 +37,12 @@ class TokenExtractor(Extractor):
 
 		:param corpus: The corpus of documents where to extract candidate participants.
 		:type corpus: list
-		:param tokenizer: The tokenizer used to extract the tokens anew.
-						  If it is given, the tokens are extracted anew.
-						  Otherwise, the document dimensions are used instead.
-		:type tokenizer: None or :class:`nlp.tokenizer.Tokenizer`
 
 		:return: A list of candidates separated by the document in which they were found.
 		:rtype: list of list of str
 		"""
 
-		if tokenizer:
-			return [ tokenizer.tokenize(document.text) for document in corpus ]
+		if self.tokenizer:
+			return [ self.tokenizer.tokenize(document.text) for document in corpus ]
 		else:
 			return [ [ token for token in document.dimensions ] for document in corpus ]
