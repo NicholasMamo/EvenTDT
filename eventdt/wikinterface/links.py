@@ -163,7 +163,10 @@ def collect_recursive(titles, level, collected_links=None, separate=True, *args,
 	if level <= 1:
 		return links
 
-	next_links = collect_recursive(list(links.keys()), level=(level - 1),
+	if separate:
+		next_titles = [ link for link_set in links.values() for link in link_set ]
+
+	next_links = collect_recursive(next_titles, level=(level - 1),
 								   collected_links=list(set(titles + collected_links)),
 								   separate=separate, *args, **kwargs)
 
