@@ -55,38 +55,34 @@ def collect(titles, separate=True, introduction_only=False):
 		'plcontinue': False,
 	}
 
-	"""
-	When there are many page titles, the GET parameters could become far too long.
-	Therefore in such cases, stagger the process.
-	Pages are always fetched separately, and then merged later if need be.
-	"""
 	if len(urllib.parse.quote('|'.join(titles))) > 1024:
+		"""
+		When there are many page titles, the GET parameters could become far too long.
+		Therefore in such cases, stagger the process.
+		Pages are always fetched separately, and then merged later if need be.
+		"""
 		for i in range(0, math.ceil(len(titles)/float(stagger))):
 			new_links = collect(titles[(i * stagger):((i + 1) * stagger)],
 								separate=True, introduction_only=introduction_only)
 			for title, link_set in new_links.items():
 				links[title] = links.get(title, []) + link_set
-		return links
-
-	"""
-	At most, 50 pages may be requested at a time.
-	If the number of titles exceeds this, the function splits the calls.
-	"""
-	if len(titles) > 50:
+	elif len(titles) > 50:
+		"""
+		At most, 50 pages may be requested at a time.
+		If the number of titles exceeds this, the function splits the calls.
+		"""
 		for i in range(0, math.ceil(len(titles)/50)):
 			new_links = collect(titles[(i * 50):((i + 1) * 50)],
 								separate=True, introduction_only=introduction_only)
 			for title, link_set in new_links.items():
 				links[title] = links.get(title, []) + link_set
-		return links
-
-	"""
-	If page titles are given, collect their links.
-	Pages are returned 20 at a time.
-	When this happens, the response contains a continue marker.
-	The loop continues fetching requests until there are no such markers.
-	"""
-	if len(titles):
+	elif len(titles):
+		"""
+		If page titles are given, collect their links.
+		Pages are returned 20 at a time.
+		When this happens, the response contains a continue marker.
+		The loop continues fetching requests until there are no such markers.
+		"""
 		while parameters['plcontinue'] is not None:
 			endpoint = construct_url(parameters)
 			response = urllib.request.urlopen(endpoint)
@@ -176,8 +172,7 @@ def collect_recursive(titles, level, collected_links=None, separate=True, *args,
 	if level <= 1:
 		return links
 
-	if separate:
-		next_titles = [ link for link_set in links.values() for link in link_set ]
+	next_titles = [ link for link_set in links.values() for link in link_set ] if separate else links
 
 	next_links = collect_recursive(next_titles, level=(level - 1),
 								   collected_links=list(set(titles + collected_links)),
