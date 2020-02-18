@@ -194,7 +194,7 @@ All of the step implementations are separated into local (using the corpus) or e
 <p>Each step is represented by a base class.
 Base classes define the minimum inputs and describe the expected outputs of each step.
 Each base class also has a central function around which processing revolves.
-For example, the <a class="reference internal" href="#module-apd.extractors.extractor" title="apd.extractors.extractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.extractors.extractor</span></code></a> class has a <code class="xref py py-func docutils literal notranslate"><span class="pre">apd.extractors.extractor.extract()</span></code> function.
+For example, the <a class="reference internal" href="#module-apd.extractors.extractor" title="apd.extractors.extractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.extractors.extractor</span></code></a> class has a <a class="reference internal" href="#apd.extractors.extractor.Extractor.extract" title="apd.extractors.extractor.Extractor.extract"><code class="xref py py-func docutils literal notranslate"><span class="pre">apd.extractors.extractor.Extractor.extract()</span></code></a> function.
 These classes go through the <code class="xref py py-class docutils literal notranslate"><span class="pre">apd.participant_detector.ParticipantDetector</span></code>
 Therefore inherited classes should accept any parameters not specified in these base functions as constructor parameters.</p>
 <div class="section" id="module-apd.extractors.extractor">

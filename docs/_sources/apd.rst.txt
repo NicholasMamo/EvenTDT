@@ -27,7 +27,7 @@ All of the step implementations are separated into local (using the corpus) or e
 Each step is represented by a base class.
 Base classes define the minimum inputs and describe the expected outputs of each step.
 Each base class also has a central function around which processing revolves.
-For example, the :class:`apd.extractors.extractor` class has a :func:`apd.extractors.extractor.extract` function.
+For example, the :class:`apd.extractors.extractor` class has a :func:`apd.extractors.extractor.Extractor.extract` function.
 These classes go through the :class:`apd.participant_detector.ParticipantDetector`
 Therefore inherited classes should accept any parameters not specified in these base functions as constructor parameters.
 

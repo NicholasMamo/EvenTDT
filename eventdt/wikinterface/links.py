@@ -148,8 +148,8 @@ def collect_recursive(titles, level, collected_links=None, separate=True, *args,
 			 If they are, the links are returned separated by the page in which they appear.
 	:rtype: dict or list
 
-	:raises ValueError: if the level is not positive.
-	:raises ValueError: if the level is not an integer.
+	:raises ValueError: when the level is not positive.
+	:raises ValueError: when the level is not an integer.
 	"""
 
 	if level <= 0:
