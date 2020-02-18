@@ -21,7 +21,7 @@ def collect(titles, introduction_only=False):
 	:return: A dictionary with page titles as keys and the text as values.
 	:rtype: dict
 
-	:raises RuntimeError: when the request is an error.
+	:raises RuntimeError: when the request returns an error response.
 	"""
 
 	text = { }
