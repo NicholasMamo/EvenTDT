@@ -9,7 +9,7 @@ import urllib.request
 
 from . import *
 
-def collect(titles, separate=True, encoding=None, introduction_only=False):
+def collect(titles, separate=True, introduction_only=False):
 	"""
 	Get a list of outgoing links from the given list of articles.
 
@@ -17,8 +17,6 @@ def collect(titles, separate=True, encoding=None, introduction_only=False):
 	:type titles: list of str or str
 	:param separate: A boolean indicating whether the links should be separated according to articles.
 	:type separate: bool
-	:param encoding: The encoding to use for links.
-	:type encoding: None or str
 	:param introduction_only: A boolean indicating whether the links should be fetched only from the introduction.
 	:type introduction_only: bool
 
@@ -65,8 +63,7 @@ def collect(titles, separate=True, encoding=None, introduction_only=False):
 	if len(urllib.parse.quote('|'.join(titles))) > 1024:
 		for i in range(0, math.ceil(len(titles)/float(stagger))):
 			new_links = collect(titles[(i * stagger):((i + 1) * stagger)],
-								separate=True, encoding=encoding,
-								introduction_only=introduction_only)
+								separate=True, introduction_only=introduction_only)
 			for title, link_set in new_links.items():
 				links[title] = links.get(title, []) + link_set
 
@@ -94,7 +91,7 @@ def collect(titles, separate=True, encoding=None, introduction_only=False):
 			Then, revert any redirections.
 			"""
 			for page in pages:
-				internal_links = _get_intro_links(pages[page], encoding=encoding) if introduction_only else _get_all_links(pages[page], encoding=encoding)
+				internal_links = _get_intro_links(pages[page]) if introduction_only else _get_all_links(pages[page])
 				links[pages[page]['title']] = links.get(pages[page]['title'], []) + internal_links
 
 			links = revert_redirects(links, redirects)
@@ -170,19 +167,17 @@ def collect_recursive(titles, level, collected_links=None, separate=True, *args,
 
 	if separate:
 		links.update(next_links)
-		return { page_title: list(set(links[page])) for page in links }
+		return { page: list(set(links[page])) for page in links }
 	else:
 		return list(set(links + next_links))
 
-def _get_intro_links(page, encoding=None):
+def _get_intro_links(page):
 	"""
 	Get a list of outgoing links from the introduction of the given page.
 
 	:param page: The page from where to get the introduction.
 				 The function expects a `revisions` key containing the text of the latest revision.
 	:type page: dict
-	:param encoding: The encoding to use for links.
-	:type encoding: None or str
 
 	:return: A list of outgoing links found in the given text.
 	:rtype: list of str
@@ -221,15 +216,13 @@ def _get_intro_links(page, encoding=None):
 	links = [ link[0] for link in links ]
 	return links
 
-def _get_all_links(page, encoding=None):
+def _get_all_links(page):
 	"""
 	Get a list of outgoing links from the given page.
 
 	:param page: The page from where to get the text.
 				 The function expects a `links` key containing the list of links in the article
 	:type page: dict
-	:param encoding: The encoding to use for links.
-	:type encoding: None or str
 
 	:return: A list of outgoing links found in the given text.
 	:rtype: list of str
@@ -241,5 +234,4 @@ def _get_all_links(page, encoding=None):
 		return links
 
 	links = [ link["title"] for link in page["links"] ]
-	links = [ link.encode(encoding) if encoding else link for link in links ]
 	return links
