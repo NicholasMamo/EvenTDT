@@ -12,17 +12,28 @@ class LogDFScorer(DFScorer):
 	The log scorer is based on normal summation.
 	However, the logarithms of the scores are taken.
 	In this way, the candidates are not overly-biased towards candidates that appear disproportionately.
+
+	:ivar base: The base of the logarithm.
+	:vartype base: int
 	"""
 
-	def score(self, candidates, base=10, normalize_scores=True, *args, **kwargs):
+	def __init__(self, base=10):
+		"""
+		Create the scorer.
+
+		:param base: The base of the logarithm.
+		:type base: int
+		"""
+
+		self.base = base
+
+	def score(self, candidates, normalize_scores=True, *args, **kwargs):
 		"""
 		Score the given candidates based on their relevance within the corpus.
 		The score is normalized using the maximum score
 
 		:param candidates: A list of candidates participants that were found earlier.
 		:type candidates: list
-		:param base: The base of the logarithm.
-		:type base: int
 		:param normalize_scores: A boolean indicating whether the scores should be normalized.
 								 Here, normalization means rescaling between 0 and 1.
 		:type normalize_scores: bool
@@ -32,5 +43,5 @@ class LogDFScorer(DFScorer):
 		"""
 
 		scores = self._sum(candidates)
-		scores = { candidate: math.log(score + 1, base) for candidate, score in scores.items() } # apply Laplace smoothing
+		scores = { candidate: math.log(score + 1, self.base) for candidate, score in scores.items() } # apply Laplace smoothing
 		return self._normalize(scores) if normalize_scores else scores

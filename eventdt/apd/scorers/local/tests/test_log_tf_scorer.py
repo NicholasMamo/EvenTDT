@@ -195,7 +195,7 @@ class TestLogTFScorer(unittest.TestCase):
 		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
 
 		extractor = TokenExtractor()
-		scorer = LogTFScorer()
+		scorer = LogTFScorer(base=2)
 		candidates = extractor.extract(corpus)
-		scores = scorer.score(candidates, normalize_scores=False, base=2)
+		scores = scorer.score(candidates, normalize_scores=False)
 		self.assertEqual(math.log(2 + 1, 2), scores.get('erdogan')) # apply Laplace smoothing
