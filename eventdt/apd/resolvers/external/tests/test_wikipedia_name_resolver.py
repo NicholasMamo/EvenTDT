@@ -45,7 +45,7 @@ class TestWikipediaNameResolver(unittest.TestCase):
 
 		candidates = EntityExtractor().extract(corpus, binary=True)
 		scores = TFScorer().score(candidates)
-		scores = ThresholdFilter().filter(scores, 0)
+		scores = ThresholdFilter(0).filter(scores)
 
 		resolver = WikipediaNameResolver(TF(), tokenizer, 0)
 		resolved, unresolved = resolver.resolve(scores, corpus)
@@ -69,7 +69,7 @@ class TestWikipediaNameResolver(unittest.TestCase):
 
 		candidates = EntityExtractor().extract(corpus, binary=True)
 		scores = TFScorer().score(candidates)
-		scores = ThresholdFilter().filter(scores, 0)
+		scores = ThresholdFilter(0).filter(scores)
 
 		resolver = WikipediaNameResolver(TF(), tokenizer, 0)
 		resolved, unresolved = resolver.resolve(scores, corpus)

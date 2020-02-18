@@ -42,7 +42,7 @@ class TestThresholdFilter(unittest.TestCase):
 
 		extractor = EntityExtractor()
 		scorer = TFScorer()
-		filter = ThresholdFilter()
+		filter = ThresholdFilter(0.75)
 
 		candidates = extractor.extract(corpus)
 		scores = scorer.score(candidates)
@@ -50,7 +50,7 @@ class TestThresholdFilter(unittest.TestCase):
 		self.assertEqual(1, scores.get('erdogan', 0))
 		self.assertEqual(0.5, scores.get('damascus', 0))
 
-		scores = filter.filter(scores, 0.75)
+		scores = filter.filter(scores)
 		self.assertTrue('erdogan' in scores)
 		self.assertFalse('damascus' in scores)
 
@@ -72,7 +72,7 @@ class TestThresholdFilter(unittest.TestCase):
 
 		extractor = EntityExtractor()
 		scorer = TFScorer()
-		filter = ThresholdFilter()
+		filter = ThresholdFilter(-1)
 
 		candidates = extractor.extract(corpus)
 		scores = scorer.score(candidates)
@@ -80,7 +80,7 @@ class TestThresholdFilter(unittest.TestCase):
 		self.assertEqual(1, scores.get('erdogan', 0))
 		self.assertEqual(0.5, scores.get('damascus', 0))
 
-		scores = filter.filter(scores, -1)
+		scores = filter.filter(scores)
 		self.assertTrue('erdogan' in scores)
 		self.assertTrue('damascus' in scores)
 
@@ -102,7 +102,7 @@ class TestThresholdFilter(unittest.TestCase):
 
 		extractor = EntityExtractor()
 		scorer = TFScorer()
-		filter = ThresholdFilter()
+		filter = ThresholdFilter(0)
 
 		candidates = extractor.extract(corpus)
 		scores = scorer.score(candidates)
@@ -110,7 +110,7 @@ class TestThresholdFilter(unittest.TestCase):
 		self.assertEqual(1, scores.get('erdogan', 0))
 		self.assertEqual(0.5, scores.get('damascus', 0))
 
-		scores = filter.filter(scores, 0)
+		scores = filter.filter(scores)
 		self.assertTrue('erdogan' in scores)
 		self.assertTrue('damascus' in scores)
 
@@ -132,7 +132,7 @@ class TestThresholdFilter(unittest.TestCase):
 
 		extractor = EntityExtractor()
 		scorer = TFScorer()
-		filter = ThresholdFilter()
+		filter = ThresholdFilter(0.5)
 
 		candidates = extractor.extract(corpus)
 		scores = scorer.score(candidates)
@@ -140,7 +140,7 @@ class TestThresholdFilter(unittest.TestCase):
 		self.assertEqual(1, scores.get('erdogan', 0))
 		self.assertEqual(0.5, scores.get('damascus', 0))
 
-		scores = filter.filter(scores, 0.5)
+		scores = filter.filter(scores)
 		self.assertTrue('erdogan' in scores)
 		self.assertTrue('damascus' in scores)
 
@@ -162,7 +162,7 @@ class TestThresholdFilter(unittest.TestCase):
 
 		extractor = EntityExtractor()
 		scorer = TFScorer()
-		filter = ThresholdFilter()
+		filter = ThresholdFilter(0.51)
 
 		candidates = extractor.extract(corpus)
 		scores = scorer.score(candidates)
@@ -170,7 +170,7 @@ class TestThresholdFilter(unittest.TestCase):
 		self.assertEqual(1, scores.get('erdogan', 0))
 		self.assertEqual(0.5, scores.get('damascus', 0))
 
-		scores = filter.filter(scores, 0.51)
+		scores = filter.filter(scores)
 		self.assertTrue('erdogan' in scores)
 		self.assertFalse('damascus' in scores)
 
@@ -192,7 +192,7 @@ class TestThresholdFilter(unittest.TestCase):
 
 		extractor = EntityExtractor()
 		scorer = TFScorer()
-		filter = ThresholdFilter()
+		filter = ThresholdFilter(1.1)
 
 		candidates = extractor.extract(corpus)
 		scores = scorer.score(candidates)
@@ -200,6 +200,6 @@ class TestThresholdFilter(unittest.TestCase):
 		self.assertEqual(1, scores.get('erdogan', 0))
 		self.assertEqual(0.5, scores.get('damascus', 0))
 
-		scores = filter.filter(scores, 1.1)
+		scores = filter.filter(scores)
 		self.assertFalse('erdogan' in scores)
 		self.assertFalse('damascus' in scores)

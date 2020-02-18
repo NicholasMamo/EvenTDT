@@ -44,7 +44,7 @@ class TestTokenResolver(unittest.TestCase):
 
 		candidates = TokenExtractor().extract(corpus)
 		scores = TFScorer().score(candidates)
-		scores = ThresholdFilter().filter(scores, 0)
+		scores = ThresholdFilter(0).filter(scores)
 		resolved, unresolved = TokenResolver().resolve(scores, corpus, tokenizer)
 
 		self.assertTrue('manchester' in resolved)
@@ -69,7 +69,7 @@ class TestTokenResolver(unittest.TestCase):
 
 		candidates = TokenExtractor().extract(corpus)
 		scores = TFScorer().score(candidates)
-		scores = ThresholdFilter().filter(scores, 0)
+		scores = ThresholdFilter(0).filter(scores)
 		resolved, unresolved = TokenResolver().resolve(scores, corpus, tokenizer)
 
 		self.assertEqual(len(scores), len(resolved))
@@ -91,7 +91,7 @@ class TestTokenResolver(unittest.TestCase):
 
 		candidates = TokenExtractor().extract(corpus)
 		scores = TFScorer().score(candidates)
-		scores = ThresholdFilter().filter(scores, 0)
+		scores = ThresholdFilter(0).filter(scores)
 		resolved, unresolved = TokenResolver().resolve(scores, corpus, tokenizer)
 		self.assertTrue('to' in resolved)
 
@@ -115,7 +115,7 @@ class TestTokenResolver(unittest.TestCase):
 
 		candidates = TokenExtractor().extract(corpus)
 		scores = TFScorer().score(candidates)
-		scores = ThresholdFilter().filter(scores, 0)
+		scores = ThresholdFilter(0).filter(scores)
 		resolved, unresolved = TokenResolver().resolve({ 'unknown': 1 }, corpus, tokenizer)
 		self.assertTrue('unknown' in unresolved)
 
@@ -136,7 +136,7 @@ class TestTokenResolver(unittest.TestCase):
 
 		candidates = TokenExtractor().extract(corpus)
 		scores = TFScorer().score(candidates)
-		scores = ThresholdFilter().filter(scores, 0)
+		scores = ThresholdFilter(0).filter(scores)
 		resolved, unresolved = TokenResolver().resolve(scores, [ ], tokenizer)
 		self.assertEqual(len(scores), len(unresolved))
 
@@ -168,7 +168,7 @@ class TestTokenResolver(unittest.TestCase):
 
 		candidates = TokenExtractor().extract(corpus)
 		scores = TFScorer().score(candidates)
-		scores = ThresholdFilter().filter(scores, 0)
+		scores = ThresholdFilter(0).filter(scores)
 		resolved, unresolved = TokenResolver().resolve(scores, corpus, tokenizer, case_fold=False)
 		self.assertTrue('reports' in resolved)
 
