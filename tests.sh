@@ -131,6 +131,7 @@ wikipedia_tests() {
 	echo -e "${HIGHLIGHT}Wikipedia${DEFAULT}"
 
 	python3 -m unittest eventdt.wikinterface.tests.test_info
+	python3 -m unittest eventdt.wikinterface.tests.test_links
 	python3 -m unittest eventdt.wikinterface.tests.test_package
 	python3 -m unittest eventdt.wikinterface.tests.test_search
 	python3 -m unittest eventdt.wikinterface.tests.test_text
