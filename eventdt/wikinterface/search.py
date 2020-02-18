@@ -27,8 +27,8 @@ def collect(terms, limit=10):
 			 Their content can be fetched using these titles.
 	:rtype: list of str
 
-	:raises ValueError: when the limit is not a positive number.
-	:raises ValueError: when the limit is not an integer.
+	:raises ValueError: When the limit is not a positive number.
+	:raises ValueError: When the limit is not an integer.
 	"""
 
 	articles = [ ]

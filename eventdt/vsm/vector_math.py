@@ -70,7 +70,7 @@ def augmented_normalize(v, a=0.5):
 	:param a: The minimum magnitude of each dimension.
 	:type a: float
 
-	:raises: :class:`ValueError`
+	:raises ValueError: When the augmentation is not between 0 and 1
 	"""
 
 	if not 0 <= a <= 1:

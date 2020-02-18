@@ -26,7 +26,7 @@ def collect(titles, separate=True, introduction_only=False):
 			 Otherwise, a list of article titles is returned.
 	:rtype: list or dict
 
-	:raises RuntimeError: when the request returns an error response.
+	:raises RuntimeError: When the request returns an error response.
 	"""
 
 	links = { }
@@ -148,8 +148,8 @@ def collect_recursive(titles, level, collected_links=None, separate=True, *args,
 			 If they are, the links are returned separated by the page in which they appear.
 	:rtype: dict or list
 
-	:raises ValueError: when the level is not positive.
-	:raises ValueError: when the level is not an integer.
+	:raises ValueError: When the level is not positive.
+	:raises ValueError: When the level is not an integer.
 	"""
 
 	if level <= 0:
