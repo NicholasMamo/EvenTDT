@@ -18,9 +18,7 @@ from vsm import vector_math
 from nlp.document import Document
 from nlp.tokenizer import Tokenizer
 
-from wikinterface.info_collector import InfoCollector, PageType
-from wikinterface.linkcollector import LinkCollector
-from wikinterface.textcollector import TextCollector
+from wikinterface import info, links, text
 
 from ..resolver import Resolver
 
@@ -92,7 +90,7 @@ class WikipediaNameResolver(Resolver):
 		Then, find the best page for each candidate.
 		If its similarity with the domain is sufficiently high, the candidate is resolved.
 		"""
-		ambiguous = LinkCollector().get_links(ambiguous, first_section_only=False)
+		ambiguous = links.collect(ambiguous, first_section_only=False)
 		for candidate, pages in ambiguous.items():
 			"""
 			If there are candidate pages, get the most similar page.
@@ -132,16 +130,16 @@ class WikipediaNameResolver(Resolver):
 		resolved_candidates, unresolved_candidates, ambiguous_candidates = [], [], []
 
 		for candidate in candidates:
-			text = InfoCollector().get_type([ candidate ])
-			for page, content in text.items():
+			text = info.types([ candidate ])
+			for page, type in text.items():
 				"""
 				Some pages resolve directly, though may need to redirect.
 				Those pages are retained unchanged to respect domain discourse.
 				"""
-				if content["type"] is PageType.NORMAL:
+				if type is info.ArticleType.NORMAL:
 					resolved_candidates.append(candidate)
 					break
-				elif content["type"] is PageType.DISAMBIGUATION:
+				elif type is info.ArticleType.DISAMBIGUATION:
 					ambiguous_candidates.append(candidate)
 					break
 
@@ -173,7 +171,7 @@ class WikipediaNameResolver(Resolver):
 		Get the first section of each page.
 		Then, convert them into documents.
 		"""
-		pages = TextCollector().get_plain_text(pages, introduction_only=True)
+		pages = text.collect(pages, introduction_only=True)
 		for page, text in pages.items():
 			pages[page] = Document(text, self.tokenizer.tokenize(text),
 								   scheme=self.scheme)
