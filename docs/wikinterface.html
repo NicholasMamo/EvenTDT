@@ -299,6 +299,10 @@ The function assumes that an article is about a person if it mentions a birth da
 <dt id="wikinterface.search.collect">
 <code class="sig-prename descclassname">wikinterface.search.</code><code class="sig-name descname">collect</code><span class="sig-paren">(</span><em class="sig-param">terms</em>, <em class="sig-param">limit=10</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.search.collect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Look for pages containing the given terms.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The search API is often overloaded and fails.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -346,7 +350,7 @@ This module contains functions to help extract that text from articles.</p>
 <dd class="field-odd"><p>dict</p>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>RuntimeError</strong> – when the request is an error.</p>
+<dd class="field-even"><p><strong>RuntimeError</strong> – when the request returns an error response.</p>
 </dd>
 </dl>
 </dd></dl>
