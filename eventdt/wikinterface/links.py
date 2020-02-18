@@ -105,7 +105,7 @@ def collect(titles, separate=True, encoding=None, introduction_only=False):
 			Therefore, the endpoint is updated to continue looking from where it left off
 			"""
 			if 'continue' in response:
-				parameters['plcontinue'] = response['continue']['plcontinue']
+				parameters['plcontinue'] = urllib.parse.quote(response['continue']['plcontinue'])
 			else:
 				break
 
