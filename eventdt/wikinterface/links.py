@@ -69,6 +69,18 @@ def collect(titles, separate=True, introduction_only=False):
 		return links
 
 	"""
+	At most, 50 pages may be requested at a time.
+	If the number of titles exceeds this, the function splits the calls.
+	"""
+	if len(titles) > 50:
+		for i in range(0, math.ceil(len(titles)/50)):
+			new_links = collect(titles[(i * 50):((i + 1) * 50)],
+								separate=True, introduction_only=introduction_only)
+			for title, link_set in new_links.items():
+				links[title] = links.get(title, []) + link_set
+		return links
+
+	"""
 	If page titles are given, collect their links.
 	Pages are returned 20 at a time.
 	When this happens, the response contains a continue marker.
