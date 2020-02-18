@@ -77,8 +77,6 @@ class WikipediaNameResolver(Resolver):
 		resolved_candidates.extend(resolved)
 		unresolved_candidates.extend(unresolved)
 
-		return resolved_candidates, unresolved_candidates
-
 		"""
 		Get the concatenated corpus as a single document, representing the domain.
 		"""
@@ -90,7 +88,7 @@ class WikipediaNameResolver(Resolver):
 		Then, find the best page for each candidate.
 		If its similarity with the domain is sufficiently high, the candidate is resolved.
 		"""
-		ambiguous = links.collect(ambiguous, first_section_only=False)
+		ambiguous = links.collect(ambiguous, introduction_only=False)
 		for candidate, pages in ambiguous.items():
 			"""
 			If there are candidate pages, get the most similar page.
