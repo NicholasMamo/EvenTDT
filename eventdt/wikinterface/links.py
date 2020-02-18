@@ -233,14 +233,12 @@ def _get_all_links(page, encoding=None):
 
 	:return: A list of outgoing links found in the given text.
 	:rtype: list of str
-
-	:raise ValueError: when no links are found in the page.
 	"""
 
 	links = [ ]
 
 	if 'links' not in page:
-		raise ValueError("No links found in the page")
+		return links
 
 	links = [ link["title"] for link in page["links"] ]
 	links = [ link.encode(encoding) if encoding else link for link in links ]
