@@ -158,13 +158,13 @@ def collect_recursive(titles, level, collected_links=None, separate=True, *args,
 	In the recursive case, fetch the links, and look for outgoing links in these results.
 	Pages for whom links have already been collected are not collected anew.
 	"""
-	seed = list(set(seed).difference(set(collected_links)))
-	links = collect(list(seed), separate=separate, *args, **kwargs)
+	titles = list(set(titles).difference(set(collected_links)))
+	links = collect(titles, separate=separate, *args, **kwargs)
 	if level <= 1:
 		return links
 
 	next_links = collect_recursive(list(links.keys()), level=(level - 1),
-								   collected_links=list(set(seed + collected_links)),
+								   collected_links=list(set(titles + collected_links)),
 								   separate=separate, *args, **kwargs)
 
 	if separate:
