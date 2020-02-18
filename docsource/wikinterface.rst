@@ -21,6 +21,14 @@ Info
    :private-members:
    :special-members:
 
+Links
+=====
+
+.. automodule:: wikinterface.links
+   :members:
+   :private-members:
+   :special-members:
+
 Search
 ======
 

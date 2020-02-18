@@ -91,6 +91,7 @@
 <li class="toctree-l1"><a class="reference internal" href="nlp.html">3. Natural Language Processing (NLP)</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">4. Wikinterface</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-wikinterface.info">Info</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-wikinterface.links">Links</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-wikinterface.search">Search</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-wikinterface.text">Text</a></li>
 </ul>
@@ -287,6 +288,115 @@ The function assumes that an article is about a person if it mentions a birth da
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-wikinterface.links">
+<span id="links"></span><h2>Links<a class="headerlink" href="#module-wikinterface.links" title="Permalink to this headline">¶</a></h2>
+<p>The link collector collects links from Wikipedia articles.</p>
+<dl class="function">
+<dt id="wikinterface.links.collect">
+<code class="sig-prename descclassname">wikinterface.links.</code><code class="sig-name descname">collect</code><span class="sig-paren">(</span><em class="sig-param">titles</em>, <em class="sig-param">separate=True</em>, <em class="sig-param">introduction_only=False</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.links.collect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of outgoing links from the given list of articles.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>titles</strong> (<em>list of str</em><em> or </em><em>str</em>) – A list of article titles, or a single article title, from where to fetch links.</p></li>
+<li><p><strong>separate</strong> (<em>bool</em>) – A boolean indicating whether the links should be separated according to articles.</p></li>
+<li><p><strong>introduction_only</strong> (<em>bool</em>) – A boolean indicating whether the links should be fetched only from the introduction.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of outgoing links from the article titles provided.
+If the <cite>separate</cite> boolean is <cite>True</cite>, a dictionary is returned.
+This dictionary’s keys are the article titles, and the values are lists of outgoing links.
+Otherwise, a list of article titles is returned.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list or dict</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>RuntimeError</strong> – when the request returns an error response.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="wikinterface.links.collect_recursive">
+<code class="sig-prename descclassname">wikinterface.links.</code><code class="sig-name descname">collect_recursive</code><span class="sig-paren">(</span><em class="sig-param">titles</em>, <em class="sig-param">level</em>, <em class="sig-param">collected_links=None</em>, <em class="sig-param">separate=True</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.links.collect_recursive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursively fetch links, starting from a seed set.
+The function uses the <a class="reference internal" href="#wikinterface.links.collect" title="wikinterface.links.collect"><code class="xref py py-func docutils literal notranslate"><span class="pre">wikinterface.links.collect()</span></code></a> function.
+Any additional arguments and keyword arguments are passed on to it.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This is a very expensive operation as it grows exponentially.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>titles</strong> (<em>list of str</em><em> or </em><em>str</em>) – The articles from where to start (or continue) looking.</p></li>
+<li><p><strong>level</strong> (<em>int</em>) – The current level.
+If the level is 1, the links are fetched once and the function returns.</p></li>
+<li><p><strong>collected_links</strong> (<em>list of str</em><em> or </em><em>None</em>) – Any links that have already been collected.</p></li>
+<li><p><strong>separate</strong> (<em>bool</em>) – A boolean indicating whether the links should be separated according to articles.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of links if they should not be separated.
+If they are, the links are returned separated by the page in which they appear.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict or list</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – if the level is not positive.</p></li>
+<li><p><strong>ValueError</strong> – if the level is not an integer.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="wikinterface.links._get_intro_links">
+<code class="sig-prename descclassname">wikinterface.links.</code><code class="sig-name descname">_get_intro_links</code><span class="sig-paren">(</span><em class="sig-param">page</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.links._get_intro_links" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of outgoing links from the introduction of the given page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>page</strong> (<em>dict</em>) – The page from where to get the introduction.
+The function expects a <cite>revisions</cite> key containing the text of the latest revision.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of outgoing links found in the given text.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – when no revisions are found in the page.</p></li>
+<li><p><strong>ValueError</strong> – when no text is found in the revision.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="wikinterface.links._get_all_links">
+<code class="sig-prename descclassname">wikinterface.links.</code><code class="sig-name descname">_get_all_links</code><span class="sig-paren">(</span><em class="sig-param">page</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.links._get_all_links" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of outgoing links from the given page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>page</strong> (<em>dict</em>) – The page from where to get the text.
+The function expects a <cite>links</cite> key containing the list of links in the article</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of outgoing links found in the given text.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of str</p>
 </dd>
 </dl>
 </dd></dl>
