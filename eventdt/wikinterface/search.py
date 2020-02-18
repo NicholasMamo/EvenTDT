@@ -13,7 +13,7 @@ def collect(terms, limit=10):
 	"""
 	Look for pages containing the given terms.
 
-	.. warning:
+	.. warning::
 
 		The search API is often overloaded and fails.
 
@@ -43,7 +43,7 @@ def collect(terms, limit=10):
 		raise ValueError(f"An integer must be requested, received {limit}")
 
 	terms = terms if type(terms) is list else [ terms ]
-	
+
 	if not len(terms):
 		return articles
 
