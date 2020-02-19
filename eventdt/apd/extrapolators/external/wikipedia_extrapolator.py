@@ -152,7 +152,7 @@ class WikipediaExtrapolator(Extrapolator):
 		participants = [ node for partition in partitions for node in partition ]
 		participants = [ participant for participant in participants if participant.strip().lower() not in words.words() ]
 		participants = [ self._remove_brackets(participant) for participant in participants ]
-		participants = [ participant for participant in participants if not _has_year(participant) ]
+		participants = [ participant for participant in participants if not self._has_year(participant) ]
 
 		"""
 		Calculate a score for each candidate participant, retaining those having a score that exceeds the threshold.
