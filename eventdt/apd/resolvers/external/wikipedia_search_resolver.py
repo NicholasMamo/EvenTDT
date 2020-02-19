@@ -75,53 +75,61 @@ class WikipediaSearchResolver(Resolver):
 		domain = Document.concatenate(*self.corpus, tokenizer=self.tokenizer, scheme=self.scheme)
 		domain.normalize()
 
+		"""
+		Get the possible pages for each candidate.
+		From each of these pages, remove the brackets because this information is secondary.
+		If there are years outside the brackets, then the page can be excluded.
+		Most often, pages with years in them are not entities.
+		Unfortunately, exceptions exist, such as with the name `TSG 1899 Hoffenheim`.
+		"""
 		for candidate in candidates:
 			"""
-			Get the possible pages for each candidate, removing those that have years in them.
-			Most often, pages with years in them are not entities.
-			Unfortunately, exceptions exist, such as with the name `TSG 1899 Hoffenheim`.
-
-			For each page, fetch its text content and type.
-			The type is used to remove pages that are not normal.
+			The page name is retained as-is when checking the year.
+			If a page had brackets in it, they are retained.
+			They are only removed temporarily to check if the non-bracket part has a year in it.
+			In this way, the information about pages and their text can be collected.
 			"""
-			pages = search_collector.search(candidate, limit=5)
-			pages = [ page for page in pages if len(year_pattern.findall(page)) == 0 ]
-			pages = [ page for page in pages if not page.lower().startswith("list of") ]
-			if len(pages) > 0:
-				page_info = info_collector.get_type(pages)
-				pages = [ page for page, content in page_info.items() if content["type"] is PageType.NORMAL ]
+			pages = search.collect(candidate, limit=5)
+			pages = [ page for page in pages if not self._has_year(self._remove_brackets(page)) ]
 
-			if len(pages) > 0:
-				text_content = text_collector.get_plain_text(pages, introduction_only=True)
-
-				"""
-				Get the score of each page.
-				"""
-				candidate_document = Document(candidate, tokenizer.tokenize(candidate), scheme=self.scheme)
-				page_scores = { }
-				for page, text in text_content.items():
-					text = text.lower()
-					text = bracket_pattern.sub(' ', text)
-					matches = delimiter_pattern.findall(text)
-					text = text if len(matches) == 0 else matches[0]
-					text = text.replace(candidate.lower(), ' ')
-					tokens = tokenizer.tokenize(text)
-					title_document = Document(page, tokenizer.tokenize(page), scheme=self.scheme)
-					document = Document(text, tokens, scheme=self.scheme)
-					document.normalize()
-					page_scores[page] = vector_math.cosine(document, corpus_document)
-					page_scores[page] = page_scores[page] * vector_math.cosine(title_document, candidate_document)
+			"""
+			Fetch the page types.
+			Disambiguation, list or missing pages are removed altogether.
+			If any pages remain at this point, get their text and score the pages based on relevance to the corpus.
+			"""
+			types = info.types(pages)
+			pages = [ page for page, type in types.items() if type is info.ArticleType.NORMAL ]
+			if len(pages):
+				articles = text.collect(pages, introduction_only=True)
+				candidate_document = Document(candidate, self.tokenizer.tokenize(candidate), scheme=self.scheme)
 
 				"""
-				Save only the most similar page if it exceeds the threshold.
+				To calculate the score, bracketed text is removed since they do not convey important information.
+				Tokens that are part of the candidate name are removed from the sentence.
 				"""
-				chosen_candidate, score = sorted(page_scores.items(), key=lambda x:x[1])[:-2:-1][0]
-				if score >= threshold:
-					resolved_candidates.append(chosen_candidate)
-				else:
-					unresolved_candidates.append(candidate)
-			else:
-				unresolved_candidates.append(candidate)
+				scores = { }
+				for page, introduction in articles.items():
+					introduction = self._remove_brackets(introduction)
+					sentence = self._get_first_sentence(introduction)
+					tokens = self.tokenizer.tokenize(sentence)
+					tokens = [ token for token in tokens if token not in candidate_document.dimensions ]
+					sentence_document = Document(introduction, tokens, scheme=self.scheme)
+
+					title_document = Document(page, self.tokenizer.tokenize(page), scheme=self.scheme)
+					scores[page] = self._compute_score(candidate_document, title_document,
+															domain, sentence_document)
+
+				"""
+				Get the most relevant article.
+				If it exceeds the threshold, then the candidate is resolved to that article.
+				If it fails to exceed the threshold, the candidate is added to the unresolved candidates.
+				"""
+				article, score = sorted(scores.items(), key=lambda x: x[1], reverse=True)[0]
+				if score >= self.threshold:
+					resolved_candidates.append(article)
+					continue
+
+			unresolved_candidates.append(candidate)
 
 		return (resolved_candidates, unresolved_candidates)
 

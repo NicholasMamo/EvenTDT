@@ -181,3 +181,117 @@ class TestWikipediaSearchResolver(unittest.TestCase):
 		score_1 = resolver._compute_score(candidate_document, title_document_1, domain, sentence_document_1)
 		score_2 = resolver._compute_score(candidate_document, title_document_2, domain, sentence_document_2)
 		self.assertGreater(score_1, score_2)
+
+	def test_wikipedia_name_resolver(self):
+		"""
+		Test the Wikipedia search resolver.
+		"""
+
+		"""
+		Create the test data
+		"""
+		tokenizer = Tokenizer(min_length=2, stem=True, stopwords=list(stopwords.words("english")))
+		posts = [
+			"Ronaldo, speaking after Juventus' victory, says league is still wide open, but his team is favorite",
+			"Ronaldo's goal voted goal of the year by football fans appreciative of the striker",
+		]
+		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+
+		candidates = EntityExtractor().extract(corpus, binary=True)
+		scores = TFScorer().score(candidates)
+
+		resolver = WikipediaSearchResolver(TF(), tokenizer, 0, corpus)
+		resolved, unresolved = resolver.resolve(scores)
+		self.assertTrue('Cristiano Ronaldo' in resolved)
+		self.assertTrue('Juventus F.C.' in resolved)
+
+	def test_all_resolved_or_unresolved(self):
+		"""
+		Test that the resolver either resolves or does not resolve named entities.
+		"""
+
+		"""
+		Create the test data
+		"""
+		tokenizer = Tokenizer(min_length=2, stem=True, stopwords=list(stopwords.words("english")))
+		posts = [
+			"Ronaldo, speaking after Juventus' victory, says league is still wide open, but his team is favorite",
+			"Ronaldo's goal voted goal of the year by football fans appreciative of the striker",
+		]
+		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+
+		candidates = EntityExtractor().extract(corpus, binary=True)
+		scores = TFScorer().score(candidates)
+
+		resolver = WikipediaSearchResolver(TF(), tokenizer, 0, corpus)
+		resolved, unresolved = resolver.resolve(scores)
+		self.assertEqual(len(scores), len(resolved + unresolved))
+
+	def test_random_string_unresolved(self):
+		"""
+		Test that a random string is unresolved.
+		"""
+
+		random_string = ''.join(random.choice(string.ascii_lowercase + string.digits) for i in range(32))
+
+		tokenizer = Tokenizer(min_length=1, stem=False)
+		resolver = WikipediaSearchResolver(TF(), tokenizer, 0, [ ])
+		resolved, unresolved = resolver.resolve({ random_string: 1 })
+		self.assertTrue(random_string in unresolved)
+
+	def test_threshold(self):
+		"""
+		Test that when the threshold is not zero, it excludes some candidates.
+		"""
+
+		"""
+		Create the test data
+		"""
+		tokenizer = Tokenizer(min_length=2, stem=True, stopwords=list(stopwords.words("english")))
+		posts = [
+			"Ronaldo, speaking after Juventus' victory, says league is still wide open, but his team is favorite",
+			"Ronaldo's goal voted goal of the year by football fans appreciative of the striker",
+		]
+		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+
+		candidates = EntityExtractor().extract(corpus, binary=True)
+		scores = TFScorer().score(candidates)
+
+		resolver = WikipediaSearchResolver(TF(), tokenizer, 0.1, corpus)
+		resolved, unresolved = resolver.resolve(scores)
+		self.assertTrue('Cristiano Ronaldo' in resolved)
+		self.assertFalse('Juventus F.C.' in resolved)
+		self.assertTrue('juventus' in unresolved)
+
+	def test_high_threshold(self):
+		"""
+		Test that when the threshold is high, it excludes all candidates.
+		"""
+
+		"""
+		Create the test data
+		"""
+		tokenizer = Tokenizer(min_length=2, stem=True, stopwords=list(stopwords.words("english")))
+		posts = [
+			"Ronaldo, speaking after Juventus' victory, says league is still wide open, but his team is favorite",
+			"Ronaldo's goal voted goal of the year by football fans appreciative of the striker",
+		]
+		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+
+		candidates = EntityExtractor().extract(corpus, binary=True)
+		scores = TFScorer().score(candidates)
+
+		resolver = WikipediaSearchResolver(TF(), tokenizer, 1, corpus)
+		resolved, unresolved = resolver.resolve(scores)
+		self.assertFalse(len(resolved))
+		self.assertEqual(set(scores.keys()), set(unresolved))
+
+	def test_resolve_empty(self):
+		"""
+		Test that when resolving an empty set of candidates, the resolver returns empty lists.
+		"""
+
+		resolver = WikipediaSearchResolver(TF(), Tokenizer(), 0, [ ])
+		resolved, unresolved = resolver.resolve({ })
+		self.assertFalse(len(resolved))
+		self.assertFalse(len(unresolved))
