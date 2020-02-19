@@ -37,9 +37,34 @@ class WikipediaExtrapolator(Extrapolator):
 	"""
 	The Wikipedia extrapolator looks for new participants that are tightly-linked with resolved participants.
 	This definition is based on a graph, and communities are extracted using the Girvan-Newman algorithm.
+
+	:ivar corpus: The corpus of documents.
+	:vartype corpus: list of :class:`nlp.document.Document`
+	:ivar scheme: The term-weighting scheme to use to create documents from Wikipedia pages.
+				  These documents are used to compare the similarity with the domain of the candidates.
+	:vartype scheme: :class:`nlp.term_weighting.scheme.TermWeightingScheme`
+	:ivar threshold: The similarity threshold beyond which new participants are are added.
+	:vartype threshold: float
 	"""
 
-	def extrapolate(self, candidates, corpus, extrapolator_scheme, extrapolator_participants=10, extrapolator_threshold=0, token_attribute="tokens", *args, **kwargs):
+	def __init__(self, corpus, scheme, threshold=0):
+		"""
+		Create the extrapolator.
+
+		:param corpus: The corpus of documents.
+		:type corpus: list of :class:`nlp.document.Document`
+		:param scheme: The term-weighting scheme to use to create documents from Wikipedia pages.
+					   These documents are used to compare the similarity with the domain of the candidates.
+		:type scheme: :class:`nlp.term_weighting.scheme.TermWeightingScheme`
+		:param threshold: The similarity threshold beyond which new participants are are added.
+		:type threshold: float
+		"""
+
+		self.corpus = corpus
+		self.scheme = scheme
+		self.threshold = threshold
+
+	def extrapolate(self, candidates, *args, **kwargs):
 		"""
 		Extrapolate the given candidates.
 
