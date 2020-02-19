@@ -22,8 +22,6 @@ from nltk.corpus import words
 
 from graph.graph import Graph, Node
 
-from logger import logger
-
 from vector import vector_math
 
 from vector.nlp.document import Document
@@ -36,7 +34,7 @@ from wikinterface.textcollector import TextCollector
 
 from ..extrapolator import Extrapolator
 
-class LinkExtrapolator(Extrapolator):
+class WikipediaExtrapolator(Extrapolator):
 	"""
 	The link extrapolator creates a graph and uses the graph to find participants.
 	"""
@@ -147,13 +145,6 @@ class LinkExtrapolator(Extrapolator):
 		Initially, this is made up of the candidates and popular outgoing links in these candidates.
 		"""
 
-		# IDEA: Choose links based on similarity to corpus; the problem is that pages like `Arsenal TV` would have a high similarity with `Arsenal`, and the communities would be flooded like this
-		# all_links = [ link for page in first_links for link in first_links[page] ]
-		# candidate_pages.update(self.get_candidate_pages(list(first_links.keys()) + all_links, extrapolator_scheme))
-		# page_similarities = { page: vector_math.cosine(candidate_pages[page], corpus_document) for page in all_links if page in candidate_pages }
-		# next_pages = sorted(page_similarities.items(), key=lambda x:x[1])[-51:]
-		# next_pages = [ page for page, _ in next_pages ]
-
 		first_links = { page: [ link for link in first_links[page] if link in next_pages ] for page in first_links }
 		for candidate, links in first_links.items():
 			""""
@@ -247,20 +238,8 @@ class LinkExtrapolator(Extrapolator):
 		Create a networkx graph and use it to partition the pages.
 		"""
 		nx_graph = graph.to_networkx()
-		# logger.info("%d nodes in the graph" % graph.size())
-		# communities = community.girvan_newman(nx_graph)
-		logger.info("Graph converted with %d nodes" % graph.size())
 		communities = community.girvan_newman(nx_graph, most_valuable_edge=self._most_central_edge)
 		top_level_partitions = list(next(communities))
-		logger.info("Communities found")
-		# i = 0
-		# while ((len(top_level_partitions) <= math.sqrt(graph.size()) # if there are too few partitions
-		# 		or max([ len(partition) for partition in top_level_partitions ]) >= math.sqrt(graph.size())) # if the largest partition is very large
-		# 	and i < 10):
-		# 	top_level_partitions = list(next(communities))
-		# 	if len(top_level_partitions) > 0:
-		# 		logger.info("%d: %d partitions (largest: %d nodes)" % (i + 1, len(top_level_partitions), max([ len(partition) for partition in top_level_partitions ])))
-		# 	i += 1
 
 		"""
 		Get the nodes from the biggest partitions.
@@ -271,7 +250,6 @@ class LinkExtrapolator(Extrapolator):
 			if len(partition) > 3:
 				nodes = [ nx_graph.node[node]["name"] for node in partition ]
 				new_candidates.extend(nodes)
-				logger.info("Partition %d: %d nodes" % (i + 1, len(partition)))
 
 
 		"""
@@ -285,8 +263,6 @@ class LinkExtrapolator(Extrapolator):
 		extrapolated_candidates = { candidate: score for candidate, score in extrapolated_candidates.items() if candidate.strip().lower() not in words.words() }
 		extrapolated_candidates = { candidate.strip(): score for candidate, score in extrapolated_candidates.items() if len(year_pattern.findall(candidate)) == 0 } # exclude candidates that have a year in the title
 		extrapolated_candidates = sorted(extrapolated_candidates.items(), key=lambda x:x[1])[:-1 * (extrapolator_participants + 1):-1]
-		# for i, (candidate, score) in enumerate(extrapolated_candidates):
-		# 	print("%d: %s (%f)" % (i + 1, candidate, score))
 		return [ candidate for candidate, _ in extrapolated_candidates ]
 
 	def get_candidate_pages(self, candidates, extrapolator_scheme):
