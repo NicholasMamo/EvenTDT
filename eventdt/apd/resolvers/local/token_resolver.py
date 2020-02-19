@@ -6,10 +6,9 @@ It tokenizes words with the given tokenizer and tries to map each candidate to t
 import os
 import sys
 
-path = os.path.dirname(__file__)
-path = os.path.join(path, '../../../')
+path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
 if path not in sys.path:
-	sys.path.append(path)
+    sys.path.append(path)
 
 from ..resolver import Resolver
 
