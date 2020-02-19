@@ -249,41 +249,6 @@ class WikipediaExtrapolator(Extrapolator):
 		extrapolated_participants = sorted(extrapolated_participants.items(), key=lambda x:x[1])[:-1 * (extrapolator_participants + 1):-1]
 		return [ candidate for candidate, _ in extrapolated_participants ]
 
-	def get_candidate_pages(self, candidates, extrapolator_scheme):
-		"""
-		Get the representation of the candidate pages.
-		This representation is based on the first sentence of the page.
-
-		:param candidates: The list of candidates whose representation will be returned.
-			It is assumed that the candidate refers to a unique Wikipedia page.
-		:type candidates: list
-		:param extrapolator_scheme: The term weighting scheme used to create the local and external contexts.
-		:type extrapolator_scheme: :class:`vector.nlp.term_weighting.TermWeighting`
-
-		:return: A dictionary matching the candidates with the :class:`vector.nlp.document.Document` representation.
-		:rtype: dict
-		"""
-
-		candidate_pages = { }
-
-		text_collector = TextCollector()
-		tokenizer = Tokenizer()
-
-		delimiter_pattern = re.compile("^(.+?)\.[\s\n][A-Z0-9]")
-		bracket_pattern = re.compile("\(.*?\)")
-
-		text_content = text_collector.get_plain_text(candidates, introduction_only=True)
-		for candidate, text in text_content.items():
-			text = bracket_pattern.sub(' ', text)
-			matches = delimiter_pattern.findall(text)
-			text = text if len(matches) == 0 else matches[0]
-			tokens = tokenizer.tokenize(text)
-			document = Document(text, tokens, scheme=extrapolator_scheme)
-			document.normalize()
-			candidate_pages[candidate] = document
-
-		return candidate_pages
-
 	def _has_year(self, title):
 		"""
 		Check whether the given title has a year in it.
@@ -343,6 +308,66 @@ class WikipediaExtrapolator(Extrapolator):
 
 		outgoing_links = [ link for link_set in articles.values() for link in link_set ]
 		return { link: outgoing_links.count(link) for link in set(outgoing_links) }
+
+	def _add_to_graph(self, graph, outgoing_links, threshold=0):
+		"""
+		Add the links to the graph.
+		The function fetches the article text and uses it to add to the weighted graph.
+
+		.. note::
+
+			The weight of edges is `1 - similarity`.
+			The higher the similarity, the less weight.
+			Therefore more paths go through that edge.
+
+		:param graph: The graph to which to add the new nodes and edges.
+		:type graph: :class:`nx.Graph`
+		:param outgoing_links: The dictionary of links.
+							   The keys should be the source articles.
+							   The values should be the outgoing links from these articles.
+		:type outgoing_links: dict
+		:param threshold: The minimum similarity between the source and target articles to add an edge between them.
+		:type threshold: float
+		"""
+
+		"""
+		Get the text from all articles.
+		"""
+		sources = list(outgoing_links.keys())
+		targets = [ link for link_set in outgoing_links.values() for link in link_set ]
+		articles = text.collect(sources + targets, introduction_only=True)
+
+		"""
+		Convert each article into a document.
+		The article is based only on the first sentence.
+		"""
+		documents = { }
+		for title, introduction in articles.items():
+			introduction = self._remove_brackets(introduction)
+			introduction = self._get_first_sentence(introduction)
+			document = Document(introduction, self.tokenizer.tokenize(introduction),
+								scheme=self.scheme)
+			document.normalize()
+			documents[title] = document
+
+		"""
+		Add first the nodes, and then the edges to the graph.
+		This is done by going through all the outgoing links.
+		If they have a page, the similarity between the source article and that link is computed.
+		If the similarity exceeds the threshold, add an edge between the two.
+		"""
+		for source, targets in outgoing_links.items():
+			if source not in graph.nodes:
+				graph.add_node(source)
+
+			for target in targets:
+				if target not in graph.nodes and target in documents:
+					graph.add_node(target)
+
+				if source in documents and target in documents:
+					similarity = vector_math.cosine(documents[source], documents[target])
+					if similarity > threshold:
+						graph.add_edge(source, target, weight=(1 - similarity))
 
 	def _most_central_edge(self, G):
 		"""

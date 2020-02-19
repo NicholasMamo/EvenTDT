@@ -188,3 +188,77 @@ class TestWikipediaExtrapolator(unittest.TestCase):
 		self.assertEqual(2, frequencies.get('z'))
 		self.assertEqual(1, frequencies.get('w'))
 		self.assertFalse(frequencies.get('a'))
+
+	def test_add_to_graph_low_threshold(self):
+		"""
+		Test adding nodes and edges to a graph with a low threshold.
+		"""
+
+		graph = nx.Graph()
+		links = {
+			'Olympique Lyonnais': [ 'Ligue 1', 'AS Monaco' ],
+		}
+
+		tokenizer = Tokenizer(stem=True, stopwords=stopwords.words('english'))
+		extrapolator = WikipediaExtrapolator([ ], tokenizer, TF())
+		extrapolator._add_to_graph(graph, links, threshold=0)
+		self.assertEqual(3, len(graph.nodes))
+		self.assertEqual(2, len(graph.edges))
+		self.assertTrue('Olympique Lyonnais' in graph.nodes)
+		self.assertTrue('Ligue 1' in graph.nodes)
+		self.assertTrue('AS Monaco' in graph.nodes)
+		self.assertTrue(('Olympique Lyonnais', 'Ligue 1') in graph.edges)
+		self.assertTrue(('Olympique Lyonnais', 'AS Monaco') in graph.edges)
+		self.assertFalse(('Ligue 1', 'AS Monaco') in graph.edges)
+		self.assertGreater(graph.edges[('Olympique Lyonnais', 'Ligue 1')]['weight'], 0)
+
+	def test_add_to_graph_non_zero_threshold(self):
+		"""
+		Test that adding nodes and edges to a graph with a non-zero threshold excludes some edges.
+		"""
+
+		graph = nx.Graph()
+		links = {
+			'Olympique Lyonnais': [ 'Ligue 1', 'AS Monaco' ],
+		}
+
+		tokenizer = Tokenizer(stem=True, stopwords=stopwords.words('english'))
+		extrapolator = WikipediaExtrapolator([ ], tokenizer, TF())
+		extrapolator._add_to_graph(graph, links, threshold=0.4)
+		self.assertFalse(('Olympique Lyonnais', 'Ligue 1') in graph.edges)
+		self.assertTrue(('Olympique Lyonnais', 'AS Monaco') in graph.edges)
+
+	def test_add_to_graph_high_threshold(self):
+		"""
+		Test that adding nodes and edges to a graph with a high threshold excludes some edges.
+		"""
+
+		graph = nx.Graph()
+		links = {
+			'Olympique Lyonnais': [ 'Ligue 1', 'AS Monaco' ],
+		}
+
+		tokenizer = Tokenizer(stem=True, stopwords=stopwords.words('english'))
+		extrapolator = WikipediaExtrapolator([ ], tokenizer, TF())
+		extrapolator._add_to_graph(graph, links, threshold=1)
+		self.assertFalse(('Olympique Lyonnais', 'Ligue 1') in graph.edges)
+		self.assertFalse(('Olympique Lyonnais', 'AS Monaco') in graph.edges)
+
+	def test_add_to_graph_node_with_no_page(self):
+		"""
+		Test that when adding a node that does not have an article, it is not added to the graph.
+		"""
+
+		random_string = ''.join(random.choice(string.ascii_lowercase + string.digits) for i in range(32))
+		graph = nx.Graph()
+		links = {
+			'Olympique Lyonnais': [ 'Ligue 1', random_string ],
+		}
+
+		tokenizer = Tokenizer(stem=True, stopwords=stopwords.words('english'))
+		extrapolator = WikipediaExtrapolator([ ], tokenizer, TF())
+		extrapolator._add_to_graph(graph, links, threshold=1)
+		self.assertEqual(2, len(graph.nodes))
+		self.assertTrue('Olympique Lyonnais' in graph.nodes)
+		self.assertTrue('Ligue 1' in graph.nodes)
+		self.assertFalse(random_string in graph.nodes)
