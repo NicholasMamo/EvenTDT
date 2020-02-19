@@ -64,15 +64,15 @@ class WikipediaExtrapolator(Extrapolator):
 		self.scheme = scheme
 		self.threshold = threshold
 
-	def extrapolate(self, candidates, *args, **kwargs):
+	def extrapolate(self, participants, *args, **kwargs):
 		"""
-		Extrapolate the given candidates.
+		Extrapolate the given participants.
 
-		:param candidates: The candidates to extrapolate.
-			It is assumed that all of the given candidates were resolved using :class:`apd.resolvers.external.wikipedia_resolver.WikipediaResolver`.
-			This means that all candidates share their name with a Wikipedia page.
-		:type candidates: list
-		:param corpus: The corpus of documents, which helps to isolate relevant candidates.
+		:param participants: The participants to extrapolate.
+							 It is assumed that all participants were resolved using a Wikipedia resolver.
+							 This means that all participants share their name with a Wikipedia page.
+		:type participants: list
+		:param corpus: The corpus of documents, which helps to isolate relevant participants.
 		:type corpus: list
 		:param extrapolator_scheme: The term weighting scheme used to create the local and external contexts.
 		:type extrapolator_scheme: :class:`vector.nlp.term_weighting.TermWeighting`
@@ -83,9 +83,9 @@ class WikipediaExtrapolator(Extrapolator):
 		:param token_attribute: The attribute that contains the tokens.
 		:type token_attribute: str
 
-		:return: The new candidates.
-			These candidates are stored as a dictionary.
-			The keys are the resolved candidates, and the values are their scores.
+		:return: The new participants.
+				 These participants are stored as a dictionary.
+				 The keys are the resolved participants, and the values are their scores.
 		:rtype: dict
 		"""
 
