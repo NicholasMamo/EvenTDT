@@ -107,6 +107,17 @@ class TestVector(unittest.TestCase):
 		v.normalize()
 		self.assertEqual({ "x": 0.789474, "y": 0.315789, "z": -0.526316 }, { key: round(value, 6) for key, value in v.dimensions.items() })
 
+	def test_double_normalization(self):
+		"""
+		Test that normalizing the same vector twice returns the same vector as when normalized once.
+		"""
+
+		v = Vector({"x": 3, "y": 1.2, "z": -2})
+		v.normalize()
+		w = v.copy()
+		w.normalize()
+		self.assertEqual(v.dimensions, w.dimensions)
+
 	def test_normalize_empty_vector(self):
 		"""
 		Test that when normalizing an empty vector, the resulting vector is also empty.
