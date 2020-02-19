@@ -52,13 +52,15 @@ class WikipediaExtrapolator(Extrapolator):
 	:vartype first_level_links: int
 	:ivar second_level_links: The number of second-level links to retain.
 	:vartype second_level_links: int
+	:ivar first_level_similarity: The minimum similarity between articles to create an edge in the first-level links.
+	:vartype first_level_similarity: float
 	:ivar second_level_similarity: The minimum similarity between articles to create an edge in the second-level links.
 	:vartype second_level_similarity: float
 	"""
 
 	def __init__(self, corpus, tokenizer, scheme, threshold=0,
 				 first_level_links=100, second_level_links=1000,
-				 second_level_similarity=0.5):
+				 first_level_similarity=0, second_level_similarity=0.5):
 		"""
 		Create the extrapolator.
 
@@ -75,6 +77,8 @@ class WikipediaExtrapolator(Extrapolator):
 		:type first_level_links: int
 		:param second_level_links: The index at which the cut-off point of link frequency is taken for the second-level links.
 		:type second_level_links: int
+		:param first_level_similarity: The minimum similarity between articles to create an edge in the first-level links.
+		:type first_level_similarity: float
 		:param second_level_similarity: The minimum similarity between articles to create an edge in the second-level links.
 		:type second_level_similarity: float
 		"""
@@ -85,6 +89,7 @@ class WikipediaExtrapolator(Extrapolator):
 		self.threshold = threshold
 		self.first_level_links = first_level_links
 		self.second_level_links = second_level_links
+		self.first_level_similarity = first_level_similarity
 		self.second_level_similarity = second_level_similarity
 
 	def extrapolate(self, participants, *args, **kwargs):
@@ -130,7 +135,7 @@ class WikipediaExtrapolator(Extrapolator):
 			article: [ link for link in first_level.get(article) if link in frequent_links ]
 					   for article in first_level
 		}
-		self._add_to_graph(graph, first_level, threshold=0)
+		self._add_to_graph(graph, first_level, threshold=self.first_level_similarity)
 
 		"""
 		Repeat the process a second time.
@@ -148,7 +153,7 @@ class WikipediaExtrapolator(Extrapolator):
 			article: [ link for link in second_level.get(article) if link in frequent_links ]
 					   for article in second_level
 		}
-		self._add_to_graph(graph, second_level, self.second_level_similarity)
+		self._add_to_graph(graph, second_level, threshold=self.second_level_similarity)
 
 		"""
 		Partition the graph into communities.
