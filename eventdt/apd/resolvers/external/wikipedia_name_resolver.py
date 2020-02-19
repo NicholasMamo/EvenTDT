@@ -34,9 +34,11 @@ class WikipediaNameResolver(Resolver):
 	:vartype tokenizer: :class:`nlp.tokenizer.Tokenizer`
 	:ivar threshold: The threshold below which candidates become unresolved.
 	:vartype threshold: float.
+	:ivar corpus: The corpus of documents.
+	:vartype corpus: list of :class:`nlp.document.Document`
 	"""
 
-	def __init__(self, scheme, tokenizer, threshold):
+	def __init__(self, scheme, tokenizer, threshold, corpus):
 		"""
 		Create the resolver.
 
@@ -49,13 +51,16 @@ class WikipediaNameResolver(Resolver):
 		:type tokenizer: :class:`nlp.tokenizer.Tokenizer`
 		:param threshold: The similarity threshold beyond which candidate participants are resolved.
 		:type threshold: float
+		:param corpus: The corpus of documents.
+		:type corpus: list of :class:`nlp.document.Document`
 		"""
 
 		self.scheme = scheme
 		self.tokenizer = tokenizer
 		self.threshold = threshold
+		self.corpus = corpus
 
-	def resolve(self, candidates, corpus, *args, **kwargs):
+	def resolve(self, candidates, *args, **kwargs):
 		"""
 		Resolve the given candidates.
 
@@ -63,8 +68,6 @@ class WikipediaNameResolver(Resolver):
 						   The candidates should be in the form of a dictionary.
 						   The keys should be the candidates, and the values the scores.
 		:type candidates: dict
-		:param corpus: The corpus of documents.
-		:type corpus: list of :class:`nlp.document.Document`
 
 		:return: A tuple containing the resolved and unresolved candidates respectively.
 		:rtype: tuple of lists
@@ -80,7 +83,7 @@ class WikipediaNameResolver(Resolver):
 		"""
 		Get the concatenated corpus as a single document, representing the domain.
 		"""
-		domain = Document.concatenate(*corpus, tokenizer=self.tokenizer, scheme=self.scheme)
+		domain = Document.concatenate(*self.corpus, tokenizer=self.tokenizer, scheme=self.scheme)
 		domain.normalize()
 
 		"""

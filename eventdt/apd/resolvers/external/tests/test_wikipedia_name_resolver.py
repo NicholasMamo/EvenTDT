@@ -47,8 +47,8 @@ class TestWikipediaNameResolver(unittest.TestCase):
 		scores = TFScorer().score(candidates)
 		scores = ThresholdFilter(0).filter(scores)
 
-		resolver = WikipediaNameResolver(TF(), tokenizer, 0)
-		resolved, unresolved = resolver.resolve(scores, corpus)
+		resolver = WikipediaNameResolver(TF(), tokenizer, 0, corpus)
+		resolved, unresolved = resolver.resolve(scores)
 
 		self.assertTrue('manchester united' in resolved)
 		self.assertTrue('burnley' in resolved)
@@ -71,8 +71,8 @@ class TestWikipediaNameResolver(unittest.TestCase):
 		scores = TFScorer().score(candidates)
 		scores = ThresholdFilter(0).filter(scores)
 
-		resolver = WikipediaNameResolver(TF(), tokenizer, 0)
-		resolved, unresolved = resolver.resolve(scores, corpus)
+		resolver = WikipediaNameResolver(TF(), tokenizer, 0, corpus)
+		resolved, unresolved = resolver.resolve(scores)
 		self.assertEqual(len(scores), len(resolved + unresolved))
 
 	def test_random_string_unresolved(self):
@@ -83,6 +83,6 @@ class TestWikipediaNameResolver(unittest.TestCase):
 		random_string = ''.join(random.choice(string.ascii_lowercase + string.digits) for i in range(32))
 
 		tokenizer = Tokenizer(min_length=1, stem=False)
-		resolver = WikipediaNameResolver(TF(), tokenizer, 0)
-		resolved, unresolved = resolver.resolve({ random_string: 1 }, [ ])
+		resolver = WikipediaNameResolver(TF(), tokenizer, 0, [ ])
+		resolved, unresolved = resolver.resolve({ random_string: 1 })
 		self.assertTrue(random_string in unresolved)
