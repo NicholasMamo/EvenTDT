@@ -273,9 +273,9 @@ class TestWikipediaExtrapolator(unittest.TestCase):
 		self.assertTrue('Ligue 1' in graph.nodes)
 		self.assertFalse(random_string in graph.nodes)
 
-	def test_extrapolate(self):
+	def test_extrapolate_excludes_resolved(self):
 		"""
-		Test extrapolating from a single term.
+		Test that when extrapolating, resolved participants are not returned.
 		"""
 
 		"""
@@ -283,8 +283,37 @@ class TestWikipediaExtrapolator(unittest.TestCase):
 		"""
 		tokenizer = Tokenizer(stem=True, stopwords=list(stopwords.words("english")))
 		posts = [
-			"Olympique Lyonnais back on top after comeback victory against Rennes",
+			"Chojniczanka Chojnice is a small Polish football team",
 		]
 		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
-		extrapolator = WikipediaExtrapolator(corpus, tokenizer, TF())
-		extrapolator.extrapolate([ 'Olympique Lyonnais' ])
+		extrapolator = WikipediaExtrapolator(corpus, tokenizer, TF(),
+											 first_level_links=5, second_level_links=10)
+		participants = extrapolator.extrapolate([ 'Chojniczanka Chojnice', 'Chrobry Głogów' ])
+		self.assertFalse('Chojniczanka Chojnice' in participants)
+		self.assertFalse('Chrobry Głogów' in participants)
+
+	def test_extrapolate_returns_related_participants(self):
+		"""
+		Test that when extrapolating, related participants are returned.
+		"""
+
+		"""
+		Create the test data
+		"""
+		tokenizer = Tokenizer(stem=True, stopwords=list(stopwords.words("english")))
+		posts = [
+			"The LigaPro is the second-highest division of the Portuguese football league system.",
+		]
+		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+		extrapolator = WikipediaExtrapolator(corpus, tokenizer, TF(),
+											 first_level_links=15, second_level_links=15)
+		participants = extrapolator.extrapolate([ 'Associação Académica de Coimbra – O.A.F.',
+												  'Académico de Viseu F.C.',
+												  'S.L. Benfica B', 'FC Porto B' ])
+
+		other_participants = [ 'Casa Pia A.C.', 'G.D. Chaves', 'C.D. Cova da Piedade',
+							   'S.C. Covilhã', 'G.D. Estoril Praia', 'S.C. Farense',
+							   'C.D. Feirense', 'Leixões S.C.', 'C.D. Mafra',
+							   'C.D. Nacional', 'U.D. Oliveirense', 'F.C. Penafiel',
+							   'Varzim S.C.', 'U.D. Vilafranquense' ]
+		self.assertGreater(len(set(participants).intersection(set(other_participants))), 5)
