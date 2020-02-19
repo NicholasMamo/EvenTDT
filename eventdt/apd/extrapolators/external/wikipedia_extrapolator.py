@@ -8,6 +8,12 @@ All of these articles are added to a graph, subject to certain constraints.
 The extrapolator uses the Girvan-Newman algorithm to extract communities.
 Large communities of tightly-linked articles are considered to be candidate participants.
 The most relevant articles in these communities are scored for relevance by the extrapolator.
+
+.. warning::
+
+	This extrapolator retrieves articles from Wikipedia twice.
+	Therefore the process is very slow and can take minutes to conclude.
+	For this reason, care should be taken with the paramaters that are provided.
 """
 
 import asyncio

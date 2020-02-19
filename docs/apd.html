@@ -1275,6 +1275,12 @@ Secondly, it looks for outgoing links from the first set of links.</p>
 The extrapolator uses the Girvan-Newman algorithm to extract communities.
 Large communities of tightly-linked articles are considered to be candidate participants.
 The most relevant articles in these communities are scored for relevance by the extrapolator.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This extrapolator retrieves articles from Wikipedia twice.
+Therefore the process is very slow and can take minutes to conclude.
+For this reason, care should be taken with the paramaters that are provided.</p>
+</div>
 <dl class="class">
 <dt id="apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator">
 <em class="property">class </em><code class="sig-prename descclassname">apd.extrapolators.external.wikipedia_extrapolator.</code><code class="sig-name descname">WikipediaExtrapolator</code><span class="sig-paren">(</span><em class="sig-param">corpus</em>, <em class="sig-param">tokenizer</em>, <em class="sig-param">scheme</em>, <em class="sig-param">threshold=0</em>, <em class="sig-param">first_level_links=100</em>, <em class="sig-param">second_level_links=1000</em>, <em class="sig-param">first_level_similarity=0</em>, <em class="sig-param">second_level_similarity=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator" title="Permalink to this definition">¶</a></dt>
