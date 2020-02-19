@@ -205,6 +205,7 @@ class TestWikipediaExtrapolator(unittest.TestCase):
 		self.assertEqual(3, len(graph.nodes))
 		self.assertEqual(2, len(graph.edges))
 		self.assertTrue('Olympique Lyonnais' in graph.nodes)
+		self.assertTrue(len(graph.nodes['Olympique Lyonnais']['document'].dimensions))
 		self.assertTrue('Ligue 1' in graph.nodes)
 		self.assertTrue('AS Monaco' in graph.nodes)
 		self.assertTrue(('Olympique Lyonnais', 'Ligue 1') in graph.edges)

@@ -358,11 +358,11 @@ class WikipediaExtrapolator(Extrapolator):
 		"""
 		for source, targets in outgoing_links.items():
 			if source not in graph.nodes:
-				graph.add_node(source)
+				graph.add_node(source, document=documents[source])
 
 			for target in targets:
 				if target not in graph.nodes and target in documents:
-					graph.add_node(target)
+					graph.add_node(target, document=documents[target])
 
 				if source in documents and target in documents:
 					similarity = vector_math.cosine(documents[source], documents[target])
