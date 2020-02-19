@@ -1,65 +1,72 @@
 """
-The Wikipedia Resolver
-A resolver that looks for keywords in Wikipedia pages.
-These pages are considered to be concepts.
+The Wikipedia search resolver is similar to the :class:`apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver`.
+In contrast with the name resolver, the search resolver searches for candidates on Wikipedia.
+The resolver tries to map candidates to one of the results.
+
+The aim of this resolver is to overcome common problems with the name resolver.
+In many cases, colloquial names of candidates are not the same as their formal names.
+For example, `FC Barcelona` is referred to simply as `Barcelona`.
 """
 
 import os
 import re
 import sys
 
-path = os.path.dirname(__file__)
-path = os.path.join(path, '../../../')
+path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
 if path not in sys.path:
-	sys.path.append(path)
+    sys.path.append(path)
 
 from nltk.corpus import stopwords
 
-from logger import logger
-
-from vector import vector_math
-
-from vector.nlp.document import Document
-from vector.nlp.tokenizer import Tokenizer
-
-from wikinterface.info_collector import InfoCollector, PageType
-from wikinterface.linkcollector import LinkCollector
-from wikinterface.searchcollector import SearchCollector
-from wikinterface.textcollector import TextCollector
+from vsm import vector_math
+from nlp.document import Document
+from nlp.tokenizer import Tokenizer
+from wikinterface import info, links, search, text
 
 from ..resolver import Resolver
 
-class SearchResolver(Resolver):
+class WikipediaSearchResolver(Resolver):
 	"""
-	The search resolver looks for pages that are most similar to the corpus.
+	The Wikipedia search resolver looks for pages that include candidate names.
+	The Wikipedia API automatically ranks articles by relevance.
+	This resolver exploits that to try and match the candidate with any of the top results.
 	"""
 
-	def resolve(self, candidates, corpus, resolver_scheme, resolver_threshold=0, token_attribute="tokens", *args, **kwargs):
+	def __init__(self, scheme, tokenizer, threshold, corpus):
+		"""
+		Create the resolver.
+
+		:param scheme: The term-weighting scheme to use to create documents from Wikipedia pages.
+					   These documents are used to compare the similarity with the domain of the candidates.
+		:type scheme: :class:`nlp.term_weighting.scheme.TermWeightingScheme`
+		:param threshold: The threshold below which candidates become unresolved.
+		:type threshold: float.
+		:param tokenizer: The tokenizer to use to create documents.
+		:type tokenizer: :class:`nlp.tokenizer.Tokenizer`
+		:param threshold: The similarity threshold beyond which candidate participants are resolved.
+		:type threshold: float
+		:param corpus: The corpus of documents.
+		:type corpus: list of :class:`nlp.document.Document`
+		"""
+
+		self.scheme = scheme
+		self.tokenizer = tokenizer
+		self.threshold = threshold
+		self.corpus = corpus
+
+	def resolve(self, candidates, *args, **kwargs):
 		"""
 		Resolve the given candidates.
 
 		:param candidates: The candidates to resolve.
 		:type candidates: list
-		:param corpus: The corpus of documents, which helps to resolve the candidates.
-		:type corpus: list
-		:param resolver_scheme: The term weighting scheme used to create documents that represent ambiguous pages.
-		:type resolver_scheme: :class:`vector.nlp.term_weighting.TermWeighting`
-		:param token_attribute: The attribute that contains the tokens.
-		:type token_attribute: str
 
-		:return: A tuple containing the resolved candidates, and unresolved ones.
-		:rtype: tuple
+		:return: A tuple containing the resolved and unresolved candidates respectively.
+		:rtype: tuple of lists
 		"""
 
 		resolved_candidates, unresolved_candidates = [], []
 
-		info_collector = InfoCollector()
-		search_collector = SearchCollector()
-		text_collector = TextCollector()
-		tokenizer = Tokenizer(stopwords=stopwords.words("english"))
-
-		year_pattern = re.compile("[0-9]{4}")
-		bracket_pattern = re.compile("\(.*?\)")
 		delimiter_pattern = re.compile("^(.+?)\.[\s\n][A-Z0-9]")
 
 		candidates = [ candidate.title() for candidate in candidates ]
@@ -70,7 +77,7 @@ class SearchResolver(Resolver):
 		tokenized_corpus = []
 		for document in corpus:
 			tokens = tokenizer.tokenize(document.get_text())
-			document = Document(document.get_text(), tokens, scheme=resolver_scheme)
+			document = Document(document.get_text(), tokens, scheme=self.scheme)
 			tokenized_corpus.append(document)
 		corpus_document = vector_math.concatenate(tokenized_corpus)
 		corpus_document.normalize()
@@ -97,7 +104,7 @@ class SearchResolver(Resolver):
 				"""
 				Get the score of each page.
 				"""
-				candidate_document = Document(candidate, tokenizer.tokenize(candidate), scheme=resolver_scheme)
+				candidate_document = Document(candidate, tokenizer.tokenize(candidate), scheme=self.scheme)
 				page_scores = { }
 				for page, text in text_content.items():
 					text = text.lower()
@@ -106,8 +113,8 @@ class SearchResolver(Resolver):
 					text = text if len(matches) == 0 else matches[0]
 					text = text.replace(candidate.lower(), ' ')
 					tokens = tokenizer.tokenize(text)
-					title_document = Document(page, tokenizer.tokenize(page), scheme=resolver_scheme)
-					document = Document(text, tokens, scheme=resolver_scheme)
+					title_document = Document(page, tokenizer.tokenize(page), scheme=self.scheme)
+					document = Document(text, tokens, scheme=self.scheme)
 					document.normalize()
 					page_scores[page] = vector_math.cosine(document, corpus_document)
 					page_scores[page] = page_scores[page] * vector_math.cosine(title_document, candidate_document)
@@ -116,11 +123,9 @@ class SearchResolver(Resolver):
 				Save only the most similar page if it exceeds the threshold.
 				"""
 				chosen_candidate, score = sorted(page_scores.items(), key=lambda x:x[1])[:-2:-1][0]
-				if score >= resolver_threshold:
+				if score >= threshold:
 					resolved_candidates.append(chosen_candidate)
-					# logger.info("Resolved %s to %s (%f)" % (candidate, chosen_candidate, score))
 				else:
-					# logger.info("Could not resolve %s to %s (%f)" % (candidate, chosen_candidate, score))
 					unresolved_candidates.append(candidate)
 			else:
 				unresolved_candidates.append(candidate)
