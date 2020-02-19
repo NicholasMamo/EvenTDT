@@ -27,6 +27,7 @@ class ArticleType(Enum):
 	NORMAL = 0
 	DISAMBIGUATION = 1
 	MISSING = 2
+	LIST = 3
 
 def types(titles):
 	"""
@@ -89,18 +90,23 @@ def types(titles):
 			Go through each page and find its type.
 			By default, pages are normal.
 			If the page has no properties, it is considered to be missing.
-			Otherwise
 			"""
 			for page in pages.values():
-				types[page['title']] = ArticleType.NORMAL
+				title = page['title']
 
-				"""
-				Once a type is found, stop looking.
-				"""
+				if title.lower().startswith("list of"):
+					types[title] = ArticleType.LIST
+					continue
+
 				if 'pageprops' not in page:
-					types[page['title']] = ArticleType.MISSING
-				elif 'disambiguation' in page.get('pageprops'):
-					types[page['title']] = ArticleType.DISAMBIGUATION
+					types[title] = ArticleType.MISSING
+					continue
+
+				if 'disambiguation' in page.get('pageprops'):
+					types[title] = ArticleType.DISAMBIGUATION
+					continue
+
+				types[title] = ArticleType.NORMAL
 
 			parameters['excontinue'] = response['continue']['excontinue'] if 'continue' in response else None
 

@@ -61,6 +61,15 @@ class TestInfo(unittest.TestCase):
 		type = info.types(page)
 		self.assertEqual(info.ArticleType.NORMAL, type[page])
 
+	def test_get_type_list(self):
+		"""
+		Test getting the type of a page that is a list of articles.
+		"""
+
+		page = 'List of works by Michelangelo'
+		type = info.types(page)
+		self.assertEqual(info.ArticleType.LIST, type[page])
+
 	def test_get_type_multiple_pages(self):
 		"""
 		Test getting the types of multiple pages returns information about all pages.
