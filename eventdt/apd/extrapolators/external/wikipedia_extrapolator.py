@@ -76,12 +76,12 @@ class WikipediaExtrapolator(Extrapolator):
 		:param participants: The participants to extrapolate.
 							 It is assumed that all participants were resolved using a Wikipedia resolver.
 							 This means that all participants share their name with a Wikipedia page.
-		:type participants: list
+		:type participants: list of str
 
 		:return: The new participants.
 				 These participants are stored as a dictionary.
 				 The keys are the resolved participants, and the values are their scores.
-		:rtype: dict
+		:rtype: list of str
 		"""
 
 		extrapolated_participants = { }
