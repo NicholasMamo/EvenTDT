@@ -51,7 +51,7 @@ class TestWikipediaExtrapolator(unittest.TestCase):
 		graph.add_nodes_from(nodes)
 		graph.add_weighted_edges_from(edges)
 
-		extrapolator = WikipediaExtrapolator([ ], TF())
+		extrapolator = WikipediaExtrapolator([ ], Tokenizer(), TF())
 		self.assertEqual(('D', 'W'), extrapolator._most_central_edge(graph))
 
 	def test_edge_centrality_multiple(self):
@@ -74,5 +74,65 @@ class TestWikipediaExtrapolator(unittest.TestCase):
 		graph.add_nodes_from(nodes)
 		graph.add_weighted_edges_from(edges)
 
-		extrapolator = WikipediaExtrapolator([ ], TF())
+		extrapolator = WikipediaExtrapolator([ ], Tokenizer(), TF())
 		self.assertEqual(('C', 'X'), extrapolator._most_central_edge(graph))
+
+
+
+	def test_year_check(self):
+		"""
+		Test that when checking for a year, the function returns a boolean.
+		"""
+
+		article = 'Youssouf Koné (footballer, born 1995)'
+		extrapolator = WikipediaExtrapolator([ ], Tokenizer(), TF())
+		self.assertTrue(extrapolator._has_year(article))
+
+	def test_year_check_range(self):
+		"""
+		Test that when checking for a year in a range, the function returns `True`.
+		"""
+
+		article = '2019–20 Premier League'
+		extrapolator = WikipediaExtrapolator([ ], Tokenizer(), TF())
+		self.assertTrue(extrapolator._has_year(article))
+
+		article = '2019-20 Premier League'
+		extrapolator = WikipediaExtrapolator([ ], Tokenizer(), TF())
+		self.assertTrue(extrapolator._has_year(article))
+
+	def test_year_check_short_number(self):
+		"""
+		Test that when checking for a year with a short number, the function does not detect a year.
+		"""
+
+		article = 'Area 51'
+		extrapolator = WikipediaExtrapolator([ ], Tokenizer(), TF())
+		self.assertFalse(extrapolator._has_year(article))
+
+	def test_year_check_long_number(self):
+		"""
+		Test that when checking for a year with a long number, the function does not detect a year.
+		"""
+
+		article = '1234567890'
+		extrapolator = WikipediaExtrapolator([ ], Tokenizer(), TF())
+		self.assertFalse(extrapolator._has_year(article))
+
+	def test_remove_brackets(self):
+		"""
+		Test that when removing brackets, they are completely removed.
+		"""
+
+		article = 'Youssouf Koné (footballer, born 1995)'
+		extrapolator = WikipediaExtrapolator([ ], Tokenizer(), TF())
+		self.assertEqual('Youssouf Koné', extrapolator._remove_brackets(article).strip())
+
+	def test_remove_unclosed_brackets(self):
+		"""
+		Test that when removing brackets that are not closed, they are not removed.
+		"""
+
+		article = 'Youssouf Koné (footballer, born 1995'
+		extrapolator = WikipediaExtrapolator([ ], Tokenizer(), TF())
+		self.assertEqual('Youssouf Koné (footballer, born 1995', extrapolator._remove_brackets(article).strip())

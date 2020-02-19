@@ -284,6 +284,34 @@ class WikipediaExtrapolator(Extrapolator):
 
 		return candidate_pages
 
+	def _has_year(self, title):
+		"""
+		Check whether the given title has a year in it.
+
+		:param title: The title of the article.
+		:type title: str
+
+		:return: A boolean indicating whether the title includes a year in it.
+		:rtype: bool
+		"""
+
+		year_pattern = re.compile("\\b[0-9]{4}\\b")
+		return len(year_pattern.findall(title)) > 0
+
+	def _remove_brackets(self, text):
+		"""
+		Remove brackets from the given text.
+
+		:param text: The text from which to remove brackets.
+		:type text: str
+
+		:return: The text without any components in the brackets.
+		:rtype: str
+		"""
+
+		bracket_pattern = re.compile("\(.*?\)")
+		return bracket_pattern.sub(' ', text)
+
 	def _most_central_edge(self, G):
 		"""
 		Find the most central edge in the given graph.
