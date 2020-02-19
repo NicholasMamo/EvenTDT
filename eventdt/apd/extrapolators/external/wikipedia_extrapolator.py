@@ -161,7 +161,6 @@ class WikipediaExtrapolator(Extrapolator):
 		partitions = [ partition for partition in partitions if len(partitions) > 3 ]
 		participants = [ node for partition in partitions for node in partition ]
 		participants = [ participant for participant in participants if participant.strip().lower() not in words.words() ]
-		participants = [ self._remove_brackets(participant) for participant in participants ]
 		participants = [ participant for participant in participants if not self._has_year(participant) ]
 
 		"""
