@@ -124,7 +124,7 @@ class WikipediaSearchResolver(Resolver):
 				If it exceeds the threshold, then the candidate is resolved to that article.
 				If it fails to exceed the threshold, the candidate is added to the unresolved candidates.
 				"""
-				article, score = sorted(scores.items(), key=lambda x: x[1], reverse=True)[0]
+				article, score = sorted(scores.items(), key=lambda score: score[1], reverse=True)[0]
 				if score >= self.threshold:
 					resolved_candidates.append(article)
 					continue

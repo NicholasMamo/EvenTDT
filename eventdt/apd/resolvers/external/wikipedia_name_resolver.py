@@ -181,6 +181,6 @@ class WikipediaNameResolver(Resolver):
 		Rank the page scores in descending order.
 		Then, choose the best page and return it alongside its score.
 		"""
-		page_scores = { page: vector_math.cosine(introduction, domain) for page, introduction in pages.items() }
-		best_page = max(page_scores, key=lambda page: page_scores.get(page))
-		return (best_page, page_scores[best_page])
+		scores = { page: vector_math.cosine(introduction, domain) for page, introduction in pages.items() }
+		article, score = sorted(scores.items(), key=lambda score: score[1], reverse=True)[0]
+		return (article, score)
