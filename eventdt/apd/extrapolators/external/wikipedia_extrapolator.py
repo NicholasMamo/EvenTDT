@@ -8,29 +8,20 @@ import os
 import re
 import sys
 
-path = os.path.dirname(__file__)
-path = os.path.join(path, '../../../')
+path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
 if path not in sys.path:
-	sys.path.append(path)
+    sys.path.append(path)
 
 import networkx as nx
 from networkx import edge_betweenness_centrality
-from networkx.algorithms import centrality, community
+from networkx.algorithms import community
 
-from nltk.corpus import stopwords
-from nltk.corpus import words
+from nltk.corpus import stopwords, words
 
-from graph.graph import Graph, Node
-
-from vector import vector_math
-
-from vector.nlp.document import Document
-from vector.nlp.tokenizer import Tokenizer
-
-from wikinterface.info_collector import InfoCollector, PageType
-from wikinterface.linkcollector import LinkCollector
-from wikinterface.searchcollector import SearchCollector
-from wikinterface.textcollector import TextCollector
+from vsm import vector_math
+from nlp.document import Document
+from nlp.tokenizer import Tokenizer
+from wikinterface import info, links, search, text
 
 from ..extrapolator import Extrapolator
 
