@@ -157,7 +157,7 @@ class WikipediaExtrapolator(Extrapolator):
 		while len(partitions) < math.sqrt(len(graph.nodes)):
 			partitions = list(next(communities))
 
-		partitions = [ partition for partition in partitions if len(partitions) > 3 ]
+		partitions = [ partition for partition in partitions if len(partition) > 3 ]
 		extrapolated = [ node for partition in partitions for node in partition ]
 		extrapolated = [ participant for participant in extrapolated if participant not in participants ]
 		extrapolated = [ participant for participant in extrapolated if participant.strip().lower() not in words.words() ]
