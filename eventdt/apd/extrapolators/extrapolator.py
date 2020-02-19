@@ -1,30 +1,31 @@
 """
-An extrapolator takes in candidates and tries to find other candidates, similar to entity set expansion.
+The extrapolator is the fifth step of APD.
+The extrapolator receives a list of participants and tries to find other relevant participants.
+This step is analogous to entity set expansion.
+The participants should be ranked in descending order of their relevance.
+
+The input participants should be the product of a :class:`apd.resolvers.resolver.Resolver` process.
+This input is a simple list of strings. each representing a participant.
+
+Extrapolators return a list of new participants: simple strings as well.
+The functionality revolves around one method: the :meth:`apd.extrapolators.extrapolator.Extrapolator.extrapolate` method.
 """
 
 class Extrapolator(object):
 	"""
-	The simplest extrapolator returns the candidates without any new members.
+	The simplest extrapolator returns no new participants.
 	"""
 
-	def extrapolate(self, candidates, corpus, extrapolated_participants=10, extrapolated_threshold=0, token_attribute="tokens", *args, **kwargs):
+	def extrapolate(self, participants, *args, **kwargs):
 		"""
-		Extrapolate from the given candidates.
-		This extrapolator changes nothing.
+		Extrapolate from the given participants.
+		This extrapolator returns no new participants.
 
-		:param candidates: The seed set of candidates.
-		:type candidates: list
-		:param corpus: The corpus of documents, which helps to measure the membership of new candidates.
-		:type corpus: list
-		:param extrapolated_participants: The number of extrapolated participants to retrieve.
-		:type extrapolated_participants: int
-		:param extrapolated_threshold: The minimum score of the extrapolated participant to be considered.
-		:type extrapolated_threshold: float
-		:param token_attribute: The attribute that contains the tokens.
-		:type token_attribute: str
+		:param participants: The participants found by the resolver.
+		:type participants: list of str
 
-		:return: The new candidates.
-		:rtype: list
+		:return: The new participants identified as relevant by the extrapolator
+		:rtype: list of str
 		"""
 
 		return [ ]
