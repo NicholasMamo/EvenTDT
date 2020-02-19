@@ -52,9 +52,13 @@ class WikipediaExtrapolator(Extrapolator):
 	:vartype first_level_links: int
 	:ivar second_level_links: The number of second-level links to retain.
 	:vartype second_level_links: int
+	:ivar second_level_similarity: The minimum similarity between articles to create an edge in the second-level links.
+	:vartype second_level_similarity: float
 	"""
 
-	def __init__(self, corpus, tokenizer, scheme, threshold=0, first_level_links=100, second_level_links=1000):
+	def __init__(self, corpus, tokenizer, scheme, threshold=0,
+				 first_level_links=100, second_level_links=1000,
+				 second_level_similarity=0.5):
 		"""
 		Create the extrapolator.
 
@@ -71,6 +75,8 @@ class WikipediaExtrapolator(Extrapolator):
 		:type first_level_links: int
 		:param second_level_links: The index at which the cut-off point of link frequency is taken for the second-level links.
 		:type second_level_links: int
+		:param second_level_similarity: The minimum similarity between articles to create an edge in the second-level links.
+		:type second_level_similarity: float
 		"""
 
 		self.corpus = corpus
@@ -79,6 +85,7 @@ class WikipediaExtrapolator(Extrapolator):
 		self.threshold = threshold
 		self.first_level_links = first_level_links
 		self.second_level_links = second_level_links
+		self.second_level_similarity = second_level_similarity
 
 	def extrapolate(self, participants, *args, **kwargs):
 		"""
@@ -141,7 +148,7 @@ class WikipediaExtrapolator(Extrapolator):
 			article: [ link for link in second_level.get(article) if link in frequent_links ]
 					   for article in second_level
 		}
-		self._add_to_graph(graph, second_level, 0.5)
+		self._add_to_graph(graph, second_level, self.second_level_similarity)
 
 		"""
 		Partition the graph into communities.
