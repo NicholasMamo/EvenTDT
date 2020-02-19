@@ -86,3 +86,56 @@ class TestWikipediaNameResolver(unittest.TestCase):
 		resolver = WikipediaNameResolver(TF(), tokenizer, 0, [ ])
 		resolved, unresolved = resolver.resolve({ random_string: 1 })
 		self.assertTrue(random_string in unresolved)
+
+	def test_low_threshold(self):
+		"""
+		Test that when the threshold is zero, it includes all ambiguous candidates.
+		"""
+
+		"""
+		Create the test data
+		"""
+		tokenizer = Tokenizer(min_length=2, stem=True, stopwords=list(stopwords.words("english")))
+		posts = [
+			"Memphis mum about his future at Lyon after the Dutch footballer wins it for the Ligue 1 team",
+		]
+		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+
+		candidates = EntityExtractor().extract(corpus, binary=True)
+		scores = TFScorer().score(candidates)
+
+		resolver = WikipediaNameResolver(TF(), tokenizer, 0.1, corpus)
+		resolved, unresolved = resolver.resolve(scores)
+		self.assertTrue('Memphis Depay' in resolved)
+		self.assertFalse(unresolved)
+
+	def test_low_threshold(self):
+		"""
+		Test that when the threshold is not zero, it excludes some ambiguous candidates.
+		"""
+
+		"""
+		Create the test data
+		"""
+		tokenizer = Tokenizer(min_length=2, stem=True, stopwords=list(stopwords.words("english")))
+		posts = [
+			"Memphis mum about his future at Lyon after the Dutch footballer wins it for the Ligue 1 team",
+		]
+		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+
+		candidates = EntityExtractor().extract(corpus, binary=True)
+		scores = TFScorer().score(candidates)
+
+		resolver = WikipediaNameResolver(TF(), tokenizer, 0.4, corpus)
+		resolved, unresolved = resolver.resolve(scores)
+		self.assertTrue('Memphis' in unresolved)
+
+	def test_resolve_empty(self):
+		"""
+		Test that when resolving an empty set of candidates, the resolver returns empty lists.
+		"""
+
+		resolver = WikipediaNameResolver(TF(), Tokenizer(), 0, [ ])
+		resolved, unresolved = resolver.resolve({ })
+		self.assertFalse(len(resolved))
+		self.assertFalse(len(unresolved))

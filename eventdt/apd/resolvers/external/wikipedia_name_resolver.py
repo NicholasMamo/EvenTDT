@@ -172,8 +172,8 @@ class WikipediaNameResolver(Resolver):
 		Then, convert them into documents.
 		"""
 		pages = text.collect(pages, introduction_only=True)
-		for page, text in pages.items():
-			pages[page] = Document(text, self.tokenizer.tokenize(text),
+		for page, introduction in pages.items():
+			pages[page] = Document(introduction, self.tokenizer.tokenize(introduction),
 								   scheme=self.scheme)
 			pages[page].normalize()
 
@@ -181,6 +181,6 @@ class WikipediaNameResolver(Resolver):
 		Rank the page scores in descending order.
 		Then, choose the best page and return it alongside its score.
 		"""
-		page_scores = { page: vector_math.cosine(text, domain) for page, text in pages.items() }
+		page_scores = { page: vector_math.cosine(introduction, domain) for page, introduction in pages.items() }
 		best_page = max(page_scores, key=lambda page: page_scores.get(page))
 		return (best_page, page_scores[best_page])
