@@ -72,16 +72,6 @@ class WikipediaExtrapolator(Extrapolator):
 							 It is assumed that all participants were resolved using a Wikipedia resolver.
 							 This means that all participants share their name with a Wikipedia page.
 		:type participants: list
-		:param corpus: The corpus of documents, which helps to isolate relevant participants.
-		:type corpus: list
-		:param extrapolator_scheme: The term weighting scheme used to create the local and external contexts.
-		:type extrapolator_scheme: :class:`vector.nlp.term_weighting.TermWeighting`
-		:param extrapolator_participants: The number of extrapolated participants to retrieve.
-		:type extrapolator_participants: int
-		:param extrapolator_threshold: The minimum score of the extrapolated participant to be considered.
-		:type extrapolator_threshold: float
-		:param token_attribute: The attribute that contains the tokens.
-		:type token_attribute: str
 
 		:return: The new participants.
 				 These participants are stored as a dictionary.
