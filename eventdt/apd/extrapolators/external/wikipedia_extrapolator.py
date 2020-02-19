@@ -118,7 +118,7 @@ class WikipediaExtrapolator(Extrapolator):
 		link_frequency = self._link_frequency(first_level)
 		link_frequency = { link: frequency for link, frequency in link_frequency.items() if not self._has_year(self._remove_brackets(link)) }
 		link_frequency = sorted(link_frequency.keys(), key=lambda link: link_frequency.get(link), reverse=True)
-		frequent_links = [ link for link in link_frequency[:self.first_level_links] ]
+		frequent_links = link_frequency[:self.first_level_links]
 		first_level = {
 			article: [ link for link in first_level.get(article) if link in frequent_links ]
 					   for article in first_level
