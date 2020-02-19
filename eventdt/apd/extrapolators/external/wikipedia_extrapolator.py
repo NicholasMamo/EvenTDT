@@ -312,6 +312,20 @@ class WikipediaExtrapolator(Extrapolator):
 		bracket_pattern = re.compile("\(.*?\)")
 		return bracket_pattern.sub(' ', text)
 
+	def _get_first_sentence(self, text):
+		"""
+		Get the first sentence from the given text.
+
+		:param text: The text from which to extract the first sentence.
+		:type text: str
+
+		:return: The first sentence from the given text.
+		:rtype: str
+		"""
+
+		sentences = nltk.sent_tokenize(text)
+		return sentences[0]
+
 	def _link_frequency(self, articles):
 		"""
 		Count the link frequency in the given set.
