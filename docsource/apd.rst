@@ -140,3 +140,11 @@ Extrapolators
    :members:
    :private-members:
    :special-members:
+
+External
+--------
+
+.. automodule:: apd.extrapolators.external.wikipedia_extrapolator
+   :members:
+   :private-members:
+   :special-members:
