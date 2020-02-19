@@ -95,7 +95,7 @@ class WikipediaExtrapolator(Extrapolator):
 		:rtype: list of str
 		"""
 
-		candidates = { }
+		extrapolated = { }
 
 		"""
 		Get the concatenated corpus as a single document, representing the domain.
@@ -113,13 +113,12 @@ class WikipediaExtrapolator(Extrapolator):
 		"""
 		Get the first-level links.
 		Then, filter the links to retain only those in the top 100, and those that do not have a year in them.
-		Popular links that have already been resolved can be discarded immediately.
 		"""
 		first_level = links.collect(participants, introduction_only=False, separate=True)
 		link_frequency = self._link_frequency(first_level)
 		link_frequency = { link: frequency for link, frequency in link_frequency.items() if not self._has_year(self._remove_brackets(link)) }
 		link_frequency = sorted(link_frequency.keys(), key=lambda link: link_frequency.get(link), reverse=True)
-		frequent_links = [ link for link in link_frequency[:self.first_level_links] if link not in participants ]
+		frequent_links = [ link for link in link_frequency[:self.first_level_links] ]
 		first_level = {
 			article: [ link for link in first_level.get(article) if link in frequent_links ]
 					   for article in first_level
@@ -159,22 +158,23 @@ class WikipediaExtrapolator(Extrapolator):
 			partitions = list(next(communities))
 
 		partitions = [ partition for partition in partitions if len(partitions) > 3 ]
-		participants = [ node for partition in partitions for node in partition ]
-		participants = [ participant for participant in participants if participant.strip().lower() not in words.words() ]
-		participants = [ participant for participant in participants if not self._has_year(participant) ]
+		extrapolated = [ node for partition in partitions for node in partition ]
+		extrapolated = [ participant for participant in extrapolated if participant not in participants ]
+		extrapolated = [ participant for participant in extrapolated if participant.strip().lower() not in words.words() ]
+		extrapolated = [ participant for participant in extrapolated if not self._has_year(participant) ]
 
 		"""
 		Calculate a score for each candidate participant, retaining those having a score that exceeds the threshold.
 		Moreover, exclude candidates that were provided in the resolved participants.
 		Return the candidates in descending order of relevance.
 		"""
-		participants = {
+		extrapolated = {
 			participant: vector_math.cosine(domain, graph.nodes[participant]['document'])
-			for participant in participants
+			for participant in extrapolated
 		}
-		participants = { participant: score for participant, score in participants.items() if score >= self.threshold }
-		participants = sorted(participants.keys(), key=lambda participant: participants.get(participant), reverse=True)
-		return participants
+		extrapolated = { participant: score for participant, score in extrapolated.items() if score >= self.threshold }
+		extrapolated = sorted(extrapolated.keys(), key=lambda participant: extrapolated.get(participant), reverse=True)
+		return extrapolated
 
 	def _has_year(self, title):
 		"""
