@@ -89,11 +89,8 @@ class WikipediaExtrapolator(Extrapolator):
 		:rtype: dict
 		"""
 
-		extrapolated_candidates = { }
+		extrapolated_participants = { }
 
-		info_collector = InfoCollector()
-		link_collector = LinkCollector()
-		tokenizer = Tokenizer(stopwords=stopwords.words("english"))
 		delimiter_pattern = re.compile("^(.+?)\.[\s\n][A-Z0-9]")
 
 		year_pattern = re.compile("[0-9]{4}") # a pattern that indicates a year in the title
@@ -249,13 +246,13 @@ class WikipediaExtrapolator(Extrapolator):
 		Moreover, exclude candidates that were provided in the seed set - they're already known to exist.
 		From these candidates, return only the top ones.
 		"""
-		extrapolated_candidates = { candidate: vector_math.cosine(corpus_document, candidate_pages[candidate]) for candidate in new_candidates if candidate in candidate_pages }
-		extrapolated_candidates = { bracket_pattern.sub(' ', candidate): score for candidate, score in extrapolated_candidates.items() if candidate not in candidates }
-		extrapolated_candidates = { candidate: score for candidate, score in extrapolated_candidates.items() if score >= extrapolator_threshold }
-		extrapolated_candidates = { candidate: score for candidate, score in extrapolated_candidates.items() if candidate.strip().lower() not in words.words() }
-		extrapolated_candidates = { candidate.strip(): score for candidate, score in extrapolated_candidates.items() if len(year_pattern.findall(candidate)) == 0 } # exclude candidates that have a year in the title
-		extrapolated_candidates = sorted(extrapolated_candidates.items(), key=lambda x:x[1])[:-1 * (extrapolator_participants + 1):-1]
-		return [ candidate for candidate, _ in extrapolated_candidates ]
+		extrapolated_participants = { candidate: vector_math.cosine(corpus_document, candidate_pages[candidate]) for candidate in new_candidates if candidate in candidate_pages }
+		extrapolated_participants = { bracket_pattern.sub(' ', candidate): score for candidate, score in extrapolated_participants.items() if candidate not in candidates }
+		extrapolated_participants = { candidate: score for candidate, score in extrapolated_participants.items() if score >= extrapolator_threshold }
+		extrapolated_participants = { candidate: score for candidate, score in extrapolated_participants.items() if candidate.strip().lower() not in words.words() }
+		extrapolated_participants = { candidate.strip(): score for candidate, score in extrapolated_participants.items() if len(year_pattern.findall(candidate)) == 0 } # exclude candidates that have a year in the title
+		extrapolated_participants = sorted(extrapolated_participants.items(), key=lambda x:x[1])[:-1 * (extrapolator_participants + 1):-1]
+		return [ candidate for candidate, _ in extrapolated_participants ]
 
 	def get_candidate_pages(self, candidates, extrapolator_scheme):
 		"""
