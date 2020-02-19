@@ -45,7 +45,7 @@ class TestTokenResolver(unittest.TestCase):
 		candidates = TokenExtractor().extract(corpus)
 		scores = TFScorer().score(candidates)
 		scores = ThresholdFilter(0).filter(scores)
-		resolved, unresolved = TokenResolver(tokenizer).resolve(scores, corpus)
+		resolved, unresolved = TokenResolver(tokenizer, corpus).resolve(scores)
 
 		self.assertTrue('manchester' in resolved)
 		self.assertTrue('united' in resolved)
@@ -70,7 +70,7 @@ class TestTokenResolver(unittest.TestCase):
 		candidates = TokenExtractor().extract(corpus)
 		scores = TFScorer().score(candidates)
 		scores = ThresholdFilter(0).filter(scores)
-		resolved, unresolved = TokenResolver(tokenizer).resolve(scores, corpus)
+		resolved, unresolved = TokenResolver(tokenizer, corpus).resolve(scores)
 
 		self.assertEqual(len(scores), len(resolved))
 
@@ -92,10 +92,10 @@ class TestTokenResolver(unittest.TestCase):
 		candidates = TokenExtractor().extract(corpus)
 		scores = TFScorer().score(candidates)
 		scores = ThresholdFilter(0).filter(scores)
-		resolved, unresolved = TokenResolver(tokenizer).resolve(scores, corpus)
+		resolved, unresolved = TokenResolver(tokenizer, corpus).resolve(scores)
 		self.assertTrue('to' in resolved)
 
-		resolved, unresolved = TokenResolver(Tokenizer(min_length=3, stem=False)).resolve(scores, corpus)
+		resolved, unresolved = TokenResolver(Tokenizer(min_length=3, stem=False), corpus).resolve(scores)
 		self.assertTrue('to' in unresolved)
 
 	def test_unknown_token(self):
@@ -116,7 +116,7 @@ class TestTokenResolver(unittest.TestCase):
 		candidates = TokenExtractor().extract(corpus)
 		scores = TFScorer().score(candidates)
 		scores = ThresholdFilter(0).filter(scores)
-		resolved, unresolved = TokenResolver(tokenizer).resolve({ 'unknown': 1 }, corpus)
+		resolved, unresolved = TokenResolver(tokenizer, corpus).resolve({ 'unknown': 1 })
 		self.assertTrue('unknown' in unresolved)
 
 	def test_empty_corpus(self):
@@ -137,7 +137,7 @@ class TestTokenResolver(unittest.TestCase):
 		candidates = TokenExtractor().extract(corpus)
 		scores = TFScorer().score(candidates)
 		scores = ThresholdFilter(0).filter(scores)
-		resolved, unresolved = TokenResolver(tokenizer).resolve(scores, [ ])
+		resolved, unresolved = TokenResolver(tokenizer, [ ]).resolve(scores)
 		self.assertEqual(len(scores), len(unresolved))
 
 	def test_case_folding(self):
@@ -169,8 +169,8 @@ class TestTokenResolver(unittest.TestCase):
 		candidates = TokenExtractor().extract(corpus)
 		scores = TFScorer().score(candidates)
 		scores = ThresholdFilter(0).filter(scores)
-		resolved, unresolved = TokenResolver(tokenizer, case_fold=False).resolve(scores, corpus)
+		resolved, unresolved = TokenResolver(tokenizer, corpus, case_fold=False).resolve(scores)
 		self.assertTrue('reports' in resolved)
 
-		resolved, unresolved = TokenResolver(tokenizer, case_fold=True).resolve(scores, corpus)
+		resolved, unresolved = TokenResolver(tokenizer, corpus, case_fold=True).resolve(scores)
 		self.assertTrue('reporters' in resolved)

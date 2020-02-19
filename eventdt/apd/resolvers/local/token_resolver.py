@@ -19,22 +19,34 @@ from nlp.tokenizer import Tokenizer
 class TokenResolver(Resolver):
 	"""
 	The token resolver tries to map tokens to actual terms.
+
+	:ivar tokenizer: The tokenizer used to extract the tokens anew.
+	:vartype tokenizer: None or :class:`nlp.tokenizer.Tokenizer`
+	:ivar corpus: The corpus of documents.
+				  This corpus is used to look for the terms that map to the tokens given as candidates.
+	:vartype corpus: list of :class:`nlp.document.Document`
+	:ivar case_fold: A boolean indicating whether terms should be case-folded.
+	:vartype case_fold: bool
 	"""
 
-	def __init__(self, tokenizer, case_fold=True):
+	def __init__(self, tokenizer, corpus, case_fold=True):
 		"""
 		Create the resolver.
 
 		:param tokenizer: The tokenizer used to extract the tokens anew.
 		:type tokenizer: None or :class:`nlp.tokenizer.Tokenizer`
+		:param corpus: The corpus of documents.
+					   This corpus is used to look for the terms that map to the tokens given as candidates.
+		:type corpus: list of :class:`nlp.document.Document`
 		:param case_fold: A boolean indicating whether terms should be case-folded.
 		:type case_fold: bool
 		"""
 
 		self.tokenizer = tokenizer
+		self.corpus = corpus
 		self.case_fold = case_fold
 
-	def resolve(self, candidates, corpus, *args, **kwargs):
+	def resolve(self, candidates, *args, **kwargs):
 		"""
 		Resolve the given candidates by looking for the original words.
 
@@ -42,9 +54,6 @@ class TokenResolver(Resolver):
 						   The candidates should be in the form of a dictionary.
 						   The keys should be the candidates, and the values the scores.
 		:type candidates: dict
-		:param corpus: The corpus of documents.
-					   This corpus is used to look for the terms that map to the tokens given as candidates.
-		:type corpus: list of :class:`nlp.document.Document`
 
 		:return: A tuple containing the resolved and unresolved candidates respectively.
 		:rtype: tuple of lists
@@ -56,7 +65,7 @@ class TokenResolver(Resolver):
 		Generate the inverted index.
 		Then keep only the most common term that generates each token.
 		"""
-		inverted_index = self._construct_inverted_index(corpus)
+		inverted_index = self._construct_inverted_index()
 		inverted_index = self._minimize_inverted_index(inverted_index)
 
 		"""
@@ -71,7 +80,7 @@ class TokenResolver(Resolver):
 
 		return (resolved_candidates, unresolved_candidates)
 
-	def _construct_inverted_index(self, corpus):
+	def _construct_inverted_index(self):
 		"""
 		Construct an inverted index from the given corpus using the tokenizer.
 		The inverted index is a nested dictionary.
@@ -79,9 +88,6 @@ class TokenResolver(Resolver):
 		Each token is associated with another dictionary.
 		This inner dictionary is a list of terms that generate that token.
 		The values of this inner dictionary is the number of times that the term is tokenized into the token.
-
-		:param corpus: The corpus of documents from which to construct the inverted index.
-		:type corpus: list of :class:`nlp.document.Document`
 
 		:return: An inverted index as a dictionary.
 				 The tokens are the keys, and the values are dictionaries.
@@ -96,7 +102,7 @@ class TokenResolver(Resolver):
 		Go through each document and split it into the individual terms.
 		Then, tokenize that term and use it to build the inverted index.
 		"""
-		for document in corpus:
+		for document in self.corpus:
 			terms = document.text.split()
 			for term in terms:
 				term = term.lower() if self.case_fold else term
