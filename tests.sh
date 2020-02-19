@@ -29,6 +29,7 @@ apd_tests() {
 	echo -e "${HIGHLIGHT}Resolver${DEFAULT}"
 	python3 -m unittest eventdt.apd.resolvers.local.tests.test_token_resolver
 	python3 -m unittest eventdt.apd.resolvers.external.tests.test_wikipedia_name_resolver
+	python3 -m unittest eventdt.apd.resolvers.external.tests.test_wikipedia_search_resolver
 
 	# echo -e "${HIGHLIGHT}Extrapolator${DEFAULT}"
 	# python3 -m unittest eventdt.apd.extrapolators.external.tests.test_external_extrapolators
