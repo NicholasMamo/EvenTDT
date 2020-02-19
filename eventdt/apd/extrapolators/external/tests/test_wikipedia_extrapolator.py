@@ -149,7 +149,7 @@ class TestWikipediaExtrapolator(unittest.TestCase):
 				He is known for his pace, ability to cut inside, dribbling, \
 				distance shooting and ability to play the ball off the ground."
 
-		resolver = WikipediaSearchResolver(TF(), Tokenizer(), 0, [ ])
+		resolver = WikipediaExtrapolator(TF(), Tokenizer(), 0, [ ])
 		self.assertEqual("Memphis Depay (Dutch pronunciation: [ˈmɛmfɪs dəˈpɑi]; born 13 February 1994), commonly known simply as Memphis,[2] is a Dutch professional footballer and music artist who plays as a forward and captains French club Lyon and plays for the Netherlands national team.",
 						 re.sub('([ \t]+)', ' ', resolver._get_first_sentence(text)).strip())
 
@@ -159,7 +159,7 @@ class TestWikipediaExtrapolator(unittest.TestCase):
 		"""
 
 		text = "Youssouf Koné (born 5 July 1995) is a Malian professional footballer who plays for French side Olympique Lyonnais and the Mali national team as a left-back."
-		resolver = WikipediaSearchResolver(TF(), Tokenizer(), 0, [ ])
+		resolver = WikipediaExtrapolator(TF(), Tokenizer(), 0, [ ])
 		self.assertEqual(text, resolver._get_first_sentence(text))
 
 	def test_get_first_sentence_full_without_period(self):
@@ -168,7 +168,16 @@ class TestWikipediaExtrapolator(unittest.TestCase):
 		"""
 
 		text = "Youssouf Koné (born 5 July 1995) is a Malian professional footballer who plays for French side Olympique Lyonnais and the Mali national team as a left-back"
-		resolver = WikipediaSearchResolver(TF(), Tokenizer(), 0, [ ])
+		resolver = WikipediaExtrapolator(TF(), Tokenizer(), 0, [ ])
+		self.assertEqual(text, resolver._get_first_sentence(text))
+
+	def test_get_first_sentence_empty(self):
+		"""
+		Test that when getting the first sentence from an empty string, an empty string is returned.
+		"""
+
+		text = ""
+		resolver = WikipediaExtrapolator(TF(), Tokenizer(), 0, [ ])
 		self.assertEqual(text, resolver._get_first_sentence(text))
 
 	def test_link_frequency(self):
@@ -263,3 +272,19 @@ class TestWikipediaExtrapolator(unittest.TestCase):
 		self.assertTrue('Olympique Lyonnais' in graph.nodes)
 		self.assertTrue('Ligue 1' in graph.nodes)
 		self.assertFalse(random_string in graph.nodes)
+
+	def test_extrapolate(self):
+		"""
+		Test extrapolating from a single term.
+		"""
+
+		"""
+		Create the test data
+		"""
+		tokenizer = Tokenizer(stem=True, stopwords=list(stopwords.words("english")))
+		posts = [
+			"Olympique Lyonnais back on top after comeback victory against Rennes",
+		]
+		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+		extrapolator = WikipediaExtrapolator(corpus, tokenizer, TF())
+		extrapolator.extrapolate([ 'Olympique Lyonnais' ])

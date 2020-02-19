@@ -122,6 +122,15 @@ class TestWikipediaSearchResolver(unittest.TestCase):
 		resolver = WikipediaSearchResolver(TF(), Tokenizer(), 0, [ ])
 		self.assertEqual(text, resolver._get_first_sentence(text))
 
+	def test_get_first_sentence_empty(self):
+		"""
+		Test that when getting the first sentence from an empty string, an empty string is returned.
+		"""
+
+		text = ""
+		resolver = WikipediaSearchResolver(TF(), Tokenizer(), 0, [ ])
+		self.assertEqual(text, resolver._get_first_sentence(text))
+
 	def test_score_upper_bound(self):
 		"""
 		Test that the score has an upper bound of 1.

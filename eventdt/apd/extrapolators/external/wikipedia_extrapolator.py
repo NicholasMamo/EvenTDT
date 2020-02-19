@@ -209,8 +209,11 @@ class WikipediaExtrapolator(Extrapolator):
 		:rtype: str
 		"""
 
-		sentences = nltk.sent_tokenize(text)
-		return sentences[0]
+		if text:
+			sentences = nltk.sent_tokenize(text)
+			return sentences[0]
+		else:
+			return text
 
 	def _link_frequency(self, articles):
 		"""
