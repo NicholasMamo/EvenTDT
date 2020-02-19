@@ -1,5 +1,13 @@
 """
-An extrapolator that uses Wikipedia's links as the basis for semantic similarity.
+The Wikipedia extrapolator looks for new participants that are tightly-linked with resolved participants.
+The extrapolator looks for outgoing links twice.
+First, it looks for outgoing links from the resolved participants.
+Secondly, it looks for outgoing links from the first set of links.
+
+All of these articles are added to a graph, subject to certain constraints.
+The extrapolator uses the Girvan-Newman algorithm to extract communities.
+Large communities of tightly-linked articles are considered to be candidate participants.
+The most relevant articles in these communities are scored for relevance by the extrapolator.
 """
 
 import asyncio
@@ -27,7 +35,8 @@ from ..extrapolator import Extrapolator
 
 class WikipediaExtrapolator(Extrapolator):
 	"""
-	The link extrapolator creates a graph and uses the graph to find participants.
+	The Wikipedia extrapolator looks for new participants that are tightly-linked with resolved participants.
+	This definition is based on a graph, and communities are extracted using the Girvan-Newman algorithm.
 	"""
 
 	def extrapolate(self, candidates, corpus, extrapolator_scheme, extrapolator_participants=10, extrapolator_threshold=0, token_attribute="tokens", *args, **kwargs):
