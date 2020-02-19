@@ -131,3 +131,18 @@ class WikipediaSearchResolver(Resolver):
 				unresolved_candidates.append(candidate)
 
 		return (resolved_candidates, unresolved_candidates)
+
+	def _has_year(self, title):
+		"""
+		Check whether the given title has a year in it.
+
+		:param title: The title of the article.
+		:type title: str
+
+		:return: A boolean indicating whether the title includes a year in it.
+		:rtype: bool
+		"""
+
+		year_pattern = re.compile("\\b[0-9]{4}\\b")
+		return len(year_pattern.findall(title)) > 0
+
