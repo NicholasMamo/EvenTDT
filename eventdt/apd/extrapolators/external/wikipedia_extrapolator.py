@@ -281,11 +281,17 @@ class WikipediaExtrapolator(Extrapolator):
 		If the similarity exceeds the threshold, add an edge between the two.
 		"""
 		for source, targets in outgoing_links.items():
+			if source not in documents:
+				continue
+
 			if source not in graph.nodes:
 				graph.add_node(source, document=documents[source])
 
 			for target in targets:
-				if target not in graph.nodes and target in documents:
+				if target not in documents:
+					continue
+
+				if target not in graph.nodes:
 					graph.add_node(target, document=documents[target])
 
 				if source in documents and target in documents:
