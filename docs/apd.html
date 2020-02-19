@@ -1089,6 +1089,18 @@ For example, <cite>FC Barcelona</cite> is referred to simply as <cite>Barcelona<
 <dd><p>The Wikipedia search resolver looks for pages that include candidate names.
 The Wikipedia API automatically ranks articles by relevance.
 This resolver exploits that to try and match the candidate with any of the top results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="nlp.html#module-nlp.term_weighting.scheme" title="nlp.term_weighting.scheme"><strong>scheme</strong></a> (<a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.term_weighting.scheme.TermWeightingScheme</span></code></a>) – The term-weighting scheme to use to create documents from Wikipedia pages.
+These documents are used to compare the similarity with the domain of the candidates.</p></li>
+<li><p><strong>threshold</strong> (<em>float</em>) – The threshold below which candidates become unresolved.</p></li>
+<li><p><a class="reference internal" href="nlp.html#module-nlp.tokenizer" title="nlp.tokenizer"><strong>tokenizer</strong></a> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.tokenizer.Tokenizer</span></code></a>) – The tokenizer to use to create documents.</p></li>
+<li><p><strong>threshold</strong> – The similarity threshold beyond which candidate participants are resolved.</p></li>
+<li><p><strong>corpus</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.document.Document</span></code></a>) – The corpus of documents.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="method">
 <dt id="apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">scheme</em>, <em class="sig-param">tokenizer</em>, <em class="sig-param">threshold</em>, <em class="sig-param">corpus</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver.__init__" title="Permalink to this definition">¶</a></dt>
