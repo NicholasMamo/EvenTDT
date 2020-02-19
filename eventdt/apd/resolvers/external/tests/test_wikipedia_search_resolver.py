@@ -110,7 +110,6 @@ class TestWikipediaSearchResolver(unittest.TestCase):
 		"""
 
 		text = "Youssouf Koné (born 5 July 1995) is a Malian professional footballer who plays for French side Olympique Lyonnais and the Mali national team as a left-back."
-
 		resolver = WikipediaSearchResolver(TF(), Tokenizer(), 0, [ ])
 		self.assertEqual(text, resolver._get_first_sentence(text))
 
@@ -120,6 +119,65 @@ class TestWikipediaSearchResolver(unittest.TestCase):
 		"""
 
 		text = "Youssouf Koné (born 5 July 1995) is a Malian professional footballer who plays for French side Olympique Lyonnais and the Mali national team as a left-back"
-
 		resolver = WikipediaSearchResolver(TF(), Tokenizer(), 0, [ ])
 		self.assertEqual(text, resolver._get_first_sentence(text))
+
+	def test_score_upper_bound(self):
+		"""
+		Test that the score has an upper bound of 1.
+		"""
+
+		tokenizer = Tokenizer(min_length=2, stem=True)
+		candidate = "Cristiano Ronaldo"
+		candidate_document = Document(candidate, tokenizer.tokenize(candidate))
+		title_document = Document(candidate, tokenizer.tokenize(candidate))
+
+		text = "Cristiano Ronaldo is a Portuguese professional footballer who plays as a forward for Serie A club Juventus and captains the Portugal national team."
+		domain = Document(text, tokenizer.tokenize(text))
+		sentence = Document(text, tokenizer.tokenize(text))
+
+		resolver = WikipediaSearchResolver(TF(), Tokenizer(), 0, [ ])
+		self.assertEqual(1, round(resolver._compute_score(candidate_document, title_document, domain, sentence), 5))
+
+	def test_score_lower_bound(self):
+		"""
+		Test that the score has a lower bound of 0.
+		"""
+
+		tokenizer = Tokenizer(min_length=2, stem=True)
+		candidate = "Cristiano Ronaldo"
+		candidate_document = Document(candidate, tokenizer.tokenize(candidate))
+		text = "Cristiano Ronaldo is a Portuguese professional footballer who plays as a forward for Serie A club Juventus and captains the Portugal national team."
+		domain = Document(text, tokenizer.tokenize(text))
+
+		title_document = Document(candidate, [ ])
+		sentence = Document(text, [ ])
+
+		resolver = WikipediaSearchResolver(TF(), Tokenizer(), 0, [ ])
+		self.assertEqual(0, round(resolver._compute_score(candidate_document, title_document, domain, sentence), 5))
+
+	def test_score_relevance(self):
+		"""
+		Test that when two documents are provided, one more relevant than the other, the score reflects it.
+		"""
+
+		tokenizer = Tokenizer(min_length=2, stem=True)
+		candidate = "Ronaldo"
+		candidate_document = Document(candidate, tokenizer.tokenize(candidate))
+		text = "Ronaldo, speaking after Juventus' victory, says Serie A is still wide open"
+		domain = Document(text, tokenizer.tokenize(text))
+
+		title_1 = "Cristiano Ronaldo"
+		text_1 = "Cristiano Ronaldo is a Portuguese professional footballer who plays as a forward for Serie A club Juventus."
+		title_document_1 = Document(title_1, tokenizer.tokenize(title_1))
+		sentence_document_1 = Document(text_1, tokenizer.tokenize(text_1))
+
+		title_2 = "Ronaldo"
+		text_2 = "Ronaldo is a Brazilian former professional footballer who played as a striker."
+		title_document_2 = Document(title_2, tokenizer.tokenize(title_2))
+		sentence_document_2 = Document(text_2, tokenizer.tokenize(text_2))
+
+		resolver = WikipediaSearchResolver(TF(), Tokenizer(), 0, [ ])
+		score_1 = resolver._compute_score(candidate_document, title_document_1, domain, sentence_document_1)
+		score_2 = resolver._compute_score(candidate_document, title_document_2, domain, sentence_document_2)
+		self.assertGreater(score_1, score_2)

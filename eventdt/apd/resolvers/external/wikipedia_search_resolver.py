@@ -155,8 +155,47 @@ class WikipediaSearchResolver(Resolver):
 
 	def _get_first_sentence(self, text):
 		"""
-		Get the first sentence
+		Get the first sentence from the given text.
+
+		:param text: The text from which to extract the first sentence.
+		:type text: str
+
+		:return: The first sentence from the given text.
+		:rtype: str
 		"""
 
 		sentences = nltk.sent_tokenize(text)
 		return sentences[0]
+
+	def _compute_score(self, candidate, title, domain, sentence):
+		"""
+		Compute the score of an article in terms of its relevance.
+		The score is made up of two factors:
+
+			#. The similarity between the article name and the candidate;
+			#. The similarity between the first sentence of the article and the domain.
+
+		These two factors are multipled together to get the score.
+		The score is bound between 0 and 1.
+
+		:param candidate: The candidate name.
+		:type candidate: `nlp.document.Document`
+		:param title: The title of the article.
+		:type title: `nlp.document.Document`
+		:param domain: The domain of the event.
+		:type domain: `nlp.document.Document`
+		:param sentence: The first sentence of the article.
+		:type sentence: `nlp.document.Document`
+
+		:return: The relevance score of the article.
+		:rtype: float
+		"""
+
+		candidate.normalize()
+		title.normalize()
+		domain.normalize()
+		sentence.normalize()
+
+		title_score = vector_math.cosine(title, candidate)
+		text_score = vector_math.cosine(sentence, domain)
+		return title_score * text_score
