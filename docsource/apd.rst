@@ -132,3 +132,11 @@ External
    :members:
    :private-members:
    :special-members:
+
+Extrapolators
+=============
+
+.. automodule:: apd.extrapolators.extrapolator
+   :members:
+   :private-members:
+   :special-members:
