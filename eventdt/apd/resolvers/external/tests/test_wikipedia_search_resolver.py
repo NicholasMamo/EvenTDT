@@ -69,3 +69,20 @@ class TestWikipediaSearchResolver(unittest.TestCase):
 		resolver = WikipediaSearchResolver(TF(), Tokenizer(), 0, [ ])
 		self.assertFalse(resolver._has_year(article))
 
+	def test_remove_brackets(self):
+		"""
+		Test that when removing brackets, they are completely removed.
+		"""
+
+		article = 'Youssouf Koné (footballer, born 1995)'
+		resolver = WikipediaSearchResolver(TF(), Tokenizer(), 0, [ ])
+		self.assertEqual('Youssouf Koné', resolver._remove_brackets(article).strip())
+
+	def test_remove_unclosed_brackets(self):
+		"""
+		Test that when removing brackets that are not closed, they are not removed.
+		"""
+
+		article = 'Youssouf Koné (footballer, born 1995'
+		resolver = WikipediaSearchResolver(TF(), Tokenizer(), 0, [ ])
+		self.assertEqual('Youssouf Koné (footballer, born 1995', resolver._remove_brackets(article).strip())

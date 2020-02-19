@@ -146,3 +146,16 @@ class WikipediaSearchResolver(Resolver):
 		year_pattern = re.compile("\\b[0-9]{4}\\b")
 		return len(year_pattern.findall(title)) > 0
 
+	def _remove_brackets(self, text):
+		"""
+		Remove brackets from the given text.
+
+		:param text: The text from which to remove brackets.
+		:type text: str
+
+		:return: The text without any components in the brackets.
+		:rtype: str
+		"""
+
+		bracket_pattern = re.compile("\(.*?\)")
+		return bracket_pattern.sub(' ', text)
