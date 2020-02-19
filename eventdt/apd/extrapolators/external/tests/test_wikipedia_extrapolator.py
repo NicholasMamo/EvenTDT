@@ -136,3 +136,21 @@ class TestWikipediaExtrapolator(unittest.TestCase):
 		article = 'Youssouf Koné (footballer, born 1995'
 		extrapolator = WikipediaExtrapolator([ ], Tokenizer(), TF())
 		self.assertEqual('Youssouf Koné (footballer, born 1995', extrapolator._remove_brackets(article).strip())
+
+	def test_link_frequency(self):
+		"""
+		Test that the link frequency count is accurate.
+		"""
+
+		links = {
+			'a': [ 'x', 'y' ],
+			'b': [ 'y', 'z' ],
+			'c': [ 'w', 'x', 'y', 'z' ],
+		}
+		extrapolator = WikipediaExtrapolator([ ], Tokenizer(), TF())
+		frequencies = extrapolator._link_frequency(links)
+		self.assertEqual(2, frequencies.get('x'))
+		self.assertEqual(3, frequencies.get('y'))
+		self.assertEqual(2, frequencies.get('z'))
+		self.assertEqual(1, frequencies.get('w'))
+		self.assertFalse(frequencies.get('a'))

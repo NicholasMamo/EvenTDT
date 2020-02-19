@@ -312,6 +312,24 @@ class WikipediaExtrapolator(Extrapolator):
 		bracket_pattern = re.compile("\(.*?\)")
 		return bracket_pattern.sub(' ', text)
 
+	def _link_frequency(self, articles):
+		"""
+		Count the link frequency in the given set.
+
+		:param articles: The dictionary of articles with their outgoing links.
+						 The keys are the article titles.
+						 The values are the outgoing links.
+		:type articles: dict
+
+		:return: A dictionary of the outgoing links (the values of the dictionary).
+				 The keys are the outgoing links.
+				 The values are the frequency across all articles.
+		:rtype: dict
+		"""
+
+		outgoing_links = [ link for link_set in articles.values() for link in link_set ]
+		return { link: outgoing_links.count(link) for link in set(outgoing_links) }
+
 	def _most_central_edge(self, G):
 		"""
 		Find the most central edge in the given graph.
