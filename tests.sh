@@ -31,8 +31,9 @@ apd_tests() {
 	python3 -m unittest eventdt.apd.resolvers.external.tests.test_wikipedia_name_resolver
 	python3 -m unittest eventdt.apd.resolvers.external.tests.test_wikipedia_search_resolver
 
-	# echo -e "${HIGHLIGHT}Extrapolator${DEFAULT}"
-	# python3 -m unittest eventdt.apd.extrapolators.external.tests.test_external_extrapolators
+	echo -e "${HIGHLIGHT}Extrapolator${DEFAULT}"
+	python3 -m unittest eventdt.apd.extrapolators.external.tests.test_wikipedia_extrapolator
+
 	# echo -e "${HIGHLIGHT}Postprocessor${DEFAULT}"
 	# python3 -m unittest eventdt.apd.postprocessors.external.tests.test_external_postprocessors
 	return
