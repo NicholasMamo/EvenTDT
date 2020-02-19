@@ -16,7 +16,7 @@ path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
-from nltk.corpus import stopwords
+import nltk
 
 from vsm import vector_math
 from nlp.document import Document
@@ -67,20 +67,13 @@ class WikipediaSearchResolver(Resolver):
 
 		resolved_candidates, unresolved_candidates = [], []
 
-		delimiter_pattern = re.compile("^(.+?)\.[\s\n][A-Z0-9]")
-
-		candidates = [ candidate.title() for candidate in candidates ]
+		candidates = list(candidates.keys())
 
 		"""
-		Get the concatenated corpus.
+		Get the concatenated corpus as a single document, representing the domain.
 		"""
-		tokenized_corpus = []
-		for document in corpus:
-			tokens = tokenizer.tokenize(document.get_text())
-			document = Document(document.get_text(), tokens, scheme=self.scheme)
-			tokenized_corpus.append(document)
-		corpus_document = vector_math.concatenate(tokenized_corpus)
-		corpus_document.normalize()
+		domain = Document.concatenate(*self.corpus, tokenizer=self.tokenizer, scheme=self.scheme)
+		domain.normalize()
 
 		for candidate in candidates:
 			"""
@@ -159,3 +152,11 @@ class WikipediaSearchResolver(Resolver):
 
 		bracket_pattern = re.compile("\(.*?\)")
 		return bracket_pattern.sub(' ', text)
+
+	def _get_first_sentence(self, text):
+		"""
+		Get the first sentence
+		"""
+
+		sentences = nltk.sent_tokenize(text)
+		return sentences[0]
