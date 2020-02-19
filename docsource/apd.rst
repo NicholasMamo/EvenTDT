@@ -127,3 +127,8 @@ External
    :members:
    :private-members:
    :special-members:
+
+.. automodule:: apd.resolvers.external.wikipedia_search_resolver
+   :members:
+   :private-members:
+   :special-members:
