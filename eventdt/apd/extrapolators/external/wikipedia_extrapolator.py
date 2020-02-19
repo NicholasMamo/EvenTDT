@@ -40,6 +40,8 @@ class WikipediaExtrapolator(Extrapolator):
 
 	:ivar corpus: The corpus of documents.
 	:vartype corpus: list of :class:`nlp.document.Document`
+	:ivar tokenizer: The tokenizer to use to create documents.
+	:vartype tokenizer: :class:`nlp.tokenizer.Tokenizer`
 	:ivar scheme: The term-weighting scheme to use to create documents from Wikipedia pages.
 				  These documents are used to compare the similarity with the domain of the candidates.
 	:vartype scheme: :class:`nlp.term_weighting.scheme.TermWeightingScheme`
@@ -47,12 +49,14 @@ class WikipediaExtrapolator(Extrapolator):
 	:vartype threshold: float
 	"""
 
-	def __init__(self, corpus, scheme, threshold=0):
+	def __init__(self, corpus, tokenizer, scheme, threshold=0):
 		"""
 		Create the extrapolator.
 
 		:param corpus: The corpus of documents.
 		:type corpus: list of :class:`nlp.document.Document`
+		:param tokenizer: The tokenizer to use to create documents.
+		:type tokenizer: :class:`nlp.tokenizer.Tokenizer`
 		:param scheme: The term-weighting scheme to use to create documents from Wikipedia pages.
 					   These documents are used to compare the similarity with the domain of the candidates.
 		:type scheme: :class:`nlp.term_weighting.scheme.TermWeightingScheme`
@@ -61,6 +65,7 @@ class WikipediaExtrapolator(Extrapolator):
 		"""
 
 		self.corpus = corpus
+		self.tokenizer = tokenizer
 		self.scheme = scheme
 		self.threshold = threshold
 
