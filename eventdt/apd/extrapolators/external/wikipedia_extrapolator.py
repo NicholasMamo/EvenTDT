@@ -30,39 +30,6 @@ class WikipediaExtrapolator(Extrapolator):
 	The link extrapolator creates a graph and uses the graph to find participants.
 	"""
 
-	def _most_central_edge(self, G):
-		"""
-		Find the most central edge in the given graph.
-		The algorithm uses NetworkX's betweenness centrality, but it is based on weight.
-		The lower the weight, the more shortest paths could go through it.
-
-		:param G: The graph on which the algorithm operates.
-		:type G: :class:`networkx.Graph`
-
-		:return: The most central edge, made up of the source and edge nodes.
-		:rtype: tuple
-		"""
-
-		centrality = edge_betweenness_centrality(G, weight='weight')
-		edge = max(centrality, key=centrality.get)
-		return edge
-
-	def _heaviest_edge(self, G):
-		"""
-		Find the heaviest edge in the given graph.
-		The algorithm uses the base weight and removes the heaviest - or most strenuous - one
-
-		:param G: The graph on which the algorithm operates.
-		:type G: :class:`networkx.Graph`
-
-		:return: The heaviest edge, made up of the source and edge nodes.
-		:rtype: tuple
-		"""
-
-		weight = { (source, target): weight for source, target, weight in G.edges(data="weight", default=1) }
-		edge = max(weight, key=weight.get)
-		return edge
-
 	def extrapolate(self, candidates, corpus, extrapolator_scheme, extrapolator_participants=10, extrapolator_threshold=0, token_attribute="tokens", *args, **kwargs):
 		"""
 		Extrapolate the given candidates.
@@ -290,3 +257,20 @@ class WikipediaExtrapolator(Extrapolator):
 			candidate_pages[candidate] = document
 
 		return candidate_pages
+
+	def _most_central_edge(self, G):
+		"""
+		Find the most central edge in the given graph.
+		The algorithm uses NetworkX's betweenness centrality, but it is based on weight.
+		The lower the weight, the more shortest paths could go through it.
+
+		:param G: The graph on which the algorithm operates.
+		:type G: :class:`networkx.Graph`
+
+		:return: The most central edge, made up of the source and edge nodes.
+		:rtype: tuple
+		"""
+
+		centrality = edge_betweenness_centrality(G, weight='weight')
+		edge = max(centrality, key=centrality.get)
+		return edge
