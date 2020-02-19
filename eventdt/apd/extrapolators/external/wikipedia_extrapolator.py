@@ -24,6 +24,7 @@ import networkx as nx
 from networkx import edge_betweenness_centrality
 from networkx.algorithms import community
 
+import nltk
 from nltk.corpus import stopwords, words
 
 from vsm import vector_math
@@ -84,170 +85,90 @@ class WikipediaExtrapolator(Extrapolator):
 		:rtype: list of str
 		"""
 
-		extrapolated_participants = { }
-
-		delimiter_pattern = re.compile("^(.+?)\.[\s\n][A-Z0-9]")
-
-		year_pattern = re.compile("[0-9]{4}") # a pattern that indicates a year in the title
-		bracket_pattern = re.compile("\(.*?\)")
+		candidates = { }
 
 		"""
-		Get the concatenated corpus.
+		Get the concatenated corpus as a single document, representing the domain.
 		This serves as the local context.
 		"""
-		tokenized_corpus = []
-		for document in corpus:
-			tokens = tokenizer.tokenize(document.get_text())
-			document = Document(document.get_text(), tokens, scheme=extrapolator_scheme)
-			tokenized_corpus.append(document)
-		corpus_document = vector_math.concatenate(tokenized_corpus)
-		corpus_document.normalize()
+		domain = Document.concatenate(*self.corpus, tokenizer=self.tokenizer, scheme=self.scheme)
+		domain.normalize()
 
 		"""
 		Create an empty graph.
+		This graph will host all resolved participants and candidate participants during extrapolation.
 		"""
-		graph = Graph()
-		candidate_nodes = {}
-		candidate_pages = {}
+		graph = nx.Graph()
 
 		"""
 		Get the first level links.
-		Only retain those that appear a minimum of times.
+		Then, filter the links to retain only those in the top 100, and those that do not have a year in them.
+		Popular links that have already been resolved can be discarded immediately.
 		"""
-		first_links = link_collector.get_links(candidates, first_section_only=False, separate=True)
-		first_links = { page: links for page, links in first_links.items() if len(year_pattern.findall(page)) == 0 } # TODO: Try removing year pattern
-		link_popularity = { }
-		for link_set in first_links.values():
-			for link in link_set:
-				link_popularity[link] = link_popularity.get(link, 0) + 1
-		link_popularity = sorted(link_popularity.items(), key=lambda x:x[1])[::-1]
-		next_pages = [ link for link, _ in link_popularity if link not in first_links.keys() ][:100]
-		candidate_pages.update(self.get_candidate_pages(list(first_links.keys()) + next_pages, extrapolator_scheme))
+		first_level = links.collect(participants, introduction_only=False, separate=True)
+		link_frequency = self._link_frequency(first_level)
+		link_frequency = [ link for link in link_frequency if not self._has_year(self._remove_brackets(link)) ]
+		link_frequency = sorted(link_frequency.keys(), key=lambda link: link_frequency.get(link), reverse=True)
+		frequent_links = link_frequency[:100]
+		frequent_links = [ link for link in link_frequency if link not in participants ]
+		first_level = {
+			article: [ link for link in first_level.get(article) if link in frequent_links ]
+					   for article in first_level
+		}
 
-		"""
-		Create the representation for the pages.
-		Initially, this is made up of the candidates and popular outgoing links in these candidates.
-		"""
-
-		first_links = { page: [ link for link in first_links[page] if link in next_pages ] for page in first_links }
-		for candidate, links in first_links.items():
-			""""
-			Create the nodes and edges, this time using the first-level links.
-			"""
-			node = Node(candidate)
-			candidate_nodes[candidate] = node
-			graph.add_node(node)
-
-			for page in links:
-				if page not in candidate_nodes:
-					"""
-					If the page does not have a node, create one for it.
-					"""
-					node = Node(page)
-					candidate_nodes[page] = node
-					graph.add_node(node)
-					if candidate not in candidate_pages:
-						logger.warning("%s has no representation" % candidate)
-						continue
-					if page not in candidate_pages:
-						logger.warning("%s has no representation" % page)
-						continue
-					similarity = vector_math.cosine(candidate_pages[candidate], candidate_pages[page])
-					if similarity > 0:
-						graph.add_edge(node, candidate_nodes[candidate], 1 - similarity)
+		self._add_to_graph(graph, first_level, threshold=0)
 
 		"""
 		Repeat the process a second time.
+		This time, the filter identifies the cut-off at the 1000th most frequent link.
+		Once more, articles with a year in the title are excluded.
+		Articles that have already been seen are not considered.
 		"""
-		second_links = link_collector.get_links(next_pages, first_section_only=False, separate=True)
-		second_links = { page: links for page, links in second_links.items() if len(year_pattern.findall(page)) == 0 }
-		link_popularity = { }
-		for link_set in second_links.values():
-			for link in link_set:
-				link_popularity[link] = link_popularity.get(link, 0) + 1
+		second_level = links.collect(frequent_links, introduction_only=False, separate=True)
+		link_frequency = self._link_frequency(second_level)
+		link_frequency = [ link for link in link_frequency if not self._has_year(self._remove_brackets(link)) ]
+		cutoff = sorted(link_frequency.values(), reverse=True)[999] if len(link_frequency) == 1000 else max(link_frequency.values())
+		frequent_links = [ link for link in link_frequency if link_frequency.get(link) >= cutoff ]
+		frequent_links = [ link for link in frequent_links if link not in list(graph.nodes) ]
+		second_level = {
+			article: [ link for link in second_level.get(article) if link in frequent_links ]
+					   for article in second_level
+		}
 
-		cutoff = 1
-		second_links = { page: [ link for link in second_links[page] if link_popularity[link] >= cutoff ] for page in second_links }
-		unique_links = set([ link for links in second_links.values() for link in links ])
-		while len(unique_links) > 1000:
-			second_links = { page: [ link for link in second_links[page] if link_popularity[link] > cutoff ] for page in second_links }
-			unique_links = set([ link for links in second_links.values() for link in links ])
-			cutoff += 1
-		logger.info("Graph to be created with a popularity cut-off of %d" % (cutoff - 1))
-
-		"""
-		Create the representations of the the new pages.
-		"""
-		new_pages = list(set([ link for page in second_links for link in second_links[page] if link not in candidate_pages ]))
-		candidate_pages.update(self.get_candidate_pages(new_pages + list(second_links.keys()), extrapolator_scheme))
-
-		for source, links in second_links.items():
-			""""
-			Create the nodes and edges, this time using the second-level links.
-			"""
-			if source not in candidate_nodes:
-				"""
-				The source page may not always have a node - this could happen because of redirections.
-				"""
-				node = Node(source)
-				candidate_nodes[source] = node
-				graph.add_node(node)
-
-			"""
-			Visit each target link and create a node for it if need be.
-			Then, add an edge from the source page to this page.
-			"""
-			for target in links:
-				if (len(year_pattern.findall(target)) == 0
-					and not target.lower().startswith("list of")):
-
-					if target not in candidate_nodes:
-						node = Node(target)
-						candidate_nodes[target] = node
-						graph.add_node(node)
-					else:
-						node = candidate_nodes[target]
-
-					if source not in candidate_pages:
-						# logger.warning("%s has no representation" % source)
-						continue
-					if target not in candidate_pages:
-						# logger.warning("%s has no representation" % target)
-						continue
-					similarity = vector_math.cosine(candidate_pages[source], candidate_pages[target])
-					if similarity > 0.5:
-						graph.add_edge(node, candidate_nodes[source], 1 - similarity)
+		self._add_to_graph(graph, second_level, 0.5)
 
 		"""
-		Create a networkx graph and use it to partition the pages.
+		Partition the graph into communities.
+		The process is repeated until there are fewer than the square root of nodes in the graph.
+		Nodes from partitions with at least 3 members are considered to be participants.
+		The exceptions are:
+
+			#. nodes that are also normal terms
+			#. nodes that have a year in the title
 		"""
-		nx_graph = graph.to_networkx()
-		communities = community.girvan_newman(nx_graph, most_valuable_edge=self._most_central_edge)
-		top_level_partitions = list(next(communities))
+		communities = community.girvan_newman(graph, most_valuable_edge=self._most_central_edge)
+		partitions = list(next(communities))
+		while len(partitions) < math.sqrt(len(graph.nodes)):
+			partitions = list(next(communities))
+
+		partitions = [ partition for partition in partitions if len(partitions) > 3 ]
+		participants = [ node for partition in partitions for node in partition ]
+		participants = [ participant for participant in participants if participant.strip().lower() not in words.words() ]
+		participants = [ self._remove_brackets(participant) for participant in participants ]
+		participants = [ participant for participant in participants if not _has_year(participant) ]
 
 		"""
-		Get the nodes from the biggest partitions.
+		Calculate a score for each candidate participant, retaining those having a score that exceeds the threshold.
+		Moreover, exclude candidates that were provided in the resolved participants.
+		Return the candidates in descending order of relevance.
 		"""
-		new_candidates = []
-		for i, partition in enumerate(top_level_partitions):
-			subgraph = nx_graph.subgraph(partition)
-			if len(partition) > 3:
-				nodes = [ nx_graph.node[node]["name"] for node in partition ]
-				new_candidates.extend(nodes)
-
-
-		"""
-		Retain the candidates having a minimum score.
-		Moreover, exclude candidates that were provided in the seed set - they're already known to exist.
-		From these candidates, return only the top ones.
-		"""
-		extrapolated_participants = { candidate: vector_math.cosine(corpus_document, candidate_pages[candidate]) for candidate in new_candidates if candidate in candidate_pages }
-		extrapolated_participants = { bracket_pattern.sub(' ', candidate): score for candidate, score in extrapolated_participants.items() if candidate not in candidates }
-		extrapolated_participants = { candidate: score for candidate, score in extrapolated_participants.items() if score >= extrapolator_threshold }
-		extrapolated_participants = { candidate: score for candidate, score in extrapolated_participants.items() if candidate.strip().lower() not in words.words() }
-		extrapolated_participants = { candidate.strip(): score for candidate, score in extrapolated_participants.items() if len(year_pattern.findall(candidate)) == 0 } # exclude candidates that have a year in the title
-		extrapolated_participants = sorted(extrapolated_participants.items(), key=lambda x:x[1])[:-1 * (extrapolator_participants + 1):-1]
-		return [ candidate for candidate, _ in extrapolated_participants ]
+		participants = {
+			participant: vector_math.cosine(domain, graph.nodes[participant]['document'])
+			for participant in participants
+		}
+		participants = { participant: score for participant, score in participants.items() if score >= self.threshold }
+		participants = sorted(participants.keys(), key=lambda participant: participants.get(participant), reverse=True)
+		return participants
 
 	def _has_year(self, title):
 		"""
