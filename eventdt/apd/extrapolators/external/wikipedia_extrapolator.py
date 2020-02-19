@@ -48,11 +48,13 @@ class WikipediaExtrapolator(Extrapolator):
 	:vartype scheme: :class:`nlp.term_weighting.scheme.TermWeightingScheme`
 	:ivar threshold: The similarity threshold beyond which new participants are are added.
 	:vartype threshold: float
-	:ivar first_level_links: The number of first level links to retain.
+	:ivar first_level_links: The number of first-level links to retain.
 	:vartype first_level_links: int
+	:ivar second_level_links: The number of second-level links to retain.
+	:vartype second_level_links: int
 	"""
 
-	def __init__(self, corpus, tokenizer, scheme, threshold=0, first_level_links=100):
+	def __init__(self, corpus, tokenizer, scheme, threshold=0, first_level_links=100, second_level_links=1000):
 		"""
 		Create the extrapolator.
 
@@ -65,8 +67,10 @@ class WikipediaExtrapolator(Extrapolator):
 		:type scheme: :class:`nlp.term_weighting.scheme.TermWeightingScheme`
 		:param threshold: The similarity threshold beyond which new participants are are added.
 		:type threshold: float
-		:param first_level_links: The number of first level links to retain.
+		:param first_level_links: The number of first-level links to retain.
 		:type first_level_links: int
+		:param second_level_links: The index at which the cut-off point of link frequency is taken for the second-level links.
+		:type second_level_links: int
 		"""
 
 		self.corpus = corpus
@@ -74,6 +78,7 @@ class WikipediaExtrapolator(Extrapolator):
 		self.scheme = scheme
 		self.threshold = threshold
 		self.first_level_links = first_level_links
+		self.second_level_links = second_level_links
 
 	def extrapolate(self, participants, *args, **kwargs):
 		"""
@@ -106,7 +111,7 @@ class WikipediaExtrapolator(Extrapolator):
 		graph = nx.Graph()
 
 		"""
-		Get the first level links.
+		Get the first-level links.
 		Then, filter the links to retain only those in the top 100, and those that do not have a year in them.
 		Popular links that have already been resolved can be discarded immediately.
 		"""
@@ -130,7 +135,7 @@ class WikipediaExtrapolator(Extrapolator):
 		second_level = links.collect(frequent_links, introduction_only=False, separate=True)
 		link_frequency = self._link_frequency(second_level)
 		link_frequency = { link: frequency for link, frequency in link_frequency.items() if not self._has_year(self._remove_brackets(link)) }
-		cutoff = sorted(link_frequency.values(), reverse=True)[999] if len(link_frequency) >= 1000 else max(link_frequency.values())
+		cutoff = sorted(link_frequency.values(), reverse=True)[self.second_level_links - 1] if len(link_frequency) >= self.second_level_links else max(link_frequency.values())
 		frequent_links = [ link for link in link_frequency if link_frequency.get(link) >= cutoff ]
 		frequent_links = [ link for link in frequent_links if link not in list(graph.nodes) ]
 		second_level = {
