@@ -1,5 +1,11 @@
 """
-A postprocessor that uses Wikipedia to postprocess candidates.
+The Wikipedia postprocessor uses Wikipedia to get information about participants.
+It uses this information to postprocess participants.
+For example, participants that are persons can be reduced to a surname.
+
+.. note::
+
+	The Wikipedia postprocessor assumes that the given participants map to Wikipedia pages.
 """
 
 import os
@@ -8,66 +14,65 @@ import sys
 
 from nltk.corpus import words
 
-path = os.path.dirname(__file__)
-path = os.path.join(path, '../../../')
+path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
 if path not in sys.path:
-	sys.path.append(path)
-
-from logger import logger
+    sys.path.append(path)
 
 from vector import vector_math
 
-from vector.nlp.document import Document
-from vector.nlp.tokenizer import Tokenizer
+from nlp.document import Document
+from nlp.tokenizer import Tokenizer
 
-from wikinterface.info_collector import InfoCollector
+from wikinterface import info
 
 from ..postprocessor import Postprocessor
 
 class WikipediaPostprocessor(Postprocessor):
 	"""
-	The Wikipedia postprocessor assumes that the given candidates map to Wikipedia pages.
-	It uses this knowledge to get additional information about candidates.
+	The Wikipedia postprocessor assumes that the given participants map to Wikipedia pages.
+	It uses this knowledge to get additional information about participants and postprocess the .
+
+	:ivar remove_accents: A boolean that indicates whether accents should be removed.
+	:vartype remove_accents: bool
+	:ivar remove_brackets: A boolean indicating whether brackets should be removed.
+	:vartype remove_brackets: bool
+	:ivar surname_only: A boolean that indicates whether participants should be reduced to surnames.
+						This only applies to participants that are known to be persons based on Wikipedia information.
+						It is assumed that the surname is made up of all terms except the first one.
+						Participants whose surnames are also words retain the full name.
+	:vartype surname_only: bool
 	"""
 
-	def postprocess(self, candidates, corpus, token_attribute="tokens",
-		postprocessor_remove_accents=True, postprocessor_remove_disambiguation=True, postprocessor_surname_only=True, force_retain=False, *args, **kwargs):
+	def __init__(self, remove_accents=True, remove_disambiguation=True, surname_only=True):
 		"""
-		Postprocess the given candidates.
+		Create the postprocessor.
 
-		:param candidates: The candidates to postprocess.
-			It is assumed that all of the given candidates were resolved using :class:`apd.resolvers.external.wikipedia_resolver.WikipediaResolver`.
-			The alternative is that they are the product
-			This means that all candidates share their name with a Wikipedia page.
-		:type candidates: list
-		:param corpus: The corpus of documents, which helps to isolate relevant candidates.
-		:type corpus: list
-		:param token_attribute: The attribute that contains the tokens.
-		:type token_attribute: str
-		:param postprocessor_remove_accents: A boolean that indicates whether accents should be removed.
-			Accents may be less likely to be written on social media since not all keyboards have them readily available.
-		:type postprocessor_remove_accents: bool
-		:param postprocessor_remove_disambiguation: A boolean indicating whether disambiguation text in the title should be removed.
-		:type postprocessor_remove_disambiguation: bool
-		:param postprocessor_surname_only: A boolean that indicates whether candidates should be reduced to surnames.
-			Especially in sports events, surnames are predominantly used.
-			This only applies to candidates that are known to be persons based on Wikipedia information.
-			It is assumed that the surname is only one word long.
-		:type postprocessor_surname_only: bool
-		:param force_retain: A boolean indicating whether all the candidates should be retained.
-			This was added in case of some participants who are known only by surname, like Pedro (Chelsea F.C.).
-			In this case, these participants would be scrapped when their surname is also a word.
-			If true, all participants are retained, even in this unlikely case.
-		:type force_retain: bool
-
-		:return: The new candidates.
-			These candidates are stored as a dictionary.
-			The keys are the resolved candidates, and the values are their scores.
-		:rtype: dict
+		:param remove_accents: A boolean that indicates whether accents should be removed.
+		:type remove_accents: bool
+		:param remove_brackets: A boolean indicating whether brackets should be removed.
+		:type remove_brackets: bool
+		:param surname_only: A boolean that indicates whether participants should be reduced to surnames.
+							 This only applies to participants that are known to be persons based on Wikipedia information.
+							 It is assumed that the surname is made up of all terms except the first one.
+							 Participants whose surnames are also words retain the full name.
+		:type surname_only: bool
 		"""
 
-		postprocessed = list(candidates)
-		info_collector = InfoCollector()
+		self.remove_accents = remove_accents
+		self.remove_disambiguation = remove_disambiguation
+		self.surname_only = surname_only
+
+	def postprocess(self, participants, *args, **kwargs):
+		"""
+		Postprocess the given participants.
+
+		:param participants: The participants to postprocess.
+							 It is assumed that all map to a Wikipedia page.
+		:type participants: list of str
+
+		:return: The postprocessed participants.
+		:rtype: list of str
+		"""
 
 		disambiguation_pattern = re.compile(" \(.*?\)$") # a pattern of information that ends a title with disambiguation information, or more information about the concept
 
