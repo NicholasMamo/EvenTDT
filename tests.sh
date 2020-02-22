@@ -12,31 +12,30 @@ usage() {
 apd_tests() {
 	echo -e "${HIGHLIGHT}APD${DEFAULT}"
 
-	echo -e "${HIGHLIGHT}Extractor${DEFAULT}"
+	echo -e "${HIGHLIGHT}Extractors${DEFAULT}"
 	python3 -m unittest eventdt.apd.extractors.local.tests.test_entity_extractor
 	python3 -m unittest eventdt.apd.extractors.local.tests.test_token_extractor
 
-	echo -e "${HIGHLIGHT}Scorer${DEFAULT}"
+	echo -e "${HIGHLIGHT}Scorers${DEFAULT}"
 	python3 -m unittest eventdt.apd.scorers.local.tests.test_df_scorer
 	python3 -m unittest eventdt.apd.scorers.local.tests.test_log_df_scorer
 	python3 -m unittest eventdt.apd.scorers.local.tests.test_tf_scorer
 	python3 -m unittest eventdt.apd.scorers.local.tests.test_log_tf_scorer
 	python3 -m unittest eventdt.apd.scorers.local.tests.test_tfidf_scorer
 
-	echo -e "${HIGHLIGHT}Filter${DEFAULT}"
+	echo -e "${HIGHLIGHT}Filters${DEFAULT}"
 	python3 -m unittest eventdt.apd.filters.local.tests.test_threshold_filter
 
-	echo -e "${HIGHLIGHT}Resolver${DEFAULT}"
+	echo -e "${HIGHLIGHT}Resolvers${DEFAULT}"
 	python3 -m unittest eventdt.apd.resolvers.local.tests.test_token_resolver
 	python3 -m unittest eventdt.apd.resolvers.external.tests.test_wikipedia_name_resolver
 	python3 -m unittest eventdt.apd.resolvers.external.tests.test_wikipedia_search_resolver
 
-	echo -e "${HIGHLIGHT}Extrapolator${DEFAULT}"
+	echo -e "${HIGHLIGHT}Extrapolators${DEFAULT}"
 	python3 -m unittest eventdt.apd.extrapolators.external.tests.test_wikipedia_extrapolator
 
-	# echo -e "${HIGHLIGHT}Postprocessor${DEFAULT}"
-	# python3 -m unittest eventdt.apd.postprocessors.external.tests.test_external_postprocessors
-	return
+	echo -e "${HIGHLIGHT}Postprocessors${DEFAULT}"
+	python3 -m unittest eventdt.apd.postprocessors.external.tests.test_wikipedia_postprocessor
 }
 
 nlp_tests() {
