@@ -62,6 +62,8 @@ class WikipediaNameResolver(Resolver):
 	def resolve(self, candidates, *args, **kwargs):
 		"""
 		Resolve the given candidates.
+		The resolved candidates are sorted in descending order of their score.
+		However, resolved ambiguous candidates are at the end.
 
 		:param candidates: The candidates to resolve.
 						   The candidates should be in the form of a dictionary.
@@ -158,8 +160,8 @@ class WikipediaNameResolver(Resolver):
 		The function returns the link's page name and the associated score.
 		Only one page is returned: the one with the highest score.
 
-		:param pages: A list
-		:type pages: TODO: complete
+		:param pages: A list of page titles.
+		:type pages: list of str
 		:param domain: A document that represents the domain.
 		:type domain: :class:`nlp.document.Document`
 

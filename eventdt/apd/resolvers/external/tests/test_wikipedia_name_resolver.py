@@ -139,3 +139,51 @@ class TestWikipediaNameResolver(unittest.TestCase):
 		resolved, unresolved = resolver.resolve({ })
 		self.assertFalse(len(resolved))
 		self.assertFalse(len(unresolved))
+
+	def test_sorting(self):
+		"""
+		Test that the resolver sorts the named entities in descending order of score.
+		"""
+
+		"""
+		Create the test data
+		"""
+		tokenizer = Tokenizer(min_length=3, stem=False, case_fold=True)
+		posts = [
+			"Manchester United falter against Manchester City",
+			"Manchester United unable to avoid defeat to Watford",
+			"Watford lose again",
+		]
+		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+
+		candidates = EntityExtractor().extract(corpus, binary=True)
+		scores = TFScorer().score(candidates)
+		scores = ThresholdFilter(0).filter(scores)
+		resolved, unresolved = WikipediaNameResolver(TF(), tokenizer, 0, corpus).resolve(scores)
+		self.assertEqual('manchester united', resolved[0])
+		self.assertEqual('watford', resolved[1])
+		self.assertEqual('manchester city', resolved[2])
+
+	def test_sorting_ambiguous(self):
+		"""
+		Test that the resolver sorts the named entities in descending order of score, but ambiguous candidates are at the end.
+		"""
+
+		"""
+		Create the test data
+		"""
+		tokenizer = Tokenizer(min_length=3, stem=False, case_fold=True)
+		posts = [
+			"Manchester United falter against Manchester City",
+			"Manchester United unable to avoid defeat to Tottenham",
+			"Tottenham lose again",
+		]
+		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+
+		candidates = EntityExtractor().extract(corpus, binary=True)
+		scores = TFScorer().score(candidates)
+		scores = ThresholdFilter(0).filter(scores)
+		resolved, unresolved = WikipediaNameResolver(TF(), tokenizer, 0, corpus).resolve(scores)
+		self.assertEqual('manchester united', resolved[0])
+		self.assertEqual('manchester city', resolved[1])
+		self.assertEqual('tottenham', resolved[2])
