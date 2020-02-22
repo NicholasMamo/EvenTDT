@@ -69,6 +69,7 @@ class WikipediaSearchResolver(Resolver):
 	def resolve(self, candidates, *args, **kwargs):
 		"""
 		Resolve the given candidates.
+		They are sorted according to their score.
 
 		:param candidates: The candidates to resolve.
 		:type candidates: list

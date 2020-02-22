@@ -1027,7 +1027,8 @@ This corpus is used to look for the terms that map to the tokens given as candid
 <dl class="method">
 <dt id="apd.resolvers.local.token_resolver.TokenResolver.resolve">
 <code class="sig-name descname">resolve</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.local.token_resolver.TokenResolver.resolve" title="Permalink to this definition">¶</a></dt>
-<dd><p>Resolve the given candidates by looking for the original words.</p>
+<dd><p>Resolve the given candidates by looking for the original words.
+They are sorted according to their score.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>candidates</strong> (<em>dict</em>) – The candidates to resolve.
@@ -1131,7 +1132,9 @@ These documents are used to compare the similarity with the domain of the candid
 <dl class="method">
 <dt id="apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver.resolve">
 <code class="sig-name descname">resolve</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver.resolve" title="Permalink to this definition">¶</a></dt>
-<dd><p>Resolve the given candidates.</p>
+<dd><p>Resolve the given candidates.
+The resolved candidates are sorted in descending order of their score.
+However, resolved ambiguous candidates are at the end.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>candidates</strong> (<em>dict</em>) – The candidates to resolve.
@@ -1185,7 +1188,7 @@ Only one page is returned: the one with the highest score.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pages</strong> (<em>TODO: complete</em>) – A list</p></li>
+<li><p><strong>pages</strong> (<em>list of str</em>) – A list of page titles.</p></li>
 <li><p><strong>domain</strong> (<a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.document.Document</span></code></a>) – A document that represents the domain.</p></li>
 </ul>
 </dd>
@@ -1245,7 +1248,8 @@ These documents are used to compare the similarity with the domain of the candid
 <dl class="method">
 <dt id="apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver.resolve">
 <code class="sig-name descname">resolve</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver.resolve" title="Permalink to this definition">¶</a></dt>
-<dd><p>Resolve the given candidates.</p>
+<dd><p>Resolve the given candidates.
+They are sorted according to their score.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>candidates</strong> (<em>list</em>) – The candidates to resolve.</p>

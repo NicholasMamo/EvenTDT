@@ -48,6 +48,7 @@ class TokenResolver(Resolver):
 	def resolve(self, candidates, *args, **kwargs):
 		"""
 		Resolve the given candidates by looking for the original words.
+		They are sorted according to their score.
 
 		:param candidates: The candidates to resolve.
 						   The candidates should be in the form of a dictionary.
