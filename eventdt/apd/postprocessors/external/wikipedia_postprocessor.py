@@ -120,8 +120,19 @@ class WikipediaPostprocessor(Postprocessor):
 		"""
 		postprocessed = self.remove_accents(postprocessed) if postprocessor_remove_accents else postprocessed
 
+	def _remove_brackets(self, participant):
 		"""
-		The removal of disambiguation text may result in words, which should be removed.
+		Remove the accents from the given participant.
+
+		:param participant: The participant whose brackets will be removed.
+		:type participant: str
+
+		:return: The participant without any brackets.
+		:rtype: str
+		"""
+
+		bracket_pattern = re.compile("\(.*?\)")
+		return bracket_pattern.sub(' ', participant).strip()
 
 	def _remove_accents(self, participant):
 		"""
