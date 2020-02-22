@@ -35,4 +35,4 @@ class Resolver(object):
 		:rtype: tuple of lists
 		"""
 
-		return (candidates, [ ])
+		return (list(candidates.keys()), [ ])
