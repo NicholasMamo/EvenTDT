@@ -174,3 +174,29 @@ class TestTokenResolver(unittest.TestCase):
 
 		resolved, unresolved = TokenResolver(tokenizer, corpus, case_fold=True).resolve(scores)
 		self.assertTrue('reporters' in resolved)
+
+	def test_sorting(self):
+		"""
+		Test that the resolver sorts the tokens in descending order of score.
+		"""
+
+		"""
+		Create the test data
+		"""
+		tokenizer = Tokenizer(min_length=3, stem=False, case_fold=True)
+		posts = [
+			"Manchester United falter against Tottenham Hotspur",
+			"Manchester United unable to avoid defeat to Tottenham",
+			"Tottenham lose again",
+		]
+		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+
+		candidates = TokenExtractor().extract(corpus)
+		scores = TFScorer().score(candidates)
+		scores = ThresholdFilter(0).filter(scores)
+		resolved, unresolved = TokenResolver(tokenizer, corpus).resolve(scores)
+		self.assertEqual('tottenham', resolved[0])
+		self.assertEqual(set([ 'manchester', 'united' ]), set(resolved[1:3]))
+		self.assertEqual(set([ 'falter', 'against', 'hotspur',
+							   'unable', 'avoid', 'defeat',
+							   'lose', 'again' ]), set(resolved[3:]))

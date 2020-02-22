@@ -71,6 +71,7 @@ class TokenResolver(Resolver):
 		Try to resolve each candidate.
 		If a candidate has no token, it is not resolved.
 		"""
+		candidates = sorted(candidates.keys(), key=lambda candidate: candidates.get(candidate), reverse=True)
 		for candidate in candidates:
 			if candidate in inverted_index:
 				resolved_candidates.append(inverted_index.get(candidate))
