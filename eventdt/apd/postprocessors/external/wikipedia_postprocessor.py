@@ -11,14 +11,13 @@ For example, participants that are persons can be reduced to a surname.
 import os
 import re
 import sys
+import unicodedata
 
 from nltk.corpus import words
 
 path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
 if path not in sys.path:
     sys.path.append(path)
-
-from vector import vector_math
 
 from nlp.document import Document
 from nlp.tokenizer import Tokenizer
@@ -40,10 +39,11 @@ class WikipediaPostprocessor(Postprocessor):
 						This only applies to participants that are known to be persons based on Wikipedia information.
 						It is assumed that the surname is made up of all terms except the first one.
 						Participants whose surnames are also words retain the full name.
+						Note that when only surnames are retained, brackets are removed.
 	:vartype surname_only: bool
 	"""
 
-	def __init__(self, remove_accents=True, remove_disambiguation=True, surname_only=True):
+	def __init__(self, remove_accents=True, remove_brackets=True, surname_only=True):
 		"""
 		Create the postprocessor.
 
@@ -55,11 +55,12 @@ class WikipediaPostprocessor(Postprocessor):
 							 This only applies to participants that are known to be persons based on Wikipedia information.
 							 It is assumed that the surname is made up of all terms except the first one.
 							 Participants whose surnames are also words retain the full name.
+							 Note that when only surnames are retained, brackets are removed.
 		:type surname_only: bool
 		"""
 
 		self.remove_accents = remove_accents
-		self.remove_disambiguation = remove_disambiguation
+		self.remove_brackets = remove_brackets
 		self.surname_only = surname_only
 
 	def postprocess(self, participants, *args, **kwargs):
@@ -121,7 +122,16 @@ class WikipediaPostprocessor(Postprocessor):
 
 		"""
 		The removal of disambiguation text may result in words, which should be removed.
-		"""
-		postprocessed = [ participant for participant in postprocessed if participant.lower() not in words.words() ] if not force_retain else postprocessed
 
-		return postprocessed
+	def _remove_accents(self, participant):
+		"""
+		Remove the accents from the given participant.
+
+		:param participant: The participant whose accents will be removed.
+		:type participant: str
+
+		:return: The participant without any accents.
+		:rtype: str
+		"""
+
+		return ''.join((c for c in unicodedata.normalize('NFD', participant) if unicodedata.category(c) != 'Mn'))
