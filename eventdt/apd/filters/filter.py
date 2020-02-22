@@ -10,17 +10,15 @@ The functionality revolves around one method: the :meth:`apd.filters.filter.Filt
 The function returns a dictionary of candidate participants and their scores.
 """
 
-from abc import ABC, abstractmethod
-
-class Filter(ABC):
+class Filter(object):
 	"""
 	The filter goes through candidate participants and removes candidates that are not credible enough.
 	"""
 
-	@abstractmethod
 	def filter(self, candidates, *args, **kwargs):
 		"""
 		Filter candidate participants that are not credible.
+		The basic filter returns all participants.
 
 		:param candidates: A dictionary of candidate praticipants and their scores.
 		 				   The keys are the candidate names, and the values are their scores.
@@ -31,4 +29,4 @@ class Filter(ABC):
 		:rtype: dict
 		"""
 
-		pass
+		return candidates
