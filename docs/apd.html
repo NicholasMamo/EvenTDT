@@ -192,15 +192,115 @@
 <li><p>Postprocesing</p></li>
 </ol>
 </div></blockquote>
-<p>The APD process revolves around a central class: the <code class="xref py py-class docutils literal notranslate"><span class="pre">apd.participant_detector.ParticipantDetector</span></code>.
+<p>The APD process revolves around a central class: the <a class="reference internal" href="#apd.participant_detector.ParticipantDetector" title="apd.participant_detector.ParticipantDetector"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.participant_detector.ParticipantDetector</span></code></a>.
 The class constructor accepts classes representing these six steps, and calls their main functions.
 All of the step implementations are separated into local (using the corpus) or external (using a different source).</p>
 <p>Each step is represented by a base class.
 Base classes define the minimum inputs and describe the expected outputs of each step.
 Each base class also has a central function around which processing revolves.
 For example, the <a class="reference internal" href="#module-apd.extractors.extractor" title="apd.extractors.extractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.extractors.extractor</span></code></a> class has a <a class="reference internal" href="#apd.extractors.extractor.Extractor.extract" title="apd.extractors.extractor.Extractor.extract"><code class="xref py py-func docutils literal notranslate"><span class="pre">apd.extractors.extractor.Extractor.extract()</span></code></a> function.
-These classes go through the <code class="xref py py-class docutils literal notranslate"><span class="pre">apd.participant_detector.ParticipantDetector</span></code>
+These classes go through the <a class="reference internal" href="#apd.participant_detector.ParticipantDetector" title="apd.participant_detector.ParticipantDetector"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.participant_detector.ParticipantDetector</span></code></a>
 Therefore inherited classes should accept any parameters not specified in these base functions as constructor parameters.</p>
+<p>All APD functionality usually goes through the <a class="reference internal" href="#apd.participant_detector.ParticipantDetector" title="apd.participant_detector.ParticipantDetector"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.participant_detector.ParticipantDetector</span></code></a>.
+This class represents APD’s six steps.
+It takes as inputs the classes and calls them one after the other.</p>
+<span class="target" id="module-apd.participant_detector"></span><p>The participant detector class is a simple class that takes in each of the six steps of APD as instances.
+Then, it calls them, one after the other.</p>
+<p>The process of the participant detector can be emulated by calling the main functions of the six steps in order.
+The reason why this class exists is so that it can be extended into particular types of participant detectors.
+The steps are identical to APD:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Extract candidate participants;</p></li>
+<li><p>Score the candidates;</p></li>
+<li><p>Filter out low-scoring candidates;</p></li>
+<li><p>Resolve the candidates into alternative representations to make the participants;</p></li>
+<li><p>Extrapolate the participants, analogous to entity set expansion; and</p></li>
+<li><p>Postprocess the participants.</p></li>
+</ol>
+</div></blockquote>
+<p>Of these steps, only the first two are required:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><dl class="simple">
+<dt>If the filter is not given, all candidates are retained;</dt><dd><ol class="arabic simple">
+<li><p>If the resolver is not given, the extractor’s inputs are all returned as participants;</p></li>
+<li><p>If the extrapolator is not given, no additional participants are returned; and</p></li>
+<li><p>If the postprocessor is not given, the participants are returned as found by the previous steps.</p></li>
+</ol>
+</dd>
+</dl>
+</li>
+</ol>
+</div></blockquote>
+<dl class="class">
+<dt id="apd.participant_detector.ParticipantDetector">
+<em class="property">class </em><code class="sig-prename descclassname">apd.participant_detector.</code><code class="sig-name descname">ParticipantDetector</code><span class="sig-paren">(</span><em class="sig-param">extractor</em>, <em class="sig-param">scorer</em>, <em class="sig-param">filter=None</em>, <em class="sig-param">resolver=None</em>, <em class="sig-param">extrapolator=None</em>, <em class="sig-param">postprocessor=None</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.participant_detector.ParticipantDetector" title="Permalink to this definition">¶</a></dt>
+<dd><p>The basic participant detector accepts all steps as individual instances.
+The participant detector chains them together to identify the event’s participants.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#module-apd.extractors.extractor" title="apd.extractors.extractor"><strong>extractor</strong></a> (<a class="reference internal" href="#apd.extractors.extractor.Extractor" title="apd.extractors.extractor.Extractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.extractors.extractor.Extractor</span></code></a>) – The extractor finds candidate participants in the corpus.</p></li>
+<li><p><a class="reference internal" href="#module-apd.scorers.scorer" title="apd.scorers.scorer"><strong>scorer</strong></a> (<a class="reference internal" href="#apd.scorers.scorer.Scorer" title="apd.scorers.scorer.Scorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.scorers.scorer.Scorer</span></code></a>) – The scorer assigns a value to each candidate participant.</p></li>
+<li><p><a class="reference internal" href="#module-apd.filters.filter" title="apd.filters.filter"><strong>filter</strong></a> (<a class="reference internal" href="#apd.filters.filter.Filter" title="apd.filters.filter.Filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.filters.filter.Filter</span></code></a> or None) – The filter excludes candidates that are unlikely to be participants.
+If it is not given, all of the candidates are retained.</p></li>
+<li><p><a class="reference internal" href="#module-apd.resolvers.resolver" title="apd.resolvers.resolver"><strong>resolver</strong></a> (<a class="reference internal" href="#apd.resolvers.resolver.Resolver" title="apd.resolvers.resolver.Resolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.resolvers.resolver.Resolver</span></code></a> or None) – The resolver resolves candidates into participants, if possible.
+If it is not given, all of the candidates are considered to be participants.</p></li>
+<li><p><a class="reference internal" href="#module-apd.extrapolators.extrapolator" title="apd.extrapolators.extrapolator"><strong>extrapolator</strong></a> (<a class="reference internal" href="#apd.extrapolators.extrapolator.Extrapolator" title="apd.extrapolators.extrapolator.Extrapolator"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.extrapolators.extrapolator.Extrapolator</span></code></a> or None) – The extrapolator looks for additional participants.
+If it is not given, no more participants are returned.</p></li>
+<li><p><strong>postprocessor</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">apd.postprocessors.postprocessor.Postprocessor</span></code> or None) – The postprocessor processes the participants.
+If it is not given, the participants are returned as found.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="apd.participant_detector.ParticipantDetector.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">extractor</em>, <em class="sig-param">scorer</em>, <em class="sig-param">filter=None</em>, <em class="sig-param">resolver=None</em>, <em class="sig-param">extrapolator=None</em>, <em class="sig-param">postprocessor=None</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.participant_detector.ParticipantDetector.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the participant detector, which is made up of a number of components.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>extractor</strong> (<a class="reference internal" href="#apd.extractors.extractor.Extractor" title="apd.extractors.extractor.Extractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.extractors.extractor.Extractor</span></code></a>) – The participant detector’s extractor.
+This component is used to find candidate participants.</p></li>
+<li><p><strong>scorer</strong> (<a class="reference internal" href="#apd.scorers.scorer.Scorer" title="apd.scorers.scorer.Scorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.scorers.scorer.Scorer</span></code></a>) – The participant detector’s scorer.
+This component is used to give a score to the extractor’s candidate participants.</p></li>
+<li><p><strong>resolver</strong> (<a class="reference internal" href="#apd.resolvers.resolver.Resolver" title="apd.resolvers.resolver.Resolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.resolvers.resolver.Resolver</span></code></a>) – The participant detector’s resolver.
+This component looks for the real keywords associated with a participant.</p></li>
+<li><p><strong>extrapolator</strong> (<a class="reference internal" href="#apd.extrapolators.extrapolator.Extrapolator" title="apd.extrapolators.extrapolator.Extrapolator"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.extrapolators.extrapolator.Extrapolator</span></code></a>) – The participant detector’s extrapolator.
+This component looks for additional participants that might not be in the corpus.</p></li>
+<li><p><strong>postprocessor</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">apd.postprocessors.postprocessor.Postprocessor</span></code>) – The participant detector’s postprocessor.
+This component modifies the found participants.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="apd.participant_detector.ParticipantDetector.detect">
+<code class="sig-name descname">detect</code><span class="sig-paren">(</span><em class="sig-param">corpus</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.participant_detector.ParticipantDetector.detect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Identify participants in the corpus.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>corpus</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.document.Document</span></code></a>) – The corpus of documents from where to identify participants.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A three-tuple, made up of the resolved, unresolved and extrapolated participants respectively.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple of list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="apd.participant_detector.ParticipantDetector.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#apd.participant_detector.ParticipantDetector.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+</dd></dl>
+
 <div class="section" id="module-apd.extractors.extractor">
 <span id="extractors"></span><h2>Extractors<a class="headerlink" href="#module-apd.extractors.extractor" title="Permalink to this headline">¶</a></h2>
 <p>The extractor is the first step in the APD process.
@@ -222,7 +322,7 @@ Each outer list represents a document.
 Each inner list is the candidates in that document.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>corpus</strong> (<em>list</em>) – The corpus of documents from where to extract candidate participants.</p>
+<dd class="field-odd"><p><strong>corpus</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.document.Document</span></code></a>) – The corpus of documents from where to extract candidate participants.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A list of candidates separated by the document in which they were found.</p>
@@ -1232,9 +1332,10 @@ The extrapolator receives a list of participants and tries to find other relevan
 This step is analogous to entity set expansion.
 The participants should be ranked in descending order of their relevance.</p>
 <p>The input participants should be the product of a <a class="reference internal" href="#apd.resolvers.resolver.Resolver" title="apd.resolvers.resolver.Resolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.resolvers.resolver.Resolver</span></code></a> process.
-This input is a simple list of strings. each representing a participant.</p>
+This input is a simple list of strings, each representing a participant.</p>
 <p>Extrapolators return a list of new participants: simple strings as well.
-The functionality revolves around one method: the <a class="reference internal" href="#apd.extrapolators.extrapolator.Extrapolator.extrapolate" title="apd.extrapolators.extrapolator.Extrapolator.extrapolate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">apd.extrapolators.extrapolator.Extrapolator.extrapolate()</span></code></a> method.</p>
+The functionality revolves around one method: the <a class="reference internal" href="#apd.extrapolators.extrapolator.Extrapolator.extrapolate" title="apd.extrapolators.extrapolator.Extrapolator.extrapolate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">apd.extrapolators.extrapolator.Extrapolator.extrapolate()</span></code></a> method.
+The function should return participants in descending order of their relevance to the domain.</p>
 <dl class="class">
 <dt id="apd.extrapolators.extrapolator.Extrapolator">
 <em class="property">class </em><code class="sig-prename descclassname">apd.extrapolators.extrapolator.</code><code class="sig-name descname">Extrapolator</code><a class="headerlink" href="#apd.extrapolators.extrapolator.Extrapolator" title="Permalink to this definition">¶</a></dt>
@@ -1249,7 +1350,7 @@ This extrapolator returns no new participants.</p>
 <dd class="field-odd"><p><strong>participants</strong> (<em>list of str</em>) – The participants found by the resolver.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The new participants identified as relevant by the extrapolator</p>
+<dd class="field-even"><p>The new participants identified as relevant by the extrapolator.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>list of str</p>
@@ -1333,9 +1434,7 @@ It is assumed that all participants were resolved using a Wikipedia resolver.
 This means that all participants share their name with a Wikipedia page.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The new participants.
-These participants are stored as a dictionary.
-The keys are the resolved participants, and the values are their scores.</p>
+<dd class="field-even"><p>The new participants, in descending order of their relevance to the domain.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>list of str</p>

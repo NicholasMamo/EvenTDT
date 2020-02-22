@@ -31,6 +31,15 @@ For example, the :class:`apd.extractors.extractor` class has a :func:`apd.extrac
 These classes go through the :class:`apd.participant_detector.ParticipantDetector`
 Therefore inherited classes should accept any parameters not specified in these base functions as constructor parameters.
 
+All APD functionality usually goes through the :class:`apd.participant_detector.ParticipantDetector`.
+This class represents APD's six steps.
+It takes as inputs the classes and calls them one after the other.
+
+.. automodule:: apd.participant_detector
+   :members:
+   :private-members:
+   :special-members:
+
 Extractors
 ==========
 

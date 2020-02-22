@@ -38,7 +38,7 @@ class ParticipantDetector(object):
 	:vartype scorer: :class:`apd.scorers.scorer.Scorer`
 	:ivar filter: The filter excludes candidates that are unlikely to be participants.
 				  If it is not given, all of the candidates are retained.
-	:vartype filter: :class:`apd.filter.filter.Filter` or None
+	:vartype filter: :class:`apd.filters.filter.Filter` or None
 	:ivar resolver: The resolver resolves candidates into participants, if possible.
 					If it is not given, all of the candidates are considered to be participants.
 	:vartype resolver: :class:`apd.resolvers.resolver.Resolver` or None
@@ -56,19 +56,19 @@ class ParticipantDetector(object):
 		Create the participant detector, which is made up of a number of components.
 
 		:param extractor: The participant detector's extractor.
-			This component is used to find candidate participants.
+						  This component is used to find candidate participants.
 		:type extractor: :class:`apd.extractors.extractor.Extractor`
 		:param scorer: The participant detector's scorer.
-			This component is used to give a score to the extractor's candidate participants.
+					   This component is used to give a score to the extractor's candidate participants.
 		:type scorer: :class:`apd.scorers.scorer.Scorer`
 		:param resolver: The participant detector's resolver.
-			This component looks for the real keywords associated with a participant.
+						 This component looks for the real keywords associated with a participant.
 		:type resolver: :class:`apd.resolvers.resolver.Resolver`
 		:param extrapolator: The participant detector's extrapolator.
-			This component looks for additional participants that might not be in the corpus.
+							 This component looks for additional participants that might not be in the corpus.
 		:type extrapolator: :class:`apd.extrapolators.extrapolator.Extrapolator`
 		:param postprocessor: The participant detector's postprocessor.
-			This component modifies the found participants.
+							  This component modifies the found participants.
 		:type postprocessor: :class:`apd.postprocessors.postprocessor.Postprocessor`
 		"""
 
@@ -85,7 +85,7 @@ class ParticipantDetector(object):
 		Identify participants in the corpus.
 
 		:param corpus: The corpus of documents from where to identify participants.
-		:type corpus: list of :class:`nlp.document.Document
+		:type corpus: list of :class:`nlp.document.Document`
 
 		:return: A three-tuple, made up of the resolved, unresolved and extrapolated participants respectively.
 		:rtype: tuple of list of str
