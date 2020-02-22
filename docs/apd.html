@@ -112,6 +112,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#id4">External</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#module-apd.postprocessors.postprocessor">Postprocessors</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="other.html">6. Other</a></li>
@@ -264,7 +265,7 @@ This component is used to give a score to the extractor’s candidate participan
 This component looks for the real keywords associated with a participant.</p></li>
 <li><p><strong>extrapolator</strong> (<a class="reference internal" href="#apd.extrapolators.extrapolator.Extrapolator" title="apd.extrapolators.extrapolator.Extrapolator"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.extrapolators.extrapolator.Extrapolator</span></code></a>) – The participant detector’s extrapolator.
 This component looks for additional participants that might not be in the corpus.</p></li>
-<li><p><strong>postprocessor</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">apd.postprocessors.postprocessor.Postprocessor</span></code>) – The participant detector’s postprocessor.
+<li><p><strong>postprocessor</strong> (<a class="reference internal" href="#apd.postprocessors.postprocessor.Postprocessor" title="apd.postprocessors.postprocessor.Postprocessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.postprocessors.postprocessor.Postprocessor</span></code></a>) – The participant detector’s postprocessor.
 This component modifies the found participants.</p></li>
 </ul>
 </dd>
@@ -1555,6 +1556,42 @@ The lower the weight, the more shortest paths could go through it.</p>
 </dd></dl>
 
 </div>
+</div>
+<div class="section" id="module-apd.postprocessors.postprocessor">
+<span id="postprocessors"></span><h2>Postprocessors<a class="headerlink" href="#module-apd.postprocessors.postprocessor" title="Permalink to this headline">¶</a></h2>
+<p>The postprocessor is the sixth and last step in the APD process.
+A postprocessor formats the participants.</p>
+<p>The postprocessor returns the same number of participants with any changes to them.
+The functionality revolves around one method: the <a class="reference internal" href="#apd.postprocessors.postprocessor.Postprocessor.postprocess" title="apd.postprocessors.postprocessor.Postprocessor.postprocess"><code class="xref py py-meth docutils literal notranslate"><span class="pre">apd.postprocessors.postprocessor.Postprocessor.postprocess()</span></code></a> method.</p>
+<dl class="class">
+<dt id="apd.postprocessors.postprocessor.Postprocessor">
+<em class="property">class </em><code class="sig-prename descclassname">apd.postprocessors.postprocessor.</code><code class="sig-name descname">Postprocessor</code><a class="headerlink" href="#apd.postprocessors.postprocessor.Postprocessor" title="Permalink to this definition">¶</a></dt>
+<dd><p>The simplest postprocessor returns the participants without any changes.</p>
+<dl class="method">
+<dt id="apd.postprocessors.postprocessor.Postprocessor.postprocess">
+<code class="sig-name descname">postprocess</code><span class="sig-paren">(</span><em class="sig-param">participants</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.postprocessors.postprocessor.Postprocessor.postprocess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the same participants as those received.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>participants</strong> (<em>list of str</em>) – The participants to postprocess.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The postprocessed participants.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="apd.postprocessors.postprocessor.Postprocessor.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#apd.postprocessors.postprocessor.Postprocessor.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 </div>
 

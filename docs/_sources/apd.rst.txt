@@ -157,3 +157,11 @@ External
    :members:
    :private-members:
    :special-members:
+
+Postprocessors
+==============
+
+.. automodule:: apd.postprocessors.postprocessor
+   :members:
+   :private-members:
+   :special-members:
