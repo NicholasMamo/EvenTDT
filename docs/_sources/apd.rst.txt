@@ -165,3 +165,11 @@ Postprocessors
    :members:
    :private-members:
    :special-members:
+
+External
+--------
+
+.. automodule:: apd.postprocessors.external.wikipedia_postprocessor
+   :members:
+   :private-members:
+   :special-members:

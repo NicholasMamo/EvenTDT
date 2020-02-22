@@ -112,7 +112,10 @@
 <li class="toctree-l3"><a class="reference internal" href="#id4">External</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#module-apd.postprocessors.postprocessor">Postprocessors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-apd.postprocessors.postprocessor">Postprocessors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id5">External</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="other.html">6. Other</a></li>
@@ -1592,6 +1595,127 @@ The functionality revolves around one method: the <a class="reference internal" 
 
 </dd></dl>
 
+<div class="section" id="id5">
+<h3>External<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<span class="target" id="module-apd.postprocessors.external.wikipedia_postprocessor"></span><p>The Wikipedia postprocessor uses Wikipedia to get information about participants.
+It uses this information to postprocess participants.
+For example, participants that are persons can be reduced to a surname.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The Wikipedia postprocessor assumes that the given participants map to Wikipedia pages.</p>
+</div>
+<dl class="class">
+<dt id="apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor">
+<em class="property">class </em><code class="sig-prename descclassname">apd.postprocessors.external.wikipedia_postprocessor.</code><code class="sig-name descname">WikipediaPostprocessor</code><span class="sig-paren">(</span><em class="sig-param">remove_accents=True</em>, <em class="sig-param">remove_brackets=True</em>, <em class="sig-param">surname_only=True</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Wikipedia postprocessor assumes that the given participants map to Wikipedia pages.
+It uses this knowledge to get additional information about participants and postprocess the .</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>remove_accents</strong> (<em>bool</em>) – A boolean that indicates whether accents should be removed.</p></li>
+<li><p><strong>remove_brackets</strong> (<em>bool</em>) – A boolean indicating whether brackets should be removed.</p></li>
+<li><p><strong>surname_only</strong> (<em>bool</em>) – A boolean that indicates whether participants should be reduced to surnames.
+This only applies to participants that are known to be persons based on Wikipedia information.
+It is assumed that the surname is made up of all terms except the first one.
+Participants whose surnames are also words retain the full name.
+Note that when only surnames are retained, brackets are removed.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">remove_accents=True</em>, <em class="sig-param">remove_brackets=True</em>, <em class="sig-param">surname_only=True</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the postprocessor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>remove_accents</strong> (<em>bool</em>) – A boolean that indicates whether accents should be removed.</p></li>
+<li><p><strong>remove_brackets</strong> (<em>bool</em>) – A boolean indicating whether brackets should be removed.</p></li>
+<li><p><strong>surname_only</strong> (<em>bool</em>) – A boolean that indicates whether participants should be reduced to surnames.
+This only applies to participants that are known to be persons based on Wikipedia information.
+It is assumed that the surname is made up of all terms except the first one.
+Participants whose surnames are also words retain the full name.
+Note that when only surnames are retained, brackets are removed.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor.postprocess">
+<code class="sig-name descname">postprocess</code><span class="sig-paren">(</span><em class="sig-param">participants</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor.postprocess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Postprocess the given participants.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>participants</strong> (<em>list of str</em>) – The participants to postprocess.
+It is assumed that all map to a Wikipedia page.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The postprocessed participants.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor._get_surname">
+<code class="sig-name descname">_get_surname</code><span class="sig-paren">(</span><em class="sig-param">participant</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor._get_surname" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the surname of the given participant.
+If the participant has brackets, they are removed.
+The surname is assumed to be all components except the first one.
+If the participant’s surname is a word, the whole participant name is returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>participant</strong> (<em>str</em>) – The participant whose surname will be removed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The participant’s surname.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor._remove_brackets">
+<code class="sig-name descname">_remove_brackets</code><span class="sig-paren">(</span><em class="sig-param">participant</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor._remove_brackets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove the accents from the given participant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>participant</strong> (<em>str</em>) – The participant whose brackets will be removed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The participant without any brackets.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor._remove_accents">
+<code class="sig-name descname">_remove_accents</code><span class="sig-paren">(</span><em class="sig-param">participant</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor._remove_accents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove the accents from the given participant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>participant</strong> (<em>str</em>) – The participant whose accents will be removed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The participant without any accents.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 </div>
 </div>
 
