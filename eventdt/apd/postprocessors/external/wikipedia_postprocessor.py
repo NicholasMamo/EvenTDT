@@ -120,6 +120,28 @@ class WikipediaPostprocessor(Postprocessor):
 		"""
 		postprocessed = self.remove_accents(postprocessed) if postprocessor_remove_accents else postprocessed
 
+	def _get_surname(self, participant):
+		"""
+		Get the surname of the given participant.
+		If the participant has brackets, they are removed.
+		The surname is assumed to be all components except the first one.
+		If the participant's surname is a word, the whole participant name is returned.
+
+		:param participant: The participant whose surname will be removed.
+		:type participant: str
+
+		:return: The participant's surname.
+		:rtype: str
+		"""
+
+		name = self._remove_brackets(participant)
+		surname = ' '.join(name.split()[1:])
+		if (surname and surname not in words.words() and
+			surname.lower() not in words.words()):
+			return surname.strip()
+
+		return name.strip()
+
 	def _remove_brackets(self, participant):
 		"""
 		Remove the accents from the given participant.
