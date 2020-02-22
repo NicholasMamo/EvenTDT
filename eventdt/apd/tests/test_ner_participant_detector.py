@@ -52,11 +52,11 @@ class TestNERParticipantDetector(unittest.TestCase):
 		tokenizer = Tokenizer(stem=False)
 		posts = [
 			"Tottenham in yet another loss, this time against Chelsea",
-			"Another loss for Tottenham",
+			"Another loss for Tottenham as Mourinho sees red",
 			"Mourinho's Tottenham lose again",
 		]
 		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
 		detector = NERParticipantDetector()
 
 		participants, unresolved, _ = detector.detect(corpus)
-		self.assertEqual([ 'tottenham', 'chelsea', 'mourinho' ], participants)
+		self.assertEqual([ 'tottenham', 'mourinho', 'chelsea' ], participants)

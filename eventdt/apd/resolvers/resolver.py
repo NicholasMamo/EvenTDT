@@ -22,7 +22,8 @@ class Resolver(object):
 
 	def resolve(self, candidates, *args, **kwargs):
 		"""
-		The resolution function returns the same candidates as they were given without making any changes.
+		The resolution function returns the same candidates as they were given, but as a list.
+		They are sorted according to their score.
 
 		:param candidates: The candidates to resolve.
 						   The candidates should be in the form of a dictionary.
@@ -35,4 +36,4 @@ class Resolver(object):
 		:rtype: tuple of lists
 		"""
 
-		return (list(candidates.keys()), [ ])
+		return (list(sorted(candidates.keys(), key=lambda x: candidates.get(x), reverse=True)), [ ])
