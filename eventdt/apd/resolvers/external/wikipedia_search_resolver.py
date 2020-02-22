@@ -79,7 +79,7 @@ class WikipediaSearchResolver(Resolver):
 
 		resolved_candidates, unresolved_candidates = [], []
 
-		candidates = list(candidates.keys())
+		candidates = sorted(candidates.keys(), key=lambda candidate: candidates.get(candidate), reverse=True)
 
 		"""
 		Get the concatenated corpus as a single document, representing the domain.

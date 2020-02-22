@@ -304,3 +304,26 @@ class TestWikipediaSearchResolver(unittest.TestCase):
 		resolved, unresolved = resolver.resolve({ })
 		self.assertFalse(len(resolved))
 		self.assertFalse(len(unresolved))
+
+	def test_sorting(self):
+		"""
+		Test that the resolver sorts the named entities in descending order of score.
+		"""
+
+		"""
+		Create the test data
+		"""
+		tokenizer = Tokenizer(min_length=3, stem=True, case_fold=True)
+		posts = [
+			"In the most heated football match of the season, Liverpool falter against Manchester City",
+			"Liverpool unable to avoid defeat to Watford, Manchester City close in on football title"
+		]
+		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+
+		candidates = EntityExtractor().extract(corpus, binary=True)
+		scores = TFScorer().score(candidates)
+		scores = ThresholdFilter(0).filter(scores)
+		resolved, unresolved = WikipediaSearchResolver(TF(), tokenizer, 0, corpus).resolve(scores)
+		self.assertEqual('Liverpool F.C.', resolved[0])
+		self.assertEqual('Manchester City F.C.', resolved[1])
+		self.assertEqual('Watford F.C.', resolved[2])
