@@ -1,74 +1,60 @@
 """
-A participant detector is responsible of collecting information about participants in an event.
+The participant detector class is a simple class that takes in each of the six steps of APD as instances.
+Then, it calls them, one after the other.
 
-The process includes a number of steps:
+The process of the participant detector can be emulated by calling the main functions of the six steps in order.
+The reason why this class exists is so that it can be extended into particular types of participant detectors.
+The steps are identical to APD:
 
 	#. Extract candidate participants;
-
 	#. Score the candidates;
+	#. Filter out low-scoring candidates;
+	#. Resolve the candidates into alternative representations to make the participants;
+	#. Extrapolate the participants, analogous to entity set expansion; and
+	#. Postprocess the participants.
 
-	#. Filter the candidates - the retained ones are the participants;
+Of these steps, only the first two are required:
 
-	#. Resolve the participants, mapping them to lemmas (optional); and
-
-	#. Extrapolate the participants, analogous to entity set expansion (optional)
+    #. If the filter is not given, all candidates are retained;
+	#. If the resolver is not given, the extractor's inputs are all returned as participants;
+	#. If the extrapolator is not given, no additional participants are returned; and
+	#. If the postprocessor is not given, the participants are returned as found by the previous steps.
 """
 
-from abc import ABC, abstractmethod
-import os
-import sys
-
-path = os.path.dirname(__file__)
-path = os.path.join(path, "../")
-if path not in sys.path:
-	sys.path.insert(1, path)
-
-from nltk.corpus import words
-
-from logger import logger
-
-from .extractors.extractor import Extractor
+from .scorers.scorer import Scorer
+from .filters.filter import Filter
+from .resolvers.resolver import Resolver
 from .extrapolators.extrapolator import Extrapolator
 from .postprocessors.postprocessor import Postprocessor
-from .resolvers.resolver import Resolver
-from .scorers.scorer import Scorer
 
-class ParticipantDetector(ABC):
+class ParticipantDetector(object):
 	"""
-	The base class for all participant detectors.
-	The corpus is used for comparisons.
-	It is assumed that the corpus has already been collected in its entirety.
+	The basic participant detector accepts all steps as individual instances.
+	The participant detector chains them together to identify the event's participants.
 
-	Similarly to query expansion, a participant detector is responsible of performing three actions:
-
-		#. Use a corpus to extract candidates;
-
-		#. Score and rank the candidates; and
-
-		#. Extract the top candidates.
-
-	:ivar _corpus: The corpus of documents on which APD is based.
-		This corpus serves multiple functions, including similarity comparisons.
-	:vartype _corpus: list
-	:ivar _extractor: The extractor that is used to find candidate participants from the corpus.
-	:vartype _extractor: :class:`apd.extractors.extractor.Extractor`
-	:ivar _scorer: The scorer that assigns a value to each candidate participant.
-	:vartype _scorer: :class:`apd.scorers.scorer.Scorer`
-	:ivar _resolver: An instance of a resolver that transforms participants into keywords.
-	:vartype _resolver: :class:`apd.resolvers.resolver.Resolver`
-	:ivar _extrapolator: An extrapolator that looks for additional participants.
-		These participants may not necessarily be found in the corpus.
-	:vartype _extrapolator: :class:`apd.extrapolators.extrapolator.Extrapolator`
-	:ivar _postprocessor: The postprocessor processes found candidates.
-	:vartype _postprocessor: :class:`apd.postprocessors.postprocessor.Postprocessor`
+	:ivar extractor: The extractor finds candidate participants in the corpus.
+	:vartype extractor: :class:`apd.extractors.extractor.Extractor`
+	:ivar scorer: The scorer assigns a value to each candidate participant.
+	:vartype scorer: :class:`apd.scorers.scorer.Scorer`
+	:ivar filter: The filter excludes candidates that are unlikely to be participants.
+				  If it is not given, all of the candidates are retained.
+	:vartype filter: :class:`apd.filter.filter.Filter` or None
+	:ivar resolver: The resolver resolves candidates into participants, if possible.
+					If it is not given, all of the candidates are considered to be participants.
+	:vartype resolver: :class:`apd.resolvers.resolver.Resolver` or None
+	:ivar extrapolator: The extrapolator looks for additional participants.
+						If it is not given, no more participants are returned.
+	:vartype extrapolator: :class:`apd.extrapolators.extrapolator.Extrapolator` or None
+	:ivar postprocessor: The postprocessor processes the participants.
+						 If it is not given, the participants are returned as found.
+	:vartype postprocessor: :class:`apd.postprocessors.postprocessor.Postprocessor` or None
 	"""
 
-	def __init__(self, corpus, extractor, scorer, resolver=Resolver, extrapolator=Extrapolator, postprocessor=Postprocessor):
+	def __init__(self,  extractor, scorer, filter=None,
+				 resolver=None, extrapolator=None, postprocessor=None):
 		"""
 		Create the participant detector, which is made up of a number of components.
 
-		:param corpus: The corpus of documents on which APD is based.
-		:type corpus: list
 		:param extractor: The participant detector's extractor.
 			This component is used to find candidate participants.
 		:type extractor: :class:`apd.extractors.extractor.Extractor`
@@ -87,125 +73,31 @@ class ParticipantDetector(ABC):
 		"""
 
 		self._corpus = corpus
-		self._extractor = extractor()
-		self._scorer = scorer()
-		self._resolver = resolver()
-		self._extrapolator = extrapolator()
-		self._postprocessor = postprocessor()
+		self.extractor = extractor
+		self.scorer = scorer
+		self.filter = Filter() if filter is None else filter
+		self.resolver = Resolver() if resolver is None else resolver
+		self.extrapolator = Extrapolator() if extrapolator is None else extrapolator
+		self.postprocessor = Postprocessor() if postprocessor is None else postprocessor
 
-	def detect(self, threshold=0, max_candidates=-1, known_participants=None, *args, **kwargs):
+	def detect(self, corpus, *args, **kwargs):
 		"""
-		Detect participants from the given corpus.
+		Identify participants in the corpus.
 
-		:param threshold: The minimum score to retain a candidate.
-		:type threshold: float
-		:param max_candidates: The maximum number of candidates to retain.
-			Only the top ones should be retained after ranking.
-		:type max_candidates: int
-		:param known_participants: A list of participants that are known in advance.
-			These are passed on to be resolved, which means they may not be retained by the resolver.
-		:type known_participants: list
+		:param corpus: The corpus of documents from where to identify participants.
+		:type corpus: list of :class:`nlp.document.Document
 
-		:return: The list of participants.
-		:rtype: list
+		:return: A three-tuple, made up of the resolved, unresolved and extrapolated participants respectively.
+		:rtype: tuple of list of str
 		"""
 
-		"""
-		Convert the known participants into a dictionary.
-		"""
-		known_participants = [] if type(known_participants) is not list else known_participants
+		candidates = self.extractor.extract(corpus)
+		candidates = self.scorer.score(candidates)
+		candidates = self.filter.filter(candidates)
 
-		documents = self._extractor.extract(self._corpus, *args, **kwargs)
-		candidates = self._scorer.score(documents, *args, **kwargs)
-		filtered = self._filter(candidates, threshold=threshold, max_candidates=max_candidates, *args, **kwargs)
-		filtered = known_participants + filtered
-
-		resolved, unresolved = self._resolver.resolve(filtered, self._corpus, *args, **kwargs)
-		extrapolated = self._extrapolator.extrapolate(resolved, self._corpus, *args, **kwargs)
-		resolved = self._postprocessor.postprocess(resolved, self._corpus, *args, **kwargs)
-		extrapolated = self._postprocessor.postprocess(extrapolated, self._corpus, *args, **kwargs)
-
-		resolved = [ resolved[i] for i in range(0, len(resolved)) if resolved[i] not in resolved[:i] ]
-		unresolved = [ unresolved[i] for i in range(0, len(unresolved)) if unresolved[i] not in unresolved[:i] ]
-		extrapolated = [ extrapolated[i] for i in range(0, len(extrapolated)) if extrapolated[i] not in extrapolated[:i] ]
+		resolved, unresolved = self.resolver.resolve(filtered)
+		extrapolated = self.extrapolator.extrapolate(resolved)
+		resolved = self.postprocessor.postprocess(resolved)
+		extrapolated = self.postprocessor.postprocess(extrapolated)
 
 		return resolved, unresolved, extrapolated
-
-	def _combine(self, candidates):
-		"""
-		Combine the candidates.
-		If a candidate is a subset of another candidate, add it to the longest one.
-		The scores are added up.
-
-		:param candidates: A dictionary of candidates participants, accompanied with a score.
-		:type candidates: dict
-
-		:return: A new dict of combined candidates.
-		:rtype: dict
-		"""
-
-		all_candidates = list(candidates.keys()) # the list of candidate names
-		combined_candidates = dict.fromkeys(all_candidates, 0)
-		sorted_candidates = sorted(candidates.items(), key=lambda x: x[1])[::-1] # the candidates sorted by score in descending order
-		longest_candidates = sorted(candidates.items(), key=lambda x: len(x[0]))[::-1]
-
-		for candidate, _ in sorted_candidates:
-			"""
-			The first step is to concatenate all candidates except the current one.
-			In this way, redundant checks can be skipped.
-			"""
-			remaining_candidates = list(all_candidates) # copy the candidates
-			remaining_candidates.remove(candidate) # remove the current candidate
-			candidate_string = '|'.join(remaining_candidates)
-
-			if candidate in candidate_string:
-				"""
-				If the candidate is in the string, look for it in the remaining candidates.
-				The overlapping candidate with the highest score is chosen.
-				"""
-				for other, _ in longest_candidates:
-					if candidate in other and candidate != other:
-						combined_candidates[other] += candidates[candidate]
-						break
-			else:
-				"""
-				Otherwise, add the score to the same candidate.
-				"""
-				combined_candidates[candidate] += candidates[candidate]
-
-		"""
-		Before returning, strip away candidates with no score.
-		These candidates were combined.
-		"""
-		combined_candidates = { candidate: score for candidate, score in combined_candidates.items() if score > 0 }
-
-		return combined_candidates
-
-	def _filter(self, candidates, threshold=0, max_candidates=-1, combine=True, *args, **kwargs):
-		"""
-		Filter the given candidates and return only the top.
-
-		:param candidates: A dictionary of candidates participants that were found earlier, accompanied with a score.
-		:type candidates: dict
-		:param threshold: The minimum score to retain a candidate.
-		:type threshold: float
-		:param max_candidates: The maximum number of candidates to retain.
-			Only the top ones should be retained after ranking.
-		:type max_candidates: int
-
-		:return: A list of retained candidates.
-		:rtype: list
-		"""
-
-		candidates = { candidate: score for candidate, score in candidates.items() if score >= threshold }
-		# candidates = { candidate: score for candidate, score in candidates.items() if candidate.lower() not in words.words() }
-		candidates = sorted(candidates.items(), key=lambda x: x[1])[::-1]
-
-		candidates = self._combine(dict(candidates)) if combine else dict(candidates)
-		candidates = sorted(candidates.items(), key=lambda x: x[1])[::-1]
-		# print(candidates)
-
-		if max_candidates > -1:
-			return list([ candidate for candidate, _ in candidates ])[:max_candidates]
-		else:
-			return list([ candidate for candidate, _ in candidates ])
