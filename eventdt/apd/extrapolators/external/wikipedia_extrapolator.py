@@ -107,9 +107,7 @@ class WikipediaExtrapolator(Extrapolator):
 							 This means that all participants share their name with a Wikipedia page.
 		:type participants: list of str
 
-		:return: The new participants.
-				 These participants are stored as a dictionary.
-				 The keys are the resolved participants, and the values are their scores.
+		:return: The new participants, in descending order of their relevance to the domain.
 		:rtype: list of str
 		"""
 

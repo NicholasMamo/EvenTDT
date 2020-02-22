@@ -5,10 +5,11 @@ This step is analogous to entity set expansion.
 The participants should be ranked in descending order of their relevance.
 
 The input participants should be the product of a :class:`apd.resolvers.resolver.Resolver` process.
-This input is a simple list of strings. each representing a participant.
+This input is a simple list of strings, each representing a participant.
 
 Extrapolators return a list of new participants: simple strings as well.
 The functionality revolves around one method: the :meth:`apd.extrapolators.extrapolator.Extrapolator.extrapolate` method.
+The function should return participants in descending order of their relevance to the domain.
 """
 
 class Extrapolator(object):
@@ -24,7 +25,7 @@ class Extrapolator(object):
 		:param participants: The participants found by the resolver.
 		:type participants: list of str
 
-		:return: The new participants identified as relevant by the extrapolator
+		:return: The new participants identified as relevant by the extrapolator.
 		:rtype: list of str
 		"""
 
