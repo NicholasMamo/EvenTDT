@@ -15,7 +15,7 @@ The steps are identical to APD:
 
 Of these steps, only the first two are required:
 
-    #. If the filter is not given, all candidates are retained;
+	#. If the filter is not given, all candidates are retained;
 	#. If the resolver is not given, the extractor's inputs are all returned as participants;
 	#. If the extrapolator is not given, no additional participants are returned; and
 	#. If the postprocessor is not given, the participants are returned as found by the previous steps.
