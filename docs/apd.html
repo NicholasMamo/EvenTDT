@@ -300,6 +300,25 @@ This component modifies the found participants.</p></li>
 
 </dd></dl>
 
+<span class="target" id="module-apd.ner_participant_detector"></span><p>The Named Entity Recognition (NER) participant detector is one that assumes that all participants are named entities.
+This participant detector does not seek to resolve named entities or extrapolate.
+It simply extracts named entities and ranks them based on frequency.
+Due to its simplicity, the NER participant detector is also a baseline for APD.</p>
+<dl class="class">
+<dt id="apd.ner_participant_detector.NERParticipantDetector">
+<em class="property">class </em><code class="sig-prename descclassname">apd.ner_participant_detector.</code><code class="sig-name descname">NERParticipantDetector</code><a class="headerlink" href="#apd.ner_participant_detector.NERParticipantDetector" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Named Entity Recognition (NER) participant detector extracts named entities from the corpus.
+The NER participant detector is based on a normal participant detector.
+It uses the <a class="reference internal" href="#apd.extractors.local.entity_extractor.EntityExtractor" title="apd.extractors.local.entity_extractor.EntityExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.extractors.local.entity_extractor.EntityExtractor</span></code></a> to extract named entities.
+The frequency is computed using the <a class="reference internal" href="#apd.scorers.local.tf_scorer.TFScorer" title="apd.scorers.local.tf_scorer.TFScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.scorers.local.tf_scorer.TFScorer</span></code></a></p>
+<dl class="method">
+<dt id="apd.ner_participant_detector.NERParticipantDetector.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#apd.ner_participant_detector.NERParticipantDetector.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the NER participant detector.</p>
+</dd></dl>
+
+</dd></dl>
+
 <div class="section" id="module-apd.extractors.extractor">
 <span id="extractors"></span><h2>Extractors<a class="headerlink" href="#module-apd.extractors.extractor" title="Permalink to this headline">¶</a></h2>
 <p>The extractor is the first step in the APD process.
@@ -855,8 +874,9 @@ The function returns a dictionary of candidate participants and their scores.</p
 <dd><p>The filter goes through candidate participants and removes candidates that are not credible enough.</p>
 <dl class="method">
 <dt id="apd.filters.filter.Filter.filter">
-<em class="property">abstract </em><code class="sig-name descname">filter</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.filters.filter.Filter.filter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filter candidate participants that are not credible.</p>
+<code class="sig-name descname">filter</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.filters.filter.Filter.filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter candidate participants that are not credible.
+The basic filter returns all participants.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>candidates</strong> (<em>dict</em>) – A dictionary of candidate praticipants and their scores.
@@ -943,7 +963,8 @@ The unresolved candidates are usually discarded.</p>
 <dl class="method">
 <dt id="apd.resolvers.resolver.Resolver.resolve">
 <code class="sig-name descname">resolve</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.resolver.Resolver.resolve" title="Permalink to this definition">¶</a></dt>
-<dd><p>The resolution function returns the same candidates as they were given without making any changes.</p>
+<dd><p>The resolution function returns the same candidates as they were given, but as a list.
+They are sorted according to their score.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>candidates</strong> (<em>dict</em>) – The candidates to resolve.

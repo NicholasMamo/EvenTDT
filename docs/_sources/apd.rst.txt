@@ -40,6 +40,11 @@ It takes as inputs the classes and calls them one after the other.
    :private-members:
    :special-members:
 
+.. automodule:: apd.ner_participant_detector
+   :members:
+   :private-members:
+   :special-members:
+
 Extractors
 ==========
 

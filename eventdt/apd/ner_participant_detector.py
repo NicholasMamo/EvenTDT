@@ -5,6 +5,13 @@ It simply extracts named entities and ranks them based on frequency.
 Due to its simplicity, the NER participant detector is also a baseline for APD.
 """
 
+import os
+import sys
+
+path = os.path.join(os.path.dirname(__file__))
+if path not in sys.path:
+    sys.path.append(path)
+
 from participant_detector import ParticipantDetector
 from extractors.local.entity_extractor import EntityExtractor
 from scorers.local.tf_scorer import TFScorer

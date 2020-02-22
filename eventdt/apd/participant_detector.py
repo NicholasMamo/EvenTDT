@@ -21,6 +21,13 @@ Of these steps, only the first two are required:
 	#. If the postprocessor is not given, the participants are returned as found by the previous steps.
 """
 
+import os
+import sys
+
+path = os.path.join(os.path.dirname(__file__))
+if path not in sys.path:
+    sys.path.append(path)
+
 from scorers.scorer import Scorer
 from filters.filter import Filter
 from resolvers.resolver import Resolver
