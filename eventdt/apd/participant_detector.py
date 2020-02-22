@@ -94,7 +94,7 @@ class ParticipantDetector(object):
 		candidates = self.scorer.score(candidates)
 		candidates = self.filter.filter(candidates)
 
-		resolved, unresolved = self.resolver.resolve(filtered)
+		resolved, unresolved = self.resolver.resolve(candidates)
 		extrapolated = self.extrapolator.extrapolate(resolved)
 		resolved = self.postprocessor.postprocess(resolved)
 		extrapolated = self.postprocessor.postprocess(extrapolated)
