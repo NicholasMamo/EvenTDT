@@ -241,15 +241,15 @@ The participant detector chains them together to identify the event’s particip
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#module-apd.extractors.extractor" title="apd.extractors.extractor"><strong>extractor</strong></a> (<a class="reference internal" href="#apd.extractors.extractor.Extractor" title="apd.extractors.extractor.Extractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.extractors.extractor.Extractor</span></code></a>) – The extractor finds candidate participants in the corpus.</p></li>
-<li><p><a class="reference internal" href="#module-apd.scorers.scorer" title="apd.scorers.scorer"><strong>scorer</strong></a> (<a class="reference internal" href="#apd.scorers.scorer.Scorer" title="apd.scorers.scorer.Scorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.scorers.scorer.Scorer</span></code></a>) – The scorer assigns a value to each candidate participant.</p></li>
-<li><p><a class="reference internal" href="#module-apd.filters.filter" title="apd.filters.filter"><strong>filter</strong></a> (<a class="reference internal" href="#apd.filters.filter.Filter" title="apd.filters.filter.Filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.filters.filter.Filter</span></code></a> or None) – The filter excludes candidates that are unlikely to be participants.
+<li><p><strong>extractor</strong> – The extractor finds candidate participants in the corpus.</p></li>
+<li><p><strong>scorer</strong> – The scorer assigns a value to each candidate participant.</p></li>
+<li><p><strong>filter</strong> – The filter excludes candidates that are unlikely to be participants.
 If it is not given, all of the candidates are retained.</p></li>
-<li><p><a class="reference internal" href="#module-apd.resolvers.resolver" title="apd.resolvers.resolver"><strong>resolver</strong></a> (<a class="reference internal" href="#apd.resolvers.resolver.Resolver" title="apd.resolvers.resolver.Resolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.resolvers.resolver.Resolver</span></code></a> or None) – The resolver resolves candidates into participants, if possible.
+<li><p><strong>resolver</strong> – The resolver resolves candidates into participants, if possible.
 If it is not given, all of the candidates are considered to be participants.</p></li>
-<li><p><a class="reference internal" href="#module-apd.extrapolators.extrapolator" title="apd.extrapolators.extrapolator"><strong>extrapolator</strong></a> (<a class="reference internal" href="#apd.extrapolators.extrapolator.Extrapolator" title="apd.extrapolators.extrapolator.Extrapolator"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.extrapolators.extrapolator.Extrapolator</span></code></a> or None) – The extrapolator looks for additional participants.
+<li><p><strong>extrapolator</strong> – The extrapolator looks for additional participants.
 If it is not given, no more participants are returned.</p></li>
-<li><p><strong>postprocessor</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">apd.postprocessors.postprocessor.Postprocessor</span></code> or None) – The postprocessor processes the participants.
+<li><p><strong>postprocessor</strong> – The postprocessor processes the participants.
 If it is not given, the participants are returned as found.</p></li>
 </ul>
 </dd>

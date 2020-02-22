@@ -32,20 +32,20 @@ class ParticipantDetector(object):
 	The basic participant detector accepts all steps as individual instances.
 	The participant detector chains them together to identify the event's participants.
 
-	:ivar extractor: The extractor finds candidate participants in the corpus.
+	:ivar ~.extractor: The extractor finds candidate participants in the corpus.
 	:vartype extractor: :class:`apd.extractors.extractor.Extractor`
-	:ivar scorer: The scorer assigns a value to each candidate participant.
+	:ivar ~.scorer: The scorer assigns a value to each candidate participant.
 	:vartype scorer: :class:`apd.scorers.scorer.Scorer`
-	:ivar filter: The filter excludes candidates that are unlikely to be participants.
+	:ivar ~.filter: The filter excludes candidates that are unlikely to be participants.
 				  If it is not given, all of the candidates are retained.
 	:vartype filter: :class:`apd.filters.filter.Filter` or None
-	:ivar resolver: The resolver resolves candidates into participants, if possible.
+	:ivar ~.resolver: The resolver resolves candidates into participants, if possible.
 					If it is not given, all of the candidates are considered to be participants.
 	:vartype resolver: :class:`apd.resolvers.resolver.Resolver` or None
-	:ivar extrapolator: The extrapolator looks for additional participants.
+	:ivar ~.extrapolator: The extrapolator looks for additional participants.
 						If it is not given, no more participants are returned.
 	:vartype extrapolator: :class:`apd.extrapolators.extrapolator.Extrapolator` or None
-	:ivar postprocessor: The postprocessor processes the participants.
+	:ivar ~.postprocessor: The postprocessor processes the participants.
 						 If it is not given, the participants are returned as found.
 	:vartype postprocessor: :class:`apd.postprocessors.postprocessor.Postprocessor` or None
 	"""
