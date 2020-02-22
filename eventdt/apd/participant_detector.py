@@ -21,11 +21,11 @@ Of these steps, only the first two are required:
 	#. If the postprocessor is not given, the participants are returned as found by the previous steps.
 """
 
-from .scorers.scorer import Scorer
-from .filters.filter import Filter
-from .resolvers.resolver import Resolver
-from .extrapolators.extrapolator import Extrapolator
-from .postprocessors.postprocessor import Postprocessor
+from scorers.scorer import Scorer
+from filters.filter import Filter
+from resolvers.resolver import Resolver
+from extrapolators.extrapolator import Extrapolator
+from postprocessors.postprocessor import Postprocessor
 
 class ParticipantDetector(object):
 	"""
