@@ -36,4 +36,4 @@ class Resolver(object):
 		:rtype: tuple of lists
 		"""
 
-		return (list(sorted(candidates.keys(), key=lambda x: candidates.get(x), reverse=True)), [ ])
+		return (list(sorted(candidates.keys(), key=lambda candidate: candidates.get(candidate), reverse=True)), [ ])
