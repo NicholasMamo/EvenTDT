@@ -36,6 +36,9 @@ apd_tests() {
 
 	echo -e "${HIGHLIGHT}Postprocessors${DEFAULT}"
 	python3 -m unittest eventdt.apd.postprocessors.external.tests.test_wikipedia_postprocessor
+
+	echo -e "${HIGHLIGHT}Participant detectors${DEFAULT}"
+	python3 -m unittest eventdt.apd.tests.test_ner_participant_detector
 }
 
 nlp_tests() {
