@@ -72,7 +72,6 @@ class ParticipantDetector(object):
 		:type postprocessor: :class:`apd.postprocessors.postprocessor.Postprocessor`
 		"""
 
-		self._corpus = corpus
 		self.extractor = extractor
 		self.scorer = scorer
 		self.filter = Filter() if filter is None else filter
