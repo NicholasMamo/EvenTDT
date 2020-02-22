@@ -74,7 +74,7 @@ class WikipediaNameResolver(Resolver):
 
 		resolved_candidates, unresolved_candidates = [], []
 
-		candidates = list(candidates.keys())
+		candidates = sorted(candidates.keys(), key=lambda candidate: candidates.get(candidate), reverse=True)
 		resolved, unresolved, ambiguous = self._resolve_unambiguous_candidates(candidates)
 		resolved_candidates.extend(resolved)
 		unresolved_candidates.extend(unresolved)
