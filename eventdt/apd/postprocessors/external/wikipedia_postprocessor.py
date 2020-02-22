@@ -75,50 +75,31 @@ class WikipediaPostprocessor(Postprocessor):
 		:rtype: list of str
 		"""
 
-		disambiguation_pattern = re.compile(" \(.*?\)$") # a pattern of information that ends a title with disambiguation information, or more information about the concept
-
-		if postprocessor_surname_only:
+		if self.surname_only:
 			"""
-			If only surnames should be retained for persons (and persons only), get the participant information.
-			If the participant is a person, retain only the last part of their name.
+			If only surnames should be retained for persons, get the participant information.
+			If the participant is a person, remove the first component of their name.
 			The only exceptions is if the surname is a word, like `Young` in `Ashley Young`.
 			In these cases, retain the full name.
+			If surnames are to be removed, brackets are also always removed.
 			"""
-			processed = []
-			candidate_status = info_collector.is_person(candidates)
-			for participant in postprocessed:
-				if participant not in candidate_status:
-					logger.warning("%s not in [%s]" % (participant, ', '.join(list(candidate_status.keys()))))
-				if participant in candidate_status and candidate_status[participant]:
-					"""
-					If the participant is a person, retain only the last part of their name.
-					First, though, get the disambiguation text and remove it.
-					This is consistent with the idea because only the surname is ever needed.
-					"""
-					participant = disambiguation_pattern.sub('', participant.strip())
-					participant = self.remove_accents([ participant ])[0] if postprocessor_remove_accents else participant
-					surname = participant[participant.rfind(" ") + 1:]
-					if surname not in words.words() and surname.lower() not in words.words():
-						processed.append(surname)
-					else:
-						processed.append(participant)
-				else:
-					"""
-					If the participant is not a person, just append them without any changes.
-					"""
-					processed.append(participant)
-
-			postprocessed = processed
+			persons = info.is_person(participants)
+			for i, participant in enumerate(participants):
+				# TODO: Look for "commonly known simply as" (Memphis) or "commonly known as" (Juninho) relations.
+				if persons[participant]:
+					participants[i] = self._get_surname(participant)
 
 		"""
-		Remove disambiguation text if need be.
+		Remove the brackets if need be.
 		"""
-		postprocessed = self.remove_disambiguation(postprocessed) if postprocessor_remove_disambiguation else postprocessed # remove disambiguation details from the end of the title
+		participants = [ self._remove_brackets(participant) for participant in participants ] if self.remove_brackets else participants
 
 		"""
 		Remove the accents if need be.
 		"""
-		postprocessed = self.remove_accents(postprocessed) if postprocessor_remove_accents else postprocessed
+		participants = [ self._remove_accents(participant) for participant in participants ] if self.remove_accents else participants
+
+		return participants
 
 	def _get_surname(self, participant):
 		"""
