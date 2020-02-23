@@ -19,10 +19,10 @@ if path not in sys.path:
 class ClusteringAlgorithm(ABC):
 	"""
 	Clustering algorithms maintain a state.
-	The state is, at least, a list of :class:`vsm.clustering.cluster.Cluster` instances.
+	The state is, at least, a list of :class:`~vsm.clustering.cluster.Cluster` instances.
 
 	:ivar clusters: A list of clusters.
-	:vartype clusters: list of :class:`vsm.clustering.cluster.Cluster`
+	:vartype clusters: list of :class:`~vsm.clustering.cluster.Cluster`
 	"""
 
 	@abstractmethod
@@ -40,10 +40,10 @@ class ClusteringAlgorithm(ABC):
 		The function returns the active clusters.
 
 		:param vectors: The vectors to cluster.
-		:type vectors: list of :class:`vsm.vector.Vector`
+		:type vectors: list of :class:`~vsm.vector.Vector`
 
 		:return: The clusters in the algorithm state.
-		:rtpye: list of :class:`vsm.clustering.cluster.Cluster`
+		:rtpye: list of :class:`~vsm.clustering.cluster.Cluster`
 		"""
 
 		pass
