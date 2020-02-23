@@ -1,5 +1,7 @@
 """
-Queues are FIFO data structures based on lists.
+Queues are first in, first out (FIFO) data structures.
+This implementation is based on lists.
+Queue-specific functionality is introduced as functions.
 """
 
 class Queue(object):
