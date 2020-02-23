@@ -49,6 +49,7 @@ class Queue(object):
 	def dequeue_all(self):
 		"""
 		Dequeue all elements in the queue.
+		Unlike the :func:`queues.queue.queue.Queue.empty` function, this function returns all of the queue's elements.
 
 		:return: All the elements in the queue.
 		:rtype: list
@@ -56,7 +57,8 @@ class Queue(object):
 
 		elements = []
 		for i in range(0, self.length()):
-			elements.append(self.dequeue())
+		elements = list(self.queue)
+		self.empty()
 		return elements
 
 	def empty(self):

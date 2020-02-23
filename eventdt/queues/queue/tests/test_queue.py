@@ -122,6 +122,25 @@ class TestQueue(unittest.TestCase):
 		self.assertEqual(0, queue.dequeue())
 		self.assertEqual(list(range(1, 10)), queue.queue)
 
+	def test_dequeue_all_empty_queue(self):
+		"""
+		Test when dequeuing an empty queue, an empty list is returned.
+		"""
+
+		queue = Queue()
+		self.assertEqual([ ], queue.dequeue_all())
+		self.assertFalse(queue.length())
+
+	def test_dequeue_all(self):
+		"""
+		Test when dequeuing all of the queue's elements, they are returned and the queue is emptied.
+		"""
+
+		queue = Queue(*list(range(0, 10)))
+		self.assertEqual(10, queue.length())
+		self.assertEqual(list(range(0, 10)), queue.dequeue_all())
+		self.assertFalse(queue.length())
+
 	def test_length_empty_queue(self):
 		"""
 		Test that the length of an empty queue is 0.
