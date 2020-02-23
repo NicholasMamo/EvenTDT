@@ -1,6 +1,4 @@
 __pycache__
 data
-notebooks/Experiments
-
-.ftpconfig
 config/conf.py
+notebooks
