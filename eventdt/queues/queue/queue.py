@@ -77,7 +77,6 @@ class Queue(object):
 
 		return len(self.queue)
 
-	def tail(self):
 	def head(self):
 		"""
 		Get the first element entered into the queue without removing it.
@@ -89,12 +88,13 @@ class Queue(object):
 
 		return self.queue[0] if self.queue else None
 
-	def head(self):
+	def tail(self):
 		"""
-		Get the first element entered into the queue without removing it.
+		Get the last element entered into the queue without removing it.
+		If the queue is empty, `None` is returned instead
 
-		:return: The oldest element in the queue.
-		:rtype: :class:`object` or None
+		:return: The newest element in the queue.
+		:rtype: object or None
 		"""
 
-		return self._q[0] if self.length() > 0 else None
+		return self.queue[-1] if self.queue else None

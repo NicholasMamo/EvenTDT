@@ -208,3 +208,23 @@ class TestQueue(unittest.TestCase):
 		self.assertEqual(10, queue.length())
 		self.assertEqual(0, queue.head())
 		self.assertEqual(10, queue.length())
+
+	def test_tail_empty_queue(self):
+		"""
+		Test that when getting the tail element of an empty queue, `None` is returned instead.
+		"""
+
+		queue = Queue()
+		self.assertEqual(None, queue.tail())
+
+	def test_tail(self):
+		"""
+		Test that getting the tail element of a queue does not remove it.
+		"""
+
+		queue = Queue(*list(range(0, 10)))
+		self.assertEqual(10, queue.length())
+		self.assertEqual(9, queue.tail())
+		self.assertEqual(10, queue.length())
+		self.assertEqual(9, queue.tail())
+		self.assertEqual(10, queue.length())
