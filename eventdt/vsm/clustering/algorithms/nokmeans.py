@@ -1,28 +1,25 @@
 """
-The No-K-Means algorithm (Azzopardi et al., 2016).
-These kinds of algorithms are meant to be used with similarity measures, not distance measures.
+The No-K-Means algorithm is an incremental clustering algorithm presented by `Azzopardi et al. in 2016 <https://www.researchgate.net/profile/Colin_Layfield/publication/303893387_Extended_No-K-Means_for_Search_Results_Clustering/links/575acd4208ae9a9c95518dfd.pdf>`_.
+The algorithm compares incoming documents to existing clusters.
+The vector is added to the most similar cluster if the similarity exceeds a certain threshold.
+Otherwise, the vector is added to a new cluster.
+
+Since clusters accumulate over time, the algorithm also has a freeze period.
+Clusters that have not been updated with new vectors for an equivalent period are frozen.
+No new vectors can be added to frozen clusters.
 """
 
+import os
+import sys
+
+paths = [ os.path.join(os.path.dirname(__file__), '..') ]
+
+for path in paths:
+	if path not in sys.path:
+	    sys.path.append(path)
+
 from .clustering import ClusteringAlgorithm
-from ..cluster import Cluster
-from ...vector_math import *
-
-from enum import Enum
-
-class ClusterType(Enum):
-	"""
-	Cluster type options:
-
-		#. ALL 		- all clusters
-
-		#. FROZEN 	- frozen clusters only
-
-		#. ACTIVE 	- non-frozen clusters only
-	"""
-
-	ALL = 1
-	FROZEN = 2
-	ACTIVE = 3
+from cluster import Cluster
 
 class NoKMeans(ClusteringAlgorithm):
 	"""
@@ -115,24 +112,6 @@ class NoKMeans(ClusteringAlgorithm):
 
 		# frozen clusters will have been dealt with already, so the check is skipped
 		return [ cluster for cluster in self._clusters if cluster.get_attribute("age") <= len(vectors) ]
-
-	def get_clusters(self, cluster_type=ClusterType.ALL):
-		"""
-		Return clusters.
-
-		:param cluster_type: The kind of clusters to return.
-		:type cluster_type: :class:`~vector.cluster.clustering.nokmeans.ClusterType`
-
-		:return: A list of clusters.
-		:rtype: list of :class:`~vector.cluster.cluster.Cluster` instances
-		"""
-
-		options= {
-			ClusterType.ALL: self._clusters + self._frozen_clusters,
-			ClusterType.FROZEN: self._frozen_clusters,
-			ClusterType.ACTIVE: self._clusters
-		}
-		return options.get(cluster_type, options[ClusterType.ALL])
 
 class TemporalNoKMeans(NoKMeans):
 	"""
