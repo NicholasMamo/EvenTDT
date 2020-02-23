@@ -16,6 +16,7 @@ Welcome to EvenTDT's documentation!
    nlp
    wikinterface
    apd
+   queues
    other
 
 Indices and tables

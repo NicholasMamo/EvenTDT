@@ -1,6 +1,6 @@
-****************
-6. Other
-****************
+********
+7. Other
+********
 
 .. meta::
    :description: Other EvenTDT functionality.
