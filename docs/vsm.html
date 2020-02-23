@@ -731,6 +731,90 @@ The function returns the active clusters.</p>
 
 </dd></dl>
 
+<span class="target" id="module-vsm.clustering.algorithms.no_k_means"></span><p>The No-K-Means algorithm is an incremental clustering algorithm, described in research by <a class="reference external" href="https://www.researchgate.net/profile/Colin_Layfield/publication/303893387_Extended_No-K-Means_for_Search_Results_Clustering/links/575acd4208ae9a9c95518dfd.pdf">Azzopardi et al. in 2016</a>.
+The algorithm compares incoming documents to existing clusters.
+The vector is added to the most similar cluster if the similarity exceeds a certain threshold.
+Otherwise, the vector is added to a new cluster.</p>
+<p>Since clusters accumulate over time, the algorithm also has a freeze period.
+Clusters that have not been updated with new vectors for an equivalent period are frozen.
+No new vectors can be added to frozen clusters.</p>
+<dl class="class">
+<dt id="vsm.clustering.algorithms.no_k_means.NoKMeans">
+<em class="property">class </em><code class="sig-name descname">NoKMeans</code><a class="headerlink" href="#vsm.clustering.algorithms.no_k_means.NoKMeans" title="Permalink to this definition">¶</a></dt>
+<dd><p>The No-K-Means algorithm is an incremental clustering algorithm.
+Incoming vectors are added to the most similar cluster if the similarity exceeds a threshold.
+Otherwise, a new cluster is created just for them.</p>
+<p>This class contains one additional field - the frozen clusters.
+Inactive clusters are frozen out, and are not checked with incoming vectors anymore.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><p><strong>_frozen_clusters</strong> (list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code> instances) – A list of clusters that have been retired.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="vsm.clustering.algorithms.no_k_means.NoKMeans.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.no_k_means.NoKMeans.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the algorithm with the clusters, the frozen clusters and a similarity measure.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vsm.clustering.algorithms.no_k_means.NoKMeans.cluster">
+<code class="sig-name descname">cluster</code><span class="sig-paren">(</span><em class="sig-param">vectors</em>, <em class="sig-param">threshold</em>, <em class="sig-param">freeze_period</em>, <em class="sig-param">store_frozen=True</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.no_k_means.NoKMeans.cluster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cluster the given documents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vectors</strong> (list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code> instances) – The list of vectors to cluster.</p></li>
+<li><p><strong>threshold</strong> – The minimum similarity for a vector to be added to a cluster.</p></li>
+<li><p><strong>freeze_period</strong> (<em>int</em>) – The number of documents that arrive without being added to a cluster, before it is frozen.</p></li>
+<li><p><strong>store_frozen</strong> (<em>bool</em>) – A boolean indicating whether frozen clusters should be retained.
+This should be turned off in long-running systems to avoid memory leaks.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The clusters that received documents, and which are not frozen.</p>
+</dd>
+<dt class="field-odd">Rtpye</dt>
+<dd class="field-odd"><p>list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code> instances</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vsm.clustering.algorithms.no_k_means.TemporalNoKMeans">
+<em class="property">class </em><code class="sig-name descname">TemporalNoKMeans</code><a class="headerlink" href="#vsm.clustering.algorithms.no_k_means.TemporalNoKMeans" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Temporal No-K-Means algorithm is an incremental clustering algorithm.
+In contrast with the normal No-K-Means, its freeze period is in seconds, not on the number of vectors seen so far.
+It is assumed that the vectors are provided in chronological order across function calls.
+Within function calls, vectors are sorted.</p>
+<dl class="method">
+<dt id="vsm.clustering.algorithms.no_k_means.TemporalNoKMeans.cluster">
+<code class="sig-name descname">cluster</code><span class="sig-paren">(</span><em class="sig-param">vectors</em>, <em class="sig-param">threshold</em>, <em class="sig-param">freeze_period</em>, <em class="sig-param">time_attribute</em>, <em class="sig-param">store_frozen=True</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.no_k_means.TemporalNoKMeans.cluster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cluster the given documents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vectors</strong> (list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code> instances) – The list of vectors to cluster.</p></li>
+<li><p><strong>threshold</strong> – The minimum similarity for a vector to be added to a cluster.</p></li>
+<li><p><strong>freeze_period</strong> (<em>int</em>) – The time (in seconds) of inactivity before a cluster is frozen.</p></li>
+<li><p><strong>time_attribute</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code>) – The key that stores the vector’s associated timestamp.</p></li>
+<li><p><strong>store_frozen</strong> (<em>bool</em>) – A boolean indicating whether frozen clusters should be retained.
+This should be turned off in long-running systems to avoid memory leaks.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The clusters that received documents, and which are not frozen.</p>
+</dd>
+<dt class="field-odd">Rtpye</dt>
+<dd class="field-odd"><p>list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code> instances</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 </div>
 </div>

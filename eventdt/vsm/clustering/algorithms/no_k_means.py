@@ -1,5 +1,5 @@
 """
-The No-K-Means algorithm is an incremental clustering algorithm presented by `Azzopardi et al. in 2016 <https://www.researchgate.net/profile/Colin_Layfield/publication/303893387_Extended_No-K-Means_for_Search_Results_Clustering/links/575acd4208ae9a9c95518dfd.pdf>`_.
+The No-K-Means algorithm is an incremental clustering algorithm, described in research by `Azzopardi et al. in 2016 <https://www.researchgate.net/profile/Colin_Layfield/publication/303893387_Extended_No-K-Means_for_Search_Results_Clustering/links/575acd4208ae9a9c95518dfd.pdf>`_.
 The algorithm compares incoming documents to existing clusters.
 The vector is added to the most similar cluster if the similarity exceeds a certain threshold.
 Otherwise, the vector is added to a new cluster.
@@ -34,15 +34,12 @@ class NoKMeans(ClusteringAlgorithm):
 	:vartype _frozen_clusters: list of :class:`~vector.cluster.cluster.Cluster` instances
 	"""
 
-	def __init__(self, similarity_measure=cosine):
+	def __init__(self):
 		"""
 		Initialize the algorithm with the clusters, the frozen clusters and a similarity measure.
-
-		:param similarity_measure: The similarity function to use to compare the likeliness of the vector with the cluster.
-		:type similarity_measure: function
 		"""
 
-		super(NoKMeans, self).__init__(similarity_measure)
+		super(NoKMeans, self).__init__()
 		self._frozen_clusters = []
 
 	def cluster(self, vectors, threshold, freeze_period, store_frozen=True):

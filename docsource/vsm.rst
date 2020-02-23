@@ -50,3 +50,8 @@ Algorithms
    :members:
    :private-members:
    :special-members:
+
+.. automodule:: vsm.clustering.algorithms.no_k_means
+   :members:
+   :private-members:
+   :special-members:
