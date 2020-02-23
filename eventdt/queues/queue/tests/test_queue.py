@@ -95,3 +95,29 @@ class TestQueue(unittest.TestCase):
 		self.assertEqual(data, queue.queue)
 		queue.enqueue(list(range(10, 12)))
 		self.assertEqual(data + [list(range(10, 12))], queue.queue)
+
+	def test_dequeue_empty_queue(self):
+		"""
+		Test that when dequeuing an empty queue, `None` is returned.
+		"""
+
+		queue = Queue()
+		self.assertEqual(None, queue.dequeue())
+
+	def test_dequeue_only_element(self):
+		"""
+		Test that when dequeuing the only element from a queue, the element is returned and the queue becomes empty.
+		"""
+
+		queue = Queue(1)
+		self.assertEqual(1, queue.dequeue())
+		self.assertFalse(queue.length())
+
+	def test_dequeue(self):
+		"""
+		Test that when dequeuing an element, it is returned and removed.
+		"""
+
+		queue = Queue(*range(0, 10))
+		self.assertEqual(0, queue.dequeue())
+		self.assertEqual(list(range(1, 10)), queue.queue)

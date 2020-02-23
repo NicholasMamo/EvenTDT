@@ -38,12 +38,13 @@ class Queue(object):
 	def dequeue(self):
 		"""
 		Get the first element in the queue.
+		If the queue is empty, `None` is returned instead
 
-		:return: The oldest element in the queue.
-		:rtype: :class:`object` or None
+		:return: The first element in the queue.
+		:rtype: object or None
 		"""
 
-		return self._q.pop(0) if self.length() > 0 else None
+		return self.queue.pop(0) if self.queue else None
 
 	def dequeue_all(self):
 		"""
