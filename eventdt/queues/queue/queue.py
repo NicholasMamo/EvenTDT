@@ -74,7 +74,7 @@ class Queue(object):
 		:rtype: int
 		"""
 
-		return len(self._q)
+		return len(self.queue)
 
 	def tail(self):
 		"""

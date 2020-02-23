@@ -121,3 +121,29 @@ class TestQueue(unittest.TestCase):
 		queue = Queue(*range(0, 10))
 		self.assertEqual(0, queue.dequeue())
 		self.assertEqual(list(range(1, 10)), queue.queue)
+
+	def test_length_empty_queue(self):
+		"""
+		Test that the length of an empty queue is 0.
+		"""
+
+		queue = Queue()
+		self.assertFalse(queue.length())
+
+	def test_length_queue(self):
+		"""
+		Test that the length of a queue is equal to the number of elements in it.
+		"""
+
+		queue = Queue()
+		self.assertFalse(queue.length())
+		queue.enqueue(*list(range(0, 10)))
+		self.assertEqual(10, queue.length())
+
+	def test_length_queue_with_list(self):
+		"""
+		Test that a queue with just a list as an element has a length of 1.
+		"""
+
+		queue = Queue(list(range(0, 10)))
+		self.assertEqual(1, queue.length())
