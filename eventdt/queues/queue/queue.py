@@ -7,19 +7,20 @@ Queue-specific functionality is introduced as functions.
 class Queue(object):
 	"""
 	The queue data structure is based on a list.
-	In its simplest form, the queue only includes function to store and return data.
+	The queue can take in any kind of data, including other queues.
+	New elements are added to the queue at the end.
+
+	:ivar queue: The queue data structure.
+	:vartype queue: list
 	"""
 
-	def __init__(self, data=None):
+	def __init__(self, *args):
 		"""
-		Create the queue with optional initial data.
-		If no data is given, an empty list is initialized.
-
-		:param data: The initial data in the queue.
-		:type data: list
+		Create the queue.
+		The queue's data can be given as normal argument.
 		"""
 
-		self._q = data if data is not None else list()
+		self.queue = [ *args ]
 
 	def enqueue(self, data):
 		"""
