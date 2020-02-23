@@ -188,3 +188,23 @@ class TestQueue(unittest.TestCase):
 
 		queue = Queue(list(range(0, 10)))
 		self.assertEqual(1, queue.length())
+
+	def test_head_empty_queue(self):
+		"""
+		Test that when getting the head element of an empty queue, `None` is returned instead.
+		"""
+
+		queue = Queue()
+		self.assertEqual(None, queue.head())
+
+	def test_head(self):
+		"""
+		Test that getting the head element of a queue does not remove it.
+		"""
+
+		queue = Queue(*list(range(0, 10)))
+		self.assertEqual(10, queue.length())
+		self.assertEqual(0, queue.head())
+		self.assertEqual(10, queue.length())
+		self.assertEqual(0, queue.head())
+		self.assertEqual(10, queue.length())
