@@ -66,14 +66,8 @@ graph_tests() {
 }
 
 queue_tests() {
-	# echo -e "${HIGHLIGHT}Queue${DEFAULT}"
-	#
-	# echo -e "${HIGHLIGHT}Base Queue${DEFAULT}"
-	# python3 -m unittest eventdt.queues.tests.test_queue
-	#
-	# echo -e "${HIGHLIGHT}Filter${DEFAULT}"
-	# python3 -m unittest eventdt.queues.consumer.filter.tests.test_filter
-	return
+	echo -e "${HIGHLIGHT}Queue${DEFAULT}"
+	python3 -m unittest eventdt.queues.queue.tests.test_queue
 }
 
 summarization_tests() {
