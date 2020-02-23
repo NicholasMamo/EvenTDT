@@ -41,3 +41,12 @@ Clustering
    :members:
    :private-members:
    :special-members:
+
+
+Algorithms
+----------
+
+.. automodule:: vsm.clustering.algorithms.clustering
+   :members:
+   :private-members:
+   :special-members:
