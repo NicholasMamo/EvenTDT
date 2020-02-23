@@ -55,8 +55,6 @@ class Queue(object):
 		:rtype: list
 		"""
 
-		elements = []
-		for i in range(0, self.length()):
 		elements = list(self.queue)
 		self.empty()
 		return elements
@@ -64,9 +62,10 @@ class Queue(object):
 	def empty(self):
 		"""
 		Empty the queue.
+		Unlike the :func:`queues.queue.queue.Queue.dequeue_all` function, this function returns nothing.
 		"""
 
-		self._q = []
+		self.queue = [ ]
 
 	def length(self):
 		"""
