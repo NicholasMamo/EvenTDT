@@ -52,3 +52,46 @@ class TestQueue(unittest.TestCase):
 
 		queue = Queue([ 1, True, 'a' ])
 		self.assertEqual([[ 1, True, 'a' ]], queue.queue)
+
+	def test_enqueue_no_data(self):
+		"""
+		Test that when enqueuing no data, the queue remains as it was in the beginning.
+		"""
+
+		data = list(range(0, 10))
+		queue = Queue(*data)
+		self.assertEqual(data, queue.queue)
+		self.assertRaises(ValueError, queue.enqueue)
+
+	def test_enqueue_data(self):
+		"""
+		Test that when enqueuing a single element, it is enqueued as an element.
+		"""
+
+		data = list(range(0, 10))
+		queue = Queue(*data)
+		self.assertEqual(data, queue.queue)
+		queue.enqueue(11)
+		self.assertEqual(data + [ 11 ], queue.queue)
+
+	def test_enqueue_multiple_data(self):
+		"""
+		Test that when enqueuing multiple elements, all of them are enqueued.
+		"""
+
+		data = list(range(0, 10))
+		queue = Queue(*data)
+		self.assertEqual(data, queue.queue)
+		queue.enqueue(*list(range(10, 12)))
+		self.assertEqual(data + list(range(10, 12)), queue.queue)
+
+	def test_enqueue_list(self):
+		"""
+		Test that when enqueuing a list, the list itself is enqueued.
+		"""
+
+		data = list(range(0, 10))
+		queue = Queue(*data)
+		self.assertEqual(data, queue.queue)
+		queue.enqueue(list(range(10, 12)))
+		self.assertEqual(data + [list(range(10, 12))], queue.queue)

@@ -17,28 +17,23 @@ class Queue(object):
 	def __init__(self, *args):
 		"""
 		Create the queue.
-		The queue's data can be given as normal argument.
+		The queue's data can be given as normal arguments.
 		"""
 
 		self.queue = [ *args ]
 
-	def enqueue(self, data):
+	def enqueue(self, *args):
 		"""
-		Add the given data - a list or a single value - to the queue.
-		If a list is provided, add all elements sequentially.
+		Add the given data to the queue.
+		All arguments can be provided as arguments.
 
-		:param data: The data to enqueue.
-		:type data: list
+		:raises ValueError: When no data is given.
 		"""
 
-		if type(data) == list:
-			"""
-			If a list is provided, add each element to the queue.
-			"""
-			for element in data:
-				self._q.append(element)
-		else:
-			self._q.append(data)
+		if not (args):
+			raise ValueError("No data given")
+
+		self.queue.extend(args)
 
 	def dequeue(self):
 		"""
