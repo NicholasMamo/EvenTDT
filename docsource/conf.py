@@ -44,6 +44,10 @@ templates_path = ['_templates']
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
+# If true, the current module name will be prepended to all description
+# unit titles (such as .. function::).
+# From: https://stackoverflow.com/a/23686917/1771724
+add_module_names = False
 
 # -- Options for HTML output -------------------------------------------------
 

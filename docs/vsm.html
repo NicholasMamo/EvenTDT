@@ -176,7 +176,7 @@ Keep reading to learn more about the different VSM classes available in EvenTDT.
 The class contains is used in clustering and Natural Language Processing (NLP) to represent documents.</p>
 <dl class="class">
 <dt id="vsm.vector.Vector">
-<em class="property">class </em><code class="sig-prename descclassname">vsm.vector.</code><code class="sig-name descname">Vector</code><span class="sig-paren">(</span><em class="sig-param">dimensions=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector.Vector" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Vector</code><span class="sig-paren">(</span><em class="sig-param">dimensions=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector.Vector" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.vector.Vector</span></code></a> class is the smallest building block in the Vector Space Model (VSM).
 It is used for tasks such as clustering and to represent documents.
 Vectors are based on <code class="xref py py-class docutils literal notranslate"><span class="pre">objects.Attributable</span></code> so that they may have additional properties.</p>
@@ -340,7 +340,7 @@ If no value is provided, the dimension is unset.</p>
 <p>Mathematical functions related to vectors.</p>
 <dl class="function">
 <dt id="vsm.vector_math.magnitude">
-<code class="sig-prename descclassname">vsm.vector_math.</code><code class="sig-name descname">magnitude</code><span class="sig-paren">(</span><em class="sig-param">v</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector_math.magnitude" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">magnitude</code><span class="sig-paren">(</span><em class="sig-param">v</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector_math.magnitude" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the magnitude of the given vector.
 The magnitude is computed as:</p>
 <div class="math notranslate nohighlight">
@@ -355,7 +355,7 @@ The magnitude is computed as:</p>
 
 <dl class="function">
 <dt id="vsm.vector_math.normalize">
-<code class="sig-prename descclassname">vsm.vector_math.</code><code class="sig-name descname">normalize</code><span class="sig-paren">(</span><em class="sig-param">v</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector_math.normalize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">normalize</code><span class="sig-paren">(</span><em class="sig-param">v</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector_math.normalize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Normalize the given vector.
 Normalization is computed as:</p>
 <div class="math notranslate nohighlight">
@@ -370,7 +370,7 @@ Normalization is computed as:</p>
 
 <dl class="function">
 <dt id="vsm.vector_math.augmented_normalize">
-<code class="sig-prename descclassname">vsm.vector_math.</code><code class="sig-name descname">augmented_normalize</code><span class="sig-paren">(</span><em class="sig-param">v</em>, <em class="sig-param">a=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector_math.augmented_normalize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">augmented_normalize</code><span class="sig-paren">(</span><em class="sig-param">v</em>, <em class="sig-param">a=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector_math.augmented_normalize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Normalize the given vector using the formula:</p>
 <div class="math notranslate nohighlight">
 \[f = a + (1 - a) \frac{f}{x}\]</div>
@@ -391,7 +391,7 @@ Normalization is computed as:</p>
 
 <dl class="function">
 <dt id="vsm.vector_math.concatenate">
-<code class="sig-prename descclassname">vsm.vector_math.</code><code class="sig-name descname">concatenate</code><span class="sig-paren">(</span><em class="sig-param">vectors</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector_math.concatenate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">concatenate</code><span class="sig-paren">(</span><em class="sig-param">vectors</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector_math.concatenate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Concatenate a list of vectors and return a new vector.
 This means adding the dimensions together:</p>
 <div class="math notranslate nohighlight">
@@ -412,7 +412,7 @@ This means adding the dimensions together:</p>
 
 <dl class="function">
 <dt id="vsm.vector_math.euclidean">
-<code class="sig-prename descclassname">vsm.vector_math.</code><code class="sig-name descname">euclidean</code><span class="sig-paren">(</span><em class="sig-param">v1</em>, <em class="sig-param">v2</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector_math.euclidean" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">euclidean</code><span class="sig-paren">(</span><em class="sig-param">v1</em>, <em class="sig-param">v2</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector_math.euclidean" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute similarity using Euclidean distance.
 The Euclidean distance <span class="math notranslate nohighlight">\(e_{p, q}\)</span> is computed as:</p>
 <div class="math notranslate nohighlight">
@@ -431,7 +431,7 @@ The Euclidean distance <span class="math notranslate nohighlight">\(e_{p, q}\)</
 
 <dl class="function">
 <dt id="vsm.vector_math.manhattan">
-<code class="sig-prename descclassname">vsm.vector_math.</code><code class="sig-name descname">manhattan</code><span class="sig-paren">(</span><em class="sig-param">v1</em>, <em class="sig-param">v2</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector_math.manhattan" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">manhattan</code><span class="sig-paren">(</span><em class="sig-param">v1</em>, <em class="sig-param">v2</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector_math.manhattan" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute similarity using Manhattan distance.
 The Manhattan distance <span class="math notranslate nohighlight">\(m_{p, q}\)</span> is computed as:</p>
 <div class="math notranslate nohighlight">
@@ -450,7 +450,7 @@ The Manhattan distance <span class="math notranslate nohighlight">\(m_{p, q}\)</
 
 <dl class="function">
 <dt id="vsm.vector_math.cosine">
-<code class="sig-prename descclassname">vsm.vector_math.</code><code class="sig-name descname">cosine</code><span class="sig-paren">(</span><em class="sig-param">v1</em>, <em class="sig-param">v2</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector_math.cosine" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">cosine</code><span class="sig-paren">(</span><em class="sig-param">v1</em>, <em class="sig-param">v2</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector_math.cosine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute similarity using cosine similarity.
 The cosine similarity <span class="math notranslate nohighlight">\(cos_{p, q}\)</span> is computed as:</p>
 <div class="math notranslate nohighlight">
@@ -469,7 +469,7 @@ The cosine similarity <span class="math notranslate nohighlight">\(cos_{p, q}\)<
 
 <dl class="function">
 <dt id="vsm.vector_math.cosine_distance">
-<code class="sig-prename descclassname">vsm.vector_math.</code><code class="sig-name descname">cosine_distance</code><span class="sig-paren">(</span><em class="sig-param">v1</em>, <em class="sig-param">v2</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector_math.cosine_distance" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">cosine_distance</code><span class="sig-paren">(</span><em class="sig-param">v1</em>, <em class="sig-param">v2</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector_math.cosine_distance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the cosine distance.
 The cosine distance <span class="math notranslate nohighlight">\(cosd_{p, q}\)</span> is computed as:</p>
 <div class="math notranslate nohighlight">
@@ -497,7 +497,7 @@ Simultaneously, they aim to minimize the distance between vectors in the same cl
 <p>Clusters can be created normally, or they can be generated by a <a class="reference internal" href="#vsm.clustering.algorithms.clustering.ClusteringAlgorithm" title="vsm.clustering.algorithms.clustering.ClusteringAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.clustering.algorithms.clustering.ClusteringAlgorithm</span></code></a>.</p>
 <dl class="class">
 <dt id="vsm.clustering.cluster.Cluster">
-<em class="property">class </em><code class="sig-prename descclassname">vsm.clustering.cluster.</code><code class="sig-name descname">Cluster</code><span class="sig-paren">(</span><em class="sig-param">vectors=None</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.cluster.Cluster" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Cluster</code><span class="sig-paren">(</span><em class="sig-param">vectors=None</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.cluster.Cluster" title="Permalink to this definition">¶</a></dt>
 <dd><p>The cluster class is a collection of vectors, or documents.
 It also has a centroid.
 Clusters are based on <code class="xref py py-class docutils literal notranslate"><span class="pre">objects.Attributable</span></code> so that they may have additional properties.</p>
@@ -691,7 +691,7 @@ Each class stores, at least, a list of <a class="reference internal" href="#vsm.
 New documents can be clustered by calling the <a class="reference internal" href="#vsm.clustering.algorithms.clustering.ClusteringAlgorithm.cluster" title="vsm.clustering.algorithms.clustering.ClusteringAlgorithm.cluster"><code class="xref py py-func docutils literal notranslate"><span class="pre">vsm.clustering.algorithms.clustering.ClusteringAlgorithm.cluster()</span></code></a> method.</p>
 <dl class="class">
 <dt id="vsm.clustering.algorithms.clustering.ClusteringAlgorithm">
-<em class="property">class </em><code class="sig-prename descclassname">vsm.clustering.algorithms.clustering.</code><code class="sig-name descname">ClusteringAlgorithm</code><a class="headerlink" href="#vsm.clustering.algorithms.clustering.ClusteringAlgorithm" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">ClusteringAlgorithm</code><a class="headerlink" href="#vsm.clustering.algorithms.clustering.ClusteringAlgorithm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clustering algorithms maintain a state.
 The state is, at least, a list of <a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.clustering.cluster.Cluster</span></code></a> instances.</p>
 <dl class="field-list simple">

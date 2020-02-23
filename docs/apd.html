@@ -235,7 +235,7 @@ The steps are identical to APD:</p>
 </div></blockquote>
 <dl class="class">
 <dt id="apd.participant_detector.ParticipantDetector">
-<em class="property">class </em><code class="sig-prename descclassname">apd.participant_detector.</code><code class="sig-name descname">ParticipantDetector</code><span class="sig-paren">(</span><em class="sig-param">extractor</em>, <em class="sig-param">scorer</em>, <em class="sig-param">filter=None</em>, <em class="sig-param">resolver=None</em>, <em class="sig-param">extrapolator=None</em>, <em class="sig-param">postprocessor=None</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.participant_detector.ParticipantDetector" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">ParticipantDetector</code><span class="sig-paren">(</span><em class="sig-param">extractor</em>, <em class="sig-param">scorer</em>, <em class="sig-param">filter=None</em>, <em class="sig-param">resolver=None</em>, <em class="sig-param">extrapolator=None</em>, <em class="sig-param">postprocessor=None</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.participant_detector.ParticipantDetector" title="Permalink to this definition">¶</a></dt>
 <dd><p>The basic participant detector accepts all steps as individual instances.
 The participant detector chains them together to identify the event’s participants.</p>
 <dl class="field-list simple">
@@ -307,7 +307,7 @@ It simply extracts named entities and ranks them based on frequency.
 Due to its simplicity, the NER participant detector is also a baseline for APD.</p>
 <dl class="class">
 <dt id="apd.ner_participant_detector.NERParticipantDetector">
-<em class="property">class </em><code class="sig-prename descclassname">apd.ner_participant_detector.</code><code class="sig-name descname">NERParticipantDetector</code><a class="headerlink" href="#apd.ner_participant_detector.NERParticipantDetector" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">NERParticipantDetector</code><a class="headerlink" href="#apd.ner_participant_detector.NERParticipantDetector" title="Permalink to this definition">¶</a></dt>
 <dd><p>The Named Entity Recognition (NER) participant detector extracts named entities from the corpus.
 The NER participant detector is based on a normal participant detector.
 It uses the <a class="reference internal" href="#apd.extractors.local.entity_extractor.EntityExtractor" title="apd.extractors.local.entity_extractor.EntityExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.extractors.local.entity_extractor.EntityExtractor</span></code></a> to extract named entities.
@@ -329,7 +329,7 @@ All extractors take the corpus as an input.</p>
 The functionality revolves around one method: the <a class="reference internal" href="#apd.extractors.extractor.Extractor.extract" title="apd.extractors.extractor.Extractor.extract"><code class="xref py py-meth docutils literal notranslate"><span class="pre">apd.extractors.extractor.Extractor.extract()</span></code></a> method.</p>
 <dl class="class">
 <dt id="apd.extractors.extractor.Extractor">
-<em class="property">class </em><code class="sig-prename descclassname">apd.extractors.extractor.</code><code class="sig-name descname">Extractor</code><a class="headerlink" href="#apd.extractors.extractor.Extractor" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Extractor</code><a class="headerlink" href="#apd.extractors.extractor.Extractor" title="Permalink to this definition">¶</a></dt>
 <dd><p>The extractor returns any participants that it finds.
 The functionality revolves around one method: the <a class="reference internal" href="#apd.extractors.extractor.Extractor.extract" title="apd.extractors.extractor.Extractor.extract"><code class="xref py py-meth docutils literal notranslate"><span class="pre">apd.extractors.extractor.Extractor.extract()</span></code></a> method.</p>
 <dl class="method">
@@ -366,7 +366,7 @@ Each inner list is the candidates in that document.</p>
 Therefore it does not perform any filtering whatsoever on the corpus.</p>
 <dl class="class">
 <dt id="apd.extractors.local.token_extractor.TokenExtractor">
-<em class="property">class </em><code class="sig-prename descclassname">apd.extractors.local.token_extractor.</code><code class="sig-name descname">TokenExtractor</code><span class="sig-paren">(</span><em class="sig-param">tokenizer=None</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.local.token_extractor.TokenExtractor" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">TokenExtractor</code><span class="sig-paren">(</span><em class="sig-param">tokenizer=None</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.local.token_extractor.TokenExtractor" title="Permalink to this definition">¶</a></dt>
 <dd><p>The token extractor does not perform any filtering whatsoever on the corpus.
 It returns all tokens as potential candidates.</p>
 <dl class="field-list simple">
@@ -416,7 +416,7 @@ This extractor requires <a class="reference external" href="http://nltk.org/">NL
 It does not distinguish between named entity types.</p>
 <dl class="class">
 <dt id="apd.extractors.local.entity_extractor.EntityExtractor">
-<em class="property">class </em><code class="sig-prename descclassname">apd.extractors.local.entity_extractor.</code><code class="sig-name descname">EntityExtractor</code><span class="sig-paren">(</span><em class="sig-param">binary=True</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.local.entity_extractor.EntityExtractor" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">EntityExtractor</code><span class="sig-paren">(</span><em class="sig-param">binary=True</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.local.entity_extractor.EntityExtractor" title="Permalink to this definition">¶</a></dt>
 <dd><p>The entity extractor uses NLTK to extract named entities from a corpus of documents.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
@@ -513,7 +513,7 @@ The scores may be normalized to make them comparable.
 This can be a simple rescaling function.</p>
 <dl class="class">
 <dt id="apd.scorers.scorer.Scorer">
-<em class="property">class </em><code class="sig-prename descclassname">apd.scorers.scorer.</code><code class="sig-name descname">Scorer</code><a class="headerlink" href="#apd.scorers.scorer.Scorer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Scorer</code><a class="headerlink" href="#apd.scorers.scorer.Scorer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The scorer returns a score for each candidate participant found in the corpus.</p>
 <dl class="method">
 <dt id="apd.scorers.scorer.Scorer.score">
@@ -568,7 +568,7 @@ The default function returns the scores as it founds them.</p>
 <span class="target" id="module-apd.scorers.local.df_scorer"></span><p>The document frequency scorer assigns a score to candidates that is proportional to their document frequency.</p>
 <dl class="class">
 <dt id="apd.scorers.local.df_scorer.DFScorer">
-<em class="property">class </em><code class="sig-prename descclassname">apd.scorers.local.df_scorer.</code><code class="sig-name descname">DFScorer</code><a class="headerlink" href="#apd.scorers.local.df_scorer.DFScorer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">DFScorer</code><a class="headerlink" href="#apd.scorers.local.df_scorer.DFScorer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The basic summation scorer assigns a score to tokens based on document frequency.</p>
 <dl class="method">
 <dt id="apd.scorers.local.df_scorer.DFScorer.score">
@@ -633,7 +633,7 @@ The function rescales them between 0 and 1, where 1 is the maximum score of the 
 The difference is that it applies a logarithm to decrease the difference between candidates that appear very often and those which do not.</p>
 <dl class="class">
 <dt id="apd.scorers.local.log_df_scorer.LogDFScorer">
-<em class="property">class </em><code class="sig-prename descclassname">apd.scorers.local.log_df_scorer.</code><code class="sig-name descname">LogDFScorer</code><span class="sig-paren">(</span><em class="sig-param">base=10</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.log_df_scorer.LogDFScorer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">LogDFScorer</code><span class="sig-paren">(</span><em class="sig-param">base=10</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.log_df_scorer.LogDFScorer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The log scorer is based on normal summation.
 However, the logarithms of the scores are taken.
 In this way, the candidates are not overly-biased towards candidates that appear disproportionately.</p>
@@ -680,7 +680,7 @@ Here, normalization means rescaling between 0 and 1.</p></li>
 <span class="target" id="module-apd.scorers.local.tf_scorer"></span><p>The term frequency scorer assigns a score to candidates that is proportional to their term frequency.</p>
 <dl class="class">
 <dt id="apd.scorers.local.tf_scorer.TFScorer">
-<em class="property">class </em><code class="sig-prename descclassname">apd.scorers.local.tf_scorer.</code><code class="sig-name descname">TFScorer</code><a class="headerlink" href="#apd.scorers.local.tf_scorer.TFScorer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">TFScorer</code><a class="headerlink" href="#apd.scorers.local.tf_scorer.TFScorer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The basic summation scorer assigns a score to tokens based on term frequency.</p>
 <dl class="method">
 <dt id="apd.scorers.local.tf_scorer.TFScorer.score">
@@ -745,7 +745,7 @@ The function rescales them between 0 and 1, where 1 is the maximum score of the 
 The difference is that it applies a logarithm to decrease the difference between candidates that appear very often and those which do not.</p>
 <dl class="class">
 <dt id="apd.scorers.local.log_tf_scorer.LogTFScorer">
-<em class="property">class </em><code class="sig-prename descclassname">apd.scorers.local.log_tf_scorer.</code><code class="sig-name descname">LogTFScorer</code><span class="sig-paren">(</span><em class="sig-param">base=10</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.log_tf_scorer.LogTFScorer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">LogTFScorer</code><span class="sig-paren">(</span><em class="sig-param">base=10</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.log_tf_scorer.LogTFScorer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The log scorer is based on normal summation.
 However, the logarithms of the scores are taken.
 In this way, the candidates are not overly-biased towards candidates that appear disproportionately.</p>
@@ -792,7 +792,7 @@ Here, normalization means rescaling between 0 and 1.</p></li>
 <span class="target" id="module-apd.scorers.local.tfidf_scorer"></span><p>The TF-IDF scorer assigns a score the candidate participants similarly to the <a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.term_weighting.tfidf.TFIDF</span></code></a> term-weighting scheme.</p>
 <dl class="class">
 <dt id="apd.scorers.local.tfidf_scorer.TFIDFScorer">
-<em class="property">class </em><code class="sig-prename descclassname">apd.scorers.local.tfidf_scorer.</code><code class="sig-name descname">TFIDFScorer</code><span class="sig-paren">(</span><em class="sig-param">idf</em>, <em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.tfidf_scorer.TFIDFScorer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">TFIDFScorer</code><span class="sig-paren">(</span><em class="sig-param">idf</em>, <em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.tfidf_scorer.TFIDFScorer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The TF-IDF scorer assigns a score the candidate participants similarly to the <a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.term_weighting.tfidf.TFIDF</span></code></a> term-weighting scheme.
 Therefore the scorer depends on an IDF table, given as a dictionary.</p>
 <dl class="method">
@@ -871,7 +871,7 @@ In other words, they should be a dictionary, with the keys being the candidates 
 The function returns a dictionary of candidate participants and their scores.</p>
 <dl class="class">
 <dt id="apd.filters.filter.Filter">
-<em class="property">class </em><code class="sig-prename descclassname">apd.filters.filter.</code><code class="sig-name descname">Filter</code><a class="headerlink" href="#apd.filters.filter.Filter" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Filter</code><a class="headerlink" href="#apd.filters.filter.Filter" title="Permalink to this definition">¶</a></dt>
 <dd><p>The filter goes through candidate participants and removes candidates that are not credible enough.</p>
 <dl class="method">
 <dt id="apd.filters.filter.Filter.filter">
@@ -906,7 +906,7 @@ The input candidates should be the product of a <a class="reference internal" hr
 <span class="target" id="module-apd.filters.local.threshold_filter"></span><p>The threshold filter excludes candidate participants with a score that is lower than a specified threshold.</p>
 <dl class="class">
 <dt id="apd.filters.local.threshold_filter.ThresholdFilter">
-<em class="property">class </em><code class="sig-prename descclassname">apd.filters.local.threshold_filter.</code><code class="sig-name descname">ThresholdFilter</code><span class="sig-paren">(</span><em class="sig-param">threshold</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.filters.local.threshold_filter.ThresholdFilter" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">ThresholdFilter</code><span class="sig-paren">(</span><em class="sig-param">threshold</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.filters.local.threshold_filter.ThresholdFilter" title="Permalink to this definition">¶</a></dt>
 <dd><p>The threshold filter excludes candidate participants with a score that is lower than a specified threshold.</p>
 <dl class="field-list simple">
 </dl>
@@ -959,7 +959,7 @@ The unresolved candidates are usually discarded.</p>
 <p>The functionality revolves around one method: the <a class="reference internal" href="#apd.resolvers.resolver.Resolver.resolve" title="apd.resolvers.resolver.Resolver.resolve"><code class="xref py py-meth docutils literal notranslate"><span class="pre">apd.resolvers.resolver.Resolver.resolve()</span></code></a> method.</p>
 <dl class="class">
 <dt id="apd.resolvers.resolver.Resolver">
-<em class="property">class </em><code class="sig-prename descclassname">apd.resolvers.resolver.</code><code class="sig-name descname">Resolver</code><a class="headerlink" href="#apd.resolvers.resolver.Resolver" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Resolver</code><a class="headerlink" href="#apd.resolvers.resolver.Resolver" title="Permalink to this definition">¶</a></dt>
 <dd><p>The simplest resolver returns all candidates without any resolution.</p>
 <dl class="method">
 <dt id="apd.resolvers.resolver.Resolver.resolve">
@@ -997,7 +997,7 @@ Therefore unresolved candidates are empty.</p>
 It tokenizes words with the given tokenizer and tries to map each candidate to the most common term.</p>
 <dl class="class">
 <dt id="apd.resolvers.local.token_resolver.TokenResolver">
-<em class="property">class </em><code class="sig-prename descclassname">apd.resolvers.local.token_resolver.</code><code class="sig-name descname">TokenResolver</code><span class="sig-paren">(</span><em class="sig-param">tokenizer</em>, <em class="sig-param">corpus</em>, <em class="sig-param">case_fold=True</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.local.token_resolver.TokenResolver" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">TokenResolver</code><span class="sig-paren">(</span><em class="sig-param">tokenizer</em>, <em class="sig-param">corpus</em>, <em class="sig-param">case_fold=True</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.local.token_resolver.TokenResolver" title="Permalink to this definition">¶</a></dt>
 <dd><p>The token resolver tries to map tokens to actual terms.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
@@ -1098,7 +1098,7 @@ The values are the terms that most-commonly generate the token.</p>
 <p>The Wikipedia name resolver looks to map candidates to pages that include their name.</p>
 <dl class="class">
 <dt id="apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver">
-<em class="property">class </em><code class="sig-prename descclassname">apd.resolvers.external.wikipedia_name_resolver.</code><code class="sig-name descname">WikipediaNameResolver</code><span class="sig-paren">(</span><em class="sig-param">scheme</em>, <em class="sig-param">tokenizer</em>, <em class="sig-param">threshold</em>, <em class="sig-param">corpus</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">WikipediaNameResolver</code><span class="sig-paren">(</span><em class="sig-param">scheme</em>, <em class="sig-param">tokenizer</em>, <em class="sig-param">threshold</em>, <em class="sig-param">corpus</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver" title="Permalink to this definition">¶</a></dt>
 <dd><p>The Wikipedia name resolver looks for pages that match the candidate’s name.
 It then maps the candidate to that page by returning the page name instead of the candidate.</p>
 <dl class="field-list simple">
@@ -1212,7 +1212,7 @@ In many cases, colloquial names of candidates are not the same as their formal n
 For example, <cite>FC Barcelona</cite> is referred to simply as <cite>Barcelona</cite>.</p>
 <dl class="class">
 <dt id="apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver">
-<em class="property">class </em><code class="sig-prename descclassname">apd.resolvers.external.wikipedia_search_resolver.</code><code class="sig-name descname">WikipediaSearchResolver</code><span class="sig-paren">(</span><em class="sig-param">scheme</em>, <em class="sig-param">tokenizer</em>, <em class="sig-param">threshold</em>, <em class="sig-param">corpus</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">WikipediaSearchResolver</code><span class="sig-paren">(</span><em class="sig-param">scheme</em>, <em class="sig-param">tokenizer</em>, <em class="sig-param">threshold</em>, <em class="sig-param">corpus</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver" title="Permalink to this definition">¶</a></dt>
 <dd><p>The Wikipedia search resolver looks for pages that include candidate names.
 The Wikipedia API automatically ranks articles by relevance.
 This resolver exploits that to try and match the candidate with any of the top results.</p>
@@ -1363,7 +1363,7 @@ The functionality revolves around one method: the <a class="reference internal" 
 The function should return participants in descending order of their relevance to the domain.</p>
 <dl class="class">
 <dt id="apd.extrapolators.extrapolator.Extrapolator">
-<em class="property">class </em><code class="sig-prename descclassname">apd.extrapolators.extrapolator.</code><code class="sig-name descname">Extrapolator</code><a class="headerlink" href="#apd.extrapolators.extrapolator.Extrapolator" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Extrapolator</code><a class="headerlink" href="#apd.extrapolators.extrapolator.Extrapolator" title="Permalink to this definition">¶</a></dt>
 <dd><p>The simplest extrapolator returns no new participants.</p>
 <dl class="method">
 <dt id="apd.extrapolators.extrapolator.Extrapolator.extrapolate">
@@ -1409,7 +1409,7 @@ For this reason, care should be taken with the paramaters that are provided.</p>
 </div>
 <dl class="class">
 <dt id="apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator">
-<em class="property">class </em><code class="sig-prename descclassname">apd.extrapolators.external.wikipedia_extrapolator.</code><code class="sig-name descname">WikipediaExtrapolator</code><span class="sig-paren">(</span><em class="sig-param">corpus</em>, <em class="sig-param">tokenizer</em>, <em class="sig-param">scheme</em>, <em class="sig-param">threshold=0</em>, <em class="sig-param">first_level_links=100</em>, <em class="sig-param">second_level_links=1000</em>, <em class="sig-param">first_level_similarity=0</em>, <em class="sig-param">second_level_similarity=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">WikipediaExtrapolator</code><span class="sig-paren">(</span><em class="sig-param">corpus</em>, <em class="sig-param">tokenizer</em>, <em class="sig-param">scheme</em>, <em class="sig-param">threshold=0</em>, <em class="sig-param">first_level_links=100</em>, <em class="sig-param">second_level_links=1000</em>, <em class="sig-param">first_level_similarity=0</em>, <em class="sig-param">second_level_similarity=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator" title="Permalink to this definition">¶</a></dt>
 <dd><p>The Wikipedia extrapolator looks for new participants that are tightly-linked with resolved participants.
 This definition is based on a graph, and communities are extracted using the Girvan-Newman algorithm.</p>
 <dl class="field-list simple">
@@ -1594,7 +1594,7 @@ A postprocessor formats the participants.</p>
 The functionality revolves around one method: the <a class="reference internal" href="#apd.postprocessors.postprocessor.Postprocessor.postprocess" title="apd.postprocessors.postprocessor.Postprocessor.postprocess"><code class="xref py py-meth docutils literal notranslate"><span class="pre">apd.postprocessors.postprocessor.Postprocessor.postprocess()</span></code></a> method.</p>
 <dl class="class">
 <dt id="apd.postprocessors.postprocessor.Postprocessor">
-<em class="property">class </em><code class="sig-prename descclassname">apd.postprocessors.postprocessor.</code><code class="sig-name descname">Postprocessor</code><a class="headerlink" href="#apd.postprocessors.postprocessor.Postprocessor" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Postprocessor</code><a class="headerlink" href="#apd.postprocessors.postprocessor.Postprocessor" title="Permalink to this definition">¶</a></dt>
 <dd><p>The simplest postprocessor returns the participants without any changes.</p>
 <dl class="method">
 <dt id="apd.postprocessors.postprocessor.Postprocessor.postprocess">
@@ -1632,7 +1632,7 @@ For example, participants that are persons can be reduced to a surname.</p>
 </div>
 <dl class="class">
 <dt id="apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor">
-<em class="property">class </em><code class="sig-prename descclassname">apd.postprocessors.external.wikipedia_postprocessor.</code><code class="sig-name descname">WikipediaPostprocessor</code><span class="sig-paren">(</span><em class="sig-param">remove_accents=True</em>, <em class="sig-param">remove_brackets=True</em>, <em class="sig-param">surname_only=True</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">WikipediaPostprocessor</code><span class="sig-paren">(</span><em class="sig-param">remove_accents=True</em>, <em class="sig-param">remove_brackets=True</em>, <em class="sig-param">surname_only=True</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor" title="Permalink to this definition">¶</a></dt>
 <dd><p>The Wikipedia postprocessor assumes that the given participants map to Wikipedia pages.
 It uses this knowledge to get additional information about participants and postprocess the .</p>
 <dl class="field-list simple">

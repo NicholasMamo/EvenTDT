@@ -170,7 +170,7 @@
 This module makes it easier to access the API.</p>
 <dl class="data">
 <dt id="wikinterface.API_ENDPOINT">
-<code class="sig-prename descclassname">wikinterface.</code><code class="sig-name descname">API_ENDPOINT</code><em class="property"> = 'https://en.wikipedia.org/w/api.php?'</em><a class="headerlink" href="#wikinterface.API_ENDPOINT" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">API_ENDPOINT</code><em class="property"> = 'https://en.wikipedia.org/w/api.php?'</em><a class="headerlink" href="#wikinterface.API_ENDPOINT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#wikinterface.API_ENDPOINT" title="wikinterface.API_ENDPOINT"><strong>API_ENDPOINT</strong></a> (<em>str</em>) – The Wikipedia API endpoint.</p>
@@ -180,7 +180,7 @@ This module makes it easier to access the API.</p>
 
 <dl class="function">
 <dt id="wikinterface.is_error_response">
-<code class="sig-prename descclassname">wikinterface.</code><code class="sig-name descname">is_error_response</code><span class="sig-paren">(</span><em class="sig-param">response</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.is_error_response" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">is_error_response</code><span class="sig-paren">(</span><em class="sig-param">response</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.is_error_response" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validate whether the given Wikipedia response is an error.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -197,7 +197,7 @@ This module makes it easier to access the API.</p>
 
 <dl class="function">
 <dt id="wikinterface.construct_url">
-<code class="sig-prename descclassname">wikinterface.</code><code class="sig-name descname">construct_url</code><span class="sig-paren">(</span><em class="sig-param">parameters=None</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.construct_url" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">construct_url</code><span class="sig-paren">(</span><em class="sig-param">parameters=None</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.construct_url" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct the URL using the given parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -217,7 +217,7 @@ If a parameter is a boolean and <cite>False</cite>, it is excluded altogether</p
 
 <dl class="function">
 <dt id="wikinterface.revert_redirects">
-<code class="sig-prename descclassname">wikinterface.</code><code class="sig-name descname">revert_redirects</code><span class="sig-paren">(</span><em class="sig-param">results</em>, <em class="sig-param">redirects</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.revert_redirects" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">revert_redirects</code><span class="sig-paren">(</span><em class="sig-param">results</em>, <em class="sig-param">redirects</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.revert_redirects" title="Permalink to this definition">¶</a></dt>
 <dd><p>Revert redirections.</p>
 <p>The function takes in search results with keys as the page titles.
 The redirections are those retorned by Wikipedia to redirect these keys.</p>
@@ -244,7 +244,7 @@ This dictionary has keys ‘from’ and ‘to’.</p></li>
 <p>The info collector fetches information about Wikipedia pages.</p>
 <dl class="class">
 <dt id="wikinterface.info.ArticleType">
-<em class="property">class </em><code class="sig-prename descclassname">wikinterface.info.</code><code class="sig-name descname">ArticleType</code><a class="headerlink" href="#wikinterface.info.ArticleType" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">ArticleType</code><a class="headerlink" href="#wikinterface.info.ArticleType" title="Permalink to this definition">¶</a></dt>
 <dd><p>The type of article.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
@@ -260,7 +260,7 @@ These articles contain links to other articles.</p></li>
 
 <dl class="function">
 <dt id="wikinterface.info.types">
-<code class="sig-prename descclassname">wikinterface.info.</code><code class="sig-name descname">types</code><span class="sig-paren">(</span><em class="sig-param">titles</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.info.types" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">types</code><span class="sig-paren">(</span><em class="sig-param">titles</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.info.types" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the type of page each page title returns.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -277,7 +277,7 @@ These articles contain links to other articles.</p></li>
 
 <dl class="function">
 <dt id="wikinterface.info.is_person">
-<code class="sig-prename descclassname">wikinterface.info.</code><code class="sig-name descname">is_person</code><span class="sig-paren">(</span><em class="sig-param">titles</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.info.is_person" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">is_person</code><span class="sig-paren">(</span><em class="sig-param">titles</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.info.is_person" title="Permalink to this definition">¶</a></dt>
 <dd><p>Go through each page title and check whether it represents a person.
 The function assumes that an article is about a person if it mentions a birth date.</p>
 <dl class="field-list simple">
@@ -299,7 +299,7 @@ The function assumes that an article is about a person if it mentions a birth da
 <p>The link collector collects links from Wikipedia articles.</p>
 <dl class="function">
 <dt id="wikinterface.links.collect">
-<code class="sig-prename descclassname">wikinterface.links.</code><code class="sig-name descname">collect</code><span class="sig-paren">(</span><em class="sig-param">titles</em>, <em class="sig-param">separate=True</em>, <em class="sig-param">introduction_only=False</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.links.collect" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">collect</code><span class="sig-paren">(</span><em class="sig-param">titles</em>, <em class="sig-param">separate=True</em>, <em class="sig-param">introduction_only=False</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.links.collect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a list of outgoing links from the given list of articles.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -326,7 +326,7 @@ Otherwise, a list of article titles is returned.</p>
 
 <dl class="function">
 <dt id="wikinterface.links.collect_recursive">
-<code class="sig-prename descclassname">wikinterface.links.</code><code class="sig-name descname">collect_recursive</code><span class="sig-paren">(</span><em class="sig-param">titles</em>, <em class="sig-param">level</em>, <em class="sig-param">collected_links=None</em>, <em class="sig-param">separate=True</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.links.collect_recursive" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">collect_recursive</code><span class="sig-paren">(</span><em class="sig-param">titles</em>, <em class="sig-param">level</em>, <em class="sig-param">collected_links=None</em>, <em class="sig-param">separate=True</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.links.collect_recursive" title="Permalink to this definition">¶</a></dt>
 <dd><p>Recursively fetch links, starting from a seed set.
 The function uses the <a class="reference internal" href="#wikinterface.links.collect" title="wikinterface.links.collect"><code class="xref py py-func docutils literal notranslate"><span class="pre">wikinterface.links.collect()</span></code></a> function.
 Any additional arguments and keyword arguments are passed on to it.</p>
@@ -362,7 +362,7 @@ If they are, the links are returned separated by the page in which they appear.<
 
 <dl class="function">
 <dt id="wikinterface.links._get_intro_links">
-<code class="sig-prename descclassname">wikinterface.links.</code><code class="sig-name descname">_get_intro_links</code><span class="sig-paren">(</span><em class="sig-param">page</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.links._get_intro_links" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_get_intro_links</code><span class="sig-paren">(</span><em class="sig-param">page</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.links._get_intro_links" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a list of outgoing links from the introduction of the given page.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -386,7 +386,7 @@ The function expects a <cite>revisions</cite> key containing the text of the lat
 
 <dl class="function">
 <dt id="wikinterface.links._get_all_links">
-<code class="sig-prename descclassname">wikinterface.links.</code><code class="sig-name descname">_get_all_links</code><span class="sig-paren">(</span><em class="sig-param">page</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.links._get_all_links" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_get_all_links</code><span class="sig-paren">(</span><em class="sig-param">page</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.links._get_all_links" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a list of outgoing links from the given page.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -408,7 +408,7 @@ The function expects a <cite>links</cite> key containing the list of links in th
 <p>The search collector is used to look for articles containing a particular list of terms.</p>
 <dl class="function">
 <dt id="wikinterface.search.collect">
-<code class="sig-prename descclassname">wikinterface.search.</code><code class="sig-name descname">collect</code><span class="sig-paren">(</span><em class="sig-param">terms</em>, <em class="sig-param">limit=10</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.search.collect" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">collect</code><span class="sig-paren">(</span><em class="sig-param">terms</em>, <em class="sig-param">limit=10</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.search.collect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Look for pages containing the given terms.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -445,7 +445,7 @@ Their content can be fetched using these titles.</p>
 This module contains functions to help extract that text from articles.</p>
 <dl class="function">
 <dt id="wikinterface.text.collect">
-<code class="sig-prename descclassname">wikinterface.text.</code><code class="sig-name descname">collect</code><span class="sig-paren">(</span><em class="sig-param">titles</em>, <em class="sig-param">introduction_only=False</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.text.collect" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">collect</code><span class="sig-paren">(</span><em class="sig-param">titles</em>, <em class="sig-param">introduction_only=False</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.text.collect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the plain text content of the pages having the given titles.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

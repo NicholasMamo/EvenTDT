@@ -183,7 +183,7 @@ First, the text needs to be converted into tokens using the <a class="reference 
 Second, those tokens need to be weighted using a <a class="reference internal" href="#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.term_weighting.scheme.TermWeightingScheme</span></code></a>, transforming them into document features, or vector dimensions.</p>
 <dl class="class">
 <dt id="nlp.document.Document">
-<em class="property">class </em><code class="sig-prename descclassname">nlp.document.</code><code class="sig-name descname">Document</code><span class="sig-paren">(</span><em class="sig-param">text=''</em>, <em class="sig-param">dimensions=None</em>, <em class="sig-param">scheme=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.document.Document" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Document</code><span class="sig-paren">(</span><em class="sig-param">text=''</em>, <em class="sig-param">dimensions=None</em>, <em class="sig-param">scheme=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.document.Document" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference internal" href="#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.document.Document</span></code></a> class is based on the <a class="reference internal" href="vsm.html#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.vector.Vector</span></code></a> class. class.
 The main addition is the text field for any later changes.</p>
 <dl class="field-list simple">
@@ -289,7 +289,7 @@ Creating and using a tokenizer is very simple:</p>
 </div>
 <dl class="class">
 <dt id="nlp.tokenizer.Tokenizer">
-<em class="property">class </em><code class="sig-prename descclassname">nlp.tokenizer.</code><code class="sig-name descname">Tokenizer</code><span class="sig-paren">(</span><em class="sig-param">remove_mentions=True</em>, <em class="sig-param">remove_hashtags=False</em>, <em class="sig-param">split_hashtags=True</em>, <em class="sig-param">remove_numbers=True</em>, <em class="sig-param">remove_urls=True</em>, <em class="sig-param">remove_alt_codes=True</em>, <em class="sig-param">normalize_words=False</em>, <em class="sig-param">character_normalization_count=3</em>, <em class="sig-param">case_fold=True</em>, <em class="sig-param">remove_punctuation=True</em>, <em class="sig-param">remove_unicode_entities=False</em>, <em class="sig-param">min_length=3</em>, <em class="sig-param">stopwords=None</em>, <em class="sig-param">stem=True</em>, <em class="sig-param">normalize_special_characters=True</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.tokenizer.Tokenizer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Tokenizer</code><span class="sig-paren">(</span><em class="sig-param">remove_mentions=True</em>, <em class="sig-param">remove_hashtags=False</em>, <em class="sig-param">split_hashtags=True</em>, <em class="sig-param">remove_numbers=True</em>, <em class="sig-param">remove_urls=True</em>, <em class="sig-param">remove_alt_codes=True</em>, <em class="sig-param">normalize_words=False</em>, <em class="sig-param">character_normalization_count=3</em>, <em class="sig-param">case_fold=True</em>, <em class="sig-param">remove_punctuation=True</em>, <em class="sig-param">remove_unicode_entities=False</em>, <em class="sig-param">min_length=3</em>, <em class="sig-param">stopwords=None</em>, <em class="sig-param">stem=True</em>, <em class="sig-param">normalize_special_characters=True</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.tokenizer.Tokenizer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The tokenizer takes in strings and converts them into tokens.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
@@ -405,7 +405,7 @@ However, they may also be provided as a dict directly.</p></li>
 Traditionally, term-weighting schemes have at least a local and global component.</p>
 <dl class="class">
 <dt id="nlp.term_weighting.scheme.TermWeightingScheme">
-<em class="property">class </em><code class="sig-prename descclassname">nlp.term_weighting.scheme.</code><code class="sig-name descname">TermWeightingScheme</code><span class="sig-paren">(</span><em class="sig-param">local_scheme</em>, <em class="sig-param">global_scheme</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.term_weighting.scheme.TermWeightingScheme" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">TermWeightingScheme</code><span class="sig-paren">(</span><em class="sig-param">local_scheme</em>, <em class="sig-param">global_scheme</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.term_weighting.scheme.TermWeightingScheme" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class defines a list of properties that all term-weighting schemes must have.
 The class can be instantiated by providing a local term-weighting scheme and a global term-weighting scheme.
 The scheme then multiplies the scores of each to <a class="reference internal" href="#nlp.term_weighting.scheme.TermWeightingScheme.create" title="nlp.term_weighting.scheme.TermWeightingScheme.create"><code class="xref py py-func docutils literal notranslate"><span class="pre">nlp.term_weighting.scheme.TermWeightingScheme.create()</span></code></a> a <a class="reference internal" href="#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.document.Document</span></code></a>.</p>
@@ -462,7 +462,7 @@ The dimensions’ weights depend on the term-weighting scheme.</p>
 
 <dl class="class">
 <dt id="nlp.term_weighting.scheme.SchemeScorer">
-<em class="property">class </em><code class="sig-prename descclassname">nlp.term_weighting.scheme.</code><code class="sig-name descname">SchemeScorer</code><a class="headerlink" href="#nlp.term_weighting.scheme.SchemeScorer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">SchemeScorer</code><a class="headerlink" href="#nlp.term_weighting.scheme.SchemeScorer" title="Permalink to this definition">¶</a></dt>
 <dd><p>A scheme is used to score documents’ tokens.
 It is important to distinguish between <a class="reference internal" href="#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.term_weighting.scheme.TermWeightingScheme</span></code></a> and <a class="reference internal" href="#nlp.term_weighting.scheme.SchemeScorer" title="nlp.term_weighting.scheme.SchemeScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.term_weighting.scheme.SchemeScorer</span></code></a>.
 The former is a complete term-weighting scheme that takes local and global scheme scorers.
@@ -502,7 +502,7 @@ The term frequency <span class="math notranslate nohighlight">\(tf_{t,d}\)</span
 \[tf_{t,d} = f_{t,d}\]</div>
 <dl class="class">
 <dt id="nlp.term_weighting.tf.TF">
-<em class="property">class </em><code class="sig-prename descclassname">nlp.term_weighting.tf.</code><code class="sig-name descname">TF</code><a class="headerlink" href="#nlp.term_weighting.tf.TF" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">TF</code><a class="headerlink" href="#nlp.term_weighting.tf.TF" title="Permalink to this definition">¶</a></dt>
 <dd><p>The TF scheme is used when there is no need for a global scheme.</p>
 <dl class="method">
 <dt id="nlp.term_weighting.tf.TF.__init__">
@@ -520,7 +520,7 @@ The weight <span class="math notranslate nohighlight">\(tfidf_{t,d}\)</span> of 
 \[tfidf_{t,d} = tf_{t,d} \cdot idf_{t}\]</div>
 <dl class="class">
 <dt id="nlp.term_weighting.tfidf.TFIDF">
-<em class="property">class </em><code class="sig-prename descclassname">nlp.term_weighting.tfidf.</code><code class="sig-name descname">TFIDF</code><span class="sig-paren">(</span><em class="sig-param">idf</em>, <em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.term_weighting.tfidf.TFIDF" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">TFIDF</code><span class="sig-paren">(</span><em class="sig-param">idf</em>, <em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.term_weighting.tfidf.TFIDF" title="Permalink to this definition">¶</a></dt>
 <dd><p>The Term Frequency-Inverse Document Frequency (TF-IDF) term-weighting scheme is one of the most popular schemes.
 The scheme promotes features that appear commonly in a document, but rarely outside of it.</p>
 <dl class="method">
@@ -552,7 +552,7 @@ The weight <span class="math notranslate nohighlight">\(bool_{t,d}\)</span> of a
                          \end{cases}\end{split}\]</div>
 <dl class="class">
 <dt id="nlp.term_weighting.local_schemes.boolean.Boolean">
-<em class="property">class </em><code class="sig-prename descclassname">nlp.term_weighting.local_schemes.boolean.</code><code class="sig-name descname">Boolean</code><a class="headerlink" href="#nlp.term_weighting.local_schemes.boolean.Boolean" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Boolean</code><a class="headerlink" href="#nlp.term_weighting.local_schemes.boolean.Boolean" title="Permalink to this definition">¶</a></dt>
 <dd><p>The boolean term-weighting scheme is one of the simplest term weighting schemes that is used.
 The weight of a feature is 1 if it appears in a document, 0 otherwise.</p>
 <dl class="method">
@@ -581,7 +581,7 @@ The term frequency <span class="math notranslate nohighlight">\(tf_{t,d}\)</span
 \[tf_{t,d} = f_{t,d}\]</div>
 <dl class="class">
 <dt id="nlp.term_weighting.local_schemes.tf.TF">
-<em class="property">class </em><code class="sig-prename descclassname">nlp.term_weighting.local_schemes.tf.</code><code class="sig-name descname">TF</code><a class="headerlink" href="#nlp.term_weighting.local_schemes.tf.TF" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">TF</code><a class="headerlink" href="#nlp.term_weighting.local_schemes.tf.TF" title="Permalink to this definition">¶</a></dt>
 <dd><p>The Term Frequency (TF) term-weighting scheme is one of the simplest term weighting schemes that is used.
 The weight of a dimension is simply the number of times that the feature appears.</p>
 <dl class="method">
@@ -616,7 +616,7 @@ The scheme assigns the same score <span class="math notranslate nohighlight">\(f
                          \end{cases}\end{split}\]</div>
 <dl class="class">
 <dt id="nlp.term_weighting.global_schemes.filler.Filler">
-<em class="property">class </em><code class="sig-prename descclassname">nlp.term_weighting.global_schemes.filler.</code><code class="sig-name descname">Filler</code><a class="headerlink" href="#nlp.term_weighting.global_schemes.filler.Filler" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Filler</code><a class="headerlink" href="#nlp.term_weighting.global_schemes.filler.Filler" title="Permalink to this definition">¶</a></dt>
 <dd><p>The filler global term-weighting scheme is used when there is no need for a global term-weighting scheme.
 The scheme assigns the same score to all terms: 1.</p>
 <dl class="method">
@@ -647,7 +647,7 @@ Terms that appear often in one document but rarely outside characterize that doc
 <p>where <span class="math notranslate nohighlight">\(N\)</span> is the total number of documents and <span class="math notranslate nohighlight">\(n_t\)</span> is the total number of documents in <span class="math notranslate nohighlight">\(N\)</span> that contain term <span class="math notranslate nohighlight">\(t\)</span>.</p>
 <dl class="class">
 <dt id="nlp.term_weighting.global_schemes.idf.IDF">
-<em class="property">class </em><code class="sig-prename descclassname">nlp.term_weighting.global_schemes.idf.</code><code class="sig-name descname">IDF</code><span class="sig-paren">(</span><em class="sig-param">idf</em>, <em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.term_weighting.global_schemes.idf.IDF" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">IDF</code><span class="sig-paren">(</span><em class="sig-param">idf</em>, <em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.term_weighting.global_schemes.idf.IDF" title="Permalink to this definition">¶</a></dt>
 <dd><p>The Inverse Document Frequency (TF-IDF) is one of the most common term-weighting schemes.
 This scheme promotes uncommon tokens.</p>
 <dl class="field-list simple">
