@@ -1,5 +1,5 @@
 """
-Run unit tests on the :class:`eventdt.nlp.term_weighting.tfidf.TFIDF` class.
+Run unit tests on the :class:`nlp.term_weighting.tfidf.TFIDF` class.
 """
 
 import os

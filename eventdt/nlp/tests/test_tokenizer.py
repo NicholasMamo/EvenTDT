@@ -1,5 +1,5 @@
 """
-Run unit tests on the :class:`eventdt.nlp.tokenizer.Tokenizer` class.
+Run unit tests on the :class:`nlp.tokenizer.Tokenizer` class.
 """
 
 from nltk.corpus import stopwords
@@ -18,7 +18,7 @@ from tokenizer import Tokenizer
 
 class TestTokenizer(unittest.TestCase):
 	"""
-	Run unit tests on the :class:`eventdt.nlp.tokenizer.Tokenizer` class.
+	Run unit tests on the :class:`nlp.tokenizer.Tokenizer` class.
 	"""
 
 	def ignore_warnings(test):

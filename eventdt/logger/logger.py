@@ -22,7 +22,7 @@ from config import conf
 class LogLevel(OrderedEnum):
 	"""
 	The logger's logging level.
-	It is based on a :class:`eventdt.objects.ordered_enum.OrderedEnum`.
+	It is based on a :class:`objects.ordered_enum.OrderedEnum`.
 
 	Valid logging levels:
 
