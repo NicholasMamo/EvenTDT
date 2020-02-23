@@ -20,18 +20,18 @@ Automatic Participant Detection (APD) is a six-step process:
    #. `Extrapolation <#module-apd.extrapolators.extrapolator>`_
    #. `Postprocesing <#module-apd.postprocessors.postprocessor>`_
 
-The APD process revolves around a central class: the :class:`apd.participant_detector.ParticipantDetector`.
+The APD process revolves around a central class: the :class:`~apd.participant_detector.ParticipantDetector`.
 The class constructor accepts classes representing these six steps, and calls their main functions.
 All of the step implementations are separated into local (using the corpus) or external (using a different source).
 
 Each step is represented by a base class.
 Base classes define the minimum inputs and describe the expected outputs of each step.
 Each base class also has a central function around which processing revolves.
-For example, the :class:`apd.extractors.extractor` class has a :func:`apd.extractors.extractor.Extractor.extract` function.
-These classes go through the :class:`apd.participant_detector.ParticipantDetector`
+For example, the :class:`~apd.extractors.extractor` class has a :func:`~apd.extractors.extractor.Extractor.extract` function.
+These classes go through the :class:`~apd.participant_detector.ParticipantDetector`
 Therefore inherited classes should accept any parameters not specified in these base functions as constructor parameters.
 
-All APD functionality usually goes through the :class:`apd.participant_detector.ParticipantDetector`.
+All APD functionality usually goes through the :class:`~apd.participant_detector.ParticipantDetector`.
 This class represents APD's six steps.
 It takes as inputs the classes and calls them one after the other.
 
