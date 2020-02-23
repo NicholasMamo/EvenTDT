@@ -78,7 +78,7 @@ class IDF(SchemeScorer):
 		Create the IDF table from the given set of documents.
 
 		:param documents: The documents from which the IDF table will be created.
-		:type documents: list of :class:`nlp.document.Document`
+		:type documents: list of :class:`~nlp.document.Document`
 
 		:return: A dictionary, where the keys are the document tokens and the values are their document frequency.
 		:rtype: dict

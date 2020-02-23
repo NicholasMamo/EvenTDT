@@ -3,8 +3,8 @@ Clusters are normally the product of clustering algorithms
 A clustering algorithm takes in vectors or documents and clusters them.
 
 Clustering algorithms are represented as classes so that they maintain their state.
-Each class stores, at least, a list of :class:`vsm.clustering.cluster.Cluster` instances.
-New documents can be clustered by calling the :func:`vsm.clustering.algorithms.clustering.ClusteringAlgorithm.cluster` method.
+Each class stores, at least, a list of :class:`~vsm.clustering.cluster.Cluster` instances.
+New documents can be clustered by calling the :func:`~vsm.clustering.algorithms.clustering.ClusteringAlgorithm.cluster` method.
 """
 
 from abc import ABC, abstractmethod

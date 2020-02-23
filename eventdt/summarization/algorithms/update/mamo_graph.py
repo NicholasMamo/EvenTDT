@@ -54,11 +54,11 @@ class DocumentGraphSummarizer(FragmentedUpdateSummarization):
 	The advantage of this approach is that there are fewer parameters.
 
 	:ivar _scorer: The scorer that is used to evaluate documents.
-	:vartype _scorer: :class:`summarization.scorers.scorer.Scorer`
+	:vartype _scorer: :class:`~summarization.scorers.scorer.Scorer`
 	:ivar _tokenizer: The tokenizer that is used to re-create sentences.
-	:vartype _tokenizer: :class:`vector.nlp.tokenizer.Tokenizer`
+	:vartype _tokenizer: :class:`~vector.nlp.tokenizer.Tokenizer`
 	:ivar _scheme: The scheme that is used to convert the tokens into dimensions.
-	:vartype _scheme: :class:`vector.nlp.TermWeighting`
+	:vartype _scheme: :class:`~vector.nlp.TermWeighting`
 	"""
 
 	def __init__(self, time_window=120, scorer=scorer.Scorer, tokenizer=None, scheme=None, output_file=None):
@@ -70,11 +70,11 @@ class DocumentGraphSummarizer(FragmentedUpdateSummarization):
 		:type time_window: int
 		:param scorer: The type of scorer used to rank documents.
 			By default, no scoring is employed.
-		:type scorer: :class:`summarization.scorers.scorer.Scorer`
+		:type scorer: :class:`~summarization.scorers.scorer.Scorer`
 		:param tokenizer: The tokenizer that is used to re-create sentences.
-		:type tokenizer: :class:`vector.nlp.tokenizer.Tokenizer`
+		:type tokenizer: :class:`~vector.nlp.tokenizer.Tokenizer`
 		:param scheme: The scheme that is used to convert the tokens into dimensions.
-		:type scheme: :class:`vector.nlp.TermWeighting`
+		:type scheme: :class:`~vector.nlp.TermWeighting`
 		:param output_file: A file handle that is used to write information.
 		:type output_file: file
 		"""
@@ -100,7 +100,7 @@ class DocumentGraphSummarizer(FragmentedUpdateSummarization):
 		:type breaking_terms: list
 		:param cluster: The cluster within which the breaking terms were found.
 			Its documents will be used to create the summaries.
-		:type cluster: :class:`vector.cluster.cluster.Cluster`
+		:type cluster: :class:`~vector.cluster.cluster.Cluster`
 		:param timestamp: The timestamp when the cluster is being added.
 		:type timestamp: int
 		:param wait_period: The period to wait (in seconds) before considering retiring developments.
@@ -157,7 +157,7 @@ class DocumentGraphSummarizer(FragmentedUpdateSummarization):
 		Generate a summary from the documents comprising the development.
 
 		:return: A summary.
-		:rtype: :class:`summarization.summary.Summary`
+		:rtype: :class:`~summarization.summary.Summary`
 		"""
 
 		sentence_split_pattern = re.compile(".+?[.?!\n]")
@@ -274,7 +274,7 @@ class DocumentGraphSummarizer(FragmentedUpdateSummarization):
 		:type cluster: list
 
 		:return: The summarization query.
-		:rtype: :class:`vector.nlp.document.Document`
+		:rtype: :class:`~vector.nlp.document.Document`
 		"""
 
 		query = Cluster()
@@ -292,7 +292,7 @@ class DocumentGraphSummarizer(FragmentedUpdateSummarization):
 		The lower the weight, the more shortest paths could go through it.
 
 		:param G: The graph on which the algorithm operates.
-		:type G: :class:`networkx.Graph`
+		:type G: :class:`~networkx.Graph`
 
 		:return: The most central edge, made up of the source and edge nodes.
 		:rtype: tuple

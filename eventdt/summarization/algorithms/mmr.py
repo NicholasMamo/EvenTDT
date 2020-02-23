@@ -27,10 +27,10 @@ def MMR(collection, query=None, similarity_measure=cosine, l=0.5, iterations=3, 
 	The MMR uses the following formula: λ sim(di, q) - (1 - λ) max(sim(di, dj))
 
 	:param collection: The collection of documents.
-	:type collection: list of :class:`vector.vector.Vector`
+	:type collection: list of :class:`~vector.vector.Vector`
 	:param query: The query terms, represented as a document.
 		If no query is provided, it is constructed using a centroid model, as described by the authors.
-	:type query: :class:`vector.vector.Vector`
+	:type query: :class:`~vector.vector.Vector`
 	:param similarity_measure: The similarity measure to use to compare documents with the query and among themselves.
 	:type similarity_measure: function
 	:param l: The lambda parameter controls the expressiveness of the chosen documents.
@@ -48,7 +48,7 @@ def MMR(collection, query=None, similarity_measure=cosine, l=0.5, iterations=3, 
 	:type min_score: float
 	:param document_scorer: The type of scorer used to rank documents.
 		By default, no scoring is employed.
-	:type document_scorer: :class:`summarization.scorers.scorer.Scorer`
+	:type document_scorer: :class:`~summarization.scorers.scorer.Scorer`
 	:param similarity_table: The two-dimensional similarity table.
 		The first rows and columns correspond to the collection's intra-similarity.
 		The last row and column is the similarity between documents and the query.
@@ -60,7 +60,7 @@ def MMR(collection, query=None, similarity_measure=cosine, l=0.5, iterations=3, 
 
 	:return: A list of documents that summarize the MMR.
 		These documents are chosen from the given collection and constitute a summary.
-	:rtype: :class:`summarization.summary.Summary`
+	:rtype: :class:`~summarization.summary.Summary`
 	"""
 
 	if query is None:

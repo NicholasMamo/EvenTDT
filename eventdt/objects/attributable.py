@@ -28,9 +28,9 @@ class Attributable(object):
 		Initialize an attribute's value if it does not eixst.
 
 		:param name: The attribute's name.
-		:type name: :class:`object`
+		:type name: :class:`~object`
 		:param value: The default value for the attribute, assigned if a value does not already exist.
-		:type value: :class:`object`
+		:type value: :class:`~object`
 		"""
 
 		self._attributes[name] = self._attributes.get(name, value)
@@ -50,9 +50,9 @@ class Attributable(object):
 		If no value is provided, the attribute is unset.
 
 		:param name: The attribute's name.
-		:type name: :class:`object`
+		:type name: :class:`~object`
 		:param value: The default value for the attribute, assigned if a value does not already exist.
-		:type value: :class:`object`
+		:type value: :class:`~object`
 		"""
 		if value is not None:
 			self._attributes[name] = value
@@ -65,9 +65,9 @@ class Attributable(object):
 		Get the value of a single attribute.
 
 		:param name: The attribute's name.
-		:type name: :class:`object`
+		:type name: :class:`~object`
 		:param default: The default value for the attribute, returned if no value is set yet.
-		:type default: :class:`object`
+		:type default: :class:`~object`
 		"""
 		return self._attributes.get(name, default)
 
@@ -85,7 +85,7 @@ class Attributable(object):
 		Remove a single attribute.
 
 		:param name: The name of the attribute too remove.
-		:type name: :class:`object`
+		:type name: :class:`~object`
 		"""
 		self.set_attribute(name)
 
@@ -110,11 +110,11 @@ class Attributable(object):
 		"""
 		Create an instance of the attributable object from the given associative array.
 
-		:param array: The associative array with the attributes to create the :class:`objects.attributable.Attributable` instance.
+		:param array: The associative array with the attributes to create the :class:`~objects.attributable.Attributable` instance.
 		:type array: dict
 
 		:return: A new instance of an object with the same attributes stored in the object.
-		:rtype: :class:`objects.attributable.Attributable`
+		:rtype: :class:`~objects.attributable.Attributable`
 		"""
 
 		return Attributable(attributes=array.get("attributes", {}))

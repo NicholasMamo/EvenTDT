@@ -60,7 +60,7 @@ class BaselineConsumer(PseudoBufferedConsumer):
 		:type tweets: list of dictionaries
 
 		:return: A list of filtered tweets.
-		:rtype: list of :class:`vector.nlp.document.Document` instances
+		:rtype: list of :class:`~vector.nlp.document.Document` instances
 		"""
 
 		t = Tokenizer()
@@ -79,11 +79,11 @@ class BaselineConsumer(PseudoBufferedConsumer):
 		Cluster the given documents.
 
 		:param documents: A list of documents.
-		:rtype documents: list of :class:`vector.nlp.document.Document`
+		:rtype documents: list of :class:`~vector.nlp.document.Document`
 
 		:return: A list of all the clusters from the clustering approach.
 			This includes those that are frozen.
-		:rtype: list of :class:`vector.cluster.cluster.Cluster` instances
+		:rtype: list of :class:`~vector.cluster.cluster.Cluster` instances
 		"""
 
 		clustering = NoKMeans()

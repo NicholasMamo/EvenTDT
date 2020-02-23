@@ -13,7 +13,7 @@ class TokenExtractor(Extractor):
 	:ivar tokenizer: The tokenizer used to extract the tokens.
 					 If it is given, the tokens are extracted anew.
 					 Otherwise, the document dimensions are used instead.
-	:vartype tokenizer: :class:`nlp.tokenizer.Tokenizer` or None
+	:vartype tokenizer: :class:`~nlp.tokenizer.Tokenizer` or None
 	"""
 
 	def __init__(self, tokenizer=None):
@@ -23,7 +23,7 @@ class TokenExtractor(Extractor):
 		:param tokenizer: The tokenizer used to extract the tokens.
 						  If it is given, the tokens are extracted anew.
 						  Otherwise, the document dimensions are used instead.
-		:type tokenizer: :class:`nlp.tokenizer.Tokenizer` or None
+		:type tokenizer: :class:`~nlp.tokenizer.Tokenizer` or None
 		"""
 
 		self.tokenizer = tokenizer

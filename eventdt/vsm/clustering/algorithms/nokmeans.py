@@ -34,7 +34,7 @@ class NoKMeans(ClusteringAlgorithm):
 	Inactive clusters are frozen out, and are not checked with incoming vectors anymore.
 
 	:ivar _frozen_clusters: A list of clusters that have been retired.
-	:vartype _frozen_clusters: list of :class:`vector.cluster.cluster.Cluster` instances
+	:vartype _frozen_clusters: list of :class:`~vector.cluster.cluster.Cluster` instances
 	"""
 
 	def __init__(self, similarity_measure=cosine):
@@ -53,7 +53,7 @@ class NoKMeans(ClusteringAlgorithm):
 		Cluster the given documents.
 
 		:param vectors: The list of vectors to cluster.
-		:type vectors: list of :class:`vector.vector.Vector` instances
+		:type vectors: list of :class:`~vector.vector.Vector` instances
 		:param threshold: The minimum similarity for a vector to be added to a cluster.
 		:type threhsold: float
 		:param freeze_period: The number of documents that arrive without being added to a cluster, before it is frozen.
@@ -63,7 +63,7 @@ class NoKMeans(ClusteringAlgorithm):
 		:type store_frozen: bool
 
 		:return: The clusters that received documents, and which are not frozen.
-		:rtpye: list of :class:`vector.cluster.cluster.Cluster` instances
+		:rtpye: list of :class:`~vector.cluster.cluster.Cluster` instances
 		"""
 
 		for index, vector in enumerate(vectors):
@@ -121,10 +121,10 @@ class NoKMeans(ClusteringAlgorithm):
 		Return clusters.
 
 		:param cluster_type: The kind of clusters to return.
-		:type cluster_type: :class:`vector.cluster.clustering.nokmeans.ClusterType`
+		:type cluster_type: :class:`~vector.cluster.clustering.nokmeans.ClusterType`
 
 		:return: A list of clusters.
-		:rtype: list of :class:`vector.cluster.cluster.Cluster` instances
+		:rtype: list of :class:`~vector.cluster.cluster.Cluster` instances
 		"""
 
 		options= {
@@ -147,19 +147,19 @@ class TemporalNoKMeans(NoKMeans):
 		Cluster the given documents.
 
 		:param vectors: The list of vectors to cluster.
-		:type vectors: list of :class:`vector.vector.Vector` instances
+		:type vectors: list of :class:`~vector.vector.Vector` instances
 		:param threshold: The minimum similarity for a vector to be added to a cluster.
 		:type threhsold: float
 		:param freeze_period: The time (in seconds) of inactivity before a cluster is frozen.
 		:type freeze_period: int
 		:param time_attribute: The key that stores the vector's associated timestamp.
-		:type time_attribute: :class:`object`
+		:type time_attribute: :class:`~object`
 		:param store_frozen: A boolean indicating whether frozen clusters should be retained.
 			This should be turned off in long-running systems to avoid memory leaks.
 		:type store_frozen: bool
 
 		:return: The clusters that received documents, and which are not frozen.
-		:rtpye: list of :class:`vector.cluster.cluster.Cluster` instances
+		:rtpye: list of :class:`~vector.cluster.cluster.Cluster` instances
 		"""
 
 		vectors = sorted(vectors, key=lambda x: x.get_attribute(time_attribute)) # sort the vectors in chronological order

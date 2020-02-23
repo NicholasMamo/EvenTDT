@@ -17,7 +17,7 @@ def detect_topics(nutrition_store, # the store contraining historical data
 	Detect topics using historical data from the given NutritionStore.
 
 	:param nutrition_store: The store contraining historical data.
-	:type NutritionStore: :class:`topic_detection.nutrition_store.nutrition_store.NutritionStore`
+	:type NutritionStore: :class:`~topic_detection.nutrition_store.nutrition_store.NutritionStore`
 	:param timestamp: The current time window's timestamp (in seconds).
 		This is taken to be the timestamp when the time window ended and is exclusive.
 	:type timestamp: int

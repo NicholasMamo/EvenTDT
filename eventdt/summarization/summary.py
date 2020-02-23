@@ -20,11 +20,11 @@ from vector.nlp.cleaners import cleaner
 class Summary(Exportable):
 	"""
 	A summary is made up of various attributes.
-	It is made up of the actual list of :class:`vector.nlp.document.Document` of the summary.
+	It is made up of the actual list of :class:`~vector.nlp.document.Document` of the summary.
 	Associated with the summary are also two timestamps - the timestamps when the summary was creation and last updated.
 
 	:ivar _documents: The documents making up the summary.
-	:vartype _documents: list of :class:`vector.nlp.document.Document` instances.
+	:vartype _documents: list of :class:`~vector.nlp.document.Document` instances.
 	:ivar _created: The timestamp when the summary was created.
 	:vartype _created: int
 	:ivar _last_updated: The timestamp when the summary was last updated.
@@ -36,7 +36,7 @@ class Summary(Exportable):
 		Create the summary.
 
 		:param documents: A list of documents that make up the summary.
-		:type documents: list of :class:`vector.nlp.document.Document` instances
+		:type documents: list of :class:`~vector.nlp.document.Document` instances
 		:param timestamp: The timestamp when the summary was created.
 		:type timestamp: int
 		"""
@@ -50,7 +50,7 @@ class Summary(Exportable):
 		Add the given document to the summary.
 
 		:param document: The new document.
-		:type document: :class:`vector.nlp.document.Document`
+		:type document: :class:`~vector.nlp.document.Document`
 		"""
 
 		self._documents.append(document)
@@ -60,7 +60,7 @@ class Summary(Exportable):
 		Remove the given document from the summary.
 
 		:param document: The document to remove from the summary.
-		:type document: :class:`vector.nlp.document.Document`
+		:type document: :class:`~vector.nlp.document.Document`
 		"""
 
 		if document in self._documents:
@@ -71,7 +71,7 @@ class Summary(Exportable):
 		Set the list of documents making up the summary.
 
 		:param documents: The list of documents that now make up the summary.
-		:type documents: list of :class:`vector.nlp.document.Document` instances
+		:type documents: list of :class:`~vector.nlp.document.Document` instances
 		"""
 
 		self._documents = documents
@@ -81,7 +81,7 @@ class Summary(Exportable):
 		Get the list of documents in the summary.
 
 		:return: A list of documents that make up the summary.
-		:rtype: list of :class:`vector.nlp.document.Document` instances
+		:rtype: list of :class:`~vector.nlp.document.Document` instances
 		"""
 
 		return self._documents
@@ -138,7 +138,7 @@ class Summary(Exportable):
 		:param cleaner: The class to use to clean the documents.
 			By default, no cleaning is performed.
 			Each document is cleaned individually.
-		:type cleaner: :class:`summarization.cleaners.cleaner.Cleaner`
+		:type cleaner: :class:`~summarization.cleaners.cleaner.Cleaner`
 
 		:return: The textual summary.
 		:rtype: str
@@ -176,7 +176,7 @@ class Summary(Exportable):
 		:type array: dict
 
 		:return: A new instance of an object with the same attributes stored in the object.
-		:rtype: :class:`summarization.summary.Summary`
+		:rtype: :class:`~summarization.summary.Summary`
 		"""
 
 		vectors = array.get("documents", [])

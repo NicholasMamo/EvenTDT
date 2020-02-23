@@ -1,5 +1,5 @@
 """
-Run unit tests on the :class:`nlp.document.Document` class.
+Run unit tests on the :class:`~nlp.document.Document` class.
 """
 
 import os
@@ -16,7 +16,7 @@ from term_weighting.tf import TF
 
 class TestDocument(unittest.TestCase):
 	"""
-	Test the :class:`nlp.document.Document` class.
+	Test the :class:`~nlp.document.Document` class.
 	"""
 
 	def test_empty_document(self):

@@ -2,7 +2,7 @@
 The resolver is the fourth step of APD.
 Its job is to take a list of candidate participants and try to transform them into actual participants.
 
-The input candidates should be the product of a :class:`apd.filters.filter.Filter` process.
+The input candidates should be the product of a :class:`~apd.filters.filter.Filter` process.
 
 The representation between candidates and participants can remain almost identical.
 For example a stemmed token can be replaced by a proper term.
@@ -12,7 +12,7 @@ For example, it can map a named entity to a Wikipedia concept.
 Resolvers return a tuple, containing resolved and unresolved candidates.
 The unresolved candidates are usually discarded.
 
-The functionality revolves around one method: the :meth:`apd.resolvers.resolver.Resolver.resolve` method.
+The functionality revolves around one method: the :func:`~apd.resolvers.resolver.Resolver.resolve` method.
 """
 
 class Resolver(object):

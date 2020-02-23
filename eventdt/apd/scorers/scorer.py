@@ -3,11 +3,11 @@ The scorer is the second step of the APD process.
 It is responsible for assigning a score to each candidate that is provided.
 Thus, it pairs up each participant with a score.
 
-The input candidates should be the product of a :class:`apd.extractors.extractor.Extractor` process.
+The input candidates should be the product of a :class:`~apd.extractors.extractor.Extractor` process.
 In other words, they should be a list, representing documents.
 Each such list contains another list of candidates.
 
-The functionality revolves around one method: the :meth:`apd.scorers.scorer.Scorer.score` method.
+The functionality revolves around one method: the :func:`~apd.scorers.scorer.Scorer.score` method.
 The function returns a dictionary of candidate participants and their scores.
 The scores may be normalized to make them comparable.
 This can be a simple rescaling function.
@@ -26,7 +26,7 @@ class Scorer(ABC):
 		Score the candidate participants that were found in the corpus.
 
 		:param candidates: A list of candidate praticipants separated by the document in which they appeared.
-						   The input candidates should be the product of a :class:`apd.extractors.extractor.Extractor` process.
+						   The input candidates should be the product of a :class:`~apd.extractors.extractor.Extractor` process.
 		:type candidates: list
 		:param normalize_scores: A boolean indicating whether the scores should be normalized.
 								 Here, normalization means rescaling between 0 and 1.

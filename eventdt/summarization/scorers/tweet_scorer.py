@@ -18,7 +18,7 @@ class TweetScorer(Scorer):
 		Evaluate the score of the given tweet.
 
 		:param tweet: The tweet that will be scored.
-		:type tweet: :class:`vector.nlp.document.Document`
+		:type tweet: :class:`~vector.nlp.document.Document`
 		:param token_attribute: The attribute that contains the tokens.
 		:type token_attribute: str
 

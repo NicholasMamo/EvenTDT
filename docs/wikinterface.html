@@ -267,7 +267,7 @@ These articles contain links to other articles.</p></li>
 <dd class="field-odd"><p><strong>titles</strong> (<em>list of str</em><em> or </em><em>str</em>) – The titles of the pages whose types are desired.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A dictionary with page titles as keys and the types as <a class="reference internal" href="#wikinterface.info.ArticleType" title="wikinterface.info.ArticleType"><code class="xref py py-class docutils literal notranslate"><span class="pre">wikinterface.info.ArticleType</span></code></a> values.</p>
+<dd class="field-even"><p>A dictionary with page titles as keys and the types as <a class="reference internal" href="#wikinterface.info.ArticleType" title="wikinterface.info.ArticleType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArticleType</span></code></a> values.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dict</p>
@@ -328,7 +328,7 @@ Otherwise, a list of article titles is returned.</p>
 <dt id="wikinterface.links.collect_recursive">
 <code class="sig-name descname">collect_recursive</code><span class="sig-paren">(</span><em class="sig-param">titles</em>, <em class="sig-param">level</em>, <em class="sig-param">collected_links=None</em>, <em class="sig-param">separate=True</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.links.collect_recursive" title="Permalink to this definition">¶</a></dt>
 <dd><p>Recursively fetch links, starting from a seed set.
-The function uses the <a class="reference internal" href="#wikinterface.links.collect" title="wikinterface.links.collect"><code class="xref py py-func docutils literal notranslate"><span class="pre">wikinterface.links.collect()</span></code></a> function.
+The function uses the <a class="reference internal" href="#wikinterface.links.collect" title="wikinterface.links.collect"><code class="xref py py-func docutils literal notranslate"><span class="pre">collect()</span></code></a> function.
 Any additional arguments and keyword arguments are passed on to it.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>

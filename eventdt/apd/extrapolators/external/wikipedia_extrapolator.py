@@ -46,12 +46,12 @@ class WikipediaExtrapolator(Extrapolator):
 	This definition is based on a graph, and communities are extracted using the Girvan-Newman algorithm.
 
 	:ivar corpus: The corpus of documents.
-	:vartype corpus: list of :class:`nlp.document.Document`
+	:vartype corpus: list of :class:`~nlp.document.Document`
 	:ivar tokenizer: The tokenizer to use to create documents.
-	:vartype tokenizer: :class:`nlp.tokenizer.Tokenizer`
+	:vartype tokenizer: :class:`~nlp.tokenizer.Tokenizer`
 	:ivar scheme: The term-weighting scheme to use to create documents from Wikipedia pages.
 				  These documents are used to compare the similarity with the domain of the candidates.
-	:vartype scheme: :class:`nlp.term_weighting.scheme.TermWeightingScheme`
+	:vartype scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
 	:ivar threshold: The similarity threshold beyond which new participants are are added.
 	:vartype threshold: float
 	:ivar first_level_links: The number of first-level links to retain.
@@ -71,12 +71,12 @@ class WikipediaExtrapolator(Extrapolator):
 		Create the extrapolator.
 
 		:param corpus: The corpus of documents.
-		:type corpus: list of :class:`nlp.document.Document`
+		:type corpus: list of :class:`~nlp.document.Document`
 		:param tokenizer: The tokenizer to use to create documents.
-		:type tokenizer: :class:`nlp.tokenizer.Tokenizer`
+		:type tokenizer: :class:`~nlp.tokenizer.Tokenizer`
 		:param scheme: The term-weighting scheme to use to create documents from Wikipedia pages.
 					   These documents are used to compare the similarity with the domain of the candidates.
-		:type scheme: :class:`nlp.term_weighting.scheme.TermWeightingScheme`
+		:type scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
 		:param threshold: The similarity threshold beyond which new participants are are added.
 		:type threshold: float
 		:param first_level_links: The number of first-level links to retain.
@@ -267,7 +267,7 @@ class WikipediaExtrapolator(Extrapolator):
 			Therefore more paths go through that edge.
 
 		:param graph: The graph to which to add the new nodes and edges.
-		:type graph: :class:`nx.Graph`
+		:type graph: :class:`~nx.Graph`
 		:param outgoing_links: The dictionary of links.
 							   The keys should be the source articles.
 							   The values should be the outgoing links from these articles.
@@ -328,7 +328,7 @@ class WikipediaExtrapolator(Extrapolator):
 		The lower the weight, the more shortest paths could go through it.
 
 		:param G: The graph on which the algorithm operates.
-		:type G: :class:`networkx.Graph`
+		:type G: :class:`~networkx.Graph`
 
 		:return: The most central edge, made up of the source and edge nodes.
 		:rtype: tuple

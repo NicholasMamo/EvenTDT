@@ -1,5 +1,5 @@
 """
-The TF-IDF scorer assigns a score the candidate participants similarly to the :class:`nlp.term_weighting.tfidf.TFIDF` term-weighting scheme.
+The TF-IDF scorer assigns a score the candidate participants similarly to the :class:`~nlp.term_weighting.tfidf.TFIDF` term-weighting scheme.
 """
 
 import math
@@ -8,7 +8,7 @@ from ..scorer import Scorer
 
 class TFIDFScorer(Scorer):
 	"""
-	The TF-IDF scorer assigns a score the candidate participants similarly to the :class:`nlp.term_weighting.tfidf.TFIDF` term-weighting scheme.
+	The TF-IDF scorer assigns a score the candidate participants similarly to the :class:`~nlp.term_weighting.tfidf.TFIDF` term-weighting scheme.
 	Therefore the scorer depends on an IDF table, given as a dictionary.
 	"""
 

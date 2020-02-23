@@ -27,7 +27,7 @@ class BufferedConsumer(Consumer):
 	The consumer function stores the elements, whereas the process function empties this buffer and processes it.
 
 	:ivar _buffer: A buffer of tweets that have been processed, but which are not part of a checkpoint yet.
-	:vartype _buffer: :class:`queues.queue.queue.Queue`
+	:vartype _buffer: :class:`~queues.queue.queue.Queue`
 	:ivar _periodicity: The time window (in seconds) of the buffered consumer, or how often it is invoked.
 	:vartype _periodicity: int
 	"""
@@ -37,7 +37,7 @@ class BufferedConsumer(Consumer):
 		Initialize the BufferedConsumer with its queue, periodicity and buffer.
 
 		:param queue: The queue that is consumed.
-		:type queue: :class:`queues.queue.queue.Queue`
+		:type queue: :class:`~queues.queue.queue.Queue`
 		:param periodicity: The time window (in seconds) of the buffered consumer, or how often it is invoked.
 		:type periodicity: int
 		"""
@@ -144,11 +144,11 @@ class PseudoBufferedConsumer(BufferedConsumer):
 		The time parameter is the field that the sleep function checks to know when it should awake.
 
 		:param queue: The queue that is consumed.
-		:type queue: :class:`queues.queue.queue.Queue`
+		:type queue: :class:`~queues.queue.queue.Queue`
 		:param periodicity: The time window (in seconds) of the buffered consumer, or how often it is invoked.
 		:type periodicity: int
 		:param time: The label of the timestamp.
-		:type time: :class:`object`
+		:type time: :class:`~object`
 		"""
 
 		super(PseudoBufferedConsumer, self).__init__(queue, periodicity)

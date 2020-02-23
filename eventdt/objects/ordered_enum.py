@@ -16,7 +16,7 @@ class OrderedEnum(Enum):
 		Greater than or equal to comparison.
 
 		:param other: The other value to compare with.
-		:type other: :class:`objects.ordered_enum.OrderedEnum`
+		:type other: :class:`~objects.ordered_enum.OrderedEnum`
 		"""
 		if self.__class__ == other.__class__:
 			return self.value >= other.value
@@ -26,7 +26,7 @@ class OrderedEnum(Enum):
 		Less than or equal to comparison.
 
 		:param other: The other value to compare with.
-		:type other: :class:`objects.ordered_enum.OrderedEnum`
+		:type other: :class:`~objects.ordered_enum.OrderedEnum`
 		"""
 		if self.__class__ == other.__class__:
 			return self.value <= other.value
@@ -36,7 +36,7 @@ class OrderedEnum(Enum):
 		Greater than comparison.
 
 		:param other: The other value to compare with.
-		:type other: :class:`objects.ordered_enum.OrderedEnum`
+		:type other: :class:`~objects.ordered_enum.OrderedEnum`
 		"""
 		if self.__class__ == other.__class__:
 			return self.value > other.value
@@ -46,7 +46,7 @@ class OrderedEnum(Enum):
 		Less than comparison.
 
 		:param other: The other value to compare with.
-		:type other: :class:`objects.ordered_enum.OrderedEnum`
+		:type other: :class:`~objects.ordered_enum.OrderedEnum`
 		"""
 		if self.__class__ == other.__class__:
 			return self.value < other.value

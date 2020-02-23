@@ -1,5 +1,5 @@
 """
-The :class:`vsm.vector.Vector` is the basis of the Vector Space Model (VSM).
+The :class:`~vsm.vector.Vector` is the basis of the Vector Space Model (VSM).
 The class contains is used in clustering and Natural Language Processing (NLP) to represent documents.
 """
 
@@ -16,9 +16,9 @@ from vsm import vector_math
 
 class Vector(Attributable):
 	"""
-	The :class:`vsm.vector.Vector` class is the smallest building block in the Vector Space Model (VSM).
+	The :class:`~vsm.vector.Vector` class is the smallest building block in the Vector Space Model (VSM).
 	It is used for tasks such as clustering and to represent documents.
-	Vectors are based on :class:`objects.Attributable` so that they may have additional properties.
+	Vectors are based on :class:`~objects.Attributable` so that they may have additional properties.
 
 	:ivar dimensions: The dimensions—name-value pairs—of the Vector.
 	:vartype dimensions: dict
@@ -26,11 +26,11 @@ class Vector(Attributable):
 
 	def __init__(self, dimensions=None, *args, **kwargs):
 		"""
-		By default, the :class:`vsm.vector.Vector` object has no dimensions.
-		The :class:`vsm.vector.Vector` object is represented using an associative array (dictionary).
+		By default, the :class:`~vsm.vector.Vector` object has no dimensions.
+		The :class:`~vsm.vector.Vector` object is represented using an associative array (dictionary).
 		Any additional attributes can be passed as arguments or keyword arguments.
 
-		:param dimensions: The initial dimensions of the :class:`vsm.vector.Vector` object.
+		:param dimensions: The initial dimensions of the :class:`~vsm.vector.Vector` object.
 			If none are given, they are initialized to an empty dict.
 		:type dimensions: dict
 		"""
@@ -43,9 +43,9 @@ class Vector(Attributable):
 		Initialize an dimension's value if it does not eixst.
 
 		:param name: The dimension's name.
-		:type name: :class:`object`
+		:type name: :class:`~object`
 		:param value: The default value for the dimension, assigned if a value does not already exist.
-		:type value: :class:`object`
+		:type value: :class:`~object`
 		"""
 
 		self.dimensions[name] = self.dimensions.get(name, value)
@@ -66,9 +66,9 @@ class Vector(Attributable):
 		If no value is provided, the dimension is unset.
 
 		:param name: The dimension's name.
-		:type name: :class:`object`
+		:type name: :class:`~object`
 		:param value: The default value for the dimension, assigned if a value does not already exist.
-		:type value: :class:`object`
+		:type value: :class:`~object`
 		"""
 
 		if value:
@@ -82,7 +82,7 @@ class Vector(Attributable):
 		Get the value of a single dimension.
 
 		:param name: The dimension's name.
-		:type name: :class:`object`
+		:type name: :class:`~object`
 		"""
 
 		return self.dimensions.get(name, 0)
@@ -102,7 +102,7 @@ class Vector(Attributable):
 		Remove a single dimension.
 
 		:param name: The name of the dimension too remove.
-		:type name: :class:`object`
+		:type name: :class:`~object`
 		"""
 
 		self.set_dimension(name)
@@ -125,8 +125,8 @@ class Vector(Attributable):
 		"""
 		Create a copy of the vector.
 
-		:return: A copy of the :class:`vsm.vector.Vector` object
-		:rtype: :class:`vector.vector.Vector`
+		:return: A copy of the :class:`~vsm.vector.Vector` object
+		:rtype: :class:`~vector.vector.Vector`
 		"""
 
 		return Vector(self.dimensions.copy(), self._attributes.copy())
@@ -154,7 +154,7 @@ class Vector(Attributable):
 		:type array: dict
 
 		:return: A new instance of an object with the same attributes stored in the object.
-		:rtype: :class:`vector.vector.Vector`
+		:rtype: :class:`~vector.vector.Vector`
 		"""
 
 		return Vector(attributes=array.get("attributes", {}), dimensions=array.get("dimensions", {}))

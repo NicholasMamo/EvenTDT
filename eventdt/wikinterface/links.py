@@ -127,7 +127,7 @@ def collect(titles, separate=True, introduction_only=False):
 def collect_recursive(titles, level, collected_links=None, separate=True, *args, **kwargs):
 	"""
 	Recursively fetch links, starting from a seed set.
-	The function uses the :func:`wikinterface.links.collect` function.
+	The function uses the :func:`~wikinterface.links.collect` function.
 	Any additional arguments and keyword arguments are passed on to it.
 
 	.. warning::

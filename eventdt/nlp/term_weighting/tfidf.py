@@ -1,7 +1,7 @@
 """
 The Term Frequency-Inverse Document Frequency (TF-IDF) term-weighting scheme is one of the most popular schemes.
 The scheme promotes features that appear commonly in a document, but rarely outside of it.
-The TFIDF is simply the multiplication of the :class:`nlp.term_weighting.local_schemes.tf.TF` and :class:`nlp.term_weighting.global_schemes.idf.IDF` term-weighting schemes:
+The TFIDF is simply the multiplication of the :class:`~nlp.term_weighting.local_schemes.tf.TF` and :class:`~nlp.term_weighting.global_schemes.idf.IDF` term-weighting schemes:
 The weight :math:`tfidf_{t,d}` of term :math:`idf_{t}` in document :math:`d` is computed as follows:
 
 .. math::

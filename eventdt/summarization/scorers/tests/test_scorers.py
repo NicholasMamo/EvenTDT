@@ -33,7 +33,7 @@ class TestScorers(unittest.TestCase):
 
 	def test_tweet_scorer(self):
 		"""
-		Test :class:`summarization.cleaner.tweet_scorer.TweetScorer`
+		Test :class:`~summarization.cleaner.tweet_scorer.TweetScorer`
 		"""
 
 		scorer = TweetScorer()

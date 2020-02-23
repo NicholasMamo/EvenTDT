@@ -1,5 +1,5 @@
 """
-A scorer is used to test the quality, or otherwise quantitatively evaluate the score of a :class:`vector.nlp.document.Document`.
+A scorer is used to test the quality, or otherwise quantitatively evaluate the score of a :class:`~vector.nlp.document.Document`.
 The most basic type of scorer.
 """
 
@@ -15,7 +15,7 @@ class Scorer(object):
 		This is the function that is usually overridden by more specific classes.
 
 		:param document: The document that will be scored.
-		:type document: :class:`vector.nlp.document.Document`
+		:type document: :class:`~vector.nlp.document.Document`
 		:param token_attribute: The attribute that contains the tokens.
 		:type token_attribute: str
 

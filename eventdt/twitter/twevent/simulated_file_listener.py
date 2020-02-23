@@ -44,7 +44,7 @@ class SimulatedFileListener(FileListener):
 		By default, the SimulatedFileListener reads for an hour.
 
 		:param _queue: The queue to which to add incoming tweets.
-		:vartype _queue: :class:`queues.queue.queue.Queue`
+		:vartype _queue: :class:`~queues.queue.queue.Queue`
 		:param f: The opened file from where to read the tweets.
 		:type f: file
 		:param max_lines: The maximum number of lines to read.

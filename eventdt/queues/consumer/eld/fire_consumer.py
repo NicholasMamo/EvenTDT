@@ -50,7 +50,7 @@ class FIREConsumer(PseudoBufferedConsumer):
 		It will be populated later when the 'reconaissance' period is finished.
 
 		:param queue: The queue that is consumed.
-		:type queue: :class:`queues.queue.queue.Queue`
+		:type queue: :class:`~queues.queue.queue.Queue`
 		:param periodicity: The time (in seconds) to spend consuming the queue.
 		:type periodicity: int
 		:param filter_words: The words to filter out of documents.
@@ -94,10 +94,10 @@ class FIREConsumer(PseudoBufferedConsumer):
 		Filter the given documents based on FIRE's filtering rules.
 
 		:param documets: The documents to filter.
-		:type documents: list of :class:`vector.nlp.document.Document` instances
+		:type documents: list of :class:`~vector.nlp.document.Document` instances
 
 		:return: The approved documents.
-		:type documents: list of :class:`vector.nlp.document.Document` instances
+		:type documents: list of :class:`~vector.nlp.document.Document` instances
 		"""
 
 		for document in documents:
@@ -119,7 +119,7 @@ class FIREConsumer(PseudoBufferedConsumer):
 		:type tweets: list of dictionaries
 
 		:return: A list of filtered tweets.
-		:rtype: list of :class:`vector.nlp.document.Document` instances
+		:rtype: list of :class:`~vector.nlp.document.Document` instances
 		"""
 
 		documents = []
@@ -150,14 +150,14 @@ class FIREConsumer(PseudoBufferedConsumer):
 		Cluster the given documents.
 
 		:param documets: The documents to cluster.
-		:type documents: list of :class:`vector.nlp.document.Document` instances
+		:type documents: list of :class:`~vector.nlp.document.Document` instances
 		:param threshold: The threshold to use for the incremental clustering approach.
 		:type threshold: float
 		:param freeze_period: The freeze period (in seconds) of the incremental clustering approach.
 		:type freeze_period: float
 
 		:return: The list of clusters that are still active and that have changed.
-		:rtype: list of :class:`vector.cluster.cluster.Cluster` instances
+		:rtype: list of :class:`~vector.cluster.cluster.Cluster` instances
 		"""
 
 		clustering = TemporalNoKMeans()
@@ -204,7 +204,7 @@ class FIREConsumer(PseudoBufferedConsumer):
 		Perform topic detection.
 
 		:param cluster: The cluster from which to extract the documents.
-		:type cluster: :class:`vector.cluster.cluster.Cluster`
+		:type cluster: :class:`~vector.cluster.cluster.Cluster`
 		:param sets: The number of time windows to consider.
 		:type sets: int
 		:param timestamp: The current timestamp, used to isolate recent documents.

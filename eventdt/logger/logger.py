@@ -22,7 +22,7 @@ from config import conf
 class LogLevel(OrderedEnum):
 	"""
 	The logger's logging level.
-	It is based on a :class:`objects.ordered_enum.OrderedEnum`.
+	It is based on a :class:`~objects.ordered_enum.OrderedEnum`.
 
 	Valid logging levels:
 
@@ -50,7 +50,7 @@ def set_logging_level(level):
 	Set the logging level.
 
 	:param level: The logging level.
-	:type level: :class:`logger.logger.LogLevel`
+	:type level: :class:`~logger.logger.LogLevel`
 	"""
 
 	conf.LOG_LEVEL = level

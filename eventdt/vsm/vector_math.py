@@ -24,7 +24,7 @@ def magnitude(v):
 	where :math:`v` is a vector having :math:`V` dimensions.
 
 	:param v: The vector whose magnitude will be calculated.
-	:type v: :class:`vsm.vector.Vector`
+	:type v: :class:`~vsm.vector.Vector`
 	"""
 
 	return math.sqrt(sum([value ** 2 for value in v.dimensions.values()]))
@@ -41,7 +41,7 @@ def normalize(v):
 	where :math:`f` is a feature in vector :math:`v`.
 
 	:param v: The vector that will be normalized.
-	:type v: :class:`vsm.vector.Vector`
+	:type v: :class:`~vsm.vector.Vector`
 	"""
 
 	n = v.copy()
@@ -66,7 +66,7 @@ def augmented_normalize(v, a=0.5):
 	:math:`a` is the augmentation, between 0 and 1, inclusive.
 
 	:param v: The vector that will be normalized
-	:type v: :class:`vsm.vector.Vector`
+	:type v: :class:`~vsm.vector.Vector`
 	:param a: The minimum magnitude of each dimension.
 	:type a: float
 
@@ -96,10 +96,10 @@ def concatenate(vectors):
 	where :math:`f` is the weight of the concatenated vector, and :math:`f_i` is the weight of the same feature `f` in each vector in the set :math:`V`.
 
 	:param vectors: A list of vectors
-	:type vectors: list of :class:`vsm.vector.Vector` instances
+	:type vectors: list of :class:`~vsm.vector.Vector` instances
 
 	:return: A single vector
-	:rtype: :class:`vsm.vector.Vector`
+	:rtype: :class:`~vsm.vector.Vector`
 	"""
 
 	concatenated = { }
@@ -122,9 +122,9 @@ def euclidean(v1, v2):
 	:math:`n` is the union of features in vectors :math:`q` and :math:`p`.
 
 	:param v1: The first vector.
-	:type v1: :class:`vsm.vector.Vector`
+	:type v1: :class:`~vsm.vector.Vector`
 	:param v2: The second vector.
-	:type v2: :class:`vsm.vector.Vector`
+	:type v2: :class:`~vsm.vector.Vector`
 	"""
 
 	dimensions = list(set(v1.dimensions.keys()).union(v2.dimensions.keys()))
@@ -144,9 +144,9 @@ def manhattan(v1, v2):
 	:math:`n` is the union of features in vectors :math:`q` and :math:`p`.
 
 	:param v1: The first vector.
-	:type v1: :class:`vsm.vector.Vector`
+	:type v1: :class:`~vsm.vector.Vector`
 	:param v2: The second vector.
-	:type v2: :class:`vsm.vector.Vector`
+	:type v2: :class:`~vsm.vector.Vector`
 	"""
 
 	dimensions = list(set(v1.dimensions.keys()).union(v2.dimensions.keys()))
@@ -166,9 +166,9 @@ def cosine(v1, v2):
 	:math:`n` is the intersection of features in vectors :math:`q` and :math:`p`.
 
 	:param v1: The first vector.
-	:type v1: :class:`vsm.vector.Vector`
+	:type v1: :class:`~vsm.vector.Vector`
 	:param v2: The second vector.
-	:type v2: :class:`vsm.vector.Vector`
+	:type v2: :class:`~vsm.vector.Vector`
 	"""
 
 	dimensions = list(set(v1.dimensions.keys()).intersection(v2.dimensions.keys()))
@@ -192,9 +192,9 @@ def cosine_distance(v1, v2):
 		The cosine distance is not a real distance metric.
 
 	:param v1: The first vector.
-	:type v1: :class:`vsm.vector.Vector`
+	:type v1: :class:`~vsm.vector.Vector`
 	:param v2: The second vector.
-	:type v2: :class:`vsm.vector.Vector`
+	:type v2: :class:`~vsm.vector.Vector`
 	"""
 
 	return 1 - cosine(v1, v2)

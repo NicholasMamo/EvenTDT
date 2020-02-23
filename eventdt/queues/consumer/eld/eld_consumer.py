@@ -60,19 +60,19 @@ class ELDConsumer(Consumer):
 	:ivar _stopwords: The list of stopwords to filter out of tweets.
 	:vartype _stopwords: list
 	:ivar _nutrition_store: The nutrition store used in conjunction with extractin breaking news.
-	:vartype _nutrition_store: :class:`topic_detection.nutrition_store.nutrition_store.NutritionStore`
+	:vartype _nutrition_store: :class:`~topic_detection.nutrition_store.nutrition_store.NutritionStore`
 	:ivar _buffer: A buffer of tweets that have been processed, but which are not part of a checkpoint yet.
-	:vartype _buffer: :class:`queues.queue.queue.Queue`
+	:vartype _buffer: :class:`~queues.queue.queue.Queue`
 	:ivar _idf: The IDF table to use in the term-weighting scheme.
 	:vartype _idf: dict
 	:ivar _tokenizer: The tokenizer used to create documents and create the IDF table, among others.
-	:vartype _tokenizer: :class:`vector.nlp.tokenizer.Tokenizer`
+	:vartype _tokenizer: :class:`~vector.nlp.tokenizer.Tokenizer`
 	:ivar _clustering: The clustering algorithm to use.
-	:vartype _clustering: :class:`vector.cluster.algorithms.nokmeans.TemporalNoKMeans`
+	:vartype _clustering: :class:`~vector.cluster.algorithms.nokmeans.TemporalNoKMeans`
 	:ivar _summarizer: The summarization algorithm used to create the timeline.
-	:vartype _summarizer: :class:`summarization.algorithms.mamo_mmr.FragmentedMMR`
+	:vartype _summarizer: :class:`~summarization.algorithms.mamo_mmr.FragmentedMMR`
 	:ivar _term_weighting: The term-weighting scheme used to create documents. Changes depending on the task.
-	:vartype _term_weighting: :class:`vector.nlp.term_weighting.TermWeighting`
+	:vartype _term_weighting: :class:`~vector.nlp.term_weighting.TermWeighting`
 	"""
 
 	def __init__(self, queue, time_window, filter_words=None, idf=None):
@@ -83,7 +83,7 @@ class ELDConsumer(Consumer):
 		It will be populated later when the 'reconaissance' period is finished.
 
 		:param queue: The queue that is consumed.
-		:type queue: :class:`queues.queue.queue.Queue`
+		:type queue: :class:`~queues.queue.queue.Queue`
 		:param time_window: The time (in seconds) to spend consuming the queue.
 		:type time_window: int
 		:param filter_words: The words to filter out of documents.
@@ -561,10 +561,10 @@ class ELDConsumer(Consumer):
 		Filter the given documents based on FIRE's filtering rules. Documents are removed if their score, approximating quality, is low.
 
 		:param documents: The documents to filter.
-		:type documents: list of :class:`vector.nlp.document.Document` instances
+		:type documents: list of :class:`~vector.nlp.document.Document` instances
 
 		:return: The approved documents.
-		:type documents: list of :class:`vector.nlp.document.Document` instances
+		:type documents: list of :class:`~vector.nlp.document.Document` instances
 		"""
 
 		for document in documents:
@@ -586,7 +586,7 @@ class ELDConsumer(Consumer):
 		:type tweets: list of dictionaries
 
 		:return: A list of filtered tweets.
-		:rtype: list of :class:`vector.nlp.document.Document` instances
+		:rtype: list of :class:`~vector.nlp.document.Document` instances
 		"""
 
 		documents = []
@@ -621,14 +621,14 @@ class ELDConsumer(Consumer):
 		Cluster the given documents.
 
 		:param documents: The documents to cluster.
-		:type documents: list of :class:`vector.nlp.document.Document` instances
+		:type documents: list of :class:`~vector.nlp.document.Document` instances
 		:param threshold: The threshold to use for the incremental clustering approach.
 		:type threshold: float
 		:param freeze_period: The freeze period (in seconds) of the incremental clustering approach.
 		:type freeze_period: float
 
 		:return: The list of clusters that are still active and that have changed.
-		:rtype: list of :class:`vector.cluster.cluster.Cluster` instances
+		:rtype: list of :class:`~vector.cluster.cluster.Cluster` instances
 		"""
 
 		clusters = self._clustering.cluster(documents, threshold=threshold, freeze_period=freeze_period, time_attribute="timestamp", store_frozen=False)
@@ -656,7 +656,7 @@ class ELDConsumer(Consumer):
 				They indicate premeditation, and possibly spam when all tweets contain them.
 
 		:param clusters: The active clusters, which represent candidate topics.
-		:type clusters: list of :class:`vector.cluster.cluster.Cluster` instances
+		:type clusters: list of :class:`~vector.cluster.cluster.Cluster` instances
 		:param timestamp: The current timestamp.
 			Used to check whether the cluster has been checked recently.
 		:type timestamp: int
@@ -669,7 +669,7 @@ class ELDConsumer(Consumer):
 		:type max_intra_similarity: float
 
 		:return: A list of clusters that should be checked for emerging terms.
-		:rtype: list of :class:`vector.cluster.cluster.Cluster` instances
+		:rtype: list of :class:`~vector.cluster.cluster.Cluster` instances
 		"""
 
 		retained_clusters = []
@@ -710,12 +710,12 @@ class ELDConsumer(Consumer):
 		Get a list of documents that were added in the past sliding time window.
 
 		:param cluster: The cluster from which to extract the documents.
-		:type cluster: :class:`vector.cluster.cluster.Cluster`
+		:type cluster: :class:`~vector.cluster.cluster.Cluster`
 		:param timestamp: The current timestamp, used to compare with the documents' timestamps.
 		:type timestamp: int
 
 		:return: A list of documents added recently to the cluster.
-		:rtype: list of :class:`vector.nlp.document.Document` instances
+		:rtype: list of :class:`~vector.nlp.document.Document` instances
 		"""
 
 		# BUG: The document's timestamp is always less than the timestamp! The order needs to be switched.
@@ -727,7 +727,7 @@ class ELDConsumer(Consumer):
 		Perform topic detection.
 
 		:param cluster: The cluster from which to extract the documents.
-		:type cluster: :class:`vector.cluster.cluster.Cluster`
+		:type cluster: :class:`~vector.cluster.cluster.Cluster`
 		:param threshold: The minimum emergence of a term to be said to be breaking.
 		:type threshold: float
 		:param sets: The number of time windows to consider.

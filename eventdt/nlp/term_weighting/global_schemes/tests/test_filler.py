@@ -1,5 +1,5 @@
 """
-Run unit tests on the :class:`nlp.term_weighting.global_schemes.filler.Filler` class.
+Run unit tests on the :class:`~nlp.term_weighting.global_schemes.filler.Filler` class.
 """
 
 import os
@@ -14,7 +14,7 @@ from filler import Filler
 
 class TestFiller(unittest.TestCase):
 	"""
-	Test the :class:`nlp.term_weighting.global_schemes.filler.Filler` class.
+	Test the :class:`~nlp.term_weighting.global_schemes.filler.Filler` class.
 	"""
 
 	def test_empty_list_score(self):

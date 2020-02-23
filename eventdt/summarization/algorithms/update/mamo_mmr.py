@@ -43,14 +43,14 @@ class FragmentedMMR(FragmentedUpdateSummarization):
 	:ivar _summary: The last generated summary.
 		This summary is still a work in progress.
 		Once it is complete, it is added to the finished summaries.
-	:vartype _summary: :class:`summarization.summary.Summary`
+	:vartype _summary: :class:`~summarization.summary.Summary`
 	:ivar _frozen_summaries: A list containing frozen tuples representing old summaries.
 		These tuples are made up of the clusters used to create the summaries, and the summaries themselves.
 		The clusters are actually a list of tuples, similarly to the `_clusters` variable.
 	:vartype _frozen_summaries: list
 	:ivar time_window: The length of the time window (in seconds).
 		This time window is used to determine how long a summary may go without update for the topic to be deemed over.
-		:vartype _scorer: :class:`summarization.scorers.scorer.Scorer`
+		:vartype _scorer: :class:`~summarization.scorers.scorer.Scorer`
 	:vartype time_window: int
 	"""
 
@@ -63,7 +63,7 @@ class FragmentedMMR(FragmentedUpdateSummarization):
 		:type time_window: int
 		:param scorer: The type of scorer used to rank documents.
 			By default, no scoring is employed.
-		:type scorer: :class:`summarization.scorers.scorer.Scorer`
+		:type scorer: :class:`~summarization.scorers.scorer.Scorer`
 		"""
 
 		super().__init__(time_window)
@@ -84,7 +84,7 @@ class FragmentedMMR(FragmentedUpdateSummarization):
 		:type breaking_terms: list
 		:param cluster: The cluster within which the breaking terms were found.
 			Its documents will be used to create the summaries.
-		:type cluster: :class:`vector.cluster.cluster.Cluster`
+		:type cluster: :class:`~vector.cluster.cluster.Cluster`
 		:param timestamp: The timestamp when the cluster is being added.
 		:type timestamp: int
 		:param min_score: The minimmum score that is required to add a document to a summary.
@@ -142,7 +142,7 @@ class FragmentedMMR(FragmentedUpdateSummarization):
 		Generate a summary from the documents comprising the development.
 
 		:return: A summary.
-		:rtype: :class:`summarization.summary.Summary`
+		:rtype: :class:`~summarization.summary.Summary`
 		"""
 
 		if len(self._clusters) > 0:
@@ -187,7 +187,7 @@ class FragmentedMMR(FragmentedUpdateSummarization):
 		:type cluster: list
 
 		:return: The summarization query.
-		:rtype: :class:`vector.nlp.document.Document`
+		:rtype: :class:`~vector.nlp.document.Document`
 		"""
 
 		query = Cluster()

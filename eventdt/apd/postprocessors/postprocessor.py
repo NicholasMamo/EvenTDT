@@ -3,7 +3,7 @@ The postprocessor is the sixth and last step in the APD process.
 A postprocessor formats the participants.
 
 The postprocessor returns the same number of participants with any changes to them.
-The functionality revolves around one method: the :meth:`apd.postprocessors.postprocessor.Postprocessor.postprocess` method.
+The functionality revolves around one method: the :func:`~apd.postprocessors.postprocessor.Postprocessor.postprocess` method.
 """
 
 class Postprocessor(object):

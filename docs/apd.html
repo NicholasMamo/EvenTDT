@@ -261,15 +261,15 @@ If it is not given, the participants are returned as found.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>extractor</strong> (<a class="reference internal" href="#apd.extractors.extractor.Extractor" title="apd.extractors.extractor.Extractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.extractors.extractor.Extractor</span></code></a>) – The participant detector’s extractor.
+<li><p><strong>extractor</strong> (<a class="reference internal" href="#apd.extractors.extractor.Extractor" title="apd.extractors.extractor.Extractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Extractor</span></code></a>) – The participant detector’s extractor.
 This component is used to find candidate participants.</p></li>
-<li><p><strong>scorer</strong> (<a class="reference internal" href="#apd.scorers.scorer.Scorer" title="apd.scorers.scorer.Scorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.scorers.scorer.Scorer</span></code></a>) – The participant detector’s scorer.
+<li><p><strong>scorer</strong> (<a class="reference internal" href="#apd.scorers.scorer.Scorer" title="apd.scorers.scorer.Scorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scorer</span></code></a>) – The participant detector’s scorer.
 This component is used to give a score to the extractor’s candidate participants.</p></li>
-<li><p><strong>resolver</strong> (<a class="reference internal" href="#apd.resolvers.resolver.Resolver" title="apd.resolvers.resolver.Resolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.resolvers.resolver.Resolver</span></code></a>) – The participant detector’s resolver.
+<li><p><strong>resolver</strong> (<a class="reference internal" href="#apd.resolvers.resolver.Resolver" title="apd.resolvers.resolver.Resolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">Resolver</span></code></a>) – The participant detector’s resolver.
 This component looks for the real keywords associated with a participant.</p></li>
-<li><p><strong>extrapolator</strong> (<a class="reference internal" href="#apd.extrapolators.extrapolator.Extrapolator" title="apd.extrapolators.extrapolator.Extrapolator"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.extrapolators.extrapolator.Extrapolator</span></code></a>) – The participant detector’s extrapolator.
+<li><p><strong>extrapolator</strong> (<a class="reference internal" href="#apd.extrapolators.extrapolator.Extrapolator" title="apd.extrapolators.extrapolator.Extrapolator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Extrapolator</span></code></a>) – The participant detector’s extrapolator.
 This component looks for additional participants that might not be in the corpus.</p></li>
-<li><p><strong>postprocessor</strong> (<a class="reference internal" href="#apd.postprocessors.postprocessor.Postprocessor" title="apd.postprocessors.postprocessor.Postprocessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.postprocessors.postprocessor.Postprocessor</span></code></a>) – The participant detector’s postprocessor.
+<li><p><strong>postprocessor</strong> (<a class="reference internal" href="#apd.postprocessors.postprocessor.Postprocessor" title="apd.postprocessors.postprocessor.Postprocessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Postprocessor</span></code></a>) – The participant detector’s postprocessor.
 This component modifies the found participants.</p></li>
 </ul>
 </dd>
@@ -282,7 +282,7 @@ This component modifies the found participants.</p></li>
 <dd><p>Identify participants in the corpus.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>corpus</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.document.Document</span></code></a>) – The corpus of documents from where to identify participants.</p>
+<dd class="field-odd"><p><strong>corpus</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The corpus of documents from where to identify participants.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A three-tuple, made up of the resolved, unresolved and extrapolated participants respectively.</p>
@@ -310,8 +310,8 @@ Due to its simplicity, the NER participant detector is also a baseline for APD.<
 <em class="property">class </em><code class="sig-name descname">NERParticipantDetector</code><a class="headerlink" href="#apd.ner_participant_detector.NERParticipantDetector" title="Permalink to this definition">¶</a></dt>
 <dd><p>The Named Entity Recognition (NER) participant detector extracts named entities from the corpus.
 The NER participant detector is based on a normal participant detector.
-It uses the <a class="reference internal" href="#apd.extractors.local.entity_extractor.EntityExtractor" title="apd.extractors.local.entity_extractor.EntityExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.extractors.local.entity_extractor.EntityExtractor</span></code></a> to extract named entities.
-The frequency is computed using the <a class="reference internal" href="#apd.scorers.local.tf_scorer.TFScorer" title="apd.scorers.local.tf_scorer.TFScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.scorers.local.tf_scorer.TFScorer</span></code></a></p>
+It uses the <a class="reference internal" href="#apd.extractors.local.entity_extractor.EntityExtractor" title="apd.extractors.local.entity_extractor.EntityExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">EntityExtractor</span></code></a> to extract named entities.
+The frequency is computed using the <a class="reference internal" href="#apd.scorers.local.tf_scorer.TFScorer" title="apd.scorers.local.tf_scorer.TFScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFScorer</span></code></a></p>
 <dl class="method">
 <dt id="apd.ner_participant_detector.NERParticipantDetector.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#apd.ner_participant_detector.NERParticipantDetector.__init__" title="Permalink to this definition">¶</a></dt>
@@ -326,12 +326,12 @@ The frequency is computed using the <a class="reference internal" href="#apd.sco
 An extractor looks for candidate participants in the corpus of documents.
 All extractors take the corpus as an input.</p>
 <p>The extractor returns the candidates in each document.
-The functionality revolves around one method: the <a class="reference internal" href="#apd.extractors.extractor.Extractor.extract" title="apd.extractors.extractor.Extractor.extract"><code class="xref py py-meth docutils literal notranslate"><span class="pre">apd.extractors.extractor.Extractor.extract()</span></code></a> method.</p>
+The functionality revolves around one method: the <a class="reference internal" href="#apd.extractors.extractor.Extractor.extract" title="apd.extractors.extractor.Extractor.extract"><code class="xref py py-func docutils literal notranslate"><span class="pre">extract()</span></code></a> method.</p>
 <dl class="class">
 <dt id="apd.extractors.extractor.Extractor">
 <em class="property">class </em><code class="sig-name descname">Extractor</code><a class="headerlink" href="#apd.extractors.extractor.Extractor" title="Permalink to this definition">¶</a></dt>
 <dd><p>The extractor returns any participants that it finds.
-The functionality revolves around one method: the <a class="reference internal" href="#apd.extractors.extractor.Extractor.extract" title="apd.extractors.extractor.Extractor.extract"><code class="xref py py-meth docutils literal notranslate"><span class="pre">apd.extractors.extractor.Extractor.extract()</span></code></a> method.</p>
+The functionality revolves around one method: the <a class="reference internal" href="#apd.extractors.extractor.Extractor.extract" title="apd.extractors.extractor.Extractor.extract"><code class="xref py py-func docutils literal notranslate"><span class="pre">extract()</span></code></a> method.</p>
 <dl class="method">
 <dt id="apd.extractors.extractor.Extractor.extract">
 <em class="property">abstract </em><code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">corpus</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.extractor.Extractor.extract" title="Permalink to this definition">¶</a></dt>
@@ -341,7 +341,7 @@ Each outer list represents a document.
 Each inner list is the candidates in that document.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>corpus</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.document.Document</span></code></a>) – The corpus of documents from where to extract candidate participants.</p>
+<dd class="field-odd"><p><strong>corpus</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The corpus of documents from where to extract candidate participants.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A list of candidates separated by the document in which they were found.</p>
@@ -371,7 +371,7 @@ Therefore it does not perform any filtering whatsoever on the corpus.</p>
 It returns all tokens as potential candidates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
-<dd class="field-odd"><p><a class="reference internal" href="nlp.html#module-nlp.tokenizer" title="nlp.tokenizer"><strong>tokenizer</strong></a> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.tokenizer.Tokenizer</span></code></a> or None) – The tokenizer used to extract the tokens.
+<dd class="field-odd"><p><a class="reference internal" href="nlp.html#module-nlp.tokenizer" title="nlp.tokenizer"><strong>tokenizer</strong></a> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a> or None) – The tokenizer used to extract the tokens.
 If it is given, the tokens are extracted anew.
 Otherwise, the document dimensions are used instead.</p>
 </dd>
@@ -382,7 +382,7 @@ Otherwise, the document dimensions are used instead.</p>
 <dd><p>Create the extractor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>tokenizer</strong> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.tokenizer.Tokenizer</span></code></a> or None) – The tokenizer used to extract the tokens.
+<dd class="field-odd"><p><strong>tokenizer</strong> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a> or None) – The tokenizer used to extract the tokens.
 If it is given, the tokens are extracted anew.
 Otherwise, the document dimensions are used instead.</p>
 </dd>
@@ -504,10 +504,10 @@ The function returns only the named entities.</p>
 <p>The scorer is the second step of the APD process.
 It is responsible for assigning a score to each candidate that is provided.
 Thus, it pairs up each participant with a score.</p>
-<p>The input candidates should be the product of a <a class="reference internal" href="#apd.extractors.extractor.Extractor" title="apd.extractors.extractor.Extractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.extractors.extractor.Extractor</span></code></a> process.
+<p>The input candidates should be the product of a <a class="reference internal" href="#apd.extractors.extractor.Extractor" title="apd.extractors.extractor.Extractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Extractor</span></code></a> process.
 In other words, they should be a list, representing documents.
 Each such list contains another list of candidates.</p>
-<p>The functionality revolves around one method: the <a class="reference internal" href="#apd.scorers.scorer.Scorer.score" title="apd.scorers.scorer.Scorer.score"><code class="xref py py-meth docutils literal notranslate"><span class="pre">apd.scorers.scorer.Scorer.score()</span></code></a> method.
+<p>The functionality revolves around one method: the <a class="reference internal" href="#apd.scorers.scorer.Scorer.score" title="apd.scorers.scorer.Scorer.score"><code class="xref py py-func docutils literal notranslate"><span class="pre">score()</span></code></a> method.
 The function returns a dictionary of candidate participants and their scores.
 The scores may be normalized to make them comparable.
 This can be a simple rescaling function.</p>
@@ -523,7 +523,7 @@ This can be a simple rescaling function.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>candidates</strong> (<em>list</em>) – A list of candidate praticipants separated by the document in which they appeared.
-The input candidates should be the product of a <a class="reference internal" href="#apd.extractors.extractor.Extractor" title="apd.extractors.extractor.Extractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.extractors.extractor.Extractor</span></code></a> process.</p></li>
+The input candidates should be the product of a <a class="reference internal" href="#apd.extractors.extractor.Extractor" title="apd.extractors.extractor.Extractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Extractor</span></code></a> process.</p></li>
 <li><p><strong>normalize_scores</strong> (<em>bool</em>) – A boolean indicating whether the scores should be normalized.
 Here, normalization means rescaling between 0 and 1.</p></li>
 </ul>
@@ -789,11 +789,11 @@ Here, normalization means rescaling between 0 and 1.</p></li>
 
 </dd></dl>
 
-<span class="target" id="module-apd.scorers.local.tfidf_scorer"></span><p>The TF-IDF scorer assigns a score the candidate participants similarly to the <a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.term_weighting.tfidf.TFIDF</span></code></a> term-weighting scheme.</p>
+<span class="target" id="module-apd.scorers.local.tfidf_scorer"></span><p>The TF-IDF scorer assigns a score the candidate participants similarly to the <a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a> term-weighting scheme.</p>
 <dl class="class">
 <dt id="apd.scorers.local.tfidf_scorer.TFIDFScorer">
 <em class="property">class </em><code class="sig-name descname">TFIDFScorer</code><span class="sig-paren">(</span><em class="sig-param">idf</em>, <em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.tfidf_scorer.TFIDFScorer" title="Permalink to this definition">¶</a></dt>
-<dd><p>The TF-IDF scorer assigns a score the candidate participants similarly to the <a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.term_weighting.tfidf.TFIDF</span></code></a> term-weighting scheme.
+<dd><p>The TF-IDF scorer assigns a score the candidate participants similarly to the <a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a> term-weighting scheme.
 Therefore the scorer depends on an IDF table, given as a dictionary.</p>
 <dl class="method">
 <dt id="apd.scorers.local.tfidf_scorer.TFIDFScorer.__init__">
@@ -865,9 +865,9 @@ The function rescales them between 0 and 1, where 1 is the maximum score of the 
 <p>The filter is the third step of the APD process.
 It is responsible for removing candidates that it deems to be invalid.
 The output is still a dictionary of candidate participants and their scores.</p>
-<p>The input candidates should be the product of a <a class="reference internal" href="#apd.scorers.scorer.Scorer" title="apd.scorers.scorer.Scorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.scorers.scorer.Scorer</span></code></a> process.
+<p>The input candidates should be the product of a <a class="reference internal" href="#apd.scorers.scorer.Scorer" title="apd.scorers.scorer.Scorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scorer</span></code></a> process.
 In other words, they should be a dictionary, with the keys being the candidates and the values being the score.</p>
-<p>The functionality revolves around one method: the <a class="reference internal" href="#apd.filters.filter.Filter.filter" title="apd.filters.filter.Filter.filter"><code class="xref py py-meth docutils literal notranslate"><span class="pre">apd.filters.filter.Filter.filter()</span></code></a> method.
+<p>The functionality revolves around one method: the <a class="reference internal" href="#apd.filters.filter.Filter.filter" title="apd.filters.filter.Filter.filter"><code class="xref py py-func docutils literal notranslate"><span class="pre">filter()</span></code></a> method.
 The function returns a dictionary of candidate participants and their scores.</p>
 <dl class="class">
 <dt id="apd.filters.filter.Filter">
@@ -882,7 +882,7 @@ The basic filter returns all participants.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>candidates</strong> (<em>dict</em>) – A dictionary of candidate praticipants and their scores.
 The keys are the candidate names, and the values are their scores.
-The input candidates should be the product of a <a class="reference internal" href="#apd.scorers.scorer.Scorer" title="apd.scorers.scorer.Scorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.scorers.scorer.Scorer</span></code></a> process.</p>
+The input candidates should be the product of a <a class="reference internal" href="#apd.scorers.scorer.Scorer" title="apd.scorers.scorer.Scorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scorer</span></code></a> process.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A dictionary of filtered candidate participants and their associated scores.</p>
@@ -930,7 +930,7 @@ The threshold is applied over the candidate participant scores.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>candidates</strong> (<em>dict</em>) – A dictionary of candidate praticipants and their scores.
 The keys are the candidate names, and the values are their scores.
-The input candidates should be the product of a <a class="reference internal" href="#apd.scorers.scorer.Scorer" title="apd.scorers.scorer.Scorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.scorers.scorer.Scorer</span></code></a> process.</p>
+The input candidates should be the product of a <a class="reference internal" href="#apd.scorers.scorer.Scorer" title="apd.scorers.scorer.Scorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scorer</span></code></a> process.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A dictionary of filtered candidate participants and their associated scores.</p>
@@ -949,14 +949,14 @@ The input candidates should be the product of a <a class="reference internal" hr
 <span id="resolvers"></span><h2>Resolvers<a class="headerlink" href="#module-apd.resolvers.resolver" title="Permalink to this headline">¶</a></h2>
 <p>The resolver is the fourth step of APD.
 Its job is to take a list of candidate participants and try to transform them into actual participants.</p>
-<p>The input candidates should be the product of a <a class="reference internal" href="#apd.filters.filter.Filter" title="apd.filters.filter.Filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.filters.filter.Filter</span></code></a> process.</p>
+<p>The input candidates should be the product of a <a class="reference internal" href="#apd.filters.filter.Filter" title="apd.filters.filter.Filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Filter</span></code></a> process.</p>
 <p>The representation between candidates and participants can remain almost identical.
 For example a stemmed token can be replaced by a proper term.
 It can also change the representation radically.
 For example, it can map a named entity to a Wikipedia concept.</p>
 <p>Resolvers return a tuple, containing resolved and unresolved candidates.
 The unresolved candidates are usually discarded.</p>
-<p>The functionality revolves around one method: the <a class="reference internal" href="#apd.resolvers.resolver.Resolver.resolve" title="apd.resolvers.resolver.Resolver.resolve"><code class="xref py py-meth docutils literal notranslate"><span class="pre">apd.resolvers.resolver.Resolver.resolve()</span></code></a> method.</p>
+<p>The functionality revolves around one method: the <a class="reference internal" href="#apd.resolvers.resolver.Resolver.resolve" title="apd.resolvers.resolver.Resolver.resolve"><code class="xref py py-func docutils literal notranslate"><span class="pre">resolve()</span></code></a> method.</p>
 <dl class="class">
 <dt id="apd.resolvers.resolver.Resolver">
 <em class="property">class </em><code class="sig-name descname">Resolver</code><a class="headerlink" href="#apd.resolvers.resolver.Resolver" title="Permalink to this definition">¶</a></dt>
@@ -1002,8 +1002,8 @@ It tokenizes words with the given tokenizer and tries to map each candidate to t
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="nlp.html#module-nlp.tokenizer" title="nlp.tokenizer"><strong>tokenizer</strong></a> (None or <a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.tokenizer.Tokenizer</span></code></a>) – The tokenizer used to extract the tokens anew.</p></li>
-<li><p><strong>corpus</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.document.Document</span></code></a>) – The corpus of documents.
+<li><p><a class="reference internal" href="nlp.html#module-nlp.tokenizer" title="nlp.tokenizer"><strong>tokenizer</strong></a> (None or <a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer used to extract the tokens anew.</p></li>
+<li><p><strong>corpus</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The corpus of documents.
 This corpus is used to look for the terms that map to the tokens given as candidates.</p></li>
 <li><p><strong>case_fold</strong> (<em>bool</em>) – A boolean indicating whether terms should be case-folded.</p></li>
 </ul>
@@ -1016,8 +1016,8 @@ This corpus is used to look for the terms that map to the tokens given as candid
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tokenizer</strong> (None or <a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.tokenizer.Tokenizer</span></code></a>) – The tokenizer used to extract the tokens anew.</p></li>
-<li><p><strong>corpus</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.document.Document</span></code></a>) – The corpus of documents.
+<li><p><strong>tokenizer</strong> (None or <a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer used to extract the tokens anew.</p></li>
+<li><p><strong>corpus</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The corpus of documents.
 This corpus is used to look for the terms that map to the tokens given as candidates.</p></li>
 <li><p><strong>case_fold</strong> (<em>bool</em>) – A boolean indicating whether terms should be case-folded.</p></li>
 </ul>
@@ -1104,11 +1104,11 @@ It then maps the candidate to that page by returning the page name instead of th
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="nlp.html#module-nlp.term_weighting.scheme" title="nlp.term_weighting.scheme"><strong>scheme</strong></a> (<a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.term_weighting.scheme.TermWeightingScheme</span></code></a>) – The term-weighting scheme to use to create documents from Wikipedia pages.
+<li><p><a class="reference internal" href="nlp.html#module-nlp.term_weighting.scheme" title="nlp.term_weighting.scheme"><strong>scheme</strong></a> (<a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme to use to create documents from Wikipedia pages.
 These documents are used to compare the similarity with the domain of the candidates.</p></li>
-<li><p><a class="reference internal" href="nlp.html#module-nlp.tokenizer" title="nlp.tokenizer"><strong>tokenizer</strong></a> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.tokenizer.Tokenizer</span></code></a>) – The tokenizer to use to create documents.</p></li>
+<li><p><a class="reference internal" href="nlp.html#module-nlp.tokenizer" title="nlp.tokenizer"><strong>tokenizer</strong></a> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer to use to create documents.</p></li>
 <li><p><strong>threshold</strong> (<em>float.</em>) – The threshold below which candidates become unresolved.</p></li>
-<li><p><strong>corpus</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.document.Document</span></code></a>) – The corpus of documents.</p></li>
+<li><p><strong>corpus</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The corpus of documents.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1119,12 +1119,12 @@ These documents are used to compare the similarity with the domain of the candid
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.term_weighting.scheme.TermWeightingScheme</span></code></a>) – The term-weighting scheme to use to create documents from Wikipedia pages.
+<li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme to use to create documents from Wikipedia pages.
 These documents are used to compare the similarity with the domain of the candidates.</p></li>
 <li><p><strong>threshold</strong> (<em>float</em>) – The threshold below which candidates become unresolved.</p></li>
-<li><p><strong>tokenizer</strong> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.tokenizer.Tokenizer</span></code></a>) – The tokenizer to use to create documents.</p></li>
+<li><p><strong>tokenizer</strong> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer to use to create documents.</p></li>
 <li><p><strong>threshold</strong> – The similarity threshold beyond which candidate participants are resolved.</p></li>
-<li><p><strong>corpus</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.document.Document</span></code></a>) – The corpus of documents.</p></li>
+<li><p><strong>corpus</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The corpus of documents.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1190,7 +1190,7 @@ Only one page is returned: the one with the highest score.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pages</strong> (<em>list of str</em>) – A list of page titles.</p></li>
-<li><p><strong>domain</strong> (<a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.document.Document</span></code></a>) – A document that represents the domain.</p></li>
+<li><p><strong>domain</strong> (<a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – A document that represents the domain.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1204,7 +1204,7 @@ Only one page is returned: the one with the highest score.</p>
 
 </dd></dl>
 
-<span class="target" id="module-apd.resolvers.external.wikipedia_search_resolver"></span><p>The Wikipedia search resolver is similar to the <a class="reference internal" href="#apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver" title="apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver</span></code></a>.
+<span class="target" id="module-apd.resolvers.external.wikipedia_search_resolver"></span><p>The Wikipedia search resolver is similar to the <a class="reference internal" href="#apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver" title="apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">WikipediaNameResolver</span></code></a>.
 In contrast with the name resolver, the search resolver searches for candidates on Wikipedia.
 The resolver tries to map candidates to one of the results.</p>
 <p>The aim of this resolver is to overcome common problems with the name resolver.
@@ -1219,12 +1219,12 @@ This resolver exploits that to try and match the candidate with any of the top r
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="nlp.html#module-nlp.term_weighting.scheme" title="nlp.term_weighting.scheme"><strong>scheme</strong></a> (<a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.term_weighting.scheme.TermWeightingScheme</span></code></a>) – The term-weighting scheme to use to create documents from Wikipedia pages.
+<li><p><a class="reference internal" href="nlp.html#module-nlp.term_weighting.scheme" title="nlp.term_weighting.scheme"><strong>scheme</strong></a> (<a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme to use to create documents from Wikipedia pages.
 These documents are used to compare the similarity with the domain of the candidates.</p></li>
 <li><p><strong>threshold</strong> (<em>float</em>) – The threshold below which candidates become unresolved.</p></li>
-<li><p><a class="reference internal" href="nlp.html#module-nlp.tokenizer" title="nlp.tokenizer"><strong>tokenizer</strong></a> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.tokenizer.Tokenizer</span></code></a>) – The tokenizer to use to create documents.</p></li>
+<li><p><a class="reference internal" href="nlp.html#module-nlp.tokenizer" title="nlp.tokenizer"><strong>tokenizer</strong></a> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer to use to create documents.</p></li>
 <li><p><strong>threshold</strong> – The similarity threshold beyond which candidate participants are resolved.</p></li>
-<li><p><strong>corpus</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.document.Document</span></code></a>) – The corpus of documents.</p></li>
+<li><p><strong>corpus</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The corpus of documents.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1235,12 +1235,12 @@ These documents are used to compare the similarity with the domain of the candid
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.term_weighting.scheme.TermWeightingScheme</span></code></a>) – The term-weighting scheme to use to create documents from Wikipedia pages.
+<li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme to use to create documents from Wikipedia pages.
 These documents are used to compare the similarity with the domain of the candidates.</p></li>
 <li><p><strong>threshold</strong> (<em>float</em>) – The threshold below which candidates become unresolved.</p></li>
-<li><p><strong>tokenizer</strong> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.tokenizer.Tokenizer</span></code></a>) – The tokenizer to use to create documents.</p></li>
+<li><p><strong>tokenizer</strong> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer to use to create documents.</p></li>
 <li><p><strong>threshold</strong> – The similarity threshold beyond which candidate participants are resolved.</p></li>
-<li><p><strong>corpus</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.document.Document</span></code></a>) – The corpus of documents.</p></li>
+<li><p><strong>corpus</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The corpus of documents.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1356,10 +1356,10 @@ The score is bound between 0 and 1.</p>
 The extrapolator receives a list of participants and tries to find other relevant participants.
 This step is analogous to entity set expansion.
 The participants should be ranked in descending order of their relevance.</p>
-<p>The input participants should be the product of a <a class="reference internal" href="#apd.resolvers.resolver.Resolver" title="apd.resolvers.resolver.Resolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.resolvers.resolver.Resolver</span></code></a> process.
+<p>The input participants should be the product of a <a class="reference internal" href="#apd.resolvers.resolver.Resolver" title="apd.resolvers.resolver.Resolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">Resolver</span></code></a> process.
 This input is a simple list of strings, each representing a participant.</p>
 <p>Extrapolators return a list of new participants: simple strings as well.
-The functionality revolves around one method: the <a class="reference internal" href="#apd.extrapolators.extrapolator.Extrapolator.extrapolate" title="apd.extrapolators.extrapolator.Extrapolator.extrapolate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">apd.extrapolators.extrapolator.Extrapolator.extrapolate()</span></code></a> method.
+The functionality revolves around one method: the <a class="reference internal" href="#apd.extrapolators.extrapolator.Extrapolator.extrapolate" title="apd.extrapolators.extrapolator.Extrapolator.extrapolate"><code class="xref py py-func docutils literal notranslate"><span class="pre">extrapolate()</span></code></a> method.
 The function should return participants in descending order of their relevance to the domain.</p>
 <dl class="class">
 <dt id="apd.extrapolators.extrapolator.Extrapolator">
@@ -1415,9 +1415,9 @@ This definition is based on a graph, and communities are extracted using the Gir
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>corpus</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.document.Document</span></code></a>) – The corpus of documents.</p></li>
-<li><p><a class="reference internal" href="nlp.html#module-nlp.tokenizer" title="nlp.tokenizer"><strong>tokenizer</strong></a> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.tokenizer.Tokenizer</span></code></a>) – The tokenizer to use to create documents.</p></li>
-<li><p><a class="reference internal" href="nlp.html#module-nlp.term_weighting.scheme" title="nlp.term_weighting.scheme"><strong>scheme</strong></a> (<a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.term_weighting.scheme.TermWeightingScheme</span></code></a>) – The term-weighting scheme to use to create documents from Wikipedia pages.
+<li><p><strong>corpus</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The corpus of documents.</p></li>
+<li><p><a class="reference internal" href="nlp.html#module-nlp.tokenizer" title="nlp.tokenizer"><strong>tokenizer</strong></a> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer to use to create documents.</p></li>
+<li><p><a class="reference internal" href="nlp.html#module-nlp.term_weighting.scheme" title="nlp.term_weighting.scheme"><strong>scheme</strong></a> (<a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme to use to create documents from Wikipedia pages.
 These documents are used to compare the similarity with the domain of the candidates.</p></li>
 <li><p><strong>threshold</strong> (<em>float</em>) – The similarity threshold beyond which new participants are are added.</p></li>
 <li><p><strong>first_level_links</strong> (<em>int</em>) – The number of first-level links to retain.</p></li>
@@ -1434,9 +1434,9 @@ These documents are used to compare the similarity with the domain of the candid
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>corpus</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.document.Document</span></code></a>) – The corpus of documents.</p></li>
-<li><p><strong>tokenizer</strong> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.tokenizer.Tokenizer</span></code></a>) – The tokenizer to use to create documents.</p></li>
-<li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.term_weighting.scheme.TermWeightingScheme</span></code></a>) – The term-weighting scheme to use to create documents from Wikipedia pages.
+<li><p><strong>corpus</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The corpus of documents.</p></li>
+<li><p><strong>tokenizer</strong> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer to use to create documents.</p></li>
+<li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme to use to create documents from Wikipedia pages.
 These documents are used to compare the similarity with the domain of the candidates.</p></li>
 <li><p><strong>threshold</strong> (<em>float</em>) – The similarity threshold beyond which new participants are are added.</p></li>
 <li><p><strong>first_level_links</strong> (<em>int</em>) – The number of first-level links to retain.</p></li>
@@ -1553,7 +1553,7 @@ Therefore more paths go through that edge.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>graph</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">nx.Graph</span></code>) – The graph to which to add the new nodes and edges.</p></li>
+<li><p><strong>graph</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Graph</span></code>) – The graph to which to add the new nodes and edges.</p></li>
 <li><p><strong>outgoing_links</strong> (<em>dict</em>) – The dictionary of links.
 The keys should be the source articles.
 The values should be the outgoing links from these articles.</p></li>
@@ -1571,7 +1571,7 @@ The algorithm uses NetworkX’s betweenness centrality, but it is based on weigh
 The lower the weight, the more shortest paths could go through it.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>G</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">networkx.Graph</span></code>) – The graph on which the algorithm operates.</p>
+<dd class="field-odd"><p><strong>G</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Graph</span></code>) – The graph on which the algorithm operates.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The most central edge, made up of the source and edge nodes.</p>
@@ -1591,7 +1591,7 @@ The lower the weight, the more shortest paths could go through it.</p>
 <p>The postprocessor is the sixth and last step in the APD process.
 A postprocessor formats the participants.</p>
 <p>The postprocessor returns the same number of participants with any changes to them.
-The functionality revolves around one method: the <a class="reference internal" href="#apd.postprocessors.postprocessor.Postprocessor.postprocess" title="apd.postprocessors.postprocessor.Postprocessor.postprocess"><code class="xref py py-meth docutils literal notranslate"><span class="pre">apd.postprocessors.postprocessor.Postprocessor.postprocess()</span></code></a> method.</p>
+The functionality revolves around one method: the <a class="reference internal" href="#apd.postprocessors.postprocessor.Postprocessor.postprocess" title="apd.postprocessors.postprocessor.Postprocessor.postprocess"><code class="xref py py-func docutils literal notranslate"><span class="pre">postprocess()</span></code></a> method.</p>
 <dl class="class">
 <dt id="apd.postprocessors.postprocessor.Postprocessor">
 <em class="property">class </em><code class="sig-name descname">Postprocessor</code><a class="headerlink" href="#apd.postprocessors.postprocessor.Postprocessor" title="Permalink to this definition">¶</a></dt>

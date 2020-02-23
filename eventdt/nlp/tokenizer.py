@@ -2,12 +2,12 @@
 The tokenizer takes plain text and splits it into a list of tokens.
 Tokens are the equivalent of document features, or vector dimensions.
 
-Tokenization is the first of two steps to create a :class:`nlp.document.Document`.
-The second step is term-weighting using a :class:`nlp.term_weighting.scheme.TermWeightingScheme`.
-A term-weighting scheme receives tokens and creates a weighted :class:`nlp.document.Document` out of them.
+Tokenization is the first of two steps to create a :class:`~nlp.document.Document`.
+The second step is term-weighting using a :class:`~nlp.term_weighting.scheme.TermWeightingScheme`.
+A term-weighting scheme receives tokens and creates a weighted :class:`~nlp.document.Document` out of them.
 
 The tokenizer takes its settings in the constructor.
-All tokenization happens using the :func:`nlp.tokenizer.Tokenizer.tokenize` function.
+All tokenization happens using the :func:`~nlp.tokenizer.Tokenizer.tokenize` function.
 In this way, all documents are tokenized in the same way.
 Creating and using a tokenizer is very simple:
 
@@ -39,7 +39,7 @@ class Tokenizer(object):
 	The tokenizer takes in strings and converts them into tokens.
 
 	:ivar stemmer: The Porter Stemmer used by the class.
-	:vartype stemmer: :class:`nltk.stem.porter.PorterStemmer`
+	:vartype stemmer: :class:`~nltk.stem.porter.PorterStemmer`
 	:ivar remove_mentions: A boolean indicating whether mentions (@) should be removed.
 	:vartype remove_mentions: bool
 	:ivar remove_hashtags: A boolean indicating whether hashtags (#) should be removed.

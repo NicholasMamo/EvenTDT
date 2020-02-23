@@ -1,11 +1,11 @@
 """
 Documents are the basis in NLP tasks.
-The :class:`nlp.document.Document` class builds on the :class:`vsm.vector.Vector` class.
+The :class:`~nlp.document.Document` class builds on the :class:`~vsm.vector.Vector` class.
 In addition to the normal VSM functionality, it stores the original text for any later changes.
 
 Creating documents is a two-step process.
-First, the text needs to be converted into tokens using the :class:`nlp.tokenizer.Tokenizer` class.
-Second, those tokens need to be weighted using a :class:`nlp.term_weighting.scheme.TermWeightingScheme`, transforming them into document features, or vector dimensions.
+First, the text needs to be converted into tokens using the :class:`~nlp.tokenizer.Tokenizer` class.
+Second, those tokens need to be weighted using a :class:`~nlp.term_weighting.scheme.TermWeightingScheme`, transforming them into document features, or vector dimensions.
 """
 
 import math
@@ -22,7 +22,7 @@ from logger import logger
 
 class Document(Vector):
 	"""
-	The :class:`nlp.document.Document` class is based on the :class:`vsm.vector.Vector` class. class.
+	The :class:`~nlp.document.Document` class is based on the :class:`~vsm.vector.Vector` class. class.
 	The main addition is the text field for any later changes.
 
 	:ivar text: The document's original text.
@@ -32,7 +32,7 @@ class Document(Vector):
 	def __init__(self, text='', dimensions=None, scheme=None, *args, **kwargs):
 		"""
 		Initialize the document with the text and optional dimensions.
-		Any other arguments or keyword arguments are passed on to the :class:`vsm.vector.Vector` constructor.
+		Any other arguments or keyword arguments are passed on to the :class:`~vsm.vector.Vector` constructor.
 
 		:param text: The document's text.
 		:type text: str
@@ -41,8 +41,8 @@ class Document(Vector):
 						   The dimensions are then created from this list using the given scheme.
 		:type dimensions: list or dict
 		:param scheme: The term-weighting scheme that is used to convert the tokens into dimensions.
-					   If `None` is given, the :class:`nlp.term_weighting.TermWeighting.TF` term-weighting scheme is used.
-		:type scheme: None or :class:`nlp.term_weighting.TermWeighting`
+					   If `None` is given, the :class:`~nlp.term_weighting.TermWeighting.TF` term-weighting scheme is used.
+		:type scheme: None or :class:`~nlp.term_weighting.TermWeighting`
 		"""
 
 		"""
@@ -82,7 +82,7 @@ class Document(Vector):
 		:type array: dict
 
 		:return: A new instance of an object with the same attributes stored in the object.
-		:rtype: :class:`vector.nlp.document.Document`
+		:rtype: :class:`~vector.nlp.document.Document`
 		"""
 
 		return Document(text=array.get("text", ""),
@@ -100,13 +100,13 @@ class Document(Vector):
 		Any additional keyword arguments are passed on to the Document constructor.
 
 		:param scheme: The term-weighting scheme to use to create the concatenated document.
-		:type scheme: :class:`nlp.term_weighting.scheme.TermWeightingScheme`
+		:type scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
 		:param tokenizer: The tokenizer to use to construct the concatenated document.
-		:type tokenizer: :class:`nlp.tokenizer.Tokenizer`
+		:type tokenizer: :class:`~nlp.tokenizer.Tokenizer`
 
 		:return: A new document representing the concatenated documents.
 				 The document is not normalized.
-		:rtype: :class:`nlp.document.Document`
+		:rtype: :class:`~nlp.document.Document`
 		"""
 
 		text = ' '.join([ document.text for document in args ])

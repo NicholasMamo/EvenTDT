@@ -172,14 +172,14 @@ EvenTDT provides classes to help you work with the VSM.
 Keep reading to learn more about the different VSM classes available in EvenTDT.</p>
 <span class="target" id="module-vsm"></span><div class="section" id="module-vsm.vector">
 <span id="vectors"></span><h2>Vectors<a class="headerlink" href="#module-vsm.vector" title="Permalink to this headline">¶</a></h2>
-<p>The <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.vector.Vector</span></code></a> is the basis of the Vector Space Model (VSM).
+<p>The <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> is the basis of the Vector Space Model (VSM).
 The class contains is used in clustering and Natural Language Processing (NLP) to represent documents.</p>
 <dl class="class">
 <dt id="vsm.vector.Vector">
 <em class="property">class </em><code class="sig-name descname">Vector</code><span class="sig-paren">(</span><em class="sig-param">dimensions=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector.Vector" title="Permalink to this definition">¶</a></dt>
-<dd><p>The <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.vector.Vector</span></code></a> class is the smallest building block in the Vector Space Model (VSM).
+<dd><p>The <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> class is the smallest building block in the Vector Space Model (VSM).
 It is used for tasks such as clustering and to represent documents.
-Vectors are based on <code class="xref py py-class docutils literal notranslate"><span class="pre">objects.Attributable</span></code> so that they may have additional properties.</p>
+Vectors are based on <code class="xref py py-class docutils literal notranslate"><span class="pre">Attributable</span></code> so that they may have additional properties.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><p><strong>dimensions</strong> (<em>dict</em>) – The dimensions—name-value pairs—of the Vector.</p>
@@ -188,12 +188,12 @@ Vectors are based on <code class="xref py py-class docutils literal notranslate"
 <dl class="method">
 <dt id="vsm.vector.Vector.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">dimensions=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector.Vector.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>By default, the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.vector.Vector</span></code></a> object has no dimensions.
-The <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.vector.Vector</span></code></a> object is represented using an associative array (dictionary).
+<dd><p>By default, the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> object has no dimensions.
+The <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> object is represented using an associative array (dictionary).
 Any additional attributes can be passed as arguments or keyword arguments.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>dimensions</strong> (<em>dict</em>) – The initial dimensions of the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.vector.Vector</span></code></a> object.
+<dd class="field-odd"><p><strong>dimensions</strong> (<em>dict</em>) – The initial dimensions of the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> object.
 If none are given, they are initialized to an empty dict.</p>
 </dd>
 </dl>
@@ -293,10 +293,10 @@ If no value is provided, the dimension is unset.</p>
 <dd><p>Create a copy of the vector.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>A copy of the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.vector.Vector</span></code></a> object</p>
+<dd class="field-odd"><p>A copy of the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> object</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">vector.vector.Vector</span></code></p>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -327,7 +327,7 @@ If no value is provided, the dimension is unset.</p>
 <dd class="field-even"><p>A new instance of an object with the same attributes stored in the object.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">vector.vector.Vector</span></code></p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -348,7 +348,7 @@ The magnitude is computed as:</p>
 <p>where <span class="math notranslate nohighlight">\(v\)</span> is a vector having <span class="math notranslate nohighlight">\(V\)</span> dimensions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>v</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.vector.Vector</span></code></a>) – The vector whose magnitude will be calculated.</p>
+<dd class="field-odd"><p><strong>v</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>) – The vector whose magnitude will be calculated.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -363,7 +363,7 @@ Normalization is computed as:</p>
 <p>where <span class="math notranslate nohighlight">\(f\)</span> is a feature in vector <span class="math notranslate nohighlight">\(v\)</span>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>v</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.vector.Vector</span></code></a>) – The vector that will be normalized.</p>
+<dd class="field-odd"><p><strong>v</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>) – The vector that will be normalized.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -379,7 +379,7 @@ Normalization is computed as:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>v</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.vector.Vector</span></code></a>) – The vector that will be normalized</p></li>
+<li><p><strong>v</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>) – The vector that will be normalized</p></li>
 <li><p><strong>a</strong> (<em>float</em>) – The minimum magnitude of each dimension.</p></li>
 </ul>
 </dd>
@@ -399,13 +399,13 @@ This means adding the dimensions together:</p>
 <p>where <span class="math notranslate nohighlight">\(f\)</span> is the weight of the concatenated vector, and <span class="math notranslate nohighlight">\(f_i\)</span> is the weight of the same feature <cite>f</cite> in each vector in the set <span class="math notranslate nohighlight">\(V\)</span>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>vectors</strong> (list of <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.vector.Vector</span></code></a> instances) – A list of vectors</p>
+<dd class="field-odd"><p><strong>vectors</strong> (list of <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> instances) – A list of vectors</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A single vector</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.vector.Vector</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -422,8 +422,8 @@ The Euclidean distance <span class="math notranslate nohighlight">\(e_{p, q}\)</
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>v1</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.vector.Vector</span></code></a>) – The first vector.</p></li>
-<li><p><strong>v2</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.vector.Vector</span></code></a>) – The second vector.</p></li>
+<li><p><strong>v1</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>) – The first vector.</p></li>
+<li><p><strong>v2</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>) – The second vector.</p></li>
 </ul>
 </dd>
 </dl>
@@ -441,8 +441,8 @@ The Manhattan distance <span class="math notranslate nohighlight">\(m_{p, q}\)</
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>v1</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.vector.Vector</span></code></a>) – The first vector.</p></li>
-<li><p><strong>v2</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.vector.Vector</span></code></a>) – The second vector.</p></li>
+<li><p><strong>v1</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>) – The first vector.</p></li>
+<li><p><strong>v2</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>) – The second vector.</p></li>
 </ul>
 </dd>
 </dl>
@@ -460,8 +460,8 @@ The cosine similarity <span class="math notranslate nohighlight">\(cos_{p, q}\)<
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>v1</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.vector.Vector</span></code></a>) – The first vector.</p></li>
-<li><p><strong>v2</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.vector.Vector</span></code></a>) – The second vector.</p></li>
+<li><p><strong>v1</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>) – The first vector.</p></li>
+<li><p><strong>v2</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>) – The second vector.</p></li>
 </ul>
 </dd>
 </dl>
@@ -481,8 +481,8 @@ The cosine distance <span class="math notranslate nohighlight">\(cosd_{p, q}\)</
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>v1</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.vector.Vector</span></code></a>) – The first vector.</p></li>
-<li><p><strong>v2</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.vector.Vector</span></code></a>) – The second vector.</p></li>
+<li><p><strong>v1</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>) – The first vector.</p></li>
+<li><p><strong>v2</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>) – The second vector.</p></li>
 </ul>
 </dd>
 </dl>
@@ -491,21 +491,21 @@ The cosine distance <span class="math notranslate nohighlight">\(cosd_{p, q}\)</
 </div>
 <div class="section" id="module-vsm.clustering.cluster">
 <span id="clustering"></span><h2>Clustering<a class="headerlink" href="#module-vsm.clustering.cluster" title="Permalink to this headline">¶</a></h2>
-<p>Clusters are groups of <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.vector.Vector</span></code></a> instances.
+<p>Clusters are groups of <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> instances.
 Groups are meant to maximize distance between vectors of different subjects.
 Simultaneously, they aim to minimize the distance between vectors in the same clusters.</p>
-<p>Clusters can be created normally, or they can be generated by a <a class="reference internal" href="#vsm.clustering.algorithms.clustering.ClusteringAlgorithm" title="vsm.clustering.algorithms.clustering.ClusteringAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.clustering.algorithms.clustering.ClusteringAlgorithm</span></code></a>.</p>
+<p>Clusters can be created normally, or they can be generated by a <a class="reference internal" href="#vsm.clustering.algorithms.clustering.ClusteringAlgorithm" title="vsm.clustering.algorithms.clustering.ClusteringAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClusteringAlgorithm</span></code></a>.</p>
 <dl class="class">
 <dt id="vsm.clustering.cluster.Cluster">
 <em class="property">class </em><code class="sig-name descname">Cluster</code><span class="sig-paren">(</span><em class="sig-param">vectors=None</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.cluster.Cluster" title="Permalink to this definition">¶</a></dt>
 <dd><p>The cluster class is a collection of vectors, or documents.
 It also has a centroid.
-Clusters are based on <code class="xref py py-class docutils literal notranslate"><span class="pre">objects.Attributable</span></code> so that they may have additional properties.</p>
+Clusters are based on <code class="xref py py-class docutils literal notranslate"><span class="pre">Attributable</span></code> so that they may have additional properties.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#vsm.clustering.cluster.Cluster.vectors" title="vsm.clustering.cluster.Cluster.vectors"><strong>vectors</strong></a> (list of <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.vector.Vector</span></code></a>) – The list of vectors that make up the cluster.</p></li>
-<li><p><strong>centroid</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.vector.Vector</span></code></a>) – The centroid of the cluster, representing the average vector.</p></li>
+<li><p><a class="reference internal" href="#vsm.clustering.cluster.Cluster.vectors" title="vsm.clustering.cluster.Cluster.vectors"><strong>vectors</strong></a> (list of <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>) – The list of vectors that make up the cluster.</p></li>
+<li><p><strong>centroid</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>) – The centroid of the cluster, representing the average vector.</p></li>
 </ul>
 </dd>
 </dl>
@@ -515,7 +515,7 @@ Clusters are based on <code class="xref py py-class docutils literal notranslate
 <dd><p>Initialize the cluster with an empty centroid and a list of vectors.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>vectors</strong> (list of <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.vector.Vector</span></code></a> or <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.vector.Vector</span></code></a> or <cite>None</cite>) – An initial list of vectors, or a single vector.
+<dd class="field-odd"><p><strong>vectors</strong> (list of <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> or <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> or <cite>None</cite>) – An initial list of vectors, or a single vector.
 If <cite>None</cite> is given, an empty list is initialized instead.</p>
 </dd>
 </dl>
@@ -538,7 +538,7 @@ If <cite>None</cite> is given, an empty list is initialized instead.</p>
 <dd><p>Add a vector to the cluster.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>vector</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.vector.Vector</span></code></a>) – The vector to add to the cluster.</p>
+<dd class="field-odd"><p><strong>vector</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>) – The vector to add to the cluster.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -556,7 +556,7 @@ This is important if, for example, one of the vector instances change in memory.
 <dd><p>Remove a vector from the cluster.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>vector</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.vector.Vector</span></code></a>) – The vector to remove from the cluster.</p>
+<dd class="field-odd"><p><strong>vector</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>) – The vector to remove from the cluster.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -568,7 +568,7 @@ This is important if, for example, one of the vector instances change in memory.
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>vector</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.vector.Vector</span></code></a>) – The vector that will be compared with the centroid.</p></li>
+<li><p><strong>vector</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>) – The vector that will be compared with the centroid.</p></li>
 <li><p><strong>similarity_measure</strong> (<em>func</em>) – The similarity function to use to compare the likeliness of the vector with the cluster.</p></li>
 </ul>
 </dd>
@@ -590,7 +590,7 @@ This is important if, for example, one of the vector instances change in memory.
 <dd class="field-odd"><p>The list of vectors in the cluster.</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>list of <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.vector.Vector</span></code></a></p>
+<dd class="field-even"><p>list of <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -612,7 +612,7 @@ Otherwise, a list of vectors is returned.</p>
 <dd class="field-even"><p>The representative vectors.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.vector.Vector</span></code></a> or list of <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.vector.Vector</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> or list of <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -675,7 +675,7 @@ The centroid is not included as it is calculated upon instantiation.</p>
 <dd class="field-even"><p>A new instance of an object with the same attributes stored in the object.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">vector.cluster.cluster.Cluster</span></code></p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -687,8 +687,8 @@ The centroid is not included as it is calculated upon instantiation.</p>
 <p>Clusters are normally the product of clustering algorithms
 A clustering algorithm takes in vectors or documents and clusters them.</p>
 <p>Clustering algorithms are represented as classes so that they maintain their state.
-Each class stores, at least, a list of <a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.clustering.cluster.Cluster</span></code></a> instances.
-New documents can be clustered by calling the <a class="reference internal" href="#vsm.clustering.algorithms.clustering.ClusteringAlgorithm.cluster" title="vsm.clustering.algorithms.clustering.ClusteringAlgorithm.cluster"><code class="xref py py-func docutils literal notranslate"><span class="pre">vsm.clustering.algorithms.clustering.ClusteringAlgorithm.cluster()</span></code></a> method.</p>
+Each class stores, at least, a list of <a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instances.
+New documents can be clustered by calling the <a class="reference internal" href="#vsm.clustering.algorithms.clustering.ClusteringAlgorithm.cluster" title="vsm.clustering.algorithms.clustering.ClusteringAlgorithm.cluster"><code class="xref py py-func docutils literal notranslate"><span class="pre">cluster()</span></code></a> method.</p>
 <dl class="class">
 <dt id="vsm.clustering.algorithms.clustering.ClusteringAlgorithm">
 <em class="property">class </em><code class="sig-name descname">ClusteringAlgorithm</code><a class="headerlink" href="#vsm.clustering.algorithms.clustering.ClusteringAlgorithm" title="Permalink to this definition">¶</a></dt>

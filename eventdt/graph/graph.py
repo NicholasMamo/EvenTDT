@@ -20,7 +20,7 @@ class Graph(object):
 	Each node then has a list of edges.
 
 	:ivar _nodes: The list of nodes making up the graph.
-	:vartype _nodes: list of :class:`graph.graph.Node`
+	:vartype _nodes: list of :class:`~graph.graph.Node`
 	:ivar _edges: The list of edges connecting the nodes together.
 	:vartype _edges: dict
 	"""
@@ -39,7 +39,7 @@ class Graph(object):
 		Add a node to the graph.
 
 		:param node: The node to add to the graph.
-		:type node: :class:`graph.graph.Node`
+		:type node: :class:`~graph.graph.Node`
 		"""
 
 		"""
@@ -53,7 +53,7 @@ class Graph(object):
 		Remove a node from the graph.
 
 		:param node: The node to remove from the graph.
-		:type node: :class:`graph.graph.Node`
+		:type node: :class:`~graph.graph.Node`
 		"""
 
 		if node.get_id() in self._nodes:
@@ -70,7 +70,7 @@ class Graph(object):
 		"""
 		Get all nodes in the graph.
 
-		:return: A list of :class:`graph.graph.Node` instances.
+		:return: A list of :class:`~graph.graph.Node` instances.
 		:rtype: list
 		"""
 
@@ -92,9 +92,9 @@ class Graph(object):
 		If the edge is not directed, the edge is also added from the target to the source.
 
 		:param source: The source node.
-		:type source: :class:`graph.graph.Node`
+		:type source: :class:`~graph.graph.Node`
 		:param target: The target node.
-		:type target: :class:`graph.graph.Node`
+		:type target: :class:`~graph.graph.Node`
 		:param weight: The weight associated with the edge.
 		:type weight: float
 		:param directed: A flag indicating whether the edge is directed.
@@ -123,9 +123,9 @@ class Graph(object):
 		If the removal is not directed, the edge is also removed from the target to the source.
 
 		:param source: The source node.
-		:type source: :class:`graph.graph.Node`
+		:type source: :class:`~graph.graph.Node`
 		:param target: The target node.
-		:type target: :class:`graph.graph.Node`
+		:type target: :class:`~graph.graph.Node`
 		:param directed: A flag indicating whether the edge removal is directed.
 		:type directed: bool
 		"""
@@ -165,10 +165,10 @@ class Graph(object):
 		Get the node's neighbours.
 
 		:param node: The node whose neighbours are to be retrieved.
-		:type node: :class:`graph.graph.Node`
+		:type node: :class:`~graph.graph.Node`
 
 		:return: All of the node's neighbours.
-		:rtype: list of :class:`graph.graph.Node` instances
+		:rtype: list of :class:`~graph.graph.Node` instances
 		"""
 
 		return [ self._nodes[node_id] for node_id in self._edges.get(node.get_id(), {}).keys() ]
@@ -178,7 +178,7 @@ class Graph(object):
 		Convert the graph to a NetworkX graph.
 
 		:return: The graph as a NetworkX graph.
-		:rtype: :class:`networkx.Graph`
+		:rtype: :class:`~networkx.Graph`
 		"""
 
 		graph = nx.Graph()

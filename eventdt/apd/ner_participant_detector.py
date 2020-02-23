@@ -20,8 +20,8 @@ class NERParticipantDetector(ParticipantDetector):
 	"""
 	The Named Entity Recognition (NER) participant detector extracts named entities from the corpus.
 	The NER participant detector is based on a normal participant detector.
-	It uses the :class:`apd.extractors.local.entity_extractor.EntityExtractor` to extract named entities.
-	The frequency is computed using the :class:`apd.scorers.local.tf_scorer.TFScorer`
+	It uses the :class:`~apd.extractors.local.entity_extractor.EntityExtractor` to extract named entities.
+	The frequency is computed using the :class:`~apd.scorers.local.tf_scorer.TFScorer`
 	"""
 
 	def __init__(self):

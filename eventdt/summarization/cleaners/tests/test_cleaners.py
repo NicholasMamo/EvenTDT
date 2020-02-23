@@ -20,7 +20,7 @@ class TestCleaners(unittest.TestCase):
 
 	def test_tweet_cleaner(self):
 		"""
-		Test :class:`summarization.cleaner.tweet_cleaner.TweetCleaner`
+		Test :class:`~summarization.cleaner.tweet_cleaner.TweetCleaner`
 		"""
 
 		tweet_cleaner = TweetCleaner()

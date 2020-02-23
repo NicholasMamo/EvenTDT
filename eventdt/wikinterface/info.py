@@ -36,7 +36,7 @@ def types(titles):
 	:param titles: The titles of the pages whose types are desired.
 	:type titles: list of str or str
 
-	:return: A dictionary with page titles as keys and the types as :class:`wikinterface.info.ArticleType` values.
+	:return: A dictionary with page titles as keys and the types as :class:`~wikinterface.info.ArticleType` values.
 	:rtype: dict
 	"""
 

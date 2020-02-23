@@ -13,7 +13,7 @@ class Consumer(ABC):
 	The abstract Consumer class outlines some necessary functions of a consumer.
 
 	:ivar _queue: The queue that is to be consumed.
-	:vartype _queue: :class:`queues.queue.queue.Queue`
+	:vartype _queue: :class:`~queues.queue.queue.Queue`
 	:ivar _stopped: A boolean indicating whether the consumer has been stopped.
 	:vartype _stopped: bool
 	"""
@@ -23,7 +23,7 @@ class Consumer(ABC):
 		Initialize the Consumer with its queue.
 
 		:param queue: The queue that will be consumed.
-		:vartype _queue: :class:`queues.queue.queue.Queue`
+		:vartype _queue: :class:`~queues.queue.queue.Queue`
 		"""
 
 		self._queue = queue
