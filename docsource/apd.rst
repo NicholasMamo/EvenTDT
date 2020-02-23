@@ -13,12 +13,12 @@
 
 Automatic Participant Detection (APD) is a six-step process:
 
-   #. `Extraction <#module-apd.extractors.extractor>`_
-   #. `Scoring <#module-apd.scorers.scorer>`_
-   #. `Filtering <#module-apd.filters.filter>`_
-   #. `Resolution <#module-apd.resolvers.resolver>`_
-   #. `Extrapolation <#module-apd.extrapolators.extrapolator>`_
-   #. `Postprocesing <#module-apd.postprocessors.postprocessor>`_
+   #. :class:`Extraction <apd.extractors.extractor>`
+   #. :class:`Scoring <apd.scorers.scorer>`
+   #. :class:`Filtering <apd.filters.filter>`
+   #. :class:`Resolution <apd.resolvers.resolver>`
+   #. :class:`Extrapolation <apd.extrapolators.extrapolator>`
+   #. :class:`Postprocesing <apd.postprocessors.postprocessor>`
 
 The APD process revolves around a central class: the :class:`~apd.participant_detector.ParticipantDetector`.
 The class constructor accepts classes representing these six steps, and calls their main functions.
