@@ -11,11 +11,11 @@ from requests.auth import HTTPBasicAuth
 consumer_key = "Qg4UBCaYSTQyco38M6DACls8y"	# Add your API key here
 consumer_secret = "eCIhph66A48sqOPQZNDFLLWjeJnCegKU7JvDGzImnQNnT7ze9g"	# Add your API secret key here
 
-stream_url = "https://api.twitter.com/labs/1/tweets/stream/filter?format=detailed&expansions=referenced_tweets.id,entities.mentions.username&user.format=detailed"
-rules_url = "https://api.twitter.com/labs/1/tweets/stream/filter/rules"
+stream_url = "https://api.twitter.com/labs/2/tweets/stream/filter?format=detailed&expansions=referenced_tweets.id,entities.mentions.username&user.format=detailed"
+rules_url = "https://api.twitter.com/labs/2/tweets/stream/filter/rules"
 
 sample_rules = [
-	{ 'value': 'newcastle', 'tag': 'single' },
+	{ 'value': 'chelsea lang:es', 'tag': 'single' },
 	# { 'value': 'madrid', 'tag': 'single' },
 	# { 'value': 'tottenham', 'tag': 'single' },
 	# { 'value': 'atletico', 'tag': 'single' },
