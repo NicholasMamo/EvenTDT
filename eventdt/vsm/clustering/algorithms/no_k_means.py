@@ -59,6 +59,10 @@ class NoKMeans(ClusteringAlgorithm):
 		super(NoKMeans, self).__init__()
 		self.frozen_clusters = [ ]
 
+		self.threshold = threshold
+		self.freeze_period = freeze_period
+		self.store_frozen = store_frozen
+
 	def cluster(self, vectors, *args, **kwargs):
 		"""
 		Cluster the given documents.
