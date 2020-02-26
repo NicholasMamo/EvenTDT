@@ -160,6 +160,17 @@ class NoKMeans(ClusteringAlgorithm):
 		if self.store_frozen:
 			self.frozen_clusters.append(cluster)
 
+	def _reset_age(self, cluster):
+		"""
+		Reset the cluster age to zero.
+		This function is called when an existing cluster receives a new vector.
+
+		:param cluster: The cluster whose age will be incremented.
+		:type cluster: :class:`~vsm.clustering.cluster.Cluster`
+		"""
+
+		cluster.set_attribute('age', 0)
+
 class TemporalNoKMeans(NoKMeans):
 	"""
 	The Temporal No-K-Means algorithm is an incremental clustering algorithm.

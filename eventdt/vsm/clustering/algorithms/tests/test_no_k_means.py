@@ -141,6 +141,29 @@ class TestNoKMeans(unittest.TestCase):
 		self.assertFalse(cluster in algo.clusters)
 		self.assertTrue(cluster in algo.frozen_clusters)
 
+	def test_reset_age_without_previous(self):
+		"""
+		Test that when resetting the age of a cluster that has no age, the age is set to 0.
+		"""
+
+		cluster = Cluster()
+		algo = NoKMeans(0.5, 10, store_frozen=True)
+		self.assertFalse(cluster.get_attribute('age'))
+		algo._reset_age(cluster)
+		self.assertEqual(0, cluster.get_attribute('age'))
+
+	def test_reset_age(self):
+		"""
+		Test that when resetting the age of a cluster that has an age, the age is set to 0.
+		"""
+
+		cluster = Cluster()
+		algo = NoKMeans(0.5, 10, store_frozen=True)
+		cluster.set_attribute('age', 10)
+		self.assertEqual(10, cluster.get_attribute('age'))
+		algo._reset_age(cluster)
+		self.assertEqual(0, cluster.get_attribute('age'))
+
 	# def test_no_k_means(self):
 	# 	"""
 	# 	Test the No-K-Means algorithm
