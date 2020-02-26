@@ -15,7 +15,7 @@ stream_url = "https://api.twitter.com/labs/2/tweets/stream/filter?format=detaile
 rules_url = "https://api.twitter.com/labs/2/tweets/stream/filter/rules"
 
 sample_rules = [
-	{ 'value': 'chelsea lang:es', 'tag': 'single' },
+	{ 'value': 'chelsea lang:en', 'tag': 'single' },
 	# { 'value': 'madrid', 'tag': 'single' },
 	# { 'value': 'tottenham', 'tag': 'single' },
 	# { 'value': 'atletico', 'tag': 'single' },
@@ -96,18 +96,25 @@ def set_rules(rules, auth):
 		raise Exception(f"Cannot create rules (HTTP %d): %s" % (response.status_code, response.text))
 
 def stream_connect(auth):
+	collected = 0
 	response = requests.get(stream_url, auth=auth, stream=True)
 	for response_line in response.iter_lines():
 		if response_line:
 			response_data = json.loads(response_line)
+			collected += 1
+			if (not collected % 100):
+				print(collected)
 			if 'data' in response_data:
 				if '…' in response_data['data']['text']:
 					# pprint(response_data)
-					print(response_data['data']['text'])
+					# print(response_data['data']['text'])
+					pass
 				else:
-					print(response_data['data']['text'])
+					# print(response_data['data']['text'])
+					pass
 			else:
-				pprint(response_data)
+				# pprint(response_data)
+				pass
 
 bearer_token = BearerTokenAuth(consumer_key, consumer_secret)
 
