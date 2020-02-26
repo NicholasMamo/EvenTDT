@@ -228,3 +228,119 @@ class TestNoKMeans(unittest.TestCase):
 		closest_cluster, similarity = algo._closest_cluster(document)
 		self.assertEqual(c1, closest_cluster)
 		self.assertGreater(similarity, 0)
+
+	def test_clusters_freeze(self):
+		"""
+		Test that when there is a shift in discourse, old clusters are frozen.
+		"""
+
+		algo = NoKMeans(0.5, 1, store_frozen=True)
+
+		"""
+		Create the test data.
+		"""
+		documents = [
+			Document('', [ 'x', 'y' ]),
+			Document('', [ 'a', 'b', 'a', 'c' ]), Document('', [ 'a', 'b', 'a' ]),
+		]
+		for document in documents:
+			document.normalize()
+
+		clusters = algo.cluster(documents)
+		self.assertEqual(2, len(clusters))
+		self.assertEqual(1, len(algo.clusters))
+		self.assertEqual(1, len(algo.frozen_clusters))
+
+	def test_similar_vectors_cluster(self):
+		"""
+		Test that similar vectors cluster together.
+		"""
+
+		algo = NoKMeans(0.5, 4, store_frozen=True)
+
+		"""
+		Create the test data.
+		"""
+		documents = [
+			Document('', [ 'x', 'y' ]),
+			Document('', [ 'a', 'b', 'a', 'c' ]), Document('', [ 'a', 'b', 'a' ]),
+		]
+		for document in documents:
+			document.normalize()
+
+		clusters = algo.cluster(documents)
+		self.assertEqual(2, len(clusters))
+		cluster_a = [ cluster for cluster in clusters if 'a' in cluster.centroid.dimensions ][0]
+		cluster_x = [ cluster for cluster in clusters if 'x' in cluster.centroid.dimensions ][0]
+		self.assertTrue(all('a' in document.dimensions for document in cluster_a.vectors))
+		self.assertTrue(all('x' in document.dimensions for document in cluster_x.vectors))
+
+	def test_not_updated_cluster_not_returned(self):
+		"""
+		Test that updated clusters are not returned.
+		"""
+
+		algo = NoKMeans(0.5, 1, store_frozen=True)
+
+		"""
+		Create the test data.
+		"""
+		documents = [
+			Document('', [ 'x', 'y' ]),
+			Document('', [ 'a', 'b', 'a', 'c' ]), Document('', [ 'a', 'b', 'a' ]),
+		]
+		for document in documents:
+			document.normalize()
+
+		clusters = algo.cluster(documents[:1])
+		self.assertEqual(1, len(clusters))
+		clusters = algo.cluster(documents[1:])
+		self.assertEqual(1, len(clusters))
+
+	def test_frozen_updated_cluster_returned(self):
+		"""
+		Test that updated clusters that are frozen are still returned.
+		"""
+
+		algo = NoKMeans(0.5, 1, store_frozen=True)
+
+		"""
+		Create the test data.
+		"""
+		documents = [
+			Document('', [ 'x', 'y' ]),
+			Document('', [ 'a', 'b', 'a', 'c' ]), Document('', [ 'a', 'b', 'a' ]),
+		]
+		for document in documents:
+			document.normalize()
+
+		clusters = algo.cluster(documents)
+		self.assertEqual(2, len(clusters))
+		active = [ cluster for cluster in clusters if 'a' in cluster.centroid.dimensions ]
+		frozen = [ cluster for cluster in clusters if 'x' in cluster.centroid.dimensions ]
+		self.assertEqual(active, algo.clusters)
+		self.assertEqual(frozen, algo.frozen_clusters)
+
+	def test_frozen_returned_and_removed(self):
+		"""
+		Test that when frozen clusters are not stored, they are still returned.
+		"""
+
+		algo = NoKMeans(0.5, 1, store_frozen=False)
+
+		"""
+		Create the test data.
+		"""
+		documents = [
+			Document('', [ 'x', 'y' ]),
+			Document('', [ 'a', 'b', 'a', 'c' ]), Document('', [ 'a', 'b', 'a' ]),
+		]
+		for document in documents:
+			document.normalize()
+
+		clusters = algo.cluster(documents)
+		self.assertEqual(2, len(clusters))
+		active = [ cluster for cluster in clusters if 'a' in cluster.centroid.dimensions ]
+		self.assertEqual(active, algo.clusters)
+		self.assertEqual(1, len(algo.clusters))
+		self.assertEqual([ ], algo.frozen_clusters)

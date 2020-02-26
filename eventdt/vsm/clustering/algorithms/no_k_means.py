@@ -71,52 +71,43 @@ class NoKMeans(ClusteringAlgorithm):
 		:param vectors: The list of vectors to cluster.
 		:type vectors: list of :class:`~vsm.vector.Vector`
 
-		:return: The clusters that received documents, and which are not frozen.
+		:return: The clusters that received documents.
 		:rtpye: list of :class:`~vsm.clustering.cluster.Cluster` instances
 		"""
+
+		updated_clusters = [ ]
 
 		for vector in vectors:
 			"""
 			Freeze inactive clusters first.
 			In this way, nothing gets added to them, thereby resetting their age.
 			"""
-			for cluster in clusters:
+			for cluster in self.clusters:
 				self._update_age(cluster)
-				if self._to_freeze(cluste):
+				if self._to_freeze(cluster):
 					self._freeze(cluster)
 
 			"""
-			Calculate the similarities between each vector and each cluster.
-			The similarity is inverted if cosine similarity is not being used to get similarity instead of distance.
+			If there are active clusters, get the closest cluster.
+			If the vector's similarity with the cluster exceeds the threshold, add the vector to the cluster.
+			The cluster's age is resetted.
 			"""
-			similarities = [ cluster.similarity(vector, self._similarity_measure) for cluster in self.clusters ]
-			similarities = [ 1 - s for s in similarities ] if self._similarity_measure != cosine else similarities
+			if self.clusters:
+				cluster, similarity = self._closest_cluster(vector, *args, **kwargs)
+				if similarity >= self.threshold:
+					cluster.add_vector(vector)
+					self._reset_age(cluster)
+					updated_clusters.append(cluster)
+					continue
 
 			"""
-			If there are similar clusters, add the Vector to the most similar cluster.
-			Otherwise, a new cluster is created for the new Vector.
+			If there was no similar cluster, create a new cluster with just that vector.
 			"""
-			if (len([s for s in similarities if s >= threshold]) > 0):
-				"""
-				If there are similar clusters, first find the index of this Cluster.
-				Then, add to this Cluster the Vector and reset its age.
-				"""
-				max_similarity = max(similarities) # get the best similarity
-				best_match = similarities.index(max_similarity) # find the position of the Cluster with the minimum distance
-				self.clusters[best_match].add_vector(vector)
-				self.clusters[best_match].set_attribute("age", 0)
-			else:
-				"""
-				If a new Cluster has to be created, add to it the Vector.
-				At the same time, set its age to 0.
-				"""
-				cluster = Cluster()
-				cluster.add_vector(vector)
-				cluster.set_attribute("age", 0)
-				self.clusters.append(cluster)
+			cluster = Cluster([ vector ])
+			self.clusters.append(cluster)
+			updated_clusters.append(cluster)
 
-		# frozen clusters will have been dealt with already, so the check is skipped
-		return [ cluster for cluster in self.clusters if cluster.get_attribute("age") <= len(vectors) ]
+		return list(set(updated_clusters))
 
 	def _update_age(self, cluster, increment=1):
 		"""
