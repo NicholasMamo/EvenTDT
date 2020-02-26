@@ -150,6 +150,23 @@ class NoKMeans(ClusteringAlgorithm):
 
 		return cluster.get_attribute('age') >= self.freeze_period
 
+	def _freeze(self, cluster):
+		"""
+		Freeze the given cluster.
+		This removes the cluster from the list of active clusters.
+		Simultaneously, it is added to the list of frozen clusters.
+
+		:param cluster: The cluster whose age will be incremented.
+		:type cluster: :class:`~vsm.clustering.cluster.Cluster`
+
+		:raises ValueError: When the cluster is not active.
+		"""
+
+		self.clusters.remove(cluster)
+
+		if self.store_frozen:
+			self.frozen_clusters.append(cluster)
+
 class TemporalNoKMeans(NoKMeans):
 	"""
 	The Temporal No-K-Means algorithm is an incremental clustering algorithm.

@@ -85,6 +85,62 @@ class TestNoKMeans(unittest.TestCase):
 		cluster.set_attribute('age', 11)
 		self.assertTrue(algo._to_freeze(cluster))
 
+	def test_freeze_inactive_cluster(self):
+		"""
+		Test that when freezing a cluster that is not part of the algorithm, the function raises a ValueError.
+		"""
+
+		cluster = Cluster()
+		algo = NoKMeans(0.5, 10)
+		self.assertRaises(ValueError, algo._freeze, cluster)
+
+	def test_frozen_cluster(self):
+		"""
+		Test that a frozen cluster cannot be frozen again.
+		"""
+
+		cluster = Cluster()
+		algo = NoKMeans(0.5, 10)
+		algo.clusters.append(cluster)
+		algo._freeze(cluster)
+		self.assertRaises(ValueError, algo._freeze, cluster)
+
+	def test_frozen_cluster_not_stored(self):
+		"""
+		Test that if the algorithm does not store frozen clusters, the cluster is removed.
+		"""
+
+		cluster = Cluster()
+		algo = NoKMeans(0.5, 10, store_frozen=False)
+		algo.clusters.append(cluster)
+		algo._freeze(cluster)
+		self.assertFalse(cluster in algo.frozen_clusters)
+
+	def test_frozen_cluster_stored(self):
+		"""
+		Test that if the algorithm stores frozen clusters, the cluster is stored.
+		"""
+
+		cluster = Cluster()
+		algo = NoKMeans(0.5, 10, store_frozen=True)
+		algo.clusters.append(cluster)
+		algo._freeze(cluster)
+		self.assertTrue(cluster in algo.frozen_clusters)
+
+	def test_frozen_cluster_not_active(self):
+		"""
+		Test that when a cluster is frozen, it moves from the active clusters to the frozen clusters.
+		"""
+
+		cluster = Cluster()
+		algo = NoKMeans(0.5, 10, store_frozen=True)
+		algo.clusters.append(cluster)
+		self.assertTrue(cluster in algo.clusters)
+		self.assertFalse(cluster in algo.frozen_clusters)
+		algo._freeze(cluster)
+		self.assertFalse(cluster in algo.clusters)
+		self.assertTrue(cluster in algo.frozen_clusters)
+
 	# def test_no_k_means(self):
 	# 	"""
 	# 	Test the No-K-Means algorithm
