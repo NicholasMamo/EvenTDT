@@ -80,7 +80,7 @@ class NoKMeans(ClusteringAlgorithm):
 			In this way, nothing gets added to them, thereby resetting their age.
 			"""
 			for cluster in clusters:
-				self._increment_age(cluster)
+				self._update_age(cluster)
 				if self._to_freeze(cluste):
 					self._freeze(cluster)
 
@@ -117,7 +117,7 @@ class NoKMeans(ClusteringAlgorithm):
 		# frozen clusters will have been dealt with already, so the check is skipped
 		return [ cluster for cluster in self.clusters if cluster.get_attribute("age") <= len(vectors) ]
 
-	def _increment_age(self, cluster, increment=1):
+	def _update_age(self, cluster, increment=1):
 		"""
 		Update the age of the given cluster.
 

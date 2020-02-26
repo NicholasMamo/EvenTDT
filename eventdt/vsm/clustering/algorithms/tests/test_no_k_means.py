@@ -20,39 +20,39 @@ class TestNoKMeans(unittest.TestCase):
 	Test the No-K-Means algorithms.
 	"""
 
-	def test_increment_age(self):
+	def test_update_age(self):
 		"""
-		Test that when incrementing the age, the cluster attribute is updated.
+		Test that when updating the age, the cluster attribute is updated.
 		"""
 
 		cluster = Cluster()
 		algo = NoKMeans(0.5, 10)
 		cluster.set_attribute('age', 10)
 		self.assertEqual(10, cluster.get_attribute('age'))
-		algo._increment_age(cluster, 1)
+		algo._update_age(cluster, 1)
 		self.assertEqual(11, cluster.get_attribute('age'))
 
-	def test_increment_age_without_previous(self):
+	def test_update_age_without_previous(self):
 		"""
-		Test that when incrementing the age, the cluster attribute is updated even if there is no previous value.
+		Test that when updating the age, the cluster attribute is updated even if there is no previous value.
 		"""
 
 		cluster = Cluster()
 		algo = NoKMeans(0.5, 10)
 		self.assertFalse(cluster.get_attribute('age'))
-		algo._increment_age(cluster, 1)
+		algo._update_age(cluster, 1)
 		self.assertEqual(1, cluster.get_attribute('age'))
 
-	def test_increment_age_parameter(self):
+	def test_update_age_parameter(self):
 		"""
-		Test that when incrementing the age with a custom parameter, the cluster attribute is updated accordingly.
+		Test that when updating the age with a custom parameter, the cluster attribute is updated accordingly.
 		"""
 
 		cluster = Cluster()
 		algo = NoKMeans(0.5, 10)
 		cluster.set_attribute('age', 10)
 		self.assertEqual(10, cluster.get_attribute('age'))
-		algo._increment_age(cluster, 12)
+		algo._update_age(cluster, 12)
 		self.assertEqual(22, cluster.get_attribute('age'))
 
 	def test_to_freeze_low_age(self):
