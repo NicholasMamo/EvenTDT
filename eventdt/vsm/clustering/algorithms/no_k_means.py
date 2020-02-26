@@ -74,7 +74,7 @@ class NoKMeans(ClusteringAlgorithm):
 		:rtpye: list of :class:`~vsm.clustering.cluster.Cluster` instances
 		"""
 
-		for index, vector in enumerate(vectors):
+		for vector in vectors:
 			"""
 			Freeze inactive clusters first.
 			In this way, nothing gets added to them, thereby resetting their age.
@@ -192,7 +192,7 @@ class TemporalNoKMeans(NoKMeans):
 		if len(vectors) > 0:
 			earliest_vector = int(vectors[0].get_attribute(time_attribute))
 
-			for index, vector in enumerate(vectors):
+			for vector in vectors:
 				"""
 				Freeze inactive clusters first.
 				In this way, nothing gets added to them, thereby resetting their age.
