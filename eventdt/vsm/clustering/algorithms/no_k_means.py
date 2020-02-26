@@ -66,9 +66,10 @@ class NoKMeans(ClusteringAlgorithm):
 	def cluster(self, vectors, *args, **kwargs):
 		"""
 		Cluster the given documents.
+		Any additional arguments and keyword arguments are passed on to the :func:`~vsm.cluster.cluster.Cluster.similarity` function.
 
 		:param vectors: The list of vectors to cluster.
-		:type vectors: list of :class:`~vsm.vector.Vector` instances
+		:type vectors: list of :class:`~vsm.vector.Vector`
 
 		:return: The clusters that received documents, and which are not frozen.
 		:rtpye: list of :class:`~vsm.clustering.cluster.Cluster` instances
@@ -159,6 +160,27 @@ class NoKMeans(ClusteringAlgorithm):
 
 		if self.store_frozen:
 			self.frozen_clusters.append(cluster)
+
+	def _closest_cluster(self, vector, *args, **kwargs):
+		"""
+		Get the closest cluster to the vector and return the similarity score.
+		This function only compares the vector with active clusters.
+		Any additional arguments and keyword arguments are passed on to the :func:`~vsm.cluster.cluster.Cluster.similarity` function.
+
+		:param vector: The vector to compare with all clusters.
+		:type vector: :class:`~vsm.vector.Vector`
+
+		:return: A tuple consisting of the closest cluster and the similarity between it and the vector.
+				 If there are no active clusters, `None` is returned instead.
+		:rtype: tuple or None
+		"""
+
+		if not self.clusters:
+			return None
+
+		similarities = [ (cluster, cluster.similarity(vector, *args, **kwargs)) for cluster in self.clusters ]
+		closest_cluster = sorted(similarities, key=lambda tuple: tuple[1], reverse=True)[0]
+		return closest_cluster
 
 	def _reset_age(self, cluster):
 		"""

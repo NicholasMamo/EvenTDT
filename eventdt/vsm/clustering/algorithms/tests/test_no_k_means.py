@@ -164,27 +164,67 @@ class TestNoKMeans(unittest.TestCase):
 		algo._reset_age(cluster)
 		self.assertEqual(0, cluster.get_attribute('age'))
 
-	# def test_no_k_means(self):
-	# 	"""
-	# 	Test the No-K-Means algorithm
-	# 	"""
-	#
-	# 	tf = TF()
-	#
-	# 	documents = [
-	# 		Document("", ["a", "b", "a", "c"], scheme=tf),
-	# 		Document("", ["a", "b", "a"], scheme=tf),
-	# 		Document("", ["x", "y", "z"], scheme=tf),
-	# 		Document("", ["x", "y"], scheme=tf),
-	# 		Document("", ["y", "z"], scheme=tf),
-	# 		Document("", ["a", "b"], scheme=tf),
-	# 		Document("", ["p", "q"], scheme=tf),
-	# 		Document("", ["q", "p"], scheme=tf),
-	# 		Document("", ["p"], scheme=tf),
-	# 	]
-	#
-	# 	for document in documents:
-	# 		document.normalize()
-	#
-	# 	algo = NoKMeans(similarity_measure=vector_math.cosine)
-	# 	clusters = algo.cluster(documents, 0.67, 2)
+	def test_closest_cluster_none(self):
+		"""
+		Test that when there are no active clusters, the closest cluster returns `None`.
+		"""
+
+		algo = NoKMeans(0.5, 10, store_frozen=True)
+		document = Document('', [ 'a', 'b' ])
+		document.normalize()
+		self.assertEqual(None, algo._closest_cluster(document))
+
+	def test_closest_cluster_excludes_frozen(self):
+		"""
+		Test that when computing the closest cluster, frozen clusters are not considered.
+		"""
+
+		algo = NoKMeans(0.5, 10, store_frozen=True)
+
+		"""
+		Create the test data.
+		"""
+		documents = [
+			Document('', [ 'a', 'b', 'a', 'c' ]), Document('', [ 'a', 'b', 'a' ]),
+			Document('', [ 'x', 'y' ])
+		]
+		for document in documents:
+			document.normalize()
+
+		c1 = Cluster(documents[:2])
+		c2 = Cluster(documents[2:])
+		algo.clusters = [ c2 ]
+		algo.frozen_clusters = [ c1 ]
+
+		document = Document('', [ 'a', 'b' ])
+		document.normalize()
+		closest_cluster, similarity = algo._closest_cluster(document)
+		self.assertEqual(c2, closest_cluster)
+		self.assertEqual(0, similarity)
+
+	def test_closest_cluster(self):
+		"""
+		Test that the closest cluster returns the closest cluster.
+		"""
+
+		algo = NoKMeans(0.5, 10, store_frozen=True)
+
+		"""
+		Create the test data.
+		"""
+		documents = [
+			Document('', [ 'a', 'b', 'a', 'c' ]), Document('', [ 'a', 'b', 'a' ]),
+			Document('', [ 'x', 'y' ])
+		]
+		for document in documents:
+			document.normalize()
+
+		c1 = Cluster(documents[:2])
+		c2 = Cluster(documents[2:])
+		algo.clusters = [ c1, c2 ]
+
+		document = Document('', [ 'a', 'b' ])
+		document.normalize()
+		closest_cluster, similarity = algo._closest_cluster(document)
+		self.assertEqual(c1, closest_cluster)
+		self.assertGreater(similarity, 0)
