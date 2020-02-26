@@ -79,17 +79,10 @@ class NoKMeans(ClusteringAlgorithm):
 			Freeze inactive clusters first.
 			In this way, nothing gets added to them, thereby resetting their age.
 			"""
-			i = 0
-			while i < len(self.clusters):
-				cluster = self.clusters[i]
-				age = cluster.get_attribute("age") or 0
-				cluster.set_attribute("age", age + 1) # increment the ages first
-				if (age + 1 > freeze_period):
-					self.clusters.remove(cluster)
-					if store_frozen:
-						self.frozen_clusters.append(cluster)
-				else:
-					i += 1
+			for cluster in clusters:
+				self._increment_age(cluster)
+				if self._to_freeze(cluste):
+					self._freeze(cluster)
 
 			"""
 			Calculate the similarities between each vector and each cluster.
