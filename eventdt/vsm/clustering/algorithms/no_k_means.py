@@ -133,7 +133,7 @@ class NoKMeans(ClusteringAlgorithm):
 	def _to_freeze(self, cluster):
 		"""
 		Check if the cluster's age is high enough that the cluster should be frozen.
-		A cluster should be frozen if its age is equal to or high to the freeze period.
+		A cluster should be frozen if its age is longer than the freeze period.
 
 		:param cluster: The cluster whose age will be incremented.
 		:type cluster: :class:`~vsm.clustering.cluster.Cluster`
@@ -142,7 +142,7 @@ class NoKMeans(ClusteringAlgorithm):
 		:rtype: bool
 		"""
 
-		return cluster.get_attribute('age') >= self.freeze_period
+		return cluster.get_attribute('age') > self.freeze_period
 
 	def _freeze(self, cluster):
 		"""

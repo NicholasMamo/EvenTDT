@@ -57,7 +57,7 @@ class TestNoKMeans(unittest.TestCase):
 
 	def test_to_freeze_low_age(self):
 		"""
-		Test that when the cluster's age is lower than the freeze period, the cluster is not marked as to be frozen.
+		Test that when the cluster's age is lower than the freeze period, it is not marked as to be frozen.
 		"""
 
 		cluster = Cluster()
@@ -67,13 +67,13 @@ class TestNoKMeans(unittest.TestCase):
 
 	def test_to_freeze_same_age(self):
 		"""
-		Test that when the cluster's age is equivalent to the freeze period, it is marked to be frozen.
+		Test that when the cluster's age is equivalent to the freeze period, it is not marked to be frozen.
 		"""
 
 		cluster = Cluster()
 		algo = NoKMeans(0.5, 10)
 		cluster.set_attribute('age', 10)
-		self.assertTrue(algo._to_freeze(cluster))
+		self.assertFalse(algo._to_freeze(cluster))
 
 	def test_to_freeze_high_age(self):
 		"""
