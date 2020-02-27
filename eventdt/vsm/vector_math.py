@@ -81,7 +81,7 @@ def augmented_normalize(v, a=0.5):
 	dimensions = n.dimensions
 	x = max(dimensions.values()) if len(dimensions) > 0 else 1
 	dimensions = { dimension: a + (1 - a) * value / x for dimension, value in dimensions.items() }
-	n.set_dimensions(dimensions)
+	n.dimensions = dimensions
 	return n
 
 def concatenate(vectors):
@@ -105,7 +105,7 @@ def concatenate(vectors):
 	concatenated = { }
 	for v in vectors:
 		for dimension in v.dimensions:
-			concatenated[dimension] = concatenated.get(dimension, 0) + v.get_dimension(dimension)
+			concatenated[dimension] = concatenated.get(dimension, 0) + v.dimensions[dimension]
 
 	return vector.Vector(concatenated)
 
@@ -128,7 +128,7 @@ def euclidean(v1, v2):
 	"""
 
 	dimensions = list(set(v1.dimensions.keys()).union(v2.dimensions.keys()))
-	differences = [ (v1.get_dimension(dimension) - v2.get_dimension(dimension)) ** 2 for dimension in dimensions ]
+	differences = [ (v1.dimensions[dimension] - v2.dimensions[dimension]) ** 2 for dimension in dimensions ]
 	return math.sqrt(sum(differences))
 
 def manhattan(v1, v2):
@@ -150,7 +150,7 @@ def manhattan(v1, v2):
 	"""
 
 	dimensions = list(set(v1.dimensions.keys()).union(v2.dimensions.keys()))
-	differences = [ abs(v1.get_dimension(dimension) - v2.get_dimension(dimension)) for dimension in dimensions ]
+	differences = [ abs(v1.dimensions[dimension] - v2.dimensions[dimension]) for dimension in dimensions ]
 	return sum(differences)
 
 def cosine(v1, v2):
@@ -172,7 +172,7 @@ def cosine(v1, v2):
 	"""
 
 	dimensions = list(set(v1.dimensions.keys()).intersection(v2.dimensions.keys()))
-	products = [ v1.get_dimension(dimension) * v2.get_dimension(dimension) for dimension in dimensions ]
+	products = [ v1.dimensions[dimension] * v2.dimensions[dimension] for dimension in dimensions ]
 	if (magnitude(v1) > 0 and magnitude(v2) > 0):
 		return sum(products) / (magnitude(v1) * magnitude(v2))
 	else:
