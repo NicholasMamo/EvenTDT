@@ -62,10 +62,10 @@ class Vector(Attributable):
 	@property
 	def dimensions(self):
 		"""
-		Get the list of dimensions in the cluster.
+		Get the dimensions of the vector.
 
-		:return: The list of dimensions in the cluster.
-		:rtype: list of :class:`~vsm.vector.Vector`
+		:return: The dimensions of the vector.
+		:rtype: :class:`~vsm.vector.VectorSpace`
 		"""
 
 		return self.__dimensions
@@ -74,6 +74,8 @@ class Vector(Attributable):
 	def dimensions(self, dimensions=None):
 		"""
 		Reset the list of dimensions.
+		If a dictionary is given, its keys are used as the new dimensions.
+		Otherwise, a new vector space is initialized.
 
 		:param dimensions: The new dimensions as a dictionary.
 						   If `None` is given, an empty vector space is initialized instead.
