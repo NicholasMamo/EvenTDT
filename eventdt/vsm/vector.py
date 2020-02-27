@@ -14,13 +14,34 @@ from objects.attributable import Attributable
 from objects.exportable import Exportable
 from vsm import vector_math
 
+class VectorSpace(dict):
+	"""
+	The vector space is the space of all dimensions.
+	This class is based on a normal dictionary.
+	The only thing that changes is that when a non-existent dimension is requested, a value of 0 is returned.
+	"""
+
+	def __getitem__(self, key):
+		"""
+		Get the dimension represented by the given key.
+		If the dimension does not exist, 0 is returned instead.
+
+		:param key: The name of the dimension whose value will be fetched.
+		:type key: str
+
+		:return: The magnitude of the dimension, or 0 if it does not exist.
+		:rtype: float
+		"""
+
+		return self.get(key, 0)
+
 class Vector(Attributable):
 	"""
 	The :class:`~vsm.vector.Vector` class is the smallest building block in the Vector Space Model (VSM).
 	It is used for tasks such as clustering and to represent documents.
 	Vectors are based on :class:`~objects.Attributable` so that they may have additional properties.
 
-	:ivar dimensions: The dimensions—name-value pairs—of the Vector.
+	:ivar dimensions: The dimensions—name-value pairs—of the vector.
 	:vartype dimensions: dict
 	"""
 
