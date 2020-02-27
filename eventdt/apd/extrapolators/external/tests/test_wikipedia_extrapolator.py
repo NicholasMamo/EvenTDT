@@ -316,4 +316,4 @@ class TestWikipediaExtrapolator(unittest.TestCase):
 							   'C.D. Feirense', 'Leixões S.C.', 'C.D. Mafra',
 							   'C.D. Nacional', 'U.D. Oliveirense', 'F.C. Penafiel',
 							   'Varzim S.C.', 'U.D. Vilafranquense' ]
-		self.assertGreater(len(set(participants).intersection(set(other_participants))), 5)
+		self.assertGreaterEqual(len(set(participants).intersection(set(other_participants))), 4)
