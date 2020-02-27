@@ -14,8 +14,7 @@ if path not in sys.path:
 from clustering.cluster import Cluster
 from nlp.document import Document
 from nlp.term_weighting.tf import TF
-from vector import Vector
-from vsm.vector import VectorSpace
+from vsm import Vector, VectorSpace
 
 class TestCluster(unittest.TestCase):
 	"""

@@ -16,7 +16,7 @@ path = os.path.join(os.path.dirname(__file__), '..')
 if path not in sys.path:
 	sys.path.insert(1, path)
 
-from vsm.vector import Vector
+from vsm import Vector
 
 from logger import logger
 
