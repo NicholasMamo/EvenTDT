@@ -123,6 +123,7 @@ vector_tests() {
 
 	echo -e "${HIGHLIGHT}Clustering algorithms${DEFAULT}"
 	python3 -m unittest eventdt.vsm.clustering.algorithms.tests.test_no_k_means
+	python3 -m unittest eventdt.vsm.clustering.algorithms.tests.test_temporal_no_k_means
 }
 
 wikipedia_tests() {
