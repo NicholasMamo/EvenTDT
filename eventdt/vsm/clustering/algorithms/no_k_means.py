@@ -1,6 +1,6 @@
 """
 The No-K-Means algorithm is an incremental clustering algorithm, described in research by `Azzopardi et al. in 2016 <https://www.researchgate.net/profile/Colin_Layfield/publication/303893387_Extended_No-K-Means_for_Search_Results_Clustering/links/575acd4208ae9a9c95518dfd.pdf>`_.
-The algorithm compares incoming documents to existing clusters.
+The algorithm compares incoming vectors to existing clusters.
 The vector is added to the most similar cluster if the similarity exceeds a certain threshold.
 Otherwise, the vector is added to a new cluster.
 
@@ -37,7 +37,7 @@ class NoKMeans(ClusteringAlgorithm):
 	:ivar threshold: The minimum similarity between a vector and a cluster's centroid.
 					 If any cluster exceeds this threshold, the vector is added to that cluster.
 	:vartype threshold: float
-	:ivar freeze_period: The number of documents that arrive without being added to a cluster before it is frozen.
+	:ivar freeze_period: The number of vectors that arrive without being added to a cluster before it is frozen.
 	:vartype freeze_period: int
 	:ivar store_frozen: A boolean indicating whether frozen clusters should be retained.
 	:vartype store_frozen: bool
@@ -50,7 +50,7 @@ class NoKMeans(ClusteringAlgorithm):
 		:param threshold: The minimum similarity between a vector and a cluster's centroid.
 						  If any cluster exceeds this threshold, the vector is added to that cluster.
 		:type threshold: float
-		:param freeze_period: The number of documents that arrive without being added to a cluster before it is frozen.
+		:param freeze_period: The number of vectors that arrive without being added to a cluster before it is frozen.
 		:type freeze_period: int
 		:param store_frozen: A boolean indicating whether frozen clusters should be retained.
 		:type store_frozen: bool
@@ -65,13 +65,13 @@ class NoKMeans(ClusteringAlgorithm):
 
 	def cluster(self, vectors, *args, **kwargs):
 		"""
-		Cluster the given documents.
+		Cluster the given vectors.
 		Any additional arguments and keyword arguments are passed on to the :func:`~vsm.cluster.cluster.Cluster.similarity` function.
 
 		:param vectors: The list of vectors to cluster.
 		:type vectors: list of :class:`~vsm.vector.Vector`
 
-		:return: The clusters that received documents.
+		:return: The clusters that received vectors.
 		:rtpye: list of :class:`~vsm.clustering.cluster.Cluster` instances
 		"""
 
@@ -194,7 +194,7 @@ class TemporalNoKMeans(NoKMeans):
 
 	def cluster(self, vectors, threshold, freeze_period, time_attribute, store_frozen=True):
 		"""
-		Cluster the given documents.
+		Cluster the given vectors.
 
 		:param vectors: The list of vectors to cluster.
 		:type vectors: list of :class:`~vsm.vector.Vector` instances
@@ -208,7 +208,7 @@ class TemporalNoKMeans(NoKMeans):
 			This should be turned off in long-running systems to avoid memory leaks.
 		:type store_frozen: bool
 
-		:return: The clusters that received documents, and which are not frozen.
+		:return: The clusters that received vectors, and which are not frozen.
 		:rtpye: list of :class:`~vsm.clustering.cluster.Cluster` instances
 		"""
 
