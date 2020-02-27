@@ -15,6 +15,7 @@ from clustering.cluster import Cluster
 from nlp.document import Document
 from nlp.term_weighting.tf import TF
 from vector import Vector
+from vsm.vector import VectorSpace
 
 class TestCluster(unittest.TestCase):
 	"""
@@ -59,12 +60,12 @@ class TestCluster(unittest.TestCase):
 		c = Cluster(v)
 		self.assertEqual(v.dimensions, c.centroid.dimensions)
 
-		v.set_dimension("d", 1)
-		self.assertEqual(1, c.vectors[0].get_dimension("d"))
-		self.assertEqual(0, c.centroid.get_dimension("d"))
+		v.dimensions["d"] = 1
+		self.assertEqual(1, c.vectors[0].dimensions["d"])
+		self.assertEqual(0, c.centroid.dimensions["d"])
 		c.recalculate_centroid()
-		self.assertEqual(1, c.vectors[0].get_dimension("d"))
-		self.assertEqual(1, c.centroid.get_dimension("d"))
+		self.assertEqual(1, c.vectors[0].dimensions["d"])
+		self.assertEqual(1, c.centroid.dimensions["d"])
 
 	def test_add_vectors(self):
 		"""
@@ -97,14 +98,18 @@ class TestCluster(unittest.TestCase):
 		c = Cluster(v)
 		self.assertEqual({"a": 1.5, "b": 0.5, "c": 1}, c.centroid.dimensions)
 		c.remove_vector(v[0])
-		self.assertEqual(v[1].dimensions, c.centroid.dimensions)
+		self.assertEqual(1, c.centroid.dimensions['a'])
+		self.assertEqual(0, c.centroid.dimensions['b'])
+		self.assertEqual(1, c.centroid.dimensions['c'])
 
 		c = Cluster(v)
 		self.assertEqual({"a": 1.5, "b": 0.5, "c": 1}, c.centroid.dimensions)
 		c.remove_vector(v[1])
 		self.assertEqual(v[0].dimensions, c.centroid.dimensions)
 		c.remove_vector(v[0])
-		self.assertEqual({ }, c.centroid.dimensions)
+		self.assertEqual(0, c.centroid.dimensions['a'])
+		self.assertEqual(0, c.centroid.dimensions['b'])
+		self.assertEqual(0, c.centroid.dimensions['c'])
 
 	def test_setting_vectors(self):
 		"""
@@ -155,12 +160,14 @@ class TestCluster(unittest.TestCase):
 		c = Cluster(v)
 		self.assertEqual({ }, c.centroid.dimensions)
 
-		v[0].set_dimensions({ 'a': 1, 'b': 1 })
+		v[0].dimensions = { 'a': 1, 'b': 1 }
+		self.assertEqual(VectorSpace, type(v[0].dimensions))
 		self.assertEqual({ }, c.centroid.dimensions)
 		c.recalculate_centroid()
 		self.assertEqual({ 'a': 0.5, 'b': 0.5 }, c.centroid.dimensions)
 
-		v[1].set_dimensions({ 'a': 1 })
+		v[1].dimensions = { 'a': 1 }
+		self.assertEqual(VectorSpace, type(v[1].dimensions))
 		self.assertEqual({ 'a': 0.5, 'b': 0.5 }, c.centroid.dimensions)
 		c.recalculate_centroid()
 		self.assertEqual({ 'a': 1, 'b': 0.5 }, c.centroid.dimensions)

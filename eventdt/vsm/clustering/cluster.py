@@ -64,14 +64,14 @@ class Cluster(Attributable):
 
 		self.vectors.append(vector)
 		vectors = len(self.vectors)
-		dimensions = vector.get_dimensions().keys() | self.centroid.get_dimensions().keys()
+		dimensions = vector.dimensions.keys() | self.centroid.dimensions.keys()
 
 		"""
 		Update the cluster's centroid incrimentally.
 		"""
 		for dimension in dimensions:
-			new_weight = (self.centroid.get_dimension(dimension) * (vectors - 1) + vector.get_dimension(dimension)) / vectors
-			self.centroid.set_dimension(dimension, new_weight)
+			new_weight = (self.centroid.dimensions[dimension] * (vectors - 1) + vector.dimensions[dimension]) / vectors
+			self.centroid.dimensions[dimension] = new_weight
 
 	def recalculate_centroid(self):
 		"""
@@ -95,16 +95,16 @@ class Cluster(Attributable):
 
 		self.vectors.remove(vector)
 		vectors = len(self.vectors)
-		copy = vector.get_dimensions().copy()
-		dimensions = list(self.centroid.get_dimensions().keys())
+		copy = vector.dimensions.copy()
+		dimensions = list(self.centroid.dimensions.keys())
 
 		"""
 		Update the cluster's centroid incrimentally.
 		"""
 		for dimension in dimensions:
-			value = self.centroid.get_dimension(dimension)
+			value = self.centroid.dimensions[dimension]
 			new_value = (value * (vectors + 1) - copy.get(dimension, 0)) / max(vectors, 1)
-			self.centroid.set_dimension(dimension, new_value)
+			self.centroid.dimensions[dimension] = new_value
 
 	def similarity(self, vector, similarity_measure=vector_math.cosine):
 		"""
