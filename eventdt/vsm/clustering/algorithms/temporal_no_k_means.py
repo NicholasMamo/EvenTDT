@@ -73,8 +73,8 @@ class TemporalNoKMeans(NoKMeans):
 			In this way, nothing gets added to them, thereby resetting their age.
 			"""
 			for cluster in self.clusters:
-				self._update_age(cluster)
-				if self._to_freeze(cluster, time, timetamp):
+				self._update_age(cluster, timestamp, time)
+				if self._to_freeze(cluster):
 					self._freeze(cluster)
 
 			"""
