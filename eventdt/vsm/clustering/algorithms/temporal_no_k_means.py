@@ -19,6 +19,14 @@ class TemporalNoKMeans(NoKMeans):
 	The temporal No-K-Means is a variant of the No-K-Means.
 	Differently from the No-K-Means, clusters are frozen if they have been inactive for a long period of time.
 	In the No-K-Means, the freeze period is based on the number of received vectors.
+
+	:ivar threshold: The minimum similarity between a vector and a cluster's centroid.
+					 If any cluster exceeds this threshold, the vector is added to that cluster.
+	:vartype threshold: float
+	:ivar freeze_period: The number of seconds of inactivity of a cluster before it is frozen.
+	:vartype freeze_period: int
+	:ivar store_frozen: A boolean indicating whether frozen clusters should be retained.
+	:vartype store_frozen: bool
 	"""
 
 	def __init__(self, threshold, freeze_period, store_frozen=False):
@@ -44,6 +52,7 @@ class TemporalNoKMeans(NoKMeans):
 		:param vectors: The list of vectors to cluster.
 		:type vectors: list of :class:`~vsm.vector.Vector`
 		:param time: The name of the vector attribute used as weight.
+					 The time value is expected to be a float or integer.
 		:type time: str
 
 		:return: The clusters that received vectors, and which are not frozen.
