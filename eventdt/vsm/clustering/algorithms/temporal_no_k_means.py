@@ -95,3 +95,25 @@ class TemporalNoKMeans(NoKMeans):
 			updated_clusters.append(cluster)
 
 		return list(set(updated_clusters))
+
+	def _update_age(self, cluster, timestamp, time):
+		"""
+		Update the age of the given cluster.
+		The age is calculated by subtracting from the current timestamp the time of the last vector in the cluster.
+		It is assumed that the last vector in the cluster is the most recently-published.
+
+		:param cluster: The cluster whose age will be incremented.
+		:type cluster: :class:`~vsm.clustering.cluster.Cluster`
+		:param timestamp: The current timestamp of the clustering algorithm.
+						  This is equivalent to the last received vector.
+		:type timestamp: int
+		:param time: The name of the vector attribute used as weight.
+					 The time value is expected to be a float or integer.
+		:type time: str
+
+		:raises IndexError: When the cluster has no vectors.
+		:raises TypeError: When the vector has no time attribute.
+		"""
+
+		vector = cluster.vectors[-1]
+		cluster.set_attribute('age', timestamp - vector.get_attribute(time))
