@@ -57,7 +57,30 @@ class Vector(Attributable):
 		"""
 
 		super(Vector, self).__init__(*args, **kwargs)
-		self.dimensions = VectorSpace() if dimensions is None else VectorSpace(dimensions)
+		self.dimensions = dimensions
+
+	@property
+	def dimensions(self):
+		"""
+		Get the list of dimensions in the cluster.
+
+		:return: The list of dimensions in the cluster.
+		:rtype: list of :class:`~vsm.vector.Vector`
+		"""
+
+		return self.__dimensions
+
+	@dimensions.setter
+	def dimensions(self, dimensions=None):
+		"""
+		Reset the list of dimensions.
+
+		:param dimensions: The new dimensions as a dictionary.
+						   If `None` is given, an empty vector space is initialized instead.
+		:type dimensions: dict or `None`
+		"""
+
+		self.__dimensions = VectorSpace() if dimensions is None else VectorSpace(dimensions)
 
 	def normalize(self):
 		"""

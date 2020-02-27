@@ -12,7 +12,7 @@ path = os.path.join(path, '..')
 if path not in sys.path:
     sys.path.append(path)
 
-from vector import Vector
+from vector import Vector, VectorSpace
 from vector_math import *
 
 class TestVector(unittest.TestCase):
@@ -113,6 +113,40 @@ class TestVector(unittest.TestCase):
 		v.dimensions['x'] = 10
 		self.assertEqual({ 'x': 10 }, v.dimensions)
 		self.assertEqual(10, v.dimensions['x'])
+
+	def test_dimensions_vector_space(self):
+		"""
+		Test that dimensions are created as a vector space.
+		"""
+
+		v = Vector()
+		self.assertEqual(VectorSpace, type(v.dimensions))
+
+	def test_empty_dict_dimensions_vector_space(self):
+		"""
+		Test that dimensions are created as a vector space when given as an empty dictionary.
+		"""
+
+		v = Vector({ })
+		self.assertEqual(VectorSpace, type(v.dimensions))
+
+	def test_non_empty_dict_dimensions_vector_space(self):
+		"""
+		Test that dimensions are created as a vector space when given as a non-empty dictionary.
+		"""
+
+		v = Vector({ 'x': 10 })
+		self.assertEqual(VectorSpace, type(v.dimensions))
+
+	def test_normalize_vector_space(self):
+		"""
+		Test that when a vector is normalized, its dimensions ae a vecto space.
+		"""
+
+		v = Vector({ 'x': 10 })
+		self.assertEqual(VectorSpace, type(v.dimensions))
+		v.normalize()
+		self.assertEqual(VectorSpace, type(v.dimensions))
 
 	def test_copy(self):
 		"""
