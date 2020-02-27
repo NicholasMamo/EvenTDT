@@ -65,7 +65,7 @@ class TestDocument(unittest.TestCase):
 		d = Document(text, text.split(), attributes={ 'timestamp': 10 })
 		e = d.to_array()
 		self.assertEqual(d.get_attributes(), Document.from_array(e).get_attributes())
-		self.assertEqual(d.get_dimensions(), Document.from_array(e).get_dimensions())
+		self.assertEqual(d.dimensions, Document.from_array(e).dimensions)
 		self.assertEqual(d.text, Document.from_array(e).text)
 		self.assertEqual(d.get_attribute('timestamp'), Document.from_array(e).get_attribute('timestamp'))
 		self.assertEqual(d.__dict__, Document.from_array(e).__dict__)
