@@ -42,7 +42,7 @@ class TemporalNoKMeans(NoKMeans):
 		:type store_frozen: bool
 		"""
 
-		super(NoKMeans, self).__init__(threshold, freeze_period, store_frozen)
+		super(TemporalNoKMeans, self).__init__(threshold, freeze_period, store_frozen)
 
 	def cluster(self, vectors, time="timestamp", *args, **kwargs):
 		"""
@@ -61,6 +61,9 @@ class TemporalNoKMeans(NoKMeans):
 
 		updated_clusters = [ ]
 
+		"""
+		Vectors are clustered chronologically.
+		"""
 		vectors = sorted(vectors, key=lambda vector: vector.get_attribute(time))
 		for vector in vectors:
 			timestamp = vector.get_attribute(time)
