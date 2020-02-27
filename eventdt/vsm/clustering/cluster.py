@@ -16,8 +16,7 @@ if path not in sys.path:
 
 from objects.attributable import Attributable
 
-from vsm import Vector
-from vsm import vector_math
+from vsm import Vector, vector_math
 
 class Cluster(Attributable):
 	"""
