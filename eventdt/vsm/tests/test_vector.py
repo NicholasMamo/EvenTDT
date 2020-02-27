@@ -42,61 +42,11 @@ class TestVector(unittest.TestCase):
 		"""
 
 		v = Vector({"x": 2, "y": 1})
-		v.set_dimension("x")
+		del v.dimensions["x"]
 		self.assertEqual({"y": 1}, v.dimensions)
 
-		v.set_dimension("x", 1)
+		v.dimensions["x"] = 1
 		self.assertEqual({"x": 1, "y": 1}, v.dimensions)
-
-		v.initialize_dimension("x", 2)
-		self.assertEqual(1, v.get_dimension("x"))
-
-	def test_initialize_existing_dimension(self):
-		"""
-		Test initializing a dimension that already exists.
-		"""
-
-		v = Vector({"x": 1, "y": 1})
-		v.initialize_dimension("x", 2)
-		self.assertEqual(1, v.get_dimension("x"))
-
-	def test_initialize_dimension(self):
-		"""
-		Test initializing a dimension if it doesn't exist.
-		"""
-
-		v = Vector({"x": 2, "y": 1})
-		v.initialize_dimension("w", 2)
-		self.assertEqual(2, v.get_dimension("w"))
-		self.assertEqual(1, v.get_dimension("y"))
-		self.assertEqual(0, v.get_dimension("p"))
-
-	def test_clear_all_dimensions(self):
-		"""
-		Test clearing all dimensions.
-		"""
-
-		v = Vector({"x": 3, "y": 2, "z": 4})
-		v.clear_dimensions()
-		self.assertEqual({ }, v.dimensions)
-
-	def test_clear_nonexisting_dimension(self):
-		"""
-		Test clearing a dimension that does not exist.
-		"""
-
-		v = Vector({"x": 3, "y": 2, "z": 4})
-		v.clear_dimension("w")
-		self.assertEqual({"x": 3, "y": 2, "z": 4}, v.dimensions)
-
-	def test_clear_dimension(self):
-		"""
-		Test clearing a single dimension.
-		"""
-
-		v = Vector({"x": 3, "y": 2, "z": 4})
-		v.clear_dimension("x")
-		self.assertEqual({"y": 2, "z": 4}, v.dimensions)
 
 	def test_normalization(self):
 		"""
@@ -136,6 +86,34 @@ class TestVector(unittest.TestCase):
 		v.normalize()
 		self.assertEqual({ 'x': 0 }, v.dimensions)
 
+	def test_get_dimension(self):
+		"""
+		Test that when getting the value of a dimension, the correct value is returned.
+		"""
+
+		v = Vector({ 'x': 1 })
+		self.assertEqual(1, v.dimensions['x'])
+
+	def test_get_non_existent_dimension(self):
+		"""
+		Test that when getting the value of a dimension that does not exist, 0 is returned.
+		"""
+
+		v = Vector({ })
+		self.assertEqual(0, v.dimensions['x'])
+
+	def test_vector_space_initialization(self):
+		"""
+		Test that when providing no dimensions, an empty vector space is created.
+		"""
+
+		v = Vector()
+		self.assertEqual({ }, v.dimensions)
+		self.assertEqual(0, v.dimensions['x'])
+		v.dimensions['x'] = 10
+		self.assertEqual({ 'x': 10 }, v.dimensions)
+		self.assertEqual(10, v.dimensions['x'])
+
 	def test_copy(self):
 		"""
 		Test copying.
@@ -145,17 +123,17 @@ class TestVector(unittest.TestCase):
 		n = v.copy()
 
 		self.assertEqual(v.get_attributes(), n.get_attributes())
-		self.assertEqual(v.dimensions, n.get_dimensions())
+		self.assertEqual(v.dimensions, n.dimensions)
 
 		v.set_attribute("y", False)
 		self.assertFalse(v.get_attribute("y"))
 		self.assertTrue(n.get_attribute("y"))
 		v.set_attribute("y", True)
 
-		v.set_dimension("x", 2)
-		self.assertEqual(2, v.get_dimension("x"))
-		self.assertEqual(3, n.get_dimension("x"))
-		v.set_dimension("x", 3)
+		v.dimensions["x"] = 2
+		self.assertEqual(2, v.dimensions["x"])
+		self.assertEqual(3, n.dimensions["x"])
+		v.dimensions["x"] = 3
 
 	def test_export(self):
 		"""
@@ -165,5 +143,5 @@ class TestVector(unittest.TestCase):
 		v = Vector({ "x": 3 }, { "y": True })
 		e = v.to_array()
 		self.assertEqual(v.get_attributes(), Vector.from_array(e).get_attributes())
-		self.assertEqual(v.dimensions, Vector.from_array(e).get_dimensions())
+		self.assertEqual(v.dimensions, Vector.from_array(e).dimensions)
 		self.assertEqual(v.__dict__, Vector.from_array(e).__dict__)

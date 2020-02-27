@@ -57,90 +57,14 @@ class Vector(Attributable):
 		"""
 
 		super(Vector, self).__init__(*args, **kwargs)
-		self.dimensions = dict() if dimensions is None else dimensions
-
-	def initialize_dimension(self, name, value):
-		"""
-		Initialize an dimension's value if it does not eixst.
-
-		:param name: The dimension's name.
-		:type name: :class:`~object`
-		:param value: The default value for the dimension, assigned if a value does not already exist.
-		:type value: :class:`~object`
-		"""
-
-		self.dimensions[name] = self.dimensions.get(name, value)
-
-	def set_dimensions(self, dimensions=None):
-		"""
-		Overwrite the dimensions, clearing them if nothing is given.
-
-		:param dimensions: The new set of dimensions.
-		:type dimensions: dict
-		"""
-
-		self.dimensions = dict() if dimensions is None else dimensions
-
-	def set_dimension(self, name, value=None):
-		"""
-		Set a single dimension.
-		If no value is provided, the dimension is unset.
-
-		:param name: The dimension's name.
-		:type name: :class:`~object`
-		:param value: The default value for the dimension, assigned if a value does not already exist.
-		:type value: :class:`~object`
-		"""
-
-		if value:
-			self.dimensions[name] = value
-		else:
-			if name in self.dimensions:
-				del self.dimensions[name]
-
-	def get_dimension(self, name):
-		"""
-		Get the value of a single dimension.
-
-		:param name: The dimension's name.
-		:type name: :class:`~object`
-		"""
-
-		return self.dimensions.get(name, 0)
-
-	def get_dimensions(self):
-		"""
-		Get all the dimensions.
-
-		:return: The dimensions dict.
-		:type: dict
-		"""
-
-		return self.dimensions
-
-	def clear_dimension(self, name):
-		"""
-		Remove a single dimension.
-
-		:param name: The name of the dimension too remove.
-		:type name: :class:`~object`
-		"""
-
-		self.set_dimension(name)
-
-	def clear_dimensions(self):
-		"""
-		Remove all dimensions.
-		"""
-
-		self.set_dimensions()
+		self.dimensions = VectorSpace() if dimensions is None else VectorSpace(dimensions)
 
 	def normalize(self):
 		"""
 		Normalize the vector.
 		"""
 
-		self.dimensions = vector_math.normalize(self).get_dimensions()
+		self.dimensions = vector_math.normalize(self).dimensions
 
 	def copy(self):
 		"""
