@@ -13,7 +13,7 @@ if path not in sys.path:
 
 from nlp.document import Document
 from vsm.clustering.cluster import Cluster
-from vsm.clustering.algorithms.no_k_means import NoKMeans, TemporalNoKMeans
+from vsm.clustering.algorithms.no_k_means import NoKMeans
 
 class TestNoKMeans(unittest.TestCase):
 	"""
@@ -229,7 +229,7 @@ class TestNoKMeans(unittest.TestCase):
 		self.assertEqual(c1, closest_cluster)
 		self.assertGreater(similarity, 0)
 
-	def test_clusters_freeze(self):
+	def test_cluster_freeze(self):
 		"""
 		Test that when there is a shift in discourse, old clusters are frozen.
 		"""
@@ -251,7 +251,7 @@ class TestNoKMeans(unittest.TestCase):
 		self.assertEqual(1, len(algo.clusters))
 		self.assertEqual(1, len(algo.frozen_clusters))
 
-	def test_similar_vectors_cluster(self):
+	def test_cluster_similar_vectors(self):
 		"""
 		Test that similar vectors cluster together.
 		"""
@@ -275,7 +275,7 @@ class TestNoKMeans(unittest.TestCase):
 		self.assertTrue(all('a' in document.dimensions for document in cluster_a.vectors))
 		self.assertTrue(all('x' in document.dimensions for document in cluster_x.vectors))
 
-	def test_not_updated_cluster_not_returned(self):
+	def test_cluster_retun_only_updated(self):
 		"""
 		Test that updated clusters are not returned.
 		"""
@@ -297,7 +297,7 @@ class TestNoKMeans(unittest.TestCase):
 		clusters = algo.cluster(documents[1:])
 		self.assertEqual(1, len(clusters))
 
-	def test_frozen_updated_cluster_returned(self):
+	def test_cluster_return_updated_frozen(self):
 		"""
 		Test that updated clusters that are frozen are still returned.
 		"""
@@ -321,7 +321,7 @@ class TestNoKMeans(unittest.TestCase):
 		self.assertEqual(active, algo.clusters)
 		self.assertEqual(frozen, algo.frozen_clusters)
 
-	def test_frozen_returned_and_removed(self):
+	def test_cluster_return_and_remove_frozen(self):
 		"""
 		Test that when frozen clusters are not stored, they are still returned.
 		"""
