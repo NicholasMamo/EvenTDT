@@ -70,7 +70,7 @@ class MemoryNutritionStore(NutritionStore):
 
 	def all(self):
 		"""
-		Get all the nutrition sets.
+		Get all the nutrition data.
 
 		:return: All the nutrition data in the nutrition store as a dictionary.
 				 The keys are the timestamps, and the values are the nutrition data at those timestamps.

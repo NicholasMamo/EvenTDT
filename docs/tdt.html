@@ -38,7 +38,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="6. Queues" href="queues.html" />
+    <link rel="next" title="7. Queues" href="queues.html" />
     <link rel="prev" title="5. Automatic Participant Detection (APD)" href="apd.html" /> 
 </head>
 
@@ -95,8 +95,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-tdt.nutrition.store">Nutrition Stores</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="queues.html">6. Queues</a></li>
-<li class="toctree-l1"><a class="reference internal" href="other.html">7. Other</a></li>
+<li class="toctree-l1"><a class="reference internal" href="queues.html">7. Queues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">8. Other</a></li>
 </ul>
 
             
@@ -200,9 +200,9 @@ Nutrition stores separate data based on timestamps.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>timestamp</strong> (<em>int</em>) – The timestamp of the nutrition data.</p></li>
-<li><p><strong>nutrition</strong> (<em>dict</em>) – The nutrition data to add.
-The data is a dictionary, where the key is the term and the value is the nutrition.</p></li>
+<li><p><strong>timestamp</strong> (<em>float</em><em> or </em><em>int</em><em> or </em><em>str</em>) – The timestamp of the nutrition data.</p></li>
+<li><p><strong>nutrition</strong> (<em>any</em>) – The nutrition data to add.
+The nutrition data can be any value.</p></li>
 </ul>
 </dd>
 </dl>
@@ -212,18 +212,22 @@ The data is a dictionary, where the key is the term and the value is the nutriti
 <dt id="tdt.nutrition.store.NutritionStore.get">
 <em class="property">abstract </em><code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param">timestmap</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.nutrition.store.NutritionStore.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the nutrition data at the given timestamp.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The function allows <code class="xref py py-class docutils literal notranslate"><span class="pre">IndexError</span></code> to be raised because having missing nutrition data needs to be handled.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>timestamp</strong> (<em>int</em>) – The timestamp whose nutrition is to be returned.</p>
+<dd class="field-odd"><p><strong>timestamp</strong> (<em>float</em><em> or </em><em>int</em><em> or </em><em>str</em>) – The timestamp whose nutrition is to be returned.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The nutrition at the given timestamp.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict</p>
+<dd class="field-odd"><p>any</p>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>IndexError</strong> – When there is no nutrition data at the given timestamp.</p>
+<dd class="field-even"><p><strong>KeyError</strong> – When there is no nutrition data at the given timestamp.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -234,7 +238,8 @@ The data is a dictionary, where the key is the term and the value is the nutriti
 <dd><p>Get all the nutrition sets.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>All the nutrition sets in the nutrition store.</p>
+<dd class="field-odd"><p>All the nutrition data in the nutrition store as a dictionary.
+The keys are the timestamps, and the values are the nutrition data at those timestamps.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>dict</p>
@@ -253,9 +258,9 @@ The data is a dictionary, where the key is the term and the value is the nutriti
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>start</strong> (<em>int</em>) – The first timestamp that should be included in the returned nutrition data.
+<li><p><strong>start</strong> (<em>float</em><em> or </em><em>int</em><em> or </em><em>str</em>) – The first timestamp that should be included in the returned nutrition data.
 If no time window with the given timestamp exists, all returned time windows succeed it.</p></li>
-<li><p><strong>end</strong> (<em>int</em>) – All the nutrition data from the beginning until the given timestamp.
+<li><p><strong>end</strong> (<em>float</em><em> or </em><em>int</em><em> or </em><em>str</em>) – All the nutrition data from the beginning until the given timestamp.
 Any nutrition data at the end timestamp is not returned.</p></li>
 </ul>
 </dd>
@@ -272,14 +277,14 @@ The start timestamp is inclusive, the end timestamp is exclusive.</p>
 <dl class="method">
 <dt id="tdt.nutrition.store.NutritionStore.since">
 <code class="sig-name descname">since</code><span class="sig-paren">(</span><em class="sig-param">start</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.nutrition.store.NutritionStore.since" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a list of nutrition sets since the given timestamp.</p>
+<dd><p>Get the nutrition data since the given timestamp.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The start timestamp is inclusive.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>start</strong> (<em>int</em>) – The first timestamp that should be included in the returned nutrition data.
+<dd class="field-odd"><p><strong>start</strong> (<em>float</em><em> or </em><em>int</em><em> or </em><em>str</em>) – The first timestamp that should be included in the returned nutrition data.
 If no time window with the given timestamp exists, all returned time windows succeed it.</p>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -301,7 +306,7 @@ If no time window with the given timestamp exists, all returned time windows suc
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>end</strong> (<em>int</em>) – The timestamp before which nutrition data should be returned.</p>
+<dd class="field-odd"><p><strong>end</strong> (<em>float</em><em> or </em><em>int</em><em> or </em><em>str</em>) – The timestamp before which nutrition data should be returned.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>All the nutrition data from the beginning until the given timestamp.
@@ -315,19 +320,134 @@ Any nutrition data at the end timestamp is not returned.</p>
 
 <dl class="method">
 <dt id="tdt.nutrition.store.NutritionStore.remove">
-<em class="property">abstract </em><code class="sig-name descname">remove</code><span class="sig-paren">(</span><em class="sig-param">timestamps</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.nutrition.store.NutritionStore.remove" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove nutrition data from the given list of timestamps.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>timestamps</strong> (<em>list of int</em>) – The timestamps whose nutrition data is to be removed.</p>
-</dd>
-</dl>
+<em class="property">abstract </em><code class="sig-name descname">remove</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.nutrition.store.NutritionStore.remove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove nutrition data from the given list of timestamps.
+The timestamps should be given as arguments.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="tdt.nutrition.store.NutritionStore.__weakref__">
 <code class="sig-name descname">__weakref__</code><a class="headerlink" href="#tdt.nutrition.store.NutritionStore.__weakref__" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-tdt.nutrition.memory"></span><p>The memory nutrition store uses Python dictionaries as data structures to store nutrition data.
+This store is a simple and efficient implementation because there is little overhead.
+However, the accumulation of nutrition data necessitates that old data is cleared routinely.</p>
+<dl class="class">
+<dt id="tdt.nutrition.memory.MemoryNutritionStore">
+<em class="property">class </em><code class="sig-name descname">MemoryNutritionStore</code><a class="headerlink" href="#tdt.nutrition.memory.MemoryNutritionStore" title="Permalink to this definition">¶</a></dt>
+<dd><p>A nutrition store that keeps the data in a dictionary.
+The keys are the timestamps, with each timestamp storing another dictionary.
+The inner dictionary has the terms as keys and their nutrition as values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#module-tdt.nutrition.store" title="tdt.nutrition.store"><strong>store</strong></a> (<em>dict</em>) – The nutrition store as a dictionary.
+The keys are the timestamps, and the values are the nutrition data.
+The nutrition data can be any value.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="tdt.nutrition.memory.MemoryNutritionStore.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tdt.nutrition.memory.MemoryNutritionStore.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the nutrition store as a dictionary.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tdt.nutrition.memory.MemoryNutritionStore.add">
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">timestamp</em>, <em class="sig-param">nutrition</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.nutrition.memory.MemoryNutritionStore.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a nutrition data to the store at the given timestamp.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This function overwrites any data at the given timestamp.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timestamp</strong> (<em>float</em><em> or </em><em>int</em><em> or </em><em>str</em>) – The timestamp of the nutrition data.</p></li>
+<li><p><strong>nutrition</strong> (<em>any</em>) – The nutrition data to add.
+The nutrition data can be any value.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tdt.nutrition.memory.MemoryNutritionStore.get">
+<code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param">timestamp</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.nutrition.memory.MemoryNutritionStore.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the nutrition data at the given timestamp.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The function allows <code class="xref py py-class docutils literal notranslate"><span class="pre">IndexError</span></code> to be raised because having missing nutrition data needs to be handled.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>timestamp</strong> (<em>float</em><em> or </em><em>int</em><em> or </em><em>str</em>) – The timestamp whose nutrition is to be returned.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The nutrition at the given timestamp.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>any</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>KeyError</strong> – When there is no nutrition data at the given timestamp.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tdt.nutrition.memory.MemoryNutritionStore.all">
+<code class="sig-name descname">all</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tdt.nutrition.memory.MemoryNutritionStore.all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all the nutrition sets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>All the nutrition data in the nutrition store as a dictionary.
+The keys are the timestamps, and the values are the nutrition data at those timestamps.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tdt.nutrition.memory.MemoryNutritionStore.between">
+<code class="sig-name descname">between</code><span class="sig-paren">(</span><em class="sig-param">start</em>, <em class="sig-param">end</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.nutrition.memory.MemoryNutritionStore.between" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the nutrition data between the given timestamps.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The start timestamp is inclusive, the end timestamp is exclusive.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start</strong> (<em>float</em><em> or </em><em>int</em><em> or </em><em>str</em>) – The first timestamp that should be included in the returned nutrition data.
+If no time window with the given timestamp exists, all returned time windows succeed it.</p></li>
+<li><p><strong>end</strong> (<em>float</em><em> or </em><em>int</em><em> or </em><em>str</em>) – All the nutrition data from the beginning until the given timestamp.
+Any nutrition data at the end timestamp is not returned.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>All the nutrition data between the given timestamps.
+The start timestamp is inclusive, the end timestamp is exclusive.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – When the start timestamp is on or after the end timestamp.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tdt.nutrition.memory.MemoryNutritionStore.remove">
+<code class="sig-name descname">remove</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.nutrition.memory.MemoryNutritionStore.remove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove nutrition data from the given list of timestamps.
+The timestamps should be given as arguments.</p>
 </dd></dl>
 
 </dd></dl>
@@ -343,7 +463,7 @@ Any nutrition data at the end timestamp is not returned.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="queues.html" class="btn btn-neutral float-right" title="6. Queues" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="queues.html" class="btn btn-neutral float-right" title="7. Queues" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="apd.html" class="btn btn-neutral float-left" title="5. Automatic Participant Detection (APD)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

@@ -22,3 +22,8 @@ Nutrition Stores
    :members:
    :private-members:
    :special-members:
+
+.. automodule:: tdt.nutrition.memory
+   :members:
+   :private-members:
+   :special-members:
