@@ -106,14 +106,11 @@ class MemoryNutritionStore(NutritionStore):
 
 		return { timestamp: self.get(timestamp) for timestamp in self.store if float(start) <= float(timestamp) < float(end) }
 
-	def remove(self, timestamp):
+	def remove(self, *args):
 		"""
-		Remove nutrition sets that are older than the given timestamp.
-
-		:param timestamp: The timestamp before which no nutrition sets may exist.
-		:type timestamp: int
+		Remove nutrition data from the given list of timestamps.
+		The timestamps should be given as arguments.
 		"""
 
-		timestamp = int(timestamp)
-		keys = sorted(self.store.keys())[::-1] # get the keys and sort them in descending order
-		self.store = { key: self.store[key] for key in keys if key >= timestamp } # compile the nutrition sets, filtering keys by timestamp to retain only recent ones
+		timestamps = [ str(timestamp) for timestamp in args ]
+		self.store = { timestamp: self.store.get(timestamp) for timestamp in self.store if timestamp not in timestamps }

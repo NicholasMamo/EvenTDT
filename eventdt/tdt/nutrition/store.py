@@ -144,12 +144,10 @@ class NutritionStore(ABC):
 		return self.between(0, str(end))
 
 	@abstractmethod
-	def remove(self, timestamps):
+	def remove(self, *args):
 		"""
 		Remove nutrition data from the given list of timestamps.
-
-		:param timestamps: The timestamps whose nutrition data is to be removed.
-		:type timestamps: list of float or int or str
+		The timestamps should be given as arguments.
 		"""
 
 		pass

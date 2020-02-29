@@ -355,3 +355,111 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		nutrition.add('20', 2)
 		self.assertEqual({ '0': 0, '10': 1 }, nutrition.until(20))
 		self.assertTrue(all(float(timestamp) < 20 for timestamp in nutrition.until(20)))
+
+	def test_remove_nothing(self):
+		"""
+		Test that when no timestamps are provided, the nutrition data is unchanged.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		nutrition.add('0', 0)
+		nutrition.add('10', 1)
+		nutrition.add('20', 2)
+		self.assertEqual({ '0': 0, '10': 1, '20': 2 }, nutrition.all())
+		nutrition.remove()
+		self.assertEqual({ '0': 0, '10': 1, '20': 2 }, nutrition.all())
+
+	def test_remove(self):
+		"""
+		Test that when removing nutrition from a single timestamp, only that data is removed.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		nutrition.add('0', 0)
+		nutrition.add('10', 1)
+		nutrition.add('20', 2)
+		self.assertEqual({ '0': 0, '10': 1, '20': 2 }, nutrition.all())
+		nutrition.remove('10')
+		self.assertEqual({ '0': 0, '20': 2 }, nutrition.all())
+
+	def test_remove_int(self):
+		"""
+		Test that when removing nutrition from a single integer timestamp, only that data is removed.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		nutrition.add('0', 0)
+		nutrition.add('10', 1)
+		nutrition.add('20', 2)
+		self.assertEqual({ '0': 0, '10': 1, '20': 2 }, nutrition.all())
+		nutrition.remove(10)
+		self.assertEqual({ '0': 0, '20': 2 }, nutrition.all())
+
+	def test_remove_float(self):
+		"""
+		Test that when removing nutrition from a single float timestamp, that data is only remove if the values match.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		nutrition.add('0', 0)
+		nutrition.add('10.0', 1)
+		nutrition.add('20', 2)
+		self.assertEqual({ '0': 0, '10.0': 1, '20': 2 }, nutrition.all())
+		nutrition.remove(10.0)
+		self.assertEqual({ '0': 0, '20': 2 }, nutrition.all())
+
+	def test_remove_multiple(self):
+		"""
+		Test removing multiple timestamps.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		nutrition.add('0', 0)
+		nutrition.add('10', 1)
+		nutrition.add('20', 2)
+		nutrition.add('30', 3)
+		self.assertEqual({ '0': 0, '10': 1, '20': 2, '30': 3 }, nutrition.all())
+		nutrition.remove('10', '20')
+		self.assertEqual({ '0': 0, '30': 3 }, nutrition.all())
+
+	def test_remove_multiple_mixed(self):
+		"""
+		Test removing multiple timestamps with mixed types.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		nutrition.add('0', 0)
+		nutrition.add('10', 1)
+		nutrition.add('20', 2)
+		nutrition.add(30.0, 3)
+		self.assertEqual({ '0': 0, '10': 1, '20': 2, '30.0': 3 }, nutrition.all())
+		nutrition.remove('10', 20, 30.0)
+		self.assertEqual({ '0': 0 }, nutrition.all())
+
+	def test_remove_until(self):
+		"""
+		Test removing timestamps that come until the given timestamp.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		nutrition.add('0', 0)
+		nutrition.add('10', 1)
+		nutrition.add('20', 2)
+		nutrition.add('30', 3)
+		self.assertEqual({ '0': 0, '10': 1, '20': 2, '30': 3 }, nutrition.all())
+		nutrition.remove(*nutrition.until(20))
+		self.assertEqual({ '20': 2, '30': 3}, nutrition.all())
+
+	def test_remove_since(self):
+		"""
+		Test removing timestamps that come since the given timestamp.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		nutrition.add('0', 0)
+		nutrition.add('10', 1)
+		nutrition.add('20', 2)
+		nutrition.add('30', 3)
+		self.assertEqual({ '0': 0, '10': 1, '20': 2, '30': 3 }, nutrition.all())
+		nutrition.remove(*nutrition.since(20))
+		self.assertEqual({ '0': 0, '10': 1}, nutrition.all())
