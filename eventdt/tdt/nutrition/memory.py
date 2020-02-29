@@ -20,8 +20,8 @@ class MemoryNutritionStore(NutritionStore):
 	The inner dictionary has the terms as keys and their nutrition as values.
 
 	:ivar store: The nutrition store as a dictionary.
-				 The keys are the timestamps, and the values are the nutrition data as a dictionary.
-				 Each inner dictionary has terms as keys and the nutrition as values.
+				 The keys are the timestamps, and the values are the nutrition data.
+				 The nutrition data can be any value.
 	:vartype store: dict
 	"""
 
@@ -43,8 +43,8 @@ class MemoryNutritionStore(NutritionStore):
 		:param timestamp: The timestamp of the nutrition data.
 		:type timestamp: int
 		:param nutrition: The nutrition data to add.
-						  The data is a dictionary, where the key is the term and the value is the nutrition.
-		:type nutrition: dict
+				 		  The nutrition data can be any value.
+		:type nutrition: any
 		"""
 
 		self.store[int(timestamp)] = nutrition

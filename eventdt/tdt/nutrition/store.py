@@ -42,8 +42,8 @@ class NutritionStore(ABC):
 		:param timestamp: The timestamp of the nutrition data.
 		:type timestamp: int
 		:param nutrition: The nutrition data to add.
-						  The data is a dictionary, where the key is the term and the value is the nutrition.
-		:type nutrition: dict
+						  The nutrition data can be any value.
+		:type nutrition: any
 		"""
 
 		pass
