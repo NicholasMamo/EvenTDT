@@ -4,7 +4,14 @@ This store is a simple and efficient implementation because there is little over
 However, the accumulation of nutrition data necessitates that old data is cleared routinely.
 """
 
-from .nutrition_store import NutritionStore
+import os
+import sys
+
+path = os.path.dirname(__file__)
+if path not in sys.path:
+    sys.path.append(path)
+
+from store import NutritionStore
 
 class MemoryNutritionStore(NutritionStore):
 	"""
@@ -25,7 +32,7 @@ class MemoryNutritionStore(NutritionStore):
 
 		self.store = { }
 
-	def add_nutrition_set(self, timestamp, nutrition_set):
+	def add(self, timestamp, nutrition_set):
 		"""
 		Add a nutrition set to the store at the given timestamp.
 
@@ -38,7 +45,7 @@ class MemoryNutritionStore(NutritionStore):
 		timestamp = int(timestamp)
 		self.store[timestamp] = nutrition_set
 
-	def get_nutrition_set(self, timestamp):
+	def get(self, timestamp):
 		"""
 		Get the nutrition set at the given timestamp.
 
@@ -52,7 +59,7 @@ class MemoryNutritionStore(NutritionStore):
 		timestamp = int(timestamp)
 		return self.store.get(timestamp, None)
 
-	def get_all_nutrition_sets(self):
+	def all(self):
 		"""
 		Get all the nutrition sets.
 
@@ -61,30 +68,6 @@ class MemoryNutritionStore(NutritionStore):
 		"""
 
 		return self.store
-
-	def get_recent_nutrition_sets(self, sets, timestamp=None):
-		"""
-		Get a list of nutrition sets.
-		Start from the given timestamp and work backwards.
-		If no timestamp is given, start from the most recent.
-		Return a list of nutrition sets in reverse chronological order.
-
-		:param sets: The number of nutrition sets to return.
-		:type sets: int
-		:param timestamp: The timestamp before which all the returned nutrition sets should be.
-		:type timestamp: int
-
-		:return: The recent nutrition sets.
-		:rtype: list
-		"""
-
-		timestamp = int(timestamp) if timestamp is not None else timestamp
-		keys = sorted(self.store.keys())[::-1] # get the keys and sort them in descending order
-		keys = [ key for key in keys if key < timestamp ] if timestamp is not None else keys # filter them by timestamp
-		keys = keys[:sets] if sets is not None else keys # only retain a subset
-
-		nutrition_sets = [ self.store[key] for key in keys ] # compile the nutrition sets
-		return nutrition_sets
 
 	def between(self, start, end):
 		"""
@@ -107,7 +90,7 @@ class MemoryNutritionStore(NutritionStore):
 
 		return { timestamp: self.store[timestamp] for timestamp in keys }
 
-	def remove_old_nutrition_sets(self, timestamp):
+	def remove(self, timestamp):
 		"""
 		Remove nutrition sets that are older than the given timestamp.
 
