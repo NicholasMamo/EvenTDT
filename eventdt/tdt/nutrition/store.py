@@ -40,10 +40,12 @@ class NutritionStore(ABC):
 			This function overwrites any data at the given timestamp.
 
 		:param timestamp: The timestamp of the nutrition data.
-		:type timestamp: int
+		:type timestamp: int or str
 		:param nutrition: The nutrition data to add.
 						  The nutrition data can be any value.
 		:type nutrition: any
+
+		:raises TypeError: When the timestamp cannot be type-cast into an integer.
 		"""
 
 		pass
@@ -54,12 +56,13 @@ class NutritionStore(ABC):
 		Get the nutrition data at the given timestamp.
 
 		:param timestamp: The timestamp whose nutrition is to be returned.
-		:type timestamp: int
+		:type timestamp: int or str
 
 		:return: The nutrition at the given timestamp.
 		:rtype: any
 
 		:raises IndexError: When there is no nutrition data at the given timestamp.
+		:raises TypeError: When the timestamp cannot be type-cast into an integer.
 		"""
 
 		pass
@@ -86,14 +89,16 @@ class NutritionStore(ABC):
 
 		:param start: The first timestamp that should be included in the returned nutrition data.
 					  If no time window with the given timestamp exists, all returned time windows succeed it.
-		:type start: int
+		:type start: int or str
 		:param end: All the nutrition data from the beginning until the given timestamp.
 					Any nutrition data at the end timestamp is not returned.
-		:type end: int
+		:type end: int or str
 
 		:return: All the nutrition data between the given timestamps.
 				 The start timestamp is inclusive, the end timestamp is exclusive.
 		:rtype: dict
+
+		:raises TypeError: When the timestamp cannot be type-cast into an integer.
 		"""
 
 		pass
@@ -108,14 +113,16 @@ class NutritionStore(ABC):
 
 		:param start: The first timestamp that should be included in the returned nutrition data.
 					  If no time window with the given timestamp exists, all returned time windows succeed it.
-		:type start: int
+		:type start: int or str
 
 		:return: All the nutrition data from the given timestamp onward.
 		:rtype: dict
+
+		:raises TypeError: When the timestamp cannot be type-cast into an integer.
 		"""
 
 		last = sorted(self.all().keys())[-1]
-		return self.between(start, last + 1)
+		return self.between(intr(start), last + 1)
 
 	def until(self, end):
 		"""
@@ -126,14 +133,16 @@ class NutritionStore(ABC):
 			The end timestamp is exclusive.
 
 		:param end: The timestamp before which nutrition data should be returned.
-		:type end: int
+		:type end: int or str
 
 		:return: All the nutrition data from the beginning until the given timestamp.
 				 Any nutrition data at the end timestamp is not returned.
 		:rtype: dict
+
+		:raises TypeError: When the timestamp cannot be type-cast into an integer.
 		"""
 
-		return self.between(0, end)
+		return self.between(0, int(end))
 
 	@abstractmethod
 	def remove(self, timestamps):
@@ -141,7 +150,7 @@ class NutritionStore(ABC):
 		Remove nutrition data from the given list of timestamps.
 
 		:param timestamps: The timestamps whose nutrition data is to be removed.
-		:type timestamps: list of int
+		:type timestamps: list of int or str
 		"""
 
 		pass
