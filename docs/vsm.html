@@ -175,6 +175,38 @@ Keep reading to learn more about the different VSM classes available in EvenTDT.
 <p>The <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> is the basis of the Vector Space Model (VSM).
 The class contains is used in clustering and Natural Language Processing (NLP) to represent documents.</p>
 <dl class="class">
+<dt id="vsm.vector.VectorSpace">
+<em class="property">class </em><code class="sig-name descname">VectorSpace</code><a class="headerlink" href="#vsm.vector.VectorSpace" title="Permalink to this definition">¶</a></dt>
+<dd><p>The vector space is the space of all dimensions.
+This class is based on a normal dictionary.
+The only thing that changes is that when a non-existent dimension is requested, a value of 0 is returned.</p>
+<dl class="method">
+<dt id="vsm.vector.VectorSpace.__getitem__">
+<code class="sig-name descname">__getitem__</code><span class="sig-paren">(</span><em class="sig-param">key</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector.VectorSpace.__getitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the dimension represented by the given key.
+If the dimension does not exist, 0 is returned instead.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>key</strong> (<em>str</em>) – The name of the dimension whose value will be fetched.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The magnitude of the dimension, or 0 if it does not exist.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="vsm.vector.VectorSpace.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#vsm.vector.VectorSpace.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="vsm.vector.Vector">
 <em class="property">class </em><code class="sig-name descname">Vector</code><span class="sig-paren">(</span><em class="sig-param">dimensions=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector.Vector" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> class is the smallest building block in the Vector Space Model (VSM).
@@ -182,7 +214,7 @@ It is used for tasks such as clustering and to represent documents.
 Vectors are based on <code class="xref py py-class docutils literal notranslate"><span class="pre">Attributable</span></code> so that they may have additional properties.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
-<dd class="field-odd"><p><strong>dimensions</strong> (<em>dict</em>) – The dimensions—name-value pairs—of the Vector.</p>
+<dd class="field-odd"><p><a class="reference internal" href="#vsm.vector.Vector.dimensions" title="vsm.vector.Vector.dimensions"><strong>dimensions</strong></a> (<em>dict</em>) – The dimensions—name-value pairs—of the vector.</p>
 </dd>
 </dl>
 <dl class="method">
@@ -200,85 +232,17 @@ If none are given, they are initialized to an empty dict.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="vsm.vector.Vector.initialize_dimension">
-<code class="sig-name descname">initialize_dimension</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector.Vector.initialize_dimension" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize an dimension’s value if it does not eixst.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code>) – The dimension’s name.</p></li>
-<li><p><strong>value</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code>) – The default value for the dimension, assigned if a value does not already exist.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="vsm.vector.Vector.set_dimensions">
-<code class="sig-name descname">set_dimensions</code><span class="sig-paren">(</span><em class="sig-param">dimensions=None</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector.Vector.set_dimensions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Overwrite the dimensions, clearing them if nothing is given.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>dimensions</strong> (<em>dict</em>) – The new set of dimensions.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="vsm.vector.Vector.set_dimension">
-<code class="sig-name descname">set_dimension</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">value=None</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector.Vector.set_dimension" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set a single dimension.
-If no value is provided, the dimension is unset.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code>) – The dimension’s name.</p></li>
-<li><p><strong>value</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code>) – The default value for the dimension, assigned if a value does not already exist.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="vsm.vector.Vector.get_dimension">
-<code class="sig-name descname">get_dimension</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector.Vector.get_dimension" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the value of a single dimension.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code>) – The dimension’s name.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="vsm.vector.Vector.get_dimensions">
-<code class="sig-name descname">get_dimensions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector.Vector.get_dimensions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get all the dimensions.</p>
+<dt id="vsm.vector.Vector.dimensions">
+<em class="property">property </em><code class="sig-name descname">dimensions</code><a class="headerlink" href="#vsm.vector.Vector.dimensions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the dimensions of the vector.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The dimensions dict.</p>
+<dd class="field-odd"><p>The dimensions of the vector.</p>
 </dd>
-<dt class="field-even">Type</dt>
-<dd class="field-even"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="vsm.vector.Vector.clear_dimension">
-<code class="sig-name descname">clear_dimension</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector.Vector.clear_dimension" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove a single dimension.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code>) – The name of the dimension too remove.</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#vsm.vector.VectorSpace" title="vsm.vector.VectorSpace"><code class="xref py py-class docutils literal notranslate"><span class="pre">VectorSpace</span></code></a></p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="vsm.vector.Vector.clear_dimensions">
-<code class="sig-name descname">clear_dimensions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector.Vector.clear_dimensions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove all dimensions.</p>
 </dd></dl>
 
 <dl class="method">
@@ -732,7 +696,7 @@ The function returns the active clusters.</p>
 </dd></dl>
 
 <span class="target" id="module-vsm.clustering.algorithms.no_k_means"></span><p>The No-K-Means algorithm is an incremental clustering algorithm, described in research by <a class="reference external" href="https://www.researchgate.net/profile/Colin_Layfield/publication/303893387_Extended_No-K-Means_for_Search_Results_Clustering/links/575acd4208ae9a9c95518dfd.pdf">Azzopardi et al. in 2016</a>.
-The algorithm compares incoming documents to existing clusters.
+The algorithm compares incoming vectors to existing clusters.
 The vector is added to the most similar cluster if the similarity exceeds a certain threshold.
 Otherwise, the vector is added to a new cluster.</p>
 <p>Since clusters accumulate over time, the algorithm also has a freeze period.
@@ -740,75 +704,221 @@ Clusters that have not been updated with new vectors for an equivalent period ar
 No new vectors can be added to frozen clusters.</p>
 <dl class="class">
 <dt id="vsm.clustering.algorithms.no_k_means.NoKMeans">
-<em class="property">class </em><code class="sig-name descname">NoKMeans</code><a class="headerlink" href="#vsm.clustering.algorithms.no_k_means.NoKMeans" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">NoKMeans</code><span class="sig-paren">(</span><em class="sig-param">threshold</em>, <em class="sig-param">freeze_period</em>, <em class="sig-param">store_frozen=False</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.no_k_means.NoKMeans" title="Permalink to this definition">¶</a></dt>
 <dd><p>The No-K-Means algorithm is an incremental clustering algorithm.
 Incoming vectors are added to the most similar cluster if the similarity exceeds a threshold.
 Otherwise, a new cluster is created just for them.</p>
-<p>This class contains one additional field - the frozen clusters.
+<p>This class contains one additional field: the frozen clusters.
 Inactive clusters are frozen out, and are not checked with incoming vectors anymore.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>By default, frozen clusters are not retained because they hog memory over time.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
-<dd class="field-odd"><p><strong>_frozen_clusters</strong> (list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code> instances) – A list of clusters that have been retired.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>frozen_clusters</strong> (list of <a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instances) – A list of clusters that have been retired.</p></li>
+<li><p><strong>threshold</strong> (<em>float</em>) – The minimum similarity between a vector and a cluster’s centroid.
+If any cluster exceeds this threshold, the vector is added to that cluster.</p></li>
+<li><p><strong>freeze_period</strong> (<em>int</em>) – The number of vectors that arrive without being added to a cluster before it is frozen.</p></li>
+<li><p><strong>store_frozen</strong> (<em>bool</em>) – A boolean indicating whether frozen clusters should be retained.</p></li>
+</ul>
 </dd>
 </dl>
 <dl class="method">
 <dt id="vsm.clustering.algorithms.no_k_means.NoKMeans.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.no_k_means.NoKMeans.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize the algorithm with the clusters, the frozen clusters and a similarity measure.</p>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">threshold</em>, <em class="sig-param">freeze_period</em>, <em class="sig-param">store_frozen=False</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.no_k_means.NoKMeans.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the algorithm with the clusters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>threshold</strong> (<em>float</em>) – The minimum similarity between a vector and a cluster’s centroid.
+If any cluster exceeds this threshold, the vector is added to that cluster.</p></li>
+<li><p><strong>freeze_period</strong> (<em>int</em>) – The number of vectors that arrive without being added to a cluster before it is frozen.</p></li>
+<li><p><strong>store_frozen</strong> (<em>bool</em>) – A boolean indicating whether frozen clusters should be retained.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="vsm.clustering.algorithms.no_k_means.NoKMeans.cluster">
-<code class="sig-name descname">cluster</code><span class="sig-paren">(</span><em class="sig-param">vectors</em>, <em class="sig-param">threshold</em>, <em class="sig-param">freeze_period</em>, <em class="sig-param">store_frozen=True</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.no_k_means.NoKMeans.cluster" title="Permalink to this definition">¶</a></dt>
-<dd><p>Cluster the given documents.</p>
+<code class="sig-name descname">cluster</code><span class="sig-paren">(</span><em class="sig-param">vectors</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.no_k_means.NoKMeans.cluster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cluster the given vectors.
+Any additional arguments and keyword arguments are passed on to the <code class="xref py py-func docutils literal notranslate"><span class="pre">similarity()</span></code> function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>vectors</strong> (list of <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>) – The list of vectors to cluster.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The clusters that received vectors.</p>
+</dd>
+<dt class="field-odd">Rtpye</dt>
+<dd class="field-odd"><p>list of <a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instances</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="vsm.clustering.algorithms.no_k_means.NoKMeans._update_age">
+<code class="sig-name descname">_update_age</code><span class="sig-paren">(</span><em class="sig-param">cluster</em>, <em class="sig-param">increment=1</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.no_k_means.NoKMeans._update_age" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the age of the given cluster.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>vectors</strong> (list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code> instances) – The list of vectors to cluster.</p></li>
-<li><p><strong>threshold</strong> – The minimum similarity for a vector to be added to a cluster.</p></li>
-<li><p><strong>freeze_period</strong> (<em>int</em>) – The number of documents that arrive without being added to a cluster, before it is frozen.</p></li>
-<li><p><strong>store_frozen</strong> (<em>bool</em>) – A boolean indicating whether frozen clusters should be retained.
-This should be turned off in long-running systems to avoid memory leaks.</p></li>
+<li><p><strong>cluster</strong> (<a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>) – The cluster whose age will be incremented.</p></li>
+<li><p><strong>increment</strong> (<em>int</em>) – The amount by which to increment the age.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The clusters that received documents, and which are not frozen.</p>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="vsm.clustering.algorithms.no_k_means.NoKMeans._to_freeze">
+<code class="sig-name descname">_to_freeze</code><span class="sig-paren">(</span><em class="sig-param">cluster</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.no_k_means.NoKMeans._to_freeze" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the cluster’s age is high enough that the cluster should be frozen.
+A cluster should be frozen if its age is longer than the freeze period.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cluster</strong> (<a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>) – The cluster whose age will be incremented.</p>
 </dd>
-<dt class="field-odd">Rtpye</dt>
-<dd class="field-odd"><p>list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code> instances</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A boolean indicating whether the cluster should be frozen.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="vsm.clustering.algorithms.no_k_means.NoKMeans._freeze">
+<code class="sig-name descname">_freeze</code><span class="sig-paren">(</span><em class="sig-param">cluster</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.no_k_means.NoKMeans._freeze" title="Permalink to this definition">¶</a></dt>
+<dd><p>Freeze the given cluster.
+This removes the cluster from the list of active clusters.
+Simultaneously, it is added to the list of frozen clusters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cluster</strong> (<a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>) – The cluster whose age will be incremented.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – When the cluster is not active.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="vsm.clustering.algorithms.no_k_means.NoKMeans._closest_cluster">
+<code class="sig-name descname">_closest_cluster</code><span class="sig-paren">(</span><em class="sig-param">vector</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.no_k_means.NoKMeans._closest_cluster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the closest cluster to the vector and return the similarity score.
+This function only compares the vector with active clusters.
+Any additional arguments and keyword arguments are passed on to the <code class="xref py py-func docutils literal notranslate"><span class="pre">similarity()</span></code> function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>vector</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>) – The vector to compare with all clusters.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A tuple consisting of the closest cluster and the similarity between it and the vector.
+If there are no active clusters, <cite>None</cite> is returned instead.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="vsm.clustering.algorithms.no_k_means.NoKMeans._reset_age">
+<code class="sig-name descname">_reset_age</code><span class="sig-paren">(</span><em class="sig-param">cluster</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.no_k_means.NoKMeans._reset_age" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the cluster age to zero.
+This function is called when an existing cluster receives a new vector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cluster</strong> (<a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>) – The cluster whose age will be incremented.</p>
 </dd>
 </dl>
 </dd></dl>
 
 </dd></dl>
 
+<span class="target" id="module-vsm.clustering.algorithms.temporal_no_k_means"></span><p>The temporal No-K-Means is a variant of the No-K-Means.
+Differently from the No-K-Means, clusters are frozen if they have been inactive for a long period of time.
+In the No-K-Means, the freeze period is based on the number of received vectors.</p>
 <dl class="class">
-<dt id="vsm.clustering.algorithms.no_k_means.TemporalNoKMeans">
-<em class="property">class </em><code class="sig-name descname">TemporalNoKMeans</code><a class="headerlink" href="#vsm.clustering.algorithms.no_k_means.TemporalNoKMeans" title="Permalink to this definition">¶</a></dt>
-<dd><p>The Temporal No-K-Means algorithm is an incremental clustering algorithm.
-In contrast with the normal No-K-Means, its freeze period is in seconds, not on the number of vectors seen so far.
-It is assumed that the vectors are provided in chronological order across function calls.
-Within function calls, vectors are sorted.</p>
+<dt id="vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans">
+<em class="property">class </em><code class="sig-name descname">TemporalNoKMeans</code><span class="sig-paren">(</span><em class="sig-param">threshold</em>, <em class="sig-param">freeze_period</em>, <em class="sig-param">store_frozen=False</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans" title="Permalink to this definition">¶</a></dt>
+<dd><p>The temporal No-K-Means is a variant of the No-K-Means.
+Differently from the No-K-Means, clusters are frozen if they have been inactive for a long period of time.
+In the No-K-Means, the freeze period is based on the number of received vectors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>threshold</strong> (<em>float</em>) – The minimum similarity between a vector and a cluster’s centroid.
+If any cluster exceeds this threshold, the vector is added to that cluster.</p></li>
+<li><p><strong>freeze_period</strong> (<em>int</em>) – The number of seconds of inactivity of a cluster before it is frozen.</p></li>
+<li><p><strong>store_frozen</strong> (<em>bool</em>) – A boolean indicating whether frozen clusters should be retained.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="method">
-<dt id="vsm.clustering.algorithms.no_k_means.TemporalNoKMeans.cluster">
-<code class="sig-name descname">cluster</code><span class="sig-paren">(</span><em class="sig-param">vectors</em>, <em class="sig-param">threshold</em>, <em class="sig-param">freeze_period</em>, <em class="sig-param">time_attribute</em>, <em class="sig-param">store_frozen=True</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.no_k_means.TemporalNoKMeans.cluster" title="Permalink to this definition">¶</a></dt>
-<dd><p>Cluster the given documents.</p>
+<dt id="vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">threshold</em>, <em class="sig-param">freeze_period</em>, <em class="sig-param">store_frozen=False</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the algorithm with the clusters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>vectors</strong> (list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code> instances) – The list of vectors to cluster.</p></li>
-<li><p><strong>threshold</strong> – The minimum similarity for a vector to be added to a cluster.</p></li>
-<li><p><strong>freeze_period</strong> (<em>int</em>) – The time (in seconds) of inactivity before a cluster is frozen.</p></li>
-<li><p><strong>time_attribute</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code>) – The key that stores the vector’s associated timestamp.</p></li>
-<li><p><strong>store_frozen</strong> (<em>bool</em>) – A boolean indicating whether frozen clusters should be retained.
-This should be turned off in long-running systems to avoid memory leaks.</p></li>
+<li><p><strong>threshold</strong> (<em>float</em>) – The minimum similarity between a vector and a cluster’s centroid.
+If any cluster exceeds this threshold, the vector is added to that cluster.</p></li>
+<li><p><strong>freeze_period</strong> (<em>int</em>) – The number of seconds of inactivity of a cluster before it is frozen.</p></li>
+<li><p><strong>store_frozen</strong> (<em>bool</em>) – A boolean indicating whether frozen clusters should be retained.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans.cluster">
+<code class="sig-name descname">cluster</code><span class="sig-paren">(</span><em class="sig-param">vectors</em>, <em class="sig-param">time='timestamp'</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans.cluster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cluster the given vectors.
+Any additional arguments and keyword arguments are passed on to the <code class="xref py py-func docutils literal notranslate"><span class="pre">similarity()</span></code> function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vectors</strong> (list of <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>) – The list of vectors to cluster.</p></li>
+<li><p><strong>time</strong> (<em>str</em>) – The name of the vector attribute used as weight.
+The time value is expected to be a float or integer.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The clusters that received documents, and which are not frozen.</p>
+<dd class="field-even"><p>The clusters that received vectors, and which are not frozen.</p>
 </dd>
 <dt class="field-odd">Rtpye</dt>
-<dd class="field-odd"><p>list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code> instances</p>
+<dd class="field-odd"><p>list of <a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instances</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans._update_age">
+<code class="sig-name descname">_update_age</code><span class="sig-paren">(</span><em class="sig-param">cluster</em>, <em class="sig-param">timestamp</em>, <em class="sig-param">time</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans._update_age" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the age of the given cluster.
+The age is calculated by subtracting from the current timestamp the time of the last vector in the cluster.
+It is assumed that the last vector in the cluster is the most recently-published.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cluster</strong> (<a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>) – The cluster whose age will be incremented.</p></li>
+<li><p><strong>timestamp</strong> (<em>int</em>) – The current timestamp of the clustering algorithm.
+This is equivalent to the last received vector.</p></li>
+<li><p><strong>time</strong> (<em>str</em>) – The name of the vector attribute used as weight.
+The time value is expected to be a float or integer.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>IndexError</strong> – When the cluster has no vectors.</p></li>
+<li><p><strong>TypeError</strong> – When the vector has no time attribute.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

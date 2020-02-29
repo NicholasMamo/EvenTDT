@@ -88,6 +88,7 @@
 <li class="toctree-l1"><a class="reference internal" href="nlp.html">3. Natural Language Processing (NLP)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="wikinterface.html">4. Wikinterface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="apd.html">5. Automatic Participant Detection (APD)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tdt.html">6. Topic Detection and Tracking (TDT)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="queues.html">6. Queues</a></li>
 <li class="toctree-l1"><a class="reference internal" href="other.html">7. Other</a></li>
 </ul>
@@ -174,6 +175,7 @@
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
+ | <a href="#U"><strong>U</strong></a>
  | <a href="#V"><strong>V</strong></a>
  | <a href="#W"><strong>W</strong></a>
  
@@ -181,6 +183,8 @@
 <h2 id="_">_</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="vsm.html#vsm.vector.VectorSpace.__getitem__">__getitem__() (VectorSpace method)</a>
+</li>
       <li><a href="vsm.html#vsm.clustering.cluster.Cluster.__init__">__init__() (Cluster method)</a>
 
       <ul>
@@ -200,9 +204,13 @@
 </li>
         <li><a href="vsm.html#vsm.clustering.algorithms.no_k_means.NoKMeans.__init__">(NoKMeans method)</a>
 </li>
+        <li><a href="tdt.html#tdt.nutrition.store.NutritionStore.__init__">(NutritionStore method)</a>
+</li>
         <li><a href="apd.html#apd.participant_detector.ParticipantDetector.__init__">(ParticipantDetector method)</a>
 </li>
         <li><a href="queues.html#queues.queue.queue.Queue.__init__">(Queue method)</a>
+</li>
+        <li><a href="vsm.html#vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans.__init__">(TemporalNoKMeans method)</a>
 </li>
         <li><a href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme.__init__">(TermWeightingScheme method)</a>
 </li>
@@ -240,6 +248,8 @@
 </li>
         <li><a href="apd.html#apd.filters.filter.Filter.__weakref__">(Filter attribute)</a>
 </li>
+        <li><a href="tdt.html#tdt.nutrition.store.NutritionStore.__weakref__">(NutritionStore attribute)</a>
+</li>
         <li><a href="apd.html#apd.participant_detector.ParticipantDetector.__weakref__">(ParticipantDetector attribute)</a>
 </li>
         <li><a href="apd.html#apd.postprocessors.postprocessor.Postprocessor.__weakref__">(Postprocessor attribute)</a>
@@ -256,10 +266,14 @@
 </li>
         <li><a href="nlp.html#nlp.tokenizer.Tokenizer.__weakref__">(Tokenizer attribute)</a>
 </li>
+        <li><a href="vsm.html#vsm.vector.VectorSpace.__weakref__">(VectorSpace attribute)</a>
+</li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apd.html#apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator._add_to_graph">_add_to_graph() (WikipediaExtrapolator method)</a>
+</li>
+      <li><a href="vsm.html#vsm.clustering.algorithms.no_k_means.NoKMeans._closest_cluster">_closest_cluster() (NoKMeans method)</a>
 </li>
       <li><a href="apd.html#apd.extractors.local.entity_extractor.EntityExtractor._combine_adjacent_entities">_combine_adjacent_entities() (EntityExtractor method)</a>
 </li>
@@ -270,6 +284,8 @@
       <li><a href="apd.html#apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver._disambiguate">_disambiguate() (WikipediaNameResolver method)</a>
 </li>
       <li><a href="apd.html#apd.extractors.local.entity_extractor.EntityExtractor._extract_entities">_extract_entities() (EntityExtractor method)</a>
+</li>
+      <li><a href="vsm.html#vsm.clustering.algorithms.no_k_means.NoKMeans._freeze">_freeze() (NoKMeans method)</a>
 </li>
       <li><a href="wikinterface.html#wikinterface.links._get_all_links">_get_all_links() (in module wikinterface.links)</a>
 </li>
@@ -315,6 +331,8 @@
         <li><a href="apd.html#apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver._remove_brackets">(WikipediaSearchResolver method)</a>
 </li>
       </ul></li>
+      <li><a href="vsm.html#vsm.clustering.algorithms.no_k_means.NoKMeans._reset_age">_reset_age() (NoKMeans method)</a>
+</li>
       <li><a href="apd.html#apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver._resolve_unambiguous_candidates">_resolve_unambiguous_candidates() (WikipediaNameResolver method)</a>
 </li>
       <li><a href="nlp.html#nlp.tokenizer.Tokenizer._split_hashtags">_split_hashtags() (Tokenizer method)</a>
@@ -325,6 +343,14 @@
         <li><a href="apd.html#apd.scorers.local.tf_scorer.TFScorer._sum">(TFScorer method)</a>
 </li>
       </ul></li>
+      <li><a href="vsm.html#vsm.clustering.algorithms.no_k_means.NoKMeans._to_freeze">_to_freeze() (NoKMeans method)</a>
+</li>
+      <li><a href="vsm.html#vsm.clustering.algorithms.no_k_means.NoKMeans._update_age">_update_age() (NoKMeans method)</a>
+
+      <ul>
+        <li><a href="vsm.html#vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans._update_age">(TemporalNoKMeans method)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -333,9 +359,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="config.html#config.example.conf.ACCOUNTS">ACCOUNTS (in module config.example.conf)</a>
 </li>
+      <li><a href="tdt.html#tdt.nutrition.store.NutritionStore.add">add() (NutritionStore method)</a>
+</li>
       <li><a href="vsm.html#vsm.clustering.cluster.Cluster.add_vector">add_vector() (Cluster method)</a>
 </li>
       <li><a href="vsm.html#vsm.clustering.cluster.Cluster.add_vectors">add_vectors() (Cluster method)</a>
+</li>
+      <li><a href="tdt.html#tdt.nutrition.store.NutritionStore.all">all() (NutritionStore method)</a>
 </li>
       <li><a href="apd.html#module-apd">apd (module)</a>
 </li>
@@ -357,10 +387,10 @@
 </li>
       <li><a href="apd.html#module-apd.participant_detector">apd.participant_detector (module)</a>
 </li>
-      <li><a href="apd.html#module-apd.postprocessors.external.wikipedia_postprocessor">apd.postprocessors.external.wikipedia_postprocessor (module)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="apd.html#module-apd.postprocessors.external.wikipedia_postprocessor">apd.postprocessors.external.wikipedia_postprocessor (module)</a>
+</li>
       <li><a href="apd.html#module-apd.postprocessors.postprocessor">apd.postprocessors.postprocessor (module)</a>
 </li>
       <li><a href="apd.html#module-apd.resolvers.external.wikipedia_name_resolver">apd.resolvers.external.wikipedia_name_resolver (module)</a>
@@ -395,6 +425,10 @@
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="tdt.html#tdt.nutrition.store.NutritionStore.between">between() (NutritionStore method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="nlp.html#nlp.term_weighting.local_schemes.boolean.Boolean">Boolean (class in nlp.term_weighting.local_schemes.boolean)</a>
 </li>
   </ul></td>
@@ -403,10 +437,6 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="vsm.html#vsm.vector.Vector.clear_dimension">clear_dimension() (Vector method)</a>
-</li>
-      <li><a href="vsm.html#vsm.vector.Vector.clear_dimensions">clear_dimensions() (Vector method)</a>
-</li>
       <li><a href="vsm.html#vsm.clustering.cluster.Cluster">Cluster (class in vsm.clustering.cluster)</a>
 </li>
       <li><a href="vsm.html#vsm.clustering.algorithms.clustering.ClusteringAlgorithm.cluster">cluster() (ClusteringAlgorithm method)</a>
@@ -414,7 +444,7 @@
       <ul>
         <li><a href="vsm.html#vsm.clustering.algorithms.no_k_means.NoKMeans.cluster">(NoKMeans method)</a>
 </li>
-        <li><a href="vsm.html#vsm.clustering.algorithms.no_k_means.TemporalNoKMeans.cluster">(TemporalNoKMeans method)</a>
+        <li><a href="vsm.html#vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans.cluster">(TemporalNoKMeans method)</a>
 </li>
       </ul></li>
       <li><a href="vsm.html#vsm.clustering.algorithms.clustering.ClusteringAlgorithm">ClusteringAlgorithm (class in vsm.clustering.algorithms.clustering)</a>
@@ -463,11 +493,13 @@
 </li>
       <li><a href="queues.html#queues.queue.queue.Queue.dequeue_all">dequeue_all() (Queue method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apd.html#apd.participant_detector.ParticipantDetector.detect">detect() (ParticipantDetector method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apd.html#apd.scorers.local.df_scorer.DFScorer">DFScorer (class in apd.scorers.local.df_scorer)</a>
+</li>
+      <li><a href="vsm.html#vsm.vector.Vector.dimensions">dimensions() (Vector property)</a>
 </li>
       <li><a href="nlp.html#nlp.document.Document">Document (class in nlp.document)</a>
 </li>
@@ -541,9 +573,7 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="vsm.html#vsm.vector.Vector.get_dimension">get_dimension() (Vector method)</a>
-</li>
-      <li><a href="vsm.html#vsm.vector.Vector.get_dimensions">get_dimensions() (Vector method)</a>
+      <li><a href="tdt.html#tdt.nutrition.store.NutritionStore.get">get() (NutritionStore method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -571,8 +601,6 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="vsm.html#vsm.vector.Vector.initialize_dimension">initialize_dimension() (Vector method)</a>
-</li>
       <li><a href="wikinterface.html#wikinterface.is_error_response">is_error_response() (in module wikinterface)</a>
 </li>
       <li><a href="wikinterface.html#wikinterface.info.is_person">is_person() (in module wikinterface.info)</a>
@@ -635,10 +663,10 @@
 </li>
       <li><a href="nlp.html#module-nlp.term_weighting.local_schemes.boolean">nlp.term_weighting.local_schemes.boolean (module)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="nlp.html#module-nlp.term_weighting.local_schemes.tf">nlp.term_weighting.local_schemes.tf (module)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="nlp.html#module-nlp.term_weighting.scheme">nlp.term_weighting.scheme (module)</a>
 </li>
       <li><a href="nlp.html#module-nlp.term_weighting.tf">nlp.term_weighting.tf (module)</a>
@@ -655,6 +683,8 @@
         <li><a href="vsm.html#vsm.vector.Vector.normalize">(Vector method)</a>
 </li>
       </ul></li>
+      <li><a href="tdt.html#tdt.nutrition.store.NutritionStore">NutritionStore (class in tdt.nutrition.store)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -692,6 +722,8 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="vsm.html#vsm.clustering.cluster.Cluster.recalculate_centroid">recalculate_centroid() (Cluster method)</a>
+</li>
+      <li><a href="tdt.html#tdt.nutrition.store.NutritionStore.remove">remove() (NutritionStore method)</a>
 </li>
       <li><a href="vsm.html#vsm.clustering.cluster.Cluster.remove_vector">remove_vector() (Cluster method)</a>
 </li>
@@ -749,15 +781,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apd.html#apd.scorers.scorer.Scorer">Scorer (class in apd.scorers.scorer)</a>
 </li>
-      <li><a href="vsm.html#vsm.vector.Vector.set_dimension">set_dimension() (Vector method)</a>
-</li>
-      <li><a href="vsm.html#vsm.vector.Vector.set_dimensions">set_dimensions() (Vector method)</a>
-</li>
       <li><a href="other.html#logger.logger.set_logging_level">set_logging_level() (in module logger.logger)</a>
 </li>
       <li><a href="tools.html#tools.collect.setup_args">setup_args() (in module tools.collect)</a>
 </li>
       <li><a href="vsm.html#vsm.clustering.cluster.Cluster.similarity">similarity() (Cluster method)</a>
+</li>
+      <li><a href="tdt.html#tdt.nutrition.store.NutritionStore.since">since() (NutritionStore method)</a>
 </li>
       <li><a href="vsm.html#vsm.clustering.cluster.Cluster.size">size() (Cluster method)</a>
 </li>
@@ -769,7 +799,11 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="queues.html#queues.queue.queue.Queue.tail">tail() (Queue method)</a>
 </li>
-      <li><a href="vsm.html#vsm.clustering.algorithms.no_k_means.TemporalNoKMeans">TemporalNoKMeans (class in vsm.clustering.algorithms.no_k_means)</a>
+      <li><a href="tdt.html#module-tdt">tdt (module)</a>
+</li>
+      <li><a href="tdt.html#module-tdt.nutrition.store">tdt.nutrition.store (module)</a>
+</li>
+      <li><a href="vsm.html#vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans">TemporalNoKMeans (class in vsm.clustering.algorithms.temporal_no_k_means)</a>
 </li>
       <li><a href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme">TermWeightingScheme (class in nlp.term_weighting.scheme)</a>
 </li>
@@ -785,10 +819,10 @@
 </li>
       <li><a href="apd.html#apd.scorers.local.tf_scorer.TFScorer">TFScorer (class in apd.scorers.local.tf_scorer)</a>
 </li>
-      <li><a href="apd.html#apd.filters.local.threshold_filter.ThresholdFilter">ThresholdFilter (class in apd.filters.local.threshold_filter)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="apd.html#apd.filters.local.threshold_filter.ThresholdFilter">ThresholdFilter (class in apd.filters.local.threshold_filter)</a>
+</li>
       <li><a href="vsm.html#vsm.clustering.cluster.Cluster.to_array">to_array() (Cluster method)</a>
 
       <ul>
@@ -814,12 +848,22 @@
   </ul></td>
 </tr></table>
 
+<h2 id="U">U</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="tdt.html#tdt.nutrition.store.NutritionStore.until">until() (NutritionStore method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="V">V</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="vsm.html#vsm.vector.Vector">Vector (class in vsm.vector)</a>
 </li>
       <li><a href="vsm.html#vsm.clustering.cluster.Cluster.vectors">vectors() (Cluster property)</a>
+</li>
+      <li><a href="vsm.html#vsm.vector.VectorSpace">VectorSpace (class in vsm.vector)</a>
 </li>
       <li><a href="vsm.html#module-vsm">vsm (module)</a>
 </li>
@@ -828,6 +872,8 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="vsm.html#module-vsm.clustering.algorithms.no_k_means">vsm.clustering.algorithms.no_k_means (module)</a>
+</li>
+      <li><a href="vsm.html#module-vsm.clustering.algorithms.temporal_no_k_means">vsm.clustering.algorithms.temporal_no_k_means (module)</a>
 </li>
       <li><a href="vsm.html#module-vsm.clustering.cluster">vsm.clustering.cluster (module)</a>
 </li>

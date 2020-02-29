@@ -16,6 +16,7 @@ Welcome to EvenTDT's documentation!
    nlp
    wikinterface
    apd
+   tdt
    queues
    other
 

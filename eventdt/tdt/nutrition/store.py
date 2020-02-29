@@ -35,7 +35,7 @@ class NutritionStore(ABC):
 		"""
 		Add a nutrition data to the store at the given timestamp.
 
-		.. note::
+		.. warning::
 
 			This function overwrites any data at the given timestamp.
 
@@ -93,7 +93,7 @@ class NutritionStore(ABC):
 
 		:return: All the nutrition data between the given timestamps.
 				 The start timestamp is inclusive, the end timestamp is exclusive.
-		;rtype: dict
+		:rtype: dict
 		"""
 
 		pass
@@ -130,7 +130,7 @@ class NutritionStore(ABC):
 
 		:return: All the nutrition data from the beginning until the given timestamp.
 				 Any nutrition data at the end timestamp is not returned.
-		:rtype dict
+		:rtype: dict
 		"""
 
 		return self.between(0, end)
