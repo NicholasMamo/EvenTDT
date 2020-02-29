@@ -139,6 +139,8 @@ class NutritionStore(ABC):
 		:rtype: dict
 		"""
 
+		timestamps = [ float(timestamp) for timestamp in self.all().keys() ]
+		last = min(timestamps)
 		return self.between(0, str(end))
 
 	@abstractmethod

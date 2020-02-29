@@ -310,3 +310,48 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		nutrition.add('20', 2)
 		self.assertEqual({ '10': 1, '20': 2 }, nutrition.since(9))
 		self.assertTrue(all(float(timestamp) >= 9 for timestamp in nutrition.since(9)))
+
+	def test_until_exclusive(self):
+		"""
+		Test that when getting nutrition data until a timestamp, the end timestamp is excluded.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		nutrition.add('0', 0)
+		nutrition.add('10', 1)
+		nutrition.add('20', 2)
+		self.assertFalse('10' in nutrition.until('10'))
+
+	def test_until_int(self):
+		"""
+		Test that when getting nutrition data until a timestamp with an integer, the correct data is returned.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		nutrition.add('0', 0)
+		nutrition.add('10', 1)
+		nutrition.add('20', 2)
+		self.assertEqual({ '0': 0 }, nutrition.until(10))
+
+	def test_until_float(self):
+		"""
+		Test that when getting nutrition data until a timestamp with a float, the correct data is returned.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		nutrition.add('0', 0)
+		nutrition.add('10', 1)
+		nutrition.add('20', 2)
+		self.assertEqual({ '0': 0 }, nutrition.until(10.0))
+
+	def test_until(self):
+		"""
+		Test that when getting nutrition data until a timestamp, the correct data is returned.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		nutrition.add('0', 0)
+		nutrition.add('10', 1)
+		nutrition.add('20', 2)
+		self.assertEqual({ '0': 0, '10': 1 }, nutrition.until(20))
+		self.assertTrue(all(float(timestamp) < 20 for timestamp in nutrition.until(20)))
