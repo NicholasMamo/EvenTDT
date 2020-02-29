@@ -44,8 +44,6 @@ class NutritionStore(ABC):
 		:param nutrition: The nutrition data to add.
 						  The nutrition data can be any value.
 		:type nutrition: any
-
-		:raises TypeError: When the timestamp cannot be type-cast into an integer.
 		"""
 
 		pass
