@@ -1,22 +1,29 @@
 """
-Stores nutrition sets in memory.
+The memory nutrition store uses Python dictionaries as data structures to store nutrition data.
+This store is a simple and efficient implementation because there is little overhead.
+However, the accumulation of nutrition data necessitates that old data is cleared routinely.
 """
 
 from .nutrition_store import NutritionStore
 
 class MemoryNutritionStore(NutritionStore):
 	"""
-	Store the nutrition sets in memory as a dictionary.
-	The timestamps are used as keys.
-	The nutrition sets are the corresponding values.
+	A nutrition store that keeps the data in a dictionary.
+	The keys are the timestamps, with each timestamp storing another dictionary.
+	The inner dictionary has the terms as keys and their nutrition as values.
+
+	:ivar store: The nutrition store as a dictionary.
+				 The keys are the timestamps, and the values are the nutrition data as a dictionary.
+				 Each inner dictionary has terms as keys and the nutrition as values.
+	:vartype store: dict
 	"""
 
 	def __init__(self):
 		"""
-		Create the NutritionStore with the actual store.
+		Create the nutrition store as a dictionary.
 		"""
 
-		self._nutrition_store = {}
+		self.store = { }
 
 	def add_nutrition_set(self, timestamp, nutrition_set):
 		"""
@@ -29,7 +36,7 @@ class MemoryNutritionStore(NutritionStore):
 		"""
 
 		timestamp = int(timestamp)
-		self._nutrition_store[timestamp] = nutrition_set
+		self.store[timestamp] = nutrition_set
 
 	def get_nutrition_set(self, timestamp):
 		"""
@@ -43,7 +50,7 @@ class MemoryNutritionStore(NutritionStore):
 		"""
 
 		timestamp = int(timestamp)
-		return self._nutrition_store.get(timestamp, None)
+		return self.store.get(timestamp, None)
 
 	def get_all_nutrition_sets(self):
 		"""
@@ -53,7 +60,7 @@ class MemoryNutritionStore(NutritionStore):
 		:rtype: dict
 		"""
 
-		return self._nutrition_store
+		return self.store
 
 	def get_recent_nutrition_sets(self, sets, timestamp=None):
 		"""
@@ -72,11 +79,11 @@ class MemoryNutritionStore(NutritionStore):
 		"""
 
 		timestamp = int(timestamp) if timestamp is not None else timestamp
-		keys = sorted(self._nutrition_store.keys())[::-1] # get the keys and sort them in descending order
+		keys = sorted(self.store.keys())[::-1] # get the keys and sort them in descending order
 		keys = [ key for key in keys if key < timestamp ] if timestamp is not None else keys # filter them by timestamp
 		keys = keys[:sets] if sets is not None else keys # only retain a subset
 
-		nutrition_sets = [ self._nutrition_store[key] for key in keys ] # compile the nutrition sets
+		nutrition_sets = [ self.store[key] for key in keys ] # compile the nutrition sets
 		return nutrition_sets
 
 	def between(self, start, end):
@@ -96,9 +103,9 @@ class MemoryNutritionStore(NutritionStore):
 
 		start = int(start) if start is not None else start
 		end = int(end) if end is not None else end
-		keys = [ key for key in self._nutrition_store.keys() if key >= start and key < end ] # filter the nutrition sets by timestamp
+		keys = [ key for key in self.store.keys() if key >= start and key < end ] # filter the nutrition sets by timestamp
 
-		return { timestamp: self._nutrition_store[timestamp] for timestamp in keys }
+		return { timestamp: self.store[timestamp] for timestamp in keys }
 
 	def remove_old_nutrition_sets(self, timestamp):
 		"""
@@ -109,5 +116,5 @@ class MemoryNutritionStore(NutritionStore):
 		"""
 
 		timestamp = int(timestamp)
-		keys = sorted(self._nutrition_store.keys())[::-1] # get the keys and sort them in descending order
-		self._nutrition_store = { key: self._nutrition_store[key] for key in keys if key >= timestamp } # compile the nutrition sets, filtering keys by timestamp to retain only recent ones
+		keys = sorted(self.store.keys())[::-1] # get the keys and sort them in descending order
+		self.store = { key: self.store[key] for key in keys if key >= timestamp } # compile the nutrition sets, filtering keys by timestamp to retain only recent ones
