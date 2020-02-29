@@ -87,11 +87,11 @@ summarization_tests() {
 }
 
 topic_detection_tests() {
-# 	echo -e "${HIGHLIGHT}Topic Detection${DEFAULT}"
-#
-# 	echo -e "${HIGHLIGHT}Memory Nutrition Store${DEFAULT}"
-# 	python3 -m unittest eventdt.topic_detection.nutrition_store.tests.test_memory_nutrition_store
-#
+	echo -e "${HIGHLIGHT}Topic Detection${DEFAULT}"
+
+	echo -e "${HIGHLIGHT}Memory Nutrition Store${DEFAULT}"
+	python3 -m unittest eventdt.tdt.nutrition.tests.test_memory_nutrition_store
+
 # 	echo -e "${HIGHLIGHT}Algorithms${DEFAULT}"
 #
 # 	echo -e "${HIGHLIGHT}${DEFAULT}"
@@ -105,7 +105,6 @@ topic_detection_tests() {
 # 	echo -e "${HIGHLIGHT}${DEFAULT}"
 # 	echo -e "${HIGHLIGHT}Zhao Algorithms${DEFAULT}"
 # 	python3 -m unittest eventdt.topic_detection.algorithms.tests.test_zhao
-	return
 }
 
 vector_tests() {
