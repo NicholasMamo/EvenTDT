@@ -62,7 +62,6 @@ class NutritionStore(ABC):
 		:rtype: any
 
 		:raises IndexError: When there is no nutrition data at the given timestamp.
-		:raises TypeError: When the timestamp cannot be type-cast into an integer.
 		"""
 
 		pass
@@ -97,8 +96,6 @@ class NutritionStore(ABC):
 		:return: All the nutrition data between the given timestamps.
 				 The start timestamp is inclusive, the end timestamp is exclusive.
 		:rtype: dict
-
-		:raises TypeError: When the timestamp cannot be type-cast into an integer.
 		"""
 
 		pass
@@ -117,12 +114,10 @@ class NutritionStore(ABC):
 
 		:return: All the nutrition data from the given timestamp onward.
 		:rtype: dict
-
-		:raises TypeError: When the timestamp cannot be type-cast into an integer.
 		"""
 
 		last = sorted(self.all().keys())[-1]
-		return self.between(intr(start), last + 1)
+		return self.between(str(start), last + 1)
 
 	def until(self, end):
 		"""
@@ -138,11 +133,9 @@ class NutritionStore(ABC):
 		:return: All the nutrition data from the beginning until the given timestamp.
 				 Any nutrition data at the end timestamp is not returned.
 		:rtype: dict
-
-		:raises TypeError: When the timestamp cannot be type-cast into an integer.
 		"""
 
-		return self.between(0, int(end))
+		return self.between(0, str(end))
 
 	@abstractmethod
 	def remove(self, timestamps):

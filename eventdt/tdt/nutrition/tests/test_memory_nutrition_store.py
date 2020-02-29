@@ -32,17 +32,17 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		nutrition = MemoryNutritionStore()
 		self.assertEqual({ }, nutrition.store)
 		nutrition.add(10, { 'a': 1 })
-		self.assertEqual({ 10: { 'a': 1 } }, nutrition.store)
+		self.assertEqual({ '10': { 'a': 1 } }, nutrition.store)
 
-	def test_add_nutrition_string(self):
+	def test_add_nutrition_int(self):
 		"""
-		Test that when adding nutrition data in a timestamp given as a string, it is type-cast properly.
+		Test that when adding nutrition data in a timestamp given as an integer, it is type-cast properly.
 		"""
 
 		nutrition = MemoryNutritionStore()
 		self.assertEqual({ }, nutrition.store)
-		nutrition.add('10', { 'a': 1 })
-		self.assertEqual({ 10: { 'a': 1 } }, nutrition.store)
+		nutrition.add(10, { 'a': 1 })
+		self.assertEqual({ '10': { 'a': 1 } }, nutrition.store)
 
 	def test_add_nutrition_arbitrary(self):
 		"""
@@ -52,7 +52,7 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		nutrition = MemoryNutritionStore()
 		self.assertEqual({ }, nutrition.store)
 		nutrition.add(123, 10)
-		self.assertEqual({ 123: 10 }, nutrition.store)
+		self.assertEqual({ '123': 10 }, nutrition.store)
 
 	def test_add_multiple_nutrition(self):
 		"""
@@ -62,9 +62,9 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		nutrition = MemoryNutritionStore()
 		self.assertEqual({ }, nutrition.store)
 		nutrition.add(10, { 'a': 1 })
-		self.assertEqual({ 10: { 'a': 1 } }, nutrition.store)
+		self.assertEqual({ '10': { 'a': 1 } }, nutrition.store)
 		nutrition.add(20, { 'b': 2 })
-		self.assertEqual({ 10: { 'a': 1 }, 20: { 'b': 2 } }, nutrition.store)
+		self.assertEqual({ '10': { 'a': 1 }, '20': { 'b': 2 } }, nutrition.store)
 
 	def test_add_overwrite(self):
 		"""
@@ -74,18 +74,18 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		nutrition = MemoryNutritionStore()
 		self.assertEqual({ }, nutrition.store)
 		nutrition.add(10, { 'a': 1 })
-		self.assertEqual({ 10: { 'a': 1 } }, nutrition.store)
+		self.assertEqual({ '10': { 'a': 1 } }, nutrition.store)
 		nutrition.add(10, { 'b': 2 })
-		self.assertEqual({ 10: { 'b': 2 } }, nutrition.store)
+		self.assertEqual({ '10': { 'b': 2 } }, nutrition.store)
 
-	def test_add_overwrite_string(self):
+	def test_add_overwrite_int(self):
 		"""
-		Test that when adding nutrition to an already-occupied timestamp with a string as timestamp, the old data is overwritten.
+		Test that when adding nutrition to an already-occupied timestamp with an integer as timestamp, the old data is overwritten.
 		"""
 
 		nutrition = MemoryNutritionStore()
 		self.assertEqual({ }, nutrition.store)
 		nutrition.add(10, { 'a': 1 })
-		self.assertEqual({ 10: { 'a': 1 } }, nutrition.store)
+		self.assertEqual({ '10': { 'a': 1 } }, nutrition.store)
 		nutrition.add('10', { 'b': 2 })
-		self.assertEqual({ 10: { 'b': 2 } }, nutrition.store)
+		self.assertEqual({ '10': { 'b': 2 } }, nutrition.store)
