@@ -81,24 +81,30 @@ class MemoryNutritionStore(NutritionStore):
 
 	def between(self, start, end):
 		"""
-		Get a list of nutrition sets that are between the given timestamps.
-		The start timestamp is inclusive, the end timestamp is exclusive.
+		Get the nutrition data between the given timestamps.
 
-		:param start: The first timestamp that should be included in the returned nutrition sets.
-			If no time window with the given timestamp exists, all returned time windows succeed it.
-		:type start: int
-		:param end: The timestamp that should be higher than all returned nutrition sets.
-		:type end: int
+		.. note::
 
-		:return: All the nutrition sets that are between the given timestamps.
-		;rtype: dict
+			The start timestamp is inclusive, the end timestamp is exclusive.
+
+		:param start: The first timestamp that should be included in the returned nutrition data.
+					  If no time window with the given timestamp exists, all returned time windows succeed it.
+		:type start: float or int or str
+		:param end: All the nutrition data from the beginning until the given timestamp.
+					Any nutrition data at the end timestamp is not returned.
+		:type end: float or int or str
+
+		:return: All the nutrition data between the given timestamps.
+				 The start timestamp is inclusive, the end timestamp is exclusive.
+		:rtype: dict
+
+		:raises ValueError: When the start timestamp is on or after the end timestamp.
 		"""
 
-		start = int(start) if start is not None else start
-		end = int(end) if end is not None else end
-		keys = [ key for key in self.store.keys() if key >= start and key < end ] # filter the nutrition sets by timestamp
+		if float(start) >= float(end):
+			raise ValueError(f"The start timestamp must be before the end timestamp: {start} >= {end}")
 
-		return { timestamp: self.store[timestamp] for timestamp in keys }
+		return { timestamp: self.get(timestamp) for timestamp in self.store if float(start) <= float(timestamp) < float(end) }
 
 	def remove(self, timestamp):
 		"""

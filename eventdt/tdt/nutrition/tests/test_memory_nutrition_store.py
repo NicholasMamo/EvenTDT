@@ -174,3 +174,94 @@ class TestMemoryNutritionStore(unittest.TestCase):
 
 		nutrition = MemoryNutritionStore()
 		self.assertEqual({ }, nutrition.all())
+
+	def test_between_start_after_than_end(self):
+		"""
+		Test that when getting nutrition with the start timestamp being less than the end timestamp, a ValueError is raised.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		self.assertRaises(ValueError, nutrition.between, '10', '0')
+
+	def test_between_start_same_as_end(self):
+		"""
+		Test that when getting nutrition with the start timestamp being equivalent to the end timestamp, a ValueError is raised.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		self.assertRaises(ValueError, nutrition.between, '10', '10')
+
+	def test_between_start_after_than_end_int(self):
+		"""
+		Test that when getting nutrition with the start timestamp being less than the end timestamp, a ValueError is raised.
+		This test uses integers.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		self.assertRaises(ValueError, nutrition.between, 10, 0)
+
+	def test_between_start_same_as_end_int(self):
+		"""
+		Test that when getting nutrition with the start timestamp being equivalent to the end timestamp, a ValueError is raised.
+		This test uses integers.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		self.assertRaises(ValueError, nutrition.between, 10, 10)
+
+	def test_between_start_after_than_end_float(self):
+		"""
+		Test that when getting nutrition with the start timestamp being less than the end timestamp, a ValueError is raised.
+		This test uses floats.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		self.assertRaises(ValueError, nutrition.between, 10.5, 0.0)
+
+	def test_between_start_same_as_end_float(self):
+		"""
+		Test that when getting nutrition with the start timestamp being equivalent to the end timestamp, a ValueError is raised.
+		This test uses floats.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		self.assertRaises(ValueError, nutrition.between, 10.5, 10.5)
+
+	def test_between_start_inclusive(self):
+		"""
+		Test that the start timestamp is inclusive when getting nutrition data between two timestamps.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		nutrition.add('10', 1)
+		nutrition.add('20', 2)
+		self.assertEqual({ '10': 1}, nutrition.between(10, 15))
+
+	def test_between_end_exclusive(self):
+		"""
+		Test that the end timestamp is exclusive when getting nutrition data between two timestamps.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		nutrition.add('10', 1)
+		nutrition.add('20', 2)
+		self.assertEqual({ '10': 1}, nutrition.between(9, 20))
+
+	def test_between_empty_result_dict(self):
+		"""
+		Test that when getting the nutrition data matches nothing, an empty dictionary is returned.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		self.assertEqual({ }, nutrition.between(0, 10))
+
+	def test_between(self):
+		"""
+		Test getting nutrition data between two timestamps.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		nutrition.add('0', 0)
+		nutrition.add('10', 1)
+		nutrition.add('20', 2)
+		self.assertEqual({ '10': 1}, nutrition.between(1, 19))
