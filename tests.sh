@@ -6,7 +6,7 @@ cd "$parent_path"
 source variables.sh
 
 usage() {
-	echo -e "${HIGHLIGHT}Usage: sh $0 [-t <apd|nlp|graph|queue|summarization|topics|vector|wikipedia>]"${DEFAULT};
+	echo -e "${HIGHLIGHT}Usage: sh $0 [-t <apd|nlp|graph|queue|summarization|tdt|vector|wikipedia>]"${DEFAULT};
 }
 
 apd_tests() {
@@ -153,7 +153,7 @@ then
 		summarization)
 			summarization_tests
 			;;
-		topics)
+		tdt)
 			topic_detection_tests
 			;;
 		vector)
