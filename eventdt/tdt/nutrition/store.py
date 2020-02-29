@@ -105,7 +105,7 @@ class NutritionStore(ABC):
 
 	def since(self, start):
 		"""
-		Get a list of nutrition sets since the given timestamp.
+		Get the nutrition data since the given timestamp.
 
 		.. note::
 
@@ -119,8 +119,9 @@ class NutritionStore(ABC):
 		:rtype: dict
 		"""
 
-		last = sorted(self.all().keys())[-1]
-		return self.between(str(start), last + 1)
+		timestamps = [ float(timestamp) for timestamp in self.all().keys() ]
+		last = sorted(timestamps)[-1]
+		return self.between(start, float(last) + 1)
 
 	def until(self, end):
 		"""

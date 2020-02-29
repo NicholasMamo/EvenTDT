@@ -265,3 +265,48 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		nutrition.add('10', 1)
 		nutrition.add('20', 2)
 		self.assertEqual({ '10': 1}, nutrition.between(1, 19))
+
+	def test_since_inclusive(self):
+		"""
+		Test that when getting nutrition data since a timestamp, the start timestamp is included.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		nutrition.add('0', 0)
+		nutrition.add('10', 1)
+		nutrition.add('20', 2)
+		self.assertTrue('10' in nutrition.since('10'))
+
+	def test_since_int(self):
+		"""
+		Test that when getting nutrition data since a timestamp with an integer, the correct data is returned.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		nutrition.add('0', 0)
+		nutrition.add('10', 1)
+		nutrition.add('20', 2)
+		self.assertEqual({ '10': 1, '20': 2 }, nutrition.since(10))
+
+	def test_since_float(self):
+		"""
+		Test that when getting nutrition data since a timestamp with a float, the correct data is returned.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		nutrition.add('0', 0)
+		nutrition.add('10', 1)
+		nutrition.add('20', 2)
+		self.assertEqual({ '10': 1, '20': 2 }, nutrition.since(10.0))
+
+	def test_since(self):
+		"""
+		Test that when getting nutrition data since a timestamp, the correct data is returned.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		nutrition.add('0', 0)
+		nutrition.add('10', 1)
+		nutrition.add('20', 2)
+		self.assertEqual({ '10': 1, '20': 2 }, nutrition.since(9))
+		self.assertTrue(all(float(timestamp) >= 9 for timestamp in nutrition.since(9)))
