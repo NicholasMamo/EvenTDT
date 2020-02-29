@@ -120,7 +120,7 @@ class NutritionStore(ABC):
 		"""
 
 		timestamps = [ float(timestamp) for timestamp in self.all().keys() ]
-		last = sorted(timestamps)[-1]
+		last = max(timestamps)
 		return self.between(start, float(last) + 1)
 
 	def until(self, end):
