@@ -32,18 +32,22 @@ class MemoryNutritionStore(NutritionStore):
 
 		self.store = { }
 
-	def add(self, timestamp, nutrition_set):
+	def add(self, timestamp, nutrition):
 		"""
-		Add a nutrition set to the store at the given timestamp.
+		Add a nutrition data to the store at the given timestamp.
 
-		:param timestamp: The timestamp of the nutrition set.
+		.. warning::
+
+			This function overwrites any data at the given timestamp.
+
+		:param timestamp: The timestamp of the nutrition data.
 		:type timestamp: int
-		:param nutrition_set: The nutrition set to add.
-		:type nutrition_set: mixed
+		:param nutrition: The nutrition data to add.
+						  The data is a dictionary, where the key is the term and the value is the nutrition.
+		:type nutrition: dict
 		"""
 
-		timestamp = int(timestamp)
-		self.store[timestamp] = nutrition_set
+		self.store[int(timestamp)] = nutrition
 
 	def get(self, timestamp):
 		"""
