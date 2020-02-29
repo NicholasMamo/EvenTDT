@@ -146,3 +146,31 @@ class TestMemoryNutritionStore(unittest.TestCase):
 
 		nutrition = MemoryNutritionStore()
 		self.assertRaises(KeyError, nutrition.get, 10)
+
+	def test_all_nutrition(self):
+		"""
+		Test that when getting all the nutrition data, all of it is returned.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		nutrition.add(10, 1)
+		nutrition.add(20, 2)
+		self.assertEqual({ '10': 1, '20': 2 }, nutrition.all())
+
+	def test_all_dict(self):
+		"""
+		Test that the return type when getting all nutrition data is a dictionary.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		nutrition.add(10, 1)
+		nutrition.add(20, 2)
+		self.assertEqual(dict, type(nutrition.all()))
+
+	def test_all_empty(self):
+		"""
+		Test that an empty dictionary is returned when there is no data in the nutrition store.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		self.assertEqual({ }, nutrition.all())

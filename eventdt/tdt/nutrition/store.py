@@ -73,7 +73,8 @@ class NutritionStore(ABC):
 		"""
 		Get all the nutrition sets.
 
-		:return: All the nutrition sets in the nutrition store.
+		:return: All the nutrition data in the nutrition store as a dictionary.
+				 The keys are the timestamps, and the values are the nutrition data at those timestamps.
 		:rtype: dict
 		"""
 
