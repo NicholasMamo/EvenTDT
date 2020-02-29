@@ -57,7 +57,7 @@ class NutritionStore(ABC):
 		:type timestamp: int
 
 		:return: The nutrition at the given timestamp.
-		:rtype: dict
+		:rtype: any
 
 		:raises IndexError: When there is no nutrition data at the given timestamp.
 		"""
