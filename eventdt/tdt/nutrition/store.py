@@ -1,57 +1,71 @@
 """
-An interface of nutrition stores, describing the list of methods that they must implement.
-This can be implemented to store data in a database, for example, or in memory.
+The concept of nutrition was used predominantly by `Cataldi et al. <https://dl.acm.org/doi/abs/10.1145/2542182.2542189>`_.
+Later, it was adopted by Mamo and others in `FIRE <https://link.springer.com/chapter/10.1007/978-3-319-74497-1_3>`_ and `ELD <https://dl.acm.org/doi/abs/10.1145/3342220.3344921>`_.
+Nutrition is a measure of the popularity of a term.
+It is combined with another metric—burst—that measures the change in nutrition.
 
-Although the specification assumes a dict type for nutrition sets, the nutrition store should be flexible.
-This would allow for narrower or newer definitions of nutrition, including volume - an integer.
+The nutrition store is an interface for data structures to store the nutrition.
+The interface contains the methods that they all must implement.
+For example, implementations can store data in a database or in memory.
+
+The nutrition stores separate nutrition based on timestamps.
+The timestamps can store nutrition data for that timestamp alone.
+They can also store nutrition data for a period of time, represented by that timestamp.
 """
 
 from abc import ABC, abstractmethod
 
 class NutritionStore(ABC):
 	"""
-	An interface of NutritionStore objects.
-
-	This class assumes that the nutrition store is stored in a variable called `_nutrition_store.`
+	The nutrition store needs to handle both the storage of nutrition, as well as retrieval.
+	All nutrition stores must implement all of the following methods.
+	Nutrition stores separate data based on timestamps.
 	"""
 
 	@abstractmethod
 	def __init__(self):
 		"""
-		Create the NutritionStore with the actual store.
+		Create the nutrition store.
 		"""
 
 		pass
 
 	@abstractmethod
-	def add_nutrition_set(self, timestamp, nutrition_set):
+	def add(self, timestamp, nutrition):
 		"""
-		Add a nutrition set to the store at the given timestamp.
+		Add a nutrition data to the store at the given timestamp.
 
-		:param timestamp: The timestamp of the nutrition set.
+		.. note::
+
+			This function overwrites any data at the given timestamp.
+
+		:param timestamp: The timestamp of the nutrition data.
 		:type timestamp: int
-		:param nutrition_set: The nutrition set to add.
-		:type nutrition_set: mixed
+		:param nutrition: The nutrition data to add.
+						  The data is a dictionary, where the key is the term and the value is the nutrition.
+		:type nutrition: dict
 		"""
 
 		pass
 
 	@abstractmethod
-	def get_nutrition_set(self, timestmap):
+	def get(self, timestmap):
 		"""
-		Get the nutrition set at the given timestamp.
+		Get the nutrition data at the given timestamp.
 
-		:param timestamp: The timestamp of the nutrition set.
+		:param timestamp: The timestamp whose nutrition is to be returned.
 		:type timestamp: int
 
-		:return: The nutrition set at the given timestamp.
-		:rtype: mixed
+		:return: The nutrition at the given timestamp.
+		:rtype: dict
+
+		:raises IndexError: When there is no nutrition data at the given timestamp.
 		"""
 
 		pass
 
 	@abstractmethod
-	def get_all_nutrition_sets(self):
+	def all(self):
 		"""
 		Get all the nutrition sets.
 
@@ -62,37 +76,23 @@ class NutritionStore(ABC):
 		pass
 
 	@abstractmethod
-	def get_recent_nutrition_sets(self, sets=None, timestamp=None):
-		"""
-		Get a list of nutrition sets.
-		Start from the given timestamp and work backwards.
-		If no timestamp is given, start from the most recent.
-		Return a list of nutrition sets in reverse chronological order.
-
-		:param sets: The number of nutrition sets to return.
-		:type sets: int
-		:param timestamp: The timestamp before which all the returned nutrition sets should be.
-		:type timestamp: int
-
-		:return: The recent nutrition sets.
-		:rtype: list
-		"""
-
-		pass
-
-	@abstractmethod
 	def between(self, start, end):
 		"""
-		Get a list of nutrition sets that are between the given timestamps.
-		The start timestamp is inclusive, the end timestamp is exclusive.
+		Get the nutrition data between the given timestamps.
 
-		:param start: The first timestamp that should be included in the returned nutrition sets.
-			If no time window with the given timestamp exists, all returned time windows succeed it.
+		.. note::
+
+			The start timestamp is inclusive, the end timestamp is exclusive.
+
+		:param start: The first timestamp that should be included in the returned nutrition data.
+					  If no time window with the given timestamp exists, all returned time windows succeed it.
 		:type start: int
-		:param end: The timestamp that should be higher than all returned nutrition sets.
+		:param end: All the nutrition data from the beginning until the given timestamp.
+					Any nutrition data at the end timestamp is not returned.
 		:type end: int
 
-		:return: All the nutrition sets that are between the given timestamps.
+		:return: All the nutrition data between the given timestamps.
+				 The start timestamp is inclusive, the end timestamp is exclusive.
 		;rtype: dict
 		"""
 
@@ -101,40 +101,47 @@ class NutritionStore(ABC):
 	def since(self, start):
 		"""
 		Get a list of nutrition sets since the given timestamp.
-		The start timestamp is inclusive.
 
-		:param start: The first timestamp that should be included in the returned nutrition sets.
-			If no time window with the given timestamp exists, all returned time windows succeed it.
+		.. note::
+
+			The start timestamp is inclusive.
+
+		:param start: The first timestamp that should be included in the returned nutrition data.
+					  If no time window with the given timestamp exists, all returned time windows succeed it.
 		:type start: int
 
-		:return: All the nutrition that happened on or after the given timestamp.
+		:return: All the nutrition data from the given timestamp onward.
 		:rtype: dict
 		"""
 
-		max_timestamp = int(max(list(self._nutrition_store.keys())))
-		return self.between(start, max_timestamp + 1)
+		last = sorted(self.all().keys())[-1]
+		return self.between(start, last + 1)
 
-	def before(self, end):
+	def until(self, end):
 		"""
 		Get a list of nutrition sets that came before the given timestamp.
-		The end timestamp is exclusive.
 
-		:param end: The timestamp that should be higher than all returned nutrition sets.
+		.. note::
+
+			The end timestamp is exclusive.
+
+		:param end: The timestamp before which nutrition data should be returned.
 		:type end: int
 
-		:return: All the nutrition sets that came before the given timestamp.
+		:return: All the nutrition data from the beginning until the given timestamp.
+				 Any nutrition data at the end timestamp is not returned.
 		:rtype dict
 		"""
 
 		return self.between(0, end)
 
 	@abstractmethod
-	def remove_old_nutrition_sets(self, timestamp):
+	def remove(self, timestamps):
 		"""
-		Remove nutrition sets that are older than the given timestamp.
+		Remove nutrition data from the given list of timestamps.
 
-		:param timestamp: The timestamp before which no nutrition sets may exist.
-		:type timestamp: int
+		:param timestamps: The timestamps whose nutrition data is to be removed.
+		:type timestamps: list of int
 		"""
 
 		pass
