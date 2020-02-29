@@ -41,7 +41,7 @@ class MemoryNutritionStore(NutritionStore):
 			This function overwrites any data at the given timestamp.
 
 		:param timestamp: The timestamp of the nutrition data.
-		:type timestamp: int or str
+		:type timestamp: float or int or str
 		:param nutrition: The nutrition data to add.
 				 		  The nutrition data can be any value.
 		:type nutrition: any

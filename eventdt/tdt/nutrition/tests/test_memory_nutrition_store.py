@@ -44,6 +44,16 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		nutrition.add(10, { 'a': 1 })
 		self.assertEqual({ '10': { 'a': 1 } }, nutrition.store)
 
+	def test_add_nutrition_float(self):
+		"""
+		Test that when adding nutrition data in a timestamp given as a float, it is type-cast properly.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		self.assertEqual({ }, nutrition.store)
+		nutrition.add(10.5, { 'a': 1 })
+		self.assertEqual({ '10.5': { 'a': 1 } }, nutrition.store)
+
 	def test_add_nutrition_arbitrary(self):
 		"""
 		Test that the nutrition store handles any type of nutrition data.
@@ -85,7 +95,19 @@ class TestMemoryNutritionStore(unittest.TestCase):
 
 		nutrition = MemoryNutritionStore()
 		self.assertEqual({ }, nutrition.store)
-		nutrition.add(10, { 'a': 1 })
+		nutrition.add('10', { 'a': 1 })
 		self.assertEqual({ '10': { 'a': 1 } }, nutrition.store)
-		nutrition.add('10', { 'b': 2 })
+		nutrition.add(10, { 'b': 2 })
 		self.assertEqual({ '10': { 'b': 2 } }, nutrition.store)
+
+	def test_add_overwrite_float(self):
+		"""
+		Test that when adding nutrition to an already-occupied timestamp with a float as timestamp, the old data is overwritten.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		self.assertEqual({ }, nutrition.store)
+		nutrition.add('10.5', { 'a': 1 })
+		self.assertEqual({ '10.5': { 'a': 1 } }, nutrition.store)
+		nutrition.add(10.5, { 'b': 2 })
+		self.assertEqual({ '10.5': { 'b': 2 } }, nutrition.store)
