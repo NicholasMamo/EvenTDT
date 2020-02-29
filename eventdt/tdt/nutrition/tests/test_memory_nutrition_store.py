@@ -111,3 +111,38 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		self.assertEqual({ '10.5': { 'a': 1 } }, nutrition.store)
 		nutrition.add(10.5, { 'b': 2 })
 		self.assertEqual({ '10.5': { 'b': 2 } }, nutrition.store)
+
+	def test_get_nutrition(self):
+		"""
+		Test getting nutrition data.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		nutrition.add('10', { 'a': 1 })
+		self.assertEqual({ 'a': 1 }, nutrition.get('10'))
+
+	def test_get_nutrition_int(self):
+		"""
+		Test getting nutrition data with an integer as timestamp.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		nutrition.add('10', { 'a': 1 })
+		self.assertEqual({ 'a': 1 }, nutrition.get(10))
+
+	def test_get_nutrition_float(self):
+		"""
+		Test getting nutrition data with a float as a timestamp.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		nutrition.add('10.5', { 'a': 1 })
+		self.assertEqual({ 'a': 1 }, nutrition.get(10.5))
+
+	def test_get_missing_nutrition(self):
+		"""
+		Test that when getting nutrition for a missing timestamp, an IndexError is returned.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		self.assertRaises(KeyError, nutrition.get, 10)
