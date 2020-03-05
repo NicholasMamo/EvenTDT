@@ -40,7 +40,7 @@ class NutritionStore(ABC):
 			This function overwrites any data at the given timestamp.
 
 		:param timestamp: The timestamp of the nutrition data.
-		:type timestamp: float or int or str
+		:type timestamp: float or int
 		:param nutrition: The nutrition data to add.
 						  The nutrition data can be any value.
 		:type nutrition: any
@@ -58,7 +58,7 @@ class NutritionStore(ABC):
 			The function allows :class:`~IndexError` to be raised because having missing nutrition data needs to be handled.
 
 		:param timestamp: The timestamp whose nutrition is to be returned.
-		:type timestamp: float or int or str
+		:type timestamp: float or int
 
 		:return: The nutrition at the given timestamp.
 		:rtype: any
@@ -91,10 +91,10 @@ class NutritionStore(ABC):
 
 		:param start: The first timestamp that should be included in the returned nutrition data.
 					  If no time window with the given timestamp exists, all returned time windows succeed it.
-		:type start: float or int or str
+		:type start: float or int
 		:param end: All the nutrition data from the beginning until the given timestamp.
 					Any nutrition data at the end timestamp is not returned.
-		:type end: float or int or str
+		:type end: float or int
 
 		:return: All the nutrition data between the given timestamps.
 				 The start timestamp is inclusive, the end timestamp is exclusive.
@@ -113,7 +113,7 @@ class NutritionStore(ABC):
 
 		:param start: The first timestamp that should be included in the returned nutrition data.
 					  If no time window with the given timestamp exists, all returned time windows succeed it.
-		:type start: float or int or str
+		:type start: float or int
 
 		:return: All the nutrition data from the given timestamp onward.
 		:rtype: dict
@@ -132,7 +132,7 @@ class NutritionStore(ABC):
 			The end timestamp is exclusive.
 
 		:param end: The timestamp before which nutrition data should be returned.
-		:type end: float or int or str
+		:type end: float or int
 
 		:return: All the nutrition data from the beginning until the given timestamp.
 				 Any nutrition data at the end timestamp is not returned.

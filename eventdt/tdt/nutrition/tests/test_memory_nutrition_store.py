@@ -24,15 +24,15 @@ class TestMemoryNutritionStore(unittest.TestCase):
 
 		self.assertEqual({ }, MemoryNutritionStore().store)
 
-	def test_add_nutrition(self):
+	def test_add_nutrition_string(self):
 		"""
-		Test that when adding nutrition data, it is stored.
+		Test that when adding nutrition data in a timestamp given as a string, it is stored.
 		"""
 
 		nutrition = MemoryNutritionStore()
 		self.assertEqual({ }, nutrition.store)
-		nutrition.add(10, { 'a': 1 })
-		self.assertEqual({ '10': { 'a': 1 } }, nutrition.store)
+		nutrition.add('10', { 'a': 1 })
+		self.assertEqual({ 10: { 'a': 1 } }, nutrition.store)
 
 	def test_add_nutrition_int(self):
 		"""
@@ -42,7 +42,7 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		nutrition = MemoryNutritionStore()
 		self.assertEqual({ }, nutrition.store)
 		nutrition.add(10, { 'a': 1 })
-		self.assertEqual({ '10': { 'a': 1 } }, nutrition.store)
+		self.assertEqual({ 10: { 'a': 1 } }, nutrition.store)
 
 	def test_add_nutrition_float(self):
 		"""
@@ -52,7 +52,7 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		nutrition = MemoryNutritionStore()
 		self.assertEqual({ }, nutrition.store)
 		nutrition.add(10.5, { 'a': 1 })
-		self.assertEqual({ '10.5': { 'a': 1 } }, nutrition.store)
+		self.assertEqual({ 10.5: { 'a': 1 } }, nutrition.store)
 
 	def test_add_nutrition_arbitrary(self):
 		"""
@@ -62,7 +62,7 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		nutrition = MemoryNutritionStore()
 		self.assertEqual({ }, nutrition.store)
 		nutrition.add(123, 10)
-		self.assertEqual({ '123': 10 }, nutrition.store)
+		self.assertEqual({ 123: 10 }, nutrition.store)
 
 	def test_add_multiple_nutrition(self):
 		"""
@@ -72,21 +72,21 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		nutrition = MemoryNutritionStore()
 		self.assertEqual({ }, nutrition.store)
 		nutrition.add(10, { 'a': 1 })
-		self.assertEqual({ '10': { 'a': 1 } }, nutrition.store)
+		self.assertEqual({ 10: { 'a': 1 } }, nutrition.store)
 		nutrition.add(20, { 'b': 2 })
-		self.assertEqual({ '10': { 'a': 1 }, '20': { 'b': 2 } }, nutrition.store)
+		self.assertEqual({ 10: { 'a': 1 }, 20: { 'b': 2 } }, nutrition.store)
 
-	def test_add_overwrite(self):
+	def test_add_overwrite_string(self):
 		"""
-		Test that when adding nutrition to an already-occupied timestamp, the old data is overwritten.
+		Test that when adding nutrition to an already-occupied timestamp with a string as timestamp, the old data is overwritten.
 		"""
 
 		nutrition = MemoryNutritionStore()
 		self.assertEqual({ }, nutrition.store)
 		nutrition.add(10, { 'a': 1 })
-		self.assertEqual({ '10': { 'a': 1 } }, nutrition.store)
-		nutrition.add(10, { 'b': 2 })
-		self.assertEqual({ '10': { 'b': 2 } }, nutrition.store)
+		self.assertEqual({ 10: { 'a': 1 } }, nutrition.store)
+		nutrition.add('10', { 'b': 2 })
+		self.assertEqual({ 10: { 'b': 2 } }, nutrition.store)
 
 	def test_add_overwrite_int(self):
 		"""
@@ -96,9 +96,9 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		nutrition = MemoryNutritionStore()
 		self.assertEqual({ }, nutrition.store)
 		nutrition.add('10', { 'a': 1 })
-		self.assertEqual({ '10': { 'a': 1 } }, nutrition.store)
+		self.assertEqual({ 10: { 'a': 1 } }, nutrition.store)
 		nutrition.add(10, { 'b': 2 })
-		self.assertEqual({ '10': { 'b': 2 } }, nutrition.store)
+		self.assertEqual({ 10: { 'b': 2 } }, nutrition.store)
 
 	def test_add_overwrite_float(self):
 		"""
@@ -107,18 +107,18 @@ class TestMemoryNutritionStore(unittest.TestCase):
 
 		nutrition = MemoryNutritionStore()
 		self.assertEqual({ }, nutrition.store)
-		nutrition.add('10.5', { 'a': 1 })
-		self.assertEqual({ '10.5': { 'a': 1 } }, nutrition.store)
+		nutrition.add(10.5, { 'a': 1 })
+		self.assertEqual({ 10.5: { 'a': 1 } }, nutrition.store)
 		nutrition.add(10.5, { 'b': 2 })
-		self.assertEqual({ '10.5': { 'b': 2 } }, nutrition.store)
+		self.assertEqual({ 10.5: { 'b': 2 } }, nutrition.store)
 
-	def test_get_nutrition(self):
+	def test_get_nutrition_string(self):
 		"""
-		Test getting nutrition data.
+		Test getting nutrition data with a string as timestamp.
 		"""
 
 		nutrition = MemoryNutritionStore()
-		nutrition.add('10', { 'a': 1 })
+		nutrition.add(10, { 'a': 1 })
 		self.assertEqual({ 'a': 1 }, nutrition.get('10'))
 
 	def test_get_nutrition_int(self):
@@ -127,7 +127,7 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		"""
 
 		nutrition = MemoryNutritionStore()
-		nutrition.add('10', { 'a': 1 })
+		nutrition.add(10, { 'a': 1 })
 		self.assertEqual({ 'a': 1 }, nutrition.get(10))
 
 	def test_get_nutrition_float(self):
@@ -136,7 +136,7 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		"""
 
 		nutrition = MemoryNutritionStore()
-		nutrition.add('10.5', { 'a': 1 })
+		nutrition.add(10.5, { 'a': 1 })
 		self.assertEqual({ 'a': 1 }, nutrition.get(10.5))
 
 	def test_get_missing_nutrition(self):
@@ -155,7 +155,7 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		nutrition = MemoryNutritionStore()
 		nutrition.add(10, 1)
 		nutrition.add(20, 2)
-		self.assertEqual({ '10': 1, '20': 2 }, nutrition.all())
+		self.assertEqual({ 10: 1, 20: 2 }, nutrition.all())
 
 	def test_all_dict(self):
 		"""
@@ -175,17 +175,19 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		nutrition = MemoryNutritionStore()
 		self.assertEqual({ }, nutrition.all())
 
-	def test_between_start_after_than_end(self):
+	def test_between_start_after_than_end_string(self):
 		"""
 		Test that when getting nutrition with the start timestamp being less than the end timestamp, a ValueError is raised.
+		This test uses strings.
 		"""
 
 		nutrition = MemoryNutritionStore()
 		self.assertRaises(ValueError, nutrition.between, '10', '0')
 
-	def test_between_start_same_as_end(self):
+	def test_between_start_same_as_end_string(self):
 		"""
 		Test that when getting nutrition with the start timestamp being equivalent to the end timestamp, a ValueError is raised.
+		This test uses strings.
 		"""
 
 		nutrition = MemoryNutritionStore()
@@ -233,9 +235,9 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		"""
 
 		nutrition = MemoryNutritionStore()
-		nutrition.add('10', 1)
-		nutrition.add('20', 2)
-		self.assertEqual({ '10': 1}, nutrition.between(10, 15))
+		nutrition.add(10, 1)
+		nutrition.add(20, 2)
+		self.assertEqual({ 10: 1}, nutrition.between(10, 15))
 
 	def test_between_end_exclusive(self):
 		"""
@@ -243,9 +245,9 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		"""
 
 		nutrition = MemoryNutritionStore()
-		nutrition.add('10', 1)
-		nutrition.add('20', 2)
-		self.assertEqual({ '10': 1}, nutrition.between(9, 20))
+		nutrition.add(10, 1)
+		nutrition.add(20, 2)
+		self.assertEqual({ 10: 1}, nutrition.between(9, 20))
 
 	def test_between_empty_result_dict(self):
 		"""
@@ -261,10 +263,10 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		"""
 
 		nutrition = MemoryNutritionStore()
-		nutrition.add('0', 0)
-		nutrition.add('10', 1)
-		nutrition.add('20', 2)
-		self.assertEqual({ '10': 1}, nutrition.between(1, 19))
+		nutrition.add(0, 0)
+		nutrition.add(10, 1)
+		nutrition.add(20, 2)
+		self.assertEqual({ 10: 1}, nutrition.between(1, 19))
 
 	def test_since_inclusive(self):
 		"""
@@ -272,10 +274,10 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		"""
 
 		nutrition = MemoryNutritionStore()
-		nutrition.add('0', 0)
-		nutrition.add('10', 1)
-		nutrition.add('20', 2)
-		self.assertTrue('10' in nutrition.since('10'))
+		nutrition.add(0, 0)
+		nutrition.add(10, 1)
+		nutrition.add(20, 2)
+		self.assertTrue(10 in nutrition.since(10))
 
 	def test_since_int(self):
 		"""
@@ -283,10 +285,10 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		"""
 
 		nutrition = MemoryNutritionStore()
-		nutrition.add('0', 0)
-		nutrition.add('10', 1)
-		nutrition.add('20', 2)
-		self.assertEqual({ '10': 1, '20': 2 }, nutrition.since(10))
+		nutrition.add(0, 0)
+		nutrition.add(10, 1)
+		nutrition.add(20, 2)
+		self.assertEqual({ 10: 1, 20: 2 }, nutrition.since(10))
 
 	def test_since_float(self):
 		"""
@@ -294,21 +296,21 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		"""
 
 		nutrition = MemoryNutritionStore()
-		nutrition.add('0', 0)
-		nutrition.add('10', 1)
-		nutrition.add('20', 2)
-		self.assertEqual({ '10': 1, '20': 2 }, nutrition.since(10.0))
+		nutrition.add(0, 0)
+		nutrition.add(10, 1)
+		nutrition.add(20, 2)
+		self.assertEqual({ 10: 1, 20: 2 }, nutrition.since(10.0))
 
-	def test_since(self):
+	def test_since_string(self):
 		"""
-		Test that when getting nutrition data since a timestamp, the correct data is returned.
+		Test that when getting nutrition data since a timestamp with a float, the correct data is returned.
 		"""
 
 		nutrition = MemoryNutritionStore()
-		nutrition.add('0', 0)
-		nutrition.add('10', 1)
-		nutrition.add('20', 2)
-		self.assertEqual({ '10': 1, '20': 2 }, nutrition.since(9))
+		nutrition.add(0, 0)
+		nutrition.add(10, 1)
+		nutrition.add(20, 2)
+		self.assertEqual({ 10: 1, 20: 2 }, nutrition.since('9'))
 		self.assertTrue(all(float(timestamp) >= 9 for timestamp in nutrition.since(9)))
 
 	def test_until_exclusive(self):
@@ -317,10 +319,10 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		"""
 
 		nutrition = MemoryNutritionStore()
-		nutrition.add('0', 0)
-		nutrition.add('10', 1)
-		nutrition.add('20', 2)
-		self.assertFalse('10' in nutrition.until('10'))
+		nutrition.add(0, 0)
+		nutrition.add(10, 1)
+		nutrition.add(20, 2)
+		self.assertFalse(10 in nutrition.until(10))
 
 	def test_until_int(self):
 		"""
@@ -328,10 +330,10 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		"""
 
 		nutrition = MemoryNutritionStore()
-		nutrition.add('0', 0)
-		nutrition.add('10', 1)
-		nutrition.add('20', 2)
-		self.assertEqual({ '0': 0 }, nutrition.until(10))
+		nutrition.add(0, 0)
+		nutrition.add(10, 1)
+		nutrition.add(20, 2)
+		self.assertEqual({ 0: 0 }, nutrition.until(10))
 
 	def test_until_float(self):
 		"""
@@ -339,22 +341,22 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		"""
 
 		nutrition = MemoryNutritionStore()
-		nutrition.add('0', 0)
-		nutrition.add('10', 1)
-		nutrition.add('20', 2)
-		self.assertEqual({ '0': 0 }, nutrition.until(10.0))
+		nutrition.add(0, 0)
+		nutrition.add(10, 1)
+		nutrition.add(20, 2)
+		self.assertEqual({ 0: 0 }, nutrition.until(10.0))
 
-	def test_until(self):
+	def test_until_string(self):
 		"""
-		Test that when getting nutrition data until a timestamp, the correct data is returned.
+		Test that when getting nutrition data until a timestamp with a string, the correct data is returned.
 		"""
 
 		nutrition = MemoryNutritionStore()
-		nutrition.add('0', 0)
-		nutrition.add('10', 1)
-		nutrition.add('20', 2)
-		self.assertEqual({ '0': 0, '10': 1 }, nutrition.until(20))
-		self.assertTrue(all(float(timestamp) < 20 for timestamp in nutrition.until(20)))
+		nutrition.add(0, 0)
+		nutrition.add(10, 1)
+		nutrition.add(20, 2)
+		self.assertEqual({ 0: 0, 10: 1 }, nutrition.until(20))
+		self.assertTrue(all(float(timestamp) < 20 for timestamp in nutrition.until('20')))
 
 	def test_remove_nothing(self):
 		"""
@@ -362,25 +364,25 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		"""
 
 		nutrition = MemoryNutritionStore()
-		nutrition.add('0', 0)
-		nutrition.add('10', 1)
-		nutrition.add('20', 2)
-		self.assertEqual({ '0': 0, '10': 1, '20': 2 }, nutrition.all())
+		nutrition.add(0, 0)
+		nutrition.add(10, 1)
+		nutrition.add(20, 2)
+		self.assertEqual({ 0: 0, 10: 1, 20: 2 }, nutrition.all())
 		nutrition.remove()
-		self.assertEqual({ '0': 0, '10': 1, '20': 2 }, nutrition.all())
+		self.assertEqual({ 0: 0, 10: 1, 20: 2 }, nutrition.all())
 
-	def test_remove(self):
+	def test_remove_string(self):
 		"""
-		Test that when removing nutrition from a single timestamp, only that data is removed.
+		Test that when removing nutrition from a single string timestamp, only that data is removed.
 		"""
 
 		nutrition = MemoryNutritionStore()
-		nutrition.add('0', 0)
-		nutrition.add('10', 1)
-		nutrition.add('20', 2)
-		self.assertEqual({ '0': 0, '10': 1, '20': 2 }, nutrition.all())
+		nutrition.add(0, 0)
+		nutrition.add(10, 1)
+		nutrition.add(20, 2)
+		self.assertEqual({ 0: 0, 10: 1, 20: 2 }, nutrition.all())
 		nutrition.remove('10')
-		self.assertEqual({ '0': 0, '20': 2 }, nutrition.all())
+		self.assertEqual({ 0: 0, 20: 2 }, nutrition.all())
 
 	def test_remove_int(self):
 		"""
@@ -388,12 +390,12 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		"""
 
 		nutrition = MemoryNutritionStore()
-		nutrition.add('0', 0)
-		nutrition.add('10', 1)
-		nutrition.add('20', 2)
-		self.assertEqual({ '0': 0, '10': 1, '20': 2 }, nutrition.all())
+		nutrition.add(0, 0)
+		nutrition.add(10, 1)
+		nutrition.add(20, 2)
+		self.assertEqual({ 0: 0, 10: 1, 20: 2 }, nutrition.all())
 		nutrition.remove(10)
-		self.assertEqual({ '0': 0, '20': 2 }, nutrition.all())
+		self.assertEqual({ 0: 0, 20: 2 }, nutrition.all())
 
 	def test_remove_float(self):
 		"""
@@ -401,12 +403,12 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		"""
 
 		nutrition = MemoryNutritionStore()
-		nutrition.add('0', 0)
-		nutrition.add('10.0', 1)
-		nutrition.add('20', 2)
-		self.assertEqual({ '0': 0, '10.0': 1, '20': 2 }, nutrition.all())
+		nutrition.add(0, 0)
+		nutrition.add(10.0, 1)
+		nutrition.add(20, 2)
+		self.assertEqual({ 0: 0, 10.0: 1, 20: 2 }, nutrition.all())
 		nutrition.remove(10.0)
-		self.assertEqual({ '0': 0, '20': 2 }, nutrition.all())
+		self.assertEqual({ 0: 0, 20: 2 }, nutrition.all())
 
 	def test_remove_multiple(self):
 		"""
@@ -414,13 +416,13 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		"""
 
 		nutrition = MemoryNutritionStore()
-		nutrition.add('0', 0)
-		nutrition.add('10', 1)
-		nutrition.add('20', 2)
-		nutrition.add('30', 3)
-		self.assertEqual({ '0': 0, '10': 1, '20': 2, '30': 3 }, nutrition.all())
-		nutrition.remove('10', '20')
-		self.assertEqual({ '0': 0, '30': 3 }, nutrition.all())
+		nutrition.add(0, 0)
+		nutrition.add(10, 1)
+		nutrition.add(20, 2)
+		nutrition.add(30, 3)
+		self.assertEqual({ 0: 0, 10: 1, 20: 2, 30: 3 }, nutrition.all())
+		nutrition.remove(10, 20)
+		self.assertEqual({ 0: 0, 30: 3 }, nutrition.all())
 
 	def test_remove_multiple_mixed(self):
 		"""
@@ -428,13 +430,13 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		"""
 
 		nutrition = MemoryNutritionStore()
-		nutrition.add('0', 0)
-		nutrition.add('10', 1)
-		nutrition.add('20', 2)
+		nutrition.add(0, 0)
+		nutrition.add(10, 1)
+		nutrition.add(20, 2)
 		nutrition.add(30.0, 3)
-		self.assertEqual({ '0': 0, '10': 1, '20': 2, '30.0': 3 }, nutrition.all())
+		self.assertEqual({ 0: 0, 10: 1, 20: 2, 30.0: 3 }, nutrition.all())
 		nutrition.remove('10', 20, 30.0)
-		self.assertEqual({ '0': 0 }, nutrition.all())
+		self.assertEqual({ 0: 0 }, nutrition.all())
 
 	def test_remove_until(self):
 		"""
@@ -442,13 +444,13 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		"""
 
 		nutrition = MemoryNutritionStore()
-		nutrition.add('0', 0)
-		nutrition.add('10', 1)
-		nutrition.add('20', 2)
-		nutrition.add('30', 3)
-		self.assertEqual({ '0': 0, '10': 1, '20': 2, '30': 3 }, nutrition.all())
+		nutrition.add(0, 0)
+		nutrition.add(10, 1)
+		nutrition.add(20, 2)
+		nutrition.add(30, 3)
+		self.assertEqual({ 0: 0, 10: 1, 20: 2, 30: 3 }, nutrition.all())
 		nutrition.remove(*nutrition.until(20))
-		self.assertEqual({ '20': 2, '30': 3}, nutrition.all())
+		self.assertEqual({ 20: 2, 30: 3}, nutrition.all())
 
 	def test_remove_since(self):
 		"""
@@ -456,10 +458,10 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		"""
 
 		nutrition = MemoryNutritionStore()
-		nutrition.add('0', 0)
-		nutrition.add('10', 1)
-		nutrition.add('20', 2)
-		nutrition.add('30', 3)
-		self.assertEqual({ '0': 0, '10': 1, '20': 2, '30': 3 }, nutrition.all())
+		nutrition.add(0, 0)
+		nutrition.add(10, 1)
+		nutrition.add(20, 2)
+		nutrition.add(30, 3)
+		self.assertEqual({ 0: 0, 10: 1, 20: 2, 30: 3 }, nutrition.all())
 		nutrition.remove(*nutrition.since(20))
-		self.assertEqual({ '0': 0, '10': 1}, nutrition.all())
+		self.assertEqual({ 0: 0, 10: 1}, nutrition.all())
