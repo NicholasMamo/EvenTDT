@@ -36,3 +36,11 @@ Algorithms
    :members:
    :private-members:
    :special-members:
+
+Zhao et al. (2011)
+------------------
+
+.. automodule:: tdt.algorithms.zhao
+   :members:
+   :private-members:
+   :special-members:

@@ -93,7 +93,10 @@
 <li class="toctree-l1"><a class="reference internal" href="apd.html">5. Automatic Participant Detection (APD)</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">6. Topic Detection and Tracking (TDT)</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-tdt.nutrition.store">Nutrition Stores</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-tdt.algorithms.tdt">Algorithms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tdt.algorithms.tdt">Algorithms</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-tdt.algorithms.zhao">Zhao et al. (2011)</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="queues.html">7. Queues</a></li>
@@ -481,6 +484,53 @@ The parameters accepted by this function as well as the return value change acco
 
 </dd></dl>
 
+<div class="section" id="module-tdt.algorithms.zhao">
+<span id="zhao-et-al-2011"></span><h3>Zhao et al. (2011)<a class="headerlink" href="#module-tdt.algorithms.zhao" title="Permalink to this headline">¶</a></h3>
+<p>Zhao et al.’s algorithm is a feature-pivot approach to TDT.
+The algorithm identifies spikes in volume in the stream by halving the most recent time window.
+If the second half has a marked increase in volume—a ratio taken to be 1.7—the algorithm identifies a topic.
+If the increase is not significant, the time window is progressively increased.</p>
+<p>The algorithm is suitable to run in real-time.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Reference: <a class="reference external" href="https://arxiv.org/abs/1106.4300">Zhao et al. (2011)</a>.</p>
+</div>
+<dl class="class">
+<dt id="tdt.algorithms.zhao.Zhao">
+<em class="property">class </em><code class="sig-name descname">Zhao</code><a class="headerlink" href="#tdt.algorithms.zhao.Zhao" title="Permalink to this definition">¶</a></dt>
+<dd><p>Zhao et al.’s algorithm is a feature-pivot approach to TDT.
+The algorithm identifies spikes in volume in the stream by halving the most recent time window.
+If the second half has a marked increase in volume—a ratio taken to be 1.7—the algorithm identifies a topic.
+If the increase is not significant, the time window is progressively increased.</p>
+<dl class="method">
+<dt id="tdt.algorithms.zhao.Zhao.detect">
+<code class="sig-name descname">detect</code><span class="sig-paren">(</span><em class="sig-param">store</em>, <em class="sig-param">timestamp=None</em>, <em class="sig-param">post_rate=1.7</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.algorithms.zhao.Zhao.detect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detect topics using historical data from the given NutritionStore.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>store</strong> (<a class="reference internal" href="#tdt.nutrition.store.NutritionStore" title="tdt.nutrition.store.NutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code></a>) – The store contraining historical nutrition data.
+The algorithm expects the nutrition values to represent the stream volume.
+Therefore the values should be floats or integers.</p></li>
+<li><p><strong>timestamp</strong> (<em>float</em><em> or </em><em>None</em>) – The timestamp at which to try to identify emerging topics.
+If it is not given, the current timestamp is used.
+This value is exclusive.</p></li>
+<li><p><strong>post_rate</strong> (<em>float</em>) – The minimum ratio between two time windows to represent a burst.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A tuple with the start and end timestamp of the time window when there was a burst.
+If there was no burst, <cite>False</cite> is returned.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple or bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 </div>
 </div>
 

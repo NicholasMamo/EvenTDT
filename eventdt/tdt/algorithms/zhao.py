@@ -1,14 +1,14 @@
 """
-.. note::
-
-	Implementation of the algorithm by `Zhao et al. (2011) <https://arxiv.org/abs/1106.4300>`_.
-
 Zhao et al.'s algorithm is a feature-pivot approach to TDT.
 The algorithm identifies spikes in volume in the stream by halving the most recent time window.
 If the second half has a marked increase in volume—a ratio taken to be 1.7—the algorithm identifies a topic.
 If the increase is not significant, the time window is progressively increased.
 
 The algorithm is suitable to run in real-time.
+
+.. note::
+
+	Reference: `Zhao et al. (2011) <https://arxiv.org/abs/1106.4300>`_.
 """
 
 import math
