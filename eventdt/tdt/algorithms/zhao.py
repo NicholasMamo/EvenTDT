@@ -49,8 +49,8 @@ class Zhao(TDTAlgorithm):
 		Detect topics using historical data from the nutrition store.
 
 		:param timestamp: The timestamp at which to try to identify emerging topics.
-					 If it is not given, the current timestamp is used.
-					 This value is exclusive.
+						  If it is not given, the current timestamp is used.
+						  This value is exclusive.
 		:type timestamp: float or None
 
 		:return: A tuple with the start and end timestamp of the time window when there was a burst.
