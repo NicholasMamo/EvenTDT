@@ -27,19 +27,24 @@ class Zhao(TDTAlgorithm):
 				 The algorithm expects the nutrition values to represent the stream volume.
 				 Therefore the values should be floats or integers.
 	:vartype store: :class:`~tdt.nutrition.store.NutritionStore`
+	:ivar post_rate: The minimum ratio between two time windows to represent a burst.
+	:vartype post_rate: float
 	"""
 
-	def __init__(self, store):
+	def __init__(self, store, post_rate=1.7):
 		"""
 		:param store: The store contraining historical nutrition data.
 					  The algorithm expects the nutrition values to represent the stream volume.
 					  Therefore the values should be floats or integers.
 		:type store: :class:`~tdt.nutrition.store.NutritionStore`
+		:param post_rate: The minimum ratio between two time windows to represent a burst.
+		:type post_rate: float
 		"""
 
 		self.store = store
+		self.post_rate = post_rate
 
-	def detect(self, timestamp=None, post_rate=1.7):
+	def detect(self, timestamp=None):
 		"""
 		Detect topics using historical data from the nutrition store.
 
@@ -47,8 +52,6 @@ class Zhao(TDTAlgorithm):
 					 If it is not given, the current timestamp is used.
 					 This value is exclusive.
 		:type timestamp: float or None
-		:param post_rate: The minimum ratio between two time windows to represent a burst.
-		:type post_rate: float
 
 		:return: A tuple with the start and end timestamp of the time window when there was a burst.
 				 If there was no burst, `False` is returned.
@@ -84,7 +87,7 @@ class Zhao(TDTAlgorithm):
 			Therefore return the emerging period: the second half of the time window.
 			"""
 			ratio = sum(second_half.values()) / sum(first_half.values())
-			if ratio >= post_rate:
+			if ratio >= self.post_rate:
 				return (float(min(second_half)), float(max(second_half)))
 
 		"""
