@@ -9,9 +9,6 @@ New documents can be clustered by calling the :func:`~vsm.clustering.algorithms.
 
 from abc import ABC, abstractmethod
 
-import os
-import sys
-
 class ClusteringAlgorithm(ABC):
 	"""
 	Clustering algorithms maintain a state.
