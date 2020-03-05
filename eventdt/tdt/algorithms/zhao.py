@@ -22,16 +22,27 @@ class Zhao(TDTAlgorithm):
 	The algorithm identifies spikes in volume in the stream by halving the most recent time window.
 	If the second half has a marked increase in volume—a ratio taken to be 1.7—the algorithm identifies a topic.
 	If the increase is not significant, the time window is progressively increased.
+
+	:ivar store: The store contraining historical nutrition data.
+				 The algorithm expects the nutrition values to represent the stream volume.
+				 Therefore the values should be floats or integers.
+	:vartype store: :class:`~tdt.nutrition.store.NutritionStore`
 	"""
 
-	def detect(self, store, timestamp=None, post_rate=1.7):
+	def __init__(self, store):
 		"""
-		Detect topics using historical data from the given nutrition store.
-
 		:param store: The store contraining historical nutrition data.
 					  The algorithm expects the nutrition values to represent the stream volume.
 					  Therefore the values should be floats or integers.
 		:type store: :class:`~tdt.nutrition.store.NutritionStore`
+		"""
+
+		self.store = store
+
+	def detect(self, timestamp=None, post_rate=1.7):
+		"""
+		Detect topics using historical data from the nutrition store.
+
 		:param timestamp: The timestamp at which to try to identify emerging topics.
 					 If it is not given, the current timestamp is used.
 					 This value is exclusive.
@@ -58,8 +69,8 @@ class Zhao(TDTAlgorithm):
 			Split the time window in two and get the volume in both.
 			"""
 			half_window = window / 2.
-			first_half = store.between(timestamp - window, timestamp - half_window)
-			second_half = store.between(timestamp - half_window, timestamp)
+			first_half = self.store.between(timestamp - window, timestamp - half_window)
+			second_half = self.store.between(timestamp - half_window, timestamp)
 
 			"""
 			If the first half has no tweets, skip the time window.

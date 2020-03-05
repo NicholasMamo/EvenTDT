@@ -26,8 +26,8 @@ class TestZhao(unittest.TestCase):
 		"""
 
 		store = MemoryNutritionStore()
-		algo = Zhao()
-		self.assertFalse(algo.detect(store))
+		algo = Zhao(store)
+		self.assertFalse(algo.detect())
 
 	def test_timestamp_before_nutrition(self):
 		"""
@@ -35,7 +35,7 @@ class TestZhao(unittest.TestCase):
 		"""
 
 		store = MemoryNutritionStore()
-		algo = Zhao()
+		algo = Zhao(store)
 
 		"""
 		Create the test data.
@@ -43,7 +43,7 @@ class TestZhao(unittest.TestCase):
 		for i in range(10, 20):
 			store.add(i, i * 10)
 
-		self.assertFalse(algo.detect(store, timestamp=10))
+		self.assertFalse(algo.detect(timestamp=10))
 
 	def test_small_time_window(self):
 		"""
@@ -51,7 +51,7 @@ class TestZhao(unittest.TestCase):
 		"""
 
 		store = MemoryNutritionStore()
-		algo = Zhao()
+		algo = Zhao(store)
 
 		"""
 		Create the test data.
@@ -60,7 +60,7 @@ class TestZhao(unittest.TestCase):
 			for j in range(5, 0, -1):
 				store.add(i * 5 + j, math.pow(i * 10, 3))
 
-		self.assertEqual((31, 35), algo.detect(store, 35 + 1))
+		self.assertEqual((31, 35), algo.detect(35 + 1))
 
 	def test_incomplete_nutrition_store(self):
 		"""
@@ -68,7 +68,7 @@ class TestZhao(unittest.TestCase):
 		"""
 
 		store = MemoryNutritionStore()
-		algo = Zhao()
+		algo = Zhao(store)
 
 		"""
 		Create the test data.
@@ -77,7 +77,7 @@ class TestZhao(unittest.TestCase):
 			for j in range(5, 0, -1):
 				store.add(i * 5 + j, i * 10)
 
-		self.assertFalse(algo.detect(store, 35 + 1))
+		self.assertFalse(algo.detect(35 + 1))
 
 	def test_10_time_window(self):
 		"""
@@ -85,7 +85,7 @@ class TestZhao(unittest.TestCase):
 		"""
 
 		store = MemoryNutritionStore()
-		algo = Zhao()
+		algo = Zhao(store)
 
 		"""
 		Create the test data.
@@ -93,7 +93,7 @@ class TestZhao(unittest.TestCase):
 		for i in range(60, 50, -1):
 			store.add(i, 10 if i > 55 else 5)
 
-		self.assertEqual((56, 60), algo.detect(store, 60 + 1))
+		self.assertEqual((56, 60), algo.detect(60 + 1))
 
 	def test_20_time_window(self):
 		"""
@@ -101,7 +101,7 @@ class TestZhao(unittest.TestCase):
 		"""
 
 		store = MemoryNutritionStore()
-		algo = Zhao()
+		algo = Zhao(store)
 
 		"""
 		Create the test data.
@@ -109,7 +109,7 @@ class TestZhao(unittest.TestCase):
 		for i in range(60, 40, -1):
 			store.add(i, 10 if i > 50 else 5)
 
-		self.assertEqual((51, 60), algo.detect(store, 60 + 1))
+		self.assertEqual((51, 60), algo.detect(60 + 1))
 
 	def test_30_time_window(self):
 		"""
@@ -117,7 +117,7 @@ class TestZhao(unittest.TestCase):
 		"""
 
 		store = MemoryNutritionStore()
-		algo = Zhao()
+		algo = Zhao(store)
 
 		"""
 		Create the test data.
@@ -125,7 +125,7 @@ class TestZhao(unittest.TestCase):
 		for i in range(60, 30, -1):
 			store.add(i, 10 if i > 45 else 5)
 
-		self.assertEqual((46, 60), algo.detect(store, 60 + 1))
+		self.assertEqual((46, 60), algo.detect(60 + 1))
 
 	def test_60_time_window(self):
 		"""
@@ -133,7 +133,7 @@ class TestZhao(unittest.TestCase):
 		"""
 
 		store = MemoryNutritionStore()
-		algo = Zhao()
+		algo = Zhao(store)
 
 		"""
 		Create the test data.
@@ -141,7 +141,7 @@ class TestZhao(unittest.TestCase):
 		for i in range(60, 0, -1):
 			store.add(i, 10 if i > 30 else 5)
 
-		self.assertEqual((31, 60), algo.detect(store, 60 + 1))
+		self.assertEqual((31, 60), algo.detect(60 + 1))
 
 	def test_realtime(self):
 		"""
@@ -149,7 +149,7 @@ class TestZhao(unittest.TestCase):
 		"""
 
 		store = MemoryNutritionStore()
-		algo = Zhao()
+		algo = Zhao(store)
 
 		"""
 		Create the test data.
@@ -158,4 +158,4 @@ class TestZhao(unittest.TestCase):
 		for i in range(timestamp, timestamp - 60, -1):
 			store.add(i, 10 if i > timestamp - 10 else 1)
 
-		self.assertEqual((timestamp - 9, timestamp), algo.detect(store))
+		self.assertEqual((timestamp - 9, timestamp), algo.detect())
