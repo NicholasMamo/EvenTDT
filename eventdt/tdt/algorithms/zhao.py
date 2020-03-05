@@ -1,56 +1,82 @@
 """
-Implementation of the algorithm by Zhao et al. (2011).
+.. note::
 
-The algorithm segments time windows into two parts and compares them together.
-If the second part has a tweet volume that is higher than the first by at least a certain ratio, the time window represents a development.
-Zhao et al. take this ratio to be 1.7.
+	Implementation of the algorithm by `Zhao et al. (2011) <https://arxiv.org/abs/1106.4300>`_.
+
+Zhao et al.'s algorithm is a feature-pivot approach to TDT.
+The algorithm identifies spikes in volume in the stream by halving the most recent time window.
+If the second half has a marked increase in volume—a ratio taken to be 1.7—the algorithm identifies a topic.
+If the increase is not significant, the time window is progressively increased.
+
+The algorithm is suitable to run in real-time.
 """
 
 import math
+import time
 
-def detect_topics(nutrition_store, # the store contraining historical data
-		timestamp, # the timestamp of the time window being considered
-		post_rate=1.7, # the minimum ratio to detect a development
-		time_windows=[10, 20, 30, 60], # the lengths of the time window
-	):
+from .tdt import TDTAlgorithm
+
+class Zhao(TDTAlgorithm):
 	"""
-	Detect topics using historical data from the given NutritionStore.
-
-	:param nutrition_store: The store contraining historical data.
-	:type NutritionStore: :class:`~topic_detection.nutrition_store.nutrition_store.NutritionStore`
-	:param timestamp: The current time window's timestamp (in seconds).
-		This is taken to be the timestamp when the time window ended and is exclusive.
-	:type timestamp: int
-	:param post_rate: The minimum ratio of increasing volume to detect a development.
-	:type post_rate: float
-	:param time_window: The lengths of the time window to consider.
-		This time window is split into two phases, the 'before' and 'after'.
-		Starting from the first window, the process repeats until a development is found, or the time windows are exhausted.
-		Zhao et al. discuss the effects of different lengths in their 2011 paper.
-
-	:return: A tuple indicating how recent the development broke, if at all.
-		The tuple is made up of a boolean, and the timw window length.
-	:rtype: tuple
+	Zhao et al.'s algorithm is a feature-pivot approach to TDT.
+	The algorithm identifies spikes in volume in the stream by halving the most recent time window.
+	If the second half has a marked increase in volume—a ratio taken to be 1.7—the algorithm identifies a topic.
+	If the increase is not significant, the time window is progressively increased.
 	"""
 
-	for window in sorted(time_windows):
+	def detect(self, store, timestamp=None, post_rate=1.7):
 		"""
-		Go through each time window and attempt to check whether there as a breaking development.
+		Detect topics using historical data from the given NutritionStore.
+
+		:param store: The store contraining historical nutrition data.
+					  The algorithm expects the nutrition values to represent the stream volume.
+					  Therefore the values should be floats or integers.
+		:type store: :class:`~tdt.nutrition.store.NutritionStore`
+		:param timestamp: The timestamp at which to try to identify emerging topics.
+					 If it is not given, the current timestamp is used.
+					 This value is exclusive.
+		:type timestamp: float or None
+		:param post_rate: The minimum ratio between two time windows to represent a burst.
+		:type post_rate: float
+
+		:return: A tuple with the start and end timestamp of the time window when there was a burst.
+				 If there was no burst, `False` is returned.
+		:rtype: tuple or bool
 		"""
 
-		half_window = window / 2.
+		"""
+		If no time was given, default to the current timestamp.
+		"""
+		timestamp = timestamp or time.time()
 
-		first_half = sum(nutrition_store.between(timestamp - window, timestamp - half_window).values())
-		second_half = sum(nutrition_store.between(timestamp - half_window, timestamp).values())
+		"""
+		Go through each time window and check whether there as a breaking development.
+		"""
+		time_windows = [ 10, 20, 30, 60 ]
+		for window in time_windows:
+			"""
+			Split the time window in two and get the volume in both.
+			"""
+			half_window = window / 2.
+			first_half = store.between(timestamp - window, timestamp - half_window)
+			second_half = store.between(timestamp - half_window, timestamp)
 
-		if first_half == 0:
-			continue
+			"""
+			If the first half has no tweets, skip the time window.
+			"""
+			if sum(first_half.values()) == 0:
+				continue
 
-		ratio = second_half / first_half
-		if ratio > post_rate:
-			return (True, window)
+			"""
+			Calculate the increase in post rate.
+			If the ratio is greater than or equal to the post rate, the time window is breaking.
+			Therefore return the emerging period: the second half of the time window.
+			"""
+			ratio = sum(second_half.values()) / sum(first_half.values())
+			if ratio >= post_rate:
+				return (float(min(second_half)), float(max(second_half)))
 
-	"""
-	If all else fails, then the time window was simply not breaking.
-	"""
-	return (False, 0)
+		"""
+		Return `False` if none of the time windows were deemed to be emerging.
+		"""
+		return False
