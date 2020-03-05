@@ -27,3 +27,12 @@ Nutrition Stores
    :members:
    :private-members:
    :special-members:
+
+==========
+Algorithms
+==========
+
+.. automodule:: tdt.algorithms.tdt
+   :members:
+   :private-members:
+   :special-members:
