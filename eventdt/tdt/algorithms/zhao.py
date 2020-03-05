@@ -8,7 +8,7 @@ The algorithm is suitable to run in real-time.
 
 .. note::
 
-	Reference: `Zhao et al. (2011) <https://arxiv.org/abs/1106.4300>`_.
+	Implementation based on the algorithm presented in `Human as Real-Time Sensors of Social and Physical Events: A Case Study of Twitter and Sports Games by Zhao et al. (2011) <https://arxiv.org/abs/1106.4300>`_.
 """
 
 import math
@@ -26,7 +26,7 @@ class Zhao(TDTAlgorithm):
 
 	def detect(self, store, timestamp=None, post_rate=1.7):
 		"""
-		Detect topics using historical data from the given NutritionStore.
+		Detect topics using historical data from the given nutrition store.
 
 		:param store: The store contraining historical nutrition data.
 					  The algorithm expects the nutrition values to represent the stream volume.
