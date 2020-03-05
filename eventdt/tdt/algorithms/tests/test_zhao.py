@@ -12,7 +12,7 @@ path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
-from algorithms.zhao import Zhao
+from algorithms import Zhao
 from nutrition.memory import MemoryNutritionStore
 
 class TestZhao(unittest.TestCase):
