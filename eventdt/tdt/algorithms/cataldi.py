@@ -33,6 +33,17 @@ class Cataldi(TDTAlgorithm):
 	:vartype store: :class:`~tdt.nutrition.store.NutritionStore`
 	"""
 
+	def __init__(self, store):
+		"""
+		:param store: The store contraining historical nutrition data.
+					  The algorithm expects the nutrition values to represent term nutrition.
+					  Therefore the values should be dictionaries with terms as keys, and nutrition as the respective values.
+					  Furthermore, the algorithm expects time windows.
+					  In other words, the timestamps should represent an entire time window, not just a particular second.
+		:type store: :class:`~tdt.nutrition.store.NutritionStore`
+		"""
+
+		self.store = store
 
 	def detect(self, timestamp, since=None):
 		"""
