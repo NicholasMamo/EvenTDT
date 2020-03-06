@@ -281,9 +281,62 @@ class TestCataldi(unittest.TestCase):
 		algo._get_critical_drop_index(drops)
 		self.assertEqual(drops_copy, drops)
 
+	def test_bursty_terms_empty(self):
+		"""
+		Test that when the bursty terms is empty, an empty list is returned.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = Cataldi(store)
+		self.assertEqual([ ], algo._get_bursty_terms({ }, 0))
+
+	def test_bursty_terms_large_critical_drop_index(self):
+		"""
+		Test that when the critical index is larger than the number of bursty terms, a ValueError is raised.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = Cataldi(store)
+		self.assertRaises(ValueError, algo._get_bursty_terms, { }, 1)
+
+	def test_bursty_terms_all(self):
+		"""
+		Test that when the critical drop index is equal to the bursty terms, all terms are returned.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = Cataldi(store)
+		drops = [ 1 ] * 5
+		burst = { 'a': 10, 'b': 10, 'c': 10, 'd': 10, 'e': 10, 'f': 10, 'g': 10, 'h': 10 }
+		critical_index = algo._get_critical_drop_index(algo._compute_burst_drops(burst))
+		self.assertEqual(set(burst.keys()), set(algo._get_bursty_terms(burst, critical_index)))
+
+	def test_bursty_terms_sorted(self):
+		"""
+		Test that the bursty terms are sorted in descending order of their burst.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = Cataldi(store)
+		drops = [ 1 ] * 5
+		burst = { 'a': 4, 'b': 2, 'c': 6, 'd': 12, 'e': 10, 'f': 8, 'g': 16, 'h': 14 }
+		critical_index = algo._get_critical_drop_index(algo._compute_burst_drops(burst))
+		self.assertEqual([ 'g', 'h', 'd', 'e', 'f', 'c', 'a', 'b' ], algo._get_bursty_terms(burst, critical_index))
+
+	def test_bursty_terms_unchanged(self):
+		"""
+		Test that the bursty terms are unchanged when given to the bursty terms function.
+		"""
 
 		self.assertEqual(filtered_cataldi.detect_topics(nutrition_store, 1532783836 + 60 * 1, p=1e-2), [])
 		self.assertEqual(filtered_cataldi.detect_topics(nutrition_store, 1532783836 + 60 * 2, p=1e-2), ["d"])
 		self.assertEqual(filtered_cataldi.detect_topics(nutrition_store, 1532783836 + 60 * 3, p=1e-2), ["f"])
 		self.assertEqual(filtered_cataldi.detect_topics(nutrition_store, 1532783836 + 60 * 4, p=1e-2), ["e"])
 		self.assertEqual(filtered_cataldi.detect_topics(nutrition_store, 1532783836 + 60 * 5, p=1e-2), ["a"])
+		store = MemoryNutritionStore()
+		algo = Cataldi(store)
+		drops = [ 1 ] * 5
+		burst = { 'a': 4, 'b': 2, 'c': 6, 'd': 12, 'e': 10, 'f': 8, 'g': 16, 'h': 14 }
+		burst_copy = dict(burst)
+		critical_index = algo._get_critical_drop_index(algo._compute_burst_drops(burst))
+		self.assertEqual(burst_copy, burst)

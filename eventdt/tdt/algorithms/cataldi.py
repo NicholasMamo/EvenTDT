@@ -167,3 +167,26 @@ class Cataldi(TDTAlgorithm):
 
 		return 0
 
+	def _get_bursty_terms(self, burst, critical_drop_index):
+		"""
+		Get the bursty terms.
+		These terms are defined as those that appear before the critical drop index.
+
+		:param burst: A dictionary with burst values.
+					  The keys are the terms and the values are the corresponding burst values.
+		:type burst: dict
+		:param critical_drop_index: The critical drop index.
+		:type critical_drop_index: int
+
+		:return: The list of bursty terms, sorted in descending order of their burst.
+		:rtype: str
+
+		:raise ValueError: When the critical drop index is larger than the available terms.
+						   This indicates that something wrong happened when calculating the critical drop index.
+		"""
+
+		if critical_drop_index > len(burst):
+			raise ValueError(f"The critical drop index cannot be larger than the number of terms: {critical_drop_index} > {len(burst)}")
+
+		burst = sorted(burst.items(), key=lambda term: term[1], reverse=True)
+		return [ term for term, burst in burst[:critical_drop_index] ]
