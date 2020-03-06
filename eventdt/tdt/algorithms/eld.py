@@ -26,22 +26,6 @@ class ELD(TDTAlgorithm):
 	The algorithm returns not only terms, but also the degree to which they are breaking.
 	"""
 
-	def _exponential_decay(n, decay_rate=(1./2)):
-		"""
-		An exponential decay factor with the formula:
-			x = 1 / (exp(n)^decay_rate)
-
-		:param n: The number of time windows to consider.
-		:type n: int
-		:param decay_rate: The decay rate of the burstiness function.
-			A smaller value gives more uniform weight to far-off nutrition sets.
-
-		:return: The exponential decay factor, or how much a result should be weighted.
-		:rtype: float
-		"""
-
-		return(1 / math.exp(n) ** decay_rate)
-
 	def detect(nutrition_store, # the store contraining historical data
 		data, # the data being compared with historical information
 		threshold, # the threshold for a term to be considered to be emerging
@@ -118,6 +102,22 @@ class ELD(TDTAlgorithm):
 
 		burstiness = [ (nutrition - historical_data[i].get(term, 0)) * decay_function(i + 1, decay_rate=decay_rate) for i in range(0, windows) ]
 		return sum(burstiness) / coefficient
+
+	def _exponential_decay(n, decay_rate=(1./2)):
+		"""
+		An exponential decay factor with the formula:
+			x = 1 / (exp(n)^decay_rate)
+
+		:param n: The number of time windows to consider.
+		:type n: int
+		:param decay_rate: The decay rate of the burstiness function.
+			A smaller value gives more uniform weight to far-off nutrition sets.
+
+		:return: The exponential decay factor, or how much a result should be weighted.
+		:rtype: float
+		"""
+
+		return(1 / math.exp(n) ** decay_rate)
 
 	def _get_coefficient(n, decay_function):
 		"""
