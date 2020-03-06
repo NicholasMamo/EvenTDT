@@ -92,19 +92,10 @@ topic_detection_tests() {
 	echo -e "${HIGHLIGHT}Memory Nutrition Store${DEFAULT}"
 	python3 -m unittest eventdt.tdt.nutrition.tests.test_memory_nutrition_store
 
-# 	echo -e "${HIGHLIGHT}Algorithms${DEFAULT}"
-#
-# 	echo -e "${HIGHLIGHT}${DEFAULT}"
-# 	echo -e "${HIGHLIGHT}Mamo Algorithms${DEFAULT}"
-# 	python3 -m unittest eventdt.topic_detection.algorithms.tests.test_mamo
-#
-# 	echo -e "${HIGHLIGHT}${DEFAULT}"
-# 	echo -e "${HIGHLIGHT}Cataldi Algorithms${DEFAULT}"
-# 	python3 -m unittest eventdt.topic_detection.algorithms.tests.test_cataldi
-#
-# 	echo -e "${HIGHLIGHT}${DEFAULT}"
-# 	echo -e "${HIGHLIGHT}Zhao Algorithms${DEFAULT}"
-# 	python3 -m unittest eventdt.topic_detection.algorithms.tests.test_zhao
+	echo -e "${HIGHLIGHT}Algorithms${DEFAULT}"
+	python3 -m unittest eventdt.tdt.algorithms.tests.test_cataldi
+	python3 -m unittest eventdt.tdt.algorithms.tests.test_zhao
+	# python3 -m unittest eventdt.topic_detection.algorithms.tests.test_mamo
 }
 
 vector_tests() {
