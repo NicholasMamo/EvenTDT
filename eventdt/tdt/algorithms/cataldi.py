@@ -90,7 +90,7 @@ class Cataldi(TDTAlgorithm):
 
 		.. math::
 
-			burst_k^t = \\sum_{x=t-s}^(t-1)(((nutr_k^t)^2 - (nutr_k^x)^2) \\cdot \\frac{1}{log(t - x + 1)})
+			burst_k^t = \\sum_{x=t-s}^{t-1}(((nutr_k^t)^2 - (nutr_k^x)^2) \\cdot \\frac{1}{log(t - x + 1)})
 
 		where :math:`t` is the current time window and :math:`s` is the number of time windows to consider.
 

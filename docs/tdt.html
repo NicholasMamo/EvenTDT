@@ -607,7 +607,7 @@ If it is not given, all of the nutrition that is available is used.</p></li>
 <dd><p>Calculate the burst for the given term using the historical data.
 The equation used is:</p>
 <div class="math notranslate nohighlight">
-\[burst_k^t = \sum_{x=t-s}^(t-1)(((nutr_k^t)^2 - (nutr_k^x)^2) \cdot \frac{1}{log(t - x + 1)})\]</div>
+\[burst_k^t = \sum_{x=t-s}^{t-1}(((nutr_k^t)^2 - (nutr_k^x)^2) \cdot \frac{1}{log(t - x + 1)})\]</div>
 <p>where <span class="math notranslate nohighlight">\(t\)</span> is the current time window and <span class="math notranslate nohighlight">\(s\)</span> is the number of time windows to consider.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
