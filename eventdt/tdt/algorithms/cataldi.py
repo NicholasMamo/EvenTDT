@@ -15,7 +15,6 @@ This implementation calculates the burst of terms based on the given nutrition.
 """
 
 import math
-import time
 
 from .tdt import TDTAlgorithm
 
