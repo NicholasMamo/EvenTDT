@@ -50,30 +50,25 @@ class ELD(TDTAlgorithm):
 		self.store = store
 		self.decay_rate = decay_rate
 
-	def detect(self, data, threshold, sets=None, timestamp=None, min_nutrition=0, ):
+	def detect(self, nutrition, since=None, min_burst=0):
 		"""
 		Detect topics using historical data from the given nutrition store.
 
-		:param data: The data from the current (sliding) time window.
-		:type data: dict
-		:param threshold: The minimum burstiness value of a term to be deemed as emergent.
-		:type threshold: float
-		:param sets: The number of time windows to consider.
-		:type sets: int
-		:param timestamp: The timestamp of the start of the (sliding) time window.
-			Used to filter out the historical data, retaining only past information.
-		:type timestamp: int
-		:param min_nutrition: The minimum nutrition of a term to be considered.
-		:type min_nutrition: float
-		:param decay_rate: The decay rate of the burstiness function.
-			A smaller value gives more uniform weight to far-off nutrition sets.
-		:type decay_rate: float
-		:param term_only: A flag indicating whether only the terms' burstiness should be returned as well.
-		:type term_only: bool
+		:param nutrition: The nutrition values from the current (sliding) time window.
+						  The keys should be the terms, and the values the respective nutrition.
+		:type nutrition: dict
+		:param since: The timestamp since when nutrition should be considered.
+					  If it is not given, all of the nutrition that is available is used.
+		:type since: float or None
+		:param min_burst: The minimum burst of a term to be considered emerging and returned.
+						  This value is exclusive.
+						  By default, only terms thet have a non-zero positive burst are returned.
+						  These terms have seen their popularity increase.
+		:type min_burst: float
 
-		:return: A list of breaking terms in the considered time window.
-			If the `term_only` flag is set to False, also return their burstiness values as tuples.
-		:rtype: list
+		:return: The breaking terms and their burst as a dictionary.
+				 The keys are the terms and the values are the respective burst values.
+		:rtype: dict
 		"""
 
 		bursty_terms = []
