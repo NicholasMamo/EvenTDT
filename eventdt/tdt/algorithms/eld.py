@@ -24,7 +24,24 @@ class ELD(TDTAlgorithm):
 	"""
 	Mamo et al.'s ELD is a feature-pivot TDT algorithm to detect breaking terms.
 	The algorithm returns not only terms, but also the degree to which they are breaking.
+
+	:ivar store: The store contraining historical nutrition data.
+				 The algorithm expects the timestamps to represent checkpoints, or time windows.
+				 Therefore the nutrition store should have dictionaries with timestamps as keys, and the nutrition of terms in a dictionary as values.
+				 In other words, the timestamps should represent an entire time window, not just a particular second.
+	:vartype store: :class:`~tdt.nutrition.store.NutritionStore`
 	"""
+
+	def __init__(self, store):
+		"""
+		:param store: The store contraining historical nutrition data.
+					  The algorithm expects the timestamps to represent checkpoints, or time windows.
+					  Therefore the nutrition store should have dictionaries with timestamps as keys, and the nutrition of terms in a dictionary as values.
+					  In other words, the timestamps should represent an entire time window, not just a particular second.
+		:type store: :class:`~tdt.nutrition.store.NutritionStore`
+		"""
+
+		self.store = store
 
 	def detect(nutrition_store, # the store contraining historical data
 		data, # the data being compared with historical information
