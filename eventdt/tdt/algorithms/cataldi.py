@@ -123,3 +123,47 @@ class Cataldi(TDTAlgorithm):
 		burst = sorted(burst.values(), reverse=True)
 		return [ burst[i] - burst[i + 1] for i in range(len(burst) - 1) ]
 
+	def _get_critical_drop_index(self, drops):
+		"""
+		Find the critical drop index.
+		The function isolates all drops that appear before the highest drop.
+		The critical drop is the first drop in this selection that is bigger than the average drop.
+
+		:param drops: A list of burst drops.
+		:type drops: list of float
+
+		:return: The index of the critical drop.
+		:rtype: int
+		"""
+
+		"""
+		Return immediately if there are no drops.
+		"""
+		if not drops:
+			return 0
+
+		"""
+		Find the maximum drop and isolate the burst values that appear before it.
+		"""
+		maximum_drop = max(drops)
+		index = len(drops) - drops[::-1].index(maximum_drop)
+		drops = drops[:index]
+
+		"""
+		Calculate the average drop and use it to find the critical index.
+
+		.. note::
+
+			The index is incremented because anything *before* the drop is bursty.
+		"""
+		if drops:
+			average = sum(drops)/len(drops)
+
+			for i, drop in enumerate(drops):
+				if drop > average:
+					return i + 1
+
+			return i + 2
+
+		return 0
+

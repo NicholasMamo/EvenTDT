@@ -214,6 +214,73 @@ class TestCataldi(unittest.TestCase):
 		drops = algo._compute_burst_drops(bursts)
 		self.assertEqual(bursts_copy, bursts)
 
+	def test_critical_drop_index_empty(self):
+		"""
+		Test that when getting the critical drop index from an empty list, 0 is returned.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = Cataldi(store)
+		self.assertEqual(0, algo._get_critical_drop_index([ ]))
+
+	def test_critical_drop_index_single_value(self):
+		"""
+		Test that when getting the critical drop index from an list with one value, 2 is returned.
+		If there is one drop value, there are two terms.
+		This is a special case of all burst drop values being the same.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = Cataldi(store)
+		self.assertEqual(2, algo._get_critical_drop_index([ 1 ]))
+
+	def test_critical_drop_index(self):
+		"""
+		Test that when getting the critical drop index, the correct drop is returned.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = Cataldi(store)
+		drops = [ 1, 1, 3, 3, 5, 4, 2 ]
+		self.assertEqual(3, algo._get_critical_drop_index(drops))
+
+	def test_critical_drop_equal_drops(self):
+		"""
+		Test that when getting the critical drop index from a list with equal drops, the critical index includes all values.
+		In this example, there are 5 equal drops, indicating 6 terms with the same difference in burst.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = Cataldi(store)
+		drops = [ 1 ] * 5
+		self.assertEqual(6, algo._get_critical_drop_index(drops))
+
+	def test_critical_drop_equal_drops_interval(self):
+		"""
+		Test that when getting the critical drop index from a list with an interval of equal drops, the critical index includes all values.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = Cataldi(store)
+		bursts = { 'a': 20, 'b': 18, 'c': 16, 'd': 14, 'e': 12, 'f': 10, 'g': 5, 'h': 1 }
+		drops = [ 2 ] * 5 + list(range(5, 3, -1))
+		self.assertEqual(drops, algo._compute_burst_drops(bursts))
+		self.assertEqual(6, algo._get_critical_drop_index(drops))
+		self.assertEqual([ 'a', 'b', 'c', 'd', 'e', 'f' ],
+						 sorted(bursts, key=bursts.get, reverse=True)[:algo._get_critical_drop_index(drops)])
+
+	def test_critical_drop_index_drops_unchanged(self):
+		"""
+		Test that when giving a list of drops to the critical index function, the list is unchanged.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = Cataldi(store)
+		drops = [ 1 ] * 5
+		drops_copy = list(drops)
+		algo._get_critical_drop_index(drops)
+		self.assertEqual(drops_copy, drops)
+
 
 		self.assertEqual(filtered_cataldi.detect_topics(nutrition_store, 1532783836 + 60 * 1, p=1e-2), [])
 		self.assertEqual(filtered_cataldi.detect_topics(nutrition_store, 1532783836 + 60 * 2, p=1e-2), ["d"])
