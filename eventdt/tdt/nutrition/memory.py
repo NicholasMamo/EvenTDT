@@ -53,20 +53,14 @@ class MemoryNutritionStore(NutritionStore):
 		"""
 		Get the nutrition data at the given timestamp.
 
-		.. note::
-
-			The function allows :class:`~IndexError` to be raised because having missing nutrition data needs to be handled.
-
 		:param timestamp: The timestamp whose nutrition is to be returned.
 		:type timestamp: float or int
 
 		:return: The nutrition at the given timestamp.
 		:rtype: any
-
-		:raises KeyError: When there is no nutrition data at the given timestamp.
 		"""
 
-		return self.store[float(timestamp)]
+		return self.store.get(float(timestamp))
 
 	def all(self):
 		"""

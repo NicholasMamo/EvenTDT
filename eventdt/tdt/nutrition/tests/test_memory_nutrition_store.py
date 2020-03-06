@@ -141,11 +141,11 @@ class TestMemoryNutritionStore(unittest.TestCase):
 
 	def test_get_missing_nutrition(self):
 		"""
-		Test that when getting nutrition for a missing timestamp, an IndexError is returned.
+		Test that when getting nutrition for a missing timestamp, `None` is returned.
 		"""
 
 		nutrition = MemoryNutritionStore()
-		self.assertRaises(KeyError, nutrition.get, 10)
+		self.assertEqual(None, nutrition.get(10))
 
 	def test_all_nutrition(self):
 		"""
