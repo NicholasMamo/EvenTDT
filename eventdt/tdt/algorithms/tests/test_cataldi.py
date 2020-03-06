@@ -1,24 +1,24 @@
 """
-Run unit tests on Cataldi et al.'s algorithm.
+Run unit tests on Cataldi et al. (2014)'s algorithm.
 """
 
+import math
 import os
+import random
+import string
 import sys
+import time
 import unittest
 
-path = os.path.dirname(__file__)
-path = os.path.join(path, "../")
+path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
-	sys.path.append(path)
+    sys.path.append(path)
 
-from libraries.topic_detection.algorithms import filtered_cataldi, cataldi
-from libraries.topic_detection.nutrition_store.memory_nutrition_store import MemoryNutritionStore
-
-import random
-
-def concatenate_dicts(x, y):
+from algorithms import Cataldi
+from nutrition.memory import MemoryNutritionStore
+class TestCataldi(unittest.TestCase):
 	"""
-	Concatenate two dictionaries
+	Test Cataldi et al. (2014)'s' algorithm.
 	"""
 
 	z = x.copy()
