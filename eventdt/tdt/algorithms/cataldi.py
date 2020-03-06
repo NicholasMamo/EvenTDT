@@ -59,6 +59,30 @@ class Cataldi(TDTAlgorithm):
 		:return: A list of breaking terms in the considered time window in descending order of their burst.
 		:rtype: list of str
 		"""
+
+		"""
+		If no timestamp to begin with is provided, all nutrition from the earliest possible timestamp is used.
+		"""
+		since = since or 0
+
+		"""
+		Load the nutrition that will be used to compute burst.
+		Also load the historic nutrition data.
+		The timestamp being evaluated is not used.
+		"""
+		nutrition = self.store.get(timestamp) or { }
+		historic = self.store.between(since, timestamp)
+
+		"""
+		Compute the burst and the drops between drops.
+		This is used to find the critical index, and then the bursty terms.
+		"""
+		burst = { term: self._compute_burst(term, nutrition, historic) for term in nutrition }
+		drops = self._compute_burst_drops(burst)
+		critical_index = self._get_critical_drop_index(drops)
+
+		return self._get_bursty_terms(burst, critical_index)
+
 	def _compute_burst(self, term, nutrition, historic):
 		"""
 		Calculate the burst for the given term using the historical data.

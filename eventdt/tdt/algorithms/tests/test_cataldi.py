@@ -21,49 +21,93 @@ class TestCataldi(unittest.TestCase):
 	Test Cataldi et al. (2014)'s' algorithm.
 	"""
 
-	z = x.copy()
-	z.update(y)
-	return z
-
-class TestCataldi(unittest.TestCase):
-	"""
-	Test Cataldi et al.'s algorithm.
-	"""
-
-	def test_topic_detection(self):
+	def test_detect(self):
 		"""
-		Test the topic detection component
+		Test detecting bursty terms.
 		"""
 
-		nutrition_store = MemoryNutritionStore()
-		nutrition_store.add_nutrition_set(1532783836 + 60 * 0, { "a": 2 , 	"b": 8 , 				"d": 20 , 				"f": 7 })
-		nutrition_store.add_nutrition_set(1532783836 + 60 * 1, { 			"b": 7 , 				"d": 22 , 				"f": 2 })
-		nutrition_store.add_nutrition_set(1532783836 + 60 * 2, { "a": 4 , 	"b": 8 , 	"c": 1 , 	"d": 23 , 				"f": 1 })
-		nutrition_store.add_nutrition_set(1532783836 + 60 * 3, { "a": 3 , 	"b": 8 , 	"c": 1 , 	"d": 23 , 				"f": 8 })
-		nutrition_store.add_nutrition_set(1532783836 + 60 * 4, { "a": 7 , 	"b": 10 , 	"c": 2 , 	"d": 26 , 	"e": 15 , 	"f": 7 })
-		nutrition_store.add_nutrition_set(1532783836 + 60 * 5, { "a": 10 , 	"b": 9 , 	"c": 7 , 	"d": 20 , 	"e": 5 , 	"f": 5 })
+		store = MemoryNutritionStore()
+		algo = Cataldi(store)
+		store.add(60, { 'a': 30, 'b': 30, 'c': 30 })
+		store.add(50, { 'a': 20, 'b': 10, 'c': 9 })
+		store.add(40, { 'a': 10, 'b': 20, 'c': 20 })
+		self.assertEqual([ 'c', 'b' ], algo.detect(60))
 
-		self.assertEqual(cataldi.detect_topics(nutrition_store, 1532783836 + 60 * 1), ["d"])
-		self.assertEqual(cataldi.detect_topics(nutrition_store, 1532783836 + 60 * 2), ["d"])
-		self.assertEqual(cataldi.detect_topics(nutrition_store, 1532783836 + 60 * 3), ["f"])
-		self.assertEqual(cataldi.detect_topics(nutrition_store, 1532783836 + 60 * 4), ["e"])
-		self.assertEqual(cataldi.detect_topics(nutrition_store, 1532783836 + 60 * 5), ["a", "c"])
-
-	def test_filtered_topic_detection(self):
+	def test_detect_recency(self):
 		"""
-		Test the filtered implementation of the algorithm by Cataldi et al.
+		Test that when detecting bursty terms, recent time windows have more weight.
 		"""
 
-		alphabet = ["g", "h", "i", "j", "k", "l", "m", "n", "o", "p"]
+		store = MemoryNutritionStore()
+		algo = Cataldi(store)
+		store.add(60, { 'a': 30, 'b': 30, 'c': 30 })
+		store.add(50, { 'a': 20, 'b': 9, 'c': 20 })
+		store.add(40, { 'a': 10, 'b': 20, 'c': 9 })
+		self.assertEqual([ 'b', 'c' ], algo.detect(60))
 
-		nutrition_store = MemoryNutritionStore()
-		random.seed(2320)
-		nutrition_store.add_nutrition_set(1532783836 + 60 * 0, concatenate_dicts({ "a": 2 , 	"b": 8 , 				"d": 10 , 				"f": 7 }, zip(alphabet, [ random.gauss(7, 0.1) for i in range(0, len(alphabet)) ])))
-		nutrition_store.add_nutrition_set(1532783836 + 60 * 1, concatenate_dicts({ 				"b": 7 , 				"d": 11 , 				"f": 2 }, zip(alphabet, [ random.gauss(7, 0.1) for i in range(0, len(alphabet)) ])))
-		nutrition_store.add_nutrition_set(1532783836 + 60 * 2, concatenate_dicts({ "a": 4 , 	"b": 8 , 	"c": 1 , 	"d": 13 , 				"f": 1 }, zip(alphabet, [ random.gauss(7, 0.1) for i in range(0, len(alphabet)) ])))
-		nutrition_store.add_nutrition_set(1532783836 + 60 * 3, concatenate_dicts({ "a": 7 , 	"b": 8 , 	"c": 1 , 	"d": 13 , 				"f": 8 }, zip(alphabet, [ random.gauss(7, 0.1) for i in range(0, len(alphabet)) ])))
-		nutrition_store.add_nutrition_set(1532783836 + 60 * 4, concatenate_dicts({ "a": 10 , 	"b": 10 , 	"c": 2 , 	"d": 15 , 	"e": 15 , 	"f": 7 }, zip(alphabet, [ random.gauss(7, 0.1) for i in range(0, len(alphabet)) ])))
-		nutrition_store.add_nutrition_set(1532783836 + 60 * 5, concatenate_dicts({ "a": 25 , 	"b": 9 , 	"c": 7 , 	"d": 10 , 	"e": 5 , 	"f": 5 }, zip(alphabet, [ random.gauss(7, 0.1) for i in range(0, len(alphabet)) ])))
+	def test_detect_sorted(self):
+		"""
+		Test that when detecting bursty terms, these terms are sorted in descending order of their burst.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = Cataldi(store)
+		store.add(60, { 'a': 30, 'b': 30, 'c': 30 })
+		store.add(50, { 'a': 20, 'b': 9, 'c': 5 })
+		store.add(40, { 'a': 10, 'b': 20, 'c': 9 })
+		self.assertEqual([ 'c', 'b' ], algo.detect(60))
+
+	def test_detect_since_inclusive(self):
+		"""
+		Test that when detecting bursty terms with a selection of time windows, only those time windows are used.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = Cataldi(store)
+		store.add(60, { 'a': 30, 'b': 30, 'c': 30 })
+		store.add(50, { 'a': 20, 'b': 9, 'c': 10 })
+		store.add(40, { 'a': 10, 'b': 20, 'c': 9 })
+		self.assertEqual([ 'c', 'b' ], algo.detect(60))
+		self.assertEqual([ 'b', 'c' ], algo.detect(60, since=50))
+
+	def test_detect_nutrition_store_unchanged(self):
+		"""
+		Test that when detecting bursty terms, the store itself is unchanged.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = Cataldi(store)
+		store.add(60, { 'a': 30, 'b': 30, 'c': 30 })
+		store.add(50, { 'a': 20, 'b': 9, 'c': 10 })
+		store.add(40, { 'a': 10, 'b': 20, 'c': 9 })
+		store_copy = dict(store.all())
+		algo.detect(60)
+		self.assertEqual(store_copy, store.all())
+
+	def test_detect_empty_nutrition(self):
+		"""
+		Test that when detecting bursty terms with an empty nutrition, no terms are returned.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = Cataldi(store)
+		store.add(60, { 'a': 30, 'b': 30, 'c': 30 })
+		store.add(50, { 'a': 20, 'b': 9, 'c': 10 })
+		store.add(40, { 'a': 10, 'b': 20, 'c': 9 })
+		self.assertFalse(algo.detect(70))
+
+	def test_detect_empty_historic(self):
+		"""
+		Test that when detecting bursty terms with empty historic data, all terms are returned in no particular order.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = Cataldi(store)
+		store.add(60, { 'a': 35, 'b': 25, 'c': 30 })
+		store.add(50, { 'a': 20, 'b': 9, 'c': 10 })
+		store.add(40, { 'a': 10, 'b': 20, 'c': 9 })
+		self.assertEqual(set([ 'a', 'b', 'c' ]), set(algo.detect(40)))
+
 	def test_compute_burst_non_existent_term(self):
 		"""
 		Test that when computing the burst of a term that does not exist, 0 is returned.
@@ -328,11 +372,6 @@ class TestCataldi(unittest.TestCase):
 		Test that the bursty terms are unchanged when given to the bursty terms function.
 		"""
 
-		self.assertEqual(filtered_cataldi.detect_topics(nutrition_store, 1532783836 + 60 * 1, p=1e-2), [])
-		self.assertEqual(filtered_cataldi.detect_topics(nutrition_store, 1532783836 + 60 * 2, p=1e-2), ["d"])
-		self.assertEqual(filtered_cataldi.detect_topics(nutrition_store, 1532783836 + 60 * 3, p=1e-2), ["f"])
-		self.assertEqual(filtered_cataldi.detect_topics(nutrition_store, 1532783836 + 60 * 4, p=1e-2), ["e"])
-		self.assertEqual(filtered_cataldi.detect_topics(nutrition_store, 1532783836 + 60 * 5, p=1e-2), ["a"])
 		store = MemoryNutritionStore()
 		algo = Cataldi(store)
 		drops = [ 1 ] * 5
