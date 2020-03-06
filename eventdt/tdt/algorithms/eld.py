@@ -50,7 +50,7 @@ class ELD(TDTAlgorithm):
 		self.store = store
 		self.decay_rate = decay_rate
 
-	def detect(self, nutrition, since=None, min_burst=0):
+	def detect(self, nutrition, since=None, until=None, min_burst=0):
 		"""
 		Detect topics using historical data from the given nutrition store.
 
@@ -58,8 +58,12 @@ class ELD(TDTAlgorithm):
 						  The keys should be the terms, and the values the respective nutrition.
 		:type nutrition: dict
 		:param since: The timestamp since when nutrition should be considered.
-					  If it is not given, all of the nutrition that is available is used.
+					  If it is not given, all of the nutrition that is available until the `until` is used.
 		:type since: float or None
+		:param until: The timestamp until when nutrition should be considered.
+					  If it is not given, all of the nutrition that is available since the `since` parameter is used.
+					  If the algorithm is being used retrospectively, this parameter can represent the current timestamp to get only past nutrition.
+		:type until: float or None
 		:param min_burst: The minimum burst of a term to be considered emerging and returned.
 						  This value is exclusive.
 						  By default, only terms thet have a non-zero positive burst are returned.
@@ -70,6 +74,21 @@ class ELD(TDTAlgorithm):
 				 The keys are the terms and the values are the respective burst values.
 		:rtype: dict
 		"""
+
+		"""
+		If no timestamp to begin with is provided, all nutrition from the earliest possible timestamp is used.
+		If no end timestamp is provided, all nutrition is used.
+		"""
+		since = since or 0
+
+		"""
+		Load the historic nutrition data.
+		The timestamp being evaluated is not used.
+		"""
+		if until:
+			historic = self.store.between(since, until)
+		else:
+			historic = self.store.since(since)
 
 		bursty_terms = []
 		historical_data = nutrition_store.get_recent_nutrition_sets(sets, timestamp=timestamp) # get the historical data
