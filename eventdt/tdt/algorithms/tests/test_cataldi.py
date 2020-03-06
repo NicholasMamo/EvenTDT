@@ -160,6 +160,60 @@ class TestCataldi(unittest.TestCase):
 		algo._compute_burst('a', nutrition, historic)
 		self.assertEqual(historic_copy, historic)
 
+	def test_compute_drops_empty(self):
+		"""
+		Test that when computing the drops and there are no burst values, an empty list is returned.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = Cataldi(store)
+		self.assertEqual([ ], algo._compute_burst_drops({ }))
+
+	def test_compute_drops_one(self):
+		"""
+		Test that when computing the drops and there is only one burst value, an empty list is returned.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = Cataldi(store)
+		self.assertEqual([ ], algo._compute_burst_drops({ 'a': 10 }))
+
+	def test_compute_drops_sorted(self):
+		"""
+		Thest that when computing the drops, the burst values are sorted.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = Cataldi(store)
+		drops = algo._compute_burst_drops({ 'a': 10 , 'b': 25, 'c': 15, 'd': 40 })
+		self.assertEqual([ 15, 10, 5 ], drops)
+		self.assertTrue(all( drop > 0 for drop in drops))
+
+	def test_compute_drops_n(self):
+		"""
+		Test that when computing the drops, the number of drops is equivalent to N-1.
+		N is the number of burst values.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = Cataldi(store)
+		bursts = { letter: random.randint(0, 100) for letter in string.ascii_uppercase }
+		drops = algo._compute_burst_drops(bursts)
+		self.assertEqual(len(string.ascii_uppercase), len(drops) + 1)
+		self.assertTrue(all( drop >= 0 for drop in drops))
+
+	def test_compute_drops_burst_unchanged(self):
+		"""
+		Test that when giving a dictionary of bursts to compute the drops, the dictionary is unchanged.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = Cataldi(store)
+		bursts = { letter: random.randint(0, 100) for letter in string.ascii_uppercase }
+		bursts_copy = dict(bursts)
+		drops = algo._compute_burst_drops(bursts)
+		self.assertEqual(bursts_copy, bursts)
+
 
 		self.assertEqual(filtered_cataldi.detect_topics(nutrition_store, 1532783836 + 60 * 1, p=1e-2), [])
 		self.assertEqual(filtered_cataldi.detect_topics(nutrition_store, 1532783836 + 60 * 2, p=1e-2), ["d"])

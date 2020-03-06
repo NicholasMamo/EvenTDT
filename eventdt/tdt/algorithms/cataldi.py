@@ -107,3 +107,19 @@ class Cataldi(TDTAlgorithm):
 		return sum([(nutrition.get(term, 0) ** 2 - historic[window].get(term, 0) ** 2) / math.log(i + 1 + 1, 10)
 					for i, window in enumerate(sorted(historic, reverse=True))])
 
+	def _compute_burst_drops(self, burst):
+		"""
+		Compute the drops in burst among terms.
+		The function sorts the burst values in descending order and computes the drops between them.
+
+		:param burst: A dictionary with burst values.
+					  The keys are the terms and the values are the corresponding burst values.
+		:type burst: dict
+
+		:return: A list of burst drops.
+		:rtype: list of str
+		"""
+
+		burst = sorted(burst.values(), reverse=True)
+		return [ burst[i] - burst[i + 1] for i in range(len(burst) - 1) ]
+
