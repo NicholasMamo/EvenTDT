@@ -30,32 +30,30 @@ class ELD(TDTAlgorithm):
 				 Therefore the nutrition store should have dictionaries with timestamps as keys, and the nutrition of terms in a dictionary as values.
 				 In other words, the timestamps should represent an entire time window, not just a particular second.
 	:vartype store: :class:`~tdt.nutrition.store.NutritionStore`
+	:ivar decay_rate: The decay rate used by the algorithm.
+					  A smaller value gives more uniform weight to far-off nutrition sets.
+	:vartype decay_rate: float
 	"""
 
-	def __init__(self, store):
+	def __init__(self, store, decay_rate=(1./2)):
 		"""
 		:param store: The store contraining historical nutrition data.
 					  The algorithm expects the timestamps to represent checkpoints, or time windows.
 					  Therefore the nutrition store should have dictionaries with timestamps as keys, and the nutrition of terms in a dictionary as values.
 					  In other words, the timestamps should represent an entire time window, not just a particular second.
 		:type store: :class:`~tdt.nutrition.store.NutritionStore`
+		:param decay_rate: The decay rate used by the algorithm.
+						   A smaller value gives more uniform weight to far-off nutrition sets.
+		:type decay_rate: float
 		"""
 
 		self.store = store
+		self.decay_rate = decay_rate
 
-	def detect(nutrition_store, # the store contraining historical data
-		data, # the data being compared with historical information
-		threshold, # the threshold for a term to be considered to be emerging
-		sets=None, # the number of sets to consider
-		timestamp=None, # the timestamp before which the historical data should be considered
-		min_nutrition=0, # consider only nutrition having a minimal value
-		decay_rate=(1./2), # the decay rate - a smaller value considers sets that are farther away
-		term_only=True):
+	def detect(self, data, threshold, sets=None, timestamp=None, min_nutrition=0, ):
 		"""
-		Detect topics using historical data from the given NutritionStore.
+		Detect topics using historical data from the given nutrition store.
 
-		:param nutrition_store: The store contraining historical data.
-		:type NutritionStore: :class:`~topic_detection.nutrition_store.nutrition_store.NutritionStore`
 		:param data: The data from the current (sliding) time window.
 		:type data: dict
 		:param threshold: The minimum burstiness value of a term to be deemed as emergent.
@@ -94,7 +92,7 @@ class ELD(TDTAlgorithm):
 
 		return bursty_terms
 
-	def _get_burstiness(term, nutrition, historical_data, decay_function=(_exponential_decay, None), laplace=False):
+	def _get_burstiness(self, term, nutrition, historical_data, decay_function=(_exponential_decay, None), laplace=False):
 		"""
 		Calculate the burstiness for the given term using the historical data.
 
@@ -120,7 +118,7 @@ class ELD(TDTAlgorithm):
 		burstiness = [ (nutrition - historical_data[i].get(term, 0)) * decay_function(i + 1, decay_rate=decay_rate) for i in range(0, windows) ]
 		return sum(burstiness) / coefficient
 
-	def _exponential_decay(n, decay_rate=(1./2)):
+	def _exponential_decay(self, n, decay_rate=(1./2)):
 		"""
 		An exponential decay factor with the formula:
 			x = 1 / (exp(n)^decay_rate)
@@ -136,7 +134,7 @@ class ELD(TDTAlgorithm):
 
 		return(1 / math.exp(n) ** decay_rate)
 
-	def _get_coefficient(n, decay_function):
+	def _get_coefficient(self, n, decay_function):
 		"""
 		Get the denominator of the burstiness calculation.
 		This denominator is used to rescale the function, for example with bounds between -1 and 1.
