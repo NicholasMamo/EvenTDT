@@ -25,9 +25,8 @@ class Cataldi(TDTAlgorithm):
 	Burst is a measure of how much a term is bursting.
 
 	:ivar store: The store contraining historical nutrition data.
-				 The algorithm expects the nutrition values to represent term nutrition.
-				 Therefore the values should be dictionaries with terms as keys, and nutrition as the respective values.
-				 Furthermore, the algorithm expects time windows.
+				 The algorithm expects the timestamps to represent time windows.
+				 Therefore the nutrition store should have dictionaries with timestamps as keys, and the nutrition of terms in a dictionary as values.
 				 In other words, the timestamps should represent an entire time window, not just a particular second.
 	:vartype store: :class:`~tdt.nutrition.store.NutritionStore`
 	"""
@@ -35,9 +34,8 @@ class Cataldi(TDTAlgorithm):
 	def __init__(self, store):
 		"""
 		:param store: The store contraining historical nutrition data.
-					  The algorithm expects the nutrition values to represent term nutrition.
-					  Therefore the values should be dictionaries with terms as keys, and nutrition as the respective values.
-					  Furthermore, the algorithm expects time windows.
+					  The algorithm expects the timestamps to represent time windows.
+					  Therefore the nutrition store should have dictionaries with timestamps as keys, and the nutrition of terms in a dictionary as values.
 					  In other words, the timestamps should represent an entire time window, not just a particular second.
 		:type store: :class:`~tdt.nutrition.store.NutritionStore`
 		"""
