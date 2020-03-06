@@ -44,3 +44,11 @@ Zhao et al. (2011)
    :members:
    :private-members:
    :special-members:
+
+Cataldi et al. (2014)
+---------------------
+
+.. automodule:: tdt.algorithms.cataldi
+   :members:
+   :private-members:
+   :special-members:

@@ -95,6 +95,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-tdt.nutrition.store">Nutrition Stores</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-tdt.algorithms.tdt">Algorithms</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module-tdt.algorithms.zhao">Zhao et al. (2011)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-tdt.algorithms.cataldi">Cataldi et al. (2014)</a></li>
 </ul>
 </li>
 </ul>
@@ -204,7 +205,7 @@ Nutrition stores separate data based on timestamps.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>timestamp</strong> (<em>float</em><em> or </em><em>int</em><em> or </em><em>str</em>) – The timestamp of the nutrition data.</p></li>
+<li><p><strong>timestamp</strong> (<em>float</em><em> or </em><em>int</em>) – The timestamp of the nutrition data.</p></li>
 <li><p><strong>nutrition</strong> (<em>any</em>) – The nutrition data to add.
 The nutrition data can be any value.</p></li>
 </ul>
@@ -216,22 +217,15 @@ The nutrition data can be any value.</p></li>
 <dt id="tdt.nutrition.store.NutritionStore.get">
 <em class="property">abstract </em><code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param">timestmap</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.nutrition.store.NutritionStore.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the nutrition data at the given timestamp.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The function allows <code class="xref py py-class docutils literal notranslate"><span class="pre">IndexError</span></code> to be raised because having missing nutrition data needs to be handled.</p>
-</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>timestamp</strong> (<em>float</em><em> or </em><em>int</em><em> or </em><em>str</em>) – The timestamp whose nutrition is to be returned.</p>
+<dd class="field-odd"><p><strong>timestamp</strong> (<em>float</em><em> or </em><em>int</em>) – The timestamp whose nutrition is to be returned.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The nutrition at the given timestamp.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>any</p>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>KeyError</strong> – When there is no nutrition data at the given timestamp.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -262,9 +256,9 @@ The keys are the timestamps, and the values are the nutrition data at those time
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>start</strong> (<em>float</em><em> or </em><em>int</em><em> or </em><em>str</em>) – The first timestamp that should be included in the returned nutrition data.
+<li><p><strong>start</strong> (<em>float</em><em> or </em><em>int</em>) – The first timestamp that should be included in the returned nutrition data.
 If no time window with the given timestamp exists, all returned time windows succeed it.</p></li>
-<li><p><strong>end</strong> (<em>float</em><em> or </em><em>int</em><em> or </em><em>str</em>) – All the nutrition data from the beginning until the given timestamp.
+<li><p><strong>end</strong> (<em>float</em><em> or </em><em>int</em>) – All the nutrition data from the beginning until the given timestamp.
 Any nutrition data at the end timestamp is not returned.</p></li>
 </ul>
 </dd>
@@ -288,7 +282,7 @@ The start timestamp is inclusive, the end timestamp is exclusive.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>start</strong> (<em>float</em><em> or </em><em>int</em><em> or </em><em>str</em>) – The first timestamp that should be included in the returned nutrition data.
+<dd class="field-odd"><p><strong>start</strong> (<em>float</em><em> or </em><em>int</em>) – The first timestamp that should be included in the returned nutrition data.
 If no time window with the given timestamp exists, all returned time windows succeed it.</p>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -310,7 +304,7 @@ If no time window with the given timestamp exists, all returned time windows suc
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>end</strong> (<em>float</em><em> or </em><em>int</em><em> or </em><em>str</em>) – The timestamp before which nutrition data should be returned.</p>
+<dd class="field-odd"><p><strong>end</strong> (<em>float</em><em> or </em><em>int</em>) – The timestamp before which nutrition data should be returned.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>All the nutrition data from the beginning until the given timestamp.
@@ -370,7 +364,7 @@ The nutrition data can be any value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>timestamp</strong> (<em>float</em><em> or </em><em>int</em><em> or </em><em>str</em>) – The timestamp of the nutrition data.</p></li>
+<li><p><strong>timestamp</strong> (<em>float</em><em> or </em><em>int</em>) – The timestamp of the nutrition data.</p></li>
 <li><p><strong>nutrition</strong> (<em>any</em>) – The nutrition data to add.
 The nutrition data can be any value.</p></li>
 </ul>
@@ -382,22 +376,15 @@ The nutrition data can be any value.</p></li>
 <dt id="tdt.nutrition.memory.MemoryNutritionStore.get">
 <code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param">timestamp</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.nutrition.memory.MemoryNutritionStore.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the nutrition data at the given timestamp.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The function allows <code class="xref py py-class docutils literal notranslate"><span class="pre">IndexError</span></code> to be raised because having missing nutrition data needs to be handled.</p>
-</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>timestamp</strong> (<em>float</em><em> or </em><em>int</em><em> or </em><em>str</em>) – The timestamp whose nutrition is to be returned.</p>
+<dd class="field-odd"><p><strong>timestamp</strong> (<em>float</em><em> or </em><em>int</em>) – The timestamp whose nutrition is to be returned.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The nutrition at the given timestamp.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>any</p>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>KeyError</strong> – When there is no nutrition data at the given timestamp.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -428,9 +415,9 @@ The keys are the timestamps, and the values are the nutrition data at those time
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>start</strong> (<em>float</em><em> or </em><em>int</em><em> or </em><em>str</em>) – The first timestamp that should be included in the returned nutrition data.
+<li><p><strong>start</strong> (<em>float</em><em> or </em><em>int</em>) – The first timestamp that should be included in the returned nutrition data.
 If no time window with the given timestamp exists, all returned time windows succeed it.</p></li>
-<li><p><strong>end</strong> (<em>float</em><em> or </em><em>int</em><em> or </em><em>str</em>) – All the nutrition data from the beginning until the given timestamp.
+<li><p><strong>end</strong> (<em>float</em><em> or </em><em>int</em>) – All the nutrition data from the beginning until the given timestamp.
 Any nutrition data at the end timestamp is not returned.</p></li>
 </ul>
 </dd>
@@ -493,30 +480,49 @@ If the increase is not significant, the time window is progressively increased.<
 <p>The algorithm is suitable to run in real-time.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Reference: <a class="reference external" href="https://arxiv.org/abs/1106.4300">Zhao et al. (2011)</a>.</p>
+<p>Implementation based on the algorithm presented in <a class="reference external" href="https://arxiv.org/abs/1106.4300">Human as Real-Time Sensors of Social and Physical Events: A Case Study of Twitter and Sports Games by Zhao et al. (2011)</a>.</p>
 </div>
 <dl class="class">
 <dt id="tdt.algorithms.zhao.Zhao">
-<em class="property">class </em><code class="sig-name descname">Zhao</code><a class="headerlink" href="#tdt.algorithms.zhao.Zhao" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Zhao</code><span class="sig-paren">(</span><em class="sig-param">store</em>, <em class="sig-param">post_rate=1.7</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.algorithms.zhao.Zhao" title="Permalink to this definition">¶</a></dt>
 <dd><p>Zhao et al.’s algorithm is a feature-pivot approach to TDT.
 The algorithm identifies spikes in volume in the stream by halving the most recent time window.
 If the second half has a marked increase in volume—a ratio taken to be 1.7—the algorithm identifies a topic.
 If the increase is not significant, the time window is progressively increased.</p>
-<dl class="method">
-<dt id="tdt.algorithms.zhao.Zhao.detect">
-<code class="sig-name descname">detect</code><span class="sig-paren">(</span><em class="sig-param">store</em>, <em class="sig-param">timestamp=None</em>, <em class="sig-param">post_rate=1.7</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.algorithms.zhao.Zhao.detect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Detect topics using historical data from the given NutritionStore.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#module-tdt.nutrition.store" title="tdt.nutrition.store"><strong>store</strong></a> (<a class="reference internal" href="#tdt.nutrition.store.NutritionStore" title="tdt.nutrition.store.NutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code></a>) – The store contraining historical nutrition data.
+The algorithm expects the nutrition values to represent the stream volume.
+Therefore the values should be floats or integers.</p></li>
+<li><p><strong>post_rate</strong> (<em>float</em>) – The minimum ratio between two time windows to represent a burst.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="tdt.algorithms.zhao.Zhao.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">store</em>, <em class="sig-param">post_rate=1.7</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.algorithms.zhao.Zhao.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>store</strong> (<a class="reference internal" href="#tdt.nutrition.store.NutritionStore" title="tdt.nutrition.store.NutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code></a>) – The store contraining historical nutrition data.
 The algorithm expects the nutrition values to represent the stream volume.
 Therefore the values should be floats or integers.</p></li>
-<li><p><strong>timestamp</strong> (<em>float</em><em> or </em><em>None</em>) – The timestamp at which to try to identify emerging topics.
-If it is not given, the current timestamp is used.
-This value is exclusive.</p></li>
 <li><p><strong>post_rate</strong> (<em>float</em>) – The minimum ratio between two time windows to represent a burst.</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tdt.algorithms.zhao.Zhao.detect">
+<code class="sig-name descname">detect</code><span class="sig-paren">(</span><em class="sig-param">timestamp=None</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.algorithms.zhao.Zhao.detect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detect topics using historical data from the nutrition store.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>timestamp</strong> (<em>float</em><em> or </em><em>None</em>) – The timestamp at which to try to identify emerging topics.
+If it is not given, the current timestamp is used.
+This value is exclusive.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A tuple with the start and end timestamp of the time window when there was a burst.
@@ -524,6 +530,173 @@ If there was no burst, <cite>False</cite> is returned.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>tuple or bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-tdt.algorithms.cataldi">
+<span id="cataldi-et-al-2014"></span><h3>Cataldi et al. (2014)<a class="headerlink" href="#module-tdt.algorithms.cataldi" title="Permalink to this headline">¶</a></h3>
+<p>Cataldi et al.’s algorithm was among the first to introduce the notion of nutrition and burst.
+The feature-pivot TDT algorithm first calculates the worth of terms as nutrition.
+Then, periodically, it calculates the burst of these terms.
+Burst is a measure of how much a term is bursting.</p>
+<p>The calculations for burst are based on time windows.
+Therefore calls to <code class="xref py py-meth docutils literal notranslate"><span class="pre">draw()</span></code> should give the timestamp of the time window with respect to which the burst is to be calculated.</p>
+<p>This implementation calculates the burst of terms based on the given nutrition.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Implementation based on the algorithm presented in <a class="reference external" href="https://dl.acm.org/doi/abs/10.1145/2542182.2542189">Personalized Emerging Topic Detection Based on a Term Aging Model by Cataldi et al. (2014)</a>.</p>
+</div>
+<dl class="class">
+<dt id="tdt.algorithms.cataldi.Cataldi">
+<em class="property">class </em><code class="sig-name descname">Cataldi</code><span class="sig-paren">(</span><em class="sig-param">store</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.algorithms.cataldi.Cataldi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cataldi et al.’s algorithm is a feature-pivot TDT approach to detect topics.
+The algorithm uses nutrition to calculate burst.
+Burst is a measure of how much a term is bursting.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#module-tdt.nutrition.store" title="tdt.nutrition.store"><strong>store</strong></a> (<a class="reference internal" href="#tdt.nutrition.store.NutritionStore" title="tdt.nutrition.store.NutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code></a>) – The store contraining historical nutrition data.
+The algorithm expects the nutrition values to represent term nutrition.
+Therefore the values should be dictionaries with terms as keys, and nutrition as the respective values.
+Furthermore, the algorithm expects time windows.
+In other words, the timestamps should represent an entire time window, not just a particular second.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="tdt.algorithms.cataldi.Cataldi.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">store</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.algorithms.cataldi.Cataldi.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>store</strong> (<a class="reference internal" href="#tdt.nutrition.store.NutritionStore" title="tdt.nutrition.store.NutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code></a>) – The store contraining historical nutrition data.
+The algorithm expects the nutrition values to represent term nutrition.
+Therefore the values should be dictionaries with terms as keys, and nutrition as the respective values.
+Furthermore, the algorithm expects time windows.
+In other words, the timestamps should represent an entire time window, not just a particular second.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tdt.algorithms.cataldi.Cataldi.detect">
+<code class="sig-name descname">detect</code><span class="sig-paren">(</span><em class="sig-param">timestamp</em>, <em class="sig-param">since=None</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.algorithms.cataldi.Cataldi.detect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detect topics using historical data from the given nutrition store.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timestamp</strong> (<em>float</em>) – The timestamp at which to try to identify emerging topics.
+This value is exclusive.</p></li>
+<li><p><strong>since</strong> (<em>float</em><em> or </em><em>None</em>) – The timestamp since when nutrition should be considered.
+If it is not given, all of the nutrition that is available is used.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of breaking terms in the considered time window in descending order of their burst.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tdt.algorithms.cataldi.Cataldi._compute_burst">
+<code class="sig-name descname">_compute_burst</code><span class="sig-paren">(</span><em class="sig-param">term</em>, <em class="sig-param">nutrition</em>, <em class="sig-param">historic</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.algorithms.cataldi.Cataldi._compute_burst" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the burst for the given term using the historical data.
+The equation used is:</p>
+<div class="math notranslate nohighlight">
+\[burst_k^t = \sum_{x=t-s}^(t-1)(((nutr_k^t)^2 - (nutr_k^x)^2) \cdot \frac{1}{log(t - x + 1)})\]</div>
+<p>where <span class="math notranslate nohighlight">\(t\)</span> is the current time window and <span class="math notranslate nohighlight">\(s\)</span> is the number of time windows to consider.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The most recent time window is <span class="math notranslate nohighlight">\(x = t-1\)</span>.
+The logarithm’s denominator would thus be 2.
+At <span class="math notranslate nohighlight">\(x = t-2\)</span>, the denominator would be 3.
+Thus, the older time windows get less importance.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>term</strong> (<em>str</em>) – The term whose burst is being calculated.</p></li>
+<li><p><strong>nutrition</strong> (<em>dict</em>) – The nutrition in the current time window.
+The keys are the terms and the values are their nutritions.</p></li>
+<li><p><strong>historic</strong> (<em>dict</em>) – The historic data.
+The keys are the timestamps of each time window.
+The values are the nutritions of the time window—another dictionary.
+The keys in the inner dictionary are the terms and the values are their nutritions.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The term’s burst.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tdt.algorithms.cataldi.Cataldi._compute_burst_drops">
+<code class="sig-name descname">_compute_burst_drops</code><span class="sig-paren">(</span><em class="sig-param">burst</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.algorithms.cataldi.Cataldi._compute_burst_drops" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the drops in burst among terms.
+The function sorts the burst values in descending order and computes the drops between them.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>burst</strong> (<em>dict</em>) – A dictionary with burst values.
+The keys are the terms and the values are the corresponding burst values.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of burst drops.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tdt.algorithms.cataldi.Cataldi._get_critical_drop_index">
+<code class="sig-name descname">_get_critical_drop_index</code><span class="sig-paren">(</span><em class="sig-param">drops</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.algorithms.cataldi.Cataldi._get_critical_drop_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the critical drop index.
+The function isolates all drops that appear before the highest drop.
+The critical drop is the first drop in this selection that is bigger than the average drop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>drops</strong> (<em>list of float</em>) – A list of burst drops.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The index of the critical drop.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tdt.algorithms.cataldi.Cataldi._get_bursty_terms">
+<code class="sig-name descname">_get_bursty_terms</code><span class="sig-paren">(</span><em class="sig-param">burst</em>, <em class="sig-param">critical_drop_index</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.algorithms.cataldi.Cataldi._get_bursty_terms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the bursty terms.
+These terms are defined as those that appear before the critical drop index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>burst</strong> (<em>dict</em>) – A dictionary with burst values.
+The keys are the terms and the values are the corresponding burst values.</p></li>
+<li><p><strong>critical_drop_index</strong> (<em>int</em>) – The critical drop index.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The list of bursty terms, sorted in descending order of their burst.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – When the critical drop index is larger than the available terms.
+This indicates that something wrong happened when calculating the critical drop index.</p>
 </dd>
 </dl>
 </dd></dl>
