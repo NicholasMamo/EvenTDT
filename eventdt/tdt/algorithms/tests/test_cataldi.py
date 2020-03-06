@@ -64,6 +64,102 @@ class TestCataldi(unittest.TestCase):
 		nutrition_store.add_nutrition_set(1532783836 + 60 * 3, concatenate_dicts({ "a": 7 , 	"b": 8 , 	"c": 1 , 	"d": 13 , 				"f": 8 }, zip(alphabet, [ random.gauss(7, 0.1) for i in range(0, len(alphabet)) ])))
 		nutrition_store.add_nutrition_set(1532783836 + 60 * 4, concatenate_dicts({ "a": 10 , 	"b": 10 , 	"c": 2 , 	"d": 15 , 	"e": 15 , 	"f": 7 }, zip(alphabet, [ random.gauss(7, 0.1) for i in range(0, len(alphabet)) ])))
 		nutrition_store.add_nutrition_set(1532783836 + 60 * 5, concatenate_dicts({ "a": 25 , 	"b": 9 , 	"c": 7 , 	"d": 10 , 	"e": 5 , 	"f": 5 }, zip(alphabet, [ random.gauss(7, 0.1) for i in range(0, len(alphabet)) ])))
+	def test_compute_burst_non_existent_term(self):
+		"""
+		Test that when computing the burst of a term that does not exist, 0 is returned.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = Cataldi(store)
+		store.add(60, { 'a': 0 })
+		store.add(50, { 'a': 0 })
+		store.add(40, { 'a': 0 })
+		self.assertEqual(0, algo._compute_burst('b', store.get(60), store.until(60)))
+
+	def test_compute_burst_term_zero_nutrition(self):
+		"""
+		Test that when computing the burst of a term that has a nutrition of 0, 0 is returned.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = Cataldi(store)
+		store.add(60, { 'a': 0 })
+		store.add(50, { 'a': 0 })
+		store.add(40, { 'a': 0 })
+		self.assertEqual(0, algo._compute_burst('a', store.get(60), store.until(60)))
+
+	def test_compute_burst_empty_historic(self):
+		"""
+		Test that when computing the burst when the historic data is empty, 0 is returned.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = Cataldi(store)
+		store.add(60, { 'a': 0 })
+		self.assertEqual(0, algo._compute_burst('a', store.get(60), store.until(60)))
+
+	def test_compute_burst_recency(self):
+		"""
+		Test that when computing burst, recent historical data has more importance.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = Cataldi(store)
+		store.add(60, { 'a': 30, 'b': 30 })
+		store.add(50, { 'a': 20, 'b': 10 })
+		store.add(40, { 'a': 10, 'b': 20 })
+		self.assertGreater(algo._compute_burst('b', store.get(60), store.until(60)),
+						   algo._compute_burst('a', store.get(60), store.until(60)))
+
+	def test_compute_burst(self):
+		"""
+		Test the burst computation.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = Cataldi(store)
+		store.add(60, { 'a': 30 })
+		store.add(50, { 'a': 20 })
+		store.add(40, { 'a': 10 })
+
+		"""
+		Formula: (30^2 - 20^2) 1/(log(3 - 2 + 1)) + (30^2 - 10^2) 1/(log(3 - 1 + 1))
+		"""
+		self.assertEqual(round(3337.6866668751888215, 10),
+						 round(algo._compute_burst('a', store.get(60), store.until(60)), 10))
+
+	def test_compute_burst_unchanged_nutrition(self):
+		"""
+		Test that when giving a dictionary of nutrition to compute the drops, the dictionary is unchanged.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = Cataldi(store)
+		store.add(60, { 'a': 30 })
+		store.add(50, { 'a': 20 })
+		store.add(40, { 'a': 10 })
+		nutrition = store.get(60)
+		historic = store.until(60)
+		nutrition_copy = dict(nutrition)
+		algo._compute_burst('a', nutrition, historic)
+		self.assertEqual(nutrition_copy, nutrition)
+
+	def test_compute_burst_unchanged_historical(self):
+		"""
+		Test that when giving a dictionary of historic nutrition to compute the drops, the dictionary is unchanged.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = Cataldi(store)
+		store.add(60, { 'a': 30 })
+		store.add(50, { 'a': 20 })
+		store.add(40, { 'a': 10 })
+		nutrition = store.get(60)
+		historic = store.until(60)
+		historic_copy = dict(historic)
+		algo._compute_burst('a', nutrition, historic)
+		self.assertEqual(historic_copy, historic)
+
 
 		self.assertEqual(filtered_cataldi.detect_topics(nutrition_store, 1532783836 + 60 * 1, p=1e-2), [])
 		self.assertEqual(filtered_cataldi.detect_topics(nutrition_store, 1532783836 + 60 * 2, p=1e-2), ["d"])

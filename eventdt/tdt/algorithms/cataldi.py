@@ -59,3 +59,51 @@ class Cataldi(TDTAlgorithm):
 		:return: A list of breaking terms in the considered time window in descending order of their burst.
 		:rtype: list of str
 		"""
+	def _compute_burst(self, term, nutrition, historic):
+		"""
+		Calculate the burst for the given term using the historical data.
+		The equation used is:
+
+		.. math::
+
+			burst_k^t = \\sum_{x=t-s}^(t-1)(((nutr_k^t)^2 - (nutr_k^x)^2) \\cdot \\frac{1}{log(t - x + 1)})
+
+		where :math:`t` is the current time window and :math:`s` is the number of time windows to consider.
+
+		.. note::
+
+			The most recent time window is :math:`x = t-1`.
+			The logarithm's denominator would thus be 2.
+			At :math:`x = t-2`, the denominator would be 3.
+			Thus, the older time windows get less importance.
+
+		:param term: The term whose burst is being calculated.
+		:type term: str
+		:param nutrition: The nutrition in the current time window.
+						  The keys are the terms and the values are their nutritions.
+		:type nutrition: dict
+		:param historic: The historic data.
+						 The keys are the timestamps of each time window.
+						 The values are the nutritions of the time window—another dictionary.
+						 The keys in the inner dictionary are the terms and the values are their nutritions.
+		:type historic: dict
+
+		:return: The term's burst.
+		:rtype: float
+		"""
+
+		"""
+		Reverse the time windows in descending order.
+		The algorithm computes burst by comparing the nutrition of the term with the historic windows.
+		Far away windows have less of an impact than recent windows.
+
+		.. note::
+
+			Note the :math:`i + 1 + 1`.
+			:math:`i` is the distance between the current time window and the old time window.
+			Since the `enumerate` function starts from 0, the distance has to be incremented.
+			The other 1 is added in the algorithm.
+		"""
+		return sum([(nutrition.get(term, 0) ** 2 - historic[window].get(term, 0) ** 2) / math.log(i + 1 + 1, 10)
+					for i, window in enumerate(sorted(historic, reverse=True))])
+
