@@ -6,7 +6,7 @@ cd "$parent_path"
 source variables.sh
 
 usage() {
-	echo -e "${HIGHLIGHT}Usage: sh $0 [-t <apd|nlp|queue|summarization|tdt|vector|wikipedia>]"${DEFAULT};
+	echo -e "${HIGHLIGHT}Usage: sh $0 [-t <apd|base|nlp|queue|summarization|tdt|vector|wikipedia>]"${DEFAULT};
 }
 
 apd_tests() {
@@ -39,6 +39,11 @@ apd_tests() {
 
 	echo -e "${HIGHLIGHT}Participant detectors${DEFAULT}"
 	python3 -m unittest eventdt.apd.tests.test_ner_participant_detector
+}
+
+base_tests() {
+	echo -e "${HIGHLIGHT}Attributable${DEFAULT}"
+	python3 -m unittest eventdt.objects.tests.test_attributable
 }
 
 nlp_tests() {
@@ -93,9 +98,6 @@ topic_detection_tests() {
 }
 
 vector_tests() {
-	# echo -e "${HIGHLIGHT}Vector${DEFAULT}"
-	# python3 -m unittest eventdt.vsm.tests.test_attributable
-
 	echo -e "${HIGHLIGHT}Vectors${DEFAULT}"
 	python3 -m unittest eventdt.vsm.tests.test_vector
 
@@ -126,6 +128,9 @@ then
 		apd)
 			apd_tests
 			;;
+		base)
+			base_tests
+			;;
 		nlp)
 			nlp_tests
 			;;
@@ -151,6 +156,7 @@ then
 	esac
 else
 	apd_tests
+	base_tests
 	nlp_tests
 	graph_tests
 	queue_tests
