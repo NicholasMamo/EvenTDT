@@ -94,45 +94,59 @@ class ELD(TDTAlgorithm):
 
 		bursty_terms = []
 		historical_data = nutrition_store.get_recent_nutrition_sets(sets, timestamp=timestamp) # get the historical data
-
-		if (sets is None and len(historical_data) > 0) or (sets is not None and len(historical_data) == sets):
-			term_nutrition = { term: value for term, value in data.items() if value >= min_nutrition } # remove seldomly-used terms
-
-			burstiness = { term: _get_burstiness(term, term_nutrition[term], historical_data, decay_function=(_exponential_decay, decay_rate)) for term in term_nutrition } # calculate the burstiness for each term
-			burstiness = sorted(burstiness.items(), key=lambda x: x[1])[::-1] # sort the burstiness values in descending order
-
-			if term_only:
-				bursty_terms = [ term for term, value in burstiness if value >= threshold ]
-			else:
-				bursty_terms = [ (term, value) for term, value in burstiness if value >= threshold ]
-
-		return bursty_terms
-
-	def _get_burstiness(self, term, nutrition, historical_data, decay_function=(_exponential_decay, None), laplace=False):
+	def _compute_burst(self, term, nutrition, historic):
 		"""
-		Calculate the burstiness for the given term using the historical data.
+		Calculate the burst for the given term using the historical data.
+		The equation used is:
 
-		:param term: The term whose burstiness is being calculated.
+			.. math::
+
+			burst_k^t = \\frac{\\sum_{c=t-s}{t-1}((nutr_{k,l} - nutr_{k,c}) \\cdot \\frac{1}{log(t - x + 1)})}{\\sum_{c=1}^s\\frac{1}{\\sqrt{e^c}}}
+
+		where :math:`t` is the current time window and :math:`s` is the number of time windows to consider.
+		:math:`nutr_{k,l}` is the nutrition of the term in the local context.
+		This local context refers to a cluster since the broader ELD system combines document-pivot and feature-pivot techniques.
+		:math:`nutr_{k,c}` is the nutrition of the term in the checkpoint :math:`c`.
+
+		The denominator is the component that is responsible for binding the burst between 1 and -1.
+
+		.. note::
+
+			The time windows are between :math:`t-s` and :math:`t-1`
+			The most recent time window is :math:`x = t-1`.
+			The exponential decay's denominator would thus be 2.
+			At :math:`x = t-2`, the denominator would be 3.
+			Thus, the older time windows get less importance.
+
+		:param term: The term whose burst is being calculated.
 		:type term: str
-		:param nutrition: The term's nutrition in the current time window.
-		:type nutrition: float
-		:param historical_data: The historical data to consider.
-		:type historical_data: dict
-		:param decay_function: The tuple containing the decay function to use and the associated decay rate.
-		:type decay_function: tuple(function, float)
-		:param laplace: A boolean indicating whether Laplace smoothing should be applied.
-		:type laplace: bool
+		:param nutrition: The nutrition in the current time window.
+						  The keys are the terms and the values are their nutritions.
+		:type nutrition: dict
+		:param historic: The historic data.
+						 The keys are the timestamps of each time window.
+						 The values are the nutritions of the time window—another dictionary.
+						 The keys in the inner dictionary are the terms and the values are their nutritions.
+		:type historic: dict
 
-		:return: The term's burstiness.
+		:return: The term's burst.
 		:rtype: float
 		"""
 
-		decay_function, decay_rate = decay_function
-		windows = len(historical_data)
-		coefficient = _get_coefficient(windows, (decay_function, decay_rate))
+		"""
+		First calculate the numerator.
+		The historic data is sorted in descending order.
+		"""
+		historic = sorted(historic.items(), key=lambda data: data[0], reverse=True)
+		historic = [ nutrition for timestamp, nutrition in historic ]
+		burst = [ (nutrition.get(term, 0) - historic[c].get(term, 0)) * self._compute_decay(c + 1)
+				  for c in range(len(historic)) ]
 
-		burstiness = [ (nutrition - historical_data[i].get(term, 0)) * decay_function(i + 1, decay_rate=decay_rate) for i in range(0, windows) ]
-		return sum(burstiness) / coefficient
+		"""
+		Calculate the denominator.
+		"""
+		coefficient = self._compute_coefficient(len(historic))
+		return sum(burst) / coefficient
 
 	def _compute_decay(self, c):
 		"""
