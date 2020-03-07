@@ -45,7 +45,7 @@ class TestDocument(unittest.TestCase):
 		d = Document('text', { 'text': 1 }, attributes={ 'label': True })
 		self.assertEqual('text', d.text)
 		self.assertEqual({ 'text': 1 }, d.dimensions)
-		self.assertTrue(d.get_attribute('label'))
+		self.assertTrue(d.attributes['label'])
 
 	def test_create_document_with_tokens(self):
 		"""
@@ -64,11 +64,20 @@ class TestDocument(unittest.TestCase):
 		text = 'this is not a pipe'
 		d = Document(text, text.split(), attributes={ 'timestamp': 10 })
 		e = d.to_array()
-		self.assertEqual(d.get_attributes(), Document.from_array(e).get_attributes())
 		self.assertEqual(d.dimensions, Document.from_array(e).dimensions)
 		self.assertEqual(d.text, Document.from_array(e).text)
-		self.assertEqual(d.get_attribute('timestamp'), Document.from_array(e).get_attribute('timestamp'))
 		self.assertEqual(d.__dict__, Document.from_array(e).__dict__)
+
+	def test_export_attributes(self):
+		"""
+		Test that exporting and importing documents include their attributes.
+		"""
+
+		text = 'this is not a pipe'
+		d = Document(text, text.split(), attributes={ 'timestamp': 10 })
+		e = d.to_array()
+		self.assertEqual(d.attributes, Document.from_array(e).attributes)
+		self.assertEqual(d.attributes['timestamp'], Document.from_array(e).attributes['timestamp'])
 
 	def test_concatenate(self):
 		"""
@@ -130,7 +139,7 @@ class TestDocument(unittest.TestCase):
 
 		document = Document.concatenate(*documents, tokenizer=tokenizer, scheme=TF(),
 										attributes={ 'attr': True })
-		self.assertTrue(document.get_attribute('attr'))
+		self.assertTrue(document.attributes['attr'])
 
 	def test_repr(self):
 		"""
