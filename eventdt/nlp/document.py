@@ -58,6 +58,17 @@ class Document(Vector):
 		super(Document, self).__init__(dimensions, *args, **kwargs)
 		self.text = text
 
+	def __repr__(self):
+		"""
+		Get the string representation of the document.
+		This is equivalent to the document's text.
+
+		:return: The text of the document.
+		:rtype: str
+		"""
+
+		return self.text
+
 	def to_array(self):
 		"""
 		Export the document as an associative array.

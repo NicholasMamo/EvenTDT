@@ -131,3 +131,11 @@ class TestDocument(unittest.TestCase):
 		document = Document.concatenate(*documents, tokenizer=tokenizer, scheme=TF(),
 										attributes={ 'attr': True })
 		self.assertTrue(document.get_attribute('attr'))
+
+	def test_repr(self):
+		"""
+		Test that the string representation of the document is equivalent to its text.
+		"""
+
+		document = Document('this is not a pipe')
+		self.assertEqual('this is not a pipe', str(document))
