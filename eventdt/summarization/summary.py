@@ -13,8 +13,9 @@ if path not in sys.path:
 	sys.path.insert(1, path)
 
 from objects.attributable import Attributable
+from objects.exportable import Exportable
 
-class Summary(Attributable):
+class Summary(Attributable, Exportable):
 	"""
 	A summary is essentially made up of a list of :class:`~nlp.document.Document`.
 	However, summaries may also have other attributes.
