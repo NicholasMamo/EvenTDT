@@ -21,3 +21,24 @@ Logger
    :members:
    :private-members:
    :special-members:
+
+============
+Base Classes
+============
+
+EvenTDT includes some base classes that add to the functionality of some classes or which require implementations.
+
+.. automodule:: objects
+   :members:
+   :private-members:
+   :special-members:
+
+.. automodule:: objects.attributable
+   :members:
+   :private-members:
+   :special-members:
+
+.. automodule:: objects.exportable
+   :members:
+   :private-members:
+   :special-members:

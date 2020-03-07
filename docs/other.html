@@ -95,6 +95,7 @@
 <li class="toctree-l1"><a class="reference internal" href="queues.html">8. Queues</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">9. Other</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-logger">Logger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#base-classes">Base Classes</a></li>
 </ul>
 </li>
 </ul>
@@ -238,6 +239,125 @@ It is based on a <code class="xref py py-class docutils literal notranslate"><sp
 <dd class="field-odd"><p><strong>message</strong> (<em>str</em>) – The message to show.</p>
 </dd>
 </dl>
+</dd></dl>
+
+</div>
+<div class="section" id="base-classes">
+<h2>Base Classes<a class="headerlink" href="#base-classes" title="Permalink to this headline">¶</a></h2>
+<p>EvenTDT includes some base classes that add to the functionality of some classes or which require implementations.</p>
+<span class="target" id="module-objects"></span><span class="target" id="module-objects.attributable"></span><p>Attributable objects are normal objects that can have attributes.</p>
+<dl class="class">
+<dt id="objects.attributable.Attributable">
+<em class="property">class </em><code class="sig-name descname">Attributable</code><span class="sig-paren">(</span><em class="sig-param">attributes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#objects.attributable.Attributable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attributable objects have a dictionary that stores attributes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><p><strong>attributes</strong> (<em>dict</em>) – The object’s attributes.
+The keys are the attribute names and the values are the respective values.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="objects.attributable.Attributable.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">attributes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#objects.attributable.Attributable.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the object with the attributes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>attributes</strong> (<em>dict</em><em> or </em><em>None</em>) – The starting attributes.
+If <cite>None</cite> is given, an empty dictionary is created instead.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="objects.attributable.Attributable.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#objects.attributable.Attributable.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-objects.exportable"></span><p>Exportable objects are normal objects that can be exported as a JSON string and loaded back.</p>
+<dl class="class">
+<dt id="objects.exportable.Exportable">
+<em class="property">class </em><code class="sig-name descname">Exportable</code><a class="headerlink" href="#objects.exportable.Exportable" title="Permalink to this definition">¶</a></dt>
+<dd><p>An abstract class of an object that can be exported as a JSON string and imported back.</p>
+<dl class="method">
+<dt id="objects.exportable.Exportable.to_array">
+<em class="property">abstract </em><code class="sig-name descname">to_array</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#objects.exportable.Exportable.to_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export the object as a dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The object as a dictionary.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="objects.exportable.Exportable.from_array">
+<em class="property">abstract static </em><code class="sig-name descname">from_array</code><span class="sig-paren">(</span><em class="sig-param">array</em><span class="sig-paren">)</span><a class="headerlink" href="#objects.exportable.Exportable.from_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an instance of the object from the given dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>array</strong> (<em>dict</em>) – The dictionary with the attributes to create the object instance.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A new instance of an object with the same attributes stored in the object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="objects.exportable.Exportable.get_module">
+<em class="property">static </em><code class="sig-name descname">get_module</code><span class="sig-paren">(</span><em class="sig-param">cls</em><span class="sig-paren">)</span><a class="headerlink" href="#objects.exportable.Exportable.get_module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the module name from the given path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cls</strong> (<em>str</em>) – The full class name.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The module name.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – When the class name is invalid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="objects.exportable.Exportable.get_class">
+<em class="property">static </em><code class="sig-name descname">get_class</code><span class="sig-paren">(</span><em class="sig-param">cls</em><span class="sig-paren">)</span><a class="headerlink" href="#objects.exportable.Exportable.get_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the class name from the given path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cls</strong> (<em>str</em>) – The full class name.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The class name.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – When the class name is invalid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="objects.exportable.Exportable.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#objects.exportable.Exportable.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
 </dd></dl>
 
 </div>
