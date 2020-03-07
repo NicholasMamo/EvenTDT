@@ -15,10 +15,11 @@ if path not in sys.path:
     sys.path.append(path)
 
 from objects.attributable import Attributable
+from objects.exportable import Exportable
 
 from vsm import Vector, vector_math
 
-class Cluster(Attributable):
+class Cluster(Attributable, Exportable):
 	"""
 	The cluster class is a collection of vectors, or documents.
 	It also has a centroid.
