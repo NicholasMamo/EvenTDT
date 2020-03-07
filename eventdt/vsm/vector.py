@@ -35,7 +35,7 @@ class VectorSpace(dict):
 
 		return self.get(key, 0)
 
-class Vector(Attributable):
+class Vector(Attributable, Exportable):
 	"""
 	The :class:`~vsm.vector.Vector` class is the smallest building block in the Vector Space Model (VSM).
 	It is used for tasks such as clustering and to represent documents.
