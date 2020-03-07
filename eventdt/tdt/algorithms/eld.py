@@ -14,6 +14,8 @@ This algorithm computes burst based on the past nutritions stored in the checkpo
 .. note::
 
 	Implementation based on the algorithm outlined in `ELD: Event TimeLine Detection -- A Participant-Based Approach to Tracking Events by Mamo et al. (2019) <https://dl.acm.org/doi/abs/10.1145/3342220.3344921>`_.
+	ELD is a combined document-pivot and feature-pivot TDT approach.
+	The algorithm in this module is the feature-pivot technique.
 """
 
 import math
@@ -31,7 +33,7 @@ class ELD(TDTAlgorithm):
 				 In other words, the timestamps should represent an entire time window, not just a particular second.
 	:vartype store: :class:`~tdt.nutrition.store.NutritionStore`
 	:ivar decay_rate: The decay rate used by the algorithm.
-					  A smaller value gives more uniform weight to far-off nutrition sets.
+					  The larger the decay rate, the less importance far-off windows have in the burst calculation.
 	:vartype decay_rate: float
 	"""
 
@@ -43,7 +45,7 @@ class ELD(TDTAlgorithm):
 					  In other words, the timestamps should represent an entire time window, not just a particular second.
 		:type store: :class:`~tdt.nutrition.store.NutritionStore`
 		:param decay_rate: The decay rate used by the algorithm.
-						   A smaller value gives more uniform weight to far-off nutrition sets.
+						   The larger the decay rate, the less importance far-off windows have in the burst calculation.
 		:type decay_rate: float
 		"""
 
