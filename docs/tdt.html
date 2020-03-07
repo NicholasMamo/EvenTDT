@@ -96,6 +96,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-tdt.algorithms.tdt">Algorithms</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module-tdt.algorithms.zhao">Zhao et al. (2011)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-tdt.algorithms.cataldi">Cataldi et al. (2014)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-tdt.algorithms.eld">Mamo et al. (2019)</a></li>
 </ul>
 </li>
 </ul>
@@ -559,9 +560,8 @@ Burst is a measure of how much a term is bursting.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#module-tdt.nutrition.store" title="tdt.nutrition.store"><strong>store</strong></a> (<a class="reference internal" href="#tdt.nutrition.store.NutritionStore" title="tdt.nutrition.store.NutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code></a>) – The store contraining historical nutrition data.
-The algorithm expects the nutrition values to represent term nutrition.
-Therefore the values should be dictionaries with terms as keys, and nutrition as the respective values.
-Furthermore, the algorithm expects time windows.
+The algorithm expects the timestamps to represent time windows.
+Therefore the nutrition store should have dictionaries with timestamps as keys, and the nutrition of terms in a dictionary as values.
 In other words, the timestamps should represent an entire time window, not just a particular second.</p>
 </dd>
 </dl>
@@ -571,9 +571,8 @@ In other words, the timestamps should represent an entire time window, not just 
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>store</strong> (<a class="reference internal" href="#tdt.nutrition.store.NutritionStore" title="tdt.nutrition.store.NutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code></a>) – The store contraining historical nutrition data.
-The algorithm expects the nutrition values to represent term nutrition.
-Therefore the values should be dictionaries with terms as keys, and nutrition as the respective values.
-Furthermore, the algorithm expects time windows.
+The algorithm expects the timestamps to represent time windows.
+Therefore the nutrition store should have dictionaries with timestamps as keys, and the nutrition of terms in a dictionary as values.
 In other words, the timestamps should represent an entire time window, not just a particular second.</p>
 </dd>
 </dl>
@@ -697,6 +696,176 @@ The keys are the terms and the values are the corresponding burst values.</p></l
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><p><strong>ValueError</strong> – When the critical drop index is larger than the available terms.
 This indicates that something wrong happened when calculating the critical drop index.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-tdt.algorithms.eld">
+<span id="mamo-et-al-2019"></span><h3>Mamo et al. (2019)<a class="headerlink" href="#module-tdt.algorithms.eld" title="Permalink to this headline">¶</a></h3>
+<p>Event TimeLine Detection (ELD) is a feature-pivot TDT approach designed to create interpretable results.
+The algorithm computes burst for each individual term.
+The interpretation is in the form of a burst value that lies between -1 and 1.
+-1 indicates that a term is losing popularity, and 1 that it is gaining popularity.
+When the burst is 0, the term’s popularity is unchanged.</p>
+<p>The broader system routinely creates checkpoints that represent the importance of terms in a particular time window.
+The implemented TDT algorithm compares the documents received in the last time window with the previous checkpoints.</p>
+<p>ELD borrows the terminology from Cataldi et al.’s previous work and algorithm: <a class="reference internal" href="#tdt.algorithms.cataldi.Cataldi" title="tdt.algorithms.cataldi.Cataldi"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cataldi</span></code></a>.
+This algorithm computes burst based on the past nutritions stored in the checkpoints.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Implementation based on the algorithm outlined in <a class="reference external" href="https://dl.acm.org/doi/abs/10.1145/3342220.3344921">ELD: Event TimeLine Detection – A Participant-Based Approach to Tracking Events by Mamo et al. (2019)</a>.
+ELD is a combined document-pivot and feature-pivot TDT approach.
+The algorithm in this module is the feature-pivot technique.</p>
+</div>
+<dl class="class">
+<dt id="tdt.algorithms.eld.ELD">
+<em class="property">class </em><code class="sig-name descname">ELD</code><span class="sig-paren">(</span><em class="sig-param">store</em>, <em class="sig-param">decay_rate=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.algorithms.eld.ELD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mamo et al.’s ELD is a feature-pivot TDT algorithm to detect breaking terms.
+The algorithm returns not only terms, but also the degree to which they are breaking.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#module-tdt.nutrition.store" title="tdt.nutrition.store"><strong>store</strong></a> (<a class="reference internal" href="#tdt.nutrition.store.NutritionStore" title="tdt.nutrition.store.NutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code></a>) – The store contraining historical nutrition data.
+The algorithm expects the timestamps to represent checkpoints, or time windows.
+Therefore the nutrition store should have dictionaries with timestamps as keys, and the nutrition of terms in a dictionary as values.
+In other words, the timestamps should represent an entire time window, not just a particular second.</p></li>
+<li><p><strong>decay_rate</strong> (<em>float</em>) – The decay rate used by the algorithm.
+The larger the decay rate, the less importance far-off windows have in the burst calculation.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="tdt.algorithms.eld.ELD.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">store</em>, <em class="sig-param">decay_rate=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.algorithms.eld.ELD.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>store</strong> (<a class="reference internal" href="#tdt.nutrition.store.NutritionStore" title="tdt.nutrition.store.NutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code></a>) – The store contraining historical nutrition data.
+The algorithm expects the timestamps to represent checkpoints, or time windows.
+Therefore the nutrition store should have dictionaries with timestamps as keys, and the nutrition of terms in a dictionary as values.
+In other words, the timestamps should represent an entire time window, not just a particular second.</p></li>
+<li><p><strong>decay_rate</strong> (<em>float</em>) – The decay rate used by the algorithm.
+The larger the decay rate, the less importance far-off windows have in the burst calculation.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tdt.algorithms.eld.ELD.detect">
+<code class="sig-name descname">detect</code><span class="sig-paren">(</span><em class="sig-param">nutrition</em>, <em class="sig-param">since=None</em>, <em class="sig-param">until=None</em>, <em class="sig-param">min_burst=0</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.algorithms.eld.ELD.detect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detect topics using historical data from the given nutrition store.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nutrition</strong> (<em>dict</em>) – The nutrition values from the current (sliding) time window.
+The keys should be the terms, and the values the respective nutrition.</p></li>
+<li><p><strong>since</strong> (<em>float</em><em> or </em><em>None</em>) – The timestamp since when nutrition should be considered.
+If it is not given, all of the nutrition that is available until the <cite>until</cite> is used.</p></li>
+<li><p><strong>until</strong> (<em>float</em><em> or </em><em>None</em>) – The timestamp until when nutrition should be considered.
+If it is not given, all of the nutrition that is available since the <cite>since</cite> parameter is used.
+If the algorithm is being used retrospectively, this parameter can represent the current timestamp to get only past nutrition.</p></li>
+<li><p><strong>min_burst</strong> (<em>float</em>) – The minimum burst of a term to be considered emerging and returned.
+This value is exclusive.
+By default, only terms thet have a non-zero positive burst are returned.
+These terms have seen their popularity increase.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The breaking terms and their burst as a dictionary.
+The keys are the terms and the values are the respective burst values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tdt.algorithms.eld.ELD._compute_burst">
+<code class="sig-name descname">_compute_burst</code><span class="sig-paren">(</span><em class="sig-param">term</em>, <em class="sig-param">nutrition</em>, <em class="sig-param">historic</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.algorithms.eld.ELD._compute_burst" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the burst for the given term using the historical data.
+The equation used is:</p>
+<div class="math notranslate nohighlight">
+\[burst_k^t = \frac{\sum_{c=t-s}^{t-1}((nutr_{k,l} - nutr_{k,c}) \cdot \frac{1}{\sqrt{e^{t - c}}})}{\sum_{c=1}^s\frac{1}{\sqrt{e^c}}}\]</div>
+<p>where <span class="math notranslate nohighlight">\(k\)</span> is the term for which burst is to be calculated.
+<span class="math notranslate nohighlight">\(t\)</span> is the current time window and <span class="math notranslate nohighlight">\(s\)</span> is the number of time windows to consider.
+<span class="math notranslate nohighlight">\(nutr_{k,l}\)</span> is the nutrition of the term in the local context.
+This local context refers to a cluster since the broader ELD system combines document-pivot and feature-pivot techniques.
+<span class="math notranslate nohighlight">\(nutr_{k,c}\)</span> is the nutrition of the term in the checkpoint <span class="math notranslate nohighlight">\(c\)</span>.</p>
+<p>The denominator is the component that is responsible for binding the burst between 1 and -1.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The time windows are between <span class="math notranslate nohighlight">\(t-s\)</span> and <span class="math notranslate nohighlight">\(t-1\)</span>
+The most recent time window is <span class="math notranslate nohighlight">\(x = t-1\)</span>.
+The exponential decay’s denominator would thus be 2.
+At <span class="math notranslate nohighlight">\(x = t-2\)</span>, the denominator would be 3.
+Thus, the older time windows get less importance.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>term</strong> (<em>str</em>) – The term whose burst is being calculated.</p></li>
+<li><p><strong>nutrition</strong> (<em>dict</em>) – The nutrition in the current time window.
+The keys are the terms and the values are their nutritions.</p></li>
+<li><p><strong>historic</strong> (<em>dict</em>) – The historic data.
+The keys are the timestamps of each time window.
+The values are the nutritions of the time window—another dictionary.
+The keys in the inner dictionary are the terms and the values are their nutritions.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The term’s burst.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tdt.algorithms.eld.ELD._compute_decay">
+<code class="sig-name descname">_compute_decay</code><span class="sig-paren">(</span><em class="sig-param">c</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.algorithms.eld.ELD._compute_decay" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the decay with an exponential formula:</p>
+<div class="math notranslate nohighlight">
+\[x = \frac{1}{(e^c)^d}\]</div>
+<p>where <span class="math notranslate nohighlight">\(c\)</span> is the number of time windows being considered and <span class="math notranslate nohighlight">\(d\)</span> is the decay rate.
+By default, the decay rate is <span class="math notranslate nohighlight">\(\frac{1}{2}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[x = \frac{1}{\sqrt{e^c}}\]</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>c</strong> (<em>int</em>) – The current time window.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The exponential decay factor, or how much weight the burst of a term in a time window has.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tdt.algorithms.eld.ELD._compute_coefficient">
+<code class="sig-name descname">_compute_coefficient</code><span class="sig-paren">(</span><em class="sig-param">s</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.algorithms.eld.ELD._compute_coefficient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the denominator of the burst calculation.
+This denominator is used to rescale the function, for example with bounds between -1 and 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>s</strong> (<em>int</em>) – The number of time windows being considered.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The denominator of the burst calculation.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – When there is a negative number of time windows.</p>
 </dd>
 </dl>
 </dd></dl>

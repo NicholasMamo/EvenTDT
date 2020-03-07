@@ -105,11 +105,12 @@ class ELD(TDTAlgorithm):
 		Calculate the burst for the given term using the historical data.
 		The equation used is:
 
-			.. math::
+		.. math::
 
-			burst_k^t = \\frac{\\sum_{c=t-s}{t-1}((nutr_{k,l} - nutr_{k,c}) \\cdot \\frac{1}{log(t - x + 1)})}{\\sum_{c=1}^s\\frac{1}{\\sqrt{e^c}}}
+			burst_k^t = \\frac{\\sum_{c=t-s}^{t-1}((nutr_{k,l} - nutr_{k,c}) \\cdot \\frac{1}{\\sqrt{e^{t - c}}})}{\\sum_{c=1}^s\\frac{1}{\\sqrt{e^c}}}
 
-		where :math:`t` is the current time window and :math:`s` is the number of time windows to consider.
+		where :math:`k` is the term for which burst is to be calculated.
+		:math:`t` is the current time window and :math:`s` is the number of time windows to consider.
 		:math:`nutr_{k,l}` is the nutrition of the term in the local context.
 		This local context refers to a cluster since the broader ELD system combines document-pivot and feature-pivot techniques.
 		:math:`nutr_{k,c}` is the nutrition of the term in the checkpoint :math:`c`.
