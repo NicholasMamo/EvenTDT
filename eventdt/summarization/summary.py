@@ -73,11 +73,8 @@ class Summary(Attributable, Exportable):
 
 		documents = [ ]
 		for vector in array.get('documents'):
-			cls = vector.get('class', '')
-			cls = cls[ cls.index('\'') + 1:cls.rindex('\'') ]
-			module_name, class_name = cls[ :cls.rindex('.') ], cls[ cls.rindex('.') + 1: ]
-			module = importlib.import_module(module_name)
-			cls = getattr(module, class_name)
+			module = importlib.import_module(Exportable.get_module(vector.get('class')))
+			cls = getattr(module, Exportable.get_class(vector.get('class')))
 			documents.append(cls.from_array(vector))
 
 		return Summary(documents=documents, attributes=array.get('attributes'))
