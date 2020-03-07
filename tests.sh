@@ -160,6 +160,7 @@ else
 	nlp_tests
 	graph_tests
 	queue_tests
+	summarization_tests
 	topic_detection_tests
 	vector_tests
 	wikipedia_tests
