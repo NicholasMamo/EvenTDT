@@ -1,0 +1,20 @@
+****************
+7. Summarization
+****************
+
+.. meta::
+   :description: The summarization implementation
+   :keywords: Python, TDT, summarization
+
+Topic Detection and Tracking (TDT) is useless if it cannot explain what it detects.
+Summarization takes the machine-understandable data and creates human-understandable information.
+
+.. automodule:: summarization
+   :members:
+   :private-members:
+   :special-members:
+
+.. automodule:: summarization.summary
+   :members:
+   :private-members:
+   :special-members:

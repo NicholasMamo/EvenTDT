@@ -17,6 +17,7 @@ Welcome to EvenTDT's documentation!
    wikinterface
    apd
    tdt
+   summarization
    queues
    other
 

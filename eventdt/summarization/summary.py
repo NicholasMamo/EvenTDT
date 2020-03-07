@@ -16,9 +16,8 @@ from objects.attributable import Attributable
 
 class Summary(Attributable):
 	"""
-	A summary is made up of various attributes.
-	It is made up of the actual list of :class:`~vector.nlp.document.Document` of the summary.
-	Associated with the summary are also two timestamps - the timestamps when the summary was creation and last updated.
+	A summary is essentially made up of a list of :class:`~nlp.document.Document`.
+	However, summaries may also have other attributes.
 
 	:ivar documents: The documents that make up the summary.
 	:vartype documents: list of :class:`~nlp.document.Document`
