@@ -317,21 +317,48 @@ class TestCluster(unittest.TestCase):
 		c = Cluster(v)
 		self.assertEqual(len(v), c.size())
 
-	def test_export(self):
+	def test_export_documents(self):
 		"""
-		Test exporting and importing clusters.
+		Test that when importing documents, the correct class is imported.
 		"""
 
 		tf = TF()
-		v = [
-			Document("", ["a", "b", "a", "c"], scheme=TF()),
-			Document("", ["a", "c"], scheme=TF()),
-			Document("", ["b"], scheme=TF()),
-		]
+		v = [ Document("a", ["a", "b", "a", "c"], scheme=TF()),
+			  Document("b", ["a", "c"], scheme=TF()),
+			  Document("c", ["b"], scheme=TF()), ]
 		c = Cluster(v)
 
 		e = c.to_array()
 		r = Cluster.from_array(e)
 
-		for i, vector in enumerate(r.vectors):
-			self.assertEqual(vector.__dict__, v[i].__dict__)
+		self.assertTrue(all( imported.__dict__ == exported.__dict__
+							for imported, exported in zip(v, r.vectors) ))
+		self.assertTrue(all( Document == type(exported)
+							for imported, exported in zip(v, r.vectors) ))
+
+	def test_export_vectors(self):
+		"""
+		Test that when importing vectors, the correct class is imported.
+		"""
+
+		v = [ Vector({ 'a': 1, 'b': 1, 'a': 1, 'c': 1}),
+			  Vector({ 'a': 1, 'c': 1 }), Vector({ 'b': 1 }), ]
+		c = Cluster(v)
+
+		e = c.to_array()
+		r = Cluster.from_array(e)
+
+		self.assertTrue(all( imported.__dict__ == exported.__dict__
+							for imported, exported in zip(v, r.vectors) ))
+		self.assertTrue(all( Vector == type(exported)
+							for imported, exported in zip(v, r.vectors) ))
+
+	def test_export_attributes(self):
+		"""
+		Test that when exporting and importing clusters, the attributes are included.
+		"""
+
+		c = Cluster([ ], attributes={ 'a': 1 })
+		e = c.to_array()
+		self.assertEqual(c.attributes, Cluster.from_array(e).attributes)
+		self.assertEqual(c.centroid.__dict__, Cluster.from_array(e).centroid.__dict__)

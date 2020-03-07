@@ -70,7 +70,7 @@ class Summary(Attributable):
 		:rtype: :class:`~summarization.summary.Summary`
 		"""
 
-		documents = []
+		documents = [ ]
 		for vector in array.get('documents'):
 			cls = vector.get('class', '')
 			cls = cls[ cls.index('\'') + 1:cls.rindex('\'') ]

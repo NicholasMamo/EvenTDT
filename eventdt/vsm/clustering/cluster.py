@@ -220,11 +220,10 @@ class Cluster(Attributable):
 		:rtype: dict
 		"""
 
-		array = Attributable.to_array(self)
-		array.update({
-			"vectors": [ vector.to_array() for vector in self.vectors ]
-		})
-		return array
+		return {
+			'attributes': self.attributes,
+			'vectors': [ vector.to_array() for vector in self.vectors ]
+		}
 
 	@staticmethod
 	def from_array(array):
@@ -238,14 +237,13 @@ class Cluster(Attributable):
 		:rtype: :class:`~vector.cluster.cluster.Cluster`
 		"""
 
-		vectors = array.get("vectors", [])
-		loaded_vectors = []
-		for vector in vectors:
-			c = vector.get("class", "")
-			c = c[c.index("'")+1:c.rindex("'")]
-			module_name, class_name = c[:c.rindex(".")], c[c.rindex(".")+1:]
+		vectors = [ ]
+		for vector in array.get('vectors'):
+			cls = vector.get('class', '')
+			cls = cls[ cls.index('\'') + 1:cls.rindex('\'') ]
+			module_name, class_name = cls[ :cls.rindex('.') ], cls[ cls.rindex('.') + 1: ]
 			module = importlib.import_module(module_name)
-			c = getattr(module, class_name)
-			loaded_vectors.append(c.from_array(vector))
+			cls = getattr(module, class_name)
+			vectors.append(cls.from_array(vector))
 
-		return Cluster(vectors=loaded_vectors)
+		return Cluster(vectors=vectors, attributes=array.get('attributes'))
