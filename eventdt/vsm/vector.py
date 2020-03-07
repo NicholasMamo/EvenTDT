@@ -99,7 +99,7 @@ class Vector(Attributable):
 		:rtype: :class:`~vector.vector.Vector`
 		"""
 
-		return Vector(self.dimensions.copy(), self._attributes.copy())
+		return Vector(self.dimensions.copy(), self.attributes.copy())
 
 	def to_array(self):
 		"""
@@ -109,11 +109,10 @@ class Vector(Attributable):
 		:rtype: dict
 		"""
 
-		array = Attributable.to_array(self)
-		array.update({
-			"dimensions": self.dimensions,
-		})
-		return array
+		return {
+			'attributes': self.attributes,
+			'dimensions': self.dimensions,
+		}
 
 	@staticmethod
 	def from_array(array):
@@ -127,4 +126,4 @@ class Vector(Attributable):
 		:rtype: :class:`~vector.vector.Vector`
 		"""
 
-		return Vector(attributes=array.get("attributes", {}), dimensions=array.get("dimensions", {}))
+		return Vector(dimensions=array.get('dimensions'), attributes=array.get('attributes'))

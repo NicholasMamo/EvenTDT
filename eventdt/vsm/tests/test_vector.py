@@ -153,29 +153,48 @@ class TestVector(unittest.TestCase):
 		Test copying.
 		"""
 
-		v = Vector({ "x": 3 }, { "y": True })
+		v = Vector({ 'x': 3 })
 		n = v.copy()
 
-		self.assertEqual(v.get_attributes(), n.get_attributes())
 		self.assertEqual(v.dimensions, n.dimensions)
 
-		v.set_attribute("y", False)
-		self.assertFalse(v.get_attribute("y"))
-		self.assertTrue(n.get_attribute("y"))
-		v.set_attribute("y", True)
+		v.dimensions['x'] = 2
+		self.assertEqual(2, v.dimensions['x'])
+		self.assertEqual(3, n.dimensions['x'])
+		v.dimensions['x'] = 3
 
-		v.dimensions["x"] = 2
-		self.assertEqual(2, v.dimensions["x"])
-		self.assertEqual(3, n.dimensions["x"])
-		v.dimensions["x"] = 3
+	def test_copy_attributes(self):
+		"""
+		Test that the attributes are also copied.
+		"""
+
+		v = Vector({ 'x': 3 }, { 'y': True })
+		n = v.copy()
+
+		self.assertEqual(v.attributes, n.attributes)
+
+		v.attributes['y'] = False
+		self.assertFalse(v.attributes['y'])
+		self.assertTrue(n.attributes['y'])
+		v.attributes['y'] = True
 
 	def test_export(self):
 		"""
 		Test exporting and importing vectors.
 		"""
 
-		v = Vector({ "x": 3 }, { "y": True })
+		v = Vector({ 'x': 3 })
 		e = v.to_array()
-		self.assertEqual(v.get_attributes(), Vector.from_array(e).get_attributes())
+		self.assertEqual(v.attributes, Vector.from_array(e).attributes)
 		self.assertEqual(v.dimensions, Vector.from_array(e).dimensions)
+		self.assertEqual(v.__dict__, Vector.from_array(e).__dict__)
+
+	def test_export_attributes(self):
+		"""
+		Test that exporting and importing vectors includes attributes.
+		"""
+
+		v = Vector({ 'x': 3 }, { "y": True })
+		e = v.to_array()
+		self.assertEqual(v.attributes, Vector.from_array(e).attributes)
 		self.assertEqual(v.__dict__, Vector.from_array(e).__dict__)
