@@ -27,10 +27,10 @@ class TestNoKMeans(unittest.TestCase):
 
 		cluster = Cluster()
 		algo = NoKMeans(0.5, 10)
-		cluster.set_attribute('age', 10)
-		self.assertEqual(10, cluster.get_attribute('age'))
+		cluster.attributes['age'] = 10
+		self.assertEqual(10, cluster.attributes['age'])
 		algo._update_age(cluster, 1)
-		self.assertEqual(11, cluster.get_attribute('age'))
+		self.assertEqual(11, cluster.attributes['age'])
 
 	def test_update_age_without_previous(self):
 		"""
@@ -39,9 +39,9 @@ class TestNoKMeans(unittest.TestCase):
 
 		cluster = Cluster()
 		algo = NoKMeans(0.5, 10)
-		self.assertFalse(cluster.get_attribute('age'))
+		self.assertFalse(cluster.attributes.get('age'))
 		algo._update_age(cluster, 1)
-		self.assertEqual(1, cluster.get_attribute('age'))
+		self.assertEqual(1, cluster.attributes['age'])
 
 	def test_update_age_parameter(self):
 		"""
@@ -50,10 +50,10 @@ class TestNoKMeans(unittest.TestCase):
 
 		cluster = Cluster()
 		algo = NoKMeans(0.5, 10)
-		cluster.set_attribute('age', 10)
-		self.assertEqual(10, cluster.get_attribute('age'))
+		cluster.attributes['age'] = 10
+		self.assertEqual(10, cluster.attributes['age'])
 		algo._update_age(cluster, 12)
-		self.assertEqual(22, cluster.get_attribute('age'))
+		self.assertEqual(22, cluster.attributes['age'])
 
 	def test_to_freeze_low_age(self):
 		"""
@@ -62,7 +62,7 @@ class TestNoKMeans(unittest.TestCase):
 
 		cluster = Cluster()
 		algo = NoKMeans(0.5, 10)
-		cluster.set_attribute('age', 9)
+		cluster.attributes['age'] = 9
 		self.assertFalse(algo._to_freeze(cluster))
 
 	def test_to_freeze_same_age(self):
@@ -72,7 +72,7 @@ class TestNoKMeans(unittest.TestCase):
 
 		cluster = Cluster()
 		algo = NoKMeans(0.5, 10)
-		cluster.set_attribute('age', 10)
+		cluster.attributes['age'] = 10
 		self.assertFalse(algo._to_freeze(cluster))
 
 	def test_to_freeze_high_age(self):
@@ -82,7 +82,7 @@ class TestNoKMeans(unittest.TestCase):
 
 		cluster = Cluster()
 		algo = NoKMeans(0.5, 10)
-		cluster.set_attribute('age', 11)
+		cluster.attributes['age'] = 11
 		self.assertTrue(algo._to_freeze(cluster))
 
 	def test_freeze_inactive_cluster(self):
@@ -148,9 +148,9 @@ class TestNoKMeans(unittest.TestCase):
 
 		cluster = Cluster()
 		algo = NoKMeans(0.5, 10, store_frozen=True)
-		self.assertFalse(cluster.get_attribute('age'))
+		self.assertFalse(cluster.attributes.get('age'))
 		algo._reset_age(cluster)
-		self.assertEqual(0, cluster.get_attribute('age'))
+		self.assertEqual(0, cluster.attributes['age'])
 
 	def test_reset_age(self):
 		"""
@@ -159,10 +159,10 @@ class TestNoKMeans(unittest.TestCase):
 
 		cluster = Cluster()
 		algo = NoKMeans(0.5, 10, store_frozen=True)
-		cluster.set_attribute('age', 10)
-		self.assertEqual(10, cluster.get_attribute('age'))
+		cluster.attributes['age'] = 10
+		self.assertEqual(10, cluster.attributes['age'])
 		algo._reset_age(cluster)
-		self.assertEqual(0, cluster.get_attribute('age'))
+		self.assertEqual(0, cluster.attributes['age'])
 
 	def test_closest_cluster_none(self):
 		"""

@@ -119,7 +119,7 @@ class NoKMeans(ClusteringAlgorithm):
 		:type increment: int
 		"""
 
-		cluster.set_attribute('age', cluster.get_attribute('age', 0) + increment)
+		cluster.attributes['age'] = cluster.attributes.get('age', 0) + increment
 
 	def _to_freeze(self, cluster):
 		"""
@@ -133,7 +133,7 @@ class NoKMeans(ClusteringAlgorithm):
 		:rtype: bool
 		"""
 
-		return cluster.get_attribute('age') > self.freeze_period
+		return cluster.attributes.get('age') > self.freeze_period
 
 	def _freeze(self, cluster):
 		"""
@@ -182,4 +182,4 @@ class NoKMeans(ClusteringAlgorithm):
 		:type cluster: :class:`~vsm.clustering.cluster.Cluster`
 		"""
 
-		cluster.set_attribute('age', 0)
+		cluster.attributes['age'] = 0
