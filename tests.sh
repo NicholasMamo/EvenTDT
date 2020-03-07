@@ -6,7 +6,7 @@ cd "$parent_path"
 source variables.sh
 
 usage() {
-	echo -e "${HIGHLIGHT}Usage: sh $0 [-t <apd|nlp|graph|queue|summarization|tdt|vector|wikipedia>]"${DEFAULT};
+	echo -e "${HIGHLIGHT}Usage: sh $0 [-t <apd|nlp|queue|summarization|tdt|vector|wikipedia>]"${DEFAULT};
 }
 
 apd_tests() {
@@ -56,12 +56,6 @@ nlp_tests() {
 	echo -e "${HIGHLIGHT}Tokenizer${DEFAULT}"
 	python3 -m unittest eventdt.nlp.tests.test_tokenizer
 
-	return
-}
-
-graph_tests() {
-	# echo -e "${HIGHLIGHT}Graph${DEFAULT}"
-	# python3 -m unittest eventdt.graph.tests.test_graph
 	return
 }
 
@@ -134,9 +128,6 @@ then
 			;;
 		nlp)
 			nlp_tests
-			;;
-		graph)
-			graph_tests
 			;;
 		queue)
 			queue_tests
