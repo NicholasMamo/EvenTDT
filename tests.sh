@@ -89,7 +89,7 @@ topic_detection_tests() {
 	echo -e "${HIGHLIGHT}Algorithms${DEFAULT}"
 	python3 -m unittest eventdt.tdt.algorithms.tests.test_cataldi
 	python3 -m unittest eventdt.tdt.algorithms.tests.test_zhao
-	# python3 -m unittest eventdt.topic_detection.algorithms.tests.test_mamo
+	python3 -m unittest eventdt.tdt.algorithms.tests.test_eld
 }
 
 vector_tests() {
