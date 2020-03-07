@@ -54,7 +54,7 @@ class Summary(Attributable):
 		"""
 
 		return {
-			'attributes': self._attributes,
+			'attributes': self.attributes,
 			'documents': [ document.to_array() for document in self.documents ]
 		}
 

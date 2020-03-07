@@ -45,14 +45,12 @@ class TestSummary(unittest.TestCase):
 
 	def test_export(self):
 		"""
-		Test exporting and importing vectors.
+		Test exporting and importing summaries.
 		"""
 
 		documents = [ Document('A'), Document('B') ]
-		summary = Summary(documents, { 'a': 0 })
+		summary = Summary(documents)
 		export = summary.to_array()
-
-		self.assertEqual(summary._attributes, Summary.from_array(export)._attributes)
 
 		"""
 		Check that the documents were exported correctly.
@@ -61,3 +59,14 @@ class TestSummary(unittest.TestCase):
 		for document in documents:
 			self.assertTrue(any(document.__dict__ == imported.__dict__
 								for imported in Summary.from_array(export).documents))
+
+	def test_export_attributes(self):
+		"""
+		Test that exporting and importing summaries includes the attributes.
+		"""
+
+		documents = [ Document('A'), Document('B') ]
+		summary = Summary(documents, { 'a': 0 })
+		export = summary.to_array()
+
+		self.assertEqual(summary.attributes, Summary.from_array(export).attributes)
