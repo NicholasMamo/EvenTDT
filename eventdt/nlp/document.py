@@ -18,8 +18,6 @@ if path not in sys.path:
 
 from vsm import Vector
 
-from logger import logger
-
 class Document(Vector):
 	"""
 	The :class:`~nlp.document.Document` class is based on the :class:`~vsm.vector.Vector` class. class.
