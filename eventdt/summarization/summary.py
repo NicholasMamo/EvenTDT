@@ -1,5 +1,7 @@
 """
-The summary object represents a textual summary.
+Summarization algorithms create summaries.
+The summary object encapsulates the output.
+It stores the documents that make it up as well as any other attributes that may be necessary.
 """
 
 import importlib
