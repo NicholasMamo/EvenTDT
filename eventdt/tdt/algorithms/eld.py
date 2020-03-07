@@ -92,8 +92,14 @@ class ELD(TDTAlgorithm):
 		else:
 			historic = self.store.since(since)
 
-		bursty_terms = []
-		historical_data = nutrition_store.get_recent_nutrition_sets(sets, timestamp=timestamp) # get the historical data
+		"""
+		Compute the burst of all the terms.
+		Filter those with a low burst.
+		"""
+		burst = { term: self._compute_burst(term, nutrition, historic) for term in nutrition }
+		burst = { term: burst for term, burst in burst.items() if burst > min_burst }
+		return burst
+
 	def _compute_burst(self, term, nutrition, historic):
 		"""
 		Calculate the burst for the given term using the historical data.
