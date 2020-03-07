@@ -3,6 +3,7 @@ Exportable objects are normal objects that can be exported as a JSON string and 
 """
 
 from abc import ABC, abstractmethod
+import re
 
 class Exportable(ABC):
 	"""
@@ -34,3 +35,43 @@ class Exportable(ABC):
 		"""
 
 		pass
+
+	def _get_module(self, cls):
+		"""
+		Get the module name from the given path.
+
+		:param cls: The full class name.
+		:type cls: str
+
+		:return: The module name.
+		:rtype: str
+
+		:raises ValueError: When the class name is invalid.
+		"""
+
+		class_pattern = re.compile('<class \'(.+)?\.?\'>')
+		if not class_pattern.match(cls):
+			raise ValueError(f"Invalid class name {cls}")
+
+		path = class_pattern.findall(cls)[0].split('.')
+		return '.'.join(path[:-1])
+
+	def _get_class(self, cls):
+		"""
+		Get the class name from the given path.
+
+		:param cls: The full class name.
+		:type cls: str
+
+		:return: The class name.
+		:rtype: str
+
+		:raises ValueError: When the class name is invalid.
+		"""
+
+		class_pattern = re.compile('<class \'(.+)?\.?\'>')
+		if not class_pattern.match(cls):
+			raise ValueError(f"Invalid class name {cls}")
+
+		path = class_pattern.findall(cls)[0].split('.')
+		return path[-1]
