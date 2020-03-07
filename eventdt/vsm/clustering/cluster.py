@@ -30,7 +30,7 @@ class Cluster(Attributable):
 	:vartype centroid: :class:`~vsm.vector.Vector`
 	"""
 
-	def __init__(self, vectors=None):
+	def __init__(self, vectors=None, *args, **kwargs):
 		"""
 		Initialize the cluster with an empty centroid and a list of vectors.
 
@@ -39,7 +39,7 @@ class Cluster(Attributable):
 		:type vectors: list of :class:`~vsm.vector.Vector` or :class:`~vsm.vector.Vector` or `None`
 		"""
 
-		super(Cluster, self).__init__()
+		super(Cluster, self).__init__(*args, **kwargs)
 		self.vectors = vectors
 
 	def add_vectors(self, vectors):
