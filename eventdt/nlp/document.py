@@ -68,8 +68,8 @@ class Document(Vector):
 
 		array = Vector.to_array(self)
 		array.update({
-			"class": str(Document),
-			"text": self.text,
+			'class': str(Document),
+			'text': self.text,
 		})
 		return array
 
@@ -85,10 +85,8 @@ class Document(Vector):
 		:rtype: :class:`~vector.nlp.document.Document`
 		"""
 
-		return Document(text=array.get("text", ""),
-			dimensions=array.get("dimensions", None),
-			attributes=array.get("attributes", {}),
-		)
+		return Document(text=array.get('text'), dimensions=array.get('dimensions'),
+						attributes=array.get('attributes'))
 
 	@staticmethod
 	def concatenate(*args, tokenizer, scheme=None, **kwargs):

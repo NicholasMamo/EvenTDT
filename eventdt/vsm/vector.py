@@ -110,6 +110,7 @@ class Vector(Attributable):
 		"""
 
 		return {
+			'class': str(Vector),
 			'attributes': self.attributes,
 			'dimensions': self.dimensions,
 		}
