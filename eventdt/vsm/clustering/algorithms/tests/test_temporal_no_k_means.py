@@ -45,10 +45,10 @@ class TestNoKMeans(unittest.TestCase):
 
 		cluster = Cluster(Document('', [ ], attributes={ 'timestamp': 10 }))
 		algo = TemporalNoKMeans(0.5, 10)
-		cluster.set_attribute('age', 8)
-		self.assertEqual(8, cluster.get_attribute('age'))
+		cluster.attributes['age'] = 8
+		self.assertEqual(8, cluster.attributes['age'])
 		algo._update_age(cluster, 23, 'timestamp')
-		self.assertEqual(13, cluster.get_attribute('age'))
+		self.assertEqual(13, cluster.attributes['age'])
 
 	def test_update_age_without_previous(self):
 		"""
@@ -58,7 +58,7 @@ class TestNoKMeans(unittest.TestCase):
 		cluster = Cluster(Document('', [ ], attributes={ 'timestamp': 10 }))
 		algo = TemporalNoKMeans(0.5, 10)
 		algo._update_age(cluster, 23, 'timestamp')
-		self.assertEqual(13, cluster.get_attribute('age'))
+		self.assertEqual(13, cluster.attributes['age'])
 
 	def test_update_age_most_recent_vector(self):
 		"""
@@ -69,7 +69,7 @@ class TestNoKMeans(unittest.TestCase):
 		 					Document('', [ ], attributes={ 'timestamp': 8 })])
 		algo = TemporalNoKMeans(0.5, 10)
 		algo._update_age(cluster, 23, 'timestamp')
-		self.assertEqual(15, cluster.get_attribute('age'))
+		self.assertEqual(15, cluster.attributes['age'])
 
 	def test_cluster_freeze(self):
 		"""

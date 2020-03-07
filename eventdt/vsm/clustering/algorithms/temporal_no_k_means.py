@@ -64,9 +64,9 @@ class TemporalNoKMeans(NoKMeans):
 		"""
 		Vectors are clustered chronologically.
 		"""
-		vectors = sorted(vectors, key=lambda vector: vector.get_attribute(time))
+		vectors = sorted(vectors, key=lambda vector: vector.attributes.get(time))
 		for vector in vectors:
-			timestamp = vector.get_attribute(time)
+			timestamp = vector.attributes.get(time)
 
 			"""
 			Freeze inactive clusters first.
@@ -119,4 +119,4 @@ class TemporalNoKMeans(NoKMeans):
 		"""
 
 		vector = cluster.vectors[-1]
-		cluster.set_attribute('age', timestamp - vector.get_attribute(time))
+		cluster.attributes['age'] = timestamp - vector.attributes.get(time)
