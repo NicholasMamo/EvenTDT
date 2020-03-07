@@ -158,19 +158,27 @@ class ELD(TDTAlgorithm):
 
 		return(1 / math.exp(c) ** self.decay_rate)
 
-	def _get_coefficient(self, n, decay_function):
+	def _compute_coefficient(self, s):
 		"""
-		Get the denominator of the burstiness calculation.
+		Get the denominator of the burst calculation.
 		This denominator is used to rescale the function, for example with bounds between -1 and 1.
 
-		:param n: The number of time windows to consider.
-		:type n: int
-		:param decay_function: The tuple containing the decay function to use and the associated decay rate.
-		:type decay_function: tuple(function, float)
+		:param s: The number of time windows being considered.
+		:type s: int
 
-		:return: The denominator of the burstiness calculation.
+		:return: The denominator of the burst calculation.
 		:rtype: float
+
+		:raises ValueError: When there is a negative number of time windows.
 		"""
 
-		decay_function, decay_rate = decay_function
-		return sum([ decay_function(n + 1, decay_rate=decay_rate) for n in range(0, n) ])
+		if s < 0:
+			raise ValueError(f"The number of time windows cannot be negative: received {s}")
+
+		"""
+		If there are no time windows, the co-efficient should be 1.
+		"""
+		if not s:
+			return 1
+		else:
+			return sum([ self._compute_decay(s + 1) for s in range(s) ])

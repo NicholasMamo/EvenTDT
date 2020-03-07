@@ -40,3 +40,40 @@ class TestELD(unittest.TestCase):
 		self.assertEqual(round(0.3678794411714424, 10),
 			round(algo._compute_decay(3), 10))
 
+	def test_compute_coefficient_negative(self):
+		"""
+		Test that the coefficient computation with negative time windows raises a ValueError.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = ELD(store)
+		self.assertRaises(ValueError, algo._compute_coefficient, -1)
+
+	def test_compute_coefficient_zero(self):
+		"""
+		Test that the coefficient computation with no time windows equals 1.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = ELD(store)
+		self.assertEqual(1, algo._compute_coefficient(0))
+
+	def test_compute_coefficient_one(self):
+		"""
+		Test the coefficient computation with one time window.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = ELD(store)
+		self.assertEqual(round(0.6065306597126334, 10),
+						 round(algo._compute_coefficient(1), 10))
+
+	def test_compute_coefficient_multiple(self):
+		"""
+		Test the coefficient computation with multiple time windows.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = ELD(store)
+		self.assertEqual(round(1.1975402610325056, 10),
+						 round(algo._compute_coefficient(3), 10))
