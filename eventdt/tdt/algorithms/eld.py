@@ -134,21 +134,29 @@ class ELD(TDTAlgorithm):
 		burstiness = [ (nutrition - historical_data[i].get(term, 0)) * decay_function(i + 1, decay_rate=decay_rate) for i in range(0, windows) ]
 		return sum(burstiness) / coefficient
 
-	def _exponential_decay(self, n, decay_rate=(1./2)):
+	def _compute_decay(self, c):
 		"""
-		An exponential decay factor with the formula:
-			x = 1 / (exp(n)^decay_rate)
+		Compute the decay with an exponential formula:
 
-		:param n: The number of time windows to consider.
-		:type n: int
-		:param decay_rate: The decay rate of the burstiness function.
-			A smaller value gives more uniform weight to far-off nutrition sets.
+		.. math::
 
-		:return: The exponential decay factor, or how much a result should be weighted.
+			x = \\frac{1}{(e^c)^d}
+
+		where :math:`c` is the number of time windows being considered and :math:`d` is the decay rate.
+		By default, the decay rate is :math:`\\frac{1}{2}`:
+
+		.. math::
+
+			x = \\frac{1}{\\sqrt{e^c}}
+
+		:param c: The current time window.
+		:type c: int
+
+		:return: The exponential decay factor, or how much weight the burst of a term in a time window has.
 		:rtype: float
 		"""
 
-		return(1 / math.exp(n) ** decay_rate)
+		return(1 / math.exp(c) ** self.decay_rate)
 
 	def _get_coefficient(self, n, decay_function):
 		"""
