@@ -36,7 +36,8 @@ class Exportable(ABC):
 
 		pass
 
-	def _get_module(self, cls):
+	@staticmethod
+	def get_module(cls):
 		"""
 		Get the module name from the given path.
 
@@ -56,7 +57,8 @@ class Exportable(ABC):
 		path = class_pattern.findall(cls)[0].split('.')
 		return '.'.join(path[:-1])
 
-	def _get_class(self, cls):
+	@staticmethod
+	def get_class(cls):
 		"""
 		Get the class name from the given path.
 
