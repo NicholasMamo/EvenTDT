@@ -65,8 +65,7 @@ class MMR(SummarizationAlgorithm):
 		if not 0 <= l <= 1:
 			raise ValueError(f"Invalid lambda value {l}")
 
-		if query is None:
-			query = Cluster(vectors=collection).get_centroid()
+		query = query or self._compute_query(documents)
 
 		# TODO: take out the scorer and extend MMR, maybe. Current implementation looks quite dirty.
 		document_scorer = scorer.Scorer() if document_scorer is None else document_scorer
@@ -134,3 +133,17 @@ class MMR(SummarizationAlgorithm):
 					break
 
 		return Summary([ collection[d] for d in summary ], timestamp)
+
+	def _compute_query(self, documents):
+		"""
+		Create the query from the given documents.
+		The query is equivalent to the centroid of the documents.
+
+		:param documents: The list of documents to summarize.
+		:type documents: list of :class:`~nlp.document.Document`
+
+		:return: The centroid of the documents.
+		:rtype: `~vsm.vector.Vector`
+		"""
+
+		return Cluster(vectors=documents).centroid
