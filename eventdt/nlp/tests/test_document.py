@@ -141,7 +141,7 @@ class TestDocument(unittest.TestCase):
 										attributes={ 'attr': True })
 		self.assertTrue(document.attributes['attr'])
 
-	def test_repr(self):
+	def test_str(self):
 		"""
 		Test that the string representation of the document is equivalent to its text.
 		"""

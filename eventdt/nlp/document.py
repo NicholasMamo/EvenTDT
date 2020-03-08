@@ -56,7 +56,7 @@ class Document(Vector):
 		super(Document, self).__init__(dimensions, *args, **kwargs)
 		self.text = text
 
-	def __repr__(self):
+	def __str__(self):
 		"""
 		Get the string representation of the document.
 		This is equivalent to the document's text.
