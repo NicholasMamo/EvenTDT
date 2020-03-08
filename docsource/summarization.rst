@@ -27,3 +27,11 @@ Algorithms
    :members:
    :private-members:
    :special-members:
+
+Carbonell and Goldstein (1998)
+------------------------------
+
+.. automodule:: summarization.algorithms.mmr
+   :members:
+   :private-members:
+   :special-members:
