@@ -79,7 +79,7 @@ class TestSummary(unittest.TestCase):
 		summary.documents = corpus
 		self.assertEqual(corpus, summary.documents)
 
-	def test_repr_empty(self):
+	def test_str_empty(self):
 		"""
 		Test that the string representation of an empty summary is an empty string.
 		"""
@@ -87,7 +87,7 @@ class TestSummary(unittest.TestCase):
 		summary = Summary()
 		self.assertEqual('', str(summary))
 
-	def test_repr(self):
+	def test_str(self):
 		"""
 		Test that the string representation of the summary is equivalent to all of the documents in it.
 		"""

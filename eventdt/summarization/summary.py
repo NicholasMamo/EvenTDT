@@ -62,7 +62,7 @@ class Summary(Attributable, Exportable):
 		else:
 			self.__documents = [ documents ]
 
-	def __repr__(self):
+	def __str__(self):
 		"""
 		Get the string representation of the summary.
 		This is equivalent to concatenating the text of all documents.
