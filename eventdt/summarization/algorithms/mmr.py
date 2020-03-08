@@ -62,6 +62,9 @@ class MMR(SummarizationAlgorithm):
 		if length <= 0:
 			raise ValueError(f"Invalid summary length {length}")
 
+		if not 0 <= l <= 1:
+			raise ValueError(f"Invalid lambda value {l}")
+
 		if query is None:
 			query = Cluster(vectors=collection).get_centroid()
 

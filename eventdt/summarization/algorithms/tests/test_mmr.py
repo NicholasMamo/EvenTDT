@@ -36,3 +36,21 @@ class TestMMR(unittest.TestCase):
 		c = [ ]
 		algo = MMR()
 		self.assertRaises(ValueError, algo.summarize, c, 0)
+
+	def test_negative_lambda(self):
+		"""
+		Test that when lambda is negative, the function raises a ValueError.
+		"""
+
+		c = [ ]
+		algo = MMR()
+		self.assertRaises(ValueError, algo.summarize, c, 0, l=-0.1)
+
+	def test_large_lambda(self):
+		"""
+		Test that when lambda is large, the function raises a ValueError.
+		"""
+
+		c = [ ]
+		algo = MMR()
+		self.assertRaises(ValueError, algo.summarize, c, 0, l=1.1)
