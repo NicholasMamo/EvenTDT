@@ -26,6 +26,59 @@ class TestSummary(unittest.TestCase):
 		summary = Summary()
 		self.assertEqual([ ], summary.documents)
 
+	def test_summary_one_document(self):
+		"""
+		Test that when creating a summary with one document, it is transformed into a list.
+		"""
+
+		d = Document('this is not a cigar', { 'this': 1, 'cigar': 1 })
+		summary = Summary(d)
+		self.assertEqual([ d ], summary.documents)
+
+	def test_summary_several_documents(self):
+		"""
+		Test that when creating a summary with several documents, they are stored as a list.
+		"""
+
+		corpus = [ Document('this is not a cigar', { 'this': 1, 'cigar': 1 }),
+		 		   Document('this is a pipe', { 'this': 1, 'pipe': 1 }) ]
+		summary = Summary(corpus)
+		self.assertEqual(corpus, summary.documents)
+
+	def test_set_documents_empty(self):
+		"""
+		Test that when setting the documents to `None`, it is transformed into an empty list.
+		"""
+
+		corpus = [ Document('this is not a cigar', { 'this': 1, 'cigar': 1 }),
+		 		   Document('this is a pipe', { 'this': 1, 'pipe': 1 }) ]
+		summary = Summary(corpus)
+		self.assertEqual(corpus, summary.documents)
+		summary.documents = None
+		self.assertEqual([ ], summary.documents)
+
+	def test_set_documents_one(self):
+		"""
+		Test that when setting the documents to one document, it is transformed into a list.
+		"""
+
+		document = Document('this is not a cigar', { 'this': 1, 'cigar': 1 })
+		summary = Summary()
+		self.assertEqual([ ], summary.documents)
+		summary.documents = document
+		self.assertEqual([ document ], summary.documents)
+
+	def test_set_documents_several(self):
+		"""
+		Test that when setting a list of documents, they are stored as a list.
+		"""
+
+		corpus = [ Document('this is not a cigar', { 'this': 1, 'cigar': 1 }),
+		 		   Document('this is a pipe', { 'this': 1, 'pipe': 1 }) ]
+		summary = Summary()
+		summary.documents = corpus
+		self.assertEqual(corpus, summary.documents)
+
 	def test_repr_empty(self):
 		"""
 		Test that the string representation of an empty summary is an empty string.

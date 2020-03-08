@@ -33,7 +33,34 @@ class Summary(Attributable, Exportable):
 		"""
 
 		super(Summary, self).__init__(*args, **kwargs)
-		self.documents = documents or [ ]
+		self.documents = documents
+
+	@property
+	def documents(self):
+		"""
+		Get the list of documents in the summary.
+
+		:return: The list of documents.
+		:rtype: list of :class:`~nlp.document.Document`
+		"""
+
+		return self.__documents
+
+	@documents.setter
+	def documents(self, documents=None):
+		"""
+		Override the documents.
+
+		:param documents: The new documents.
+		:type documents: list of :class:`~nlp.document.Document` or :class:`~nlp.document.Document` or None
+		"""
+
+		if documents is None:
+			self.__documents = [ ]
+		elif type(documents) is list:
+			self.__documents = list(documents)
+		else:
+			self.__documents = [ documents ]
 
 	def __repr__(self):
 		"""
