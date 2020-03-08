@@ -42,69 +42,7 @@ class Cluster(Attributable, Exportable):
 
 		super(Cluster, self).__init__(*args, **kwargs)
 		self.vectors = vectors
-
-	def add_vectors(self, vectors):
-		"""
-		Add the given vectors to the cluster.
-
-		:param vectors: The vectors to add to the cluster.
-		:type vectors: list
-		"""
-
-		for vector in vectors:
-			self.add_vector(vector)
-
-	def add_vector(self, vector):
-		"""
-		Add a vector to the cluster.
-
-		:param vector: The vector to add to the cluster.
-		:type vector: :class:`~vsm.vector.Vector`
-		"""
-
-		self.vectors.append(vector)
-		vectors = len(self.vectors)
-		dimensions = vector.dimensions.keys() | self.centroid.dimensions.keys()
-
-		"""
-		Update the cluster's centroid incrimentally.
-		"""
-		for dimension in dimensions:
-			new_weight = (self.centroid.dimensions[dimension] * (vectors - 1) + vector.dimensions[dimension]) / vectors
-			self.centroid.dimensions[dimension] = new_weight
-
-	def recalculate_centroid(self):
-		"""
-		Recalculate the centroid.
-		This is important if, for example, one of the vector instances change in memory.
-		"""
-
 		self.centroid = Vector()
-		old_vectors = list(self.vectors) # make a copy of the Vectors
-		self.vectors = [] # remove all Vectors
-		for vector in old_vectors:
-			self.add_vector(vector)
-
-	def remove_vector(self, vector):
-		"""
-		Remove a vector from the cluster.
-
-		:param vector: The vector to remove from the cluster.
-		:type vector: :class:`~vsm.vector.Vector`
-		"""
-
-		self.vectors.remove(vector)
-		vectors = len(self.vectors)
-		copy = vector.dimensions.copy()
-		dimensions = list(self.centroid.dimensions.keys())
-
-		"""
-		Update the cluster's centroid incrimentally.
-		"""
-		for dimension in dimensions:
-			value = self.centroid.dimensions[dimension]
-			new_value = (value * (vectors + 1) - copy.get(dimension, 0)) / max(vectors, 1)
-			self.centroid.dimensions[dimension] = new_value
 
 	def similarity(self, vector, similarity_measure=vector_math.cosine):
 		"""
@@ -121,6 +59,43 @@ class Cluster(Attributable, Exportable):
 
 		return similarity_measure(self.centroid, vector)
 
+	def recalculate_centroid(self):
+		"""
+		Recalculate the centroid.
+		"""
+
+		dimensions = set([ dimension for vector in self.vectors
+									 for dimension in vector.dimensions ])
+
+		for dimension in dimensions:
+			weight = sum([ vector.dimensions[dimension] for vector in self.vectors ])
+			self.__centroid.dimensions[dimension] = weight/len(self.vectors)
+
+		self.__centroid.normalize()
+
+	@property
+	def centroid(self):
+		"""
+		Get the cluster's centroid.
+
+		:return: The cluster's centroid.
+		:rtype: :class:`~vsm.vector.Vector`
+		"""
+
+		self.recalculate_centroid()
+		return self.__centroid
+
+	@centroid.setter
+	def centroid(self, centroid):
+		"""
+		Override the centroid.
+
+		:param centroid: The new centroid.
+		:type centroid: :class:`~vsm.vector.Vector`
+		"""
+
+		self.__centroid = centroid
+
 	@property
 	def vectors(self):
 		"""
@@ -135,21 +110,18 @@ class Cluster(Attributable, Exportable):
 	@vectors.setter
 	def vectors(self, vectors=None):
 		"""
-		Reset the list of vectors.
+		Override the vectors.
 
-		:param vectors: The new list of vectors, or a single vector.
-						If `None` is given, an empty list is initialized instead.
-		:type vectors: list of :class:`~vsm.vector.Vector` or :class:`~vsm.vector.Vector` or `None`
+		:param vectors: The new vectors.
+		:type vectors: list of :class:`~vsm.vector.Vector` or :class:`~vsm.vector.Vector` or None
 		"""
 
-		vectors = list() if vectors is None else vectors
-		if type(vectors) is not list:
-			vectors = [ vectors ]
-
-		self.centroid = Vector()
-		self.__vectors = []
-		for vector in vectors:
-			self.add_vector(vector)
+		if vectors is None:
+			self.__vectors = [ ]
+		elif type(vectors) is list:
+			self.__vectors = list(vectors)
+		else:
+			self.__vectors = [ vectors ]
 
 	def get_representative_vectors(self, vectors=1, similarity_measure=vector_math.cosine):
 		"""
@@ -171,9 +143,9 @@ class Cluster(Attributable, Exportable):
 		Then, rank all vectors by their similarity score.
 		"""
 
-		similarities = [ self.similarity(vector, similarity_measure) for vector in self.vectors ] # calculate the similarities
-		similarities = zip(self.vectors, similarities) # combine the similarities with the vectors
-		similarities = sorted(similarities, key=lambda x:x[1])[::-1] # sort the vectors in descending order of similarity
+		similarities = [ self.similarity(vector, similarity_measure) for vector in self.vectors ]
+		similarities = zip(self.vectors, similarities)
+		similarities = sorted(similarities, key=lambda x:x[1])[::-1]
 
 		"""
 		If only one vector is needed, just return the vector, not a list of vectors.

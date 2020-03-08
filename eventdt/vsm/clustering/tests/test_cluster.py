@@ -15,6 +15,7 @@ from clustering.cluster import Cluster
 from nlp.document import Document
 from nlp.term_weighting.tf import TF
 from vsm import Vector, VectorSpace
+from vsm import vector_math
 
 class TestCluster(unittest.TestCase):
 	"""
@@ -27,14 +28,15 @@ class TestCluster(unittest.TestCase):
 		"""
 
 		c = Cluster()
-		self.assertEqual({}, c.centroid.dimensions)
+		self.assertEqual({ }, c.centroid.dimensions)
 
 	def test_cluster_with_one_vector(self):
 		"""
 		Test that the centroid of a cluster with a single vector has an equivalent centroid.
 		"""
 
-		v = Document("", ["a", "b", "a", "c"], scheme=TF())
+		v = Document("a", ["a", "b", "a", "c"], scheme=TF())
+		v.normalize()
 		c = Cluster(v)
 		self.assertEqual(v.dimensions, c.centroid.dimensions)
 
@@ -47,24 +49,31 @@ class TestCluster(unittest.TestCase):
 			Document("", ["a", "b", "a", "c"], scheme=TF()),
 			Document("", ["a", "c"], scheme=TF()),
 		]
+		for vector in v:
+			vector.normalize()
+
 		c = Cluster(v)
-		self.assertEqual({"a": 1.5, "b": 0.5, "c": 1}, c.centroid.dimensions)
+		self.assertEqual(v, c.vectors)
 
-	def test_vectors_reference(self):
+	def test_cluster_with_several_vectors_copy(self):
 		"""
-		Test that when a vector changes, the same vector in the cluster also changes.
+		Test that when creating a cluster with several vectors, a copy is created.
 		"""
 
-		v = Document("", ["a", "b", "a", "c"], scheme=TF())
+		v = [
+			Document("", ["a", "b", "a", "c"], scheme=TF()),
+			Document("", ["a", "c"], scheme=TF()),
+		]
+		for vector in v:
+			vector.normalize()
+
 		c = Cluster(v)
-		self.assertEqual(v.dimensions, c.centroid.dimensions)
-
-		v.dimensions["d"] = 1
-		self.assertEqual(1, c.vectors[0].dimensions["d"])
-		self.assertEqual(0, c.centroid.dimensions["d"])
-		c.recalculate_centroid()
-		self.assertEqual(1, c.vectors[0].dimensions["d"])
-		self.assertEqual(1, c.centroid.dimensions["d"])
+		self.assertEqual(v, c.vectors)
+		copy = list(v)
+		c.vectors.remove(v[0])
+		self.assertEqual([ v[1] ], c.vectors)
+		self.assertEqual(copy, v)
+		self.assertEqual(2, len(v))
 
 	def test_add_vectors(self):
 		"""
@@ -79,11 +88,11 @@ class TestCluster(unittest.TestCase):
 
 		self.assertEqual({}, c.centroid.dimensions)
 
-		c.add_vector(v[0])
-		self.assertEqual(v[0].dimensions, c.centroid.dimensions)
+		c.vectors.append(v[0])
+		self.assertEqual([ v[0] ], c.vectors)
 
-		c.add_vector(v[1])
-		self.assertEqual({"a": 1.5, "b": 0.5, "c": 1}, c.centroid.dimensions)
+		c.vectors.append(v[1])
+		self.assertEqual(v, c.vectors)
 
 	def test_remove_vectors(self):
 		"""
@@ -95,20 +104,14 @@ class TestCluster(unittest.TestCase):
 			Document("", ["a", "c"], scheme=TF())
 		]
 		c = Cluster(v)
-		self.assertEqual({"a": 1.5, "b": 0.5, "c": 1}, c.centroid.dimensions)
-		c.remove_vector(v[0])
-		self.assertEqual(1, c.centroid.dimensions['a'])
-		self.assertEqual(0, c.centroid.dimensions['b'])
-		self.assertEqual(1, c.centroid.dimensions['c'])
+		c.vectors.remove(v[0])
+		self.assertEqual([ v[1] ], c.vectors)
 
 		c = Cluster(v)
-		self.assertEqual({"a": 1.5, "b": 0.5, "c": 1}, c.centroid.dimensions)
-		c.remove_vector(v[1])
-		self.assertEqual(v[0].dimensions, c.centroid.dimensions)
-		c.remove_vector(v[0])
-		self.assertEqual(0, c.centroid.dimensions['a'])
-		self.assertEqual(0, c.centroid.dimensions['b'])
-		self.assertEqual(0, c.centroid.dimensions['c'])
+		c.vectors.remove(v[1])
+		self.assertEqual([ v[0] ], c.vectors)
+		c.vectors.remove(v[0])
+		self.assertEqual([ ], c.vectors)
 
 	def test_setting_vectors(self):
 		"""
@@ -120,9 +123,9 @@ class TestCluster(unittest.TestCase):
 			Document("", ["a", "c"], scheme=TF())
 		]
 		c = Cluster()
-		self.assertEqual({}, c.centroid.dimensions)
+		self.assertEqual({ }, c.centroid.dimensions)
 		c.vectors = v
-		self.assertEqual(c.centroid.dimensions, {"a": 1.5, "b": 0.5, "c": 1})
+		self.assertEqual(v, c.vectors)
 
 	def test_cluster_similarity(self):
 		"""
@@ -138,7 +141,7 @@ class TestCluster(unittest.TestCase):
 		n = Document("", ["a", "b"], scheme=TF())
 		self.assertEqual(round((1.5 + 0.5)/(math.sqrt(2) * math.sqrt(1.5 ** 2 + 0.5 ** 2 + 1)), 5), round(c.similarity(n), 5))
 
-		c.remove_vector(v[1])
+		c.vectors.remove(v[1])
 		self.assertEqual(round(3/(math.sqrt(2) * math.sqrt(2**2 + 1 + 1)), 5), round(c.similarity(n), 5))
 
 	def test_empty_cluster_similarity(self):
@@ -149,6 +152,37 @@ class TestCluster(unittest.TestCase):
 		c = Cluster()
 		v = Document("", ["a", "c"], scheme=TF())
 		self.assertEqual(0, c.similarity(v))
+
+	def test_get_centroid(self):
+		"""
+		Test getting the centroid.
+		"""
+
+		v = Document("", ["a", "c"], scheme=TF())
+		v.normalize()
+		c = Cluster(v)
+		self.assertTrue(all(round(v.dimensions[dimension], 10) == round(c.centroid.dimensions[dimension], 10)
+							for dimension in v.dimensions.keys() | c.centroid.dimensions))
+
+	def test_centroid_normalized(self):
+		"""
+		Test that the centroid is normalized.
+		"""
+
+		v = Document("", ["a", "c"], scheme=TF())
+		c = Cluster(v)
+		self.assertEqual(1, round(vector_math.magnitude(c.centroid), 10))
+
+	def test_centroid_normalized_several_vectors(self):
+		"""
+		Test that the centroid is always normalized.
+		"""
+
+		v = Document("", ["a", "c"], scheme=TF())
+		c = Cluster(v)
+		self.assertEqual(1, round(vector_math.magnitude(c.centroid), 10))
+		c.vectors.append(Document("", ["a", "b", "a", "d"]))
+		self.assertEqual(1, round(vector_math.magnitude(c.centroid), 10))
 
 	def test_recalculate_centroid(self):
 		"""
@@ -161,15 +195,15 @@ class TestCluster(unittest.TestCase):
 
 		v[0].dimensions = { 'a': 1, 'b': 1 }
 		self.assertEqual(VectorSpace, type(v[0].dimensions))
-		self.assertEqual({ }, c.centroid.dimensions)
-		c.recalculate_centroid()
-		self.assertEqual({ 'a': 0.5, 'b': 0.5 }, c.centroid.dimensions)
+		self.assertEqual(round(math.sqrt(2)/2., 10), round(c.centroid.dimensions['a'], 10))
+		self.assertEqual(round(math.sqrt(2)/2., 10), round(c.centroid.dimensions['b'], 10))
+		self.assertEqual(1, round(vector_math.magnitude(c.centroid), 10))
 
 		v[1].dimensions = { 'a': 1 }
 		self.assertEqual(VectorSpace, type(v[1].dimensions))
-		self.assertEqual({ 'a': 0.5, 'b': 0.5 }, c.centroid.dimensions)
-		c.recalculate_centroid()
-		self.assertEqual({ 'a': 1, 'b': 0.5 }, c.centroid.dimensions)
+		self.assertEqual(round(1./math.sqrt(1 ** 2 + 0.5 ** 2), 10), round(c.centroid.dimensions['a'], 10))
+		self.assertEqual(round(0.5/math.sqrt(1 ** 2 + 0.5 ** 2), 10), round(c.centroid.dimensions['b'], 10))
+		self.assertEqual(1, round(vector_math.magnitude(c.centroid), 10))
 
 	def test_set_vectors_none(self):
 		"""
@@ -221,7 +255,6 @@ class TestCluster(unittest.TestCase):
 
 		c.vectors = n
 		self.assertEqual(n, c.vectors)
-		self.assertEqual({ 'a': 1.5, 'b': 0.5, 'c': 1 }, c.centroid.dimensions)
 
 	def test_get_representative_vector(self):
 		"""
