@@ -85,7 +85,7 @@ class TemporalNoKMeans(NoKMeans):
 			if self.clusters:
 				cluster, similarity = self._closest_cluster(vector, *args, **kwargs)
 				if similarity >= self.threshold:
-					cluster.add_vector(vector)
+					cluster.vectors.append(vector)
 					self._reset_age(cluster)
 					updated_clusters.append(cluster)
 					continue
