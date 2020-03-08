@@ -66,22 +66,7 @@ class MMR(SummarizationAlgorithm):
 			raise ValueError(f"Invalid lambda value {l}")
 
 		query = query or self._compute_query(documents)
-
-		# TODO: take out the scorer and extend MMR, maybe. Current implementation looks quite dirty.
-		document_scorer = scorer.Scorer() if document_scorer is None else document_scorer
-
-		if similarity_table is None:
-			"""
-			Firstly, create the similarity table among documents.
-			The last column is the similarity between each document and the query.
-			"""
-			similarity_entities = collection + [query]
-			similarity_table = [ [0 for i in range(0, len(similarity_entities))] for j in range(0, len(similarity_entities))]
-			for i in range(0, len(similarity_entities)): # one row for each document/query
-				for j in range(i, len(similarity_entities)): # one column for each document/query
-					similarity = similarity_measure(similarity_entities[i], similarity_entities[j])
-					similarity_table[i][j] = similarity
-					similarity_table[j][i] = similarity
+		similarity_matrix = self._compute_similarity_matrix(documents, query)
 
 		summary = [] # the list of chosen documents
 		"""
@@ -147,3 +132,30 @@ class MMR(SummarizationAlgorithm):
 		"""
 
 		return Cluster(vectors=documents).centroid
+
+	def _compute_similarity_matrix(self, documents, query):
+		"""
+		Create the similarity matrix.
+		This matrix contains the similarities between the documents themselves, and between the documents and the query.
+
+		:param documents: The list of documents to summarize.
+		:type documents: list of :class:`~nlp.document.Document`
+		:param query: The query to which documents will be compared.
+		:type query: :class:`~nlp.document.Document`
+
+		:return: The similarity matrix as a dictionary.
+				 The keys are the documents, and the values are their similarities.
+				 These similarities are another dictionary.
+				 The keys are the other document, and the value is the actual similarity.
+		:rtype: dict
+		"""
+
+		documents = documents + [query]
+		matrix = { document: { } for document in documents }
+		for i, document in enumerate(documents):
+			for other in documents[i:]:
+				similarity = vector_math.cosine(document, other)
+				matrix[document][other] = similarity
+				matrix[other][document] = similarity
+
+		return matrix

@@ -98,3 +98,100 @@ class TestMMR(unittest.TestCase):
 		self.assertEqual(round(math.sqrt(2)/2., 10), round(algo._compute_query(corpus).dimensions['this'], 10))
 		self.assertEqual(round(math.sqrt(2)/2., 10), round(algo._compute_query(corpus).dimensions['pipe'], 10))
 		self.assertEqual(1, round(vector_math.magnitude(algo._compute_query(corpus)), 10))
+
+	def test_compute_similarity_matrix_documents_empty(self):
+		"""
+		Test that the cimilarity matrix has only one row and column when no documents are given.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is not a cigar', { 'this': 1, 'cigar': 1 }),
+		 		   Document('this is a pipe', { 'this': 1, 'pipe': 1 }) ]
+		for document in corpus:
+			document.normalize()
+
+		algo = MMR()
+		query = algo._compute_query(corpus)
+		matrix = algo._compute_similarity_matrix([ ], query)
+		self.assertEqual(1, len(matrix))
+		self.assertEqual(1, len(matrix[query]))
+
+	def test_compute_similarity_matrix_documents_unchanged(self):
+		"""
+		Test that the documents given to the similarity matrix are unchanged.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is not a cigar', { 'this': 1, 'cigar': 1 }),
+		 		   Document('this is a pipe', { 'this': 1, 'pipe': 1 }) ]
+		for document in corpus:
+			document.normalize()
+
+		algo = MMR()
+		query = algo._compute_query(corpus)
+		copy = list(corpus)
+		matrix = algo._compute_similarity_matrix(corpus, query)
+		self.assertEqual(copy, corpus)
+
+	def test_compute_similarity_matrix_query_unchanged(self):
+		"""
+		Test that the query given to the similarity matrix is unchanged.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is not a cigar', { 'this': 1, 'cigar': 1 }),
+		 		   Document('this is a pipe', { 'this': 1, 'pipe': 1 }) ]
+		for document in corpus:
+			document.normalize()
+
+		algo = MMR()
+		query = algo._compute_query(corpus)
+		copy = query.copy()
+		matrix = algo._compute_similarity_matrix(corpus, query)
+		self.assertEqual(copy.dimensions, query.dimensions)
+
+	def test_compute_similarity_matrix_diagonal(self):
+		"""
+		Test that the diagonal of a similarity matrix is 1.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is not a cigar', { 'this': 1, 'cigar': 1 }),
+		 		   Document('this is a pipe', { 'this': 1, 'pipe': 1 }) ]
+		for document in corpus:
+			document.normalize()
+
+		algo = MMR()
+		query = algo._compute_query(corpus)
+
+		matrix = algo._compute_similarity_matrix(corpus, query)
+		self.assertTrue(all(round(matrix[document][document], 10) == 1 for document in corpus + [query]))
+
+	def test_compute_similarity_matrix_symmetrical(self):
+		"""
+		Test that the similarity matrix is symmetrical.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is not a cigar', { 'this': 1, 'cigar': 1 }),
+		 		   Document('this is a pipe', { 'this': 1, 'pipe': 1 }) ]
+		for document in corpus:
+			document.normalize()
+
+		algo = MMR()
+		query = algo._compute_query(corpus)
+
+		matrix = algo._compute_similarity_matrix(corpus, query)
+		self.assertTrue(all(matrix[document][other] == matrix[other][document]
+							for document in corpus + [query]
+							for other in matrix[document]))
