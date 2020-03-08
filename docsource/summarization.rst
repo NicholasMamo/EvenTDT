@@ -18,3 +18,12 @@ Summarization takes the machine-understandable data and creates human-understand
    :members:
    :private-members:
    :special-members:
+
+==========
+Algorithms
+==========
+
+.. automodule:: summarization.algorithms.summarization
+   :members:
+   :private-members:
+   :special-members:

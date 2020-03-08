@@ -1,5 +1,11 @@
 """
 Implementation of the Maximal Marginal Relevance model by Carbonell and Goldstein (1998).
+
+This implementation calculates the burst of terms based on the given nutrition.
+
+.. note::
+
+	Implementation based on the algorithm presented in `The Use of MMR, Diversity-Based Reranking for Reordering Documents and Producing Summaries by Carbonell and Goldstein (1998) <https://dl.acm.org/doi/abs/10.1145/290941.291025>`_.
 """
 
 import os
