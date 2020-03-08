@@ -30,6 +30,11 @@ class MMR(SummarizationAlgorithm):
 		"""
 		Summarize the given documents.
 
+		.. note::
+
+			The algorithm assumes that the documents are already unique sentences.
+			Therefore the summary is a selection of the given documents.
+
 		:param documents: The list of documents to summarize.
 		:type documents: list of :class:`~nlp.document.Document`
 		:param length: The maximum length of the summary.
@@ -46,9 +51,16 @@ class MMR(SummarizationAlgorithm):
 		:return: The summary of the documents.
 		:rtype: :class:`~summarization.summary.Summary`
 
-		:raises ValueError: When the summary length is negative.
+		:raises ValueError: When the summary length is not positive.
 		:raises ValueError: When lambda is not between 0 and 1.
 		"""
+
+		"""
+		Validate the inputs.
+		"""
+
+		if length <= 0:
+			raise ValueError(f"Invalid summary length {length}")
 
 		if query is None:
 			query = Cluster(vectors=collection).get_centroid()

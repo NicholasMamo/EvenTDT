@@ -16,6 +16,7 @@ if path not in sys.path:
 
 from algorithms import Cataldi
 from nutrition.memory import MemoryNutritionStore
+
 class TestCataldi(unittest.TestCase):
 	"""
 	Test Cataldi et al. (2014)'s' algorithm.
