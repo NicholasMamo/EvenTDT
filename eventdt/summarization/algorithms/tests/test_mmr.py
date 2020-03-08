@@ -12,6 +12,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from nlp.document import Document
+from summarization import Summary
 from summarization.algorithms import MMR
 from vsm import vector_math
 
@@ -195,3 +196,109 @@ class TestMMR(unittest.TestCase):
 		self.assertTrue(all(matrix[document][other] == matrix[other][document]
 							for document in corpus + [query]
 							for other in matrix[document]))
+
+	def test_filter_documents_empty(self):
+		"""
+		Test that when filtering an empty list of documents, an empty list is returned.
+		"""
+
+		algo = MMR()
+		self.assertEqual([ ], algo._filter_documents([ ], Summary(), 0))
+
+	def test_filter_documents_empty_summary(self):
+		"""
+		Test that when filtering a list of documents with an empty summary, the same documents are returned.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is not a cigar', { 'this': 1, 'cigar': 1 }),
+		 		   Document('this is a pipe', { 'this': 1, 'pipe': 1 }) ]
+
+		algo = MMR()
+		self.assertEqual(set(corpus), set(algo._filter_documents(corpus, Summary(), 99)))
+
+	def test_filter_documents_in_summary(self):
+		"""
+		Test filtering documents in the summary.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is not a cigar', { 'this': 1, 'cigar': 1 }),
+		 		   Document('this is a pipe', { 'this': 1, 'pipe': 1 }) ]
+
+		algo = MMR()
+		self.assertEqual([ corpus[1] ], algo._filter_documents(corpus, Summary(corpus[0]), 99))
+
+	def test_filter_all_documents(self):
+		"""
+		Test that when filtering all of the documents in the summary, an empty list is returned.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is not a cigar', { 'this': 1, 'cigar': 1 }),
+		 		   Document('this is a pipe', { 'this': 1, 'pipe': 1 }) ]
+
+		algo = MMR()
+		self.assertEqual([ ], algo._filter_documents(corpus, Summary(corpus), 99))
+
+	def test_filter_extra_documents(self):
+		"""
+		Test that when the summary contains extra documents, an empty list is returned.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is not a cigar', { 'this': 1, 'cigar': 1 }),
+		 		   Document('this is a pipe', { 'this': 1, 'pipe': 1 }) ]
+
+		algo = MMR()
+		self.assertEqual([ ], algo._filter_documents(corpus[:1], Summary(corpus), 99))
+
+	def test_filter_zero_length(self):
+		"""
+		Test that when filtering with a length of zero, no documents are retained.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is not a cigar', { 'this': 1, 'cigar': 1 }),
+		 		   Document('this is a pipe', { 'this': 1, 'pipe': 1 }) ]
+
+		algo = MMR()
+		self.assertEqual([ ], algo._filter_documents(corpus, Summary(), 0))
+
+	def test_filter_exact_length(self):
+		"""
+		Test that when a document has the same length as the filter length, it is retained.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is not a cigar', { 'this': 1, 'cigar': 1 }),
+		 		   Document('this is a pipe', { 'this': 1, 'pipe': 1 }) ]
+
+		algo = MMR()
+		self.assertEqual(set(corpus), set(algo._filter_documents(corpus, Summary(), len(str(corpus[0])))))
+
+	def test_filter_length(self):
+		"""
+		Test that when filtering with a length, longer documents are excluded.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is not a cigar', { 'this': 1, 'cigar': 1 }),
+		 		   Document('this is a pipe', { 'this': 1, 'pipe': 1 }) ]
+
+		algo = MMR()
+		self.assertEqual(corpus[1:], algo._filter_documents(corpus, Summary(), len(str(corpus[1]))))

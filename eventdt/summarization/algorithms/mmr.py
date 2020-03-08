@@ -55,10 +55,11 @@ class MMR(SummarizationAlgorithm):
 		:raises ValueError: When lambda is not between 0 and 1.
 		"""
 
+		summary = Summary()
+
 		"""
 		Validate the inputs.
 		"""
-
 		if length <= 0:
 			raise ValueError(f"Invalid summary length {length}")
 
@@ -68,7 +69,6 @@ class MMR(SummarizationAlgorithm):
 		query = query or self._compute_query(documents)
 		similarity_matrix = self._compute_similarity_matrix(documents, query)
 
-		summary = [] # the list of chosen documents
 		"""
 		Repeatedly choose the most relevant document while minimizing redundancy.
 		"""
@@ -81,10 +81,8 @@ class MMR(SummarizationAlgorithm):
 				candidate_documents = {}
 				for d in [ d for d in range(0, len(collection)) ]:
 					query_similarity = similarity_table[d][len(collection)]
-					score = document_scorer.score(collection[d])
-					candidate_documents[d] = query_similarity * score
+					candidate_documents[d] = query_similarity
 				most_similar_index = max(candidate_documents.items(), key=lambda d: d[1])[0]
-				# most_similar_index = max([document_scorer.score(collection[d]) for d in range(0, len(collection))], key=lambda d : similarity_table[d][len(collection)])
 				summary.append(most_similar_index)
 			else:
 				"""
@@ -100,8 +98,7 @@ class MMR(SummarizationAlgorithm):
 					query_similarity = similarity_table[d][len(collection)]
 					summary_document = max([sd for sd in summary], key=lambda sd : similarity_table[d][sd])
 					summary_document_similarity = similarity_table[d][summary_document]
-					score = document_scorer.score(collection[d])
-					candidate_documents[d] = l * query_similarity - (1 - l) * summary_document_similarity * score
+					candidate_documents[d] = l * query_similarity - (1 - l) * summary_document_similarity
 
 				if len(candidate_documents) == 0:
 					break
@@ -159,3 +156,28 @@ class MMR(SummarizationAlgorithm):
 				matrix[other][document] = similarity
 
 		return matrix
+
+	def _filter_documents(self, documents, summary, length):
+		"""
+		Get the documents that can be added to the summary.
+		These include:
+
+			#. Documents that are not already in the summary;
+
+			#. Documents that are shorter than the length.
+
+		:param documents: The list of available documents.
+		:type documents: list of :class:`~nlp.document.Document`
+		:param summary: The summary constructed so far.
+		:type summary: :class:`~summarization.summary.Summary`
+		:param length: The maximum length of the document.
+					   The length is inclusive.
+		:type length: float
+
+		:return: A list of documents that can be added to the summary.
+		:rtype: list of :class:`~nlp.document.Document`
+		"""
+
+		documents = set(documents).difference(set(summary.documents))
+		documents = [ document for document in documents if len(str(document)) <= length ]
+		return documents
