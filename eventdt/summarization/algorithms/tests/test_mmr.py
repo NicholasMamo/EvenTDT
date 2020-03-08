@@ -12,6 +12,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from nlp.document import Document
+from nlp.term_weighting.tf import TF
 from summarization import Summary
 from summarization.algorithms import MMR
 from vsm import vector_math
@@ -302,3 +303,156 @@ class TestMMR(unittest.TestCase):
 
 		algo = MMR()
 		self.assertEqual(corpus[1:], algo._filter_documents(corpus, Summary(), len(str(corpus[1]))))
+
+	def test_get_next_document_empty(self):
+		"""
+		Test that when getting the next document from an empty list, `None` is returned.
+		"""
+
+		algo = MMR()
+		self.assertEqual(None, algo._get_next_document([ ], Summary(), Document(), { }, 0.5))
+
+	def test_get_next_document_empty_summary(self):
+		"""
+		Test that when the summary is empty, the next document is the one that is most similar to the query.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is not a cigar', { 'this': 1, 'cigar': 1 }),
+		 		   Document('this is a pipe', { 'this': 1, 'pipe': 1 }) ]
+		for document in corpus:
+			document.normalize()
+		query = Document('cigars', [ 'cigar' ], scheme=TF())
+		query.normalize()
+
+		algo = MMR()
+		matrix = algo._compute_similarity_matrix(corpus, query)
+		self.assertEqual(corpus[0], algo._get_next_document(corpus, Summary(), query, matrix, 0.5))
+
+	def test_get_next_document_redundancy(self):
+		"""
+		Test that redundancy affects which document is chosen.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is not a cigar', { 'this': 1, 'cigar': 1 }),
+		 		   Document('this is a pipe', { 'this': 1, 'pipe': 1 }),
+				   Document('this is a pipe and a cigar', { 'this': 1, 'pipe': 1, 'cigar': 1 }) ]
+		for document in corpus:
+			document.normalize()
+		query = Document('cigars', [ 'pipe', 'cigar' ], scheme=TF())
+		query.normalize()
+
+		algo = MMR()
+		matrix = algo._compute_similarity_matrix(corpus, query)
+		self.assertEqual(corpus[1], algo._get_next_document(corpus[1:], Summary(corpus[0]), query, matrix, 0.5))
+
+	def test_get_next_document_redundancy_only(self):
+		"""
+		Test that when only redundancy is considered, repeat documents are filtered out.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is not a cigar', { 'this': 1, 'cigar': 1 }),
+		 		   Document('this is a pipe', { 'this': 1, 'pipe': 1 }),
+				   Document('this is a pipe and a cigar', { 'this': 1, 'pipe': 1, 'cigar': 1 }) ]
+		for document in corpus:
+			document.normalize()
+		query = Document('cigars', [ 'cigar' ], scheme=TF())
+		query.normalize()
+
+		algo = MMR()
+		matrix = algo._compute_similarity_matrix(corpus, query)
+		self.assertEqual(corpus[1], algo._get_next_document(corpus[1:], Summary(corpus[0]), query, matrix, 0))
+
+	def test_get_next_document_relevance_only(self):
+		"""
+		Test that when only relevance is considered, repeat documents are not filtered out.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is not a cigar', { 'this': 1, 'cigar': 1 }),
+		 		   Document('this is a pipe', { 'this': 1, 'pipe': 1 }),
+				   Document('this is a pipe and a cigar', { 'this': 1, 'pipe': 1, 'cigar': 1 }) ]
+		for document in corpus:
+			document.normalize()
+		query = Document('cigars', [ 'cigar' ], scheme=TF())
+		query.normalize()
+
+		algo = MMR()
+		matrix = algo._compute_similarity_matrix(corpus, query)
+		self.assertEqual(corpus[2], algo._get_next_document(corpus[1:], Summary(corpus[0]), query, matrix, 1))
+
+	def test_get_next_document_documents_unchanged(self):
+		"""
+		Test that when getting the next document, the documents are unchanged.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is not a cigar', { 'this': 1, 'cigar': 1 }),
+		 		   Document('this is a pipe', { 'this': 1, 'pipe': 1 }),
+				   Document('this is a pipe and a cigar', { 'this': 1, 'pipe': 1, 'cigar': 1 }) ]
+		for document in corpus:
+			document.normalize()
+		query = Document('cigars', [ 'cigar' ], scheme=TF())
+		query.normalize()
+
+		algo = MMR()
+		matrix = algo._compute_similarity_matrix(corpus, query)
+		copy = list(corpus)
+		algo._get_next_document(corpus[1:], Summary(corpus[0]), query, matrix, 1)
+		self.assertEqual(copy, corpus)
+
+	def test_get_next_document_query_unchanged(self):
+		"""
+		Test that when getting the next document, the query is unchanged.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is not a cigar', { 'this': 1, 'cigar': 1 }),
+		 		   Document('this is a pipe', { 'this': 1, 'pipe': 1 }),
+				   Document('this is a pipe and a cigar', { 'this': 1, 'pipe': 1, 'cigar': 1 }) ]
+		for document in corpus:
+			document.normalize()
+		query = Document('cigars', [ 'cigar' ], scheme=TF())
+		query.normalize()
+
+		algo = MMR()
+		matrix = algo._compute_similarity_matrix(corpus, query)
+		copy = query.copy()
+		algo._get_next_document(corpus[1:], Summary(corpus[0]), query, matrix, 1)
+		self.assertEqual(copy.dimensions, query.dimensions)
+
+	def test_get_next_document_matrix_unchanged(self):
+		"""
+		Test that when getting the next document, the matrix is unchanged.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is not a cigar', { 'this': 1, 'cigar': 1 }),
+		 		   Document('this is a pipe', { 'this': 1, 'pipe': 1 }),
+				   Document('this is a pipe and a cigar', { 'this': 1, 'pipe': 1, 'cigar': 1 }) ]
+		for document in corpus:
+			document.normalize()
+		query = Document('cigars', [ 'cigar' ], scheme=TF())
+		query.normalize()
+
+		algo = MMR()
+		matrix = algo._compute_similarity_matrix(corpus, query)
+		copy = dict(matrix)
+		algo._get_next_document(corpus[1:], Summary(corpus[0]), query, matrix, 1)
+		self.assertEqual(copy, matrix)

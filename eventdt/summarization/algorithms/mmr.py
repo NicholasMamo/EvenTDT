@@ -43,8 +43,8 @@ class MMR(SummarizationAlgorithm):
 					  If no query is given, the summary is built around the centroid of documents.
 		:type query: :class:`~vsm.vector.Vector` or None
 		:param l: The :math:`\\lambda` parameter, which must be between 0 and 1.
-				  When :math:`\\lambda` is 0, only relevance to the query is considered.
-				  When :math:`\\lambda` is 1, only non-redundancy is considered.
+				  When :math:`\\lambda` is 1, only relevance to the query is considered.
+				  When :math:`\\lambda` is 0, only non-redundancy is considered.
 				  By default, the algorithm assigns equal weight to relevance and non-redundancy.
 		:type l: float
 
@@ -181,3 +181,40 @@ class MMR(SummarizationAlgorithm):
 		documents = set(documents).difference(set(summary.documents))
 		documents = [ document for document in documents if len(str(document)) <= length ]
 		return documents
+
+	def _get_next_document(self, documents, summary, query, matrix, l):
+		"""
+		Get the next document to add to the summary.
+
+		:param documents: The list of available documents.
+		:type documents: list of :class:`~nlp.document.Document`
+		:param summary: The summary constructed so far.
+		:type summary: :class:`~summarization.summary.Summary`
+		:param query: The query used to select the documents.
+		:type query: `~vsm.vector.Vector`
+		:param matrix: The similarity matrix to use.
+		:type matrix: dict
+		:param l: The :math:`\\lambda` parameter.
+		:type l: float
+
+		:return: The next document to add to the summary, or `None` if there are no documents.
+		:rtype list of :class:`~nlp.document.Document` or None
+		"""
+
+		if not documents:
+			return None
+
+		query_scores = { document: matrix[document][query] for document in documents }
+
+		"""
+		If there are documents in the summary, calculate the redundancy scores.
+		Otherwise, set the redundancy scores to the optimal score.
+		"""
+		redundancy_scores = { document: 1 for document in documents }
+		if summary.documents:
+			redundancy_scores = { document: 1 - max(matrix[document][other] for other in summary.documents)
+								  for document in documents }
+
+		scores = { document: l * query_scores[document] + (1 - l) * redundancy_scores[document]
+		 		   for document in documents }
+		return max(scores.keys(), key=scores.get)
