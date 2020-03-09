@@ -1,6 +1,7 @@
 """
 The Maximal Marginal Relevance (MMR) algorithm takes in documents and a query and builds a summary.
 This summary has the ideal property of being relevant to the query and non-redundant.
+The algorithm follows a greedy approach.
 
 .. note::
 
@@ -37,7 +38,7 @@ class MMR(SummarizationAlgorithm):
 
 		:param documents: The list of documents to summarize.
 		:type documents: list of :class:`~nlp.document.Document`
-		:param length: The maximum length of the summary.
+		:param length: The maximum length of the summary in characters.
 		:type length: float
 		:param query: The query around which to build the summary.
 					  If no query is given, the summary is built around the centroid of documents.
@@ -66,8 +67,32 @@ class MMR(SummarizationAlgorithm):
 		if not 0 <= l <= 1:
 			raise ValueError(f"Invalid lambda value {l}")
 
-		query = query or self._compute_query(documents)
-		similarity_matrix = self._compute_similarity_matrix(documents, query)
+		"""
+		Compute the query if need be, and construct the similarity matrix.
+		"""
+		query = query or self._compute_query(documents) # TODO: test
+		matrix = self._compute_similarity_matrix(documents, query)
+
+		"""
+		The loop continues picking documents until one of two conditions is reached:
+
+		 	#. No documents remain;
+
+			#. Adding any of the remaining documents mean that the summary becomes too long.
+		"""
+		while True:
+			"""
+			Return if there are no remaining candidates for the summary.
+			"""
+			candidates = self._filter_documents(documents, summary, length - len(str(summary)))
+			if not candidates:
+				return summary
+
+			"""
+			Otherwise, get the next document for the summary.
+			"""
+			document = self._get_next_document(candidates, summary, query, matrix, l)
+			summary.documents.append(document)
 
 		"""
 		Repeatedly choose the most relevant document while minimizing redundancy.

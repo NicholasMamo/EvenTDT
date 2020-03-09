@@ -22,6 +22,110 @@ class TestMMR(unittest.TestCase):
 	Test Carbonell and Goldstein (1998)'s algorithm.
 	"""
 
+	def test_summarize_empty(self):
+		"""
+		Test that when summarizing an empty set of documents, an empty summary is returned.
+		"""
+
+		algo = MMR()
+		self.assertEqual([ ], algo.summarize([ ], 100).documents)
+
+	def test_summarize_small_length(self):
+		"""
+		Test that when summarizing a set of documents, all of which exceed the length, an empty summary is returned.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is a pipe.', { 'pipe': 1 }),
+		 		   Document('this is a cigar.', { 'cigar': 1 }),
+				   Document('this is a cigar and this is a pipe.', { 'cigar': 1, 'pipe': 1 }), ]
+		for document in corpus:
+			document.normalize()
+
+		algo = MMR()
+		self.assertEqual([ ], algo.summarize(corpus, 10).documents)
+
+	def test_summarize_exact_length(self):
+		"""
+		Test that when summarizing a set of documents and there is only one candidate, that candidate is included in the summary.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is a pipe.', { 'pipe': 1 }),
+		 		   Document('this is a cigar.', { 'cigar': 1 }),
+				   Document('this is a cigar and this is a pipe.', { 'cigar': 1, 'pipe': 1 }), ]
+		for document in corpus:
+			document.normalize()
+
+		algo = MMR()
+		summary = algo.summarize(corpus, len(str(corpus[0])))
+		self.assertEqual([ corpus[0] ], summary.documents)
+		self.assertLessEqual(len(str(summary)), len(str(corpus[0])))
+
+	def test_summarize_exact_full_length(self):
+		"""
+		Test that when summarizing a set of documents, the exact length does not include all documents because of the spaces between them in the final summary.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is a pipe.', { 'pipe': 1 }),
+		 		   Document('this is a cigar.', { 'cigar': 1 }),
+				   Document('this is a cigar and this is a pipe.', { 'cigar': 1, 'pipe': 1 }), ]
+		for document in corpus:
+			document.normalize()
+
+		algo = MMR()
+		length = sum(len(str(document)) for document in corpus)
+		summary = algo.summarize(corpus, length)
+		self.assertTrue(len(set(corpus).difference(set(summary.documents))))
+		self.assertLessEqual(len(str(summary)), length)
+
+	def test_summarize_exact_summary_length(self):
+		"""
+		Test that when summarizing a set of documents and the length is equal to the projected summary length, including spaces, all documents are included in the summary.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is a pipe.', { 'pipe': 1 }),
+		 		   Document('this is a cigar.', { 'cigar': 1 }),
+				   Document('this is a cigar and this is a pipe.', { 'cigar': 1, 'pipe': 1 }), ]
+		for document in corpus:
+			document.normalize()
+
+		algo = MMR()
+		length = sum(len(str(document)) for document in corpus) + len(corpus) - 1
+		summary = algo.summarize(corpus, length)
+		self.assertEqual(set(corpus), set(summary.documents))
+		self.assertEqual(len(str(summary)), length)
+
+	def test_summarize_long_summary_length(self):
+		"""
+		Test that when summarizing a set of documents and a long length is given, all documents are included in the summary.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is a pipe.', { 'pipe': 1 }),
+		 		   Document('this is a cigar.', { 'cigar': 1 }),
+				   Document('this is a cigar and this is a pipe.', { 'cigar': 1, 'pipe': 1 }), ]
+		for document in corpus:
+			document.normalize()
+
+		algo = MMR()
+		length = sum(len(str(document)) for document in corpus) + len(corpus)
+		summary = algo.summarize(corpus, length)
+		self.assertEqual(set(corpus), set(summary.documents))
+		self.assertLessEqual(len(str(summary)), length)
+
 	def test_negative_length(self):
 		"""
 		Test that when providing a negative length, the function raises a ValueError.
