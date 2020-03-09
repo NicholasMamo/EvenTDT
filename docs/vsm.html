@@ -471,7 +471,7 @@ Clusters are based on <code class="xref py py-class docutils literal notranslate
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#vsm.clustering.cluster.Cluster.vectors" title="vsm.clustering.cluster.Cluster.vectors"><strong>vectors</strong></a> (list of <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>) – The list of vectors that make up the cluster.</p></li>
-<li><p><strong>centroid</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>) – The centroid of the cluster, representing the average vector.</p></li>
+<li><p><a class="reference internal" href="#vsm.clustering.cluster.Cluster.centroid" title="vsm.clustering.cluster.Cluster.centroid"><strong>centroid</strong></a> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>) – The centroid of the cluster, representing the average vector.</p></li>
 </ul>
 </dd>
 </dl>
@@ -483,46 +483,6 @@ Clusters are based on <code class="xref py py-class docutils literal notranslate
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>vectors</strong> (list of <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> or <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> or <cite>None</cite>) – An initial list of vectors, or a single vector.
 If <cite>None</cite> is given, an empty list is initialized instead.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="vsm.clustering.cluster.Cluster.add_vectors">
-<code class="sig-name descname">add_vectors</code><span class="sig-paren">(</span><em class="sig-param">vectors</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.cluster.Cluster.add_vectors" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add the given vectors to the cluster.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>vectors</strong> (<em>list</em>) – The vectors to add to the cluster.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="vsm.clustering.cluster.Cluster.add_vector">
-<code class="sig-name descname">add_vector</code><span class="sig-paren">(</span><em class="sig-param">vector</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.cluster.Cluster.add_vector" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add a vector to the cluster.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>vector</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>) – The vector to add to the cluster.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="vsm.clustering.cluster.Cluster.recalculate_centroid">
-<code class="sig-name descname">recalculate_centroid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.cluster.Cluster.recalculate_centroid" title="Permalink to this definition">¶</a></dt>
-<dd><p>Recalculate the centroid.
-This is important if, for example, one of the vector instances change in memory.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vsm.clustering.cluster.Cluster.remove_vector">
-<code class="sig-name descname">remove_vector</code><span class="sig-paren">(</span><em class="sig-param">vector</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.cluster.Cluster.remove_vector" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove a vector from the cluster.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>vector</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>) – The vector to remove from the cluster.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -543,6 +503,26 @@ This is important if, for example, one of the vector instances change in memory.
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="vsm.clustering.cluster.Cluster.recalculate_centroid">
+<code class="sig-name descname">recalculate_centroid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.cluster.Cluster.recalculate_centroid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recalculate the centroid.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vsm.clustering.cluster.Cluster.centroid">
+<em class="property">property </em><code class="sig-name descname">centroid</code><a class="headerlink" href="#vsm.clustering.cluster.Cluster.centroid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the cluster’s centroid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The cluster’s centroid.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>

@@ -179,7 +179,7 @@ It stores the documents that make it up as well as any other attributes that may
 However, summaries may also have other attributes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
-<dd class="field-odd"><p><strong>documents</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The documents that make up the summary.</p>
+<dd class="field-odd"><p><a class="reference internal" href="#summarization.summary.Summary.documents" title="summarization.summary.Summary.documents"><strong>documents</strong></a> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The documents that make up the summary.</p>
 </dd>
 </dl>
 <dl class="method">
@@ -194,8 +194,22 @@ However, summaries may also have other attributes.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="summarization.summary.Summary.__repr__">
-<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.summary.Summary.__repr__" title="Permalink to this definition">¶</a></dt>
+<dt id="summarization.summary.Summary.documents">
+<em class="property">property </em><code class="sig-name descname">documents</code><a class="headerlink" href="#summarization.summary.Summary.documents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the list of documents in the summary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The list of documents.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="summarization.summary.Summary.__str__">
+<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.summary.Summary.__str__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the string representation of the summary.
 This is equivalent to concatenating the text of all documents.</p>
 <dl class="field-list simple">
@@ -280,7 +294,8 @@ They must also always return a summary object.</p>
 <div class="section" id="module-summarization.algorithms.mmr">
 <span id="carbonell-and-goldstein-1998"></span><h3>Carbonell and Goldstein (1998)<a class="headerlink" href="#module-summarization.algorithms.mmr" title="Permalink to this headline">¶</a></h3>
 <p>The Maximal Marginal Relevance (MMR) algorithm takes in documents and a query and builds a summary.
-This summary has the ideal property of being relevant to the query and non-redundant.</p>
+This summary has the ideal property of being relevant to the query and non-redundant.
+The algorithm follows a greedy approach.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Implementation based on the algorithm presented in <a class="reference external" href="https://dl.acm.org/doi/abs/10.1145/290941.291025">The Use of MMR, Diversity-Based Reranking for Reordering Documents and Producing Summaries by Carbonell and Goldstein (1998)</a>.</p>
@@ -294,16 +309,21 @@ The algorithm looks to build a summary that is simultaneously similar to the que
 <dt id="summarization.algorithms.mmr.MMR.summarize">
 <code class="sig-name descname">summarize</code><span class="sig-paren">(</span><em class="sig-param">documents</em>, <em class="sig-param">length</em>, <em class="sig-param">query=None</em>, <em class="sig-param">l=0.5</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.mmr.MMR.summarize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Summarize the given documents.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The algorithm assumes that the documents are already unique sentences.
+Therefore the summary is a selection of the given documents.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>documents</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The list of documents to summarize.</p></li>
-<li><p><strong>length</strong> (<em>float</em>) – The maximum length of the summary.</p></li>
+<li><p><strong>length</strong> (<em>float</em>) – The maximum length of the summary in characters.</p></li>
 <li><p><strong>query</strong> (<a class="reference internal" href="vsm.html#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> or None) – The query around which to build the summary.
 If no query is given, the summary is built around the centroid of documents.</p></li>
 <li><p><strong>l</strong> (<em>float</em>) – The <span class="math notranslate nohighlight">\(\lambda\)</span> parameter, which must be between 0 and 1.
-When <span class="math notranslate nohighlight">\(\lambda\)</span> is 0, only relevance to the query is considered.
-When <span class="math notranslate nohighlight">\(\lambda\)</span> is 1, only non-redundancy is considered.
+When <span class="math notranslate nohighlight">\(\lambda\)</span> is 1, only relevance to the query is considered.
+When <span class="math notranslate nohighlight">\(\lambda\)</span> is 0, only non-redundancy is considered.
 By default, the algorithm assigns equal weight to relevance and non-redundancy.</p></li>
 </ul>
 </dd>
@@ -315,9 +335,127 @@ By default, the algorithm assigns equal weight to relevance and non-redundancy.<
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>ValueError</strong> – When the summary length is negative.</p></li>
+<li><p><strong>ValueError</strong> – When the summary length is not positive.</p></li>
 <li><p><strong>ValueError</strong> – When lambda is not between 0 and 1.</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="summarization.algorithms.mmr.MMR._compute_query">
+<code class="sig-name descname">_compute_query</code><span class="sig-paren">(</span><em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.mmr.MMR._compute_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the query from the given documents.
+The query is equivalent to the centroid of the documents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>documents</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The list of documents to summarize.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The centroid of the documents.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><cite>~vsm.vector.Vector</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="summarization.algorithms.mmr.MMR._compute_similarity_matrix">
+<code class="sig-name descname">_compute_similarity_matrix</code><span class="sig-paren">(</span><em class="sig-param">documents</em>, <em class="sig-param">query</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.mmr.MMR._compute_similarity_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the similarity matrix.
+This matrix contains the similarities between the documents themselves, and between the documents and the query.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>documents</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The list of documents to summarize.</p></li>
+<li><p><strong>query</strong> (<a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The query to which documents will be compared.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The similarity matrix as a dictionary.
+The keys are the documents, and the values are their similarities.
+These similarities are another dictionary.
+The keys are the other document, and the value is the actual similarity.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="summarization.algorithms.mmr.MMR._filter_documents">
+<code class="sig-name descname">_filter_documents</code><span class="sig-paren">(</span><em class="sig-param">documents</em>, <em class="sig-param">summary</em>, <em class="sig-param">length</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.mmr.MMR._filter_documents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the documents that can be added to the summary.
+These include:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Documents that are not already in the summary;</p></li>
+<li><p>Documents that are shorter than the length.</p></li>
+</ol>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>documents</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The list of available documents.</p></li>
+<li><p><strong>summary</strong> (<a class="reference internal" href="#summarization.summary.Summary" title="summarization.summary.Summary"><code class="xref py py-class docutils literal notranslate"><span class="pre">Summary</span></code></a>) – The summary constructed so far.</p></li>
+<li><p><strong>length</strong> (<em>float</em>) – The maximum length of the document.
+The length is inclusive.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of documents that can be added to the summary.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="summarization.algorithms.mmr.MMR._get_next_document">
+<code class="sig-name descname">_get_next_document</code><span class="sig-paren">(</span><em class="sig-param">documents</em>, <em class="sig-param">summary</em>, <em class="sig-param">query</em>, <em class="sig-param">matrix</em>, <em class="sig-param">l</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.mmr.MMR._get_next_document" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the next document to add to the summary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>documents</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The list of available documents.</p></li>
+<li><p><strong>summary</strong> (<a class="reference internal" href="#summarization.summary.Summary" title="summarization.summary.Summary"><code class="xref py py-class docutils literal notranslate"><span class="pre">Summary</span></code></a>) – The summary constructed so far.</p></li>
+<li><p><strong>query</strong> (<cite>~vsm.vector.Vector</cite>) – The query used to select the documents.</p></li>
+<li><p><strong>matrix</strong> (<em>dict</em>) – The similarity matrix to use.</p></li>
+<li><p><strong>l</strong> (<em>float</em>) – The <span class="math notranslate nohighlight">\(\lambda\)</span> parameter.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The next document to add to the summary, or <cite>None</cite> if there are no documents.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="summarization.algorithms.mmr.MMR._compute_scores">
+<code class="sig-name descname">_compute_scores</code><span class="sig-paren">(</span><em class="sig-param">documents</em>, <em class="sig-param">summary</em>, <em class="sig-param">query</em>, <em class="sig-param">matrix</em>, <em class="sig-param">l</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.mmr.MMR._compute_scores" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the scores of each candidate document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>documents</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The list of available documents.</p></li>
+<li><p><strong>summary</strong> (<a class="reference internal" href="#summarization.summary.Summary" title="summarization.summary.Summary"><code class="xref py py-class docutils literal notranslate"><span class="pre">Summary</span></code></a>) – The summary constructed so far.</p></li>
+<li><p><strong>query</strong> (<cite>~vsm.vector.Vector</cite>) – The query used to select the documents.</p></li>
+<li><p><strong>matrix</strong> (<em>dict</em>) – The similarity matrix to use.</p></li>
+<li><p><strong>l</strong> (<em>float</em>) – The <span class="math notranslate nohighlight">\(\lambda\)</span> parameter.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The score of each document.
+The key is the document itself and the value is the respective score.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
