@@ -198,23 +198,47 @@ class MMR(SummarizationAlgorithm):
 		:type l: float
 
 		:return: The next document to add to the summary, or `None` if there are no documents.
-		:rtype list of :class:`~nlp.document.Document` or None
+		:rtype: list of :class:`~nlp.document.Document` or None
 		"""
 
 		if not documents:
 			return None
 
+		scores = self._compute_scores(documents, summary, query, matrix, l)
+		return max(scores.keys(), key=scores.get)
+
+	def _compute_scores(self, documents, summary, query, matrix, l):
+		"""
+		Compute the scores of each candidate document.
+
+		:param documents: The list of available documents.
+		:type documents: list of :class:`~nlp.document.Document`
+		:param summary: The summary constructed so far.
+		:type summary: :class:`~summarization.summary.Summary`
+		:param query: The query used to select the documents.
+		:type query: `~vsm.vector.Vector`
+		:param matrix: The similarity matrix to use.
+		:type matrix: dict
+		:param l: The :math:`\\lambda` parameter.
+		:type l: float
+
+		:return: The score of each document.
+				 The key is the document itself and the value is the respective score.
+		:rtype: dict
+		"""
+
 		query_scores = { document: matrix[document][query] for document in documents }
 
 		"""
 		If there are documents in the summary, calculate the redundancy scores.
-		Otherwise, set the redundancy scores to the optimal score.
+		Otherwise, ignore the redundancy score.
 		"""
-		redundancy_scores = { document: 1 for document in documents }
 		if summary.documents:
-			redundancy_scores = { document: 1 - max(matrix[document][other] for other in summary.documents)
+			redundancy_scores = { document: max(matrix[document][other] for other in summary.documents)
 								  for document in documents }
+		else:
+			redundancy_scores = { document: 1 for document in documents }
+			l = 1
 
-		scores = { document: l * query_scores[document] + (1 - l) * redundancy_scores[document]
+		return { document: l * query_scores[document] - (1 - l) * redundancy_scores[document]
 		 		   for document in documents }
-		return max(scores.keys(), key=scores.get)

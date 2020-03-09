@@ -456,3 +456,60 @@ class TestMMR(unittest.TestCase):
 		copy = dict(matrix)
 		algo._get_next_document(corpus[1:], Summary(corpus[0]), query, matrix, 1)
 		self.assertEqual(copy, matrix)
+
+	def test_worked_example(self):
+		"""
+		Test the `worked example <http://www.cs.bilkent.edu.tr/~canf/CS533/hwSpring14/eightMinPresentations/handoutMMR.pdf>`_.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		d = [ Document('', {}) for i in range(5) ]
+		q = Document('')
+		matrix = {
+			d[0]: { d[0]: 1.00, d[1]: 0.11, d[2]: 0.23, d[3]: 0.76, d[4]: 0.25, q: 0.91, },
+			d[1]: { d[0]: 0.11, d[1]: 1.00, d[2]: 0.29, d[3]: 0.57, d[4]: 0.51, q: 0.90, },
+			d[2]: { d[0]: 0.23, d[1]: 0.29, d[2]: 1.00, d[3]: 0.02, d[4]: 0.20, q: 0.50, },
+			d[3]: { d[0]: 0.76, d[1]: 0.57, d[2]: 0.02, d[3]: 1.00, d[4]: 0.33, q: 0.06, },
+			d[4]: { d[0]: 0.25, d[1]: 0.51, d[2]: 0.20, d[3]: 0.33, d[4]: 1.00, q: 0.63, },
+			q:    { d[0]: 0.91, d[1]: 0.90, d[2]: 0.50, d[3]: 0.06, d[4]: 0.63, q: 1.00, },
+		}
+
+		algo = MMR()
+
+		"""
+		Run the first iteration.
+		"""
+		scores = algo._compute_scores(d, Summary(), q, matrix, 0.5)
+		self.assertEqual(0.91, scores[d[0]])
+		self.assertEqual(d[0], max(scores.keys(), key=scores.get))
+
+		"""
+		Run the second iteration.
+		"""
+		scores = algo._compute_scores(d[1:], Summary(d[0]), q, matrix, 0.5)
+		self.assertEqual(0.395, scores[d[1]])
+		self.assertEqual(0.135, scores[d[2]])
+		self.assertEqual(-0.35, scores[d[3]])
+		self.assertEqual(0.19, scores[d[4]])
+
+		"""
+		Run the third iteration.
+		"""
+		scores = algo._compute_scores(d[2:], Summary(d[:2]), q, matrix, 0.5)
+		self.assertEqual(0.105, round(scores[d[2]], 10))
+		self.assertEqual(-0.35, scores[d[3]])
+		self.assertEqual(0.06, scores[d[4]])
+		self.assertEqual(0.63, round(matrix[d[0]][d[1]] +
+									 matrix[d[0]][d[2]] +
+									 matrix[d[1]][d[2]], 10))
+
+		"""
+		Run the case with :math:`\\lambda` = 1.
+		"""
+		scores = algo._compute_scores(d[2:], Summary(d[:2]), q, matrix, 1)
+		self.assertEqual(d[4], max(scores.keys(), key=scores.get))
+		self.assertEqual(0.87, round(matrix[d[0]][d[1]] +
+									 matrix[d[0]][d[4]] +
+									 matrix[d[1]][d[4]], 10))
