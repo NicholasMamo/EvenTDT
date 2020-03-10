@@ -35,3 +35,11 @@ Carbonell and Goldstein (1998)
    :members:
    :private-members:
    :special-members:
+
+Mamo et al. (2019)
+------------------
+
+.. automodule:: summarization.algorithms.dgs
+   :members:
+   :private-members:
+   :special-members:
