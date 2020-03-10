@@ -46,6 +46,12 @@ class DGS(SummarizationAlgorithm):
 
 		:return: The summary of the documents.
 		:rtype: :class:`~summarization.summary.Summary`
+
+		:raises ValueError: When the summary length is not positive.
 		"""
 
-		pass
+		"""
+		Validate the inputs.
+		"""
+		if length <= 0:
+			raise ValueError(f"Invalid summary length {length}")

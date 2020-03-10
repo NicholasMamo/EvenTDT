@@ -22,4 +22,20 @@ class TestDGS(unittest.TestCase):
 	Test Document Graph Summarizer by Mamo et al. (2019)'s algorithm.
 	"""
 
-	pass
+	def test_negative_length(self):
+		"""
+		Test that when providing a negative length, the function raises a ValueError.
+		"""
+
+		c = [ ]
+		algo = DGS()
+		self.assertRaises(ValueError, algo.summarize, c, -1)
+
+	def test_zero_length(self):
+		"""
+		Test that when providing a length of zero, the function raises a ValueError.
+		"""
+
+		c = [ ]
+		algo = DGS()
+		self.assertRaises(ValueError, algo.summarize, c, 0)
