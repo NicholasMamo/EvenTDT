@@ -70,7 +70,7 @@ class MMR(SummarizationAlgorithm):
 		"""
 		Compute the query if need be, and construct the similarity matrix.
 		"""
-		query = query or self._compute_query(documents) # TODO: test
+		query = query or self._compute_query(documents)
 		matrix = self._compute_similarity_matrix(documents, query)
 
 		"""

@@ -20,6 +20,7 @@ from .summarization import SummarizationAlgorithm
 from summarization import Summary
 
 from vsm import vector_math
+from vsm.clustering import Cluster
 
 class DGS(SummarizationAlgorithm):
 	"""
@@ -55,3 +56,22 @@ class DGS(SummarizationAlgorithm):
 		"""
 		if length <= 0:
 			raise ValueError(f"Invalid summary length {length}")
+
+		"""
+		Compute the query if need be.
+		"""
+		query = query or self._compute_query(documents)
+
+	def _compute_query(self, documents):
+		"""
+		Create the query from the given documents.
+		The query is equivalent to the centroid of the documents.
+
+		:param documents: The list of documents to summarize.
+		:type documents: list of :class:`~nlp.document.Document`
+
+		:return: The centroid of the documents.
+		:rtype: `~vsm.vector.Vector`
+		"""
+
+		return Cluster(vectors=documents).centroid
