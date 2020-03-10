@@ -76,7 +76,7 @@ summarization_tests() {
 
 	echo -e "${HIGHLIGHT}Algorithms${DEFAULT}"
 	python3 -m unittest eventdt.summarization.algorithms.tests.test_mmr
-	# python3 -m unittest eventdt.summarization.algorithms.tests.test_graph
+	python3 -m unittest eventdt.summarization.algorithms.tests.test_dgs
 
 	# echo -e "${HIGHLIGHT}Scorer${DEFAULT}"
 	# python3 -m unittest eventdt.summarization.scorers.tests.test_scorers
