@@ -67,6 +67,16 @@ class Document(Vector):
 
 		return self.text
 
+	def copy(self):
+		"""
+		Create a copy of the document.
+
+		:return: A copy of the :class:`~nlp.document.Document`.
+		:rtype: :class:`~nlp.document.Document`
+		"""
+
+		return Document(self.text, self.dimensions.copy(), attributes=self.attributes.copy())
+
 	def to_array(self):
 		"""
 		Export the document as an associative array.

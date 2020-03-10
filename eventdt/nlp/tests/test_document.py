@@ -4,6 +4,7 @@ Run unit tests on the :class:`~nlp.document.Document` class.
 
 import os
 import sys
+import time
 import unittest
 
 path = os.path.join(os.path.dirname(__file__), '..')
@@ -148,3 +149,37 @@ class TestDocument(unittest.TestCase):
 
 		document = Document('this is not a pipe')
 		self.assertEqual('this is not a pipe', str(document))
+
+	def test_copy(self):
+		"""
+		Test that when copying a document, the text, dimensions and attributes are identical.
+		"""
+
+		document = Document('this is a pipe', { 'pipe': 1 }, attributes={ 'timestamp': time.time() })
+		copy = document.copy()
+		self.assertEqual(document.text, copy.text)
+		self.assertEqual(document.dimensions, copy.dimensions)
+		self.assertEqual(document.attributes, copy.attributes)
+
+	def test_copy_true(self):
+		"""
+		Test that when copying a document, changes to the copy do not affect the original.
+		"""
+
+		document = Document('this is a pipe', { 'pipe': 1 }, attributes={ 'original': True })
+		copy = document.copy()
+
+		self.assertEqual(document.text, copy.text)
+		copy.text = 'this is a cigar'
+		self.assertEqual('this is a cigar', copy.text)
+		self.assertEqual('this is a pipe', document.text)
+
+		self.assertEqual(document.dimensions, copy.dimensions)
+		copy.dimensions = { 'cigar': 1 }
+		self.assertEqual({ 'cigar': 1 }, copy.dimensions)
+		self.assertEqual({ 'pipe': 1 }, document.dimensions)
+
+		self.assertEqual(document.attributes, copy.attributes)
+		copy.attributes = { 'original': False }
+		self.assertEqual({ 'original': False }, copy.attributes)
+		self.assertEqual({ 'original': True }, document.attributes)
