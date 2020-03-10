@@ -126,6 +126,77 @@ class TestMMR(unittest.TestCase):
 		self.assertEqual(set(corpus), set(summary.documents))
 		self.assertLessEqual(len(str(summary)), length)
 
+	def test_summarize_custom_query(self):
+		"""
+		Test that when summarizing a set of documents and a custom query is given, that query is used.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is a pipe.', { 'pipe': 1 }),
+		 		   Document('this is a cigar.', { 'cigar': 1 }),
+				   Document('this is a cigar and this is a pipe.', { 'cigar': 1, 'pipe': 1 }),
+				   Document('the original picture of a pipe', { 'picture': 1, 'pipe': 1 }) ]
+		for document in corpus:
+			document.normalize()
+
+		algo = MMR()
+		length = max(len(str(document)) for document in corpus)
+
+		summary = algo.summarize(corpus, length)
+		self.assertEqual([ corpus[2] ], summary.documents)
+
+		query = Document('', { 'picture': 1 })
+		summary = algo.summarize(corpus, length, query=query)
+		self.assertEqual([ corpus[3] ], summary.documents)
+
+	def test_summarize_documents_unchanged(self):
+		"""
+		Test that when summarizing a set of documents, they are unchanged.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is a pipe.', { 'pipe': 1 }),
+		 		   Document('this is a cigar.', { 'cigar': 1 }),
+				   Document('this is a cigar and this is a pipe.', { 'cigar': 1, 'pipe': 1 }),
+				   Document('the original picture of a pipe', { 'picture': 1, 'pipe': 1 }) ]
+		for document in corpus:
+			document.normalize()
+
+		algo = MMR()
+		query = Document('', { 'picture': 1 })
+		copy = query.copy()
+
+		length = max(len(str(document)) for document in corpus)
+		summary = algo.summarize(corpus, length, query=query)
+		self.assertEqual(copy.dimensions, query.dimensions)
+
+	def test_summarize_query_unchanged(self):
+		"""
+		Test that when summarizing a set of documents with a query, it is unchanged.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is a pipe.', { 'pipe': 1 }),
+		 		   Document('this is a cigar.', { 'cigar': 1 }),
+				   Document('this is a cigar and this is a pipe.', { 'cigar': 1, 'pipe': 1 }),
+				   Document('the original picture of a pipe', { 'picture': 1, 'pipe': 1 }) ]
+		for document in corpus:
+			document.normalize()
+
+		algo = MMR()
+		copy = [ document.copy() for document in corpus ]
+
+		length = max(len(str(document)) for document in corpus)
+		summary = algo.summarize(corpus, length)
+		for d1, d2 in zip(copy, corpus):
+			self.assertEqual(d1.dimensions, d2.dimensions)
+
 	def test_negative_length(self):
 		"""
 		Test that when providing a negative length, the function raises a ValueError.
