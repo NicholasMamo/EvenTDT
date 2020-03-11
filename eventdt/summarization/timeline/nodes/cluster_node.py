@@ -16,8 +16,8 @@ from vsm.clustering import Cluster
 
 class ClusterNode(Node):
 	"""
-	A document node stores documents as a list.
-	Comparisons are made with the centroid of these documents.
+	A cluster node stores clusters instead of documents.
+	Comparisons are made with each cluster's centroid.
 
 	:ivar clusters: The list of clusters in this node.
 	:type clusters: list of :class:`~vsm.clustering.cluster.Cluster`
