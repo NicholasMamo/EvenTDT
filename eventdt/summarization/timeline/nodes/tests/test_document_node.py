@@ -76,6 +76,20 @@ class TestDocumentNode(unittest.TestCase):
 		node.add([ documents[1] ])
 		self.assertEqual(documents, node.documents)
 
+	def test_add_dynamic(self):
+		"""
+		Test that when changing a document, the node's document also changes.
+		"""
+
+		node = DocumentNode()
+		self.assertEqual([ ], node.documents)
+		document = Document('', { })
+		node.add([ document ])
+		self.assertEqual([ document ], node.documents)
+		document.dimensions['x'] = 1
+		self.assertEqual({ 'x': 1 }, document.dimensions)
+		self.assertEqual(document.dimensions, node.documents[0].dimensions)
+
 	def test_similarity_empty_node(self):
 		"""
 		Test that the similarity between a document and an empty document node, the similarity is 0.
