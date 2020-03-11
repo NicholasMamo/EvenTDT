@@ -17,7 +17,7 @@ from nlp.document import Document
 from nlp.term_weighting.tf import TF
 from summarization import Summary
 from summarization.algorithms import DGS
-from vsm import vector_math
+from vsm import vector_math, Vector
 
 class TestDGS(unittest.TestCase):
 	"""
@@ -419,3 +419,128 @@ class TestDGS(unittest.TestCase):
 		algo = DGS()
 		self.assertEqual([ { 'A', 'B', }, { 'C', 'D' } ],
 						 algo._largest_communities([ { 'A', 'B' }, { 'C', 'D' }, { 'E' } ]))
+
+	def test_score_documents_no_communities(self):
+		"""
+		Test that when scoring no communities, an empty list is returned.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is not a pipe', { 'pipe': 1 }),
+				   Document('a pipe is preferable', { 'pipe': 1 }),
+				   Document('this is not a cigar', { 'cigar': 1 }),
+				   Document('this is not a cigar, but a pipe', { 'cigar': 1, 'pipe': 1 }) ]
+		for document in corpus:
+			document.normalize()
+		query = Vector({ 'cigar': 1 })
+		query.normalize()
+
+		algo = DGS()
+		graph = algo._to_graph(corpus)
+		scores = algo._score_documents(graph, [ ], query)
+		self.assertEqual(0, len(scores))
+
+	def test_score_documents_one_community(self):
+		"""
+		Test scoring the documents in one community.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is not a pipe', { 'pipe': 1 }),
+				   Document('a pipe is preferable', { 'pipe': 1 }),
+				   Document('this is not a cigar', { 'cigar': 1 }),
+				   Document('this is not a cigar, but a pipe', { 'cigar': 1, 'pipe': 1 }) ]
+		for document in corpus:
+			document.normalize()
+		query = Vector({ 'cigar': 1 })
+		query.normalize()
+
+		algo = DGS()
+		graph = algo._to_graph(corpus)
+		scores = algo._score_documents(graph, [ { *corpus } ], query)
+		self.assertEqual(1, len(scores))
+		scores = scores[0]
+		self.assertEqual(0, scores[corpus[0]])
+		self.assertEqual(0, scores[corpus[1]])
+		self.assertGreater(scores[corpus[2]], scores[corpus[0]])
+		self.assertGreater(scores[corpus[2]], scores[corpus[1]])
+		self.assertEqual(scores[corpus[-1]], max(scores.values()))
+
+	def test_score_documents_relevance(self):
+		"""
+		Test that when scoring a community, relevance influences results.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is not a pipe', { 'this': 1, 'pipe': 1 }),
+				   Document('this is not a cigar', { 'this': 1, 'cigar': 1 }),
+				   Document('this is a cigar, but a pipe', { 'this': 1, 'cigar': 1 }) ]
+		for document in corpus:
+			document.normalize()
+		query = Vector({ 'cigar': 1 })
+		query.normalize()
+
+		algo = DGS()
+		graph = algo._to_graph(corpus)
+		scores = algo._score_documents(graph, [ { *corpus } ], query)
+		self.assertEqual(1, len(scores))
+		scores = scores[0]
+		self.assertEqual(0, scores[corpus[0]])
+		self.assertEqual(scores[corpus[1]], max(scores.values()))
+		self.assertEqual(scores[corpus[-1]], max(scores.values()))
+		self.assertEqual(scores[corpus[1]], scores[corpus[-1]])
+
+	def test_score_documents_centrality(self):
+		"""
+		Test that when scoring a community, centrality influences results.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is not a pipe', { 'pipe': 1 }),
+				   Document('this is a cigar', { 'this': 1, 'cigar': 1 }),
+				   Document('this is a cigar, but a pipe', { 'cigar': 1, 'pipe': 1 }) ]
+		for document in corpus:
+			document.normalize()
+		query = Vector({ 'cigar': 1, 'this': 1, 'pipe': 1 })
+		query.normalize()
+
+		algo = DGS()
+		graph = algo._to_graph(corpus)
+		scores = algo._score_documents(graph, [ { *corpus } ], query)
+		self.assertEqual(1, len(scores))
+		scores = scores[0]
+		self.assertEqual(scores[corpus[0]], min(scores.values()))
+		self.assertEqual(scores[corpus[-1]], max(scores.values()))
+		self.assertGreater(scores[corpus[-1]], scores[corpus[1]])
+
+	def test_score_documents_multiple_communities(self):
+		"""
+		Test scoring the documents in multiple communities.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is not a pipe', { 'pipe': 1 }),
+				   Document('a pipe is preferable', { 'pipe': 1 }),
+				   Document('this is not a cigar', { 'cigar': 1 }),
+				   Document('this is not a cigar, but a pipe', { 'cigar': 1, 'pipe': 1 }) ]
+		for document in corpus:
+			document.normalize()
+		query = Vector({ 'cigar': 1 })
+		query.normalize()
+
+		algo = DGS()
+		graph = algo._to_graph(corpus)
+		scores = algo._score_documents(graph, [ { *corpus[:2] }, { *corpus[2:] } ], query)
+		self.assertEqual(2, len(scores))
+		self.assertEqual(set(corpus[:2]), set(scores[0].keys()))
+		self.assertEqual(set(corpus[2:]), set(scores[1].keys()))

@@ -15,7 +15,7 @@ import sys
 
 import networkx as nx
 from networkx import edge_betweenness_centrality
-from networkx.algorithms import community
+from networkx.algorithms import centrality, community
 
 path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
@@ -173,3 +173,40 @@ class DGS(SummarizationAlgorithm):
 			return list(filter(lambda community: len(community) == size, communities))
 
 		return [ ]
+
+	def _score_documents(self, graph, communities, query):
+		"""
+		Score the documents in the given communities.
+		The score is based on centrality and query similarity.
+
+		:param graph: The graph in which the communities were found.
+		:type graph: :class:`~networkx.Graph`
+		:param communities: The list of partitions.
+							Each partition is a set of nodes.
+		:type communities: list of set
+		:param query: The query to which to compare the documents.
+		:type query: :class:`vsm.vector.Vector`
+
+		:return: A list of documents scored and separated by their community.
+				 The outer list corresponds to the communities.
+				 Internally, the documents are a dictionary.
+				 The keys are the documents and the values their scores.
+		:rtype: list of dict
+		"""
+
+		scores = []
+
+		"""
+		Go through each community and represent it as a subgraph.
+		Calculate the eigenvector centrality for each node in the subgraph.
+		Then, calculate the similarity between each node, or document, and the query.
+		"""
+		for community in communities:
+			subgraph = graph.subgraph(community)
+			centrality_scores = centrality.eigenvector_centrality(subgraph)
+			relevance = { document: vector_math.cosine(document, query)
+						  for document in subgraph.nodes }
+			scores.append({ document: centrality_scores[document] * relevance[document]
+			 				for document in subgraph.nodes })
+
+		return scores
