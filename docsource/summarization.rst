@@ -56,6 +56,11 @@ Nodes
    :private-members:
    :special-members:
 
+.. automodule:: summarization.timeline.nodes.cluster_node
+   :members:
+   :private-members:
+   :special-members:
+
 .. automodule:: summarization.timeline.nodes.document_node
    :members:
    :private-members:

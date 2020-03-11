@@ -762,6 +762,60 @@ If the timestamp is not given, the current time is used.</p></li>
 
 </dd></dl>
 
+<span class="target" id="module-summarization.timeline.nodes.cluster_node"></span><p>A cluster node stores clusters instead of documents.</p>
+<dl class="class">
+<dt id="summarization.timeline.nodes.cluster_node.ClusterNode">
+<em class="property">class </em><code class="sig-name descname">ClusterNode</code><span class="sig-paren">(</span><em class="sig-param">created_at=None</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.cluster_node.ClusterNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>A cluster node stores clusters instead of documents.
+Comparisons are made with each cluster’s centroid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><p><strong>clusters</strong> – The list of clusters in this node.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="summarization.timeline.nodes.cluster_node.ClusterNode.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">created_at=None</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.cluster_node.ClusterNode.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>created_at</strong> (<em>float</em>) – The timestamp when the node was created.
+If the timestamp is not given, the current time is used.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="summarization.timeline.nodes.cluster_node.ClusterNode.add">
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">cluster</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.cluster_node.ClusterNode.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add documents to the node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cluster</strong> (<a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>) – The cluster to add to the node.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="summarization.timeline.nodes.cluster_node.ClusterNode.similarity">
+<code class="sig-name descname">similarity</code><span class="sig-paren">(</span><em class="sig-param">cluster</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.cluster_node.ClusterNode.similarity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the similarity between this node and a given cluster.
+The returned similarity is the maximum similarity between the given cluster and any cluster in the node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cluster</strong> (<a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>) – The cluster with which to compute similarity.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The similarity between this node and the given cluster.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 <span class="target" id="module-summarization.timeline.nodes.document_node"></span><p>A document node stores documents as a list.</p>
 <dl class="class">
 <dt id="summarization.timeline.nodes.document_node.DocumentNode">
