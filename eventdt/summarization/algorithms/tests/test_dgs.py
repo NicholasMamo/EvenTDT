@@ -386,3 +386,36 @@ class TestDGS(unittest.TestCase):
 		self.assertEqual(2, len(partitions))
 		self.assertTrue({ corpus[0] } in partitions)
 		self.assertTrue({ corpus[1], corpus[2] } in partitions)
+
+	def test_largest_communities_empty(self):
+		"""
+		Test that when getting the largest communities from an empty list, another empty list is returned.
+		"""
+
+		algo = DGS()
+		self.assertEqual([ ], algo._largest_communities([ ]))
+
+	def test_largest_communities_one(self):
+		"""
+		Test that when getting the largest communities of one community, that community is returned.
+		"""
+
+		algo = DGS()
+		self.assertEqual([ { 'A' } ], algo._largest_communities([ { 'A' } ]))
+
+	def test_largest_communities(self):
+		"""
+		Test that when getting the largest communities where only one stands out, that community is returned.
+		"""
+
+		algo = DGS()
+		self.assertEqual([ { 'A', 'B', } ], algo._largest_communities([ { 'A', 'B' } ]))
+
+	def test_largest_communities_multiple(self):
+		"""
+		Test that when getting the largest communities where multiple are large, all are returned.
+		"""
+
+		algo = DGS()
+		self.assertEqual([ { 'A', 'B', }, { 'C', 'D' } ],
+						 algo._largest_communities([ { 'A', 'B' }, { 'C', 'D' }, { 'E' } ]))

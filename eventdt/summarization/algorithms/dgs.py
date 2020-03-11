@@ -154,3 +154,22 @@ class DGS(SummarizationAlgorithm):
 		centrality = edge_betweenness_centrality(graph, weight='weight')
 		edge = max(centrality, key=centrality.get)
 		return edge
+
+	def _largest_communities(self, communities):
+		"""
+		Extract the largest communities.
+
+		:param communities: The list of partitions.
+							Each partition is a set of nodes.
+		:type communities: list of set
+
+		:return: A list of the largest communities.
+				 Each community is a set of nodes.
+		:rtype: list of set
+		"""
+
+		if communities:
+			size = max(len(community) for community in communities)
+			return list(filter(lambda community: len(community) == size, communities))
+
+		return [ ]
