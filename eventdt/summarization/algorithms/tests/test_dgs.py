@@ -7,6 +7,8 @@ import os
 import sys
 import unittest
 
+import networkx as nx
+
 path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
 if path not in sys.path:
     sys.path.append(path)
@@ -248,3 +250,50 @@ class TestDGS(unittest.TestCase):
 		self.assertEqual(2, len(list(graph.nodes)))
 		self.assertEqual(corpus[0], graph.nodes[corpus[0]]['document'])
 		self.assertEqual(corpus[1], graph.nodes[corpus[1]]['document'])
+
+	def test_edge_centrality(self):
+		"""
+		Test that the edge centrality correctly identifies the most central edge.
+		"""
+
+		nodes =  [ 'A', 'B', 'C', 'D', 'W', 'X', 'Y', 'Z' ]
+		edges = { ('A', 'B', 0.1), ('A', 'C', 0.1), ('A', 'D', 0.1),
+		 		  ('B', 'C', 0.1), ('B', 'D', 0.1), ('C', 'D', 0.1),
+
+				  ('W', 'X', 0.1), ('W', 'Y', 0.1), ('W', 'Z', 0.1),
+		  		  ('X', 'Y', 0.1), ('X', 'Z', 0.1), ('Y', 'Z', 0.1),
+
+				  ('D', 'W', 0.1)
+				}
+
+		graph = nx.Graph()
+		graph.add_nodes_from(nodes)
+		graph.add_weighted_edges_from(edges)
+
+		algo = DGS()
+		edge = algo._most_central_edge(graph)
+		self.assertEqual(('D', 'W'), edge)
+
+	def test_edge_centrality_multiple(self):
+		"""
+		Test that the edge centrality correctly identifies the most central edge when there are two such edges.
+		This edge should be the one with the lowest weight.
+		"""
+
+		nodes =  [ 'A', 'B', 'C', 'D', 'W', 'X', 'Y', 'Z' ]
+		edges = { ('A', 'B', 0.1), ('A', 'C', 0.1), ('A', 'D', 0.1),
+		 		  ('B', 'C', 0.1), ('B', 'D', 0.1), ('C', 'D', 0.1),
+
+				  ('W', 'X', 0.1), ('W', 'Y', 0.1), ('W', 'Z', 0.1),
+		  		  ('X', 'Y', 0.1), ('X', 'Z', 0.1), ('Y', 'Z', 0.1),
+
+				  ('D', 'W', 0.1), ('C', 'X', 0.05),
+				}
+
+		graph = nx.Graph()
+		graph.add_nodes_from(nodes)
+		graph.add_weighted_edges_from(edges)
+
+		algo = DGS()
+		edge = algo._most_central_edge(graph)
+		self.assertEqual(('C', 'X'), edge)

@@ -13,6 +13,7 @@ import os
 import sys
 
 import networkx as nx
+from networkx import edge_betweenness_centrality
 
 path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
@@ -115,3 +116,20 @@ class DGS(SummarizationAlgorithm):
 					graph.add_edge(source, target, weight=(1 - similarity))
 
 		return graph
+
+	def _most_central_edge(self, graph):
+		"""
+		Find the most central edge in the given graph.
+		The algorithm uses NetworkX's betweenness centrality, but it is based on weight.
+		The lower the weight, the more shortest paths could go through it.
+
+		:param graph: The graph on which the algorithm operates.
+		:type graph: :class:`~networkx.Graph`
+
+		:return: The most central edge, made up of the source and edge nodes.
+		:rtype: tuple
+		"""
+
+		centrality = edge_betweenness_centrality(graph, weight='weight')
+		edge = max(centrality, key=centrality.get)
+		return edge
