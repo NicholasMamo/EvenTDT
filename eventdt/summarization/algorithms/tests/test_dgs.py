@@ -387,6 +387,28 @@ class TestDGS(unittest.TestCase):
 		self.assertTrue({ corpus[0] } in partitions)
 		self.assertTrue({ corpus[1], corpus[2] } in partitions)
 
+	def test_extract_document_communities_trivial(self):
+		"""
+		Test that when the quota of communities is already reached, no communities are extracted.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is a pipe.', { 'pipe': 1 }),
+		 		   Document('this is a cigar.', { 'cigar': 1 }),
+				   Document('this is a cigar and this is a pipe.', { 'cigar': 1, 'pipe': 1 }),
+				   Document('the picture of dorian gray', { 'picture': 1, 'dorian': 1, 'gray': 1 })]
+		for document in corpus:
+			document.normalize()
+
+		algo = DGS()
+		graph = algo._to_graph(corpus)
+		partitions = algo._extract_communities(graph)
+		self.assertEqual(2, len(partitions))
+		self.assertTrue({ *corpus[:3] } in partitions)
+		self.assertTrue({ corpus[3] } in partitions)
+
 	def test_largest_communities_empty(self):
 		"""
 		Test that when getting the largest communities from an empty list, another empty list is returned.

@@ -131,6 +131,13 @@ class DGS(SummarizationAlgorithm):
 		:rtype: list of set
 		"""
 
+		"""
+		If the graph is already split into enough communities, do not split it further.
+		"""
+		connected = list(nx.connected_components(graph))
+		if len(connected) >= math.sqrt(len(graph.nodes)):
+			return connected
+
 		communities = community.girvan_newman(graph, most_valuable_edge=self._most_central_edge)
 		partitions = list(next(communities))
 		while len(partitions) < math.sqrt(len(graph.nodes)):
