@@ -271,9 +271,17 @@ All algorithms must, however, implement the <a class="reference internal" href="
 <dd><p>Summarize the given documents.</p>
 <p>Summarization algorithms may accept more parameters, but they must accept, at least a list of documents.
 They must also always return a summary object.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The algorithm assumes that the documents are already unique sentences.
+Therefore the summary is a selection of the given documents.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>documents</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The list of documents to summarize.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>documents</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The list of documents to summarize.</p></li>
+<li><p><strong>length</strong> (<em>float</em>) – The maximum length of the summary in characters.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The summary of the documents.</p>
@@ -502,6 +510,163 @@ If no query is given, the summary is built around the centroid of documents.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#summarization.summary.Summary" title="summarization.summary.Summary"><code class="xref py py-class docutils literal notranslate"><span class="pre">Summary</span></code></a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – When the summary length is not positive.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="summarization.algorithms.dgs.DGS._compute_query">
+<code class="sig-name descname">_compute_query</code><span class="sig-paren">(</span><em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.dgs.DGS._compute_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the query from the given documents.
+The query is equivalent to the centroid of the documents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>documents</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The list of documents to summarize.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The centroid of the documents.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><cite>~vsm.vector.Vector</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="summarization.algorithms.dgs.DGS._to_graph">
+<code class="sig-name descname">_to_graph</code><span class="sig-paren">(</span><em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.dgs.DGS._to_graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the given documents to a networkx graph.
+The documents are converted to nodes.
+Weighted edges between them are created if their similarity exceeds 0.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The weight of edges is <cite>1 - similarity</cite>.
+The higher the similarity, the less weight.
+Therefore more paths go through that edge.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>documents</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The list of documents to convert into a graph.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A graph with nodes representind documents and weighted edges between them.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Graph</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="summarization.algorithms.dgs.DGS._extract_communities">
+<code class="sig-name descname">_extract_communities</code><span class="sig-paren">(</span><em class="sig-param">graph</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.dgs.DGS._extract_communities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the communities from the given graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>graph</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Graph</span></code>) – The document graph.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of parititions.
+Each partition is a set of nodes.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="summarization.algorithms.dgs.DGS._most_central_edge">
+<code class="sig-name descname">_most_central_edge</code><span class="sig-paren">(</span><em class="sig-param">graph</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.dgs.DGS._most_central_edge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the most central edge in the given graph.
+The algorithm uses NetworkX’s betweenness centrality, but it is based on weight.
+The lower the weight, the more shortest paths could go through it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>graph</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Graph</span></code>) – The graph on which the algorithm operates.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The most central edge, made up of the source and edge nodes.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="summarization.algorithms.dgs.DGS._largest_communities">
+<code class="sig-name descname">_largest_communities</code><span class="sig-paren">(</span><em class="sig-param">communities</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.dgs.DGS._largest_communities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the largest communities.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>communities</strong> (<em>list of set</em>) – The list of partitions.
+Each partition is a set of nodes.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of the largest communities.
+Each community is a set of nodes.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="summarization.algorithms.dgs.DGS._score_documents">
+<code class="sig-name descname">_score_documents</code><span class="sig-paren">(</span><em class="sig-param">graph</em>, <em class="sig-param">communities</em>, <em class="sig-param">query</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.dgs.DGS._score_documents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Score the documents in the given communities.
+The score is based on centrality and query similarity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>graph</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Graph</span></code>) – The graph in which the communities were found.</p></li>
+<li><p><strong>communities</strong> (<em>list of set</em>) – The list of partitions.
+Each partition is a set of nodes.</p></li>
+<li><p><strong>query</strong> (<a class="reference internal" href="vsm.html#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">vsm.vector.Vector</span></code></a>) – The query to which to compare the documents.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of documents scored and separated by their community.
+The outer list corresponds to the communities.
+Internally, the documents are a dictionary.
+The keys are the documents and the values their scores.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="summarization.algorithms.dgs.DGS._filter_documents">
+<code class="sig-name descname">_filter_documents</code><span class="sig-paren">(</span><em class="sig-param">documents</em>, <em class="sig-param">summary</em>, <em class="sig-param">length</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.dgs.DGS._filter_documents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the documents that can be added to the summary.
+These include:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Documents that are not already in the summary;</p></li>
+<li><p>Documents that are shorter than the length.</p></li>
+</ol>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>documents</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The list of available documents.</p></li>
+<li><p><strong>summary</strong> (<a class="reference internal" href="#summarization.summary.Summary" title="summarization.summary.Summary"><code class="xref py py-class docutils literal notranslate"><span class="pre">Summary</span></code></a>) – The summary constructed so far.</p></li>
+<li><p><strong>length</strong> (<em>float</em>) – The maximum length of the document.
+The length is inclusive.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of documents that can be added to the summary.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>

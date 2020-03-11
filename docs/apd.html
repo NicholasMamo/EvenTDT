@@ -1567,13 +1567,13 @@ The values should be the outgoing links from these articles.</p></li>
 
 <dl class="method">
 <dt id="apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator._most_central_edge">
-<code class="sig-name descname">_most_central_edge</code><span class="sig-paren">(</span><em class="sig-param">G</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator._most_central_edge" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_most_central_edge</code><span class="sig-paren">(</span><em class="sig-param">graph</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator._most_central_edge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the most central edge in the given graph.
 The algorithm uses NetworkX’s betweenness centrality, but it is based on weight.
 The lower the weight, the more shortest paths could go through it.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>G</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Graph</span></code>) – The graph on which the algorithm operates.</p>
+<dd class="field-odd"><p><strong>graph</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Graph</span></code>) – The graph on which the algorithm operates.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The most central edge, made up of the source and edge nodes.</p>
