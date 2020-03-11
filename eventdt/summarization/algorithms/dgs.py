@@ -9,11 +9,13 @@ In this way, the algorithm can maximize precision by minimizing redundancy.
 	Implementation based on the algorithm presented in `ELD: Event TimeLine Detection—A Participant-Based Approach to Tracking Events by Mamo et al. (2019) <https://dl.acm.org/doi/abs/10.1145/3342220.3344921>`_.
 """
 
+import math
 import os
 import sys
 
 import networkx as nx
 from networkx import edge_betweenness_centrality
+from networkx.algorithms import community
 
 path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
@@ -116,6 +118,25 @@ class DGS(SummarizationAlgorithm):
 					graph.add_edge(source, target, weight=(1 - similarity))
 
 		return graph
+
+	def _extract_communities(self, graph):
+		"""
+		Extract the communities from the given graph.
+
+		:param graph: The document graph.
+		:type graph: :class:`~networkx.Graph`
+
+		:return: List of parititions.
+				 Each partition is a set of nodes.
+		:rtype: list of set
+		"""
+
+		communities = community.girvan_newman(graph, most_valuable_edge=self._most_central_edge)
+		partitions = list(next(communities))
+		while len(partitions) < math.sqrt(len(graph.nodes)):
+			partitions = list(next(communities))
+
+		return partitions
 
 	def _most_central_edge(self, graph):
 		"""

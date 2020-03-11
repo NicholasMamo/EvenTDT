@@ -297,3 +297,92 @@ class TestDGS(unittest.TestCase):
 		algo = DGS()
 		edge = algo._most_central_edge(graph)
 		self.assertEqual(('C', 'X'), edge)
+
+	def test_extract_communities_empty_graph(self):
+		"""
+		Test that when extracting communities from an empty graph, an empty list of partitions is returned.
+		"""
+
+		graph = nx.Graph()
+		algo = DGS()
+		partitions = algo._extract_communities(graph)
+		self.assertEqual([ ], partitions)
+
+	def test_extract_communities_no_edges(self):
+		"""
+		Test that when extracting communities from a graph with no edges, the same nodes are returned as partitions.
+		"""
+
+		nodes = [ 'A', 'B', 'C', 'D' ]
+
+		graph = nx.Graph()
+		graph.add_nodes_from(nodes)
+
+		algo = DGS()
+		partitions = algo._extract_communities(graph)
+		self.assertEqual(4, len(partitions))
+		self.assertEqual([ { 'A' }, { 'B' }, { 'C' }, { 'D' } ], partitions)
+
+	def test_extract_communities_weight(self):
+		"""
+		Test that when extracting communities from an empty graph, the weight is considered primarily.
+		"""
+
+		nodes = [ 'A', 'B', 'C', 'D' ]
+		edges = [ ('A', 'B'), ('A', 'C'), ('B', 'C'), ('C', 'D') ]
+
+		graph = nx.Graph()
+		graph.add_nodes_from(nodes)
+		graph.add_edges_from(edges)
+
+		algo = DGS()
+		partitions = algo._extract_communities(graph)
+		self.assertTrue({ 'A', 'B', 'C' } in partitions)
+		self.assertTrue({ 'D' } in partitions)
+
+		edges = [ ('A', 'B', 0.1), ('A', 'D', 1), ('B', 'C', 1), ('C', 'D', 0.4) ]
+		graph = nx.Graph()
+		graph.add_nodes_from(nodes)
+		graph.add_weighted_edges_from(edges)
+		partitions = algo._extract_communities(graph)
+		self.assertTrue({ 'A', 'D' } in partitions)
+		self.assertTrue({  'B', 'C' } in partitions)
+
+	def test_extract_communities_square(self):
+		"""
+		Test that when extracting communities, the number of partitions is at least equal to the square root of nodes.
+		"""
+
+		nodes = [ 'A', 'B', 'C', 'D' ]
+		edges = [ ('A', 'B', 0.1), ('B', 'C', 0.2), ('C', 'D', 0.4), ('A', 'D', 0.2) ]
+
+		graph = nx.Graph()
+		graph.add_nodes_from(nodes)
+		graph.add_weighted_edges_from(edges)
+
+		algo = DGS()
+		partitions = algo._extract_communities(graph)
+		self.assertEqual(2, len(partitions))
+		self.assertTrue({ 'A', 'D' } in partitions)
+		self.assertTrue({ 'B', 'C' } in partitions)
+
+	def test_extract_document_communities(self):
+		"""
+		Test that when extracting communities of documents, the partitions are also documents.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is not a pipe', { 'pipe': 1 }),
+				   Document('this is not a cigar', { 'cigar': 1 }),
+				   Document('this is not a cigar, but a pipe', { 'cigar': 1, 'pipe': 1 }) ]
+		for document in corpus:
+			document.normalize()
+
+		algo = DGS()
+		graph = algo._to_graph(corpus)
+		partitions = algo._extract_communities(graph)
+		self.assertEqual(2, len(partitions))
+		self.assertTrue({ corpus[0] } in partitions)
+		self.assertTrue({ corpus[1], corpus[2] } in partitions)
