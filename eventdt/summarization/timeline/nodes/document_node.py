@@ -4,6 +4,9 @@ A document node stores documents as a list.
 
 from .node import Node
 
+import os
+import sys
+
 path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
 if path not in sys.path:
     sys.path.append(path)
@@ -28,7 +31,8 @@ class DocumentNode(Node):
 		:type created_at: float
 		"""
 
-		self.created_at = created_at or time.time()
+		super(DocumentNode, self).__init__(created_at)
+		self.documents = [ ]
 
 	def add(self, *args, **kwargs):
 		"""
