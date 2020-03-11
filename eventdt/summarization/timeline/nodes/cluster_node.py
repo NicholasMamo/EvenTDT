@@ -35,12 +35,15 @@ class ClusterNode(Node):
 		super(ClusterNode, self).__init__(created_at)
 		self.clusters = [ ]
 
-	def add(self, *args, **kwargs):
+	def add(self, cluster, *args, **kwargs):
 		"""
 		Add documents to the node.
+
+		:param cluster: The cluster to add to the node.
+		:type cluster: :class:`~vsm.clustering.cluster.Cluster`
 		"""
 
-		pass
+		self.clusters.append(cluster)
 
 	def similarity(self, *args, **kwargs):
 		"""
