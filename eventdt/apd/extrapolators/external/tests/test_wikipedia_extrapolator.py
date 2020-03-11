@@ -77,8 +77,6 @@ class TestWikipediaExtrapolator(unittest.TestCase):
 		extrapolator = WikipediaExtrapolator([ ], Tokenizer(), TF())
 		self.assertEqual(('C', 'X'), extrapolator._most_central_edge(graph))
 
-
-
 	def test_year_check(self):
 		"""
 		Test that when checking for a year, the function returns a boolean.

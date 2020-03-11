@@ -12,6 +12,8 @@ In this way, the algorithm can maximize precision by minimizing redundancy.
 import os
 import sys
 
+import networkx as nx
+
 path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
     sys.path.append(path)
@@ -75,3 +77,41 @@ class DGS(SummarizationAlgorithm):
 		"""
 
 		return Cluster(vectors=documents).centroid
+
+	def _to_graph(self, documents):
+		"""
+		Convert the given documents to a networkx graph.
+		The documents are converted to nodes.
+		Weighted edges between them are created if their similarity exceeds 0.
+
+		.. note::
+
+			The weight of edges is `1 - similarity`.
+			The higher the similarity, the less weight.
+			Therefore more paths go through that edge.
+
+		:param documents: The list of documents to convert into a graph.
+		:type documents: list of :class:`~nlp.document.Document`
+
+		:return: A graph with nodes representind documents and weighted edges between them.
+		:rtype: :class:`~networkx.Graph`
+		"""
+
+		graph = nx.Graph()
+
+		"""
+		First add the nodes to the graph.
+		"""
+		for document in documents:
+			graph.add_node(document, document=document)
+
+		"""
+		Add the weighted edges between the documents.
+		"""
+		for i, source in enumerate(documents):
+			for target in documents[:i]:
+				similarity = vector_math.cosine(source, target)
+				if similarity > 0:
+					graph.add_edge(source, target, weight=(1 - similarity))
+
+		return graph
