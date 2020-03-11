@@ -129,6 +129,26 @@ class TestDGS(unittest.TestCase):
 		self.assertLessEqual(len(str(summary)), length)
 		self.assertEqual(1, len(summary.documents))
 
+	def test_summary_one_each_community(self):
+		"""
+		Test that when summarizing, only one document is chosen from each community.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is a pipe.', { 'pipe': 1 }),
+		 		   Document('this is a cigar.', { 'cigar': 1 }),
+				   Document('this is a cigar and this is a pipe.', { 'cigar': 1, 'pipe': 1 }),
+				   Document('the picture of dorian gray', { 'picture': 1, 'dorian': 1, 'gray': 1 })]
+		for document in corpus:
+			document.normalize()
+
+		algo = DGS()
+		length = 100
+		summary = algo.summarize(corpus, length)
+		self.assertEqual({ corpus[2], corpus[3] }, set(summary.documents))
+
 	def test_summarize_custom_query(self):
 		"""
 		Test that when summarizing a set of documents and a custom query is given, that query is used.
@@ -574,7 +594,7 @@ class TestDGS(unittest.TestCase):
 		corpus = [ Document('this is a pipe.', { 'pipe': 1 }),
 		 		   Document('this is a cigar.', { 'cigar': 1 }),
 				   Document('this is a cigar and this is a pipe.', { 'cigar': 1, 'pipe': 1 }),
-				   Document('the picture of dorian gray', { 'picture': 1, 'dorian': 1, 'gray': 1 })]
+				   Document('the picture of dorian gray', { 'picture': 1, 'dorian': 1, 'gray': 1 }) ]
 		for document in corpus:
 			document.normalize()
 
@@ -584,6 +604,25 @@ class TestDGS(unittest.TestCase):
 		self.assertEqual(2, len(partitions))
 		self.assertTrue({ *corpus[:3] } in partitions)
 		self.assertTrue({ corpus[3] } in partitions)
+
+	def test_extract_document_communities_disconnected(self):
+		"""
+		Test that when all nodes are disconnected, all are returned as distinct communities.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('A', { 'A': 1 }), Document('B', { 'B': 1 }),
+				   Document('C', { 'C': 1 }), Document('D', { 'D': 1 }) ]
+		for document in corpus:
+			document.normalize()
+
+		algo = DGS()
+		graph = algo._to_graph(corpus)
+		partitions = algo._extract_communities(graph)
+		self.assertEqual(4, len(partitions))
+		self.assertEqual([ { corpus[0] }, { corpus[1] }, { corpus[2] }, { corpus[3] } ], partitions)
 
 	def test_largest_communities_empty(self):
 		"""
