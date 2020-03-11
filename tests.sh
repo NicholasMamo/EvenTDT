@@ -80,6 +80,7 @@ summarization_tests() {
 
 	echo -e "${HIGHLIGHT}Timeline${DEFAULT}"
 	echo -e "${HIGHLIGHT}Nodes${DEFAULT}"
+	python3 -m unittest eventdt.summarization.timeline.nodes.tests.test_cluster_node
 	python3 -m unittest eventdt.summarization.timeline.nodes.tests.test_document_node
 
 	# echo -e "${HIGHLIGHT}Scorer${DEFAULT}"
