@@ -210,3 +210,28 @@ class DGS(SummarizationAlgorithm):
 			 				for document in subgraph.nodes })
 
 		return scores
+
+	def _filter_documents(self, documents, summary, length):
+		"""
+		Get the documents that can be added to the summary.
+		These include:
+
+			#. Documents that are not already in the summary;
+
+			#. Documents that are shorter than the length.
+
+		:param documents: The list of available documents.
+		:type documents: list of :class:`~nlp.document.Document`
+		:param summary: The summary constructed so far.
+		:type summary: :class:`~summarization.summary.Summary`
+		:param length: The maximum length of the document.
+					   The length is inclusive.
+		:type length: float
+
+		:return: A list of documents that can be added to the summary.
+		:rtype: list of :class:`~nlp.document.Document`
+		"""
+
+		documents = set(documents).difference(set(summary.documents))
+		documents = [ document for document in documents if len(str(document)) <= length ]
+		return documents
