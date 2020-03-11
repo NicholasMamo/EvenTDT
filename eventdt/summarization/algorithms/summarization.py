@@ -19,8 +19,15 @@ class SummarizationAlgorithm(ABC):
 		Summarization algorithms may accept more parameters, but they must accept, at least a list of documents.
 		They must also always return a summary object.
 
+		.. note::
+
+			The algorithm assumes that the documents are already unique sentences.
+			Therefore the summary is a selection of the given documents.
+
 		:param documents: The list of documents to summarize.
 		:type documents: list of :class:`~nlp.document.Document`
+		:param length: The maximum length of the summary in characters.
+		:type length: float
 
 		:return: The summary of the documents.
 		:rtype: :class:`~summarization.summary.Summary`
