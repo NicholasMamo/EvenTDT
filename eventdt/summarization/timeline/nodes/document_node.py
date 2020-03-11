@@ -11,12 +11,13 @@ path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
-from nlp.document import Document
+from vsm import vector_math
+from vsm.clustering import Cluster
 
 class DocumentNode(Node):
 	"""
 	A document node stores documents as a list.
-	Comparisons are made with these documents, concatenated into one document.
+	Comparisons are made with the centroid of these documents.
 
 	:ivar documents: The list of documents in this node.
 	:type documents: list of :class:`~nlp.document.Document`
@@ -44,12 +45,17 @@ class DocumentNode(Node):
 
 		self.documents.extend(documents)
 
-	def similarity(self, *args, **kwargs):
+	def similarity(self, document, *args, **kwargs):
 		"""
-		Compute the similarity between this node and a given object.
+		Compute the similarity between this node's documents and the given document.
 
-		:return: The similarity between this node and the given object.
+		:param document: The document with which to compute similarity.
+		:type document: :class:`~vsm.vector.Vector`
+
+		:return: The similarity between this node's documents and the given document.
 		:rtype: float
 		"""
 
-		pass
+		centroid = Cluster(self.documents).centroid
+		centroid.normalize()
+		return vector_math.cosine(centroid, document)

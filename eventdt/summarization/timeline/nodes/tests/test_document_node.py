@@ -2,6 +2,7 @@
 Run unit tests on the document node.
 """
 
+import math
 import os
 import sys
 import time
@@ -74,3 +75,76 @@ class TestDocumentNode(unittest.TestCase):
 		self.assertEqual([ documents[0] ], node.documents)
 		node.add([ documents[1] ])
 		self.assertEqual(documents, node.documents)
+
+	def test_similarity_empty_node(self):
+		"""
+		Test that the similarity between a document and an empty document node, the similarity is 0.
+		"""
+
+		node = DocumentNode()
+		self.assertEqual([ ], node.documents)
+		self.assertEqual(0, node.similarity(Document('', { 'x': 1 })))
+
+	def test_similarity_empty_document(self):
+		"""
+		Test that the similarity between a node and an empty document, the similarity is 0.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		documents = [ Document('this is not a pipe', { 'pipe': 1 }),
+		 			  Document('this is not a cigar', { 'cigar': 1 }) ]
+
+		node = DocumentNode()
+		node.add(documents)
+		self.assertEqual(documents, node.documents)
+		self.assertEqual(0, node.similarity(Document('', { })))
+
+	def test_similarity(self):
+		"""
+		Test calculating the similarity between a node and a document.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		documents = [ Document('this is not a pipe', { 'pipe': 1 }),
+		 			  Document('this is not a cigar', { 'cigar': 1 }) ]
+
+		node = DocumentNode()
+		node.add(documents)
+		self.assertEqual(documents, node.documents)
+		self.assertEqual(math.sqrt(2)/2., node.similarity(Document('this is not a pipe', { 'pipe': 1 })))
+
+	def test_similarity_lower_bound(self):
+		"""
+		Test that the similarity lower-bound between a node and a document is 0.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		documents = [ Document('this is not a pipe', { 'pipe': 1 }),
+		 			  Document('this is not a cigar', { 'cigar': 1 }) ]
+
+		node = DocumentNode()
+		node.add(documents)
+		self.assertEqual(documents, node.documents)
+		self.assertEqual(0, node.similarity(Document('this is a picture of dorian gray', { 'picture': 1, 'dorian': 1, 'gray': 1 })))
+
+	def test_similarity_upper_bound(self):
+		"""
+		Test that the similarity upper-bound between a node and a document is 1.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		documents = [ Document('this is not a pipe', { 'pipe': 1 }),
+		 			  Document('this is not a cigar', { 'cigar': 1 }) ]
+
+		node = DocumentNode()
+		node.add(documents)
+		self.assertEqual(documents, node.documents)
+		self.assertEqual(1, node.similarity(Document('this is not a pipe and this is not a cigar', { 'cigar': 1, 'pipe': 1 })))
