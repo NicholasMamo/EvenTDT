@@ -45,12 +45,19 @@ class ClusterNode(Node):
 
 		self.clusters.append(cluster)
 
-	def similarity(self, *args, **kwargs):
+	def similarity(self, cluster, *args, **kwargs):
 		"""
-		Compute the similarity between this node and a given object.
+		Compute the similarity between this node and a given cluster.
+		The returned similarity is the maximum similarity between the given cluster and any cluster in the node.
 
-		:return: The similarity between this node and the given object.
+		:param cluster: The cluster with which to compute similarity.
+		:type cluster: :class:`~vsm.clustering.cluster.Cluster`
+
+		:return: The similarity between this node and the given cluster.
 		:rtype: float
 		"""
 
-		pass
+		if self.clusters:
+			return max(vector_math.cosine(cluster.centroid, other.centroid) for other in self.clusters)
+
+		return 0

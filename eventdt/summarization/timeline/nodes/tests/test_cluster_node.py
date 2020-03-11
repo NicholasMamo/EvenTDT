@@ -84,3 +84,112 @@ class TestClusterNode(unittest.TestCase):
 		self.assertEqual(cluster, node.clusters[0])
 		self.assertEqual(cluster.vectors, node.clusters[0].vectors)
 		self.assertEqual(document, node.clusters[0].vectors[0])
+
+	def test_similarity_empty_node(self):
+		"""
+		Test that the similarity between a cluster and an empty cluster node, the similarity is 0.
+		"""
+
+		node = ClusterNode()
+		self.assertEqual([ ], node.clusters)
+		self.assertEqual(0, node.similarity(Cluster(Document('', { 'x': 1 }))))
+
+	def test_similarity_empty_cluster(self):
+		"""
+		Test that the similarity between a node and an empty cluster, the similarity is 0.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		documents = [ Document('this is not a pipe', { 'pipe': 1 }),
+		 			  Document('this is not a cigar', { 'cigar': 1 }) ]
+		cluster = Cluster(documents)
+
+		node = ClusterNode()
+		node.add(cluster)
+		self.assertEqual([ cluster ], node.clusters)
+		self.assertEqual(0, node.similarity(Cluster(Document('', { }))))
+
+	def test_similarity(self):
+		"""
+		Test calculating the similarity between a node and a cluster.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		documents = [ Document('this is not a pipe', { 'pipe': 1 }),
+		 			  Document('this is not a cigar', { 'cigar': 1 }) ]
+
+		node = ClusterNode()
+		cluster = Cluster(documents)
+		node.add(cluster)
+		self.assertEqual([ cluster ], node.clusters)
+		self.assertEqual(math.sqrt(2)/2., node.similarity(Cluster(Document('this is not a pipe', { 'pipe': 1 }))))
+
+	def test_similarity_lower_bound(self):
+		"""
+		Test that the similarity lower-bound between a node and a cluster is 0.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		documents = [ Document('this is not a pipe', { 'pipe': 1 }),
+		 			  Document('this is not a cigar', { 'cigar': 1 }) ]
+
+		node = ClusterNode()
+		cluster = Cluster(documents)
+		node.add(cluster)
+		self.assertEqual([ cluster ], node.clusters)
+		self.assertEqual(0, node.similarity(Cluster(Document('this is a picture of dorian gray', { 'picture': 1, 'dorian': 1, 'gray': 1 }))))
+
+	def test_similarity_upper_bound(self):
+		"""
+		Test that the similarity upper-bound between a node and a cluster is 1.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		documents = [ Document('this is not a pipe', { 'pipe': 1 }),
+		 			  Document('this is not a cigar', { 'cigar': 1 }) ]
+
+		node = ClusterNode()
+		cluster = Cluster(documents)
+		node.add(cluster)
+		self.assertEqual([ cluster ], node.clusters)
+		self.assertEqual(1, node.similarity(Cluster(Document('this is not a pipe and this is not a cigar', { 'cigar': 1, 'pipe': 1 }))))
+
+	def test_similarity_max(self):
+		"""
+		Test that the returned similarity is the maximum between the cluster and the node's clusters.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		documents = [ Document('this is not a pipe', { 'pipe': 1 }),
+		 			  Document('this is not a cigar', { 'cigar': 1 }) ]
+		document = Document('this is a picture of dorian gray', { 'picture': 1, 'dorian': 1, 'gray': 1 })
+
+		node = ClusterNode()
+		cluster = Cluster(documents)
+		node.add(cluster)
+		self.assertEqual([ cluster ], node.clusters)
+		self.assertEqual(0, node.similarity(Cluster(document)))
+		node.add(Cluster(document))
+		self.assertEqual(1, round(node.similarity(Cluster(document), 10)))
+
+		"""
+		Reverse the procedure.
+		"""
+
+		node = ClusterNode()
+		cluster = Cluster(document)
+		node.add(cluster)
+		self.assertEqual([ cluster ], node.clusters)
+		self.assertEqual(1, round(node.similarity(Cluster(document)), 10))
+		node.add(Cluster(documents))
+		self.assertEqual(1, round(node.similarity(Cluster(document)), 10))
