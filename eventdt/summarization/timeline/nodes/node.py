@@ -65,7 +65,12 @@ class Node(ABC):
 		:param timestamp: The current timestamp.
 						  If the timestamp is not given, the current time is used.
 		:type timestamp: float
+
+		:raises ValueError: When the expiry is negative.
 		"""
+
+		if expiry < 0:
+			raise ValueError(f"The expiry cannot be negative: received {expiry}")
 
 		timestamp = timestamp or time.time()
 		return timestamp - self.created_at >= expiry

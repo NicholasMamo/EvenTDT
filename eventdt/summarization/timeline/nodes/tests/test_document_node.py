@@ -180,3 +180,36 @@ class TestDocumentNode(unittest.TestCase):
 
 		node = DocumentNode(created_at=1000)
 		self.assertFalse(node.expired(10, 999))
+
+	def test_expired_realtime(self):
+		"""
+		Test that when the timestamp is not given, the current timestamp is used.
+		"""
+
+		node = DocumentNode(created_at=time.time())
+		self.assertFalse(node.expired(1))
+
+	def test_expired_realtime_sleep(self):
+		"""
+		Test that when the timestamp is not given, the current timestamp is used.
+		"""
+
+		node = DocumentNode(created_at=time.time())
+		time.sleep(1)
+		self.assertTrue(node.expired(1))
+
+	def test_expired_zero(self):
+		"""
+		Test that a node immediately expired if the expiry is 0.
+		"""
+
+		node = DocumentNode(created_at=1000)
+		self.assertTrue(node.expired(0, 1000))
+
+	def test_expired_negative(self):
+		"""
+		Test that a ValueError is raised when the expiry is negative.
+		"""
+
+		node = DocumentNode(created_at=1000)
+		self.assertRaises(ValueError, node.expired, -1, 0)
