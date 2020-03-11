@@ -4,7 +4,7 @@ Each node stores documents that can be summarized.
 Moreover, nodes provide functionality to facilitate timeline tasks.
 """
 
-import ABC, abstractmethod
+from abc import ABC, abstractmethod
 import time
 
 class Node(ABC):

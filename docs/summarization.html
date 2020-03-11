@@ -98,6 +98,10 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-summarization.algorithms.dgs">Mamo et al. (2019)</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#timelines">Timelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-summarization.timeline.nodes.node">Nodes</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="queues.html">8. Queues</a></li>
@@ -669,6 +673,88 @@ The length is inclusive.</p></li>
 <dd class="field-odd"><p>list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a></p>
 </dd>
 </dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="timelines">
+<h2>Timelines<a class="headerlink" href="#timelines" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-summarization.timeline.nodes.node">
+<span id="nodes"></span><h3>Nodes<a class="headerlink" href="#module-summarization.timeline.nodes.node" title="Permalink to this headline">¶</a></h3>
+<p>Timelines are made up of nodes.
+Each node stores documents that can be summarized.
+Moreover, nodes provide functionality to facilitate timeline tasks.</p>
+<dl class="class">
+<dt id="summarization.timeline.nodes.node.Node">
+<em class="property">class </em><code class="sig-name descname">Node</code><span class="sig-paren">(</span><em class="sig-param">created_at=None</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.node.Node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Nodes are the basic component of a timeline.
+Timelines contain an ordered list of these nodes.</p>
+<p>Nodes can store documents in different ways.
+For example, they can be stored as simple documents.
+Alternatively, they can be stored as clusters.</p>
+<p>Nodes must offer certain functionality to facilitate the timeline construction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><p><strong>created_at</strong> (<em>float</em>) – The timestamp when the node was created.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="summarization.timeline.nodes.node.Node.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">created_at=None</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.node.Node.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>created_at</strong> (<em>float</em>) – The timestamp when the node was created.
+If the timestamp is not given, the current time is used.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="summarization.timeline.nodes.node.Node.add">
+<em class="property">abstract </em><code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.node.Node.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add documents to the node.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="summarization.timeline.nodes.node.Node.similarity">
+<em class="property">abstract </em><code class="sig-name descname">similarity</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.node.Node.similarity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the similarity between this node and a given object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The similarity between this node and the given object.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="summarization.timeline.nodes.node.Node.expired">
+<code class="sig-name descname">expired</code><span class="sig-paren">(</span><em class="sig-param">expiry</em>, <em class="sig-param">timestamp=None</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.node.Node.expired" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check whether the node has expired.
+A node has expired if a certain time has passed.
+A node can still absorb documents if it has expired.
+If a node has not expired, another one cannot be created.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>expiry</strong> (<em>float</em>) – The lifetime of a node before it is said to expire.
+It is measured in timestamps.</p></li>
+<li><p><strong>timestamp</strong> (<em>float</em>) – The current timestamp.
+If the timestamp is not given, the current time is used.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="summarization.timeline.nodes.node.Node.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#summarization.timeline.nodes.node.Node.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
 </dd></dl>
 
 </dd></dl>

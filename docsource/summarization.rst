@@ -43,3 +43,15 @@ Mamo et al. (2019)
    :members:
    :private-members:
    :special-members:
+
+=========
+Timelines
+=========
+
+Nodes
+-----
+
+.. automodule:: summarization.timeline.nodes.node
+   :members:
+   :private-members:
+   :special-members:
