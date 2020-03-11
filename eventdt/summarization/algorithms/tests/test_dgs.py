@@ -24,6 +24,182 @@ class TestDGS(unittest.TestCase):
 	Test Document Graph Summarizer by Mamo et al. (2019)'s algorithm.
 	"""
 
+	def test_summarize_empty(self):
+		"""
+		Test that when summarizing an empty set of documents, an empty summary is returned.
+		"""
+
+		algo = DGS()
+		self.assertEqual([ ], algo.summarize([ ], 100).documents)
+
+	def test_summarize_small_length(self):
+		"""
+		Test that when summarizing a set of documents, all of which exceed the length, an empty summary is returned.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is a pipe.', { 'pipe': 1 }),
+		 		   Document('this is a cigar.', { 'cigar': 1 }),
+				   Document('this is a cigar and this is a pipe.', { 'cigar': 1, 'pipe': 1 }), ]
+		for document in corpus:
+			document.normalize()
+
+		algo = DGS()
+		self.assertEqual([ ], algo.summarize(corpus, 10).documents)
+
+	def test_summarize_exact_length(self):
+		"""
+		Test that when summarizing a set of documents and there is only one candidate, that candidate is included in the summary.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is a pipe.', { 'pipe': 1 }),
+		 		   Document('this is a cigar.', { 'cigar': 1 }),
+				   Document('this is a cigar and this is a pipe.', { 'cigar': 1, 'pipe': 1 }), ]
+		for document in corpus:
+			document.normalize()
+
+		algo = DGS()
+		summary = algo.summarize(corpus, len(str(corpus[0])))
+		self.assertEqual([ corpus[0] ], summary.documents)
+		self.assertLessEqual(len(str(summary)), len(str(corpus[0])))
+
+	def test_summarize_exact_full_length(self):
+		"""
+		Test that when summarizing a set of documents, the exact length does not include all documents because of the spaces between them in the final summary.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is a pipe.', { 'pipe': 1 }),
+		 		   Document('this is a cigar.', { 'cigar': 1 }),
+				   Document('this is a cigar and this is a pipe.', { 'cigar': 1, 'pipe': 1 }), ]
+		for document in corpus:
+			document.normalize()
+
+		algo = DGS()
+		length = sum(len(str(document)) for document in corpus)
+		summary = algo.summarize(corpus, length)
+		self.assertTrue(len(set(corpus).difference(set(summary.documents))))
+		self.assertLessEqual(len(str(summary)), length)
+
+	def test_summarize_long_summary_length(self):
+		"""
+		Test that when summarizing a set of documents and a long length is given, the number of documents included is less than the square root of the number of documents.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is a pipe.', { 'pipe': 1 }),
+		 		   Document('this is a cigar.', { 'cigar': 1 }),
+				   Document('this is a cigar and this is a pipe.', { 'cigar': 1, 'pipe': 1 }), ]
+		for document in corpus:
+			document.normalize()
+
+		algo = DGS()
+		length = sum(len(str(document)) for document in corpus) + len(corpus)
+		summary = algo.summarize(corpus, length)
+		self.assertLessEqual(len(str(summary)), length)
+		self.assertGreaterEqual(math.ceil(math.sqrt(len(corpus))), len(summary.documents))
+
+	def test_summary_large_communities(self):
+		"""
+		Test that when summarizing, large communities are preferred.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is a pipe.', { 'pipe': 1 }),
+		 		   Document('this is a cigar.', { 'cigar': 1 }),
+				   Document('this is a cigar and this is a pipe.', { 'cigar': 1, 'pipe': 1 }),
+				   Document('the picture of dorian gray', { 'picture': 1, 'dorian': 1, 'gray': 1 })]
+		for document in corpus:
+			document.normalize()
+
+		algo = DGS()
+		length = 30
+		summary = algo.summarize(corpus, length)
+		self.assertLessEqual(len(str(summary)), length)
+		self.assertEqual(1, len(summary.documents))
+
+	def test_summarize_custom_query(self):
+		"""
+		Test that when summarizing a set of documents and a custom query is given, that query is used.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is a pipe.', { 'pipe': 1 }),
+		 		   Document('this is a cigar.', { 'cigar': 1 }),
+				   Document('this is a cigar and this is a pipe.', { 'cigar': 1, 'pipe': 1 }),
+				   Document('the original picture of a pipe', { 'picture': 1, 'pipe': 1 }) ]
+		for document in corpus:
+			document.normalize()
+
+		algo = DGS()
+		length = max(len(str(document)) for document in corpus)
+
+		summary = algo.summarize(corpus, length)
+		self.assertEqual([ corpus[2] ], summary.documents)
+
+		query = Document('', { 'picture': 1 })
+		summary = algo.summarize(corpus, length, query=query)
+		self.assertEqual([ corpus[3] ], summary.documents)
+
+	def test_summarize_documents_unchanged(self):
+		"""
+		Test that when summarizing a set of documents, they are unchanged.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is a pipe.', { 'pipe': 1 }),
+		 		   Document('this is a cigar.', { 'cigar': 1 }),
+				   Document('this is a cigar and this is a pipe.', { 'cigar': 1, 'pipe': 1 }),
+				   Document('the original picture of a pipe', { 'picture': 1, 'pipe': 1 }) ]
+		for document in corpus:
+			document.normalize()
+
+		algo = DGS()
+		query = Document('', { 'picture': 1 })
+		copy = query.copy()
+
+		length = max(len(str(document)) for document in corpus)
+		summary = algo.summarize(corpus, length, query=query)
+		self.assertEqual(copy.dimensions, query.dimensions)
+
+	def test_summarize_query_unchanged(self):
+		"""
+		Test that when summarizing a set of documents with a query, it is unchanged.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		corpus = [ Document('this is a pipe.', { 'pipe': 1 }),
+		 		   Document('this is a cigar.', { 'cigar': 1 }),
+				   Document('this is a cigar and this is a pipe.', { 'cigar': 1, 'pipe': 1 }),
+				   Document('the original picture of a pipe', { 'picture': 1, 'pipe': 1 }) ]
+		for document in corpus:
+			document.normalize()
+
+		algo = DGS()
+		copy = [ document.copy() for document in corpus ]
+
+		length = max(len(str(document)) for document in corpus)
+		summary = algo.summarize(corpus, length)
+		for d1, d2 in zip(copy, corpus):
+			self.assertEqual(d1.dimensions, d2.dimensions)
+
 	def test_negative_length(self):
 		"""
 		Test that when providing a negative length, the function raises a ValueError.

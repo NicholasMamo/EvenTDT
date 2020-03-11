@@ -56,6 +56,8 @@ class DGS(SummarizationAlgorithm):
 		:raises ValueError: When the summary length is not positive.
 		"""
 
+		summary = Summary()
+
 		"""
 		Validate the inputs.
 		"""
@@ -66,6 +68,47 @@ class DGS(SummarizationAlgorithm):
 		Compute the query if need be.
 		"""
 		query = query or self._compute_query(documents)
+
+		"""
+		Convert the documents into a graph.
+		From this graph extract all communities.
+		"""
+		graph = self._to_graph(documents)
+		communities = self._extract_communities(graph)
+
+		"""
+		Repeatedly go over the communities.
+		Larger communities are preferred to reflect popular facets.
+		From each community, the top-scoring, valid document is added to the summary.
+		"""
+		while communities:
+			subset = self._largest_communities(communities)
+			scores = self._score_documents(graph, subset, query)
+
+			"""
+			Visit the largest communities first.
+			Filter out documents that are too long to be in the summary.
+			"""
+			for community, scores in zip(subset, scores):
+				"""
+				Only one document can be chosen from each community.
+				Therefore remove the community immediately.
+				"""
+				communities.remove(community)
+				documents = self._filter_documents(community, summary, length - len(str(summary)))
+				scores = { document: score for document, score in scores.items()
+						   if document in documents }
+
+				"""
+				If no document is valid, move on to the next community.
+				Otherwise, add the highest-scoring document to the summary.
+				"""
+				if not documents:
+					continue
+				else:
+					summary.documents.append(max(scores, key=scores.get))
+
+		return summary
 
 	def _compute_query(self, documents):
 		"""
