@@ -39,3 +39,38 @@ class TestDocumentNode(unittest.TestCase):
 		"""
 
 		self.assertEqual(round(time.time()), round(DocumentNode().created_at))
+
+	def test_add(self):
+		"""
+		Test adding documents to the node.
+		"""
+
+		node = DocumentNode()
+		self.assertEqual([ ], node.documents)
+		document = Document('')
+		node.add([ document ])
+		self.assertEqual([ document ], node.documents)
+
+	def test_add_multiple(self):
+		"""
+		Test adding multiple documents to the node.
+		"""
+
+		node = DocumentNode()
+		self.assertEqual([ ], node.documents)
+		documents = [ Document('') for i in range(2)]
+		node.add(documents)
+		self.assertEqual(documents, node.documents)
+
+	def test_add_repeated(self):
+		"""
+		Test adding documents one at a time to the node.
+		"""
+
+		node = DocumentNode()
+		self.assertEqual([ ], node.documents)
+		documents = [ Document('') for i in range(2)]
+		node.add([ documents[0] ])
+		self.assertEqual([ documents[0] ], node.documents)
+		node.add([ documents[1] ])
+		self.assertEqual(documents, node.documents)

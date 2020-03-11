@@ -19,7 +19,7 @@ class DocumentNode(Node):
 	Comparisons are made with these documents, concatenated into one document.
 
 	:ivar documents: The list of documents in this node.
-	:type documents: :class:`~nlp.document.Document`
+	:type documents: list of :class:`~nlp.document.Document`
 	"""
 
 	def __init__(self, created_at=None):
@@ -34,12 +34,15 @@ class DocumentNode(Node):
 		super(DocumentNode, self).__init__(created_at)
 		self.documents = [ ]
 
-	def add(self, *args, **kwargs):
+	def add(self, documents, *args, **kwargs):
 		"""
 		Add documents to the node.
+
+		:param documents: A list of documents to add to the node.
+		:type documents: list of :class:`~nlp.document.Document`
 		"""
 
-		pass
+		self.documents.extend(documents)
 
 	def similarity(self, *args, **kwargs):
 		"""
