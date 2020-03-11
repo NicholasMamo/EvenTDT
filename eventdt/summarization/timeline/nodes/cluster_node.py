@@ -18,7 +18,22 @@ class ClusterNode(Node):
 	"""
 	A document node stores documents as a list.
 	Comparisons are made with the centroid of these documents.
+
+	:ivar clusters: The list of clusters in this node.
+	:type clusters: list of :class:`~vsm.clustering.cluster.Cluster`
 	"""
+
+	def __init__(self, created_at=None):
+		"""
+		Create the node.
+
+		:param created_at: The timestamp when the node was created.
+						   If the timestamp is not given, the current time is used.
+		:type created_at: float
+		"""
+
+		super(ClusterNode, self).__init__(created_at)
+		self.clusters = [ ]
 
 	def add(self, *args, **kwargs):
 		"""
