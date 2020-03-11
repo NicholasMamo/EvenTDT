@@ -68,3 +68,4 @@ class Node(ABC):
 		"""
 
 		timestamp = timestamp or time.time()
+		return timestamp - self.created_at >= expiry

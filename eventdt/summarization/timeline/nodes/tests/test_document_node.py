@@ -148,3 +148,35 @@ class TestDocumentNode(unittest.TestCase):
 		node.add(documents)
 		self.assertEqual(documents, node.documents)
 		self.assertEqual(1, node.similarity(Document('this is not a pipe and this is not a cigar', { 'cigar': 1, 'pipe': 1 })))
+
+	def test_expired_inclusive(self):
+		"""
+		Test that the expiry is inclusive.
+		"""
+
+		node = DocumentNode(created_at=1000)
+		self.assertTrue(node.expired(10, 1010))
+
+	def test_expired_far_timestamp(self):
+		"""
+		Test that a node is expired if the timestamp is sufficiently far.
+		"""
+
+		node = DocumentNode(created_at=1000)
+		self.assertTrue(node.expired(10, 1011))
+
+	def test_expired_close_timestamp(self):
+		"""
+		Test that a node is not expired if the timestamp is close.
+		"""
+
+		node = DocumentNode(created_at=1000)
+		self.assertFalse(node.expired(10, 1001))
+
+	def test_expired_past_timestamp(self):
+		"""
+		Test that a node is not expired if the timestamp is in the past.
+		"""
+
+		node = DocumentNode(created_at=1000)
+		self.assertFalse(node.expired(10, 999))
