@@ -100,6 +100,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#timelines">Timelines</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module-summarization.timeline.nodes.node">Nodes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-summarization.timeline.timeline.Timeline">Timeline</a></li>
 </ul>
 </li>
 </ul>
@@ -733,6 +734,22 @@ If the timestamp is not given, the current time is used.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="summarization.timeline.nodes.node.Node.get_all_documents">
+<em class="property">abstract </em><code class="sig-name descname">get_all_documents</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.node.Node.get_all_documents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all the documents in this node.</p>
+<p>The implementation differs according to what the node stores.
+However, they must all have functionality to return a list of documents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A list of docuemnts in the node.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="summarization.timeline.nodes.node.Node.expired">
 <code class="sig-name descname">expired</code><span class="sig-paren">(</span><em class="sig-param">expiry</em>, <em class="sig-param">timestamp=None</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.node.Node.expired" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check whether the node has expired.
@@ -797,6 +814,20 @@ If the timestamp is not given, the current time is used.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="summarization.timeline.nodes.cluster_node.ClusterNode.get_all_documents">
+<code class="sig-name descname">get_all_documents</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.cluster_node.ClusterNode.get_all_documents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all the documents in this node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A list of docuemnts in the node.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="summarization.timeline.nodes.cluster_node.ClusterNode.similarity">
 <code class="sig-name descname">similarity</code><span class="sig-paren">(</span><em class="sig-param">cluster</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.cluster_node.ClusterNode.similarity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the similarity between this node and a given cluster.
@@ -851,6 +882,20 @@ If the timestamp is not given, the current time is used.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="summarization.timeline.nodes.document_node.DocumentNode.get_all_documents">
+<code class="sig-name descname">get_all_documents</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode.get_all_documents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all the documents in this node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A list of docuemnts in the node.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="summarization.timeline.nodes.document_node.DocumentNode.similarity">
 <code class="sig-name descname">similarity</code><span class="sig-paren">(</span><em class="sig-param">document</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode.similarity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the similarity between this node’s documents and the given document.</p>
@@ -867,6 +912,152 @@ If the timestamp is not given, the current time is used.</p>
 </dl>
 </dd></dl>
 
+</dd></dl>
+
+</div>
+<div class="section" id="module-summarization.timeline.timeline.Timeline">
+<span id="timeline"></span><h3>Timeline<a class="headerlink" href="#module-summarization.timeline.timeline.Timeline" title="Permalink to this headline">¶</a></h3>
+<p>The timeline stores a list of nodes and provides functionality to convert them into summaries.
+More importantly, the timeline provides functionality to construct the timeline.
+This includes redundancy management.</p>
+<dl class="field-list simple">
+<dt class="field-odd">ivar nodes</dt>
+<dd class="field-odd"><p>The list of nodes in the timeline.</p>
+</dd>
+<dt class="field-even">vartype nodes</dt>
+<dd class="field-even"><p><a class="reference internal" href="#summarization.timeline.nodes.node.Node" title="summarization.timeline.nodes.node.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a></p>
+</dd>
+</dl>
+<dl class="function">
+<dt id="summarization.timeline.timeline.Timeline.__delattr__">
+<code class="sig-name descname">__delattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.timeline.Timeline.__delattr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implement delattr(self, name).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="summarization.timeline.timeline.Timeline.__dir__">
+<code class="sig-name descname">__dir__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.timeline.Timeline.__dir__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default dir() implementation.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="summarization.timeline.timeline.Timeline.__eq__">
+<code class="sig-name descname">__eq__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.timeline.Timeline.__eq__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self==value.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="summarization.timeline.timeline.Timeline.__format__">
+<code class="sig-name descname">__format__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.timeline.Timeline.__format__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default object formatter.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="summarization.timeline.timeline.Timeline.__ge__">
+<code class="sig-name descname">__ge__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.timeline.Timeline.__ge__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&gt;=value.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="summarization.timeline.timeline.Timeline.__getattribute__">
+<code class="sig-name descname">__getattribute__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.timeline.Timeline.__getattribute__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return getattr(self, name).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="summarization.timeline.timeline.Timeline.__gt__">
+<code class="sig-name descname">__gt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.timeline.Timeline.__gt__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&gt;value.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="summarization.timeline.timeline.Timeline.__hash__">
+<code class="sig-name descname">__hash__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.timeline.Timeline.__hash__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return hash(self).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="summarization.timeline.timeline.Timeline.__init_subclass__">
+<code class="sig-name descname">__init_subclass__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.timeline.Timeline.__init_subclass__" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method is called when a class is subclassed.</p>
+<p>The default implementation does nothing. It may be
+overridden to extend subclasses.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="summarization.timeline.timeline.Timeline.__le__">
+<code class="sig-name descname">__le__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.timeline.Timeline.__le__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&lt;=value.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="summarization.timeline.timeline.Timeline.__lt__">
+<code class="sig-name descname">__lt__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.timeline.Timeline.__lt__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self&lt;value.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="summarization.timeline.timeline.Timeline.__ne__">
+<code class="sig-name descname">__ne__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.timeline.Timeline.__ne__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return self!=value.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="summarization.timeline.timeline.Timeline.__new__">
+<code class="sig-name descname">__new__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.timeline.Timeline.__new__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create and return a new object.  See help(type) for accurate signature.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="summarization.timeline.timeline.Timeline.__reduce__">
+<code class="sig-name descname">__reduce__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.timeline.Timeline.__reduce__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper for pickle.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="summarization.timeline.timeline.Timeline.__reduce_ex__">
+<code class="sig-name descname">__reduce_ex__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.timeline.Timeline.__reduce_ex__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper for pickle.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="summarization.timeline.timeline.Timeline.__repr__">
+<code class="sig-name descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.timeline.Timeline.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return repr(self).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="summarization.timeline.timeline.Timeline.__setattr__">
+<code class="sig-name descname">__setattr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.timeline.Timeline.__setattr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implement setattr(self, name, value).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="summarization.timeline.timeline.Timeline.__sizeof__">
+<code class="sig-name descname">__sizeof__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.timeline.Timeline.__sizeof__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Size of object in memory, in bytes.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="summarization.timeline.timeline.Timeline.__str__">
+<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.timeline.Timeline.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="summarization.timeline.timeline.Timeline.__subclasshook__">
+<code class="sig-name descname">__subclasshook__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.timeline.Timeline.__subclasshook__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract classes can override this to customize issubclass().</p>
+<p>This is invoked early on by abc.ABCMeta.__subclasscheck__().
+It should return True, False or NotImplemented.  If it returns
+NotImplemented, the normal algorithm is used.  Otherwise, it
+overrides the normal algorithm (and the outcome is cached).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="summarization.timeline.timeline.Timeline.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#summarization.timeline.timeline.Timeline.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
 </dd></dl>
 
 </div>

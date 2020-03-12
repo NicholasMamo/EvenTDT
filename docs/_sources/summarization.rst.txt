@@ -65,3 +65,11 @@ Nodes
    :members:
    :private-members:
    :special-members:
+
+Timeline
+--------
+
+.. automodule:: summarization.timeline.timeline.Timeline
+   :members:
+   :private-members:
+   :special-members:
