@@ -52,6 +52,20 @@ class Node(ABC):
 
 		pass
 
+	@abstractmethod
+	def get_all_documents(self, *args, **kwargs):
+		"""
+		Get all the documents in this node.
+
+		The implementation differs according to what the node stores.
+		However, they must all have functionality to return a list of documents.
+
+		:return: A list of docuemnts in the node.
+		:rtype: list of :class:`~nlp.document.Document`
+		"""
+
+		pass
+
 	def expired(self, expiry, timestamp=None):
 		"""
 		Check whether the node has expired.
