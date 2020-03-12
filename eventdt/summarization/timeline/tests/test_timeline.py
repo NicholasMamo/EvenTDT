@@ -49,6 +49,20 @@ class TestTimeline(unittest.TestCase):
 
 		self.assertEqual(60, Timeline(DocumentNode, 60).expiry)
 
+	def test_create_expiry_negative(self):
+		"""
+		Test that when the timeline is created with a negative expiry, a ValueError is raised.
+		"""
+
+		self.assertRaises(ValueError, Timeline, DocumentNode, -1)
+
+	def test_create_expiry_zero(self):
+		"""
+		Test that when the timeline is created with an expiry of zero, no ValueError is raised.
+		"""
+
+		self.assertTrue(Timeline(DocumentNode, 0))
+
 	def test_create_document_node(self):
 		"""
 		Test that when creating a node, the node type is as given in the constructor.

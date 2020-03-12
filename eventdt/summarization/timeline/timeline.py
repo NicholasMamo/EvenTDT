@@ -20,6 +20,7 @@ class Timeline():
 	:vartype node_type: :class:`~summarization.timeline.nodes.node.Node`
 	:ivar expiry: The time in seconds that it takes for a node to expire.
 				  Expired nodes do not automatically absorb documents.
+				  If the expiry is 0, new documents immediately join a new node unless they are absorbed.
 	:vartype expiry: float
 	"""
 
@@ -31,8 +32,18 @@ class Timeline():
 		:type node_type: :class:`~summarization.timeline.nodes.node.Node`
 		:param expiry: The time in seconds that it takes for a node to expire.
 					   Expired nodes do not automatically absorb documents.
+					   If the expiry is 0, new documents immediately join a new node unless they are absorbed.
 		:type expiry: float
+
+		:raises ValueError: When the expiry is negative.
 		"""
+
+		"""
+		Validate the parameters.
+		"""
+
+		if expiry < 0:
+			raise ValueError(f"The node expiry cannot be negative: received {expiry}")
 
 		self.nodes = [ ]
 		self.node_type = node_type
