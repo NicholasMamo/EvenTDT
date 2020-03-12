@@ -25,9 +25,33 @@ class MMR(SummarizationAlgorithm):
 	"""
 	The Maximal Marginal Relevance (MMR) algorithm accepts documents and a query and builds a summary.
 	The algorithm looks to build a summary that is simultaneously similar to the query and non-redundant.
+
+	:ivar l: The :math:`\\lambda` parameter, which must be between 0 and 1.
+			 When :math:`\\lambda` is 1, only relevance to the query is considered.
+			 When :math:`\\lambda` is 0, only non-redundancy is considered.
+			 By default, the algorithm assigns equal weight to relevance and non-redundancy.
+	:vartype l: float
 	"""
 
-	def summarize(self, documents, length, query=None, l=0.5, *args, **kwargs):
+	def __init__(self, l=0.5):
+		"""
+		Create the MMR summarization algorithm with the lambda value.
+
+		:param l: The :math:`\\lambda` parameter, which must be between 0 and 1.
+				  When :math:`\\lambda` is 1, only relevance to the query is considered.
+				  When :math:`\\lambda` is 0, only non-redundancy is considered.
+				  By default, the algorithm assigns equal weight to relevance and non-redundancy.
+		:type l: float
+
+		:raises ValueError: When lambda is not between 0 and 1.
+		"""
+
+		if not 0 <= l <= 1:
+			raise ValueError(f"Invalid lambda value {l}")
+
+		self.l = l
+
+	def summarize(self, documents, length, query=None, *args, **kwargs):
 		"""
 		Summarize the given documents.
 
@@ -43,17 +67,11 @@ class MMR(SummarizationAlgorithm):
 		:param query: The query around which to build the summary.
 					  If no query is given, the summary is built around the centroid of documents.
 		:type query: :class:`~vsm.vector.Vector` or None
-		:param l: The :math:`\\lambda` parameter, which must be between 0 and 1.
-				  When :math:`\\lambda` is 1, only relevance to the query is considered.
-				  When :math:`\\lambda` is 0, only non-redundancy is considered.
-				  By default, the algorithm assigns equal weight to relevance and non-redundancy.
-		:type l: float
 
 		:return: The summary of the documents.
 		:rtype: :class:`~summarization.summary.Summary`
 
 		:raises ValueError: When the summary length is not positive.
-		:raises ValueError: When lambda is not between 0 and 1.
 		"""
 
 		summary = Summary()
@@ -63,9 +81,6 @@ class MMR(SummarizationAlgorithm):
 		"""
 		if length <= 0:
 			raise ValueError(f"Invalid summary length {length}")
-
-		if not 0 <= l <= 1:
-			raise ValueError(f"Invalid lambda value {l}")
 
 		"""
 		Compute the query if need be, and construct the similarity matrix.
@@ -91,7 +106,7 @@ class MMR(SummarizationAlgorithm):
 			"""
 			Otherwise, get the next document for the summary.
 			"""
-			document = self._get_next_document(candidates, summary, query, matrix, l)
+			document = self._get_next_document(candidates, summary, query, matrix)
 			summary.documents.append(document)
 
 		"""
@@ -207,7 +222,7 @@ class MMR(SummarizationAlgorithm):
 		documents = [ document for document in documents if len(str(document)) <= length ]
 		return documents
 
-	def _get_next_document(self, documents, summary, query, matrix, l):
+	def _get_next_document(self, documents, summary, query, matrix):
 		"""
 		Get the next document to add to the summary.
 
@@ -219,8 +234,6 @@ class MMR(SummarizationAlgorithm):
 		:type query: `~vsm.vector.Vector`
 		:param matrix: The similarity matrix to use.
 		:type matrix: dict
-		:param l: The :math:`\\lambda` parameter.
-		:type l: float
 
 		:return: The next document to add to the summary, or `None` if there are no documents.
 		:rtype: list of :class:`~nlp.document.Document` or None
@@ -229,10 +242,10 @@ class MMR(SummarizationAlgorithm):
 		if not documents:
 			return None
 
-		scores = self._compute_scores(documents, summary, query, matrix, l)
+		scores = self._compute_scores(documents, summary, query, matrix)
 		return max(scores.keys(), key=scores.get)
 
-	def _compute_scores(self, documents, summary, query, matrix, l):
+	def _compute_scores(self, documents, summary, query, matrix):
 		"""
 		Compute the scores of each candidate document.
 
@@ -244,8 +257,6 @@ class MMR(SummarizationAlgorithm):
 		:type query: `~vsm.vector.Vector`
 		:param matrix: The similarity matrix to use.
 		:type matrix: dict
-		:param l: The :math:`\\lambda` parameter.
-		:type l: float
 
 		:return: The score of each document.
 				 The key is the document itself and the value is the respective score.
@@ -258,6 +269,7 @@ class MMR(SummarizationAlgorithm):
 		If there are documents in the summary, calculate the redundancy scores.
 		Otherwise, ignore the redundancy score.
 		"""
+		l  = self.l
 		if summary.documents:
 			redundancy_scores = { document: max(matrix[document][other] for other in summary.documents)
 								  for document in documents }

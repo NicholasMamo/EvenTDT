@@ -221,8 +221,7 @@ class TestMMR(unittest.TestCase):
 		"""
 
 		c = [ ]
-		algo = MMR()
-		self.assertRaises(ValueError, algo.summarize, c, 0, l=-0.1)
+		self.assertRaises(ValueError, MMR, l=-0.1)
 
 	def test_large_lambda(self):
 		"""
@@ -230,8 +229,7 @@ class TestMMR(unittest.TestCase):
 		"""
 
 		c = [ ]
-		algo = MMR()
-		self.assertRaises(ValueError, algo.summarize, c, 0, l=1.1)
+		self.assertRaises(ValueError, MMR, l=1.1)
 
 	def test_compute_query_empty(self):
 		"""
@@ -484,8 +482,8 @@ class TestMMR(unittest.TestCase):
 		Test that when getting the next document from an empty list, `None` is returned.
 		"""
 
-		algo = MMR()
-		self.assertEqual(None, algo._get_next_document([ ], Summary(), Document(), { }, 0.5))
+		algo = MMR(0.5)
+		self.assertEqual(None, algo._get_next_document([ ], Summary(), Document(), { }))
 
 	def test_get_next_document_empty_summary(self):
 		"""
@@ -502,9 +500,9 @@ class TestMMR(unittest.TestCase):
 		query = Document('cigars', [ 'cigar' ], scheme=TF())
 		query.normalize()
 
-		algo = MMR()
+		algo = MMR(0.5)
 		matrix = algo._compute_similarity_matrix(corpus, query)
-		self.assertEqual(corpus[0], algo._get_next_document(corpus, Summary(), query, matrix, 0.5))
+		self.assertEqual(corpus[0], algo._get_next_document(corpus, Summary(), query, matrix))
 
 	def test_get_next_document_redundancy(self):
 		"""
@@ -522,9 +520,9 @@ class TestMMR(unittest.TestCase):
 		query = Document('cigars', [ 'pipe', 'cigar' ], scheme=TF())
 		query.normalize()
 
-		algo = MMR()
+		algo = MMR(0.5)
 		matrix = algo._compute_similarity_matrix(corpus, query)
-		self.assertEqual(corpus[1], algo._get_next_document(corpus[1:], Summary(corpus[0]), query, matrix, 0.5))
+		self.assertEqual(corpus[1], algo._get_next_document(corpus[1:], Summary(corpus[0]), query, matrix))
 
 	def test_get_next_document_redundancy_only(self):
 		"""
@@ -542,9 +540,9 @@ class TestMMR(unittest.TestCase):
 		query = Document('cigars', [ 'cigar' ], scheme=TF())
 		query.normalize()
 
-		algo = MMR()
+		algo = MMR(0)
 		matrix = algo._compute_similarity_matrix(corpus, query)
-		self.assertEqual(corpus[1], algo._get_next_document(corpus[1:], Summary(corpus[0]), query, matrix, 0))
+		self.assertEqual(corpus[1], algo._get_next_document(corpus[1:], Summary(corpus[0]), query, matrix))
 
 	def test_get_next_document_relevance_only(self):
 		"""
@@ -562,9 +560,9 @@ class TestMMR(unittest.TestCase):
 		query = Document('cigars', [ 'cigar' ], scheme=TF())
 		query.normalize()
 
-		algo = MMR()
+		algo = MMR(1)
 		matrix = algo._compute_similarity_matrix(corpus, query)
-		self.assertEqual(corpus[2], algo._get_next_document(corpus[1:], Summary(corpus[0]), query, matrix, 1))
+		self.assertEqual(corpus[2], algo._get_next_document(corpus[1:], Summary(corpus[0]), query, matrix))
 
 	def test_get_next_document_documents_unchanged(self):
 		"""
@@ -582,10 +580,10 @@ class TestMMR(unittest.TestCase):
 		query = Document('cigars', [ 'cigar' ], scheme=TF())
 		query.normalize()
 
-		algo = MMR()
+		algo = MMR(1)
 		matrix = algo._compute_similarity_matrix(corpus, query)
 		copy = list(corpus)
-		algo._get_next_document(corpus[1:], Summary(corpus[0]), query, matrix, 1)
+		algo._get_next_document(corpus[1:], Summary(corpus[0]), query, matrix)
 		self.assertEqual(copy, corpus)
 
 	def test_get_next_document_query_unchanged(self):
@@ -604,10 +602,10 @@ class TestMMR(unittest.TestCase):
 		query = Document('cigars', [ 'cigar' ], scheme=TF())
 		query.normalize()
 
-		algo = MMR()
+		algo = MMR(1)
 		matrix = algo._compute_similarity_matrix(corpus, query)
 		copy = query.copy()
-		algo._get_next_document(corpus[1:], Summary(corpus[0]), query, matrix, 1)
+		algo._get_next_document(corpus[1:], Summary(corpus[0]), query, matrix)
 		self.assertEqual(copy.dimensions, query.dimensions)
 
 	def test_get_next_document_matrix_unchanged(self):
@@ -626,10 +624,10 @@ class TestMMR(unittest.TestCase):
 		query = Document('cigars', [ 'cigar' ], scheme=TF())
 		query.normalize()
 
-		algo = MMR()
+		algo = MMR(1)
 		matrix = algo._compute_similarity_matrix(corpus, query)
 		copy = dict(matrix)
-		algo._get_next_document(corpus[1:], Summary(corpus[0]), query, matrix, 1)
+		algo._get_next_document(corpus[1:], Summary(corpus[0]), query, matrix)
 		self.assertEqual(copy, matrix)
 
 	def test_worked_example(self):
@@ -651,19 +649,19 @@ class TestMMR(unittest.TestCase):
 			q:    { d[0]: 0.91, d[1]: 0.90, d[2]: 0.50, d[3]: 0.06, d[4]: 0.63, q: 1.00, },
 		}
 
-		algo = MMR()
+		algo = MMR(0.5)
 
 		"""
 		Run the first iteration.
 		"""
-		scores = algo._compute_scores(d, Summary(), q, matrix, 0.5)
+		scores = algo._compute_scores(d, Summary(), q, matrix)
 		self.assertEqual(0.91, scores[d[0]])
 		self.assertEqual(d[0], max(scores.keys(), key=scores.get))
 
 		"""
 		Run the second iteration.
 		"""
-		scores = algo._compute_scores(d[1:], Summary(d[0]), q, matrix, 0.5)
+		scores = algo._compute_scores(d[1:], Summary(d[0]), q, matrix)
 		self.assertEqual(0.395, scores[d[1]])
 		self.assertEqual(0.135, scores[d[2]])
 		self.assertEqual(-0.35, scores[d[3]])
@@ -672,7 +670,7 @@ class TestMMR(unittest.TestCase):
 		"""
 		Run the third iteration.
 		"""
-		scores = algo._compute_scores(d[2:], Summary(d[:2]), q, matrix, 0.5)
+		scores = algo._compute_scores(d[2:], Summary(d[:2]), q, matrix)
 		self.assertEqual(0.105, round(scores[d[2]], 10))
 		self.assertEqual(-0.35, scores[d[3]])
 		self.assertEqual(0.06, scores[d[4]])
@@ -683,7 +681,8 @@ class TestMMR(unittest.TestCase):
 		"""
 		Run the case with :math:`\\lambda` = 1.
 		"""
-		scores = algo._compute_scores(d[2:], Summary(d[:2]), q, matrix, 1)
+		algo = MMR(1)
+		scores = algo._compute_scores(d[2:], Summary(d[:2]), q, matrix)
 		self.assertEqual(d[4], max(scores.keys(), key=scores.get))
 		self.assertEqual(0.87, round(matrix[d[0]][d[1]] +
 									 matrix[d[0]][d[4]] +
