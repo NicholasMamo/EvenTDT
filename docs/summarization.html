@@ -315,12 +315,37 @@ The algorithm follows a greedy approach.</p>
 </div>
 <dl class="class">
 <dt id="summarization.algorithms.mmr.MMR">
-<em class="property">class </em><code class="sig-name descname">MMR</code><a class="headerlink" href="#summarization.algorithms.mmr.MMR" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">MMR</code><span class="sig-paren">(</span><em class="sig-param">l=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.mmr.MMR" title="Permalink to this definition">¶</a></dt>
 <dd><p>The Maximal Marginal Relevance (MMR) algorithm accepts documents and a query and builds a summary.
 The algorithm looks to build a summary that is simultaneously similar to the query and non-redundant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><p><strong>l</strong> (<em>float</em>) – The <span class="math notranslate nohighlight">\(\lambda\)</span> parameter, which must be between 0 and 1.
+When <span class="math notranslate nohighlight">\(\lambda\)</span> is 1, only relevance to the query is considered.
+When <span class="math notranslate nohighlight">\(\lambda\)</span> is 0, only non-redundancy is considered.
+By default, the algorithm assigns equal weight to relevance and non-redundancy.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="summarization.algorithms.mmr.MMR.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">l=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.mmr.MMR.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the MMR summarization algorithm with the lambda value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>l</strong> (<em>float</em>) – The <span class="math notranslate nohighlight">\(\lambda\)</span> parameter, which must be between 0 and 1.
+When <span class="math notranslate nohighlight">\(\lambda\)</span> is 1, only relevance to the query is considered.
+When <span class="math notranslate nohighlight">\(\lambda\)</span> is 0, only non-redundancy is considered.
+By default, the algorithm assigns equal weight to relevance and non-redundancy.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – When lambda is not between 0 and 1.</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="method">
 <dt id="summarization.algorithms.mmr.MMR.summarize">
-<code class="sig-name descname">summarize</code><span class="sig-paren">(</span><em class="sig-param">documents</em>, <em class="sig-param">length</em>, <em class="sig-param">query=None</em>, <em class="sig-param">l=0.5</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.mmr.MMR.summarize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">summarize</code><span class="sig-paren">(</span><em class="sig-param">documents</em>, <em class="sig-param">length</em>, <em class="sig-param">query=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.mmr.MMR.summarize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Summarize the given documents.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -334,10 +359,6 @@ Therefore the summary is a selection of the given documents.</p>
 <li><p><strong>length</strong> (<em>float</em>) – The maximum length of the summary in characters.</p></li>
 <li><p><strong>query</strong> (<a class="reference internal" href="vsm.html#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> or None) – The query around which to build the summary.
 If no query is given, the summary is built around the centroid of documents.</p></li>
-<li><p><strong>l</strong> (<em>float</em>) – The <span class="math notranslate nohighlight">\(\lambda\)</span> parameter, which must be between 0 and 1.
-When <span class="math notranslate nohighlight">\(\lambda\)</span> is 1, only relevance to the query is considered.
-When <span class="math notranslate nohighlight">\(\lambda\)</span> is 0, only non-redundancy is considered.
-By default, the algorithm assigns equal weight to relevance and non-redundancy.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -347,10 +368,7 @@ By default, the algorithm assigns equal weight to relevance and non-redundancy.<
 <dd class="field-odd"><p><a class="reference internal" href="#summarization.summary.Summary" title="summarization.summary.Summary"><code class="xref py py-class docutils literal notranslate"><span class="pre">Summary</span></code></a></p>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>ValueError</strong> – When the summary length is not positive.</p></li>
-<li><p><strong>ValueError</strong> – When lambda is not between 0 and 1.</p></li>
-</ul>
+<dd class="field-even"><p><strong>ValueError</strong> – When the summary length is not positive.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -428,7 +446,7 @@ The length is inclusive.</p></li>
 
 <dl class="method">
 <dt id="summarization.algorithms.mmr.MMR._get_next_document">
-<code class="sig-name descname">_get_next_document</code><span class="sig-paren">(</span><em class="sig-param">documents</em>, <em class="sig-param">summary</em>, <em class="sig-param">query</em>, <em class="sig-param">matrix</em>, <em class="sig-param">l</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.mmr.MMR._get_next_document" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_get_next_document</code><span class="sig-paren">(</span><em class="sig-param">documents</em>, <em class="sig-param">summary</em>, <em class="sig-param">query</em>, <em class="sig-param">matrix</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.mmr.MMR._get_next_document" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the next document to add to the summary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -437,7 +455,6 @@ The length is inclusive.</p></li>
 <li><p><strong>summary</strong> (<a class="reference internal" href="#summarization.summary.Summary" title="summarization.summary.Summary"><code class="xref py py-class docutils literal notranslate"><span class="pre">Summary</span></code></a>) – The summary constructed so far.</p></li>
 <li><p><strong>query</strong> (<cite>~vsm.vector.Vector</cite>) – The query used to select the documents.</p></li>
 <li><p><strong>matrix</strong> (<em>dict</em>) – The similarity matrix to use.</p></li>
-<li><p><strong>l</strong> (<em>float</em>) – The <span class="math notranslate nohighlight">\(\lambda\)</span> parameter.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -451,7 +468,7 @@ The length is inclusive.</p></li>
 
 <dl class="method">
 <dt id="summarization.algorithms.mmr.MMR._compute_scores">
-<code class="sig-name descname">_compute_scores</code><span class="sig-paren">(</span><em class="sig-param">documents</em>, <em class="sig-param">summary</em>, <em class="sig-param">query</em>, <em class="sig-param">matrix</em>, <em class="sig-param">l</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.mmr.MMR._compute_scores" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_compute_scores</code><span class="sig-paren">(</span><em class="sig-param">documents</em>, <em class="sig-param">summary</em>, <em class="sig-param">query</em>, <em class="sig-param">matrix</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.mmr.MMR._compute_scores" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the scores of each candidate document.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -460,7 +477,6 @@ The length is inclusive.</p></li>
 <li><p><strong>summary</strong> (<a class="reference internal" href="#summarization.summary.Summary" title="summarization.summary.Summary"><code class="xref py py-class docutils literal notranslate"><span class="pre">Summary</span></code></a>) – The summary constructed so far.</p></li>
 <li><p><strong>query</strong> (<cite>~vsm.vector.Vector</cite>) – The query used to select the documents.</p></li>
 <li><p><strong>matrix</strong> (<em>dict</em>) – The similarity matrix to use.</p></li>
-<li><p><strong>l</strong> (<em>float</em>) – The <span class="math notranslate nohighlight">\(\lambda\)</span> parameter.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
