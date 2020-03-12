@@ -167,7 +167,7 @@ def main():
 	if meta:
 		save_meta(os.path.join(data_dir, 'meta.json'), meta)
 
-def collect(auth, track, filename, time, lang=None, *args, **kwargs):
+def collect(auth, track, filename, max_time, lang=None, *args, **kwargs):
 	"""
 	Collect tweets and save them to the given file.
 	The tweets are collected synchronously.
@@ -179,18 +179,24 @@ def collect(auth, track, filename, time, lang=None, *args, **kwargs):
 	:type track: list of str
 	:param filename: The filename where to save the collected tweets.
 	:type filename: str
-	:param time: The number of seconds to spend collecting tweets.
-	:type time: int
+	:param max_time: The number of seconds to spend collecting tweets.
+	:type max_time: int
 	:param lang: The tweet collection language, defaults to English.
 	:type lang: list of str
 	"""
 
 	lang = [ 'en' ] if lang is None else lang
 
-	with open(filename, 'w') as file:
-		listener = TweetListener(file, max_time=time, *args, **kwargs)
-		stream = Stream(auth, listener)
-		stream.filter(track=track, languages=lang)
+	start = time.time()
+	try:
+		with open(filename, 'w') as file:
+			listener = TweetListener(file, max_time=max_time, *args, **kwargs)
+			stream = Stream(auth, listener)
+			stream.filter(track=track, languages=lang)
+	except (Exception) as e:
+		elapsed = time.time() - start
+		logger.warning(f"{e.__name__} after {elapsed} seconds, restarting for {max_time - elapsed} seconds")
+		collect(auth, track, filename, max_time - elapsed, lang, *args, **kwargs)
 
 def save_meta(filename, meta):
 	"""
