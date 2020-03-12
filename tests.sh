@@ -79,6 +79,8 @@ summarization_tests() {
 	python3 -m unittest eventdt.summarization.algorithms.tests.test_dgs
 
 	echo -e "${HIGHLIGHT}Timeline${DEFAULT}"
+	python3 -m unittest eventdt.summarization.timeline.tests.test_timeline
+
 	echo -e "${HIGHLIGHT}Nodes${DEFAULT}"
 	python3 -m unittest eventdt.summarization.timeline.nodes.tests.test_cluster_node
 	python3 -m unittest eventdt.summarization.timeline.nodes.tests.test_document_node
