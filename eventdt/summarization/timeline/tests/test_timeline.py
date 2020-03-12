@@ -15,6 +15,7 @@ if path not in sys.path:
 from nlp.document import Document
 from summarization.timeline import Timeline
 from summarization.timeline.nodes import ClusterNode, DocumentNode
+from vsm.clustering import Cluster
 
 class TestTimeline(unittest.TestCase):
 	"""
@@ -77,6 +78,215 @@ class TestTimeline(unittest.TestCase):
 
 		self.assertRaises(ValueError, Timeline, DocumentNode, -1, -0.01)
 
+	def test_add_first_node(self):
+		"""
+		Test that when adding documents to an empty node, the timeline adds it to the timeline in a new node.
+		"""
+
+		documents = [ Document('this is not a pipe', { 'pipe': 1 }) ]
+		timeline = Timeline(DocumentNode, 60, 0.5)
+		self.assertEqual([ ], timeline.nodes)
+		timeline.add(1000, documents)
+		self.assertEqual(1, len(timeline.nodes))
+		self.assertEqual(documents, timeline.nodes[0].get_all_documents())
+
+	def test_add_node_created_at(self):
+		"""
+		Test that when creating a new node, the created at time is copied as given.
+		"""
+
+		documents = [ Document('this is not a pipe', { 'pipe': 1 }) ]
+		timeline = Timeline(DocumentNode, 60, 0.5)
+		timeline.add(1000, documents)
+		self.assertEqual(1, len(timeline.nodes))
+		self.assertEqual(1000, timeline.nodes[0].created_at)
+
+	def test_add_node_created_at_zero(self):
+		"""
+		Test that when creating a new node, the created at time is copied as given even if it is zero.
+		"""
+
+		documents = [ Document('this is not a pipe', { 'pipe': 1 }) ]
+		timeline = Timeline(DocumentNode, 60, 0.5)
+		timeline.add(0, documents)
+		self.assertEqual(1, len(timeline.nodes))
+		self.assertEqual(0, timeline.nodes[0].created_at)
+
+	def test_add_node_created_at_realtime(self):
+		"""
+		Test that when creating a new node, the created at time is the current time if it is not given.
+		"""
+
+		documents = [ Document('this is not a pipe', { 'pipe': 1 }) ]
+		timeline = Timeline(DocumentNode, 60, 0.5)
+		timeline.add(None, documents)
+		self.assertEqual(1, len(timeline.nodes))
+		self.assertEqual(round(time.time()), round(timeline.nodes[0].created_at))
+
+	def test_add_node_document_type(self):
+		"""
+		Test that when creating a new node, the correct node type is used.
+		"""
+
+		documents = [ Document('this is not a pipe', { 'pipe': 1 }) ]
+		timeline = Timeline(DocumentNode, 60, 0.5)
+		timeline.add(None, documents)
+		self.assertEqual(1, len(timeline.nodes))
+		self.assertEqual(DocumentNode, type(timeline.nodes[0]))
+
+	def test_add_node_cluster_type(self):
+		"""
+		Test that when creating a new node, the correct node type is used.
+		"""
+
+		documents = [ Document('this is not a pipe', { 'pipe': 1 }) ]
+		timeline = Timeline(ClusterNode, 60, 0.5)
+		timeline.add(None, Cluster(documents))
+		self.assertEqual(1, len(timeline.nodes))
+		self.assertEqual(ClusterNode, type(timeline.nodes[0]))
+		self.assertEqual(documents, timeline.nodes[0].get_all_documents())
+
+	def test_add_node_unexpired(self):
+		"""
+		Test that when adding a node and there is an unexpired node, it absorbs the documents.
+		"""
+
+		documents = [ Document('this is not a pipe', { 'pipe': 1 }),
+		 			  Document('this is not a cigar', { 'cigar': 1 }) ]
+		timeline = Timeline(DocumentNode, 60, 0.5)
+		timeline.add(0, documents[:1])
+		self.assertEqual(1, len(timeline.nodes))
+		self.assertEqual(documents[:1], timeline.nodes[0].get_all_documents())
+		timeline.add(59, documents[1:])
+		self.assertEqual(1, len(timeline.nodes))
+		self.assertEqual(documents, timeline.nodes[0].get_all_documents())
+
+	def test_add_node_just_expired(self):
+		"""
+		Test that when adding a node and an active one has just expired, a new node is created.
+		"""
+
+		documents = [ Document('this is not a pipe', { 'pipe': 1 }),
+		 			  Document('this is not a cigar', { 'cigar': 1 }) ]
+		timeline = Timeline(DocumentNode, 60, 0.5)
+		timeline.add(0, documents[:1])
+		self.assertEqual(1, len(timeline.nodes))
+		self.assertEqual(documents[:1], timeline.nodes[0].get_all_documents())
+		timeline.add(60, documents[1:])
+		self.assertEqual(2, len(timeline.nodes))
+		self.assertEqual(documents[:1], timeline.nodes[0].get_all_documents())
+		self.assertEqual(documents[1:], timeline.nodes[1].get_all_documents())
+
+	def test_add_node_last_absorbs(self):
+		"""
+		Test that when adding a new node, it is only the last node that absorbs the documents.
+		"""
+
+		documents = [ Document('this is not a pipe', { 'pipe': 1 }),
+		 			  Document('this is not a cigar', { 'cigar': 1 }),
+					  Document('this is not a pipe and this is not a cigar', { 'pipe': 1, 'cigar': 1 }) ]
+		timeline = Timeline(DocumentNode, 60, 0.5)
+		timeline.add(0, documents[:1])
+		self.assertEqual(1, len(timeline.nodes))
+		self.assertEqual(documents[:1], timeline.nodes[0].get_all_documents())
+		timeline.add(61, documents[1:2])
+		self.assertEqual(2, len(timeline.nodes))
+		self.assertEqual(documents[:1], timeline.nodes[0].get_all_documents())
+		self.assertEqual(documents[1:2], timeline.nodes[1].get_all_documents())
+		timeline.add(120, documents[2:])
+		self.assertEqual(2, len(timeline.nodes))
+		self.assertEqual(documents[:1], timeline.nodes[0].get_all_documents())
+		self.assertEqual(documents[1:], timeline.nodes[1].get_all_documents())
+
+	def test_add_node_absorb(self):
+		"""
+		Test that when a similar document is added, a node absorbs it, even if it has expired.
+		"""
+
+		documents = [ Document('this is not a pipe', { 'pipe': 1 }),
+		 			  Document('this is not a cigar', { 'cigar': 1 }),
+					  Document('this is not a pipe and this is not a cigar', { 'pipe': 1, 'cigar': 1 }) ]
+		timeline = Timeline(DocumentNode, 60, 0.5)
+		timeline.add(0, documents[:1])
+		self.assertEqual(1, len(timeline.nodes))
+		self.assertEqual(documents[:1], timeline.nodes[0].get_all_documents())
+		timeline.add(61, documents[2:])
+		self.assertEqual(1, len(timeline.nodes))
+		self.assertEqual([ documents[0], documents[2] ] , timeline.nodes[0].get_all_documents())
+
+	def test_add_node_absorb_inclusive(self):
+		"""
+		Test that the minimum similarity is inclusive.
+		"""
+
+		documents = [ Document('this is not a pipe', { 'pipe': 1 }),
+		 			  Document('this is not a cigar', { 'cigar': 1 }),
+					  Document('this is not a pipe and this is not a cigar', { 'pipe': 1, 'cigar': 1 }) ]
+		timeline = Timeline(DocumentNode, 60, 1)
+		timeline.add(0, documents[:1])
+		self.assertEqual(1, len(timeline.nodes))
+		self.assertEqual(documents[:1], timeline.nodes[0].get_all_documents())
+		timeline.add(61, documents[:1])
+		self.assertEqual(1, len(timeline.nodes))
+		self.assertEqual(documents[:1] * 2, timeline.nodes[0].get_all_documents())
+
+	def test_add_node_absorb_zero(self):
+		"""
+		Test that when the minimum similarity is zero, no new nodes are created.
+		"""
+
+		documents = [ Document('this is not a pipe', { 'pipe': 1 }),
+		 			  Document('this is not a cigar', { 'cigar': 1 }),
+					  Document('this is not a pipe and this is not a cigar', { 'pipe': 1, 'cigar': 1 }) ]
+		timeline = Timeline(DocumentNode, 60, 0)
+		timeline.add(0, documents[:1])
+		self.assertEqual(1, len(timeline.nodes))
+		self.assertEqual(documents[:1], timeline.nodes[0].get_all_documents())
+		timeline.add(61, documents[1:2])
+		self.assertEqual(1, len(timeline.nodes))
+		self.assertEqual(documents[:2], timeline.nodes[0].get_all_documents())
+		timeline.add(122, documents[2:])
+		self.assertEqual(1, len(timeline.nodes))
+		self.assertEqual(documents, timeline.nodes[0].get_all_documents())
+
+	def test_add_node_absorbs_last(self):
+		"""
+		Test that when going over the list of nodes, it is done in reverse.
+		"""
+
+		documents = [ Document('this is not a pipe', { 'pipe': 1 }),
+		 			  Document('this is not a cigar', { 'cigar': 1 }),
+					  Document('this is not a pipe and this is not a cigar', { 'pipe': 1, 'cigar': 1 }) ]
+		timeline = Timeline(DocumentNode, 60, 0.5)
+		timeline.add(0, documents[:1])
+		self.assertEqual(1, len(timeline.nodes))
+		self.assertEqual(documents[:1], timeline.nodes[0].get_all_documents())
+		timeline.add(61, documents[1:2])
+		self.assertEqual(2, len(timeline.nodes))
+		self.assertEqual(documents[1:2], timeline.nodes[1].get_all_documents())
+		timeline.add(122, documents[2:])
+		self.assertEqual(2, len(timeline.nodes))
+		self.assertEqual(documents[1:], timeline.nodes[-1].get_all_documents())
+
+	def test_add_node_absorbs_similar(self):
+		"""
+		Test that when going over the list of nodes, the first similar node from the end absorbs the documents.
+		"""
+
+		documents = [ Document('this is not a pipe and this is not a cigar', { 'pipe': 1, 'cigar': 1 }),
+					  Document('this is a picture of dorian gray', { 'dorian': 1, 'gray': 1 }),
+		 			  Document('this is not a cigar', { 'cigar': 1 }) ]
+		timeline = Timeline(DocumentNode, 60, 0.5)
+		timeline.add(0, documents[:1])
+		self.assertEqual(1, len(timeline.nodes))
+		self.assertEqual(documents[:1], timeline.nodes[0].get_all_documents())
+		timeline.add(61, documents[1:2])
+		self.assertEqual(2, len(timeline.nodes))
+		self.assertEqual(documents[1:2], timeline.nodes[1].get_all_documents())
+		timeline.add(122, documents[2:])
+		self.assertEqual(2, len(timeline.nodes))
+		self.assertEqual([ documents[0], documents[2] ], timeline.nodes[0].get_all_documents())
+
 	def test_create_expiry_zero(self):
 		"""
 		Test that when the timeline is created with an expiry of zero, no ValueError is raised.
@@ -124,6 +334,15 @@ class TestTimeline(unittest.TestCase):
 		timeline = Timeline(ClusterNode, 60, 0.5)
 		node = timeline._create(created_at=1000)
 		self.assertEqual(1000, node.created_at)
+
+	def test_create_node_created_at(self):
+		"""
+		Test that when the creation time is given, it is passed on to the node even if it is 0.
+		"""
+
+		timeline = Timeline(ClusterNode, 60, 0.5)
+		node = timeline._create(created_at=0)
+		self.assertEqual(0, node.created_at)
 
 	def test_create_node_created_at_none(self):
 		"""

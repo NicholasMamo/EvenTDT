@@ -60,6 +60,43 @@ class Timeline():
 		self.expiry = expiry
 		self.min_similarity = min_similarity
 
+	def add(self, timestamp=None, *args, **kwargs):
+		"""
+		Add documents to a node.
+		This function first tries to identify if there is an active node.
+		If there isn't, it tries to find a node that can absorb the documents.
+		This process is performed in reverse.
+		If it doesn't, a new node is created.
+
+		All arguments and keyword arguments are passed on to the :func:`~summarization.timeline.nodes.node.Node.add` and :func:`~summarization.timeline.nodes.node.Node.similarity` methods.
+
+		:param timestamp: The current timestamp.
+						  If the timestamp is not given, the current time is used.
+		:type timestamp: float
+		"""
+
+		"""
+		If there are nodes and the latest one is still active—it hasn't expired—add the documents to it.
+		"""
+		if self.nodes and not self.nodes[-1].expired(self.expiry, timestamp):
+			self.nodes[-1].add(*args, **kwargs)
+			return
+
+		"""
+		Go through the nodes backwards and see if any node absorbs the documents.
+		"""
+		for node in self.nodes[::-1]:
+			if node.similarity(*args, **kwargs) >= self.min_similarity:
+				node.add(*args, **kwargs)
+				return
+
+		"""
+		If no node absorbs the documents, create a new node and add them to it.
+		"""
+		node = self._create(created_at=timestamp)
+		node.add(*args, **kwargs)
+		self.nodes.append(node)
+
 	def _create(self, created_at=None, *args, **kwargs):
 		"""
 		Create a new node on the timeline.
