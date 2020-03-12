@@ -22,9 +22,12 @@ class Timeline():
 				  Expired nodes do not automatically absorb documents.
 				  If the expiry is 0, new documents immediately join a new node unless they are absorbed.
 	:vartype expiry: float
+	:ivar min_similarity: The minimum similarity between incoming documents and a node to be absorbed by it.
+						  This value is inclusive.
+	:vartype similarity: float
 	"""
 
-	def __init__(self, node_type, expiry):
+	def __init__(self, node_type, expiry, min_similarity):
 		"""
 		Create the timeline with an empty set of nodes.
 
@@ -34,6 +37,9 @@ class Timeline():
 					   Expired nodes do not automatically absorb documents.
 					   If the expiry is 0, new documents immediately join a new node unless they are absorbed.
 		:type expiry: float
+		:param min_similarity: The minimum similarity between incoming documents and a node to be absorbed by it.
+							   This value is inclusive.
+		:type similarity: float
 
 		:raises ValueError: When the expiry is negative.
 		"""
@@ -48,6 +54,7 @@ class Timeline():
 		self.nodes = [ ]
 		self.node_type = node_type
 		self.expiry = expiry
+		self.min_similarity = min_similarity
 
 	def _create(self, created_at=None, *args, **kwargs):
 		"""
