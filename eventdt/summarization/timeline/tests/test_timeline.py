@@ -26,28 +26,35 @@ class TestTimeline(unittest.TestCase):
 		Test that when creating an empty timeline, the list of nodes is empty.
 		"""
 
-		self.assertEqual([ ], Timeline(ClusterNode).nodes)
+		self.assertEqual([ ], Timeline(ClusterNode, 60).nodes)
 
 	def test_create_node_type_cluster_node(self):
 		"""
 		Test that when creating a timeline with a cluster node, the node type is saved.
 		"""
 
-		self.assertEqual(ClusterNode, Timeline(ClusterNode).node_type)
+		self.assertEqual(ClusterNode, Timeline(ClusterNode, 60).node_type)
 
 	def test_create_node_type_document_node(self):
 		"""
 		Test that when creating a timeline with a document node, the node type is saved.
 		"""
 
-		self.assertEqual(DocumentNode, Timeline(DocumentNode).node_type)
+		self.assertEqual(DocumentNode, Timeline(DocumentNode, 60).node_type)
+
+	def test_create_expiry(self):
+		"""
+		Test that when creating a timeline with the expiry, it is saved.
+		"""
+
+		self.assertEqual(60, Timeline(DocumentNode, 60).expiry)
 
 	def test_create_document_node(self):
 		"""
 		Test that when creating a node, the node type is as given in the constructor.
 		"""
 
-		timeline = Timeline(DocumentNode)
+		timeline = Timeline(DocumentNode, 60)
 		timeline._create()
 		self.assertEqual(DocumentNode, type(timeline.nodes[0]))
 
@@ -56,7 +63,7 @@ class TestTimeline(unittest.TestCase):
 		Test that when creating a node, the node type is as given in the constructor.
 		"""
 
-		timeline = Timeline(ClusterNode)
+		timeline = Timeline(ClusterNode, 60)
 		timeline._create()
 		self.assertEqual(ClusterNode, type(timeline.nodes[0]))
 
@@ -65,7 +72,7 @@ class TestTimeline(unittest.TestCase):
 		Test that when the creation time is given, it is passed on to the node.
 		"""
 
-		timeline = Timeline(ClusterNode)
+		timeline = Timeline(ClusterNode, 60)
 		timeline._create(created_at=1000)
 		self.assertEqual(1000, timeline.nodes[0].created_at)
 
@@ -74,6 +81,6 @@ class TestTimeline(unittest.TestCase):
 		Test that when the creation time is not given, the time is real-time.
 		"""
 
-		timeline = Timeline(ClusterNode)
+		timeline = Timeline(ClusterNode, 60)
 		timeline._create()
 		self.assertEqual(round(time.time()), round(timeline.nodes[0].created_at))

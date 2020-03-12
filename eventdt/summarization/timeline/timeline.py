@@ -10,22 +10,33 @@ class Timeline():
 	More importantly, the timeline provides functionality to construct the timeline.
 	This includes redundancy management.
 
+	Incoming documents are added automatically to the latest node if it has not expired.
+	At any time, the timeline only ever has one non-expired, or active, node.
+	If there are no active nodes, the incoming documents can either be absorbed by an expired node, or go into a new node.
+
 	:ivar nodes: The list of nodes in the timeline.
 	:vartype nodes: :class:`~summarization.timeline.nodes.node.Node`
 	:ivar node_type: The type of nodes to create in the timeline.
 	:vartype node_type: :class:`~summarization.timeline.nodes.node.Node`
+	:ivar expiry: The time in seconds that it takes for a node to expire.
+				  Expired nodes do not automatically absorb documents.
+	:vartype expiry: float
 	"""
 
-	def __init__(self, node_type):
+	def __init__(self, node_type, expiry):
 		"""
 		Create the timeline with an empty set of nodes.
 
 		:param node_type: The type of nodes to create in the timeline.
 		:type node_type: :class:`~summarization.timeline.nodes.node.Node`
+		:param expiry: The time in seconds that it takes for a node to expire.
+					   Expired nodes do not automatically absorb documents.
+		:type expiry: float
 		"""
 
 		self.nodes = [ ]
 		self.node_type = node_type
+		self.expiry = expiry
 
 	def _create(self, created_at=None, *args, **kwargs):
 		"""
