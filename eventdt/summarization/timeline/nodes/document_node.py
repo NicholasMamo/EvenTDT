@@ -49,7 +49,7 @@ class DocumentNode(Node):
 		"""
 		Get all the documents in this node.
 
-		:return: A list of docuemnts in the node.
+		:return: A list of documents in the node.
 		:rtype: list of :class:`~nlp.document.Document`
 		"""
 

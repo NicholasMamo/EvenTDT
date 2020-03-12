@@ -60,7 +60,7 @@ class Node(ABC):
 		The implementation differs according to what the node stores.
 		However, they must all have functionality to return a list of documents.
 
-		:return: A list of docuemnts in the node.
+		:return: A list of documents in the node.
 		:rtype: list of :class:`~nlp.document.Document`
 		"""
 
