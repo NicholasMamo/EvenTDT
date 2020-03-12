@@ -55,17 +55,21 @@ class DocumentNode(Node):
 
 		return self.documents
 
-	def similarity(self, document, *args, **kwargs):
+	def similarity(self, documents, *args, **kwargs):
 		"""
-		Compute the similarity between this node's documents and the given document.
+		Compute the similarity between this node's documents and the centroid of the given documents.
 
-		:param document: The document with which to compute similarity.
-		:type document: :class:`~vsm.vector.Vector`
+		:param documents: The documents with which to compute similarity.
+		:type documents: list of :class:`~nlp.document.Docunet`
 
-		:return: The similarity between this node's documents and the given document.
+		:return: The similarity between this node's documents and the given documents.
 		:rtype: float
 		"""
 
 		centroid = Cluster(self.documents).centroid
 		centroid.normalize()
-		return vector_math.cosine(centroid, document)
+
+		document_centroid = Cluster(documents).centroid
+		document_centroid.normalize()
+
+		return vector_math.cosine(centroid, document_centroid)

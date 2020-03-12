@@ -14,6 +14,8 @@ if path not in sys.path:
 
 from nlp.document import Document
 from summarization.timeline.nodes import DocumentNode
+from vsm import vector_math
+from vsm.clustering import Cluster
 
 class TestDocumentNode(unittest.TestCase):
 	"""
@@ -152,6 +154,27 @@ class TestDocumentNode(unittest.TestCase):
 		self.assertEqual(documents, node.documents)
 		self.assertEqual(math.sqrt(2)/2., node.similarity(Document('this is not a pipe', { 'pipe': 1 })))
 
+	def test_similarity_several(self):
+		"""
+		Test calculating the similarity between a node and several documents.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		documents = [ Document('this is not a pipe', { 'pipe': 1 }),
+		 			  Document('this is not a cigar', { 'cigar': 1 }) ]
+
+		node = DocumentNode()
+		document = Document('this is not a pipe and this is not a cigar', { 'pipe': 1, 'cigar': 1 })
+		node.add([ document ])
+		self.assertEqual(math.sqrt(2)/2., node.similarity(documents[0]))
+		self.assertEqual(math.sqrt(2)/2., node.similarity(documents[1]))
+
+		centroid = Cluster(documents).centroid
+		centroid.normalize()
+		self.assertEqual(vector_math.cosine(centroid, Cluster(node.documents).centroid), node.similarity(documents))
+
 	def test_similarity_lower_bound(self):
 		"""
 		Test that the similarity lower-bound between a node and a document is 0.
@@ -182,7 +205,7 @@ class TestDocumentNode(unittest.TestCase):
 		node = DocumentNode()
 		node.add(documents)
 		self.assertEqual(documents, node.documents)
-		self.assertEqual(1, node.similarity(Document('this is not a pipe and this is not a cigar', { 'cigar': 1, 'pipe': 1 })))
+		self.assertEqual(1, round(node.similarity(Document('this is not a pipe and this is not a cigar', { 'cigar': 1, 'pipe': 1 }))))
 
 	def test_expired_inclusive(self):
 		"""
