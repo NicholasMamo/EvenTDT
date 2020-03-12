@@ -45,6 +45,16 @@ class ClusterNode(Node):
 
 		self.clusters.append(cluster)
 
+	def get_all_documents(self, *args, **kwargs):
+		"""
+		Get all the documents in this node.
+
+		:return: A list of docuemnts in the node.
+		:rtype: list of :class:`~nlp.document.Document`
+		"""
+
+		return [ document for cluster in self.clusters for document in cluster.vectors ]
+
 	def similarity(self, cluster, *args, **kwargs):
 		"""
 		Compute the similarity between this node and a given cluster.

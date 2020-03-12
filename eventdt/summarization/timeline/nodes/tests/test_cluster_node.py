@@ -85,6 +85,27 @@ class TestClusterNode(unittest.TestCase):
 		self.assertEqual(cluster.vectors, node.clusters[0].vectors)
 		self.assertEqual(document, node.clusters[0].vectors[0])
 
+	def test_get_all_documents_empty(self):
+		"""
+		Test that when getting all documents from an empty node, an empty list is returned.
+		"""
+
+		node = ClusterNode()
+		self.assertEqual([ ], node.get_all_documents())
+
+	def test_get_all_documents(self):
+		"""
+		Test that when getting all documents from an empty node, an empty list is returned.
+		"""
+
+		node = ClusterNode()
+		clusters = [ Cluster(Document('', { })), Cluster(Document('', { })) ]
+		self.assertEqual([ ], node.get_all_documents())
+		node.add(clusters[0])
+		self.assertEqual(clusters[0].vectors, node.get_all_documents())
+		node.add(clusters[1])
+		self.assertEqual(clusters[0].vectors + clusters[1].vectors, node.get_all_documents())
+
 	def test_similarity_empty_node(self):
 		"""
 		Test that the similarity between a cluster and an empty cluster node, the similarity is 0.
