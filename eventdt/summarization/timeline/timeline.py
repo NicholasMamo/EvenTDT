@@ -26,3 +26,15 @@ class Timeline():
 
 		self.nodes = [ ]
 		self.node_type = node_type
+
+	def _create(self, created_at=None, *args, **kwargs):
+		"""
+		Create a new node on the timeline.
+		Any arguments and keyword arguments are passed on to the :func:`~summarization.timeline.nodes.node.Node.__init__` method.
+
+		:param created_at: The timestamp when the node was created.
+						   If the timestamp is not given, the current time is used.
+		:type created_at: float
+		"""
+
+		self.nodes.append(self.node_type(created_at=created_at, *args, **kwargs))

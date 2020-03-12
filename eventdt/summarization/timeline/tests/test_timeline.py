@@ -41,3 +41,39 @@ class TestTimeline(unittest.TestCase):
 		"""
 
 		self.assertEqual(DocumentNode, Timeline(DocumentNode).node_type)
+
+	def test_create_document_node(self):
+		"""
+		Test that when creating a node, the node type is as given in the constructor.
+		"""
+
+		timeline = Timeline(DocumentNode)
+		timeline._create()
+		self.assertEqual(DocumentNode, type(timeline.nodes[0]))
+
+	def test_create_cluster_node(self):
+		"""
+		Test that when creating a node, the node type is as given in the constructor.
+		"""
+
+		timeline = Timeline(ClusterNode)
+		timeline._create()
+		self.assertEqual(ClusterNode, type(timeline.nodes[0]))
+
+	def test_create_node_created_at(self):
+		"""
+		Test that when the creation time is given, it is passed on to the node.
+		"""
+
+		timeline = Timeline(ClusterNode)
+		timeline._create(created_at=1000)
+		self.assertEqual(1000, timeline.nodes[0].created_at)
+
+	def test_create_node_created_at_none(self):
+		"""
+		Test that when the creation time is not given, the time is real-time.
+		"""
+
+		timeline = Timeline(ClusterNode)
+		timeline._create()
+		self.assertEqual(round(time.time()), round(timeline.nodes[0].created_at))
