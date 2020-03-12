@@ -68,6 +68,9 @@ class Timeline():
 		:param created_at: The timestamp when the node was created.
 						   If the timestamp is not given, the current time is used.
 		:type created_at: float
+
+		:return: The created node.
+		:rtype: :class:`~summarization.timeline.nodes.node.Node`
 		"""
 
-		self.nodes.append(self.node_type(created_at=created_at, *args, **kwargs))
+		return self.node_type(created_at=created_at, *args, **kwargs)

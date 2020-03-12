@@ -104,8 +104,8 @@ class TestTimeline(unittest.TestCase):
 		"""
 
 		timeline = Timeline(DocumentNode, 60, 0.5)
-		timeline._create()
-		self.assertEqual(DocumentNode, type(timeline.nodes[0]))
+		node = timeline._create()
+		self.assertEqual(DocumentNode, type(node))
 
 	def test_create_cluster_node(self):
 		"""
@@ -113,8 +113,8 @@ class TestTimeline(unittest.TestCase):
 		"""
 
 		timeline = Timeline(ClusterNode, 60, 0.5)
-		timeline._create()
-		self.assertEqual(ClusterNode, type(timeline.nodes[0]))
+		node = timeline._create()
+		self.assertEqual(ClusterNode, type(node))
 
 	def test_create_node_created_at(self):
 		"""
@@ -122,8 +122,8 @@ class TestTimeline(unittest.TestCase):
 		"""
 
 		timeline = Timeline(ClusterNode, 60, 0.5)
-		timeline._create(created_at=1000)
-		self.assertEqual(1000, timeline.nodes[0].created_at)
+		node = timeline._create(created_at=1000)
+		self.assertEqual(1000, node.created_at)
 
 	def test_create_node_created_at_none(self):
 		"""
@@ -131,5 +131,5 @@ class TestTimeline(unittest.TestCase):
 		"""
 
 		timeline = Timeline(ClusterNode, 60, 0.5)
-		timeline._create()
-		self.assertEqual(round(time.time()), round(timeline.nodes[0].created_at))
+		node = timeline._create()
+		self.assertEqual(round(time.time()), round(node.created_at))
