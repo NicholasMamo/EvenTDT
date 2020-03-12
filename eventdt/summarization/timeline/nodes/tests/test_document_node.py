@@ -29,6 +29,13 @@ class TestDocumentNode(unittest.TestCase):
 
 		self.assertEqual([ ], DocumentNode().documents)
 
+	def test_create_with_timestamp_zero(self):
+		"""
+		Test that the document node saves the timestamp correctly even if it is zero.
+		"""
+
+		self.assertEqual(0, DocumentNode(0).created_at)
+
 	def test_create_with_timestamp(self):
 		"""
 		Test that the document node saves the timestamp correctly.

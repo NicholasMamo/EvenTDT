@@ -31,7 +31,7 @@ class Node(ABC):
 		:type created_at: float
 		"""
 
-		self.created_at = created_at or time.time()
+		self.created_at = created_at if created_at is not None else time.time()
 
 	@abstractmethod
 	def add(self, *args, **kwargs):

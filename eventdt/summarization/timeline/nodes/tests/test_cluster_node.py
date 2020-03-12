@@ -28,6 +28,13 @@ class TestClusterNode(unittest.TestCase):
 
 		self.assertEqual([ ], ClusterNode().clusters)
 
+	def test_create_with_timestamp_zero(self):
+		"""
+		Test that the cluster node saves the timestamp correctly even if it is zero.
+		"""
+
+		self.assertEqual(0, ClusterNode(0).created_at)
+
 	def test_create_with_timestamp(self):
 		"""
 		Test that the cluster node saves the timestamp correctly.
