@@ -90,6 +90,27 @@ class TestDocumentNode(unittest.TestCase):
 		self.assertEqual({ 'x': 1 }, document.dimensions)
 		self.assertEqual(document.dimensions, node.documents[0].dimensions)
 
+	def test_get_all_documents_empty(self):
+		"""
+		Test that when getting all documents from an empty node, an empty list is returned.
+		"""
+
+		node = DocumentNode()
+		self.assertEqual([ ], node.get_all_documents())
+
+	def test_get_all_documents(self):
+		"""
+		Test that when getting all documents from a node, all documents are returned.
+		"""
+
+		node = DocumentNode()
+		corpus = [ Document('', { }), Document('', { }) ]
+		self.assertEqual([ ], node.get_all_documents())
+		node.add([ corpus[0] ])
+		self.assertEqual([ corpus[0] ], node.get_all_documents())
+		node.add([ corpus[1] ])
+		self.assertEqual(corpus, node.get_all_documents())
+
 	def test_similarity_empty_node(self):
 		"""
 		Test that the similarity between a document and an empty document node, the similarity is 0.

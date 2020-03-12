@@ -45,6 +45,16 @@ class DocumentNode(Node):
 
 		self.documents.extend(documents)
 
+	def get_all_documents(self, *args, **kwargs):
+		"""
+		Get all the documents in this node.
+
+		:return: A list of docuemnts in the node.
+		:rtype: list of :class:`~nlp.document.Document`
+		"""
+
+		return self.documents
+
 	def similarity(self, document, *args, **kwargs):
 		"""
 		Compute the similarity between this node's documents and the given document.
