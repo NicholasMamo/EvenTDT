@@ -12,11 +12,17 @@ class Timeline():
 
 	:ivar nodes: The list of nodes in the timeline.
 	:vartype nodes: :class:`~summarization.timeline.nodes.node.Node`
+	:ivar node_type: The type of nodes to create in the timeline.
+	:vartype node_type: :class:`~summarization.timeline.nodes.node.Node`
 	"""
 
-	def __init__(self):
+	def __init__(self, node_type):
 		"""
 		Create the timeline with an empty set of nodes.
+
+		:param node_type: The type of nodes to create in the timeline.
+		:type node_type: :class:`~summarization.timeline.nodes.node.Node`
 		"""
 
 		self.nodes = [ ]
+		self.node_type = node_type
