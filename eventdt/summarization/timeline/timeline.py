@@ -42,6 +42,7 @@ class Timeline():
 		:type similarity: float
 
 		:raises ValueError: When the expiry is negative.
+		:raises ValueError: When the minimum similarity is not between 0 and 1.
 		"""
 
 		"""
@@ -50,6 +51,9 @@ class Timeline():
 
 		if expiry < 0:
 			raise ValueError(f"The node expiry cannot be negative: received {expiry}")
+
+		if not 0 <= min_similarity <= 1:
+			raise ValueError(f"The minimum similarity must be between 0 and 1: received {min_similarity}")
 
 		self.nodes = [ ]
 		self.node_type = node_type
