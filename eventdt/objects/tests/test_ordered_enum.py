@@ -28,6 +28,22 @@ class LogLevel(OrderedEnum):
 	WARNING = 2
 	ERROR = 3
 
+class OtherLogLevel(OrderedEnum):
+	"""
+	Another logger's logging level.
+	It is based on a :class:`~objects.ordered_enum.OrderedEnum`.
+
+	Valid logging levels:
+
+		#. `INFO` - Information and higher-level logging only
+		#. `WARNING` - Warnings and higher-level logging only
+		#. `ERROR` - Errors and higher-level logging only
+	"""
+
+	INFO = 1
+	WARNING = 2
+	ERROR = 3
+
 class TestOrderedEnum(unittest.TestCase):
 	"""
 	Test the :class:`~objects.ordered_enum.OrderedEnum` class.
@@ -137,3 +153,213 @@ class TestOrderedEnum(unittest.TestCase):
 		"""
 
 		self.assertFalse(3 == LogLevel.WARNING)
+
+	def test_ge_less_same_type(self):
+		"""
+		Test the greater than or equal comparison when the value is less with the same enum type.
+		"""
+
+		self.assertFalse(LogLevel.INFO >= LogLevel.WARNING)
+
+	def test_ge_equal_same_type(self):
+		"""
+		Test the greater than or equal comparison when the value is equal with the same enum type.
+		"""
+
+		self.assertTrue(LogLevel.WARNING >= LogLevel.WARNING)
+
+	def test_ge_greater_same_type(self):
+		"""
+		Test the greater than or equal comparison when the value is greater with the same enum type.
+		"""
+
+		self.assertTrue(LogLevel.ERROR >= LogLevel.WARNING)
+
+	def test_le_less_same_type(self):
+		"""
+		Test the less than or equal comparison when the value is less with the same enum type.
+		"""
+
+		self.assertTrue(LogLevel.INFO <= LogLevel.WARNING)
+
+	def test_le_equal_same_type(self):
+		"""
+		Test the less than or equal comparison when the value is equal with the same enum type.
+		"""
+
+		self.assertTrue(LogLevel.WARNING <= LogLevel.WARNING)
+
+	def test_le_greater_same_type(self):
+		"""
+		Test the less than or equal comparison when the value is greater with the same enum type.
+		"""
+
+		self.assertFalse(LogLevel.ERROR <= LogLevel.WARNING)
+
+	def test_g_less_same_type(self):
+		"""
+		Test the greater than comparison when the value is less with the same enum type.
+		"""
+
+		self.assertFalse(LogLevel.INFO > LogLevel.WARNING)
+
+	def test_g_equal_same_type(self):
+		"""
+		Test the greater than comparison when the value is equal with the same enum type.
+		"""
+
+		self.assertFalse(LogLevel.WARNING > LogLevel.WARNING)
+
+	def test_g_greater_same_type(self):
+		"""
+		Test the greater than comparison when the value is greater with the same enum type.
+		"""
+
+		self.assertTrue(LogLevel.ERROR > LogLevel.WARNING)
+
+	def test_l_less_same_type(self):
+		"""
+		Test the less than comparison when the value is less with the same enum type.
+		"""
+
+		self.assertTrue(LogLevel.INFO < LogLevel.WARNING)
+
+	def test_l_equal_same_type(self):
+		"""
+		Test the less than comparison when the value is equal with the same enum type.
+		"""
+
+		self.assertFalse(LogLevel.WARNING < LogLevel.WARNING)
+
+	def test_l_greater_same_type(self):
+		"""
+		Test the less than comparison when the value is greater with the same enum type.
+		"""
+
+		self.assertFalse(LogLevel.ERROR < LogLevel.WARNING)
+
+	def test_eq_less_same_type(self):
+		"""
+		Test the equality comparison when the value is less with the same enum type.
+		"""
+
+		self.assertFalse(LogLevel.INFO == LogLevel.WARNING)
+
+	def test_eq_equal_same_type(self):
+		"""
+		Test the equality comparison when the value is equal with the same enum type.
+		"""
+
+		self.assertTrue(LogLevel.WARNING == LogLevel.WARNING)
+
+	def test_eq_greater_same_type(self):
+		"""
+		Test the equality comparison when the value is greater with the same enum type.
+		"""
+
+		self.assertFalse(LogLevel.ERROR == LogLevel.WARNING)
+
+	def test_ge_less_ordered_enum(self):
+		"""
+		Test the greater than or equal comparison when the value is less with the ordered enum type.
+		"""
+
+		self.assertFalse(OtherLogLevel.INFO >= LogLevel.WARNING)
+
+	def test_ge_equal_ordered_enum(self):
+		"""
+		Test the greater than or equal comparison when the value is equal with the ordered enum type.
+		"""
+
+		self.assertTrue(OtherLogLevel.WARNING >= LogLevel.WARNING)
+
+	def test_ge_greater_ordered_enum(self):
+		"""
+		Test the greater than or equal comparison when the value is greater with the ordered enum type.
+		"""
+
+		self.assertTrue(OtherLogLevel.ERROR >= LogLevel.WARNING)
+
+	def test_le_less_ordered_enum(self):
+		"""
+		Test the less than or equal comparison when the value is less with the ordered enum type.
+		"""
+
+		self.assertTrue(OtherLogLevel.INFO <= LogLevel.WARNING)
+
+	def test_le_equal_ordered_enum(self):
+		"""
+		Test the less than or equal comparison when the value is equal with the ordered enum type.
+		"""
+
+		self.assertTrue(OtherLogLevel.WARNING <= LogLevel.WARNING)
+
+	def test_le_greater_ordered_enum(self):
+		"""
+		Test the less than or equal comparison when the value is greater with the ordered enum type.
+		"""
+
+		self.assertFalse(OtherLogLevel.ERROR <= LogLevel.WARNING)
+
+	def test_g_less_ordered_enum(self):
+		"""
+		Test the greater than comparison when the value is less with the ordered enum type.
+		"""
+
+		self.assertFalse(OtherLogLevel.INFO > LogLevel.WARNING)
+
+	def test_g_equal_ordered_enum(self):
+		"""
+		Test the greater than comparison when the value is equal with the ordered enum type.
+		"""
+
+		self.assertFalse(OtherLogLevel.WARNING > LogLevel.WARNING)
+
+	def test_g_greater_ordered_enum(self):
+		"""
+		Test the greater than comparison when the value is greater with the ordered enum type.
+		"""
+
+		self.assertTrue(OtherLogLevel.ERROR > LogLevel.WARNING)
+
+	def test_l_less_ordered_enum(self):
+		"""
+		Test the less than comparison when the value is less with the ordered enum type.
+		"""
+
+		self.assertTrue(OtherLogLevel.INFO < LogLevel.WARNING)
+
+	def test_l_equal_ordered_enum(self):
+		"""
+		Test the less than comparison when the value is equal with the ordered enum type.
+		"""
+
+		self.assertFalse(OtherLogLevel.WARNING < LogLevel.WARNING)
+
+	def test_l_greater_ordered_enum(self):
+		"""
+		Test the less than comparison when the value is greater with the ordered enum type.
+		"""
+
+		self.assertFalse(OtherLogLevel.ERROR < LogLevel.WARNING)
+
+	def test_eq_less_ordered_enum(self):
+		"""
+		Test the equality comparison when the value is less with the ordered enum type.
+		"""
+
+		self.assertFalse(OtherLogLevel.INFO == LogLevel.WARNING)
+
+	def test_eq_equal_ordered_enum(self):
+		"""
+		Test the equality comparison when the value is equal with the ordered enum type.
+		"""
+
+		self.assertTrue(OtherLogLevel.WARNING == LogLevel.WARNING)
+
+	def test_eq_greater_ordered_enum(self):
+		"""
+		Test the equality comparison when the value is greater with the ordered enum type.
+		"""
+
+		self.assertFalse(OtherLogLevel.ERROR == LogLevel.WARNING)
