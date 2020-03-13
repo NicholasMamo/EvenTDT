@@ -44,8 +44,12 @@ apd_tests() {
 base_tests() {
 	echo -e "${HIGHLIGHT}Attributable${DEFAULT}"
 	python3 -m unittest eventdt.objects.tests.test_attributable
+
 	echo -e "${HIGHLIGHT}Exportable${DEFAULT}"
 	python3 -m unittest eventdt.objects.tests.test_exportable
+
+	echo -e "${HIGHLIGHT}Ordered Enum${DEFAULT}"
+	python3 -m unittest eventdt.objects.tests.test_ordered_enum
 }
 
 nlp_tests() {
