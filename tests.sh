@@ -44,6 +44,8 @@ apd_tests() {
 base_tests() {
 	echo -e "${HIGHLIGHT}Attributable${DEFAULT}"
 	python3 -m unittest eventdt.objects.tests.test_attributable
+	echo -e "${HIGHLIGHT}Exportable${DEFAULT}"
+	python3 -m unittest eventdt.objects.tests.test_exportable
 }
 
 nlp_tests() {
