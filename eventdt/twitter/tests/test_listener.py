@@ -25,6 +25,21 @@ class TestListener(unittest.TestCase):
 	Test the functionality of the tweet listener.
 	"""
 
+	def clean(f):
+		"""
+		A decorator that removes the data file after writing it to a file.
+		"""
+
+		def wrapper(*args, **kwargs):
+			"""
+			The function first calls the test and then removes the data file, assumed to be called `data.json`.
+			"""
+
+			f(*args, **kwargs)
+			os.remove(os.path.join(os.path.dirname(__file__), 'data.json'))
+
+		return wrapper
+
 	def authenticate(self):
 		"""
 		Create the authentication object.
@@ -36,7 +51,8 @@ class TestListener(unittest.TestCase):
 		auth = OAuthHandler(conf.ACCOUNTS[0]['CONSUMER_KEY'], conf.ACCOUNTS[0]['CONSUMER_SECRET'])
 		auth.set_access_token(conf.ACCOUNTS[0]['ACCESS_TOKEN'], conf.ACCOUNTS[0]['ACCESS_TOKEN_SECRET'])
 		return auth
-
+		
+	@clean
 	def test_collect(self):
 		"""
 		Test collecting data very simply.
@@ -53,6 +69,7 @@ class TestListener(unittest.TestCase):
 			for line in lines:
 				self.assertTrue('id' in json.loads(line))
 
+	@clean
 	def test_collect_filtered(self):
 		"""
 		Test collecting data with a few attributes.
@@ -69,6 +86,7 @@ class TestListener(unittest.TestCase):
 			for line in lines:
 				self.assertEqual(set([ 'id', 'text' ]), set(json.loads(line)))
 
+	@clean
 	def test_collect_empty_attribute_list(self):
 		"""
 		Test that collecting data with an empty attribute list returns everything.
@@ -85,6 +103,7 @@ class TestListener(unittest.TestCase):
 			for line in lines:
 				self.assertLessEqual(10, len(json.loads(line)))
 
+	@clean
 	def test_collect_none_attribute(self):
 		"""
 		Test that collecting data with `None` as the attributes returns everything.
@@ -101,6 +120,7 @@ class TestListener(unittest.TestCase):
 			for line in lines:
 				self.assertLessEqual(10, len(json.loads(line)))
 
+	@clean
 	def test_collect_time(self):
 		"""
 		Test that when collecting data, the time limit is respected.
