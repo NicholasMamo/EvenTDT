@@ -53,7 +53,7 @@ class ZhaoConsumer(PseudoBufferedConsumer):
 		It will be populated later when the 'reconaissance' period is finished.
 
 		:param queue: The queue that is consumed.
-		:type queue: :class:`~queues.queue.queue.Queue`
+		:type queue: :class:`~queues.queue.Queue.Queue`
 		:param periodicity: The time (in seconds) to spend consuming the queue.
 		:type periodicity: int
 		:param idf: The IDF table to use in the term-weighting scheme.

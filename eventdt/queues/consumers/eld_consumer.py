@@ -62,7 +62,7 @@ class ELDConsumer(Consumer):
 	:ivar _nutrition_store: The nutrition store used in conjunction with extractin breaking news.
 	:vartype _nutrition_store: :class:`~topic_detection.nutrition_store.nutrition_store.NutritionStore`
 	:ivar _buffer: A buffer of tweets that have been processed, but which are not part of a checkpoint yet.
-	:vartype _buffer: :class:`~queues.queue.queue.Queue`
+	:vartype _buffer: :class:`~queues.queue.Queue.Queue`
 	:ivar _idf: The IDF table to use in the term-weighting scheme.
 	:vartype _idf: dict
 	:ivar _tokenizer: The tokenizer used to create documents and create the IDF table, among others.
@@ -83,7 +83,7 @@ class ELDConsumer(Consumer):
 		It will be populated later when the 'reconaissance' period is finished.
 
 		:param queue: The queue that is consumed.
-		:type queue: :class:`~queues.queue.queue.Queue`
+		:type queue: :class:`~queues.queue.Queue.Queue`
 		:param time_window: The time (in seconds) to spend consuming the queue.
 		:type time_window: int
 		:param filter_words: The words to filter out of documents.

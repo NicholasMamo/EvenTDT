@@ -18,7 +18,7 @@ class QueuedListener(StreamListener):
 	:vartype UPDATE_THRESHOLD: int
 
 	:ivar _queue: The queue to which to add incoming tweets.
-	:vartype _queue: :class:`~queues.queue.queue.Queue`
+	:vartype _queue: :class:`~queues.queue.Queue.Queue`
 	:ivar _count: The number of tweets read so far.
 	:vartype _count: int
 	:ivar _timestamp: The current timestamp.
@@ -41,7 +41,7 @@ class QueuedListener(StreamListener):
 		By default, the stream continues processing for an hour.
 
 		:param _queue: The queue to which to add incoming tweets.
-		:vartype _queue: :class:`~queues.queue.queue.Queue`
+		:vartype _queue: :class:`~queues.queue.Queue.Queue`
 		:param max_time: The maximum time (in seconds) to spend reading the file.
 			If the number is negative, it is ignored.
 		:type max_time: int

@@ -1,1 +1,1 @@
-from .queue.queue import *
+from .queue import Queue

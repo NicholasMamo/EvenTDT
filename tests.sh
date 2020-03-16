@@ -72,7 +72,7 @@ nlp_tests() {
 
 queue_tests() {
 	echo -e "${HIGHLIGHT}Queue${DEFAULT}"
-	python3 -m unittest eventdt.queues.queue.tests.test_queue
+	python3 -m unittest eventdt.queues.tests.test_queue
 }
 
 summarization_tests() {

@@ -20,7 +20,7 @@ class FileListener(ABC):
 	:vartype UPDATE_THRESHOLD: int
 
 	:ivar _queue: The queue to which to add tweets.
-	:vartype _queue: :class:`~queues.queue.queue.Queue`
+	:vartype _queue: :class:`~queues.queue.Queue.Queue`
 	:ivar _count: The number of tweets read so far.
 	:vartype _count: int
 	:ivar _file: The opened file pointer which contains the tweets.
@@ -41,7 +41,7 @@ class FileListener(ABC):
 		Simultaneously set the queue, the list of tweets and the number of processed tweets.
 
 		:param queue: The queue to which to add the tweets.
-		:type queue: :class:`~queues.queue.queue.Queue`
+		:type queue: :class:`~queues.queue.Queue.Queue`
 		:param f: The opened file from where to read the tweets.
 		:type f: file
 		:param max_lines: The maximum number of lines to read.
@@ -90,7 +90,7 @@ class StaggeredFileListener(FileListener):
 		By default, the FileListener has no limit on the number of lines to read per second.
 
 		:param queue: The queue to which to add the tweets.
-		:type queue: :class:`~queues.queue.queue.Queue`
+		:type queue: :class:`~queues.queue.Queue.Queue`
 		:param f: The opened file from where to read the tweets.
 		:type f: file
 		:param skip_lines: The number of lines to skip from the beginning of the file.
