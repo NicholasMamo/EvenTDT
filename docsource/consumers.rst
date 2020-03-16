@@ -1,10 +1,10 @@
-*********
-8. Queues
-*********
+************
+8. Consumers
+************
 
 .. meta::
-   :description: The queue functionality of EvenTDT
-   :keywords: Python, TDT, queue
+   :description: The consumer functionality of EvenTDT
+   :keywords: Python, TDT, queue, consumer
 
 EvenTDT collects tweets and processes them.
 In-between collecting and processing, the tweets go into a queue data structure.
@@ -15,3 +15,6 @@ The queue functionality is a special class.
    :members:
    :private-members:
    :special-members:
+
+Queue data is consumed by consumers.
+Each consumer dequeues the accumulated data and processes it or outputs it.

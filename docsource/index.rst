@@ -18,7 +18,7 @@ Welcome to EvenTDT's documentation!
    apd
    tdt
    summarization
-   queues
+   consumers
    other
 
 Indices and tables
