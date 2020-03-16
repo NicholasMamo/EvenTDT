@@ -55,7 +55,7 @@ class TweetListener(StreamListener):
 		"""
 
 		self.file = f
-		self.tweets = []
+		self.tweets = [ ]
 		self.max_time = max_time
 		self.start = time.time()
 		self.attributes = attributes or [ ]
@@ -63,6 +63,8 @@ class TweetListener(StreamListener):
 	def flush(self):
 		"""
 		Flush the tweets to file.
+
+		Data is saved as a string to file.
 		"""
 
 		self.file.write(''.join(self.tweets))
@@ -74,8 +76,10 @@ class TweetListener(StreamListener):
 		If there are many tweets, save them to file and reset the list of tweets.
 		The override flag indicates whether the function should skip checking if the tweet is valid.
 
+		Data is saved as a string to file.
+
 		:param data: The received data.
-		:type data: dict
+		:type data: listener
 
 		:return: A boolean indicating if the listener has finished reading tweets.
 		:rtype: bool
