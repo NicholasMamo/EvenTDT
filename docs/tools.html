@@ -94,8 +94,10 @@
 <li class="toctree-l1"><a class="reference internal" href="nlp.html">3. Natural Language Processing (NLP)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="wikinterface.html">4. Wikinterface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="apd.html">5. Automatic Participant Detection (APD)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="queues.html">6. Queues</a></li>
-<li class="toctree-l1"><a class="reference internal" href="other.html">7. Other</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tdt.html">6. Topic Detection and Tracking (TDT)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="summarization.html">7. Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="consumers.html">8. Consumers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">9. Other</a></li>
 </ul>
 
             
@@ -230,7 +232,7 @@ Each corpus is a JSON file, where each line is one tweet.</p>
 
 <dl class="function">
 <dt id="tools.collect.collect">
-<code class="sig-name descname">collect</code><span class="sig-paren">(</span><em class="sig-param">auth</em>, <em class="sig-param">track</em>, <em class="sig-param">filename</em>, <em class="sig-param">time</em>, <em class="sig-param">lang=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.collect.collect" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">collect</code><span class="sig-paren">(</span><em class="sig-param">auth</em>, <em class="sig-param">track</em>, <em class="sig-param">filename</em>, <em class="sig-param">max_time</em>, <em class="sig-param">lang=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.collect.collect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Collect tweets and save them to the given file.
 The tweets are collected synchronously.
 Any additional arguments or keyword arguments are passed on to the <code class="xref py py-class docutils literal notranslate"><span class="pre">twitter.twevent.listener.TweetListener</span></code> constructor.</p>
@@ -240,7 +242,7 @@ Any additional arguments or keyword arguments are passed on to the <code class="
 <li><p><strong>auth</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tweepy.OAuthHandler</span></code>) – The OAuth handler to connect with Twitter’s API.</p></li>
 <li><p><strong>track</strong> (<em>list of str</em>) – The tracking keywords:</p></li>
 <li><p><strong>filename</strong> (<em>str</em>) – The filename where to save the collected tweets.</p></li>
-<li><p><strong>time</strong> (<em>int</em>) – The number of seconds to spend collecting tweets.</p></li>
+<li><p><strong>max_time</strong> (<em>int</em>) – The number of seconds to spend collecting tweets.</p></li>
 <li><p><strong>lang</strong> (<em>list of str</em>) – The tweet collection language, defaults to English.</p></li>
 </ul>
 </dd>

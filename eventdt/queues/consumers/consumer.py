@@ -98,18 +98,20 @@ class Consumer(ABC):
 		"""
 		If the queue is empty, it could be an indication of downtime.
 		Therefore the consumer should yield for a bit.
-		However, if it yields for too long, it is assumed that the queue is dead.
 		"""
 		inactive = 0
 		while not self.queue.length() and (max_inactivity < 0 or inactive < max_inactivity):
 			await asyncio.sleep(sleep)
 			inactive += sleep
 
-		if self.queue.length() > 0:
+		"""
+		If there are objects in the queue after waiting, return `True`.
+		"""
+		if self.queue.length():
 			return True
 
 		"""
-		Stop trying to consume if the consumer has been inactive for far too long.
+		If the queue is still empty, return `False` because the queue is idle.
 		"""
 		if inactive >= max_inactivity and max_inactivity > 0:
 			return False
@@ -122,6 +124,7 @@ class Consumer(ABC):
 
 		.. note::
 			Contrary to the name of the function, the function sets the `active` flag, not the `stopped` flag.
+			This function merely asks that the consumer stops accepting new objects for processing.
 		"""
 
 		self.active = False
