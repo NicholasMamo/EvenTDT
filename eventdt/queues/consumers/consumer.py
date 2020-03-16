@@ -1,9 +1,16 @@
 """
 All consumers follow a simple workflow.
-After initialization with a queue, the consumer can be run using the :func:`~queues.consumer.`
+After initialization with a queue, the consumer can be run using the :func:`~queues.consumers.consumer.Consumer.run` function.
+That function prepares to start consuming the queue and calls the :func:`~queues.consumers.consumer.Consumer._consume` function.
+
+Consumers have two other state variables apart from the queue: the `active` and `stopped` variables.
+The `active` variable indicates whether the consumer is still accepting objects.
+The `stopped` variable indicates whether the consumer has finished consuming all objects.
+Generally, consumers keep accepting objects until the `active` variable is disabled.
+At that point, they process the last objects and set the `stopped` flag to `True`.
 """
 
-from ..queue.queue import Queue
+from ..queue import Queue
 
 from abc import ABC, abstractmethod
 
@@ -11,12 +18,15 @@ import asyncio
 
 class Consumer(ABC):
 	"""
-	The abstract Consumer class outlines some necessary functions of a consumer.
+	The abstract Consumer class outlines the necessary functions of a consumer.
+	It also defines the state of the consumer.
 
-	:ivar _queue: The queue that is to be consumed.
-	:vartype _queue: :class:`~queues.queue.queue.Queue`
-	:ivar _stopped: A boolean indicating whether the consumer has been stopped.
-	:vartype _stopped: bool
+	:ivar queue: The queue that is to be consumed.
+	:vartype queue: :class:`~queues.queue.queue.Queue`
+	:ivar active: A boolean indicating whether the consumer is still accepting data.
+	:vartype active: bool
+	:ivar stopped: A boolean indicating whether the consumer has finished processing.
+	:vartype stopped: bool
 	"""
 
 	def __init__(self, queue):
@@ -24,65 +34,82 @@ class Consumer(ABC):
 		Initialize the Consumer with its queue.
 
 		:param queue: The queue that will be consumed.
-		:vartype _queue: :class:`~queues.queue.queue.Queue`
+		:vartype queue: :class:`~queues.queue.queue.Queue`
 		"""
 
-		self._queue = queue
-		self._stopped = False
+		self.queue = queue
+		self.active = False
+		self.stopped = True
 
-	async def run(self, initial_wait=0, max_time=3600, max_inactivity=-1):
+	async def run(self, wait=0, max_time=3600, max_inactivity=-1):
 		"""
-		Invokes the consume method.
+		Invoke the consume method.
 		Since some listeners have a small delay, the consumer waits a bit before starting to consume input.
 
-		:param initial_wait: The time (in seconds) to wait until starting to understand the event.
-			This is used when the file listener spends a lot of time skipping documents.
-		:type initial_wait: int
-		:param max_time: The maximum time (in seconds) to spend understanding the event.
-			It may be interrupted if the queue is inactive for a long time.
+		:param wait: The time in seconds to wait until starting to understand the event.
+					 This is used when the file listener spends a lot of time skipping documents.
+		:type wait: int
+		:param max_time: The maximum time in seconds to spend consuming the queue.
+						 It may be interrupted if the queue is inactive for a long time.
 		:type max_time: int
-		:param max_inactivity: The maximum time (in seconds) to wait idly without input before stopping.
-			If it is negative, it is ignored.
+		:param max_inactivity: The maximum time in seconds to wait idly without input before stopping.
+							   If it is negative, the consumer keeps waiting for input until the maximum time expires.
 		:type max_inactivity: int
 		"""
 
-		await asyncio.sleep(initial_wait)
-		self._active = True
-		self._stopped = False
-		await self._consume(max_time=max_time, max_inactivity=max_inactivity)
+		await asyncio.sleep(wait)
+		self.active = True
+		self.stopped = False
+		await self._consume(max_time, max_inactivity)
 
-	async def _wait_for_input(self, max_inactivity=-1):
+	@abstractmethod
+	async def _consume(self, max_time, max_inactivity):
+		"""
+		Consume the queue.
+		This is the function where most processing occurs.
+
+		:param max_time: The maximum time in seconds to spend consuming the queue.
+						 It may be interrupted if the queue is inactive for a long time.
+		:type max_time: int
+		:param max_inactivity: The maximum time in seconds to wait idly without input before stopping.
+							   If it is negative, the consumer keeps waiting for input until the maximum time expires.
+		:type max_inactivity: int
+		"""
+
+		pass
+
+	async def _wait_for_input(self, max_inactivity, sleep=0.25):
 		"""
 		Wait for input from the queue.
 		When input is received, the function returns True.
 		If no input is found for the given number of seconds, the function returns False.
-		If the maximum inactivity is negative or zero, it is disregarded.
+		If the maximum inactivity is negative, it is disregarded.
 
-		:param max_inactivity: The maximum time (in seconds) to wait idly without input before stopping.
-			If it is negative, it is ignored.
+		:param max_inactivity: The maximum time in seconds to wait idly without input before stopping.
+							   If it is negative, it is ignored.
 		:type max_inactivity: int
+		:param sleep: The number of seconds to sleep while waiting for input.
+		:type sleep: float
 
 		:return: A boolean indicating whether the consumer should continue, or whether it has been idle for far too long.
 		:rtype: bool
 		"""
 
 		"""
-		If the queue is empty, it could be an indication of downtime
-		Therefore the consumer should yield for a bit
-		However, if it yields for too long, it is assumed that the queue is dead
+		If the queue is empty, it could be an indication of downtime.
+		Therefore the consumer should yield for a bit.
+		However, if it yields for too long, it is assumed that the queue is dead.
 		"""
-
 		inactive = 0
-		sleep = 0.25
-		while self._queue.length() == 0 and (max_inactivity < 0 or inactive < max_inactivity):
+		while not self.queue.length() and (max_inactivity < 0 or inactive < max_inactivity):
 			await asyncio.sleep(sleep)
 			inactive += sleep
 
-		if self._queue.length() > 0:
+		if self.queue.length() > 0:
 			return True
 
 		"""
-		Stop trying to consume if the consumer has been inactive for far too long
+		Stop trying to consume if the consumer has been inactive for far too long.
 		"""
 		if inactive >= max_inactivity and max_inactivity > 0:
 			return False
@@ -91,32 +118,10 @@ class Consumer(ABC):
 
 	def stop(self):
 		"""
-		Set a flag to stop consuming.
+		Set a flag to stop accepting new objects.
+
+		.. note::
+			Contrary to the name of the function, the function sets the `active` flag, not the `stopped` flag.
 		"""
 
-		self._active = False
-
-	def is_stopped(self):
-		"""
-		Get a boolean indicating whether the consumer has shut down or not.
-
-		:return: A flag indicating whether the consumer has been stopped.
-		:rtype: bool
-		"""
-
-		return self._stopped
-
-	@abstractmethod
-	async def _consume(self, max_time, max_inactivity):
-		"""
-		Consume the next element from the queue.
-
-		:param max_time: The maximum time (in seconds) to spend understanding the event.
-			It may be interrupted if the queue is inactive for a long time.
-		:type max_time: int
-		:param max_inactivity: The maximum time (in seconds) to wait idly without input before stopping.
-			If it is negative, it is ignored.
-		:type max_inactivity: int
-		"""
-
-		pass
+		self.active = False
