@@ -114,6 +114,9 @@ topic_detection_tests() {
 twitter_tests() {
 	echo -e "${HIGHLIGHT}Twitter${DEFAULT}"
 	python3 -m unittest eventdt.twitter.tests.test_package
+
+	echo -e "${HIGHLIGHT}Listeners${DEFAULT}"
+	python3 -m unittest eventdt.twitter.tests.test_listener
 }
 
 vector_tests() {
