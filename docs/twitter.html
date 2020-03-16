@@ -198,7 +198,7 @@ It is used to listen to tweets, processing them as need be when they arrive, unt
 The behavior of this class collects tweets in bulk, then writes them to an always-open file.</p>
 <dl class="class">
 <dt id="twitter.listener.TweetListener">
-<em class="property">class </em><code class="sig-name descname">TweetListener</code><span class="sig-paren">(</span><em class="sig-param">f</em>, <em class="sig-param">max_time=3600</em>, <em class="sig-param">silent=True</em>, <em class="sig-param">attributes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.listener.TweetListener" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">TweetListener</code><span class="sig-paren">(</span><em class="sig-param">f</em>, <em class="sig-param">max_time=3600</em>, <em class="sig-param">attributes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.listener.TweetListener" title="Permalink to this definition">¶</a></dt>
 <dd><p>The listener that handles the collected tweets.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
@@ -208,7 +208,6 @@ The behavior of this class collects tweets in bulk, then writes them to an alway
 <li><p><strong>tweets</strong> (<em>list</em>) – The list of read tweets that have not been written to file yet.</p></li>
 <li><p><strong>max_time</strong> (<em>int</em>) – The maximum time in seconds to spend reading the file.</p></li>
 <li><p><strong>start</strong> (<em>int</em>) – The timestamp when the listener started waiting for tweets.</p></li>
-<li><p><strong>silent</strong> (<em>bool</em>) – A boolean indicating whether the listener should write updates to stdout.</p></li>
 <li><p><strong>attributes</strong> (<em>list of str</em><em> or </em><em>None</em>) – The attributes to save from each tweet.
 If <cite>None</cite> is given, the entire tweet objects are saved.</p></li>
 </ul>
@@ -216,7 +215,7 @@ If <cite>None</cite> is given, the entire tweet objects are saved.</p></li>
 </dl>
 <dl class="method">
 <dt id="twitter.listener.TweetListener.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">f</em>, <em class="sig-param">max_time=3600</em>, <em class="sig-param">silent=True</em>, <em class="sig-param">attributes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.listener.TweetListener.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">f</em>, <em class="sig-param">max_time=3600</em>, <em class="sig-param">attributes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.listener.TweetListener.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the listener.
 Simultaneously set the file, the list of tweets and the number of processed tweets.
 By default, the stream continues processing for an hour.</p>
@@ -225,7 +224,6 @@ By default, the stream continues processing for an hour.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>f</strong> (<em>file</em>) – The opened file pointer to which to write the tweets.</p></li>
 <li><p><strong>max_time</strong> (<em>int</em>) – The maximum time in seconds to spend reading the file.</p></li>
-<li><p><strong>silent</strong> (<em>bool</em>) – A boolean indicating whether the listener should write updates to stdout.</p></li>
 <li><p><strong>attributes</strong> (<em>list of str</em><em> or </em><em>None</em>) – The attributes to save from each tweet.
 If <cite>None</cite> is given, the entire tweet objects are saved.</p></li>
 </ul>

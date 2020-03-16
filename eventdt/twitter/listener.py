@@ -32,8 +32,6 @@ class TweetListener(StreamListener):
 	:vartype max_time: int
 	:ivar start: The timestamp when the listener started waiting for tweets.
 	:vartype start: int
-	:ivar silent: A boolean indicating whether the listener should write updates to stdout.
-	:vartype silent: bool
 	:ivar attributes: The attributes to save from each tweet.
 					  If `None` is given, the entire tweet objects are saved.
 	:vartype attributes: list of str or None
@@ -41,7 +39,7 @@ class TweetListener(StreamListener):
 
 	THRESHOLD = 200
 
-	def __init__(self, f, max_time=3600, silent=True, attributes=None):
+	def __init__(self, f, max_time=3600, attributes=None):
 		"""
 		Create the listener.
 		Simultaneously set the file, the list of tweets and the number of processed tweets.
@@ -51,8 +49,6 @@ class TweetListener(StreamListener):
 		:type f: file
 		:param max_time: The maximum time in seconds to spend reading the file.
 		:type max_time: int
-		:param silent: A boolean indicating whether the listener should write updates to stdout.
-		:type silent: bool
 		:param attributes: The attributes to save from each tweet.
 						   If `None` is given, the entire tweet objects are saved.
 		:type attributes: list of str or None
@@ -62,7 +58,6 @@ class TweetListener(StreamListener):
 		self.tweets = []
 		self.max_time = max_time
 		self.start = time.time()
-		self.silent = silent
 		self.attributes = attributes or [ ]
 
 	def flush(self):
