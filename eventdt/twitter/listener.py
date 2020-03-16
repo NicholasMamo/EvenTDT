@@ -2,13 +2,20 @@
 The TweetListener class is based on Tweepy.
 It is used to listen to tweets, processing them as need be when they arrive, until the event ends.
 The behavior of this class collects tweets in bulk, then writes them to an always-open file.
-Every number of tweets, an update is shown.
 """
 
-from datetime import datetime
 from tweepy.streaming import StreamListener
 
 import json
+import os
+import sys
+import time
+
+path = os.path.join(os.path.dirname(__file__), '..', '..')
+if path not in sys.path:
+    sys.path.append(path)
+
+from logger import logger
 
 class TweetListener(StreamListener):
 	"""
@@ -19,27 +26,24 @@ class TweetListener(StreamListener):
 	:cvar UPDATE_THRESHOLD: The number of tweets to accumulate before outputting an update to stdout.
 	:vartype UPDATE_THRESHOLD: int
 
-	:ivar _file: The opened file pointer to which to write the tweets.
-	:vartype _file: file
-	:ivar _tweets: The list of read tweets, and which have not been written to file yet.
-	:vartype _tweets: list
-	:ivar _count: The number of tweets read so far.
-	:vartype _count: int
-	:ivar _timestamp: The current timestamp.
-	:vartype _timestamp: int
-	:ivar _max_time: The maximum time (in seconds) to spend reading the file.
-		If the number is negative, it is ignored.
-	:vartype _max_time: int
-	:ivar _start: The timestamp when the listener started waiting for tweets.
-	:vartype _start: int
-	:ivar _silent: A boolean indicating whether the listener should write updates to stdout.
+	:ivar file: The opened file pointer to which to write the tweets.
+	:vartype file: file
+	:ivar tweets: The list of read tweets that have not been written to file yet.
+	:vartype tweets: list
+	:ivar max_time: The maximum time in seconds to spend reading the file.
+	:vartype max_time: int
+	:ivar start: The timestamp when the listener started waiting for tweets.
+	:vartype start: int
+	:ivar silent: A boolean indicating whether the listener should write updates to stdout.
 	:vartype silent: bool
+	:ivar attributes: The attributes to save from each tweet.
+					  If `None` is given, the entire tweet objects are saved.
+	:vartype attributes: list of str or None
 	"""
 
 	THRESHOLD = 200
-	UPDATE_THRESHOLD = 1000
 
-	def __init__(self, f, max_time=3600, silent=True):
+	def __init__(self, f, max_time=3600, silent=True, attributes=None):
 		"""
 		Create the listener.
 		Simultaneously set the file, the list of tweets and the number of processed tweets.
@@ -47,63 +51,87 @@ class TweetListener(StreamListener):
 
 		:param f: The opened file pointer to which to write the tweets.
 		:type f: file
-		:param max_time: The maximum time (in seconds) to spend reading the file.
-			If the number is negative, it is ignored.
+		:param max_time: The maximum time in seconds to spend reading the file.
 		:type max_time: int
 		:param silent: A boolean indicating whether the listener should write updates to stdout.
 		:type silent: bool
+		:param attributes: The attributes to save from each tweet.
+						   If `None` is given, the entire tweet objects are saved.
+		:type attributes: list of str or None
 		"""
 
-		self._file = f
-		self._tweets = []
-		self._count = 0
-		self._timestamp = datetime.now().timestamp()
-		self._max_time = max_time
-		self._start = datetime.now().timestamp()
-		self._silent = silent
+		self.file = f
+		self.tweets = []
+		self.max_time = max_time
+		self.start = time.time()
+		self.silent = silent
+		self.attributes = attributes or [ ]
 
 	def flush(self):
 		"""
 		Flush the tweets to file.
 		"""
 
-		self._file.write("".join(self._tweets))
-		self._tweets = []
+		self.file.write(''.join(self.tweets))
+		self.tweets = [ ]
 
-	def on_data(self, data, override=False):
+	def on_data(self, data):
 		"""
-		When tweets are received, at them to a list.
+		When tweets are received, add them to a list.
 		If there are many tweets, save them to file and reset the list of tweets.
 		The override flag indicates whether the function should skip checking if the tweet is valid.
 
 		:param data: The received data.
 		:type data: dict
-		:param override: A boolean that overrides checks for the validity of a tweet.
-			This is used in case the tweet's content is filtered to remove the ID.
-		:type override: bool
+
+		:return: A boolean indicating if the listener has finished reading tweets.
+		:rtype: bool
 		"""
 
 		data = json.loads(data)
-		if override or "id" in data:
-			self._tweets.append(json.dumps(data) + "\n")
-			self._count += 1
+		if 'id' in data:
+			self.tweets.append(json.dumps(data) + "\n")
 
-			if (len(self._tweets) >= self.THRESHOLD):
-				# flush the tweets
+			"""
+			If the tweets have exceeded the threshold of tweets, save them to the file.
+			"""
+			if len(self.tweets) >= self.THRESHOLD:
 				self.flush()
 
-			if (self._count % self.UPDATE_THRESHOLD == 0 and not self._silent):
-				time = datetime.now()
-				print("%s:%s\twrote %d tweets\t%.2f tweets/second" % (("0" + str(time.time().hour))[-2:], ("0" + str(time.time().minute))[-2:], self._count, self.UPDATE_THRESHOLD / (time.timestamp() - self._timestamp)))
-				self._timestamp = time.timestamp()
-
-			# stop listening if the time limit has been exceeded
-			current = datetime.now().timestamp()
-			if (current - self._start < self._max_time):
+			"""
+			Stop listening if the time limit has been exceeded.
+			To stop listening, the function returns `False`, but not before saving any pending tweets.
+			"""
+			current = time.time()
+			if (current - self.start < self.max_time):
 				return True
 			else:
 				self.flush()
 				return False
+
+	def filter(self, tweet):
+		"""
+		Filter the given tweet using the attributes.
+		If no attributes are given, the tweet's attributes are all retained.
+
+		:param tweet: The tweet attributes as a dictionary.
+					  The keys are the attribute names and the values are the data.
+		:type tweet: dict
+
+		:return: The tweet as a dictionary with only the required attributes.
+		:rtype: dict
+		"""
+
+		"""
+		Return the tweet as it is if there are no attributes to filter.
+		"""
+		if not self.attributes:
+			return tweet
+
+		"""
+		Otherwise, keep only the attributes in the list.
+		"""
+		return { attribute: tweet.get(attribute) for attribute in self.attributes }
 
 	def on_error(self, status):
 		"""
@@ -113,48 +141,4 @@ class TweetListener(StreamListener):
 		:type status: str
 		"""
 
-		print("Error:", status)
-
-class FilteredTweetListener(TweetListener):
-	"""
-	This listener builds on the more simple one, but only retains the given attributes from tweets.
-	"""
-
-	def __init__(self, f, attributes, max_time=3600, silent=True):
-		"""
-		Initialize the listener, retaining only select attributes.
-
-		:param f: The opened file pointer to which to write the tweets.
-		:type f: file
-		:param attributes: The list of attributes to retain from incoming tweets.
-		:type attributes: list
-		:param max_time: The maximum time (in seconds) to spend reading the file.
-			If the number is negative, it is ignored.
-		:type max_time: int
-		:param silent: A boolean indicating whether the listener should write updates to stdout.
-		:type silent: bool
-		"""
-
-		super(FilteredTweetListener, self).__init__(f, max_time, silent=silent)
-		self._attributes = attributes
-
-	def on_data(self, data):
-		"""
-		When tweets are received, first retain only the selected attributes
-		The remaining content is then passed on to the parent class for processing.
-
-		:param data: The received data.
-		:type data: dict
-		"""
-
-		"""
-		Filter the data, and do the same for the quoted tweet's data, if it is given.
-		"""
-		data = json.loads(data)
-		if "id" in data:
-			filtered_data = { attribute: data.get(attribute, None) for attribute in self._attributes }
-			if "quoted_status" in data:
-				filtered_quoted_data = { attribute: data["quoted_status"].get(attribute, None) for attribute in self._attributes }
-				filtered_data["quoted_status"] = filtered_quoted_data
-
-			return super(FilteredTweetListener, self).on_data(json.dumps(filtered_data) + "\n", override=True)
+		logger.error(str(status))
