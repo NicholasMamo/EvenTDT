@@ -5,11 +5,14 @@ The consumer receives an input file and consumes it with one of the given consum
 This consumer is split into two asynchronous tasks.
 The first task reads the file, and the second consumes it.
 
+The dataset files are expected to contain one tweet on every line, encoded as JSON strings.
+
 To run the script, use:
 
 .. code-block:: bash
 
-    ./implementation/consume.py
+    ./implementation/consume.py \\
+		-f data/event/event.json
 
 Accepted arguments:
 
@@ -49,7 +52,7 @@ def main():
 	"""
 
 	args = setup_args()
-	print(args.f)
+	print(args.file)
 
 if __name__ == "__main__":
 	main()
