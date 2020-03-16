@@ -101,7 +101,7 @@
 <li class="toctree-l1"><a class="reference internal" href="apd.html">5. Automatic Participant Detection (APD)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tdt.html">6. Topic Detection and Tracking (TDT)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="summarization.html">7. Summarization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="queues.html">8. Queues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="consumers.html">8. Consumers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="other.html">9. Other</a></li>
 </ul>
 
@@ -867,7 +867,7 @@ Any additional arguments and keyword arguments are passed on to the <code class=
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>vectors</strong> (list of <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>) – The list of vectors to cluster.</p></li>
-<li><p><strong>time</strong> (<em>str</em>) – The name of the vector attribute used as weight.
+<li><p><strong>time</strong> (<em>str</em>) – The name of the vector attribute used to get the timestamp value.
 The time value is expected to be a float or integer.</p></li>
 </ul>
 </dd>
@@ -892,7 +892,7 @@ It is assumed that the last vector in the cluster is the most recently-published
 <li><p><strong>cluster</strong> (<a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>) – The cluster whose age will be incremented.</p></li>
 <li><p><strong>timestamp</strong> (<em>int</em>) – The current timestamp of the clustering algorithm.
 This is equivalent to the last received vector.</p></li>
-<li><p><strong>time</strong> (<em>str</em>) – The name of the vector attribute used as weight.
+<li><p><strong>time</strong> (<em>str</em>) – The name of the vector attribute used to get the timestamp value.
 The time value is expected to be a float or integer.</p></li>
 </ul>
 </dd>

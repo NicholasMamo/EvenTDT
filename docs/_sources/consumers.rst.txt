@@ -29,3 +29,8 @@ Each consumer dequeues the accumulated data and processes it or outputs it.
    :members:
    :private-members:
    :special-members:
+
+.. automodule:: queues.consumers.buffered_consumer
+   :members:
+   :private-members:
+   :special-members:

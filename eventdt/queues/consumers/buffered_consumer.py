@@ -21,8 +21,8 @@ from logger import logger
 class BufferedConsumer(Consumer):
 	"""
 	The buffered consumer adds the processing stage apart from the consumption.
-	The :func:`~queues.consumers.buffered_consumer.BufferedConsumer.consume` function function waits until objects become available in the queue.
-	The :func:`~queues.consumers.buffered_consumer.BufferedConsumer.process` function empties this buffer and processes it.
+	The :func:`~queues.consumers.buffered_consumer.BufferedConsumer._consume` function function waits until objects become available in the queue.
+	The :func:`~queues.consumers.buffered_consumer.BufferedConsumer._process` function empties this buffer and processes it.
 	The two functions communicate with each other using a common queue, called a buffer.
 
 	:ivar periodicity: The time window in seconds of the buffered consumer, or how often it is invoked.
