@@ -17,6 +17,7 @@ To run the script, use:
 Accepted arguments:
 
 	- ``-f --file``			*<Required>* The file to consume.
+	- ``-c --class``		*<Required>* The consumer to use; supported: `PrintConsumer`.
 
 """
 
@@ -39,6 +40,7 @@ def setup_args():
 	Accepted arguments:
 
 		- ``-f --file``			*<Required>* The file to consume.
+		- ``-c --class``		*<Required>* The consumer to use; supported: `PrintConsumer`.
 
 	:return: The command-line arguments.
 	:rtype: list
@@ -52,6 +54,8 @@ def setup_args():
 
 	parser.add_argument('-f', '--file', nargs=1, type=str, required=True,
 						help='<Required> The file to consume.')
+	parser.add_argument('-c', '--consumer', nargs=1, type=consumer, required=True,
+						help='<Required> The consumer to use.')
 
 	args = parser.parse_args()
 	return args
@@ -63,6 +67,7 @@ def main():
 
 	args = setup_args()
 	print(args.file)
+	print(args.consumer)
 
 def consumer(consumer):
 	"""
