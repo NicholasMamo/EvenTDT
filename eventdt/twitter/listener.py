@@ -88,9 +88,10 @@ class TweetListener(StreamListener):
 		:rtype: bool
 		"""
 
-		data = json.loads(data)
-		if 'id' in data:
-			self.tweets.append(json.dumps(data) + "\n")
+		tweet = json.loads(data)
+		if 'id' in tweet:
+			tweet = self.filter(tweet)
+			self.tweets.append(json.dumps(tweet) + "\n")
 
 			"""
 			If the tweets have exceeded the threshold of tweets, save them to the file.

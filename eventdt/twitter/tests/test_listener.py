@@ -5,6 +5,7 @@ Test the functionality of the tweet listener.
 import json
 import os
 import sys
+import time
 import unittest
 
 from datetime import datetime
@@ -42,13 +43,14 @@ class TestListener(unittest.TestCase):
 		"""
 
 		with open(os.path.join(os.path.dirname(__file__), 'data.json'), 'w') as f:
-			listener = TweetListener(f, max_time=1)
+			listener = TweetListener(f, max_time=2)
 			stream = Stream(self.authenticate(), listener)
 			stream.filter(track=[ 'is' ])
 
 		with open(os.path.join(os.path.dirname(__file__), 'data.json'), 'r') as f:
-			self.assertTrue(f.readlines())
-			for line in f:
+			lines = f.readlines()
+			self.assertTrue(lines)
+			for line in lines:
 				self.assertTrue('id' in json.loads(line))
 
 	def test_collect_filtered(self):
@@ -57,13 +59,14 @@ class TestListener(unittest.TestCase):
 		"""
 
 		with open(os.path.join(os.path.dirname(__file__), 'data.json'), 'w') as f:
-			listener = TweetListener(f, max_time=1, attributes=[ 'id', 'text' ])
+			listener = TweetListener(f, max_time=2, attributes=[ 'id', 'text' ])
 			stream = Stream(self.authenticate(), listener)
 			stream.filter(track=[ 'is' ])
 
 		with open(os.path.join(os.path.dirname(__file__), 'data.json'), 'r') as f:
-			self.assertTrue(f.readlines())
-			for line in f:
+			lines = f.readlines()
+			self.assertTrue(lines)
+			for line in lines:
 				self.assertEqual(set([ 'id', 'text' ]), set(json.loads(line)))
 
 	def test_collect_empty_attribute_list(self):
@@ -72,13 +75,14 @@ class TestListener(unittest.TestCase):
 		"""
 
 		with open(os.path.join(os.path.dirname(__file__), 'data.json'), 'w') as f:
-			listener = TweetListener(f, max_time=1, attributes=[ ])
+			listener = TweetListener(f, max_time=2, attributes=[ ])
 			stream = Stream(self.authenticate(), listener)
 			stream.filter(track=[ 'is' ])
 
 		with open(os.path.join(os.path.dirname(__file__), 'data.json'), 'r') as f:
-			self.assertTrue(f.readlines())
-			for line in f:
+			lines = f.readlines()
+			self.assertTrue(lines)
+			for line in lines:
 				self.assertLessEqual(10, len(json.loads(line)))
 
 	def test_collect_none_attribute(self):
@@ -87,13 +91,14 @@ class TestListener(unittest.TestCase):
 		"""
 
 		with open(os.path.join(os.path.dirname(__file__), 'data.json'), 'w') as f:
-			listener = TweetListener(f, max_time=1, attributes=None)
+			listener = TweetListener(f, max_time=2, attributes=None)
 			stream = Stream(self.authenticate(), listener)
 			stream.filter(track=[ 'is' ])
 
 		with open(os.path.join(os.path.dirname(__file__), 'data.json'), 'r') as f:
-			self.assertTrue(f.readlines())
-			for line in f:
+			lines = f.readlines()
+			self.assertTrue(lines)
+			for line in lines:
 				self.assertLessEqual(10, len(json.loads(line)))
 
 	def test_collect_time(self):
