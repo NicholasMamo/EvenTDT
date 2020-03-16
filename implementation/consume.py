@@ -40,6 +40,7 @@ def setup_args():
 	parser.add_argument('-f', '--file', nargs=1, type=str, required=True,
 						help='<Required> The file to consume.')
 
+	args = parser.parse_args()
 	return args
 
 def main():
