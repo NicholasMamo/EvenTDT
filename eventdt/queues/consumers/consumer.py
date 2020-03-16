@@ -1,5 +1,6 @@
 """
-A queue consumer takes in elements added to queues and processes them.
+All consumers follow a simple workflow.
+After initialization with a queue, the consumer can be run using the :func:`~queues.consumer.`
 """
 
 from ..queue.queue import Queue
