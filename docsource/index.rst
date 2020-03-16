@@ -18,6 +18,7 @@ Welcome to EvenTDT's documentation!
    apd
    tdt
    summarization
+   twitter
    consumers
    other
 

@@ -1,5 +1,5 @@
 """
-The TweetListener class is based on Tweepy.
+The tweet lisener is based on Tweepy.
 It is used to listen to tweets, processing them as need be when they arrive, until the event ends.
 The behavior of this class collects tweets in bulk, then writes them to an always-open file.
 """

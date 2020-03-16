@@ -1,5 +1,5 @@
 ************
-8. Consumers
+9. Consumers
 ************
 
 .. meta::
