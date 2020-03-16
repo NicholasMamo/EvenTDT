@@ -55,12 +55,19 @@ class Consumer(ABC):
 		:param max_inactivity: The maximum time in seconds to wait idly without input before stopping.
 							   If it is negative, the consumer keeps waiting for input until the maximum time expires.
 		:type max_inactivity: int
+
+		:return: The output of the consume method.
+		:rtype: any
 		"""
 
 		await asyncio.sleep(wait)
 		self.active = True
 		self.stopped = False
-		await self._consume(max_time, max_inactivity)
+
+		results = await asyncio.gather(
+			self._consume(max_time=max_time, max_inactivity=max_inactivity),
+		)
+		return results
 
 	@abstractmethod
 	async def _consume(self, max_time, max_inactivity):
