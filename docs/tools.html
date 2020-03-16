@@ -88,6 +88,7 @@
 <li class="toctree-l1"><a class="reference internal" href="config.html">0. Configuration</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">1. Tools</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-tools.collect">Data Collection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tools.consume">Consumption</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="vsm.html">2. Vector Space Model (VSM)</a></li>
@@ -175,10 +176,10 @@ All related corpora are stored together in this directory.
 Each corpus is a JSON file, where each line is one tweet.</p>
 <p>To run the script, use:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./tools/collect.py <span class="se">\</span>
-        -t <span class="s1">&#39;#ARSWAT&#39;</span> Arsenal Watford <span class="se">\</span>
-        -o data <span class="se">\</span>
-        -U -u <span class="m">60</span> <span class="se">\</span>
-        -E -e <span class="m">60</span>
+    -t <span class="s1">&#39;#ARSWAT&#39;</span> Arsenal Watford <span class="se">\</span>
+    -o data <span class="se">\</span>
+    -U -u <span class="m">60</span> <span class="se">\</span>
+    -E -e <span class="m">60</span>
 </pre></div>
 </div>
 <p>Accepted arguments:</p>
@@ -259,6 +260,79 @@ Any additional arguments or keyword arguments are passed on to the <code class="
 <li><p><strong>filename</strong> (<em>str</em>) – The filename where to write the metadata.</p></li>
 <li><p><strong>meta</strong> (<em>list of dict</em>) – The metadata to save.</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-tools.consume">
+<span id="consumption"></span><h2>Consumption<a class="headerlink" href="#module-tools.consume" title="Permalink to this headline">¶</a></h2>
+<p>The consumer receives an input file and consumes it with one of the given consumers.
+This consumer is split into two asynchronous tasks.
+The first task reads the file, and the second consumes it.</p>
+<p>The dataset files are expected to contain one tweet on every line, encoded as JSON strings.</p>
+<p>To run the script, use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./implementation/consume.py <span class="se">\</span>
+    -f data/event/event.json <span class="se">\</span>
+    -c PrintConsumer
+</pre></div>
+</div>
+<p>Accepted arguments:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--file</span></code>                 <em>&lt;Required&gt;</em> The file to consume.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">--class</span></code>                <em>&lt;Required&gt;</em> The consumer to use; supported: <cite>PrintConsumer</cite>.</p></li>
+</ul>
+</div></blockquote>
+<dl class="function">
+<dt id="tools.consume.setup_args">
+<code class="sig-name descname">setup_args</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.consume.setup_args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up and get the list of command-line arguments.</p>
+<p>Accepted arguments:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--file</span></code>                 <em>&lt;Required&gt;</em> The file to consume.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">--class</span></code>                <em>&lt;Required&gt;</em> The consumer to use; supported: <cite>PrintConsumer</cite>.</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The command-line arguments.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.consume.main">
+<code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.consume.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main program loop.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.consume.consumer">
+<code class="sig-name descname">consumer</code><span class="sig-paren">(</span><em class="sig-param">consumer</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.consume.consumer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the given string into a consumer class.
+The accepted consumers are:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p><a class="reference internal" href="consumers.html#queues.consumers.print_consumer.PrintConsumer" title="queues.consumers.print_consumer.PrintConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">PrintConsumer</span></code></a></p></li>
+</ol>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>consumer</strong> (<em>str</em>) – The consumer string.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The class that corresponds to the given consumer.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>class</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>argparse.ArgumentTypeError</strong> – When the given consumer string is invalid.</p>
 </dd>
 </dl>
 </dd></dl>

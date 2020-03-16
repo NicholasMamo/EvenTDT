@@ -13,10 +13,10 @@ To run the script, use:
 .. code-block:: bash
 
     ./tools/collect.py \\
-	    -t '#ARSWAT' Arsenal Watford \\
-	    -o data \\
-	    -U -u 60 \\
-	    -E -e 60
+	-t '#ARSWAT' Arsenal Watford \\
+	-o data \\
+	-U -u 60 \\
+	-E -e 60
 
 Accepted arguments:
 

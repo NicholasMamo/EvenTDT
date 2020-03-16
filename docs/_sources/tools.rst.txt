@@ -22,3 +22,12 @@ Data Collection
    :members:
    :private-members:
    :special-members:
+
+===========
+Consumption
+===========
+
+.. automodule:: tools.consume
+   :members:
+   :private-members:
+   :special-members:
