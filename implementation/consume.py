@@ -49,3 +49,6 @@ def main():
 
 	args = setup_args()
 	print(args.f)
+
+if __name__ == "__main__":
+	main()
