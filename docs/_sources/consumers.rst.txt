@@ -24,6 +24,7 @@ Consumers
 
 Queue data is consumed by consumers.
 Each consumer dequeues the accumulated data and processes it or outputs it.
+There are various base classes for consumers, covering both real-time and buffered consumption.
 
 .. automodule:: queues.consumers.consumer
    :members:
@@ -31,6 +32,14 @@ Each consumer dequeues the accumulated data and processes it or outputs it.
    :special-members:
 
 .. automodule:: queues.consumers.buffered_consumer
+   :members:
+   :private-members:
+   :special-members:
+
+Simple Consumers
+----------------
+
+.. automodule:: queues.consumers.print_consumer
    :members:
    :private-members:
    :special-members:

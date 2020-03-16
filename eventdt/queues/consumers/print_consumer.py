@@ -1,5 +1,5 @@
 """
-A simple consumer that simply outputs the queue's elements as they arrive.
+The print consumer outputs the queue's elements as they arrive.
 """
 
 from .consumer import Consumer

@@ -95,7 +95,10 @@
 <li class="toctree-l1"><a class="reference internal" href="summarization.html">7. Summarization</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">8. Consumers</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#queues">Queues</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id1">Consumers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Consumers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-queues.consumers.print_consumer">Simple Consumers</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="other.html">9. Other</a></li>
@@ -297,7 +300,8 @@ If the queue is empty, <cite>None</cite> is returned instead</p>
 <div class="section" id="id1">
 <h2>Consumers<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <p>Queue data is consumed by consumers.
-Each consumer dequeues the accumulated data and processes it or outputs it.</p>
+Each consumer dequeues the accumulated data and processes it or outputs it.
+There are various base classes for consumers, covering both real-time and buffered consumption.</p>
 <span class="target" id="module-queues.consumers.consumer"></span><p>All consumers follow a simple workflow.
 After initialization with a queue, the consumer can be run using the <a class="reference internal" href="#queues.consumers.consumer.Consumer.run" title="queues.consumers.consumer.Consumer.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a> function.
 That function prepares to start consuming the queue and calls the <a class="reference internal" href="#queues.consumers.consumer.Consumer._consume" title="queues.consumers.consumer.Consumer._consume"><code class="xref py py-func docutils literal notranslate"><span class="pre">_consume()</span></code></a> function.</p>
@@ -543,6 +547,32 @@ The function periodically checks if the consumer has been asked to stop.</p>
 
 </dd></dl>
 
+<div class="section" id="module-queues.consumers.print_consumer">
+<span id="simple-consumers"></span><h3>Simple Consumers<a class="headerlink" href="#module-queues.consumers.print_consumer" title="Permalink to this headline">¶</a></h3>
+<p>The print consumer outputs the queue’s elements as they arrive.</p>
+<dl class="class">
+<dt id="queues.consumers.print_consumer.PrintConsumer">
+<em class="property">class </em><code class="sig-name descname">PrintConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.print_consumer.PrintConsumer" title="Permalink to this definition">¶</a></dt>
+<dd><p>The print consumer prints queue messages and discards them.</p>
+<dl class="method">
+<dt id="queues.consumers.print_consumer.PrintConsumer._consume">
+<em class="property">async </em><code class="sig-name descname">_consume</code><span class="sig-paren">(</span><em class="sig-param">max_time=3600</em>, <em class="sig-param">max_inactivity=5</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.print_consumer.PrintConsumer._consume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Consume the next elements from the queue.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>max_time</strong> (<em>int</em>) – The maximum time in seconds to spend consuming the queue.
+It may be interrupted if the queue is inactive for a long time.</p></li>
+<li><p><strong>max_inactivity</strong> (<em>int</em>) – The maximum time in seconds to wait idly without input before stopping.
+If it is negative, the consumer keeps waiting for input until the maximum time expires.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 </div>
 </div>
 
