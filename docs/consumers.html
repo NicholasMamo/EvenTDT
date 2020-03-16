@@ -227,7 +227,7 @@ If the queue is empty, <cite>None</cite> is returned instead</p>
 <dt id="queues.queue.Queue.dequeue_all">
 <code class="sig-name descname">dequeue_all</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queues.queue.Queue.dequeue_all" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dequeue all elements in the queue.
-Unlike the <code class="xref py py-func docutils literal notranslate"><span class="pre">empty()</span></code> function, this function returns all of the queue’s elements.</p>
+Unlike the <a class="reference internal" href="#queues.queue.Queue.empty" title="queues.queue.Queue.empty"><code class="xref py py-func docutils literal notranslate"><span class="pre">empty()</span></code></a> function, this function returns all of the queue’s elements.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>All the elements in the queue.</p>
@@ -242,7 +242,7 @@ Unlike the <code class="xref py py-func docutils literal notranslate"><span clas
 <dt id="queues.queue.Queue.empty">
 <code class="sig-name descname">empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queues.queue.Queue.empty" title="Permalink to this definition">¶</a></dt>
 <dd><p>Empty the queue.
-Unlike the <code class="xref py py-func docutils literal notranslate"><span class="pre">dequeue_all()</span></code> function, this function returns nothing.</p>
+Unlike the <a class="reference internal" href="#queues.queue.Queue.dequeue_all" title="queues.queue.Queue.dequeue_all"><code class="xref py py-func docutils literal notranslate"><span class="pre">dequeue_all()</span></code></a> function, this function returns nothing.</p>
 </dd></dl>
 
 <dl class="method">
@@ -319,7 +319,7 @@ It also defines the state of the consumer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#module-queues.queue" title="queues.queue"><strong>queue</strong></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code>) – The queue that is to be consumed.</p></li>
+<li><p><a class="reference internal" href="#module-queues.queue" title="queues.queue"><strong>queue</strong></a> (<a class="reference internal" href="#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that is to be consumed.</p></li>
 <li><p><strong>active</strong> (<em>bool</em>) – A boolean indicating whether the consumer is still accepting data.</p></li>
 <li><p><strong>stopped</strong> (<em>bool</em>) – A boolean indicating whether the consumer has finished processing.</p></li>
 </ul>
@@ -433,7 +433,7 @@ The two functions communicate with each other using a common queue, called a buf
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>periodicity</strong> (<em>int</em>) – The time window in seconds of the buffered consumer, or how often it is invoked.</p></li>
-<li><p><strong>buffer</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code>) – The buffer of objects that have to be processed.</p></li>
+<li><p><strong>buffer</strong> (<a class="reference internal" href="#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The buffer of objects that have to be processed.</p></li>
 </ul>
 </dd>
 </dl>
@@ -444,7 +444,7 @@ The two functions communicate with each other using a common queue, called a buf
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>queue</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code>) – The queue that is consumed.</p></li>
+<li><p><strong>queue</strong> (<a class="reference internal" href="#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that is consumed.</p></li>
 <li><p><strong>periodicity</strong> (<em>int</em>) – The time window in seconds of the buffered consumer, or how often it is invoked.</p></li>
 </ul>
 </dd>
@@ -529,7 +529,7 @@ The timestamp parameter is the field that the sleep function checks to know when
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>queue</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code>) – The queue that is consumed.</p></li>
+<li><p><strong>queue</strong> (<a class="reference internal" href="#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that is consumed.</p></li>
 <li><p><strong>periodicity</strong> (<em>int</em>) – The time window in seconds of the buffered consumer, or how often it is invoked.</p></li>
 <li><p><strong>timestamp</strong> (<em>str</em>) – The name of the vector attribute used to get the timestamp value.
 The time value is expected to be a float or integer.</p></li>

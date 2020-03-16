@@ -28,7 +28,7 @@ class BufferedConsumer(Consumer):
 	:ivar periodicity: The time window in seconds of the buffered consumer, or how often it is invoked.
 	:vartype periodicity: int
 	:ivar buffer: The buffer of objects that have to be processed.
-	:vartype buffer: :class:`~queues.queue.Queue.Queue`
+	:vartype buffer: :class:`~queues.queue.Queue`
 	"""
 
 	def __init__(self, queue, periodicity):
@@ -36,7 +36,7 @@ class BufferedConsumer(Consumer):
 		Initialize the buffered consumer with its queue and periodicity.
 
 		:param queue: The queue that is consumed.
-		:type queue: :class:`~queues.queue.Queue.Queue`
+		:type queue: :class:`~queues.queue.Queue`
 		:param periodicity: The time window in seconds of the buffered consumer, or how often it is invoked.
 		:type periodicity: int
 		"""
@@ -155,7 +155,7 @@ class SimulatedBufferedConsumer(BufferedConsumer):
 		The timestamp parameter is the field that the sleep function checks to know when it should awake.
 
 		:param queue: The queue that is consumed.
-		:type queue: :class:`~queues.queue.Queue.Queue`
+		:type queue: :class:`~queues.queue.Queue`
 		:param periodicity: The time window in seconds of the buffered consumer, or how often it is invoked.
 		:type periodicity: int
 		:param timestamp: The name of the vector attribute used to get the timestamp value.

@@ -22,7 +22,7 @@ class Consumer(ABC):
 	It also defines the state of the consumer.
 
 	:ivar queue: The queue that is to be consumed.
-	:vartype queue: :class:`~queues.queue.Queue.Queue`
+	:vartype queue: :class:`~queues.queue.Queue`
 	:ivar active: A boolean indicating whether the consumer is still accepting data.
 	:vartype active: bool
 	:ivar stopped: A boolean indicating whether the consumer has finished processing.
@@ -34,7 +34,7 @@ class Consumer(ABC):
 		Initialize the Consumer with its queue.
 
 		:param queue: The queue that will be consumed.
-		:vartype queue: :class:`~queues.queue.Queue.Queue`
+		:vartype queue: :class:`~queues.queue.Queue`
 		"""
 
 		self.queue = queue

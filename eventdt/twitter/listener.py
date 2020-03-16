@@ -102,7 +102,7 @@ class TweetListener(StreamListener):
 			To stop listening, the function returns `False`, but not before saving any pending tweets.
 			"""
 			current = time.time()
-			if (current - self.start < self.max_time):
+			if current - self.start < self.max_time:
 				return True
 			else:
 				self.flush()

@@ -49,7 +49,7 @@ class Queue(object):
 	def dequeue_all(self):
 		"""
 		Dequeue all elements in the queue.
-		Unlike the :func:`~queues.queue.queue.Queue.empty` function, this function returns all of the queue's elements.
+		Unlike the :func:`~queues.queue.Queue.empty` function, this function returns all of the queue's elements.
 
 		:return: All the elements in the queue.
 		:rtype: list
@@ -62,7 +62,7 @@ class Queue(object):
 	def empty(self):
 		"""
 		Empty the queue.
-		Unlike the :func:`~queues.queue.queue.Queue.dequeue_all` function, this function returns nothing.
+		Unlike the :func:`~queues.queue.Queue.dequeue_all` function, this function returns nothing.
 		"""
 
 		self.queue = [ ]
