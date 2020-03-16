@@ -23,8 +23,6 @@ class TweetListener(StreamListener):
 
 	:cvar THRESHOLD: The number of tweets to accumulate before writing them to file.
 	:vartype THRESHOLD: int
-	:cvar UPDATE_THRESHOLD: The number of tweets to accumulate before outputting an update to stdout.
-	:vartype UPDATE_THRESHOLD: int
 
 	:ivar file: The opened file pointer to which to write the tweets.
 	:vartype file: file
