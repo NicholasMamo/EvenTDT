@@ -1,86 +1,112 @@
 """
-The QueuedListener class is based on Tweepy.
-A queued listener does very little, if anything at all, with the data.
-Instead, it adds tweets to a queue, allowing other consumers to do something with them.
+The queued listener is based on Tweepy.
+All a queued listener does with the data is add it to a queue.
+It is up to other consumers to process it.
 """
 
 from datetime import datetime
 from tweepy.streaming import StreamListener
 
 import json
+import os
+import sys
+import time
+
+path = os.path.join(os.path.dirname(__file__), '..', '..')
+if path not in sys.path:
+    sys.path.append(path)
+
+from .listener import TweetListener
+from logger import logger
 
 class QueuedListener(StreamListener):
 	"""
-	The QueuedListener is built from the ground up.
-	The reason behind this is that the output is not flushed to a file, but to a queue.
+	The queued listener diverges enough from the :class:`~twitter.listener.TweetListener` that it is built from the ground up.
+	Incoming tweets are not added to a queue.
 
-	:cvar UPDATE_THRESHOLD: The number of tweets to accumulate before outputting an update to stdout.
-	:vartype UPDATE_THRESHOLD: int
-
-	:ivar _queue: The queue to which to add incoming tweets.
-	:vartype _queue: :class:`~queues.queue.Queue.Queue`
-	:ivar _count: The number of tweets read so far.
-	:vartype _count: int
-	:ivar _timestamp: The current timestamp.
-	:vartype _timestamp: int
-	:ivar _max_time: The maximum time (in seconds) to spend reading the file.
-		If the number is negative, it is ignored.
-	:vartype _max_time: int
-	:ivar _start: The timestamp when the listener started waiting for tweets.
-	:vartype _start: int
-	:ivar _silent: A boolean indicating whether the listener should write updates to stdout.
-	:vartype silent: bool
+	:ivar queue: The queue to which to add incoming tweets.
+	:vartype queue: :class:`~queues.queue.Queue`
+	:ivar tweets: The list of read tweets that have not been written to file yet.
+	:vartype tweets: list
+	:ivar max_time: The maximum time in seconds to spend reading the file.
+	:vartype max_time: int
+	:ivar start: The timestamp when the listener started waiting for tweets.
+	:vartype start: int
+	:ivar attributes: The attributes to save from each tweet.
+					  If `None` is given, the entire tweet objects are saved.
+	:vartype attributes: list of str or None
 	"""
 
-	UPDATE_THRESHOLD = 1000
-
-	def __init__(self, queue, max_time=3600, silent=True):
+	def __init__(self, queue, max_time=3600, attributes=None):
 		"""
 		Create the listener.
 		Simultaneously set the queue, the list of tweets and the number of processed tweets.
 		By default, the stream continues processing for an hour.
 
-		:param _queue: The queue to which to add incoming tweets.
-		:vartype _queue: :class:`~queues.queue.Queue.Queue`
-		:param max_time: The maximum time (in seconds) to spend reading the file.
-			If the number is negative, it is ignored.
+		:param queue: The queue to which to add incoming tweets.
+		:vartype queue: :class:`~queues.queue.Queue`
+		:param max_time: The maximum time in seconds to spend reading the file.
 		:type max_time: int
-		:param silent: A boolean indicating whether the listener should write updates to stdout.
-		:type silent: bool
+		:param attributes: The attributes to save from each tweet.
+						   If `None` is given, the entire tweet objects are saved.
+		:type attributes: list of str or None
 		"""
 
-		self._queue = queue # copy the reference to the queue
-		# self._tweets = []
-		self._count = 0
-		self._timestamp = datetime.now().timestamp()
-		self._max_time = max_time
-		self._start = datetime.now().timestamp()
-		self._silent = silent
+		self.queue = queue
+		self.max_time = max_time
+		self.start = time.time()
+		self.attributes = attributes or [ ]
 
 	def on_data(self, data):
 		"""
-		When new data is received, add it to the queue.
+		When tweets are received, add them to a list.
+		If there are many tweets, save them to file and reset the list of tweets.
+		The override flag indicates whether the function should skip checking if the tweet is valid.
+
+		Data is added as a dictionary to the queue.
 
 		:param data: The received data.
-		:type data: dict
+		:type data: str
+
+		:return: A boolean indicating if the listener has finished reading tweets.
+		:rtype: bool
 		"""
 
-		# decode the data
-		data = json.loads(data)
-		self._queue.enqueue(data)
-		self._count += 1
+		tweet = json.loads(data)
+		if 'id' in tweet:
+			tweet = self.filter(tweet)
+			self.queue.enqueue(tweet)
 
-		if (self._count % self.UPDATE_THRESHOLD == 0 and not self._silent):
-			time = datetime.now()
-			print("%s:%s\twrote %d tweets\t%.2f tweets/second" % (("0" + str(time.time().hour))[-2:], ("0" + str(time.time().minute))[-2:], self._count, self.UPDATE_THRESHOLD / (time.timestamp() - self._timestamp)))
-			self._timestamp = time.timestamp()
+			"""
+			Stop listening if the time limit has been exceeded.
+			To stop listening, the function returns `False`
+			"""
+			current = time.time()
+			return current - self.start < self.max_time
 
-		# stop listening if the time limit has been exceeded
-		current = datetime.now().timestamp()
-		if (current - self._start < self._max_time):
-			return True
-		else:
-			return False
+	def filter(self, tweet):
+		"""
+		Filter the given tweet using the attributes.
+		If no attributes are given, the tweet's attributes are all retained.
+
+		:param tweet: The tweet attributes as a dictionary.
+					  The keys are the attribute names and the values are the data.
+		:type tweet: dict
+
+		:return: The tweet as a dictionary with only the required attributes.
+		:rtype: dict
+		"""
+
+		"""
+		Return the tweet as it is if there are no attributes to filter.
+		"""
+		if not self.attributes:
+			return tweet
+
+		"""
+		Otherwise, keep only the attributes in the list.
+		"""
+		return { attribute: tweet.get(attribute) for attribute in self.attributes }
 
 	def on_error(self, status):
 		"""
@@ -90,4 +116,4 @@ class QueuedListener(StreamListener):
 		:type status: str
 		"""
 
-		print(status)
+		logger.error(str(status))
