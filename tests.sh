@@ -6,7 +6,7 @@ cd "$parent_path"
 source variables.sh
 
 usage() {
-	echo -e "${HIGHLIGHT}Usage: sh $0 [-t <apd|base|nlp|queue|summarization|tdt|vector|wikipedia>]"${DEFAULT};
+	echo -e "${HIGHLIGHT}Usage: sh $0 [-t <apd|base|nlp|queue|summarization|tdt|twitter|vector|wikipedia>]"${DEFAULT};
 }
 
 apd_tests() {
@@ -111,6 +111,11 @@ topic_detection_tests() {
 	python3 -m unittest eventdt.tdt.algorithms.tests.test_eld
 }
 
+twitter_tests() {
+	echo -e "${HIGHLIGHT}Twitter${DEFAULT}"
+	python3 -m unittest eventdt.twitter.tests.test_package
+}
+
 vector_tests() {
 	echo -e "${HIGHLIGHT}Vectors${DEFAULT}"
 	python3 -m unittest eventdt.vsm.tests.test_vector
@@ -157,6 +162,9 @@ then
 		tdt)
 			topic_detection_tests
 			;;
+		twitter)
+			twitter_tests
+			;;
 		vector)
 			vector_tests
 			;;
@@ -176,6 +184,7 @@ else
 	queue_tests
 	summarization_tests
 	topic_detection_tests
+	twitter_tests
 	vector_tests
 	wikipedia_tests
 fi
