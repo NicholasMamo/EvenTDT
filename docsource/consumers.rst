@@ -14,7 +14,7 @@ In-between collecting and processing, the tweets go into a queue data structure.
 In this way, the consumers can process the data in the same order as it was received.
 The queue functionality is a special class.
 
-.. automodule:: queues.queue.Queue
+.. automodule:: queues.queue
    :members:
    :private-members:
    :special-members:
