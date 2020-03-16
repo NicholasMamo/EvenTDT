@@ -1,10 +1,8 @@
 """
-A buffered consumer saves content and only actually processes it later.
-It is built on the basic consumer.
+A buffered consumer processes content in batches.
 """
 
 from abc import ABC, abstractmethod
-from datetime import datetime
 
 from ..queue.queue import Queue
 from .consumer import Consumer
@@ -12,96 +10,106 @@ from .consumer import Consumer
 import asyncio
 import os
 import sys
+import time
 
-path = os.path.dirname(__file__)
-path = os.path.join(path, '../../')
+path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
-	sys.path.insert(1, path)
+    sys.path.append(path)
 
 from logger import logger
 
 class BufferedConsumer(Consumer):
 	"""
-	The BufferedConsumer is built on the basic Consumer.
-	It adds an important function - the actual processing stage, which is different from the consuming phase.
-	The consumer function stores the elements, whereas the process function empties this buffer and processes it.
+	The buffered consumer adds the processing stage apart from the consumption.
+	The :func:`~queues.consumers.buffered_consumer.BufferedConsumer.consume` function function waits until objects become available in the queue.
+	The :func:`~queues.consumers.buffered_consumer.BufferedConsumer.process` function empties this buffer and processes it.
+	The two functions communicate with each other using a common queue, called a buffer.
 
-	:ivar _buffer: A buffer of tweets that have been processed, but which are not part of a checkpoint yet.
-	:vartype _buffer: :class:`~queues.queue.queue.Queue`
-	:ivar _periodicity: The time window (in seconds) of the buffered consumer, or how often it is invoked.
-	:vartype _periodicity: int
+	:ivar periodicity: The time window in seconds of the buffered consumer, or how often it is invoked.
+	:vartype periodicity: int
+	:ivar buffer: The buffer of objects that have to be processed.
+	:vartype buffer: :class:`~queues.queue.queue.Queue`
 	"""
 
 	def __init__(self, queue, periodicity):
 		"""
-		Initialize the BufferedConsumer with its queue, periodicity and buffer.
+		Initialize the buffered consumer with its queue and periodicity.
 
 		:param queue: The queue that is consumed.
 		:type queue: :class:`~queues.queue.queue.Queue`
-		:param periodicity: The time window (in seconds) of the buffered consumer, or how often it is invoked.
+		:param periodicity: The time window in seconds of the buffered consumer, or how often it is invoked.
 		:type periodicity: int
 		"""
 
 		super(BufferedConsumer, self).__init__(queue)
-		self._buffer = Queue()
-		self._periodicity = periodicity
+		self.periodicity = periodicity
+		self.buffer = Queue()
 
-	async def run(self, initial_wait=0, max_time=3600, max_inactivity=-1):
+	async def run(self, wait=0, max_time=3600, max_inactivity=-1):
 		"""
 		Invokes the consume and process method.
 
-		:param initial_wait: The time (in seconds) to wait until starting to understand the event.
-			This is used when the file listener spends a lot of time skipping documents.
-		:type initial_wait: int
-		:param max_time: The maximum time (in seconds) to spend understanding the event.
-			It may be interrupted if the queue is inactive for a long time.
+		:param wait: The time in seconds to wait until starting to understand the event.
+					 This is used when the file listener spends a lot of time skipping documents.
+		:type wait: int
+		:param max_time: The maximum time in seconds to spend consuming the queue.
+						 It may be interrupted if the queue is inactive for a long time.
 		:type max_time: int
-		:param max_inactivity: The maximum time (in seconds) to wait idly without input before stopping.
-			If it is negative, it is ignored.
+		:param max_inactivity: The maximum time in seconds to wait idly without input before stopping.
+							   If it is negative, the consumer keeps waiting for input until the maximum time expires.
 		:type max_inactivity: int
+
+		:return: The output of the consume method.
+		:rtype: any
 		"""
 
-		await asyncio.sleep(initial_wait)
-		self._active = True
-		self._stopped = False
+		await asyncio.sleep(wait)
+		self.active = True
+		self.stopped = False
+
 		results = await asyncio.gather(
 			self._consume(max_time=max_time, max_inactivity=max_inactivity),
 			self._process(),
 		)
-		return (results[1], )
+		return results
 
-	async def _consume(self, max_time=3600, max_inactivity=5):
+	@abstractmethod
+	async def _consume(self, max_time, max_inactivity):
 		"""
-		Consume the next elemenet from the queue and add it to the buffer.
+		Consume the queue.
+		This function calls for processing in turn.
 
-		:param max_time: The maximum time (in seconds) to spend understanding the event.
-			It may be interrupted if the queue is inactive for a long time.
+		:param max_time: The maximum time in seconds to spend consuming the queue.
+						 It may be interrupted if the queue is inactive for a long time.
 		:type max_time: int
-		:param max_inactivity: The maximum time (in seconds) to wait idly without input before stopping.
-			If it is negative, it is ignored.
+		:param max_inactivity: The maximum time in seconds to wait idly without input before stopping.
+							   If it is negative, the consumer keeps waiting for input until the maximum time expires.
 		:type max_inactivity: int
 		"""
 
 		"""
-		The consumer should keep working until it is forcibly stopped or its time runs out
+		The consumer should keep working until it is forcibly stopped or its time runs out.
 		"""
-		start = datetime.now().timestamp()
-		while True and self._active and (datetime.now().timestamp() - start < max_time):
+		start = time.time()
+		while self.active and (time.time() - start < max_time):
 			"""
-			If the queue is idle, stop waiting for input
+			If the queue is idle, stop waiting for input.
 			"""
 			inactive = await self._wait_for_input(max_inactivity=max_inactivity)
 			if not inactive:
 				break
 
 			"""
-			The consuming phase should empty the queue and store the elements in the buffer
+			The consuming phase empties the queue and stores the elements in the buffer.
+			The buffer is processed separately in the :func:`~queues.consumers.buffered_consumer.BufferedConsumer.process` function.
 			"""
-			while self._queue.length() > 0:
-				element = self._queue.dequeue()
-				self._buffer.enqueue(element)
+			elements = self.queue.dequeue_all()
+			self.buffer.enqueue(*elements)
 
-		self._stopped = True # set a boolean indicating that the consumer has successfully stopped working
+		"""
+		Set the consumer to indicate that the buffered consumer has stopped working.
+		"""
+		self.stopped = True
 
 	@abstractmethod
 	async def _process():
@@ -113,70 +121,77 @@ class BufferedConsumer(Consumer):
 
 	async def _sleep(self):
 		"""
-		Sleep until the window is over, but periodically check if the consumer should stop.
+		Sleep until the window is over.
+		At this point, the queue is emptied into a buffer for processing.
+		The function periodically checks if the consumer has been asked to stop.
 		"""
 
-		sleep = 1
-
-		for i in range(0, int(self._periodicity/sleep)):
+		for i in range(self.periodicity):
 			await asyncio.sleep(sleep)
-			if self._stopped:
+			if self.stopped:
 				break
 
 		"""
-		Before finishing the sleep cycle, check if the consumer should stop
+		If the periodicity is a float, sleep for the remaining milli-seconds.
 		"""
-		if not self._stopped:
-			await asyncio.sleep(self._periodicity % sleep)
+		if not self.stopped:
+			await asyncio.sleep(self.periodicity % 1)
 
-class PseudoBufferedConsumer(BufferedConsumer):
+class SimulatedBufferedConsumer(BufferedConsumer):
 	"""
-	The PseudoBufferedConsumer builds on the BufferedConsumer.
-	However, its periodicity is not real-time.
+	The simulated buffered consumer is exactly like the buffered consumer, but its periodicity is not real-time.
 	Instead, it gets the time from the incoming message.
 	This class can be used in a simulated environment, such as when data has been collected.
 	In this case, it allows the data to be consumed at the rate that it is read.
+
+	:ivar timestamp: The name of the vector attribute used to get the timestamp value.
+					 The time value is expected to be a float or integer.
+	:vartype timestamp: str
 	"""
 
-	def __init__(self, queue, periodicity, time="time"):
+	def __init__(self, queue, periodicity, timestamp="timestamp"):
 		"""
-		Initialize the PseudoBufferedConsumer with its queue, periodicity and buffer.
-		The time parameter is the field that the sleep function checks to know when it should awake.
+		Initialize the simulated buffered consumer with its queue, periodicity and buffer.
+		The timestamp parameter is the field that the sleep function checks to know when it should awake.
 
 		:param queue: The queue that is consumed.
 		:type queue: :class:`~queues.queue.queue.Queue`
-		:param periodicity: The time window (in seconds) of the buffered consumer, or how often it is invoked.
+		:param periodicity: The time window in seconds of the buffered consumer, or how often it is invoked.
 		:type periodicity: int
-		:param time: The label of the timestamp.
-		:type time: :class:`~object`
+		:param timestamp: The name of the vector attribute used to get the timestamp value.
+						  The time value is expected to be a float or integer.
+		:type timestamp: str
 		"""
 
-		super(PseudoBufferedConsumer, self).__init__(queue, periodicity)
-		self._time = time
+		super(SimulatedBufferedConsumer, self).__init__(queue, periodicity)
+		self.timestamp = timestamp
 
 	async def _sleep(self):
 		"""
-		Sleep until the pseudo-window is over, but periodically check if the consumer should stop.
+		Sleep until the window is over.
+		At this point, the queue is emptied into a buffer for processing.
+		The function periodically checks if the consumer has been asked to stop.
 		"""
 
 		"""
-		Wait until there's something in the Queue, to get a reference point for when the sleep should end.
+		Wait until there's something in the queue, to get a reference point for when the sleep should end.
 		"""
-		sleep = 0.1
-		while self._buffer.head() is None and not self._stopped:
-			await asyncio.sleep(sleep)
+		while self.buffer.head() is None and not self.stopped:
+			await asyncio.sleep(0.1)
 
-		if not self._stopped:
-			start = self._buffer.head()[self._time]
+		if not self.stopped:
+			start = self.buffer.head()[self.timestamp]
 
+		"""
+		Check if the consumer should stop.
+		The consumer should stop if:
+
+			#. It has been shut down; or
+
+			#. The buffer's periodicity has been reached.
+		"""
 		while True:
-			"""
-			Check if the consumer should stop.
-			The consumer should stop if:
-				it has been shut down or
-				the buffer's periodicity has been reached.
-			"""
-			if self._stopped or self._buffer.tail()[self._time] - start >= self._periodicity:
+			if self.stopped or self.buffer.tail()[self.timestamp] - start >= self.periodicity:
 				break
 
 			await asyncio.sleep(sleep)
