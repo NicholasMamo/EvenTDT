@@ -21,6 +21,16 @@ Accepted arguments:
 """
 
 import argparse
+import os
+import sys
+
+file_path = os.path.dirname(os.path.abspath(__file__))
+root = os.path.join(file_path, '..')
+lib = os.path.join(root, 'eventdt')
+sys.path.insert(-1, root)
+sys.path.insert(-1, lib)
+
+from queues.consumers import PrintConsumer
 
 def setup_args():
 	"""
@@ -53,6 +63,31 @@ def main():
 
 	args = setup_args()
 	print(args.file)
+
+def consumer(consumer):
+	"""
+	Convert the given string into a consumer class.
+	The accepted consumers are:
+
+		#. :class:`~queues.consumers.print_consumer.PrintConsumer`
+
+	:param consumer: The consumer string.
+	:type consumer: str
+
+	:return: The class that corresponds to the given consumer.
+	:rtype: class
+
+	:raises argparse.ArgumentTypeError: When the given consumer string is invalid.
+	"""
+
+	consumers = {
+		'printconsumer': PrintConsumer
+	}
+
+	if consumer.lower() in consumers:
+		return consumers[consumer.lower()]
+
+	raise argparse.ArgumentTypeError(f"Invalid consumer value: {consumer}")
 
 if __name__ == "__main__":
 	main()
