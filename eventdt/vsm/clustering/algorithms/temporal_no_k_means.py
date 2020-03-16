@@ -51,7 +51,7 @@ class TemporalNoKMeans(NoKMeans):
 
 		:param vectors: The list of vectors to cluster.
 		:type vectors: list of :class:`~vsm.vector.Vector`
-		:param time: The name of the vector attribute used as weight.
+		:param time: The name of the vector attribute used to get the timestamp value.
 					 The time value is expected to be a float or integer.
 		:type time: str
 
@@ -110,7 +110,7 @@ class TemporalNoKMeans(NoKMeans):
 		:param timestamp: The current timestamp of the clustering algorithm.
 						  This is equivalent to the last received vector.
 		:type timestamp: int
-		:param time: The name of the vector attribute used as weight.
+		:param time: The name of the vector attribute used to get the timestamp value.
 					 The time value is expected to be a float or integer.
 		:type time: str
 
