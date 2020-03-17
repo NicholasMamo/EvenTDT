@@ -118,6 +118,9 @@ twitter_tests() {
 	echo -e "${HIGHLIGHT}Listeners${DEFAULT}"
 	python3 -m unittest eventdt.twitter.tests.test_listener
 	python3 -m unittest eventdt.twitter.tests.test_queued_listener
+
+	echo -e "${HIGHLIGHT}File Readers${DEFAULT}"
+	python3 -m unittest eventdt.twitter.file.tests.test_staggered_reader
 }
 
 vector_tests() {
