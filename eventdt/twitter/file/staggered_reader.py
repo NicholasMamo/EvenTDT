@@ -3,7 +3,18 @@ The staggered file reader reads lines a few at a time.
 This reader allows a steady stream of tweets to be read and processed.
 """
 
+import json
+
+import os
+import sys
+import time
+
+path = os.path.join(os.path.dirname(__file__), '..', '..')
+if path not in sys.path:
+    sys.path.append(path)
+
 from .reader import FileReader
+from twitter import *
 
 class StaggeredFileReader(FileReader):
 	"""
@@ -11,22 +22,21 @@ class StaggeredFileReader(FileReader):
 
 	:ivar rate: The number of lines to read per second.
 	:vartype rate: float
-	:ivar skip_lines: The number of lines to skip from the beginning of the file.
-	:vartype skip_lines: int
-	:ivar skip_time: The time in seconds to skip from the beginning of the file.
-					  The time is taken from tweets' `created_at` attribute.
-	:vartype skip_time: int
 	:ivar skip_rate: The number of lines to skip for each line read.
 	:vartype skip_rate: int
 	"""
 
-	def __init__(self, queue, f, max_lines=-1, max_time=-1, rate=1, skip_lines=0, skip_time=0, skip_rate=0):
+	def __init__(self, queue, f, max_lines=-1, max_time=-1, rate=1, skip_rate=0, skip_lines=0, skip_time=0):
 		"""
 		Create the listener.
 		Simultaneously set the queue, the list of tweets and the number of processed tweets.
 		By default, the FileReader skips no lines, though it can be overwritten to skip any number of lines for every one read.
 		This makes it possible to sample the file.
 		By default, the FileReader has no limit on the number of lines to read per second.
+
+		.. note::
+
+			The number of lines and seconds that are skipped depend on the largest number.
 
 		:param queue: The queue to which to add the tweets.
 		:type queue: :class:`~queues.queue.Queue`
@@ -41,16 +51,9 @@ class StaggeredFileReader(FileReader):
 		:type max_time: int
 		:param rate: The number of lines to read per second.
 		:type rate: float
-		:param skip_lines: The number of lines to skip from the beginning of the file.
-		:type skip_lines: int
-		:param skip_time: The time (in seconds) to skip from the beginning of the file.
-						  The time is taken from tweets' `created_at` attribute.
-		:type skip_time: int
-		:param max_lines: The maximum number of lines to read.
-						  If the number is negative, it is ignored.
-		:type max_lines: int
 		:param skip_rate: The number of lines to skip for each line read.
 		:type skip_rate: int
+		:param skip_lines: The number of lines to skip from the beginning of the file.
 
 		:raises ValueError: When the rate is not an integer.
 		:raises ValueError: When the rate is zero or negative.
@@ -87,70 +90,89 @@ class StaggeredFileReader(FileReader):
 			raise ValueError(f"The rate of lines to skip after each read cannot be negative; received {skip_rate}")
 
 		self.rate = rate
-		self.skip_lines = skip_lines
-		self.skip_time = skip_time
 		self.skip_rate = skip_rate
+
+		self.skip(skip_lines, skip_time)
+
+	def skip(self, lines, time):
+		"""
+		Skip a number of lines from the file.
+		This virtually just reads lines without storing them.
+
+		.. note::
+
+			The number of lines and seconds that are skipped depend on the largest number.
+
+		:param lines: The number of lines to skip.
+		:type lines: int
+		:param time: The number of seconds to skip from the beginning of the file.
+					 The time is taken from tweets' `created_at` attribute.
+		:type time: int
+		"""
+
+		file = self.file
+
+		"""
+		Extract the timestamp from the first tweet, then reset the file pointer.
+		"""
+		start = extract_timestamp(json.loads(file.readline()))
+		file.seek(0)
+
+		"""
+		Skip a number of lines first.
+		"""
+		if lines >= 0:
+			for i in range(int(lines)):
+				file.readline()
+
+		"""
+		Skip a number of seconds from the file.
+		Once a line that should not be skipped is skipped, the read is rolled back.
+		"""
+		pos = file.tell()
+		next = json.loads(file.readline())
+		while extract_timestamp(next) - start < time:
+			pos = file.tell()
+			next = json.loads(file.readline())
+
+		file.seek(pos)
 
 	async def read(self):
 		"""
 		Read the file.
+		Tweets are added as a dictionary to the queue.
 		"""
 
-		"""
-		Load the first line and parse it
-		At the same time, create the tracking variables
-		"""
-		first_line = self._file.readline()
-		data = json.loads(first_line)
-		last_pos, skip = 0, 0 # the last starting byte read by the file, and the number of lines skipped
-		original_start = get_timestamp(data["created_at"]) # the publicationtime of the first tweet
-		"""
-		Keep reading lines until the first encountered tweet published after the given number of seconds
-		"""
-		while get_timestamp(data["created_at"]) - original_start < self.skip_time :
-			last_pos = self._file.tell() # record the file's position
-			skip += 1 # a new line has been skipped
-			"""
-			Read another line
-			"""
-			line = self._file.readline()
-			data = json.loads(line)
-
-		original_start = get_timestamp(data["created_at"]) # the position is where the stream will start
-		self._file.seek(last_pos) # reset the file pointer to the last line read
+		file = self.file
 
 		"""
-		Skip a number of lines
+		Extract the timestamp from the first tweet, then reset the file pointer.
 		"""
-		for i in range(skip, self.skip_lines):
-			self._file.readline()
-
-		start = datetime.now().timestamp() # start timing the procedure
+		pos = file.tell()
+		start = extract_timestamp(json.loads(file.readline()))
+		file.seek(pos)
 
 		"""
 		Go through each line and add it to the queue
 		"""
-		for line in self._file:
-			"""
-			Stop reading if the limit has been reached
-			"""
-			self._count += 1
-			if ((self._max_lines > -1 and self._count > self._max_lines)
-				or (self._max_time > -1 and (datetime.now().timestamp() - start) > self._max_time)):
+		for i, line in enumerate(file):
+			if self.max_lines >= 0 and i > self.max_lines:
 				break
 
-			data = json.loads(line)
-			data["time"] = get_timestamp(data["created_at"])
-			self._queue.enqueue(data)
+			tweet = json.loads(line)
+			if self.max_time >= 0 and extract_timestamp(tweet) - start > self.max_time:
+				break
+
+			self.queue.enqueue(tweet)
 
 			"""
-			Skip some lines if need be
+			Skip some lines if need be.
 			"""
-			for l in range(0, self.skip_rate):
-				self._file.readline()
+			for _ in range(self.skip_rate):
+				file.readline()
 
 			"""
-			If there is a limit on the number of lines to read per minute, sleep a bit
+			If there is a limit on the number of lines to read per minute, sleep a bit.
 			"""
 			if self.rate > 0:
 				time.sleep(1/self.rate)
