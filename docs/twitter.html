@@ -95,6 +95,7 @@
 <li class="toctree-l1"><a class="reference internal" href="summarization.html">7. Summarization</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">8. Twitter</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#listeners">Listeners</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#readers">Readers</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="consumers.html">9. Consumers</a></li>
@@ -371,6 +372,58 @@ The keys are the attribute names and the values are the data.</p>
 <dd class="field-odd"><p><strong>status</strong> (<em>str</em>) – The error status.</p>
 </dd>
 </dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="readers">
+<h2>Readers<a class="headerlink" href="#readers" title="Permalink to this headline">¶</a></h2>
+<p>The Twitter package allows you to read in files collected previously.</p>
+<span class="target" id="module-twitter.file.reader"></span><p>A reader does not collect tweets from Twitter, but reads them from a file.
+The queue and file are given in the constructor.
+Reading can be started asynchronously using the <a class="reference internal" href="#twitter.file.reader.FileReader.read" title="twitter.file.reader.FileReader.read"><code class="xref py py-func docutils literal notranslate"><span class="pre">read()</span></code></a> function.</p>
+<dl class="class">
+<dt id="twitter.file.reader.FileReader">
+<em class="property">class </em><code class="sig-name descname">FileReader</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">f</em>, <em class="sig-param">max_lines=-1</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.reader.FileReader" title="Permalink to this definition">¶</a></dt>
+<dd><p>The file reader reads tweets from a file and outputs its contents to a queue.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="consumers.html#module-queues.queue" title="queues.queue"><strong>queue</strong></a> (<a class="reference internal" href="consumers.html#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue to which to add tweets.</p></li>
+<li><p><strong>file</strong> (<em>file</em>) – The opened file pointer which contains the tweets.</p></li>
+<li><p><strong>max_lines</strong> (<em>int</em>) – The maximum number of lines to read.
+If the number is negative, it is ignored.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="twitter.file.reader.FileReader.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">f</em>, <em class="sig-param">max_lines=-1</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.reader.FileReader.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the listener.
+Simultaneously set the queue, the list of tweets and the number of processed tweets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>queue</strong> (<a class="reference internal" href="consumers.html#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue to which to add the tweets.</p></li>
+<li><p><strong>f</strong> (<em>file</em>) – The opened file from where to read the tweets.</p></li>
+<li><p><strong>max_lines</strong> (<em>int</em>) – The maximum number of lines to read.
+If the number is negative, it is ignored.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="twitter.file.reader.FileReader.read">
+<em class="property">abstract async </em><code class="sig-name descname">read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.reader.FileReader.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the file and add each line as a dictionary to the queue.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="twitter.file.reader.FileReader.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#twitter.file.reader.FileReader.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
 </dd></dl>
 
 </dd></dl>

@@ -28,3 +28,13 @@ Tweet listeners download tweets in real-time.
    :members:
    :private-members:
    :special-members:
+
+Readers
+=======
+
+The Twitter package allows you to read in files collected previously.
+
+.. automodule:: twitter.file.reader
+   :members:
+   :private-members:
+   :special-members:

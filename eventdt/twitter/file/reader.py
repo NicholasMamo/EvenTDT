@@ -1,5 +1,7 @@
 """
 A reader does not collect tweets from Twitter, but reads them from a file.
+The queue and file are given in the constructor.
+Reading can be started asynchronously using the :func:`~twitter.file.reader.FileReader.read` function.
 """
 
 from abc import ABC, abstractmethod
