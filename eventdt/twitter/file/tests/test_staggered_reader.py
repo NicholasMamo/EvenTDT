@@ -454,3 +454,77 @@ class TestStaggeredFileReader(unittest.TestCase):
 			self.assertEqual(100, queue.length())
 			self.assertEqual(start, extract_timestamp(queue.head()))
 			self.assertEqual(end, extract_timestamp(queue.tail()))
+
+	@async_test
+	async def test_max_time(self):
+		"""
+		Test that when limiting the time, only a few are returned.
+		"""
+
+		"""
+		Calculate the start and end of the corpus.
+		"""
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			start = extract_timestamp(json.loads(lines[0]))
+			end = extract_timestamp(json.loads(lines[-1]))
+
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			queue = Queue()
+			reader = StaggeredFileReader(queue, f, rate=600, max_time=1)
+			await reader.read()
+			self.assertEqual(100, queue.length())
+			self.assertEqual(start, extract_timestamp(queue.head()))
+			self.assertEqual(start, extract_timestamp(queue.tail()))
+
+	@async_test
+	async def test_max_time_zero(self):
+		"""
+		Test that when the time is zero, nothing is returned.
+		"""
+
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			queue = Queue()
+			reader = StaggeredFileReader(queue, f, rate=600, max_time=0)
+			await reader.read()
+			self.assertEqual(0, queue.length())
+
+	@async_test
+	async def test_max_time_all(self):
+		"""
+		Test that when all the time is allowed, the entire corpus is returned.
+		"""
+
+		"""
+		Calculate the start and end of the corpus.
+		"""
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			start = extract_timestamp(json.loads(lines[0]))
+			end = extract_timestamp(json.loads(lines[-1]))
+
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			queue = Queue()
+			reader = StaggeredFileReader(queue, f, rate=600, max_time=end - start + 1)
+			await reader.read()
+			self.assertEqual(600, queue.length())
+
+	@async_test
+	async def test_max_time_excess(self):
+		"""
+		Test that when excess time is allowed, the entire corpus is returned.
+		"""
+
+		"""
+		Calculate the start and end of the corpus.
+		"""
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			start = extract_timestamp(json.loads(lines[0]))
+			end = extract_timestamp(json.loads(lines[-1]))
+
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			queue = Queue()
+			reader = StaggeredFileReader(queue, f, rate=600, max_time=end - start + 2)
+			await reader.read()
+			self.assertEqual(600, queue.length())

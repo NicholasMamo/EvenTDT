@@ -178,7 +178,7 @@ class StaggeredFileReader(FileReader):
 				break
 
 			tweet = json.loads(line)
-			if self.max_time >= 0 and extract_timestamp(tweet) - first > self.max_time:
+			if self.max_time >= 0 and extract_timestamp(tweet) - first >= self.max_time:
 				break
 
 			self.queue.enqueue(tweet)
