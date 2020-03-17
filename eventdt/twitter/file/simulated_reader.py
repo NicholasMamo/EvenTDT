@@ -1,12 +1,9 @@
 """
-A simulated file listener reads data from a file.
+A simulated file listener reads data from a file and adds it to a queue.
 It pretends that the event is ongoing, and adds data to the queue according to when they happened.
+Therefore high-volume periods enqueue a lot of tweets to the queue.
+Low-volume periods enqueue fewer tweets to the queue.
 """
-
-from datetime import datetime
-
-from .file_listener import FileListener
-from .tweet_functions import *
 
 import asyncio
 import json
@@ -14,57 +11,88 @@ import os
 import sys
 import time
 
-path = os.path.dirname(__file__)
-path = os.path.join(path, '../../')
+path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
-	sys.path.insert(1, path)
+    sys.path.append(path)
 
-from logger import logger
+from twitter import *
+from .reader import FileReader
 
-class SimulatedFileListener(FileListener):
+class SimulatedFileReader(FileReader):
 	"""
-	The SimulatedFileListener class takes in a file
-	It then proceeds to read it, adding data according to when it was originally received
+	The simulated file listener reads data from a file and adds it to a queue.
+	This works like a simulation, as if the event was happening at the same time.
 
-	:ivar _speed: The reading speed, considered to be a function of time.
-	:vartype _speed: int
-	:ivar _max_time: The maximum time (in seconds) to spend reading the file.
-		If the number is negative, it is ignored.
-	:vartype _max_time: int
-	:ivar _skip_time: The time (in seconds) to skip from the beginning of the file.
-		The time is taken from tweets' `created_at` attribute.
-	:vartype _skip_time: int
+	:ivar speed: The reading speed as a function of time.
+				 If it is set to 0.5, for example, the event progresses at half the speed.
+				 If it is set to 2, the event progresses at double the speed.
+	:vartype speed: int
 	"""
 
-	def __init__(self, queue, f,
-		max_lines=-1, max_time=3600,
-		skip_time=0, speed=1):
+	def __init__(self, queue, f, max_lines=-1, max_time=-1, speed=1, skip_lines=0, skip_time=0):
 		"""
-		Create the listener.
-		By default, the SimulatedFileListener reads for an hour.
+		Create the reader and skip any required lines or time from the file.
+		By default, the file reader skips no lines or time.
+		The skip rate can be set to sample the file.
 
-		:param _queue: The queue to which to add incoming tweets.
-		:vartype _queue: :class:`~queues.queue.Queue`
+		.. note::
+
+			The number of lines and seconds that are skipped depend on the largest number.
+
+		.. note::
+
+			The maximum number of lines and seconds is exclusive.
+			That means that if either are 0, no tweets are read.
+
+		:param queue: The queue to which to add incoming tweets.
+		:vartype queue: :class:`~queues.queue.Queue`
 		:param f: The opened file from where to read the tweets.
 		:type f: file
 		:param max_lines: The maximum number of lines to read.
-			If the number is negative, it is ignored.
+						  If the number is negative, it is ignored.
 		:type max_lines: int
-		:param max_time: The maximum time (in seconds) to spend reading the file.
-			If the number is negative, it is ignored.
+		:param max_time: The maximum time in seconds to spend reading from the file.
+						 The time is taken from tweets' `created_at` attribute.
+						 If the number is negative, it is ignored.
 		:type max_time: int
-		:param skip_time: The time (in seconds) to skip from the beginning of the file.
-			The time is taken from tweets' `created_at` attribute.
-		:type skip_time: int
 		:param speed: The reading speed, considered to be a function of time.
+					  If it is set to 0.5, for example, the event progresses at half the speed.
+   				 	  If it is set to 2, the event progresses at double the speed.
 		:type speed: int
+		:param skip_lines: The number of lines to skip from the beginning of the file.
+		:type skip_lines: int
+		:param skip_time: The number of seconds to skip from the beginning of the file.
+		:type skip_time: int
+
+		:raises ValueError: When the speed is zero or negative.
+		:raises ValueError: When the number of lines to skip is negative.
+		:raises ValueError: When the number of seconds to skip is negative.
+		:raises ValueError: When the number of lines to skip after each read is not an integer.
+		:raises ValueError: When the number of lines to skip after each read is negative.
 		"""
 
-		super(SimulatedFileListener, self).__init__(queue, f, max_lines=max_lines)
+		super(SimulatedFileReader, self).__init__(queue, f, max_lines=max_lines, max_time=max_time)
 
-		self._speed = speed
-		self._max_time = max_time
-		self._skip_time = skip_time
+		"""
+		Validate the inputs.
+		"""
+		if speed <= 0:
+			raise ValueError(f"The speed must be positive; received {speed}")
+
+		if skip_lines % 1:
+			raise ValueError(f"The number of lines to skip must be an integer; received {skip_lines}")
+
+		if skip_lines < 0:
+			raise ValueError(f"The number of lines to skip cannot be negative; received {skip_lines}")
+
+		if skip_time < 0:
+			raise ValueError(f"The number of seconds to skip cannot be negative; received {skip_time}")
+
+		self.speed = speed
+
+		self.skip(skip_lines, skip_time)
+
+
 
 	async def read(self):
 		"""
@@ -98,7 +126,6 @@ class SimulatedFileListener(FileListener):
 				data = old_data
 				continue
 
-		logger.info("Skipped %d tweets" % skip)
 		original_start = extract_timestamp(data) # the position is where the stream will start
 		self._file.seek(last_pos) # reset the file pointer to the last line read
 
@@ -120,11 +147,11 @@ class SimulatedFileListener(FileListener):
 			"""
 			If the line is 'in the future', stop reading for a bit
 			"""
-			while ((extract_timestamp(data) - original_start) / self._speed > int(datetime.now().timestamp() - start)):
+			while ((extract_timestamp(data) - original_start) / self.speed > int(datetime.now().timestamp() - start)):
 				await asyncio.sleep(sleep)
 
 			if ((self._max_lines > -1 and self._count > self._max_lines)
 				or (int(datetime.now().timestamp() - start) > self._max_time)):
 				break
 
-			self._queue.enqueue(data)
+			self.queue.enqueue(data)
