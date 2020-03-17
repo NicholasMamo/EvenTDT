@@ -92,7 +92,57 @@ class SimulatedFileReader(FileReader):
 
 		self.skip(skip_lines, skip_time)
 
+	def skip(self, lines, time):
+		"""
+		Skip a number of lines from the file.
+		This virtually just reads lines without storing them.
 
+		.. note::
+
+			The number of lines and seconds that are skipped depend on the largest number.
+
+		:param lines: The number of lines to skip.
+		:type lines: int
+		:param time: The number of seconds to skip from the beginning of the file.
+					 The time is taken from tweets' `created_at` attribute.
+		:type time: int
+		"""
+
+		file = self.file
+
+		"""
+		Extract the timestamp from the first tweet, then reset the file pointer.
+		"""
+		line = file.readline()
+		if not line:
+			return
+		start = extract_timestamp(json.loads(line))
+		file.seek(0)
+
+		"""
+		Skip a number of lines first.
+		"""
+		if lines >= 0:
+			for i in range(int(lines)):
+				file.readline()
+
+		"""
+		Skip a number of seconds from the file.
+		Once a line that should not be skipped is skipped, the read is rolled back.
+		"""
+		pos = file.tell()
+		line = file.readline()
+		if not line:
+			return
+		next = json.loads(line)
+		while extract_timestamp(next) - start < time:
+			pos = file.tell()
+			line = file.readline()
+			if not line:
+				break
+			next = json.loads(line)
+
+		file.seek(pos)
 
 	async def read(self):
 		"""
