@@ -434,6 +434,95 @@ If the number is negative, it is ignored.</p></li>
 
 </dd></dl>
 
+<span class="target" id="module-twitter.file.simulated_reader"></span><p>A simulated file listener reads data from a file and adds it to a queue.
+It pretends that the event is ongoing, and adds data to the queue according to when they happened.
+Therefore high-volume periods enqueue a lot of tweets to the queue.
+Low-volume periods enqueue fewer tweets to the queue.</p>
+<dl class="class">
+<dt id="twitter.file.simulated_reader.SimulatedFileReader">
+<em class="property">class </em><code class="sig-name descname">SimulatedFileReader</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">f</em>, <em class="sig-param">max_lines=-1</em>, <em class="sig-param">max_time=-1</em>, <em class="sig-param">speed=1</em>, <em class="sig-param">skip_lines=0</em>, <em class="sig-param">skip_time=0</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.simulated_reader.SimulatedFileReader" title="Permalink to this definition">¶</a></dt>
+<dd><p>The simulated file listener reads data from a file and adds it to a queue.
+This works like a simulation, as if the event was happening at the same time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><p><strong>speed</strong> (<em>int</em>) – The reading speed as a function of time.
+If it is set to 0.5, for example, the event progresses at half the speed.
+If it is set to 2, the event progresses at double the speed.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="twitter.file.simulated_reader.SimulatedFileReader.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">f</em>, <em class="sig-param">max_lines=-1</em>, <em class="sig-param">max_time=-1</em>, <em class="sig-param">speed=1</em>, <em class="sig-param">skip_lines=0</em>, <em class="sig-param">skip_time=0</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.simulated_reader.SimulatedFileReader.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the reader and skip any required lines or time from the file.
+By default, the file reader skips no lines or time.
+The skip rate can be set to sample the file.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The number of lines and seconds that are skipped depend on the largest number.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The maximum number of lines and seconds is exclusive.
+That means that if either are 0, no tweets are read.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>queue</strong> – The queue to which to add incoming tweets.</p></li>
+<li><p><strong>f</strong> (<em>file</em>) – The opened file from where to read the tweets.</p></li>
+<li><p><strong>max_lines</strong> (<em>int</em>) – The maximum number of lines to read.
+If the number is negative, it is ignored.</p></li>
+<li><p><strong>max_time</strong> (<em>int</em>) – The maximum time in seconds to spend reading from the file.
+The maximum time is understood to be i nterms of the corpus’ time.
+The time is taken from tweets’ <cite>created_at</cite> attribute.
+If the number is negative, it is ignored.</p></li>
+<li><p><strong>speed</strong> (<em>int</em>) – The reading speed, considered to be a function of time.
+If it is set to 0.5, for example, the event progresses at half the speed.
+If it is set to 2, the event progresses at double the speed.</p></li>
+<li><p><strong>skip_lines</strong> (<em>int</em>) – The number of lines to skip from the beginning of the file.</p></li>
+<li><p><strong>skip_time</strong> (<em>int</em>) – The number of seconds to skip from the beginning of the file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – When the speed is zero or negative.</p></li>
+<li><p><strong>ValueError</strong> – When the number of lines to skip is not an integer.</p></li>
+<li><p><strong>ValueError</strong> – When the number of lines to skip is negative.</p></li>
+<li><p><strong>ValueError</strong> – When the number of seconds to skip is negative.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="twitter.file.simulated_reader.SimulatedFileReader.skip">
+<code class="sig-name descname">skip</code><span class="sig-paren">(</span><em class="sig-param">lines</em>, <em class="sig-param">time</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.simulated_reader.SimulatedFileReader.skip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Skip a number of lines from the file.
+This virtually just reads lines without storing them.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The number of lines and seconds that are skipped depend on the largest number.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lines</strong> (<em>int</em>) – The number of lines to skip.</p></li>
+<li><p><strong>time</strong> (<em>int</em>) – The number of seconds to skip from the beginning of the file.
+The time is taken from tweets’ <cite>created_at</cite> attribute.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="twitter.file.simulated_reader.SimulatedFileReader.read">
+<em class="property">async </em><code class="sig-name descname">read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.simulated_reader.SimulatedFileReader.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the file.
+Tweets are added as a dictionary to the queue.</p>
+</dd></dl>
+
+</dd></dl>
+
 <span class="target" id="module-twitter.file.staggered_reader"></span><p>The staggered file reader reads lines a few at a time.
 This reader allows a steady stream of tweets to be read and processed.</p>
 <dl class="class">
@@ -451,11 +540,9 @@ This reader allows a steady stream of tweets to be read and processed.</p>
 <dl class="method">
 <dt id="twitter.file.staggered_reader.StaggeredFileReader.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">f</em>, <em class="sig-param">max_lines=-1</em>, <em class="sig-param">max_time=-1</em>, <em class="sig-param">rate=1</em>, <em class="sig-param">skip_rate=0</em>, <em class="sig-param">skip_lines=0</em>, <em class="sig-param">skip_time=0</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.staggered_reader.StaggeredFileReader.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create the listener.
-Simultaneously set the queue, the list of tweets and the number of processed tweets.
-By default, the FileReader skips no lines, though it can be overwritten to skip any number of lines for every one read.
-This makes it possible to sample the file.
-By default, the FileReader has no limit on the number of lines to read per second.</p>
+<dd><p>Create the reader and skip any required lines or time from the file.
+By default, the file reader skips no lines or time.
+The skip rate can be set to sample the file.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The number of lines and seconds that are skipped depend on the largest number.</p>
@@ -477,13 +564,15 @@ The time is taken from tweets’ <cite>created_at</cite> attribute.
 If the number is negative, it is ignored.</p></li>
 <li><p><strong>rate</strong> (<em>float</em>) – The number of lines to read per second.</p></li>
 <li><p><strong>skip_rate</strong> (<em>int</em>) – The number of lines to skip for each line read.</p></li>
-<li><p><strong>skip_lines</strong> – The number of lines to skip from the beginning of the file.</p></li>
+<li><p><strong>skip_lines</strong> (<em>int</em>) – The number of lines to skip from the beginning of the file.</p></li>
+<li><p><strong>skip_time</strong> (<em>int</em>) – The number of seconds to skip from the beginning of the file.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>ValueError</strong> – When the rate is not an integer.</p></li>
 <li><p><strong>ValueError</strong> – When the rate is zero or negative.</p></li>
+<li><p><strong>ValueError</strong> – When the number of lines to skip is not an integer.</p></li>
 <li><p><strong>ValueError</strong> – When the number of lines to skip is negative.</p></li>
 <li><p><strong>ValueError</strong> – When the number of seconds to skip is negative.</p></li>
 <li><p><strong>ValueError</strong> – When the number of lines to skip after each read is not an integer.</p></li>

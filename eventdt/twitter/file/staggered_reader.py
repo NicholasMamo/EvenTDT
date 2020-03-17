@@ -63,6 +63,7 @@ class StaggeredFileReader(FileReader):
 
 		:raises ValueError: When the rate is not an integer.
 		:raises ValueError: When the rate is zero or negative.
+		:raises ValueError: When the number of lines to skip is not an integer.
 		:raises ValueError: When the number of lines to skip is negative.
 		:raises ValueError: When the number of seconds to skip is negative.
 		:raises ValueError: When the number of lines to skip after each read is not an integer.

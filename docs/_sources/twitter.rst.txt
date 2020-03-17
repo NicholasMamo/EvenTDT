@@ -39,6 +39,11 @@ The Twitter package allows you to read in files collected previously.
    :private-members:
    :special-members:
 
+.. automodule:: twitter.file.simulated_reader
+   :members:
+   :private-members:
+   :special-members:
+
 .. automodule:: twitter.file.staggered_reader
    :members:
    :private-members:
