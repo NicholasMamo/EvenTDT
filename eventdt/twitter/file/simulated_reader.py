@@ -52,6 +52,7 @@ class SimulatedFileReader(FileReader):
 						  If the number is negative, it is ignored.
 		:type max_lines: int
 		:param max_time: The maximum time in seconds to spend reading from the file.
+						 The maximum time is understood to be i nterms of the corpus' time.
 						 The time is taken from tweets' `created_at` attribute.
 						 If the number is negative, it is ignored.
 		:type max_time: int
@@ -147,61 +148,44 @@ class SimulatedFileReader(FileReader):
 	async def read(self):
 		"""
 		Read the file.
+		Tweets are added as a dictionary to the queue.
 		"""
 
-		"""
-		Load the first line and parse it
-		At the same time, create the tracking variables
-		"""
-		sleep = 0.1
-		self._file.readline()
-		first_line = self._file.readline()
-		data = json.loads(first_line)
-		last_pos, skip = 0, 0 # the last starting byte read by the file, and the number of lines skipped
-		original_start = extract_timestamp(data) # the publicationtime of the first tweet
-		"""
-		Keep reading lines until the first encountered tweet published after the given number of seconds
-		"""
-		while extract_timestamp(data) - original_start < self._skip_time :
-			last_pos = self._file.tell() # record the file's position
-			skip += 1 # a new line has been skipped
-			"""
-			Read another line
-			"""
-			line = self._file.readline()
-			old_data = dict(data)
-			try:
-				data = json.loads(line)
-			except ValueError as e:
-				data = old_data
-				continue
+		file = self.file
 
-		original_start = extract_timestamp(data) # the position is where the stream will start
-		self._file.seek(last_pos) # reset the file pointer to the last line read
-
-		start = datetime.now().timestamp() # start timing the procedure
 		"""
-		Go through each line and add it to the queue
+		Extract the timestamp from the first tweet, then reset the file pointer.
 		"""
-		for line in self._file:
-			"""
-			Stop reading if the limit has been reached
-			"""
-			self._count += 1
-			data = json.loads(line)
-			if "created_at" not in data:
-				continue
+		pos = file.tell()
+		line = file.readline()
+		if not line:
+			return
+		first = extract_timestamp(json.loads(line))
+		file.seek(pos)
 
-			data["time"] = extract_timestamp(data)
+		"""
+		Go through each line and add it to the queue.
+		"""
+		start = time.time()
+		for i, line in enumerate(file):
+			tweet = json.loads(line)
+			created_at = extract_timestamp(tweet)
 
 			"""
-			If the line is 'in the future', stop reading for a bit
+			If the maximum number of lines, or the time, has been exceeded, stop reading.
 			"""
-			while ((extract_timestamp(data) - original_start) / self.speed > int(datetime.now().timestamp() - start)):
-				await asyncio.sleep(sleep)
-
-			if ((self._max_lines > -1 and self._count > self._max_lines)
-				or (int(datetime.now().timestamp() - start) > self._max_time)):
+			if self.max_lines >= 0 and i >= self.max_lines:
 				break
 
-			self.queue.enqueue(data)
+			if self.max_time >= 0 and created_at - first >= self.max_time:
+				break
+
+			"""
+			If the tweet is 'in the future', stop reading until the reader catches up.
+			It is only after it catches up that the tweet is added to the queue.
+			"""
+			elapsed = time.time() - start
+			if (created_at - first) / self.speed > elapsed:
+				await asyncio.sleep((created_at - first) / self.speed - elapsed)
+
+			self.queue.enqueue(tweet)
