@@ -38,6 +38,11 @@ class StaggeredFileReader(FileReader):
 
 			The number of lines and seconds that are skipped depend on the largest number.
 
+		.. note::
+
+			The maximum number of lines and seconds is exclusive.
+			That means that if either are 0, no tweets are read.
+
 		:param queue: The queue to which to add the tweets.
 		:type queue: :class:`~queues.queue.Queue`
 		:param f: The opened file from where to read the tweets.
