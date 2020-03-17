@@ -57,6 +57,9 @@ class StaggeredFileReader(FileReader):
 		:param skip_rate: The number of lines to skip for each line read.
 		:type skip_rate: int
 		:param skip_lines: The number of lines to skip from the beginning of the file.
+		:type skip_lines: int
+		:param skip_time: The number of seconds to skip from the beginning of the file.
+		:type skip_time: int
 
 		:raises ValueError: When the rate is not an integer.
 		:raises ValueError: When the rate is zero or negative.
