@@ -28,11 +28,9 @@ class StaggeredFileReader(FileReader):
 
 	def __init__(self, queue, f, max_lines=-1, max_time=-1, rate=1, skip_rate=0, skip_lines=0, skip_time=0):
 		"""
-		Create the listener.
-		Simultaneously set the queue, the list of tweets and the number of processed tweets.
-		By default, the FileReader skips no lines, though it can be overwritten to skip any number of lines for every one read.
-		This makes it possible to sample the file.
-		By default, the FileReader has no limit on the number of lines to read per second.
+		Create the reader and skip any required lines or time from the file.
+		By default, the file reader skips no lines or time.
+		The skip rate can be set to sample the file.
 
 		.. note::
 
