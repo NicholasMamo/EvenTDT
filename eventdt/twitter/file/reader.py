@@ -21,9 +21,13 @@ class FileReader(ABC):
 	:ivar max_lines: The maximum number of lines to read.
 					 If the number is negative, it is ignored.
 	:vartype max_lines: int
+	:ivar max_time: The maximum time in seconds to spend reading from the file.
+					The time is taken from tweets' `created_at` attribute.
+					If the number is negative, it is ignored.
+	:vartype max_time: int
 	"""
 
-	def __init__(self, queue, f, max_lines=-1):
+	def __init__(self, queue, f, max_lines=-1, max_time=-1):
 		"""
 		Create the listener.
 		Simultaneously set the queue, the list of tweets and the number of processed tweets.
@@ -35,11 +39,16 @@ class FileReader(ABC):
 		:param max_lines: The maximum number of lines to read.
 						  If the number is negative, it is ignored.
 		:type max_lines: int
+		:param max_time: The maximum time in seconds to spend reading from the file.
+						 The time is taken from tweets' `created_at` attribute.
+						 If the number is negative, it is ignored.
+		:type max_time: int
 		"""
 
 		self.queue = queue
 		self.file = f
 		self.max_lines = max_lines
+		self.max_time = max_time
 
 	@abstractmethod
 	async def read(self):
