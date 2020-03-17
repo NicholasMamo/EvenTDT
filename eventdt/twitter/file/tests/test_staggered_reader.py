@@ -334,3 +334,53 @@ class TestStaggeredFileReader(unittest.TestCase):
 			reader = StaggeredFileReader(queue, f, rate=1000, skip_time=skip + 1)
 			await reader.read()
 			self.assertEqual(0, queue.length())
+
+	@async_test
+	async def test_skip_rate(self):
+		"""
+		Test that when using the skip rate, the tweets are distributed evenly.
+		"""
+
+		"""
+		Calculate the start and end of the corpus.
+		"""
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			start = extract_timestamp(json.loads(lines[0]))
+			end = extract_timestamp(json.loads(lines[-1]))
+
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			queue = Queue()
+			reader = StaggeredFileReader(queue, f, rate=1000, skip_rate=1)
+			await reader.read()
+			self.assertEqual(300, queue.length())
+			self.assertEqual(start, extract_timestamp(queue.head()))
+			self.assertEqual(end, extract_timestamp(queue.tail()))
+
+	@async_test
+	async def test_rate(self):
+		"""
+		Test that when using the rate, the time scales accordingly.
+		"""
+
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			queue = Queue()
+			reader = StaggeredFileReader(queue, f, rate=100)
+			start = time.time()
+			await reader.read()
+			self.assertTrue(6 <= round(time.time() - start, 2) <= 6.2)
+			self.assertEqual(600, queue.length())
+
+	@async_test
+	async def test_rate_with_skip(self):
+		"""
+		Test that when using the rate while skipping, the time scales accordingly.
+		"""
+
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			queue = Queue()
+			reader = StaggeredFileReader(queue, f, rate=100, skip_rate=1)
+			start = time.time()
+			await reader.read()
+			self.assertTrue(3 <= round(time.time() - start, 2) <= 3.1)
+			self.assertEqual(300, queue.length())

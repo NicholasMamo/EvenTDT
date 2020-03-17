@@ -166,8 +166,14 @@ class StaggeredFileReader(FileReader):
 
 		"""
 		Go through each line and add it to the queue
+		Time how long it takes to read each tweet to avoid extra time skipping.
 		"""
 		for i, line in enumerate(file):
+			start = time.time()
+
+			"""
+			If the maximum number of lines, or time, has been exceeded, stop reading.
+			"""
 			if self.max_lines >= 0 and i > self.max_lines:
 				break
 
@@ -185,6 +191,10 @@ class StaggeredFileReader(FileReader):
 
 			"""
 			If there is a limit on the number of lines to read per minute, sleep a bit.
+			The calculation considers how long reading the tweet took.
 			"""
+			elapsed = time.time() - start
 			if self.rate > 0:
-				time.sleep(1/self.rate)
+				sleep = 1/self.rate - elapsed
+				if sleep > 0:
+					time.sleep(sleep)
