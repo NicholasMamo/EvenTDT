@@ -201,7 +201,7 @@ class TestStaggeredFileReader(unittest.TestCase):
 
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			queue = Queue()
-			reader = StaggeredFileReader(queue, f, rate=1000)
+			reader = StaggeredFileReader(queue, f, rate=600)
 			self.assertEqual(0, queue.length())
 			await reader.read()
 			self.assertEqual(600, queue.length())
@@ -214,7 +214,7 @@ class TestStaggeredFileReader(unittest.TestCase):
 
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			queue = Queue()
-			reader = StaggeredFileReader(queue, f, rate=1000, skip_lines=0)
+			reader = StaggeredFileReader(queue, f, rate=600, skip_lines=0)
 			await reader.read()
 			self.assertEqual(600, queue.length())
 
@@ -226,7 +226,7 @@ class TestStaggeredFileReader(unittest.TestCase):
 
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			queue = Queue()
-			reader = StaggeredFileReader(queue, f, rate=1000, skip_lines=100)
+			reader = StaggeredFileReader(queue, f, rate=600, skip_lines=100)
 			await reader.read()
 			self.assertEqual(500, queue.length())
 
@@ -238,7 +238,7 @@ class TestStaggeredFileReader(unittest.TestCase):
 
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			queue = Queue()
-			reader = StaggeredFileReader(queue, f, rate=1000, skip_lines=600)
+			reader = StaggeredFileReader(queue, f, rate=600, skip_lines=600)
 			await reader.read()
 			self.assertEqual(0, queue.length())
 
@@ -250,7 +250,7 @@ class TestStaggeredFileReader(unittest.TestCase):
 
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			queue = Queue()
-			reader = StaggeredFileReader(queue, f, rate=1000, skip_lines=601)
+			reader = StaggeredFileReader(queue, f, rate=600, skip_lines=601)
 			await reader.read()
 			self.assertEqual(0, queue.length())
 
@@ -262,7 +262,7 @@ class TestStaggeredFileReader(unittest.TestCase):
 
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			queue = Queue()
-			reader = StaggeredFileReader(queue, f, rate=1000, skip_time=0)
+			reader = StaggeredFileReader(queue, f, rate=600, skip_time=0)
 			await reader.read()
 			self.assertEqual(600, queue.length())
 
@@ -287,7 +287,7 @@ class TestStaggeredFileReader(unittest.TestCase):
 
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			queue = Queue()
-			reader = StaggeredFileReader(queue, f, rate=1000, skip_time=1)
+			reader = StaggeredFileReader(queue, f, rate=600, skip_time=1)
 			await reader.read()
 			self.assertEqual(600 - skipped, queue.length())
 
@@ -309,7 +309,7 @@ class TestStaggeredFileReader(unittest.TestCase):
 
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			queue = Queue()
-			reader = StaggeredFileReader(queue, f, rate=1000, skip_time=skip)
+			reader = StaggeredFileReader(queue, f, rate=600, skip_time=skip)
 			await reader.read()
 			self.assertEqual(50, queue.length())
 
@@ -331,7 +331,7 @@ class TestStaggeredFileReader(unittest.TestCase):
 
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			queue = Queue()
-			reader = StaggeredFileReader(queue, f, rate=1000, skip_time=skip + 1)
+			reader = StaggeredFileReader(queue, f, rate=600, skip_time=skip + 1)
 			await reader.read()
 			self.assertEqual(0, queue.length())
 
@@ -351,7 +351,7 @@ class TestStaggeredFileReader(unittest.TestCase):
 
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			queue = Queue()
-			reader = StaggeredFileReader(queue, f, rate=1000, skip_rate=1)
+			reader = StaggeredFileReader(queue, f, rate=600, skip_rate=1)
 			await reader.read()
 			self.assertEqual(300, queue.length())
 			self.assertEqual(start, extract_timestamp(queue.head()))
@@ -384,3 +384,73 @@ class TestStaggeredFileReader(unittest.TestCase):
 			await reader.read()
 			self.assertTrue(3 <= round(time.time() - start, 2) <= 3.1)
 			self.assertEqual(300, queue.length())
+
+	@async_test
+	async def test_max_lines(self):
+		"""
+		Test that when limiting the number of lines, only a few are returned.
+		"""
+
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			queue = Queue()
+			reader = StaggeredFileReader(queue, f, rate=600, max_lines=100)
+			await reader.read()
+			self.assertEqual(100, queue.length())
+
+	@async_test
+	async def test_max_lines_zero(self):
+		"""
+		Test that when reading zero lines, no lines are returned.
+		"""
+
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			queue = Queue()
+			reader = StaggeredFileReader(queue, f, rate=600, max_lines=0)
+			await reader.read()
+			self.assertEqual(0, queue.length())
+
+	@async_test
+	async def test_max_lines_all(self):
+		"""
+		Test that when reading all lines, all lines are returned.
+		"""
+
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			queue = Queue()
+			reader = StaggeredFileReader(queue, f, rate=600, max_lines=600)
+			await reader.read()
+			self.assertEqual(600, queue.length())
+
+	@async_test
+	async def test_max_lines_excess(self):
+		"""
+		Test that when reading excess lines, all lines are returned.
+		"""
+
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			queue = Queue()
+			reader = StaggeredFileReader(queue, f, rate=600, max_lines=1200)
+			await reader.read()
+			self.assertEqual(600, queue.length())
+
+	@async_test
+	async def test_max_lines_with_skip(self):
+		"""
+		Test that when limiting the number of lines and employing skipping, only a few are returned.
+		"""
+
+		"""
+		Calculate the start and end of the corpus.
+		"""
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			start = extract_timestamp(json.loads(lines[0]))
+			end = extract_timestamp(json.loads(lines[-1]))
+
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			queue = Queue()
+			reader = StaggeredFileReader(queue, f, rate=600, max_lines=100, skip_rate=5)
+			await reader.read()
+			self.assertEqual(100, queue.length())
+			self.assertEqual(start, extract_timestamp(queue.head()))
+			self.assertEqual(end, extract_timestamp(queue.tail()))

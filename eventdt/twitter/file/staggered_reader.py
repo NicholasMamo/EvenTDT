@@ -161,7 +161,7 @@ class StaggeredFileReader(FileReader):
 		line = file.readline()
 		if not line:
 			return
-		start = extract_timestamp(json.loads(line))
+		first = extract_timestamp(json.loads(line))
 		file.seek(pos)
 
 		"""
@@ -174,11 +174,11 @@ class StaggeredFileReader(FileReader):
 			"""
 			If the maximum number of lines, or time, has been exceeded, stop reading.
 			"""
-			if self.max_lines >= 0 and i > self.max_lines:
+			if self.max_lines >= 0 and i >= self.max_lines:
 				break
 
 			tweet = json.loads(line)
-			if self.max_time >= 0 and extract_timestamp(tweet) - start > self.max_time:
+			if self.max_time >= 0 and extract_timestamp(tweet) - first > self.max_time:
 				break
 
 			self.queue.enqueue(tweet)
