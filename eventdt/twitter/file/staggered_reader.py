@@ -115,7 +115,10 @@ class StaggeredFileReader(FileReader):
 		"""
 		Extract the timestamp from the first tweet, then reset the file pointer.
 		"""
-		start = extract_timestamp(json.loads(file.readline()))
+		line = file.readline()
+		if not line:
+			return
+		start = extract_timestamp(json.loads(line))
 		file.seek(0)
 
 		"""
@@ -130,10 +133,16 @@ class StaggeredFileReader(FileReader):
 		Once a line that should not be skipped is skipped, the read is rolled back.
 		"""
 		pos = file.tell()
-		next = json.loads(file.readline())
+		line = file.readline()
+		if not line:
+			return
+		next = json.loads(line)
 		while extract_timestamp(next) - start < time:
 			pos = file.tell()
-			next = json.loads(file.readline())
+			line = file.readline()
+			if not line:
+				break
+			next = json.loads(line)
 
 		file.seek(pos)
 
@@ -149,7 +158,10 @@ class StaggeredFileReader(FileReader):
 		Extract the timestamp from the first tweet, then reset the file pointer.
 		"""
 		pos = file.tell()
-		start = extract_timestamp(json.loads(file.readline()))
+		line = file.readline()
+		if not line:
+			return
+		start = extract_timestamp(json.loads(line))
 		file.seek(pos)
 
 		"""
