@@ -43,3 +43,8 @@ Simple Consumers
    :members:
    :private-members:
    :special-members:
+
+.. automodule:: queues.consumers.stat_consumer
+   :members:
+   :private-members:
+   :special-members:

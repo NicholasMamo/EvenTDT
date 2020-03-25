@@ -282,7 +282,7 @@ The first task reads the file, and the second consumes it.</p>
 <blockquote>
 <div><ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--file</span></code>                 <em>&lt;Required&gt;</em> The file to consume.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">--class</span></code>                <em>&lt;Required&gt;</em> The consumer to use; supported: <cite>PrintConsumer</cite>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">--class</span></code>                <em>&lt;Required&gt;</em> The consumer to use; supported: <cite>PrintConsumer</cite>, <cite>StatConsumer</cite>.</p></li>
 </ul>
 </div></blockquote>
 <dl class="function">
@@ -293,7 +293,7 @@ The first task reads the file, and the second consumes it.</p>
 <blockquote>
 <div><ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--file</span></code>                 <em>&lt;Required&gt;</em> The file to consume.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">--class</span></code>                <em>&lt;Required&gt;</em> The consumer to use; supported: <cite>PrintConsumer</cite>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">--class</span></code>                <em>&lt;Required&gt;</em> The consumer to use; supported: <cite>PrintConsumer</cite>, <cite>StatConsumer</cite>.</p></li>
 </ul>
 </div></blockquote>
 <dl class="field-list simple">
@@ -310,6 +310,35 @@ The first task reads the file, and the second consumes it.</p>
 <dt id="tools.consume.main">
 <code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.consume.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Main program loop.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.consume.stream_process">
+<code class="sig-name descname">stream_process</code><span class="sig-paren">(</span><em class="sig-param">loop</em>, <em class="sig-param">queue</em>, <em class="sig-param">file</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.consume.stream_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stream the file and add its tweets to the queue.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>loop</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.unix_events._UnixSelectorEventLoop</span></code>) – The main event loop.</p></li>
+<li><p><strong>queue</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">multiprocessing.managers.AutoProxy[Queue]</span></code>) – The queue where to add tweets.</p></li>
+<li><p><strong>file</strong> (<em>str</em>) – The path to the file to read.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.consume.consume_process">
+<code class="sig-name descname">consume_process</code><span class="sig-paren">(</span><em class="sig-param">loop</em>, <em class="sig-param">consumer</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.consume.consume_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Consume the incoming tweets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>loop</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.unix_events._UnixSelectorEventLoop</span></code>) – The main event loop.</p></li>
+<li><p><strong>consumer</strong> (<a class="reference internal" href="consumers.html#queues.consumers.consumer.Consumer" title="queues.consumers.consumer.Consumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">queues.consumers.consumer.Consumer</span></code></a>) – The consumer to use to process tweets.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
