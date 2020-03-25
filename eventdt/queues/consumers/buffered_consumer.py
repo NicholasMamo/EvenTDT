@@ -16,8 +16,6 @@ path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
-from logger import logger
-
 class BufferedConsumer(Consumer):
 	"""
 	The buffered consumer adds the processing stage apart from the consumption.
@@ -31,7 +29,7 @@ class BufferedConsumer(Consumer):
 	:vartype buffer: :class:`~queues.queue.Queue`
 	"""
 
-	def __init__(self, queue, periodicity):
+	def __init__(self, queue, periodicity=60):
 		"""
 		Initialize the buffered consumer with its queue and periodicity.
 
@@ -73,7 +71,6 @@ class BufferedConsumer(Consumer):
 		)
 		return results
 
-	@abstractmethod
 	async def _consume(self, max_time, max_inactivity):
 		"""
 		Consume the queue.
@@ -127,7 +124,7 @@ class BufferedConsumer(Consumer):
 		"""
 
 		for i in range(self.periodicity):
-			await asyncio.sleep(sleep)
+			await asyncio.sleep(1)
 			if self.stopped:
 				break
 
