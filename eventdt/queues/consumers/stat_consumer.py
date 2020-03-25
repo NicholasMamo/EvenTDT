@@ -1,30 +1,40 @@
 """
-A simple consumer that observes the stream and outputs statistics about it.
+The statistic consumer is a simple consumer that reports statistics about tweets periodically.
 """
 
 from .buffered_consumer import BufferedConsumer
 
-from datetime import datetime
-
 import asyncio
+import os
+import sys
+import time
+
+path = os.path.join(os.path.dirname(__file__), '..', '..')
+if path not in sys.path:
+    sys.path.append(path)
+
+from logger import logger
 
 class StatConsumer(BufferedConsumer):
 	"""
-	The StatConsumer class' only job is to observe the stream and output the number of tweets per minute every minute.
+	The statistic consumer is a simple consumer that reports statistics about tweets periodically.
+	The reporting is done based on the periodicity.
 	"""
 
 	async def _process(self):
 		"""
-		Count the elements in the queue.
+		Count and report the number of tweets received in the last period.
 		"""
 
-		while not self._stopped:
-			if self._buffer.length() > 0:
-				print(datetime.now().strftime("%H:%M:%S"), self._buffer.length(), "tweets every", self._periodicity, "seconds")
-				self._buffer.empty() # empty the queue to start counting again
-
+		"""
+		The process repeats until the consumer has been stopped.
+		"""
+		await self._sleep()
+		while not self.stopped:
+			logger.info(f"{ self.buffer.length() } tweets in {self.periodicity} seconds")
+			self.buffer.empty()
 			await self._sleep()
 
-		if self._buffer.length() > 0:
-			print(datetime.now().strftime("%H:%M:%S"), self._buffer.length(), "tweets flushed")
-			self._buffer.empty() # empty the queue to start counting again
+		if self.buffer.length():
+			logger.info(self.buffer.length(), "tweets flushed")
+			self.buffer.empty()
