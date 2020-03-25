@@ -70,6 +70,28 @@ def main():
 	print(args.file)
 	print(args.consumer)
 
+def consume_process(loop, consumer):
+	"""
+	Consume the incoming tweets.
+
+	:param loop: The main event loop.
+	:type loop: :class:`asyncio.unix_events._UnixSelectorEventLoop`
+	:param consumer: The consumer to use to process tweets.
+	:type consumer: :class:`queues.consumers.consumer.Consumer`
+	"""
+
+	async def consume(consumer):
+		"""
+		Consume the queue's tweets.
+
+		:param consumer: The consumer to use to process tweets.
+		:type consumer: :class:`queues.consumers.consumer.Consumer`
+		"""
+
+		await consumer.run()
+
+	loop.run_until_complete(consume(consumer))
+
 def consumer(consumer):
 	"""
 	Convert the given string into a consumer class.
