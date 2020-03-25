@@ -1,1 +1,2 @@
+from .simulated_reader import SimulatedFileReader
 from .staggered_reader import StaggeredFileReader
