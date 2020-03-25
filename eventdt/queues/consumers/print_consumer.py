@@ -5,7 +5,16 @@ The print consumer outputs the queue's elements as they arrive.
 from .consumer import Consumer
 
 import asyncio
+import json
+import os
+import sys
 import time
+
+path = os.path.join(os.path.dirname(__file__), '..', '..')
+if path not in sys.path:
+    sys.path.append(path)
+
+from logger import logger
 
 class PrintConsumer(Consumer):
 	"""
@@ -40,7 +49,8 @@ class PrintConsumer(Consumer):
 			The print consumer prints the string representation of each object in the queue.
 			"""
 			while self.queue.length():
-				logger.info(str(self.queue.dequeue()))
+				tweet = self.queue.dequeue()
+				logger.info(tweet.get('text'))
 
 		"""
 		Set a boolean indicating that the consumer has successfully stopped working.
