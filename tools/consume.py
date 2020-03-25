@@ -70,6 +70,32 @@ def main():
 	print(args.file)
 	print(args.consumer)
 
+def stream_process(loop, queue, file):
+	"""
+	Stream the file and add its tweets to the queue.
+
+	:param loop: The main event loop.
+	:type loop: :class:`asyncio.unix_events._UnixSelectorEventLoop`
+	:param queue: The queue where to add tweets.
+	:type queue: :class:`multiprocessing.managers.AutoProxy[Queue]`
+	:param file: The path to the file to read.
+	:type file: str
+	"""
+
+	async def read(reader):
+		"""
+		Read the file.
+
+		:param reader: The file reader to use.
+		:type reader: :class:`twitter.file.reader.FileReader`
+		"""
+
+		await reader.read()
+
+	with open(file, 'r') as f:
+		reader = SimulatedFileReader(queue, f)
+		loop.run_until_complete(read(reader))
+
 def consume_process(loop, consumer):
 	"""
 	Consume the incoming tweets.
