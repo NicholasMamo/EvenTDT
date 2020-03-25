@@ -23,8 +23,12 @@ Accepted arguments:
 """
 
 import argparse
+import asyncio
 import os
 import sys
+
+from multiprocessing import Process
+from multiprocessing.managers import BaseManager
 
 file_path = os.path.dirname(os.path.abspath(__file__))
 root = os.path.join(file_path, '..')
@@ -32,7 +36,9 @@ lib = os.path.join(root, 'eventdt')
 sys.path.insert(-1, root)
 sys.path.insert(-1, lib)
 
+from queues import Queue
 from queues.consumers import PrintConsumer
+from twitter.file import SimulatedFileReader
 
 def setup_args():
 	"""
@@ -67,8 +73,35 @@ def main():
 	"""
 
 	args = setup_args()
-	print(args.file)
-	print(args.consumer)
+
+	"""
+	Register and create a shared queue.
+	"""
+	BaseManager.register("Queue", Queue)
+	manager = BaseManager()
+	manager.start()
+	queue = manager.Queue()
+
+	"""
+	Create a consumer with the shared queue.
+	Then, create two processes.
+	Both processes share the event loop and queue.
+	"""
+	consumer = args.consumer[0](queue)
+	loop = asyncio.get_event_loop()
+	stream = Process(target=stream_process, args=(loop, queue, args.file[0], ))
+	consume = Process(target=consume_process, args=(loop, consumer, ))
+	stream.start()
+	consume.start()
+
+	"""
+	Wait for the streaming and consumption jobs to finish.
+	Then, close the loop and shut down the base manager.
+	"""
+	stream.join()
+	consume.join()
+	loop.close()
+	manager.shutdown()
 
 def stream_process(loop, queue, file):
 	"""
