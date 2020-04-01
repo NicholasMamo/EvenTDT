@@ -1,2 +1,2 @@
-from tf import TF
-from tfidf import TFIDF
+from .tf import TF
+from .tfidf import TFIDF
