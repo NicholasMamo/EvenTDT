@@ -43,6 +43,9 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 	:vartype store: :class:`~tdt.nutrition.store.Store`
 	:ivar scheme: The term-weighting scheme used to create documents.
 	:vartype scheme: :class:`~nlp.term_weighting.TermWeighting`
+	:ivar documents: The documents that can still be used for summarization.
+					 Older documents are automatically cleared.
+	:vartype documents: :class:`~nlp.document.Document`
 	"""
 
 	def __init__(self, queue, periodicity=5, timestamp='timestamp', scheme=None):
@@ -68,6 +71,7 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 		super(ZhaoConsumer, self).__init__(queue, periodicity, timestamp=timestamp)
 		self.scheme = scheme
 		self.store = MemoryNutritionStore()
+		self.documents = { }
 
 	def _to_documents(self, tweets):
 		"""
