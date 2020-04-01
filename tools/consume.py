@@ -18,7 +18,7 @@ To run the script, use:
 Accepted arguments:
 
 	- ``-f --file``			*<Required>* The file to consume.
-	- ``-c --class``		*<Required>* The consumer to use; supported: `PrintConsumer`, `StatConsumer`.
+	- ``-c --class``		*<Required>* The consumer to use; supported: `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.
 
 """
 
@@ -37,7 +37,7 @@ sys.path.insert(-1, root)
 sys.path.insert(-1, lib)
 
 from queues import Queue
-from queues.consumers import PrintConsumer, StatConsumer
+from queues.consumers import PrintConsumer, StatConsumer, ZhaoConsumer
 from twitter.file import SimulatedFileReader
 
 def setup_args():
@@ -47,7 +47,7 @@ def setup_args():
 	Accepted arguments:
 
 		- ``-f --file``			*<Required>* The file to consume.
-		- ``-c --class``		*<Required>* The consumer to use; supported: `PrintConsumer`, `StatConsumer`.
+		- ``-c --class``		*<Required>* The consumer to use; supported: `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.
 
 	:return: The command-line arguments.
 	:rtype: list
@@ -170,6 +170,7 @@ def consumer(consumer):
 	consumers = {
 		'printconsumer': PrintConsumer,
 		'statconsumer': StatConsumer,
+		'zhaoconsumer': ZhaoConsumer,
 	}
 
 	if consumer.lower() in consumers:
