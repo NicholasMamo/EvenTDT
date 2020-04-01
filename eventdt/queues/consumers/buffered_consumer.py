@@ -16,6 +16,8 @@ if path not in sys.path:
 from queues import Queue
 from .consumer import Consumer
 
+import twitter
+
 class BufferedConsumer(Consumer):
 	"""
 	The buffered consumer adds the processing stage apart from the consumption.
@@ -177,7 +179,7 @@ class SimulatedBufferedConsumer(BufferedConsumer):
 			await asyncio.sleep(0.1)
 
 		if not self.stopped:
-			start = self.buffer.head()[self.timestamp]
+			start = twitter.extract_timestamp(self.buffer.head())
 
 		"""
 		Check if the consumer should stop.
@@ -188,7 +190,7 @@ class SimulatedBufferedConsumer(BufferedConsumer):
 			#. The buffer's periodicity has been reached.
 		"""
 		while True:
-			if self.stopped or self.buffer.tail()[self.timestamp] - start >= self.periodicity:
+			if self.stopped or twitter.extract_timestamp(self.buffer.tail()) - start >= self.periodicity:
 				break
 
 			await asyncio.sleep(sleep)
