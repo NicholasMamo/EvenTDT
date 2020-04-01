@@ -27,6 +27,8 @@ from nlp.tokenizer import Tokenizer
 from logger import logger
 
 from summarization.algorithms import MMR
+from summarization.timeline import Timeline
+from summarization.timeline.nodes import DocumentNode
 
 from tdt.algorithms import Zhao
 from tdt.nutrition import MemoryNutritionStore
@@ -75,6 +77,51 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 		self.store = MemoryNutritionStore()
 		self.documents = { }
 		self.algo = Zhao(self.store)
+
+	async def _process(self):
+		"""
+		Find breaking develpoments based on changes in volume.
+
+		:return: The constructed timeline.
+		:rtype: :class:`~summarization.timeline.Timeline`
+		"""
+
+		timeline = Timeline(DocumentNode, 0, 1)
+
+		while not self.stopped:
+			"""
+			If there are tweets in the buffer, dequeue them and convert them into documents.
+			"""
+			if self.buffer.length() > 0:
+				tweets = self.buffer.dequeue_all()
+				documents = self._to_documents(tweets)
+				latest_timestamp = self._latest_timestamp(documents)
+
+				"""
+				Add the received documents to the document list.
+				Then remove old documents that are not needed anymore.
+				Zhao et al. limit the dynamic window to 60 seconds.
+				Therefore only documents from the past 30 seconds can be relevant.
+				"""
+				self._add_documents(documents)
+				self.documents = self._documents_since(latest_timestamp - 30)
+
+				"""
+				Create checkpoints from the received documents.
+				"""
+				self._create_checkpoint(last_timestamp, documents)
+
+				"""
+				Detect topics from the stream.
+				"""
+				window = self._detect_topics(latest_timestamp)
+				if window:
+					start, end = window
+					timeline.add(timestamp, self._documents_since(start))
+
+			await self._sleep()
+
+		return timeline
 
 	def _to_documents(self, tweets):
 		"""
@@ -204,72 +251,17 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 
 	def _detect_topics(self, timestamp):
 		"""
-		Perform topic detection.
+		Detect breaking topics using the Zhao et al. algorithm.
 
-		:param timestamp: The current timestamp, used to isolate recent documents.
-		:type timestamp: int
+		:param timestamp: The timestamp at which point topics are detected.
+						  This value is exclusive.
+		:type timestamp: float
 
-		:return: A list of emerging terms from the cluster.
-		:rtype: list
+		:return: A tuple with the start and end timestamp of the time window when there was a burst.
+				 Note that this is a half-window, not the entire window.
+				 If there was an increase in the second half of the last 60 seconds, the last 30 seconds are returned.
+				 If there was no burst, `False` is returned.
+		:rtype: tuple or bool
 		"""
 
-		(breaking, time_window) = zhao.detect_topics(self.store, # use the nutrition store's checkpoints as historical data
-			timestamp=timestamp, # do not consider checkpoints in this sliding time window, but only those that preceed it
-			post_rate=1.7
-		)
-		return (breaking, time_window)
-
-	async def _process(self):
-		"""
-		Find breaking develpoments based on volume.
-
-		:return: A list of topics, represented with tweets that represent breaking topics.
-		:rtype: list of tweets
-		"""
-
-		raw_timeline = {}
-		timeline = []
-		document_set = {}
-		last_timestamp = 0
-
-		while not self._stopped:
-			if self._buffer.length() > 0:
-				"""
-				The first step is to filter out non-English tweets and tokenize the rest
-				"""
-				tweets = self._buffer.dequeue_all()
-				documents = self._tokenize(tweets)
-				documents = sorted(documents, key=lambda document: document.get_attribute("timestamp"))
-				last_timestamp = documents[-1].get_attribute("timestamp")
-
-				"""
-				Save the documents just in case they need to be used for summarization.
-				"""
-				for document in documents:
-					timestamp = document.get_attribute("timestamp")
-					document_set[timestamp] = document_set.get(timestamp, [])
-					document_set[timestamp].append(document)
-
-				"""
-				Remove old documents.
-				Zhao et al. limit the dynamic window to 60 seconds.
-				If this window is used, then the past 30 seconds are relevant.
-				"""
-				document_set = { timestamp: historical_documents for timestamp, historical_documents in document_set.items() if last_timestamp - timestamp <= 30 }
-
-				await self._create_checkpoint(last_timestamp, documents)
-
-			breaking, time_window = self._detect_topics(last_timestamp)
-			if breaking:
-				timestamp = -1
-				collection = [ document for timestamp in document_set.keys() for document in document_set.get(timestamp) if last_timestamp - timestamp <= time_window / 2. ]
-				raw_timeline[last_timestamp] = collection
-
-			await self._sleep()
-
-		for timestamp, collection in sorted(raw_timeline.items(), key=lambda x: x[0]):
-			summary = MMR(collection, timestamp=timestamp)
-			logger.info("%s: %s" % (datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S'), summary.generate_summary(tweet_cleaner.TweetCleaner)))
-			timeline.append(summary)
-
-		return timeline
+		return self.algo.detect(timestamp)
