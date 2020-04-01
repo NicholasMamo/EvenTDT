@@ -183,6 +183,53 @@ class TestZhaoConsumer(unittest.TestCase):
 			documents = consumer._to_documents(tweets)[::-1]
 			self.assertEqual(documents[0].attributes['timestamp'], consumer._latest_timestamp(documents))
 
+	def test_add_documents(self):
+		"""
+		Test adding documents to the historical data.
+		"""
+
+		consumer = ZhaoConsumer(Queue(), 60)
+		self.assertEqual({ }, consumer.documents)
+
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			consumer._add_documents(documents)
+			self.assertEqual(set(document.attributes['timestamp'] for document in documents), set(consumer.documents.keys()))
+
+	def test_add_documents_empty(self):
+		"""
+		Test that when adding no documents to the historical data, it remains unchanged.
+		"""
+
+		consumer = ZhaoConsumer(Queue(), 60)
+		self.assertEqual({ }, consumer.documents)
+
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			consumer._add_documents(documents)
+			self.assertEqual(set(document.attributes['timestamp'] for document in documents), set(consumer.documents.keys()))
+			consumer._add_documents([ ])
+			self.assertEqual(set(document.attributes['timestamp'] for document in documents), set(consumer.documents.keys()))
+
+	def test_add_documents_multiple(self):
+		"""
+		Test that when adding documents to the historical data, each timestamp can have multiple documents.
+		"""
+
+		consumer = ZhaoConsumer(Queue(), 60)
+		self.assertEqual({ }, consumer.documents)
+
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			consumer._add_documents(documents)
+			self.assertTrue(all( len(documents) > 1 for documents in consumer.documents.values() ))
+
 	def test_create_checkpoint_empty(self):
 		"""
 		Test that when creating the first checkpoint, the nutrition is created from scratch.

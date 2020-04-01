@@ -121,7 +121,7 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 		"""
 		Get the latest timestamp from the given documents.
 
-		:param documents: The list of documents that form the checkpoint.
+		:param documents: The list of documents from where to get the latest timestamp.
 		:type documents: list of :class:`~nlp.document.Document`
 
 		:return: The latest timestamp in the given document set.
@@ -132,6 +132,19 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 
 		timestamps = [ document.attributes['timestamp'] for document in documents ]
 		return max(timestamps)
+
+	def _add_documents(self, documents):
+		"""
+		Add the given documents to the list of stored documents.
+
+		:param documents: The list of documents that form the checkpoint.
+		:type documents: list of :class:`~nlp.document.Document`
+		"""
+
+		for document in documents:
+			timestamp = document.attributes['timestamp']
+			self.documents[timestamp] = self.documents.get(timestamp, [ ])
+			self.documents[timestamp].append(document)
 
 	def _create_checkpoint(self, documents):
 		"""
