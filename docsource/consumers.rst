@@ -48,3 +48,11 @@ Simple Consumers
    :members:
    :private-members:
    :special-members:
+
+Algorithms
+----------
+
+.. automodule:: queues.consumers.zhao_consumer
+   :members:
+   :private-members:
+   :special-members:
