@@ -151,8 +151,7 @@ class TestZhaoConsumer(unittest.TestCase):
 					"""
 					self.assertFalse(document.text.endswith('…'))
 
-	@async_test
-	async def test_create_checkpoint_empty(self):
+	def test_create_checkpoint_empty(self):
 		"""
 		Test that when creating the first checkpoint, the nutrition is created from scratch.
 		"""
@@ -162,12 +161,11 @@ class TestZhaoConsumer(unittest.TestCase):
 			for line in f:
 				tweet = json.loads(line)
 				documents = consumer._to_documents([ tweet ])
-				await consumer._create_checkpoint(documents)
+				consumer._create_checkpoint(documents)
 				self.assertEqual([ 1 ], list(consumer.store.all().values()))
 				break
 
-	@async_test
-	async def test_create_checkpoint_multiple_empty(self):
+	def test_create_checkpoint_multiple_empty(self):
 		"""
 		Test that when creating the first checkpoint with multiple tweets, the nutrition is created from scratch.
 		"""
@@ -177,11 +175,10 @@ class TestZhaoConsumer(unittest.TestCase):
 			lines = f.readlines()[:10]
 			tweets = [ json.loads(line) for line in lines ]
 			documents = consumer._to_documents(tweets)
-			await consumer._create_checkpoint(documents)
+			consumer._create_checkpoint(documents)
 			self.assertEqual([ 10 ], list(consumer.store.all().values()))
 
-	@async_test
-	async def test_create_checkpoint_increment(self):
+	def test_create_checkpoint_increment(self):
 		"""
 		Test that when creating checkpoints, the nutrition increments.
 		"""
@@ -192,11 +189,10 @@ class TestZhaoConsumer(unittest.TestCase):
 			tweets = [ json.loads(line) for line in lines ]
 			documents = consumer._to_documents(tweets)
 			for i, document in enumerate(documents):
-				await consumer._create_checkpoint([ document ])
+				consumer._create_checkpoint([ document ])
 				self.assertEqual([ i + 1 ], list(consumer.store.all().values()))
 
-	@async_test
-	async def test_create_checkpoint_timestamp(self):
+	def test_create_checkpoint_timestamp(self):
 		"""
 		Test that when creating checkpoints, the correct timestamp is recorded.
 		"""
@@ -207,11 +203,10 @@ class TestZhaoConsumer(unittest.TestCase):
 			tweets = [ json.loads(line) for line in lines ]
 			documents = consumer._to_documents(tweets)
 			for i, document in enumerate(documents):
-				await consumer._create_checkpoint([ document ])
+				consumer._create_checkpoint([ document ])
 				self.assertEqual(i + 1, consumer.store.get(document.attributes['timestamp']))
 
-	@async_test
-	async def test_create_checkpoint_range(self):
+	def test_create_checkpoint_range(self):
 		"""
 		Test that when creating checkpoints, the correct range of timestamps is created.
 		"""
@@ -221,6 +216,6 @@ class TestZhaoConsumer(unittest.TestCase):
 			lines = f.readlines()
 			tweets = [ json.loads(line) for line in lines ]
 			documents = consumer._to_documents(tweets)
-			await consumer._create_checkpoint(documents)
+			consumer._create_checkpoint(documents)
 			self.assertEqual(documents[0].attributes['timestamp'], min(consumer.store.all()))
 			self.assertEqual(documents[-1].attributes['timestamp'], max(consumer.store.all()))

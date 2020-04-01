@@ -113,7 +113,7 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 
 		return documents
 
-	async def _create_checkpoint(self, documents):
+	def _create_checkpoint(self, documents):
 		"""
 		Create checkpoints from the documents in the
 		After every time window has elapsed, create a checkpoint from the documents.
