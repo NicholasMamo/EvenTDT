@@ -7,6 +7,8 @@ The algorithm revolves around the :class:`~tdt.algorithms.zhao.Zhao` algorithm.
 	Implementation based on the algorithm presented in `Human as Real-Time Sensors of Social and Physical Events: A Case Study of Twitter and Sports Games by Zhao et al. (2011) <https://arxiv.org/abs/1106.4300>`_.
 """
 
+from datetime import datetime
+
 import asyncio
 import math
 import os
@@ -120,7 +122,9 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 				window = self._detect_topics(latest_timestamp)
 				if window:
 					start, end = window
-					timeline.add(timestamp, self._documents_since(start))
+					timeline.add(latest_timestamp, self._documents_since(start))
+					summary = self.summarization.summarize(timeline.nodes[-1].get_all_documents(), 140)
+					logger.info(f"{datetime.fromtimestamp(latest_timestamp).iso_format()}: { str(summary) }")
 
 			await self._sleep()
 
