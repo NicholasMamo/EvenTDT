@@ -43,7 +43,7 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 	:vartype scheme: :class:`~nlp.term_weighting.TermWeighting`
 	"""
 
-	def __init__(self, queue, periodicity, timestamp='timestamp', scheme=None):
+	def __init__(self, queue, periodicity=5, timestamp='timestamp', scheme=None):
 		"""
 		Create the consumer with a queue.
 		Simultaneously create a nutrition store and the topic detection algorithm container.
@@ -53,6 +53,7 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 		:param queue: The queue that is consumed.
 		:type queue: :class:`~queues.queue.Queue`
 		:param periodicity: The time window in seconds of the buffered consumer, or how often it is invoked.
+							This defaults to 5 seconds, the same span as half the smallest time window in Zhao et al.'s algorithm.
 		:type periodicity: int
 		:param timestamp: The name of the vector attribute used to get the timestamp value.
 						  The time value is expected to be a float or integer.
