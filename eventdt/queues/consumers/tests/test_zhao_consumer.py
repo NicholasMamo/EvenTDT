@@ -10,7 +10,7 @@ import unittest
 
 path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
 if path not in sys.path:
-    sys.path.append(path)
+	sys.path.append(path)
 
 from queues import Queue
 from queues.consumers import ZhaoConsumer
@@ -326,6 +326,75 @@ class TestZhaoConsumer(unittest.TestCase):
  			documents = sorted(documents, key=lambda document: document.attributes['timestamp'])
  			consumer._add_documents(documents)
  			self.assertEqual([ ], consumer._documents_since(documents[-1].attributes['timestamp'] + 1))
+
+	def test_remove_documents_before_empty(self):
+ 		"""
+ 		Test that when removing documents when there are no documents, nothing is removed.
+ 		"""
+
+ 		consumer = ZhaoConsumer(Queue(), 60)
+ 		self.assertEqual({ }, consumer.documents)
+
+ 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+ 			lines = f.readlines()
+ 			tweets = [ json.loads(line) for line in lines ]
+ 			documents = consumer._to_documents(tweets)
+ 			documents = sorted(documents, key=lambda document: document.attributes['timestamp'])
+ 			consumer._remove_documents_before(documents[0].attributes['timestamp'] - 1)
+ 			self.assertEqual([ ], consumer._documents_since(0))
+
+	def test_remove_documents_before_none(self):
+ 		"""
+ 		Test that when removing documents that were published before the first document, nothing is removed.
+ 		"""
+
+ 		consumer = ZhaoConsumer(Queue(), 60)
+ 		self.assertEqual({ }, consumer.documents)
+
+ 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+ 			lines = f.readlines()
+ 			tweets = [ json.loads(line) for line in lines ]
+ 			documents = consumer._to_documents(tweets)
+ 			documents = sorted(documents, key=lambda document: document.attributes['timestamp'])
+ 			consumer._add_documents(documents)
+ 			consumer._remove_documents_before(documents[0].attributes['timestamp'] - 1)
+ 			self.assertEqual(documents, consumer._documents_since(0))
+
+	def test_remove_documents_before_exclusive(self):
+ 		"""
+ 		Test that when removing documents, the removal is exclusive.
+ 		"""
+
+ 		consumer = ZhaoConsumer(Queue(), 60)
+ 		self.assertEqual({ }, consumer.documents)
+
+ 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+ 			lines = f.readlines()
+ 			tweets = [ json.loads(line) for line in lines ]
+ 			documents = consumer._to_documents(tweets)
+ 			documents = sorted(documents, key=lambda document: document.attributes['timestamp'])
+ 			consumer._add_documents(documents)
+ 			consumer._remove_documents_before(documents[0].attributes['timestamp'])
+ 			self.assertEqual(documents, consumer._documents_since(0))
+ 			consumer._remove_documents_before(documents[-1].attributes['timestamp'])
+ 			self.assertEqual(documents[-50:], consumer._documents_since(0))
+
+	def test_remove_documents_before_all(self):
+ 		"""
+ 		Test that when removing all documents, no documents remain.
+ 		"""
+
+ 		consumer = ZhaoConsumer(Queue(), 60)
+ 		self.assertEqual({ }, consumer.documents)
+
+ 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+ 			lines = f.readlines()
+ 			tweets = [ json.loads(line) for line in lines ]
+ 			documents = consumer._to_documents(tweets)
+ 			documents = sorted(documents, key=lambda document: document.attributes['timestamp'])
+ 			consumer._add_documents(documents)
+ 			consumer._remove_documents_before(documents[-1].attributes['timestamp'] + 1)
+ 			self.assertEqual([ ], consumer._documents_since(0))
 
 	def test_create_checkpoint_empty(self):
 		"""

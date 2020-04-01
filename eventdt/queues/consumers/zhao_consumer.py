@@ -109,7 +109,7 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 				Therefore only documents from the past 30 seconds can be relevant.
 				"""
 				self._add_documents(documents)
-				self.documents = self._documents_since(latest_timestamp - 30)
+				self._remove_documents_before(latest_timestamp - 30)
 
 				"""
 				Create checkpoints from the received documents.
@@ -223,6 +223,17 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 			documents.extend(self.documents[timestamp])
 
 		return documents
+
+	def _remove_documents_before(self, until):
+		"""
+		Remove all the documents published before the given timestamp.
+
+		:param until: The timestamp until when all documents should be removed.
+					  This value is exclusive.
+		:type until: float
+		"""
+
+		self.documents = { timestamp: documents for timestamp, documents in self.documents.items() if timestamp >= until }
 
 	def _create_checkpoint(self, documents):
 		"""
