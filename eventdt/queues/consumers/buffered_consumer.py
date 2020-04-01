@@ -193,4 +193,4 @@ class SimulatedBufferedConsumer(BufferedConsumer):
 			if self.stopped or twitter.extract_timestamp(self.buffer.tail()) - start >= self.periodicity:
 				break
 
-			await asyncio.sleep(sleep)
+			await asyncio.sleep(0.1)
