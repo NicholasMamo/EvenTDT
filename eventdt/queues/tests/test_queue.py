@@ -1,5 +1,5 @@
 """
-Test the functionality of the Wikipedia extrapolator.
+Test the functionality of the queue.
 """
 
 import os
@@ -18,7 +18,7 @@ from queues import Queue
 
 class TestQueue(unittest.TestCase):
 	"""
-	Test the implementation of the Queue.
+	Test the implementation of the queue.
 	"""
 
 	def test_empty_init(self):
