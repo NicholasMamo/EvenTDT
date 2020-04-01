@@ -109,7 +109,7 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 				"""
 				Create checkpoints from the received documents.
 				"""
-				self._create_checkpoint(last_timestamp, documents)
+				self._create_checkpoint(documents)
 
 				"""
 				Detect topics from the stream.
