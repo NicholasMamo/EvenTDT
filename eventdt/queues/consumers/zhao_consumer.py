@@ -46,6 +46,8 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 	:ivar documents: The documents that can still be used for summarization.
 					 Older documents are automatically cleared.
 	:vartype documents: :class:`~nlp.document.Document`
+	:ivar algo: The TDT algorithm: Zhao et al.'s implementation.
+	:vartype algo: :class:`~tdt.algorithms.zhao.Zhao`
 	"""
 
 	def __init__(self, queue, periodicity=5, timestamp='timestamp', scheme=None):
@@ -72,6 +74,7 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 		self.scheme = scheme
 		self.store = MemoryNutritionStore()
 		self.documents = { }
+		self.algo = Zhao(self.store)
 
 	def _to_documents(self, tweets):
 		"""
