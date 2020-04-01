@@ -124,7 +124,7 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 					start, _ = window
 					timeline.add(latest_timestamp, self._documents_since(start))
 					summary = self.summarization.summarize(timeline.nodes[-1].get_all_documents(), 140)
-					logger.info(f"{datetime.fromtimestamp(latest_timestamp).iso_format()}: { str(summary) }")
+					logger.info(f"{datetime.fromtimestamp(latest_timestamp).ctime()}: { str(summary) }")
 
 			await self._sleep()
 
