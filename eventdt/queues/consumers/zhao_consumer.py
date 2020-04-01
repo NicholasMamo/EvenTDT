@@ -137,7 +137,7 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 		"""
 		Add the given documents to the list of stored documents.
 
-		:param documents: The list of documents that form the checkpoint.
+		:param documents: The list of documents to store in this consumer.
 		:type documents: list of :class:`~nlp.document.Document`
 		"""
 
@@ -145,6 +145,27 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 			timestamp = document.attributes['timestamp']
 			self.documents[timestamp] = self.documents.get(timestamp, [ ])
 			self.documents[timestamp].append(document)
+
+	def _documents_since(self, since):
+		"""
+		Get all the documents since the given timestamp.
+		The documents are ordered chronologically.
+
+		:param since: The timestamp since when all documents should be returned.
+						  This value is inclusive.
+		:type since: float
+
+		:return: The list of documents added since the given timestamp.
+		:rtype: list of :class:`~nlp.document.Document`
+		"""
+
+		documents = [ ]
+
+		timestamps = [ timestamp for timestamp in self.documents if timestamp >= since ]
+		for timestamp in sorted(timestamps):
+			documents.extend(self.documents[timestamp])
+
+		return documents
 
 	def _create_checkpoint(self, documents):
 		"""

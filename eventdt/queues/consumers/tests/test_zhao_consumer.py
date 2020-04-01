@@ -230,6 +230,103 @@ class TestZhaoConsumer(unittest.TestCase):
 			consumer._add_documents(documents)
 			self.assertTrue(all( len(documents) > 1 for documents in consumer.documents.values() ))
 
+	def test_documents_since_empty(self):
+		"""
+		Test that getting the documents when there are no documents returns an empty list.
+		"""
+
+		consumer = ZhaoConsumer(Queue(), 60)
+		self.assertEqual({ }, consumer.documents)
+
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			documents = sorted(documents, key=lambda document: document.attributes['timestamp'])
+			self.assertEqual([ ], consumer._documents_since(0))
+
+	def test_documents_since_all(self):
+		"""
+		Test that getting the documents since the first timestamp returns all documents.
+		"""
+
+		consumer = ZhaoConsumer(Queue(), 60)
+		self.assertEqual({ }, consumer.documents)
+
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			documents = sorted(documents, key=lambda document: document.attributes['timestamp'])
+			consumer._add_documents(documents)
+			self.assertEqual(documents, consumer._documents_since(0))
+
+	def test_documents_since_order(self):
+		"""
+		Test that when getting all documents since a timestamp, the documents are ordered chronologically.
+		"""
+
+		consumer = ZhaoConsumer(Queue(), 60)
+		self.assertEqual({ }, consumer.documents)
+
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			consumer._add_documents(documents[::-1])
+			documents = consumer._documents_since(0)
+			self.assertTrue(all(documents[i].attributes['timestamp'] <= documents[i + 1].attributes['timestamp']
+							for i in range(0, len(documents) - 1)))
+
+	def test_documents_since_inclusive(self):
+		"""
+		Test that getting the documents since a timestamp returns an inclusive result set.
+		"""
+
+		consumer = ZhaoConsumer(Queue(), 60)
+		self.assertEqual({ }, consumer.documents)
+
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			documents = sorted(documents, key=lambda document: document.attributes['timestamp'])
+			consumer._add_documents(documents)
+			self.assertEqual(documents, consumer._documents_since(documents[0].attributes['timestamp']))
+
+	def test_documents_since_last(self):
+		"""
+		Test that getting the documents since the last timestamp returns all documents published at the same time.
+		"""
+
+		consumer = ZhaoConsumer(Queue(), 60)
+		self.assertEqual({ }, consumer.documents)
+
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			documents = sorted(documents, key=lambda document: document.attributes['timestamp'])
+			consumer._add_documents(documents)
+			self.assertEqual([ document for document in documents if document.attributes['timestamp'] == documents[-1].attributes['timestamp'] ],
+							 consumer._documents_since(documents[-1].attributes['timestamp']))
+
+	def test_documents_since_none(self):
+ 		"""
+ 		Test that getting the documents beyond the last timestamp returns an empty set.
+ 		"""
+
+ 		consumer = ZhaoConsumer(Queue(), 60)
+ 		self.assertEqual({ }, consumer.documents)
+
+ 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+ 			lines = f.readlines()
+ 			tweets = [ json.loads(line) for line in lines ]
+ 			documents = consumer._to_documents(tweets)
+ 			documents = sorted(documents, key=lambda document: document.attributes['timestamp'])
+ 			consumer._add_documents(documents)
+ 			self.assertEqual([ ], consumer._documents_since(documents[-1].attributes['timestamp'] + 1))
+
 	def test_create_checkpoint_empty(self):
 		"""
 		Test that when creating the first checkpoint, the nutrition is created from scratch.
