@@ -63,43 +63,47 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 		"""
 
 		super(ZhaoConsumer, self).__init__(queue, periodicity, timestamp=timestamp)
-		self.store = MemoryNutritionStore()
 		self.scheme = scheme
+		self.store = MemoryNutritionStore()
 
-	def _tokenize(self, tweets):
+	def _to_documents(self, tweets):
 		"""
-		Tokenize the given list of tweets.
+		Convert the given tweets into documents.
 
 		:param tweets: A list of tweets.
-		:type tweets: list of dictionaries
+		:type tweets: list of dict
 
-		:return: A list of filtered tweets.
-		:rtype: list of :class:`~vector.nlp.document.Document` instances
+		:return: A list of documents created from the tweets in the same order as the given tweets.
+				 Documents are normalized and store the original tweet in the `tweet` attribute.
+		:rtype: list of :class:`~nlp.document.Document`
 		"""
 
-		documents = []
-		tokenizer = Tokenizer(stopwords=stopwords.words("english"), normalize_words=True, character_normalization_count=3, remove_unicode_entities=True)
-		for tweet in tweets:
-			timestamp_ms = int(tweet["timestamp_ms"])
-			timestamp = int(timestamp_ms / 1000)
+		documents = [ ]
 
-			"""
-			Retain the comment of a quoted status.
-			However, if the tweet is a plain retweet, get the full text.
-			"""
-			if "retweeted_status" in tweet and "quoted_status" not in tweet:
-				text = tweet["retweeted_status"].get("extended_tweet", {}).get("full_text", tweet.get("text", ""))
-			elif "extended_tweet" in tweet:
+		"""
+		The text used for the document depend on what kind of tweet it is.
+		If the tweet is too long to fit in the tweet, the full text is used;
+
+		Retain the comment of a quoted status.
+		However, if the tweet is a plain retweet, get the full text.
+		"""
+		tokenizer = Tokenizer(stopwords=stopwords.words("english"), remove_unicode_entities=True)
+		for tweet in tweets:
+			original = tweet
+			while "retweeted_status" in tweet:
+				tweet = original["retweeted_status"]
+
+			if "extended_tweet" in tweet:
 				text = tweet["extended_tweet"].get("full_text", tweet.get("text", ""))
 			else:
 				text = tweet.get("text", "")
 
+			"""
+			Create the document and save the tweet in it.
+			"""
 			tokens = tokenizer.tokenize(text)
 			document = Document(text, tokens, scheme=self.scheme)
-			document.set_attribute("tokens", tokens)
-			document.set_attribute("timestamp", timestamp)
-			document.set_attribute("tweet", tweet)
-
+			document.attributes["tweet"] = original
 			document.normalize()
 			documents.append(document)
 
