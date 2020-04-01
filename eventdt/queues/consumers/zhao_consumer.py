@@ -1,47 +1,42 @@
 """
-A consumer based on Zhao et al. (2011)'s topic detection algorithm.
+The Zhao et al. consumer is based on the implementation by the same authors.
+The algorithm revolves around the :class:`~tdt.algorithms.zhao.Zhao` algorithm.
+
+.. note::
+
+	Implementation based on the algorithm presented in `Human as Real-Time Sensors of Social and Physical Events: A Case Study of Twitter and Sports Games by Zhao et al. (2011) <https://arxiv.org/abs/1106.4300>`_.
 """
 
+import asyncio
+import math
 import os
 import sys
 import time
 
 from nltk.corpus import stopwords
 
-path = os.path.dirname(__file__)
-path = os.path.join(path, '../../../../')
+path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
-	sys.path.insert(1, path)
+    sys.path.append(path)
 
-from ..buffered_consumer import BufferedConsumer
-from ..buffered_consumer import PseudoBufferedConsumer
+from .buffered_consumer import SimulatedBufferedConsumer
 
-from ..filter import filter
-from ..filter.filter import Filter
+from nlp.document import Document
+from nlp.tokenizer import Tokenizer
 
-from libraries.vector.nlp.document import Document
-from libraries.vector.nlp.tokenizer import Tokenizer
+from logger import logger
 
-from libraries.logger import logger
+from summarization.algorithms import MMR
 
-from libraries.summarization.algorithms.mmr import MMR
+from tdt.algorithms import Zhao
+from tdt.nutrition import MemoryNutritionStore
 
-from libraries.topic_detection.algorithms import zhao
-from libraries.topic_detection.nutrition_store.memory_nutrition_store import MemoryNutritionStore
+from nlp.term_weighting import TFIDF
 
-from libraries.vector.nlp.cleaners import tweet_cleaner
-from libraries.vector.nlp.term_weighting import TFIDF
-
-from datetime import datetime
-
-import asyncio
-import math
-
-logger.set_logging_level(logger.LogLevel.INFO)
-
-class ZhaoConsumer(PseudoBufferedConsumer):
+class ZhaoConsumer(SimulatedBufferedConsumer):
 	"""
-	The consumer is based on Zhao et al. (2011)'s topic detection algorithm.
+	The Zhao et al. consumer is based on the implementation by the same authors.
+	The algorithm revolves around the :class:`~tdt.algorithms.zhao.Zhao` algorithm.
 	The algorithm examines changes in volume using a dynamic time window.
 	"""
 
