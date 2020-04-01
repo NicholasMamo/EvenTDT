@@ -121,7 +121,7 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 		This nutrition set represents a snapshot of the time window.
 
 		:param documents: The list of documents that form the checkpoint.
-		:type documents: list
+		:type documents: list of :class:`~nlp.document.Document`
 		"""
 
 		if len(documents) > 0:
