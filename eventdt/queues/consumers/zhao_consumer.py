@@ -31,6 +31,8 @@ from summarization.algorithms import MMR
 from tdt.algorithms import Zhao
 from tdt.nutrition import MemoryNutritionStore
 
+import twitter
+
 class ZhaoConsumer(SimulatedBufferedConsumer):
 	"""
 	The Zhao et al. consumer is based on the implementation by the same authors.
@@ -105,24 +107,24 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 			tokens = tokenizer.tokenize(text)
 			document = Document(text, tokens, scheme=self.scheme)
 			document.attributes["tweet"] = original
+			document.attributes[self.timestamp] = twitter.extract_timestamp(original)
 			document.normalize()
 			documents.append(document)
 
 		return documents
 
-	async def _create_checkpoint(self, timestamp, document_set):
+	async def _create_checkpoint(self, documents):
 		"""
+		Create checkpoints from the documents in the
 		After every time window has elapsed, create a checkpoint from the documents.
 		These documents are used to create a nutrition set for the nutrition store.
 		This nutrition set represents a snapshot of the time window.
 
-		:param timestamp: The timestamp of the new checkpoint.
-		:type timestamp: int
-		:param document_set: The list of documents that form the checkpoint.
-		:type document_set: list
+		:param documents: The list of documents that form the checkpoint.
+		:type documents: list
 		"""
 
-		if len(document_set) > 0:
+		if len(documents) > 0:
 			"""
 			Concatenate all the documents in the buffer and normalize the dimensions
 			The goal is to get a list of dimensions in the range 0 to 1
@@ -131,19 +133,17 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 			"""
 			Count the volume at each second.
 			"""
-			timestamp_counts = {}
-			for document in document_set:
-				timestamp = document.get_attribute("timestamp")
-				timestamp_counts[timestamp] = timestamp_counts.get(timestamp, 0) + 1
+			volume = { }
+			for document in documents:
+				timestamp = document.attributes[self.timestamp]
+				volume[timestamp] = volume.get(timestamp, 0) + 1
 
 			"""
 			Retrieve the volume counts, if there are any, for the given timestamps.
 			Only the volume at a given second is saved.
 			"""
-			for timestamp, count in timestamp_counts.items():
-				volume = self.store.get_nutrition_set(timestamp)
-				volume = 0 if volume is None else volume
-				self.store.add_nutrition_set(timestamp, volume + count)
+			for timestamp, count in volume.items():
+				self.store.add(timestamp, (self.store.get(timestamp) or 0) + (count or 0))
 
 	def _detect_topics(self, timestamp):
 		"""

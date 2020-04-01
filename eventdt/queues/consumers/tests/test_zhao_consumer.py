@@ -2,6 +2,7 @@
 Test the functionality of the Zhao et al. consumer.
 """
 
+import asyncio
 import json
 import os
 import sys
@@ -18,6 +19,14 @@ class TestZhaoConsumer(unittest.TestCase):
 	"""
 	Test the implementation of the Zhao et al. consumer.
 	"""
+
+	def async_test(f):
+		def wrapper(*args, **kwargs):
+			coro = asyncio.coroutine(f)
+			future = coro(*args, **kwargs)
+			loop = asyncio.get_event_loop()
+			loop.run_until_complete(future)
+		return wrapper
 
 	def test_create_consumer(self):
 		"""
@@ -85,7 +94,9 @@ class TestZhaoConsumer(unittest.TestCase):
 			for line in f:
 				tweet = json.loads(line)
 				if 'retweeted_status' in tweet:
+					timestamp = tweet['timestamp_ms']
 					tweet = tweet['retweeted_status']
+					tweet['timestamp_ms'] = timestamp
 
 				if 'quoted_status' in tweet:
 					document = consumer._to_documents([ tweet ])[0]
@@ -139,3 +150,77 @@ class TestZhaoConsumer(unittest.TestCase):
 					There should be no ellipsis in the text now.
 					"""
 					self.assertFalse(document.text.endswith('…'))
+
+	@async_test
+	async def test_create_checkpoint_empty(self):
+		"""
+		Test that when creating the first checkpoint, the nutrition is created from scratch.
+		"""
+
+		consumer = ZhaoConsumer(Queue(), 60)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			for line in f:
+				tweet = json.loads(line)
+				documents = consumer._to_documents([ tweet ])
+				await consumer._create_checkpoint(documents)
+				self.assertEqual([ 1 ], list(consumer.store.all().values()))
+				break
+
+	@async_test
+	async def test_create_checkpoint_multiple_empty(self):
+		"""
+		Test that when creating the first checkpoint with multiple tweets, the nutrition is created from scratch.
+		"""
+
+		consumer = ZhaoConsumer(Queue(), 60)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()[:10]
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			await consumer._create_checkpoint(documents)
+			self.assertEqual([ 10 ], list(consumer.store.all().values()))
+
+	@async_test
+	async def test_create_checkpoint_increment(self):
+		"""
+		Test that when creating checkpoints, the nutrition increments.
+		"""
+
+		consumer = ZhaoConsumer(Queue(), 60)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()[:10]
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			for i, document in enumerate(documents):
+				await consumer._create_checkpoint([ document ])
+				self.assertEqual([ i + 1 ], list(consumer.store.all().values()))
+
+	@async_test
+	async def test_create_checkpoint_timestamp(self):
+		"""
+		Test that when creating checkpoints, the correct timestamp is recorded.
+		"""
+
+		consumer = ZhaoConsumer(Queue(), 60)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()[:10]
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			for i, document in enumerate(documents):
+				await consumer._create_checkpoint([ document ])
+				self.assertEqual(i + 1, consumer.store.get(document.attributes['timestamp']))
+
+	@async_test
+	async def test_create_checkpoint_range(self):
+		"""
+		Test that when creating checkpoints, the correct range of timestamps is created.
+		"""
+
+		consumer = ZhaoConsumer(Queue(), 60)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			await consumer._create_checkpoint(documents)
+			self.assertEqual(documents[0].attributes['timestamp'], min(consumer.store.all()))
+			self.assertEqual(documents[-1].attributes['timestamp'], max(consumer.store.all()))
