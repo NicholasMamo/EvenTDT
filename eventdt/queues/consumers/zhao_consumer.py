@@ -50,6 +50,8 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 	:vartype documents: :class:`~nlp.document.Document`
 	:ivar tdt: The TDT algorithm: Zhao et al.'s implementation.
 	:vartype tdt: :class:`~tdt.algorithms.zhao.Zhao`
+	:ivar summarization: The summarization algorithm to use.
+	:vartype summarization: :class:`~summarization.algorithms.mmr.MMR`
 	"""
 
 	def __init__(self, queue, periodicity=5, timestamp='timestamp', scheme=None):
@@ -77,6 +79,7 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 		self.store = MemoryNutritionStore()
 		self.documents = { }
 		self.tdt = Zhao(self.store)
+		self.summarization = MMR()
 
 	async def _process(self):
 		"""
