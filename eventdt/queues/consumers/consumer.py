@@ -10,11 +10,17 @@ Generally, consumers keep accepting objects until the `active` variable is disab
 At that point, they process the last objects and set the `stopped` flag to `True`.
 """
 
-from ..queue import Queue
-
 from abc import ABC, abstractmethod
 
 import asyncio
+import os
+import sys
+
+path = os.path.join(os.path.dirname(__file__), '..', '..')
+if path not in sys.path:
+    sys.path.append(path)
+
+from queue import Queue
 
 class Consumer(ABC):
 	"""

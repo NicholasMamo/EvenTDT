@@ -4,9 +4,6 @@ A buffered consumer processes content in batches.
 
 from abc import ABC, abstractmethod
 
-from ..queue import Queue
-from .consumer import Consumer
-
 import asyncio
 import os
 import sys
@@ -15,6 +12,9 @@ import time
 path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
     sys.path.append(path)
+
+from queues import Queue
+from .consumer import Consumer
 
 class BufferedConsumer(Consumer):
 	"""
