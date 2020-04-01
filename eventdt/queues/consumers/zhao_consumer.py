@@ -31,16 +31,19 @@ from summarization.algorithms import MMR
 from tdt.algorithms import Zhao
 from tdt.nutrition import MemoryNutritionStore
 
-from nlp.term_weighting import TFIDF
-
 class ZhaoConsumer(SimulatedBufferedConsumer):
 	"""
 	The Zhao et al. consumer is based on the implementation by the same authors.
 	The algorithm revolves around the :class:`~tdt.algorithms.zhao.Zhao` algorithm.
 	The algorithm examines changes in volume using a dynamic time window.
+
+	:ivar store: The nutrition store used to store the volume.
+	:vartype store: :class:`~tdt.nutrition.store.Store`
+	:ivar scheme: The term-weighting scheme used to create documents.
+	:vartype scheme: :class:`~nlp.term_weighting.TermWeighting`
 	"""
 
-	def __init__(self, queue, periodicity, idf=None):
+	def __init__(self, queue, periodicity, timestamp='timestamp', scheme=None):
 		"""
 		Create the consumer with a queue.
 		Simultaneously create a nutrition store and the topic detection algorithm container.
@@ -49,15 +52,19 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 
 		:param queue: The queue that is consumed.
 		:type queue: :class:`~queues.queue.Queue`
-		:param periodicity: The time (in seconds) to spend consuming the queue.
+		:param periodicity: The time window in seconds of the buffered consumer, or how often it is invoked.
 		:type periodicity: int
-		:param idf: The IDF table to use in the term-weighting scheme.
-		:type idf: dict
+		:param timestamp: The name of the vector attribute used to get the timestamp value.
+						  The time value is expected to be a float or integer.
+		:type timestamp: str
+		:param scheme: The term-weighting scheme that is used to create dimensions.
+					   If `None` is given, the :class:`~nlp.term_weighting.TermWeighting.TF` term-weighting scheme is used.
+		:type scheme: None or :class:`~nlp.term_weighting.TermWeighting`
 		"""
 
-		super(ZhaoConsumer, self).__init__(queue, periodicity)
-		self._nutrition_store = MemoryNutritionStore()
-		self._term_weighting = TFIDF(idf)
+		super(ZhaoConsumer, self).__init__(queue, periodicity, timestamp=timestamp)
+		self.store = MemoryNutritionStore()
+		self.scheme = scheme
 
 	def _tokenize(self, tweets):
 		"""
@@ -88,7 +95,7 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 				text = tweet.get("text", "")
 
 			tokens = tokenizer.tokenize(text)
-			document = Document(text, tokens, scheme=self._term_weighting)
+			document = Document(text, tokens, scheme=self.scheme)
 			document.set_attribute("tokens", tokens)
 			document.set_attribute("timestamp", timestamp)
 			document.set_attribute("tweet", tweet)
@@ -129,9 +136,9 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 			Only the volume at a given second is saved.
 			"""
 			for timestamp, count in timestamp_counts.items():
-				volume = self._nutrition_store.get_nutrition_set(timestamp)
+				volume = self.store.get_nutrition_set(timestamp)
 				volume = 0 if volume is None else volume
-				self._nutrition_store.add_nutrition_set(timestamp, volume + count)
+				self.store.add_nutrition_set(timestamp, volume + count)
 
 	def _detect_topics(self, timestamp):
 		"""
@@ -144,7 +151,7 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 		:rtype: list
 		"""
 
-		(breaking, time_window) = zhao.detect_topics(self._nutrition_store, # use the nutrition store's checkpoints as historical data
+		(breaking, time_window) = zhao.detect_topics(self.store, # use the nutrition store's checkpoints as historical data
 			timestamp=timestamp, # do not consider checkpoints in this sliding time window, but only those that preceed it
 			post_rate=1.7
 		)
