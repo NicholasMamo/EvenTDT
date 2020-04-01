@@ -44,9 +44,9 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 	The algorithm examines changes in volume using a dynamic time window.
 
 	:ivar store: The nutrition store used to store the volume.
-	:vartype store: :class:`~tdt.nutrition.store.Store`
+	:vartype store: :class:`~tdt.nutrition.store.NutritionStore`
 	:ivar scheme: The term-weighting scheme used to create documents.
-	:vartype scheme: :class:`~nlp.term_weighting.TermWeighting`
+	:vartype scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
 	:ivar documents: The documents that can still be used for summarization.
 					 Older documents are automatically cleared.
 	:vartype documents: :class:`~nlp.document.Document`
@@ -72,8 +72,8 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 						  The time value is expected to be a float or integer.
 		:type timestamp: str
 		:param scheme: The term-weighting scheme that is used to create dimensions.
-					   If `None` is given, the :class:`~nlp.term_weighting.TermWeighting.TF` term-weighting scheme is used.
-		:type scheme: None or :class:`~nlp.term_weighting.TermWeighting`
+					   If `None` is given, the :class:`~nlp.term_weighting.tf.TF` term-weighting scheme is used.
+		:type scheme: None or :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
 		"""
 
 		super(ZhaoConsumer, self).__init__(queue, periodicity, timestamp=timestamp)
@@ -88,7 +88,7 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 		Find breaking develpoments based on changes in volume.
 
 		:return: The constructed timeline.
-		:rtype: :class:`~summarization.timeline.Timeline`
+		:rtype: :class:`~summarization.timeline.timeline.Timeline`
 		"""
 
 		timeline = Timeline(DocumentNode, 0, 1)
