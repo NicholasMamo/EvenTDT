@@ -30,15 +30,21 @@ from tdt.algorithms import Cataldi
 from tdt.nutrition import MemoryNutritionStore
 
 from nlp.document import Document
-from nlp.tokenizer import Tokenizer
 from nlp.term_weighting import TFIDF
+from nlp.tokenizer import Tokenizer
 
 class FIREConsumer(SimulatedBufferedConsumer):
 	"""
-	The FireConsumer class is based on FIRE: Finding Important News REports (Mamo et al., 2018).
+	The FIRE consumer is based on the implementation of the same name.
+	The algorithm clusters all tweets received in the same period and uses the Cataldi et al. algorithm to identify which ones are breaking.
+
+	:ivar store: The nutrition store used to store the volume changes of individual terms.
+	:vartype store: :class:`~tdt.nutrition.store.NutritionStore`
+	:ivar scheme: The term-weighting scheme used to create documents.
+	:vartype scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
 	"""
 
-	def __init__(self, queue, periodicity, idf=None):
+	def __init__(self, queue, periodicity, scheme=None):
 		"""
 		Create the consumer with a queue.
 		Simultaneously create a nutrition store and the topic detection algorithm container.
@@ -47,16 +53,17 @@ class FIREConsumer(SimulatedBufferedConsumer):
 
 		:param queue: The queue that is consumed.
 		:type queue: :class:`~queues.queue.Queue`
-		:param periodicity: The time (in seconds) to spend consuming the queue.
+		:param periodicity: The time window in seconds of the buffered consumer, or how often it is invoked.
+							This defaults to 5 seconds, the same span as half the smallest time window in Zhao et al.'s algorithm.
 		:type periodicity: int
-		:param filter_words: The words to filter out of documents.
-		:type filter_words: list
-		:param idf: The IDF table to use in the term-weighting scheme.
-		:type idf: dict
+		:param scheme: The term-weighting scheme that is used to create dimensions.
+					   If `None` is given, the :class:`~nlp.term_weighting.tf.TF` term-weighting scheme is used.
+		:type scheme: None or :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
 		"""
+
 		super(FIREConsumer, self).__init__(queue, periodicity)
-		self._nutrition_store = MemoryNutritionStore()
-		self._term_weighting = TFIDF(idf)
+		self.store = MemoryNutritionStore()
+		self.scheme = scheme
 
 	def _filter_tweets(self, tweets):
 		"""
@@ -127,7 +134,7 @@ class FIREConsumer(SimulatedBufferedConsumer):
 			timestamp = int(timestamp_ms / 1000)
 			tokens = tokenizer.tokenize(tweet.get("text", ""))
 
-			document = Document(tweet.get("text", ""), tokens, scheme=self._term_weighting)
+			document = Document(tweet.get("text", ""), tokens, scheme=self.scheme)
 			document.set_attribute("tokens", tokens)
 			document.set_attribute("timestamp", timestamp)
 			document.set_attribute("tweet", tweet)
@@ -187,13 +194,13 @@ class FIREConsumer(SimulatedBufferedConsumer):
 			"""
 
 			single_document = vector_math.concatenate(document_set)
-			self._nutrition_store.add_nutrition_set(timestamp, single_document.get_dimensions())
+			self.store.add_nutrition_set(timestamp, single_document.get_dimensions())
 		elif timestamp is not None:
-			self._nutrition_store.add_nutrition_set(timestamp, {})
+			self.store.add_nutrition_set(timestamp, {})
 			logger.info("Checkpoint passed internally with 0 documents")
 
 		if timestamp is not None:
-			self._nutrition_store.remove_old_nutrition_sets(timestamp - self._periodicity * (sets + 1)) # keep an extra one, just in case
+			self.store.remove_old_nutrition_sets(timestamp - self._periodicity * (sets + 1)) # keep an extra one, just in case
 
 	def _detect_topics(self, cluster, sets, timestamp):
 		"""
@@ -210,7 +217,7 @@ class FIREConsumer(SimulatedBufferedConsumer):
 		:rtype: list
 		"""
 
-		terms = cataldi.detect_topics(self._nutrition_store, # use the nutrition store's checkpoints as historical data
+		terms = cataldi.detect_topics(self.store, # use the nutrition store's checkpoints as historical data
 			timestamp=timestamp, # do not consider checkpoints in this sliding time window, but only those that preceed it
 			sets=sets, # consider the past few sets
 		)
