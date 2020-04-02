@@ -24,7 +24,7 @@ class TestFIREConsumer(unittest.TestCase):
 	Test the implementation of the FIRE consumer.
 	"""
 
-	def test_create_consumer(self):
+	def no_test_create_consumer(self):
 		"""
 		Test that when creating a consumer, all the parameters are saved correctly.
 		"""
@@ -35,7 +35,7 @@ class TestFIREConsumer(unittest.TestCase):
 		self.assertEqual(60, consumer.periodicity)
 		self.assertEqual(TF, type(consumer.scheme))
 
-	def test_filter_tweets_empty(self):
+	def no_test_filter_tweets_empty(self):
 		"""
 		Test that when filtering a list of empty tweets, another empty list is returned.
 		"""
@@ -43,7 +43,7 @@ class TestFIREConsumer(unittest.TestCase):
 		consumer = FIREConsumer(Queue(), 60, scheme=TF())
 		self.assertEqual([ ], consumer._filter_tweets([ ]))
 
-	def test_filter_tweets_english(self):
+	def no_test_filter_tweets_english(self):
 		"""
 		Test that when filtering a list of tweets, only English tweets are returned.
 		"""
@@ -57,7 +57,7 @@ class TestFIREConsumer(unittest.TestCase):
 			self.assertTrue(all(tweet['lang'] == 'en' for tweet in tweets))
 			self.assertGreater(count, len(tweets))
 
-	def test_filter_tweets_hashtags(self):
+	def no_test_filter_tweets_hashtags(self):
 		"""
 		Test that when filtering tweets, all returned tweets have no more than 2 hashtags.
 		"""
@@ -71,7 +71,7 @@ class TestFIREConsumer(unittest.TestCase):
 			self.assertTrue(all(len(tweet['entities']['hashtags']) <= 2 for tweet in tweets))
 			self.assertGreater(count, len(tweets))
 
-	def test_filter_tweets_no_favourites(self):
+	def no_test_filter_tweets_no_favourites(self):
 		"""
 		Test that when filtering tweets, all returned tweets' authors have favourited at least one tweet.
 		"""
@@ -85,7 +85,7 @@ class TestFIREConsumer(unittest.TestCase):
 			self.assertTrue(all(tweet['user']['favourites_count'] > 0 for tweet in tweets))
 			self.assertGreater(count, len(tweets))
 
-	def test_filter_tweets_follower_ratio(self):
+	def no_test_filter_tweets_follower_ratio(self):
 		"""
 		Test that when filtering tweets, all users have at least one follower for every thousand tweets they've published.
 		"""
@@ -99,7 +99,7 @@ class TestFIREConsumer(unittest.TestCase):
 			self.assertTrue(all(tweet['user']['followers_count'] / tweet['user']['statuses_count'] >= 1./1000. for tweet in tweets))
 			self.assertGreater(count, len(tweets))
 
-	def test_filter_tweets_repeat(self):
+	def no_test_filter_tweets_repeat(self):
 		"""
 		Test that when filtering tweets twice, the second time has no effect.
 		"""
@@ -123,7 +123,7 @@ class TestFIREConsumer(unittest.TestCase):
 			tweets = consumer._filter_tweets(tweets)
 			self.assertEqual(count, len(tweets))
 
-	def test_filter_tweets_unchanged(self):
+	def no_test_filter_tweets_unchanged(self):
 		"""
 		Test that when filtering tweets, the tweet data does not change.
 		"""
@@ -135,7 +135,7 @@ class TestFIREConsumer(unittest.TestCase):
 			filtered = consumer._filter_tweets(tweets)
 			self.assertTrue(all(tweet in tweets for tweet in filtered))
 
-	def test_to_documents_tweet(self):
+	def no_test_to_documents_tweet(self):
 		"""
 		Test that when creating a document from a tweet, the tweet is saved as an attribute.
 		"""
@@ -146,7 +146,7 @@ class TestFIREConsumer(unittest.TestCase):
 			document = consumer._to_documents([ tweet ])[0]
 			self.assertEqual(tweet, document.attributes['tweet'])
 
-	def test_to_documents_ellipsis(self):
+	def no_test_to_documents_ellipsis(self):
 		"""
 		Test that when the text has an ellipsis, the full text is used.
 		"""
@@ -164,7 +164,7 @@ class TestFIREConsumer(unittest.TestCase):
 					if not ('retweeted_status' in tweet and tweet['retweeted_status']['id_str'] == '1238513167573147648'):
 						self.assertFalse(document.text.endswith('…'))
 
-	def test_to_documents_quoted(self):
+	def no_test_to_documents_quoted(self):
 		"""
 		Test that when the tweet is a quote, the text is used, not the quoted tweet's text.
 		"""
@@ -186,7 +186,7 @@ class TestFIREConsumer(unittest.TestCase):
 					else:
 						self.assertEqual(tweet.get('text'), document.text)
 
-	def test_to_documents_retweeted(self):
+	def no_test_to_documents_retweeted(self):
 		"""
 		Test that when the tweet is a quote, the retweet's text is used.
 		"""
@@ -209,7 +209,7 @@ class TestFIREConsumer(unittest.TestCase):
 					"""
 					self.assertFalse(document.text.startswith('RT'))
 
-	def test_to_documents_normal(self):
+	def no_test_to_documents_normal(self):
 		"""
 		Test that when the tweet is not a quote or retweet, the full text is used.
 		"""
@@ -231,7 +231,7 @@ class TestFIREConsumer(unittest.TestCase):
 					"""
 					self.assertFalse(document.text.endswith('…'))
 
-	def test_filter_documents_empty(self):
+	def no_test_filter_documents_empty(self):
 		"""
 		Test that when filtering a list of empty documents, another empty list is returned.
 		"""
@@ -239,7 +239,7 @@ class TestFIREConsumer(unittest.TestCase):
 		consumer = FIREConsumer(Queue(), 60, scheme=TF())
 		self.assertEqual([ ], consumer._filter_documents([ ]))
 
-	def test_filter_documents_empty(self):
+	def no_test_filter_documents_empty(self):
 		"""
 		Test that when filtering an empty document, an empty list is returned.
 		"""
@@ -248,7 +248,7 @@ class TestFIREConsumer(unittest.TestCase):
 		consumer = FIREConsumer(Queue(), 60, scheme=TF())
 		self.assertEqual([ ], consumer._filter_documents([ document ]))
 
-	def test_filter_documents_stopwords(self):
+	def no_test_filter_documents_stopwords(self):
 		"""
 		Test that when filtering a document with only stopwords, an empty list is returned.
 		"""
@@ -257,7 +257,7 @@ class TestFIREConsumer(unittest.TestCase):
 		consumer = FIREConsumer(Queue(), 60, scheme=TF())
 		self.assertEqual([ ], consumer._filter_documents([ document ]))
 
-	def test_filter_documents_excludes_stopwords(self):
+	def no_test_filter_documents_excludes_stopwords(self):
 		"""
 		Test that when filtering a document, stopwords are not considered in the calculation.
 		"""
@@ -266,7 +266,7 @@ class TestFIREConsumer(unittest.TestCase):
 		consumer = FIREConsumer(Queue(), 60, scheme=TF())
 		self.assertEqual([ document ], consumer._filter_documents([ document ]))
 
-	def test_filter_documents_repetition(self):
+	def no_test_filter_documents_repetition(self):
 		"""
 		Test that when filtering documents that have repetition, they are rejected if their score is low.
 		"""
@@ -275,7 +275,7 @@ class TestFIREConsumer(unittest.TestCase):
 		consumer = FIREConsumer(Queue(), 60, scheme=TF())
 		self.assertEqual([ ], consumer._filter_documents([ document ]))
 
-	def test_filter_documents_repeat(self):
+	def no_test_filter_documents_repeat(self):
 		"""
 		Test that when filtering documents twice, the second time has no effect.
 		"""
@@ -300,7 +300,7 @@ class TestFIREConsumer(unittest.TestCase):
 			documents = consumer._filter_documents(documents)
 			self.assertEqual(count, len(documents))
 
-	def test_filter_documents_unchanged(self):
+	def no_test_filter_documents_unchanged(self):
 		"""
 		Test that when filtering documents, the document data does not change.
 		"""
@@ -313,7 +313,7 @@ class TestFIREConsumer(unittest.TestCase):
 			filtered = consumer._filter_documents(documents)
 			self.assertTrue(all(document in documents for document in filtered))
 
-	def test_create_checkpoint_first(self):
+	def no_test_create_checkpoint_first(self):
 		"""
 		Test that when creating the first checkpoint, the nutrition is created from scratch.
 		"""
@@ -328,7 +328,7 @@ class TestFIREConsumer(unittest.TestCase):
 			consumer._create_checkpoint(timestamp, documents)
 			self.assertTrue(consumer.store.get(timestamp))
 
-	def test_create_checkpoint_empty(self):
+	def no_test_create_checkpoint_empty(self):
 		"""
 		Test that when creating an empty checkpoint, it is still recorded.
 		"""
@@ -342,7 +342,7 @@ class TestFIREConsumer(unittest.TestCase):
 			consumer._create_checkpoint(timestamp, [ ])
 			self.assertEqual({ }, consumer.store.get(timestamp))
 
-	def test_create_checkpoint_timestamp(self):
+	def no_test_create_checkpoint_timestamp(self):
 		"""
 		Test that when creating checkpoints, the correct timestamp is recorded.
 		"""
@@ -356,7 +356,7 @@ class TestFIREConsumer(unittest.TestCase):
 			consumer._create_checkpoint(timestamp, documents)
 			self.assertEqual([ timestamp ], list(consumer.store.all().keys()))
 
-	def test_create_checkpoint_scale(self):
+	def no_test_create_checkpoint_scale(self):
 		"""
 		Test that when creating checkpoints, they are rescaled correctly.
 		"""
@@ -371,7 +371,7 @@ class TestFIREConsumer(unittest.TestCase):
 			self.assertLessEqual(0, min(consumer.store.get(timestamp).values()))
 			self.assertEqual(1, max(consumer.store.get(timestamp).values()))
 
-	def test_remove_old_checkpoints_empty(self):
+	def no_test_remove_old_checkpoints_empty(self):
 		"""
 		Test that when removing checkpoints from an empty store, nothing happens.
 		"""
@@ -380,7 +380,7 @@ class TestFIREConsumer(unittest.TestCase):
 		self.assertEqual({ }, consumer.store.all())
 		consumer._remove_old_checkpoints(100)
 
-	def test_remove_old_checkpoints_zero_timestamp(self):
+	def no_test_remove_old_checkpoints_zero_timestamp(self):
 		"""
 		Test that when removing checkpoints at timestamp 0, nothing is removed.
 		"""
@@ -395,7 +395,7 @@ class TestFIREConsumer(unittest.TestCase):
 			self.assertEqual([ timestamp ], list(consumer.store.all().keys()))
 			consumer._remove_old_checkpoints(0)
 
-	def test_remove_old_checkpoints_small_timestamp(self):
+	def no_test_remove_old_checkpoints_small_timestamp(self):
 		"""
 		Test that when removing checkpoints with a small timestamp that does not cover the entire sets, nothing is removed.
 		"""
@@ -410,7 +410,7 @@ class TestFIREConsumer(unittest.TestCase):
 			self.assertEqual([ 10 ], list(consumer.store.all().keys()))
 			consumer._remove_old_checkpoints(9)
 
-	def test_remove_old_checkpoints_exclusive(self):
+	def no_test_remove_old_checkpoints_exclusive(self):
 		"""
 		Test that when removing checkpoints, the removal is exclusive.
 		"""
@@ -426,7 +426,7 @@ class TestFIREConsumer(unittest.TestCase):
 			consumer._remove_old_checkpoints(timestamp + 600)
 			self.assertEqual([ timestamp ], list(consumer.store.all().keys()))
 
-	def test_remove_old_checkpoints(self):
+	def no_test_remove_old_checkpoints(self):
 		"""
 		Test that when removing checkpoints, any nutrition data out of frame is removed.
 		"""
@@ -442,7 +442,7 @@ class TestFIREConsumer(unittest.TestCase):
 			consumer._remove_old_checkpoints(timestamp + 600 + 1)
 			self.assertEqual([ ], list(consumer.store.all().keys()))
 
-	def test_detect_topics_store_unchanged(self):
+	def no_test_detect_topics_store_unchanged(self):
 		"""
 		Test that when detecting topics, the nutrition store itself does not change.
 		"""
@@ -490,4 +490,4 @@ class TestFIREConsumer(unittest.TestCase):
 			document.text = document.text + ' pipe'
 			cluster = Cluster(document)
 			terms = consumer._detect_topics(cluster, timestamp + 60)
-			self.assertTrue('pipe' in terms)
+			self.assertEqual([ 'pipe' ], terms)
