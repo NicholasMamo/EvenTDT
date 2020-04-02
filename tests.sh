@@ -73,6 +73,9 @@ nlp_tests() {
 queue_tests() {
 	echo -e "${HIGHLIGHT}Queue${DEFAULT}"
 	python3 -m unittest eventdt.queues.tests.test_queue
+
+	echo -e "${HIGHLIGHT}Consumers${DEFAULT}"
+	python3 -m unittest eventdt.queues.consumers.tests.test_zhao_consumer
 }
 
 summarization_tests() {
