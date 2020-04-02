@@ -131,3 +131,99 @@ class TestFIREConsumer(unittest.TestCase):
 			tweets = [ json.loads(line) for line in lines ]
 			filtered = consumer._filter_tweets(tweets)
 			self.assertTrue(all(tweet in tweets for tweet in filtered))
+
+	def test_to_documents_tweet(self):
+		"""
+		Test that when creating a document from a tweet, the tweet is saved as an attribute.
+		"""
+
+		consumer = FIREConsumer(Queue(), 60, TF())
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			tweet = json.loads(f.readline())
+			document = consumer._to_documents([ tweet ])[0]
+			self.assertEqual(tweet, document.attributes['tweet'])
+
+	def test_to_documents_ellipsis(self):
+		"""
+		Test that when the text has an ellipsis, the full text is used.
+		"""
+
+		consumer = FIREConsumer(Queue(), 60, TF())
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			for line in f:
+				tweet = json.loads(line)
+				if '…' in tweet['text']:
+					document = consumer._to_documents([ tweet ])[0]
+
+					"""
+					Make an exception for a special case.
+					"""
+					if not ('retweeted_status' in tweet and tweet['retweeted_status']['id_str'] == '1238513167573147648'):
+						self.assertFalse(document.text.endswith('…'))
+
+	def test_to_documents_quoted(self):
+		"""
+		Test that when the tweet is a quote, the text is used, not the quoted tweet's text.
+		"""
+
+		consumer = FIREConsumer(Queue(), 60, TF())
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			for line in f:
+				tweet = json.loads(line)
+				if 'retweeted_status' in tweet:
+					timestamp = tweet['timestamp_ms']
+					tweet = tweet['retweeted_status']
+					tweet['timestamp_ms'] = timestamp
+
+				if 'quoted_status' in tweet:
+					document = consumer._to_documents([ tweet ])[0]
+
+					if 'extended_tweet' in tweet:
+						self.assertEqual(tweet["extended_tweet"].get("full_text", tweet.get("text", "")), document.text)
+					else:
+						self.assertEqual(tweet.get('text'), document.text)
+
+	def test_to_documents_retweeted(self):
+		"""
+		Test that when the tweet is a quote, the retweet's text is used.
+		"""
+
+		consumer = FIREConsumer(Queue(), 60, TF())
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			for line in f:
+				tweet = json.loads(line)
+				if 'retweeted_status' in tweet:
+					document = consumer._to_documents([ tweet ])[0]
+
+					retweet = tweet['retweeted_status']
+					if 'extended_tweet' in retweet:
+						self.assertEqual(retweet["extended_tweet"].get("full_text", retweet.get("text", "")), document.text)
+					else:
+						self.assertEqual(retweet.get('text'), document.text)
+
+					"""
+					Tweets shouldn't start with 'RT'.
+					"""
+					self.assertFalse(document.text.startswith('RT'))
+
+	def test_to_documents_normal(self):
+		"""
+		Test that when the tweet is not a quote or retweet, the full text is used.
+		"""
+
+		consumer = FIREConsumer(Queue(), 60, TF())
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			for line in f:
+				tweet = json.loads(line)
+				if not 'retweeted_status' in tweet and not 'quoted_status' in tweet:
+					document = consumer._to_documents([ tweet ])[0]
+
+					if 'extended_tweet' in tweet:
+						self.assertEqual(tweet["extended_tweet"].get("full_text", tweet.get("text", "")), document.text)
+					else:
+						self.assertEqual(tweet.get('text'), document.text)
+
+					"""
+					There should be no ellipsis in the text now.
+					"""
+					self.assertFalse(document.text.endswith('…'))
