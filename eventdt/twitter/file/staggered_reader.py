@@ -188,6 +188,12 @@ class StaggeredFileReader(FileReader):
 			if self.max_time >= 0 and extract_timestamp(tweet) - first >= self.max_time:
 				break
 
+			"""
+			If the reader has been interrupted, stop reading.
+			"""
+			if not self.active:
+				break
+
 			self.queue.enqueue(tweet)
 
 			"""
@@ -205,3 +211,6 @@ class StaggeredFileReader(FileReader):
 				sleep = 1/self.rate - elapsed
 				if sleep > 0:
 					time.sleep(sleep)
+
+		self.active = False
+		self.stopped = True
