@@ -206,6 +206,22 @@ class FIREConsumer(SimulatedBufferedConsumer):
 
 		return documents
 
+	def _latest_timestamp(self, documents):
+		"""
+		Get the latest timestamp from the given documents.
+
+		:param documents: The list of documents from where to get the latest timestamp.
+		:type documents: list of :class:`~nlp.document.Document`
+
+		:return: The latest timestamp in the given document set.
+		:rtype: int
+
+		:raises ValueError: When there are no documents to consider.
+		"""
+
+		timestamps = [ document.attributes['timestamp'] for document in documents ]
+		return max(timestamps)
+
 	def _filter_documents(self, documents):
 		"""
 		Filter the given documents based on FIRE's scoring.
