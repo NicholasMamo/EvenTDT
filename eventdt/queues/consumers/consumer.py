@@ -113,9 +113,13 @@ class Consumer(ABC):
 		Therefore the consumer should yield for a bit.
 		"""
 		inactive = 0
-		while not self.queue.length() and (max_inactivity < 0 or inactive < max_inactivity):
+		while (self.active and not self.queue.length() and
+			  (max_inactivity < 0 or inactive < max_inactivity)):
 			await asyncio.sleep(sleep)
 			inactive += sleep
+
+		if not self.active:
+			return False
 
 		"""
 		If there are objects in the queue after waiting, return `True`.
