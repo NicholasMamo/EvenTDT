@@ -57,9 +57,11 @@ class FIREConsumer(SimulatedBufferedConsumer):
 	:vartype tokenizer: :class:`~nlp.tokenizer.Tokenizer`
 	:ivar clustering: The clustering algorithm to use.
 	:vartype clustering: :class:`~vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans`
+	:ivar min_size: The minimum size for a cluster to be considered to be a candidate breaking topic.
+	:vartype min_size: int
 	"""
 
-	def __init__(self, queue, periodicity, scheme=None, sets=10, threshold=0.7, freeze_period=20):
+	def __init__(self, queue, periodicity, scheme=None, sets=10, threshold=0.7, freeze_period=20, min_size=4):
 		"""
 		Create the consumer with a queue.
 		Simultaneously create a nutrition store and the topic detection algorithm container.
@@ -84,12 +86,15 @@ class FIREConsumer(SimulatedBufferedConsumer):
 		:type threshold: float
 		:param freeze_period: The freeze period, in seconds, of the incremental clustering approach.
 		:type freeze_period: float
+		:param min_size: The minimum size for a cluster to be considered to be a candidate breaking topic.
+		:type min_size: int
 		"""
 
 		super(FIREConsumer, self).__init__(queue, periodicity)
 		self.store = MemoryNutritionStore()
 		self.scheme = scheme
 		self.sets = sets
+		self.min_size = min_size
 
 		self.tokenizer = Tokenizer(stopwords=stopwords.words("english"), normalize_words=True,
 								   character_normalization_count=3, remove_unicode_entities=True)
@@ -125,11 +130,11 @@ class FIREConsumer(SimulatedBufferedConsumer):
 				self._cluster(documents)
 
 				"""
-				Clusters are candidates if they have at least 4 documents in them.
+				Clusters are candidates if they have a minimum number of documents in them.
 				For each such cluster, check if it has any bursty terms.
 				If it does, the cluster is breaking.
 				"""
-				clusters = filter(lambda cluster: cluster.size() > 3, clusters)
+				clusters = filter(lambda cluster: cluster.size() >= self.min_size, clusters)
 				for cluster in clusters:
 					terms = self._detect_topics(cluster, timestamp=latest_timestamp)
 					if terms:
