@@ -55,8 +55,8 @@ class TemporalNoKMeans(NoKMeans):
 					 The time value is expected to be a float or integer.
 		:type time: str
 
-		:return: The clusters that received vectors, and which are not frozen.
-		:rtpye: list of :class:`~vsm.clustering.cluster.Cluster` instances
+		:return: The clusters that received vectors.
+		:rtpye: list of :class:`~vsm.clustering.cluster.Cluster`
 		"""
 
 		updated_clusters = [ ]
