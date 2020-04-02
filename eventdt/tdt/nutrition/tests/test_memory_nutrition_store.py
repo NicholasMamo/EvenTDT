@@ -481,3 +481,66 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		self.assertEqual({ 0: 0, 10: 1, 20: 2, 30: 3 }, nutrition.all())
 		nutrition.remove(*nutrition.since(20))
 		self.assertEqual({ 0: 0, 10: 1}, nutrition.all())
+
+	def test_copy(self):
+		"""
+		Test that when creating a copy of the nutrition store, all the timestamps and data are the same.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		nutrition.add(0, 0)
+		nutrition.add(10, 1)
+		nutrition.add(20, 2)
+		nutrition.add(30, 3)
+
+		copy = nutrition.copy()
+		self.assertEqual(0, copy.get(0))
+		self.assertEqual(1, copy.get(10))
+		self.assertEqual(2, copy.get(20))
+		self.assertEqual(3, copy.get(30))
+
+	def test_copy_edit(self):
+		"""
+		Test that when editing a copy of the nutrition store, the original data is the same.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		nutrition.add(0, 0)
+		nutrition.add(10, 1)
+		nutrition.add(20, 2)
+		nutrition.add(30, 3)
+
+		copy = nutrition.copy()
+		copy.add(0, 1)
+		copy.add(10, 2)
+		copy.add(20, 3)
+		copy.add(30, 4)
+
+		self.assertEqual(0, nutrition.get(0))
+		self.assertEqual(1, nutrition.get(10))
+		self.assertEqual(2, nutrition.get(20))
+		self.assertEqual(3, nutrition.get(30))
+
+		self.assertEqual(1, copy.get(0))
+		self.assertEqual(2, copy.get(10))
+		self.assertEqual(3, copy.get(20))
+		self.assertEqual(4, copy.get(30))
+
+	def test_copy_deep(self):
+		"""
+		Test that the copy of the nutrition store is deep.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		nutrition.add(0, { 'value': 0 })
+		nutrition.add(10, [ 'value', 1 ])
+
+		copy = nutrition.copy()
+		copy.add(0, { 'value': 1 })
+		copy.add(10, [ 'value', 2 ])
+
+		self.assertEqual({ 'value': 0 }, nutrition.get(0))
+		self.assertEqual([ 'value', 1 ], nutrition.get(10))
+
+		self.assertEqual({ 'value': 1 }, copy.get(0))
+		self.assertEqual([ 'value', 2 ], copy.get(10))

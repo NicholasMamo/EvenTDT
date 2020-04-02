@@ -4,6 +4,7 @@ This store is a simple and efficient implementation because there is little over
 However, the accumulation of nutrition data necessitates that old data is cleared routinely.
 """
 
+import copy
 import os
 import sys
 
@@ -108,3 +109,21 @@ class MemoryNutritionStore(NutritionStore):
 
 		timestamps = [ float(timestamp) for timestamp in args ]
 		self.store = { timestamp: self.store.get(timestamp) for timestamp in self.store if timestamp not in timestamps }
+
+	def copy(self):
+		"""
+		Create a copy of the nutrition store.
+		The copy is a deep copy.
+		This means that all changes to the copy do not affect the original.
+
+		:return: A copy of the nutrition store.
+		:rtype: :class:`~tdt.nutrition.memory.MemoryNutritionStore`
+		"""
+
+		store = MemoryNutritionStore()
+
+		copy_data = copy.deepcopy(self.all())
+		for timestamp, data in copy_data.items():
+			store.add(timestamp, data)
+
+		return store
