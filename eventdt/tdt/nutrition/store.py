@@ -151,3 +151,16 @@ class NutritionStore(ABC):
 		"""
 
 		pass
+
+	@abstractmethod
+	def copy(self):
+		"""
+		Create a copy of the nutrition store.
+		The copy is a deep copy.
+		This means that all changes to the copy do not affect the original.
+
+		:return: A copy of the nutrition store.
+		:rtype: :class:`~tdt.nutrition.store.NutritionStore`
+		"""
+
+		pass
