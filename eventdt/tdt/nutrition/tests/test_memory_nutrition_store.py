@@ -268,6 +268,14 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		nutrition.add(20, 2)
 		self.assertEqual({ 10: 1}, nutrition.between(1, 19))
 
+	def test_since_empty(self):
+		"""
+		Test that when getting nutrition data since a timestamp from an empty store, an empty dictionary is returned.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		self.assertEqual({ }, nutrition.since(0))
+
 	def test_since_inclusive(self):
 		"""
 		Test that when getting nutrition data since a timestamp, the start timestamp is included.

@@ -113,9 +113,12 @@ class NutritionStore(ABC):
 		:rtype: dict
 		"""
 
-		timestamps = [ float(timestamp) for timestamp in self.all().keys() ]
-		last = max(timestamps)
-		return self.between(start, float(last) + 1)
+		if self.all():
+			timestamps = [ float(timestamp) for timestamp in self.all().keys() ]
+			last = max(timestamps)
+			return self.between(start, float(last) + 1)
+
+		return { }
 
 	def until(self, end):
 		"""
@@ -137,8 +140,8 @@ class NutritionStore(ABC):
 			timestamps = [ float(timestamp) for timestamp in self.all().keys() ]
 			last = min(timestamps)
 			return self.between(0, str(end))
-		else:
-			return { }
+
+		return { }
 
 	@abstractmethod
 	def remove(self, *args):
