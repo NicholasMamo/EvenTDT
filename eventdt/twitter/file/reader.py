@@ -63,3 +63,14 @@ class FileReader(ABC):
 		"""
 
 		pass
+
+	def stop(self):
+		"""
+		Set a flag to stop accepting new objects.
+
+		.. note::
+			Contrary to the name of the function, the function sets the `active` flag, not the `stopped` flag.
+			This function merely asks that the consumer stops accepting new objects for processing.
+		"""
+
+		self.active = False
