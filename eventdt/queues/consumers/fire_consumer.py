@@ -114,29 +114,28 @@ class FIREConsumer(SimulatedBufferedConsumer):
 	def _filter_tweets(self, tweets):
 		"""
 		Filter the given tweets based on FIRE's filtering rules.
+		The rules are:
 
-		:param tweets: A list of tweets.
-		:type tweets: list of dictionaries
+			#. The tweet has to be in English,
+
+			#. The tweet must contain no more than 2 hashtags,
+
+			#. The tweet's author must have favorited at least one tweet, and
+
+			#. The tweet's author must have at least one follower for every thousand tweets they've published.
+
+		:param tweets: A list of tweets to filter.
+		:type tweets: list of dict
 
 		:return: A list of filtered tweets.
-		:type tweets: list of dictionaries
+		:type tweets: list of dict
 		"""
 
-		for tweet in tweets:
-			"""
-			Calculate some scores that are not provided by Twitter's API
-			"""
-			tweet["num_hashtags"] = len(tweet["entities"]["hashtags"])
-			tweet["follower_per_thousand_tweets"] = tweet["user"]["followers_count"] / tweet["user"]["statuses_count"]
-
-		rules = [
-			("lang", filter.equal, "en"),
-			("num_hashtags", filter.lte, 2),
-			("user:favourites_count", filter.gt, 0),
-			("follower_per_thousand_tweets", filter.gte, 1./1000.)
-		]
-		f = Filter(rules)
-		return [tweet for tweet in tweets if f.filter(tweet)]
+		tweets = filter(lambda tweet: tweet['lang'] == 'en', tweets)
+		tweets = filter(lambda tweet: len(tweet['entities']['hashtags']) <= 2, tweets)
+		tweets = filter(lambda tweet: tweet['user']['favourites_count'] > 0, tweets)
+		tweets = filter(lambda tweet: tweet['user']['followers_count'] / tweet['user']['statuses_count'] >= 1e-3, tweets)
+		return list(tweets)
 
 	def _tokenize(self, tweets):
 		"""
