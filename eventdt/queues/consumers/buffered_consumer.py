@@ -142,13 +142,9 @@ class SimulatedBufferedConsumer(BufferedConsumer):
 	Instead, it gets the time from the incoming message.
 	This class can be used in a simulated environment, such as when data has been collected.
 	In this case, it allows the data to be consumed at the rate that it is read.
-
-	:ivar timestamp: The name of the vector attribute used to get the timestamp value.
-					 The time value is expected to be a float or integer.
-	:vartype timestamp: str
 	"""
 
-	def __init__(self, queue, periodicity, timestamp="timestamp"):
+	def __init__(self, queue, periodicity):
 		"""
 		Initialize the simulated buffered consumer with its queue, periodicity and buffer.
 		The timestamp parameter is the field that the sleep function checks to know when it should awake.
@@ -157,13 +153,9 @@ class SimulatedBufferedConsumer(BufferedConsumer):
 		:type queue: :class:`~queues.queue.Queue`
 		:param periodicity: The time window in seconds of the buffered consumer, or how often it is invoked.
 		:type periodicity: int
-		:param timestamp: The name of the vector attribute used to get the timestamp value.
-						  The time value is expected to be a float or integer.
-		:type timestamp: str
 		"""
 
 		super(SimulatedBufferedConsumer, self).__init__(queue, periodicity)
-		self.timestamp = timestamp
 
 	async def _sleep(self):
 		"""

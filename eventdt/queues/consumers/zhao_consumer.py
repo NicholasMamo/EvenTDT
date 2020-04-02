@@ -56,7 +56,7 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 	:vartype summarization: :class:`~summarization.algorithms.mmr.MMR`
 	"""
 
-	def __init__(self, queue, periodicity=5, timestamp='timestamp', scheme=None):
+	def __init__(self, queue, periodicity=5, scheme=None):
 		"""
 		Create the consumer with a queue.
 		Simultaneously create a nutrition store and the topic detection algorithm container.
@@ -68,15 +68,12 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 		:param periodicity: The time window in seconds of the buffered consumer, or how often it is invoked.
 							This defaults to 5 seconds, the same span as half the smallest time window in Zhao et al.'s algorithm.
 		:type periodicity: int
-		:param timestamp: The name of the vector attribute used to get the timestamp value.
-						  The time value is expected to be a float or integer.
-		:type timestamp: str
 		:param scheme: The term-weighting scheme that is used to create dimensions.
 					   If `None` is given, the :class:`~nlp.term_weighting.tf.TF` term-weighting scheme is used.
 		:type scheme: None or :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
 		"""
 
-		super(ZhaoConsumer, self).__init__(queue, periodicity, timestamp=timestamp)
+		super(ZhaoConsumer, self).__init__(queue, periodicity)
 		self.scheme = scheme
 		self.store = MemoryNutritionStore()
 		self.documents = { }
@@ -168,7 +165,7 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 			tokens = tokenizer.tokenize(text)
 			document = Document(text, tokens, scheme=self.scheme)
 			document.attributes["tweet"] = original
-			document.attributes[self.timestamp] = twitter.extract_timestamp(original)
+			document.attributes['timestamp'] = twitter.extract_timestamp(original)
 			document.normalize()
 			documents.append(document)
 
@@ -257,7 +254,7 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 			"""
 			volume = { }
 			for document in documents:
-				timestamp = document.attributes[self.timestamp]
+				timestamp = document.attributes['timestamp']
 				volume[timestamp] = volume.get(timestamp, 0) + 1
 
 			"""
