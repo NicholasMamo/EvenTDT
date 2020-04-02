@@ -70,3 +70,8 @@ Nodes
    :members:
    :private-members:
    :special-members:
+
+.. automodule:: summarization.timeline.nodes.topical_cluster_node
+   :members:
+   :private-members:
+   :special-members:
