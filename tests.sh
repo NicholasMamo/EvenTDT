@@ -92,8 +92,9 @@ summarization_tests() {
 	python3 -m unittest eventdt.summarization.timeline.tests.test_timeline
 
 	echo -e "${HIGHLIGHT}Nodes${DEFAULT}"
-	python3 -m unittest eventdt.summarization.timeline.nodes.tests.test_cluster_node
 	python3 -m unittest eventdt.summarization.timeline.nodes.tests.test_document_node
+	python3 -m unittest eventdt.summarization.timeline.nodes.tests.test_cluster_node
+	python3 -m unittest eventdt.summarization.timeline.nodes.tests.test_topical_cluster_node
 
 	# echo -e "${HIGHLIGHT}Scorer${DEFAULT}"
 	# python3 -m unittest eventdt.summarization.scorers.tests.test_scorers
