@@ -474,6 +474,63 @@ class TestFIREConsumer(unittest.TestCase):
 			consumer._remove_old_checkpoints(timestamp + 600 + 1)
 			self.assertEqual([ ], list(consumer.store.all().keys()))
 
+	def test_filter_clusters_empty(self):
+		"""
+		Test that when filtering an empty list of clusters, another empty list is returned.
+		"""
+
+		consumer = FIREConsumer(Queue(), 60, scheme=TF())
+		self.assertEqual([ ], consumer._filter_clusters([ ]))
+
+	def test_filter_clusters_size_inclusive(self):
+		"""
+		Test that when filtering a list of clusters, the minimum size is inclusive.
+		"""
+
+		consumer = FIREConsumer(Queue(), 60, scheme=TF(), min_size=3)
+		cluster = Cluster()
+		for i in range(3):
+			cluster.vectors.append(Document(''))
+		self.assertEqual([ cluster ], consumer._filter_clusters([ cluster ]))
+
+	def test_filter_clusters_small(self):
+		"""
+		Test that when filtering a list of clusters, small clusters are filtered out.
+		"""
+
+		consumer = FIREConsumer(Queue(), 60, scheme=TF(), min_size=3)
+		cluster = Cluster()
+		for i in range(2):
+			cluster.vectors.append(Document(''))
+		self.assertEqual([ ], consumer._filter_clusters([ cluster ]))
+
+	def test_filter_clusters_large(self):
+		"""
+		Test that when filtering a list of clusters, large clusters are retained.
+		"""
+
+		consumer = FIREConsumer(Queue(), 60, scheme=TF(), min_size=3)
+		cluster = Cluster()
+		for i in range(30):
+			cluster.vectors.append(Document(''))
+		self.assertEqual([ cluster ], consumer._filter_clusters([ cluster ]))
+
+	def test_filter_clusters_mix(self):
+		"""
+		Test that when filtering a list of clusters with mixed sizes, only those that need to be filtered out are removed.
+		"""
+
+		consumer = FIREConsumer(Queue(), 60, scheme=TF(), min_size=3)
+		clusters = [ Cluster(), Cluster() ]
+
+		for i in range(3):
+			clusters[0].vectors.append(Document(''))
+
+		for i in range(2):
+			clusters[0].vectors.append(Document(''))
+
+		self.assertEqual([ clusters[0] ], consumer._filter_clusters(clusters))
+
 	def test_detect_topics_store_unchanged(self):
 		"""
 		Test that when detecting topics, the nutrition store itself does not change.

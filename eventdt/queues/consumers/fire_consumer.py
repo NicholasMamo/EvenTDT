@@ -58,6 +58,7 @@ class FIREConsumer(SimulatedBufferedConsumer):
 	:ivar clustering: The clustering algorithm to use.
 	:vartype clustering: :class:`~vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans`
 	:ivar min_size: The minimum size for a cluster to be considered to be a candidate breaking topic.
+					This value is inclusive.
 	:vartype min_size: int
 	"""
 
@@ -87,6 +88,7 @@ class FIREConsumer(SimulatedBufferedConsumer):
 		:param freeze_period: The freeze period, in seconds, of the incremental clustering approach.
 		:type freeze_period: float
 		:param min_size: The minimum size for a cluster to be considered to be a candidate breaking topic.
+						 This value is inclusive.
 		:type min_size: int
 		"""
 
@@ -134,7 +136,7 @@ class FIREConsumer(SimulatedBufferedConsumer):
 				For each such cluster, check if it has any bursty terms.
 				If it does, the cluster is breaking.
 				"""
-				clusters = filter(lambda cluster: cluster.size() >= self.min_size, clusters)
+				clusters = self._filter_clusters(clusters)
 				for cluster in clusters:
 					terms = self._detect_topics(cluster, timestamp=latest_timestamp)
 					if terms:
@@ -274,19 +276,6 @@ class FIREConsumer(SimulatedBufferedConsumer):
 
 		return filtered
 
-	def _cluster(self, documents):
-		"""
-		Cluster the given documents.
-
-		:param documets: The documents to cluster.
-		:type documents: list of :class:`~nlp.document.Document`
-
-		:return: The list of clusters that have changed.
-		:rtype: list of :class:`~vector.cluster.cluster.Cluster`
-		"""
-
-		return self.clustering.cluster(documents, time='timestamp', store_frozen=False)
-
 	def _create_checkpoint(self, timestamp, documents):
 		"""
 		After every time window has elapsed, create a checkpoint from the documents.
@@ -333,6 +322,32 @@ class FIREConsumer(SimulatedBufferedConsumer):
 		until = timestamp - self.periodicity * self.sets
 		if until > 0:
 			self.store.remove(*self.store.until(until))
+
+	def _cluster(self, documents):
+		"""
+		Cluster the given documents.
+
+		:param documets: The documents to cluster.
+		:type documents: list of :class:`~nlp.document.Document`
+
+		:return: The list of clusters that have changed.
+		:rtype: list of :class:`~vector.cluster.cluster.Cluster`
+		"""
+
+		return self.clustering.cluster(documents, time='timestamp', store_frozen=False)
+
+	def _filter_clusters(self, clusters):
+		"""
+		Filter clusters that are too small.
+
+		:param clusters: A list of clusters to filter.
+		:type clusters: list of :class:`~vsm.clustering.cluster.Cluster`
+
+		:return: A list of filtered clusters.
+		:rtype: list of :class:`~vsm.clustering.cluster.Cluster`
+		"""
+
+		return list(filter(lambda cluster: cluster.size() >= self.min_size, clusters))
 
 	def _detect_topics(self, cluster, timestamp):
 		"""
