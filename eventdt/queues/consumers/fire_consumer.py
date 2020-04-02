@@ -53,13 +53,15 @@ class FIREConsumer(SimulatedBufferedConsumer):
 				However, because of the decay in :class:`~tdt.algorithms.cataldi.Cataldi`, old time windows do not affect the result by a big margin.
 				Therefore old data can be removed safely.
 	:vartype sets: int
+	:ivar min_size: The minimum size for a cluster to be considered to be a candidate breaking topic.
+					This value is inclusive.
+	:vartype min_size: int
 	:ivar tokenizer: The tokenizer used to create documents.
 	:vartype tokenizer: :class:`~nlp.tokenizer.Tokenizer`
 	:ivar clustering: The clustering algorithm to use.
 	:vartype clustering: :class:`~vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans`
-	:ivar min_size: The minimum size for a cluster to be considered to be a candidate breaking topic.
-					This value is inclusive.
-	:vartype min_size: int
+	:ivar summarization: The summarization algorithm to use.
+	:vartype summarization: :class:`~summarization.algorithms.mmr.MMR`
 	"""
 
 	def __init__(self, queue, periodicity=60, scheme=None, sets=10, threshold=0.7, freeze_period=20, min_size=4):
@@ -101,6 +103,7 @@ class FIREConsumer(SimulatedBufferedConsumer):
 		self.tokenizer = Tokenizer(stopwords=stopwords.words("english"), normalize_words=True,
 								   character_normalization_count=3, remove_unicode_entities=True)
 		self.clustering = TemporalNoKMeans(threshold, freeze_period, store_frozen=False)
+		self.summarization = MMR()
 
 	async def _process(self):
 		"""
