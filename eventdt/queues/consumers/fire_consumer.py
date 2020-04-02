@@ -309,23 +309,37 @@ class FIREConsumer(SimulatedBufferedConsumer):
 		if until > 0:
 			self.store.remove(*self.store.until(until))
 
-	def _detect_topics(self, cluster, sets, timestamp):
+	def _detect_topics(self, cluster, timestamp):
 		"""
-		Perform topic detection.
+		Detect topics from the given cluster.
+		This method makes a copy of the nutrition store.
+		It replaces the data at the given timestamp with a pseudo-checkpoint.
+		This checkpoint is constructed using only data from the cluster.
 
-		:param cluster: The cluster from which to extract the documents.
-		:type cluster: :class:`~vector.cluster.cluster.Cluster`
-		:param sets: The number of time windows to consider.
-		:type sets: int
-		:param timestamp: The current timestamp, used to isolate recent documents.
+		:param cluster: The cluster for which to identify breaking topics.
+		:type cluster: :class:`~vsm.clustering.cluster.Cluster`
+		:param timestamp: The current timestamp.
+						  Sets older than this timestamp are used to calculate the burst.
 		:type timestamp: int
 
 		:return: A list of emerging terms from the cluster.
 		:rtype: list
 		"""
 
-		terms = cataldi.detect_topics(self.store, # use the nutrition store's checkpoints as historical data
-			timestamp=timestamp, # do not consider checkpoints in this sliding time window, but only those that preceed it
-			sets=sets, # consider the past few sets
-		)
-		return terms
+		"""
+		Create a copy of the memory nutrition store.
+		Replace the value at the current timestamp with a pseudo-checkpoint from the cluster's documents.
+		"""
+		copy = self.store.copy()
+		document = Document.concatenate(*cluster.vectors, tokenizer=self.tokenizer, scheme=self.scheme)
+		max_magnitude = max(document.dimensions.values())
+		document.dimensions = { dimension: magnitude / max_magnitude
+								for dimension, magnitude in document.dimensions.items() }
+		copy.add(timestamp, document.dimensions)
+
+		"""
+		Run the algorithm.
+		"""
+		algo = Cataldi(copy)
+		since = timestamp - self.periodicity * self.sets
+		return algo.detect(timestamp=timestamp, since=since)

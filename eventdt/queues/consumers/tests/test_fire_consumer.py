@@ -16,6 +16,7 @@ from queues import Queue
 from queues.consumers import FIREConsumer
 from nlp.document import Document
 from nlp.term_weighting import TF
+from vsm.clustering import Cluster
 import twitter
 
 class TestFIREConsumer(unittest.TestCase):
@@ -440,3 +441,53 @@ class TestFIREConsumer(unittest.TestCase):
 			self.assertEqual([ timestamp ], list(consumer.store.all().keys()))
 			consumer._remove_old_checkpoints(timestamp + 600 + 1)
 			self.assertEqual([ ], list(consumer.store.all().keys()))
+
+	def test_detect_topics_store_unchanged(self):
+		"""
+		Test that when detecting topics, the nutrition store itself does not change.
+		"""
+
+		consumer = FIREConsumer(Queue(), 60, scheme=TF(), sets=10)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			line = f.readline()
+			tweet = json.loads(line)
+			documents = consumer._to_documents([ tweet ])
+			timestamp = twitter.extract_timestamp(tweet)
+			consumer._create_checkpoint(timestamp, documents)
+			self.assertEqual([ timestamp ], list(consumer.store.all().keys()))
+			self.assertEqual(documents[0].dimensions.keys(), consumer.store.get(timestamp).keys())
+
+			"""
+			Create a new cluster with a different tweet.
+			The function should not replace the original nutrition data, only make a copy.
+			"""
+			line = f.readline()
+			tweet = json.loads(line)
+			cluster = Cluster(consumer._to_documents([ tweet ]))
+			consumer._detect_topics(cluster, timestamp)
+			self.assertEqual(documents[0].dimensions.keys(), consumer.store.get(timestamp).keys())
+
+	def test_detect_topics_breaking(self):
+		"""
+		Test that when detecting topics, the nutrition store itself does not change.
+		"""
+
+		consumer = FIREConsumer(Queue(), 60, scheme=TF(), sets=10)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			line = f.readline()
+			tweet = json.loads(line)
+			documents = consumer._to_documents([ tweet ])
+			timestamp = twitter.extract_timestamp(tweet)
+			consumer._create_checkpoint(timestamp, documents)
+			self.assertEqual([ timestamp ], list(consumer.store.all().keys()))
+			self.assertEqual(documents[0].dimensions.keys(), consumer.store.get(timestamp).keys())
+
+			"""
+			Create a new cluster with a sligtly different tweet.
+			The function should return some of the different dimensions as breaking terms.
+			"""
+			document = documents[0].copy()
+			document.text = document.text + ' pipe'
+			cluster = Cluster(document)
+			terms = consumer._detect_topics(cluster, timestamp + 60)
+			self.assertTrue('pipe' in terms)
