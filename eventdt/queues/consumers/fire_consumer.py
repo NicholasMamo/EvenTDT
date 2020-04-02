@@ -65,6 +65,52 @@ class FIREConsumer(SimulatedBufferedConsumer):
 		self.store = MemoryNutritionStore()
 		self.scheme = scheme
 
+	async def _process(self):
+		"""
+		Find breaking terms from the stream of tweets.
+
+		:return: A list of topics, represented with tweets that represent breaking topics.
+		:rtype: list of tweets
+		"""
+
+		sets = 10
+		topics = []
+		total_documents, total_tweets = 0, 0
+
+		while not self._stopped:
+			if self._buffer.length() > 0:
+				"""
+				The first step is to filter out non-English tweets and tokenize the rest
+				"""
+				tweets = self._buffer.dequeue_all()
+				total_tweets += len(tweets)
+				tweets = self._filter_tweets(tweets)
+				documents = self._tokenize(tweets)
+				# documents = self._filter_documents(documents)
+				total_documents += len(documents)
+				last_timestamp = documents[-1].get_attribute("timestamp")
+
+				await self._create_checkpoint(last_timestamp, sets, documents)
+
+				"""
+				Then, cluster the documents
+				"""
+				clusters = self._cluster(documents)
+				# clusters = self._filter_clusters(clusters, last_timestamp, min_size=2, max_intra_similarity=0.9)
+				for cluster in clusters:
+					"""
+					Perform topic detection
+					"""
+					if cluster.size() > 3:
+						terms = self._detect_topics(cluster, sets=sets, timestamp=last_timestamp)
+						if len(terms) > 0:
+							logger.info("%s: %s" % (datetime.fromtimestamp(last_timestamp).strftime('%Y-%m-%d %H:%M:%S'), ', '.join(terms)))
+
+			await self._sleep()
+
+		logger.info("%d tweets viewed and %d documents processed" % (total_tweets, total_documents))
+		return topics
+
 	def _filter_tweets(self, tweets):
 		"""
 		Filter the given tweets based on FIRE's filtering rules.
@@ -91,28 +137,6 @@ class FIREConsumer(SimulatedBufferedConsumer):
 		]
 		f = Filter(rules)
 		return [tweet for tweet in tweets if f.filter(tweet)]
-
-	def _filter_documents(self, documents):
-		"""
-		Filter the given documents based on FIRE's filtering rules.
-
-		:param documets: The documents to filter.
-		:type documents: list of :class:`~vector.nlp.document.Document` instances
-
-		:return: The approved documents.
-		:type documents: list of :class:`~vector.nlp.document.Document` instances
-		"""
-
-		for document in documents:
-			tokens = document.get_attribute("tokens")
-			token_count, unique_token_count = len(tokens), len(set(tokens))
-			document.set_attribute("score", math.log(token_count) * unique_token_count / token_count if token_count > 0 else 0)
-
-		rules = [
-			("score", filter.gte, 1.37)
-		]
-		f = Filter(rules)
-		return [document for document in documents if f.filter(document.get_attributes())]
 
 	def _tokenize(self, tweets):
 		"""
@@ -147,6 +171,28 @@ class FIREConsumer(SimulatedBufferedConsumer):
 			documents.append(document)
 
 		return documents
+
+	def _filter_documents(self, documents):
+		"""
+		Filter the given documents based on FIRE's filtering rules.
+
+		:param documets: The documents to filter.
+		:type documents: list of :class:`~vector.nlp.document.Document` instances
+
+		:return: The approved documents.
+		:type documents: list of :class:`~vector.nlp.document.Document` instances
+		"""
+
+		for document in documents:
+			tokens = document.get_attribute("tokens")
+			token_count, unique_token_count = len(tokens), len(set(tokens))
+			document.set_attribute("score", math.log(token_count) * unique_token_count / token_count if token_count > 0 else 0)
+
+		rules = [
+			("score", filter.gte, 1.37)
+		]
+		f = Filter(rules)
+		return [document for document in documents if f.filter(document.get_attributes())]
 
 	def _cluster(self, documents, threshold=0.7, freeze_period=20):
 		"""
@@ -222,49 +268,3 @@ class FIREConsumer(SimulatedBufferedConsumer):
 			sets=sets, # consider the past few sets
 		)
 		return terms
-
-	async def _process(self):
-		"""
-		Find breaking terms from the stream of tweets.
-
-		:return: A list of topics, represented with tweets that represent breaking topics.
-		:rtype: list of tweets
-		"""
-
-		sets = 10
-		topics = []
-		total_documents, total_tweets = 0, 0
-
-		while not self._stopped:
-			if self._buffer.length() > 0:
-				"""
-				The first step is to filter out non-English tweets and tokenize the rest
-				"""
-				tweets = self._buffer.dequeue_all()
-				total_tweets += len(tweets)
-				tweets = self._filter_tweets(tweets)
-				documents = self._tokenize(tweets)
-				# documents = self._filter_documents(documents)
-				total_documents += len(documents)
-				last_timestamp = documents[-1].get_attribute("timestamp")
-
-				await self._create_checkpoint(last_timestamp, sets, documents)
-
-				"""
-				Then, cluster the documents
-				"""
-				clusters = self._cluster(documents)
-				# clusters = self._filter_clusters(clusters, last_timestamp, min_size=2, max_intra_similarity=0.9)
-				for cluster in clusters:
-					"""
-					Perform topic detection
-					"""
-					if cluster.size() > 3:
-						terms = self._detect_topics(cluster, sets=sets, timestamp=last_timestamp)
-						if len(terms) > 0:
-							logger.info("%s: %s" % (datetime.fromtimestamp(last_timestamp).strftime('%Y-%m-%d %H:%M:%S'), ', '.join(terms)))
-
-			await self._sleep()
-
-		logger.info("%d tweets viewed and %d documents processed" % (total_tweets, total_documents))
-		return topics
