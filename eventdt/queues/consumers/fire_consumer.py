@@ -186,25 +186,48 @@ class FIREConsumer(SimulatedBufferedConsumer):
 
 	def _filter_documents(self, documents):
 		"""
-		Filter the given documents based on FIRE's filtering rules.
+		Filter the given documents based on FIRE's scoring.
+		The score is based on the fraction of unique tokens:
 
-		:param documets: The documents to filter.
-		:type documents: list of :class:`~vector.nlp.document.Document` instances
+		.. math::
 
-		:return: The approved documents.
-		:type documents: list of :class:`~vector.nlp.document.Document` instances
+			s_d = \\ln(|d|) * \\frac{|d_u|}{|d|}
+
+		where :math:`s_d` is the computed score.
+		:math:`|d|` and :math:`|d_u|` are the number of tokens, and the number of unique tokens in the document respectively.
+		Documents that have no tokens are immediately discarded.
+
+		:param documets: A list of documents.
+		:type documents: list of :class:`~nlp.document.Document`
+
+		:return: A list of filtered documents.
+		:type documents: list of :class:`~nlp.document.Document`
 		"""
 
-		for document in documents:
-			tokens = document.get_attribute("tokens")
-			token_count, unique_token_count = len(tokens), len(set(tokens))
-			document.set_attribute("score", math.log(token_count) * unique_token_count / token_count if token_count > 0 else 0)
+		filtered = [ ]
+		tokenizer = Tokenizer(stopwords=stopwords.words("english"), normalize_words=True,
+							  character_normalization_count=3, remove_unicode_entities=True)
 
-		rules = [
-			("score", filter.gte, 1.37)
-		]
-		f = Filter(rules)
-		return [document for document in documents if f.filter(document.get_attributes())]
+		for document in documents:
+			tokens = tokenizer.tokenize(document.text)
+			count, unique = len(tokens), len(set(tokens))
+
+			"""
+			If the document has no tokens, the score cannot be computed.
+			Since it is low-quality, it is removed immediately.
+			"""
+			if not count:
+				continue
+
+			"""
+			If the document does have tokens, compute the score.
+			Low-quality documents are removed.
+			"""
+			score = math.log(count) * unique / count
+			if score >= 1.37:
+				filtered.append(document)
+
+		return filtered
 
 	def _cluster(self, documents, threshold=0.7, freeze_period=20):
 		"""
