@@ -14,6 +14,7 @@ if path not in sys.path:
 
 from nlp.document import Document
 from summarization.timeline.nodes import TopicalClusterNode
+from vsm.vector import Vector
 from vsm.clustering import Cluster
 
 class TestClusterNode(unittest.TestCase):
@@ -49,3 +50,49 @@ class TestClusterNode(unittest.TestCase):
 		"""
 
 		self.assertEqual(round(time.time()), round(TopicalClusterNode().created_at))
+
+	def test_add(self):
+		"""
+		Test adding a cluster to the node.
+		"""
+
+		node = TopicalClusterNode()
+		self.assertEqual([ ], node.clusters)
+		self.assertEqual([ ], node.topics)
+		cluster = Cluster()
+		topic = Vector()
+		node.add(cluster, topic)
+		self.assertEqual([ cluster ], node.clusters)
+		self.assertEqual([ topic ], node.topics)
+
+	def test_add_repeated(self):
+		"""
+		Test adding clusters one at a time to the node.
+		"""
+
+		node = TopicalClusterNode()
+		self.assertEqual([ ], node.clusters)
+		clusters = [ Cluster() for i in range(2)]
+		topics = [ Vector() for i in range(2)]
+		node.add(clusters[0], topics[0])
+		self.assertEqual([ clusters[0] ], node.clusters)
+		self.assertEqual([ topics[0] ], node.topics)
+		node.add(clusters[1], topics[1])
+		self.assertEqual(clusters, node.clusters)
+		self.assertEqual(topics, node.topics)
+
+	def test_add_cluster_dynamic(self):
+		"""
+		Test that when changing a topic, the node's topic also changes.
+		"""
+
+		node = TopicalClusterNode()
+		self.assertEqual([ ], node.topics)
+		topic = Vector()
+		node.add(Cluster(), topic)
+		self.assertEqual(topic, node.topics[0])
+		self.assertEqual({ }, node.topics[0].dimensions)
+
+		topic.dimensions['a'] = 1
+		self.assertEqual({ 'a': 1 }, node.topics[0].dimensions)
+		self.assertEqual(topic, node.topics[0])

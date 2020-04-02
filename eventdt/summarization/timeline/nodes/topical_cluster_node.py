@@ -36,4 +36,15 @@ class TopicalClusterNode(ClusterNode):
 		super(TopicalClusterNode, self).__init__(created_at)
 		self.topics = [ ]
 
-	
+	def add(self, cluster, topic, *args, **kwargs):
+		"""
+		Add documents to the node.
+
+		:param cluster: The cluster to add to the node.
+		:type cluster: :class:`~vsm.clustering.cluster.Cluster`
+		:param topic: The topical representation of the cluster.
+		:type topic: :class:`~vsm.vector.Vector`
+		"""
+
+		super(TopicalClusterNode, self).add(cluster)
+		self.topics.append(topic)
