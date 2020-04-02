@@ -8,6 +8,8 @@ In this implementation, the tracking happens through the timeline.
 	Implementation based on the algorithm presented in `FIRE: Finding Important News REports by Mamo and Azzopardi (2017) <https://link.springer.com/chapter/10.1007/978-3-319-74497-1_3>`_.
 """
 
+from datetime import datetime
+
 import asyncio
 import math
 import os
