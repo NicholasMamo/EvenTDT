@@ -44,9 +44,11 @@ class FIREConsumer(SimulatedBufferedConsumer):
 	:vartype store: :class:`~tdt.nutrition.store.NutritionStore`
 	:ivar scheme: The term-weighting scheme used to create documents.
 	:vartype scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
+	:ivar summarization: The summarization algorithm to use.
+	:vartype summarization: :class:`~vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans`
 	"""
 
-	def __init__(self, queue, periodicity, scheme=None):
+	def __init__(self, queue, periodicity, scheme=None, threshold=0.7, freeze_period=20):
 		"""
 		Create the consumer with a queue.
 		Simultaneously create a nutrition store and the topic detection algorithm container.
@@ -61,11 +63,17 @@ class FIREConsumer(SimulatedBufferedConsumer):
 		:param scheme: The term-weighting scheme that is used to create dimensions.
 					   If `None` is given, the :class:`~nlp.term_weighting.tf.TF` term-weighting scheme is used.
 		:type scheme: None or :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
+		:param threshold: The similarity threshold to use for the :class:`~vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans` incremental clustering approach.
+						  Documents are added to an existing cluster if their similarity with the centroid is greater than or equal to this threshold.
+		:type threshold: float
+		:param freeze_period: The freeze period, in seconds, of the incremental clustering approach.
+		:type freeze_period: float
 		"""
 
 		super(FIREConsumer, self).__init__(queue, periodicity)
 		self.store = MemoryNutritionStore()
 		self.scheme = scheme
+		self.clustering = TemporalNoKMeans(threshold, freeze_period, store_frozen=False)
 
 	async def _process(self):
 		"""
@@ -177,8 +185,8 @@ class FIREConsumer(SimulatedBufferedConsumer):
 			"""
 			tokens = tokenizer.tokenize(text)
 			document = Document(text, tokens, scheme=self.scheme)
-			document.attributes["tweet"] = original
-			document.attributes[self.timestamp] = twitter.extract_timestamp(original)
+			document.attributes['tweet'] = original
+			document.attributes['timestamp'] = twitter.extract_timestamp(original)
 			document.normalize()
 			documents.append(document)
 
@@ -229,24 +237,18 @@ class FIREConsumer(SimulatedBufferedConsumer):
 
 		return filtered
 
-	def _cluster(self, documents, threshold=0.7, freeze_period=20):
+	def _cluster(self, documents):
 		"""
 		Cluster the given documents.
 
 		:param documets: The documents to cluster.
-		:type documents: list of :class:`~vector.nlp.document.Document` instances
-		:param threshold: The threshold to use for the incremental clustering approach.
-		:type threshold: float
-		:param freeze_period: The freeze period (in seconds) of the incremental clustering approach.
-		:type freeze_period: float
+		:type documents: list of :class:`~nlp.document.Document`
 
-		:return: The list of clusters that are still active and that have changed.
-		:rtype: list of :class:`~vector.cluster.cluster.Cluster` instances
+		:return: The list of clusters that have changed.
+		:rtype: list of :class:`~vector.cluster.cluster.Cluster`
 		"""
 
-		clustering = TemporalNoKMeans()
-		clusters = clustering.cluster(documents, threshold=threshold, freeze_period=freeze_period, time_attribute="timestamp", store_frozen=False)
-		return clusters
+		return self.clustering.cluster(documents, time='timestamp', store_frozen=False)
 
 	async def _create_checkpoint(self, timestamp, sets, document_set):
 		"""
