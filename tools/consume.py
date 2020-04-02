@@ -25,6 +25,7 @@ Accepted arguments:
 import argparse
 import asyncio
 import os
+import signal
 import sys
 
 from multiprocessing import Process
@@ -36,6 +37,7 @@ lib = os.path.join(root, 'eventdt')
 sys.path.insert(-1, root)
 sys.path.insert(-1, lib)
 
+from logger import logger
 from queues import Queue
 from queues.consumers import FIREConsumer, PrintConsumer, StatConsumer, ZhaoConsumer
 from twitter.file import SimulatedFileReader
@@ -93,6 +95,11 @@ def main():
 	consume = Process(target=consume_process, args=(loop, consumer, ))
 	stream.start()
 	consume.start()
+
+	def sigint_handler(signal, frame):
+		logger.info("Waiting for reading and consumption processes to end")
+
+	signal.signal(signal.SIGINT, sigint_handler)
 
 	"""
 	Wait for the streaming and consumption jobs to finish.
