@@ -109,51 +109,6 @@ class MMR(SummarizationAlgorithm):
 			document = self._get_next_document(candidates, summary, query, matrix)
 			summary.documents.append(document)
 
-		"""
-		Repeatedly choose the most relevant document while minimizing redundancy.
-		"""
-		for i in range(0, iterations):
-			"""
-			In the first iteration, simply pick the most relevant document.
-			Otherwise, a longer route has to be taken.
-			"""
-			if len(summary) == 0:
-				candidate_documents = {}
-				for d in [ d for d in range(0, len(collection)) ]:
-					query_similarity = similarity_table[d][len(collection)]
-					candidate_documents[d] = query_similarity
-				most_similar_index = max(candidate_documents.items(), key=lambda d: d[1])[0]
-				summary.append(most_similar_index)
-			else:
-				"""
-				The formula has two components.
-				The first component finds the similarity between the document and the query.
-				The second component finds the maximum similarity between the document and each document in the summary.
-
-				To simplify the approach, this is enclosed in a loop.
-				"""
-
-				candidate_documents = {}
-				for d in [ d for d in range(0, len(collection)) if d not in summary ]:
-					query_similarity = similarity_table[d][len(collection)]
-					summary_document = max([sd for sd in summary], key=lambda sd : similarity_table[d][sd])
-					summary_document_similarity = similarity_table[d][summary_document]
-					candidate_documents[d] = l * query_similarity - (1 - l) * summary_document_similarity
-
-				if len(candidate_documents) == 0:
-					break
-
-				"""
-				Only add the document if its score is higher than the given threshold.
-				Note that a summary will always have at least one document - this is in the 'else' part.
-				"""
-				document, max_score = max(candidate_documents.items(), key=lambda d: d[1])
-				if max_score >= min_score:
-					summary.append(document)
-					# summary.append(max(candidate_documents.items(), key=lambda d: d[1])[0])
-				else:
-					break
-
 		return Summary([ collection[d] for d in summary ], timestamp)
 
 	def _compute_query(self, documents):
