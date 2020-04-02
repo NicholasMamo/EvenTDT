@@ -326,6 +326,22 @@ Any nutrition data at the end timestamp is not returned.</p>
 The timestamps should be given as arguments.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="tdt.nutrition.store.NutritionStore.copy">
+<em class="property">abstract </em><code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tdt.nutrition.store.NutritionStore.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a copy of the nutrition store.
+The copy is a deep copy.
+This means that all changes to the copy do not affect the original.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A copy of the nutrition store.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#tdt.nutrition.store.NutritionStore" title="tdt.nutrition.store.NutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="tdt.nutrition.store.NutritionStore.__weakref__">
 <code class="sig-name descname">__weakref__</code><a class="headerlink" href="#tdt.nutrition.store.NutritionStore.__weakref__" title="Permalink to this definition">¶</a></dt>
@@ -442,6 +458,22 @@ The start timestamp is inclusive, the end timestamp is exclusive.</p>
 <code class="sig-name descname">remove</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.nutrition.memory.MemoryNutritionStore.remove" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove nutrition data from the given list of timestamps.
 The timestamps should be given as arguments.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tdt.nutrition.memory.MemoryNutritionStore.copy">
+<code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tdt.nutrition.memory.MemoryNutritionStore.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a copy of the nutrition store.
+The copy is a deep copy.
+This means that all changes to the copy do not affect the original.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A copy of the nutrition store.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#tdt.nutrition.memory.MemoryNutritionStore" title="tdt.nutrition.memory.MemoryNutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">MemoryNutritionStore</span></code></a></p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

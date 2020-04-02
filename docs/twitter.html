@@ -397,6 +397,8 @@ If the number is negative, it is ignored.</p></li>
 <li><p><strong>max_time</strong> (<em>int</em>) – The maximum time in seconds to spend reading from the file.
 The time is taken from tweets’ <cite>created_at</cite> attribute.
 If the number is negative, it is ignored.</p></li>
+<li><p><strong>active</strong> (<em>bool</em>) – A boolean indicating whether the reader is still reading data.</p></li>
+<li><p><strong>stopped</strong> (<em>bool</em>) – A boolean indicating whether the consumer has finished processing.</p></li>
 </ul>
 </dd>
 </dl>
@@ -424,6 +426,17 @@ If the number is negative, it is ignored.</p></li>
 <dt id="twitter.file.reader.FileReader.read">
 <em class="property">abstract async </em><code class="sig-name descname">read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.reader.FileReader.read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read the file and add each line as a dictionary to the queue.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="twitter.file.reader.FileReader.stop">
+<code class="sig-name descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.reader.FileReader.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a flag to stop accepting new objects.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Contrary to the name of the function, the function sets the <cite>active</cite> flag, not the <cite>stopped</cite> flag.
+This function merely asks that the consumer stops accepting new objects for processing.</p>
+</div>
 </dd></dl>
 
 <dl class="attribute">

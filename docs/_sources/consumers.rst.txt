@@ -52,6 +52,11 @@ Simple Consumers
 Algorithms
 ----------
 
+.. automodule:: queues.consumers.fire_consumer
+   :members:
+   :private-members:
+   :special-members:
+
 .. automodule:: queues.consumers.zhao_consumer
    :members:
    :private-members:

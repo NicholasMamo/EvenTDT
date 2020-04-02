@@ -98,7 +98,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#queues">Queues</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#id1">Consumers</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module-queues.consumers.print_consumer">Simple Consumers</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-queues.consumers.zhao_consumer">Algorithms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-queues.consumers.fire_consumer">Algorithms</a></li>
 </ul>
 </li>
 </ul>
@@ -511,20 +511,14 @@ The function periodically checks if the consumer has been asked to stop.</p>
 
 <dl class="class">
 <dt id="queues.consumers.buffered_consumer.SimulatedBufferedConsumer">
-<em class="property">class </em><code class="sig-name descname">SimulatedBufferedConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity</em>, <em class="sig-param">timestamp='timestamp'</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.buffered_consumer.SimulatedBufferedConsumer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">SimulatedBufferedConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.buffered_consumer.SimulatedBufferedConsumer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The simulated buffered consumer is exactly like the buffered consumer, but its periodicity is not real-time.
 Instead, it gets the time from the incoming message.
 This class can be used in a simulated environment, such as when data has been collected.
 In this case, it allows the data to be consumed at the rate that it is read.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Variables</dt>
-<dd class="field-odd"><p><strong>timestamp</strong> (<em>str</em>) – The name of the vector attribute used to get the timestamp value.
-The time value is expected to be a float or integer.</p>
-</dd>
-</dl>
 <dl class="method">
 <dt id="queues.consumers.buffered_consumer.SimulatedBufferedConsumer.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity</em>, <em class="sig-param">timestamp='timestamp'</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.buffered_consumer.SimulatedBufferedConsumer.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.buffered_consumer.SimulatedBufferedConsumer.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the simulated buffered consumer with its queue, periodicity and buffer.
 The timestamp parameter is the field that the sleep function checks to know when it should awake.</p>
 <dl class="field-list simple">
@@ -532,8 +526,6 @@ The timestamp parameter is the field that the sleep function checks to know when
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>queue</strong> (<a class="reference internal" href="#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that is consumed.</p></li>
 <li><p><strong>periodicity</strong> (<em>int</em>) – The time window in seconds of the buffered consumer, or how often it is invoked.</p></li>
-<li><p><strong>timestamp</strong> (<em>str</em>) – The name of the vector attribute used to get the timestamp value.
-The time value is expected to be a float or integer.</p></li>
 </ul>
 </dd>
 </dl>
@@ -589,9 +581,249 @@ The reporting is done based on the periodicity.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-queues.consumers.zhao_consumer">
-<span id="algorithms"></span><h3>Algorithms<a class="headerlink" href="#module-queues.consumers.zhao_consumer" title="Permalink to this headline">¶</a></h3>
-<p>The Zhao et al. consumer is based on the implementation by the same authors.
+<div class="section" id="module-queues.consumers.fire_consumer">
+<span id="algorithms"></span><h3>Algorithms<a class="headerlink" href="#module-queues.consumers.fire_consumer" title="Permalink to this headline">¶</a></h3>
+<p>Finding Important News REports (FIRE) is a periodic TDT consumer.
+It takes in tweets every time window, clusters them and finds the most important terms in each cluster.
+In this implementation, the tracking happens through the timeline.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Implementation based on the algorithm presented in <a class="reference external" href="https://link.springer.com/chapter/10.1007/978-3-319-74497-1_3">FIRE: Finding Important News REports by Mamo and Azzopardi (2017)</a>.</p>
+</div>
+<dl class="class">
+<dt id="queues.consumers.fire_consumer.FIREConsumer">
+<em class="property">class </em><code class="sig-name descname">FIREConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity=60</em>, <em class="sig-param">scheme=None</em>, <em class="sig-param">sets=10</em>, <em class="sig-param">threshold=0.7</em>, <em class="sig-param">freeze_period=20</em>, <em class="sig-param">min_size=4</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.fire_consumer.FIREConsumer" title="Permalink to this definition">¶</a></dt>
+<dd><p>The FIRE consumer is based on the implementation of the same name.
+The algorithm clusters all tweets received in the same period and uses the Cataldi et al. algorithm to identify which ones are breaking.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="tdt.html#module-tdt.nutrition.store" title="tdt.nutrition.store"><strong>store</strong></a> (<a class="reference internal" href="tdt.html#tdt.nutrition.store.NutritionStore" title="tdt.nutrition.store.NutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code></a>) – The nutrition store used to store the volume changes of individual terms.</p></li>
+<li><p><a class="reference internal" href="nlp.html#module-nlp.term_weighting.scheme" title="nlp.term_weighting.scheme"><strong>scheme</strong></a> (<a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme used to create documents.</p></li>
+<li><p><strong>sets</strong> (<em>int</em>) – The number of time windows that are considered when computing burst.
+The higher this number, the more precise the calculations.
+However, because of the decay in <a class="reference internal" href="tdt.html#tdt.algorithms.cataldi.Cataldi" title="tdt.algorithms.cataldi.Cataldi"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cataldi</span></code></a>, old time windows do not affect the result by a big margin.
+Therefore old data can be removed safely.</p></li>
+<li><p><strong>min_size</strong> (<em>int</em>) – The minimum size for a cluster to be considered to be a candidate breaking topic.
+This value is inclusive.</p></li>
+<li><p><a class="reference internal" href="nlp.html#module-nlp.tokenizer" title="nlp.tokenizer"><strong>tokenizer</strong></a> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer used to create documents.</p></li>
+<li><p><a class="reference internal" href="vsm.html#module-vsm.clustering.algorithms.clustering" title="vsm.clustering.algorithms.clustering"><strong>clustering</strong></a> (<a class="reference internal" href="vsm.html#vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans" title="vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans"><code class="xref py py-class docutils literal notranslate"><span class="pre">TemporalNoKMeans</span></code></a>) – The clustering algorithm to use.</p></li>
+<li><p><a class="reference internal" href="summarization.html#module-summarization" title="summarization"><strong>summarization</strong></a> (<a class="reference internal" href="summarization.html#summarization.algorithms.mmr.MMR" title="summarization.algorithms.mmr.MMR"><code class="xref py py-class docutils literal notranslate"><span class="pre">MMR</span></code></a>) – The summarization algorithm to use.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="queues.consumers.fire_consumer.FIREConsumer.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity=60</em>, <em class="sig-param">scheme=None</em>, <em class="sig-param">sets=10</em>, <em class="sig-param">threshold=0.7</em>, <em class="sig-param">freeze_period=20</em>, <em class="sig-param">min_size=4</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.fire_consumer.FIREConsumer.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the consumer with a queue.
+Simultaneously create a nutrition store and the topic detection algorithm container.
+Initially, the IDF table should be empty.
+It will be populated later when the ‘reconaissance’ period is finished.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>queue</strong> (<a class="reference internal" href="#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that is consumed.</p></li>
+<li><p><strong>periodicity</strong> (<em>int</em>) – The time window in seconds of the buffered consumer, or how often it is invoked.
+This defaults to 5 seconds, the same span as half the smallest time window in Zhao et al.’s algorithm.</p></li>
+<li><p><strong>scheme</strong> (None or <a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme that is used to create dimensions.
+If <cite>None</cite> is given, the <a class="reference internal" href="nlp.html#nlp.term_weighting.tf.TF" title="nlp.term_weighting.tf.TF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TF</span></code></a> term-weighting scheme is used.</p></li>
+<li><p><strong>sets</strong> (<em>int</em>) – The number of time windows that are considered when computing burst.
+The higher this number, the more precise the calculations.
+However, because of the decay in <a class="reference internal" href="tdt.html#tdt.algorithms.cataldi.Cataldi" title="tdt.algorithms.cataldi.Cataldi"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cataldi</span></code></a>, old time windows do not affect the result by a big margin.
+Therefore old data can be removed safely.</p></li>
+<li><p><strong>threshold</strong> (<em>float</em>) – The similarity threshold to use for the <a class="reference internal" href="vsm.html#vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans" title="vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans"><code class="xref py py-class docutils literal notranslate"><span class="pre">TemporalNoKMeans</span></code></a> incremental clustering approach.
+Documents are added to an existing cluster if their similarity with the centroid is greater than or equal to this threshold.</p></li>
+<li><p><strong>freeze_period</strong> (<em>float</em>) – The freeze period, in seconds, of the incremental clustering approach.</p></li>
+<li><p><strong>min_size</strong> (<em>int</em>) – The minimum size for a cluster to be considered to be a candidate breaking topic.
+This value is inclusive.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="queues.consumers.fire_consumer.FIREConsumer._process">
+<em class="property">async </em><code class="sig-name descname">_process</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.fire_consumer.FIREConsumer._process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find breaking develpoments based on how people are talking.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The constructed timeline.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="summarization.html#summarization.timeline.timeline.Timeline" title="summarization.timeline.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="queues.consumers.fire_consumer.FIREConsumer._filter_tweets">
+<code class="sig-name descname">_filter_tweets</code><span class="sig-paren">(</span><em class="sig-param">tweets</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.fire_consumer.FIREConsumer._filter_tweets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter the given tweets based on FIRE’s filtering rules.
+The rules are:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>The tweet has to be in English,</p></li>
+<li><p>The tweet must contain no more than 2 hashtags,</p></li>
+<li><p>The tweet’s author must have favorited at least one tweet, and</p></li>
+<li><p>The tweet’s author must have at least one follower for every thousand tweets they’ve published.</p></li>
+</ol>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tweets</strong> (<em>list of dict</em>) – A list of tweets to filter.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of filtered tweets.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="queues.consumers.fire_consumer.FIREConsumer._to_documents">
+<code class="sig-name descname">_to_documents</code><span class="sig-paren">(</span><em class="sig-param">tweets</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.fire_consumer.FIREConsumer._to_documents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the given tweets into documents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tweets</strong> (<em>list of dict</em>) – A list of tweets.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of documents created from the tweets in the same order as the given tweets.
+Documents are normalized and store the original tweet in the <cite>tweet</cite> attribute.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="queues.consumers.fire_consumer.FIREConsumer._latest_timestamp">
+<code class="sig-name descname">_latest_timestamp</code><span class="sig-paren">(</span><em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.fire_consumer.FIREConsumer._latest_timestamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the latest timestamp from the given documents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>documents</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The list of documents from where to get the latest timestamp.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The latest timestamp in the given document set.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – When there are no documents to consider.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="queues.consumers.fire_consumer.FIREConsumer._filter_documents">
+<code class="sig-name descname">_filter_documents</code><span class="sig-paren">(</span><em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.fire_consumer.FIREConsumer._filter_documents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter the given documents based on FIRE’s scoring.
+The score is based on the fraction of unique tokens:</p>
+<div class="math notranslate nohighlight">
+\[s_d = \ln(|d|) * \frac{|d_u|}{|d|}\]</div>
+<p>where <span class="math notranslate nohighlight">\(s_d\)</span> is the computed score.
+<span class="math notranslate nohighlight">\(|d|\)</span> and <span class="math notranslate nohighlight">\(|d_u|\)</span> are the number of tokens, and the number of unique tokens in the document respectively.
+Documents that have no tokens are immediately discarded.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>documets</strong> – A list of documents.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of filtered documents.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="queues.consumers.fire_consumer.FIREConsumer._create_checkpoint">
+<code class="sig-name descname">_create_checkpoint</code><span class="sig-paren">(</span><em class="sig-param">timestamp</em>, <em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.fire_consumer.FIREConsumer._create_checkpoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>After every time window has elapsed, create a checkpoint from the documents.
+These checkpoints store a snapshot of how much each different term was used at the time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timestamp</strong> (<em>int</em>) – The timestamp of the new checkpoint.</p></li>
+<li><p><strong>documents</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The list of documents that form the checkpoint.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="queues.consumers.fire_consumer.FIREConsumer._remove_old_checkpoints">
+<code class="sig-name descname">_remove_old_checkpoints</code><span class="sig-paren">(</span><em class="sig-param">timestamp</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.fire_consumer.FIREConsumer._remove_old_checkpoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove old checkpoints.
+The checkpoints that are removed depend on the number of sets that should be retained and the periodicity of the consumer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>timestamp</strong> (<em>int</em>) – The timestamp of the new checkpoint.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="queues.consumers.fire_consumer.FIREConsumer._cluster">
+<code class="sig-name descname">_cluster</code><span class="sig-paren">(</span><em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.fire_consumer.FIREConsumer._cluster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cluster the given documents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>documets</strong> – The documents to cluster.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The list of clusters that have changed.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="queues.consumers.fire_consumer.FIREConsumer._filter_clusters">
+<code class="sig-name descname">_filter_clusters</code><span class="sig-paren">(</span><em class="sig-param">clusters</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.fire_consumer.FIREConsumer._filter_clusters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter clusters that are too small.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>clusters</strong> (list of <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>) – A list of clusters to filter.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of filtered clusters.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="queues.consumers.fire_consumer.FIREConsumer._detect_topics">
+<code class="sig-name descname">_detect_topics</code><span class="sig-paren">(</span><em class="sig-param">cluster</em>, <em class="sig-param">timestamp</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.fire_consumer.FIREConsumer._detect_topics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detect topics from the given cluster.
+This method makes a copy of the nutrition store.
+It replaces the data at the given timestamp with a pseudo-checkpoint.
+This checkpoint is constructed using only data from the cluster.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cluster</strong> (<a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>) – The cluster for which to identify breaking topics.</p></li>
+<li><p><strong>timestamp</strong> (<em>int</em>) – The current timestamp.
+Sets older than this timestamp are used to calculate the burst.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of emerging terms from the cluster.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-queues.consumers.zhao_consumer"></span><p>The Zhao et al. consumer is based on the implementation by the same authors.
 The algorithm revolves around the <a class="reference internal" href="tdt.html#tdt.algorithms.zhao.Zhao" title="tdt.algorithms.zhao.Zhao"><code class="xref py py-class docutils literal notranslate"><span class="pre">Zhao</span></code></a> algorithm.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -599,7 +831,7 @@ The algorithm revolves around the <a class="reference internal" href="tdt.html#t
 </div>
 <dl class="class">
 <dt id="queues.consumers.zhao_consumer.ZhaoConsumer">
-<em class="property">class </em><code class="sig-name descname">ZhaoConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity=5</em>, <em class="sig-param">timestamp='timestamp'</em>, <em class="sig-param">scheme=None</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.zhao_consumer.ZhaoConsumer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">ZhaoConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity=5</em>, <em class="sig-param">scheme=None</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.zhao_consumer.ZhaoConsumer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The Zhao et al. consumer is based on the implementation by the same authors.
 The algorithm revolves around the <a class="reference internal" href="tdt.html#tdt.algorithms.zhao.Zhao" title="tdt.algorithms.zhao.Zhao"><code class="xref py py-class docutils literal notranslate"><span class="pre">Zhao</span></code></a> algorithm.
 The algorithm examines changes in volume using a dynamic time window.</p>
@@ -617,7 +849,7 @@ Older documents are automatically cleared.</p></li>
 </dl>
 <dl class="method">
 <dt id="queues.consumers.zhao_consumer.ZhaoConsumer.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity=5</em>, <em class="sig-param">timestamp='timestamp'</em>, <em class="sig-param">scheme=None</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.zhao_consumer.ZhaoConsumer.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity=5</em>, <em class="sig-param">scheme=None</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.zhao_consumer.ZhaoConsumer.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the consumer with a queue.
 Simultaneously create a nutrition store and the topic detection algorithm container.
 Initially, the IDF table should be empty.
@@ -628,8 +860,6 @@ It will be populated later when the ‘reconaissance’ period is finished.</p>
 <li><p><strong>queue</strong> (<a class="reference internal" href="#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that is consumed.</p></li>
 <li><p><strong>periodicity</strong> (<em>int</em>) – The time window in seconds of the buffered consumer, or how often it is invoked.
 This defaults to 5 seconds, the same span as half the smallest time window in Zhao et al.’s algorithm.</p></li>
-<li><p><strong>timestamp</strong> (<em>str</em>) – The name of the vector attribute used to get the timestamp value.
-The time value is expected to be a float or integer.</p></li>
 <li><p><strong>scheme</strong> (None or <a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme that is used to create dimensions.
 If <cite>None</cite> is given, the <a class="reference internal" href="nlp.html#nlp.term_weighting.tf.TF" title="nlp.term_weighting.tf.TF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TF</span></code></a> term-weighting scheme is used.</p></li>
 </ul>
