@@ -1,43 +1,39 @@
 """
-A simple consumer that takes in tweets every time window, clusters them and finds the most important terms in each cluster.
+Finding Important News REports (FIRE) is a periodic TDT consumer.
+It takes in tweets every time window, clusters them and finds the most important terms in each cluster.
+In this implementation, the tracking happens through the timeline.
+
+.. note::
+
+	Implementation based on the algorithm presented in `FIRE: Finding Important News REports by Mamo and Azzopardi (2017) <https://link.springer.com/chapter/10.1007/978-3-319-74497-1_3>`_.
 """
 
+import asyncio
+import math
 import os
 import sys
 
 from nltk.corpus import stopwords
 
-path = os.path.dirname(__file__)
-path = os.path.join(path, '../../../../')
+path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
-	sys.path.insert(1, path)
+    sys.path.append(path)
 
-from ..buffered_consumer import BufferedConsumer
-from ..buffered_consumer import PseudoBufferedConsumer
+from .buffered_consumer import SimulatedBufferedConsumer
 
-from ..filter import filter
-from ..filter.filter import Filter
+from vsm.clustering.algorithms import TemporalNoKMeans
+from vsm import vector_math
 
-from libraries.vector.cluster.algorithms.nokmeans import TemporalNoKMeans, ClusterType
-from libraries.vector.nlp.document import Document
-from libraries.vector.nlp.tokenizer import Tokenizer
+from logger import logger
 
-from libraries.logger import logger
+from tdt.algorithms import Cataldi
+from tdt.nutrition import MemoryNutritionStore
 
-from libraries.topic_detection.algorithms import cataldi
-from libraries.topic_detection.nutrition_store.memory_nutrition_store import MemoryNutritionStore
+from nlp.document import Document
+from nlp.tokenizer import Tokenizer
+from nlp.term_weighting import TFIDF
 
-from libraries.vector.nlp.term_weighting import TF, TFIDF
-from libraries.vector import vector_math
-
-from datetime import datetime
-
-import asyncio
-import math
-
-logger.set_logging_level(logger.LogLevel.INFO)
-
-class FIREConsumer(PseudoBufferedConsumer):
+class FIREConsumer(SimulatedBufferedConsumer):
 	"""
 	The FireConsumer class is based on FIRE: Finding Important News REports (Mamo et al., 2018).
 	"""
