@@ -26,12 +26,16 @@ from vsm import vector_math
 
 from logger import logger
 
-from tdt.algorithms import Cataldi
-from tdt.nutrition import MemoryNutritionStore
-
 from nlp.document import Document
 from nlp.term_weighting import TFIDF
 from nlp.tokenizer import Tokenizer
+
+from summarization.algorithms import MMR
+from summarization.timeline import Timeline
+from summarization.timeline.nodes import DocumentNode
+
+from tdt.algorithms import Cataldi
+from tdt.nutrition import MemoryNutritionStore
 
 import twitter
 
@@ -93,49 +97,49 @@ class FIREConsumer(SimulatedBufferedConsumer):
 
 	async def _process(self):
 		"""
-		Find breaking terms from the stream of tweets.
+		Find breaking develpoments based on how people are talking.
 
-		:return: A list of topics, represented with tweets that represent breaking topics.
-		:rtype: list of tweets
+		:return: The constructed timeline.
+		:rtype: :class:`~summarization.timeline.timeline.Timeline`
 		"""
 
-		sets = 10
-		topics = []
-		total_documents, total_tweets = 0, 0
+		timeline = Timeline(ClusterNode, 0, 1)
 
-		while not self._stopped:
-			if self._buffer.length() > 0:
+		while not self.stopped:
+			if self.buffer.length() > 0:
 				"""
-				The first step is to filter out non-English tweets and tokenize the rest
+				If there are any tweets in the buffer, dequeue and filter them, and convert them into documents.
 				"""
-				tweets = self._buffer.dequeue_all()
-				total_tweets += len(tweets)
+				tweets = self.buffer.dequeue_all()
 				tweets = self._filter_tweets(tweets)
-				documents = self._tokenize(tweets)
-				# documents = self._filter_documents(documents)
-				total_documents += len(documents)
-				last_timestamp = documents[-1].get_attribute("timestamp")
-
-				await self._create_checkpoint(last_timestamp, sets, documents)
+				documents = self._to_documents(tweets)
+				latest_timestamp = self._latest_timestamp(documents)
+				documents = self._filter_documents(documents)
 
 				"""
-				Then, cluster the documents
+				Create a checkpoint from the received documents.
+				Then, remove old checkpoints and cluster the received documents.
 				"""
-				clusters = self._cluster(documents)
-				# clusters = self._filter_clusters(clusters, last_timestamp, min_size=2, max_intra_similarity=0.9)
+				self._create_checkpoint(latest_timestamp, documents)
+				self._remove_old_checkpoints(latest_timestamp)
+				self._cluster(documents)
+
+				"""
+				Clusters are candidates if they have at least 4 documents in them.
+				For each such cluster, check if it has any bursty terms.
+				If it does, the cluster is breaking.
+				"""
+				clusters = filter(lambda cluster: cluster.size() > 3, clusters)
 				for cluster in clusters:
-					"""
-					Perform topic detection
-					"""
-					if cluster.size() > 3:
-						terms = self._detect_topics(cluster, sets=sets, timestamp=last_timestamp)
-						if len(terms) > 0:
-							logger.info("%s: %s" % (datetime.fromtimestamp(last_timestamp).strftime('%Y-%m-%d %H:%M:%S'), ', '.join(terms)))
+					terms = self._detect_topics(cluster, timestamp=latest_timestamp)
+					if terms:
+						timeline.add(latest_timestamp, cluster)
+						summary = self.summarization.summarize(timeline.nodes[-1].get_all_documents(), 140)
+						logger.info(f"{datetime.fromtimestamp(latest_timestamp).ctime()}: { str(summary) }")
 
 			await self._sleep()
 
-		logger.info("%d tweets viewed and %d documents processed" % (total_tweets, total_documents))
-		return topics
+		return timeline
 
 	def _filter_tweets(self, tweets):
 		"""

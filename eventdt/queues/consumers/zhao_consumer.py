@@ -91,10 +91,10 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 		timeline = Timeline(DocumentNode, 0, 1)
 
 		while not self.stopped:
-			"""
-			If there are tweets in the buffer, dequeue them and convert them into documents.
-			"""
 			if self.buffer.length() > 0:
+				"""
+				If there are tweets in the buffer, dequeue them and convert them into documents.
+				"""
 				tweets = self.buffer.dequeue_all()
 				documents = self._to_documents(tweets)
 				latest_timestamp = self._latest_timestamp(documents)
