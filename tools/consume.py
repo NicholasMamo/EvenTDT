@@ -130,6 +130,12 @@ def stream_process(loop, queue, file):
 		:type reader: :class:`twitter.file.reader.FileReader`
 		"""
 
+		def sigint_handler(signal, frame):
+			reader.stop()
+			logger.info("Interrupted file reader")
+
+		signal.signal(signal.SIGINT, sigint_handler)
+
 		await reader.read()
 
 	with open(file, 'r') as f:
