@@ -133,9 +133,12 @@ class NutritionStore(ABC):
 		:rtype: dict
 		"""
 
-		timestamps = [ float(timestamp) for timestamp in self.all().keys() ]
-		last = min(timestamps)
-		return self.between(0, str(end))
+		if self.all():
+			timestamps = [ float(timestamp) for timestamp in self.all().keys() ]
+			last = min(timestamps)
+			return self.between(0, str(end))
+		else:
+			return { }
 
 	@abstractmethod
 	def remove(self, *args):

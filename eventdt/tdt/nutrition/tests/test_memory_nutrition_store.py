@@ -313,6 +313,14 @@ class TestMemoryNutritionStore(unittest.TestCase):
 		self.assertEqual({ 10: 1, 20: 2 }, nutrition.since('9'))
 		self.assertTrue(all(float(timestamp) >= 9 for timestamp in nutrition.since(9)))
 
+	def test_until_empty(self):
+		"""
+		Test that when getting nutrition data until a timestamp from an empty store, an empty dictionary is returned.
+		"""
+
+		nutrition = MemoryNutritionStore()
+		self.assertEqual({ }, nutrition.until(10))
+
 	def test_until_exclusive(self):
 		"""
 		Test that when getting nutrition data until a timestamp, the end timestamp is excluded.
