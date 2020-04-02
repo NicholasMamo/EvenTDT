@@ -96,3 +96,16 @@ class TestClusterNode(unittest.TestCase):
 		topic.dimensions['a'] = 1
 		self.assertEqual({ 'a': 1 }, node.topics[0].dimensions)
 		self.assertEqual(topic, node.topics[0])
+
+	def test_get_all_documents(self):
+		"""
+		Test that when getting all documents, the cluster documents are returned.
+		"""
+
+		node = TopicalClusterNode()
+		clusters = [ Cluster(Document('', { })), Cluster(Document('', { })) ]
+		self.assertEqual([ ], node.get_all_documents())
+		node.add(clusters[0], Vector())
+		self.assertEqual(clusters[0].vectors, node.get_all_documents())
+		node.add(clusters[1], Vector())
+		self.assertEqual(clusters[0].vectors + clusters[1].vectors, node.get_all_documents())

@@ -102,7 +102,7 @@ class TestClusterNode(unittest.TestCase):
 
 	def test_get_all_documents(self):
 		"""
-		Test that when getting all documents from an empty node, an empty list is returned.
+		Test that when getting all documents, the cluster documents are returned.
 		"""
 
 		node = ClusterNode()
