@@ -129,7 +129,7 @@ class FIREConsumer(SimulatedBufferedConsumer):
 				"""
 				self._create_checkpoint(latest_timestamp, documents)
 				self._remove_old_checkpoints(latest_timestamp)
-				self._cluster(documents)
+				clusters = self._cluster(documents)
 
 				"""
 				Clusters are candidates if they have a minimum number of documents in them.
