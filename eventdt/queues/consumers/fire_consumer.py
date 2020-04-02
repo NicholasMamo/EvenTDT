@@ -44,13 +44,18 @@ class FIREConsumer(SimulatedBufferedConsumer):
 	:vartype store: :class:`~tdt.nutrition.store.NutritionStore`
 	:ivar scheme: The term-weighting scheme used to create documents.
 	:vartype scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
-	:ivar summarization: The summarization algorithm to use.
-	:vartype summarization: :class:`~vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans`
+	:ivar sets: The number of time windows that are considered when computing burst.
+				The higher this number, the more precise the calculations.
+				However, because of the decay in :class:`~tdt.algorithms.cataldi.Cataldi`, old time windows do not affect the result by a big margin.
+				Therefore old data can be removed safely.
+	:vartype sets: int
 	:ivar tokenizer: The tokenizer used to create documents.
 	:vartype tokenizer: :class:`~nlp.tokenizer.Tokenizer`
+	:ivar clustering: The clustering algorithm to use.
+	:vartype clustering: :class:`~vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans`
 	"""
 
-	def __init__(self, queue, periodicity, scheme=None, threshold=0.7, freeze_period=20):
+	def __init__(self, queue, periodicity, scheme=None, sets=10, threshold=0.7, freeze_period=20):
 		"""
 		Create the consumer with a queue.
 		Simultaneously create a nutrition store and the topic detection algorithm container.
@@ -65,6 +70,11 @@ class FIREConsumer(SimulatedBufferedConsumer):
 		:param scheme: The term-weighting scheme that is used to create dimensions.
 					   If `None` is given, the :class:`~nlp.term_weighting.tf.TF` term-weighting scheme is used.
 		:type scheme: None or :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
+		:param sets: The number of time windows that are considered when computing burst.
+					 The higher this number, the more precise the calculations.
+					 However, because of the decay in :class:`~tdt.algorithms.cataldi.Cataldi`, old time windows do not affect the result by a big margin.
+					 Therefore old data can be removed safely.
+		:type sets: int
 		:param threshold: The similarity threshold to use for the :class:`~vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans` incremental clustering approach.
 						  Documents are added to an existing cluster if their similarity with the centroid is greater than or equal to this threshold.
 		:type threshold: float
@@ -75,6 +85,7 @@ class FIREConsumer(SimulatedBufferedConsumer):
 		super(FIREConsumer, self).__init__(queue, periodicity)
 		self.store = MemoryNutritionStore()
 		self.scheme = scheme
+		self.sets = sets
 
 		self.tokenizer = Tokenizer(stopwords=stopwords.words("english"), normalize_words=True,
 								   character_normalization_count=3, remove_unicode_entities=True)
@@ -251,40 +262,44 @@ class FIREConsumer(SimulatedBufferedConsumer):
 
 		return self.clustering.cluster(documents, time='timestamp', store_frozen=False)
 
-	async def _create_checkpoint(self, timestamp, sets, document_set):
+	def _create_checkpoint(self, timestamp, documents):
 		"""
 		After every time window has elapsed, create a checkpoint from the documents.
-		These documents are used to create a nutrition set for the nutrition store.
-		This nutrition set represents a snapshot of the time window.
+		These checkpoints store a snapshot of how much each different term was used at the time.
 
 		:param timestamp: The timestamp of the new checkpoint.
 		:type timestamp: int
-		:param sets: The number of time windows that are considered.
-			Older ones serve no purpose, so they may be removed.
-		:type timestamp: int
-		:param document_set: The list of documents that form the checkpoint.
-		:type document_set: list
+		:param documents: The list of documents that form the checkpoint.
+		:type documents: list of :class:`~nlp.document.Document`
 		"""
 
 		"""
-		Concatenate all the documents in the buffer and normalize the dimensions
-		The goal is to get a list of dimensions in the range 0 to 1
+		To create the checkpoint, concatenate all documents without normalizing.
+		This simply sums up all of the dimensions.
+		Then, the dimensions are rescaled to be between 0 and 1.
+
+		.. note::
+
+			The document is not normalized, but rescaled.
 		"""
 
-		if len(document_set) > 0:
-			"""
-			Concatenate all the documents in the buffer and normalize the dimensions
-			The goal is to get a list of dimensions in the range 0 to 1
-			"""
+		"""
+		If there are documents, concatenate them and rescale the dimensions between 0 and 1.
+		Otherwise, create an empty nutrition set.
+		"""
+		if documents:
+			document = Document.concatenate(*documents, tokenizer=self.tokenizer, scheme=self.scheme)
+			max_magnitude = max(document.dimensions.values())
+			document.dimensions = { dimension: magnitude / max_magnitude
+									for dimension, magnitude in document.dimensions.items() }
+			self.store.add(timestamp, document.dimensions)
+		else:
+			self.store.add(timestamp, { })
 
-			single_document = vector_math.concatenate(document_set)
-			self.store.add_nutrition_set(timestamp, single_document.get_dimensions())
-		elif timestamp is not None:
-			self.store.add_nutrition_set(timestamp, {})
-			logger.info("Checkpoint passed internally with 0 documents")
-
-		if timestamp is not None:
-			self.store.remove_old_nutrition_sets(timestamp - self._periodicity * (sets + 1)) # keep an extra one, just in case
+		"""
+		Remove old checkpoints.
+		"""
+		self.store.remove(*self.store.until(timestamp - self.periodicity * self.sets))
 
 	def _detect_topics(self, cluster, sets, timestamp):
 		"""

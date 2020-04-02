@@ -16,6 +16,7 @@ from queues import Queue
 from queues.consumers import FIREConsumer
 from nlp.document import Document
 from nlp.term_weighting import TF
+import twitter
 
 class TestFIREConsumer(unittest.TestCase):
 	"""
@@ -310,3 +311,61 @@ class TestFIREConsumer(unittest.TestCase):
 			documents = consumer._to_documents(tweets)
 			filtered = consumer._filter_documents(documents)
 			self.assertTrue(all(document in documents for document in filtered))
+
+	def test_create_checkpoint_first(self):
+		"""
+		Test that when creating the first checkpoint, the nutrition is created from scratch.
+		"""
+
+		consumer = FIREConsumer(Queue(), 60, scheme=TF())
+		self.assertEqual({ }, consumer.store.all())
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			line = f.readline()
+			tweet = json.loads(line)
+			documents = consumer._to_documents([ tweet ])
+			timestamp = twitter.extract_timestamp(tweet)
+			consumer._create_checkpoint(timestamp, documents)
+			self.assertTrue(consumer.store.get(timestamp))
+
+	def test_create_checkpoint_empty(self):
+		"""
+		Test that when creating an empty checkpoint, it is still recorded.
+		"""
+
+		consumer = FIREConsumer(Queue(), 60, scheme=TF())
+		self.assertEqual({ }, consumer.store.all())
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			line = f.readline()
+			tweet = json.loads(line)
+			timestamp = twitter.extract_timestamp(tweet)
+			consumer._create_checkpoint(timestamp, [ ])
+			self.assertEqual({ }, consumer.store.get(timestamp))
+
+	def test_create_checkpoint_timestamp(self):
+		"""
+		Test that when creating checkpoints, the correct timestamp is recorded.
+		"""
+
+		consumer = FIREConsumer(Queue(), 60, scheme=TF())
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			line = f.readline()
+			tweet = json.loads(line)
+			documents = consumer._to_documents([ tweet ])
+			timestamp = twitter.extract_timestamp(tweet)
+			consumer._create_checkpoint(timestamp, documents)
+			self.assertEqual([ timestamp ], list(consumer.store.all().keys()))
+
+	def test_create_checkpoint_scale(self):
+		"""
+		Test that when creating checkpoints, they are rescaled correctly.
+		"""
+
+		consumer = FIREConsumer(Queue(), 60, TF())
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			timestamp = twitter.extract_timestamp(tweets[-1])
+			consumer._create_checkpoint(timestamp, documents)
+			self.assertLessEqual(0, min(consumer.store.get(timestamp).values()))
+			self.assertEqual(1, max(consumer.store.get(timestamp).values()))
