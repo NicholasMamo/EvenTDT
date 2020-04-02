@@ -96,6 +96,9 @@ def main():
 	stream.start()
 	consume.start()
 
+	"""
+	When the consumption tool is interrupted, show a prompt with information.
+	"""
 	def sigint_handler(signal, frame):
 		logger.info("Waiting for reading and consumption processes to end")
 
@@ -130,6 +133,9 @@ def stream_process(loop, queue, file):
 		:type reader: :class:`twitter.file.reader.FileReader`
 		"""
 
+		"""
+		When the reading process is interrupted, stop reading tweets.
+		"""
 		def sigint_handler(signal, frame):
 			reader.stop()
 			logger.info("Interrupted file reader")
@@ -160,13 +166,16 @@ def consume_process(loop, consumer):
 		:type consumer: :class:`queues.consumers.consumer.Consumer`
 		"""
 
+		"""
+		When the consumption process is interrupted, stop consuming tweets.
+		"""
+		def sigint_handler(signal, frame):
+			consumer.stop()
+			logger.info("Interrupted consumer")
+
+		signal.signal(signal.SIGINT, sigint_handler)
+
 		await consumer.run()
-
-	def sigint_handler(signal, frame):
-		consumer.stop()
-		logger.info("Interrupted consumer")
-
-	signal.signal(signal.SIGINT, sigint_handler)
 
 	loop.run_until_complete(consume(consumer))
 
