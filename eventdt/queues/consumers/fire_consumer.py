@@ -334,7 +334,7 @@ class FIREConsumer(SimulatedBufferedConsumer):
 		:rtype: list of :class:`~vector.cluster.cluster.Cluster`
 		"""
 
-		return self.clustering.cluster(documents, time='timestamp', store_frozen=False)
+		return self.clustering.cluster(documents, time='timestamp')
 
 	def _filter_clusters(self, clusters):
 		"""
