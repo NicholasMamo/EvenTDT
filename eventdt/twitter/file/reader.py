@@ -25,6 +25,10 @@ class FileReader(ABC):
 					The time is taken from tweets' `created_at` attribute.
 					If the number is negative, it is ignored.
 	:vartype max_time: int
+	:ivar active: A boolean indicating whether the reader is still reading data.
+	:vartype active: bool
+	:ivar stopped: A boolean indicating whether the consumer has finished processing.
+	:vartype stopped: bool
 	"""
 
 	def __init__(self, queue, f, max_lines=-1, max_time=-1):
@@ -49,6 +53,8 @@ class FileReader(ABC):
 		self.file = f
 		self.max_lines = max_lines
 		self.max_time = max_time
+		self.active = False
+		self.stopped = True
 
 	@abstractmethod
 	async def read(self):
