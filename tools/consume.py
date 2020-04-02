@@ -162,6 +162,12 @@ def consume_process(loop, consumer):
 
 		await consumer.run()
 
+	def sigint_handler(signal, frame):
+		consumer.stop()
+		logger.info("Interrupted consumer")
+
+	signal.signal(signal.SIGINT, sigint_handler)
+
 	loop.run_until_complete(consume(consumer))
 
 def consumer(consumer):
