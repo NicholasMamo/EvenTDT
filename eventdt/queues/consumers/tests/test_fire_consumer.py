@@ -16,6 +16,7 @@ from queues import Queue
 from queues.consumers import FIREConsumer
 from nlp.document import Document
 from nlp.term_weighting import TF
+from vsm import vector_math
 from vsm.clustering import Cluster
 import twitter
 
@@ -230,6 +231,18 @@ class TestFIREConsumer(unittest.TestCase):
 					There should be no ellipsis in the text now.
 					"""
 					self.assertFalse(document.text.endswith('…'))
+
+	def test_to_documents_normalized(self):
+		"""
+		Test that the documents are returned normalized.
+		"""
+
+		consumer = FIREConsumer(Queue(), 60, TF())
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			for line in f:
+				tweet = json.loads(line)
+				document = consumer._to_documents([ tweet ])[0]
+				self.assertEqual(1, round(vector_math.magnitude(document), 10))
 
 	def test_latest_timestamp_empty(self):
 		"""

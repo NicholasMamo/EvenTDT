@@ -13,6 +13,7 @@ if path not in sys.path:
 
 from queues import Queue
 from queues.consumers import ZhaoConsumer
+from vsm import vector_math
 
 class TestZhaoConsumer(unittest.TestCase):
 	"""
@@ -25,18 +26,9 @@ class TestZhaoConsumer(unittest.TestCase):
 		"""
 
 		queue = Queue()
-		consumer = ZhaoConsumer(queue, 60, timestamp='time')
+		consumer = ZhaoConsumer(queue, 60)
 		self.assertEqual(queue, consumer.queue)
 		self.assertEqual(60, consumer.periodicity)
-		self.assertEqual('time', consumer.timestamp)
-
-	def test_create_consumer_default_timestamp(self):
-		"""
-		Test that when creating a consumer, the default timestamp attribute is 'timestamp'.
-		"""
-
-		consumer = ZhaoConsumer(Queue(), 60)
-		self.assertEqual('timestamp', consumer.timestamp)
 
 	def test_create_consumer_store(self):
 		"""
@@ -141,6 +133,18 @@ class TestZhaoConsumer(unittest.TestCase):
 					There should be no ellipsis in the text now.
 					"""
 					self.assertFalse(document.text.endswith('…'))
+
+	def test_to_documents_normalized(self):
+		"""
+		Test that the documents are returned normalized.
+		"""
+
+		consumer = ZhaoConsumer(Queue(), 60)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			for line in f:
+				tweet = json.loads(line)
+				document = consumer._to_documents([ tweet ])[0]
+				self.assertEqual(1, round(vector_math.magnitude(document), 10))
 
 	def test_latest_timestamp_empty(self):
 		"""
