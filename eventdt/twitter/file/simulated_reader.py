@@ -150,6 +150,9 @@ class SimulatedFileReader(FileReader):
 		Tweets are added as a dictionary to the queue.
 		"""
 
+		self.active = True
+		self.stopped = False
+
 		file = self.file
 
 		"""
@@ -187,4 +190,13 @@ class SimulatedFileReader(FileReader):
 			if (created_at - first) / self.speed > elapsed:
 				await asyncio.sleep((created_at - first) / self.speed - elapsed)
 
+			"""
+			If the reader has been interrupted, stop reading.
+			"""
+			if not self.active:
+				break
+
 			self.queue.enqueue(tweet)
+
+		self.active = False
+		self.stopped = True
