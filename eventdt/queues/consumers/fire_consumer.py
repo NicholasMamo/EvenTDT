@@ -296,10 +296,18 @@ class FIREConsumer(SimulatedBufferedConsumer):
 		else:
 			self.store.add(timestamp, { })
 
+	def _remove_old_checkpoints(self, timestamp):
 		"""
 		Remove old checkpoints.
+		The checkpoints that are removed depend on the number of sets that should be retained and the periodicity of the consumer.
+
+		:param timestamp: The timestamp of the new checkpoint.
+		:type timestamp: int
 		"""
-		self.store.remove(*self.store.until(timestamp - self.periodicity * self.sets))
+
+		until = timestamp - self.periodicity * self.sets
+		if until > 0:
+			self.store.remove(*self.store.until(until))
 
 	def _detect_topics(self, cluster, sets, timestamp):
 		"""
