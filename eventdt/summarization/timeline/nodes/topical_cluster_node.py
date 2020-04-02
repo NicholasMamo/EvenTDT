@@ -48,3 +48,22 @@ class TopicalClusterNode(ClusterNode):
 
 		super(TopicalClusterNode, self).add(cluster)
 		self.topics.append(topic)
+
+	def similarity(self, cluster, topic, *args, **kwargs):
+		"""
+		Compute the similarity between this node and a given topic.
+		The returned similarity is the maximum similarity between the given topic and any topic in the node.
+
+		:param cluster: The cluster to which the topic belongs.
+		:type cluster: :class:`~vsm.clustering.cluster.Cluster`
+		:param topic: The topic with which to compute similarity.
+		:type topic: :class:`~vsm.vector.Vector`
+
+		:return: The similarity between this node and the given topic.
+		:rtype: float
+		"""
+
+		if self.topics:
+			return max(vector_math.cosine(topic, other) for other in self.topics)
+
+		return 0

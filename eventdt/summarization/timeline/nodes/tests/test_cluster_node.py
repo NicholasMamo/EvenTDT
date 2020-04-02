@@ -137,7 +137,7 @@ class TestClusterNode(unittest.TestCase):
 		node = ClusterNode()
 		node.add(cluster)
 		self.assertEqual([ cluster ], node.clusters)
-		self.assertEqual(0, node.similarity(Cluster(Document('', { }))))
+		self.assertEqual(0, node.similarity(Cluster()))
 
 	def test_similarity(self):
 		"""
@@ -208,7 +208,7 @@ class TestClusterNode(unittest.TestCase):
 		self.assertEqual([ cluster ], node.clusters)
 		self.assertEqual(0, node.similarity(Cluster(document)))
 		node.add(Cluster(document))
-		self.assertEqual(1, round(node.similarity(Cluster(document), 10)))
+		self.assertEqual(1, round(node.similarity(Cluster(document)), 10))
 
 		"""
 		Reverse the procedure.
