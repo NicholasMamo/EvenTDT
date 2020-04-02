@@ -46,6 +46,8 @@ class FIREConsumer(SimulatedBufferedConsumer):
 	:vartype scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
 	:ivar summarization: The summarization algorithm to use.
 	:vartype summarization: :class:`~vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans`
+	:ivar tokenizer: The tokenizer used to create documents.
+	:vartype tokenizer: :class:`~nlp.tokenizer.Tokenizer`
 	"""
 
 	def __init__(self, queue, periodicity, scheme=None, threshold=0.7, freeze_period=20):
@@ -73,6 +75,9 @@ class FIREConsumer(SimulatedBufferedConsumer):
 		super(FIREConsumer, self).__init__(queue, periodicity)
 		self.store = MemoryNutritionStore()
 		self.scheme = scheme
+
+		self.tokenizer = Tokenizer(stopwords=stopwords.words("english"), normalize_words=True,
+								   character_normalization_count=3, remove_unicode_entities=True)
 		self.clustering = TemporalNoKMeans(threshold, freeze_period, store_frozen=False)
 
 	async def _process(self):
@@ -168,8 +173,6 @@ class FIREConsumer(SimulatedBufferedConsumer):
 		Retain the comment of a quoted status.
 		However, if the tweet is a plain retweet, get the full text.
 		"""
-		tokenizer = Tokenizer(stopwords=stopwords.words("english"), normalize_words=True,
-							  character_normalization_count=3, remove_unicode_entities=True)
 		for tweet in tweets:
 			original = tweet
 			while "retweeted_status" in tweet:
@@ -183,7 +186,7 @@ class FIREConsumer(SimulatedBufferedConsumer):
 			"""
 			Create the document and save the tweet in it.
 			"""
-			tokens = tokenizer.tokenize(text)
+			tokens = self.tokenizer.tokenize(text)
 			document = Document(text, tokens, scheme=self.scheme)
 			document.attributes['tweet'] = original
 			document.attributes['timestamp'] = twitter.extract_timestamp(original)
@@ -213,11 +216,9 @@ class FIREConsumer(SimulatedBufferedConsumer):
 		"""
 
 		filtered = [ ]
-		tokenizer = Tokenizer(stopwords=stopwords.words("english"), normalize_words=True,
-							  character_normalization_count=3, remove_unicode_entities=True)
 
 		for document in documents:
-			tokens = tokenizer.tokenize(document.text)
+			tokens = self.tokenizer.tokenize(document.text)
 			count, unique = len(tokens), len(set(tokens))
 
 			"""
