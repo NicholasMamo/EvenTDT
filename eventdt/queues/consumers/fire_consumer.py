@@ -32,7 +32,7 @@ from nlp.tokenizer import Tokenizer
 
 from summarization.algorithms import MMR
 from summarization.timeline import Timeline
-from summarization.timeline.nodes import DocumentNode
+from summarization.timeline.nodes import ClusterNode
 
 from tdt.algorithms import Cataldi
 from tdt.nutrition import MemoryNutritionStore
