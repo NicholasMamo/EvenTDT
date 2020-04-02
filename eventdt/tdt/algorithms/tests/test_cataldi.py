@@ -41,10 +41,10 @@ class TestCataldi(unittest.TestCase):
 
 		store = MemoryNutritionStore()
 		algo = Cataldi(store)
-		store.add(60, { 'a': 30, 'b': 30, 'c': 30 })
-		store.add(50, { 'a': 20, 'b': 9, 'c': 20 })
-		store.add(40, { 'a': 10, 'b': 20, 'c': 9 })
-		self.assertEqual([ 'b', 'c' ], algo.detect(60))
+		store.add(60, { 'a': 30, 'b': 30, 'c': 30, 'd': 10 })
+		store.add(50, { 'a': 20, 'b': 9, 'c': 20, 'd': 10 })
+		store.add(40, { 'a': 10, 'b': 20, 'c': 9, 'd': 10 })
+		self.assertEqual([ 'b', 'c', 'a' ], algo.detect(60))
 
 	def test_detect_sorted(self):
 		"""
@@ -53,10 +53,10 @@ class TestCataldi(unittest.TestCase):
 
 		store = MemoryNutritionStore()
 		algo = Cataldi(store)
-		store.add(60, { 'a': 30, 'b': 30, 'c': 30 })
-		store.add(50, { 'a': 20, 'b': 9, 'c': 5 })
-		store.add(40, { 'a': 10, 'b': 20, 'c': 9 })
-		self.assertEqual([ 'c', 'b' ], algo.detect(60))
+		store.add(60, { 'a': 30, 'b': 30, 'c': 30, 'd': 10 })
+		store.add(50, { 'a': 20, 'b': 9, 'c': 5, 'd': 10 })
+		store.add(40, { 'a': 10, 'b': 20, 'c': 9, 'd': 10 })
+		self.assertEqual([ 'c', 'b', 'a' ], algo.detect(60))
 
 	def test_detect_since_inclusive(self):
 		"""
@@ -68,7 +68,7 @@ class TestCataldi(unittest.TestCase):
 		store.add(60, { 'a': 30, 'b': 30, 'c': 30 })
 		store.add(50, { 'a': 20, 'b': 9, 'c': 10 })
 		store.add(40, { 'a': 10, 'b': 20, 'c': 9 })
-		self.assertEqual([ 'c', 'b' ], algo.detect(60))
+		self.assertEqual([ 'c' ], algo.detect(60))
 		self.assertEqual([ 'b', 'c' ], algo.detect(60, since=50))
 
 	def test_detect_nutrition_store_unchanged(self):
@@ -270,14 +270,13 @@ class TestCataldi(unittest.TestCase):
 
 	def test_critical_drop_index_single_value(self):
 		"""
-		Test that when getting the critical drop index from an list with one value, 2 is returned.
-		If there is one drop value, there are two terms.
-		This is a special case of all burst drop values being the same.
+		Test that when getting the critical drop index from an list with one value, 1 is returned.
+		If there is one drop value, then the first term is bursty.
 		"""
 
 		store = MemoryNutritionStore()
 		algo = Cataldi(store)
-		self.assertEqual(2, algo._get_critical_drop_index([ 1 ]))
+		self.assertEqual(1, algo._get_critical_drop_index([ 1 ]))
 
 	def test_critical_drop_index(self):
 		"""
@@ -291,14 +290,13 @@ class TestCataldi(unittest.TestCase):
 
 	def test_critical_drop_equal_drops(self):
 		"""
-		Test that when getting the critical drop index from a list with equal drops, the critical index includes all values.
-		In this example, there are 5 equal drops, indicating 6 terms with the same difference in burst.
+		Test that when getting the critical drop index from a list with equal drops, the critical index includes only the first value.
 		"""
 
 		store = MemoryNutritionStore()
 		algo = Cataldi(store)
 		drops = [ 1 ] * 5
-		self.assertEqual(6, algo._get_critical_drop_index(drops))
+		self.assertEqual(1, algo._get_critical_drop_index(drops))
 
 	def test_critical_drop_equal_drops_interval(self):
 		"""
@@ -363,10 +361,9 @@ class TestCataldi(unittest.TestCase):
 
 		store = MemoryNutritionStore()
 		algo = Cataldi(store)
-		drops = [ 1 ] * 5
-		burst = { 'a': 4, 'b': 2, 'c': 6, 'd': 12, 'e': 10, 'f': 8, 'g': 16, 'h': 14 }
+		burst = { 'a': -2, 'b': -4, 'c': 6, 'd': 12, 'e': 10, 'f': 8, 'g': 16, 'h': 14 }
 		critical_index = algo._get_critical_drop_index(algo._compute_burst_drops(burst))
-		self.assertEqual([ 'g', 'h', 'd', 'e', 'f', 'c', 'a', 'b' ], algo._get_bursty_terms(burst, critical_index))
+		self.assertEqual([ 'g', 'h', 'd', 'e', 'f', 'c' ], algo._get_bursty_terms(burst, critical_index))
 
 	def test_bursty_terms_unchanged(self):
 		"""
@@ -375,7 +372,6 @@ class TestCataldi(unittest.TestCase):
 
 		store = MemoryNutritionStore()
 		algo = Cataldi(store)
-		drops = [ 1 ] * 5
 		burst = { 'a': 4, 'b': 2, 'c': 6, 'd': 12, 'e': 10, 'f': 8, 'g': 16, 'h': 14 }
 		burst_copy = dict(burst)
 		critical_index = algo._get_critical_drop_index(algo._compute_burst_drops(burst))

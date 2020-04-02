@@ -164,6 +164,13 @@ class Cataldi(TDTAlgorithm):
 			return 0
 
 		"""
+		If all drops have a value of 0, the number of drops + 1 is returned.
+		This is equivalent to all terms (there are n-1 drops for n terms).
+		"""
+		if all(drop == 0 for drop in drops):
+			return len(drops) + 1
+
+		"""
 		Find the maximum drop and isolate the burst values that appear before it.
 		"""
 		maximum_drop = max(drops)
@@ -181,10 +188,10 @@ class Cataldi(TDTAlgorithm):
 			average = sum(drops)/len(drops)
 
 			for i, drop in enumerate(drops):
-				if drop > average:
+				if drop >= average:
 					return i + 1
 
-			return i + 2
+			return i + 1
 
 		return 0
 
