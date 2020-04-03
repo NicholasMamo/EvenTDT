@@ -50,7 +50,7 @@ class Consumer(ABC):
 	async def run(self, wait=0, max_time=3600, max_inactivity=-1):
 		"""
 		Invoke the consume method.
-		Since some listeners have a small delay, the consumer waits a bit before starting to consume input.
+		Since some listeners have a small delay, the consumer may wait a bit before starting to consume input.
 
 		Any additional arguments and keyword arguments are passed on to the :class:`~queues.consumers.consumer.Consumer._consume` function.
 

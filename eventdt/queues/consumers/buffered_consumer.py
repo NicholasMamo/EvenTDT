@@ -49,6 +49,8 @@ class BufferedConsumer(Consumer):
 		"""
 		Invokes the consume and process method.
 
+		Any additional arguments and keyword arguments are passed on to the :class:`~queues.consumers.consumer.Consumer._consume` function.
+
 		:param wait: The time in seconds to wait until starting to understand the event.
 					 This is used when the file listener spends a lot of time skipping documents.
 		:type wait: int
@@ -64,13 +66,12 @@ class BufferedConsumer(Consumer):
 		"""
 
 		await asyncio.sleep(wait)
-		self.active = True
-		self.stopped = False
-
+		self._started()
 		results = await asyncio.gather(
-			self._consume(max_time=max_time, max_inactivity=max_inactivity),
+			self._consume(*args, **kwargs, max_time=max_time, max_inactivity=max_inactivity),
 			self._process(),
 		)
+		self._stopped()
 		return results
 
 	async def _consume(self, max_time, max_inactivity):
