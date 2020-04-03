@@ -61,8 +61,6 @@ class ELDConsumer(Consumer):
 
 	:ivar time_window: The time (in seconds) to spend consuming the queue.
 	:vartype time_window: int
-	:ivar scheme: The term-weighting scheme used to create documents. Changes depending on the task.
-	:vartype scheme: :class:`~vector.nlp.term_weighting.TermWeighting`
 	:ivar store: The nutrition store used in conjunction with extractin breaking news.
 	:vartype store: :class:`~topic_detection.nutrition_store.nutrition_store.NutritionStore`
 	:ivar buffer: A buffer of tweets that have been processed, but which are not part of a checkpoint yet.
@@ -91,15 +89,11 @@ class ELDConsumer(Consumer):
 		:type queue: :class:`~queues.queue.Queue`
 		:param time_window: The size of the window after which checkpoints are created.
 		:type time_window: int
-		:param scheme: The term-weighting scheme that is used to create dimensions.
-					   If `None` is given, the :class:`~nlp.term_weighting.tf.TF` term-weighting scheme is used.
-		:type scheme: None or :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
 		"""
 
 		super(ELDConsumer, self).__init__(queue)
 
 		self.time_window = time_window
-		self.scheme = scheme
 
 		"""
 		Create the nutrition store and the buffer.
@@ -118,43 +112,42 @@ class ELDConsumer(Consumer):
 		self.tdt = ELD(self.store)
 		self.summarization = DGS()
 
-	async def understand(self, understanding_period, general_idf, initial_wait=0, max_time=3600, max_inactivity=-1, *args, **kwargs):
+	async def understand(self, max_time, max_inactivity=-1, scheme=None, *args, **kwargs):
 		"""
-		Invokes the IDF table construction method.
+		Understanding is split into two tasks:
 
-		:param understanding_period: The time (in seconds) spent understanding the event before topic detection starts.
-		:type understanding_period: int
-		:param general_idf: The general IDF table, constructed from a general corpus.
-			This corpus represents the general discourse of Twitter.
-			The table is used in the participant detection stage.
-			It is assumed that one of the keys of the table is the 'DOCUMENTS' field.
-		:type general_idf: dict
-		:param initial_wait: The time (in seconds) to wait until starting to understand the event.
-			This is used when the file listener spends a lot of time skipping documents.
-		:type initial_wait: int
-		:param max_time: The maximum time (in seconds) to spend understanding the event.
-			It may be interrupted if the queue is inactive for a long time.
+			#. Construct the TF-IDF scheme used from the pre-event discussion, and
+
+			#. Identify the event's participants.
+
+		The function returns both in a tuple.
+
+		:param max_time: The time, in seconds, spent understanding the event.
+						 It may be interrupted if the queue is inactive for a long time.
 		:type max_time: int
 		:param max_inactivity: The maximum time (in seconds) to wait idly without input before stopping.
-			If it is negative, it is ignored.
+							   If it is negative, it is ignored.
 		:type max_inactivity: int
-		:param known_participants: A list of participants that are known in advance.
-			These are passed on to be resolved, which means they may not be retained by the resolver.
-		:type known_participants: list
+		:param scheme: The term-weighting scheme that is used to create documents in APD.
+					   If `None` is given, the :class:`~nlp.term_weighting.tf.TF` term-weighting scheme is used.
+		:type scheme: None or :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
 
-		:return: The constructed IDF table.
-		:rtype: dict
+		:return: A tuple containing the TF-IDF scheme and the event's participants from the pre-event discussion.
+				 The TF-IDF scheme is a :class:`~nlp.term_weighting.tfidf.TFIDF` instance.
+				 The participants are a list of strings.
+		:rtype: tuple
 		"""
 
-		self.scheme = TFIDF(general_idf)
-		await asyncio.sleep(initial_wait)
-		self._active = True
-		self._stopped = False
-		idf = await self._construct_idf(understanding_period, max_time=max_time, max_inactivity=max_inactivity)
-		logger.info("IDF created with %d documents" % self.buffer.length())
-		participants = await self._detect_participants(general_idf, *args, **kwargs)
-		logger.info("%d participants found" % len(participants))
-		return (idf, participants)
+		self.active = True
+		self.stopped = False
+
+		tfidf = await self._construct_idf(max_time=max_time, max_inactivity=max_inactivity)
+		participants = await self._detect_participants(scheme, *args, **kwargs)
+
+		self.active = False
+		self.stopped = True
+
+		return (tfidf, participants)
 
 	async def run(self, idf, initial_wait=0, max_time=3600, max_inactivity=-1, summarization_algorithm=DGS, *args, **kwargs):
 		"""
@@ -180,8 +173,8 @@ class ELDConsumer(Consumer):
 
 		self.scheme = TFIDF(idf)
 		await asyncio.sleep(initial_wait)
-		self._active = True
-		self._stopped = False
+		self.active = True
+		self.stopped = False
 		# with open("/home/memonick/output/temp/graph.json", "w") as f:
 		if summarization_algorithm.__name__ == mamo_graph.DGS.__name__:
 			self.summarization = mamo_graph.DGS(scorer=tweet_scorer.TweetScorer, tokenizer=self.tokenizer, scheme=self.scheme)
@@ -196,7 +189,7 @@ class ELDConsumer(Consumer):
 
 		return results[0]
 
-	async def _construct_idf(self, understanding_period, max_time, max_inactivity):
+	async def _construct_idf(self, max_time, max_inactivity):
 		"""
 		Construct the IDF table.
 		Processed documents are added to the buffer.
@@ -217,7 +210,7 @@ class ELDConsumer(Consumer):
 		idf_copied = False # flag indicating whether the IDF has been copied
 		total_documents, total_tweets = 0, 0
 
-		while (True and self._active
+		while (True and self.active
 			and (datetime.now().timestamp() - real_start < max_time)): # The consumer should keep working until it is stopped or it runs out of time
 			"""
 			If the queue is idle, stop waiting for input
@@ -245,7 +238,7 @@ class ELDConsumer(Consumer):
 						self._idf[feature] = self._idf.get(feature, 0) + 1
 				self._idf["DOCUMENTS"] = self._idf.get("DOCUMENTS", 0) + len(documents)
 
-		self._stopped = True # set a boolean indicating that the consumer has successfully stopped working
+		self.stopped = True # set a boolean indicating that the consumer has successfully stopped working
 
 		return self._idf
 
@@ -330,7 +323,7 @@ class ELDConsumer(Consumer):
 		start, last_timestamp = None, None # if a file is being used, the timing starts from the first tweet
 		total_documents, total_tweets = 0, 0
 
-		while True and self._active and (datetime.now().timestamp() - real_start < max_time): # The consumer should keep working until it is stopped or it runs out of time
+		while True and self.active and (datetime.now().timestamp() - real_start < max_time): # The consumer should keep working until it is stopped or it runs out of time
 			"""
 			If the queue is idle, stop waiting for input.
 			"""
@@ -420,7 +413,7 @@ class ELDConsumer(Consumer):
 
 		logger.info("Last document published at time %s (UTC)" % datetime.fromtimestamp(last_timestamp).strftime('%Y-%m-%d %H:%M:%S'))
 
-		self._stopped = True # set a boolean indicating that the consumer has successfully stopped working
+		self.stopped = True # set a boolean indicating that the consumer has successfully stopped working
 
 		return (self.summarization.export_raw_timeline(), self.summarization.export_timeline(), )
 
@@ -755,7 +748,7 @@ class SimulatedELDConsumer(ELDConsumer):
 		idf_copied = False # flag indicating whether the IDF has been copied
 		total_documents, total_tweets = 0, 0
 
-		while (True and self._active
+		while (True and self.active
 			and (start is None or datetime.now().timestamp() - real_start < max_time)
 			and (start is None or last_timestamp - start < understanding_period)): # The consumer should keep working until it is stopped or it runs out of time
 			"""
@@ -791,7 +784,7 @@ class SimulatedELDConsumer(ELDConsumer):
 						self._idf[feature] = self._idf.get(feature, 0) + 1
 				self._idf["DOCUMENTS"] = self._idf.get("DOCUMENTS", 0) + len(documents)
 
-		self._stopped = True # set a boolean indicating that the consumer has successfully stopped working
+		self.stopped = True # set a boolean indicating that the consumer has successfully stopped working
 
 		return self._idf
 
@@ -828,7 +821,7 @@ class SimulatedELDConsumer(ELDConsumer):
 		logger.info("Freeze period: %ds" % freeze_period)
 		logger.info("Minimum burst: %f" % min_burst)
 
-		while True and self._active and (start is None or datetime.now().timestamp() - real_start < max_time): # The consumer should keep working until it is stopped or it runs out of time
+		while True and self.active and (start is None or datetime.now().timestamp() - real_start < max_time): # The consumer should keep working until it is stopped or it runs out of time
 			"""
 			If the queue is idle, stop waiting for input.
 			"""
@@ -935,6 +928,6 @@ class SimulatedELDConsumer(ELDConsumer):
 
 		logger.info("Last document published at time %s (UTC)" % datetime.fromtimestamp(last_timestamp).strftime('%Y-%m-%d %H:%M:%S'))
 
-		self._stopped = True # set a boolean indicating that the consumer has successfully stopped working
+		self.stopped = True # set a boolean indicating that the consumer has successfully stopped working
 
 		return (self.summarization.export_raw_timeline(), self.summarization.export_timeline(), )
