@@ -24,3 +24,25 @@ class TestELDConsumer(unittest.TestCase):
 	"""
 	Test the implementation of the ELD consumer.
 	"""
+
+	def test_create_consumer(self):
+		"""
+		Test that when creating a consumer, all the parameters are saved correctly.
+		"""
+
+		queue = Queue()
+		consumer = ELDConsumer(queue, 60, scheme=TF())
+		self.assertEqual(queue, consumer.queue)
+		self.assertEqual(0, consumer.queue.length())
+		self.assertEqual(60, consumer.time_window)
+		self.assertEqual(TF, type(consumer.scheme))
+
+	def test_create_consumer_buffer_empty(self):
+		"""
+		Test that when creating a consumer, an empty buffer is created.
+		"""
+
+		queue = Queue()
+		consumer = ELDConsumer(queue, 60, scheme=TF())
+		self.assertEqual(Queue, type(consumer.buffer))
+		self.assertEqual(0, consumer.buffer.length())

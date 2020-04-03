@@ -24,7 +24,7 @@ path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
-from .buffered_consumer import BufferedConsumer, SimulatedBufferedConsumer
+from .consumer import Consumer
 
 from apd.participant_detector import ParticipantDetector
 from apd.extractors.local.entity_extractor import EntityExtractor
@@ -39,6 +39,8 @@ from nlp.document import Document
 from nlp.term_weighting import TF, TFIDF
 from nlp.tokenizer import Tokenizer
 
+from queues import Queue
+
 from summarization.algorithms import DGS
 
 from tdt.algorithms import ELD
@@ -48,72 +50,73 @@ from vsm import vector_math
 from vsm.clustering.algorithms import TemporalNoKMeans
 from vsm.clustering import Cluster
 
-class ELDConsumer(BufferedConsumer):
+class ELDConsumer(Consumer):
 	"""
-	The ELDConsumer routinely creates checkpoints of historical data.
-	It also stores a list of clusters.
-	Whenever new documents arrive, they are clustered.
-	Changed clusters are then examined to determine whether they contain topics or not.
+	The ELD consumer is a real-time consumer with a custom algorithm to detect topics.
+	It is siplit into two steps:
 
-	:ivar _time_window: The time (in seconds) to spend consuming the queue.
+		#. Understand the event, and
+
+		#. Build a timeline for it.
+
+	:ivar time_window: The time (in seconds) to spend consuming the queue.
 	:vartype time_window: int
-	:ivar _stopwords: The list of stopwords to filter out of tweets.
-	:vartype _stopwords: list
-	:ivar _nutrition_store: The nutrition store used in conjunction with extractin breaking news.
-	:vartype _nutrition_store: :class:`~topic_detection.nutrition_store.nutrition_store.NutritionStore`
-	:ivar _buffer: A buffer of tweets that have been processed, but which are not part of a checkpoint yet.
-	:vartype _buffer: :class:`~queues.queue.Queue`
-	:ivar _idf: The IDF table to use in the term-weighting scheme.
-	:vartype _idf: dict
-	:ivar _tokenizer: The tokenizer used to create documents and create the IDF table, among others.
-	:vartype _tokenizer: :class:`~vector.nlp.tokenizer.Tokenizer`
-	:ivar _clustering: The clustering algorithm to use.
-	:vartype _clustering: :class:`~vector.cluster.algorithms.nokmeans.TemporalNoKMeans`
-	:ivar _summarizer: The summarization algorithm used to create the timeline.
-	:vartype _summarizer: :class:`~summarization.algorithms.mamo_mmr.FragmentedMMR`
-	:ivar _term_weighting: The term-weighting scheme used to create documents. Changes depending on the task.
-	:vartype _term_weighting: :class:`~vector.nlp.term_weighting.TermWeighting`
+	:ivar scheme: The term-weighting scheme used to create documents. Changes depending on the task.
+	:vartype scheme: :class:`~vector.nlp.term_weighting.TermWeighting`
+	:ivar store: The nutrition store used in conjunction with extractin breaking news.
+	:vartype store: :class:`~topic_detection.nutrition_store.nutrition_store.NutritionStore`
+	:ivar buffer: A buffer of tweets that have been processed, but which are not part of a checkpoint yet.
+	:vartype buffer: :class:`~queues.queue.Queue`
+	:ivar tokenizer: The tokenizer used to create documents and create the IDF table, among others.
+	:vartype tokenizer: :class:`~vector.nlp.tokenizer.Tokenizer`
+	:ivar clustering: The clustering algorithm to use.
+	:vartype clustering: :class:`~vector.cluster.algorithms.nokmeans.TemporalNoKMeans`
+	:ivar tdt: The TDT algorithm used to detect breaking developments.
+	:vartype tdt: :class:`~tdt.algorithms.eld.ELD`
+	:ivar summarization: The summarization algorithm used to create the timeline.
+	:vartype summarization: :class:`~summarization.algorithms.dgs.DGS`
 	"""
 
-	def __init__(self, queue, time_window, filter_words=None, idf=None):
+	def __init__(self, queue, time_window=60, scheme=None):
 		"""
 		Create the consumer with a queue.
 		Simultaneously create a nutrition store and the topic detection algorithm container.
 		Initially, the IDF table should be empty.
 		It will be populated later when the 'reconaissance' period is finished.
 
+		The constructor also creates a buffer.
+		This buffer is used to store tweets until they are made into a checkpoint.
+
 		:param queue: The queue that is consumed.
 		:type queue: :class:`~queues.queue.Queue`
-		:param time_window: The time (in seconds) to spend consuming the queue.
+		:param time_window: The size of the window after which checkpoints are created.
 		:type time_window: int
-		:param filter_words: The words to filter out of documents.
-		:type filter_words: list
-		:param idf: The IDF table to use in the term-weighting scheme.
-		:type idf: dict
+		:param scheme: The term-weighting scheme that is used to create dimensions.
+					   If `None` is given, the :class:`~nlp.term_weighting.tf.TF` term-weighting scheme is used.
+		:type scheme: None or :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
 		"""
+
 		super(ELDConsumer, self).__init__(queue)
 
-		self._time_window = time_window
-		self._stopwords = stopwords.words("english") + filter_words if filter_words is not None else stopwords.words("english")
-		self._idf = { "DOCUMENTS": 0 } if idf is None else idf
-		self._term_weighting = TF()
+		self.time_window = time_window
+		self.scheme = scheme
 
-		self._nutrition_store = MemoryNutritionStore()
-		self._buffer = Queue()
+		"""
+		Create the nutrition store and the buffer.
+		The buffer stores tweets that have been processed, but not yet added to a checkpoint.
+		"""
+		self.store = MemoryNutritionStore()
+		self.buffer = Queue()
 
-		self._tokenizer = Tokenizer(stopwords=self._stopwords, normalize_words=True, character_normalization_count=3, remove_unicode_entities=True)
-		self._clustering = TemporalNoKMeans()
-		# self._summarizer = mamo_graph.DGS(scorer=tweet_scorer.TweetScorer)
-		self._summarizer = mamo_mmr.FragmentedMMR(scorer=tweet_scorer.TweetScorer)
-
-	"""
-	Two main running tasks are included in the consumer.
-	The understanding phase creates the IDF table.
-	Then it performs Automatic Participant Detection (APD) at the end.
-
-	The running phase consumes the stream during the event.
-	It is responsible for detecting topics from the stream.
-	"""
+		"""
+		Create the different components of the system.
+		"""
+		self.tokenizer = Tokenizer(stopwords=stopwords.words('english'),
+								   normalize_words=True, character_normalization_count=3,
+								   remove_unicode_entities=True)
+		self.clustering = TemporalNoKMeans(threshold=0.5, freeze_period=20, store_frozen=False)
+		self.tdt = ELD(self.store)
+		self.summarization = DGS()
 
 	async def understand(self, understanding_period, general_idf, initial_wait=0, max_time=3600, max_inactivity=-1, *args, **kwargs):
 		"""
@@ -143,15 +146,55 @@ class ELDConsumer(BufferedConsumer):
 		:rtype: dict
 		"""
 
-		self._term_weighting = TFIDF(general_idf)
+		self.scheme = TFIDF(general_idf)
 		await asyncio.sleep(initial_wait)
 		self._active = True
 		self._stopped = False
 		idf = await self._construct_idf(understanding_period, max_time=max_time, max_inactivity=max_inactivity)
-		logger.info("IDF created with %d documents" % self._buffer.length())
+		logger.info("IDF created with %d documents" % self.buffer.length())
 		participants = await self._detect_participants(general_idf, *args, **kwargs)
 		logger.info("%d participants found" % len(participants))
 		return (idf, participants)
+
+	async def run(self, idf, initial_wait=0, max_time=3600, max_inactivity=-1, summarization_algorithm=DGS, *args, **kwargs):
+		"""
+		Invokes the consume and checkpoint methods.
+		The consume method processes the documents and adds them to a buffer.
+		The checkpoint uses this buffer to create nutrition checkpoints and add them to the nutrition store.
+
+		:param initial_wait: The time (in seconds) to wait until starting to understand the event.
+			This is used when the file listener spends a lot of time skipping documents.
+		:type initial_wait: int
+		:param max_time: The maximum time (in seconds) to spend understanding the event.
+			It may be interrupted if the queue is inactive for a long time.
+		:type max_time: int
+		:param max_inactivity: The maximum time (in seconds) to wait idly without input before stopping.
+			If it is negative, it is ignored.
+		:type max_inactivity: int
+		:param summarization_algorithm: The type of summarization algorithm to use.
+		:type summarization_algorithm: func
+
+		:return: A list of detected breaking topics.
+		:rtype: list
+		"""
+
+		self.scheme = TFIDF(idf)
+		await asyncio.sleep(initial_wait)
+		self._active = True
+		self._stopped = False
+		# with open("/home/memonick/output/temp/graph.json", "w") as f:
+		if summarization_algorithm.__name__ == mamo_graph.DGS.__name__:
+			self.summarization = mamo_graph.DGS(scorer=tweet_scorer.TweetScorer, tokenizer=self.tokenizer, scheme=self.scheme)
+			logger.info("Document Graph Summarizer Timeline")
+		elif summarization_algorithm.__name__ == mamo_mmr.FragmentedMMR.__name__:
+			self.summarization = mamo_mmr.FragmentedMMR(scorer=tweet_scorer.TweetScorer)
+			logger.info("Fragmented MMR Timeline")
+		# self.summarization = baseline_mmr.BaselineMMR(scorer=tweet_scorer.TweetScorer)
+		results = await asyncio.gather(
+			self._consume(max_time=max_time, max_inactivity=max_inactivity, *args, **kwargs),
+		)
+
+		return results[0]
 
 	async def _construct_idf(self, understanding_period, max_time, max_inactivity):
 		"""
@@ -192,7 +235,7 @@ class ELDConsumer(BufferedConsumer):
 			documents = self._tokenize(tweets)
 
 			if len(documents) > 0:
-				self._buffer.enqueue(documents)
+				self.buffer.enqueue(documents)
 
 				"""
 				Update the IDF.
@@ -222,7 +265,7 @@ class ELDConsumer(BufferedConsumer):
 		:rtype: list
 		"""
 
-		documents = self._buffer.dequeue_all()
+		documents = self.buffer.dequeue_all()
 		cleaner = tweet_cleaner.TweetCleaner()
 		scorer = tweet_scorer.TweetScorer()
 
@@ -257,46 +300,6 @@ class ELDConsumer(BufferedConsumer):
 		logger.info("Extrapolated participants: %s" % ', '.join(extrapolated))
 		return resolved + extrapolated
 
-	async def run(self, idf, initial_wait=0, max_time=3600, max_inactivity=-1, summarization_algorithm=DGS, *args, **kwargs):
-		"""
-		Invokes the consume and checkpoint methods.
-		The consume method processes the documents and adds them to a buffer.
-		The checkpoint uses this buffer to create nutrition checkpoints and add them to the nutrition store.
-
-		:param initial_wait: The time (in seconds) to wait until starting to understand the event.
-			This is used when the file listener spends a lot of time skipping documents.
-		:type initial_wait: int
-		:param max_time: The maximum time (in seconds) to spend understanding the event.
-			It may be interrupted if the queue is inactive for a long time.
-		:type max_time: int
-		:param max_inactivity: The maximum time (in seconds) to wait idly without input before stopping.
-			If it is negative, it is ignored.
-		:type max_inactivity: int
-		:param summarization_algorithm: The type of summarization algorithm to use.
-		:type summarization_algorithm: func
-
-		:return: A list of detected breaking topics.
-		:rtype: list
-		"""
-
-		self._term_weighting = TFIDF(idf)
-		await asyncio.sleep(initial_wait)
-		self._active = True
-		self._stopped = False
-		# with open("/home/memonick/output/temp/graph.json", "w") as f:
-		if summarization_algorithm.__name__ == mamo_graph.DGS.__name__:
-			self._summarizer = mamo_graph.DGS(scorer=tweet_scorer.TweetScorer, tokenizer=self._tokenizer, scheme=self._term_weighting)
-			logger.info("Document Graph Summarizer Timeline")
-		elif summarization_algorithm.__name__ == mamo_mmr.FragmentedMMR.__name__:
-			self._summarizer = mamo_mmr.FragmentedMMR(scorer=tweet_scorer.TweetScorer)
-			logger.info("Fragmented MMR Timeline")
-		# self._summarizer = baseline_mmr.BaselineMMR(scorer=tweet_scorer.TweetScorer)
-		results = await asyncio.gather(
-			self._consume(max_time=max_time, max_inactivity=max_inactivity, *args, **kwargs),
-		)
-
-		return results[0]
-
 	async def _consume(self, max_time, max_inactivity, min_size=3, *args, **kwargs):
 		"""
 		Consume and process the documents in the queue.
@@ -315,14 +318,14 @@ class ELDConsumer(BufferedConsumer):
 		freeze_period = 20
 		min_burst = 0.5
 
-		logger.info("Time window: %ds" % self._time_window)
+		logger.info("Time window: %ds" % self.time_window)
 		logger.info("Sets: %d" % sets)
 		logger.info("Minimum cluster size: %d" % min_size)
 		logger.info("Cluster threshold: %f" % threshold)
 		logger.info("Freeze period: %ds" % freeze_period)
 		logger.info("Minimum burst: %f" % min_burst)
 
-		self._buffer.dequeue_all()
+		self.buffer.dequeue_all()
 		real_start = datetime.now().timestamp() # the consumer will run for a limited real time
 		start, last_timestamp = None, None # if a file is being used, the timing starts from the first tweet
 		total_documents, total_tweets = 0, 0
@@ -346,7 +349,7 @@ class ELDConsumer(BufferedConsumer):
 			documents = [ document for document in documents if last_timestamp is None or document.get_attribute("timestamp") >= last_timestamp ]
 			documents = sorted(documents, key=lambda document: document.get_attribute("timestamp")) # NOTE: Untested
 
-			self._buffer.enqueue(documents)
+			self.buffer.enqueue(documents)
 
 			if len(documents) > 0:
 				"""
@@ -360,13 +363,13 @@ class ELDConsumer(BufferedConsumer):
 
 				last_timestamp = documents[len(documents) - 1].get_attribute("timestamp")
 				checkpoints = 0
-				while start is not None and last_timestamp - start >= self._time_window:
-					start += self._time_window
+				while start is not None and last_timestamp - start >= self.time_window:
+					start += self.time_window
 					await self._create_checkpoint(start, sets)
 					checkpoints += 1
 
 				if checkpoints >= 1:
-					self._summarizer.ping(last_timestamp)
+					self.summarization.ping(last_timestamp)
 
 				"""
 				The current implementation resumes from the last time window if there is a backlog.
@@ -400,15 +403,15 @@ class ELDConsumer(BufferedConsumer):
 					if len(terms) > 0:
 						term_dict = dict(terms)
 						if len(term_dict) > 2 or sum(term_dict.values())/len(terms) > 0.9:
-							# summary = self._summarizer.add_cluster(cluster, terms, last_timestamp, summarization_min_score=0.5)
-							summary = self._summarizer.add_cluster(cluster, terms, last_timestamp)
+							# summary = self.summarization.add_cluster(cluster, terms, last_timestamp, summarization_min_score=0.5)
+							summary = self.summarization.add_cluster(cluster, terms, last_timestamp)
 
 							cluster.set_attribute("checked", True) # once a cluster has been deemed to be breaking, it should not be checked anymore, which guards against repeated clusters in the summary
 
 		await self._create_checkpoint(last_timestamp, sets)
 		await asyncio.sleep(1)
 
-		last_summary = self._summarizer.create_summary()
+		last_summary = self.summarization.create_summary()
 		if last_summary is not None:
 			logger.info("%s last: %s" % (datetime.fromtimestamp(last_summary.created_at()).strftime('%Y-%m-%d %H:%M:%S'),
 				last_summary.generate_summary(cleaner=tweet_cleaner.TweetCleaner)))
@@ -419,7 +422,7 @@ class ELDConsumer(BufferedConsumer):
 
 		self._stopped = True # set a boolean indicating that the consumer has successfully stopped working
 
-		return (self._summarizer.export_raw_timeline(), self._summarizer.export_timeline(), )
+		return (self.summarization.export_raw_timeline(), self.summarization.export_timeline(), )
 
 	async def _create_checkpoint(self, timestamp, sets):
 		"""
@@ -440,8 +443,8 @@ class ELDConsumer(BufferedConsumer):
 		"""
 
 		document_set = []
-		while self._buffer.length() > 0 and self._buffer.head().get_attribute("timestamp") < timestamp:
-			document_set.append(self._buffer.dequeue())
+		while self.buffer.length() > 0 and self.buffer.head().get_attribute("timestamp") < timestamp:
+			document_set.append(self.buffer.dequeue())
 
 		if len(document_set) > 0:
 			"""
@@ -451,35 +454,17 @@ class ELDConsumer(BufferedConsumer):
 
 			single_document = vector_math.concatenate(document_set)
 			single_document = vector_math.augmented_normalize(single_document, a=0)
-			self._nutrition_store.add_nutrition_set(timestamp, single_document.get_dimensions())
+			self.store.add_nutrition_set(timestamp, single_document.get_dimensions())
 			# logger.info("Checkpoint created with %d documents at time %s (UTC)" % (
 			#	len(document_set),
 			#	datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S'))
 			# )
 		elif timestamp is not None:
-			self._nutrition_store.add_nutrition_set(timestamp, {})
+			self.store.add_nutrition_set(timestamp, {})
 			logger.info("Checkpoint passed internally with 0 documents")
 
 		if timestamp is not None:
-			self._nutrition_store.remove_old_nutrition_sets(timestamp - self._time_window * (sets + 1)) # keep an extra one, just in case
-
-	async def _sleep(self):
-		"""
-		Sleep until the time window is over, but periodically check if the consumer should stop.
-		"""
-
-		sleep = 1
-
-		for i in range(0, int(self._time_window/sleep)):
-			await asyncio.sleep(sleep)
-			if self._stopped:
-				break
-
-		"""
-		Before finishing the sleep cycle, check if the consumer should stop
-		"""
-		if not self._stopped:
-			await asyncio.sleep(self._time_window % sleep)
+			self.store.remove_old_nutrition_sets(timestamp - self.time_window * (sets + 1)) # keep an extra one, just in case
 
 	def _filter_tweets(self, tweets):
 		"""
@@ -605,8 +590,8 @@ class ELDConsumer(BufferedConsumer):
 			else:
 				text = tweet.get("text", "")
 
-			tokens = self._tokenizer.tokenize(text)
-			document = Document(text, tokens, scheme=self._term_weighting)
+			tokens = self.tokenizer.tokenize(text)
+			document = Document(text, tokens, scheme=self.scheme)
 			document.set_attribute("tokens", tokens)
 			document.set_attribute("timestamp", timestamp)
 			document.set_attribute("tweet", tweet)
@@ -631,9 +616,9 @@ class ELDConsumer(BufferedConsumer):
 		:rtype: list of :class:`~vector.cluster.cluster.Cluster` instances
 		"""
 
-		clusters = self._clustering.cluster(documents, threshold=threshold, freeze_period=freeze_period, time_attribute="timestamp", store_frozen=False)
+		clusters = self.clustering.cluster(documents, threshold=threshold, freeze_period=freeze_period, time_attribute="timestamp", store_frozen=False)
 		return clusters
-		# return self._clustering.get_clusters(ClusterType.ACTIVE)
+		# return self.clustering.get_clusters(ClusterType.ACTIVE)
 
 	def _filter_clusters(self, clusters, timestamp, min_size=10, cooldown=1, max_intra_similarity=0.8):
 		"""
@@ -705,23 +690,6 @@ class ELDConsumer(BufferedConsumer):
 		f = Filter(rules)
 		return [cluster for cluster in clusters if f.filter(cluster.get_attributes())]
 
-	def _get_recent_documents(self, cluster, timestamp):
-		"""
-		Get a list of documents that were added in the past sliding time window.
-
-		:param cluster: The cluster from which to extract the documents.
-		:type cluster: :class:`~vector.cluster.cluster.Cluster`
-		:param timestamp: The current timestamp, used to compare with the documents' timestamps.
-		:type timestamp: int
-
-		:return: A list of documents added recently to the cluster.
-		:rtype: list of :class:`~vector.nlp.document.Document` instances
-		"""
-
-		# BUG: The document's timestamp is always less than the timestamp! The order needs to be switched.
-		documents = [ document for document in cluster.get_vectors() if document.get_attribute("timestamp") - timestamp < self._time_window ]
-		return documents
-
 	def _detect_topics(self, cluster, threshold, sets, timestamp, decay_rate=(1./2)):
 		"""
 		Perform topic detection.
@@ -747,98 +715,15 @@ class ELDConsumer(BufferedConsumer):
 		single_document = vector_math.concatenate(documents)
 		single_document = vector_math.augmented_normalize(single_document, a=0)
 
-		terms = mamo_eld.detect_topics(self._nutrition_store, # use the nutrition store's checkpoints as historical data
+		terms = mamo_eld.detect_topics(self.store, # use the nutrition store's checkpoints as historical data
 			single_document.get_dimensions(),  # the current data is the most recent documents from the cluster
 			threshold, # use a strict threshold
 			sets=sets, # consider the past few sets
-			timestamp=timestamp-self._time_window,# do not consider checkpoints in this sliding time window, but only those that preceed it
+			timestamp=timestamp-self.time_window,# do not consider checkpoints in this sliding time window, but only those that preceed it
 			decay_rate=decay_rate, # set a decay rate,
 			term_only=False
 		)
 		return terms
-
-	def _create_digest(self, timeline_filename):
-		"""
-		Create a timeline digest and write it to file.
-		The digest is a JSON output.
-		Each line is one timeline node, consisting of:
-			#. Timestamp - the time when the node was created;
-			#. Summary - the summary text;
-			#. Documents - the number of documents making up the summary;
-			#. Terms - a list of bursty terms, in descending order of burst.
-			#. Finished - a flag indicating whether
-
-		:param timeline_filename: The filename of the file where to write the digest.
-		:type timeline_filename: str
-		"""
-
-		"""
-		Preload the saved developments.
-		They are separated by timestamp since each development has a unique creation datetime.
-		"""
-		developments = {}
-		if (os.path.isfile(timeline_filename)):
-			with open(timeline_filename, "r") as timeline_file:
-				for line in timeline_file:
-					data = json.loads(line) # decode the line
-					if data["finished"]:
-						developments[data["timestamp"]] = data
-
-		resolver = TokenResolver()
-
-		with open(timeline_filename, "w") as timeline_file:
-			"""
-			Create the retrospective summaries.
-			"""
-			for clusters, summary, development in self._summarizer._frozen_summaries:
-				timestamp = summary.created_at()
-				summary_text = summary.generate_summary(tweet_cleaner.TweetCleaner)
-				documents = [ document for (_, cluster) in clusters for document in cluster.get_vectors() ]
-				terms = [ term for term, _ in sorted(self._summarizer._create_query(clusters).get_dimensions().items(), key=lambda x: x[1])[::-1] ]
-				terms, _ = resolver.resolve(terms, documents) # resolve the terms that can be resolved
-				finished = True
-
-				if timestamp not in developments:
-					participant_detector = ParticipantDetector(documents, EntityExtractor, LogSumScorer, EntityResolver)
-					resolved, _, _ = participant_detector.detect(threshold=0.5, max_candidates=20, combine=False)
-					participants = resolved
-				else:
-					participants = developments[timestamp]["participants"]
-
-				array = {
-					"timestamp": timestamp,
-					"summary": summary_text,
-					"documents": len(documents),
-					"terms": terms,
-					"participants": participants,
-					"finished": finished
-				}
-
-				timeline_file.write("%s\n" % json.dumps(array))
-
-			"""
-			Create the current summary.
-			"""
-			if self._summarizer.is_active_summary():
-				summary = self._summarizer.create_summary()
-
-				timestamp = summary.created_at()
-				summary_text = summary.generate_summary(tweet_cleaner.TweetCleaner)
-				clusters = self._summarizer._clusters
-				documents = [ document for (_, cluster) in clusters for document in cluster.get_vectors() ]
-				terms = [ term for term, _ in sorted(self._summarizer._create_query(clusters).get_dimensions().items(), key=lambda x: x[1])[::-1] ]
-				terms, _ = resolver.resolve(terms, documents) # resolve the terms that can be resolved
-				finished = False
-
-				array = {
-					"timestamp": timestamp,
-					"summary": summary_text,
-					"documents": len(documents),
-					"terms": terms,
-					"finished": finished
-				}
-
-				timeline_file.write("%s\n" % json.dumps(array))
 
 class SimulatedELDConsumer(ELDConsumer):
 	"""
@@ -896,7 +781,7 @@ class SimulatedELDConsumer(ELDConsumer):
 
 				last_timestamp = documents[len(documents) - 1].get_attribute("timestamp")
 				# documents = self._filter_documents(documents)
-				self._buffer.enqueue(documents)
+				self.buffer.enqueue(documents)
 
 				"""
 				Update the IDF.
@@ -931,12 +816,12 @@ class SimulatedELDConsumer(ELDConsumer):
 		freeze_period = 20
 		min_burst = 0.5
 
-		self._buffer.dequeue_all()
+		self.buffer.dequeue_all()
 		real_start = datetime.now().timestamp() # the consumer will run for a limited real time
 		start, last_timestamp, last_written = None, None, None # if a file is being used, the timing starts from the first tweet
 		total_documents, total_tweets = 0, 0
 
-		logger.info("Time window: %ds" % self._time_window)
+		logger.info("Time window: %ds" % self.time_window)
 		logger.info("Sets: %d" % sets)
 		logger.info("Minimum cluster size: %d" % min_size)
 		logger.info("Cluster threshold: %f" % threshold)
@@ -964,7 +849,7 @@ class SimulatedELDConsumer(ELDConsumer):
 			documents = [ document for document in documents if last_timestamp is None or document.get_attribute("timestamp") >= last_timestamp ]
 			documents = sorted(documents, key=lambda document: document.get_attribute("timestamp")) # NOTE: Untested
 
-			self._buffer.enqueue(documents)
+			self.buffer.enqueue(documents)
 
 			if len(documents) > 0:
 				"""
@@ -978,13 +863,13 @@ class SimulatedELDConsumer(ELDConsumer):
 
 				last_timestamp = documents[len(documents) - 1].get_attribute("timestamp")
 				checkpoints = 0
-				while start is not None and last_timestamp - start >= self._time_window:
-					start += self._time_window
+				while start is not None and last_timestamp - start >= self.time_window:
+					start += self.time_window
 					await self._create_checkpoint(start, sets)
 					checkpoints += 1
 
 				if checkpoints >= 1:
-					self._summarizer.ping(last_timestamp)
+					self.summarization.ping(last_timestamp)
 
 				"""
 				The current implementation resumes from the last time window if there is a backlog.
@@ -1018,8 +903,8 @@ class SimulatedELDConsumer(ELDConsumer):
 					if len(terms) > 0:
 						term_dict = dict(terms)
 						if len(term_dict) > 2 or sum(term_dict.values())/len(terms) > 0.9:
-							# summary = self._summarizer.add_cluster(cluster, terms, last_timestamp, summarization_min_score=0.5)
-							summary = self._summarizer.add_cluster(cluster, terms, last_timestamp)
+							# summary = self.summarization.add_cluster(cluster, terms, last_timestamp, summarization_min_score=0.5)
+							summary = self.summarization.add_cluster(cluster, terms, last_timestamp)
 
 							cluster.set_attribute("checked", True) # once a cluster has been deemed to be breaking, it should not be checked anymore, which guards against repeated clusters in the summary
 
@@ -1041,7 +926,7 @@ class SimulatedELDConsumer(ELDConsumer):
 		if timeline_filename is not None:
 			self._create_digest(timeline_filename)
 
-		last_summary = self._summarizer.create_summary()
+		last_summary = self.summarization.create_summary()
 		if last_summary is not None:
 			logger.info("%s last: %s" % (datetime.fromtimestamp(last_summary.created_at()).strftime('%Y-%m-%d %H:%M:%S'),
 				last_summary.generate_summary(cleaner=tweet_cleaner.TweetCleaner)))
@@ -1052,4 +937,4 @@ class SimulatedELDConsumer(ELDConsumer):
 
 		self._stopped = True # set a boolean indicating that the consumer has successfully stopped working
 
-		return (self._summarizer.export_raw_timeline(), self._summarizer.export_timeline(), )
+		return (self.summarization.export_raw_timeline(), self.summarization.export_timeline(), )
