@@ -52,8 +52,10 @@ class Consumer(ABC):
 		Invoke the consume method.
 		Since some listeners have a small delay, the consumer waits a bit before starting to consume input.
 
-		:param wait: The time in seconds to wait until starting to understand the event.
-					 This is used when the file listener spends a lot of time skipping documents.
+		Any additional arguments and keyword arguments are passed on to the :class:`~queues.consumers.consumer.Consumer._consume` function.
+
+		:param wait: The time in seconds to wait until starting to consume the event.
+					 This is used when the file listener spends a lot of time skipping tweets.
 		:type wait: int
 		:param max_time: The maximum time in seconds to spend consuming the queue.
 						 It may be interrupted if the queue is inactive for a long time.
@@ -71,12 +73,12 @@ class Consumer(ABC):
 		self.stopped = False
 
 		results = await asyncio.gather(
-			self._consume(max_time=max_time, max_inactivity=max_inactivity),
+			self._consume(*args, max_time=max_time, max_inactivity=max_inactivity, **kwargs),
 		)
 		return results
 
 	@abstractmethod
-	async def _consume(self, max_time, max_inactivity):
+	async def _consume(self, max_time, max_inactivity, *args, **kwargs):
 		"""
 		Consume the queue.
 		This is the function where most processing occurs.
