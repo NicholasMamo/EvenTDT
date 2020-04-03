@@ -371,48 +371,6 @@ class ELDConsumer(Consumer):
 
 		return (self.summarization.export_raw_timeline(), self.summarization.export_timeline(), )
 
-	async def _create_checkpoint(self, timestamp, sets):
-		"""
-		After every time window has elapsed, get all the buffered documents.
-		These documents are used to create a nutrition set for the nutrition store.
-		This nutrition set represents a snapshot of the time window.
-
-		:param timestamp: The timestamp of the new checkpoint.
-		:type timestamp: int
-		:param sets: The number of time windows that are considered.
-			Older ones serve no purpose, so they may be removed.
-		:type timestamp: int
-		"""
-
-		"""
-		Concatenate all the documents in the buffer and normalize the dimensions.
-		The goal is to get a list of dimensions in the range 0 to 1.
-		"""
-
-		document_set = []
-		while self.buffer.length() > 0 and self.buffer.head().get_attribute("timestamp") < timestamp:
-			document_set.append(self.buffer.dequeue())
-
-		if len(document_set) > 0:
-			"""
-			Concatenate all the documents in the buffer and normalize the dimensions.
-			The goal is to get a list of dimensions in the range 0 to 1.
-			"""
-
-			single_document = vector_math.concatenate(document_set)
-			single_document = vector_math.augmented_normalize(single_document, a=0)
-			self.store.add_nutrition_set(timestamp, single_document.get_dimensions())
-			# logger.info("Checkpoint created with %d documents at time %s (UTC)" % (
-			#	len(document_set),
-			#	datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S'))
-			# )
-		elif timestamp is not None:
-			self.store.add_nutrition_set(timestamp, {})
-			logger.info("Checkpoint passed internally with 0 documents")
-
-		if timestamp is not None:
-			self.store.remove_old_nutrition_sets(timestamp - self.time_window * (sets + 1)) # keep an extra one, just in case
-
 	def _filter_tweets(self, tweets):
 		"""
 		Filter the given tweets, largely based on FIRE's filtering rules.
@@ -510,6 +468,48 @@ class ELDConsumer(Consumer):
 			documents.append(document)
 
 		return documents
+
+	async def _create_checkpoint(self, timestamp, sets):
+		"""
+		After every time window has elapsed, get all the buffered documents.
+		These documents are used to create a nutrition set for the nutrition store.
+		This nutrition set represents a snapshot of the time window.
+
+		:param timestamp: The timestamp of the new checkpoint.
+		:type timestamp: int
+		:param sets: The number of time windows that are considered.
+			Older ones serve no purpose, so they may be removed.
+		:type timestamp: int
+		"""
+
+		"""
+		Concatenate all the documents in the buffer and normalize the dimensions.
+		The goal is to get a list of dimensions in the range 0 to 1.
+		"""
+
+		document_set = []
+		while self.buffer.length() > 0 and self.buffer.head().get_attribute("timestamp") < timestamp:
+			document_set.append(self.buffer.dequeue())
+
+		if len(document_set) > 0:
+			"""
+			Concatenate all the documents in the buffer and normalize the dimensions.
+			The goal is to get a list of dimensions in the range 0 to 1.
+			"""
+
+			single_document = vector_math.concatenate(document_set)
+			single_document = vector_math.augmented_normalize(single_document, a=0)
+			self.store.add_nutrition_set(timestamp, single_document.get_dimensions())
+			# logger.info("Checkpoint created with %d documents at time %s (UTC)" % (
+			#	len(document_set),
+			#	datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S'))
+			# )
+		elif timestamp is not None:
+			self.store.add_nutrition_set(timestamp, {})
+			logger.info("Checkpoint passed internally with 0 documents")
+
+		if timestamp is not None:
+			self.store.remove_old_nutrition_sets(timestamp - self.time_window * (sets + 1)) # keep an extra one, just in case
 
 	def _cluster(self, documents, threshold=0.7, freeze_period=1):
 		"""
