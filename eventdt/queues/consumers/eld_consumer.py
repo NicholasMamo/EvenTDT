@@ -19,6 +19,7 @@ import math
 import os
 import re
 import sys
+import time
 
 path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
@@ -140,14 +141,14 @@ class ELDConsumer(Consumer):
 
 		self._started()
 		tfidf = await self._construct_idf(max_time=max_time, max_inactivity=max_inactivity)
-		participants = await self._detect_participants(scheme, *args, **kwargs)
+		participants = await self._detect_participants(scheme)
 		self._stopped()
 		return (tfidf, participants)
 
 	async def _construct_idf(self, max_time, max_inactivity):
 		"""
-		Construct the IDF table.
-		Processed documents are added to the buffer.
+		Construct the TF-IDF table from the pre-event discussion.
+		All of the tweets processed by
 		These documents may then be used by the APD task.
 
 		:param max_time: The maximum time (in seconds) to spend understanding the event.
@@ -162,8 +163,7 @@ class ELDConsumer(Consumer):
 		"""
 
 		real_start = datetime.now().timestamp() # the consumer will run for a limited real time
-		idf_copied = False # flag indicating whether the IDF has been copied
-		total_documents, total_tweets = 0, 0
+		total_tweets = 0
 
 		while (True and self.active
 			and (datetime.now().timestamp() - real_start < max_time)): # The consumer should keep working until it is stopped or it runs out of time
@@ -700,7 +700,6 @@ class SimulatedELDConsumer(ELDConsumer):
 
 		real_start = datetime.now().timestamp() # the consumer will run for a limited real time
 		start, last_timestamp = None, None # if a file is being used, the timing starts from the first tweet
-		idf_copied = False # flag indicating whether the IDF has been copied
 		total_documents, total_tweets = 0, 0
 
 		while (True and self.active
