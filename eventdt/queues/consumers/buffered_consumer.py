@@ -45,11 +45,11 @@ class BufferedConsumer(Consumer):
 		self.periodicity = periodicity
 		self.buffer = Queue()
 
-	async def run(self, wait=0, max_time=3600, max_inactivity=-1):
+	async def run(self, wait=0, max_time=3600, max_inactivity=-1, *args, **kwargs):
 		"""
 		Invokes the consume and process method.
 
-		Any additional arguments and keyword arguments are passed on to the :class:`~queues.consumers.consumer.Consumer._consume` function.
+		Any additional arguments and keyword arguments are passed on to the :class:`~queues.consumers.buffered_consumer.BufferedConsumer._consume` and :class:`~queues.consumers.buffered_consumer.BufferedConsumer._process` functions.
 
 		:param wait: The time in seconds to wait until starting to understand the event.
 					 This is used when the file listener spends a lot of time skipping documents.
@@ -69,7 +69,7 @@ class BufferedConsumer(Consumer):
 		self._started()
 		results = await asyncio.gather(
 			self._consume(*args, max_time=max_time, max_inactivity=max_inactivity, **kwargs),
-			self._process(),
+			self._process(*args, **kwargs),
 		)
 		self._stopped()
 		return results

@@ -47,7 +47,7 @@ class Consumer(ABC):
 		self.active = False
 		self.stopped = True
 
-	async def run(self, wait=0, max_time=3600, max_inactivity=-1):
+	async def run(self, wait=0, max_time=3600, max_inactivity=-1, *args, **kwargs):
 		"""
 		Invoke the consume method.
 		Since some listeners have a small delay, the consumer may wait a bit before starting to consume input.
