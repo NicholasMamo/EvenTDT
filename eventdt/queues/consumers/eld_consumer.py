@@ -138,15 +138,10 @@ class ELDConsumer(Consumer):
 		:rtype: tuple
 		"""
 
-		self.active = True
-		self.stopped = False
-
+		self._started()
 		tfidf = await self._construct_idf(max_time=max_time, max_inactivity=max_inactivity)
 		participants = await self._detect_participants(scheme, *args, **kwargs)
-
-		self.active = False
-		self.stopped = True
-
+		self._stopped()
 		return (tfidf, participants)
 
 	async def run(self, idf, initial_wait=0, max_time=3600, max_inactivity=-1, summarization_algorithm=DGS, *args, **kwargs):
