@@ -68,7 +68,7 @@ class BufferedConsumer(Consumer):
 		await asyncio.sleep(wait)
 		self._started()
 		results = await asyncio.gather(
-			self._consume(*args, **kwargs, max_time=max_time, max_inactivity=max_inactivity),
+			self._consume(*args, max_time=max_time, max_inactivity=max_inactivity, **kwargs),
 			self._process(),
 		)
 		self._stopped()

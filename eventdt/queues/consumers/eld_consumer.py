@@ -144,46 +144,6 @@ class ELDConsumer(Consumer):
 		self._stopped()
 		return (tfidf, participants)
 
-	async def run(self, idf, initial_wait=0, max_time=3600, max_inactivity=-1, summarization_algorithm=DGS, *args, **kwargs):
-		"""
-		Invokes the consume and checkpoint methods.
-		The consume method processes the documents and adds them to a buffer.
-		The checkpoint uses this buffer to create nutrition checkpoints and add them to the nutrition store.
-
-		:param initial_wait: The time (in seconds) to wait until starting to understand the event.
-			This is used when the file listener spends a lot of time skipping documents.
-		:type initial_wait: int
-		:param max_time: The maximum time (in seconds) to spend understanding the event.
-			It may be interrupted if the queue is inactive for a long time.
-		:type max_time: int
-		:param max_inactivity: The maximum time (in seconds) to wait idly without input before stopping.
-			If it is negative, it is ignored.
-		:type max_inactivity: int
-		:param summarization_algorithm: The type of summarization algorithm to use.
-		:type summarization_algorithm: func
-
-		:return: A list of detected breaking topics.
-		:rtype: list
-		"""
-
-		self.scheme = TFIDF(idf)
-		await asyncio.sleep(initial_wait)
-		self.active = True
-		self.stopped = False
-		# with open("/home/memonick/output/temp/graph.json", "w") as f:
-		if summarization_algorithm.__name__ == mamo_graph.DGS.__name__:
-			self.summarization = mamo_graph.DGS(scorer=tweet_scorer.TweetScorer, tokenizer=self.tokenizer, scheme=self.scheme)
-			logger.info("Document Graph Summarizer Timeline")
-		elif summarization_algorithm.__name__ == mamo_mmr.FragmentedMMR.__name__:
-			self.summarization = mamo_mmr.FragmentedMMR(scorer=tweet_scorer.TweetScorer)
-			logger.info("Fragmented MMR Timeline")
-		# self.summarization = baseline_mmr.BaselineMMR(scorer=tweet_scorer.TweetScorer)
-		results = await asyncio.gather(
-			self._consume(max_time=max_time, max_inactivity=max_inactivity, *args, **kwargs),
-		)
-
-		return results[0]
-
 	async def _construct_idf(self, max_time, max_inactivity):
 		"""
 		Construct the IDF table.
