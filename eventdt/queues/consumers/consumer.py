@@ -70,9 +70,11 @@ class Consumer(ABC):
 
 		await asyncio.sleep(wait)
 
+		self._started()
 		results = await asyncio.gather(
 			self._consume(*args, max_time=max_time, max_inactivity=max_inactivity, **kwargs),
 		)
+		self._stopped()
 		return results
 
 	def stop(self):

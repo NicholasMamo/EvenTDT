@@ -51,8 +51,3 @@ class PrintConsumer(Consumer):
 			while self.queue.length():
 				tweet = self.queue.dequeue()
 				logger.info(tweet.get('text'))
-
-		"""
-		Set a boolean indicating that the consumer has successfully stopped working.
-		"""
-		self.stopped = True
