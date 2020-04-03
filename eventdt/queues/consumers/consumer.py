@@ -69,8 +69,6 @@ class Consumer(ABC):
 		"""
 
 		await asyncio.sleep(wait)
-		self.active = True
-		self.stopped = False
 
 		results = await asyncio.gather(
 			self._consume(*args, max_time=max_time, max_inactivity=max_inactivity, **kwargs),
@@ -136,6 +134,22 @@ class Consumer(ABC):
 			return False
 
 		return True
+
+	def _started(self):
+		"""
+		A function that sets the active and stopped flags to indicate that the consumer has started operating.
+		"""
+
+		self.active = True
+		self.stopped = False
+
+	def _stopped(self):
+		"""
+		A function that sets the active and stopped flags to indicate that the consumer has stopped operating.
+		"""
+
+		self.active = False
+		self.stopped = True
 
 	def stop(self):
 		"""
