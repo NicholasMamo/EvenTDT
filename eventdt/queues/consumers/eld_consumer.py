@@ -1,8 +1,16 @@
 """
-The centerpiece topic detection approach of ELD.
+Event TimeLine Detection (ELD) is a consumer based on a publication of the same name.
+The approach splits processing into two steps:
+
+ 	#. Understand the event, and
+
+	#. Build a timeline for it.
+
+.. note::
+
+	Implementation based on the algorithm presented in `ELD: Event TimeLine Detection -- A Participant-Based Approach to Tracking Events by Mamo et al. (2019) <https://dl.acm.org/doi/10.1145/3342220.3344921>`_.
 """
 
-from datetime import datetime
 from nltk.corpus import stopwords
 
 import asyncio
@@ -12,43 +20,35 @@ import os
 import re
 import sys
 
-path = os.path.dirname(__file__)
-path = os.path.join(path, '../../../../')
+path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
-	sys.path.insert(1, path)
+    sys.path.append(path)
 
-from ..consumer import Consumer
-from ..filter import filter
-from ..filter.filter import Filter
-from ...queue.queue import Queue
+from .buffered_consumer import BufferedConsumer, SimulatedBufferedConsumer
 
-from libraries.apd.participant_detector import ParticipantDetector
-from libraries.apd.extractors.local.entity_extractor import EntityExtractor
-from libraries.apd.extrapolators.external.wikipedia_extrapolator import LinkExtrapolator, WikipediaExtrapolator
-from libraries.apd.postprocessors.external.wikipedia_postprocessor import WikipediaPostprocessor
-from libraries.apd.resolvers.local.entity_resolver import EntityResolver
-from libraries.apd.resolvers.local.token_resolver import TokenResolver
-from libraries.apd.resolvers.external.wikipedia_resolver import SearchResolver, WikipediaResolver
-from libraries.apd.scorers.local.sum_scorer import SumScorer, LogSumScorer
+from apd.participant_detector import ParticipantDetector
+from apd.extractors.local.entity_extractor import EntityExtractor
+from apd.extrapolators.external.wikipedia_extrapolator import WikipediaExtrapolator
+from apd.postprocessors.external.wikipedia_postprocessor import WikipediaPostprocessor
+from apd.resolvers.external.wikipedia_search_resolver import WikipediaSearchResolver
+from apd.scorers.local.log_tf_scorer import LogTFScorer
 
-from libraries.logger import logger
+from logger import logger
 
-from libraries.summarization.algorithms.update import baseline_mmr, mamo_graph, mamo_mmr
-from libraries.summarization.scorers import tweet_scorer
+from nlp.document import Document
+from nlp.term_weighting import TF, TFIDF
+from nlp.tokenizer import Tokenizer
 
-from libraries.topic_detection.algorithms import mamo_eld
-from libraries.topic_detection.nutrition_store.memory_nutrition_store import MemoryNutritionStore
+from summarization.algorithms import DGS
 
-from libraries.vector import vector_math
-from libraries.vector.cluster.algorithms.nokmeans import TemporalNoKMeans, ClusterType
-from libraries.vector.cluster.cluster import Cluster
+from tdt.algorithms import ELD
+from tdt.nutrition import MemoryNutritionStore
 
-from libraries.vector.nlp.cleaners import tweet_cleaner
-from libraries.vector.nlp.document import Document
-from libraries.vector.nlp.term_weighting import TF, TFIDF
-from libraries.vector.nlp.tokenizer import Tokenizer
+from vsm import vector_math
+from vsm.clustering.algorithms import TemporalNoKMeans
+from vsm.clustering import Cluster
 
-class ELDConsumer(Consumer):
+class ELDConsumer(BufferedConsumer):
 	"""
 	The ELDConsumer routinely creates checkpoints of historical data.
 	It also stores a list of clusters.
@@ -103,7 +103,7 @@ class ELDConsumer(Consumer):
 
 		self._tokenizer = Tokenizer(stopwords=self._stopwords, normalize_words=True, character_normalization_count=3, remove_unicode_entities=True)
 		self._clustering = TemporalNoKMeans()
-		# self._summarizer = mamo_graph.DocumentGraphSummarizer(scorer=tweet_scorer.TweetScorer)
+		# self._summarizer = mamo_graph.DGS(scorer=tweet_scorer.TweetScorer)
 		self._summarizer = mamo_mmr.FragmentedMMR(scorer=tweet_scorer.TweetScorer)
 
 	"""
@@ -248,7 +248,7 @@ class ELDConsumer(Consumer):
 		known_participants = [] if type(known_participants) is not list else known_participants
 		known_participants = [ keyword for keyword in known_participants if all(c.isalpha() or c.isspace() for c in keyword) ]
 
-		participant_detector = ParticipantDetector(corpus, EntityExtractor, LogSumScorer, SearchResolver, LinkExtrapolator, WikipediaPostprocessor)
+		participant_detector = ParticipantDetector(corpus, EntityExtractor, LogSumScorer, WikipediaSearchResolver, WikipediaExtrapolator, WikipediaPostprocessor)
 		resolved, unresolved, extrapolated = participant_detector.detect(threshold=0.2, max_candidates=20, known_participants=known_participants,
 			resolver_scheme=TFIDF(general_idf), resolver_threshold=0.05,
 			extrapolator_scheme=TFIDF(general_idf), extrapolator_participants=30, extrapolator_threshold=0.05,
@@ -257,7 +257,7 @@ class ELDConsumer(Consumer):
 		logger.info("Extrapolated participants: %s" % ', '.join(extrapolated))
 		return resolved + extrapolated
 
-	async def run(self, idf, initial_wait=0, max_time=3600, max_inactivity=-1, summarization_algorithm=mamo_graph.DocumentGraphSummarizer, *args, **kwargs):
+	async def run(self, idf, initial_wait=0, max_time=3600, max_inactivity=-1, summarization_algorithm=DGS, *args, **kwargs):
 		"""
 		Invokes the consume and checkpoint methods.
 		The consume method processes the documents and adds them to a buffer.
@@ -284,8 +284,8 @@ class ELDConsumer(Consumer):
 		self._active = True
 		self._stopped = False
 		# with open("/home/memonick/output/temp/graph.json", "w") as f:
-		if summarization_algorithm.__name__ == mamo_graph.DocumentGraphSummarizer.__name__:
-			self._summarizer = mamo_graph.DocumentGraphSummarizer(scorer=tweet_scorer.TweetScorer, tokenizer=self._tokenizer, scheme=self._term_weighting)
+		if summarization_algorithm.__name__ == mamo_graph.DGS.__name__:
+			self._summarizer = mamo_graph.DGS(scorer=tweet_scorer.TweetScorer, tokenizer=self._tokenizer, scheme=self._term_weighting)
 			logger.info("Document Graph Summarizer Timeline")
 		elif summarization_algorithm.__name__ == mamo_mmr.FragmentedMMR.__name__:
 			self._summarizer = mamo_mmr.FragmentedMMR(scorer=tweet_scorer.TweetScorer)
