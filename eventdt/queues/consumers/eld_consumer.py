@@ -293,7 +293,6 @@ class ELDConsumer(Consumer):
 			total_tweets += len(tweets)
 			tweets = self._filter_tweets(tweets)
 			documents = self._tokenize(tweets)
-			# documents = self._filter_documents(documents)
 			documents = [ document for document in documents if last_timestamp is None or document.get_attribute("timestamp") >= last_timestamp ]
 			documents = sorted(documents, key=lambda document: document.get_attribute("timestamp")) # NOTE: Untested
 
@@ -473,43 +472,6 @@ class ELDConsumer(Consumer):
 
 		f = Filter(rules)
 		return [ tweet for tweet in retained_tweets if f.filter(tweet) ]
-
-	def _preprocess(self, tweets):
-		"""
-		Preprocess the tweets, adding the timestamp to the tweet.
-
-		:param tweets: A list of tweets.
-		:type tweets: list of dictionaries
-
-		:return: A list of preprocessed tweets.
-		:type tweets: list of dictionaries
-		"""
-		for tweet in tweets:
-			timestamp_ms = int(tweet["timestamp_ms"])
-			tweet["timestamp"] = timestamp_ms - timestamp_ms % 1000
-		return tweets
-
-	def _filter_documents(self, documents):
-		"""
-		Filter the given documents based on FIRE's filtering rules. Documents are removed if their score, approximating quality, is low.
-
-		:param documents: The documents to filter.
-		:type documents: list of :class:`~vector.nlp.document.Document` instances
-
-		:return: The approved documents.
-		:type documents: list of :class:`~vector.nlp.document.Document` instances
-		"""
-
-		for document in documents:
-			tokens = document.get_attribute("tokens")
-			token_count, unique_token_count = len(tokens), len(set(tokens))
-			document.set_attribute("score", math.log(token_count) * unique_token_count / token_count if token_count > 0 else 0)
-
-		rules = [
-			("score", filter.gte, 1.37)
-		]
-		f = Filter(rules)
-		return [document for document in documents if f.filter(document.get_attributes())]
 
 	def _tokenize(self, tweets):
 		"""
@@ -727,7 +689,6 @@ class SimulatedELDConsumer(ELDConsumer):
 				start = documents[0].get_attribute("timestamp") if start is None else start
 
 				last_timestamp = documents[len(documents) - 1].get_attribute("timestamp")
-				# documents = self._filter_documents(documents)
 				self.buffer.enqueue(documents)
 
 				"""
@@ -792,7 +753,6 @@ class SimulatedELDConsumer(ELDConsumer):
 			# 	logger.info(tweet.get("text", ""))
 			tweets = self._filter_tweets(tweets)
 			documents = self._tokenize(tweets)
-			# documents = self._filter_documents(documents)
 			documents = [ document for document in documents if last_timestamp is None or document.get_attribute("timestamp") >= last_timestamp ]
 			documents = sorted(documents, key=lambda document: document.get_attribute("timestamp")) # NOTE: Untested
 
