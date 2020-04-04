@@ -98,3 +98,8 @@ These can be used, for example, to clean summaries.
    :members:
    :private-members:
    :special-members:
+
+.. automodule:: nlp.cleaners.tweet_cleaner
+   :members:
+   :private-members:
+   :special-members:
