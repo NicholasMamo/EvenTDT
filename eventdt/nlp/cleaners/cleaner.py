@@ -6,6 +6,7 @@ Then, the cleaners' main functionality revolves around the :func:`~nlp.cleaners.
 """
 
 import re
+import string
 
 class Cleaner(object):
 	"""
@@ -108,7 +109,6 @@ class Cleaner(object):
 		:rtype: str
 		"""
 
-		punctuation = ['.', '?', '!', '…']
 		quotes = ['\'', '"', '»']
 
 		"""
@@ -120,8 +120,8 @@ class Cleaner(object):
 		"""
 		If the text already ends in punctuation, return immediately.
 		"""
-		if (text[-1] in punctuation or
-			(len(text) > 1 and text[-2] in punctuation)):
+		if ((text[-1] in string.punctuation and text[-1] not in quotes) or
+			(len(text) > 1 and text[-1] in quotes and text[-2] in string.punctuation)):
 			return text
 
 		"""
@@ -133,7 +133,7 @@ class Cleaner(object):
 		"""
 		If the text ends with a quote, but is not a complete sentence before the quote, add a period.
 		"""
-		if len(text) > 1 and text[-1] in quotes and text[-2] not in punctuation:
+		if len(text) > 1 and text[-1] in quotes and text[-2] not in string.punctuation:
 			return f"{text[:-1]}.{text[-1]}"
 
 		"""

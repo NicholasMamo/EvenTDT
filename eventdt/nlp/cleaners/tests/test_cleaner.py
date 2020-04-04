@@ -267,6 +267,16 @@ class TestCleaner(unittest.TestCase):
 		text = 'The NBA is "angling" to cancel the 2019-20 season after China\'s CBA shutdown'
 		self.assertEqual('The NBA is "angling" to cancel the 2019-20 season after China\'s CBA shutdown.', cleaner.clean(text))
 
+	def test_complete_sentences_colon(self):
+		"""
+		Test that when the text ends in a colon (or any other punctuation), no period is added.
+		"""
+
+		cleaner = Cleaner(complete_sentences=True)
+
+		text = 'The NBA is "angling" to cancel the 2019-20 season after China\'s CBA shutdown. More details:'
+		self.assertEqual('The NBA is "angling" to cancel the 2019-20 season after China\'s CBA shutdown. More details:', cleaner.clean(text))
+
 	def test_collapse_whitespaces_single(self):
 		"""
 		Test that when the sentence has a single space, it is not removed.
