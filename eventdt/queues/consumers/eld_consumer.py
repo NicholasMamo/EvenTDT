@@ -373,63 +373,46 @@ class ELDConsumer(Consumer):
 
 	def _filter_tweets(self, tweets):
 		"""
-		Filter the given tweets, largely based on FIRE's filtering rules.
-		Tweets are removed if:
+		Filter the given tweets based on :class:`~.queues.consumers.fire_consumer.FIREConsumer`'s filtering rules and new rules.
+		FIRE's rules are:
 
-			#. They are not in English - an extra check, just in case;
+			#. The tweet has to be in English,
 
-			#. There are too many hashtags, indicating that the user is desperate for attention;
+			#. The tweet must contain no more than 2 hashtags,
 
-			#. The user has never favorited a tweet, indicative of bot-like behavior.;
+			#. The tweet's author must have favorited at least one tweet, and
 
-			#. The user has fewer than one follower for every thousand tweets published. \
-				These users are usually not only incredibly unpopular, but bots. \
-				Their goal is to create trends;
+			#. The tweet's author must have at least one follower for every thousand tweets they've published.
 
-			#. There is more than one URL. Too many URLs are indicative of pre-planned content. \
-				For this reason alone, they may be removed. \
-				If a development is breaking, many people post immediately, with minimal media; and
+		The new rules are:
 
-			#. The biography is empty. \
-				Most users have a biography. Spam accounts do not bother.
+			#. The tweet cannot have more than one URL because too many URLs are indicative of pre-planned content, and
 
-		:param tweets: A list of tweets.
-		:type tweets: list of dictionaries
+			#. The biography of the tweet's author cannot be empty because that is indicative of bots.
+
+		:param tweets: A list of tweets to filter.
+		:type tweets: list of dict
 
 		:return: A list of filtered tweets.
-		:type tweets: list of dictionaries
+		:type tweets: list of dict
 		"""
 
 		"""
-		Remove objects that are not really tweets
+		Apply FIRE's filtering rules.
 		"""
-		retained_tweets = []
-		for tweet in tweets:
-			if ("entities" in tweet):
-				retained_tweets.append(tweet)
+		tweets = filter(lambda tweet: tweet['lang'] == 'en', tweets)
+		tweets = filter(lambda tweet: len(tweet['entities']['hashtags']) <= 2, tweets)
+		tweets = filter(lambda tweet: tweet['user']['favourites_count'] > 0, tweets)
+		tweets = filter(lambda tweet: tweet['user']['followers_count'] / tweet['user']['statuses_count'] >= 1e-3, tweets)
 
-		for tweet in retained_tweets:
-			"""
-			Calculate some scores that are not provided by Twitter's API
-			"""
-			tweet["num_hashtags"] = len(tweet["entities"]["hashtags"])
-			tweet["num_urls"] = len(tweet["entities"]["urls"])
-			tweet["follower_per_tweet"] = tweet["user"]["followers_count"] / tweet["user"]["statuses_count"]
-			tweet["bio_length"] = len(tweet["user"]["description"]) if tweet["user"]["description"] is not None else 0
+		"""
+		Apply ELD's filtering rules.
+		"""
 
-		rules = [
-			("lang", filter.equal, "en"),
-			("num_hashtags", filter.lte, 2),
-			("user:favourites_count", filter.gt, 0),
-			("follower_per_tweet", filter.gte, 1./1000.)
-		]
+		tweets = filter(lambda tweet: len(tweet['entities']['urls']) <= 1, tweets)
+		tweets = filter(lambda tweet: tweet['user']['description'], tweets)
 
-		# Rules that are new in ELD
-		rules.append(("num_urls", filter.lt, 2))
-		rules.append(("bio_length", filter.gt, 0))
-
-		f = Filter(rules)
-		return [ tweet for tweet in retained_tweets if f.filter(tweet) ]
+		return list(tweets)
 
 	def _tokenize(self, tweets):
 		"""
