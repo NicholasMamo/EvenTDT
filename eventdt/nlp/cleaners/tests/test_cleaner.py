@@ -347,3 +347,13 @@ class TestCleaner(unittest.TestCase):
 
 		text = 'The NBA is	 "angling"	  to cancel the 2019-20 season after China\'s CBA shutdown'
 		self.assertEqual('The NBA is "angling" to cancel the 2019-20 season after China\'s CBA shutdown', cleaner.clean(text))
+
+	def test_collapse_whitespaces_before_periods(self):
+		"""
+		Test that whitespaces are removed before periods.
+		"""
+
+		cleaner = Cleaner(remove_alt_codes=True, collapse_whitespaces=True, complete_sentences=True)
+
+		text = ' Our prediction based on #FIFA Rankings . Country Risk Ratings &amp;'
+		self.assertEqual('Our prediction based on #FIFA Rankings. Country Risk Ratings.', cleaner.clean(text))

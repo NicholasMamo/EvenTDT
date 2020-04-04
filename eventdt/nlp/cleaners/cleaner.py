@@ -21,6 +21,7 @@ class Cleaner(object):
 	:ivar collapse_new_lines: A boolean indicating whether new lines should be collapsed into whitespaces.
 	:vartype collapse_new_lines: bool
 	:ivar collapse_whitespaces: A boolean indicating whether consecutive whitespaces and tabs should be collapsed into a single whitespace.
+								This also removes whitespaces just before periods.
 	:vartype collapse_whitespaces: bool
 	"""
 
@@ -40,6 +41,7 @@ class Cleaner(object):
 		:param collapse_new_lines: A boolean indicating whether new lines should be collapsed into whitespaces.
 		:type collapse_new_lines: bool
 		:param collapse_whitespaces: A boolean indicating whether consecutive whitespaces and tabs should be collapsed into a single whitespace.
+									 This also removes whitespaces just before periods.
 		:type collapse_whitespaces: bool
 		"""
 
@@ -142,6 +144,7 @@ class Cleaner(object):
 	def _collapse_whitespaces(self, text):
 		"""
 		Remove consecutive whitespaces and tabs, and replace them with a single space.
+		This also removes whitespaces just before periods.
 
 		:param text: The text to clean.
 		:type text: str
@@ -151,4 +154,9 @@ class Cleaner(object):
 		"""
 
 		whitespace_pattern = re.compile('(\\s{2,}|\\t)+')
-		return whitespace_pattern.sub(" ", text) # replace consecutive whitespaces with a single one
+		text = whitespace_pattern.sub(' ', text)
+
+		whitespace_period_pattern =  re.compile('\\s\\.')
+		text = whitespace_period_pattern.sub('.', text)
+
+		return text
