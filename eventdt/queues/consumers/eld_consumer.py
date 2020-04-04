@@ -76,7 +76,7 @@ class ELDConsumer(Consumer):
 	:vartype summarization: :class:`~summarization.algorithms.dgs.DGS`
 	"""
 
-	def __init__(self, queue, time_window=60, scheme=None):
+	def __init__(self, queue, time_window=60):
 		"""
 		Create the consumer with a queue.
 		Simultaneously create a nutrition store and the topic detection algorithm container.
