@@ -66,6 +66,11 @@ class ELDConsumer(Consumer):
 	:vartype time_window: int
 	:ivar scheme: The term-weighting scheme used to create documents.
 	:vartype scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
+	:ivar sets: The number of time windows that are considered when computing burst.
+				The higher this number, the more precise the calculations.
+				However, because of the decay in :class:`~tdt.algorithms.cataldi.Cataldi`, old time windows do not affect the result by a big margin.
+				Therefore old data can be removed safely.
+	:vartype sets: int
 	:ivar store: The nutrition store used in conjunction with extractin breaking news.
 	:vartype store: :class:`~topic_detection.nutrition_store.nutrition_store.NutritionStore`
 	:ivar buffer: A buffer of tweets that have been processed, but which are not part of a checkpoint yet.
@@ -80,7 +85,7 @@ class ELDConsumer(Consumer):
 	:vartype summarization: :class:`~summarization.algorithms.dgs.DGS`
 	"""
 
-	def __init__(self, queue, time_window=60, scheme=None):
+	def __init__(self, queue, time_window=60, scheme=None, sets=10):
 		"""
 		Create the consumer with a queue.
 		Simultaneously create a nutrition store and the topic detection algorithm container.
@@ -97,12 +102,18 @@ class ELDConsumer(Consumer):
 		:param scheme: The term-weighting scheme that is used to create dimensions.
 					   If `None` is given, the :class:`~nlp.term_weighting.tf.TF` term-weighting scheme is used.
 		:type scheme: None or :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
+		:param sets: The number of time windows that are considered when computing burst.
+					 The higher this number, the more precise the calculations.
+					 However, because of the decay in :class:`~tdt.algorithms.cataldi.Cataldi`, old time windows do not affect the result by a big margin.
+					 Therefore old data can be removed safely.
+		:type sets: int
 		"""
 
 		super(ELDConsumer, self).__init__(queue)
 
 		self.time_window = time_window
 		self.scheme = scheme
+		self.sets = sets
 
 		"""
 		Create the nutrition store and the buffer.
@@ -505,6 +516,23 @@ class ELDConsumer(Consumer):
 			self.store.add(timestamp, document.dimensions)
 		else:
 			self.store.add(timestamp, { })
+
+	def _remove_old_checkpoints(self, timestamp):
+		"""
+		Remove old checkpoints.
+		The checkpoints that are removed depend on:
+
+			#. The number of sets that should be retained, and
+
+			#. The length of the time window of the consumer.
+
+		:param timestamp: The timestamp of the new checkpoint.
+		:type timestamp: int
+		"""
+
+		until = timestamp - self.time_window * self.sets
+		if until > 0:
+			self.store.remove(*self.store.until(until))
 
 	def _cluster(self, documents, threshold=0.7, freeze_period=1):
 		"""

@@ -424,6 +424,7 @@ class TestFIREConsumer(unittest.TestCase):
 		consumer = FIREConsumer(Queue(), 60, TF())
 		self.assertEqual({ }, consumer.store.all())
 		consumer._remove_old_checkpoints(100)
+		self.assertEqual({ }, consumer.store.all())
 
 	def test_remove_old_checkpoints_zero_timestamp(self):
 		"""

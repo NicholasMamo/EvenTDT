@@ -434,3 +434,79 @@ class TestELDConsumer(unittest.TestCase):
 			 						 for dimension in document.dimensions
 									 if document.attributes['timestamp'] <= timestamp ]
 			self.assertEqual(set(dimensions), set(consumer.store.get(timestamp)))
+
+	def test_remove_old_checkpoints_empty(self):
+		"""
+		Test that when removing checkpoints from an empty store, nothing happens.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, TF())
+		self.assertEqual({ }, consumer.store.all())
+		consumer._remove_old_checkpoints(100)
+		self.assertEqual({ }, consumer.store.all())
+
+	def test_remove_old_checkpoints_zero_timestamp(self):
+		"""
+		Test that when removing checkpoints at timestamp 0, nothing is removed.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, scheme=TF())
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			line = f.readline()
+			tweet = json.loads(line)
+			documents = consumer._to_documents([ tweet ])
+			timestamp = twitter.extract_timestamp(tweet)
+			consumer.buffer.enqueue(*documents)
+			consumer._create_checkpoint(timestamp)
+			self.assertEqual([ timestamp ], list(consumer.store.all().keys()))
+			consumer._remove_old_checkpoints(0)
+
+	def test_remove_old_checkpoints_small_timestamp(self):
+		"""
+		Test that when removing checkpoints with a small timestamp that does not cover the entire sets, nothing is removed.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, scheme=TF())
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			line = f.readline()
+			tweet = json.loads(line)
+			documents = consumer._to_documents([ tweet ])
+			timestamp = twitter.extract_timestamp(tweet)
+			consumer.buffer.enqueue(*documents)
+			consumer._create_checkpoint(10)
+			self.assertEqual([ 10 ], list(consumer.store.all().keys()))
+			consumer._remove_old_checkpoints(9)
+
+	def test_remove_old_checkpoints_exclusive(self):
+		"""
+		Test that when removing checkpoints, the removal is exclusive.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, scheme=TF(), sets=10)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			line = f.readline()
+			tweet = json.loads(line)
+			documents = consumer._to_documents([ tweet ])
+			timestamp = twitter.extract_timestamp(tweet)
+			consumer.buffer.enqueue(*documents)
+			consumer._create_checkpoint(timestamp)
+			self.assertEqual([ timestamp ], list(consumer.store.all().keys()))
+			consumer._remove_old_checkpoints(timestamp + 600)
+			self.assertEqual([ timestamp ], list(consumer.store.all().keys()))
+
+	def test_remove_old_checkpoints(self):
+		"""
+		Test that when removing checkpoints, any nutrition data out of frame is removed.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, scheme=TF(), sets=10)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			line = f.readline()
+			tweet = json.loads(line)
+			documents = consumer._to_documents([ tweet ])
+			timestamp = twitter.extract_timestamp(tweet)
+			consumer.buffer.enqueue(*documents)
+			consumer._create_checkpoint(timestamp)
+			self.assertEqual([ timestamp ], list(consumer.store.all().keys()))
+			consumer._remove_old_checkpoints(timestamp + 600 + 1)
+			self.assertEqual([ ], list(consumer.store.all().keys()))
