@@ -1,26 +1,43 @@
 """
-The general structure of a cleaner.
-A cleaner object takes in text and cleans it according to some regular expression rules.
+A cleaner takes in strings and cleans them according to some rules.
+Any configuration is passed on to the constructor :func:`nlp.cleaners.cleaner.Cleaner.__init__`.
+Without any configuration, the cleaner should change nothing.
+Then, the cleaners' main functionality revolves around the :func:`nlp.cleaners.cleaner.Cleaner.clean` function.
 """
 
 import re
 
 class Cleaner(object):
 	"""
-	Defines the general structure of a cleaner object.
-	This is meant to be used if no cleaning is required, ironically.
+	The base cleaner is meant to perform only basing pre-processing and cleaning.
+	These functions are generally applicable to any type of text.
+
+	:ivar remove_alt_codes: A boolean indicating whether alt-codes should be removed.
+	:vartype remove_alt_codes: bool
 	"""
+
+	def __init__(self, remove_alt_codes=False):
+		"""
+		Create the cleaner with the basic configuration.
+
+		:param remove_alt_codes: A boolean indicating whether alt-codes should be removed.
+		:type remove_alt_codes: bool
+		"""
+
+		self.remove_alt_codes = remove_alt_codes
 
 	def clean(self, text):
 		"""
-		Do nothing with the text, return it normally.
+		Clean the given text.
 
 		:param text: The text to clean.
 		:type text: str
 
-		:return: The same text.
+		:return: The cleaned text.
 		:rtype: str
 		"""
+
+		text = self._remove_alt_codes(text) if self.remove_alt_codes else text
 
 		return text
 
@@ -35,8 +52,8 @@ class Cleaner(object):
 		:rtype: str
 		"""
 
-		alt_code_pattern = re.compile("&.+?;")
-		return alt_code_pattern.sub("", text)
+		alt_code_pattern = re.compile('&.+?;')
+		return alt_code_pattern.sub('', text)
 
 	def _complete_sentences(self, text):
 		"""
