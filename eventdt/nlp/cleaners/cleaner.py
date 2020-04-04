@@ -18,10 +18,13 @@ class Cleaner(object):
 							  The cleaner has no knowledge of any incomplete sentences in the middle of the text.
 							  Therefore it only completes the last sentence.
 	:vartype complete_sentences: bool
+	:ivar collapse_new_lines: A boolean indicating whether new lines should be collapsed into whitespaces.
+	:vartype collapse_new_lines: bool
 	"""
 
 	def __init__(self, remove_alt_codes=False,
-					   complete_sentences=False):
+					   complete_sentences=False,
+					   collapse_new_lines=False):
 		"""
 		Create the cleaner with the basic configuration.
 
@@ -31,10 +34,13 @@ class Cleaner(object):
 								   The cleaner has no knowledge of any incomplete sentences in the middle of the text.
 								   Therefore it only completes the last sentence.
 		:type complete_sentences: bool
+		:param collapse_new_lines: A boolean indicating whether new lines should be collapsed into whitespaces.
+		:type collapse_new_lines: bool
 		"""
 
 		self.remove_alt_codes = remove_alt_codes
 		self.complete_sentences = complete_sentences
+		self.collapse_new_lines = collapse_new_lines
 
 	def clean(self, text):
 		"""
@@ -49,10 +55,18 @@ class Cleaner(object):
 		"""
 
 		text = text.strip()
+		text = self._collapse_new_lines(text) if self.collapse_new_lines else text
 		text = self._remove_alt_codes(text) if self.remove_alt_codes else text
 		text = self._complete_sentences(text) if self.complete_sentences else text
 
 		return text
+
+	def _collapse_new_lines(self, text):
+		"""
+		Collapse new lines into white spaces.
+		"""
+
+		return text.replace('\n', ' ')
 
 	def _remove_alt_codes(self, text):
 		"""
@@ -127,21 +141,3 @@ class Cleaner(object):
 
 		whitespace_pattern = re.compile("\s{2,}")
 		return whitespace_pattern.sub(" ", text) # replace consecutive whitespaces with a single one
-
-	def _preprocess(self, text):
-		"""
-		Preprocess the text.
-		This function first replaces newlines with whitespaces.
-		Then, the function removes consecutive whitespaces and replaces them with a single space.
-
-		:param text: The text to clean.
-		:type text: str
-
-		:return: The preprocessed text.
-		:rtype: str
-		"""
-
-		text = text.replace("\n", " ") # replace newlines with whitespaces
-
-		text = text.strip() # remove extra spaces on each end
-		return text

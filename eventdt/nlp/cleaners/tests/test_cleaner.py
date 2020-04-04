@@ -59,6 +59,39 @@ class TestCleaner(unittest.TestCase):
 		text = ' Our prediction based on #FIFA Rankings, &amp; Country Risk Ratings '
 		self.assertEqual('Our prediction based on #FIFA Rankings, &amp; Country Risk Ratings', cleaner.clean(text))
 
+	def test_collapse_new_lines_none(self):
+		"""
+		Test that when there are no new lines to collapse, the text is returned the same.
+		"""
+
+		cleaner = Cleaner(collapse_new_lines=True)
+
+		text = 'Our prediction based on #FIFA Rankings, &amp; Country Risk Ratings'
+		self.assertEqual(text, cleaner.clean(text))
+
+	def test_collapse_new_lines_single(self):
+		"""
+		Test that when collapsing text with one new line, it is converted into a single white-space.
+		"""
+
+		cleaner = Cleaner(collapse_new_lines=True)
+
+		text = """SPECIAL OFFER
+From now until the end of April all digital versions (apart from Issue 15) will be available to download for FREE."""
+		self.assertEqual('SPECIAL OFFER From now until the end of April all digital versions (apart from Issue 15) will be available to download for FREE.', cleaner.clean(text))
+
+	def test_collapse_new_lines_multiple(self):
+		"""
+		Test that when collapsing text with multiple new lines, it is converted into a single white-space.
+		"""
+
+		cleaner = Cleaner(collapse_new_lines=True)
+
+		text = """SPECIAL OFFER
+From now until the end of April all digital versions (apart from Issue 15) will be available to download for FREE.
+So please either send the link or share the files with anyone who's self-isolating and could do with some reading material."""
+		self.assertEqual('SPECIAL OFFER From now until the end of April all digital versions (apart from Issue 15) will be available to download for FREE. So please either send the link or share the files with anyone who\'s self-isolating and could do with some reading material.', cleaner.clean(text))
+
 	def test_remove_alt_codes(self):
 		"""
 		Test that when remove alt-codes, they are indeed removed.
