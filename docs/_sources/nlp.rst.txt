@@ -86,3 +86,15 @@ Global Term-Weighting Schemes
    :members:
    :private-members:
    :special-members:
+
+========
+Cleaners
+========
+
+EvenTDT comes with classes to clean documents.
+These can be used, for example, to clean summaries.
+
+.. automodule:: nlp.cleaners.cleaner
+   :members:
+   :private-members:
+   :special-members:

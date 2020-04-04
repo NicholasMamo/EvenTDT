@@ -97,14 +97,16 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-nlp.term_weighting.global_schemes.filler">Global Term-Weighting Schemes</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#cleaners">Cleaners</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="wikinterface.html">4. Wikinterface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="apd.html">5. Automatic Participant Detection (APD)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tdt.html">6. Topic Detection and Tracking (TDT)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="summarization.html">7. Summarization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="queues.html">8. Queues</a></li>
-<li class="toctree-l1"><a class="reference internal" href="other.html">9. Other</a></li>
+<li class="toctree-l1"><a class="reference internal" href="twitter.html">8. Twitter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="consumers.html">9. Consumers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">10. Other</a></li>
 </ul>
 
             
@@ -745,6 +747,135 @@ The keys are the terms, and the corresponding values are the number of documents
 </dd></dl>
 
 </div>
+</div>
+<div class="section" id="cleaners">
+<h2>Cleaners<a class="headerlink" href="#cleaners" title="Permalink to this headline">¶</a></h2>
+<p>EvenTDT comes with classes to clean documents.
+These can be used, for example, to clean summaries.</p>
+<span class="target" id="module-nlp.cleaners.cleaner"></span><p>A cleaner takes in strings and cleans them according to some rules.
+Any configuration is passed on to the constructor, <a class="reference internal" href="#nlp.cleaners.cleaner.Cleaner.__init__" title="nlp.cleaners.cleaner.Cleaner.__init__"><code class="xref py py-func docutils literal notranslate"><span class="pre">__init__()</span></code></a>.
+Without any configuration, the cleaner should change nothing.
+Then, the cleaners’ main functionality revolves around the <a class="reference internal" href="#nlp.cleaners.cleaner.Cleaner.clean" title="nlp.cleaners.cleaner.Cleaner.clean"><code class="xref py py-func docutils literal notranslate"><span class="pre">clean()</span></code></a> function.</p>
+<dl class="class">
+<dt id="nlp.cleaners.cleaner.Cleaner">
+<em class="property">class </em><code class="sig-name descname">Cleaner</code><span class="sig-paren">(</span><em class="sig-param">remove_alt_codes=False</em>, <em class="sig-param">complete_sentences=False</em>, <em class="sig-param">collapse_new_lines=False</em>, <em class="sig-param">collapse_whitespaces=False</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.cleaner.Cleaner" title="Permalink to this definition">¶</a></dt>
+<dd><p>The base cleaner is meant to perform only basing pre-processing and cleaning.
+These functions are generally applicable to any type of text.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>remove_alt_codes</strong> (<em>bool</em>) – A boolean indicating whether alt-codes should be removed.</p></li>
+<li><p><strong>complete_sentences</strong> (<em>bool</em>) – A boolean indicating whether the sentences should be completed.
+The cleaner has no knowledge of any incomplete sentences in the middle of the text.
+Therefore it only completes the last sentence.</p></li>
+<li><p><strong>collapse_new_lines</strong> (<em>bool</em>) – A boolean indicating whether new lines should be collapsed into whitespaces.</p></li>
+<li><p><strong>collapse_whitespaces</strong> (<em>bool</em>) – A boolean indicating whether consecutive whitespaces and tabs should be collapsed into a single whitespace.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="nlp.cleaners.cleaner.Cleaner.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">remove_alt_codes=False</em>, <em class="sig-param">complete_sentences=False</em>, <em class="sig-param">collapse_new_lines=False</em>, <em class="sig-param">collapse_whitespaces=False</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.cleaner.Cleaner.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the cleaner with the basic configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>remove_alt_codes</strong> (<em>bool</em>) – A boolean indicating whether alt-codes should be removed.</p></li>
+<li><p><strong>complete_sentences</strong> (<em>bool</em>) – A boolean indicating whether the sentences should be completed.
+The cleaner has no knowledge of any incomplete sentences in the middle of the text.
+Therefore it only completes the last sentence.</p></li>
+<li><p><strong>collapse_new_lines</strong> (<em>bool</em>) – A boolean indicating whether new lines should be collapsed into whitespaces.</p></li>
+<li><p><strong>collapse_whitespaces</strong> (<em>bool</em>) – A boolean indicating whether consecutive whitespaces and tabs should be collapsed into a single whitespace.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nlp.cleaners.cleaner.Cleaner.clean">
+<code class="sig-name descname">clean</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.cleaner.Cleaner.clean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clean the given text.
+The basic cleaner always strips empty whitespaces before any pre-processing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – The text to clean.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The cleaned text.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nlp.cleaners.cleaner.Cleaner._collapse_new_lines">
+<code class="sig-name descname">_collapse_new_lines</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.cleaner.Cleaner._collapse_new_lines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collapse new lines into white spaces.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="nlp.cleaners.cleaner.Cleaner._remove_alt_codes">
+<code class="sig-name descname">_remove_alt_codes</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.cleaner.Cleaner._remove_alt_codes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove alt-codes from the given text.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – The text to clean.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The text without alt-codes.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nlp.cleaners.cleaner.Cleaner._complete_sentences">
+<code class="sig-name descname">_complete_sentences</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.cleaner.Cleaner._complete_sentences" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a period if the sentence does not end with punctuation.
+There is one exception to this rule: if the sentence ends with a quote.
+In this case, the period is added before the quote if there is no punctuation there..</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – The text to clean.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The text without alt-codes.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nlp.cleaners.cleaner.Cleaner._collapse_whitespaces">
+<code class="sig-name descname">_collapse_whitespaces</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.cleaner.Cleaner._collapse_whitespaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove consecutive whitespaces and tabs, and replace them with a single space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – The text to clean.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The text without any consectuive spaces or tabs.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="nlp.cleaners.cleaner.Cleaner.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#nlp.cleaners.cleaner.Cleaner.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 </div>
 

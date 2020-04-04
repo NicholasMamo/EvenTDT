@@ -1,8 +1,8 @@
 """
 A cleaner takes in strings and cleans them according to some rules.
-Any configuration is passed on to the constructor :func:`nlp.cleaners.cleaner.Cleaner.__init__`.
+Any configuration is passed on to the constructor, :func:`~nlp.cleaners.cleaner.Cleaner.__init__`.
 Without any configuration, the cleaner should change nothing.
-Then, the cleaners' main functionality revolves around the :func:`nlp.cleaners.cleaner.Cleaner.clean` function.
+Then, the cleaners' main functionality revolves around the :func:`~nlp.cleaners.cleaner.Cleaner.clean` function.
 """
 
 import re

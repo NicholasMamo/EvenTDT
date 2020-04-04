@@ -339,14 +339,15 @@ It also defines the state of the consumer.</p>
 
 <dl class="method">
 <dt id="queues.consumers.consumer.Consumer.run">
-<em class="property">async </em><code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">wait=0</em>, <em class="sig-param">max_time=3600</em>, <em class="sig-param">max_inactivity=-1</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.consumer.Consumer.run" title="Permalink to this definition">¶</a></dt>
+<em class="property">async </em><code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">wait=0</em>, <em class="sig-param">max_time=3600</em>, <em class="sig-param">max_inactivity=-1</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.consumer.Consumer.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invoke the consume method.
-Since some listeners have a small delay, the consumer waits a bit before starting to consume input.</p>
+Since some listeners have a small delay, the consumer may wait a bit before starting to consume input.</p>
+<p>Any additional arguments and keyword arguments are passed on to the <a class="reference internal" href="#queues.consumers.consumer.Consumer._consume" title="queues.consumers.consumer.Consumer._consume"><code class="xref py py-class docutils literal notranslate"><span class="pre">_consume</span></code></a> function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>wait</strong> (<em>int</em>) – The time in seconds to wait until starting to understand the event.
-This is used when the file listener spends a lot of time skipping documents.</p></li>
+<li><p><strong>wait</strong> (<em>int</em>) – The time in seconds to wait until starting to consume the event.
+This is used when the file listener spends a lot of time skipping tweets.</p></li>
 <li><p><strong>max_time</strong> (<em>int</em>) – The maximum time in seconds to spend consuming the queue.
 It may be interrupted if the queue is inactive for a long time.</p></li>
 <li><p><strong>max_inactivity</strong> (<em>int</em>) – The maximum time in seconds to wait idly without input before stopping.
@@ -363,8 +364,19 @@ If it is negative, the consumer keeps waiting for input until the maximum time e
 </dd></dl>
 
 <dl class="method">
+<dt id="queues.consumers.consumer.Consumer.stop">
+<code class="sig-name descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.consumer.Consumer.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a flag to stop accepting new objects.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Contrary to the name of the function, the function sets the <cite>active</cite> flag, not the <cite>stopped</cite> flag.
+This function merely asks that the consumer stops accepting new objects for processing.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
 <dt id="queues.consumers.consumer.Consumer._consume">
-<em class="property">abstract async </em><code class="sig-name descname">_consume</code><span class="sig-paren">(</span><em class="sig-param">max_time</em>, <em class="sig-param">max_inactivity</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.consumer.Consumer._consume" title="Permalink to this definition">¶</a></dt>
+<em class="property">abstract async </em><code class="sig-name descname">_consume</code><span class="sig-paren">(</span><em class="sig-param">max_time</em>, <em class="sig-param">max_inactivity</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.consumer.Consumer._consume" title="Permalink to this definition">¶</a></dt>
 <dd><p>Consume the queue.
 This is the function where most processing occurs.</p>
 <dl class="field-list simple">
@@ -404,14 +416,15 @@ If it is negative, it is ignored.</p></li>
 </dd></dl>
 
 <dl class="method">
-<dt id="queues.consumers.consumer.Consumer.stop">
-<code class="sig-name descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.consumer.Consumer.stop" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set a flag to stop accepting new objects.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Contrary to the name of the function, the function sets the <cite>active</cite> flag, not the <cite>stopped</cite> flag.
-This function merely asks that the consumer stops accepting new objects for processing.</p>
-</div>
+<dt id="queues.consumers.consumer.Consumer._started">
+<code class="sig-name descname">_started</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.consumer.Consumer._started" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function that sets the active and stopped flags to indicate that the consumer has started operating.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queues.consumers.consumer.Consumer._stopped">
+<code class="sig-name descname">_stopped</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.consumer.Consumer._stopped" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function that sets the active and stopped flags to indicate that the consumer has stopped operating.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -454,8 +467,9 @@ The two functions communicate with each other using a common queue, called a buf
 
 <dl class="method">
 <dt id="queues.consumers.buffered_consumer.BufferedConsumer.run">
-<em class="property">async </em><code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">wait=0</em>, <em class="sig-param">max_time=3600</em>, <em class="sig-param">max_inactivity=-1</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.buffered_consumer.BufferedConsumer.run" title="Permalink to this definition">¶</a></dt>
+<em class="property">async </em><code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">wait=0</em>, <em class="sig-param">max_time=3600</em>, <em class="sig-param">max_inactivity=-1</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.buffered_consumer.BufferedConsumer.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invokes the consume and process method.</p>
+<p>Any additional arguments and keyword arguments are passed on to the <a class="reference internal" href="#queues.consumers.buffered_consumer.BufferedConsumer._consume" title="queues.consumers.buffered_consumer.BufferedConsumer._consume"><code class="xref py py-class docutils literal notranslate"><span class="pre">_consume</span></code></a> and <a class="reference internal" href="#queues.consumers.buffered_consumer.BufferedConsumer._process" title="queues.consumers.buffered_consumer.BufferedConsumer._process"><code class="xref py py-class docutils literal notranslate"><span class="pre">_process</span></code></a> functions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
