@@ -74,10 +74,10 @@ class TestCleaner(unittest.TestCase):
 		Test that when collapsing text with one new line, it is converted into a single white-space.
 		"""
 
-		cleaner = Cleaner(collapse_new_lines=True)
+		cleaner = Cleaner(collapse_new_lines=True, collapse_whitespaces=True)
 
 		text = """SPECIAL OFFER
-From now until the end of April all digital versions (apart from Issue 15) will be available to download for FREE."""
+				  From now until the end of April all digital versions (apart from Issue 15) will be available to download for FREE."""
 		self.assertEqual('SPECIAL OFFER From now until the end of April all digital versions (apart from Issue 15) will be available to download for FREE.', cleaner.clean(text))
 
 	def test_collapse_new_lines_multiple(self):
@@ -85,11 +85,11 @@ From now until the end of April all digital versions (apart from Issue 15) will 
 		Test that when collapsing text with multiple new lines, it is converted into a single white-space.
 		"""
 
-		cleaner = Cleaner(collapse_new_lines=True)
+		cleaner = Cleaner(collapse_new_lines=True, collapse_whitespaces=True)
 
 		text = """SPECIAL OFFER
-From now until the end of April all digital versions (apart from Issue 15) will be available to download for FREE.
-So please either send the link or share the files with anyone who's self-isolating and could do with some reading material."""
+				  From now until the end of April all digital versions (apart from Issue 15) will be available to download for FREE.
+				  So please either send the link or share the files with anyone who's self-isolating and could do with some reading material."""
 		self.assertEqual('SPECIAL OFFER From now until the end of April all digital versions (apart from Issue 15) will be available to download for FREE. So please either send the link or share the files with anyone who\'s self-isolating and could do with some reading material.', cleaner.clean(text))
 
 	def test_collapse_new_lines_empty(self):
@@ -97,12 +97,12 @@ So please either send the link or share the files with anyone who's self-isolati
 		Test that when collapsing new lines, empty lines are not retained.
 		"""
 
-		cleaner = Cleaner(collapse_new_lines=True)
+		cleaner = Cleaner(collapse_new_lines=True, collapse_whitespaces=True)
 
 		text = """SPECIAL OFFER
 
-From now until the end of April all digital versions (apart from Issue 15) will be available to download for FREE.
-So please either send the link or share the files with anyone who's self-isolating and could do with some reading material."""
+				  From now until the end of April all digital versions (apart from Issue 15) will be available to download for FREE.
+				  So please either send the link or share the files with anyone who's self-isolating and could do with some reading material."""
 		self.assertEqual('SPECIAL OFFER From now until the end of April all digital versions (apart from Issue 15) will be available to download for FREE. So please either send the link or share the files with anyone who\'s self-isolating and could do with some reading material.', cleaner.clean(text))
 
 	def test_collapse_new_lines_complete_sentences(self):
@@ -110,11 +110,11 @@ So please either send the link or share the files with anyone who's self-isolati
 		Test that when collapsing new lines with the flag to complete sentences, periods are added where necessary.
 		"""
 
-		cleaner = Cleaner(complete_sentences=True, collapse_new_lines=True)
+		cleaner = Cleaner(complete_sentences=True, collapse_new_lines=True, collapse_whitespaces=True)
 
 		text = """SPECIAL OFFER
-From now until the end of April all digital versions (apart from Issue 15) will be available to download for FREE.
-So please either send the link or share the files with anyone who's self-isolating and could do with some reading material."""
+				  From now until the end of April all digital versions (apart from Issue 15) will be available to download for FREE.
+				  So please either send the link or share the files with anyone who's self-isolating and could do with some reading material."""
 		self.assertEqual('SPECIAL OFFER. From now until the end of April all digital versions (apart from Issue 15) will be available to download for FREE. So please either send the link or share the files with anyone who\'s self-isolating and could do with some reading material.', cleaner.clean(text))
 
 	def test_remove_alt_codes(self):
@@ -256,3 +256,84 @@ So please either send the link or share the files with anyone who's self-isolati
 
 		text = 'The NBA is "angling" to cancel the 2019-20 season after China\'s CBA shutdown'
 		self.assertEqual('The NBA is "angling" to cancel the 2019-20 season after China\'s CBA shutdown.', cleaner.clean(text))
+
+	def test_collapse_whitespaces_single(self):
+		"""
+		Test that when the sentence has a single space, it is not removed.
+		"""
+
+		cleaner = Cleaner(collapse_whitespaces=True)
+
+		text = 'The NBA is "angling" to cancel the 2019-20 season after China\'s CBA shutdown'
+		self.assertEqual('The NBA is "angling" to cancel the 2019-20 season after China\'s CBA shutdown', cleaner.clean(text))
+
+	def test_collapse_whitespaces_long(self):
+		"""
+		Test that when the sentence has long spaces, they are removed.
+		"""
+
+		cleaner = Cleaner(collapse_whitespaces=True)
+
+		text = 'The NBA is   "angling" to cancel the 2019-20 season after China\'s CBA shutdown'
+		self.assertEqual('The NBA is "angling" to cancel the 2019-20 season after China\'s CBA shutdown', cleaner.clean(text))
+
+	def test_collapse_whitespaces_multiple(self):
+		"""
+		Test that when ther are multiple whitespaces, they are collapsed into a single space.
+		"""
+
+		cleaner = Cleaner(collapse_whitespaces=True)
+
+		text = 'The  NBA  is  "angling"  to  cancel  the  2019-20  season  after  China\'s  CBA  shutdown'
+		self.assertEqual('The NBA is "angling" to cancel the 2019-20 season after China\'s CBA shutdown', cleaner.clean(text))
+
+	def test_collapse_whitespaces_tab(self):
+		"""
+		Test that tabs are also collapsed into a single whitespace.
+		"""
+
+		cleaner = Cleaner(collapse_whitespaces=True)
+
+		text = 'The NBA is	"angling" to cancel the 2019-20 season after China\'s CBA shutdown'
+		self.assertEqual('The NBA is "angling" to cancel the 2019-20 season after China\'s CBA shutdown', cleaner.clean(text))
+
+	def test_collapse_whitespaces_tabs(self):
+		"""
+		Test that multiple tabs are also collapsed into a single whitespace.
+		"""
+
+		cleaner = Cleaner(collapse_whitespaces=True)
+
+		text = 'The NBA is	"angling"	to cancel the 2019-20 season after China\'s CBA shutdown'
+		self.assertEqual('The NBA is "angling" to cancel the 2019-20 season after China\'s CBA shutdown', cleaner.clean(text))
+
+	def test_collapse_whitespaces_long_tab(self):
+		"""
+		Test that long tabs are also collapsed into a single whitespace.
+		"""
+
+		cleaner = Cleaner(collapse_whitespaces=True)
+
+		text = 'The NBA is		"angling"		to cancel the 2019-20 season after China\'s CBA shutdown'
+		self.assertEqual('The NBA is "angling" to cancel the 2019-20 season after China\'s CBA shutdown', cleaner.clean(text))
+
+	def test_collapse_whitespaces_after_altcode_removal(self):
+		"""
+		Test that whitespaces are collapsed after alt-code removal.
+		Otherwise, there could be multiple whitespaces.
+		"""
+
+		cleaner = Cleaner(remove_alt_codes=True, collapse_whitespaces=True)
+
+		text = 'Our prediction based on #FIFA Rankings, &amp; Country Risk Ratings'
+		self.assertEqual('Our prediction based on #FIFA Rankings, Country Risk Ratings', cleaner.clean(text))
+
+	def test_collapse_whitespaces_mix(self):
+		"""
+		Test that mixes of whitespaces and tabs are also collapsed into a single whitespace.
+		"""
+
+		cleaner = Cleaner(collapse_whitespaces=True)
+
+		text = 'The NBA is	 "angling"	  to cancel the 2019-20 season after China\'s CBA shutdown'
+		self.assertEqual('The NBA is "angling" to cancel the 2019-20 season after China\'s CBA shutdown', cleaner.clean(text))

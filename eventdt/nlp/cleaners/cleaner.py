@@ -20,11 +20,14 @@ class Cleaner(object):
 	:vartype complete_sentences: bool
 	:ivar collapse_new_lines: A boolean indicating whether new lines should be collapsed into whitespaces.
 	:vartype collapse_new_lines: bool
+	:ivar collapse_whitespaces: A boolean indicating whether consecutive whitespaces and tabs should be collapsed into a single whitespace.
+	:vartype collapse_whitespaces: bool
 	"""
 
 	def __init__(self, remove_alt_codes=False,
 					   complete_sentences=False,
-					   collapse_new_lines=False):
+					   collapse_new_lines=False,
+					   collapse_whitespaces=False):
 		"""
 		Create the cleaner with the basic configuration.
 
@@ -36,11 +39,14 @@ class Cleaner(object):
 		:type complete_sentences: bool
 		:param collapse_new_lines: A boolean indicating whether new lines should be collapsed into whitespaces.
 		:type collapse_new_lines: bool
+		:param collapse_whitespaces: A boolean indicating whether consecutive whitespaces and tabs should be collapsed into a single whitespace.
+		:type collapse_whitespaces: bool
 		"""
 
 		self.remove_alt_codes = remove_alt_codes
 		self.complete_sentences = complete_sentences
 		self.collapse_new_lines = collapse_new_lines
+		self.collapse_whitespaces = collapse_whitespaces
 
 	def clean(self, text):
 		"""
@@ -58,6 +64,7 @@ class Cleaner(object):
 		text = self._collapse_new_lines(text) if self.collapse_new_lines else text
 		text = self._remove_alt_codes(text) if self.remove_alt_codes else text
 		text = self._complete_sentences(text) if self.complete_sentences else text
+		text = self._collapse_whitespaces(text) if self.collapse_whitespaces else text
 
 		return text
 
@@ -131,16 +138,16 @@ class Cleaner(object):
 		"""
 		return f"{text}."
 
-	def _remove_consecutive_whitespaces(self, text):
+	def _collapse_whitespaces(self, text):
 		"""
-		Remove consecutive whitespaces and replace them with a single space.
+		Remove consecutive whitespaces and tabs, and replace them with a single space.
 
 		:param text: The text to clean.
 		:type text: str
 
-		:return: The normalized text.
+		:return: The text without any consectuive spaces or tabs.
 		:rtype: str
 		"""
 
-		whitespace_pattern = re.compile("\s{2,}")
+		whitespace_pattern = re.compile('(\\s{2,}|\\t)+')
 		return whitespace_pattern.sub(" ", text) # replace consecutive whitespaces with a single one
