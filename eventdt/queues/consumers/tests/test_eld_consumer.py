@@ -282,3 +282,155 @@ class TestELDConsumer(unittest.TestCase):
 				tweet = json.loads(line)
 				document = consumer._to_documents([ tweet ])[0]
 				self.assertEqual(1, round(vector_math.magnitude(document), 10))
+
+	def test_create_checkpoint_first(self):
+		"""
+		Test that when creating the first checkpoint, the nutrition is created from scratch.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, scheme=TF())
+		self.assertEqual({ }, consumer.store.all())
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			line = f.readline()
+			tweet = json.loads(line)
+			documents = consumer._to_documents([ tweet ])
+			timestamp = twitter.extract_timestamp(tweet)
+			consumer.buffer.enqueue(*documents)
+			consumer._create_checkpoint(timestamp)
+			self.assertTrue(consumer.store.get(timestamp))
+			self.assertEqual(set(documents[0].dimensions), set(consumer.store.get(timestamp)))
+
+	def test_create_checkpoint_empty(self):
+		"""
+		Test that when creating an empty checkpoint, it is still recorded.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, scheme=TF())
+		self.assertEqual({ }, consumer.store.all())
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			line = f.readline()
+			tweet = json.loads(line)
+			timestamp = twitter.extract_timestamp(tweet)
+			consumer._create_checkpoint(timestamp)
+			self.assertEqual({ }, consumer.store.get(timestamp))
+
+	def test_create_checkpoint_timestamp(self):
+		"""
+		Test that when creating checkpoints, the correct timestamp is recorded.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, scheme=TF())
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			line = f.readline()
+			tweet = json.loads(line)
+			documents = consumer._to_documents([ tweet ])
+			timestamp = twitter.extract_timestamp(tweet)
+			consumer.buffer.enqueue(*documents)
+			consumer._create_checkpoint(timestamp)
+			self.assertEqual([ timestamp ], list(consumer.store.all().keys()))
+
+	def test_create_checkpoint_scale(self):
+		"""
+		Test that when creating checkpoints, they are rescaled correctly.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, TF())
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			timestamp = twitter.extract_timestamp(tweets[-1])
+			consumer.buffer.enqueue(*documents)
+			consumer._create_checkpoint(timestamp)
+			self.assertLessEqual(0, min(consumer.store.get(timestamp).values()))
+			self.assertEqual(1, max(consumer.store.get(timestamp).values()))
+
+	def test_create_checkpoint_filter_empty(self):
+		"""
+		Test that when creating a checkpoint with the timestamp before any published documents, it is empty.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, TF())
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			consumer.buffer.enqueue(*documents)
+			timestamp = twitter.extract_timestamp(tweets[0])
+			consumer._create_checkpoint(timestamp - 1)
+
+	def test_create_checkpoint_filter_inclusive(self):
+		"""
+		Test that when creating a checkpoint, the timestamp filter is inclusive.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, TF())
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			consumer.buffer.enqueue(*documents)
+			timestamp = twitter.extract_timestamp(tweets[0])
+			consumer._create_checkpoint(timestamp)
+
+			"""
+			Work out which dimensions should be in the checkpoint.
+			"""
+			dimensions = [ dimension for document in documents
+			 						 for dimension in document.dimensions
+									 if document.attributes['timestamp'] <= timestamp ]
+			self.assertEqual(set(dimensions), set(consumer.store.get(timestamp)))
+
+	def test_create_checkpoint_removes_documents_from_buffer(self):
+		"""
+		Test that when creating a checkpoint, the documents are removed from the buffer..
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, TF())
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			consumer.buffer.enqueue(*documents)
+			timestamp = twitter.extract_timestamp(tweets[0])
+			self.assertEqual(len(tweets), consumer.buffer.length())
+			consumer._create_checkpoint(timestamp)
+			self.assertEqual(len(tweets) - 100, consumer.buffer.length())
+
+	def test_create_checkpoint_reorders_buffer(self):
+		"""
+		Test that when creating a checkpoint and the buffer has mixed-up documents, the buffer is re-ordered.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, TF())
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			consumer.buffer.enqueue(*documents[::-1])
+			timestamp = twitter.extract_timestamp(tweets[0])
+			consumer._create_checkpoint(timestamp)
+			self.assertTrue(all(consumer.buffer.queue[i].attributes['timestamp'] <= consumer.buffer.queue[i + 1].attributes['timestamp'])
+								for i in range(len(consumer.buffer.queue) - 1))
+
+	def test_create_checkpoint_wrong_order(self):
+		"""
+		Test that when creating a checkpoint and the buffer has mixed-up documents, the correct documents are used.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, TF())
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			consumer.buffer.enqueue(*documents[::-1])
+			timestamp = twitter.extract_timestamp(tweets[0])
+			consumer._create_checkpoint(timestamp)
+
+			"""
+			Work out which dimensions should be in the checkpoint.
+			"""
+			dimensions = [ dimension for document in documents
+			 						 for dimension in document.dimensions
+									 if document.attributes['timestamp'] <= timestamp ]
+			self.assertEqual(set(dimensions), set(consumer.store.get(timestamp)))

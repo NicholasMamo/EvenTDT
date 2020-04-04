@@ -465,47 +465,46 @@ class ELDConsumer(Consumer):
 
 		return documents
 
-	async def _create_checkpoint(self, timestamp, sets):
+	def _create_checkpoint(self, timestamp):
 		"""
-		After every time window has elapsed, get all the buffered documents.
-		These documents are used to create a nutrition set for the nutrition store.
+		After every time window has elapsed, use all the buffered documents to create a new checkpoint.
+		The checkpoint creates a new nutrition set stored in the nutrition store.
 		This nutrition set represents a snapshot of the time window.
 
+		.. note::
+
+			The ELD consumer follows a real-time process.
+			Since there could be a backlog, the function ensures that documents published after the given timestamp are not added to the checkpoint.
+
 		:param timestamp: The timestamp of the new checkpoint.
+						  The nutrition data is from documents published in the time window that ends at this timestamp.
+						  Newer documents are left in the buffer.
 		:type timestamp: int
-		:param sets: The number of time windows that are considered.
-			Older ones serve no purpose, so they may be removed.
-		:type timestamp: int
 		"""
 
 		"""
-		Concatenate all the documents in the buffer and normalize the dimensions.
-		The goal is to get a list of dimensions in the range 0 to 1.
+		At times, tweets do not arrive in order of their timestamp.
+		Therefore before creating the checkpoint, re-organize the buffer.
+		The buffer is created with only the documents published before or at the given timestamp.
+		The rest of the documents are re-added to the buffer.
 		"""
+		documents = self.buffer.dequeue_all()
+		documents = sorted(documents, key=lambda document: document.attributes['timestamp'])
+		self.buffer.enqueue(*[ document for document in documents if document.attributes['timestamp'] > timestamp ])
+		documents = [ document for document in documents if document.attributes['timestamp'] <= timestamp ]
 
-		document_set = []
-		while self.buffer.length() > 0 and self.buffer.head().get_attribute("timestamp") < timestamp:
-			document_set.append(self.buffer.dequeue())
-
-		if len(document_set) > 0:
-			"""
-			Concatenate all the documents in the buffer and normalize the dimensions.
-			The goal is to get a list of dimensions in the range 0 to 1.
-			"""
-
-			single_document = vector_math.concatenate(document_set)
-			single_document = vector_math.augmented_normalize(single_document, a=0)
-			self.store.add_nutrition_set(timestamp, single_document.get_dimensions())
-			# logger.info("Checkpoint created with %d documents at time %s (UTC)" % (
-			#	len(document_set),
-			#	datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S'))
-			# )
-		elif timestamp is not None:
-			self.store.add_nutrition_set(timestamp, {})
-			logger.info("Checkpoint passed internally with 0 documents")
-
-		if timestamp is not None:
-			self.store.remove_old_nutrition_sets(timestamp - self.time_window * (sets + 1)) # keep an extra one, just in case
+		"""
+		If there are documents, concatenate them and rescale the dimensions between 0 and 1.
+		Otherwise, create an empty nutrition set.
+		"""
+		if documents:
+			document = Document.concatenate(*documents, tokenizer=self.tokenizer, scheme=self.scheme)
+			max_magnitude = max(document.dimensions.values())
+			document.dimensions = { dimension: magnitude / max_magnitude
+									for dimension, magnitude in document.dimensions.items() }
+			self.store.add(timestamp, document.dimensions)
+		else:
+			self.store.add(timestamp, { })
 
 	def _cluster(self, documents, threshold=0.7, freeze_period=1):
 		"""
