@@ -67,6 +67,9 @@ nlp_tests() {
 	echo -e "${HIGHLIGHT}Tokenizer${DEFAULT}"
 	python3 -m unittest eventdt.nlp.tests.test_tokenizer
 
+	echo -e "${HIGHLIGHT}Cleaners${DEFAULT}"
+	python3 -m unittest eventdt.nlp.cleaners.tests.test_cleaner
+
 	return
 }
 
