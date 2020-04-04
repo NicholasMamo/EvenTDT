@@ -284,3 +284,63 @@ class TestTweetCleaner(unittest.TestCase):
 
 		text = "The Vardy party has gone very quiet 💤 😢 #EPL2020"
 		self.assertEqual("The Vardy party has gone very quiet 💤 😢 #EPL2020", cleaner.clean(text))
+
+	def test_remove_retweet_prefix(self):
+		"""
+		Test removing the retweet prefix.
+		"""
+
+		cleaner = TweetCleaner(remove_retweet_prefix=True)
+
+		text = "RT @NicholasMamo: Great podcast episode about the repercussions of the ongoing pandemic on French football, as well as a brilliant short segment on how we're giving too much importance to TV rights, and too little to the supporters."
+		self.assertEqual("Great podcast episode about the repercussions of the ongoing pandemic on French football, as well as a brilliant short segment on how we're giving too much importance to TV rights, and too little to the supporters.", cleaner.clean(text))
+
+	def test_remove_retweet_prefix_retain(self):
+		"""
+		Test that when the flag to remove the retweet prefix is not given, it is retained.
+		"""
+
+		cleaner = TweetCleaner(remove_retweet_prefix=False)
+
+		text = "RT @NicholasMamo: Great podcast episode about the repercussions of the ongoing pandemic on French football, as well as a brilliant short segment on how we're giving too much importance to TV rights, and too little to the supporters."
+		self.assertEqual(text, cleaner.clean(text))
+
+	def test_remove_retweet_prefix_without_prefix(self):
+		"""
+		Test that when a tweet without a retweet prefix is given, the exact same tweet is returned.
+		"""
+
+		cleaner = TweetCleaner(remove_retweet_prefix=True)
+
+		text = "Great podcast episode about the repercussions of the ongoing pandemic on French football, as well as a brilliant short segment on how we're giving too much importance to TV rights, and too little to the supporters."
+		self.assertEqual(text, cleaner.clean(text))
+
+	def test_remove_retweet_prefix_empty(self):
+		"""
+		Test that when an empty tweet is given, the exact same tweet is returned.
+		"""
+
+		cleaner = TweetCleaner(remove_retweet_prefix=True)
+
+		text = ""
+		self.assertEqual(text, cleaner.clean(text))
+
+	def test_remove_retweet_prefix_middle(self):
+		"""
+		Test that when a retweet prefix is in the middle of the tweet, it is not removed.
+		"""
+
+		cleaner = TweetCleaner(remove_retweet_prefix=True)
+
+		text = "Great podcast episode RT @NicholasMamo: the repercussions of the ongoing pandemic on French football, as well as a brilliant short segment on how we're giving too much importance to TV rights, and too little to the supporters."
+		self.assertEqual(text, cleaner.clean(text))
+
+	def test_remove_retweet_prefix_consecutive(self):
+		"""
+		Test that when there are consecutive retweet prefixes, only the first one is removed.
+		"""
+
+		cleaner = TweetCleaner(remove_retweet_prefix=True)
+
+		text = "RT @NicholasMamo: RT @NicholasMamo: Great podcast episode about the repercussions of the ongoing pandemic on French football, as well as a brilliant short segment on how we're giving too much importance to TV rights, and too little to the supporters."
+		self.assertEqual("RT @NicholasMamo: Great podcast episode about the repercussions of the ongoing pandemic on French football, as well as a brilliant short segment on how we're giving too much importance to TV rights, and too little to the supporters.", cleaner.clean(text))

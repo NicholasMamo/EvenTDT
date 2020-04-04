@@ -20,12 +20,15 @@ class TweetCleaner(Cleaner):
 	:vartype remove_hashtags: bool
 	:ivar split_hashtags: A boolean indicating whether hashtags should be split.
 	:vartype split_hashtags: bool
+	:ivar remove_retweet_prefix: A boolean indicating whether the retweet prefix should be removed.
+	:vartype remove_retweet_prefix: bool
 	"""
 
 	def __init__(self, remove_unicode_entities=False,
 					   remove_urls=False,
 					   remove_hashtags=False,
-					   split_hashtags=False, *args, **kwargs):
+					   split_hashtags=False,
+					   remove_retweet_prefix=False, *args, **kwargs):
 		"""
 		Create the tweet cleaner.
 
@@ -41,6 +44,8 @@ class TweetCleaner(Cleaner):
 		:type remove_hashtags: bool
 		:param split_hashtags: A boolean indicating whether hashtags should be split.
 		:type split_hashtags: bool
+		:param remove_retweet_prefix: A boolean indicating whether the retweet prefix should be removed.
+		:type remove_retweet_prefix: bool
 		"""
 
 		super(TweetCleaner, self).__init__(*args, **kwargs)
@@ -49,6 +54,7 @@ class TweetCleaner(Cleaner):
 		self.remove_urls = remove_urls
 		self.remove_hashtags = remove_hashtags
 		self.split_hashtags = split_hashtags
+		self.remove_retweet_prefix = remove_retweet_prefix
 
 	def clean(self, text):
 		"""
@@ -69,6 +75,7 @@ class TweetCleaner(Cleaner):
 		text = self._remove_urls(text) if self.remove_urls else text
 		text = self._split_hashtags(text) if self.split_hashtags else text
 		text = self._remove_hashtags(text) if self.remove_hashtags else text
+		text = self._remove_retweet_prefix(text) if self.remove_retweet_prefix else text
 		text = self._complete_sentences(text) if self.complete_sentences else text
 		text = self._collapse_whitespaces(text) if self.collapse_whitespaces else text
 		text = text.strip()
@@ -92,7 +99,7 @@ class TweetCleaner(Cleaner):
 		"""
 		Remove Twitter short URLs from the text.
 
-		:param text: The text to clean.
+		:param text: The text to clean().
 		:type text: str
 
 		:return: The text without URLs.
@@ -159,6 +166,6 @@ class TweetCleaner(Cleaner):
 		:rtype: str
 		"""
 
-		retweet_pattern = re.compile("^RT @.+?: ")
+		retweet_pattern = re.compile('^RT @.+?: ')
 
-		return retweet_pattern.sub("", text)
+		return retweet_pattern.sub(' ', text)
