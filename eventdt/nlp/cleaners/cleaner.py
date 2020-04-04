@@ -66,7 +66,10 @@ class Cleaner(object):
 		Collapse new lines into white spaces.
 		"""
 
-		return text.replace('\n', ' ')
+		lines = text.split('\n')
+		lines = [ line for line in lines if len(line) ]
+
+		return ' '.join(lines)
 
 	def _remove_alt_codes(self, text):
 		"""
