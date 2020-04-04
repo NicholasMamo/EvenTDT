@@ -85,7 +85,8 @@ class ELDConsumer(Consumer):
 	:vartype summarization: :class:`~summarization.algorithms.dgs.DGS`
 	"""
 
-	def __init__(self, queue, time_window=60, scheme=None, sets=10):
+	def __init__(self, queue, time_window=60, scheme=None, sets=10,
+				 threshold=0.5, freeze_period=20):
 		"""
 		Create the consumer with a queue.
 		Simultaneously create a nutrition store and the topic detection algorithm container.
@@ -107,6 +108,11 @@ class ELDConsumer(Consumer):
 					 However, because of the decay in :class:`~tdt.algorithms.cataldi.Cataldi`, old time windows do not affect the result by a big margin.
 					 Therefore old data can be removed safely.
 		:type sets: int
+		:param threshold: The similarity threshold to use for the :class:`~vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans` incremental clustering approach.
+						  Documents are added to an existing cluster if their similarity with the centroid is greater than or equal to this threshold.
+		:type threshold: float
+		:param freeze_period: The freeze period, in seconds, of the incremental clustering approach.
+		:type freeze_period: float
 		"""
 
 		super(ELDConsumer, self).__init__(queue)
@@ -128,7 +134,7 @@ class ELDConsumer(Consumer):
 		self.tokenizer = Tokenizer(stopwords=stopwords.words('english'),
 								   normalize_words=True, character_normalization_count=3,
 								   remove_unicode_entities=True)
-		self.clustering = TemporalNoKMeans(threshold=0.5, freeze_period=20, store_frozen=False)
+		self.clustering = TemporalNoKMeans(threshold=threshold, freeze_period=freeze_period, store_frozen=False)
 		self.tdt = ELD(self.store)
 		self.summarization = DGS()
 
@@ -534,24 +540,19 @@ class ELDConsumer(Consumer):
 		if until > 0:
 			self.store.remove(*self.store.until(until))
 
-	def _cluster(self, documents, threshold=0.7, freeze_period=1):
+	def _cluster(self, documents):
 		"""
 		Cluster the given documents.
 
 		:param documents: The documents to cluster.
-		:type documents: list of :class:`~vector.nlp.document.Document` instances
-		:param threshold: The threshold to use for the incremental clustering approach.
-		:type threshold: float
-		:param freeze_period: The freeze period (in seconds) of the incremental clustering approach.
-		:type freeze_period: float
+		:type documents: list of :class:`~nlp.document.Document`
 
 		:return: The list of clusters that are still active and that have changed.
-		:rtype: list of :class:`~vector.cluster.cluster.Cluster` instances
+		:rtype: list of :class:`~vector.cluster.cluster.Cluster`
 		"""
 
-		clusters = self.clustering.cluster(documents, threshold=threshold, freeze_period=freeze_period, time_attribute="timestamp", store_frozen=False)
+		return self.clustering.cluster(documents, time='timestamp')
 		return clusters
-		# return self.clustering.get_clusters(ClusterType.ACTIVE)
 
 	def _filter_clusters(self, clusters, timestamp, min_size=10, cooldown=1, max_intra_similarity=0.8):
 		"""

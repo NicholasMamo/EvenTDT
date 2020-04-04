@@ -66,7 +66,8 @@ class FIREConsumer(SimulatedBufferedConsumer):
 	:vartype summarization: :class:`~summarization.algorithms.mmr.MMR`
 	"""
 
-	def __init__(self, queue, periodicity=60, scheme=None, sets=10, threshold=0.7, freeze_period=20, min_size=4):
+	def __init__(self, queue, periodicity=60, scheme=None, sets=10,
+				 threshold=0.7, freeze_period=20, min_size=4):
 		"""
 		Create the consumer with a queue.
 		Simultaneously create a nutrition store and the topic detection algorithm container.
