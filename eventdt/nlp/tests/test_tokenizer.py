@@ -152,7 +152,7 @@ class TestTokenizer(unittest.TestCase):
 
 	def test_split_hashtag_multiple_components(self):
 		"""
-		Test that hashtags with multiple components are split properly
+		Test that hashtags with multiple components are split properly.
 		"""
 
 		s = "Hello! I'm Harry Styles, I'm sixteen and I work in a bakery #HappyBirthdayHarry"

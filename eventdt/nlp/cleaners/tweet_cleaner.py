@@ -16,10 +16,16 @@ class TweetCleaner(Cleaner):
 	:vartype remove_unicode_entities: bool
 	:ivar remove_urls: A boolean indicating whether URLs should be removed.
 	:vartype remove_urls: bool
+	:ivar remove_hashtags: A boolean indicating whether hashtags that cannot be split should be removed.
+	:vartype remove_hashtags: bool
+	:ivar split_hashtags: A boolean indicating whether hashtags should be split.
+	:vartype split_hashtags: bool
 	"""
 
 	def __init__(self, remove_unicode_entities=False,
-					   remove_urls=False, *args, **kwargs):
+					   remove_urls=False,
+					   remove_hashtags=False,
+					   split_hashtags=False, *args, **kwargs):
 		"""
 		Create the tweet cleaner.
 
@@ -31,12 +37,18 @@ class TweetCleaner(Cleaner):
 		:type remove_unicode_entities: bool
 		:param remove_urls: A boolean indicating whether URLs should be removed.
 		:type remove_urls: bool
+		:param remove_hashtags: A boolean indicating whether hashtags that cannot be split should be removed.
+		:type remove_hashtags: bool
+		:param split_hashtags: A boolean indicating whether hashtags should be split.
+		:type split_hashtags: bool
 		"""
 
 		super(TweetCleaner, self).__init__(*args, **kwargs)
 
 		self.remove_unicode_entities = remove_unicode_entities
-		self.remove_urls = True
+		self.remove_urls = remove_urls
+		self.remove_hashtags = remove_hashtags
+		self.split_hashtags = split_hashtags
 
 	def clean(self, text):
 		"""
@@ -55,6 +67,8 @@ class TweetCleaner(Cleaner):
 		text = self._remove_alt_codes(text) if self.remove_alt_codes else text
 		text = self._remove_unicode_entities(text) if self.remove_unicode_entities else text
 		text = self._remove_urls(text) if self.remove_urls else text
+		text = self._split_hashtags(text) if self.split_hashtags else text
+		text = self._remove_hashtags(text) if self.remove_hashtags else text
 		text = self._complete_sentences(text) if self.complete_sentences else text
 		text = self._collapse_whitespaces(text) if self.collapse_whitespaces else text
 		text = text.strip()
@@ -88,31 +102,50 @@ class TweetCleaner(Cleaner):
 		url_pattern = re.compile("(https?:\/\/)?([^\s]+)?\.[a-zA-Z0-9]+?\/?([^\s,\.]+)?")
 		return url_pattern.sub(' ', text)
 
-	def _normalize_hashtags(self, text):
+	def _split_hashtags(self, text):
 		"""
-		Normalize the given text, splitting hashtags based on camel case notation.
+		Split the hashtags in the given text based on camel-case notation.
 
 		:param text: The text to normalize.
 		:type text: str
 
-		:return: The normalized string.
+		:return: The text with split hashtags.
 		:rtype: str
 		"""
-		hashtag_pattern = re.compile("#([a-zA-Z0-9_]+)")
-		camel_case_pattern = re.compile("#?(([a-z]+?)([A-Z]+))")
 
-		for hashtag in hashtag_pattern.findall(text):
+		hashtag_pattern = re.compile("#([a-zA-Z0-9_]+)")
+		camel_case_pattern = re.compile("(([a-z]+)?([A-Z]+|[0-9]+))")
+
+		"""
+		First find all hashtags.
+		Then, split them and replace the hashtag lexeme with the split components.
+		"""
+		hashtags = hashtag_pattern.findall(text)
+		for hashtag in hashtags:
+			components = camel_case_pattern.sub("\g<2> \g<3>", hashtag)
+
 			"""
-			If the hashtag has camel-case notation, normalize it.
-			Otherwise, remove the hashtag altogethe.
+			Only split hashtags that have multiple components.
+			If there is only one component, it's just a hashtag.
 			"""
-			if len(camel_case_pattern.findall(hashtag)) > 0:
-				text = text.replace("#%s" % hashtag, hashtag, 1) # remove the hashtag symbol
-				text = text.replace(hashtag, camel_case_pattern.sub("\g<2> \g<3>", hashtag), 1)
-			else:
-				text = text.replace("#%s" % hashtag, "", 1)
+			if len(components.split()) > 1:
+				text = text.replace(f"#{hashtag}", components)
 
 		return text
+
+	def _remove_hashtags(self, text):
+		"""
+		Remove hashtags from the given text.
+
+		:param text: The text to clean.
+		:type text: str
+
+		:return: The text without any hashtags.
+		:rtype: str
+		"""
+
+		hashtag_pattern = re.compile("#([a-zA-Z0-9_]+)")
+		return hashtag_pattern.sub(' ', text)
 
 	def _remove_retweet_prefix(self, text):
 		"""

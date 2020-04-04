@@ -151,3 +151,136 @@ class TestTweetCleaner(unittest.TestCase):
 
 		text = 'Thank you @BillGates. It\'s amazing, almost as incredible as the fact that you use Gmail. https://t.co/drawyFHHQM'
 		self.assertEqual('Thank you @BillGates. It\'s amazing, almost as incredible as the fact that you use Gmail.', cleaner.clean(text))
+
+	def test_remove_hashtags(self):
+		"""
+		Test that the hashtag removal functionality removes a single hashtag.
+		"""
+
+		cleaner = TweetCleaner(remove_hashtags=True)
+
+		text = "The Vardy party has gone very quiet 💤 😢 #FPL"
+		self.assertEqual("The Vardy party has gone very quiet 💤 😢", cleaner.clean(text))
+
+	def test_remove_hashtags_multiple(self):
+		"""
+		Test that the hashtag removal functionality removes all hashtags.
+		"""
+
+		cleaner = TweetCleaner(remove_hashtags=True)
+
+		text = "The Vardy party has gone very quiet 💤 😢 #FPL #LEICHE"
+		self.assertEqual("The Vardy party has gone very quiet 💤 😢", cleaner.clean(text))
+
+	def test_remove_hashtags_mixed_case(self):
+		"""
+		Test that the hashtag removal functionality removes all hashtags, regardless of the case.
+		"""
+
+		cleaner = TweetCleaner(remove_hashtags=True, split_hashtags=False)
+
+		text = "The Vardy party has gone very quiet 💤 😢 #FPL #LeiChe"
+		self.assertEqual("The Vardy party has gone very quiet 💤 😢", cleaner.clean(text))
+
+	def test_remove_hashtags(self):
+		"""
+		Test that the hashtag removal functionality retains all hashtags when not requested.
+		"""
+
+		cleaner = TweetCleaner(remove_hashtags=False, split_hashtags=False)
+
+		text = "The Vardy party has gone very quiet 💤 😢 #FPL #LEICHE"
+		self.assertEqual("The Vardy party has gone very quiet 💤 😢 #FPL #LEICHE", cleaner.clean(text))
+
+	def test_remove_hashtags_mixed_case(self):
+		"""
+		Test that the hashtag removal functionality retains all hashtags when not requested, regardless of the case.
+		"""
+
+		cleaner = TweetCleaner(remove_hashtags=False, split_hashtags=False)
+
+		text = "The Vardy party has gone very quiet 💤 😢 #FPL #LeiChe"
+		self.assertEqual("The Vardy party has gone very quiet 💤 😢 #FPL #LeiChe", cleaner.clean(text))
+
+	def test_remove_hashtags_with_splitting(self):
+		"""
+		Test that when hashtags are removed, split hashtags are retained.
+		"""
+
+		cleaner = TweetCleaner(remove_hashtags=True, split_hashtags=True, collapse_whitespaces=True)
+
+		text = "The Vardy party has gone very quiet 💤 😢 #FPL #LeiChe"
+		self.assertEqual("The Vardy party has gone very quiet 💤 😢 Lei Che", cleaner.clean(text))
+
+	def test_split_hashtag(self):
+		"""
+		Test the hashtag splitting functionality.
+		"""
+
+		cleaner = TweetCleaner(split_hashtags=True, collapse_whitespaces=True)
+
+		text = "The Vardy party has gone very quiet 💤 😢 #LeiChe"
+		self.assertEqual("The Vardy party has gone very quiet 💤 😢 Lei Che", cleaner.clean(text))
+
+	def test_split_hashtag_all_upper(self):
+		"""
+		Test that trying to split a hashtag that is made up of only uppercase letters does not split it.
+		"""
+
+		cleaner = TweetCleaner(remove_hashtags=False, split_hashtags=True)
+
+		text = "The Vardy party has gone very quiet 💤 😢 #FPL"
+		self.assertEqual("The Vardy party has gone very quiet 💤 😢 #FPL", cleaner.clean(text))
+
+	def test_split_hashtag_all_lower(self):
+		"""
+		Test that trying to split a hashtag that is made up of only lowercase letters does not split it.
+		"""
+
+		cleaner = TweetCleaner(remove_hashtags=False, split_hashtags=True)
+
+		text = "The Vardy party has gone very quiet 💤 😢 #fpl"
+		self.assertEqual("The Vardy party has gone very quiet 💤 😢 #fpl", cleaner.clean(text))
+
+	def test_split_hashtag_multiple_components(self):
+		"""
+		Test that hashtags with multiple components are split properly.
+		"""
+
+		cleaner = TweetCleaner(split_hashtags=True, collapse_whitespaces=True)
+
+		text = "Hello! I'm Harry Styles, I'm sixteen and I work in a bakery #HappyBirthdayHarry"
+		self.assertEqual("Hello! I'm Harry Styles, I'm sixteen and I work in a bakery Happy Birthday Harry", cleaner.clean(text))
+
+	def test_split_hashtag_repeated(self):
+		"""
+		Test that when a hashtag is repeated, splitting is applied to both.
+		"""
+
+		cleaner = TweetCleaner(split_hashtags=True, collapse_whitespaces=True)
+
+		text = "The Vardy party has gone very quiet 💤 😢 #LeiChe #LeiChe"
+		self.assertEqual("The Vardy party has gone very quiet 💤 😢 Lei Che Lei Che", cleaner.clean(text))
+
+	def test_split_hashtag_with_numbers(self):
+		"""
+		Test that hashtags are treated as words when splitting hashtags.
+		"""
+
+		cleaner = TweetCleaner(split_hashtags=True, collapse_whitespaces=True)
+
+		text = "The Vardy party has gone very quiet 💤 😢 #EPL2020"
+		self.assertEqual("The Vardy party has gone very quiet 💤 😢 EPL 2020", cleaner.clean(text))
+
+		text = "The Vardy party has gone very quiet 💤 😢 #2020EPL"
+		self.assertEqual("The Vardy party has gone very quiet 💤 😢 2020 EPL", cleaner.clean(text))
+
+	def test_do_not_split_hashtags(self):
+		"""
+		Test that hashtags aren't split if the flag is not provided.
+		"""
+
+		cleaner = TweetCleaner(remove_hashtags=False, split_hashtags=False)
+
+		text = "The Vardy party has gone very quiet 💤 😢 #EPL2020"
+		self.assertEqual("The Vardy party has gone very quiet 💤 😢 #EPL2020", cleaner.clean(text))
