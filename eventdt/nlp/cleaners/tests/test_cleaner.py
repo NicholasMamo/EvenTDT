@@ -29,6 +29,36 @@ class TestCleaner(unittest.TestCase):
 		text = 'Our prediction based on #FIFA Rankings, &amp; Country Risk Ratings'
 		self.assertEqual(text, cleaner.clean(text))
 
+	def test_clean_strip_start(self):
+		"""
+		Test that the text in the beginning is always stripped.
+		"""
+
+		cleaner = Cleaner()
+
+		text = ' Our prediction based on #FIFA Rankings, &amp; Country Risk Ratings'
+		self.assertEqual('Our prediction based on #FIFA Rankings, &amp; Country Risk Ratings', cleaner.clean(text))
+
+	def test_clean_strip_end(self):
+		"""
+		Test that the text in the end is always stripped.
+		"""
+
+		cleaner = Cleaner()
+
+		text = 'Our prediction based on #FIFA Rankings, &amp; Country Risk Ratings '
+		self.assertEqual('Our prediction based on #FIFA Rankings, &amp; Country Risk Ratings', cleaner.clean(text))
+
+	def test_clean_strip(self):
+		"""
+		Test that the text is always stripped on both ends.
+		"""
+
+		cleaner = Cleaner()
+
+		text = ' Our prediction based on #FIFA Rankings, &amp; Country Risk Ratings '
+		self.assertEqual('Our prediction based on #FIFA Rankings, &amp; Country Risk Ratings', cleaner.clean(text))
+
 	def test_remove_alt_codes(self):
 		"""
 		Test that when remove alt-codes, they are indeed removed.
