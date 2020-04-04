@@ -49,7 +49,7 @@ class TestTweetCleaner(unittest.TestCase):
 
 		cleaner = TweetCleaner(remove_unicode_entities=True)
 
-		text = "Je veux 😂😂😂🦁"
+		text = 'Je veux 😂😂😂🦁'
 		self.assertEqual('Je veux', cleaner.clean(text))
 
 	def test_remove_unicode_entities(self):
@@ -59,7 +59,7 @@ class TestTweetCleaner(unittest.TestCase):
 
 		cleaner = TweetCleaner(remove_unicode_entities=True)
 
-		text = "\u0632\u0648\u062f_\u0641\u0648\u0644\u0648\u0631\u0632_\u0645\u0639_\u0627\u0644\u0645\u0628\u0627\u062d\u062b"
+		text = '\u0632\u0648\u062f_\u0641\u0648\u0644\u0648\u0631\u0632_\u0645\u0639_\u0627\u0644\u0645\u0628\u0627\u062d\u062b'
 		self.assertEqual('___', cleaner.clean(text))
 
 	def test_remove_unicode_entities_includes_emojis(self):
@@ -69,7 +69,7 @@ class TestTweetCleaner(unittest.TestCase):
 
 		cleaner = TweetCleaner(remove_unicode_entities=True)
 
-		text = "Je veux 😂😂😂🦁"
+		text = 'Je veux 😂😂😂🦁'
 		self.assertEqual('Je veux', cleaner.clean(text))
 
 	def test_remove_unicode_entities_retain(self):
@@ -79,7 +79,7 @@ class TestTweetCleaner(unittest.TestCase):
 
 		cleaner = TweetCleaner(remove_unicode_entities=False)
 
-		text = "\u0632\u0648\u062f_\u0641\u0648\u0644\u0648\u0631\u0632_\u0645\u0639_\u0627\u0644\u0645\u0628\u0627\u062d\u062b"
+		text = '\u0632\u0648\u062f_\u0641\u0648\u0644\u0648\u0631\u0632_\u0645\u0639_\u0627\u0644\u0645\u0628\u0627\u062d\u062b'
 		self.assertEqual('زود_فولورز_مع_المباحث', cleaner.clean(text))
 
 	def test_remove_unicode_entities_retain_emojis(self):
@@ -89,5 +89,65 @@ class TestTweetCleaner(unittest.TestCase):
 
 		cleaner = TweetCleaner(remove_unicode_entities=False)
 
-		text = "Je veux 😂😂😂🦁"
+		text = 'Je veux 😂😂😂🦁'
 		self.assertEqual('Je veux 😂😂😂🦁', cleaner.clean(text))
+
+	def test_remove_url(self):
+		"""
+		Test the URL removal functionality.
+		"""
+
+		cleaner = TweetCleaner(remove_urls=True)
+
+		text = 'Thank you @BillGates. It\'s amazing, almost as incredible as the fact that you use Gmail. https://t.co/drawyFHHQM'
+		self.assertEqual('Thank you @BillGates. It\'s amazing, almost as incredible as the fact that you use Gmail.', cleaner.clean(text))
+
+	def test_remove_url_without_protocol(self):
+		"""
+		Test the URL removal functionality when there is no protocol.
+		"""
+
+		cleaner = TweetCleaner(remove_urls=True)
+
+		text = 'Thank you @BillGates. It\'s amazing, almost as incredible as the fact that you use Gmail. t.co/drawyFHHQM'
+		self.assertEqual('Thank you @BillGates. It\'s amazing, almost as incredible as the fact that you use Gmail.', cleaner.clean(text))
+
+	def test_remove_url_with_http_protocol(self):
+		"""
+		Test the URL removal functionality when the protocol is http.
+		"""
+
+		cleaner = TweetCleaner(remove_urls=True)
+
+		text = 'Thank you @BillGates. It\'s amazing, almost as incredible as the fact that you use Gmail. http://t.co/drawyFHHQM'
+		self.assertEqual('Thank you @BillGates. It\'s amazing, almost as incredible as the fact that you use Gmail.', cleaner.clean(text))
+
+	def test_remove_url_with_subdomain(self):
+		"""
+		Test that URL removal includes subdomains.
+		"""
+
+		cleaner = TweetCleaner(remove_urls=True)
+
+		text = 'Visit Multiplex\'s documentation for more information: https://nicholasmamo.github.io/multiplex-plot/'
+		self.assertEqual('Visit Multiplex\'s documentation for more information:', cleaner.clean(text))
+
+	def test_remove_url_with_subdomain_without_protocol(self):
+		"""
+		Test that URL removal includes subdomains even if they have no protocol.
+		"""
+
+		cleaner = TweetCleaner(remove_urls=True)
+
+		text = 'Visit Multiplex\'s documentation for more information: nicholasmamo.github.io/multiplex-plot/'
+		self.assertEqual('Visit Multiplex\'s documentation for more information:', cleaner.clean(text))
+
+	def test_remove_url_retain(self):
+		"""
+		Test the URL retention functionality.
+		"""
+
+		cleaner = TweetCleaner(remove_urls=True)
+
+		text = 'Thank you @BillGates. It\'s amazing, almost as incredible as the fact that you use Gmail. https://t.co/drawyFHHQM'
+		self.assertEqual('Thank you @BillGates. It\'s amazing, almost as incredible as the fact that you use Gmail.', cleaner.clean(text))

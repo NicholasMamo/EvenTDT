@@ -14,9 +14,12 @@ class TweetCleaner(Cleaner):
 	:ivar remove_unicode_entities: A boolean indicating whether unicode entities should be removed.
 								   Note that this also includes emojis.
 	:vartype remove_unicode_entities: bool
+	:ivar remove_urls: A boolean indicating whether URLs should be removed.
+	:vartype remove_urls: bool
 	"""
 
-	def __init__(self, remove_unicode_entities=False, *args, **kwargs):
+	def __init__(self, remove_unicode_entities=False,
+					   remove_urls=False, *args, **kwargs):
 		"""
 		Create the tweet cleaner.
 
@@ -26,10 +29,14 @@ class TweetCleaner(Cleaner):
 		:param remove_unicode_entities: A boolean indicating whether unicode entities should be removed.
 										Note that this also includes emojis.
 		:type remove_unicode_entities: bool
+		:param remove_urls: A boolean indicating whether URLs should be removed.
+		:type remove_urls: bool
 		"""
 
 		super(TweetCleaner, self).__init__(*args, **kwargs)
+
 		self.remove_unicode_entities = remove_unicode_entities
+		self.remove_urls = True
 
 	def clean(self, text):
 		"""
@@ -47,6 +54,7 @@ class TweetCleaner(Cleaner):
 		text = self._collapse_new_lines(text) if self.collapse_new_lines else text
 		text = self._remove_alt_codes(text) if self.remove_alt_codes else text
 		text = self._remove_unicode_entities(text) if self.remove_unicode_entities else text
+		text = self._remove_urls(text) if self.remove_urls else text
 		text = self._complete_sentences(text) if self.complete_sentences else text
 		text = self._collapse_whitespaces(text) if self.collapse_whitespaces else text
 		text = text.strip()
@@ -66,7 +74,7 @@ class TweetCleaner(Cleaner):
 
 		return text.encode('ascii', 'ignore').decode("utf-8")
 
-	def _remove_twitter_urls(self, text):
+	def _remove_urls(self, text):
 		"""
 		Remove Twitter short URLs from the text.
 
@@ -77,8 +85,8 @@ class TweetCleaner(Cleaner):
 		:rtype: str
 		"""
 
-		url_pattern = re.compile("https:\\/\\/t.co\\/[a-zA-Z0-9]+\\b")
-		return url_pattern.sub("", text)
+		url_pattern = re.compile("(https?:\/\/)?([^\s]+)?\.[a-zA-Z0-9]+?\/?([^\s,\.]+)?")
+		return url_pattern.sub(' ', text)
 
 	def _normalize_hashtags(self, text):
 		"""
