@@ -1,5 +1,5 @@
 """
-A cleaner that specializes in tweets.
+The tweet cleaner builds on the base cleaner, but adds Twitter-specific functionality.
 """
 
 import re
@@ -8,13 +8,24 @@ from .cleaner import Cleaner
 
 class TweetCleaner(Cleaner):
 	"""
-	The tweet cleaner removes spurious needless information from a text.
+	The tweet cleaner removes needless information from a text to make it presentable.
 	This includes retweet syntax and URLs.
 	"""
+
+	def __init__(self, *args, **kwargs):
+		"""
+		Create the tweet cleaner.
+
+		The same configuration accepted by the :class:`~nlp.cleaners.cleaner.Cleaner` are accepted as arguments and keyword arguments.
+		They are then passed on to the parent constructor, :func:`~nlp.cleaners.cleaner.Cleaner.__init__`.
+		"""
+
+		super(TweetCleaner, self).__init__(*args, **kwargs)
 
 	def clean(self, text):
 		"""
 		Clean the given text.
+		The basic cleaner always strips empty whitespaces before any pre-processing.
 
 		:param text: The text to clean.
 		:type text: str
@@ -23,16 +34,12 @@ class TweetCleaner(Cleaner):
 		:rtype: str
 		"""
 
-		text = self._preprocess(text)
+		text = text.strip()
+		text = self._collapse_new_lines(text) if self.collapse_new_lines else text
+		text = self._remove_alt_codes(text) if self.remove_alt_codes else text
+		text = self._complete_sentences(text) if self.complete_sentences else text
+		text = self._collapse_whitespaces(text) if self.collapse_whitespaces else text
 
-		text = self._remove_twitter_urls(text)
-		text = self._remove_emojis(text)
-		text = self._remove_alt_codes(text)
-		text = self._remove_retweet_prefix(text)
-		text = self._normalize_hashtags(text)
-
-		text = self._remove_consecutive_whitespaces(text)
-		text = self._complete_sentences(text)
 		return text
 
 	def _remove_emojis(self, text):
@@ -102,6 +109,6 @@ class TweetCleaner(Cleaner):
 		:rtype: str
 		"""
 
-		retweet_pattern = re.compile("^RT @.*?: ")
+		retweet_pattern = re.compile("^RT @.+?: ")
 
 		return retweet_pattern.sub("", text)
