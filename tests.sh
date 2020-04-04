@@ -69,6 +69,7 @@ nlp_tests() {
 
 	echo -e "${HIGHLIGHT}Cleaners${DEFAULT}"
 	python3 -m unittest eventdt.nlp.cleaners.tests.test_cleaner
+	python3 -m unittest eventdt.nlp.cleaners.tests.test_tweet_cleaner
 
 	return
 }
