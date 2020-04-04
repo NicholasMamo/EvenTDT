@@ -10,17 +10,26 @@ class TweetCleaner(Cleaner):
 	"""
 	The tweet cleaner removes needless information from a text to make it presentable.
 	This includes retweet syntax and URLs.
+
+	:ivar remove_unicode_entities: A boolean indicating whether unicode entities should be removed.
+								   Note that this also includes emojis.
+	:vartype remove_unicode_entities: bool
 	"""
 
-	def __init__(self, *args, **kwargs):
+	def __init__(self, remove_unicode_entities=False, *args, **kwargs):
 		"""
 		Create the tweet cleaner.
 
 		The same configuration accepted by the :class:`~nlp.cleaners.cleaner.Cleaner` are accepted as arguments and keyword arguments.
 		They are then passed on to the parent constructor, :func:`~nlp.cleaners.cleaner.Cleaner.__init__`.
+
+		:param remove_unicode_entities: A boolean indicating whether unicode entities should be removed.
+										Note that this also includes emojis.
+		:type remove_unicode_entities: bool
 		"""
 
 		super(TweetCleaner, self).__init__(*args, **kwargs)
+		self.remove_unicode_entities = remove_unicode_entities
 
 	def clean(self, text):
 		"""
@@ -37,25 +46,25 @@ class TweetCleaner(Cleaner):
 		text = text.strip()
 		text = self._collapse_new_lines(text) if self.collapse_new_lines else text
 		text = self._remove_alt_codes(text) if self.remove_alt_codes else text
+		text = self._remove_unicode_entities(text) if self.remove_unicode_entities else text
 		text = self._complete_sentences(text) if self.complete_sentences else text
 		text = self._collapse_whitespaces(text) if self.collapse_whitespaces else text
+		text = text.strip()
 
 		return text
 
-	def _remove_emojis(self, text):
+	def _remove_unicode_entities(self, text):
 		"""
-		Remove emojis from the given text.
+		Remove unicode entities, including emojis, from the given text.
 
 		:param text: The tweet to be cleaned.
 		:type text: str
 
-		:return: The tweet without emojis.
+		:return: The tweet without unicode entities.
 		:rtype: str
 		"""
 
-		# TODO: Doesn't really remove emojis, does it?
-		emoji_pattern = re.compile(":[DP\(\)]")
-		return emoji_pattern.sub("", text)
+		return text.encode('ascii', 'ignore').decode("utf-8")
 
 	def _remove_twitter_urls(self, text):
 		"""

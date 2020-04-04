@@ -41,3 +41,53 @@ class TestTweetCleaner(unittest.TestCase):
 		self.assertTrue(cleaner.complete_sentences)
 		self.assertTrue(cleaner.collapse_new_lines)
 		self.assertTrue(cleaner.collapse_whitespaces)
+
+	def test_strip_after_processing(self):
+		"""
+		Test that the text is stripped after all processing.
+		"""
+
+		cleaner = TweetCleaner(remove_unicode_entities=True)
+
+		text = "Je veux 😂😂😂🦁"
+		self.assertEqual('Je veux', cleaner.clean(text))
+
+	def test_remove_unicode_entities(self):
+		"""
+		Test that the unicode entity removal functionality removes unicode characters.
+		"""
+
+		cleaner = TweetCleaner(remove_unicode_entities=True)
+
+		text = "\u0632\u0648\u062f_\u0641\u0648\u0644\u0648\u0631\u0632_\u0645\u0639_\u0627\u0644\u0645\u0628\u0627\u062d\u062b"
+		self.assertEqual('___', cleaner.clean(text))
+
+	def test_remove_unicode_entities_includes_emojis(self):
+		"""
+		Test that the unicode entity removal functionality also removes emojis.
+		"""
+
+		cleaner = TweetCleaner(remove_unicode_entities=True)
+
+		text = "Je veux 😂😂😂🦁"
+		self.assertEqual('Je veux', cleaner.clean(text))
+
+	def test_remove_unicode_entities_retain(self):
+		"""
+		Test that when unicode character removal is not specified, these characters are retained.
+		"""
+
+		cleaner = TweetCleaner(remove_unicode_entities=False)
+
+		text = "\u0632\u0648\u062f_\u0641\u0648\u0644\u0648\u0631\u0632_\u0645\u0639_\u0627\u0644\u0645\u0628\u0627\u062d\u062b"
+		self.assertEqual('زود_فولورز_مع_المباحث', cleaner.clean(text))
+
+	def test_remove_unicode_entities_retain_emojis(self):
+		"""
+		Test that when unicode character removal is not specified, emojis are retained.
+		"""
+
+		cleaner = TweetCleaner(remove_unicode_entities=False)
+
+		text = "Je veux 😂😂😂🦁"
+		self.assertEqual('Je veux 😂😂😂🦁', cleaner.clean(text))
