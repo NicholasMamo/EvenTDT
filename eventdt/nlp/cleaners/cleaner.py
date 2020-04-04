@@ -14,17 +14,27 @@ class Cleaner(object):
 
 	:ivar remove_alt_codes: A boolean indicating whether alt-codes should be removed.
 	:vartype remove_alt_codes: bool
+	:ivar complete_sentences: A boolean indicating whether the sentences should be completed.
+							  The cleaner has no knowledge of any incomplete sentences in the middle of the text.
+							  Therefore it only completes the last sentence.
+	:vartype complete_sentences: bool
 	"""
 
-	def __init__(self, remove_alt_codes=False):
+	def __init__(self, remove_alt_codes=False,
+					   complete_sentences=False):
 		"""
 		Create the cleaner with the basic configuration.
 
 		:param remove_alt_codes: A boolean indicating whether alt-codes should be removed.
 		:type remove_alt_codes: bool
+		:param complete_sentences: A boolean indicating whether the sentences should be completed.
+								   The cleaner has no knowledge of any incomplete sentences in the middle of the text.
+								   Therefore it only completes the last sentence.
+		:type complete_sentences: bool
 		"""
 
 		self.remove_alt_codes = remove_alt_codes
+		self.complete_sentences = complete_sentences
 
 	def clean(self, text):
 		"""
@@ -38,6 +48,7 @@ class Cleaner(object):
 		"""
 
 		text = self._remove_alt_codes(text) if self.remove_alt_codes else text
+		text = self._complete_sentences(text) if self.complete_sentences else text
 
 		return text
 
@@ -58,6 +69,8 @@ class Cleaner(object):
 	def _complete_sentences(self, text):
 		"""
 		Add a period if the sentence does not end with punctuation.
+		There is one exception to this rule: if the sentence ends with a quote.
+		In this case, the period is added before the quote if there is no punctuation there..
 
 		:param text: The text to clean.
 		:type text: str
@@ -66,18 +79,38 @@ class Cleaner(object):
 		:rtype: str
 		"""
 
-		text = text.strip()
 		punctuation = ['.', '?', '!', '…']
-		quotes = ['\'', '"']
+		quotes = ['\'', '"', '»']
 
-		if len(text) > 1 and text[-1] in quotes and text[-2] in punctuation:
+		"""
+		If the text is empty, return immediately.
+		"""
+		if not text:
 			return text
-		elif len(text) > 1 and text[-1] in quotes and text[-2] not in punctuation:
-			return text[:-1] + '.' + text[-1]
-		elif len(text) > 0 and text[-1] not in punctuation:
-			return text.strip() + '.'
-		else:
+
+		"""
+		If the text already ends in punctuation, return immediately.
+		"""
+		if (text[-1] in punctuation or
+			(len(text) > 1 and text[-2] in punctuation)):
 			return text
+
+		"""
+		If the text is just a quote, return immediately.
+		"""
+		if text in quotes:
+			return text
+
+		"""
+		If the text ends with a quote, but is not a complete sentence before the quote, add a period.
+		"""
+		if len(text) > 1 and text[-1] in quotes and text[-2] not in punctuation:
+			return f"{text[:-1]}.{text[-1]}"
+
+		"""
+		Otherwise, add a period at the end.
+		"""
+		return f"{text}."
 
 	def _remove_consecutive_whitespaces(self, text):
 		"""
