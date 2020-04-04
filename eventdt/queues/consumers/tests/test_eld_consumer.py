@@ -31,10 +31,11 @@ class TestELDConsumer(unittest.TestCase):
 		"""
 
 		queue = Queue()
-		consumer = ELDConsumer(queue, 60)
+		consumer = ELDConsumer(queue, 60, TF())
 		self.assertEqual(queue, consumer.queue)
 		self.assertEqual(0, consumer.queue.length())
 		self.assertEqual(60, consumer.time_window)
+		self.assertEqual(TF, type(consumer.scheme))
 
 	def test_create_consumer_buffer_empty(self):
 		"""
@@ -42,7 +43,7 @@ class TestELDConsumer(unittest.TestCase):
 		"""
 
 		queue = Queue()
-		consumer = ELDConsumer(queue, 60)
+		consumer = ELDConsumer(queue, 60, TF())
 		self.assertEqual(Queue, type(consumer.buffer))
 		self.assertEqual(0, consumer.buffer.length())
 

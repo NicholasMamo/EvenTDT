@@ -47,6 +47,8 @@ from summarization.algorithms import DGS
 from tdt.algorithms import ELD
 from tdt.nutrition import MemoryNutritionStore
 
+import twitter
+
 from vsm import vector_math
 from vsm.clustering.algorithms import TemporalNoKMeans
 from vsm.clustering import Cluster
@@ -62,6 +64,8 @@ class ELDConsumer(Consumer):
 
 	:ivar time_window: The time (in seconds) to spend consuming the queue.
 	:vartype time_window: int
+	:ivar scheme: The term-weighting scheme used to create documents.
+	:vartype scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
 	:ivar store: The nutrition store used in conjunction with extractin breaking news.
 	:vartype store: :class:`~topic_detection.nutrition_store.nutrition_store.NutritionStore`
 	:ivar buffer: A buffer of tweets that have been processed, but which are not part of a checkpoint yet.
@@ -76,7 +80,7 @@ class ELDConsumer(Consumer):
 	:vartype summarization: :class:`~summarization.algorithms.dgs.DGS`
 	"""
 
-	def __init__(self, queue, time_window=60):
+	def __init__(self, queue, time_window=60, scheme=None):
 		"""
 		Create the consumer with a queue.
 		Simultaneously create a nutrition store and the topic detection algorithm container.
@@ -90,11 +94,15 @@ class ELDConsumer(Consumer):
 		:type queue: :class:`~queues.queue.Queue`
 		:param time_window: The size of the window after which checkpoints are created.
 		:type time_window: int
+		:param scheme: The term-weighting scheme that is used to create dimensions.
+					   If `None` is given, the :class:`~nlp.term_weighting.tf.TF` term-weighting scheme is used.
+		:type scheme: None or :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
 		"""
 
 		super(ELDConsumer, self).__init__(queue)
 
 		self.time_window = time_window
+		self.scheme = scheme
 
 		"""
 		Create the nutrition store and the buffer.
