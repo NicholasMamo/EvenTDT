@@ -92,10 +92,10 @@ class TweetCleaner(Cleaner):
 		"""
 		Remove Twitter short URLs from the text.
 
-		:param text: The tweet that may contain URLs.
+		:param text: The text to clean.
 		:type text: str
 
-		:return: The tweet without URLs.
+		:return: The text without URLs.
 		:rtype: str
 		"""
 
@@ -152,7 +152,7 @@ class TweetCleaner(Cleaner):
 		Remove retweet syntax from a tweet.
 		Retweets start with the text 'RT @user: '
 
-		:param text: The tweet to clean.
+		:param text: The text to clean.
 		:type text: str
 
 		:return: The cleaned text.
