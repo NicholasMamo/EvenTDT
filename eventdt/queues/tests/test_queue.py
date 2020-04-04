@@ -61,7 +61,8 @@ class TestQueue(unittest.TestCase):
 		data = list(range(0, 10))
 		queue = Queue(*data)
 		self.assertEqual(data, queue.queue)
-		self.assertRaises(ValueError, queue.enqueue)
+		queue.enqueue()
+		self.assertEqual(data, queue.queue)
 
 	def test_enqueue_data(self):
 		"""

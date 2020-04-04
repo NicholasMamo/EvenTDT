@@ -26,12 +26,7 @@ class Queue(object):
 		"""
 		Add the given data to the queue.
 		All arguments can be provided as arguments.
-
-		:raises ValueError: When no data is given.
 		"""
-
-		if not (args):
-			raise ValueError("No data given")
 
 		self.queue.extend(args)
 
