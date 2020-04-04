@@ -68,7 +68,7 @@ class Cleaner(object):
 
 		lines = text.split('\n')
 		lines = [ line for line in lines if len(line) ]
-
+		lines = [ self._complete_sentences(line) for line in lines ] if self.complete_sentences else lines
 		return ' '.join(lines)
 
 	def _remove_alt_codes(self, text):

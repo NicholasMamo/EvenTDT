@@ -105,6 +105,18 @@ From now until the end of April all digital versions (apart from Issue 15) will 
 So please either send the link or share the files with anyone who's self-isolating and could do with some reading material."""
 		self.assertEqual('SPECIAL OFFER From now until the end of April all digital versions (apart from Issue 15) will be available to download for FREE. So please either send the link or share the files with anyone who\'s self-isolating and could do with some reading material.', cleaner.clean(text))
 
+	def test_collapse_new_lines_complete_sentences(self):
+		"""
+		Test that when collapsing new lines with the flag to complete sentences, periods are added where necessary.
+		"""
+
+		cleaner = Cleaner(complete_sentences=True, collapse_new_lines=True)
+
+		text = """SPECIAL OFFER
+From now until the end of April all digital versions (apart from Issue 15) will be available to download for FREE.
+So please either send the link or share the files with anyone who's self-isolating and could do with some reading material."""
+		self.assertEqual('SPECIAL OFFER. From now until the end of April all digital versions (apart from Issue 15) will be available to download for FREE. So please either send the link or share the files with anyone who\'s self-isolating and could do with some reading material.', cleaner.clean(text))
+
 	def test_remove_alt_codes(self):
 		"""
 		Test that when remove alt-codes, they are indeed removed.
