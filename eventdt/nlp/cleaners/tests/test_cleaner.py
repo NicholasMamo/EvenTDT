@@ -59,6 +59,16 @@ class TestCleaner(unittest.TestCase):
 		text = ' Our prediction based on #FIFA Rankings, &amp; Country Risk Ratings '
 		self.assertEqual('Our prediction based on #FIFA Rankings, &amp; Country Risk Ratings', cleaner.clean(text))
 
+	def test_strip_after_processing(self):
+		"""
+		Test that the text is stripped after processing.
+		"""
+
+		cleaner = Cleaner(remove_alt_codes=True)
+
+		text = ' Our prediction based on #FIFA Rankings, Country Risk Ratings &amp;'
+		self.assertEqual('Our prediction based on #FIFA Rankings, Country Risk Ratings', cleaner.clean(text))
+
 	def test_collapse_new_lines_none(self):
 		"""
 		Test that when there are no new lines to collapse, the text is returned the same.

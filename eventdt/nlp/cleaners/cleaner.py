@@ -51,7 +51,7 @@ class Cleaner(object):
 	def clean(self, text):
 		"""
 		Clean the given text.
-		The basic cleaner always strips empty whitespaces before any pre-processing.
+		The basic cleaner always strips empty whitespaces before and after all processing.
 
 		:param text: The text to clean.
 		:type text: str
@@ -65,6 +65,7 @@ class Cleaner(object):
 		text = self._remove_alt_codes(text) if self.remove_alt_codes else text
 		text = self._complete_sentences(text) if self.complete_sentences else text
 		text = self._collapse_whitespaces(text) if self.collapse_whitespaces else text
+		text = text.strip()
 
 		return text
 

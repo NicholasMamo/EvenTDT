@@ -378,7 +378,7 @@ class TestTokenizer(unittest.TestCase):
 		t = Tokenizer(remove_unicode_entities=False, stem=False, min_length=1, remove_punctuation=False)
 		self.assertEqual([ 'زود_فولورز_مع_المباحث' ], t.tokenize(s))
 
-	def test_unicode_retentionl_includes_emojis(self):
+	def test_unicode_retention_includes_emojis(self):
 		"""
 		Test that the unicode entity retention also allows emojis.
 		"""
