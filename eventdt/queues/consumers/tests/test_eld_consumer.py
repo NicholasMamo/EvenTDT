@@ -31,7 +31,7 @@ class TestELDConsumer(unittest.TestCase):
 		"""
 
 		queue = Queue()
-		consumer = ELDConsumer(queue, 60, TF())
+		consumer = ELDConsumer(queue, 60, scheme=TF())
 		self.assertEqual(queue, consumer.queue)
 		self.assertEqual(0, consumer.queue.length())
 		self.assertEqual(60, consumer.time_window)
@@ -43,7 +43,7 @@ class TestELDConsumer(unittest.TestCase):
 		"""
 
 		queue = Queue()
-		consumer = ELDConsumer(queue, 60, TF())
+		consumer = ELDConsumer(queue, 60)
 		self.assertEqual(Queue, type(consumer.buffer))
 		self.assertEqual(0, consumer.buffer.length())
 
@@ -52,7 +52,7 @@ class TestELDConsumer(unittest.TestCase):
 		Test that when filtering a list of empty tweets, another empty list is returned.
 		"""
 
-		consumer = ELDConsumer(Queue(), 60, TF())
+		consumer = ELDConsumer(Queue(), 60)
 		self.assertEqual([ ], consumer._filter_tweets([ ]))
 
 	def test_filter_tweets_english(self):
@@ -60,7 +60,7 @@ class TestELDConsumer(unittest.TestCase):
 		Test that when filtering a list of tweets, only English tweets are returned.
 		"""
 
-		consumer = ELDConsumer(Queue(), 60, TF())
+		consumer = ELDConsumer(Queue(), 60)
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			lines = f.readlines()
 			tweets = [ json.loads(line) for line in lines ]
@@ -74,7 +74,7 @@ class TestELDConsumer(unittest.TestCase):
 		Test that when filtering tweets, all returned tweets have no more than 2 hashtags.
 		"""
 
-		consumer = ELDConsumer(Queue(), 60, TF())
+		consumer = ELDConsumer(Queue(), 60)
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			lines = f.readlines()
 			tweets = [ json.loads(line) for line in lines ]
@@ -88,7 +88,7 @@ class TestELDConsumer(unittest.TestCase):
 		Test that when filtering tweets, all returned tweets' authors have favourited at least one tweet.
 		"""
 
-		consumer = ELDConsumer(Queue(), 60, TF())
+		consumer = ELDConsumer(Queue(), 60)
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			lines = f.readlines()
 			tweets = [ json.loads(line) for line in lines ]
@@ -102,7 +102,7 @@ class TestELDConsumer(unittest.TestCase):
 		Test that when filtering tweets, all users have at least one follower for every thousand tweets they've published.
 		"""
 
-		consumer = ELDConsumer(Queue(), 60, TF())
+		consumer = ELDConsumer(Queue(), 60)
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			lines = f.readlines()
 			tweets = [ json.loads(line) for line in lines ]
@@ -116,7 +116,7 @@ class TestELDConsumer(unittest.TestCase):
 		Test that when filtering tweets, they can have no more than one URL.
 		"""
 
-		consumer = ELDConsumer(Queue(), 60, TF())
+		consumer = ELDConsumer(Queue(), 60)
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			lines = f.readlines()
 			tweets = [ json.loads(line) for line in lines ]
@@ -130,7 +130,7 @@ class TestELDConsumer(unittest.TestCase):
 		Test that when filtering tweets, their authors must have a non-empty biography.
 		"""
 
-		consumer = ELDConsumer(Queue(), 60, TF())
+		consumer = ELDConsumer(Queue(), 60)
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			lines = f.readlines()
 			tweets = [ json.loads(line) for line in lines ]
@@ -144,7 +144,7 @@ class TestELDConsumer(unittest.TestCase):
 		Test that when filtering tweets twice, the second time has no effect.
 		"""
 
-		consumer = ELDConsumer(Queue(), 60, TF())
+		consumer = ELDConsumer(Queue(), 60)
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			lines = f.readlines()
 			tweets = [ json.loads(line) for line in lines ]
@@ -168,7 +168,7 @@ class TestELDConsumer(unittest.TestCase):
 		Test that when filtering tweets, the tweet data does not change.
 		"""
 
-		consumer = ELDConsumer(Queue(), 60, TF())
+		consumer = ELDConsumer(Queue(), 60)
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			lines = f.readlines()
 			tweets = [ json.loads(line) for line in lines ]
@@ -180,7 +180,7 @@ class TestELDConsumer(unittest.TestCase):
 		Test that when creating a document from a tweet, the tweet is saved as an attribute.
 		"""
 
-		consumer = ELDConsumer(Queue(), 60, TF())
+		consumer = ELDConsumer(Queue(), 60)
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			tweet = json.loads(f.readline())
 			document = consumer._to_documents([ tweet ])[0]
@@ -191,7 +191,7 @@ class TestELDConsumer(unittest.TestCase):
 		Test that when the text has an ellipsis, the full text is used.
 		"""
 
-		consumer = ELDConsumer(Queue(), 60, TF())
+		consumer = ELDConsumer(Queue(), 60)
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			for line in f:
 				tweet = json.loads(line)
@@ -209,7 +209,7 @@ class TestELDConsumer(unittest.TestCase):
 		Test that when the tweet is a quote, the text is used, not the quoted tweet's text.
 		"""
 
-		consumer = ELDConsumer(Queue(), 60, TF())
+		consumer = ELDConsumer(Queue(), 60)
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			for line in f:
 				tweet = json.loads(line)
@@ -231,7 +231,7 @@ class TestELDConsumer(unittest.TestCase):
 		Test that when the tweet is a quote, the retweet's text is used.
 		"""
 
-		consumer = ELDConsumer(Queue(), 60, TF())
+		consumer = ELDConsumer(Queue(), 60)
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			for line in f:
 				tweet = json.loads(line)
@@ -254,7 +254,7 @@ class TestELDConsumer(unittest.TestCase):
 		Test that when the tweet is not a quote or retweet, the full text is used.
 		"""
 
-		consumer = ELDConsumer(Queue(), 60, TF())
+		consumer = ELDConsumer(Queue(), 60)
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			for line in f:
 				tweet = json.loads(line)
@@ -276,7 +276,7 @@ class TestELDConsumer(unittest.TestCase):
 		Test that the documents are returned normalized.
 		"""
 
-		consumer = ELDConsumer(Queue(), 60, TF())
+		consumer = ELDConsumer(Queue(), 60)
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			for line in f:
 				tweet = json.loads(line)
@@ -288,7 +288,7 @@ class TestELDConsumer(unittest.TestCase):
 		Test that when creating the first checkpoint, the nutrition is created from scratch.
 		"""
 
-		consumer = ELDConsumer(Queue(), 60, scheme=TF())
+		consumer = ELDConsumer(Queue(), 60)
 		self.assertEqual({ }, consumer.store.all())
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			line = f.readline()
@@ -305,7 +305,7 @@ class TestELDConsumer(unittest.TestCase):
 		Test that when creating an empty checkpoint, it is still recorded.
 		"""
 
-		consumer = ELDConsumer(Queue(), 60, scheme=TF())
+		consumer = ELDConsumer(Queue(), 60)
 		self.assertEqual({ }, consumer.store.all())
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			line = f.readline()
@@ -319,7 +319,7 @@ class TestELDConsumer(unittest.TestCase):
 		Test that when creating checkpoints, the correct timestamp is recorded.
 		"""
 
-		consumer = ELDConsumer(Queue(), 60, scheme=TF())
+		consumer = ELDConsumer(Queue(), 60)
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			line = f.readline()
 			tweet = json.loads(line)
@@ -334,7 +334,7 @@ class TestELDConsumer(unittest.TestCase):
 		Test that when creating checkpoints, they are rescaled correctly.
 		"""
 
-		consumer = ELDConsumer(Queue(), 60, TF())
+		consumer = ELDConsumer(Queue(), 60)
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			lines = f.readlines()
 			tweets = [ json.loads(line) for line in lines ]
@@ -350,7 +350,7 @@ class TestELDConsumer(unittest.TestCase):
 		Test that when creating a checkpoint with the timestamp before any published documents, it is empty.
 		"""
 
-		consumer = ELDConsumer(Queue(), 60, TF())
+		consumer = ELDConsumer(Queue(), 60)
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			lines = f.readlines()
 			tweets = [ json.loads(line) for line in lines ]
@@ -364,7 +364,7 @@ class TestELDConsumer(unittest.TestCase):
 		Test that when creating a checkpoint, the timestamp filter is inclusive.
 		"""
 
-		consumer = ELDConsumer(Queue(), 60, TF())
+		consumer = ELDConsumer(Queue(), 60)
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			lines = f.readlines()
 			tweets = [ json.loads(line) for line in lines ]
@@ -386,7 +386,7 @@ class TestELDConsumer(unittest.TestCase):
 		Test that when creating a checkpoint, the documents are removed from the buffer..
 		"""
 
-		consumer = ELDConsumer(Queue(), 60, TF())
+		consumer = ELDConsumer(Queue(), 60)
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			lines = f.readlines()
 			tweets = [ json.loads(line) for line in lines ]
@@ -402,7 +402,7 @@ class TestELDConsumer(unittest.TestCase):
 		Test that when creating a checkpoint and the buffer has mixed-up documents, the buffer is re-ordered.
 		"""
 
-		consumer = ELDConsumer(Queue(), 60, TF())
+		consumer = ELDConsumer(Queue(), 60)
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			lines = f.readlines()
 			tweets = [ json.loads(line) for line in lines ]
@@ -418,7 +418,7 @@ class TestELDConsumer(unittest.TestCase):
 		Test that when creating a checkpoint and the buffer has mixed-up documents, the correct documents are used.
 		"""
 
-		consumer = ELDConsumer(Queue(), 60, TF())
+		consumer = ELDConsumer(Queue(), 60)
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			lines = f.readlines()
 			tweets = [ json.loads(line) for line in lines ]
@@ -440,7 +440,7 @@ class TestELDConsumer(unittest.TestCase):
 		Test that when removing checkpoints from an empty store, nothing happens.
 		"""
 
-		consumer = ELDConsumer(Queue(), 60, TF())
+		consumer = ELDConsumer(Queue(), 60)
 		self.assertEqual({ }, consumer.store.all())
 		consumer._remove_old_checkpoints(100)
 		self.assertEqual({ }, consumer.store.all())
@@ -450,7 +450,7 @@ class TestELDConsumer(unittest.TestCase):
 		Test that when removing checkpoints at timestamp 0, nothing is removed.
 		"""
 
-		consumer = ELDConsumer(Queue(), 60, scheme=TF())
+		consumer = ELDConsumer(Queue(), 60)
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			line = f.readline()
 			tweet = json.loads(line)
@@ -466,7 +466,7 @@ class TestELDConsumer(unittest.TestCase):
 		Test that when removing checkpoints with a small timestamp that does not cover the entire sets, nothing is removed.
 		"""
 
-		consumer = ELDConsumer(Queue(), 60, scheme=TF())
+		consumer = ELDConsumer(Queue(), 60)
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			line = f.readline()
 			tweet = json.loads(line)
@@ -482,7 +482,7 @@ class TestELDConsumer(unittest.TestCase):
 		Test that when removing checkpoints, the removal is exclusive.
 		"""
 
-		consumer = ELDConsumer(Queue(), 60, scheme=TF(), sets=10)
+		consumer = ELDConsumer(Queue(), 60, sets=10)
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			line = f.readline()
 			tweet = json.loads(line)
@@ -499,7 +499,7 @@ class TestELDConsumer(unittest.TestCase):
 		Test that when removing checkpoints, any nutrition data out of frame is removed.
 		"""
 
-		consumer = ELDConsumer(Queue(), 60, scheme=TF(), sets=10)
+		consumer = ELDConsumer(Queue(), 60, sets=10)
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			line = f.readline()
 			tweet = json.loads(line)
@@ -510,3 +510,326 @@ class TestELDConsumer(unittest.TestCase):
 			self.assertEqual([ timestamp ], list(consumer.store.all().keys()))
 			consumer._remove_old_checkpoints(timestamp + 600 + 1)
 			self.assertEqual([ ], list(consumer.store.all().keys()))
+
+	def test_filter_clusters_empty(self):
+		"""
+		Test that when filtering an empty list of clusters, another empty list is returned.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60)
+		self.assertEqual([ ], consumer._filter_clusters([ ], 0))
+
+	def test_filter_clusters_copy(self):
+		"""
+		Test that when filtering a list of clusters, the list itself doesn't change, but a copy is returned.
+		The test creates singleton clusters for all documents so they are all filtered out.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, sets=10)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			clusters = [ Cluster(document) for document in documents ]
+			original = len(clusters)
+			timestamp = documents[-1].attributes['timestamp']
+			self.assertEqual(0, len(consumer._filter_clusters(clusters, timestamp)))
+			self.assertEqual(original, len(clusters))
+
+	def test_filter_clusters_size_inclusive(self):
+		"""
+		Test that when filtering a list of clusters, the minimum size is inclusive.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, min_size=3)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			clusters = [ Cluster(documents[:3]) ]
+			self.assertEqual(clusters, consumer._filter_clusters(clusters, 10))
+
+	def test_filter_clusters_small(self):
+		"""
+		Test that when filtering a list of clusters, small clusters are filtered out.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, min_size=3)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			clusters = [ Cluster(documents[:2]) ]
+			self.assertEqual([ ], consumer._filter_clusters(clusters, 10))
+
+	def test_filter_clusters_large(self):
+		"""
+		Test that when filtering a list of clusters, large clusters are retained.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, min_size=3)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			clusters = [ Cluster(documents[:4]) ]
+			self.assertEqual(clusters, consumer._filter_clusters(clusters, 10))
+
+	def test_filter_clusters_recently_checked(self):
+		"""
+		Test that when filtering a list of clusters, clusters that have been recently checked are filtered out.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, min_size=0, cooldown=10)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			clusters = [ Cluster(documents[:2], { 'last_checked': 10 }) ]
+			self.assertEqual([ ], consumer._filter_clusters(clusters, 11))
+
+	def test_filter_clusters_never_checked(self):
+		"""
+		Test that when filtering a list of clusters, clusters that have never been checked are retained.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, min_size=0, cooldown=10)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			clusters = [ Cluster(documents[:2]) ]
+			self.assertEqual(clusters, consumer._filter_clusters(clusters, 11))
+
+	def test_filter_clusters_recently_checked_exclusive(self):
+		"""
+		Test that when filtering a list of clusters, the checked filter is exclusive.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, min_size=0, cooldown=10)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			clusters = [ Cluster(documents[:2], { 'last_checked': 10 }) ]
+			self.assertEqual([ ], consumer._filter_clusters(clusters, 20))
+
+	def test_filter_clusters_checked_long_ago(self):
+		"""
+		Test that when filtering a list of clusters, clusters that were checked a long time ago are retained.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, min_size=0, cooldown=10)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			clusters = [ Cluster(documents[:2], { 'last_checked': 10 }) ]
+			self.assertEqual(clusters, consumer._filter_clusters(clusters, 21))
+
+	def test_filter_clusters_intra_similarity_low(self):
+		"""
+		Test that when filtering a list of clusters, clusters with a low intra-similarity are retained.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			clusters = [ Cluster(documents[:3]) ]
+			self.assertEqual(clusters, consumer._filter_clusters(clusters, 10))
+
+	def test_filter_clusters_intra_similarity_high(self):
+		"""
+		Test that when filtering a list of clusters, clusters with a high intra-similarity are not retained.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			clusters = [ Cluster([ documents[0] ] * 3) ]
+			self.assertEqual([ ], consumer._filter_clusters(clusters, 10))
+
+	def test_filter_clusters_no_urls(self):
+		"""
+		Test that when filtering a list of clusters, clusters whose tweets have no URLs are retained.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			tweets = [ tweet for tweet in tweets if not tweet['entities']['urls'] ]
+			documents = consumer._to_documents(tweets)
+			clusters = [ Cluster(documents[:3]) ]
+			self.assertEqual(clusters, consumer._filter_clusters(clusters, 10))
+
+	def test_filter_clusters_few_urls(self):
+		"""
+		Test that when filtering a list of clusters, clusters with a few URLs are retained.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			clusters = [ Cluster(documents[:20]) ]
+			self.assertEqual(clusters, consumer._filter_clusters(clusters, 10))
+
+	def test_filter_clusters_urls_inclusive(self):
+		"""
+		Test that when filtering a list of clusters, the check for URLs is inclusive.
+		This test adds documents having exactly one URL to a cluster.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			tweets = [ tweet for tweet in tweets if len(tweet['entities']['urls']) == 1 ]
+			documents = consumer._to_documents(tweets)
+			clusters = [ Cluster(documents[:50]) ]
+			self.assertEqual(clusters, consumer._filter_clusters(clusters, 10))
+
+	def test_filter_clusters_urls_average(self):
+		"""
+		Test that when filtering a list of clusters, the check for URLs is an average.
+		This test adds documents having no URLs and documents having 2 URLs to a cluster.
+		This brings the average to 1 URL per document.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			no_url_tweets = [ tweet for tweet in tweets if not len(tweet['entities']['urls']) ]
+			url_tweets = [ tweet for tweet in tweets if len(tweet['entities']['urls']) == 2 ]
+			no_url_documents = consumer._to_documents(no_url_tweets)
+			url_documents = consumer._to_documents(url_tweets)
+			clusters = [ Cluster(no_url_documents[:50] + url_documents[:50]) ]
+			self.assertEqual(clusters, consumer._filter_clusters(clusters, 10))
+
+	def test_filter_clusters_many_urls(self):
+		"""
+		Test that when filtering a list of clusters, clusters with many URLs are filtered out.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			tweets = [ tweet for tweet in tweets if len(tweet['entities']['urls']) == 2 ]
+			documents = consumer._to_documents(tweets)
+			clusters = [ Cluster(documents[:50]) ]
+			self.assertEqual([ ], consumer._filter_clusters(clusters, 10))
+
+	def test_filter_clusters_no_replies(self):
+		"""
+		Test that when filtering a list of clusters, clusters without replies are retained.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			documents = [ document for document in documents if not document.text.startswith('@') ]
+			clusters = [ Cluster(documents[:3]) ]
+			self.assertEqual(clusters, consumer._filter_clusters(clusters, 10))
+
+	def test_filter_clusters_few_replies(self):
+		"""
+		Test that when filtering a list of clusters, clusters with few replies are retained.
+		This test adds one document with a reply and the rest without replies to the cluster.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			documents = [ document for document in documents if not document.text.startswith('@') ]
+			reply_documents = [ document for document in documents if document.text.startswith('@') ]
+			clusters = [ Cluster(documents[:3] + reply_documents[:1]) ]
+			self.assertEqual(clusters, consumer._filter_clusters(clusters, 10))
+
+	def test_filter_clusters_replies_inclusive(self):
+		"""
+		Test that when filtering a list of clusters, the check for replies is inclusive.
+		This test adds three documents that are replies and three others that aren't to a clustser.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			documents = [ document for document in documents if not document.text.startswith('@') ]
+			reply_documents = [ document for document in documents if document.text.startswith('@') ]
+			clusters = [ Cluster(documents[:3] + reply_documents[:3]) ]
+			self.assertEqual(clusters, consumer._filter_clusters(clusters, 10))
+
+	def test_filter_clusters_replies_average(self):
+		"""
+		Test that when filtering a list of clusters, the check for replies is an average.
+		This test adds many documents that aren't mentions and one document that is to a cluster.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			documents = [ document for document in documents if not document.text.startswith('@') ]
+			reply_documents = [ document for document in documents if document.text.startswith('@') ]
+			clusters = [ Cluster(documents[:3] + reply_documents[:1]) ]
+			self.assertEqual(clusters, consumer._filter_clusters(clusters, 10))
+
+	def test_filter_clusters_many_replies(self):
+		"""
+		Test that when filtering a list of clusters, clusters with many replies are filtered out.
+		The proportion of documents added to a cluster is three being replies, and two that aren't.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			documents = [ document for document in documents if not document.text.startswith('@') ]
+			reply_documents = [ document for document in documents if document.text.startswith('@') ]
+			clusters = [ Cluster(documents[:2] + reply_documents[:3]) ]
+			self.assertEqual([ ], consumer._filter_clusters(clusters, 10))
+
+	def test_filter_clusters_mix(self):
+		"""
+		Test that when filtering a list of clusters, only those that need to be filtered out are removed.
+		In this test, one cluster is too small, one was checked recently, the other has identical documents, another has many URLs and a final one with many mentions.
+		A valid cluster is also among the clusters.
+		"""
+
+		clusters = [ ]
+		consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			clusters.append(Cluster(documents[:2]))
+			clusters.append(Cluster(documents[:50], { 'last_checked': 10 }))
+			clusters.append(Cluster([ documents[0] ] * 3))
+
+			no_url_documents = [ document for document in documents if len(document.attributes['tweet']['entities']['urls']) == 0 ]
+			url_documents = [ document for document in documents if len(document.attributes['tweet']['entities']['urls']) >= 2 ]
+			clusters.append(Cluster(no_url_documents[:1] + url_documents[:3]))
+
+			no_reply_documents = [ document for document in documents if not document.text.startswith('@') ]
+			reply_documents = [ document for document in documents if document.text.startswith('@') ]
+			clusters.append(Cluster(no_reply_documents[:2] + reply_documents[:3]))
+
+			cluster = Cluster(documents[:50])
+			clusters.append(cluster)
+			self.assertEqual([ cluster ], consumer._filter_clusters(clusters, 10))

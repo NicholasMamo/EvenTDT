@@ -71,6 +71,13 @@ class ELDConsumer(Consumer):
 				However, because of the decay in :class:`~tdt.algorithms.cataldi.Cataldi`, old time windows do not affect the result by a big margin.
 				Therefore old data can be removed safely.
 	:vartype sets: int
+	:ivar min_size: The minimum size of a cluster to be considered valid.
+	:vartype min_size: int
+	:ivar cooldown: The minimum time (in seconds) between consecutive checks of a cluster.
+	:vartype cooldown: float
+	:ivar max_intra_similarity: The maximum average similarity, between 0 and 1, of the cluster's documents with the centroid.
+								Used to filter out clusters that include only retweets of the same, or almost identical documents.
+	:vartype max_intra_similarity: float
 	:ivar store: The nutrition store used in conjunction with extractin breaking news.
 	:vartype store: :class:`~topic_detection.nutrition_store.nutrition_store.NutritionStore`
 	:ivar buffer: A buffer of tweets that have been processed, but which are not part of a checkpoint yet.
@@ -86,7 +93,7 @@ class ELDConsumer(Consumer):
 	"""
 
 	def __init__(self, queue, time_window=60, scheme=None, sets=10,
-				 threshold=0.5, freeze_period=20):
+				 threshold=0.5, freeze_period=20, min_size=3, cooldown=1, max_intra_similarity=0.8):
 		"""
 		Create the consumer with a queue.
 		Simultaneously create a nutrition store and the topic detection algorithm container.
@@ -113,13 +120,25 @@ class ELDConsumer(Consumer):
 		:type threshold: float
 		:param freeze_period: The freeze period, in seconds, of the incremental clustering approach.
 		:type freeze_period: float
+		:param min_size: The minimum size of a cluster to be considered valid.
+		:type min_size: int
+		:param cooldown: The minimum time (in seconds) between consecutive checks of a cluster.
+		:type cooldown: float
+		:param max_intra_similarity: The maximum average similarity, between 0 and 1, of the cluster's documents with the centroid.
+									 Used to filter out clusters that include only retweets of the same, or almost identical documents.
+		:type max_intra_similarity: float
 		"""
+
+		# NOTE: 1 second cooldown is very low. Maybe this parameter isn't needed.
 
 		super(ELDConsumer, self).__init__(queue)
 
 		self.time_window = time_window
 		self.scheme = scheme
 		self.sets = sets
+		self.min_size = min_size
+		self.cooldown = cooldown
+		self.max_intra_similarity = max_intra_similarity
 
 		"""
 		Create the nutrition store and the buffer.
@@ -554,75 +573,63 @@ class ELDConsumer(Consumer):
 		return self.clustering.cluster(documents, time='timestamp')
 		return clusters
 
-	def _filter_clusters(self, clusters, timestamp, min_size=10, cooldown=1, max_intra_similarity=0.8):
+	def _filter_clusters(self, clusters, timestamp):
 		"""
 		Get a list of clusters that should be checked for emerging topics.
-		The filtering looks at various aspects:
+		The filtering rules are:
 
-			#. A cluster must be slightly large, indicating popularity and importance;
+			#. A cluster must have a minimum number of tweets, indicating popularity.
 
-			#. A cluster must not have been checked very recently;
+			#. A cluster must not have been checked very recently. \
+			   This keeps from checking clusters for breaking topics too often.
+			   Instead, clusters are checked only after some time has passed to save some time.
 
 			#. A cluster's documents must not be quasi-identical to each other. \
-				This might indicate a slew of retweets. \
-				When something happens, people do not wait until someone writes something. \
-				Instead, they themselves create conversation;
-
-			#. A cluster may not have been checked previously; and
+			   This might indicate a slew of retweets. \
+			   When something happens, people do not wait until someone writes something. \
+			   Instead, they themselves create conversation;
 
 			#. A cluster must not be inundated with URLs. \
-				URLs may be used not only for links, but also media. \
-				They indicate premeditation, and possibly spam when all tweets contain them.
+			   URLs include both links and media. \
+			   They indicate premeditation, usually spam, when all tweets contain them.
 
 		:param clusters: The active clusters, which represent candidate topics.
-		:type clusters: list of :class:`~vector.cluster.cluster.Cluster` instances
-		:param timestamp: The current timestamp.
-			Used to check whether the cluster has been checked recently.
+		:type clusters: list of :class:`~vector.clustering.cluster.Cluster`
+		:param timestamp: The current timestamp, used to check how long ago the cluster was last checked.
 		:type timestamp: int
-		:param min_size: The minimum size of a cluster to be considered valid.
-		:type min_size: int
-		:param cooldown: The minimum time (in seconds) between consecutive checks of a cluster.
-		:type cooldown: float
-		:param max_intra_similarity: The maximum average similarity, between 0 and 1, of the cluster's documents with the centroid.
-			Used to filter out clusters that include only retweets of the same, or almost identical documents.
-		:type max_intra_similarity: float
 
 		:return: A list of clusters that should be checked for emerging terms.
-		:rtype: list of :class:`~vector.cluster.cluster.Cluster` instances
+		:rtype: list of :class:`~vsm.clustering.cluster.Cluster`
 		"""
 
-		retained_clusters = []
+		filtered = list(clusters)
 
 		"""
-		Clusters are valid if they are moderately large and they have not been checked recently.
-		Moreover, clusters that have more than one URL - either a link to a page, or a media file - are removed.
-		This is based on the observation that tweets with many URLs are usually premeditated, or spam.
+		Filter clusters based on readily-available attributes.
 		"""
+		filtered = filter(lambda cluster: cluster.size() >= self.min_size, filtered)
+		filtered = filter(lambda cluster: timestamp - cluster.attributes.get('last_checked', 0) > self.cooldown, filtered)
+		filtered = filter(lambda cluster: cluster.get_intra_similarity() <= self.max_intra_similarity, filtered)
+		filtered = list(filtered)
 
-		for cluster in clusters:
-			cluster.set_attribute("size", cluster.size())
-			cluster.set_attribute("cooldown", timestamp - cluster.get_attribute("last_checked", 0))
-			cluster.set_attribute("intra_similarity", cluster.get_intra_similarity())
-			cluster.initialize_attribute("checked", False) # only set the flag if it does not exist - if the cluster has been checkd, do nothing
+		"""
+		Filter clusters that have more than 1 url per tweet on average.
+		"""
+		for cluster in filtered:
+			urls = [ len(document.attributes['tweet']['entities']['urls'])
+					 for document in cluster.vectors ]
+			if sum(urls)/cluster.size() > 1:
+				filtered.remove(cluster)
 
-			url_pattern = re.compile("https:\\/\\/t.co\\/[a-zA-Z0-9]+\\b")
-			urls = [ len(url_pattern.findall(document.get_text())) for document in cluster.get_vectors() ]
-			cluster.set_attribute("average_urls", sum(urls)/len(urls))
+		"""
+		Filter clusters that have more than half of tweets being replies.
+		"""
+		for cluster in filtered:
+			replies = [ document.text.startswith('@') for document in cluster.vectors ]
+			if sum(replies)/cluster.size() > 0.5:
+				filtered.remove(cluster)
 
-			replies = [ document.get_text().startswith("@") for document in cluster.get_vectors() ]
-			cluster.set_attribute("average_replies", sum(replies)/cluster.size())
-
-		rules = [
-			("size", filter.gte, min_size),
-			("cooldown", filter.gt, cooldown),
-			("intra_similarity", filter.lte, max_intra_similarity),
-			("checked", filter.false),
-			("average_urls", filter.lte, 1),
-			("average_replies", filter.lte, 0.5),
-		]
-
-		f = Filter(rules)
-		return [cluster for cluster in clusters if f.filter(cluster.get_attributes())]
+		return list(filtered)
 
 	def _detect_topics(self, cluster, threshold, sets, timestamp, decay_rate=(1./2)):
 		"""
