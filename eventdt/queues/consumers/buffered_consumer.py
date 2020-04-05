@@ -106,11 +106,6 @@ class BufferedConsumer(Consumer):
 			elements = self.queue.dequeue_all()
 			self.buffer.enqueue(*elements)
 
-		"""
-		Set the consumer to indicate that the buffered consumer has stopped working.
-		"""
-		self.active = False
-
 	@abstractmethod
 	async def _process():
 		"""
