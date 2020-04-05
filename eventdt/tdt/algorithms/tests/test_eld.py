@@ -97,6 +97,23 @@ class TestELD(unittest.TestCase):
 		store.add(40, { 'a': 0.33, 'b': 0.67, 'c': 0.3 })
 		self.assertEqual(set([ ]), set(algo.detect(store.get(60), until=40)))
 
+	def test_detect_all_terms(self):
+		"""
+		Test that when detecting bursty terms, the data is taken from both the historic data and the nutrition.
+		For this test, the minimum burst is set such that it includes all burst values.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = ELD(store)
+		store.add(50, { 'a': 0.67, 'b': 0.3, 'c': 0.33 })
+		store.add(40, { 'a': 0.33, 'b': 0.67, 'c': 0.3 })
+		store.add(30, { 'a': 1.00, 'b': 0.75 })
+
+		self.assertEqual(set([ 'a', 'b', 'd' ]), set(algo.detect({ 'd': 1.00 }, until=40, min_burst=-1.1)))
+		self.assertEqual(set([ 'a', 'b', 'c', 'd' ]), set(algo.detect({ 'd': 1.00 }, until=60, min_burst=-1.1)))
+		self.assertEqual(set([ 'a', 'b', 'c', 'd' ]), set(algo.detect({ 'd': 1.00 }, until=60, min_burst=-1.)))
+		self.assertEqual(set([ 'd' ]), set(algo.detect({ 'd': 1.00 }, until=60)))
+
 	def test_compute_burst_non_existent_term(self):
 		"""
 		Test that when computing the burst of a term that does not exist, 0 is returned.

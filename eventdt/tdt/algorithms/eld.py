@@ -98,10 +98,19 @@ class ELD(TDTAlgorithm):
 			historic = self.store.since(since)
 
 		"""
-		Compute the burst of all the given terms.
+		Get a list of all the terms in the historic data.
+		These terms are added to the new nutrition data.
+		Burst is computed for all these terms.
+		"""
+		terms = [ term for data in historic.values()
+		 			   for term in data ]
+		terms = set(list(nutrition.keys()) + terms)
+
+		"""
+		Compute the burst of all the terms.
 		Filter those with a low burst.
 		"""
-		burst = { term: self._compute_burst(term, nutrition, historic) for term in nutrition }
+		burst = { term: self._compute_burst(term, nutrition, historic) for term in terms }
 		burst = { term: burst for term, burst in burst.items() if burst > min_burst }
 		return burst
 
