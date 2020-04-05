@@ -37,7 +37,7 @@ class ELD(TDTAlgorithm):
 	:vartype decay_rate: float
 	"""
 
-	def __init__(self, store, decay_rate=(1./2)):
+	def __init__(self, store, decay_rate=(1./2.)):
 		"""
 		:param store: The store contraining historical nutrition data.
 					  The algorithm expects the timestamps to represent checkpoints, or time windows.
@@ -55,6 +55,11 @@ class ELD(TDTAlgorithm):
 	def detect(self, nutrition, since=None, until=None, min_burst=0):
 		"""
 		Detect topics using historical data from the given nutrition store.
+
+		.. note::
+
+			The minimum burst is exclusive.
+			This is so that items with a burst of 0 (no change from previous checkpoints) are excluded.
 
 		:param nutrition: The nutrition values from the current (sliding) time window.
 						  The keys should be the terms, and the values the respective nutrition.
@@ -93,7 +98,7 @@ class ELD(TDTAlgorithm):
 			historic = self.store.since(since)
 
 		"""
-		Compute the burst of all the terms.
+		Compute the burst of all the given terms.
 		Filter those with a low burst.
 		"""
 		burst = { term: self._compute_burst(term, nutrition, historic) for term in nutrition }
