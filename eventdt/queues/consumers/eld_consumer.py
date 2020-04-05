@@ -92,7 +92,7 @@ class ELDConsumer(Consumer):
 	:vartype summarization: :class:`~summarization.algorithms.dgs.DGS`
 	"""
 
-	def __init__(self, queue, time_window=60, scheme=None, sets=10,
+	def __init__(self, queue, time_window=30, scheme=None, sets=10,
 				 threshold=0.5, freeze_period=20, min_size=3, cooldown=1, max_intra_similarity=0.8):
 		"""
 		Create the consumer with a queue.
