@@ -833,3 +833,56 @@ class TestELDConsumer(unittest.TestCase):
 			cluster = Cluster(documents[:50])
 			clusters.append(cluster)
 			self.assertEqual([ cluster ], consumer._filter_clusters(clusters, 10))
+
+	def test_detect_topics_breaking(self):
+		"""
+		Test that when detecting topics, the returned terms should be breaking.
+		"""
+
+		consumer = ELDConsumer(Queue(), 30, min_burst=0)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			line = f.readline()
+			tweet = json.loads(line)
+			documents = consumer._to_documents([ tweet ])
+			timestamp = twitter.extract_timestamp(tweet)
+			consumer.buffer.enqueue(*documents)
+			consumer._create_checkpoint(timestamp)
+			self.assertEqual([ timestamp ], list(consumer.store.all().keys()))
+			self.assertEqual(documents[0].dimensions.keys(), consumer.store.get(timestamp).keys())
+
+			"""
+			Create a new cluster with a sligtly different tweet.
+			The function should return some of the different dimensions as breaking terms.
+			"""
+			document = documents[0].copy()
+			document.text = document.text + ' pipe'
+			cluster = Cluster(document)
+			terms = consumer._detect_topics(cluster, timestamp + 60)
+			self.assertEqual([ 'pipe' ], list(terms))
+			self.assertEqual(0.5, terms.get('pipe'))
+
+	def test_detect_topics_dict(self):
+		"""
+		Test that when detecting topics, the returned terms are returned as a dictionary.
+		"""
+
+		consumer = ELDConsumer(Queue(), 30, min_burst=0)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			line = f.readline()
+			tweet = json.loads(line)
+			documents = consumer._to_documents([ tweet ])
+			timestamp = twitter.extract_timestamp(tweet)
+			consumer.buffer.enqueue(*documents)
+			consumer._create_checkpoint(timestamp)
+			self.assertEqual([ timestamp ], list(consumer.store.all().keys()))
+			self.assertEqual(documents[0].dimensions.keys(), consumer.store.get(timestamp).keys())
+
+			"""
+			Create a new cluster with a sligtly different tweet.
+			The function should return some of the different dimensions as breaking terms.
+			"""
+			document = documents[0].copy()
+			document.text = document.text + ' pipe'
+			cluster = Cluster(document)
+			terms = consumer._detect_topics(cluster, timestamp + 60)
+			self.assertEqual(dict, type(terms))

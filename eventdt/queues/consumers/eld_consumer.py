@@ -66,11 +66,6 @@ class ELDConsumer(Consumer):
 	:vartype time_window: int
 	:ivar scheme: The term-weighting scheme used to create documents.
 	:vartype scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
-	:ivar sets: The number of time windows that are considered when computing burst.
-				The higher this number, the more precise the calculations.
-				However, because of the decay in :class:`~tdt.algorithms.cataldi.Cataldi`, old time windows do not affect the result by a big margin.
-				Therefore old data can be removed safely.
-	:vartype sets: int
 	:ivar min_size: The minimum size of a cluster to be considered valid.
 	:vartype min_size: int
 	:ivar cooldown: The minimum time (in seconds) between consecutive checks of a cluster.
@@ -78,6 +73,14 @@ class ELDConsumer(Consumer):
 	:ivar max_intra_similarity: The maximum average similarity, between 0 and 1, of the cluster's documents with the centroid.
 								Used to filter out clusters that include only retweets of the same, or almost identical documents.
 	:vartype max_intra_similarity: float
+	:ivar sets: The number of time windows that are considered when computing burst.
+				The higher this number, the more precise the calculations.
+				However, because of the decay in :class:`~tdt.algorithms.cataldi.Cataldi`, old time windows do not affect the result by a big margin.
+				Therefore old data can be removed safely.
+	:vartype sets: int
+	:ivar min_burst: The minimum burst of a term to be considered emerging and returned.
+					 This value is exclusive.
+	:vartype min_burst: float
 	:ivar store: The nutrition store used in conjunction with extractin breaking news.
 	:vartype store: :class:`~topic_detection.nutrition_store.nutrition_store.NutritionStore`
 	:ivar buffer: A buffer of tweets that have been processed, but which are not part of a checkpoint yet.
@@ -92,8 +95,9 @@ class ELDConsumer(Consumer):
 	:vartype summarization: :class:`~summarization.algorithms.dgs.DGS`
 	"""
 
-	def __init__(self, queue, time_window=30, scheme=None, sets=10,
-				 threshold=0.5, freeze_period=20, min_size=3, cooldown=1, max_intra_similarity=0.8):
+	def __init__(self, queue, time_window=30, scheme=None,
+				 threshold=0.5, freeze_period=20, min_size=3, cooldown=1, max_intra_similarity=0.8,
+				 sets=10, min_burst=0.5):
 		"""
 		Create the consumer with a queue.
 		Simultaneously create a nutrition store and the topic detection algorithm container.
@@ -110,11 +114,6 @@ class ELDConsumer(Consumer):
 		:param scheme: The term-weighting scheme that is used to create dimensions.
 					   If `None` is given, the :class:`~nlp.term_weighting.tf.TF` term-weighting scheme is used.
 		:type scheme: None or :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
-		:param sets: The number of time windows that are considered when computing burst.
-					 The higher this number, the more precise the calculations.
-					 However, because of the decay in :class:`~tdt.algorithms.cataldi.Cataldi`, old time windows do not affect the result by a big margin.
-					 Therefore old data can be removed safely.
-		:type sets: int
 		:param threshold: The similarity threshold to use for the :class:`~vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans` incremental clustering approach.
 						  Documents are added to an existing cluster if their similarity with the centroid is greater than or equal to this threshold.
 		:type threshold: float
@@ -127,6 +126,14 @@ class ELDConsumer(Consumer):
 		:param max_intra_similarity: The maximum average similarity, between 0 and 1, of the cluster's documents with the centroid.
 									 Used to filter out clusters that include only retweets of the same, or almost identical documents.
 		:type max_intra_similarity: float
+		:param sets: The number of time windows that are considered when computing burst.
+					 The higher this number, the more precise the calculations.
+					 However, because of the decay in :class:`~tdt.algorithms.cataldi.Cataldi`, old time windows do not affect the result by a big margin.
+					 Therefore old data can be removed safely.
+		:type sets: int
+		:param min_burst: The minimum burst of a term to be considered emerging and returned.
+						  This value is exclusive.
+		:type min_burst: float
 		"""
 
 		# NOTE: 1 second cooldown is very low. Maybe this parameter isn't needed.
@@ -139,6 +146,7 @@ class ELDConsumer(Consumer):
 		self.min_size = min_size
 		self.cooldown = cooldown
 		self.max_intra_similarity = max_intra_similarity
+		self.min_burst = min_burst
 
 		"""
 		Create the nutrition store and the buffer.
@@ -515,6 +523,7 @@ class ELDConsumer(Consumer):
 		:param timestamp: The timestamp of the new checkpoint.
 						  The nutrition data is from documents published in the time window that ends at this timestamp.
 						  Newer documents are left in the buffer.
+						  This timestamp is inclusive.
 		:type timestamp: int
 		"""
 
@@ -631,40 +640,42 @@ class ELDConsumer(Consumer):
 
 		return list(filtered)
 
-	def _detect_topics(self, cluster, threshold, sets, timestamp, decay_rate=(1./2)):
+	def _detect_topics(self, cluster, timestamp):
 		"""
-		Perform topic detection.
+		Detect topics using historical data from the given nutrition store.
 
-		:param cluster: The cluster from which to extract the documents.
-		:type cluster: :class:`~vector.cluster.cluster.Cluster`
-		:param threshold: The minimum emergence of a term to be said to be breaking.
-		:type threshold: float
-		:param sets: The number of time windows to consider.
-		:type sets: int
-		:param timestamp: The current timestamp, used to isolate recent documents.
+		:param cluster: The cluster for which to identify breaking topics.
+		:type cluster: :class:`~vsm.clustering.cluster.Cluster`
+		:param timestamp: The current timestamp.
+						  Sets older than this timestamp are used to calculate the burst.
 		:type timestamp: int
-		:param decay_rate: The decay rate - a smaller decay rate favors recent time windows.
-		:type decay_rate: float
 
-		:return: A list of emerging terms from the cluster.
-			Each term is actually a tuple, containing the keyword and its emergence.
-		:rtype: list
+		:return: The breaking terms and their burst as a dictionary.
+				 The keys are the terms and the values are the respective burst values.
+		:rtype: dict
 		"""
 
-		cluster.set_attribute("last_checked", timestamp)
-		documents = self._get_recent_documents(cluster, timestamp)
-		single_document = vector_math.concatenate(documents)
-		single_document = vector_math.augmented_normalize(single_document, a=0)
+		"""
+		Mark the cluster as having been checked.
+		"""
+		cluster.attributes['last_checked'] = timestamp
 
-		terms = mamo_eld.detect_topics(self.store, # use the nutrition store's checkpoints as historical data
-			single_document.get_dimensions(),  # the current data is the most recent documents from the cluster
-			threshold, # use a strict threshold
-			sets=sets, # consider the past few sets
-			timestamp=timestamp-self.time_window,# do not consider checkpoints in this sliding time window, but only those that preceed it
-			decay_rate=decay_rate, # set a decay rate,
-			term_only=False
-		)
-		return terms
+		"""
+		Create a pseudo-checkpoint from the cluster's documents.
+		"""
+		document = Document.concatenate(*cluster.vectors, tokenizer=self.tokenizer, scheme=self.scheme)
+		max_magnitude = max(document.dimensions.values())
+		document.dimensions = { dimension: magnitude / max_magnitude
+								for dimension, magnitude in document.dimensions.items() }
+
+		"""
+		Calculate the burst for all the terms in the cluster's pseudo-checkpoint.
+		The last sets are used.
+		"""
+		since = timestamp - self.time_window * self.sets
+		until = timestamp - self.time_window
+		return self.tdt.detect(document.dimensions, min_burst=self.min_burst,
+							   since=since, until=until)
 
 class SimulatedELDConsumer(ELDConsumer):
 	"""

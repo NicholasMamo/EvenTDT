@@ -572,7 +572,7 @@ class TestFIREConsumer(unittest.TestCase):
 
 	def test_detect_topics_breaking(self):
 		"""
-		Test that when detecting topics, the nutrition store itself does not change.
+		Test that when detecting topics, the returned terms are breaking.
 		"""
 
 		consumer = FIREConsumer(Queue(), 60, scheme=TF(), sets=10)
