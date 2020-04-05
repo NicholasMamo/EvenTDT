@@ -118,7 +118,7 @@ class FIREConsumer(SimulatedBufferedConsumer):
 
 		timeline = Timeline(ClusterNode, 0, 1)
 
-		while not self.stopped:
+		while not self.active:
 			if self.buffer.length() > 0:
 				"""
 				If there are any tweets in the buffer, dequeue and filter them, and convert them into documents.

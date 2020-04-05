@@ -109,7 +109,7 @@ class BufferedConsumer(Consumer):
 		"""
 		Set the consumer to indicate that the buffered consumer has stopped working.
 		"""
-		self.stopped = True
+		self.active = False
 
 	@abstractmethod
 	async def _process():
