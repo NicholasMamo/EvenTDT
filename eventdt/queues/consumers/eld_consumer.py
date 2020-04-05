@@ -509,6 +509,22 @@ class ELDConsumer(Consumer):
 
 		return documents
 
+	def _latest_timestamp(self, documents):
+		"""
+		Get the latest timestamp from the given documents.
+
+		:param documents: The list of documents from where to get the latest timestamp.
+		:type documents: list of :class:`~nlp.document.Document`
+
+		:return: The latest timestamp in the given document set.
+		:rtype: int
+
+		:raises ValueError: When there are no documents to consider.
+		"""
+
+		timestamps = [ document.attributes['timestamp'] for document in documents ]
+		return max(timestamps)
+
 	def _create_checkpoint(self, timestamp):
 		"""
 		After every time window has elapsed, use all the buffered documents to create a new checkpoint.

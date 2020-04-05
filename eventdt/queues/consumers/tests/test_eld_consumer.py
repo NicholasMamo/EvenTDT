@@ -283,6 +283,38 @@ class TestELDConsumer(unittest.TestCase):
 				document = consumer._to_documents([ tweet ])[0]
 				self.assertEqual(1, round(vector_math.magnitude(document), 10))
 
+	def test_latest_timestamp_empty(self):
+		"""
+		Test that when getting the timestamp from an empty set, a ValueError is raised.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60)
+		self.assertRaises(ValueError, consumer._latest_timestamp, [ ])
+
+	def test_latest_timestamp(self):
+		"""
+		Test getting the latest timestamp from a corpus of documents.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			self.assertEqual(documents[-1].attributes['timestamp'], consumer._latest_timestamp(documents))
+
+	def test_latest_timestamp_reversed(self):
+		"""
+		Test that when getting the latest timestamp from a corpus of reversed documents, the actual latest timestamp is given.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)[::-1]
+			self.assertEqual(documents[0].attributes['timestamp'], consumer._latest_timestamp(documents))
+
 	def test_create_checkpoint_first(self):
 		"""
 		Test that when creating the first checkpoint, the nutrition is created from scratch.
