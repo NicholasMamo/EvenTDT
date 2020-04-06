@@ -90,7 +90,7 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 
 		timeline = Timeline(DocumentNode, 0, 1)
 
-		while not self.stopped:
+		while self.active:
 			if self.buffer.length() > 0:
 				"""
 				If there are tweets in the buffer, dequeue them and convert them into documents.
