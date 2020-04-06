@@ -339,6 +339,9 @@ class ELDConsumer(Consumer):
 				tweets = self.queue.dequeue_all()
 				tweets = self._filter_tweets(tweets)
 				documents = self._to_documents(tweets)
+				if not tweets:
+					continue
+
 				latest_timestamp = self._latest_timestamp(documents)
 				self.buffer.enqueue(*documents)
 
