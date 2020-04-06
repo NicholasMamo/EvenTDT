@@ -771,14 +771,11 @@ class SimulatedELDConsumer(ELDConsumer):
 
 		return self._idf
 
-	async def _consume(self, max_time, max_inactivity, *args, **kwargs):
+	async def _consume(self, max_inactivity, *args, **kwargs):
 		"""
 		Consume and process the documents in the queue.
 		Processed documents are added to the buffer.
 
-		:param max_time: The maximum time in seconds to spend consuming the queue.
-						 It may be interrupted if the queue is inactive for a long time.
-		:type max_time: int
 		:param max_inactivity: The maximum time in seconds to wait idly without input before stopping.
 							   If it is negative, the consumer keeps waiting for input until the maximum time expires.
 		:type max_inactivity: int
@@ -790,19 +787,11 @@ class SimulatedELDConsumer(ELDConsumer):
 		timeline = Timeline(TopicalClusterNode, expiry=90, min_similarity=0.6)
 
 		"""
-		Before starting, record the starting time.
-		This is the consumer may only run until the maximum time parameter is reached at most.
-
-		In addition, create placeholder variables to store the time of publication of the timestamp of the last checkpoint.
-		The former is used when creating checkpoints.
+		The consumer keeps should keep working until it is stopped.
+		Before that, create a placeholder variable to store the time of the last checkpoint.
 		"""
-		real_start = time.time()
 		last_checkpoint = None
-
-		"""
-		The consumer keeps should keep working until it is stopped or it runs out of time.
-		"""
-		while self.active and time.time() - real_start < max_time:
+		while self.active:
 			"""
 			If the queue is idle, stop waiting for input.
 			"""
