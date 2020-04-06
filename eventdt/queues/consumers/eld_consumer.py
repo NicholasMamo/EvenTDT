@@ -567,7 +567,6 @@ class ELDConsumer(Consumer):
 		"""
 
 		return self.clustering.cluster(documents, time='timestamp')
-		return clusters
 
 	def _filter_clusters(self, clusters, timestamp):
 		"""
