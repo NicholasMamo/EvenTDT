@@ -849,10 +849,15 @@ class SimulatedELDConsumer(ELDConsumer):
 						#. It has at least 3 breaking terms, or
 
 						#. The average burst of its breaking terms is higher than 0.9.
+
+					Clusters that are breaking are marked as such so that they are not checked again.
 					"""
 					terms = self._detect_topics(cluster, latest_timestamp)
 					if len(terms) > 2 or (terms and sum(terms.values())/len(terms) > 0.9):
-						timeline.add(timestamp=latest_timestamp, cluster, Vector(terms))
+						cluster.attributes['bursty'] = True
+						topic = Vector(terms)
+						topic.normalize()
+						timeline.add(timestamp=latest_timestamp, cluster=cluster, topic=topic)
 						summary = self.summarization.summarize(timeline.nodes[-1].get_all_documents(), 140)
 						logger.info(f"{datetime.fromtimestamp(latest_timestamp).ctime()}: { str(summary) }")
 
