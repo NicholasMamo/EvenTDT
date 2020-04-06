@@ -136,7 +136,7 @@ class Consumer(ABC):
 		"""
 		If the queue is still empty, return `False` because the queue is idle.
 		"""
-		if inactive >= max_inactivity and max_inactivity > 0:
+		if inactive >= max_inactivity and max_inactivity >= 0:
 			return False
 
 		return True
