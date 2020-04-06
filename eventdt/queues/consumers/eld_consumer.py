@@ -31,6 +31,7 @@ from .consumer import Consumer
 from apd.participant_detector import ParticipantDetector
 from apd.extractors.local.entity_extractor import EntityExtractor
 from apd.extrapolators.external.wikipedia_extrapolator import WikipediaExtrapolator
+from apd.filters.local.threshold_filter import ThresholdFilter
 from apd.postprocessors.external.wikipedia_postprocessor import WikipediaPostprocessor
 from apd.resolvers.external.wikipedia_search_resolver import WikipediaSearchResolver
 from apd.scorers.local.log_tf_scorer import LogTFScorer
@@ -243,55 +244,50 @@ class ELDConsumer(Consumer):
 
 		return TFIDF(idf, self.buffer.size())
 
-	async def _detect_participants(self, general_idf, known_participants=None, *args, **kwargs):
+	async def _detect_participants(self, *args, **kwargs):
 		"""
 		Detect participants from the received documents.
 
-		:param general_idf: The general IDF table, constructed from a general corpus.
-			This corpus represents the general discourse of Twitter.
-			It is assumed that one of the keys of the table is the 'DOCUMENTS' field.
-		:type general_idf: dict
-		:param known_participants: A list of participants that are known in advance.
-			These are passed on to be resolved, which means they may not be retained by the resolver.
-		:type known_participants: list
+		ELD assumes that all participants are named entities.
+		Therefore the APD process is based on the :class:`~apd.extractors.local.entity_extractor.EntityExtractor`.
+
+		This function assumes that it follows the :func:`~queues.consumers.eld_consumer.ELDConsumer._construct_idf` function.
+		Therefore the documents it uses are those added to the buffer.
 
 		:return: A list of participants.
-		:rtype: list
+		:rtype: list of str
 		"""
 
+		"""
+		Load the documents from the buffer.
+		"""
 		documents = self.buffer.dequeue_all()
-		cleaner = tweet_cleaner.TweetCleaner()
-		scorer = tweet_scorer.TweetScorer()
-
-		rules = [
-			("score", filter.gte, 0.9),
-			# ("verified", filter.true),
-		]
-
-		f = Filter(rules)
-
-		corpus = []
 		for document in documents:
-			document.set_text(cleaner.clean(document.get_text()))
+			"""
+			Go through each document and clean it.
+			"""
+			document.text = self.cleaner.clean(document.text)
 
-			tweet = {
-				"score": scorer.score(document),
-				# "verified": document.get_attribute("tweet")["user"]["verified"]
-			}
+			"""
+			Only documents that have a very high quality are allowed to be used by the participant detector.
+			"""
+			brevity = self._brevity_score(document.text)
+			emotion = self._emotion_score(document.text)
+			if brevity * emotion >= 0.9:
+				corpus.remove(document)
 
-			if f.filter(tweet):
-				corpus.append(document)
+		"""
+		Detect participants with the assumption that participants are named entities.
+		"""
+		extractor = EntityExtractor()
+		scorer = LogTFScorer()
+		filter = ThresholdFilter(0.2)
+		resolver = WikipediaSearchResolver(self.scheme, self.tokenizer, 0.05, documents)
+		extrapolator = WikipediaExtrapolator(documents, self.tokenizer, self.scheme, threshold=0.05)
+		postprocessor = WikipediaPostprocessor()
 
-		known_participants = [] if type(known_participants) is not list else known_participants
-		known_participants = [ keyword for keyword in known_participants if all(c.isalpha() or c.isspace() for c in keyword) ]
-
-		participant_detector = ParticipantDetector(corpus, EntityExtractor, LogSumScorer, WikipediaSearchResolver, WikipediaExtrapolator, WikipediaPostprocessor)
-		resolved, unresolved, extrapolated = participant_detector.detect(threshold=0.2, max_candidates=20, known_participants=known_participants,
-			resolver_scheme=TFIDF(general_idf), resolver_threshold=0.05,
-			extrapolator_scheme=TFIDF(general_idf), extrapolator_participants=30, extrapolator_threshold=0.05,
-			postprocessor_surname_only=True)
-		logger.info("Found participants: %s" % ', '.join(resolved))
-		logger.info("Extrapolated participants: %s" % ', '.join(extrapolated))
+		apd = ParticipantDetector(extractor, scorer, filter, resolver, extrapolator, postprocessor)
+		resolved, unresolved, extrapolated = apd.detect(documents)
 		return resolved + extrapolated
 
 	async def _consume(self, max_inactivity, *args, **kwargs):
@@ -714,7 +710,7 @@ class ELDConsumer(Consumer):
 		scores = { }
 		for document in documents:
 			brevity = self._brevity_score(document.text, *args, **kwargs)
-			emotion = self._emotion_score(document.text)
+			emotion = self._emotion_score(document.text, *args, **kwargs)
 			scores[document] = brevity * emotion
 
 		return sorted(scores, key=scores.get, reverse=True)
