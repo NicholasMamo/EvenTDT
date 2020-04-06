@@ -303,128 +303,93 @@ class ELDConsumer(Consumer):
 		logger.info("Extrapolated participants: %s" % ', '.join(extrapolated))
 		return resolved + extrapolated
 
-	async def _consume(self, max_time, max_inactivity, min_size=3, *args, **kwargs):
+	async def _consume(self, max_inactivity, *args, **kwargs):
 		"""
 		Consume and process the documents in the queue.
 		Processed documents are added to the buffer.
 
-		:param max_time: The maximum time (in seconds) to spend understanding the event.
-			It may be interrupted if the queue is inactive for a long time.
-		:type max_time: int
-		:param max_inactivity: The maximum time (in seconds) to wait idly without input before stopping.
-			If it is negative, it is ignored.
+		:param max_inactivity: The maximum time in seconds to wait idly without input before stopping.
+							   If it is negative, the consumer keeps waiting for input until the maximum time expires.
 		:type max_inactivity: int
+
+		:return: The constructed timeline.
+		:rtype: :class:`~summarization.timeline.timeline.Timeline`
 		"""
 
-		sets = 10
-		threshold = 0.5
-		freeze_period = 20
-		min_burst = 0.5
+		timeline = Timeline(TopicalClusterNode, expiry=90, min_similarity=0.6)
 
-		logger.info("Time window: %ds" % self.time_window)
-		logger.info("Sets: %d" % sets)
-		logger.info("Minimum cluster size: %d" % min_size)
-		logger.info("Cluster threshold: %f" % threshold)
-		logger.info("Freeze period: %ds" % freeze_period)
-		logger.info("Minimum burst: %f" % min_burst)
-
-		self.buffer.dequeue_all()
-		real_start = datetime.now().timestamp() # the consumer will run for a limited real time
-		start, last_timestamp = None, None # if a file is being used, the timing starts from the first tweet
-		total_documents, total_tweets = 0, 0
-
-		while True and self.active and (datetime.now().timestamp() - real_start < max_time): # The consumer should keep working until it is stopped or it runs out of time
+		"""
+		The consumer keeps should keep working until it is stopped.
+		Before that, create a placeholder variable to store the time of the last checkpoint.
+		"""
+		last_checkpoint = None
+		while self.active:
 			"""
 			If the queue is idle, stop waiting for input.
 			"""
-			active = await self._wait_for_input(max_inactivity=max_inactivity)
-			if not active:
+			inactive = await self._wait_for_input(max_inactivity=max_inactivity)
+			if inactive:
 				break
 
-			"""
-			Get all the tweets in the queue and add them to the buffer to be used for the checkpoint.
-			"""
-			tweets = self.queue.dequeue_all()
-			total_tweets += len(tweets)
-			tweets = self._filter_tweets(tweets)
-			documents = self._to_documents(tweets)
-			documents = [ document for document in documents if last_timestamp is None or document.get_attribute("timestamp") >= last_timestamp ]
-			documents = sorted(documents, key=lambda document: document.get_attribute("timestamp")) # NOTE: Untested
-
-			self.buffer.enqueue(documents)
-
-			if len(documents) > 0:
+			if self.queue.length():
 				"""
-				If this is the first batch of tweets, start timing the procedure.
+				Get all the tweets in the queue and convert them to documents.
+				These documents are added to the buffer so that they can become part of a checkpoint later.
+				"""
+				tweets = self.queue.dequeue_all()
+				tweets = self._filter_tweets(tweets)
+				documents = self._to_documents(tweets)
+				latest_timestamp = self._latest_timestamp(documents)
+				self.buffer.enqueue(*documents)
+
+				"""
+				In the first batch of tweets, the last checkpoint is set to be the first document's timestamp.
+				"""
+				last_checkpoint = last_checkpoint or documents[0].attributes['timestamp']
+
+				"""
 				If a time window has passed, create a checkpoint.
-				The timing is incremented, rather than updated.
-				This is aimed at circumventing problems when the consumer spends a lot of time waiting for input.
-				In such cases, the time windows could be of unequal length.
+				Multiple checkpoints can be created in every iteration.
+				This is because when there are backlogs, an iteration can take longer than a time window.
+				In this way, all time windows are of equal length.
 				"""
-				start = documents[0].get_attribute("timestamp") if start is None else start
-
-				last_timestamp = documents[len(documents) - 1].get_attribute("timestamp")
-				checkpoints = 0
-				while start is not None and last_timestamp - start >= self.time_window:
-					start += self.time_window
-					await self._create_checkpoint(start, sets)
-					checkpoints += 1
-
-				if checkpoints >= 1:
-					self.summarization.ping(last_timestamp)
+				while latest_timestamp - last_checkpoint >= self.time_window:
+					last_checkpoint += self.time_window
+					self._create_checkpoint(last_checkpoint)
 
 				"""
-				The current implementation resumes from the last time window if there is a backlog.
-				That is, it skips all of those that are late.
-				This makes sure that the backlog does not snowball.
-				To fix this, don't work with all `documents`, but isolate a document set for each time window.
+				To avoid backlogs from hogging the system, documents published since before the last time window are not used.
+				That is, the implementation skips all of those that are late.
 				"""
-				if (checkpoints > 1):
-					logger.warning("%d checkpoints created at time %s (UTC)" % (
-						checkpoints,
-						datetime.fromtimestamp(last_timestamp).strftime('%Y-%m-%d %H:%M:%S'))
-					)
-				documents = [ document for document in documents if document.get_attribute("timestamp") >= start ]
+				documents = [ document for document in documents
+							  if latest_timestamp - document.attributes['timestamp'] < self.time_window ]
 
 				"""
-				If the understanding period has passed, start consuming the stream.
-
-				Scenarios:
-					In small events, a threshold of 0.6 and a minimum cluster size of 2 can help with a freeze period of 30 seconds.
-					In larger events, a threshold of 0.65 and a minimum cluster size of 3 is preferable with a freeze period of 30 seconds.
-
-					In large events, a threshold of 0.6 and a minimum cluster size of 3 works better with a freeze period of 20 seconds, but with a burst threshold of 0.8.
+				Cluster the documents that remain and filter the clusters.
+				For each cluster, detect any breaking terms.
 				"""
-				clusters = self._cluster(documents, threshold=threshold, freeze_period=freeze_period) # TEMP: Updated threshold from 0.6 to 0.5 for LIVFUL match, worked well for ARSLIV.
-				clusters = self._filter_clusters(clusters, last_timestamp, min_size=min_size, max_intra_similarity=0.9) # TEMP: Updated minimum size from 2 to 3 for LIVFUL match, worked well for ARSLIV.
+				clusters = self._cluster(documents)
+				clusters = self._filter_clusters(clusters, latest_timestamp)
 				for cluster in clusters:
 					"""
-					Perform topic detection
+					A cluster is breaking if:
+
+						#. It has at least 3 breaking terms, or
+
+						#. The average burst of its breaking terms is higher than 0.9.
+
+					Clusters that are breaking are marked as such so that they are not checked again.
 					"""
-					terms = self._detect_topics(cluster, threshold=min_burst, sets=sets, timestamp=last_timestamp, decay_rate=(1./5.))
-					if len(terms) > 0:
-						term_dict = dict(terms)
-						if len(term_dict) > 2 or sum(term_dict.values())/len(terms) > 0.9:
-							# summary = self.summarization.add_cluster(cluster, terms, last_timestamp, summarization_min_score=0.5)
-							summary = self.summarization.add_cluster(cluster, terms, last_timestamp)
+					terms = self._detect_topics(cluster, latest_timestamp)
+					if len(terms) > 2 or (terms and sum(terms.values())/len(terms) > 0.9):
+						cluster.attributes['bursty'] = True
+						topic = Vector(terms)
+						topic.normalize()
+						timeline.add(timestamp=latest_timestamp, cluster=cluster, topic=topic)
+						summary = self.summarization.summarize(timeline.nodes[-1].get_all_documents(), 140)
+						logger.info(f"{datetime.fromtimestamp(latest_timestamp).ctime()}: { str(summary) }")
 
-							cluster.set_attribute("checked", True) # once a cluster has been deemed to be breaking, it should not be checked anymore, which guards against repeated clusters in the summary
-
-		await self._create_checkpoint(last_timestamp, sets)
-		await asyncio.sleep(1)
-
-		last_summary = self.summarization.create_summary()
-		if last_summary is not None:
-			logger.info("%s last: %s" % (datetime.fromtimestamp(last_summary.created_at()).strftime('%Y-%m-%d %H:%M:%S'),
-				last_summary.generate_summary(cleaner=tweet_cleaner.TweetCleaner)))
-		else:
-			logger.info("Summarizer empty")
-
-		logger.info("Last document published at time %s (UTC)" % datetime.fromtimestamp(last_timestamp).strftime('%Y-%m-%d %H:%M:%S'))
-
-		self.stopped = True # set a boolean indicating that the consumer has successfully stopped working
-
-		return (self.summarization.export_raw_timeline(), self.summarization.export_timeline(), )
+		return timeline
 
 	def _filter_tweets(self, tweets):
 		"""
@@ -770,91 +735,3 @@ class SimulatedELDConsumer(ELDConsumer):
 		self.stopped = True # set a boolean indicating that the consumer has successfully stopped working
 
 		return self._idf
-
-	async def _consume(self, max_inactivity, *args, **kwargs):
-		"""
-		Consume and process the documents in the queue.
-		Processed documents are added to the buffer.
-
-		:param max_inactivity: The maximum time in seconds to wait idly without input before stopping.
-							   If it is negative, the consumer keeps waiting for input until the maximum time expires.
-		:type max_inactivity: int
-
-		:return: The constructed timeline.
-		:rtype: :class:`~summarization.timeline.timeline.Timeline`
-		"""
-
-		timeline = Timeline(TopicalClusterNode, expiry=90, min_similarity=0.6)
-
-		"""
-		The consumer keeps should keep working until it is stopped.
-		Before that, create a placeholder variable to store the time of the last checkpoint.
-		"""
-		last_checkpoint = None
-		while self.active:
-			"""
-			If the queue is idle, stop waiting for input.
-			"""
-			inactive = await self._wait_for_input(max_inactivity=max_inactivity)
-			if inactive:
-				break
-
-			if self.queue.length():
-				"""
-				Get all the tweets in the queue and convert them to documents.
-				These documents are added to the buffer so that they can become part of a checkpoint later.
-				"""
-				tweets = self.queue.dequeue_all()
-				tweets = self._filter_tweets(tweets)
-				documents = self._to_documents(tweets)
-				latest_timestamp = self._latest_timestamp(documents)
-				self.buffer.enqueue(*documents)
-
-				"""
-				In the first batch of tweets, the last checkpoint is set to be the first document's timestamp.
-				"""
-				last_checkpoint = last_checkpoint or documents[0].attributes['timestamp']
-
-				"""
-				If a time window has passed, create a checkpoint.
-				Multiple checkpoints can be created in every iteration.
-				This is because when there are backlogs, an iteration can take longer than a time window.
-				In this way, all time windows are of equal length.
-				"""
-				while latest_timestamp - last_checkpoint >= self.time_window:
-					last_checkpoint += self.time_window
-					self._create_checkpoint(last_checkpoint)
-
-				"""
-				To avoid backlogs from hogging the system, documents published since before the last time window are not used.
-				That is, the implementation skips all of those that are late.
-				"""
-				documents = [ document for document in documents
-							  if latest_timestamp - document.attributes['timestamp'] < self.time_window ]
-
-				"""
-				Cluster the documents that remain and filter the clusters.
-				For each cluster, detect any breaking terms.
-				"""
-				clusters = self._cluster(documents)
-				clusters = self._filter_clusters(clusters, latest_timestamp)
-				for cluster in clusters:
-					"""
-					A cluster is breaking if:
-
-						#. It has at least 3 breaking terms, or
-
-						#. The average burst of its breaking terms is higher than 0.9.
-
-					Clusters that are breaking are marked as such so that they are not checked again.
-					"""
-					terms = self._detect_topics(cluster, latest_timestamp)
-					if len(terms) > 2 or (terms and sum(terms.values())/len(terms) > 0.9):
-						cluster.attributes['bursty'] = True
-						topic = Vector(terms)
-						topic.normalize()
-						timeline.add(timestamp=latest_timestamp, cluster=cluster, topic=topic)
-						summary = self.summarization.summarize(timeline.nodes[-1].get_all_documents(), 140)
-						logger.info(f"{datetime.fromtimestamp(latest_timestamp).ctime()}: { str(summary) }")
-
-		return timeline
