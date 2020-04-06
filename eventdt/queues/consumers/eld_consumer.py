@@ -37,6 +37,7 @@ from apd.scorers.local.log_tf_scorer import LogTFScorer
 
 from logger import logger
 
+from nlp.cleaners import TweetCleaner
 from nlp.document import Document
 from nlp.term_weighting import TF, TFIDF
 from nlp.tokenizer import Tokenizer
@@ -96,6 +97,8 @@ class ELDConsumer(Consumer):
 	:vartype tdt: :class:`~tdt.algorithms.eld.ELD`
 	:ivar summarization: The summarization algorithm used to create the timeline.
 	:vartype summarization: :class:`~summarization.algorithms.dgs.DGS`
+	:ivar cleaner: The cleaner used to make summaries more presentable.
+	:vartype cleaner: :class:`~nlp.cleaners.TweetCleaner`
 	"""
 
 	def __init__(self, queue, time_window=30, scheme=None,
@@ -166,6 +169,11 @@ class ELDConsumer(Consumer):
 								   remove_unicode_entities=True)
 		self.clustering = TemporalNoKMeans(threshold=threshold, freeze_period=freeze_period, store_frozen=False)
 		self.tdt = ELD(self.store)
+		self.cleaner = TweetCleaner(remove_alt_codes=True, complete_sentences=True,
+									collapse_new_lines=True, collapse_whitespaces=True,
+									remove_unicode_entities=True, remove_urls=True,
+									remove_hashtags=True, split_hashtags=True,
+									remove_retweet_prefix=True)
 		self.summarization = DGS()
 
 	async def understand(self, max_time, max_inactivity=-1, scheme=None, *args, **kwargs):
