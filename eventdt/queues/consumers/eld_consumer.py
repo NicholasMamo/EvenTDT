@@ -327,8 +327,8 @@ class ELDConsumer(Consumer):
 			"""
 			If the queue is idle, stop waiting for input.
 			"""
-			inactive = await self._wait_for_input(max_inactivity=max_inactivity)
-			if inactive:
+			active = await self._wait_for_input(max_inactivity=max_inactivity)
+			if not active:
 				break
 
 			if self.queue.length():
