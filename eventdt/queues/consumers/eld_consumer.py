@@ -670,6 +670,35 @@ class ELDConsumer(Consumer):
 		return self.tdt.detect(document.dimensions, min_burst=self.min_burst,
 							   since=since, until=until)
 
+	def _score_documents(self, documents, *args, **kwargs):
+		"""
+		Score the given documents.
+		The score is the product of two scores:
+
+			#. A brevity score, based on `BLEU: a Method for Automatic Evaluation of Machine Translation by Papineni et al. (2002) <https://dl.acm.org/doi/10.3115/1073083.1073135>`; and
+
+			#. An emotion score, which is the complement of the fraction of tokens that are capitalized.
+
+		Any additional arguments and keyword arguments are passed on to the functions that calculate the scores.
+
+		:param documents: The list of documents to score.
+		:type documents: list of :class:`~nlp.document.Document`
+
+		:return: A list of documents ranked in descending order of their score.
+		:rtype: list of :class:`~nlp.document.Document`
+		"""
+
+		"""
+		Score each document.
+		"""
+		scores = { }
+		for document in documents:
+			brevity = self._brevity_score(document.text, *args, **kwargs)
+			emotion = self._emotion_score(document.text)
+			scores[document] = brevity * emotion
+
+		return sorted(scores, key=scores.get, reverse=True)
+
 	def _brevity_score(self, text, r=10, *args, **kwargs):
 		"""
 		Calculate the brevity score, bounded between 0 and 1.
