@@ -84,7 +84,7 @@ class IDF(SchemeScorer):
 		:rtype: dict
 		"""
 
-		idf = {}
+		idf = { }
 
 		for document in documents:
 			for dimension in document.dimensions:

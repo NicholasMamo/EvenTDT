@@ -40,6 +40,7 @@ from logger import logger
 from nlp.cleaners import TweetCleaner
 from nlp.document import Document
 from nlp.term_weighting import TF, TFIDF
+from nlp.term_weighting.global_schemes.idf import IDF
 from nlp.tokenizer import Tokenizer
 
 from queues import Queue
@@ -200,33 +201,30 @@ class ELDConsumer(Consumer):
 		"""
 
 		self._started()
-		tfidf = self._construct_idf(max_time=max_time, max_inactivity=max_inactivity)
-		participants = self._detect_participants()
+		tfidf = await self._construct_idf(max_time=max_time, max_inactivity=max_inactivity)
+		participants = await self._detect_participants()
 		self._stopped()
 		return { 'scheme': tfidf, 'participants': participants }
 
-	async def _construct_idf(self, max_time, max_inactivity):
+	async def _construct_idf(self, max_inactivity):
 		"""
 		Construct the TF-IDF table from the pre-event discussion.
-		All of the tweets processed by
-		These documents may then be used by the APD task.
+		All of the tweets processed by these documents are added to a buffer so they can be used by the APD task.
 
-		:param max_time: The maximum time (in seconds) to spend understanding the event.
-			It may be interrupted if the queue is inactive for a long time.
-		:type max_time: int
-		:param max_inactivity: The maximum time (in seconds) to wait idly without input before stopping.
-			If it is negative, it is ignored.
+		:param max_inactivity: The maximum time in seconds to wait idly without input before stopping.
+							   If it is negative, it is ignored.
 		:type max_inactivity: int
 
-		:return: The constructed IDF table.
-		:rtype: dict
+		:return: The constructed TF-IDF scheme.
+		:rtype: :class:`~nlp.term_weighting.tfidf.TFIDF`
 		"""
 
-		real_start = datetime.now().timestamp() # the consumer will run for a limited real time
-		total_tweets = 0
+		idf = { }
 
-		while (True and self.active
-			and (datetime.now().timestamp() - real_start < max_time)): # The consumer should keep working until it is stopped or it runs out of time
+		"""
+		Understanding keeps working until it is stopped.
+		"""
+		while self.active:
 			"""
 			If the queue is idle, stop waiting for input
 			"""
@@ -234,28 +232,21 @@ class ELDConsumer(Consumer):
 			if not active:
 				break
 
-			"""
-			Get all the tweets in the queue and add them to the buffer to be used for the checkpoint
-			"""
-			tweets = self.queue.dequeue_all()
-			total_tweets += len(tweets)
-			# tweets = self._filter_tweets(tweets)
-			documents = self._to_documents(tweets)
+		"""
+		After it is stopped, construct the IDF.
+		Get all the tweets in the queue and convert them to documents.
+		Use these documents to build the IDF, but add them to the buffer so they can be used by the APD process.
+		"""
+		tweets = self.queue.dequeue_all()
+		documents = self._to_documents(tweets)
+		self.buffer.enqueue(*documents)
 
-			if len(documents) > 0:
-				self.buffer.enqueue(documents)
+		"""
+		Update the IDF with the new documents.
+		"""
+		idf = IDF.from_documents(documents)
 
-				"""
-				Update the IDF.
-				"""
-				for document in documents:
-					for feature in set(document.get_dimensions().keys()):
-						self._idf[feature] = self._idf.get(feature, 0) + 1
-				self._idf["DOCUMENTS"] = self._idf.get("DOCUMENTS", 0) + len(documents)
-
-		self.stopped = True # set a boolean indicating that the consumer has successfully stopped working
-
-		return self._idf
+		return TFIDF(idf, self.buffer.size())
 
 	async def _detect_participants(self, general_idf, known_participants=None, *args, **kwargs):
 		"""
@@ -324,7 +315,7 @@ class ELDConsumer(Consumer):
 		timeline = Timeline(TopicalClusterNode, expiry=90, min_similarity=0.6)
 
 		"""
-		The consumer keeps should keep working until it is stopped.
+		The consumer should keep working until it is stopped.
 		Before that, create a placeholder variable to store the time of the last checkpoint.
 		"""
 		last_checkpoint = None
@@ -394,11 +385,39 @@ class ELDConsumer(Consumer):
 						topic = Vector(terms)
 						topic.normalize()
 						timeline.add(timestamp=latest_timestamp, cluster=cluster, topic=topic)
-						summary_documents = self._score_documents(timeline.nodes[-1].get_all_documents())
-						summary = self.summarization.summarize(summary_documents[:50], 140)
+
+						"""
+						After adding a cluster to the timeline, generate a summary.
+						"""
+						summary_documents = self._score_documents(timeline.nodes[-1].get_all_documents())[:50]
+						for document in summary_documents:
+							document.text = self.cleaner.clean(document.text)
+
+						"""
+						Generate a query from the topical keywords and use it to come up with a summary.
+						"""
+						query = Cluster(vectors=timeline.nodes[-1].topics).centroid
+						summary = self.summarization.summarize(summary_documents, 140, query=query)
 						logger.info(f"{datetime.fromtimestamp(latest_timestamp).ctime()}: { str(summary) }")
 
 		return timeline
+
+	def _update_idf(self, idf, subset):
+		"""
+		Update the IDF with the new subset.
+
+		:param idf: The current IDF.
+					The function expects a dictionary with the keys being terms and the values their document frequency.
+		:type idf: dict
+		:param subset: The IDF constructed from a subset of documents.
+					   The function expects a dictionary with the keys being terms and the values their document frequency.
+		:type subset: dict
+
+		:return: The updated IDF with the terms being the keys and the values their document frequency.
+		:rtype: dict
+		"""
+
+		return { term: idf.get(term, 0) + subset.get(term, 0) for term in idf.keys() | subset.keys() }
 
 	def _filter_tweets(self, tweets):
 		"""
