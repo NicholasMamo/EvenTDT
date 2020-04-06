@@ -52,7 +52,7 @@ from tdt.nutrition import MemoryNutritionStore
 
 import twitter
 
-from vsm import vector_math
+from vsm import Vector, vector_math
 from vsm.clustering.algorithms import TemporalNoKMeans
 from vsm.clustering import Cluster
 
