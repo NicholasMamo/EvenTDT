@@ -1,4 +1,4 @@
-from .eld_consumer import ELDConsumer, SimulatedELDConsumer
+from .eld_consumer import ELDConsumer
 from .fire_consumer import FIREConsumer
 from .print_consumer import PrintConsumer
 from .stat_consumer import StatConsumer
