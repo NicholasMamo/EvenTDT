@@ -981,3 +981,72 @@ class TestELDConsumer(unittest.TestCase):
 			cluster = Cluster(document)
 			terms = consumer._detect_topics(cluster, timestamp + 60)
 			self.assertEqual(dict, type(terms))
+
+	def test_score_documents_brevity_empty(self):
+		"""
+		Test that the brevity score is 0 when the text is empty.
+		"""
+
+		consumer = ELDConsumer(Queue(), 30)
+		text = ''
+		self.assertEqual(0, consumer._brevity_score(text))
+
+	def test_score_documents_brevity(self):
+		"""
+		Test the calculation of the brevity score.
+		"""
+
+		consumer = ELDConsumer(Queue(), 30)
+		text = 'this is a pipe'
+		self.assertEqual(0.00012, round(consumer._brevity_score(text, r=10), 5))
+
+	def test_score_documents_brevity_equal(self):
+		"""
+		Test that when the text has as many tokens as required, the score is 1.
+		"""
+
+		consumer = ELDConsumer(Queue(), 30)
+		text = 'a pipe is not a cigar and a cigar is not a pipe'
+		self.assertEqual(1, consumer._brevity_score(text, r=4))
+
+	def test_score_documents_brevity_long(self):
+		"""
+		Test that when the text has more tokens than required, the score is 1.
+		"""
+
+		consumer = ELDConsumer(Queue(), 30)
+		text = 'a pipe is not a cigar and a cigar is not a pipe'
+		self.assertEqual(1, consumer._brevity_score(text, r=3))
+
+	def test_score_documents_brevity_bounds(self):
+		"""
+		Test that the bounds of the brevity score are between 0 and 1.
+		"""
+
+		consumer = ELDConsumer(Queue(), 30)
+
+		text = ''
+		self.assertEqual(0, consumer._brevity_score(text))
+		text = 'a pipe is not a cigar and a cigar is not a pipe'
+		self.assertEqual(1, consumer._brevity_score(text, r=3))
+
+	def test_score_documents_brevity_custom_r(self):
+		"""
+		Test that when a custom ideal length is given, it is used.
+		"""
+
+		consumer = ELDConsumer(Queue(), 30)
+
+		text = 'a pipe is not a cigar'
+		self.assertEqual(0.60653, round(consumer._brevity_score(text, r=3), 5))
+		text = 'a pipe is not a cigar'
+		self.assertEqual(0.36788, round(consumer._brevity_score(text, r=4), 5))
+
+	def test_score_documents_brevity(self):
+		"""
+		Test the calculation of the brevity score.
+		"""
+
+		consumer = ELDConsumer(Queue(), 30)
+		text = 'this is a pipe'
+		self.assertEqual(0.13534, round(consumer._brevity_score(text, r=3), 5))

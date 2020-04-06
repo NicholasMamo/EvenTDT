@@ -670,6 +670,47 @@ class ELDConsumer(Consumer):
 		return self.tdt.detect(document.dimensions, min_burst=self.min_burst,
 							   since=since, until=until)
 
+	def _brevity_score(self, text, r=10, *args, **kwargs):
+		"""
+		Calculate the brevity score, bounded between 0 and 1.
+		This score is based on `BLEU: a Method for Automatic Evaluation of Machine Translation by Papineni et al. (2002) <https://dl.acm.org/doi/10.3115/1073083.1073135>`:
+
+		.. math::
+
+			score = max(1, e^{1 - \\frac{r}{c}})
+
+		where :math:`c` is the number of tokens in the text, and :math:`r` is the ideal number of tokens.
+
+		The score is 1 even when the tweet is longer than the desired length.
+		In this way, the brevity score is more akin to a brevity penalty.
+
+		:param text: The text to score.
+					 The text is tokanized by the function.
+		:type text: str
+		:param r: The ideal number of tokens in the text.
+		:type r: str
+
+		:return: The brevity score, bounded between 0 and 1.
+		:rtype: float
+		"""
+
+		"""
+		The tokens are extracted using the same method as in the consumer.
+		"""
+		tokens = self.tokenizer.tokenize(text)
+
+		"""
+		If the text has no tokens, then the score is 0.
+		"""
+		if not len(tokens):
+			return 0
+
+		"""
+		If there are tokens in the text, the score is calculated using the formula.
+		If there are more tokens than the desired length, the score is capped at 1.
+		"""
+		return min(math.exp(1 - r/len(tokens)), 1)
+
 class SimulatedELDConsumer(ELDConsumer):
 	"""
 	The SimulatedELDConsumer is a consumer built on the ELDConsumer.
