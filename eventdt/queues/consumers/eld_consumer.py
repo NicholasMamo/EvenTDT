@@ -176,7 +176,7 @@ class ELDConsumer(Consumer):
 									remove_retweet_prefix=True)
 		self.summarization = DGS()
 
-	async def understand(self, max_time, max_inactivity=-1, scheme=None, *args, **kwargs):
+	async def understand(self, max_inactivity=-1, *args, **kwargs):
 		"""
 		Understanding is split into two tasks:
 
@@ -184,29 +184,26 @@ class ELDConsumer(Consumer):
 
 			#. Identify the event's participants.
 
-		The function returns both in a tuple.
+		The function returns both as a dictionary.
+		The two keys are `scheme` and `participants`.
 
-		:param max_time: The time, in seconds, spent understanding the event.
-						 It may be interrupted if the queue is inactive for a long time.
-		:type max_time: int
-		:param max_inactivity: The maximum time (in seconds) to wait idly without input before stopping.
+		Any additional arguments and keyword arguments are passed on to the :func:`~queues.consumers.eld_consumer.ELDConsumer._construct_idf` and :func:`~queues.consumers.eld_consumer.ELDConsumer._detect_participants` functions.
+
+		:param max_inactivity: The maximum time in seconds to wait idly without input before stopping.
 							   If it is negative, it is ignored.
 		:type max_inactivity: int
-		:param scheme: The term-weighting scheme that is used to create documents in APD.
-					   If `None` is given, the :class:`~nlp.term_weighting.tf.TF` term-weighting scheme is used.
-		:type scheme: None or :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
 
-		:return: A tuple containing the TF-IDF scheme and the event's participants from the pre-event discussion.
-				 The TF-IDF scheme is a :class:`~nlp.term_weighting.tfidf.TFIDF` instance.
-				 The participants are a list of strings.
-		:rtype: tuple
+		:return: A dictionary containing the TF-IDF scheme and the event's participants from the pre-event discussion.
+				 The TF-IDF scheme is returned in the `scheme` key as a :class:`~nlp.term_weighting.tfidf.TFIDF` instance.
+				 The participants are returned in the `participants` key a list of strings.
+		:rtype: dict
 		"""
 
 		self._started()
-		tfidf = await self._construct_idf(max_time=max_time, max_inactivity=max_inactivity)
-		participants = await self._detect_participants(scheme)
+		tfidf = self._construct_idf(max_time=max_time, max_inactivity=max_inactivity)
+		participants = self._detect_participants()
 		self._stopped()
-		return (tfidf, participants)
+		return { 'scheme': tfidf, 'participants': participants }
 
 	async def _construct_idf(self, max_time, max_inactivity):
 		"""
