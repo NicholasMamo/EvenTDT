@@ -711,6 +711,32 @@ class ELDConsumer(Consumer):
 		"""
 		return min(math.exp(1 - r/len(tokens)), 1)
 
+	def _emotion_score(self, text, *args, **kwargs):
+		"""
+		Calculate the emotion in the text.
+		This is based on the number of capitalized characters.
+		The higher the score, the less emotional the tweet.
+
+		.. note::
+
+			It is not always desirable for the score to be 1.
+			That would mean that there is absolutely no capitalization at all.
+
+		:param text: The text to score.
+					 The text is tokanized by the function.
+		:type text: str
+
+		:return: The emotion score, bounded between 0 and 1.
+		:rtype: float
+		"""
+
+		upper_pattern = re.compile("[A-Z]")
+		lower_pattern = re.compile("[a-z]")
+		upper = len(upper_pattern.findall(text))
+		lower = len(lower_pattern.findall(text))
+
+		return 1 - upper/(upper + lower) if (upper + lower) else 0
+
 class SimulatedELDConsumer(ELDConsumer):
 	"""
 	The SimulatedELDConsumer is a consumer built on the ELDConsumer.
