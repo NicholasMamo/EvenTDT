@@ -156,10 +156,10 @@ class SimulatedBufferedConsumer(BufferedConsumer):
 		"""
 		Wait until there's something in the queue, to get a reference point for when the sleep should end.
 		"""
-		while self.buffer.head() is None and not self.stopped:
+		while self.buffer.head() is None and self.active:
 			await asyncio.sleep(0.1)
 
-		if not self.stopped:
+		if self.active:
 			start = twitter.extract_timestamp(self.buffer.head())
 
 		"""
@@ -171,7 +171,7 @@ class SimulatedBufferedConsumer(BufferedConsumer):
 			#. The buffer's periodicity has been reached.
 		"""
 		while True:
-			if self.stopped or twitter.extract_timestamp(self.buffer.tail()) - start >= self.periodicity:
+			if not self.active or twitter.extract_timestamp(self.buffer.tail()) - start >= self.periodicity:
 				break
 
 			await asyncio.sleep(0.1)
