@@ -21,23 +21,19 @@ class PrintConsumer(Consumer):
 	The print consumer prints queue messages and discards them.
 	"""
 
-	async def _consume(self, max_time=3600, max_inactivity=5):
+	async def _consume(self, max_inactivity=5):
 		"""
 		Consume the next elements from the queue.
 
-		:param max_time: The maximum time in seconds to spend consuming the queue.
-						 It may be interrupted if the queue is inactive for a long time.
-		:type max_time: int
 		:param max_inactivity: The maximum time in seconds to wait idly without input before stopping.
 							   If it is negative, the consumer keeps waiting for input until the maximum time expires.
 		:type max_inactivity: int
 		"""
 
 		"""
-		The consumer keeps working until it is forcibly stopped or its time runs out.
+		The consumer keeps working until it is stopped.
 		"""
-		start = time.time()
-		while self.active and (time.time() - start < max_time):
+		while self.active:
 			"""
 			If the queue is idle, stop waiting for input
 			"""
