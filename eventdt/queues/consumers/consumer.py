@@ -52,7 +52,7 @@ class Consumer(ABC):
 		Invoke the consume method.
 		Since some listeners have a small delay, the consumer may wait a bit before starting to consume input.
 
-		Any additional arguments and keyword arguments are passed on to the :class:`~queues.consumers.consumer.Consumer._consume` function.
+		Any additional arguments and keyword arguments are passed on to the :func:`~queues.consumers.consumer.Consumer._consume` function.
 
 		:param wait: The time in seconds to wait until starting to consume the event.
 					 This is used when the file listener spends a lot of time skipping tweets.
