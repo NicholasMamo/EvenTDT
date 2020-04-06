@@ -389,7 +389,8 @@ class ELDConsumer(Consumer):
 						topic = Vector(terms)
 						topic.normalize()
 						timeline.add(timestamp=latest_timestamp, cluster=cluster, topic=topic)
-						summary = self.summarization.summarize(timeline.nodes[-1].get_all_documents(), 140)
+						summary_documents = self._score_documents(timeline.nodes[-1].get_all_documents())
+						summary = self.summarization.summarize(summary_documents[:50], 140)
 						logger.info(f"{datetime.fromtimestamp(latest_timestamp).ctime()}: { str(summary) }")
 
 		return timeline
