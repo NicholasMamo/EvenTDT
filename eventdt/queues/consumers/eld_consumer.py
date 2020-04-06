@@ -225,12 +225,7 @@ class ELDConsumer(Consumer):
 		Understanding keeps working until it is stopped.
 		"""
 		while self.active:
-			"""
-			If the queue is idle, stop waiting for input
-			"""
-			active = await self._wait_for_input(max_inactivity=max_inactivity)
-			if not active:
-				break
+			await asyncio.sleep(1)
 
 		"""
 		After it is stopped, construct the IDF.
