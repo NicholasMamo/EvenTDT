@@ -47,7 +47,7 @@ class Consumer(ABC):
 		self.active = False
 		self.stopped = True
 
-	async def run(self, wait=0, max_time=3600, max_inactivity=-1, *args, **kwargs):
+	async def run(self, wait=0, max_inactivity=-1, *args, **kwargs):
 		"""
 		Invoke the consume method.
 		Since some listeners have a small delay, the consumer may wait a bit before starting to consume input.
@@ -57,9 +57,6 @@ class Consumer(ABC):
 		:param wait: The time in seconds to wait until starting to consume the event.
 					 This is used when the file listener spends a lot of time skipping tweets.
 		:type wait: int
-		:param max_time: The maximum time in seconds to spend consuming the queue.
-						 It may be interrupted if the queue is inactive for a long time.
-		:type max_time: int
 		:param max_inactivity: The maximum time in seconds to wait idly without input before stopping.
 							   If it is negative, the consumer keeps waiting for input until the maximum time expires.
 		:type max_inactivity: int
@@ -71,7 +68,7 @@ class Consumer(ABC):
 		await asyncio.sleep(wait)
 		self._started()
 		results = await asyncio.gather(
-			self._consume(*args, max_time=max_time, max_inactivity=max_inactivity, **kwargs),
+			self._consume(*args, max_inactivity=max_inactivity, **kwargs),
 		)
 		self._stopped()
 		return results
@@ -88,14 +85,11 @@ class Consumer(ABC):
 		self.active = False
 
 	@abstractmethod
-	async def _consume(self, max_time, max_inactivity, *args, **kwargs):
+	async def _consume(self, max_inactivity, *args, **kwargs):
 		"""
 		Consume the queue.
 		This is the function where most processing occurs.
 
-		:param max_time: The maximum time in seconds to spend consuming the queue.
-						 It may be interrupted if the queue is inactive for a long time.
-		:type max_time: int
 		:param max_inactivity: The maximum time in seconds to wait idly without input before stopping.
 							   If it is negative, the consumer keeps waiting for input until the maximum time expires.
 		:type max_inactivity: int
