@@ -30,11 +30,11 @@ class StatConsumer(BufferedConsumer):
 		The process repeats until the consumer has been stopped.
 		"""
 		await self._sleep()
-		while not self.stopped:
+		while self.active:
 			logger.info(f"{ self.buffer.length() } tweets in {self.periodicity} seconds")
 			self.buffer.empty()
 			await self._sleep()
 
 		if self.buffer.length():
-			logger.info(self.buffer.length(), "tweets flushed")
+			logger.info(f"{ self.buffer.length() } tweets flushed")
 			self.buffer.empty()
