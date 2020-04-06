@@ -982,6 +982,36 @@ class TestELDConsumer(unittest.TestCase):
 			terms = consumer._detect_topics(cluster, timestamp + 60)
 			self.assertEqual(dict, type(terms))
 
+	def test_score_documents_empty(self):
+		"""
+		Test that when scoring an empty list of documents, an empty list is returned.
+		"""
+
+		consumer = ELDConsumer(Queue(), 30)
+		self.assertEqual([ ], consumer._score_documents([ ]))
+
+	def test_score_documents_sorted(self):
+		"""
+		Test that when scoring documents, the returned list is sorted.
+		"""
+
+		consumer = ELDConsumer(Queue(), 30)
+		documents = [ Document('THIS IS A PIPE'),
+					  Document('This is a pipe and this is a cigar'),
+					  Document('this is a pipe'), ]
+		self.assertEqual([ documents[1], documents[2], documents[0] ], consumer._score_documents(documents))
+
+	def test_score_documents(self):
+		"""
+		Test that when scoring documents, the same list of documents is returned, albeit in a different order.
+		"""
+
+		consumer = ELDConsumer(Queue(), 30)
+		documents = [ Document('THIS IS A PIPE'),
+					  Document('This is a pipe and this is a cigar'),
+					  Document('this is a pipe'), ]
+		self.assertEqual(set(documents), set(consumer._score_documents(documents)))
+
 	def test_brevity_score_empty(self):
 		"""
 		Test that the brevity score is 0 when the text is empty.
