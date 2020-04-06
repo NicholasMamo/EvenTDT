@@ -609,7 +609,7 @@ class ELDConsumer(Consumer):
 			#. A cluster must have a minimum number of tweets, indicating popularity.
 
 			#. A cluster must not have been checked very recently. \
-			   This keeps from checking clusters for breaking topics too often.
+			   This keeps from checking clusters for breaking topics too often. \
 			   Instead, clusters are checked only after some time has passed to save some time.
 
 			#. A cluster's documents must not be quasi-identical to each other. \
@@ -617,9 +617,15 @@ class ELDConsumer(Consumer):
 			   When something happens, people do not wait until someone writes something. \
 			   Instead, they themselves create conversation;
 
-			#. A cluster must not be inundated with URLs. \
+			#. A cluster may not have been deemed to be bursty already. \
+			   Clusters that are bursty may keep collecting tweets for the summary. \
+			   However, they may not be added twice to the same timeline node.
+
+			#. A cluster must not have more than one URL per tweet on average. \
 			   URLs include both links and media. \
 			   They indicate premeditation, usually spam, when all tweets contain them.
+
+			#. No more than half of a cluster's tweets may be replies.
 
 		:param clusters: The active clusters, which represent candidate topics.
 		:type clusters: list of :class:`~vector.clustering.cluster.Cluster`
@@ -638,6 +644,7 @@ class ELDConsumer(Consumer):
 		filtered = filter(lambda cluster: cluster.size() >= self.min_size, filtered)
 		filtered = filter(lambda cluster: timestamp - cluster.attributes.get('last_checked', 0) > self.cooldown, filtered)
 		filtered = filter(lambda cluster: cluster.get_intra_similarity() <= self.max_intra_similarity, filtered)
+		filtered = filter(lambda cluster: not cluster.attributes.get('bursty', False), filtered)
 		filtered = list(filtered)
 
 		"""

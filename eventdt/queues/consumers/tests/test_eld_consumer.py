@@ -685,6 +685,68 @@ class TestELDConsumer(unittest.TestCase):
 			clusters = [ Cluster([ documents[0] ] * 3) ]
 			self.assertEqual([ ], consumer._filter_clusters(clusters, 10))
 
+	def test_filter_clusters_not_bursty(self):
+		"""
+		Test that when filtering a list of clusters, clusters that are explicitly not bursty are retained.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			cluster = Cluster(documents[:3], attributes={ 'bursty': False })
+			self.assertEqual([ cluster ], consumer._filter_clusters([ cluster ], 10))
+
+	def test_filter_clusters_bursty(self):
+		"""
+		Test that when filtering a list of clusters, clusters that are explicitly bursty are removed.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			cluster = Cluster(documents[:3], attributes={ 'bursty': True })
+			self.assertEqual([ ], consumer._filter_clusters([ cluster ], 10))
+
+	def test_filter_clusters_unknown_bursty(self):
+		"""
+		Test that when filtering a list of clusters, clusters that are implicitly not bursty are retained.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			cluster = Cluster(documents[:3])
+			self.assertEqual([ cluster ], consumer._filter_clusters([ cluster ], 10))
+
+	def test_filter_clusters_bursty_attribute_unchanged(self):
+		"""
+		Test that when filtering a list of clusters, the bursty attribute is unchanged.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+
+			cluster = Cluster(documents[:3], attributes={ 'bursty': True })
+			self.assertEqual([ ], consumer._filter_clusters([ cluster ], 10))
+			self.assertTrue(cluster.attributes['bursty'])
+
+			cluster = Cluster(documents[:3], attributes={ 'bursty': False })
+			self.assertEqual([ cluster ], consumer._filter_clusters([ cluster ], 10))
+			self.assertFalse(cluster.attributes['bursty'])
+
+			cluster = Cluster(documents[:3])
+			self.assertEqual([ cluster ], consumer._filter_clusters([ cluster ], 10))
+			self.assertEqual(None, cluster.attributes.get('bursty'))
+
 	def test_filter_clusters_no_urls(self):
 		"""
 		Test that when filtering a list of clusters, clusters whose tweets have no URLs are retained.
@@ -840,7 +902,7 @@ class TestELDConsumer(unittest.TestCase):
 	def test_filter_clusters_mix(self):
 		"""
 		Test that when filtering a list of clusters, only those that need to be filtered out are removed.
-		In this test, one cluster is too small, one was checked recently, the other has identical documents, another has many URLs and a final one with many mentions.
+		In this test, one cluster is too small, one was checked recently, the other has identical documents, another is bursty, one more has many URLs and a final one with many mentions.
 		A valid cluster is also among the clusters.
 		"""
 
@@ -853,6 +915,7 @@ class TestELDConsumer(unittest.TestCase):
 			clusters.append(Cluster(documents[:2]))
 			clusters.append(Cluster(documents[:50], { 'last_checked': 10 }))
 			clusters.append(Cluster([ documents[0] ] * 3))
+			clusters.append(Cluster(documents[:50], { 'bursty': True }))
 
 			no_url_documents = [ document for document in documents if len(document.attributes['tweet']['entities']['urls']) == 0 ]
 			url_documents = [ document for document in documents if len(document.attributes['tweet']['entities']['urls']) >= 2 ]
