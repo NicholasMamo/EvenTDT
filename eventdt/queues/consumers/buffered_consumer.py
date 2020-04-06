@@ -45,7 +45,7 @@ class BufferedConsumer(Consumer):
 		self.periodicity = periodicity
 		self.buffer = Queue()
 
-	async def run(self, wait=0, max_time=3600, max_inactivity=-1, *args, **kwargs):
+	async def run(self, wait=0, max_inactivity=-1, *args, **kwargs):
 		"""
 		Invokes the consume and process method.
 
@@ -54,9 +54,6 @@ class BufferedConsumer(Consumer):
 		:param wait: The time in seconds to wait until starting to understand the event.
 					 This is used when the file listener spends a lot of time skipping documents.
 		:type wait: int
-		:param max_time: The maximum time in seconds to spend consuming the queue.
-						 It may be interrupted if the queue is inactive for a long time.
-		:type max_time: int
 		:param max_inactivity: The maximum time in seconds to wait idly without input before stopping.
 							   If it is negative, the consumer keeps waiting for input until the maximum time expires.
 		:type max_inactivity: int
@@ -68,30 +65,26 @@ class BufferedConsumer(Consumer):
 		await asyncio.sleep(wait)
 		self._started()
 		results = await asyncio.gather(
-			self._consume(*args, max_time=max_time, max_inactivity=max_inactivity, **kwargs),
+			self._consume(*args, max_inactivity=max_inactivity, **kwargs),
 			self._process(*args, **kwargs),
 		)
 		self._stopped()
 		return results
 
-	async def _consume(self, max_time, max_inactivity):
+	async def _consume(self, max_inactivity):
 		"""
 		Consume the queue.
 		This function calls for processing in turn.
 
-		:param max_time: The maximum time in seconds to spend consuming the queue.
-						 It may be interrupted if the queue is inactive for a long time.
-		:type max_time: int
 		:param max_inactivity: The maximum time in seconds to wait idly without input before stopping.
 							   If it is negative, the consumer keeps waiting for input until the maximum time expires.
 		:type max_inactivity: int
 		"""
 
 		"""
-		The consumer should keep working until it is forcibly stopped or its time runs out.
+		The consumer should keep working until it is stopped.
 		"""
-		start = time.time()
-		while self.active and (time.time() - start < max_time):
+		while self.active:
 			"""
 			If the queue is idle, stop waiting for input.
 			"""
@@ -123,13 +116,13 @@ class BufferedConsumer(Consumer):
 
 		for i in range(self.periodicity):
 			await asyncio.sleep(1)
-			if self.stopped:
+			if not self.active:
 				break
 
 		"""
-		If the periodicity is a float, sleep for the remaining milli-seconds.
+		If the periodicity is a float, sleep for the remaining milliseconds.
 		"""
-		if not self.stopped:
+		if self.active:
 			await asyncio.sleep(self.periodicity % 1)
 
 class SimulatedBufferedConsumer(BufferedConsumer):
