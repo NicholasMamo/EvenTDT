@@ -96,7 +96,7 @@ class IDF(Exportable, SchemeScorer):
 		:type array: dict
 
 		:return: A new instance of the IDF with the same attributes stored in the object.
-		:rtype: :class:`~vector.vector.Vector`
+		:rtype: :class:`~nlp.term_weighting.global_schemes.idf.IDF`
 		"""
 
 		return IDF(documents=array.get('documents'), idf=array.get('idf'))
