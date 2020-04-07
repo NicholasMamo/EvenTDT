@@ -34,7 +34,7 @@ import os
 import signal
 import sys
 
-from multiprocessing import Process
+from multiprocessing import Process, Manager
 from multiprocessing.managers import BaseManager
 
 file_path = os.path.dirname(os.path.abspath(__file__))
@@ -99,11 +99,14 @@ def main():
 
 	"""
 	Register and create a shared queue.
+	Also create a shared dictionary that processes can use to communicate with the main loop.
 	"""
 	BaseManager.register("Queue", Queue)
-	manager = BaseManager()
-	manager.start()
-	queue = manager.Queue()
+	queue_manager = BaseManager()
+	queue_manager.start()
+	queue = queue_manager.Queue()
+	manager = Manager()
+	comm = manager.dict()
 
 	"""
 	If an understanding file was given, read and understand the file.
@@ -123,7 +126,7 @@ def main():
 		stream = Process(target=stream_process,
 						 args=(loop, queue, args.understanding, ),
 						 kwargs={ 'speed': args.speed * 60 })
-		understand = Process(target=understand_process, args=(loop, consumer, ))
+		understand = Process(target=understand_process, args=(comm, loop, consumer, ))
 		stream.start()
 		understand.start()
 		stream.join()
@@ -152,6 +155,7 @@ def main():
 	stream.join()
 	consume.join()
 	loop.close()
+	queue_manager.shutdown()
 	manager.shutdown()
 
 def stream_process(loop, queue, file, *args, **kwargs):
@@ -191,10 +195,12 @@ def stream_process(loop, queue, file, *args, **kwargs):
 		reader = SimulatedFileReader(queue, f, *args, **kwargs)
 		loop.run_until_complete(read(reader))
 
-def understand_process(loop, consumer):
+def understand_process(comm, loop, consumer):
 	"""
 	Consume the incoming tweets to understand the event.
 
+	:param comm: The dictionary used by the understanding process to communicate data back to the main loop.
+	:type comm: :class:`multiprocessing.managers.DictProxy`
 	:param loop: The main event loop.
 	:type loop: :class:`asyncio.unix_events._UnixSelectorEventLoop`
 	:param consumer: The consumer to use to process tweets.
@@ -220,7 +226,7 @@ def understand_process(loop, consumer):
 
 		return await consumer.understand(max_inactivity=1)
 
-	return loop.run_until_complete(asyncio.gather(understand(consumer)))[0]
+	comm['understanding'] = loop.run_until_complete(asyncio.gather(understand(consumer)))[0]
 
 def consume_process(loop, consumer):
 	"""
