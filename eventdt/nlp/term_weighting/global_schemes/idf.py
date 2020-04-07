@@ -16,13 +16,14 @@ import math
 import os
 import sys
 
-path = os.path.join(os.path.dirname(__file__), '..')
+path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
-from scheme import SchemeScorer
+from objects.exportable import Exportable
+from nlp.term_weighting.scheme import SchemeScorer
 
-class IDF(SchemeScorer):
+class IDF(SchemeScorer, Exportable):
 	"""
 	The Inverse Document Frequency (TF-IDF) is one of the most common term-weighting schemes.
 	This scheme promotes uncommon tokens.
@@ -71,6 +72,34 @@ class IDF(SchemeScorer):
 
 		weights = { token: math.log(self.documents / (self.idf.get(token, 0) + 1), 10) for token in tokens }
 		return weights
+
+	def to_array(self):
+		"""
+		Export the IDF as an associative array.
+
+		:return: The IDF as an associative array.
+		:rtype: dict
+		"""
+
+		return {
+			'class': str(IDF),
+			'documents': self.documents,
+			'idf': self.idf,
+		}
+
+	@staticmethod
+	def from_array(array):
+		"""
+		Create an instance of the IDF from the given associative array.
+
+		:param array: The associative array with the attributes to create the IDF.
+		:type array: dict
+
+		:return: A new instance of the IDF with the same attributes stored in the object.
+		:rtype: :class:`~vector.vector.Vector`
+		"""
+
+		return IDF(documents=array.get('documents'), idf=array.get('idf'))
 
 	@staticmethod
 	def from_documents(documents):

@@ -142,3 +142,24 @@ class TestIDF(unittest.TestCase):
 
 		idf = IDF.from_documents(corpus)
 		self.assertEqual(1, idf.get('manchester'))
+
+	def test_export(self):
+		"""
+		Test exporting and importing the IDF table.
+		"""
+
+		"""
+		Create the test corpus.
+		"""
+		tokenizer = Tokenizer(stopwords=stopwords.words("english"), stem=False)
+		posts = [
+			"Manchester United falter against Tottenham Hotspur",
+			"Mourinho under pressure as Manchester United follow with a loss",
+		]
+		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+
+		idf = IDF(IDF.from_documents(corpus), len(corpus))
+		e = idf.to_array()
+		self.assertEqual(idf.documents, IDF.from_array(e).documents)
+		self.assertEqual(idf.idf, IDF.from_array(e).idf)
+		self.assertEqual(idf.__dict__, IDF.from_array(e).__dict__)
