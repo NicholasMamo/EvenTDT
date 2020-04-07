@@ -25,6 +25,14 @@ class TestELDConsumer(unittest.TestCase):
 	Test the implementation of the ELD consumer.
 	"""
 
+	def async_test(f):
+		def wrapper(*args, **kwargs):
+			coro = asyncio.coroutine(f)
+			future = coro(*args, **kwargs)
+			loop = asyncio.get_event_loop()
+			loop.run_until_complete(future)
+		return wrapper
+
 	def test_create_consumer(self):
 		"""
 		Test that when creating a consumer, all the parameters are saved correctly.
