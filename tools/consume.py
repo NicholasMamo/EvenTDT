@@ -115,7 +115,9 @@ def main():
 	"""
 	Consume the event with the main file.
 	"""
+	logger.info("Starting event period")
 	consume(**vars(args))
+	logger.info("Event period ended")
 
 	asyncio.get_event_loop().close()
 
