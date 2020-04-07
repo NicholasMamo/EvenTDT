@@ -202,7 +202,7 @@ class ELDConsumer(Consumer):
 		"""
 
 		self._started()
-		tfidf = await self._construct_idf(max_time=max_time, max_inactivity=max_inactivity)
+		tfidf = await self._construct_idf(max_inactivity=max_inactivity)
 		participants = await self._detect_participants()
 		self._stopped()
 		return { 'scheme': tfidf, 'participants': participants }
@@ -226,21 +226,27 @@ class ELDConsumer(Consumer):
 		Understanding keeps working until it is stopped.
 		"""
 		while self.active:
-			await asyncio.sleep(1)
+			active = await self._wait_for_input(max_inactivity)
+			if not active:
+				break
 
-		"""
-		After it is stopped, construct the IDF.
-		Get all the tweets in the queue and convert them to documents.
-		Use these documents to build the IDF, but add them to the buffer so they can be used by the APD process.
-		"""
-		tweets = self.queue.dequeue_all()
-		documents = self._to_documents(tweets)
-		self.buffer.enqueue(*documents)
+			"""
+			After it is stopped, construct the IDF.
+			Get all the tweets in the queue and convert them to documents.
+			"""
+			tweets = self.queue.dequeue_all()
+			documents = self._to_documents(tweets)
 
-		"""
-		Update the IDF with the consumed documents.
-		"""
-		idf = IDF.from_documents(documents)
+			"""
+			If there are documents, update the IDF with the consumed documents.
+			These documents are also added to the buffer so they can be used by the APD process.
+			"""
+			if documents:
+				self.buffer.enqueue(*documents)
+
+				subset = IDF.from_documents(documents)
+				idf = { term: idf.get(term, 0) + subset.get(term, 0)
+						for term in subset.keys() | idf.keys() }
 
 		return TFIDF(idf, self.buffer.length())
 

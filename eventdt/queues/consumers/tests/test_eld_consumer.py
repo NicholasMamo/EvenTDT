@@ -67,6 +67,7 @@ class TestELDConsumer(unittest.TestCase):
 			lines = f.readlines()
 			tweets = [ json.loads(line) for line in lines ]
 			queue.enqueue(*tweets)
+			consumer._started()
 			scheme = await consumer._construct_idf(1)
 			self.assertEqual(len(lines), scheme.global_scheme.documents)
 
@@ -82,6 +83,7 @@ class TestELDConsumer(unittest.TestCase):
 			lines = f.readlines()
 			tweets = [ json.loads(line) for line in lines ]
 			queue.enqueue(*tweets)
+			consumer._started()
 			scheme = await consumer._construct_idf(1)
 
 			documents = consumer._to_documents(tweets)
@@ -102,6 +104,7 @@ class TestELDConsumer(unittest.TestCase):
 			lines = f.readlines()
 			tweets = [ json.loads(line) for line in lines ]
 			queue.enqueue(*tweets)
+			consumer._started()
 			scheme = await consumer._construct_idf(1)
 
 			documents = consumer._to_documents(tweets)
