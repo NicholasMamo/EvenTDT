@@ -115,6 +115,25 @@ class TestELDConsumer(unittest.TestCase):
 				count = len([ document for document in documents if term in document.dimensions ])
 				self.assertEqual(count, scheme.global_scheme.idf[term])
 
+	@async_test
+	async def test_construct_idf_buffer(self):
+		"""
+		Test that when constructing the IDF, the documents are added to the buffer.
+		"""
+
+		queue = Queue()
+		consumer = ELDConsumer(queue, 60)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			queue.enqueue(*tweets)
+			consumer._started()
+			scheme = await consumer._construct_idf(1)
+
+			documents = consumer._to_documents(tweets)
+			for document, buffered in zip(documents, consumer.buffer.queue):
+				self.assertEqual(document.text, buffered.text)
+
 	def test_filter_tweets_empty(self):
 		"""
 		Test that when filtering a list of empty tweets, another empty list is returned.
