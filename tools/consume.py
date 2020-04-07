@@ -103,7 +103,9 @@ def main():
 	"""
 	consumer = args.consumer[0](queue)
 	loop = asyncio.get_event_loop()
-	stream = Process(target=stream_process, args=(loop, queue, args.file[0], ))
+	stream = Process(target=stream_process,
+					 args=(loop, queue, args.file[0], ),
+					 kwargs={ 'speed': args.speed })
 	consume = Process(target=consume_process, args=(loop, consumer, ))
 	stream.start()
 	consume.start()
