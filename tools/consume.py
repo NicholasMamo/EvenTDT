@@ -172,11 +172,12 @@ def understand(understanding, consumer, *args, **kwargs):
 	"""
 	Clean up understanding.
 	"""
+	understanding = dict(comm)
 	manager.shutdown()
 	queue_manager.shutdown()
 	loop.close()
 
-	return dict(comm)
+	return understanding
 
 def consume(file, consumer, speed, understanding=None, *args, **kwargs):
 	"""
