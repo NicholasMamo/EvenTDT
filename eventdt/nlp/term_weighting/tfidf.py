@@ -17,8 +17,6 @@ if path not in sys.path:
     sys.path.append(path)
 
 from scheme import TermWeightingScheme
-from local_schemes.tf import TF
-from global_schemes.idf import IDF
 
 class TFIDF(TermWeightingScheme):
 	"""
@@ -36,6 +34,10 @@ class TFIDF(TermWeightingScheme):
 		:param documents: The number of documents in the IDF table.
 		:type documents: int
 		"""
+
+		# NOTE: The imports are located here because of circular dependencies
+		from local_schemes.tf import TF
+		from global_schemes.idf import IDF
 
 		tf = TF()
 		idf = IDF(idf, documents)
