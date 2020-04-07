@@ -19,6 +19,7 @@ if path not in sys.path:
 import nltk
 
 from vsm import vector_math
+from vsm.clustering import Cluster
 from nlp.document import Document
 from nlp.tokenizer import Tokenizer
 from wikinterface import info, links, search, text
@@ -83,10 +84,9 @@ class WikipediaSearchResolver(Resolver):
 		candidates = sorted(candidates.keys(), key=lambda candidate: candidates.get(candidate), reverse=True)
 
 		"""
-		Get the concatenated corpus as a single document, representing the domain.
+		Get the centroid of the corpus as a single document, representing the domain.
 		"""
-		domain = Document.concatenate(*self.corpus, tokenizer=self.tokenizer, scheme=self.scheme)
-		domain.normalize()
+		domain = Cluster(self.corpus).centroid
 
 		"""
 		Get the possible pages for each candidate.

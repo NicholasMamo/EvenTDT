@@ -34,6 +34,7 @@ import nltk
 from nltk.corpus import stopwords, words
 
 from vsm import vector_math
+from vsm.clustering import Cluster
 from nlp.document import Document
 from nlp.tokenizer import Tokenizer
 from wikinterface import info, links, search, text
@@ -114,11 +115,9 @@ class WikipediaExtrapolator(Extrapolator):
 		extrapolated = { }
 
 		"""
-		Get the concatenated corpus as a single document, representing the domain.
-		This serves as the local context.
+		Get the centroid of the corpus as a single document, representing the domain.
 		"""
-		domain = Document.concatenate(*self.corpus, tokenizer=self.tokenizer, scheme=self.scheme)
-		domain.normalize()
+		domain = Cluster(self.corpus).centroid
 
 		"""
 		Create an empty graph.
