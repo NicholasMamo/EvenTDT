@@ -242,7 +242,7 @@ class ELDConsumer(Consumer):
 		"""
 		idf = IDF.from_documents(documents)
 
-		return TFIDF(idf, self.buffer.size())
+		return TFIDF(idf, self.buffer.length())
 
 	async def _detect_participants(self, *args, **kwargs):
 		"""
