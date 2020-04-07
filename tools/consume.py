@@ -75,7 +75,7 @@ def setup_args():
 						help='<Required> The consumer to use.')
 	parser.add_argument('-u', '--understanding', nargs=1, type=str, required=False,
 						help='<Optional> The understanding file used to understand the event.')
-	parser.add_argument('-s', '--speed', nargs=1, type=float, required=False, default=1,
+	parser.add_argument('-s', '--speed', type=float, required=False, default=1,
 						help='<Optional> The understanding file used to understand the event.')
 
 	args = parser.parse_args()
