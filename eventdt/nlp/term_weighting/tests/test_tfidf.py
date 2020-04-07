@@ -31,3 +31,17 @@ class TestTFIDF(unittest.TestCase):
 		self.assertEqual(0.35218, round(document.dimensions['b'], 5))
 		self.assertEqual(0.17609, round(document.dimensions['c'], 5))
 		self.assertEqual(0.47712, round(document.dimensions['d'], 5))
+
+	def test_export(self):
+		"""
+		Test exporting and importing the IDF table.
+		"""
+
+		idf = { 'a': 2, 'b': 1, 'c': 1 }
+		tfidf = TFIDF(idf, 3)
+
+		e = tfidf.to_array()
+		self.assertEqual(tfidf.global_scheme.documents, TFIDF.from_array(e).global_scheme.documents)
+		self.assertEqual(tfidf.global_scheme.idf, TFIDF.from_array(e).global_scheme.idf)
+		self.assertEqual(tfidf.local_scheme.__dict__, TFIDF.from_array(e).local_scheme.__dict__)
+		self.assertEqual(tfidf.global_scheme.__dict__, TFIDF.from_array(e).global_scheme.__dict__)
