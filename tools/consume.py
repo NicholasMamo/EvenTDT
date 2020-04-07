@@ -121,9 +121,11 @@ def main():
 	loop.close()
 	manager.shutdown()
 
-def stream_process(loop, queue, file):
+def stream_process(loop, queue, file, *args, **kwargs):
 	"""
 	Stream the file and add its tweets to the queue.
+
+	Any additional arguments and keyword arguments are passed to the :func:`~twitter.file.simulated_reader.SimulatedFileReader.__init__` constructor.
 
 	:param loop: The main event loop.
 	:type loop: :class:`asyncio.unix_events._UnixSelectorEventLoop`
@@ -153,7 +155,7 @@ def stream_process(loop, queue, file):
 		await reader.read()
 
 	with open(file, 'r') as f:
-		reader = SimulatedFileReader(queue, f)
+		reader = SimulatedFileReader(queue, f, *args, **kwargs)
 		loop.run_until_complete(read(reader))
 
 def consume_process(loop, consumer):
