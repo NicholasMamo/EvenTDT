@@ -87,7 +87,6 @@ def main():
 	"""
 
 	args = setup_args()
-	loop = asyncio.get_event_loop()
 
 	"""
 	When the consumption tool is interrupted, show a prompt with information.
@@ -98,39 +97,18 @@ def main():
 	signal.signal(signal.SIGINT, sigint_handler)
 
 	"""
-	Register and create a shared queue.
-	Also create a shared dictionary that processes can use to communicate with the main loop.
+	Register the queue in the base manager.
 	"""
 	BaseManager.register("Queue", Queue)
-	queue_manager = BaseManager()
-	queue_manager.start()
-	queue = queue_manager.Queue()
-	manager = Manager()
-	comm = manager.dict()
 
 	"""
 	If an understanding file was given, read and understand the file.
-	Understanding uses two processes.
-	The first process streams the file.
-	The second process understands it.
-	Both processes share the event loop and queue.
-
-	Understanding is sped up, consuming one hour in one minute before applying speed.
+	This understanding replaces the understanding file.
 	"""
 	if args.understanding:
-		"""
-		Create a consumer with the shared queue.
-		"""
 		logger.info("Starting understanding period")
-		consumer = args.consumer(queue)
-		stream = Process(target=stream_process,
-						 args=(loop, queue, args.understanding, ),
-						 kwargs={ 'speed': args.speed * 60 })
-		understand = Process(target=understand_process, args=(comm, loop, consumer, ))
-		stream.start()
-		understand.start()
-		stream.join()
-		understand.join()
+		understanding = understand(**vars(args))
+		args.understanding = understanding
 		logger.info("Understanding period ended")
 
 	"""
@@ -154,9 +132,68 @@ def main():
 	"""
 	stream.join()
 	consume.join()
-	loop.close()
-	queue_manager.shutdown()
 	manager.shutdown()
+
+def understand(understanding, consumer, *args, **kwargs):
+	"""
+	Run the understanding process.
+	The arguments and keyword arguments should be the command-line arguments.
+
+	Understanding uses two processes:
+
+		#. Stream the file, and
+		#. Understand the file.
+
+	Both processes share the same event loop and queue.
+
+	.. note::
+
+		Understanding is sped up, on the assumption that processing is done retrospectively.
+
+	:param understanding: The path to the file containing the event's understanding.
+	:type understanding: str
+	:param consumer: The type of consumer to use.
+	:type consumer: :class:`~queues.consumers.consumer.Consumer`
+
+	:return: A dictionary containing the understanding.
+	:rtype: dict
+	"""
+
+	loop = asyncio.get_event_loop()
+
+	"""
+	Create a queue that will be shared between the streaming and understanding processes.
+	"""
+	queue_manager = BaseManager()
+	queue_manager.start()
+	queue = queue_manager.Queue()
+	consumer = consumer(queue)
+
+	"""
+	Create a shared dictionary that processes can use to communicate with this function.
+	"""
+	manager = Manager()
+	comm = manager.dict()
+
+	"""
+	Create and start the streaming and understanding processes.
+	"""
+	stream = Process(target=stream_process,
+					 args=(loop, queue, understanding, ),
+					 kwargs={ 'speed': 120 })
+	understand = Process(target=understand_process, args=(comm, loop, consumer, ))
+	stream.start()
+	understand.start()
+	stream.join()
+	understand.join()
+
+	"""
+	Clean up understanding.
+	"""
+	queue_manager.shutdown()
+	loop.close()
+
+	return dict(comm)
 
 def stream_process(loop, queue, file, *args, **kwargs):
 	"""
