@@ -287,6 +287,7 @@ The first task reads the file, and the second consumes it, this time to understa
 <li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--file</span></code>                         <em>&lt;Required&gt;</em> The file to consume.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">--class</span></code>                        <em>&lt;Required&gt;</em> The consumer to use; supported: <cite>ELDConsumer</cite>, <cite>FIREConsumer</cite>, <cite>PrintConsumer</cite>, <cite>StatConsumer</cite>, <cite>ZhaoConsumer</cite>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-u</span> <span class="pre">--understanding</span></code>        <em>&lt;Optional&gt;</em> The understanding file used to understand the event.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-s</span> <span class="pre">--speed</span></code>                        <em>&lt;Optional&gt;</em> The speed at which the file is consumed, defaults to 1.</p></li>
 </ul>
 </div></blockquote>
 <dl class="function">
@@ -299,6 +300,7 @@ The first task reads the file, and the second consumes it, this time to understa
 <li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--file</span></code>                         <em>&lt;Required&gt;</em> The file to consume.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">--class</span></code>                        <em>&lt;Required&gt;</em> The consumer to use; supported: <cite>ELDConsumer</cite>, <cite>FIREConsumer</cite>, <cite>PrintConsumer</cite>, <cite>StatConsumer</cite>, <cite>ZhaoConsumer</cite>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-u</span> <span class="pre">--understanding</span></code>        <em>&lt;Optional&gt;</em> The understanding file used to understand the event.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-s</span> <span class="pre">--speed</span></code>                        <em>&lt;Optional&gt;</em> The speed at which the file is consumed, defaults to 1.</p></li>
 </ul>
 </div></blockquote>
 <dl class="field-list simple">
@@ -319,8 +321,9 @@ The first task reads the file, and the second consumes it, this time to understa
 
 <dl class="function">
 <dt id="tools.consume.stream_process">
-<code class="sig-name descname">stream_process</code><span class="sig-paren">(</span><em class="sig-param">loop</em>, <em class="sig-param">queue</em>, <em class="sig-param">file</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.consume.stream_process" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">stream_process</code><span class="sig-paren">(</span><em class="sig-param">loop</em>, <em class="sig-param">queue</em>, <em class="sig-param">file</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.consume.stream_process" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stream the file and add its tweets to the queue.</p>
+<p>Any additional arguments and keyword arguments are passed to the <a class="reference internal" href="twitter.html#twitter.file.simulated_reader.SimulatedFileReader.__init__" title="twitter.file.simulated_reader.SimulatedFileReader.__init__"><code class="xref py py-func docutils literal notranslate"><span class="pre">__init__()</span></code></a> constructor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -353,7 +356,11 @@ The first task reads the file, and the second consumes it, this time to understa
 The accepted consumers are:</p>
 <blockquote>
 <div><ol class="arabic simple">
-<li><p><a class="reference internal" href="consumers.html#queues.consumers.print_consumer.PrintConsumer" title="queues.consumers.print_consumer.PrintConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">PrintConsumer</span></code></a></p></li>
+<li><p><a class="reference internal" href="consumers.html#queues.consumers.eld_consumer.ELDConsumer" title="queues.consumers.eld_consumer.ELDConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ELDConsumer</span></code></a>,</p></li>
+<li><p><a class="reference internal" href="consumers.html#queues.consumers.fire_consumer.FIREConsumer" title="queues.consumers.fire_consumer.FIREConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">FIREConsumer</span></code></a>,</p></li>
+<li><p><a class="reference internal" href="consumers.html#queues.consumers.print_consumer.PrintConsumer" title="queues.consumers.print_consumer.PrintConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">PrintConsumer</span></code></a>,</p></li>
+<li><p><a class="reference internal" href="consumers.html#queues.consumers.stat_consumer.StatConsumer" title="queues.consumers.stat_consumer.StatConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">StatConsumer</span></code></a>, and</p></li>
+<li><p><a class="reference internal" href="consumers.html#queues.consumers.zhao_consumer.ZhaoConsumer" title="queues.consumers.zhao_consumer.ZhaoConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ZhaoConsumer</span></code></a></p></li>
 </ol>
 </div></blockquote>
 <dl class="field-list simple">

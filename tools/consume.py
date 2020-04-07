@@ -200,7 +200,11 @@ def consumer(consumer):
 	Convert the given string into a consumer class.
 	The accepted consumers are:
 
-		#. :class:`~queues.consumers.print_consumer.PrintConsumer`
+		#. :class:`~queues.consumers.eld_consumer.ELDConsumer`,
+		#. :class:`~queues.consumers.fire_consumer.FIREConsumer`,
+		#. :class:`~queues.consumers.print_consumer.PrintConsumer`,
+		#. :class:`~queues.consumers.stat_consumer.StatConsumer`, and
+		#. :class:`~queues.consumers.zhao_consumer.ZhaoConsumer`
 
 	:param consumer: The consumer string.
 	:type consumer: str
