@@ -112,27 +112,9 @@ def main():
 		logger.info("Understanding period ended")
 
 	"""
-	Create a consumer with the shared queue.
-	For the main consumption loop, create two processes.
-	The first process streams the file.
-	The second process consumes it.
-	Both processes share the event loop and queue.
+	Consume the event with the main file.
 	"""
-	consumer = args.consumer(queue)
-	stream = Process(target=stream_process,
-					 args=(loop, queue, args.file, ),
-					 kwargs={ 'speed': args.speed })
-	consume = Process(target=consume_process, args=(loop, consumer, ))
-	stream.start()
-	consume.start()
-
-	"""
-	Wait for the streaming and consumption jobs to finish.
-	Then, close the loop and shut down the base manager.
-	"""
-	stream.join()
-	consume.join()
-	manager.shutdown()
+	consume(**vars(args))
 
 def understand(understanding, consumer, *args, **kwargs):
 	"""
@@ -190,10 +172,66 @@ def understand(understanding, consumer, *args, **kwargs):
 	"""
 	Clean up understanding.
 	"""
+	manager.shutdown()
 	queue_manager.shutdown()
 	loop.close()
 
 	return dict(comm)
+
+def consume(file, consumer, speed, understanding=None, *args, **kwargs):
+	"""
+	Run the consumption process.
+	The arguments and keyword arguments should be the command-line arguments.
+
+	Consumption uses two processes:
+
+		#. Stream the file, and
+		#. Consume the file.
+
+	Both processes share the same event loop and queue.
+
+	:param file: The path to the file containing the event's tweets.
+	:type file: str
+	:param consumer: The type of consumer to use.
+	:type consumer: :class:`~queues.consumers.consumer.Consumer`
+	:param speed: The speed with which to read the file.
+	:type speed: float
+	:param understanding: The path to the file containing the event's understanding.
+	:type understanding: str
+	"""
+
+	loop = asyncio.get_event_loop()
+
+	"""
+	Create a queue that will be shared between the streaming and understanding processes.
+	"""
+	queue_manager = BaseManager()
+	queue_manager.start()
+	queue = queue_manager.Queue()
+	consumer = consumer(queue)
+
+	"""
+	Create and start the streaming and consumption processes.
+	"""
+	stream = Process(target=stream_process,
+					 args=(loop, queue, file, ),
+					 kwargs={ 'speed': speed })
+	consume = Process(target=consume_process, args=(loop, consumer, ))
+	stream.start()
+	consume.start()
+
+	"""
+	Wait for the streaming and consumption jobs to finish.
+	Then, close the loop and shut down the base manager.
+	"""
+	stream.join()
+	consume.join()
+
+	"""
+	Clean up understanding.
+	"""
+	queue_manager.shutdown()
+	loop.close()
 
 def stream_process(loop, queue, file, *args, **kwargs):
 	"""
