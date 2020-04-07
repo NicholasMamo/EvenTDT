@@ -81,26 +81,26 @@ class ELDConsumer(Consumer):
 	:vartype max_intra_similarity: float
 	:ivar sets: The number of time windows that are considered when computing burst.
 				The higher this number, the more precise the calculations.
-				However, because of the decay in :class:`~tdt.algorithms.cataldi.Cataldi`, old time windows do not affect the result by a big margin.
+				However, because of the decay in :class:`~tdt.algorithms.eld.ELD`, old time windows do not affect the result by a big margin.
 				Therefore old data can be removed safely.
 	:vartype sets: int
 	:ivar min_burst: The minimum burst of a term to be considered emerging and returned.
 					 This value is exclusive.
 	:vartype min_burst: float
 	:ivar store: The nutrition store used in conjunction with extractin breaking news.
-	:vartype store: :class:`~topic_detection.nutrition_store.nutrition_store.NutritionStore`
+	:vartype store: :class:`~tdt.nutrition.store.NutritionStore`
 	:ivar buffer: A buffer of tweets that have been processed, but which are not part of a checkpoint yet.
 	:vartype buffer: :class:`~queues.queue.Queue`
 	:ivar tokenizer: The tokenizer used to create documents and create the IDF table, among others.
-	:vartype tokenizer: :class:`~vector.nlp.tokenizer.Tokenizer`
+	:vartype tokenizer: :class:`~nlp.tokenizer.Tokenizer`
 	:ivar clustering: The clustering algorithm to use.
-	:vartype clustering: :class:`~vector.cluster.algorithms.nokmeans.TemporalNoKMeans`
+	:vartype clustering: :class:`~vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans`
 	:ivar tdt: The TDT algorithm used to detect breaking developments.
 	:vartype tdt: :class:`~tdt.algorithms.eld.ELD`
 	:ivar summarization: The summarization algorithm used to create the timeline.
 	:vartype summarization: :class:`~summarization.algorithms.dgs.DGS`
 	:ivar cleaner: The cleaner used to make summaries more presentable.
-	:vartype cleaner: :class:`~nlp.cleaners.TweetCleaner`
+	:vartype cleaner: :class:`~nlp.cleaners.tweet_cleaner.TweetCleaner`
 	"""
 
 	def __init__(self, queue, time_window=30, scheme=None,
@@ -136,7 +136,7 @@ class ELDConsumer(Consumer):
 		:type max_intra_similarity: float
 		:param sets: The number of time windows that are considered when computing burst.
 					 The higher this number, the more precise the calculations.
-					 However, because of the decay in :class:`~tdt.algorithms.cataldi.Cataldi`, old time windows do not affect the result by a big margin.
+					 However, because of the decay in :class:`~tdt.algorithms.eld.ELD`, old time windows do not affect the result by a big margin.
 					 Therefore old data can be removed safely.
 		:type sets: int
 		:param min_burst: The minimum burst of a term to be considered emerging and returned.
@@ -579,7 +579,7 @@ class ELDConsumer(Consumer):
 		:type documents: list of :class:`~nlp.document.Document`
 
 		:return: The list of clusters that are still active and that have changed.
-		:rtype: list of :class:`~vector.cluster.cluster.Cluster`
+		:rtype: list of :class:`~vsm.clustering.cluster.Cluster`
 		"""
 
 		return self.clustering.cluster(documents, time='timestamp')
@@ -611,7 +611,7 @@ class ELDConsumer(Consumer):
 			#. No more than half of a cluster's tweets may be replies.
 
 		:param clusters: The active clusters, which represent candidate topics.
-		:type clusters: list of :class:`~vector.clustering.cluster.Cluster`
+		:type clusters: list of :class:`~vsm.clustering.cluster.Cluster`
 		:param timestamp: The current timestamp, used to check how long ago the cluster was last checked.
 		:type timestamp: int
 

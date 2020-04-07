@@ -98,7 +98,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#queues">Queues</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#id1">Consumers</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module-queues.consumers.print_consumer">Simple Consumers</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-queues.consumers.fire_consumer">Algorithms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-queues.consumers.eld_consumer">Algorithms</a></li>
 </ul>
 </li>
 </ul>
@@ -202,11 +202,6 @@ The queue’s data can be given as normal arguments.</p>
 <code class="sig-name descname">enqueue</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.queue.Queue.enqueue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add the given data to the queue.
 All arguments can be provided as arguments.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Raises</dt>
-<dd class="field-odd"><p><strong>ValueError</strong> – When no data is given.</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="method">
@@ -339,17 +334,15 @@ It also defines the state of the consumer.</p>
 
 <dl class="method">
 <dt id="queues.consumers.consumer.Consumer.run">
-<em class="property">async </em><code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">wait=0</em>, <em class="sig-param">max_time=3600</em>, <em class="sig-param">max_inactivity=-1</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.consumer.Consumer.run" title="Permalink to this definition">¶</a></dt>
+<em class="property">async </em><code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">wait=0</em>, <em class="sig-param">max_inactivity=-1</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.consumer.Consumer.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invoke the consume method.
 Since some listeners have a small delay, the consumer may wait a bit before starting to consume input.</p>
-<p>Any additional arguments and keyword arguments are passed on to the <a class="reference internal" href="#queues.consumers.consumer.Consumer._consume" title="queues.consumers.consumer.Consumer._consume"><code class="xref py py-class docutils literal notranslate"><span class="pre">_consume</span></code></a> function.</p>
+<p>Any additional arguments and keyword arguments are passed on to the <a class="reference internal" href="#queues.consumers.consumer.Consumer._consume" title="queues.consumers.consumer.Consumer._consume"><code class="xref py py-func docutils literal notranslate"><span class="pre">_consume()</span></code></a> function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>wait</strong> (<em>int</em>) – The time in seconds to wait until starting to consume the event.
 This is used when the file listener spends a lot of time skipping tweets.</p></li>
-<li><p><strong>max_time</strong> (<em>int</em>) – The maximum time in seconds to spend consuming the queue.
-It may be interrupted if the queue is inactive for a long time.</p></li>
 <li><p><strong>max_inactivity</strong> (<em>int</em>) – The maximum time in seconds to wait idly without input before stopping.
 If it is negative, the consumer keeps waiting for input until the maximum time expires.</p></li>
 </ul>
@@ -376,17 +369,13 @@ This function merely asks that the consumer stops accepting new objects for proc
 
 <dl class="method">
 <dt id="queues.consumers.consumer.Consumer._consume">
-<em class="property">abstract async </em><code class="sig-name descname">_consume</code><span class="sig-paren">(</span><em class="sig-param">max_time</em>, <em class="sig-param">max_inactivity</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.consumer.Consumer._consume" title="Permalink to this definition">¶</a></dt>
+<em class="property">abstract async </em><code class="sig-name descname">_consume</code><span class="sig-paren">(</span><em class="sig-param">max_inactivity</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.consumer.Consumer._consume" title="Permalink to this definition">¶</a></dt>
 <dd><p>Consume the queue.
 This is the function where most processing occurs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>max_time</strong> (<em>int</em>) – The maximum time in seconds to spend consuming the queue.
-It may be interrupted if the queue is inactive for a long time.</p></li>
-<li><p><strong>max_inactivity</strong> (<em>int</em>) – The maximum time in seconds to wait idly without input before stopping.
-If it is negative, the consumer keeps waiting for input until the maximum time expires.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>max_inactivity</strong> (<em>int</em>) – The maximum time in seconds to wait idly without input before stopping.
+If it is negative, the consumer keeps waiting for input until the maximum time expires.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -447,7 +436,7 @@ The two functions communicate with each other using a common queue, called a buf
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>periodicity</strong> (<em>int</em>) – The time window in seconds of the buffered consumer, or how often it is invoked.</p></li>
-<li><p><strong>buffer</strong> (<a class="reference internal" href="#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The buffer of objects that have to be processed.</p></li>
+<li><p><a class="reference internal" href="#queues.consumers.eld_consumer.ELDConsumer.buffer" title="queues.consumers.eld_consumer.ELDConsumer.buffer"><strong>buffer</strong></a> (<a class="reference internal" href="#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The buffer of objects that have to be processed.</p></li>
 </ul>
 </dd>
 </dl>
@@ -467,7 +456,7 @@ The two functions communicate with each other using a common queue, called a buf
 
 <dl class="method">
 <dt id="queues.consumers.buffered_consumer.BufferedConsumer.run">
-<em class="property">async </em><code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">wait=0</em>, <em class="sig-param">max_time=3600</em>, <em class="sig-param">max_inactivity=-1</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.buffered_consumer.BufferedConsumer.run" title="Permalink to this definition">¶</a></dt>
+<em class="property">async </em><code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">wait=0</em>, <em class="sig-param">max_inactivity=-1</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.buffered_consumer.BufferedConsumer.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invokes the consume and process method.</p>
 <p>Any additional arguments and keyword arguments are passed on to the <a class="reference internal" href="#queues.consumers.buffered_consumer.BufferedConsumer._consume" title="queues.consumers.buffered_consumer.BufferedConsumer._consume"><code class="xref py py-class docutils literal notranslate"><span class="pre">_consume</span></code></a> and <a class="reference internal" href="#queues.consumers.buffered_consumer.BufferedConsumer._process" title="queues.consumers.buffered_consumer.BufferedConsumer._process"><code class="xref py py-class docutils literal notranslate"><span class="pre">_process</span></code></a> functions.</p>
 <dl class="field-list simple">
@@ -475,8 +464,6 @@ The two functions communicate with each other using a common queue, called a buf
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>wait</strong> (<em>int</em>) – The time in seconds to wait until starting to understand the event.
 This is used when the file listener spends a lot of time skipping documents.</p></li>
-<li><p><strong>max_time</strong> (<em>int</em>) – The maximum time in seconds to spend consuming the queue.
-It may be interrupted if the queue is inactive for a long time.</p></li>
 <li><p><strong>max_inactivity</strong> (<em>int</em>) – The maximum time in seconds to wait idly without input before stopping.
 If it is negative, the consumer keeps waiting for input until the maximum time expires.</p></li>
 </ul>
@@ -492,17 +479,13 @@ If it is negative, the consumer keeps waiting for input until the maximum time e
 
 <dl class="method">
 <dt id="queues.consumers.buffered_consumer.BufferedConsumer._consume">
-<em class="property">async </em><code class="sig-name descname">_consume</code><span class="sig-paren">(</span><em class="sig-param">max_time</em>, <em class="sig-param">max_inactivity</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.buffered_consumer.BufferedConsumer._consume" title="Permalink to this definition">¶</a></dt>
+<em class="property">async </em><code class="sig-name descname">_consume</code><span class="sig-paren">(</span><em class="sig-param">max_inactivity</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.buffered_consumer.BufferedConsumer._consume" title="Permalink to this definition">¶</a></dt>
 <dd><p>Consume the queue.
 This function calls for processing in turn.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>max_time</strong> (<em>int</em>) – The maximum time in seconds to spend consuming the queue.
-It may be interrupted if the queue is inactive for a long time.</p></li>
-<li><p><strong>max_inactivity</strong> (<em>int</em>) – The maximum time in seconds to wait idly without input before stopping.
-If it is negative, the consumer keeps waiting for input until the maximum time expires.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>max_inactivity</strong> (<em>int</em>) – The maximum time in seconds to wait idly without input before stopping.
+If it is negative, the consumer keeps waiting for input until the maximum time expires.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -564,16 +547,12 @@ The function periodically checks if the consumer has been asked to stop.</p>
 <dd><p>The print consumer prints queue messages and discards them.</p>
 <dl class="method">
 <dt id="queues.consumers.print_consumer.PrintConsumer._consume">
-<em class="property">async </em><code class="sig-name descname">_consume</code><span class="sig-paren">(</span><em class="sig-param">max_time=3600</em>, <em class="sig-param">max_inactivity=5</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.print_consumer.PrintConsumer._consume" title="Permalink to this definition">¶</a></dt>
+<em class="property">async </em><code class="sig-name descname">_consume</code><span class="sig-paren">(</span><em class="sig-param">max_inactivity=5</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.print_consumer.PrintConsumer._consume" title="Permalink to this definition">¶</a></dt>
 <dd><p>Consume the next elements from the queue.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>max_time</strong> (<em>int</em>) – The maximum time in seconds to spend consuming the queue.
-It may be interrupted if the queue is inactive for a long time.</p></li>
-<li><p><strong>max_inactivity</strong> (<em>int</em>) – The maximum time in seconds to wait idly without input before stopping.
-If it is negative, the consumer keeps waiting for input until the maximum time expires.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>max_inactivity</strong> (<em>int</em>) – The maximum time in seconds to wait idly without input before stopping.
+If it is negative, the consumer keeps waiting for input until the maximum time expires.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -595,9 +574,467 @@ The reporting is done based on the periodicity.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-queues.consumers.fire_consumer">
-<span id="algorithms"></span><h3>Algorithms<a class="headerlink" href="#module-queues.consumers.fire_consumer" title="Permalink to this headline">¶</a></h3>
-<p>Finding Important News REports (FIRE) is a periodic TDT consumer.
+<div class="section" id="module-queues.consumers.eld_consumer">
+<span id="algorithms"></span><h3>Algorithms<a class="headerlink" href="#module-queues.consumers.eld_consumer" title="Permalink to this headline">¶</a></h3>
+<p>Event TimeLine Detection (ELD) is a consumer based on a publication of the same name.
+The approach splits processing into two steps:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Understand the event, and</p></li>
+<li><p>Build a timeline for it.</p></li>
+</ol>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Implementation based on the algorithm presented in <a class="reference external" href="https://dl.acm.org/doi/10.1145/3342220.3344921">ELD: Event TimeLine Detection – A Participant-Based Approach to Tracking Events by Mamo et al. (2019)</a>.</p>
+</div>
+<dl class="class">
+<dt id="queues.consumers.eld_consumer.ELDConsumer">
+<em class="property">class </em><code class="sig-name descname">ELDConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">time_window=30</em>, <em class="sig-param">scheme=None</em>, <em class="sig-param">threshold=0.5</em>, <em class="sig-param">freeze_period=20</em>, <em class="sig-param">min_size=3</em>, <em class="sig-param">cooldown=1</em>, <em class="sig-param">max_intra_similarity=0.8</em>, <em class="sig-param">sets=10</em>, <em class="sig-param">min_burst=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer" title="Permalink to this definition">¶</a></dt>
+<dd><p>The ELD consumer is a real-time consumer with a custom algorithm to detect topics.
+It is siplit into two steps:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Understand the event, and</p></li>
+<li><p>Build a timeline for it.</p></li>
+</ol>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time_window</strong> (<em>int</em>) – The time (in seconds) to spend consuming the queue.</p></li>
+<li><p><a class="reference internal" href="nlp.html#module-nlp.term_weighting.scheme" title="nlp.term_weighting.scheme"><strong>scheme</strong></a> (<a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme used to create documents.</p></li>
+<li><p><strong>min_size</strong> (<em>int</em>) – The minimum size of a cluster to be considered valid.</p></li>
+<li><p><strong>cooldown</strong> (<em>float</em>) – The minimum time (in seconds) between consecutive checks of a cluster.</p></li>
+<li><p><strong>max_intra_similarity</strong> (<em>float</em>) – The maximum average similarity, between 0 and 1, of the cluster’s documents with the centroid.
+Used to filter out clusters that include only retweets of the same, or almost identical documents.</p></li>
+<li><p><strong>sets</strong> (<em>int</em>) – The number of time windows that are considered when computing burst.
+The higher this number, the more precise the calculations.
+However, because of the decay in <a class="reference internal" href="tdt.html#tdt.algorithms.eld.ELD" title="tdt.algorithms.eld.ELD"><code class="xref py py-class docutils literal notranslate"><span class="pre">ELD</span></code></a>, old time windows do not affect the result by a big margin.
+Therefore old data can be removed safely.</p></li>
+<li><p><a class="reference internal" href="#queues.consumers.eld_consumer.ELDConsumer.min_burst" title="queues.consumers.eld_consumer.ELDConsumer.min_burst"><strong>min_burst</strong></a> (<em>float</em>) – The minimum burst of a term to be considered emerging and returned.
+This value is exclusive.</p></li>
+<li><p><a class="reference internal" href="tdt.html#module-tdt.nutrition.store" title="tdt.nutrition.store"><strong>store</strong></a> (<a class="reference internal" href="tdt.html#tdt.nutrition.store.NutritionStore" title="tdt.nutrition.store.NutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code></a>) – The nutrition store used in conjunction with extractin breaking news.</p></li>
+<li><p><a class="reference internal" href="#queues.consumers.eld_consumer.ELDConsumer.buffer" title="queues.consumers.eld_consumer.ELDConsumer.buffer"><strong>buffer</strong></a> (<a class="reference internal" href="#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – A buffer of tweets that have been processed, but which are not part of a checkpoint yet.</p></li>
+<li><p><a class="reference internal" href="nlp.html#module-nlp.tokenizer" title="nlp.tokenizer"><strong>tokenizer</strong></a> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer used to create documents and create the IDF table, among others.</p></li>
+<li><p><a class="reference internal" href="vsm.html#module-vsm.clustering.algorithms.clustering" title="vsm.clustering.algorithms.clustering"><strong>clustering</strong></a> (<a class="reference internal" href="vsm.html#vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans" title="vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans"><code class="xref py py-class docutils literal notranslate"><span class="pre">TemporalNoKMeans</span></code></a>) – The clustering algorithm to use.</p></li>
+<li><p><a class="reference internal" href="tdt.html#module-tdt" title="tdt"><strong>tdt</strong></a> (<a class="reference internal" href="tdt.html#tdt.algorithms.eld.ELD" title="tdt.algorithms.eld.ELD"><code class="xref py py-class docutils literal notranslate"><span class="pre">ELD</span></code></a>) – The TDT algorithm used to detect breaking developments.</p></li>
+<li><p><a class="reference internal" href="summarization.html#module-summarization" title="summarization"><strong>summarization</strong></a> (<a class="reference internal" href="summarization.html#summarization.algorithms.dgs.DGS" title="summarization.algorithms.dgs.DGS"><code class="xref py py-class docutils literal notranslate"><span class="pre">DGS</span></code></a>) – The summarization algorithm used to create the timeline.</p></li>
+<li><p><a class="reference internal" href="nlp.html#module-nlp.cleaners.cleaner" title="nlp.cleaners.cleaner"><strong>cleaner</strong></a> (<a class="reference internal" href="nlp.html#nlp.cleaners.tweet_cleaner.TweetCleaner" title="nlp.cleaners.tweet_cleaner.TweetCleaner"><code class="xref py py-class docutils literal notranslate"><span class="pre">TweetCleaner</span></code></a>) – The cleaner used to make summaries more presentable.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="queues.consumers.eld_consumer.ELDConsumer.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">time_window=30</em>, <em class="sig-param">scheme=None</em>, <em class="sig-param">threshold=0.5</em>, <em class="sig-param">freeze_period=20</em>, <em class="sig-param">min_size=3</em>, <em class="sig-param">cooldown=1</em>, <em class="sig-param">max_intra_similarity=0.8</em>, <em class="sig-param">sets=10</em>, <em class="sig-param">min_burst=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the consumer with a queue.
+Simultaneously create a nutrition store and the topic detection algorithm container.
+Initially, the IDF table should be empty.
+It will be populated later when the ‘reconaissance’ period is finished.</p>
+<p>The constructor also creates a buffer.
+This buffer is used to store tweets until they are made into a checkpoint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>queue</strong> (<a class="reference internal" href="#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that is consumed.</p></li>
+<li><p><strong>time_window</strong> (<em>int</em>) – The size of the window after which checkpoints are created.</p></li>
+<li><p><strong>scheme</strong> (None or <a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme that is used to create dimensions.
+If <cite>None</cite> is given, the <a class="reference internal" href="nlp.html#nlp.term_weighting.tf.TF" title="nlp.term_weighting.tf.TF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TF</span></code></a> term-weighting scheme is used.</p></li>
+<li><p><strong>threshold</strong> (<em>float</em>) – The similarity threshold to use for the <a class="reference internal" href="vsm.html#vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans" title="vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans"><code class="xref py py-class docutils literal notranslate"><span class="pre">TemporalNoKMeans</span></code></a> incremental clustering approach.
+Documents are added to an existing cluster if their similarity with the centroid is greater than or equal to this threshold.</p></li>
+<li><p><strong>freeze_period</strong> (<em>float</em>) – The freeze period, in seconds, of the incremental clustering approach.</p></li>
+<li><p><strong>min_size</strong> (<em>int</em>) – The minimum size of a cluster to be considered valid.</p></li>
+<li><p><strong>cooldown</strong> (<em>float</em>) – The minimum time (in seconds) between consecutive checks of a cluster.</p></li>
+<li><p><strong>max_intra_similarity</strong> (<em>float</em>) – The maximum average similarity, between 0 and 1, of the cluster’s documents with the centroid.
+Used to filter out clusters that include only retweets of the same, or almost identical documents.</p></li>
+<li><p><strong>sets</strong> (<em>int</em>) – The number of time windows that are considered when computing burst.
+The higher this number, the more precise the calculations.
+However, because of the decay in <a class="reference internal" href="tdt.html#tdt.algorithms.eld.ELD" title="tdt.algorithms.eld.ELD"><code class="xref py py-class docutils literal notranslate"><span class="pre">ELD</span></code></a>, old time windows do not affect the result by a big margin.
+Therefore old data can be removed safely.</p></li>
+<li><p><strong>min_burst</strong> (<em>float</em>) – The minimum burst of a term to be considered emerging and returned.
+This value is exclusive.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="queues.consumers.eld_consumer.ELDConsumer.min_burst">
+<code class="sig-name descname">min_burst</code><em class="property"> = None</em><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer.min_burst" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the nutrition store and the buffer.
+The buffer stores tweets that have been processed, but not yet added to a checkpoint.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="queues.consumers.eld_consumer.ELDConsumer.buffer">
+<code class="sig-name descname">buffer</code><em class="property"> = None</em><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the different components of the system.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queues.consumers.eld_consumer.ELDConsumer.understand">
+<em class="property">async </em><code class="sig-name descname">understand</code><span class="sig-paren">(</span><em class="sig-param">max_inactivity=-1</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer.understand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Understanding is split into two tasks:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Construct the TF-IDF scheme used from the pre-event discussion, and</p></li>
+<li><p>Identify the event’s participants.</p></li>
+</ol>
+</div></blockquote>
+<p>The function returns both as a dictionary.
+The two keys are <cite>scheme</cite> and <cite>participants</cite>.</p>
+<p>Any additional arguments and keyword arguments are passed on to the <a class="reference internal" href="#queues.consumers.eld_consumer.ELDConsumer._construct_idf" title="queues.consumers.eld_consumer.ELDConsumer._construct_idf"><code class="xref py py-func docutils literal notranslate"><span class="pre">_construct_idf()</span></code></a> and <a class="reference internal" href="#queues.consumers.eld_consumer.ELDConsumer._detect_participants" title="queues.consumers.eld_consumer.ELDConsumer._detect_participants"><code class="xref py py-func docutils literal notranslate"><span class="pre">_detect_participants()</span></code></a> functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>max_inactivity</strong> (<em>int</em>) – The maximum time in seconds to wait idly without input before stopping.
+If it is negative, it is ignored.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary containing the TF-IDF scheme and the event’s participants from the pre-event discussion.
+The TF-IDF scheme is returned in the <cite>scheme</cite> key as a <a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a> instance.
+The participants are returned in the <cite>participants</cite> key a list of strings.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="queues.consumers.eld_consumer.ELDConsumer._construct_idf">
+<em class="property">async </em><code class="sig-name descname">_construct_idf</code><span class="sig-paren">(</span><em class="sig-param">max_inactivity</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer._construct_idf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct the TF-IDF table from the pre-event discussion.
+All of the tweets processed by these documents are added to a buffer so they can be used by the APD task.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>max_inactivity</strong> (<em>int</em>) – The maximum time in seconds to wait idly without input before stopping.
+If it is negative, it is ignored.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The constructed TF-IDF scheme.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="queues.consumers.eld_consumer.ELDConsumer._detect_participants">
+<em class="property">async </em><code class="sig-name descname">_detect_participants</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer._detect_participants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detect participants from the received documents.</p>
+<p>ELD assumes that all participants are named entities.
+Therefore the APD process is based on the <a class="reference internal" href="apd.html#apd.extractors.local.entity_extractor.EntityExtractor" title="apd.extractors.local.entity_extractor.EntityExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">EntityExtractor</span></code></a>.</p>
+<p>This function assumes that it follows the <a class="reference internal" href="#queues.consumers.eld_consumer.ELDConsumer._construct_idf" title="queues.consumers.eld_consumer.ELDConsumer._construct_idf"><code class="xref py py-func docutils literal notranslate"><span class="pre">_construct_idf()</span></code></a> function.
+Therefore the documents it uses are those added to the buffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A list of participants.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="queues.consumers.eld_consumer.ELDConsumer._consume">
+<em class="property">async </em><code class="sig-name descname">_consume</code><span class="sig-paren">(</span><em class="sig-param">max_inactivity</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer._consume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Consume and process the documents in the queue.
+Processed documents are added to the buffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>max_inactivity</strong> (<em>int</em>) – The maximum time in seconds to wait idly without input before stopping.
+If it is negative, the consumer keeps waiting for input until the maximum time expires.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The constructed timeline.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="summarization.html#summarization.timeline.timeline.Timeline" title="summarization.timeline.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="queues.consumers.eld_consumer.ELDConsumer._update_idf">
+<code class="sig-name descname">_update_idf</code><span class="sig-paren">(</span><em class="sig-param">idf</em>, <em class="sig-param">subset</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer._update_idf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the IDF with the new subset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>idf</strong> (<em>dict</em>) – The current IDF.
+The function expects a dictionary with the keys being terms and the values their document frequency.</p></li>
+<li><p><strong>subset</strong> (<em>dict</em>) – The IDF constructed from a subset of documents.
+The function expects a dictionary with the keys being terms and the values their document frequency.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The updated IDF with the terms being the keys and the values their document frequency.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="queues.consumers.eld_consumer.ELDConsumer._filter_tweets">
+<code class="sig-name descname">_filter_tweets</code><span class="sig-paren">(</span><em class="sig-param">tweets</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer._filter_tweets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter the given tweets based on <a class="reference internal" href="#queues.consumers.fire_consumer.FIREConsumer" title="queues.consumers.fire_consumer.FIREConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">FIREConsumer</span></code></a>’s filtering rules and new rules.
+FIRE’s rules are:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>The tweet has to be in English,</p></li>
+<li><p>The tweet must contain no more than 2 hashtags,</p></li>
+<li><p>The tweet’s author must have favorited at least one tweet, and</p></li>
+<li><p>The tweet’s author must have at least one follower for every thousand tweets they’ve published.</p></li>
+</ol>
+</div></blockquote>
+<p>The new rules are:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>The tweet cannot have more than one URL because too many URLs are indicative of pre-planned content, and</p></li>
+<li><p>The biography of the tweet’s author cannot be empty because that is indicative of bots.</p></li>
+</ol>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tweets</strong> (<em>list of dict</em>) – A list of tweets to filter.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of filtered tweets.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="queues.consumers.eld_consumer.ELDConsumer._to_documents">
+<code class="sig-name descname">_to_documents</code><span class="sig-paren">(</span><em class="sig-param">tweets</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer._to_documents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the given tweets into documents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tweets</strong> (<em>list of dict</em>) – A list of tweets.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of documents created from the tweets in the same order as the given tweets.
+Documents are normalized and store the original tweet in the <cite>tweet</cite> attribute.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="queues.consumers.eld_consumer.ELDConsumer._latest_timestamp">
+<code class="sig-name descname">_latest_timestamp</code><span class="sig-paren">(</span><em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer._latest_timestamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the latest timestamp from the given documents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>documents</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The list of documents from where to get the latest timestamp.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The latest timestamp in the given document set.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – When there are no documents to consider.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="queues.consumers.eld_consumer.ELDConsumer._create_checkpoint">
+<code class="sig-name descname">_create_checkpoint</code><span class="sig-paren">(</span><em class="sig-param">timestamp</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer._create_checkpoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>After every time window has elapsed, use all the buffered documents to create a new checkpoint.
+The checkpoint creates a new nutrition set stored in the nutrition store.
+This nutrition set represents a snapshot of the time window.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The ELD consumer follows a real-time process.
+Since there could be a backlog, the function ensures that documents published after the given timestamp are not added to the checkpoint.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>timestamp</strong> (<em>int</em>) – The timestamp of the new checkpoint.
+The nutrition data is from documents published in the time window that ends at this timestamp.
+Newer documents are left in the buffer.
+This timestamp is inclusive.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="queues.consumers.eld_consumer.ELDConsumer._remove_old_checkpoints">
+<code class="sig-name descname">_remove_old_checkpoints</code><span class="sig-paren">(</span><em class="sig-param">timestamp</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer._remove_old_checkpoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove old checkpoints.
+The checkpoints that are removed depend on:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>The number of sets that should be retained, and</p></li>
+<li><p>The length of the time window of the consumer.</p></li>
+</ol>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>timestamp</strong> (<em>int</em>) – The timestamp of the new checkpoint.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="queues.consumers.eld_consumer.ELDConsumer._cluster">
+<code class="sig-name descname">_cluster</code><span class="sig-paren">(</span><em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer._cluster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cluster the given documents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>documents</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The documents to cluster.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The list of clusters that are still active and that have changed.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="queues.consumers.eld_consumer.ELDConsumer._filter_clusters">
+<code class="sig-name descname">_filter_clusters</code><span class="sig-paren">(</span><em class="sig-param">clusters</em>, <em class="sig-param">timestamp</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer._filter_clusters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of clusters that should be checked for emerging topics.
+The filtering rules are:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>A cluster must have a minimum number of tweets, indicating popularity.</p></li>
+<li><p>A cluster must not have been checked very recently.                     This keeps from checking clusters for breaking topics too often.                        Instead, clusters are checked only after some time has passed to save some time.</p></li>
+<li><p>A cluster’s documents must not be quasi-identical to each other.                        This might indicate a slew of retweets.                         When something happens, people do not wait until someone writes something.                      Instead, they themselves create conversation;</p></li>
+<li><p>A cluster may not have been deemed to be bursty already.                        Clusters that are bursty may keep collecting tweets for the summary.                            However, they may not be added twice to the same timeline node.</p></li>
+<li><p>A cluster must not have more than one URL per tweet on average.                         URLs include both links and media.                      They indicate premeditation, usually spam, when all tweets contain them.</p></li>
+<li><p>No more than half of a cluster’s tweets may be replies.</p></li>
+</ol>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>clusters</strong> (list of <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>) – The active clusters, which represent candidate topics.</p></li>
+<li><p><strong>timestamp</strong> (<em>int</em>) – The current timestamp, used to check how long ago the cluster was last checked.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of clusters that should be checked for emerging terms.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="queues.consumers.eld_consumer.ELDConsumer._detect_topics">
+<code class="sig-name descname">_detect_topics</code><span class="sig-paren">(</span><em class="sig-param">cluster</em>, <em class="sig-param">timestamp</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer._detect_topics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detect topics using historical data from the given nutrition store.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cluster</strong> (<a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>) – The cluster for which to identify breaking topics.</p></li>
+<li><p><strong>timestamp</strong> (<em>int</em>) – The current timestamp.
+Sets older than this timestamp are used to calculate the burst.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The breaking terms and their burst as a dictionary.
+The keys are the terms and the values are the respective burst values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="queues.consumers.eld_consumer.ELDConsumer._score_documents">
+<code class="sig-name descname">_score_documents</code><span class="sig-paren">(</span><em class="sig-param">documents</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer._score_documents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Score the given documents.
+The score is the product of two scores:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>A brevity score, based on <cite>BLEU: a Method for Automatic Evaluation of Machine Translation by Papineni et al. (2002) &lt;https://dl.acm.org/doi/10.3115/1073083.1073135&gt;</cite>; and</p></li>
+<li><p>An emotion score, which is the complement of the fraction of tokens that are capitalized.</p></li>
+</ol>
+</div></blockquote>
+<p>Any additional arguments and keyword arguments are passed on to the functions that calculate the scores.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>documents</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The list of documents to score.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of documents ranked in descending order of their score.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="queues.consumers.eld_consumer.ELDConsumer._brevity_score">
+<code class="sig-name descname">_brevity_score</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">r=10</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer._brevity_score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the brevity score, bounded between 0 and 1.
+This score is based on <cite>BLEU: a Method for Automatic Evaluation of Machine Translation by Papineni et al. (2002) &lt;https://dl.acm.org/doi/10.3115/1073083.1073135&gt;</cite>:</p>
+<div class="math notranslate nohighlight">
+\[score = max(1, e^{1 - \frac{r}{c}})\]</div>
+<p>where <span class="math notranslate nohighlight">\(c\)</span> is the number of tokens in the text, and <span class="math notranslate nohighlight">\(r\)</span> is the ideal number of tokens.</p>
+<p>The score is 1 even when the tweet is longer than the desired length.
+In this way, the brevity score is more akin to a brevity penalty.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – The text to score.
+The text is tokanized by the function.</p></li>
+<li><p><strong>r</strong> (<em>str</em>) – The ideal number of tokens in the text.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The brevity score, bounded between 0 and 1.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="queues.consumers.eld_consumer.ELDConsumer._emotion_score">
+<code class="sig-name descname">_emotion_score</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer._emotion_score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the emotion in the text.
+This is based on the number of capitalized characters.
+The higher the score, the less emotional the tweet.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is not always desirable for the score to be 1.
+That would mean that there is absolutely no capitalization at all.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – The text to score.
+The text is tokanized by the function.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The emotion score, bounded between 0 and 1.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-queues.consumers.fire_consumer"></span><p>Finding Important News REports (FIRE) is a periodic TDT consumer.
 It takes in tweets every time window, clusters them and finds the most important terms in each cluster.
 In this implementation, the tracking happens through the timeline.</p>
 <div class="admonition note">

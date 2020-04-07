@@ -792,6 +792,11 @@ The larger the decay rate, the less importance far-off windows have in the burst
 <dt id="tdt.algorithms.eld.ELD.detect">
 <code class="sig-name descname">detect</code><span class="sig-paren">(</span><em class="sig-param">nutrition</em>, <em class="sig-param">since=None</em>, <em class="sig-param">until=None</em>, <em class="sig-param">min_burst=0</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.algorithms.eld.ELD.detect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Detect topics using historical data from the given nutrition store.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The minimum burst is exclusive.
+This is so that items with a burst of 0 (no change from previous checkpoints) are excluded.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">

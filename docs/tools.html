@@ -271,7 +271,10 @@ Any additional arguments or keyword arguments are passed on to the <code class="
 <p>The consumer receives an input file and consumes it with one of the given consumers.
 This consumer is split into two asynchronous tasks.
 The first task reads the file, and the second consumes it.</p>
-<p>The dataset files are expected to contain one tweet on every line, encoded as JSON strings.</p>
+<p>If an understanding file is provided, it is used for the understanding task.
+The process is similar to before, with two asynchronous tasks.
+The first task reads the file, and the second consumes it, this time to understand the event.</p>
+<p>All dataset files are expected to contain one tweet on every line, encoded as JSON strings.</p>
 <p>To run the script, use:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./implementation/consume.py <span class="se">\</span>
     -f data/event/event.json <span class="se">\</span>
@@ -281,8 +284,9 @@ The first task reads the file, and the second consumes it.</p>
 <p>Accepted arguments:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--file</span></code>                 <em>&lt;Required&gt;</em> The file to consume.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">--class</span></code>                <em>&lt;Required&gt;</em> The consumer to use; supported: <cite>FIREConsumer</cite>, <cite>PrintConsumer</cite>, <cite>StatConsumer</cite>, <cite>ZhaoConsumer</cite>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--file</span></code>                         <em>&lt;Required&gt;</em> The file to consume.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">--class</span></code>                        <em>&lt;Required&gt;</em> The consumer to use; supported: <cite>ELDConsumer</cite>, <cite>FIREConsumer</cite>, <cite>PrintConsumer</cite>, <cite>StatConsumer</cite>, <cite>ZhaoConsumer</cite>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-u</span> <span class="pre">--understanding</span></code>        <em>&lt;Optional&gt;</em> The understanding file used to understand the event.</p></li>
 </ul>
 </div></blockquote>
 <dl class="function">
@@ -292,8 +296,9 @@ The first task reads the file, and the second consumes it.</p>
 <p>Accepted arguments:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--file</span></code>                 <em>&lt;Required&gt;</em> The file to consume.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">--class</span></code>                <em>&lt;Required&gt;</em> The consumer to use; supported: <cite>FIREConsumer</cite>, <cite>PrintConsumer</cite>, <cite>StatConsumer</cite>, <cite>ZhaoConsumer</cite>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--file</span></code>                         <em>&lt;Required&gt;</em> The file to consume.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">--class</span></code>                        <em>&lt;Required&gt;</em> The consumer to use; supported: <cite>ELDConsumer</cite>, <cite>FIREConsumer</cite>, <cite>PrintConsumer</cite>, <cite>StatConsumer</cite>, <cite>ZhaoConsumer</cite>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-u</span> <span class="pre">--understanding</span></code>        <em>&lt;Optional&gt;</em> The understanding file used to understand the event.</p></li>
 </ul>
 </div></blockquote>
 <dl class="field-list simple">
