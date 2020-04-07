@@ -571,6 +571,37 @@ The keys are the terms, and the corresponding values are the number of documents
 </dl>
 </dd></dl>
 
+<dl class="method">
+<dt id="nlp.term_weighting.tfidf.TFIDF.to_array">
+<code class="sig-name descname">to_array</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nlp.term_weighting.tfidf.TFIDF.to_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export the TF-IDF as an associative array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The TF-IDF as an associative array.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nlp.term_weighting.tfidf.TFIDF.from_array">
+<em class="property">static </em><code class="sig-name descname">from_array</code><span class="sig-paren">(</span><em class="sig-param">array</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.term_weighting.tfidf.TFIDF.from_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an instance of the TF-IDF from the given associative array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>array</strong> (<em>dict</em>) – The associative array with the attributes to create the TF-IDF.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A new instance of the TF-IDF with the same attributes stored in the object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -723,6 +754,37 @@ The keys are the terms, and the corresponding values are the number of documents
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nlp.term_weighting.global_schemes.idf.IDF.to_array">
+<code class="sig-name descname">to_array</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nlp.term_weighting.global_schemes.idf.IDF.to_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export the IDF as an associative array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The IDF as an associative array.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nlp.term_weighting.global_schemes.idf.IDF.from_array">
+<em class="property">static </em><code class="sig-name descname">from_array</code><span class="sig-paren">(</span><em class="sig-param">array</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.term_weighting.global_schemes.idf.IDF.from_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an instance of the IDF from the given associative array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>array</strong> (<em>dict</em>) – The associative array with the attributes to create the IDF.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A new instance of the IDF with the same attributes stored in the object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#nlp.term_weighting.global_schemes.idf.IDF" title="nlp.term_weighting.global_schemes.idf.IDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">IDF</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>

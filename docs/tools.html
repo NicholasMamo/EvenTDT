@@ -336,6 +336,20 @@ The first task reads the file, and the second consumes it, this time to understa
 </dd></dl>
 
 <dl class="function">
+<dt id="tools.consume.understand_process">
+<code class="sig-name descname">understand_process</code><span class="sig-paren">(</span><em class="sig-param">loop</em>, <em class="sig-param">consumer</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.consume.understand_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Consume the incoming tweets to understand the event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>loop</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.unix_events._UnixSelectorEventLoop</span></code>) – The main event loop.</p></li>
+<li><p><strong>consumer</strong> (<a class="reference internal" href="consumers.html#queues.consumers.consumer.Consumer" title="queues.consumers.consumer.Consumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code></a>) – The consumer to use to process tweets.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="tools.consume.consume_process">
 <code class="sig-name descname">consume_process</code><span class="sig-paren">(</span><em class="sig-param">loop</em>, <em class="sig-param">consumer</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.consume.consume_process" title="Permalink to this definition">¶</a></dt>
 <dd><p>Consume the incoming tweets.</p>
@@ -343,7 +357,7 @@ The first task reads the file, and the second consumes it, this time to understa
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>loop</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.unix_events._UnixSelectorEventLoop</span></code>) – The main event loop.</p></li>
-<li><p><strong>consumer</strong> (<a class="reference internal" href="consumers.html#queues.consumers.consumer.Consumer" title="queues.consumers.consumer.Consumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">queues.consumers.consumer.Consumer</span></code></a>) – The consumer to use to process tweets.</p></li>
+<li><p><strong>consumer</strong> (<a class="reference internal" href="consumers.html#queues.consumers.consumer.Consumer" title="queues.consumers.consumer.Consumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code></a>) – The consumer to use to process tweets.</p></li>
 </ul>
 </dd>
 </dl>
