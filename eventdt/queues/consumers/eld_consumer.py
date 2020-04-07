@@ -288,7 +288,7 @@ class ELDConsumer(Consumer):
 		"""
 		extractor = EntityExtractor()
 		scorer = LogTFScorer()
-		filter = ThresholdFilter(0.2)
+		filter = ThresholdFilter(0.6)
 		resolver = WikipediaSearchResolver(self.scheme, self.tokenizer, 0.05, documents)
 		extrapolator = WikipediaExtrapolator(documents, self.tokenizer, self.scheme, threshold=0.05)
 		postprocessor = WikipediaPostprocessor()
