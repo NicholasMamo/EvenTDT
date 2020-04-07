@@ -238,7 +238,7 @@ class ELDConsumer(Consumer):
 		self.buffer.enqueue(*documents)
 
 		"""
-		Update the IDF with the new documents.
+		Update the IDF with the consumed documents.
 		"""
 		idf = IDF.from_documents(documents)
 
@@ -392,23 +392,6 @@ class ELDConsumer(Consumer):
 						logger.info(f"{datetime.fromtimestamp(latest_timestamp).ctime()}: { str(summary) }")
 
 		return timeline
-
-	def _update_idf(self, idf, subset):
-		"""
-		Update the IDF with the new subset.
-
-		:param idf: The current IDF.
-					The function expects a dictionary with the keys being terms and the values their document frequency.
-		:type idf: dict
-		:param subset: The IDF constructed from a subset of documents.
-					   The function expects a dictionary with the keys being terms and the values their document frequency.
-		:type subset: dict
-
-		:return: The updated IDF with the terms being the keys and the values their document frequency.
-		:rtype: dict
-		"""
-
-		return { term: idf.get(term, 0) + subset.get(term, 0) for term in idf.keys() | subset.keys() }
 
 	def _filter_tweets(self, tweets):
 		"""

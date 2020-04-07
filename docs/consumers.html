@@ -757,28 +757,6 @@ If it is negative, the consumer keeps waiting for input until the maximum time e
 </dd></dl>
 
 <dl class="method">
-<dt id="queues.consumers.eld_consumer.ELDConsumer._update_idf">
-<code class="sig-name descname">_update_idf</code><span class="sig-paren">(</span><em class="sig-param">idf</em>, <em class="sig-param">subset</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer._update_idf" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the IDF with the new subset.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>idf</strong> (<em>dict</em>) – The current IDF.
-The function expects a dictionary with the keys being terms and the values their document frequency.</p></li>
-<li><p><strong>subset</strong> (<em>dict</em>) – The IDF constructed from a subset of documents.
-The function expects a dictionary with the keys being terms and the values their document frequency.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The updated IDF with the terms being the keys and the values their document frequency.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
 <dt id="queues.consumers.eld_consumer.ELDConsumer._filter_tweets">
 <code class="sig-name descname">_filter_tweets</code><span class="sig-paren">(</span><em class="sig-param">tweets</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer._filter_tweets" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filter the given tweets based on <a class="reference internal" href="#queues.consumers.fire_consumer.FIREConsumer" title="queues.consumers.fire_consumer.FIREConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">FIREConsumer</span></code></a>’s filtering rules and new rules.
