@@ -5,7 +5,11 @@ The consumer receives an input file and consumes it with one of the given consum
 This consumer is split into two asynchronous tasks.
 The first task reads the file, and the second consumes it.
 
-The dataset files are expected to contain one tweet on every line, encoded as JSON strings.
+If an understanding file is provided, it is used for the understanding task.
+The process is similar to before, with two asynchronous tasks.
+The first task reads the file, and the second consumes it, this time to understand the event.
+
+All dataset files are expected to contain one tweet on every line, encoded as JSON strings.
 
 To run the script, use:
 
@@ -17,8 +21,9 @@ To run the script, use:
 
 Accepted arguments:
 
-	- ``-f --file``			*<Required>* The file to consume.
-	- ``-c --class``		*<Required>* The consumer to use; supported: `ELDConsumer`, `FIREConsumer`, `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.
+	- ``-f --file``				*<Required>* The file to consume.
+	- ``-c --class``			*<Required>* The consumer to use; supported: `ELDConsumer`, `FIREConsumer`, `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.
+	- ``-u --understanding``	*<Optional>* The understanding file used to understand the event.
 
 """
 
@@ -48,8 +53,9 @@ def setup_args():
 
 	Accepted arguments:
 
-		- ``-f --file``			*<Required>* The file to consume.
-		- ``-c --class``		*<Required>* The consumer to use; supported: `ELDConsumer`, `FIREConsumer`, `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.
+		- ``-f --file``				*<Required>* The file to consume.
+		- ``-c --class``			*<Required>* The consumer to use; supported: `ELDConsumer`, `FIREConsumer`, `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.
+		- ``-u --understanding``	*<Optional>* The understanding file used to understand the event.
 
 	:return: The command-line arguments.
 	:rtype: list
@@ -65,6 +71,8 @@ def setup_args():
 						help='<Required> The file to consume.')
 	parser.add_argument('-c', '--consumer', nargs=1, type=consumer, required=True,
 						help='<Required> The consumer to use.')
+	parser.add_argument('-u', '--understanding', nargs=1, type=str, required=False,
+						help='<Optional> The understanding file used to understand the event.')
 
 	args = parser.parse_args()
 	return args
