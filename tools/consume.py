@@ -116,6 +116,8 @@ def main():
 	"""
 	consume(**vars(args))
 
+	asyncio.get_event_loop().close()
+
 def understand(understanding, consumer, *args, **kwargs):
 	"""
 	Run the understanding process.
@@ -175,7 +177,6 @@ def understand(understanding, consumer, *args, **kwargs):
 	understanding = dict(comm)
 	manager.shutdown()
 	queue_manager.shutdown()
-	loop.close()
 
 	return understanding
 
@@ -229,10 +230,9 @@ def consume(file, consumer, speed, understanding=None, *args, **kwargs):
 	consume.join()
 
 	"""
-	Clean up understanding.
+	Clean up after the consumption.
 	"""
 	queue_manager.shutdown()
-	loop.close()
 
 def stream_process(loop, queue, file, *args, **kwargs):
 	"""
