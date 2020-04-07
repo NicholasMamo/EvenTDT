@@ -280,7 +280,7 @@ class ELDConsumer(Consumer):
 			brevity = self._brevity_score(document.text)
 			emotion = self._emotion_score(document.text)
 			if brevity * emotion >= 0.9:
-				corpus.remove(document)
+				documents.remove(document)
 
 		"""
 		Detect participants with the assumption that participants are named entities.
