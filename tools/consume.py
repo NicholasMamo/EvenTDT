@@ -89,17 +89,18 @@ def main():
 	args = setup_args()
 
 	"""
-	When the consumption tool is interrupted, show a prompt with information.
-	"""
-	def sigint_handler(signal, frame):
-		logger.info("Waiting for reading and consumption processes to end")
-
-	signal.signal(signal.SIGINT, sigint_handler)
-
-	"""
 	Register the queue in the base manager.
 	"""
 	BaseManager.register("Queue", Queue)
+
+	"""
+	When the consumption tool is interrupted, do nothing.
+	The separate processes receive the instruction separately.
+	"""
+	def sigint_handler(signal, frame):
+		return
+
+	signal.signal(signal.SIGINT, sigint_handler)
 
 	"""
 	If an understanding file was given, read and understand the file.
