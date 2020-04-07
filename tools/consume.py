@@ -118,6 +118,7 @@ def main():
 		"""
 		Create a consumer with the shared queue.
 		"""
+		logger.info("Starting understanding period")
 		consumer = args.consumer(queue)
 		stream = Process(target=stream_process,
 						 args=(loop, queue, args.understanding, ),
@@ -127,6 +128,7 @@ def main():
 		understand.start()
 		stream.join()
 		understand.join()
+		logger.info("Understanding period ended")
 
 	"""
 	Create a consumer with the shared queue.
