@@ -23,7 +23,7 @@ if path not in sys.path:
 from objects.exportable import Exportable
 from nlp.term_weighting.scheme import SchemeScorer
 
-class IDF(SchemeScorer, Exportable):
+class IDF(Exportable, SchemeScorer):
 	"""
 	The Inverse Document Frequency (TF-IDF) is one of the most common term-weighting schemes.
 	This scheme promotes uncommon tokens.
