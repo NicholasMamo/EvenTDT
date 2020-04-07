@@ -216,7 +216,7 @@ def understand_process(loop, consumer):
 
 		signal.signal(signal.SIGINT, sigint_handler)
 
-		await consumer.understand()
+		return await consumer.understand(max_inactivity=1)
 
 	return loop.run_until_complete(asyncio.gather(understand(consumer)))[0]
 
@@ -247,7 +247,7 @@ def consume_process(loop, consumer):
 
 		signal.signal(signal.SIGINT, sigint_handler)
 
-		await consumer.run()
+		await consumer.run(max_inactivity=1)
 
 	loop.run_until_complete(consume(consumer))
 
