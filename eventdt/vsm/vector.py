@@ -96,7 +96,7 @@ class Vector(Attributable, Exportable):
 		Create a copy of the vector.
 
 		:return: A copy of the :class:`~vsm.vector.Vector` object
-		:rtype: :class:`~vector.vector.Vector`
+		:rtype: :class:`~vsm.vector.Vector`
 		"""
 
 		return Vector(self.dimensions.copy(), self.attributes.copy())
@@ -123,8 +123,8 @@ class Vector(Attributable, Exportable):
 		:param array: The associative array with the attributes to create the vector.
 		:type array: dict
 
-		:return: A new instance of an object with the same attributes stored in the object.
-		:rtype: :class:`~vector.vector.Vector`
+		:return: A new instance of the vector with the same attributes stored in the object.
+		:rtype: :class:`~vsm.vector.Vector`
 		"""
 
 		return Vector(dimensions=array.get('dimensions'), attributes=array.get('attributes'))
