@@ -122,11 +122,11 @@ def main():
 		stream = Process(target=stream_process,
 						 args=(loop, queue, args.understanding, ),
 						 kwargs={ 'speed': args.speed * 60 })
-		consume = Process(target=understand_process, args=(loop, consumer, ))
+		understand = Process(target=understand_process, args=(loop, consumer, ))
 		stream.start()
-		consume.start()
+		understand.start()
 		stream.join()
-		consume.join()
+		understand.join()
 
 	"""
 	Create a consumer with the shared queue.
@@ -218,7 +218,7 @@ def understand_process(loop, consumer):
 
 		await consumer.understand()
 
-	loop.run_until_complete(understand(consumer))
+	return loop.run_until_complete(asyncio.gather(understand(consumer)))[0]
 
 def consume_process(loop, consumer):
 	"""
