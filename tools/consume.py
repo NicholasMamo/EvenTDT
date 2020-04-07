@@ -24,6 +24,7 @@ Accepted arguments:
 	- ``-f --file``				*<Required>* The file to consume.
 	- ``-c --class``			*<Required>* The consumer to use; supported: `ELDConsumer`, `FIREConsumer`, `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.
 	- ``-u --understanding``	*<Optional>* The understanding file used to understand the event.
+	- ``-s --speed``			*<Optional>* The speed at which the file is consumed, defaults to 1.
 
 """
 
@@ -56,6 +57,7 @@ def setup_args():
 		- ``-f --file``				*<Required>* The file to consume.
 		- ``-c --class``			*<Required>* The consumer to use; supported: `ELDConsumer`, `FIREConsumer`, `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.
 		- ``-u --understanding``	*<Optional>* The understanding file used to understand the event.
+		- ``-s --speed``			*<Optional>* The speed at which the file is consumed, defaults to 1.
 
 	:return: The command-line arguments.
 	:rtype: list
@@ -72,6 +74,8 @@ def setup_args():
 	parser.add_argument('-c', '--consumer', nargs=1, type=consumer, required=True,
 						help='<Required> The consumer to use.')
 	parser.add_argument('-u', '--understanding', nargs=1, type=str, required=False,
+						help='<Optional> The understanding file used to understand the event.')
+	parser.add_argument('-s', '--speed', nargs=1, type=float, required=False, default=1,
 						help='<Optional> The understanding file used to understand the event.')
 
 	args = parser.parse_args()
