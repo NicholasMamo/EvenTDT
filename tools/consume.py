@@ -69,11 +69,11 @@ def setup_args():
 	Parameters that define how the corpus should be collected.
 	"""
 
-	parser.add_argument('-f', '--file', nargs=1, type=str, required=True,
+	parser.add_argument('-f', '--file', type=str, required=True,
 						help='<Required> The file to consume.')
-	parser.add_argument('-c', '--consumer', nargs=1, type=consumer, required=True,
+	parser.add_argument('-c', '--consumer', type=consumer, required=True,
 						help='<Required> The consumer to use.')
-	parser.add_argument('-u', '--understanding', nargs=1, type=str, required=False,
+	parser.add_argument('-u', '--understanding', type=str, required=False,
 						help='<Optional> The understanding file used to understand the event.')
 	parser.add_argument('-s', '--speed', type=float, required=False, default=1,
 						help='<Optional> The understanding file used to understand the event.')
@@ -101,10 +101,10 @@ def main():
 	Then, create two processes.
 	Both processes share the event loop and queue.
 	"""
-	consumer = args.consumer[0](queue)
+	consumer = args.consumer(queue)
 	loop = asyncio.get_event_loop()
 	stream = Process(target=stream_process,
-					 args=(loop, queue, args.file[0], ),
+					 args=(loop, queue, args.file, ),
 					 kwargs={ 'speed': args.speed })
 	consume = Process(target=consume_process, args=(loop, consumer, ))
 	stream.start()
