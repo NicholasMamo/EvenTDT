@@ -87,6 +87,15 @@ def main():
 	"""
 
 	args = setup_args()
+	loop = asyncio.get_event_loop()
+
+	"""
+	When the consumption tool is interrupted, show a prompt with information.
+	"""
+	def sigint_handler(signal, frame):
+		logger.info("Waiting for reading and consumption processes to end")
+
+	signal.signal(signal.SIGINT, sigint_handler)
 
 	"""
 	Register and create a shared queue.
@@ -97,26 +106,42 @@ def main():
 	queue = manager.Queue()
 
 	"""
+	If an understanding file was given, read and understand the file.
+	Understanding uses two processes.
+	The first process streams the file.
+	The second process understands it.
+	Both processes share the event loop and queue.
+
+	Understanding is sped up, consuming one hour in one minute before applying speed.
+	"""
+	if args.understanding:
+		"""
+		Create a consumer with the shared queue.
+		"""
+		consumer = args.consumer(queue)
+		stream = Process(target=stream_process,
+						 args=(loop, queue, args.understanding, ),
+						 kwargs={ 'speed': args.speed * 60 })
+		consume = Process(target=understand_process, args=(loop, consumer, ))
+		stream.start()
+		consume.start()
+		stream.join()
+		consume.join()
+
+	"""
 	Create a consumer with the shared queue.
-	Then, create two processes.
+	For the main consumption loop, create two processes.
+	The first process streams the file.
+	The second process consumes it.
 	Both processes share the event loop and queue.
 	"""
 	consumer = args.consumer(queue)
-	loop = asyncio.get_event_loop()
 	stream = Process(target=stream_process,
 					 args=(loop, queue, args.file, ),
 					 kwargs={ 'speed': args.speed })
 	consume = Process(target=consume_process, args=(loop, consumer, ))
 	stream.start()
 	consume.start()
-
-	"""
-	When the consumption tool is interrupted, show a prompt with information.
-	"""
-	def sigint_handler(signal, frame):
-		logger.info("Waiting for reading and consumption processes to end")
-
-	signal.signal(signal.SIGINT, sigint_handler)
 
 	"""
 	Wait for the streaming and consumption jobs to finish.
@@ -164,6 +189,37 @@ def stream_process(loop, queue, file, *args, **kwargs):
 		reader = SimulatedFileReader(queue, f, *args, **kwargs)
 		loop.run_until_complete(read(reader))
 
+def understand_process(loop, consumer):
+	"""
+	Consume the incoming tweets to understand the event.
+
+	:param loop: The main event loop.
+	:type loop: :class:`asyncio.unix_events._UnixSelectorEventLoop`
+	:param consumer: The consumer to use to process tweets.
+	:type consumer: :class:`~queues.consumers.consumer.Consumer`
+	"""
+
+	async def understand(consumer):
+		"""
+		Understand the queue's tweets.
+
+		:param consumer: The consumer to use to process tweets.
+		:type consumer: :class:`~queues.consumers.consumer.Consumer`
+		"""
+
+		"""
+		When the consumption process is interrupted, stop consuming tweets.
+		"""
+		def sigint_handler(signal, frame):
+			consumer.stop()
+			logger.info("Interrupted understanding")
+
+		signal.signal(signal.SIGINT, sigint_handler)
+
+		await consumer.understand()
+
+	loop.run_until_complete(understand(consumer))
+
 def consume_process(loop, consumer):
 	"""
 	Consume the incoming tweets.
@@ -171,7 +227,7 @@ def consume_process(loop, consumer):
 	:param loop: The main event loop.
 	:type loop: :class:`asyncio.unix_events._UnixSelectorEventLoop`
 	:param consumer: The consumer to use to process tweets.
-	:type consumer: :class:`queues.consumers.consumer.Consumer`
+	:type consumer: :class:`~queues.consumers.consumer.Consumer`
 	"""
 
 	async def consume(consumer):
@@ -179,7 +235,7 @@ def consume_process(loop, consumer):
 		Consume the queue's tweets.
 
 		:param consumer: The consumer to use to process tweets.
-		:type consumer: :class:`queues.consumers.consumer.Consumer`
+		:type consumer: :class:`~queues.consumers.consumer.Consumer`
 		"""
 
 		"""
