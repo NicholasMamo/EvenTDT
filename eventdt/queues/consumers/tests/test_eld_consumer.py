@@ -55,6 +55,63 @@ class TestELDConsumer(unittest.TestCase):
 		self.assertEqual(Queue, type(consumer.buffer))
 		self.assertEqual(0, consumer.buffer.length())
 
+	@async_test
+	async def test_construct_idf_documents(self):
+		"""
+		Test that when constructing the IDF, it uses all documents.
+		"""
+
+		queue = Queue()
+		consumer = ELDConsumer(queue, 60)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			queue.enqueue(*tweets)
+			scheme = await consumer._construct_idf(1)
+			self.assertEqual(len(lines), scheme.global_scheme.documents)
+
+	@async_test
+	async def test_construct_idf_terms(self):
+		"""
+		Test that when constructing the IDF, the correct terms are registered.
+		"""
+
+		queue = Queue()
+		consumer = ELDConsumer(queue, 60)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			queue.enqueue(*tweets)
+			scheme = await consumer._construct_idf(1)
+
+			documents = consumer._to_documents(tweets)
+			terms = set([ term for document in documents
+							   for term in document.dimensions ])
+
+			self.assertEqual(terms, set(scheme.global_scheme.idf))
+
+	@async_test
+	async def test_construct_idf_counts(self):
+		"""
+		Test that when constructing the IDF, the correct term counts are registered.
+		"""
+
+		queue = Queue()
+		consumer = ELDConsumer(queue, 60)
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			queue.enqueue(*tweets)
+			scheme = await consumer._construct_idf(1)
+
+			documents = consumer._to_documents(tweets)
+			terms = set([ term for document in documents
+							   for term in document.dimensions ])
+
+			for term in terms:
+				count = len([ document for document in documents if term in document.dimensions ])
+				self.assertEqual(count, scheme.global_scheme.idf[term])
+
 	def test_filter_tweets_empty(self):
 		"""
 		Test that when filtering a list of empty tweets, another empty list is returned.
