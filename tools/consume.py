@@ -435,6 +435,37 @@ def encode(data):
 			else:
 				data[key] = data.get(key).to_array()
 
+def load_cache(file, cache_dir='.cache'):
+	"""
+	Cache the given data to the given file.
+	The cache exists in a cache directory and has the same name as the given file.
+	The function saves cache as a JSON file.
+
+	:param file: The path to the file containing the inital understanding data.
+				 Its name will be used to save the cache the understanding with the same name.
+	:type file: str
+	:param cache_dir: The directory where cache is stored.
+					  This is relative to the file's directory.
+	:type cache_dir: str
+
+	:return: A new dictionary with the understanding.
+	:rtype: dict
+	"""
+
+	dir = os.path.dirname(file)
+	filename = os.path.basename(file)
+
+	"""
+	Read the data as a JSON string.
+	"""
+	cache_dir = os.path.join(dir, cache_dir)
+	cache_file = os.path.join(cache_dir, filename)
+	with open(cache_file, 'r') as f:
+		line = f.readline()
+		data = json.loads(line)
+
+	return decode(data)
+
 def decode(data):
 	"""
 	A function that recursively decodes cached data.
