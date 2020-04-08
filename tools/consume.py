@@ -32,8 +32,6 @@ Accepted arguments:
 
 import argparse
 import asyncio
-import copy
-import importlib
 import json
 import os
 import signal
@@ -417,37 +415,10 @@ def cache(file, data, cache_dir='.cache'):
 	"""
 	Encode the data and save it.
 	"""
-	data = copy.deepcopy(data)
-	encode(data)
+	data = Exportable.encode(data)
 	cache_file = os.path.join(cache_dir, filename)
 	with open(cache_file, 'w') as f:
 		f.write(json.dumps(data))
-
-def encode(data):
-	"""
-	Try to encode the given data.
-	This function expects a dictionary and checks if values are JSON serializable.
-	If this is not possible, instances of :class:`~objects.exportable.Exportable` are converted to arrays.
-	This is done through the :func:`~objects.exportable.Exportable.to_array` function.
-
-	:param data: The data to encode.
-	:type data: dict
-
-	:return: The encoded data.
-	:rtype dict:
-	"""
-
-	"""
-	Go over the cache and see if the values are serializable.
-	"""
-	for key in data:
-		try:
-			data[key] = json.loads(json.dumps(data.get(key)))
-		except TypeError:
-			if type(data[key]) is dict:
-				encode(data.get(key))
-			else:
-				data[key] = data.get(key).to_array()
 
 def load_cache(file, cache_dir='.cache'):
 	"""
@@ -478,32 +449,7 @@ def load_cache(file, cache_dir='.cache'):
 		line = f.readline()
 		data = json.loads(line)
 
-	return decode(data)
-
-def decode(data):
-	"""
-	A function that recursively decodes cached data.
-	By decoded, it means that objects are created where necessary or possible.
-	Only classes that inherit the :class:`~objects.exportable.Exportable` can be decoded.
-	This is done through the :func:`~objects.exportable.Exportable.from_array` function.
-
-	:param data: The data to decode.
-	:type data: dict
-
-	:return: A dictionary, but this time decoded.
-	:rtype: dict
-	"""
-
-	data = copy.deepcopy(data)
-	for key in data:
-		if 'class' in data.get(key):
-			module = importlib.import_module(Exportable.get_module(data.get(key).get('class')))
-			cls = getattr(module, Exportable.get_class(data.get(key).get('class')))
-			data[key] = cls.from_array(data.get(key))
-		elif type(data.get(key)) is dict:
-			data[key] = decode(data.get(key))
-
-	return data
+	return Exportable.decode(data)
 
 def consumer(consumer):
 	"""
