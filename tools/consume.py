@@ -25,6 +25,7 @@ Accepted arguments:
 	- ``-c --class``			*<Required>* The consumer to use; supported: `ELDConsumer`, `FIREConsumer`, `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.
 	- ``-u --understanding``	*<Optional>* The understanding file used to understand the event.
 	- ``-s --speed``			*<Optional>* The speed at which the file is consumed, defaults to 1.
+	- ``--no-cache``			*<Optional>* If specified, the cached understanding is not used. The new understanding is cached instead.
 
 """
 
@@ -58,6 +59,7 @@ def setup_args():
 		- ``-c --class``			*<Required>* The consumer to use; supported: `ELDConsumer`, `FIREConsumer`, `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.
 		- ``-u --understanding``	*<Optional>* The understanding file used to understand the event.
 		- ``-s --speed``			*<Optional>* The speed at which the file is consumed, defaults to 1.
+		- ``--no-cache``			*<Optional>* If specified, the cached understanding is not used. The new understanding is cached instead.
 
 	:return: The command-line arguments.
 	:rtype: list
@@ -77,6 +79,8 @@ def setup_args():
 						help='<Optional> The understanding file used to understand the event.')
 	parser.add_argument('-s', '--speed', type=float, required=False, default=1,
 						help='<Optional> The understanding file used to understand the event.')
+	parser.add_argument('--no-cache', action="store_true",
+						help='<Optional> If specified, the cached understanding is not used. The new understanding is cached instead.')
 
 	args = parser.parse_args()
 	return args
