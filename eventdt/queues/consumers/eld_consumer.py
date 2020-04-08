@@ -369,16 +369,12 @@ class ELDConsumer(Consumer):
 				clusters = self._filter_clusters(clusters, latest_timestamp)
 				for cluster in clusters:
 					"""
-					A cluster is breaking if:
-
-						#. It has at least 3 breaking terms, or
-
-						#. The average burst of its breaking terms is higher than 0.9.
-
+					A cluster is breaking if the maximum burst value is higher than 0.9.
 					Clusters that are breaking are marked as such so that they are not checked again.
+					However, they keep accepting documents.
 					"""
 					terms = self._detect_topics(cluster, latest_timestamp)
-					if len(terms) > 2 or (terms and sum(terms.values())/len(terms) > 0.9):
+					if terms and max(terms.values()) > 0.9:
 						cluster.attributes['bursty'] = True
 						topic = Vector(terms)
 						topic.normalize()
