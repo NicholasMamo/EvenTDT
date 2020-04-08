@@ -494,5 +494,30 @@ def consumer(consumer):
 
 	raise argparse.ArgumentTypeError(f"Invalid consumer value: {consumer}")
 
+def scheme(file):
+	"""
+	Load the term-weighting scheme from the given file.
+
+	:param file: The path to the term-weighting scheme.
+	:type file: str
+
+	:return: The term-weighting scheme in the given file.
+	:rtype: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
+	"""
+
+	"""
+	Read the data as a JSON string.
+	Then, decode it and return it.
+	"""
+	with open(file, 'r') as f:
+		line = f.readline()
+		data = json.loads(line)
+
+	scheme = Exportable.decode(data)
+	if type(scheme) is dict:
+		for key in scheme:
+			if isinstance(scheme.get(key), TermWeightingScheme):
+				return scheme.get(key)
+
 if __name__ == "__main__":
 	main()
