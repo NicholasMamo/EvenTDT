@@ -13,10 +13,11 @@ To run the script, use:
 
 Accepted arguments:
 
-	- ``-f --file``					*<Required>* The file to use to construct the TF-IDF scheme.
-	- ``-o --output``				*<Required>* The file where to save the TF-IDF scheme.
-	- ``--remove-unicode-entities``	*<Optional>* A boolean indicating whether to remove unicode entities.
-	- ``--normalize-words``			*<Optional>* A boolean indicating whether to normalize words with repeating characters.
+	- ``-f --file``							*<Required>* The file to use to construct the TF-IDF scheme.
+	- ``-o --output``						*<Required>* The file where to save the TF-IDF scheme.
+	- ``--remove-unicode-entities``			*<Optional>* A boolean indicating whether to remove unicode entities.
+	- ``--normalize-words``					*<Optional>* A boolean indicating whether to normalize words with repeating characters.
+	- ``-character-normalization-count``	*<Optional>* The number of times a character must repeat for it to be normalized. Used only with the ``--normalize-words`` flag.
 """
 
 import argparse
@@ -39,10 +40,11 @@ def setup_args():
 
 	Accepted arguments:
 
-		- ``-f --file``					*<Required>* The file to use to construct the TF-IDF scheme.
-		- ``-o --output``				*<Required>* The file where to save the TF-IDF scheme.
-		- ``--remove-unicode-entities``	*<Optional>* A boolean indicating whether to remove unicode entities.
-		- ``--normalize-words``			*<Optional>* A boolean indicating whether to normalize words with repeating characters.
+		- ``-f --file``							*<Required>* The file to use to construct the TF-IDF scheme.
+		- ``-o --output``						*<Required>* The file where to save the TF-IDF scheme.
+		- ``--remove-unicode-entities``			*<Optional>* A boolean indicating whether to remove unicode entities.
+		- ``--normalize-words``					*<Optional>* A boolean indicating whether to normalize words with repeating characters.
+		- ``-character-normalization-count``	*<Optional>* The number of times a character must repeat for it to be normalized. Used only with the ``--normalize-words`` flag.
 
 	:return: The command-line arguments.
 	:rtype: list
@@ -62,6 +64,8 @@ def setup_args():
 						help='<Optional> A boolean indicating whether to remove unicode entities.')
 	parser.add_argument('--normalize-words', action="store_true",
 						help='<Optional> A boolean indicating whether to normalize words with repeating characters.')
+	parser.add_argument('--character-normalization-count', type=int, required=False, default=3,
+						help='<Optional> The number of times a character must repeat for it to be normalized. Used only with the --normalize-words flag.')
 
 	args = parser.parse_args()
 	return args
@@ -73,6 +77,7 @@ def main():
 
 	args = setup_args()
 	tfidf = construct(file=args.file, normalize_words=args.normalize_words,
+					  character_normalization_count=args.character_normalization_count,
 					  remove_unicode_entities=args.remove_unicode_entities)
 	save(tfidf, args.output)
 
