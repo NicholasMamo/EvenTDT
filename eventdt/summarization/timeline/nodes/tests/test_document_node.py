@@ -50,6 +50,27 @@ class TestDocumentNode(unittest.TestCase):
 
 		self.assertEqual(round(time.time()), round(DocumentNode().created_at))
 
+	def test_create_with_no_documents(self):
+		"""
+		Test that when creating the document node with no documents, an empty list is initialized.
+		"""
+
+		node = DocumentNode()
+		self.assertEqual([ ], node.documents)
+
+	def test_create_with_documents(self):
+		"""
+		Test that when creating the document node with a list of documents, it is saved.
+		"""
+
+		documents = [ Document(''), Document('') ]
+		n1 = DocumentNode(documents=documents[:1])
+		self.assertEqual(documents[:1], n1.documents)
+
+		n2 = DocumentNode(documents=documents[1:])
+		self.assertEqual(documents[:1], n1.documents)
+		self.assertEqual(documents[1:], n2.documents)
+
 	def test_add(self):
 		"""
 		Test adding documents to the node.
