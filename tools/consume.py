@@ -375,7 +375,7 @@ def cache(file, data, cache_dir='.cache'):
 	The function saves cache as a JSON file.
 
 	:param file: The path to the file containing the inital understanding data.
-				 Its name will be used
+				 Its name will be used to save the cache the understanding with the same name.
 	:type file: str
 	:param data: The data to cache.
 				  The function expects a dictionary that can be JSON serializable.
@@ -385,7 +385,7 @@ def cache(file, data, cache_dir='.cache'):
 	:type data: dict
 	:param cache_dir: The directory where cache is stored.
 					  This is relative to the file's directory.
-	:type cache: str
+	:type cache_dir: str
 	"""
 
 	dir = os.path.dirname(file)
