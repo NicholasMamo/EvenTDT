@@ -23,17 +23,19 @@ class ClusterNode(Node):
 	:vartype clusters: list of :class:`~vsm.clustering.cluster.Cluster`
 	"""
 
-	def __init__(self, created_at=None):
+	def __init__(self, created_at=None, clusters=[ ]):
 		"""
 		Create the node.
 
 		:param created_at: The timestamp when the node was created.
 						   If the timestamp is not given, the current time is used.
 		:type created_at: float
+		:param clusters: The initial list of clusters in this node.
+		:type clusters: list of :class:`~vsm.clustering.cluster.Cluster`
 		"""
 
 		super(ClusterNode, self).__init__(created_at)
-		self.clusters = [ ]
+		self.clusters = clusters or [ ]
 
 	def add(self, cluster, *args, **kwargs):
 		"""

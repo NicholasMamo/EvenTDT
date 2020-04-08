@@ -49,6 +49,27 @@ class TestClusterNode(unittest.TestCase):
 
 		self.assertEqual(round(time.time()), round(ClusterNode().created_at))
 
+	def test_create_with_no_clusters(self):
+		"""
+		Test that when creating the cluster node with no clusters, an empty list is initialized.
+		"""
+
+		node = ClusterNode()
+		self.assertEqual([ ], node.clusters)
+
+	def test_create_with_clusters(self):
+		"""
+		Test that when creating the cluster node with a list of clusters, it is saved.
+		"""
+
+		clusters = [ Cluster(), Cluster() ]
+		n1 = ClusterNode(clusters=clusters[:1])
+		self.assertEqual(clusters[:1], n1.clusters)
+
+		n2 = ClusterNode(clusters=clusters[1:])
+		self.assertEqual(clusters[:1], n1.clusters)
+		self.assertEqual(clusters[1:], n2.clusters)
+
 	def test_add(self):
 		"""
 		Test adding a cluster to the node.
