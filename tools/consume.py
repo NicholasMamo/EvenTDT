@@ -131,7 +131,7 @@ def main():
 			logger.info("Starting understanding period")
 			understanding = understand(**args)['understanding']
 			cache(args['understanding'], understanding)
-			args['understanding'] = understanding
+			args.update(understanding)
 			logger.info("Understanding period ended")
 		else:
 			args.update(load_cache(args['understanding']))
