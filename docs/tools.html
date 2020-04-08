@@ -266,6 +266,84 @@ Any additional arguments or keyword arguments are passed on to the <code class="
 </dl>
 </dd></dl>
 
+<span class="target" id="module-tools.sample"></span><p>A tool to collect tweets using the Sampling API.</p>
+<p>The tool collects a corpus of tweets.
+Each collection has its own directory.
+Each corpus is a JSON file, where each line is one tweet.</p>
+<p>To run the script, use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./tools/sample.py <span class="se">\</span>
+    -o data/sample <span class="se">\</span>
+    -t <span class="m">60</span>
+</pre></div>
+</div>
+<p>Accepted arguments:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-t</span> <span class="pre">--time</span></code>         <em>&lt;Required&gt;</em> The time to spend collecting tweets in minutes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-o</span> <span class="pre">--output</span></code>       <em>&lt;Required&gt;</em> The data directory where the corpus should be written.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-a</span> <span class="pre">--account</span></code>      <em>&lt;Optional&gt;</em> The account to use to collect the corpus with, as an index of the configuration’s accounts. Defaults to the first account.</p></li>
+</ul>
+</div></blockquote>
+<dl class="function">
+<dt id="tools.sample.setup_args">
+<code class="sig-name descname">setup_args</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.sample.setup_args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up and get the list of command-line arguments.</p>
+<p>Accepted arguments:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-t</span> <span class="pre">--time</span></code>         <em>&lt;Required&gt;</em> The time to spend collecting tweets in minutes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-o</span> <span class="pre">--output</span></code>       <em>&lt;Required&gt;</em> The data directory where the corpus should be written.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-a</span> <span class="pre">--account</span></code>      <em>&lt;Optional&gt;</em> The account to use to collect the corpus with, as an index of the configuration’s accounts. Defaults to the first account.</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The command-line arguments.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.sample.main">
+<code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.sample.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main program loop.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.sample.collect">
+<code class="sig-name descname">collect</code><span class="sig-paren">(</span><em class="sig-param">auth</em>, <em class="sig-param">filename</em>, <em class="sig-param">max_time</em>, <em class="sig-param">lang=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.sample.collect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collect tweets and save them to the given file.
+The tweets are collected synchronously.
+Any additional arguments or keyword arguments are passed on to the <code class="xref py py-class docutils literal notranslate"><span class="pre">twitter.twevent.listener.TweetListener</span></code> constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>auth</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tweepy.OAuthHandler</span></code>) – The OAuth handler to connect with Twitter’s API.</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – The filename where to save the collected tweets.</p></li>
+<li><p><strong>max_time</strong> (<em>int</em>) – The number of seconds to spend collecting tweets.</p></li>
+<li><p><strong>lang</strong> (<em>list of str</em>) – The tweet collection language, defaults to English.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.sample.save_meta">
+<code class="sig-name descname">save_meta</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">meta</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.sample.save_meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the metadata of the collected dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – The filename where to write the metadata.</p></li>
+<li><p><strong>meta</strong> (<em>list of dict</em>) – The metadata to save.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 <div class="section" id="module-tools.idf">
 <span id="tf-idf"></span><h2>TF-IDF<a class="headerlink" href="#module-tools.idf" title="Permalink to this headline">¶</a></h2>

@@ -105,7 +105,7 @@ def main():
 	start = time.time()
 	logger.info('Starting to collect sample')
 	collect(auth, filename, args.time * 60)
-	logger.info('Understanding corpus collected')
+	logger.info('Sample collected')
 	end = time.time()
 	meta.append({
 		'output': filename,
