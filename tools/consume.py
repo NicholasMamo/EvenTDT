@@ -25,6 +25,7 @@ Accepted arguments:
 	- ``-c --class``			*<Required>* The consumer to use; supported: `ELDConsumer`, `FIREConsumer`, `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.
 	- ``-u --understanding``	*<Optional>* The understanding file used to understand the event.
 	- ``-s --speed``			*<Optional>* The speed at which the file is consumed, defaults to 1.
+	- ``--skip``				*<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
 	- ``--no-cache``			*<Optional>* If specified, the cached understanding is not used. The new understanding is cached instead.
 
 """
@@ -64,6 +65,7 @@ def setup_args():
 		- ``-u --understanding``	*<Optional>* The understanding file used to understand the event.
 		- ``-s --speed``			*<Optional>* The speed at which the file is consumed, defaults to 1.
 		- ``--no-cache``			*<Optional>* If specified, the cached understanding is not used. The new understanding is cached instead.
+		- ``--skip``				*<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
 
 	:return: The command-line arguments.
 	:rtype: list
@@ -85,6 +87,8 @@ def setup_args():
 						help='<Optional> The understanding file used to understand the event.')
 	parser.add_argument('--no-cache', action="store_true",
 						help='<Optional> If specified, the cached understanding is not used. The new understanding is cached instead.')
+	parser.add_argument('--skip', type=int, required=False, default=0,
+						help='<Optional> The amount of time to skip from the beginning of the file in minutes, defaults to 0.')
 
 	args = parser.parse_args()
 	return args
@@ -199,7 +203,7 @@ def understand(understanding, consumer, *args, **kwargs):
 
 	return understanding
 
-def consume(file, consumer, speed, understanding=None, *args, **kwargs):
+def consume(file, consumer, speed, scheme=None, skip=0, *args, **kwargs):
 	"""
 	Run the consumption process.
 	The arguments and keyword arguments should be the command-line arguments.
@@ -217,8 +221,10 @@ def consume(file, consumer, speed, understanding=None, *args, **kwargs):
 	:type consumer: :class:`~queues.consumers.consumer.Consumer`
 	:param speed: The speed with which to read the file.
 	:type speed: float
-	:param understanding: The path to the file containing the event's understanding.
-	:type understanding: str
+	:param scheme: The scheme to use when consuming the file.
+	:type scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
+	:param skip: The amount of time to skip from the beginning of the file in minutes, defaults to 0.
+	:type skip: int
 	"""
 
 	loop = asyncio.get_event_loop()
@@ -236,7 +242,7 @@ def consume(file, consumer, speed, understanding=None, *args, **kwargs):
 	"""
 	stream = Process(target=stream_process,
 					 args=(loop, queue, file, ),
-					 kwargs={ 'speed': speed })
+					 kwargs={ 'speed': speed, 'skip_time': skip * 60 })
 	consume = Process(target=consume_process, args=(loop, consumer, ))
 	stream.start()
 	consume.start()
