@@ -19,6 +19,17 @@ Accepted arguments:
 
 import argparse
 import copy
+import json
+import os
+import sys
+
+path = os.path.join(os.path.dirname(__file__), '..', 'eventdt')
+if path not in sys.path:
+    sys.path.append(path)
+
+from nlp.term_weighting.tfidf import TFIDF
+from nlp.tokenizer import Tokenizer
+from objects.exportable import Exportable
 
 def setup_args():
 	"""
@@ -53,6 +64,34 @@ def main():
 	"""
 
 	args = setup_args()
+def construct(file, *args, **kwargs):
+	"""
+	Construct the TF-IDF scheme from the file.
+	The scheme is constructed one line at a time.
+
+	:param file: The path to the file to use to construct the TF-IDF scheme.
+	:type file: str
+
+	:return: The TF-IDF scheme constructed from the file.
+	:rtype: :class:`~nlp.term_weighting.tfidf.TFIDF`
+	"""
+
+	documents, idf = 0, { }
+	tokenizer = Tokenizer()
+
+	"""
+	Open the file and iterate over every tweet.
+	Tokenize those tweets and use them to update the TF-IDF table.
+	"""
+	with open(file, 'r') as f:
+		for line in f:
+			documents = documents + 1
+			tweet = json.loads(line)
+			tokens = tokenize(tweet, tokenizer)
+			idf = update(idf, tokens)
+
+	return TFIDF(documents=documents, idf=idf)
+
 def tokenize(tweet, tokenizer):
 	"""
 	Convert the given tweet into a document.
