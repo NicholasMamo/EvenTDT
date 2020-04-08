@@ -31,6 +31,7 @@ Accepted arguments:
 
 import argparse
 import asyncio
+import json
 import os
 import signal
 import sys
@@ -365,6 +366,32 @@ def cache_exists(file, cache_dir='.cache'):
 		return os.path.exists(cache_file) and os.path.isfile(cache_file)
 
 	return False
+
+def encode(data):
+	"""
+	Try to encode the given data.
+	This function expects a dictionary and checks if values are JSON serializable.
+	If this is not possible, instances of :class:`~objects.exportable.Exportable` are converted to arrays.
+	This is done through the :func:`~objects.exportable.Exportable.to_array` function.
+
+	:param data: The data to encode.
+	:type data: dict
+
+	:return: The encoded data.
+	:rtype dict:
+	"""
+
+	"""
+	Go over the cache and see if the values are serializable.
+	"""
+	for key in data:
+		try:
+			data[key] = json.loads(json.dumps(data.get(key)))
+		except TypeError:
+			if type(data[key]) is dict:
+				encode(data.get(key))
+			else:
+				data[key] = data.get(key).to_array()
 
 def consumer(consumer):
 	"""
