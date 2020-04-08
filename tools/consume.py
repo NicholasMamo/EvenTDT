@@ -235,7 +235,7 @@ def consume(file, consumer, speed, scheme=None, skip=0, *args, **kwargs):
 	queue_manager = BaseManager()
 	queue_manager.start()
 	queue = queue_manager.Queue()
-	consumer = consumer(queue)
+	consumer = consumer(queue, scheme=scheme)
 
 	"""
 	Create and start the streaming and consumption processes.
