@@ -113,12 +113,19 @@ def main():
 	"""
 	If an understanding file was given, read and understand the file.
 	This understanding replaces the understanding file.
+
+	Priority is given to cached understanding.
+	The only exception is when cache is explictly disabled or there is no cache.
 	"""
 	if args.understanding:
-		logger.info("Starting understanding period")
-		understanding = understand(**vars(args))
-		args.understanding = understanding
-		logger.info("Understanding period ended")
+		if args.no_cache or not cache_exists(args.understanding):
+			logger.info("Starting understanding period")
+			understanding = understand(**vars(args))['understanding']
+			cache(args.understanding, understanding)
+			args.understanding = understanding
+			logger.info("Understanding period ended")
+		else:
+			args.understanding = load_cache(args.understanding)
 
 	"""
 	Consume the event with the main file.
