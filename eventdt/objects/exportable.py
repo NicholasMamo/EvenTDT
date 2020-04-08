@@ -4,6 +4,7 @@ Exportable objects are normal objects that can be exported as a JSON string and 
 
 from abc import ABC, abstractmethod
 import copy
+import importlib
 import json
 import re
 
@@ -71,6 +72,39 @@ class Exportable(ABC):
 				else:
 					data[key] = data.get(key).to_array()
 		return data
+
+	@staticmethod
+	def decode(data):
+		"""
+		A function that recursively decodes cached data.
+		By decoded, it means that objects are created where necessary or possible.
+		Only classes that inherit the :class:`~objects.exportable.Exportable` can be decoded.
+		This is done through the :func:`~objects.exportable.Exportable.from_array` function.
+
+		:param data: The data to decode.
+		:type data: dict
+
+		:return: A dictionary, but this time decoded.
+		:rtype: dict
+
+		:raises TypeError: When the data is not a dictionary.
+		"""
+
+		if type(data) is not dict:
+			raise TypeError(f"dict expected, received { type(data) }")
+
+		data = copy.deepcopy(data)
+		for key in data:
+			if type(data.get(key)) is dict:
+				if 'class' in data.get(key):
+					module = importlib.import_module(Exportable.get_module(data.get(key).get('class')))
+					cls = getattr(module, Exportable.get_class(data.get(key).get('class')))
+					data[key] = cls.from_array(data.get(key))
+				else:
+					data[key] = Exportable.decode(data.get(key))
+
+		return data
+
 	@staticmethod
 	def get_module(cls):
 		"""

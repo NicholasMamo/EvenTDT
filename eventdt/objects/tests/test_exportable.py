@@ -76,6 +76,61 @@ class TestAttributable(unittest.TestCase):
 		self.assertEqual({ 'a': 1 }, encoding['vector']['dimensions'])
 		self.assertEqual({ 'b': 2 }, encoding['vector']['attributes'])
 
+	def test_decode_not_dict(self):
+		"""
+		Test that when decoding something that is not a dictionary, a TypeError is returned.
+		"""
+
+		self.assertRaises(TypeError, Exportable.decode, [ 1 ])
+		self.assertRaises(TypeError, Exportable.decode, 1)
+		self.assertRaises(TypeError, Exportable.decode, True)
+
+	def test_decode_empty_dict(self):
+		"""
+		Test that when edecoding an empty dictionary, another empty dictionary is returned.
+		"""
+
+		self.assertEqual({ }, Exportable.decode({ }))
+
+	def test_decode_primitive_dict(self):
+		"""
+		Test that when decoding a dictionary with primitive values, the same dictionary is returned.
+		"""
+
+		data = { 'a': 1, 'b': [ 1, 2 ] }
+		self.assertEqual(data, Exportable.decode({ 'a': 1, 'b': [ 1, 2 ] }))
+
+	def test_decode_primitive_recursive_dict(self):
+		"""
+		Test that when decoding a dictionary with primitive values stored recursively, the same dictionary is returned.
+		"""
+
+		data = { 'a': 1, 'b': { 'c': 1 } }
+		self.assertEqual(data, Exportable.decode({ 'a': 1, 'b': { 'c': 1 } }))
+
+	def test_decode_primitive_copy(self):
+		"""
+		Test that when decoding a dictionary of primitives, the encoding is a copy.
+		"""
+
+		data = { 'a': 1, 'b': { 'c': 1 } }
+		decoded = Exportable.decode({ 'a': 1, 'b': { 'c': 1 } })
+		self.assertEqual(data, decoded)
+		data['b']['c'] = 2
+		self.assertEqual(2, data['b']['c'])
+		self.assertEqual(1, decoded['b']['c'])
+
+	def test_decode_vector(self):
+		"""
+		Test that when decoding a vector, it is converted into a dictionary.
+		"""
+
+		v = Vector({ 'a': 1 }, { 'b': 2 })
+		data = Exportable.encode({ 'vector': v })
+		decoded = Exportable.decode(data)
+		self.assertTrue({ v }, decoded.keys())
+		self.assertEqual(v.__dict__, decoded['vector'].__dict__)
+
 	def test_get_module_empty(self):
 		"""
 		Test that when getting the module name from an invalid string, a ValueError is raised.
