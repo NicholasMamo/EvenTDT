@@ -3,6 +3,8 @@ Exportable objects are normal objects that can be exported as a JSON string and 
 """
 
 from abc import ABC, abstractmethod
+import copy
+import json
 import re
 
 class Exportable(ABC):
@@ -36,6 +38,39 @@ class Exportable(ABC):
 
 		pass
 
+	@staticmethod
+	def encode(data):
+		"""
+		Try to encode the given data.
+		This function expects a dictionary and checks if values are JSON serializable.
+		If this is not possible, instances of :class:`~objects.exportable.Exportable` are converted to arrays.
+		This is done through the :func:`~objects.exportable.Exportable.to_array` function.
+
+		:param data: The data to encode.
+		:type data: dict
+
+		:return: The encoded data.
+		:rtype: dict
+
+		:raises TypeError: When the data is not a dictionary.
+		"""
+
+		if type(data) is not dict:
+			raise TypeError(f"dict expected, received { type(data) }")
+
+		data = copy.deepcopy(data)
+		"""
+		Go over the cache and see if the values are serializable.
+		"""
+		for key in data:
+			try:
+				data[key] = json.loads(json.dumps(data.get(key)))
+			except TypeError:
+				if type(data[key]) is dict:
+					data[key] = Exportable.encode(data.get(key))
+				else:
+					data[key] = data.get(key).to_array()
+		return data
 	@staticmethod
 	def get_module(cls):
 		"""
