@@ -194,6 +194,7 @@ class Cluster(Attributable, Exportable):
 		"""
 
 		return {
+			'class': str(Cluster),
 			'attributes': self.attributes,
 			'vectors': [ vector.to_array() for vector in self.vectors ]
 		}
@@ -207,7 +208,7 @@ class Cluster(Attributable, Exportable):
 		:type array: dict
 
 		:return: A new instance of an object with the same attributes stored in the object.
-		:rtype: :class:`~vector.cluster.cluster.Cluster`
+		:rtype: :class:`~vsm.cluster.cluster.Cluster`
 		"""
 
 		vectors = [ ]

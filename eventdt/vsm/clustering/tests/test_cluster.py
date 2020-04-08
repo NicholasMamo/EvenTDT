@@ -7,15 +7,15 @@ import os
 import sys
 import unittest
 
-path = os.path.join(os.path.dirname(__file__), '..', '..')
+path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
-from clustering.cluster import Cluster
 from nlp.document import Document
 from nlp.term_weighting.tf import TF
 from vsm import Vector, VectorSpace
 from vsm import vector_math
+from vsm.clustering.cluster import Cluster
 
 class TestCluster(unittest.TestCase):
 	"""
@@ -393,5 +393,6 @@ class TestCluster(unittest.TestCase):
 
 		c = Cluster([ ], attributes={ 'a': 1 })
 		e = c.to_array()
+		self.assertEqual("<class 'vsm.clustering.cluster.Cluster'>", e['class'])
 		self.assertEqual(c.attributes, Cluster.from_array(e).attributes)
 		self.assertEqual(c.centroid.__dict__, Cluster.from_array(e).centroid.__dict__)
