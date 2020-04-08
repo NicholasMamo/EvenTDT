@@ -140,5 +140,19 @@ def update(idf, tokens):
 
 	return idf
 
+def save(tfidf, output):
+	"""
+	Save the given TF-IDF scheme to file.
+
+	:param tfidf: The TF-IDF scheme.
+	:type tf-idf: :class:`~nlp.term_weighting.tfidf.TFIDF`
+	:param output: The path to the file where to save the TF-IDF scheme.
+	:type output: str
+	"""
+
+	tfidf = { 'tfidf': tfidf }
+	with open(output, 'w') as f:
+		f.write(json.dumps(Exportable.encode(tfidf)))
+
 if __name__ == "__main__":
 	main()
