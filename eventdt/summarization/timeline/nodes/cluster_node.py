@@ -20,7 +20,7 @@ class ClusterNode(Node):
 	Comparisons are made with each cluster's centroid.
 
 	:ivar clusters: The list of clusters in this node.
-	:type clusters: list of :class:`~vsm.clustering.cluster.Cluster`
+	:vartype clusters: list of :class:`~vsm.clustering.cluster.Cluster`
 	"""
 
 	def __init__(self, created_at=None):

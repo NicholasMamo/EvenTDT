@@ -20,7 +20,7 @@ class DocumentNode(Node):
 	Comparisons are made with the centroid of these documents.
 
 	:ivar documents: The list of documents in this node.
-	:type documents: list of :class:`~nlp.document.Document`
+	:vartype documents: list of :class:`~nlp.document.Document`
 	"""
 
 	def __init__(self, created_at=None, documents=None):
@@ -30,7 +30,7 @@ class DocumentNode(Node):
 		:param created_at: The timestamp when the node was created.
 						   If the timestamp is not given, the current time is used.
 		:type created_at: float
-		:ivar documents: The list of documents in this node.
+		:param documents: The initial list of documents in this node.
 		:type documents: list of :class:`~nlp.document.Document`
 		"""
 
