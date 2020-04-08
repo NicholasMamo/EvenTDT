@@ -263,7 +263,7 @@ def consume(file, consumer, speed, scheme=None, skip=0, *args, **kwargs):
 	"""
 	queue_manager.shutdown()
 
-def stream_process(loop, queue, file, skip_time=0, *args, **kwargs):
+def stream_process(loop, queue, file, skip_time=0, speed=1, *args, **kwargs):
 	"""
 	Stream the file and add its tweets to the queue.
 
@@ -275,6 +275,8 @@ def stream_process(loop, queue, file, skip_time=0, *args, **kwargs):
 	:type file: str
 	:param skip_time: The amount of time to skip from the beginning of the file in minutes, defaults to 0.
 	:type skip_time: int
+	:param speed: The speed at which the file is consumed, defaults to 1.
+	:type speed: float
 	"""
 
 	async def read(reader):
@@ -297,7 +299,7 @@ def stream_process(loop, queue, file, skip_time=0, *args, **kwargs):
 		await reader.read()
 
 	with open(file, 'r') as f:
-		reader = SimulatedFileReader(queue, f, skip_time=skip_time)
+		reader = SimulatedFileReader(queue, f, skip_time=skip_time, speed=speed)
 		loop.run_until_complete(read(reader))
 
 	logger.info("Streaming ended")
