@@ -23,6 +23,15 @@ Data Collection
    :private-members:
    :special-members:
 
+======
+TF-IDF
+======
+
+.. automodule:: tools.idf
+   :members:
+   :private-members:
+   :special-members:
+
 ===========
 Consumption
 ===========
