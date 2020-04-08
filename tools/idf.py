@@ -18,6 +18,7 @@ Accepted arguments:
 """
 
 import argparse
+import copy
 
 def setup_args():
 	"""
@@ -52,6 +53,23 @@ def main():
 	"""
 
 	args = setup_args()
+def update(idf, tokens):
+	"""
+	Update the given IDF table with the given tokens.
+
+	:param idf: The IDF table as a dictionary.
+				The keys are the tokens and the values are the document frequencies.
+	:type idf: dict
+	:param tokens: The tokens to add to the IDF.
+				   The function automatically gets the set of tokens to remove duplicates.
+	:type: list of str
+	"""
+
+	idf = copy.deepcopy(idf)
+	for token in set(tokens):
+		idf[token] = idf.get(token, 0) + 1
+
+	return idf
 
 if __name__ == "__main__":
 	main()
