@@ -13,8 +13,9 @@ To run the script, use:
 
 Accepted arguments:
 
-	- ``-f --file``		*<Required>* The file to use to construct the TF-IDF scheme.
-	- ``-o --output``	*<Required>* The file where to save the TF-IDF scheme.
+	- ``-f --file``					*<Required>* The file to use to construct the TF-IDF scheme.
+	- ``-o --output``				*<Required>* The file where to save the TF-IDF scheme.
+	- ``--remove-unicode-entities``	*<Optional>* A boolean indicating whether to remove unicode entities.
 """
 
 import argparse
@@ -37,8 +38,9 @@ def setup_args():
 
 	Accepted arguments:
 
-		- ``-f --file``		*<Required>* The file to use to construct the TF-IDF scheme.
-		- ``-o --output``	*<Required>* The file where to save the TF-IDF scheme.
+		- ``-f --file``					*<Required>* The file to use to construct the TF-IDF scheme.
+		- ``-o --output``				*<Required>* The file where to save the TF-IDF scheme.
+		- ``--remove-unicode-entities``	*<Optional>* A boolean indicating whether to remove unicode entities.
 
 	:return: The command-line arguments.
 	:rtype: list
@@ -54,6 +56,8 @@ def setup_args():
 						help='<Required> The file to use to construct the TF-IDF scheme.')
 	parser.add_argument('-o', '--output', type=str, required=True,
 						help='<Required> The file where to save the TF-IDF scheme.')
+	parser.add_argument('--remove-unicode-entities', action="store_true",
+						help='<Optional> A boolean indicating whether to remove unicode entities.')
 
 	args = parser.parse_args()
 	return args
@@ -64,13 +68,15 @@ def main():
 	"""
 
 	args = setup_args()
-	tfidf = construct(**vars(args))
+	tfidf = construct(file=args.file, remove_unicode_entities=args.remove_unicode_entities)
 	save(tfidf, args.output)
 
 def construct(file, *args, **kwargs):
 	"""
 	Construct the TF-IDF scheme from the file.
 	The scheme is constructed one line at a time.
+
+	Any additional arguments and keyword arguments are passed on to the :func:`~nlp.tokenizer.Tokenizer.__init__` constructor.
 
 	:param file: The path to the file to use to construct the TF-IDF scheme.
 	:type file: str
@@ -80,7 +86,7 @@ def construct(file, *args, **kwargs):
 	"""
 
 	documents, idf = 0, { }
-	tokenizer = Tokenizer()
+	tokenizer = Tokenizer(*args, **kwargs)
 
 	"""
 	Open the file and iterate over every tweet.
