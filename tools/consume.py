@@ -27,6 +27,7 @@ Accepted arguments:
 	- ``-s --speed``			*<Optional>* The speed at which the file is consumed, defaults to 1.
 	- ``--skip``				*<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
 	- ``--no-cache``			*<Optional>* If specified, the cached understanding is not used. The new understanding is cached instead.
+	- ``--scheme``				*<Optional>* If specified, the path to the :class:`~nlp.term_weighting.scheme.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.term_weighting.scheme.TF` scheme is used.
 
 """
 
@@ -64,6 +65,7 @@ def setup_args():
 		- ``-s --speed``			*<Optional>* The speed at which the file is consumed, defaults to 1.
 		- ``--no-cache``			*<Optional>* If specified, the cached understanding is not used. The new understanding is cached instead.
 		- ``--skip``				*<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
+		- ``--scheme``				*<Optional>* If specified, the path to the :class:`~nlp.term_weighting.scheme.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.term_weighting.scheme.TF` scheme is used. This can be overwritten if there is event understanding.
 
 	:return: The command-line arguments.
 	:rtype: list
@@ -87,6 +89,10 @@ def setup_args():
 						help='<Optional> If specified, the cached understanding is not used. The new understanding is cached instead.')
 	parser.add_argument('--skip', type=int, required=False, default=0,
 						help='<Optional> The amount of time to skip from the beginning of the file in minutes, defaults to 0.')
+	parser.add_argument('--scheme', type=str, required=False, default=None,
+						help="""<Optional> If specified, the path to the term-weighting scheme file.
+								If it is not specified, the term frequency scheme is used instead.
+								This can be overwritten if there is event understanding.""")
 
 	args = parser.parse_args()
 	return args
