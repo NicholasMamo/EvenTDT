@@ -14,6 +14,7 @@ if path not in sys.path:
 
 from nlp.document import Document
 from summarization.timeline.nodes import ClusterNode
+from vsm.vector import Vector
 from vsm.clustering import Cluster
 
 class TestClusterNode(unittest.TestCase):
@@ -307,3 +308,49 @@ class TestClusterNode(unittest.TestCase):
 
 		node = ClusterNode(created_at=1000)
 		self.assertRaises(ValueError, node.expired, -1, 0)
+
+	def test_export(self):
+		"""
+		Test exporting and importing cluster nodes.
+		"""
+
+		node = ClusterNode()
+		e = node.to_array()
+		self.assertEqual(node.created_at, ClusterNode.from_array(e).created_at)
+		self.assertEqual(node.clusters, ClusterNode.from_array(e).clusters)
+		self.assertEqual(node.__dict__, ClusterNode.from_array(e).__dict__)
+
+	def test_export_with_clusters(self):
+		"""
+		Test importing cluster nodes that have clusters.
+		"""
+
+		clusters = [ Cluster(Document('', { 'a': 1 }), attributes={ 'b': 2 }),
+					  Cluster(Vector({ 'c': 3 }), attributes={ 'd': 4 }) ]
+		node = ClusterNode(clusters=clusters)
+		e = node.to_array()
+		self.assertEqual(node.created_at, ClusterNode.from_array(e).created_at)
+		self.assertTrue(all(cluster['class'] == "<class 'vsm.clustering.cluster.Cluster'>" for cluster in e['clusters']))
+		self.assertEqual(clusters[0].vectors[0].dimensions, e['clusters'][0]['vectors'][0]['dimensions'])
+		self.assertEqual({ 'b': 2 }, e['clusters'][0]['attributes'])
+		self.assertEqual(clusters[1].vectors[0].dimensions, e['clusters'][1]['vectors'][0]['dimensions'])
+		self.assertEqual({ 'd': 4 }, e['clusters'][1]['attributes'])
+
+	def test_import(self):
+		"""
+		Test importing cluster nodes that have clusters.
+		"""
+
+		clusters = [ Cluster(Document('', { 'a': 1 }), attributes={ 'b': 2 }),
+					  Cluster(Vector({ 'c': 3 }), attributes={ 'd': 4 }) ]
+		node = ClusterNode(clusters=clusters)
+		e = node.to_array()
+		i = node.from_array(e)
+		self.assertEqual(node.created_at, i.created_at)
+		self.assertTrue(all(type(cluster) is Cluster for cluster in i.clusters))
+		self.assertEqual(clusters[0].centroid.dimensions, i.clusters[0].centroid.dimensions)
+		self.assertEqual(clusters[0].attributes, i.clusters[0].attributes)
+		self.assertEqual(clusters[1].centroid.dimensions, i.clusters[1].centroid.dimensions)
+		self.assertEqual(clusters[1].attributes, i.clusters[1].attributes)
+		self.assertEqual(Document, type(i.clusters[0].vectors[0]))
+		self.assertEqual(Vector, type(i.clusters[1].vectors[0]))
