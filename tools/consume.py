@@ -49,6 +49,7 @@ sys.path.insert(-1, lib)
 
 from logger import logger
 from objects.exportable import Exportable
+from nlp.term_weighting.scheme import TermWeightingScheme
 from queues import Queue
 from queues.consumers import *
 from twitter.file import SimulatedFileReader
@@ -89,7 +90,7 @@ def setup_args():
 						help='<Optional> If specified, the cached understanding is not used. The new understanding is cached instead.')
 	parser.add_argument('--skip', type=int, required=False, default=0,
 						help='<Optional> The amount of time to skip from the beginning of the file in minutes, defaults to 0.')
-	parser.add_argument('--scheme', type=str, required=False, default=None,
+	parser.add_argument('--scheme', type=scheme, required=False, default=None,
 						help="""<Optional> If specified, the path to the term-weighting scheme file.
 								If it is not specified, the term frequency scheme is used instead.
 								This can be overwritten if there is event understanding.""")
@@ -145,7 +146,7 @@ def main():
 
 	asyncio.get_event_loop().close()
 
-def understand(understanding, consumer, *args, **kwargs):
+def understand(understanding, consumer, scheme=None, *args, **kwargs):
 	"""
 	Run the understanding process.
 	The arguments and keyword arguments should be the command-line arguments.
@@ -165,6 +166,8 @@ def understand(understanding, consumer, *args, **kwargs):
 	:type understanding: str
 	:param consumer: The type of consumer to use.
 	:type consumer: :class:`~queues.consumers.consumer.Consumer`
+	:param scheme: The scheme to use when consuming the file.
+	:type scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
 
 	:return: A dictionary containing the understanding.
 	:rtype: dict
@@ -178,7 +181,7 @@ def understand(understanding, consumer, *args, **kwargs):
 	queue_manager = BaseManager()
 	queue_manager.start()
 	queue = queue_manager.Queue()
-	consumer = consumer(queue)
+	consumer = consumer(queue, scheme=scheme)
 
 	"""
 	Create a shared dictionary that processes can use to communicate with this function.
