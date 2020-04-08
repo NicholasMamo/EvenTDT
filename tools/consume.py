@@ -31,6 +31,7 @@ Accepted arguments:
 
 import argparse
 import asyncio
+import copy
 import json
 import os
 import signal
@@ -366,6 +367,47 @@ def cache_exists(file, cache_dir='.cache'):
 		return os.path.exists(cache_file) and os.path.isfile(cache_file)
 
 	return False
+
+def cache(file, data, cache_dir='.cache'):
+	"""
+	Cache the given data to the given file.
+	The cache exists in a cache directory and has the same name as the given file.
+	The function saves cache as a JSON file.
+
+	:param file: The path to the file containing the inital understanding data.
+				 Its name will be used
+	:type file: str
+	:param data: The data to cache.
+				  The function expects a dictionary that can be JSON serializable.
+				  The function tries to convert the values that cannot be serialized to arrays.
+				  Only classes that inherit the :class:`~objects.exportable.Exportable` can be converted to arrays.
+				  This is done through the :func:`~objects.exportable.Exportable.to_array` function.
+	:type data: dict
+	:param cache_dir: The directory where cache is stored.
+					  This is relative to the file's directory.
+	:type cache: str
+
+	:raises TypeError: When the cache is not a dictionary.
+	"""
+
+	dir = os.path.dirname(file)
+	filename = os.path.basename(file)
+
+	"""
+	Create the cache directory if it doesn't exist.
+	"""
+	cache_dir = os.path.join(dir, cache_dir)
+	if not os.path.exists(cache_dir):
+		os.path.mkdir(cache_dir)
+
+	"""
+	Encode the data and save it.
+	"""
+	data = copy.deepcopy(data)
+	encode(data)
+	cache_file = os.path.join(cache_dir, filename)
+	with open(cache_file, 'w') as f:
+		f.write(json.dumps(data))
 
 def encode(data):
 	"""
