@@ -5,9 +5,17 @@ Moreover, nodes provide functionality to facilitate timeline tasks.
 """
 
 from abc import ABC, abstractmethod
+import os
+import sys
 import time
 
-class Node(ABC):
+path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
+if path not in sys.path:
+    sys.path.append(path)
+
+from objects.exportable import Exportable
+
+class Node(Exportable):
 	"""
 	Nodes are the basic component of a timeline.
 	Timelines contain an ordered list of these nodes.
