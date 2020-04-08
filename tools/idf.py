@@ -64,6 +64,9 @@ def main():
 	"""
 
 	args = setup_args()
+	tfidf = construct(**vars(args))
+	save(tfidf, args.output)
+
 def construct(file, *args, **kwargs):
 	"""
 	Construct the TF-IDF scheme from the file.
