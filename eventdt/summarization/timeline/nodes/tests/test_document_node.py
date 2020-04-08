@@ -299,3 +299,14 @@ class TestDocumentNode(unittest.TestCase):
 
 		node = DocumentNode(created_at=1000)
 		self.assertRaises(ValueError, node.expired, -1, 0)
+
+	def test_export(self):
+		"""
+		Test exporting and importing document nodes.
+		"""
+
+		node = DocumentNode()
+		e = node.to_array()
+		self.assertEqual(node.created_at, DocumentNode.from_array(e).created_at)
+		self.assertEqual(node.documents, DocumentNode.from_array(e).documents)
+		self.assertEqual(node.__dict__, DocumentNode.from_array(e).__dict__)

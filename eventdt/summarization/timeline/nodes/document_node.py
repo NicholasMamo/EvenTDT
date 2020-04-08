@@ -75,3 +75,31 @@ class DocumentNode(Node):
 		document_centroid.normalize()
 
 		return vector_math.cosine(centroid, document_centroid)
+
+	def to_array(self):
+		"""
+		Export the document node as an associative array.
+
+		:return: The document as an associative array.
+		:rtype: dict
+		"""
+
+		return {
+			'class': str(DocumentNode),
+			'created_at': self.created_at,
+			'documents': self.documents,
+		}
+
+	@staticmethod
+	def from_array(array):
+		"""
+		Create an instance of the document node from the given associative array.
+
+		:param array: The associative array with the attributes to create the document node.
+		:type array: dict
+
+		:return: A new instance of the document node with the same attributes stored in the object.
+		:rtype: :class:`~summarization.timeline.nodes.document_node.DocumentNode`
+		"""
+
+		return DocumentNode(created_at=array.get('created_at'), documents=array.get('documents'))
