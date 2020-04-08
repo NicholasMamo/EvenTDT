@@ -16,6 +16,7 @@ Accepted arguments:
 	- ``-f --file``					*<Required>* The file to use to construct the TF-IDF scheme.
 	- ``-o --output``				*<Required>* The file where to save the TF-IDF scheme.
 	- ``--remove-unicode-entities``	*<Optional>* A boolean indicating whether to remove unicode entities.
+	- ``--normalize-words``			*<Optional>* A boolean indicating whether to normalize words with repeating characters.
 """
 
 import argparse
@@ -41,6 +42,7 @@ def setup_args():
 		- ``-f --file``					*<Required>* The file to use to construct the TF-IDF scheme.
 		- ``-o --output``				*<Required>* The file where to save the TF-IDF scheme.
 		- ``--remove-unicode-entities``	*<Optional>* A boolean indicating whether to remove unicode entities.
+		- ``--normalize-words``			*<Optional>* A boolean indicating whether to normalize words with repeating characters.
 
 	:return: The command-line arguments.
 	:rtype: list
@@ -58,6 +60,8 @@ def setup_args():
 						help='<Required> The file where to save the TF-IDF scheme.')
 	parser.add_argument('--remove-unicode-entities', action="store_true",
 						help='<Optional> A boolean indicating whether to remove unicode entities.')
+	parser.add_argument('--normalize-words', action="store_true",
+						help='<Optional> A boolean indicating whether to normalize words with repeating characters.')
 
 	args = parser.parse_args()
 	return args
@@ -68,7 +72,8 @@ def main():
 	"""
 
 	args = setup_args()
-	tfidf = construct(file=args.file, remove_unicode_entities=args.remove_unicode_entities)
+	tfidf = construct(file=args.file, normalize_words=args.normalize_words,
+					  remove_unicode_entities=args.remove_unicode_entities)
 	save(tfidf, args.output)
 
 def construct(file, *args, **kwargs):
