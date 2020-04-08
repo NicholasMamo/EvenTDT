@@ -25,7 +25,6 @@ Accepted arguments:
 """
 
 import argparse
-import copy
 import json
 import os
 import sys
@@ -160,7 +159,7 @@ def update(idf, tokens):
 	:type: list of str
 	"""
 
-	idf = copy.deepcopy(idf)
+	idf = dict(idf)
 	for token in set(tokens):
 		idf[token] = idf.get(token, 0) + 1
 
