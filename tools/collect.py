@@ -136,7 +136,7 @@ def main():
 
 		start = time.time()
 		logger.info('Starting to collect understanding corpus')
-		collect(auth, track, filename, args.understanding * 60, silent=True)
+		collect(auth, track, filename, args.understanding * 60)
 		logger.info('Understanding corpus collected')
 		end = time.time()
 		meta.append({
@@ -154,7 +154,7 @@ def main():
 
 		start = time.time()
 		logger.info('Starting to collect event corpus')
-		collect(auth, track, filename, args.event * 60, silent=True)
+		collect(auth, track, filename, args.event * 60)
 		logger.info('Event corpus collected')
 		end = time.time()
 		meta.append({
