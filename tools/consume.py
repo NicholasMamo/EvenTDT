@@ -257,11 +257,9 @@ def consume(file, consumer, speed, scheme=None, skip=0, *args, **kwargs):
 	"""
 	queue_manager.shutdown()
 
-def stream_process(loop, queue, file, *args, **kwargs):
+def stream_process(loop, queue, file, skip_time=0, *args, **kwargs):
 	"""
 	Stream the file and add its tweets to the queue.
-
-	Any additional arguments and keyword arguments are passed to the :func:`~twitter.file.simulated_reader.SimulatedFileReader.__init__` constructor.
 
 	:param loop: The main event loop.
 	:type loop: :class:`asyncio.unix_events._UnixSelectorEventLoop`
@@ -269,6 +267,8 @@ def stream_process(loop, queue, file, *args, **kwargs):
 	:type queue: :class:`multiprocessing.managers.AutoProxy[Queue]`
 	:param file: The path to the file to read.
 	:type file: str
+	:param skip_time: The amount of time to skip from the beginning of the file in minutes, defaults to 0.
+	:type skip_time: int
 	"""
 
 	async def read(reader):
@@ -291,7 +291,7 @@ def stream_process(loop, queue, file, *args, **kwargs):
 		await reader.read()
 
 	with open(file, 'r') as f:
-		reader = SimulatedFileReader(queue, f, *args, **kwargs)
+		reader = SimulatedFileReader(queue, f, skip_time=skip_time)
 		loop.run_until_complete(read(reader))
 
 	logger.info("Streaming ended")
