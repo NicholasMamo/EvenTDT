@@ -9,7 +9,9 @@ To run the script, use:
 
     ./implementation/consume.py \\
 	-f data/sample.json \\
-	-o data/idf.json
+	-o data/idf.json \\
+	--remove-unicode-entities
+	--normalize-words --stem
 
 Accepted arguments:
 
