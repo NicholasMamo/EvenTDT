@@ -13,6 +13,7 @@ if path not in sys.path:
 
 from objects.exportable import Exportable
 from vsm.vector import Vector
+from nlp.term_weighting.tfidf import TFIDF
 
 class TestAttributable(unittest.TestCase):
 	"""
@@ -130,6 +131,18 @@ class TestAttributable(unittest.TestCase):
 		decoded = Exportable.decode(data)
 		self.assertTrue({ v }, decoded.keys())
 		self.assertEqual(v.__dict__, decoded['vector'].__dict__)
+
+	def test_decode_nested(self):
+		"""
+		Test that when decoding an exportable object that has an exportable object, the highest one is decoded.
+		"""
+
+		tfidf = TFIDF(idf={ 'a': 1 }, documents=10)
+		data = Exportable.encode({ 'tfidf': tfidf })
+		decoded = Exportable.decode(data)
+		self.assertTrue({ tfidf }, decoded.keys())
+		self.assertEqual(tfidf.local_scheme.__dict__, decoded['tfidf'].local_scheme.__dict__)
+		self.assertEqual(tfidf.global_scheme.__dict__, decoded['tfidf'].global_scheme.__dict__)
 
 	def test_get_module_empty(self):
 		"""
