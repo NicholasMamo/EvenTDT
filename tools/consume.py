@@ -342,6 +342,30 @@ def consume_process(loop, consumer):
 
 	loop.run_until_complete(consume(consumer))
 
+def cache_exists(file, cache_dir='.cache'):
+	"""
+	Check whether cache exists for the given file.
+	The cache exists in a cache directory and has the same name as the given file.
+
+	:param file: The path to the file whose cache will be sought.
+	:type file: str
+	:param cache_dir: The directory where cache is stored.
+					  This is relative to the file's directory.
+	:type cache: str
+
+	:return: A boolean indicating whether cache exists for the given file.
+	:rtype: bool
+	"""
+
+	dir = os.path.dirname(file)
+	filename = os.path.basename(file)
+	cache_dir = os.path.join(dir, cache_dir)
+	if os.path.exists(cache_dir) and os.path.isdir(cache_dir):
+		cache_file = os.path.join(cache_dir, filename)
+		return os.path.exists(cache_file) and os.path.isfile(cache_file)
+
+	return False
+
 def consumer(consumer):
 	"""
 	Convert the given string into a consumer class.
