@@ -395,7 +395,7 @@ class ELDConsumer(Consumer):
 							Generate a query from the topical keywords and use it to come up with a summary.
 							"""
 							query = Cluster(vectors=node.topics).centroid
-							summary = self.summarization.summarize(summary_documents, 280, query=query)
+							summary = self.summarization.summarize(summary_documents, 140, query=query)
 							logger.info(f"{datetime.fromtimestamp(node.created_at).ctime()}: { str(summary) }")
 
 		return timeline
