@@ -15,9 +15,11 @@ Accepted arguments:
 
 	- ``-f --file``							*<Required>* The file to use to construct the TF-IDF scheme.
 	- ``-o --output``						*<Required>* The file where to save the TF-IDF scheme.
-	- ``--remove-unicode-entities``			*<Optional>* A boolean indicating whether to remove unicode entities.
-	- ``--normalize-words``					*<Optional>* A boolean indicating whether to normalize words with repeating characters.
-	- ``-character-normalization-count``	*<Optional>* The number of times a character must repeat for it to be normalized. Used only with the ``--normalize-words`` flag.
+	- ``--remove-unicode-entities``			*<Optional>* Remove unicode entities from the TF-IDF scheme.
+	- ``--normalize-words``					*<Optional>* Normalize words with repeating characters in them.
+	- ``--character-normalization-count``	*<Optional>* The number of times a character must repeat for it to be normalized. Used only with the ``--normalize-words`` flag.
+	- ``-stem``								*<Optional>* Stem the tokens when constructing the TF-IDF scheme.
+
 """
 
 import argparse
@@ -42,9 +44,10 @@ def setup_args():
 
 		- ``-f --file``							*<Required>* The file to use to construct the TF-IDF scheme.
 		- ``-o --output``						*<Required>* The file where to save the TF-IDF scheme.
-		- ``--remove-unicode-entities``			*<Optional>* A boolean indicating whether to remove unicode entities.
-		- ``--normalize-words``					*<Optional>* A boolean indicating whether to normalize words with repeating characters.
-		- ``-character-normalization-count``	*<Optional>* The number of times a character must repeat for it to be normalized. Used only with the ``--normalize-words`` flag.
+		- ``--remove-unicode-entities``			*<Optional>* Remove unicode entities from the TF-IDF scheme.
+		- ``--normalize-words``					*<Optional>* Normalize words with repeating characters in them.
+		- ``--character-normalization-count``	*<Optional>* The number of times a character must repeat for it to be normalized. Used only with the ``--normalize-words`` flag.
+		- ``--stem``							*<Optional>* Stem the tokens when constructing the TF-IDF scheme.
 
 	:return: The command-line arguments.
 	:rtype: list
@@ -61,11 +64,13 @@ def setup_args():
 	parser.add_argument('-o', '--output', type=str, required=True,
 						help='<Required> The file where to save the TF-IDF scheme.')
 	parser.add_argument('--remove-unicode-entities', action="store_true",
-						help='<Optional> A boolean indicating whether to remove unicode entities.')
+						help='<Optional> Remove unicode entities from the TF-IDF scheme.')
 	parser.add_argument('--normalize-words', action="store_true",
-						help='<Optional> A boolean indicating whether to normalize words with repeating characters.')
+						help='<Optional> Normalize words with repeating characters in them.')
 	parser.add_argument('--character-normalization-count', type=int, required=False, default=3,
 						help='<Optional> The number of times a character must repeat for it to be normalized. Used only with the --normalize-words flag.')
+	parser.add_argument('--stem', action="store_true",
+						help='<Optional> Stem the tokens when constructing the TF-IDF scheme.')
 
 	args = parser.parse_args()
 	return args
@@ -78,7 +83,7 @@ def main():
 	args = setup_args()
 	tfidf = construct(file=args.file, normalize_words=args.normalize_words,
 					  character_normalization_count=args.character_normalization_count,
-					  remove_unicode_entities=args.remove_unicode_entities)
+					  remove_unicode_entities=args.remove_unicode_entities, stem=args.stem)
 	save(tfidf, args.output)
 
 def construct(file, *args, **kwargs):
