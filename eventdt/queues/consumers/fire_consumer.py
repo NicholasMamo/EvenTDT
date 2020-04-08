@@ -337,7 +337,7 @@ class FIREConsumer(SimulatedBufferedConsumer):
 		:type documents: list of :class:`~nlp.document.Document`
 
 		:return: The list of clusters that have changed.
-		:rtype: list of :class:`~vector.cluster.cluster.Cluster`
+		:rtype: list of :class:`~vsm.cluster.cluster.Cluster`
 		"""
 
 		return self.clustering.cluster(documents, time='timestamp')
