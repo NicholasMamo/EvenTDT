@@ -28,6 +28,7 @@ Accepted arguments:
 	- ``--skip``				*<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
 	- ``--no-cache``			*<Optional>* If specified, the cached understanding is not used. The new understanding is cached instead.
 	- ``--scheme``				*<Optional>* If specified, the path to the :class:`~nlp.term_weighting.scheme.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.term_weighting.scheme.TF` scheme is used.
+	- ``--min-size``			*<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
 
 """
 
@@ -67,6 +68,7 @@ def setup_args():
 		- ``--no-cache``			*<Optional>* If specified, the cached understanding is not used. The new understanding is cached instead.
 		- ``--skip``				*<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
 		- ``--scheme``				*<Optional>* If specified, the path to the :class:`~nlp.term_weighting.scheme.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.term_weighting.scheme.TF` scheme is used. This can be overwritten if there is event understanding.
+		- ``--min-size``			*<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
 
 	:return: The command-line arguments.
 	:rtype: list
@@ -94,6 +96,8 @@ def setup_args():
 						help="""<Optional> If specified, the path to the term-weighting scheme file.
 								If it is not specified, the term frequency scheme is used instead.
 								This can be overwritten if there is event understanding.""")
+	parser.add_argument('--min-size', type=int, required=False, default=3,
+						help='<Optional> The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.')
 
 	args = parser.parse_args()
 	return args
@@ -210,7 +214,7 @@ def understand(understanding, consumer, scheme=None, *args, **kwargs):
 
 	return understanding
 
-def consume(file, consumer, speed, scheme=None, skip=0, *args, **kwargs):
+def consume(file, consumer, speed, scheme=None, skip=0, min_size=3, *args, **kwargs):
 	"""
 	Run the consumption process.
 	The arguments and keyword arguments should be the command-line arguments.
@@ -232,6 +236,8 @@ def consume(file, consumer, speed, scheme=None, skip=0, *args, **kwargs):
 	:type scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
 	:param skip: The amount of time to skip from the beginning of the file in minutes, defaults to 0.
 	:type skip: int
+	:param min_size: The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
+	:type min_size: int
 	"""
 
 	loop = asyncio.get_event_loop()
@@ -242,7 +248,7 @@ def consume(file, consumer, speed, scheme=None, skip=0, *args, **kwargs):
 	queue_manager = BaseManager()
 	queue_manager.start()
 	queue = queue_manager.Queue()
-	consumer = consumer(queue, scheme=scheme)
+	consumer = consumer(queue, scheme=scheme, min_size=min_size)
 
 	"""
 	Create and start the streaming and consumption processes.
