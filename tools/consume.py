@@ -294,6 +294,8 @@ def stream_process(loop, queue, file, *args, **kwargs):
 		reader = SimulatedFileReader(queue, f, *args, **kwargs)
 		loop.run_until_complete(read(reader))
 
+	logger.info("Streaming ended")
+
 def understand_process(comm, loop, consumer):
 	"""
 	Consume the incoming tweets to understand the event.
@@ -326,6 +328,7 @@ def understand_process(comm, loop, consumer):
 		return await consumer.understand(max_inactivity=1)
 
 	comm['understanding'] = loop.run_until_complete(asyncio.gather(understand(consumer)))[0]
+	logger.info("Understanding ended")
 
 def consume_process(loop, consumer):
 	"""
@@ -357,6 +360,7 @@ def consume_process(loop, consumer):
 		await consumer.run(max_inactivity=1)
 
 	loop.run_until_complete(consume(consumer))
+	logger.info("Consumption ended")
 
 def cache_exists(file, cache_dir='.cache'):
 	"""
