@@ -152,7 +152,7 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 		for tweet in tweets:
 			original = tweet
 			while "retweeted_status" in tweet:
-				tweet = original["retweeted_status"]
+				tweet = tweet["retweeted_status"]
 
 			if "extended_tweet" in tweet:
 				text = tweet["extended_tweet"].get("full_text", tweet.get("text", ""))
