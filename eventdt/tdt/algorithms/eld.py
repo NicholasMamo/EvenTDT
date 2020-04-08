@@ -39,6 +39,8 @@ class ELD(TDTAlgorithm):
 
 	def __init__(self, store, decay_rate=(1./2.)):
 		"""
+		Create the TDT algorithm.
+
 		:param store: The store contraining historical nutrition data.
 					  The algorithm expects the timestamps to represent checkpoints, or time windows.
 					  Therefore the nutrition store should have dictionaries with timestamps as keys, and the nutrition of terms in a dictionary as values.
@@ -55,6 +57,11 @@ class ELD(TDTAlgorithm):
 	def detect(self, nutrition, since=None, until=None, min_burst=0):
 		"""
 		Detect topics using historical data from the given nutrition store.
+
+		.. note::
+
+			The function assumes that nutrition is always zero or positive.
+			With this assumption, when the minimum burst is not negative, the burst can be calculated only for terms that have a present nutrition greater or equal to the minimum burst.
 
 		.. note::
 
@@ -97,14 +104,7 @@ class ELD(TDTAlgorithm):
 		else:
 			historic = self.store.since(since)
 
-		"""
-		Get a list of all the terms in the historic data.
-		These terms are added to the new nutrition data.
-		Burst is computed for all these terms.
-		"""
-		terms = [ term for data in historic.values()
-		 			   for term in data ]
-		terms = set(list(nutrition.keys()) + terms)
+		terms = self._get_terms(min_burst, nutrition, historic)
 
 		"""
 		Compute the burst of all the terms.
@@ -113,6 +113,36 @@ class ELD(TDTAlgorithm):
 		burst = { term: self._compute_burst(term, nutrition, historic) for term in terms }
 		burst = { term: burst for term, burst in burst.items() if burst > min_burst }
 		return burst
+
+	def _get_terms(self, min_burst, nutrition, historic):
+		"""
+		Get the terms for which to calculate the burst.
+		If the minimum burst is not negative, only calculate the burst for the terms in the current time window.
+		Furthermore, the burst can be calculated only for terms whose nutrition is equal to or greater than the minimum burst.
+
+		Otherwise, get a list of all the terms in the historic data to find drops in burst.
+		These terms are added to the new nutrition data.
+		Burst is computed for all these terms.
+
+		:param min_burst: The minimum burst of a term to be considered emerging and returned.
+						  This value is exclusive.
+						  By default, only terms thet have a non-zero positive burst are returned.
+						  These terms have seen their popularity increase.
+		:type min_burst: float
+		:param historic: The historic nutrition values from the past time windows.
+						 The keys should be the terms, and the values the respective nutrition.
+		:type historic: dict
+		:param nutrition: The nutrition values from the current (sliding) time window.
+						  The keys should be the terms, and the values the respective nutrition.
+		:type nutrition: dict
+		"""
+
+		if min_burst >= 0:
+			return [ term for term in nutrition if nutrition.get(term) >= min_burst ]
+		else:
+			terms = [ term for data in historic.values()
+			 			   for term in data ]
+			return set(list(nutrition.keys()) + terms)
 
 	def _compute_burst(self, term, nutrition, historic):
 		"""

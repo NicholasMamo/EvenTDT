@@ -114,6 +114,68 @@ class TestELD(unittest.TestCase):
 		self.assertEqual(set([ 'a', 'b', 'c', 'd' ]), set(algo.detect({ 'd': 1.00 }, until=60, min_burst=-1.)))
 		self.assertEqual(set([ 'd' ]), set(algo.detect({ 'd': 1.00 }, until=60)))
 
+	def test_get_terms_negative_minimum_burst(self):
+		"""
+		Test that when detecting bursty terms, all terms are returned when the minimum burst is negative.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = ELD(store)
+		store.add(50, { 'a': 0.67, 'b': 0.3, 'c': 0.33 })
+		store.add(40, { 'a': 0.33, 'b': 0.67, 'c': 0.3 })
+		store.add(30, { 'a': 1.00, 'b': 0.75 })
+
+		nutrition = { 'd': 1.00 }
+		historic = store.until(60)
+		self.assertEqual(set(algo._get_terms(-0.1, nutrition, historic)), { 'a', 'b', 'c', 'd' })
+
+	def test_get_terms_zero_minimum_burst(self):
+		"""
+		Test that when detecting bursty terms, the data is only taken from the present nutrition when the minimum burst is zero.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = ELD(store)
+		store.add(50, { 'a': 0.67, 'b': 0.3, 'c': 0.33 })
+		store.add(40, { 'a': 0.33, 'b': 0.67, 'c': 0.3 })
+		store.add(30, { 'a': 1.00, 'b': 0.75 })
+
+		nutrition = { 'd': 1.00 }
+		historic = store.until(60)
+		self.assertEqual(algo._get_terms(0, nutrition, historic), [ 'd' ])
+
+	def test_get_terms_positive_minimum_burst(self):
+		"""
+		Test that when detecting bursty terms, the data is only taken from the present nutrition when the minimum burst is positive.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = ELD(store)
+		store.add(50, { 'a': 0.67, 'b': 0.3, 'c': 0.33 })
+		store.add(40, { 'a': 0.33, 'b': 0.67, 'c': 0.3 })
+		store.add(30, { 'a': 1.00, 'b': 0.75 })
+
+		nutrition = { 'd': 1.00 }
+		historic = store.until(60)
+		self.assertEqual(algo._get_terms(0.5, nutrition, historic), [ 'd' ])
+
+	def test_get_terms_positive_minimum_burst_filter(self):
+		"""
+		Test that when detecting bursty terms, the data is only taken from the present nutrition when the minimum burst is positive.
+		Moreover, the terms should be filtered based on the minimum burst.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = ELD(store)
+		store.add(50, { 'a': 0.67, 'b': 0.3, 'c': 0.33 })
+		store.add(40, { 'a': 0.33, 'b': 0.67, 'c': 0.3 })
+		store.add(30, { 'a': 1.00, 'b': 0.75 })
+
+		nutrition = { 'd': 1.00, 'e': 0.5 }
+		historic = store.until(60)
+		self.assertEqual(algo._get_terms(0.5, nutrition, historic), [ 'd', 'e' ])
+		self.assertEqual(algo._get_terms(0.6, nutrition, historic), [ 'd' ])
+
 	def test_compute_burst_non_existent_term(self):
 		"""
 		Test that when computing the burst of a term that does not exist, 0 is returned.
