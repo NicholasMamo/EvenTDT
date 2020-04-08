@@ -386,8 +386,6 @@ def cache(file, data, cache_dir='.cache'):
 	:param cache_dir: The directory where cache is stored.
 					  This is relative to the file's directory.
 	:type cache: str
-
-	:raises TypeError: When the cache is not a dictionary.
 	"""
 
 	dir = os.path.dirname(file)
