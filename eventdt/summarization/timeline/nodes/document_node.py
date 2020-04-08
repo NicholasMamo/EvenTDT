@@ -4,6 +4,7 @@ A document node stores documents as a list.
 
 from .node import Node
 
+import importlib
 import os
 import sys
 
@@ -11,6 +12,7 @@ path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
+from objects.exportable import Exportable
 from vsm import vector_math
 from vsm.clustering import Cluster
 
@@ -87,7 +89,7 @@ class DocumentNode(Node):
 		return {
 			'class': str(DocumentNode),
 			'created_at': self.created_at,
-			'documents': self.documents,
+			'documents': [ document.to_array() for document in self.documents ],
 		}
 
 	@staticmethod
@@ -102,4 +104,10 @@ class DocumentNode(Node):
 		:rtype: :class:`~summarization.timeline.nodes.document_node.DocumentNode`
 		"""
 
-		return DocumentNode(created_at=array.get('created_at'), documents=array.get('documents'))
+		documents = [ ]
+		for document in array.get('documents'):
+			module = importlib.import_module(Exportable.get_module(document.get('class')))
+			cls = getattr(module, Exportable.get_class(document.get('class')))
+			documents.append(cls.from_array(document))
+
+		return DocumentNode(created_at=array.get('created_at'), documents=documents)
