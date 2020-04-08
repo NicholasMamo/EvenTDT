@@ -420,7 +420,7 @@ def cache(file, data, cache_dir='.cache'):
 	"""
 	cache_dir = os.path.join(dir, cache_dir)
 	if not os.path.exists(cache_dir):
-		os.path.mkdir(cache_dir)
+		os.mkdir(cache_dir)
 
 	"""
 	Encode the data and save it.
