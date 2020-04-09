@@ -116,6 +116,8 @@ def main():
 	"""
 
 	args = setup_args()
+	dir = os.path.dirname(args.file)
+	filename = os.path.basename(args.file)
 
 	"""
 	Register the queue in the base manager.
@@ -143,7 +145,7 @@ def main():
 		if args['no_cache'] or not cache_exists(args['understanding']):
 			logger.info("Starting understanding period")
 			understanding = understand(**args)['understanding']
-			cache(args['understanding'], understanding)
+			save(os.path.join(dir, '.cache', filename), understanding)
 			args.update(understanding)
 			logger.info("Understanding period ended")
 		else:
@@ -432,42 +434,33 @@ def cache_exists(file, cache_dir='.cache'):
 
 	return False
 
-def cache(file, data, cache_dir='.cache'):
+def save(file, data):
 	"""
-	Cache the given data to the given file.
-	The cache exists in a cache directory and has the same name as the given file.
-	The function saves cache as a JSON file.
+	Save the data to the given file.
+	The function saves the data as a JSON file.
 
-	:param file: The path to the file containing the inital understanding data.
-				 Its name will be used to save the cache the understanding with the same name.
+	:param file: The path to the file where to save the data.
 	:type file: str
-	:param data: The data to cache.
+	:param data: The data to save.
 				  The function expects a dictionary that can be JSON serializable.
 				  The function tries to convert the values that cannot be serialized to arrays.
 				  Only classes that inherit the :class:`~objects.exportable.Exportable` can be converted to arrays.
 				  This is done through the :func:`~objects.exportable.Exportable.to_array` function.
 	:type data: dict
-	:param cache_dir: The directory where cache is stored.
-					  This is relative to the file's directory.
-	:type cache_dir: str
 	"""
 
+	"""
+	Create the directory if it doesn't exist.
+	"""
 	dir = os.path.dirname(file)
-	filename = os.path.basename(file)
-
-	"""
-	Create the cache directory if it doesn't exist.
-	"""
-	cache_dir = os.path.join(dir, cache_dir)
-	if not os.path.exists(cache_dir):
-		os.mkdir(cache_dir)
+	if not os.path.exists(dir):
+		os.mkdir(dir)
 
 	"""
 	Encode the data and save it.
 	"""
 	data = Exportable.encode(data)
-	cache_file = os.path.join(cache_dir, filename)
-	with open(cache_file, 'w') as f:
+	with open(file, 'w') as f:
 		f.write(json.dumps(data))
 
 def load_cache(file, cache_dir='.cache'):
