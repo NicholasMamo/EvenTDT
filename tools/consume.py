@@ -21,15 +21,16 @@ To run the script, use:
 
 Accepted arguments:
 
-	- ``-f --file``				*<Required>* The file to consume.
-	- ``-c --class``			*<Required>* The consumer to use; supported: `ELDConsumer`, `FIREConsumer`, `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.
-	- ``-u --understanding``	*<Optional>* The understanding file used to understand the event.
-	- ``-s --speed``			*<Optional>* The speed at which the file is consumed, defaults to 1.
-	- ``--skip``				*<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
-	- ``--no-cache``			*<Optional>* If specified, the cached understanding is not used. The new understanding is cached instead.
-	- ``--scheme``				*<Optional>* If specified, the path to the :class:`~nlp.term_weighting.scheme.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.term_weighting.scheme.TF` scheme is used.
-	- ``--min-size``			*<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
-	- ``--threshold``			*<Optional>* The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
+	- ``-f --file``					*<Required>* The file to consume.
+	- ``-c --class``				*<Required>* The consumer to use; supported: `ELDConsumer`, `FIREConsumer`, `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.
+	- ``-u --understanding``		*<Optional>* The understanding file used to understand the event.
+	- ``-s --speed``				*<Optional>* The speed at which the file is consumed, defaults to 1.
+	- ``--skip``					*<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
+	- ``--no-cache``				*<Optional>* If specified, the cached understanding is not used. The new understanding is cached instead.
+	- ``--scheme``					*<Optional>* If specified, the path to the :class:`~nlp.term_weighting.scheme.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.term_weighting.scheme.TF` scheme is used.
+	- ``--min-size``				*<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
+	- ``--threshold``				*<Optional>* The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
+	- ``--max-intra-similarity``	*<Optional>* The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
 
 """
 
@@ -62,15 +63,16 @@ def setup_args():
 
 	Accepted arguments:
 
-		- ``-f --file``				*<Required>* The file to consume.
-		- ``-c --class``			*<Required>* The consumer to use; supported: `ELDConsumer`, `FIREConsumer`, `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.
-		- ``-u --understanding``	*<Optional>* The understanding file used to understand the event.
-		- ``-s --speed``			*<Optional>* The speed at which the file is consumed, defaults to 1.
-		- ``--no-cache``			*<Optional>* If specified, the cached understanding is not used. The new understanding is cached instead.
-		- ``--skip``				*<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
-		- ``--scheme``				*<Optional>* If specified, the path to the :class:`~nlp.term_weighting.scheme.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.term_weighting.scheme.TF` scheme is used. This can be overwritten if there is event understanding.
-		- ``--min-size``			*<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
-		- ``--threshold``			*<Optional>* The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
+		- ``-f --file``					*<Required>* The file to consume.
+		- ``-c --class``				*<Required>* The consumer to use; supported: `ELDConsumer`, `FIREConsumer`, `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.
+		- ``-u --understanding``		*<Optional>* The understanding file used to understand the event.
+		- ``-s --speed``				*<Optional>* The speed at which the file is consumed, defaults to 1.
+		- ``--no-cache``				*<Optional>* If specified, the cached understanding is not used. The new understanding is cached instead.
+		- ``--skip``					*<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
+		- ``--scheme``					*<Optional>* If specified, the path to the :class:`~nlp.term_weighting.scheme.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.term_weighting.scheme.TF` scheme is used. This can be overwritten if there is event understanding.
+		- ``--min-size``				*<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
+		- ``--threshold``				*<Optional>* The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
+		- ``--max-intra-similarity``	*<Optional>* The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
 
 	:return: The command-line arguments.
 	:rtype: list
@@ -102,6 +104,8 @@ def setup_args():
 						help='<Optional> The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.')
 	parser.add_argument('--threshold', type=float, required=False, default=0.5,
 						help='<Optional> The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.')
+	parser.add_argument('--max-intra-similarity', type=float, required=False, default=0.8,
+						help='<Optional> The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.')
 
 	args = parser.parse_args()
 	return args
@@ -218,7 +222,8 @@ def understand(understanding, consumer, scheme=None, *args, **kwargs):
 
 	return understanding
 
-def consume(file, consumer, speed, scheme=None, skip=0, min_size=3, threshold=0.5, *args, **kwargs):
+def consume(file, consumer, speed, scheme=None, skip=0,
+			min_size=3, threshold=0.5, max_intra_similarity=0.8, *args, **kwargs):
 	"""
 	Run the consumption process.
 	The arguments and keyword arguments should be the command-line arguments.
@@ -244,6 +249,8 @@ def consume(file, consumer, speed, scheme=None, skip=0, min_size=3, threshold=0.
 	:type min_size: int
 	:param threshold: The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
 	:type threshold: float
+	:param max_intra_similarity: The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
+	:type max_intra_similarity: float
 	"""
 
 	loop = asyncio.get_event_loop()
@@ -254,7 +261,8 @@ def consume(file, consumer, speed, scheme=None, skip=0, min_size=3, threshold=0.
 	queue_manager = BaseManager()
 	queue_manager.start()
 	queue = queue_manager.Queue()
-	consumer = consumer(queue, scheme=scheme, min_size=min_size, threshold=threshold)
+	consumer = consumer(queue, scheme=scheme,
+						min_size=min_size, threshold=threshold, max_intra_similarity=max_intra_similarity)
 
 	"""
 	Create and start the streaming and consumption processes.
