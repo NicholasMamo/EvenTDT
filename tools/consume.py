@@ -142,7 +142,7 @@ def main():
 	"""
 	args = vars(args)
 	if args['understanding']:
-		cache = os.path.join(dir, '.cache', filename)
+		cache = os.path.join(dir, '.cache', os.path.basename(args['understanding']))
 		if args['no_cache'] or not cache_exists(args['understanding']):
 			logger.info("Starting understanding period")
 			understanding = understand(**args)['understanding']
