@@ -153,7 +153,7 @@ def main():
 	Consume the event with the main file.
 	"""
 	logger.info("Starting event period")
-	consume(**args)
+	timeline = consume(**args)
 	logger.info("Event period ended")
 
 	asyncio.get_event_loop().close()
@@ -251,6 +251,9 @@ def consume(file, consumer, speed, scheme=None, skip=0,
 	:type threshold: float
 	:param max_intra_similarity: The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
 	:type max_intra_similarity: float
+
+	:return: A dictionary containing the timeline.
+	:rtype: dict
 	"""
 
 	loop = asyncio.get_event_loop()
@@ -265,12 +268,18 @@ def consume(file, consumer, speed, scheme=None, skip=0,
 						min_size=min_size, threshold=threshold, max_intra_similarity=max_intra_similarity)
 
 	"""
+	Create a shared dictionary that processes can use to communicate with this function.
+	"""
+	manager = Manager()
+	comm = manager.dict()
+
+	"""
 	Create and start the streaming and consumption processes.
 	"""
 	stream = Process(target=stream_process,
 					 args=(loop, queue, file, ),
 					 kwargs={ 'speed': speed, 'skip_time': skip * 60 })
-	consume = Process(target=consume_process, args=(loop, consumer, ))
+	consume = Process(target=consume_process, args=(comm, loop, consumer, ))
 	stream.start()
 	consume.start()
 
@@ -284,7 +293,11 @@ def consume(file, consumer, speed, scheme=None, skip=0,
 	"""
 	Clean up after the consumption.
 	"""
+	timeline = dict(comm)
+	manager.shutdown()
 	queue_manager.shutdown()
+
+	return timeline
 
 def stream_process(loop, queue, file, skip_time=0, speed=1, *args, **kwargs):
 	"""
@@ -361,10 +374,12 @@ def understand_process(comm, loop, consumer):
 	comm['understanding'] = loop.run_until_complete(asyncio.gather(understand(consumer)))[0]
 	logger.info("Understanding ended")
 
-def consume_process(loop, consumer):
+def consume_process(comm, loop, consumer):
 	"""
 	Consume the incoming tweets.
 
+	:param comm: The dictionary used by the consumption process to communicate data back to the main loop.
+	:type comm: :class:`multiprocessing.managers.DictProxy`
 	:param loop: The main event loop.
 	:type loop: :class:`asyncio.unix_events._UnixSelectorEventLoop`
 	:param consumer: The consumer to use to process tweets.
@@ -388,9 +403,9 @@ def consume_process(loop, consumer):
 
 		signal.signal(signal.SIGINT, sigint_handler)
 
-		await consumer.run(max_inactivity=60)
+		return await consumer.run(max_inactivity=60)
 
-	loop.run_until_complete(consume(consumer))
+	comm['timeline'] = loop.run_until_complete(consume(consumer))[0]
 	logger.info("Consumption ended")
 
 def cache_exists(file, cache_dir='.cache'):
