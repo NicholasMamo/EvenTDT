@@ -142,14 +142,15 @@ def main():
 	"""
 	args = vars(args)
 	if args['understanding']:
+		cache = os.path.join(dir, '.cache', filename)
 		if args['no_cache'] or not cache_exists(args['understanding']):
 			logger.info("Starting understanding period")
 			understanding = understand(**args)['understanding']
-			save(os.path.join(dir, '.cache', filename), understanding)
+			save(cache, understanding)
 			args.update(understanding)
 			logger.info("Understanding period ended")
 		else:
-			args.update(load_cache(args['understanding']))
+			args.update(load(cache))
 
 	"""
 	Consume the event with the main file.
@@ -463,32 +464,22 @@ def save(file, data):
 	with open(file, 'w') as f:
 		f.write(json.dumps(data))
 
-def load_cache(file, cache_dir='.cache'):
+def load(file):
 	"""
-	Cache the given data to the given file.
-	The cache exists in a cache directory and has the same name as the given file.
-	The function saves cache as a JSON file.
+	Load the data from the given file.
 
-	:param file: The path to the file containing the inital understanding data.
-				 Its name will be used to save the cache the understanding with the same name.
+	:param file: The path to the file from where to load the data.
 	:type file: str
-	:param cache_dir: The directory where cache is stored.
-					  This is relative to the file's directory.
-	:type cache_dir: str
 
-	:return: A new dictionary with the understanding.
+	:return: A new dictionary with the loaded data.
 	:rtype: dict
 	"""
 
-	dir = os.path.dirname(file)
-	filename = os.path.basename(file)
-
 	"""
 	Read the data as a JSON string.
+	Then, decode the data and return it.
 	"""
-	cache_dir = os.path.join(dir, cache_dir)
-	cache_file = os.path.join(cache_dir, filename)
-	with open(cache_file, 'r') as f:
+	with open(file, 'r') as f:
 		line = f.readline()
 		data = json.loads(line)
 
