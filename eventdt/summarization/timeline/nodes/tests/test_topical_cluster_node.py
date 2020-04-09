@@ -335,7 +335,7 @@ class TestClusterNode(unittest.TestCase):
 		topics = [ Vector({ 'p': 1 }, { 'y': 2 }), Document('text', { 'q': 2 }, attributes={ 'x': 1}) ]
 		node = TopicalClusterNode(clusters=clusters, topics=topics)
 		e = node.to_array()
-		i = node.from_array(e)
+		i = TopicalClusterNode.from_array(e)
 		self.assertEqual(node.created_at, i.created_at)
 		self.assertTrue(all(type(cluster) is Cluster for cluster in i.clusters))
 		self.assertEqual(clusters[0].centroid.dimensions, i.clusters[0].centroid.dimensions)

@@ -336,7 +336,7 @@ class TestDocumentNode(unittest.TestCase):
 					  Document('', { 'c': 3 }, attributes={ 'd': 4 }) ]
 		node = DocumentNode(documents=documents)
 		e = node.to_array()
-		i = node.from_array(e)
+		i = DocumentNode.from_array(e)
 		self.assertEqual(node.created_at, i.created_at)
 		self.assertTrue(all(type(document) is Document for document in i.documents))
 		self.assertEqual(documents[0].dimensions, i.documents[0].dimensions)
