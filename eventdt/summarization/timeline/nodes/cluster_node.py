@@ -80,7 +80,7 @@ class ClusterNode(Node):
 		"""
 		Export the cluster node as an associative array.
 
-		:return: The cluster as an associative array.
+		:return: The cluster node as an associative array.
 		:rtype: dict
 		"""
 
@@ -99,7 +99,7 @@ class ClusterNode(Node):
 		:type array: dict
 
 		:return: A new instance of the cluster node with the same attributes stored in the object.
-		:rtype: :class:`~summarization.timeline.nodes.document_node.ClusterNode`
+		:rtype: :class:`~summarization.timeline.nodes.cluster_node.ClusterNode`
 		"""
 
 		clusters = [ ]
