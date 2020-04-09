@@ -291,3 +291,63 @@ class TestClusterNode(unittest.TestCase):
 
 		self.assertEqual(1, node.similarity(Document('this is a cigar', { 'cigar': 1 }), Vector({ 'pipe': 1 })))
 		self.assertEqual(0, node.similarity(Document('this is a pipe', { 'pipe': 1 }), Vector({ 'cigar': 1 })))
+
+	def test_export(self):
+		"""
+		Test exporting and importing topical cluster nodes.
+		"""
+
+		node = TopicalClusterNode()
+		e = node.to_array()
+		self.assertEqual(node.created_at, TopicalClusterNode.from_array(e).created_at)
+		self.assertEqual(node.clusters, TopicalClusterNode.from_array(e).clusters)
+		self.assertEqual(node.topics, TopicalClusterNode.from_array(e).topics)
+		self.assertEqual(node.__dict__, TopicalClusterNode.from_array(e).__dict__)
+
+	def test_export_with_clusters(self):
+		"""
+		Test importing topical cluster nodes that have clusters.
+		"""
+
+		clusters = [ Cluster(Document('', { 'a': 1 }), attributes={ 'b': 2 }),
+					 Cluster(Vector({ 'c': 3 }), attributes={ 'd': 4 }) ]
+		topics = [ Vector({ 'p': 1 }, { 'y': 2 }), Vector({ 'q': 2 }, { 'x': 1}) ]
+		node = TopicalClusterNode(clusters=clusters, topics=topics)
+		e = node.to_array()
+		self.assertEqual(node.created_at, TopicalClusterNode.from_array(e).created_at)
+		self.assertTrue(all(cluster['class'] == "<class 'vsm.clustering.cluster.Cluster'>" for cluster in e['clusters']))
+		self.assertEqual(clusters[0].vectors[0].dimensions, e['clusters'][0]['vectors'][0]['dimensions'])
+		self.assertEqual({ 'b': 2 }, e['clusters'][0]['attributes'])
+		self.assertEqual(clusters[1].vectors[0].dimensions, e['clusters'][1]['vectors'][0]['dimensions'])
+		self.assertEqual({ 'd': 4 }, e['clusters'][1]['attributes'])
+		self.assertEqual(topics[0].dimensions, e['topics'][0]['dimensions'])
+		self.assertEqual(topics[1].dimensions, e['topics'][1]['dimensions'])
+		self.assertEqual(topics[0].attributes, e['topics'][0]['attributes'])
+		self.assertEqual(topics[1].attributes, e['topics'][1]['attributes'])
+
+	def test_import(self):
+		"""
+		Test importing topical cluster nodes that have clusters.
+		"""
+
+		clusters = [ Cluster(Document('', { 'a': 1 }), attributes={ 'b': 2 }),
+					 Cluster(Vector({ 'c': 3 }), attributes={ 'd': 4 }) ]
+		topics = [ Vector({ 'p': 1 }, { 'y': 2 }), Document('text', { 'q': 2 }, attributes={ 'x': 1}) ]
+		node = TopicalClusterNode(clusters=clusters, topics=topics)
+		e = node.to_array()
+		i = node.from_array(e)
+		self.assertEqual(node.created_at, i.created_at)
+		self.assertTrue(all(type(cluster) is Cluster for cluster in i.clusters))
+		self.assertEqual(clusters[0].centroid.dimensions, i.clusters[0].centroid.dimensions)
+		self.assertEqual(clusters[0].attributes, i.clusters[0].attributes)
+		self.assertEqual(clusters[1].centroid.dimensions, i.clusters[1].centroid.dimensions)
+		self.assertEqual(clusters[1].attributes, i.clusters[1].attributes)
+		self.assertEqual(Document, type(i.clusters[0].vectors[0]))
+		self.assertEqual(Vector, type(i.clusters[1].vectors[0]))
+		self.assertEqual(topics[0].dimensions, i.topics[0].dimensions)
+		self.assertEqual(topics[0].attributes, i.topics[0].attributes)
+		self.assertEqual(Vector, type(topics[0]))
+		self.assertEqual(topics[1].text, i.topics[1].text)
+		self.assertEqual(topics[1].dimensions, i.topics[1].dimensions)
+		self.assertEqual(topics[1].attributes, i.topics[1].attributes)
+		self.assertEqual(Document, type(topics[1]))
