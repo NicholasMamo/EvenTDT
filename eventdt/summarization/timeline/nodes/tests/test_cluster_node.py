@@ -322,7 +322,7 @@ class TestClusterNode(unittest.TestCase):
 
 	def test_export_with_clusters(self):
 		"""
-		Test importing cluster nodes that have clusters.
+		Test exporting cluster nodes that have clusters.
 		"""
 
 		clusters = [ Cluster(Document('', { 'a': 1 }), attributes={ 'b': 2 }),

@@ -313,7 +313,7 @@ class TestDocumentNode(unittest.TestCase):
 
 	def test_export_with_documents(self):
 		"""
-		Test importing document nodes that have documents.
+		Test exporting document nodes that have documents.
 		"""
 
 		documents = [ Document('', { 'a': 1 }, attributes={ 'b': 2 }),
