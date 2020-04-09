@@ -27,7 +27,7 @@ class Timeline():
 	:vartype similarity: float
 	"""
 
-	def __init__(self, node_type, expiry, min_similarity):
+	def __init__(self, node_type, expiry, min_similarity,  nodes=None):
 		"""
 		Create the timeline with an empty set of nodes.
 
@@ -40,6 +40,8 @@ class Timeline():
 		:param min_similarity: The minimum similarity between incoming documents and a node to be absorbed by it.
 							   This value is inclusive.
 		:type similarity: float
+		:ivar nodes: The initial list of nodes in the timeline.
+		:vartype nodes: :class:`~summarization.timeline.nodes.node.Node`
 
 		:raises ValueError: When the expiry is negative.
 		:raises ValueError: When the minimum similarity is not between 0 and 1.
@@ -55,7 +57,7 @@ class Timeline():
 		if not 0 <= min_similarity <= 1:
 			raise ValueError(f"The minimum similarity must be between 0 and 1: received {min_similarity}")
 
-		self.nodes = [ ]
+		self.nodes = nodes or [ ]
 		self.node_type = node_type
 		self.expiry = expiry
 		self.min_similarity = min_similarity

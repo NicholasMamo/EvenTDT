@@ -78,6 +78,15 @@ class TestTimeline(unittest.TestCase):
 
 		self.assertRaises(ValueError, Timeline, DocumentNode, -1, -0.01)
 
+	def test_create_with_nodes(self):
+		"""
+		Test that when nodes are provided in the constructor, they are saved.
+		"""
+
+		nodes = [ DocumentNode(documents=[ Document('') ]), DocumentNode(documents=[ Document('') ]) ]
+		timeline = Timeline(DocumentNode, 60, 0.5, nodes=nodes)
+		self.assertEqual(timeline.nodes, nodes)
+
 	def test_add_first_node(self):
 		"""
 		Test that when adding documents to an empty node, the timeline adds it to the timeline in a new node.
