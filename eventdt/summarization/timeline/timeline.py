@@ -4,7 +4,17 @@ Each node stores information about what happened in that period of time.
 The timeline groups these nodes together.
 """
 
-class Timeline():
+import importlib
+import os
+import sys
+
+path = os.path.join(os.path.dirname(__file__), '..', '..')
+if path not in sys.path:
+    sys.path.append(path)
+
+from objects.exportable import Exportable
+
+class Timeline(Exportable):
 	"""
 	The timeline stores a list of nodes and provides functionality to convert them into summaries.
 	More importantly, the timeline provides functionality to construct the timeline.
@@ -113,3 +123,43 @@ class Timeline():
 		"""
 
 		return self.node_type(created_at=created_at, *args, **kwargs)
+
+	def to_array(self):
+		"""
+		Export the timeline as an associative array.
+
+		:return: The timeline as an associative array.
+		:rtype: dict
+		"""
+
+		return {
+			'class': str(Timeline),
+			'node_type': str(self.node_type),
+			'expiry': self.expiry,
+			'min_similarity': self.min_similarity,
+			'nodes': [ node.to_array() for node in self.nodes ],
+		}
+
+	@staticmethod
+	def from_array(array):
+		"""
+		Create an instance of the timeline from the given associative array.
+
+		:param array: The associative array with the attributes to create the timeline.
+		:type array: dict
+
+		:return: A new instance of the timeline with the same attributes stored in the object.
+		:rtype: :class:`~summarization.timeline.nodes.node_node.ClusterNode`
+		"""
+
+		nodes = [ ]
+		for node in array.get('nodes'):
+			module = importlib.import_module(Exportable.get_module(node.get('class')))
+			cls = getattr(module, Exportable.get_class(node.get('class')))
+			nodes.append(cls.from_array(node))
+
+		module = importlib.import_module(Exportable.get_module(array.get('node_type')))
+		node_type = getattr(module, Exportable.get_class(array.get('node_type')))
+
+		return Timeline(node_type=node_type, expiry=array.get('expiry'),
+						min_similarity=array.get('min_similarity'), nodes=nodes)

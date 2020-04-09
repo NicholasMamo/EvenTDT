@@ -361,3 +361,51 @@ class TestTimeline(unittest.TestCase):
 		timeline = Timeline(ClusterNode, 60, 0.5)
 		node = timeline._create()
 		self.assertEqual(round(time.time()), round(node.created_at))
+
+	def test_export(self):
+		"""
+		Test exporting and importing timelines.
+		"""
+
+		nodes = [ DocumentNode() ]
+		timeline = Timeline(DocumentNode, 60, 0.5, nodes=nodes)
+		e = timeline.to_array()
+		self.assertEqual(timeline.node_type, Timeline.from_array(e).node_type)
+		self.assertEqual(timeline.expiry, Timeline.from_array(e).expiry)
+		self.assertEqual(timeline.min_similarity, Timeline.from_array(e).min_similarity)
+		self.assertEqual(timeline.nodes[0].__dict__, Timeline.from_array(e).nodes[0].__dict__)
+
+	def test_export_with_nodes(self):
+		"""
+		Test exporting timelines that have nodes.
+		"""
+
+		nodes = [ ClusterNode(clusters=[ Cluster(Document('text', { 'a': 1 }, attributes={ 'b': 2 }), { 'c': 3 }) ]) ]
+		timeline = Timeline(ClusterNode, 120, 0.1, nodes=nodes)
+		e = timeline.to_array()
+		self.assertEqual(timeline.node_type, Timeline.from_array(e).node_type)
+		self.assertEqual(timeline.expiry, Timeline.from_array(e).expiry)
+		self.assertEqual(timeline.min_similarity, Timeline.from_array(e).min_similarity)
+		self.assertEqual(len(timeline.nodes), len(e['nodes']))
+		self.assertTrue(all(node['class'] == "<class 'summarization.timeline.nodes.cluster_node.ClusterNode'>" for node in e['nodes']))
+		self.assertEqual({ 'a': 1 }, e['nodes'][0]['clusters'][0]['vectors'][0]['dimensions'])
+		self.assertEqual({ 'b': 2 }, e['nodes'][0]['clusters'][0]['vectors'][0]['attributes'])
+		self.assertEqual({ 'c': 3 }, e['nodes'][0]['clusters'][0]['attributes'])
+
+	def test_import(self):
+		"""
+		Test importing timelines that have nodes.
+		"""
+
+		nodes = [ Document(documents=[ Document('text', { 'a': 1 }, attributes={ 'b': 2 }) ]),
+		 		  Document(documents=[ Document('text', { 'c': 3 }, attributes={ 'd': 4 }) ]) ]
+		timeline = Timeline(DocumentNode, 120, 0.1, nodes=nodes)
+
+		e = timeline.to_array()
+		i = Timeline.from_array(e)
+		self.assertEqual(node.node_type, i.node_type)
+		self.assertEqual(node.expiry, i.expiry)
+		self.assertEqual(node.min_similarity, i.min_similarity)
+		self.assertEqual(len(timeline.nodes), len(i.nodes))
+		self.assertEqual(timeline.nodes[0].documents[0].__dict__, i.nodes[0].documents[0].__dict__)
+		self.assertEqual(timeline.nodes[1].documents[0].__dict__, i.nodes[1].documents[0].__dict__)
