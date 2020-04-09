@@ -157,6 +157,7 @@ def main():
 	"""
 	logger.info("Starting event period")
 	timeline = consume(**args)
+	save(os.path.join(dir, '.out', filename), timeline)
 	logger.info("Event period ended")
 
 	asyncio.get_event_loop().close()
