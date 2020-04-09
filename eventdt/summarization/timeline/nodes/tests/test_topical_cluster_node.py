@@ -52,6 +52,43 @@ class TestClusterNode(unittest.TestCase):
 
 		self.assertEqual(round(time.time()), round(TopicalClusterNode().created_at))
 
+	def test_create_with_no_clusters(self):
+		"""
+		Test that when creating the topical cluster node with no clusters, an empty list is initialized.
+		"""
+
+		node = TopicalClusterNode()
+		self.assertEqual([ ], node.clusters)
+
+	def test_create_with_clusters(self):
+		"""
+		Test that when creating the topical cluster node with a list of clusters and topics, they are saved.
+		"""
+
+		clusters = [ Cluster(), Cluster() ]
+		topics = [ Vector(), Vector() ]
+		n1 = TopicalClusterNode(clusters=clusters[:1], topics=topics[:1])
+		self.assertEqual(clusters[:1], n1.clusters)
+		self.assertEqual(topics[:1], n1.topics)
+
+		n2 = TopicalClusterNode(clusters=clusters[1:], topics=topics[1:])
+		self.assertEqual(clusters[:1], n1.clusters)
+		self.assertEqual(topics[:1], n1.topics)
+		self.assertEqual(clusters[1:], n2.clusters)
+		self.assertEqual(topics[1:], n2.topics)
+
+	def test_create_with_unequal_clusters_topics(self):
+		"""
+		Test that when creating the topical cluster node with an unequal number of clusters and topics, a ValueError is raised.
+		"""
+
+		clusters = [ Cluster(), Cluster() ]
+		topics = [ Vector(), Vector() ]
+		self.assertRaises(ValueError, TopicalClusterNode, clusters=clusters[:1])
+		self.assertRaises(ValueError, TopicalClusterNode, topics=topics[:1])
+		self.assertRaises(ValueError, TopicalClusterNode, clusters=clusters, topics=topics[:1])
+		self.assertRaises(ValueError, TopicalClusterNode, clusters=clusters[:1], topics=topics)
+
 	def test_add(self):
 		"""
 		Test adding a cluster to the node.

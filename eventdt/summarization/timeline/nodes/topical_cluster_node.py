@@ -21,20 +21,36 @@ class TopicalClusterNode(ClusterNode):
 
 	:ivar topics: The list of topics in this node.
 				  Each topic is a vector and corresponds to a cluster.
-	:type clusters: list of :class:`~vsm.vector.Vector`
+	:type topics: list of :class:`~vsm.vector.Vector`
 	"""
 
-	def __init__(self, created_at=None):
+	def __init__(self, created_at=None, clusters=None, topics=None):
 		"""
 		Create the node.
 
 		:param created_at: The timestamp when the node was created.
 						   If the timestamp is not given, the current time is used.
 		:type created_at: float
+		:param clusters: The initial list of clusters in this node.
+		:type clusters: list of :class:`~vsm.clustering.cluster.Cluster`
+		:param topics: The initial listo f topics in this node.
+		:type topics: list of :class:`~vsm.vector.Vector`
+
+		:raises ValueError: When an unequal number of clusters are provided.
 		"""
 
-		super(TopicalClusterNode, self).__init__(created_at)
-		self.topics = [ ]
+		"""
+		The number of clusters and topics must be the same.
+		If they aren't, or only the topics or only the clusters are given, raise a ValueError.
+		"""
+		if (clusters and topics and len(clusters) != len(topics) or
+			(clusters and not topics) or (topics and not clusters)):
+			clusters = clusters or [ ]
+			topics = topics or [ ]
+			raise ValueError(f"The number of clusters and topics must be the same, received { len(clusters) } and { len(topics) } respectively")
+
+		super(TopicalClusterNode, self).__init__(created_at, clusters=clusters)
+		self.topics = topics or [ ]
 
 	def add(self, cluster, topic, *args, **kwargs):
 		"""
