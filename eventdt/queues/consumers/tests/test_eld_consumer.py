@@ -271,7 +271,8 @@ class TestELDConsumer(unittest.TestCase):
 		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
 			tweet = json.loads(f.readline())
 			document = consumer._to_documents([ tweet ])[0]
-			self.assertEqual(tweet, document.attributes['tweet'])
+			self.assertEqual(tweet['id'], document.attributes['id'])
+			self.assertEqual(len(tweet['entities']['urls']), document.attributes['urls'])
 
 	def test_to_documents_ellipsis(self):
 		"""
@@ -1004,8 +1005,8 @@ class TestELDConsumer(unittest.TestCase):
 			clusters.append(Cluster([ documents[0] ] * 3))
 			clusters.append(Cluster(documents[:50], { 'bursty': True }))
 
-			no_url_documents = [ document for document in documents if len(document.attributes['tweet']['entities']['urls']) == 0 ]
-			url_documents = [ document for document in documents if len(document.attributes['tweet']['entities']['urls']) >= 2 ]
+			no_url_documents = [ document for document in documents if document.attributes['urls'] == 0 ]
+			url_documents = [ document for document in documents if document.attributes['urls'] >= 2 ]
 			clusters.append(Cluster(no_url_documents[:1] + url_documents[:3]))
 
 			no_reply_documents = [ document for document in documents if not document.text.startswith('@') ]
