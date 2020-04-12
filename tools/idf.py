@@ -157,9 +157,11 @@ def update(idf, tokens):
 	:param tokens: The tokens to add to the IDF.
 				   The function automatically gets the set of tokens to remove duplicates.
 	:type: list of str
+
+	:return: The updated IDF table.
+	:rtype: dict
 	"""
 
-	idf = dict(idf)
 	for token in set(tokens):
 		idf[token] = idf.get(token, 0) + 1
 
