@@ -78,6 +78,23 @@ class Tokenizer(object):
 	:vartype stem: bool
 	:ivar normalize_special_characters: A boolean indicating whether accents should be removed and replaced with simple unicode characters.
 	:vartype normalize_special_characters: bool
+
+	:ivar url_pattern: The pattern used to identify URLs in the text.
+	:vartype url_pattern: :class:`re.Pattern`
+	:ivar alt_code_pattern: The pattern used to identify and remove alt-codes from the text.
+	:vartype alt_code_pattern: :class:`re.Pattern`
+	:ivar mention_pattern: The pattern used to identify mentions in the text.
+	:vartype mention_pattern: :class:`re.Pattern`
+	:ivar hashtag_pattern: The pattern used to identify hashtags in the text.
+	:vartype hashtag_pattern: :class:`re.Pattern`
+	:ivar word_normalization_pattern: The pattern used to identify words with repeated characters.
+	:vartype word_normalization_pattern: :class:`re.Pattern`
+	:ivar number_pattern: The pattern used to identify numbers in the text.
+	:vartype number_pattern: :class:`re.Pattern`
+	:ivar tokenize_pattern: The pattern used to split the text into tokens.
+	:vartype tokenize_pattern: :class:`re.Pattern`
+	:ivar camel_case_pattern: The pattern used to identify camel-case letters.
+	:vartype camel_case_pattern: :class:`re.Pattern`
 	"""
 
 	def __init__(self, remove_mentions=True, remove_hashtags=False, split_hashtags=True,
@@ -155,6 +172,18 @@ class Tokenizer(object):
 		self.stem_tokens = stem
 		self.normalize_special_characters = normalize_special_characters
 
+		"""
+		The list of regular expressions to be used.
+		"""
+		self.url_pattern = re.compile("(https?:\/\/)?([^\s]+)?\.[a-zA-Z0-9]+?\/?([^\s,\.]+)?")
+		self.alt_code_pattern = re.compile("&.+?;")
+		self.mention_pattern = re.compile("@[a-zA-Z0-9_]+")
+		self.hashtag_pattern = re.compile("#([a-zA-Z0-9_]+)")
+		self.word_normalization_pattern = re.compile("(.)\\1{%d,}" % (self.character_normalization_count - 1))
+		self.number_pattern = re.compile("\\b([0-9]{1,3}|[0-9]{5,})\\b") # preserve years
+		self.tokenize_pattern = re.compile("\s+")
+		self.camel_case_pattern = re.compile("(([a-z]+)?([A-Z]+|[0-9]+))")
+
 	def tokenize(self, text):
 		"""
 		Tokenize the given text.
@@ -187,15 +216,15 @@ class Tokenizer(object):
 		"""
 		Remove illegal components.
 		"""
-		text = url_pattern.sub("", text) if self.remove_urls else text
-		text = alt_code_pattern.sub("", text) if self.remove_alt_codes else text
+		text = self.url_pattern.sub("", text) if self.remove_urls else text
+		text = self.alt_code_pattern.sub("", text) if self.remove_alt_codes else text
 		text = text.encode('ascii', 'ignore').decode("utf-8") if self.remove_unicode_entities else text
-		text = word_normalization_pattern.sub("\g<1>", text) if self.normalize_words else text
-		text = mention_pattern.sub("", text) if self.remove_mentions else text
-		text = hashtag_pattern.sub("", text) if self.remove_hashtags else hashtag_pattern.sub("\g<1>", text)
-		text = number_pattern.sub("", text) if self.remove_numbers else text
+		text = self.word_normalization_pattern.sub("\g<1>", text) if self.normalize_words else text
+		text = self.mention_pattern.sub("", text) if self.remove_mentions else text
+		text = self.hashtag_pattern.sub("", text) if self.remove_hashtags else self.hashtag_pattern.sub("\g<1>", text)
+		text = self.number_pattern.sub("", text) if self.remove_numbers else text
 		text = ''.join([ char if char not in string.punctuation else ' ' for char in text ]) if self.remove_punctuation else text
-		tokens = tokenize_pattern.split(text)
+		tokens = self.tokenize_pattern.split(text)
 
 		"""
 		Post-process the tokens.
@@ -217,16 +246,13 @@ class Tokenizer(object):
 		:rtype: str
 		"""
 
-		hashtag_pattern = re.compile("#([a-zA-Z0-9_]+)")
-		camel_case_pattern = re.compile("(([a-z]+)?([A-Z]+|[0-9]+))")
-
 		"""
 		First find all hashtags.
 		Then, split them and replace the hashtag lexeme with the split components.
 		"""
-		hashtags = hashtag_pattern.findall(string)
+		hashtags = self.hashtag_pattern.findall(string)
 		for hashtag in hashtags:
-			components = camel_case_pattern.sub("\g<2> \g<3>", hashtag)
+			components = self.camel_case_pattern.sub("\g<2> \g<3>", hashtag)
 
 			"""
 			Only split hashtags that have multiple components.
