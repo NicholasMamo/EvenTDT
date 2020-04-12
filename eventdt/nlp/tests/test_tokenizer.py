@@ -6,6 +6,7 @@ from nltk.corpus import stopwords
 
 import os
 import sys
+import time
 import unittest
 
 import warnings
@@ -531,6 +532,26 @@ class TestTokenizer(unittest.TestCase):
 		s = "Toko-Ekambi scores, assisted by Mendes!"
 		t = Tokenizer(stem=True)
 		self.assertEqual([ "toko", "ekambi", "score", "assist", "mend" ], t.tokenize(s))
+
+	def test_stemming_cache(self):
+		"""
+		Test that the stemmer uses a cache.
+		"""
+
+		s = "Toko-Ekambi scores, assisted by Mendes!"
+		t = Tokenizer(stem=True)
+		start = time.time()
+		self.assertEqual([ "toko", "ekambi", "score", "assist", "mend" ], t.tokenize(s))
+		elapsed = time.time() - start
+		start = time.time()
+		self.assertEqual({ 'toko', 'ekambi', 'scores', 'assisted', 'mendes' }, set(t.stem_cache.keys()))
+		self.assertEqual('toko', t.stem_cache.get('toko'))
+		self.assertEqual('ekambi', t.stem_cache.get('ekambi'))
+		self.assertEqual('score', t.stem_cache.get('scores'))
+		self.assertEqual('assist', t.stem_cache.get('assisted'))
+		self.assertEqual('mend', t.stem_cache.get('mendes'))
+		t.tokenize(s)
+		self.assertLess(time.time() - start, elapsed)
 
 	def test_no_stemming(self):
 		"""

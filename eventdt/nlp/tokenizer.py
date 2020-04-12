@@ -78,7 +78,9 @@ class Tokenizer(object):
 	:vartype stem: bool
 	:ivar normalize_special_characters: A boolean indicating whether accents should be removed and replaced with simple unicode characters.
 	:vartype normalize_special_characters: bool
-
+	:ivar stem_cache: A mapping of tokens and their stems.
+					  The keys are the original tokens and the values are their stems.
+	:vartype stem_cache: dict
 	:ivar url_pattern: The pattern used to identify URLs in the text.
 	:vartype url_pattern: :class:`re.Pattern`
 	:ivar alt_code_pattern: The pattern used to identify and remove alt-codes from the text.
@@ -172,6 +174,8 @@ class Tokenizer(object):
 		self.stem_tokens = stem
 		self.normalize_special_characters = normalize_special_characters
 
+		self.stem_cache = { }
+
 		"""
 		The list of regular expressions to be used.
 		"""
@@ -196,17 +200,6 @@ class Tokenizer(object):
 		"""
 
 		"""
-		The list of regular expressions to be used.
-		"""
-		url_pattern = re.compile("(https?:\/\/)?([^\s]+)?\.[a-zA-Z0-9]+?\/?([^\s,\.]+)?")
-		alt_code_pattern = re.compile("&.+?;")
-		mention_pattern = re.compile("@[a-zA-Z0-9_]+")
-		hashtag_pattern = re.compile("#([a-zA-Z0-9_]+)")
-		word_normalization_pattern = re.compile("(.)\\1{%d,}" % (self.character_normalization_count - 1))
-		number_pattern = re.compile("\\b([0-9]{1,3}|[0-9]{5,})\\b") # preserve years
-		tokenize_pattern = re.compile("\s+")
-
-		"""
 		Split hashtags, casefold and remove accents.
 		"""
 		text = self._split_hashtags(text) if self.split_hashtags else text
@@ -229,9 +222,9 @@ class Tokenizer(object):
 		"""
 		Post-process the tokens.
 		"""
-		tokens = [token for token in tokens if token not in self.stopword_dict]
-		tokens = [token for token in tokens if len(token) >= self.min_length]
-		tokens = [ self.stemmer.stem(token) for token in tokens ] if self.stem_tokens else tokens
+		tokens = [ token for token in tokens if token not in self.stopword_dict ]
+		tokens = [ token for token in tokens if len(token) >= self.min_length ]
+		tokens = self._stem(tokens) if self.stem_tokens else tokens
 
 		return tokens
 
@@ -262,3 +255,30 @@ class Tokenizer(object):
 				string = string.replace(f"#{hashtag}", components)
 
 		return string
+
+	def _stem(self, tokens):
+		"""
+		Stem the given tokens.
+		Stemming is an expensive operation.
+		Therefore the function uses a stem cache to avoid re-stemming previously-seen tokens.
+
+		:param tokens: The tokens to stem.
+		:type tokens: list of str
+
+		:return: A list of stemmed tokens.
+		:rtype: list of str
+		"""
+
+		for i, token in enumerate(tokens):
+			"""
+			Re-use the stemmed token if it is cached.
+			Otherwise, stem the token and cache it.
+			"""
+			if self.stem_cache.get(token):
+				tokens[i] = self.stem_cache.get(token)
+			else:
+				stem = self.stemmer.stem(token)
+				tokens[i] = stem
+				self.stem_cache[token] = stem
+
+		return tokens
