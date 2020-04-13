@@ -223,6 +223,48 @@ class TestTimeline(unittest.TestCase):
 		self.assertEqual(1, len(timeline.nodes))
 		self.assertEqual([ documents[0], documents[2] ] , timeline.nodes[0].get_all_documents())
 
+	def test_add_node_absorb_max_time(self):
+		"""
+		Test that when a similar node is added, a node does not absorb it if too much time has passed since it was created.
+		"""
+
+		documents = [ Document('this is not a pipe', { 'pipe': 1 }),
+		 			  Document('this is not a cigar', { 'cigar': 1 }),
+					  Document('this is not a pipe and this is not a cigar', { 'pipe': 1, 'cigar': 1 }) ]
+		timeline = Timeline(DocumentNode, 60, 0.5, max_time=600)
+		timeline.add(0, documents)
+		self.assertEqual(1, len(timeline.nodes))
+		timeline.add(700, documents)
+		self.assertEqual(2, len(timeline.nodes))
+
+	def test_add_node_absorb_max_time_inclusive(self):
+		"""
+		Test that when a similar node is added, the maximum time is inclusive.
+		"""
+
+		documents = [ Document('this is not a pipe', { 'pipe': 1 }),
+		 			  Document('this is not a cigar', { 'cigar': 1 }),
+					  Document('this is not a pipe and this is not a cigar', { 'pipe': 1, 'cigar': 1 }) ]
+		timeline = Timeline(DocumentNode, 60, 0.5, max_time=600)
+		timeline.add(0, documents)
+		self.assertEqual(1, len(timeline.nodes))
+		timeline.add(600, documents)
+		self.assertEqual(1, len(timeline.nodes))
+
+	def test_add_node_absorb_before_max_time(self):
+		"""
+		Test that when a similar node is added, it is absorbed if there is a node that is fairly recent.
+		"""
+
+		documents = [ Document('this is not a pipe', { 'pipe': 1 }),
+		 			  Document('this is not a cigar', { 'cigar': 1 }),
+					  Document('this is not a pipe and this is not a cigar', { 'pipe': 1, 'cigar': 1 }) ]
+		timeline = Timeline(DocumentNode, 60, 0.5, max_time=600)
+		timeline.add(0, documents)
+		self.assertEqual(1, len(timeline.nodes))
+		timeline.add(599, documents)
+		self.assertEqual(1, len(timeline.nodes))
+
 	def test_add_node_absorb_inclusive(self):
 		"""
 		Test that the minimum similarity is inclusive.

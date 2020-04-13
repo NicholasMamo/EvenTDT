@@ -36,9 +36,13 @@ class Timeline(Exportable):
 	:ivar min_similarity: The minimum similarity between incoming documents and a node to be absorbed by it.
 						  This value is inclusive.
 	:vartype similarity: float
+	:ivar max_time: The maximum time in seconds to look back when deciding whether a node should absorb a new topic.
+					The comparison is made with the node's `created_at` instance variable.
+					This value is inclusive.
+	:vartype max_time: float
 	"""
 
-	def __init__(self, node_type, expiry, min_similarity,  nodes=None):
+	def __init__(self, node_type, expiry, min_similarity, max_time=600, nodes=None):
 		"""
 		Create the timeline with an empty set of nodes.
 
@@ -51,8 +55,12 @@ class Timeline(Exportable):
 		:param min_similarity: The minimum similarity between incoming documents and a node to be absorbed by it.
 							   This value is inclusive.
 		:type similarity: float
-		:ivar nodes: The initial list of nodes in the timeline.
-		:vartype nodes: :class:`~summarization.timeline.nodes.node.Node`
+		:param max_time: The maximum time in seconds to look back when deciding whether a node should absorb a new topic.
+						 The comparison is made with the node's `created_at` instance variable.
+						 This value is inclusive.
+		:type max_time: float
+		:param nodes: The initial list of nodes in the timeline.
+		:type nodes: :class:`~summarization.timeline.nodes.node.Node`
 
 		:raises ValueError: When the expiry is negative.
 		:raises ValueError: When the minimum similarity is not between 0 and 1.
@@ -72,6 +80,7 @@ class Timeline(Exportable):
 		self.node_type = node_type
 		self.expiry = expiry
 		self.min_similarity = min_similarity
+		self.max_time = max_time
 
 	def add(self, timestamp=None, *args, **kwargs):
 		"""
@@ -101,7 +110,7 @@ class Timeline(Exportable):
 		Go through the nodes backwards and see if any node absorbs the documents.
 		"""
 		for node in self.nodes[::-1]:
-			if node.similarity(*args, **kwargs) >= self.min_similarity:
+			if timestamp - node.created_at <= self.max_time and node.similarity(*args, **kwargs) >= self.min_similarity:
 				node.add(*args, **kwargs)
 				return
 
