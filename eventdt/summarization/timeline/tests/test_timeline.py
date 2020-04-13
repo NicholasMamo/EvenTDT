@@ -83,7 +83,7 @@ class TestTimeline(unittest.TestCase):
 		Test that when nodes are provided in the constructor, they are saved.
 		"""
 
-		nodes = [ DocumentNode(documents=[ Document('') ]), DocumentNode(documents=[ Document('') ]) ]
+		nodes = [ DocumentNode(0, documents=[ Document('') ]), DocumentNode(0, documents=[ Document('') ]) ]
 		timeline = Timeline(DocumentNode, 60, 0.5, nodes=nodes)
 		self.assertEqual(timeline.nodes, nodes)
 
@@ -323,7 +323,7 @@ class TestTimeline(unittest.TestCase):
 		"""
 
 		timeline = Timeline(DocumentNode, 60, 0.5)
-		node = timeline._create()
+		node = timeline._create(0)
 		self.assertEqual(DocumentNode, type(node))
 
 	def test_create_cluster_node(self):
@@ -332,7 +332,7 @@ class TestTimeline(unittest.TestCase):
 		"""
 
 		timeline = Timeline(ClusterNode, 60, 0.5)
-		node = timeline._create()
+		node = timeline._create(0)
 		self.assertEqual(ClusterNode, type(node))
 
 	def test_create_node_created_at(self):
@@ -359,7 +359,7 @@ class TestTimeline(unittest.TestCase):
 		"""
 
 		timeline = Timeline(ClusterNode, 60, 0.5)
-		node = timeline._create()
+		node = timeline._create(time.time())
 		self.assertEqual(round(time.time()), round(node.created_at))
 
 	def test_export(self):
@@ -367,7 +367,7 @@ class TestTimeline(unittest.TestCase):
 		Test exporting and importing timelines.
 		"""
 
-		nodes = [ DocumentNode() ]
+		nodes = [ DocumentNode(0) ]
 		timeline = Timeline(DocumentNode, 60, 0.5, nodes=nodes)
 		e = timeline.to_array()
 		self.assertEqual(timeline.node_type, Timeline.from_array(e).node_type)
@@ -380,7 +380,7 @@ class TestTimeline(unittest.TestCase):
 		Test exporting timelines that have nodes.
 		"""
 
-		nodes = [ ClusterNode(clusters=[ Cluster(Document('text', { 'a': 1 }, attributes={ 'b': 2 }), { 'c': 3 }) ]) ]
+		nodes = [ ClusterNode(0, clusters=[ Cluster(Document('text', { 'a': 1 }, attributes={ 'b': 2 }), { 'c': 3 }) ]) ]
 		timeline = Timeline(ClusterNode, 120, 0.1, nodes=nodes)
 		e = timeline.to_array()
 		self.assertEqual(timeline.node_type, Timeline.from_array(e).node_type)
@@ -397,15 +397,15 @@ class TestTimeline(unittest.TestCase):
 		Test importing timelines that have nodes.
 		"""
 
-		nodes = [ Document(documents=[ Document('text', { 'a': 1 }, attributes={ 'b': 2 }) ]),
-		 		  Document(documents=[ Document('text', { 'c': 3 }, attributes={ 'd': 4 }) ]) ]
+		nodes = [ DocumentNode(0, documents=[ Document('text', { 'a': 1 }, attributes={ 'b': 2 }) ]),
+		 		  DocumentNode(0, documents=[ Document('text', { 'c': 3 }, attributes={ 'd': 4 }) ]) ]
 		timeline = Timeline(DocumentNode, 120, 0.1, nodes=nodes)
 
 		e = timeline.to_array()
 		i = Timeline.from_array(e)
-		self.assertEqual(node.node_type, i.node_type)
-		self.assertEqual(node.expiry, i.expiry)
-		self.assertEqual(node.min_similarity, i.min_similarity)
+		self.assertEqual(timeline.node_type, i.node_type)
+		self.assertEqual(timeline.expiry, i.expiry)
+		self.assertEqual(timeline.min_similarity, i.min_similarity)
 		self.assertEqual(len(timeline.nodes), len(i.nodes))
 		self.assertEqual(timeline.nodes[0].documents[0].__dict__, i.nodes[0].documents[0].__dict__)
 		self.assertEqual(timeline.nodes[1].documents[0].__dict__, i.nodes[1].documents[0].__dict__)

@@ -7,6 +7,7 @@ The timeline groups these nodes together.
 import importlib
 import os
 import sys
+import time
 
 path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
@@ -87,6 +88,8 @@ class Timeline(Exportable):
 		:type timestamp: float
 		"""
 
+		timestamp = time.time() if timestamp is None else timestamp
+
 		"""
 		If there are nodes and the latest one is still active—it hasn't expired—add the documents to it.
 		"""
@@ -109,13 +112,12 @@ class Timeline(Exportable):
 		node.add(*args, **kwargs)
 		self.nodes.append(node)
 
-	def _create(self, created_at=None, *args, **kwargs):
+	def _create(self, created_at, *args, **kwargs):
 		"""
 		Create a new node on the timeline.
 		Any arguments and keyword arguments are passed on to the :func:`~summarization.timeline.nodes.node.Node.__init__` method.
 
 		:param created_at: The timestamp when the node was created.
-						   If the timestamp is not given, the current time is used.
 		:type created_at: float
 
 		:return: The created node.
