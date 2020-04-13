@@ -7,7 +7,7 @@ To run the script, use:
 
 .. code-block:: bash
 
-    ./implementation/consume.py \\
+    ./implementation/idf.py \\
 	-f data/sample.json \\
 	-o data/idf.json \\
 	--remove-unicode-entities

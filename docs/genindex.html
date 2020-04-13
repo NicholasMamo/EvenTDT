@@ -318,8 +318,6 @@
 </li>
         <li><a href="apd.html#apd.filters.filter.Filter.__weakref__">(Filter attribute)</a>
 </li>
-        <li><a href="summarization.html#summarization.timeline.nodes.node.Node.__weakref__">(Node attribute)</a>
-</li>
         <li><a href="tdt.html#tdt.nutrition.store.NutritionStore.__weakref__">(NutritionStore attribute)</a>
 </li>
         <li><a href="apd.html#apd.participant_detector.ParticipantDetector.__weakref__">(ParticipantDetector attribute)</a>
@@ -339,8 +337,6 @@
         <li><a href="tdt.html#tdt.algorithms.tdt.TDTAlgorithm.__weakref__">(TDTAlgorithm attribute)</a>
 </li>
         <li><a href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme.__weakref__">(TermWeightingScheme attribute)</a>
-</li>
-        <li><a href="summarization.html#summarization.timeline.timeline.Timeline.__weakref__">(Timeline attribute)</a>
 </li>
         <li><a href="nlp.html#nlp.tokenizer.Tokenizer.__weakref__">(Tokenizer attribute)</a>
 </li>
@@ -379,8 +375,6 @@
 </li>
       <li><a href="tdt.html#tdt.algorithms.eld.ELD._compute_coefficient">_compute_coefficient() (ELD method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="tdt.html#tdt.algorithms.eld.ELD._compute_decay">_compute_decay() (ELD method)</a>
 </li>
       <li><a href="summarization.html#summarization.algorithms.dgs.DGS._compute_query">_compute_query() (DGS method)</a>
@@ -389,6 +383,8 @@
         <li><a href="summarization.html#summarization.algorithms.mmr.MMR._compute_query">(MMR method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apd.html#apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver._compute_score">_compute_score() (WikipediaSearchResolver method)</a>
 </li>
       <li><a href="summarization.html#summarization.algorithms.mmr.MMR._compute_scores">_compute_scores() (MMR method)</a>
@@ -478,6 +474,8 @@
       <li><a href="summarization.html#summarization.algorithms.mmr.MMR._get_next_document">_get_next_document() (MMR method)</a>
 </li>
       <li><a href="apd.html#apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor._get_surname">_get_surname() (WikipediaPostprocessor method)</a>
+</li>
+      <li><a href="tdt.html#tdt.algorithms.eld.ELD._get_terms">_get_terms() (ELD method)</a>
 </li>
       <li><a href="apd.html#apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator._has_year">_has_year() (WikipediaExtrapolator method)</a>
 
@@ -576,6 +574,8 @@
 </li>
       </ul></li>
       <li><a href="consumers.html#queues.consumers.consumer.Consumer._started">_started() (Consumer method)</a>
+</li>
+      <li><a href="nlp.html#nlp.tokenizer.Tokenizer._stem">_stem() (Tokenizer method)</a>
 </li>
       <li><a href="consumers.html#queues.consumers.consumer.Consumer._stopped">_stopped() (Consumer method)</a>
 </li>
@@ -715,8 +715,6 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="tools.html#tools.consume.cache">cache() (in module tools.consume)</a>
-</li>
       <li><a href="tools.html#tools.consume.cache_exists">cache_exists() (in module tools.consume)</a>
 </li>
       <li><a href="tdt.html#tdt.algorithms.cataldi.Cataldi">Cataldi (class in tdt.algorithms.cataldi)</a>
@@ -909,14 +907,16 @@
       </ul></li>
       <li><a href="consumers.html#queues.consumers.fire_consumer.FIREConsumer">FIREConsumer (class in queues.consumers.fire_consumer)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="twitter.html#twitter.listener.TweetListener.flush">flush() (TweetListener method)</a>
 </li>
       <li><a href="vsm.html#vsm.clustering.cluster.Cluster.from_array">from_array() (Cluster static method)</a>
 
       <ul>
+        <li><a href="summarization.html#summarization.timeline.nodes.cluster_node.ClusterNode.from_array">(ClusterNode static method)</a>
+</li>
         <li><a href="nlp.html#nlp.document.Document.from_array">(Document static method)</a>
+</li>
+        <li><a href="summarization.html#summarization.timeline.nodes.document_node.DocumentNode.from_array">(DocumentNode static method)</a>
 </li>
         <li><a href="other.html#objects.exportable.Exportable.from_array">(Exportable static method)</a>
 </li>
@@ -926,9 +926,15 @@
 </li>
         <li><a href="nlp.html#nlp.term_weighting.tfidf.TFIDF.from_array">(TFIDF static method)</a>
 </li>
+        <li><a href="summarization.html#summarization.timeline.timeline.Timeline.from_array">(Timeline static method)</a>
+</li>
+        <li><a href="summarization.html#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.from_array">(TopicalClusterNode static method)</a>
+</li>
         <li><a href="vsm.html#vsm.vector.Vector.from_array">(Vector static method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="nlp.html#nlp.term_weighting.global_schemes.idf.IDF.from_documents">from_documents() (IDF static method)</a>
 </li>
   </ul></td>
@@ -993,7 +999,7 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="consumers.html#queues.queue.Queue.length">length() (Queue method)</a>
 </li>
-      <li><a href="tools.html#tools.consume.load_cache">load_cache() (in module tools.consume)</a>
+      <li><a href="tools.html#tools.consume.load">load() (in module tools.consume)</a>
 </li>
       <li><a href="config.html#config.example.conf.LOG_LEVEL">LOG_LEVEL (in module config.example.conf)</a>
 </li>
@@ -1034,6 +1040,8 @@
       <li><a href="vsm.html#vsm.vector_math.manhattan">manhattan() (in module vsm.vector_math)</a>
 </li>
       <li><a href="tdt.html#tdt.nutrition.memory.MemoryNutritionStore">MemoryNutritionStore (class in tdt.nutrition.memory)</a>
+</li>
+      <li><a href="tools.html#tools.consume.meta">meta() (in module tools.consume)</a>
 </li>
       <li><a href="consumers.html#queues.consumers.eld_consumer.ELDConsumer.min_burst">min_burst (ELDConsumer attribute)</a>
 </li>
@@ -1211,14 +1219,20 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="tools.html#tools.idf.save">save() (in module tools.idf)</a>
+      <li><a href="tools.html#tools.consume.save">save() (in module tools.consume)</a>
+
+      <ul>
+        <li><a href="tools.html#tools.idf.save">(in module tools.idf)</a>
 </li>
+      </ul></li>
       <li><a href="tools.html#tools.collect.save_meta">save_meta() (in module tools.collect)</a>
 
       <ul>
         <li><a href="tools.html#tools.sample.save_meta">(in module tools.sample)</a>
 </li>
       </ul></li>
+      <li><a href="tools.html#tools.consume.scheme">scheme() (in module tools.consume)</a>
+</li>
       <li><a href="nlp.html#nlp.term_weighting.scheme.SchemeScorer">SchemeScorer (class in nlp.term_weighting.scheme)</a>
 </li>
       <li><a href="nlp.html#nlp.term_weighting.local_schemes.boolean.Boolean.score">score() (Boolean method)</a>
@@ -1290,6 +1304,8 @@
       <li><a href="twitter.html#twitter.file.staggered_reader.StaggeredFileReader">StaggeredFileReader (class in twitter.file.staggered_reader)</a>
 </li>
       <li><a href="consumers.html#queues.consumers.stat_consumer.StatConsumer">StatConsumer (class in queues.consumers.stat_consumer)</a>
+</li>
+      <li><a href="nlp.html#nlp.tokenizer.Tokenizer.stem_cache">stem_cache (Tokenizer attribute)</a>
 </li>
       <li><a href="consumers.html#queues.consumers.consumer.Consumer.stop">stop() (Consumer method)</a>
 
@@ -1378,7 +1394,11 @@
       <li><a href="vsm.html#vsm.clustering.cluster.Cluster.to_array">to_array() (Cluster method)</a>
 
       <ul>
+        <li><a href="summarization.html#summarization.timeline.nodes.cluster_node.ClusterNode.to_array">(ClusterNode method)</a>
+</li>
         <li><a href="nlp.html#nlp.document.Document.to_array">(Document method)</a>
+</li>
+        <li><a href="summarization.html#summarization.timeline.nodes.document_node.DocumentNode.to_array">(DocumentNode method)</a>
 </li>
         <li><a href="other.html#objects.exportable.Exportable.to_array">(Exportable method)</a>
 </li>
@@ -1387,6 +1407,10 @@
         <li><a href="summarization.html#summarization.summary.Summary.to_array">(Summary method)</a>
 </li>
         <li><a href="nlp.html#nlp.term_weighting.tfidf.TFIDF.to_array">(TFIDF method)</a>
+</li>
+        <li><a href="summarization.html#summarization.timeline.timeline.Timeline.to_array">(Timeline method)</a>
+</li>
+        <li><a href="summarization.html#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.to_array">(TopicalClusterNode method)</a>
 </li>
         <li><a href="vsm.html#vsm.vector.Vector.to_array">(Vector method)</a>
 </li>

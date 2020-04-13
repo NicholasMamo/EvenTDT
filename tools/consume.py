@@ -27,7 +27,7 @@ Accepted arguments:
 	- ``-s --speed``				*<Optional>* The speed at which the file is consumed, defaults to 1.
 	- ``--skip``					*<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
 	- ``--no-cache``				*<Optional>* If specified, the cached understanding is not used. The new understanding is cached instead.
-	- ``--scheme``					*<Optional>* If specified, the path to the :class:`~nlp.term_weighting.scheme.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.term_weighting.scheme.TF` scheme is used.
+	- ``--scheme``					*<Optional>* If specified, the path to the :class:`~nlp.term_weighting.scheme.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.term_weighting.tf.TF` scheme is used.
 	- ``--min-size``				*<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
 	- ``--threshold``				*<Optional>* The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
 	- ``--max-intra-similarity``	*<Optional>* The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
@@ -70,7 +70,7 @@ def setup_args():
 		- ``-s --speed``				*<Optional>* The speed at which the file is consumed, defaults to 1.
 		- ``--no-cache``				*<Optional>* If specified, the cached understanding is not used. The new understanding is cached instead.
 		- ``--skip``					*<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
-		- ``--scheme``					*<Optional>* If specified, the path to the :class:`~nlp.term_weighting.scheme.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.term_weighting.scheme.TF` scheme is used. This can be overwritten if there is event understanding.
+		- ``--scheme``					*<Optional>* If specified, the path to the :class:`~nlp.term_weighting.scheme.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.term_weighting.tf.TF` scheme is used. This can be overwritten if there is event understanding.
 		- ``--min-size``				*<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
 		- ``--threshold``				*<Optional>* The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
 		- ``--max-intra-similarity``	*<Optional>* The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.

@@ -774,7 +774,8 @@ The larger the decay rate, the less importance far-off windows have in the burst
 <dl class="method">
 <dt id="tdt.algorithms.eld.ELD.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">store</em>, <em class="sig-param">decay_rate=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.algorithms.eld.ELD.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Create the TDT algorithm.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>store</strong> (<a class="reference internal" href="#tdt.nutrition.store.NutritionStore" title="tdt.nutrition.store.NutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code></a>) – The store contraining historical nutrition data.
@@ -792,6 +793,11 @@ The larger the decay rate, the less importance far-off windows have in the burst
 <dt id="tdt.algorithms.eld.ELD.detect">
 <code class="sig-name descname">detect</code><span class="sig-paren">(</span><em class="sig-param">nutrition</em>, <em class="sig-param">since=None</em>, <em class="sig-param">until=None</em>, <em class="sig-param">min_burst=0</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.algorithms.eld.ELD.detect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Detect topics using historical data from the given nutrition store.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The function assumes that nutrition is always zero or positive.
+With this assumption, when the minimum burst is not negative, the burst can be calculated only for terms that have a present nutrition greater or equal to the minimum burst.</p>
+</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The minimum burst is exclusive.
@@ -819,6 +825,31 @@ The keys are the terms and the values are the respective burst values.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tdt.algorithms.eld.ELD._get_terms">
+<code class="sig-name descname">_get_terms</code><span class="sig-paren">(</span><em class="sig-param">min_burst</em>, <em class="sig-param">nutrition</em>, <em class="sig-param">historic</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.algorithms.eld.ELD._get_terms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the terms for which to calculate the burst.
+If the minimum burst is not negative, only calculate the burst for the terms in the current time window.
+Furthermore, the burst can be calculated only for terms whose nutrition is equal to or greater than the minimum burst.</p>
+<p>Otherwise, get a list of all the terms in the historic data to find drops in burst.
+These terms are added to the new nutrition data.
+Burst is computed for all these terms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>min_burst</strong> (<em>float</em>) – The minimum burst of a term to be considered emerging and returned.
+This value is exclusive.
+By default, only terms thet have a non-zero positive burst are returned.
+These terms have seen their popularity increase.</p></li>
+<li><p><strong>historic</strong> (<em>dict</em>) – The historic nutrition values from the past time windows.
+The keys should be the terms, and the values the respective nutrition.</p></li>
+<li><p><strong>nutrition</strong> (<em>dict</em>) – The nutrition values from the current (sliding) time window.
+The keys should be the terms, and the values the respective nutrition.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
