@@ -14,7 +14,7 @@ if path not in sys.path:
 
 from objects.exportable import Exportable
 from vsm import vector_math
-from vsm.clustering import Cluster
+from vsm.clustering.cluster import Cluster
 
 class ClusterNode(Node):
 	"""
