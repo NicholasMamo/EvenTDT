@@ -27,7 +27,7 @@ class TestDocumentNode(unittest.TestCase):
 		Test that the document node is created empty.
 		"""
 
-		self.assertEqual([ ], DocumentNode().documents)
+		self.assertEqual([ ], DocumentNode(0).documents)
 
 	def test_create_with_timestamp_zero(self):
 		"""
@@ -43,19 +43,12 @@ class TestDocumentNode(unittest.TestCase):
 
 		self.assertEqual(1000, DocumentNode(1000).created_at)
 
-	def test_create_default_timestamp(self):
-		"""
-		Test that the document node uses the current timestamp if it is not given.
-		"""
-
-		self.assertEqual(round(time.time()), round(DocumentNode().created_at))
-
 	def test_create_with_no_documents(self):
 		"""
 		Test that when creating the document node with no documents, an empty list is initialized.
 		"""
 
-		node = DocumentNode()
+		node = DocumentNode(0)
 		self.assertEqual([ ], node.documents)
 
 	def test_create_with_documents(self):
@@ -64,10 +57,10 @@ class TestDocumentNode(unittest.TestCase):
 		"""
 
 		documents = [ Document(''), Document('') ]
-		n1 = DocumentNode(documents=documents[:1])
+		n1 = DocumentNode(0, documents=documents[:1])
 		self.assertEqual(documents[:1], n1.documents)
 
-		n2 = DocumentNode(documents=documents[1:])
+		n2 = DocumentNode(0, documents=documents[1:])
 		self.assertEqual(documents[:1], n1.documents)
 		self.assertEqual(documents[1:], n2.documents)
 
@@ -76,7 +69,7 @@ class TestDocumentNode(unittest.TestCase):
 		Test adding documents to the node.
 		"""
 
-		node = DocumentNode()
+		node = DocumentNode(0)
 		self.assertEqual([ ], node.documents)
 		document = Document('')
 		node.add([ document ])
@@ -87,7 +80,7 @@ class TestDocumentNode(unittest.TestCase):
 		Test adding multiple documents to the node.
 		"""
 
-		node = DocumentNode()
+		node = DocumentNode(0)
 		self.assertEqual([ ], node.documents)
 		documents = [ Document('') for i in range(2)]
 		node.add(documents)
@@ -98,7 +91,7 @@ class TestDocumentNode(unittest.TestCase):
 		Test adding documents one at a time to the node.
 		"""
 
-		node = DocumentNode()
+		node = DocumentNode(0)
 		self.assertEqual([ ], node.documents)
 		documents = [ Document('') for i in range(2)]
 		node.add([ documents[0] ])
@@ -111,7 +104,7 @@ class TestDocumentNode(unittest.TestCase):
 		Test that when changing a document, the node's document also changes.
 		"""
 
-		node = DocumentNode()
+		node = DocumentNode(0)
 		self.assertEqual([ ], node.documents)
 		document = Document('', { })
 		node.add([ document ])
@@ -125,7 +118,7 @@ class TestDocumentNode(unittest.TestCase):
 		Test that when getting all documents from an empty node, an empty list is returned.
 		"""
 
-		node = DocumentNode()
+		node = DocumentNode(0)
 		self.assertEqual([ ], node.get_all_documents())
 
 	def test_get_all_documents(self):
@@ -133,7 +126,7 @@ class TestDocumentNode(unittest.TestCase):
 		Test that when getting all documents from a node, all documents are returned.
 		"""
 
-		node = DocumentNode()
+		node = DocumentNode(0)
 		corpus = [ Document('', { }), Document('', { }) ]
 		self.assertEqual([ ], node.get_all_documents())
 		node.add([ corpus[0] ])
@@ -146,7 +139,7 @@ class TestDocumentNode(unittest.TestCase):
 		Test that the similarity between a document and an empty document node, the similarity is 0.
 		"""
 
-		node = DocumentNode()
+		node = DocumentNode(0)
 		self.assertEqual([ ], node.documents)
 		self.assertEqual(0, node.similarity(Document('', { 'x': 1 })))
 
@@ -161,7 +154,7 @@ class TestDocumentNode(unittest.TestCase):
 		documents = [ Document('this is not a pipe', { 'pipe': 1 }),
 		 			  Document('this is not a cigar', { 'cigar': 1 }) ]
 
-		node = DocumentNode()
+		node = DocumentNode(0)
 		node.add(documents)
 		self.assertEqual(documents, node.documents)
 		self.assertEqual(0, node.similarity(Document('', { })))
@@ -177,7 +170,7 @@ class TestDocumentNode(unittest.TestCase):
 		documents = [ Document('this is not a pipe', { 'pipe': 1 }),
 		 			  Document('this is not a cigar', { 'cigar': 1 }) ]
 
-		node = DocumentNode()
+		node = DocumentNode(0)
 		node.add(documents)
 		self.assertEqual(documents, node.documents)
 		self.assertEqual(math.sqrt(2)/2., node.similarity(Document('this is not a pipe', { 'pipe': 1 })))
@@ -193,7 +186,7 @@ class TestDocumentNode(unittest.TestCase):
 		documents = [ Document('this is not a pipe', { 'pipe': 1 }),
 		 			  Document('this is not a cigar', { 'cigar': 1 }) ]
 
-		node = DocumentNode()
+		node = DocumentNode(0)
 		document = Document('this is not a pipe and this is not a cigar', { 'pipe': 1, 'cigar': 1 })
 		node.add([ document ])
 		self.assertEqual(math.sqrt(2)/2., node.similarity(documents[0]))
@@ -214,7 +207,7 @@ class TestDocumentNode(unittest.TestCase):
 		documents = [ Document('this is not a pipe', { 'pipe': 1 }),
 		 			  Document('this is not a cigar', { 'cigar': 1 }) ]
 
-		node = DocumentNode()
+		node = DocumentNode(0)
 		node.add(documents)
 		self.assertEqual(documents, node.documents)
 		self.assertEqual(0, node.similarity(Document('this is a picture of dorian gray', { 'picture': 1, 'dorian': 1, 'gray': 1 })))
@@ -230,7 +223,7 @@ class TestDocumentNode(unittest.TestCase):
 		documents = [ Document('this is not a pipe', { 'pipe': 1 }),
 		 			  Document('this is not a cigar', { 'cigar': 1 }) ]
 
-		node = DocumentNode()
+		node = DocumentNode(0)
 		node.add(documents)
 		self.assertEqual(documents, node.documents)
 		self.assertEqual(1, round(node.similarity(Document('this is not a pipe and this is not a cigar', { 'cigar': 1, 'pipe': 1 }))))
@@ -273,7 +266,7 @@ class TestDocumentNode(unittest.TestCase):
 		"""
 
 		node = DocumentNode(created_at=time.time())
-		self.assertFalse(node.expired(1))
+		self.assertFalse(node.expired(1, time.time()))
 
 	def test_expired_realtime_sleep(self):
 		"""
@@ -282,7 +275,7 @@ class TestDocumentNode(unittest.TestCase):
 
 		node = DocumentNode(created_at=time.time())
 		time.sleep(1)
-		self.assertTrue(node.expired(1))
+		self.assertTrue(node.expired(1, time.time()))
 
 	def test_expired_zero(self):
 		"""
@@ -305,7 +298,7 @@ class TestDocumentNode(unittest.TestCase):
 		Test exporting and importing document nodes.
 		"""
 
-		node = DocumentNode()
+		node = DocumentNode(0)
 		e = node.to_array()
 		self.assertEqual(node.created_at, DocumentNode.from_array(e).created_at)
 		self.assertEqual(node.documents, DocumentNode.from_array(e).documents)
@@ -318,7 +311,7 @@ class TestDocumentNode(unittest.TestCase):
 
 		documents = [ Document('', { 'a': 1 }, attributes={ 'b': 2 }),
 					  Document('', { 'c': 3 }, attributes={ 'd': 4 }) ]
-		node = DocumentNode(documents=documents)
+		node = DocumentNode(created_at=0, documents=documents)
 		e = node.to_array()
 		self.assertEqual(node.created_at, DocumentNode.from_array(e).created_at)
 		self.assertTrue(all(document['class'] == "<class 'nlp.document.Document'>" for document in e['documents']))
@@ -334,7 +327,7 @@ class TestDocumentNode(unittest.TestCase):
 
 		documents = [ Document('', { 'a': 1 }, attributes={ 'b': 2 }),
 					  Document('', { 'c': 3 }, attributes={ 'd': 4 }) ]
-		node = DocumentNode(documents=documents)
+		node = DocumentNode(created_at=0, documents=documents)
 		e = node.to_array()
 		i = DocumentNode.from_array(e)
 		self.assertEqual(node.created_at, i.created_at)

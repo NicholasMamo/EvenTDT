@@ -28,8 +28,8 @@ class TestClusterNode(unittest.TestCase):
 		Test that the cluster node is created empty.
 		"""
 
-		self.assertEqual([ ], TopicalClusterNode().clusters)
-		self.assertEqual([ ], TopicalClusterNode().topics)
+		self.assertEqual([ ], TopicalClusterNode(0).clusters)
+		self.assertEqual([ ], TopicalClusterNode(0).topics)
 
 	def test_create_with_timestamp_zero(self):
 		"""
@@ -45,19 +45,12 @@ class TestClusterNode(unittest.TestCase):
 
 		self.assertEqual(1000, TopicalClusterNode(1000).created_at)
 
-	def test_create_default_timestamp(self):
-		"""
-		Test that the cluster node uses the current timestamp if it is not given.
-		"""
-
-		self.assertEqual(round(time.time()), round(TopicalClusterNode().created_at))
-
 	def test_create_with_no_clusters(self):
 		"""
 		Test that when creating the topical cluster node with no clusters, an empty list is initialized.
 		"""
 
-		node = TopicalClusterNode()
+		node = TopicalClusterNode(0)
 		self.assertEqual([ ], node.clusters)
 
 	def test_create_with_clusters(self):
@@ -67,11 +60,11 @@ class TestClusterNode(unittest.TestCase):
 
 		clusters = [ Cluster(), Cluster() ]
 		topics = [ Vector(), Vector() ]
-		n1 = TopicalClusterNode(clusters=clusters[:1], topics=topics[:1])
+		n1 = TopicalClusterNode(0, clusters=clusters[:1], topics=topics[:1])
 		self.assertEqual(clusters[:1], n1.clusters)
 		self.assertEqual(topics[:1], n1.topics)
 
-		n2 = TopicalClusterNode(clusters=clusters[1:], topics=topics[1:])
+		n2 = TopicalClusterNode(0, clusters=clusters[1:], topics=topics[1:])
 		self.assertEqual(clusters[:1], n1.clusters)
 		self.assertEqual(topics[:1], n1.topics)
 		self.assertEqual(clusters[1:], n2.clusters)
@@ -84,17 +77,17 @@ class TestClusterNode(unittest.TestCase):
 
 		clusters = [ Cluster(), Cluster() ]
 		topics = [ Vector(), Vector() ]
-		self.assertRaises(ValueError, TopicalClusterNode, clusters=clusters[:1])
-		self.assertRaises(ValueError, TopicalClusterNode, topics=topics[:1])
-		self.assertRaises(ValueError, TopicalClusterNode, clusters=clusters, topics=topics[:1])
-		self.assertRaises(ValueError, TopicalClusterNode, clusters=clusters[:1], topics=topics)
+		self.assertRaises(ValueError, TopicalClusterNode, 0, clusters=clusters[:1])
+		self.assertRaises(ValueError, TopicalClusterNode, 0, topics=topics[:1])
+		self.assertRaises(ValueError, TopicalClusterNode, 0, clusters=clusters, topics=topics[:1])
+		self.assertRaises(ValueError, TopicalClusterNode, 0, clusters=clusters[:1], topics=topics)
 
 	def test_add(self):
 		"""
 		Test adding a cluster to the node.
 		"""
 
-		node = TopicalClusterNode()
+		node = TopicalClusterNode(0)
 		self.assertEqual([ ], node.clusters)
 		self.assertEqual([ ], node.topics)
 		cluster = Cluster()
@@ -108,7 +101,7 @@ class TestClusterNode(unittest.TestCase):
 		Test adding clusters one at a time to the node.
 		"""
 
-		node = TopicalClusterNode()
+		node = TopicalClusterNode(0)
 		self.assertEqual([ ], node.clusters)
 		clusters = [ Cluster() for i in range(2)]
 		topics = [ Vector() for i in range(2)]
@@ -124,7 +117,7 @@ class TestClusterNode(unittest.TestCase):
 		Test that when changing a topic, the node's topic also changes.
 		"""
 
-		node = TopicalClusterNode()
+		node = TopicalClusterNode(0)
 		self.assertEqual([ ], node.topics)
 		topic = Vector()
 		node.add(Cluster(), topic)
@@ -140,7 +133,7 @@ class TestClusterNode(unittest.TestCase):
 		Test that when getting all documents, the cluster documents are returned.
 		"""
 
-		node = TopicalClusterNode()
+		node = TopicalClusterNode(0)
 		clusters = [ Cluster(Document('', { })), Cluster(Document('', { })) ]
 		self.assertEqual([ ], node.get_all_documents())
 		node.add(clusters[0], Vector())
@@ -153,7 +146,7 @@ class TestClusterNode(unittest.TestCase):
 		Test that the similarity between a cluster and an empty cluster node, the similarity is 0.
 		"""
 
-		node = TopicalClusterNode()
+		node = TopicalClusterNode(0)
 		self.assertEqual([ ], node.clusters)
 		self.assertEqual(0, node.similarity(Cluster(Document('', { 'x': 1 })), Vector()))
 
@@ -169,7 +162,7 @@ class TestClusterNode(unittest.TestCase):
 		 			  Document('this is not a cigar', { 'cigar': 1 }) ]
 		cluster = Cluster(documents)
 
-		node = TopicalClusterNode()
+		node = TopicalClusterNode(0)
 		node.add(cluster, cluster.centroid)
 		self.assertEqual([ cluster ], node.clusters)
 		self.assertEqual([ cluster.centroid ], node.topics)
@@ -186,7 +179,7 @@ class TestClusterNode(unittest.TestCase):
 		documents = [ Document('this is not a pipe', { 'pipe': 1 }),
 		 			  Document('this is not a cigar', { 'cigar': 1 }) ]
 
-		node = TopicalClusterNode()
+		node = TopicalClusterNode(0)
 		cluster = Cluster(documents)
 		node.add(cluster, cluster.centroid)
 		self.assertEqual([ cluster ], node.clusters)
@@ -203,7 +196,7 @@ class TestClusterNode(unittest.TestCase):
 		documents = [ Document('this is not a pipe', { 'pipe': 1 }),
 		 			  Document('this is not a cigar', { 'cigar': 1 }) ]
 
-		node = TopicalClusterNode()
+		node = TopicalClusterNode(0)
 		cluster = Cluster(documents)
 		node.add(cluster, cluster.centroid)
 		self.assertEqual([ cluster ], node.clusters)
@@ -220,7 +213,7 @@ class TestClusterNode(unittest.TestCase):
 		documents = [ Document('this is not a pipe', { 'pipe': 1 }),
 		 			  Document('this is not a cigar', { 'cigar': 1 }) ]
 
-		node = TopicalClusterNode()
+		node = TopicalClusterNode(0)
 		cluster = Cluster(documents)
 		node.add(cluster, cluster.centroid)
 		self.assertEqual([ cluster ], node.clusters)
@@ -238,7 +231,7 @@ class TestClusterNode(unittest.TestCase):
 		 			  Document('this is not a cigar', { 'cigar': 1 }) ]
 		document = Document('this is a picture of dorian gray', { 'picture': 1, 'dorian': 1, 'gray': 1 })
 
-		node = TopicalClusterNode()
+		node = TopicalClusterNode(0)
 		cluster = Cluster(documents)
 		node.add(cluster, cluster.centroid)
 		self.assertEqual([ cluster ], node.clusters)
@@ -250,7 +243,7 @@ class TestClusterNode(unittest.TestCase):
 		Reverse the procedure.
 		"""
 
-		node = TopicalClusterNode()
+		node = TopicalClusterNode(0)
 		cluster = Cluster(document)
 		node.add(cluster, cluster.centroid)
 		self.assertEqual([ cluster ], node.clusters)
@@ -268,7 +261,7 @@ class TestClusterNode(unittest.TestCase):
 		"""
 		document = Document('this is a pipe and this is a cigar', { 'cigar': 1, 'pipe': 1 })
 
-		node = TopicalClusterNode()
+		node = TopicalClusterNode(0)
 		cluster = Cluster(document)
 		node.add(cluster, Vector({ 'pipe': 1 }))
 
@@ -285,7 +278,7 @@ class TestClusterNode(unittest.TestCase):
 		"""
 		document = Document('this is a pipe and this is a cigar', { 'cigar': 1, 'pipe': 1 })
 
-		node = TopicalClusterNode()
+		node = TopicalClusterNode(0)
 		cluster = Cluster(document)
 		node.add(cluster, Vector({ 'pipe': 1 }))
 
@@ -297,7 +290,7 @@ class TestClusterNode(unittest.TestCase):
 		Test exporting and importing topical cluster nodes.
 		"""
 
-		node = TopicalClusterNode()
+		node = TopicalClusterNode(0)
 		e = node.to_array()
 		self.assertEqual(node.created_at, TopicalClusterNode.from_array(e).created_at)
 		self.assertEqual(node.clusters, TopicalClusterNode.from_array(e).clusters)
@@ -312,7 +305,7 @@ class TestClusterNode(unittest.TestCase):
 		clusters = [ Cluster(Document('', { 'a': 1 }), attributes={ 'b': 2 }),
 					 Cluster(Vector({ 'c': 3 }), attributes={ 'd': 4 }) ]
 		topics = [ Vector({ 'p': 1 }, { 'y': 2 }), Vector({ 'q': 2 }, { 'x': 1}) ]
-		node = TopicalClusterNode(clusters=clusters, topics=topics)
+		node = TopicalClusterNode(0, clusters=clusters, topics=topics)
 		e = node.to_array()
 		self.assertEqual(node.created_at, TopicalClusterNode.from_array(e).created_at)
 		self.assertTrue(all(cluster['class'] == "<class 'vsm.clustering.cluster.Cluster'>" for cluster in e['clusters']))
@@ -333,7 +326,7 @@ class TestClusterNode(unittest.TestCase):
 		clusters = [ Cluster(Document('', { 'a': 1 }), attributes={ 'b': 2 }),
 					 Cluster(Vector({ 'c': 3 }), attributes={ 'd': 4 }) ]
 		topics = [ Vector({ 'p': 1 }, { 'y': 2 }), Document('text', { 'q': 2 }, attributes={ 'x': 1}) ]
-		node = TopicalClusterNode(clusters=clusters, topics=topics)
+		node = TopicalClusterNode(0, clusters=clusters, topics=topics)
 		e = node.to_array()
 		i = TopicalClusterNode.from_array(e)
 		self.assertEqual(node.created_at, i.created_at)

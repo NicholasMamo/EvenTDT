@@ -26,12 +26,11 @@ class TopicalClusterNode(ClusterNode):
 	:type topics: list of :class:`~vsm.vector.Vector`
 	"""
 
-	def __init__(self, created_at=None, clusters=None, topics=None):
+	def __init__(self, created_at, clusters=None, topics=None):
 		"""
 		Create the node.
 
 		:param created_at: The timestamp when the node was created.
-						   If the timestamp is not given, the current time is used.
 		:type created_at: float
 		:param clusters: The initial list of clusters in this node.
 		:type clusters: list of :class:`~vsm.clustering.cluster.Cluster`

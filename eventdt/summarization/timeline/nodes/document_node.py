@@ -25,12 +25,11 @@ class DocumentNode(Node):
 	:vartype documents: list of :class:`~nlp.document.Document`
 	"""
 
-	def __init__(self, created_at=None, documents=None):
+	def __init__(self, created_at, documents=None):
 		"""
 		Create the node.
 
 		:param created_at: The timestamp when the node was created.
-						   If the timestamp is not given, the current time is used.
 		:type created_at: float
 		:param documents: The initial list of documents in this node.
 		:type documents: list of :class:`~nlp.document.Document`

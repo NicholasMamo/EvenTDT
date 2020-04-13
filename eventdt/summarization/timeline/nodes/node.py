@@ -36,16 +36,15 @@ class Node(Exportable):
 	:vartype created_at: float
 	"""
 
-	def __init__(self, created_at=None):
+	def __init__(self, created_at):
 		"""
 		Create the node.
 
 		:param created_at: The timestamp when the node was created.
-						   If the timestamp is not given, the current time is used.
 		:type created_at: float
 		"""
 
-		self.created_at = created_at if created_at is not None else time.time()
+		self.created_at = created_at
 
 	@abstractmethod
 	def add(self, *args, **kwargs):
@@ -80,7 +79,7 @@ class Node(Exportable):
 
 		pass
 
-	def expired(self, expiry, timestamp=None):
+	def expired(self, expiry, timestamp):
 		"""
 		Check whether the node has expired.
 		A node has expired if a certain time has passed.
@@ -88,10 +87,9 @@ class Node(Exportable):
 		If a node has not expired, another one cannot be created.
 
 		:param expiry: The lifetime of a node before it is said to expire.
-					   It is measured in timestamps.
+					   It is measured in seconds.
 		:type expiry: float
 		:param timestamp: The current timestamp.
-						  If the timestamp is not given, the current time is used.
 		:type timestamp: float
 
 		:raises ValueError: When the expiry is negative.
@@ -100,5 +98,4 @@ class Node(Exportable):
 		if expiry < 0:
 			raise ValueError(f"The expiry cannot be negative: received {expiry}")
 
-		timestamp = timestamp or time.time()
 		return timestamp - self.created_at >= expiry
