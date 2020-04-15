@@ -21,6 +21,8 @@ path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
+from nlp.tokenizer import Tokenizer
+
 from .summarization import SummarizationAlgorithm
 from summarization import Summary
 
@@ -31,7 +33,17 @@ class DGS(SummarizationAlgorithm):
 	"""
 	The Document Graph Summarizer (DGS) is an algorithm that minimizes redundancy by splitting documents into communities.
 	The algorithm receives documents and builds a summary from the largest communities to capture all facets.
+
+	:ivar tokenizer: The tokenizer used to calculate the brevity score.
+	:vartype tokenizer: :class:`~nlp.tokenizer.Tokenizer`
 	"""
+
+	def __init__(self):
+		"""
+		Create the DGS summarization algorithm with a tokenizer.
+		"""
+
+		self.tokenizer = Tokenizer(min_length=1)
 
 	def summarize(self, documents, length, query=None, *args, **kwargs):
 		"""
@@ -254,12 +266,56 @@ class DGS(SummarizationAlgorithm):
 		for community in communities:
 			subgraph = graph.subgraph(community)
 			centrality_scores = centrality.eigenvector_centrality(subgraph)
+			brevity_scores = { document: self._brevity_score(document.text)
+						  	   for document in subgraph.nodes }
 			relevance = { document: vector_math.cosine(document, query)
 						  for document in subgraph.nodes }
-			scores.append({ document: centrality_scores[document] * relevance[document]
+			scores.append({ document: brevity_scores[document] * centrality_scores[document] * relevance[document]
 			 				for document in subgraph.nodes })
 
 		return scores
+
+	def _brevity_score(self, text, r=10, *args, **kwargs):
+		"""
+		Calculate the brevity score, bounded between 0 and 1.
+		This score is based on `BLEU: a Method for Automatic Evaluation of Machine Translation by Papineni et al. (2002) <https://dl.acm.org/doi/10.3115/1073083.1073135>`:
+
+		.. math::
+
+			score = max(1, e^{1 - \\frac{r}{c}})
+
+		where :math:`c` is the number of tokens in the text, and :math:`r` is the ideal number of tokens.
+		The score is based on the default tokenizezr.
+
+		The score is 1 even when the tweet is longer than the desired length.
+		In this way, the brevity score is more akin to a brevity penalty.
+
+		:param text: The text to score.
+					 The text is tokanized by the function.
+		:type text: str
+		:param r: The ideal number of tokens in the text.
+		:type r: str
+
+		:return: The brevity score, bounded between 0 and 1.
+		:rtype: float
+		"""
+
+		"""
+		The tokens are extracted using the same method as in the consumer.
+		"""
+		tokens = self.tokenizer.tokenize(text)
+
+		"""
+		If the text has no tokens, then the score is 0.
+		"""
+		if not len(tokens):
+			return 0
+
+		"""
+		If there are tokens in the text, the score is calculated using the formula.
+		If there are more tokens than the desired length, the score is capped at 1.
+		"""
+		return min(math.exp(1 - r/len(tokens)), 1)
 
 	def _filter_documents(self, documents, summary, length):
 		"""

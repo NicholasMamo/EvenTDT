@@ -729,9 +729,8 @@ class TestDGS(unittest.TestCase):
 		self.assertEqual(1, len(scores))
 		scores = scores[0]
 		self.assertEqual(0, scores[corpus[0]])
-		self.assertEqual(scores[corpus[1]], max(scores.values()))
+		self.assertEqual(scores[corpus[2]], max(scores.values()))
 		self.assertEqual(scores[corpus[-1]], max(scores.values()))
-		self.assertEqual(scores[corpus[1]], scores[corpus[-1]])
 
 	def test_score_documents_centrality(self):
 		"""
@@ -754,7 +753,7 @@ class TestDGS(unittest.TestCase):
 		scores = algo._score_documents(graph, [ { *corpus } ], query)
 		self.assertEqual(1, len(scores))
 		scores = scores[0]
-		self.assertEqual(scores[corpus[0]], min(scores.values()))
+		self.assertEqual(scores[corpus[1]], min(scores.values()))
 		self.assertEqual(scores[corpus[-1]], max(scores.values()))
 		self.assertGreater(scores[corpus[-1]], scores[corpus[1]])
 
@@ -781,6 +780,57 @@ class TestDGS(unittest.TestCase):
 		self.assertEqual(2, len(scores))
 		self.assertEqual(set(corpus[:2]), set(scores[0].keys()))
 		self.assertEqual(set(corpus[2:]), set(scores[1].keys()))
+
+	def test_brevity_score(self):
+		"""
+		Test the calculation of the brevity score.
+		"""
+
+		algo = DGS()
+		text = 'this is a pipe'
+		self.assertEqual(0.22313, round(algo._brevity_score(text, r=10), 5))
+
+	def test_brevity_score_equal(self):
+		"""
+		Test that when the text has as many tokens as required, the score is 1.
+		"""
+
+		algo = DGS()
+		text = 'a pipe is not a cigar and a cigar is not a pipe'
+		self.assertEqual(1, algo._brevity_score(text, r=4))
+
+	def test_brevity_score_long(self):
+		"""
+		Test that when the text has more tokens than required, the score is 1.
+		"""
+
+		algo = DGS()
+		text = 'a pipe is not a cigar and a cigar is not a pipe'
+		self.assertEqual(1, algo._brevity_score(text, r=3))
+
+	def test_brevity_score_bounds(self):
+		"""
+		Test that the bounds of the brevity score are between 0 and 1.
+		"""
+
+		algo = DGS()
+
+		text = ''
+		self.assertEqual(0, algo._brevity_score(text))
+		text = 'a pipe is not a cigar and a cigar is not a pipe'
+		self.assertEqual(1, algo._brevity_score(text, r=3))
+
+	def test_brevity_score_custom_r(self):
+		"""
+		Test that when a custom ideal length is given, it is used.
+		"""
+
+		algo = DGS()
+
+		text = 'a pipe is not a cigar'
+		self.assertEqual(0.84648, round(algo._brevity_score(text, r=7), 5))
+		text = 'a pipe is not a cigar'
+		self.assertEqual(0.60653, round(algo._brevity_score(text, r=9), 5))
 
 	def test_filter_documents_empty(self):
 		"""
