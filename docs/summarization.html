@@ -508,6 +508,17 @@ In this way, the algorithm can maximize precision by minimizing redundancy.</p>
 <em class="property">class </em><code class="sig-name descname">DGS</code><a class="headerlink" href="#summarization.algorithms.dgs.DGS" title="Permalink to this definition">¶</a></dt>
 <dd><p>The Document Graph Summarizer (DGS) is an algorithm that minimizes redundancy by splitting documents into communities.
 The algorithm receives documents and builds a summary from the largest communities to capture all facets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><p><a class="reference internal" href="nlp.html#module-nlp.tokenizer" title="nlp.tokenizer"><strong>tokenizer</strong></a> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer used to calculate the brevity score.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="summarization.algorithms.dgs.DGS.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.dgs.DGS.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the DGS summarization algorithm with a tokenizer.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="summarization.algorithms.dgs.DGS.summarize">
 <code class="sig-name descname">summarize</code><span class="sig-paren">(</span><em class="sig-param">documents</em>, <em class="sig-param">length</em>, <em class="sig-param">query=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.dgs.DGS.summarize" title="Permalink to this definition">¶</a></dt>
@@ -659,6 +670,34 @@ The keys are the documents and the values their scores.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>list of dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="summarization.algorithms.dgs.DGS._brevity_score">
+<code class="sig-name descname">_brevity_score</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">r=10</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.dgs.DGS._brevity_score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the brevity score, bounded between 0 and 1.
+This score is based on <cite>BLEU: a Method for Automatic Evaluation of Machine Translation by Papineni et al. (2002) &lt;https://dl.acm.org/doi/10.3115/1073083.1073135&gt;</cite>:</p>
+<div class="math notranslate nohighlight">
+\[score = max(1, e^{1 - \frac{r}{c}})\]</div>
+<p>where <span class="math notranslate nohighlight">\(c\)</span> is the number of tokens in the text, and <span class="math notranslate nohighlight">\(r\)</span> is the ideal number of tokens.
+The score is based on the default tokenizezr.</p>
+<p>The score is 1 even when the tweet is longer than the desired length.
+In this way, the brevity score is more akin to a brevity penalty.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – The text to score.
+The text is tokanized by the function.</p></li>
+<li><p><strong>r</strong> (<em>str</em>) – The ideal number of tokens in the text.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The brevity score, bounded between 0 and 1.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
