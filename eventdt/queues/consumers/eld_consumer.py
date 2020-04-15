@@ -387,7 +387,13 @@ class ELDConsumer(Consumer):
 						timeline.add(timestamp=latest_timestamp, cluster=cluster, topic=topic)
 						if len(timeline.nodes) > nodes and len(timeline.nodes) > 1:
 							node = timeline.nodes[-2]
-							summary_documents = self._score_documents(node.get_all_documents())[:50]
+							"""
+							The documents that go into the new summary are preferably not too short.
+							If there are no documents that are sufficiently long, any documents can be used instead.
+							"""
+							summary_documents = [ document for document in node.get_all_documents() if self._brevity_score(document.text) > 0.5 ]
+							summary_documents = summary_documents or node.get_all_documents()
+							summary_documents = self._score_documents(summary_documents)[:50]
 							for document in summary_documents:
 								document.text = self.cleaner.clean(document.text)
 
