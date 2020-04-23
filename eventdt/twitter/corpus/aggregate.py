@@ -23,3 +23,16 @@ def aggregate(corpus, bin_size=60, skip_bins=0, track=None):
 	"""
 
 	pass
+
+def volume(bin):
+	"""
+	Count the number of documents in the given bin.
+
+	:param bin: A bin containing a list of tweets published at that time.
+	:type bin: list of dict
+
+	:return: The number of tweets in the bin.
+	:rtype: int
+	"""
+
+	return list(bin)
