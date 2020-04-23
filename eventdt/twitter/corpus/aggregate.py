@@ -4,7 +4,7 @@ This can be used to create volume time-series, for example.
 Other aggregation functions can be provided.
 """
 
-def aggregate(corpus, bin_size=60, skip_bins=0, track=None):
+def aggregate(corpus, bin_size=60, skip_bins=0, track=None, aggregation=volume):
 	"""
 
 	:param corpus: The file handle containing the data.
@@ -17,6 +17,9 @@ def aggregate(corpus, bin_size=60, skip_bins=0, track=None):
     :param track: The keywords to track.
                   If it is not None, only documents mentioning the keyword are counted.
     :type track: None, str or list of str
+	:param aggregation: The aggregation function to use.
+						Defaults to simple volume.
+	:type aggregation: func
 
 	:return: The tweets in the corpus aggregated into bins.
     :rtype: dict
