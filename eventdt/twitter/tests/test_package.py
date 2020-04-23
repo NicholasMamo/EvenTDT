@@ -20,7 +20,7 @@ class TestPackage(unittest.TestCase):
 	Test the functionality of the tweet package-level functions.
 	"""
 
-	def test_timestamp_date(self):
+	def test_timestamp_ms_date(self):
 		"""
 		Test that the timestamp date is the same and correct for all tweets in the corpus.
 		"""
@@ -34,3 +34,58 @@ class TestPackage(unittest.TestCase):
 				self.assertEqual(14, date.day)
 				self.assertEqual(14, date.hour)
 				self.assertTrue(date.minute in range(39, 42))
+
+	def test_timestamp_created_at_date(self):
+		"""
+		Test that the timestamp date is the same and correct for all tweets in the corpus.
+		In this test, the millisecond timestamp is removed so the created-at date is used instead.
+		"""
+
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			for line in f:
+				tweet = json.loads(line)
+				self.assertTrue('created_at' in tweet)
+				self.assertTrue('timestamp_ms' in tweet)
+				del tweet['timestamp_ms']
+				self.assertTrue('created_at' in tweet)
+				self.assertFalse('timestamp_ms' in tweet)
+				date = datetime.fromtimestamp(twitter.extract_timestamp(tweet))
+				self.assertEqual(2020, date.year)
+				self.assertEqual(3, date.month)
+				self.assertEqual(14, date.day)
+				self.assertEqual(14, date.hour)
+				self.assertTrue(date.minute in range(39, 42))
+
+	def test_timestamp_ms_equal_created_at(self):
+		"""
+		Test that the timestamp extracted from the milli-seconds is equal to the timestamp from the created-at field.
+		"""
+
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			for line in f:
+				tweet = json.loads(line)
+				del tweet['timestamp_ms']
+				self.assertTrue('created_at' in tweet)
+				self.assertFalse('timestamp_ms' in tweet)
+				created_at = twitter.extract_timestamp(tweet)
+
+				tweet = json.loads(line)
+				del tweet['created_at']
+				self.assertFalse('created_at' in tweet)
+				self.assertTrue('timestamp_ms' in tweet)
+				timestamp_ms = twitter.extract_timestamp(tweet)
+				self.assertEqual(created_at, timestamp_ms)
+
+	def test_timestamp_no_fields(self):
+		"""
+		Test that when there are no valid fields, a KeyError is raised.
+		"""
+
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			line = f.readline()
+			tweet = json.loads(line)
+			del tweet['timestamp_ms']
+			del tweet['created_at']
+			self.assertFalse('timestamp_ms' in tweet)
+			self.assertFalse('created_at' in tweet)
+			self.assertRaises(KeyError, twitter.extract_timestamp, tweet)
