@@ -14,7 +14,9 @@ if path not in sys.path:
     sys.path.append(path)
 
 from nlp.document import Document
+from nlp.tokenizer import Tokenizer
 from twitter.corpus.aggregate import *
+from vsm import vector_math
 
 class TestAggregate(unittest.TestCase):
 	"""
@@ -56,3 +58,137 @@ class TestAggregate(unittest.TestCase):
 
 		self.assertEqual(1, volume([ Document('a', { 'b': 1 }),
 									 Document('a', { 'c': 1 }) ], track='b'))
+
+	def test_to_documents_tweet(self):
+		"""
+		Test that when creating a document from a tweet, the tweet is saved as an attribute.
+		"""
+
+		tokenizer = Tokenizer()
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			tweet = json.loads(f.readline())
+			document = to_documents([ tweet ], tokenizer)[0]
+			self.assertEqual(tweet, document.attributes['tweet'])
+
+	def test_to_documents_ellipsis(self):
+		"""
+		Test that when the text has an ellipsis, the full text is used.
+		"""
+
+		tokenizer = Tokenizer()
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			for line in f:
+				tweet = json.loads(line)
+				if '…' in tweet['text']:
+					document = to_documents([ tweet ], tokenizer)[0]
+
+					"""
+					Make an exception for a special case.
+					"""
+					if not ('retweeted_status' in tweet and tweet['retweeted_status']['id_str'] == '1238513167573147648'):
+						self.assertFalse(document.text.endswith('…'))
+
+	def test_to_documents_quoted(self):
+		"""
+		Test that when the tweet is a quote, the text is used, not the quoted tweet's text.
+		"""
+
+		tokenizer = Tokenizer()
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			for line in f:
+				tweet = json.loads(line)
+				if 'retweeted_status' in tweet:
+					timestamp = tweet['timestamp_ms']
+					tweet = tweet['retweeted_status']
+					tweet['timestamp_ms'] = timestamp
+
+				if 'quoted_status' in tweet:
+					document = to_documents([ tweet ], tokenizer)[0]
+
+					if 'extended_tweet' in tweet:
+						self.assertEqual(tweet["extended_tweet"].get("full_text", tweet.get("text", "")), document.text)
+					else:
+						self.assertEqual(tweet.get('text'), document.text)
+
+	def test_to_documents_retweeted(self):
+		"""
+		Test that when the tweet is a quote, the retweet's text is used.
+		"""
+
+		tokenizer = Tokenizer()
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			for line in f:
+				tweet = json.loads(line)
+				if 'retweeted_status' in tweet:
+					document = to_documents([ tweet ], tokenizer)[0]
+
+					retweet = tweet['retweeted_status']
+					if 'extended_tweet' in retweet:
+						self.assertEqual(retweet["extended_tweet"].get("full_text", retweet.get("text", "")), document.text)
+					else:
+						self.assertEqual(retweet.get('text'), document.text)
+
+					"""
+					Tweets shouldn't start with 'RT'.
+					"""
+					self.assertFalse(document.text.startswith('RT'))
+
+	def test_to_documents_normal(self):
+		"""
+		Test that when the tweet is not a quote or retweet, the full text is used.
+		"""
+
+		tokenizer = Tokenizer()
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			for line in f:
+				tweet = json.loads(line)
+				if not 'retweeted_status' in tweet and not 'quoted_status' in tweet:
+					document = to_documents([ tweet ], tokenizer)[0]
+
+					if 'extended_tweet' in tweet:
+						self.assertEqual(tweet["extended_tweet"].get("full_text", tweet.get("text", "")), document.text)
+					else:
+						self.assertEqual(tweet.get('text'), document.text)
+
+					"""
+					There should be no ellipsis in the text now.
+					"""
+					self.assertFalse(document.text.endswith('…'))
+
+	def test_to_documents_normalized(self):
+		"""
+		Test that the documents are returned normalized.
+		"""
+
+		tokenizer = Tokenizer()
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			for line in f:
+				tweet = json.loads(line)
+				document = to_documents([ tweet ], tokenizer)[0]
+				self.assertEqual(1, round(vector_math.magnitude(document), 10))
+
+	def test_to_documents_all(self):
+		"""
+		Test that when a list of documents are given, they are all converted to documents.
+		"""
+
+		tokenizer = Tokenizer()
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = to_documents(tweets, tokenizer)
+			self.assertEqual(len(tweets), len(documents))
+
+	def test_to_documents_order(self):
+		"""
+		Test that when a list of documents are given, the correct order is retained,
+		This test checks that the tweets are assigned correctly.
+		"""
+
+		tokenizer = Tokenizer()
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = to_documents(tweets, tokenizer)
+			for (tweet, document) in zip(tweets, documents):
+				self.assertEqual(tweet, document.attributes['tweet'])
