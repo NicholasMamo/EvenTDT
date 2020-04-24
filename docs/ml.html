@@ -219,6 +219,32 @@ Otherwise, if the antecedent doesn’t contribute more to the consequent with it
 </dl>
 </dd></dl>
 
+<dl class="function">
+<dt id="ml.association.confidence">
+<code class="sig-name descname">confidence</code><span class="sig-paren">(</span><em class="sig-param">transactions</em>, <em class="sig-param">antecedent</em>, <em class="sig-param">consequent</em><span class="sig-paren">)</span><a class="headerlink" href="#ml.association.confidence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the confidence for the given antecedent and consequent in the given transactions.</p>
+<p>It is the posterior probability of the consequent given the antecedent:</p>
+<div class="math notranslate nohighlight">
+\[c_{\{X, Y\} \implies \{Z\}} = \frac{s_{\{X, Y, Z\}}}{s_{\{X, Y\}}}\]</div>
+<p>where <span class="math notranslate nohighlight">\(c_{\{X, Y\} \implies \{Z\}}\)</span> is the confidence of the association rule <span class="math notranslate nohighlight">\(\{X, Y\} \implies \{Z\}\)</span>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>transactions</strong> (<em>list of list</em>) – A list of transactions, each containing any number of items.</p></li>
+<li><p><strong>antecedent</strong> (<em>list</em><em> or </em><em>set</em>) – The antecedent is the condition for the association rule.
+It is presented as a set of items.</p></li>
+<li><p><strong>consequent</strong> (<em>list</em><em> or </em><em>set</em>) – The consequent is the conclusion of the antecedent.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The confidence of the association rule.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 </div>
 

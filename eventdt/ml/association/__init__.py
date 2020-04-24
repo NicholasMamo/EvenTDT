@@ -58,7 +58,7 @@ def support(transactions, itemset):
 	where :math:`s_X` is the support of :math:`s_X` and :math:`T` is the set of transactions.
 
 	:param transactions: A list of transactions, each containing any number of items.
-	:type transactions: list of list
+	:type transactions: list of list or list of set
 	:param itemset: The itemset for which to calculate the support.
 	:type itemset: list or set
 
@@ -72,3 +72,33 @@ def support(transactions, itemset):
 	cover = [ transaction for transaction in transactions
 			  if all( item in transaction for item in itemset ) ]
 	return len(cover) / len(transactions)
+
+def confidence(transactions, antecedent, consequent):
+	"""
+	Calculate the confidence for the given antecedent and consequent in the given transactions.
+
+	It is the posterior probability of the consequent given the antecedent:
+
+	.. math::
+
+		c_{\{X, Y\} \\implies \{Z\}} = \\frac{s_{\{X, Y, Z\}}}{s_{\{X, Y\}}}
+
+	where :math:`c_{\{X, Y\} \\implies \{Z\}}` is the confidence of the association rule :math:`\{X, Y\} \\implies \{Z\}`.
+
+	:param transactions: A list of transactions, each containing any number of items.
+	:type transactions: list of list or list of set
+	:param antecedent: The antecedent is the condition for the association rule.
+					   It is presented as a set of items.
+	:type antecedent: list or set
+	:param consequent: The consequent is the conclusion of the antecedent.
+	:type consequent: list or set
+
+	:return: The confidence of the association rule.
+	:rtype: float
+	"""
+
+	antecedent_support = support(transactions, antecedent)
+	if antecedent_support > 0:
+		return support(transactions, set( set(antecedent).union(set(consequent)) ))/antecedent_support
+
+	return 0

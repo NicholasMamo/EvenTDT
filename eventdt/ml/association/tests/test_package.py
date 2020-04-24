@@ -61,3 +61,45 @@ class TestPackage(unittest.TestCase):
 		"""
 
 		self.assertEqual(0.5, association.support([ { 'A', 'A' }, { 'B' } ], { 'A' }))
+
+	def test_confidence_empty_transactions(self):
+		"""
+		Test that when the transactions are empty, the confidence is always 0.
+		"""
+
+		self.assertEqual(0, association.confidence([ ], { }, { }))
+
+	def test_confidence_unknown_antecedent(self):
+		"""
+		Test that when the antecedent never appears, the confidence is 0.
+		"""
+
+		self.assertEqual(0, association.confidence([ { 'A', 'B' }, { 'A', 'B', 'C' } ], { 'D' }, { }))
+
+	def test_confidence_empty_consequent(self):
+		"""
+		Test that when the consequent is empty and the antecedent is known, the confidence is 1.
+		"""
+
+		self.assertEqual(1.0, association.confidence([ { 'A', 'B' }, { 'A', 'B', 'C' } ], { 'A' }, { }))
+
+	def test_confidence_whole(self):
+		"""
+		Test that when the antecedent and consequent always appear together, the confidence is 1.
+		"""
+
+		self.assertEqual(1.0, association.confidence([ { 'A', 'B' }, { 'A', 'B', 'C' } ], { 'A' }, { 'B' }))
+
+	def test_confidence_partial(self):
+		"""
+		Test that when the antecedent and consequent do not always appear together, the confidence is a fraction.
+		"""
+
+		self.assertEqual(0.5, association.confidence([ { 'A', 'B' }, { 'A', 'B', 'C' } ], { 'A', 'B' }, { 'C' }))
+
+	def test_confidence_antecedent_condition(self):
+		"""
+		Test that transactions without the antecedent are not used to compute the confidence.
+		"""
+
+		self.assertEqual(0.5, association.confidence([ { 'A', 'B' }, { 'A', 'B', 'C' }, { 'B', 'C' } ], { 'A', 'B' }, { 'C' }))
