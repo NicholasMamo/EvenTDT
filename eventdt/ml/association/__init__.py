@@ -44,3 +44,31 @@ Otherwise, if the antecedent doesn't contribute more to the consequent with its 
 
 where :math:`l_{\{X, Y\} \\implies \{Z\}}` is the lift of the association rule.
 """
+
+def support(transactions, itemset):
+	"""
+	Calculate the support of the itemset in the given transactions.
+
+	The support of an item or a set of items is the number of transactions in which it appears:
+
+	.. math::
+
+		s_X = \\frac{|\{ t | X \\in t, t \\in T \}|}{|T|}
+
+	where :math:`s_X` is the support of :math:`s_X` and :math:`T` is the set of transactions.
+
+	:param transactions: A list of transactions, each containing any number of items.
+	:type transactions: list of list
+	:param itemset: The itemset for which to calculate the support.
+	:type itemset: list or set
+
+	:return: The support of the itemset in the given transactions.
+	:rtype: float
+	"""
+
+	if not transactions:
+		return 0
+
+	cover = [ transaction for transaction in transactions
+			  if all( item in transaction for item in itemset ) ]
+	return len(cover) / len(transactions)

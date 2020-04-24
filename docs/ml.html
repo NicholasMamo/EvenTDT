@@ -195,6 +195,30 @@ Otherwise, if the antecedent doesn’t contribute more to the consequent with it
 <div class="math notranslate nohighlight">
 \[l_{\{X, Y\} \implies \{Z\}} = \frac{s_{\{X, Y, Z\}}}{s_{\{X, Y\}} \cdot s_{\{Z\}}}\]</div>
 <p>where <span class="math notranslate nohighlight">\(l_{\{X, Y\} \implies \{Z\}}\)</span> is the lift of the association rule.</p>
+<dl class="function">
+<dt id="ml.association.support">
+<code class="sig-name descname">support</code><span class="sig-paren">(</span><em class="sig-param">transactions</em>, <em class="sig-param">itemset</em><span class="sig-paren">)</span><a class="headerlink" href="#ml.association.support" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the support of the itemset in the given transactions.</p>
+<p>The support of an item or a set of items is the number of transactions in which it appears:</p>
+<div class="math notranslate nohighlight">
+\[s_X = \frac{|\{ t | X \in t, t \in T \}|}{|T|}\]</div>
+<p>where <span class="math notranslate nohighlight">\(s_X\)</span> is the support of <span class="math notranslate nohighlight">\(s_X\)</span> and <span class="math notranslate nohighlight">\(T\)</span> is the set of transactions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>transactions</strong> (<em>list of list</em>) – A list of transactions, each containing any number of items.</p></li>
+<li><p><strong>itemset</strong> (<em>list</em><em> or </em><em>set</em>) – The itemset for which to calculate the support.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The support of the itemset in the given transactions.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 </div>
 
