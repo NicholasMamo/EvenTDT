@@ -169,21 +169,32 @@
 <p>The machine learning package contains algorithms that don’t quite fit into any other package.</p>
 <span class="target" id="module-ml"></span><div class="section" id="module-ml.association">
 <span id="association-rule-mining"></span><h2>Association Rule Mining<a class="headerlink" href="#module-ml.association" title="Permalink to this headline">¶</a></h2>
-<p>Association rule mining is used to find items that are correlated.
+<p>Association rule mining is used to find items that are correlated in transactions.
 Association rules are made up of an antecedent and a consequent:</p>
 <div class="math notranslate nohighlight">
-\[\{X, Y\} =&gt; \{Z\}\]</div>
+\[\{X, Y\} \implies \{Z\}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\{X, Y\}\)</span> is the antecedent and <span class="math notranslate nohighlight">\(\{Z\}\)</span> is the consequent.
 Both the antecedent and consequent are sets.</p>
-<p>Key to association rule mining are:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>Itemset: The antecedent and consequent,</p></li>
-<li><p>Support: The fraction of transactions that contain all items in the itemset,</p></li>
-<li><p>Confidence: The posterior probability of the support given the antecedent,</p></li>
-<li><p>Lift: The ratio of confidence of the association rule divided by the consequent’s support.</p></li>
-</ul>
-</div></blockquote>
+<p>Key to association rule mining are transactions, the itemset, the support, the confidence and the lift of association rules.</p>
+<p>Association rules are built from transactions.
+Each transaction has associated with it a number of items.</p>
+<p>The itemset is the set comprising all items in the antecedent and consequent.
+For example, the itemset of <span class="math notranslate nohighlight">\(\{X, Y\} \implies \{Z\}\)</span> is <span class="math notranslate nohighlight">\(\{X, Y, Z\}\)</span>.</p>
+<p>The support of an item or a set of items is the number of transactions in which it appears:</p>
+<div class="math notranslate nohighlight">
+\[s_X = \frac{|\{ t | X \in t, t \in T \}|}{|T|}\]</div>
+<p>where <span class="math notranslate nohighlight">\(s_X\)</span> is the support of <span class="math notranslate nohighlight">\(s_X\)</span> and <span class="math notranslate nohighlight">\(T\)</span> is the set of transactions.</p>
+<p>Confidence is calculated for association rules.
+It is the posterior probability of the consequent given the antecedent:</p>
+<div class="math notranslate nohighlight">
+\[c_{\{X, Y\} \implies \{Z\}} = \frac{s_{\{X, Y, Z\}}}{s_{\{X, Y\}}}\]</div>
+<p>where <span class="math notranslate nohighlight">\(c_{\{X, Y\} \implies \{Z\}}\)</span> is the confidence of the association rule <span class="math notranslate nohighlight">\(\{X, Y\} \implies \{Z\}\)</span>.</p>
+<p>Lift avoids overweighting items by computing the ratio of the rule’s confidence as a function of the consequent’s support.
+If the antecedent really contributes to the consequent, the ratio will be greater than 1.
+Otherwise, if the antecedent doesn’t contribute more to the consequent with its presence, the lift will be less than 1.</p>
+<div class="math notranslate nohighlight">
+\[l_{\{X, Y\} \implies \{Z\}} = \frac{s_{\{X, Y, Z\}}}{s_{\{X, Y\}} \cdot s_{\{Z\}}}\]</div>
+<p>where <span class="math notranslate nohighlight">\(l_{\{X, Y\} \implies \{Z\}}\)</span> is the lift of the association rule.</p>
 </div>
 </div>
 
