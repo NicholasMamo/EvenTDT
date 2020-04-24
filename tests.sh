@@ -194,7 +194,6 @@ else
 	apd_tests
 	base_tests
 	nlp_tests
-	graph_tests
 	queue_tests
 	summarization_tests
 	topic_detection_tests
