@@ -52,6 +52,11 @@ base_tests() {
 	python3 -m unittest eventdt.objects.tests.test_ordered_enum
 }
 
+ml_tests() {
+	echo -e "${HIGHLIGHT}Association rules${DEFAULT}"
+	python -m unittest eventdt.ml.association.tests.test_package
+}
+
 nlp_tests() {
 	echo -e "${HIGHLIGHT}Term-weighting schemes${DEFAULT}"
 	python3 -m unittest eventdt.nlp.term_weighting.local_schemes.tests.test_boolean
@@ -164,6 +169,9 @@ then
 		base)
 			base_tests
 			;;
+		ml)
+			ml_tests
+			;;
 		nlp)
 			nlp_tests
 			;;
@@ -193,6 +201,7 @@ then
 else
 	apd_tests
 	base_tests
+	ml_tests
 	nlp_tests
 	queue_tests
 	summarization_tests
