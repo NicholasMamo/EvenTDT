@@ -172,7 +172,12 @@ The package itself has functions to help with processing.</p>
 <dl class="function">
 <dt id="twitter.extract_timestamp">
 <code class="sig-name descname">extract_timestamp</code><span class="sig-paren">(</span><em class="sig-param">tweet</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.extract_timestamp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the timestamp from the given tweet.</p>
+<dd><p>Get the timestamp from the given tweet.
+This function looks for the timestamp in one of two fields:</p>
+<ol class="arabic simple">
+<li><p><cite>timestamp_ms</cite> - present in top-level fields, and</p></li>
+<li><p><cite>created_at</cite> - present in <cite>retweeted_status</cite>, for example.</p></li>
+</ol>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>tweet</strong> (<em>dict</em>) – The tweet being considered.</p>
@@ -182,6 +187,9 @@ The package itself has functions to help with processing.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>int</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>KeyError</strong> – When no timestamp field can be found.</p>
 </dd>
 </dl>
 </dd></dl>
