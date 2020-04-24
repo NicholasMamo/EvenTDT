@@ -100,13 +100,6 @@ summarization_tests() {
 	python3 -m unittest eventdt.summarization.timeline.nodes.tests.test_document_node
 	python3 -m unittest eventdt.summarization.timeline.nodes.tests.test_cluster_node
 	python3 -m unittest eventdt.summarization.timeline.nodes.tests.test_topical_cluster_node
-
-	# echo -e "${HIGHLIGHT}Scorer${DEFAULT}"
-	# python3 -m unittest eventdt.summarization.scorers.tests.test_scorers
-	#
-	# echo -e "${HIGHLIGHT}Cleaning${DEFAULT}"
-	# python3 -m unittest eventdt.vsm.nlp.cleaners.tests.test_cleaners
-	return
 }
 
 topic_detection_tests() {
