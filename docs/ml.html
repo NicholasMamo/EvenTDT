@@ -194,7 +194,10 @@ If the antecedent really contributes to the consequent, the ratio will be greate
 Otherwise, if the antecedent doesn’t contribute more to the consequent with its presence, the lift will be less than 1.</p>
 <div class="math notranslate nohighlight">
 \[l_{\{X, Y\} \implies \{Z\}} = \frac{s_{\{X, Y, Z\}}}{s_{\{X, Y\}} \cdot s_{\{Z\}}}\]</div>
-<p>where <span class="math notranslate nohighlight">\(l_{\{X, Y\} \implies \{Z\}}\)</span> is the lift of the association rule.</p>
+<p>where <span class="math notranslate nohighlight">\(l_{\{X, Y\} \implies \{Z\}}\)</span> is the lift of the association rule.
+Lift can also be defined in terms of the confidence:</p>
+<div class="math notranslate nohighlight">
+\[l_{\{X, Y\} \implies \{Z\}} = \frac{c_{\{X, Y\} \implies \{Z\}}}{s_{\{Z\}}}\]</div>
 <dl class="function">
 <dt id="ml.association.support">
 <code class="sig-name descname">support</code><span class="sig-paren">(</span><em class="sig-param">transactions</em>, <em class="sig-param">itemset</em><span class="sig-paren">)</span><a class="headerlink" href="#ml.association.support" title="Permalink to this definition">¶</a></dt>
@@ -206,7 +209,7 @@ Otherwise, if the antecedent doesn’t contribute more to the consequent with it
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>transactions</strong> (<em>list of list</em>) – A list of transactions, each containing any number of items.</p></li>
+<li><p><strong>transactions</strong> (<em>list of list</em><em> or </em><em>list of set</em>) – A list of transactions, each containing any number of items.</p></li>
 <li><p><strong>itemset</strong> (<em>list</em><em> or </em><em>set</em>) – The itemset for which to calculate the support.</p></li>
 </ul>
 </dd>
@@ -230,7 +233,7 @@ Otherwise, if the antecedent doesn’t contribute more to the consequent with it
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>transactions</strong> (<em>list of list</em>) – A list of transactions, each containing any number of items.</p></li>
+<li><p><strong>transactions</strong> (<em>list of list</em><em> or </em><em>list of set</em>) – A list of transactions, each containing any number of items.</p></li>
 <li><p><strong>antecedent</strong> (<em>list</em><em> or </em><em>set</em>) – The antecedent is the condition for the association rule.
 It is presented as a set of items.</p></li>
 <li><p><strong>consequent</strong> (<em>list</em><em> or </em><em>set</em>) – The consequent is the conclusion of the antecedent.</p></li>
@@ -238,6 +241,37 @@ It is presented as a set of items.</p></li>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The confidence of the association rule.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ml.association.lift">
+<code class="sig-name descname">lift</code><span class="sig-paren">(</span><em class="sig-param">transactions</em>, <em class="sig-param">antecedent</em>, <em class="sig-param">consequent</em><span class="sig-paren">)</span><a class="headerlink" href="#ml.association.lift" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the lift for the given antecedent and consequent in the given transactions.</p>
+<p>Lift avoids overweighting items by computing the ratio of the rule’s confidence as a function of the consequent’s support.
+If the antecedent really contributes to the consequent, the ratio will be greater than 1.
+Otherwise, if the antecedent doesn’t contribute more to the consequent with its presence, the lift will be less than 1.</p>
+<div class="math notranslate nohighlight">
+\[l_{\{X, Y\} \implies \{Z\}} = \frac{s_{\{X, Y, Z\}}}{s_{\{X, Y\}} \cdot s_{\{Z\}}}\]</div>
+<p>where <span class="math notranslate nohighlight">\(l_{\{X, Y\} \implies \{Z\}}\)</span> is the lift of the association rule.
+Lift can also be defined in terms of the confidence:</p>
+<div class="math notranslate nohighlight">
+\[l_{\{X, Y\} \implies \{Z\}} = \frac{c_{\{X, Y\} \implies \{Z\}}}{s_{\{Z\}}}\]</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>transactions</strong> (<em>list of list</em><em> or </em><em>list of set</em>) – A list of transactions, each containing any number of items.</p></li>
+<li><p><strong>antecedent</strong> (<em>list</em><em> or </em><em>set</em>) – The antecedent is the condition for the association rule.
+It is presented as a set of items.</p></li>
+<li><p><strong>consequent</strong> (<em>list</em><em> or </em><em>set</em>) – The consequent is the conclusion of the antecedent.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The lift of the association rule.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>float</p>

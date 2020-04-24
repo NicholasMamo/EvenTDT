@@ -103,3 +103,45 @@ class TestPackage(unittest.TestCase):
 		"""
 
 		self.assertEqual(0.5, association.confidence([ { 'A', 'B' }, { 'A', 'B', 'C' }, { 'B', 'C' } ], { 'A', 'B' }, { 'C' }))
+
+	def test_lift_empty_transactions(self):
+		"""
+		Test that when the transactions are empty, the lift is always 0.
+		"""
+
+		self.assertEqual(0, association.lift([ ], { 'A', 'B' }, { 'C' }))
+
+	def test_lift_zero_consequent_support(self):
+		"""
+		Test that when the support of the consequent is zero, the lift is always 0.
+		"""
+
+		self.assertEqual(0, association.lift([ { 'A', 'B' }, { 'A' } ], { 'A', 'B' }, { 'C' }))
+
+	def test_lift_zero_antecedent_support(self):
+		"""
+		Test that when the support of the antecedent is zero, the lift is always 0.
+		"""
+
+		self.assertEqual(0, association.lift([ { 'C' } ], { 'A', 'B' }, { 'C' }))
+
+	def test_lift_positive(self):
+		"""
+		Test that when the antecedent is a predictor of the consequent, the lift is greater than 1.
+		"""
+
+		self.assertGreater(association.lift([ { 'A', 'B', 'C' }, { 'A', 'B', 'C', 'D' }, { 'D' }, { 'C' } ], { 'A', 'B' }, { 'C' }), 1)
+
+	def test_lift_negative(self):
+		"""
+		Test that when the antecedent is not a predictor of the consequent, the lift is less than 1.
+		"""
+
+		self.assertLess(association.lift([ { 'A', 'B', 'C' }, { 'A', 'B', 'D' }, { 'A', 'B', 'E' }, { 'D' }, { 'C' } ], { 'A', 'B' }, { 'C' }), 1)
+
+	def test_lift_independent(self):
+		"""
+		Test that when the consequent and antecedent are independentant, the lift is 1.
+		"""
+
+		self.assertEqual(1, association.lift([ { 'A', 'B', 'C' }, { 'A', 'B', 'D' }, { 'D' }, { 'C' } ], { 'A', 'B' }, { 'C' }))

@@ -43,6 +43,11 @@ Otherwise, if the antecedent doesn't contribute more to the consequent with its 
 	l_{\{X, Y\} \\implies \{Z\}} = \\frac{s_{\{X, Y, Z\}}}{s_{\{X, Y\}} \\cdot s_{\{Z\}}}
 
 where :math:`l_{\{X, Y\} \\implies \{Z\}}` is the lift of the association rule.
+Lift can also be defined in terms of the confidence:
+
+.. math::
+
+	l_{\{X, Y\} \\implies \{Z\}} = \\frac{c_{\{X, Y\} \\implies \{Z\}}}{s_{\{Z\}}}
 """
 
 def support(transactions, itemset):
@@ -100,5 +105,42 @@ def confidence(transactions, antecedent, consequent):
 	antecedent_support = support(transactions, antecedent)
 	if antecedent_support > 0:
 		return support(transactions, set( set(antecedent).union(set(consequent)) ))/antecedent_support
+
+	return 0
+
+def lift(transactions, antecedent, consequent):
+	"""
+	Calculate the lift for the given antecedent and consequent in the given transactions.
+
+	Lift avoids overweighting items by computing the ratio of the rule's confidence as a function of the consequent's support.
+	If the antecedent really contributes to the consequent, the ratio will be greater than 1.
+	Otherwise, if the antecedent doesn't contribute more to the consequent with its presence, the lift will be less than 1.
+
+	.. math::
+
+		l_{\{X, Y\} \\implies \{Z\}} = \\frac{s_{\{X, Y, Z\}}}{s_{\{X, Y\}} \\cdot s_{\{Z\}}}
+
+	where :math:`l_{\{X, Y\} \\implies \{Z\}}` is the lift of the association rule.
+	Lift can also be defined in terms of the confidence:
+
+	.. math::
+
+		l_{\{X, Y\} \\implies \{Z\}} = \\frac{c_{\{X, Y\} \\implies \{Z\}}}{s_{\{Z\}}}
+
+	:param transactions: A list of transactions, each containing any number of items.
+	:type transactions: list of list or list of set
+	:param antecedent: The antecedent is the condition for the association rule.
+					   It is presented as a set of items.
+	:type antecedent: list or set
+	:param consequent: The consequent is the conclusion of the antecedent.
+	:type consequent: list or set
+
+	:return: The lift of the association rule.
+	:rtype: float
+	"""
+
+	consequent_support = support(transactions, consequent)
+	if consequent_support > 0:
+		return confidence(transactions, antecedent, consequent) / consequent_support
 
 	return 0
