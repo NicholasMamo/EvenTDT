@@ -5,7 +5,26 @@ Other aggregation functions can be provided.
 """
 
 def aggregate(corpus, bin_size=60, skip_bins=0, track=None, aggregation=volume):
+def volume(bin, track=None, *args, **kwargs):
 	"""
+	Count the number of documents in the given bin.
+	If a tracking keyword is given, the function returns the number of documents in which the keyword appears.
+	The function looks for the keyword in the dimensions.
+
+	:param bin: A bin containing a list of documents to count.
+	:type bin: list of :class:`~nlp.document.Document`
+	:param track: The keyword to track.
+	:type track: None or str
+
+	:return: The number of documents in the bin.
+			 If a tracking keyword is given, the function counts the number of documents in the bin that contain the keyword.
+	:rtype: int
+	"""
+
+	if track:
+		return len([ document for document in bin if track.lower() in document.dimensions ])
+	else:
+		return len(bin)
 
 	:param corpus: The file handle containing the data.
     :type corpus: ?
