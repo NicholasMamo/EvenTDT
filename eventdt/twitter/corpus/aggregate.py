@@ -4,7 +4,7 @@ This can be used to create volume time-series, for example.
 Other aggregation functions can be provided.
 """
 
-def aggregate(corpus, bin_size=60, skip_bins=0, track=None, aggregation=volume):
+import json
 import os
 import sys
 
@@ -13,6 +13,9 @@ if path not in sys.path:
     sys.path.append(path)
 
 from nlp.document import Document
+from nlp.tokenizer import Tokenizer
+import twitter
+
 def volume(bin, track=None, *args, **kwargs):
 	"""
 	Count the number of documents in the given bin.
@@ -80,35 +83,91 @@ def to_documents(tweets, tokenizer, scheme=None):
 		documents.append(document)
 
 	return documents
+
+def aggregate(corpus, bin_size=60, aggregation=volume, track=None, tokenizer=None, scheme=None, *args, **kwargs):
+	"""
+	Aggregate the given corpus.
+	The tracking keywords as well as any other arguments or keyword arguments are passed on to the aggregation function.
+
 	:param corpus: The file handle containing the data.
-    :type corpus: ?
+    :type corpus: :class:`_io.TextIOWrapper`
     :param bin_size: The length in seconds of each time window.
     :type bin_size: int
-    :param skip_bins: The number of bins to skip.
-					  If a negative number is provided, no bins are skipped.
-    :type skip_bins: int
-    :param track: The keywords to track.
-                  If it is not None, only documents mentioning the keyword are counted.
-    :type track: None, str or list of str
 	:param aggregation: The aggregation function to use.
 						Defaults to simple volume.
 	:type aggregation: func
+    :param track: The keywords to aggregate.
+                  If it is not None, only documents containing the keyword are considered in the aggregation.
+    :type track: None, str or list of str
+	:param tokenizer: The tokenizer used to create documents from tweets.
+	:type tokenizer: :class:`~nlp.tokenizer.Tokenizer`
+	:param scheme: The term-weighting scheme that is used to create dimensions.
+				   If `None` is given, the :class:`~nlp.term_weighting.tf.TF` term-weighting scheme is used.
+	:type scheme: None or :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
 
-	:return: The tweets in the corpus aggregated into bins.
+	:return: The tweets in the corpus aggregated into time windows.
+			 The time windows have keys that correspond to the tracking keywords.
+			 Moreover, they have an extra key that corresponds to the aggregation of all tweets, named `*`.
     :rtype: dict
 	"""
 
-	pass
+	bins = { }
 
-def volume(bin):
 	"""
-	Count the number of documents in the given bin.
-
-	:param bin: A bin containing a list of tweets published at that time.
-	:type bin: list of dict
-
-	:return: The number of tweets in the bin.
-	:rtype: int
+	Convert the tracking keywords into a list.
 	"""
+	track = [ track ] if type(track) is str else track
+	track = track or [ ]
+	tokenizer = tokenizer or Tokenizer()
 
-	return list(bin)
+	"""
+	Go through each line to count the documents.
+	"""
+	bin = []
+	current_time_window = None
+	for line in corpus:
+		tweet = json.loads(line)
+
+		"""
+		Find the time window of the document.
+		"""
+		timestamp = twitter.extract_timestamp(tweet)
+		time_window = timestamp - timestamp % bin_size if bin_size > 0 else 0
+		current_time_window = current_time_window or time_window
+
+		if time_window != current_time_window:
+			"""
+			If the time window is over, process the tweets.
+			"""
+			documents = to_documents(bin, tokenizer)
+			for tweet, document in zip(bin, documents):
+				document.attributes['tweet'] = tweet
+
+			bins[current_time_window] = bins.get(current_time_window, { })
+			bins[current_time_window]['*'] =  bins[current_time_window].get('*', 0) + aggregation(documents, *args, **kwargs)
+			if track:
+				for keyword in track:
+					bins[current_time_window][keyword] =  bins[current_time_window].get(keyword, 0) + aggregation(documents, keyword, *args, **kwargs)
+
+			"""
+			Finally, reset the records.
+			"""
+			bin = [ ]
+			current_time_window = time_window
+
+		bin.append(tweet)
+
+	"""
+	Finalize the aggregation with any last tweets that have not been committed.
+	"""
+	documents = to_documents(bin, tokenizer)
+	for tweet, document in zip(bin, documents):
+		document.attributes['tweet'] = tweet
+	
+	bins[current_time_window] = bins.get(current_time_window, { })
+	bins[current_time_window]['*'] =  bins[current_time_window].get('*', 0) + aggregation(documents, *args, **kwargs)
+	if track:
+		for keyword in track:
+			bins[current_time_window][keyword] =  bins[current_time_window].get(keyword, 0) + aggregation(documents, keyword, *args, **kwargs)
+
+	return bins

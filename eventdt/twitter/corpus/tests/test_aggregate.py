@@ -17,6 +17,7 @@ from nlp.document import Document
 from nlp.tokenizer import Tokenizer
 from twitter.corpus.aggregate import *
 from vsm import vector_math
+import twitter
 
 class TestAggregate(unittest.TestCase):
 	"""
@@ -192,3 +193,107 @@ class TestAggregate(unittest.TestCase):
 			documents = to_documents(tweets, tokenizer)
 			for (tweet, document) in zip(tweets, documents):
 				self.assertEqual(tweet, document.attributes['tweet'])
+
+	def test_aggregate_timestamps(self):
+		"""
+		Test that when aggregating the corpus, the correct timestamps are processed.
+		"""
+
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			volume = aggregate(f, bin_size=1)
+
+			f.seek(0)
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			timestamps = set([ twitter.extract_timestamp(tweet) for tweet in tweets ])
+			self.assertEqual(timestamps, set(volume))
+
+	def test_aggregate_count(self):
+		"""
+		Test that the total count of the aggregation is equivalent to the corpus length.
+		"""
+
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			volume = aggregate(f, bin_size=1)
+
+			f.seek(0)
+			lines = f.readlines()
+			self.assertEqual(len(lines), sum([ volume[bin]['*'] for bin in volume ]))
+
+	def test_aggregate_reverse_count(self):
+		"""
+		Test that when aggregating a reversed corpus, the correct count is still used.
+		"""
+
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = reversed(f.readlines())
+			volume = aggregate(lines, bin_size=1)
+
+			f.seek(0)
+			lines = f.readlines()
+			self.assertEqual(len(lines), sum([ volume[bin]['*'] for bin in volume ]))
+
+			tweets = [ json.loads(line) for line in lines ]
+			timestamps = set([ twitter.extract_timestamp(tweet) for tweet in tweets ])
+			self.assertEqual(timestamps, set(volume))
+
+	def test_aggregate_track_keyword(self):
+		"""
+		Test that when tracking keywords, there is an entry for it at each timestamp.
+		"""
+
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			volume = aggregate(f, bin_size=1, track='coronaviru')
+
+			self.assertTrue(all([ 'coronaviru' in volume[bin] for bin in volume ]))
+
+	def test_aggregate_track_nonexistent_keyword(self):
+		"""
+		Test that when tracking keywords that do not exist in the corpus, they still have a volume of zero.
+		"""
+
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			volume = aggregate(f, bin_size=1, track='terrier')
+
+			self.assertTrue(all([ 'terrier' in volume[bin] for bin in volume ]))
+			self.assertEqual(0, sum([ volume[bin]['terrier'] for bin in volume ]))
+
+	def test_aggregate_custom_tokenizer(self):
+		"""
+		Test that when a custom tokenizer is given, it is used.
+		"""
+
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			volume = aggregate(f, bin_size=1, track=[ 'coronaviru', 'coronavirus' ])
+
+			self.assertTrue(all([ 'coronaviru' in volume[bin] for bin in volume ]))
+			self.assertTrue(all([ volume[bin]['coronaviru'] > 0 for bin in volume ]))
+			self.assertTrue(all([ volume[bin]['coronavirus'] == 0 for bin in volume ]))
+
+			f.seek(0)
+			tokenizer = Tokenizer(stem=False)
+			volume = aggregate(f, bin_size=1, track=[ 'coronaviru', 'coronavirus' ], tokenizer=tokenizer)
+
+			self.assertTrue(all([ 'coronaviru' in volume[bin] for bin in volume ]))
+			self.assertTrue(all([ volume[bin]['coronaviru'] == 0 for bin in volume ]))
+			self.assertTrue(all([ volume[bin]['coronavirus'] > 0 for bin in volume ]))
+
+	def test_bin_size(self):
+		"""
+		Test that when setting the bin size, the tweets are segmented correctly.
+		"""
+
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			volume = aggregate(f, bin_size=5, track=[ 'coronaviru', 'coronavirus' ])
+			self.assertEqual(3, len(volume))
+			self.assertTrue(all(timestamp % 5 == 0 for timestamp in volume))
+
+			for timestamp in volume:
+				count = 0
+				f.seek(0)
+				for line in f.readlines():
+					tweet = json.loads(line)
+					time = twitter.extract_timestamp(tweet)
+					if 0 <= time - timestamp < 5:
+						count += 1
+				self.assertEqual(count, volume[timestamp]['*'])
