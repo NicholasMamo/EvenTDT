@@ -125,6 +125,9 @@ twitter_tests() {
 	echo -e "${HIGHLIGHT}File Readers${DEFAULT}"
 	python3 -m unittest eventdt.twitter.file.tests.test_simulated_reader
 	python3 -m unittest eventdt.twitter.file.tests.test_staggered_reader
+
+	echo -e "${HIGHLIGHT}Corpus${DEFAULT}"
+	python -m unittest eventdt.twitter.corpus.tests.test_aggregate
 }
 
 vector_tests() {
