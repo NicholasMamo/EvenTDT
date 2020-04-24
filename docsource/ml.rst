@@ -21,3 +21,11 @@ Association Rule Mining
    :members:
    :private-members:
    :special-members:
+
+Algorithms
+----------
+
+.. automodule:: ml.association.algo.apriori
+   :members:
+   :private-members:
+   :special-members:

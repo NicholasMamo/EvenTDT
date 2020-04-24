@@ -96,7 +96,10 @@
 <li class="toctree-l1"><a class="reference internal" href="twitter.html">8. Twitter</a></li>
 <li class="toctree-l1"><a class="reference internal" href="consumers.html">9. Consumers</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">10. Machine Learning</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-ml.association">Association Rule Mining</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-ml.association">Association Rule Mining</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-ml.association.algo.apriori">Algorithms</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="other.html">11. Other</a></li>
@@ -279,6 +282,48 @@ It is presented as a set of items.</p></li>
 </dl>
 </dd></dl>
 
+<div class="section" id="module-ml.association.algo.apriori">
+<span id="algorithms"></span><h3>Algorithms<a class="headerlink" href="#module-ml.association.algo.apriori" title="Permalink to this headline">¶</a></h3>
+<p>The implementation of the Apriori algorithm.
+The Apriori algorithm mines for association rules breadth-first.
+To restrain the depth of association rules, the Apriori algorithm accepts two parameters:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p><cite>minsup</cite>: The minimum support of an itemset to be part of a rule.</p></li>
+<li><p><cite>minconf</cite>: The minimum confidence of an association rule to be accepted.</p></li>
+</ol>
+</div></blockquote>
+<dl class="function">
+<dt id="ml.association.algo.apriori.apriori">
+<code class="sig-name descname">apriori</code><span class="sig-paren">(</span><em class="sig-param">transactions</em>, <em class="sig-param">minsup=0</em>, <em class="sig-param">minconf=0</em><span class="sig-paren">)</span><a class="headerlink" href="#ml.association.algo.apriori.apriori" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform the Apriori algorithm over the given transactions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>transactions</strong> (<em>list of list</em><em> or </em><em>list of set</em>) – A list of transactions, each containing any number of items.</p></li>
+<li><p><strong>minsup</strong> (<em>float</em>) – The minimum support of an itemset to be part of a rule.
+It is bound between 0 and 1.</p></li>
+<li><p><strong>minconf</strong> (<em>float</em>) – The minimum confidence of an association rule to be accepted.
+It is bound between 0 and 1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of association rules.
+Each rule is a two-tuple made up of the antecedent and consequent respectively.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of tuple</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – When the minimum support is not bound between 0 and 1.</p></li>
+<li><p><strong>ValueError</strong> – When the minimum confidence is not bound between 0 and 1.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
 </div>
 </div>
 
