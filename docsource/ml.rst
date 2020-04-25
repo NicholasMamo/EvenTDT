@@ -13,7 +13,6 @@ The machine learning package contains algorithms that don't quite fit into any o
    :private-members:
    :special-members:
 
-=======================
 Association Rule Mining
 =======================
 
@@ -24,6 +23,9 @@ Association Rule Mining
 
 Algorithms
 ----------
+
+Apriori
+^^^^^^^
 
 .. automodule:: ml.association.algo.apriori
    :members:
