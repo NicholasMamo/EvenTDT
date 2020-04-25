@@ -143,11 +143,13 @@ def filter_itemsets(transactions, itemsets, minsup):
 	return [ itemset for itemset in itemsets
 			 if association.support(transactions, itemset) >= minsup ]
 
-def next_rules(antecedent, consequent=None):
+def next_rules(transactions, antecedent, consequent=None):
 	"""
 	Generate the next rules from the given antecedent and consequent.
 	The function generates rules by taking one item from the antecedent and adding it to the consequent.
 
+	:param transactions: A list of transactions, each containing any number of items.
+	:type transactions: list of list or list of set
 	:param antecedent: The antecedent is the condition for the association rule.
 					   It is presented as a set of items.
 	:type antecedent: list or set
@@ -177,16 +179,15 @@ def next_rules(antecedent, consequent=None):
 	for item in antecedent:
 		copy = set(antecedent)
 		copy.remove(item)
-		rules.append((copy, consequent.union(set(item))))
+		confidence = association.confidence(transactions, copy, consequent.union(set(item)))
+		rules.append((copy, consequent.union(set(item)), confidence))
 
 	return rules
 
-def filter_rules(transactions, rules, minconf):
+def filter_rules(rules, minconf):
 	"""
 	Filter the rules to retain only those having a minimum confidence.
 
-	:param transactions: A list of transactions, each containing any number of items.
-	:type transactions: list of list or list of set
 	:param rules: The rules to filter.
 	:type rules: list of tuple
 	:param minconf: The minimum confidence of an association rule to be accepted.
@@ -212,5 +213,5 @@ def filter_rules(transactions, rules, minconf):
 			unique_rules.append(rule)
 	rules = unique_rules
 
-	return [ (antecedent, consequent) for (antecedent, consequent) in rules
-			 if association.confidence(transactions, antecedent, consequent) >= minconf ]
+	return [ (antecedent, consequent, confidence) for (antecedent, consequent, confidence) in rules
+			 if confidence >= minconf ]

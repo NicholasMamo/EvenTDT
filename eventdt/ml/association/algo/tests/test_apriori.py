@@ -325,11 +325,11 @@ class TestApriori(unittest.TestCase):
 		"""
 
 		antecedent = [ letter for letter in string.ascii_letters + string.digits ]
-		rules = next_rules(antecedent, { })
-		self.assertTrue(all(len(consequent) == 1 for _, consequent in rules))
-		self.assertTrue(all(len(rule_antecedent) == len(antecedent) -1 for rule_antecedent, _ in rules))
+		rules = next_rules([ ], antecedent, { })
+		self.assertTrue(all(len(consequent) == 1 for _, consequent, _ in rules))
+		self.assertTrue(all(len(rule_antecedent) == len(antecedent) -1 for rule_antecedent, _, _ in rules))
 		self.assertEqual(len(antecedent), len(rules))
-		self.assertEqual(set(antecedent), set(list(consequent)[0] for _, consequent in rules))
+		self.assertEqual(set(antecedent), set(list(consequent)[0] for _, consequent, _ in rules))
 
 	def test_next_rules_no_consequent(self):
 		"""
@@ -337,35 +337,37 @@ class TestApriori(unittest.TestCase):
 		"""
 
 		antecedent = [ letter for letter in string.ascii_letters + string.digits ]
-		rules = next_rules(antecedent)
-		self.assertTrue(all(len(consequent) == 1 for _, consequent in rules))
-		self.assertTrue(all(len(rule_antecedent) == len(antecedent) -1 for rule_antecedent, _ in rules))
+		rules = next_rules([ ], antecedent)
+		self.assertTrue(all(len(consequent) == 1 for _, consequent, _ in rules))
+		self.assertTrue(all(len(rule_antecedent) == len(antecedent) -1 for rule_antecedent, _, _ in rules))
 		self.assertEqual(len(antecedent), len(rules))
-		self.assertEqual(set(antecedent), set(list(consequent)[0] for _, consequent in rules))
+		self.assertEqual(set(antecedent), set(list(consequent)[0] for _, consequent, _ in rules))
 
 	def test_next_rules_overlapping(self):
 		"""
 		Test that when the antecedent and the consequent have overlapping items, they are ignored in the consequent.
 		"""
 
+		transactions = [ { 'A', 'B' }, { 'A' } ]
 		antecedent = { 'A', 'B' }
 		consequent = { 'A' }
-		rules = next_rules(antecedent, consequent)
+		rules = next_rules(transactions, antecedent, consequent)
 		self.assertEqual(2, len(rules))
-		self.assertTrue(({ 'B' }, { 'A' }) in rules)
-		self.assertTrue(({ 'A' }, { 'A', 'B' }) in  rules)
+		self.assertTrue(any( antecedent == { 'B' } and consequent == { 'A' } for antecedent, consequent, _ in rules ))
+		self.assertTrue(any( antecedent == { 'A' } and consequent == { 'A', 'B' } for antecedent, consequent, _ in rules ))
 
 	def test_next_rules_duplicate_antecedent(self):
 		"""
 		Test that when there are duplicate items in the antecedent, they are removed.
 		"""
 
+		transactions = [ { 'A', 'B' }, { 'A' } ]
 		antecedent = { 'A', 'A', 'B' }
 		consequent = { 'C' }
-		rules = next_rules(antecedent, consequent)
+		rules = next_rules(transactions, antecedent, consequent)
 		self.assertEqual(2, len(rules))
-		self.assertTrue(({ 'A' }, { 'B', 'C' }) in rules)
-		self.assertTrue(({ 'B' }, { 'A', 'C' }) in  rules)
+		self.assertTrue(any( antecedent == { 'A' } and consequent == { 'B', 'C' } for antecedent, consequent, _ in rules ))
+		self.assertTrue(any( antecedent == { 'B' } and consequent == { 'A', 'C' } for antecedent, consequent, _ in rules ))
 
 	def test_next_rules_count(self):
 		"""
@@ -374,7 +376,7 @@ class TestApriori(unittest.TestCase):
 
 		antecedent = [ letter for letter in string.ascii_letters ]
 		consequent = { letter for letter in string.digits }
-		rules = next_rules(antecedent, consequent)
+		rules = next_rules([ ], antecedent, consequent)
 		self.assertEqual(len(antecedent), len(rules))
 
 	def test_next_rules_one_antecedent(self):
@@ -382,38 +384,62 @@ class TestApriori(unittest.TestCase):
 		Test that rules with one antecedent cannot create any new rules.
 		"""
 
+		transactions = [ { 'A', 'B' }, { 'A' } ]
 		antecedent = [ 'A' ]
 		consequent = { letter for letter in string.digits }
-		rules = next_rules(antecedent, consequent)
+		rules = next_rules(transactions, antecedent, consequent)
 		self.assertEqual([ ], rules)
+
+	def test_next_rules_one_antecedent(self):
+		"""
+		Test that rules with one antecedent cannot create any new rules.
+		"""
+
+		transactions = [ { 'A', 'B' }, { 'A' } ]
+		antecedent = [ 'A' ]
+		consequent = { letter for letter in string.digits }
+		rules = next_rules(transactions, antecedent, consequent)
+		self.assertEqual([ ], rules)
+
+	def test_next_rules_confidence(self):
+		"""
+		Test that rules are a three-tuple containing the antecedent, consequent and confidence.
+		"""
+
+		transactions = [ { 'A', 'B', 'C' }, { 'A', 'B', 'C', 'D' }, { 'A', 'C', 'D' } ]
+		antecedent = [ 'A', 'B', 'C', 'D' ]
+		self.assertTrue(({ 'A', 'B', 'C' }, { 'D' }, 0.5) in next_rules(transactions, antecedent, None))
+		self.assertTrue(({ 'A', 'B', 'D' }, { 'C' }, 1) in next_rules(transactions, antecedent, None))
+		self.assertTrue(({ 'A', 'C', 'D' }, { 'B' }, 0.5) in next_rules(transactions, antecedent, None))
+		self.assertTrue(({ 'B', 'C', 'D' }, { 'A' }, 1) in next_rules(transactions, antecedent, None))
 
 	def test_filter_rules_minconf_negative(self):
 		"""
 		Test that when the minimum confidence is negative, a ValueError is raised.
 		"""
 
-		self.assertRaises(ValueError, filter_rules, [ ], [ ], -1)
+		self.assertRaises(ValueError, filter_rules, [ ], -1)
 
 	def test_filter_rules_minconf_zero(self):
 		"""
 		Test that when the minimum confidence is zero, no ValueError is raised.
 		"""
 
-		filter_rules([ ], [ ], 0)
+		filter_rules([ ], 0)
 
 	def test_filter_rules_minconf_one(self):
 		"""
 		Test that when the minimum confidence is one, no ValueError is raised.
 		"""
 
-		filter_rules([ ], [ ], 1)
+		filter_rules([ ], 1)
 
 	def test_filter_rules_minconf_high(self):
 		"""
 		Test that when the minimum confidence is bigger than 1, a ValueError is raised.
 		"""
 
-		self.assertRaises(ValueError, filter_rules, [ ], [ ], 1.1)
+		self.assertRaises(ValueError, filter_rules, [ ], 1.1)
 
 	def test_filter_rules_empty_transactions(self):
 		"""
@@ -423,7 +449,7 @@ class TestApriori(unittest.TestCase):
 		antecedent = { 'A', 'A', 'B' }
 		consequent = { 'C' }
 		rules = next_rules(antecedent, consequent)
-		self.assertEqual([ ], filter_rules([ ], rules, 0.1))
+		self.assertEqual([ ], filter_rules(rules, 0.1))
 
 	def test_filter_rules_empty_transactions_minsup_zero(self):
 		"""
@@ -433,7 +459,7 @@ class TestApriori(unittest.TestCase):
 		antecedent = { 'A', 'A', 'B' }
 		consequent = { 'C' }
 		rules = next_rules(antecedent, consequent)
-		self.assertEqual(rules, filter_rules([ ], rules, 0))
+		self.assertEqual(rules, filter_rules(rules, 0))
 
 	def test_filter_rules_empty_rules(self):
 		"""
@@ -441,7 +467,7 @@ class TestApriori(unittest.TestCase):
 		"""
 
 		transactions = [ { letter } for letter in string.ascii_letters + string.digits ]
-		self.assertEqual([ ], filter_rules(transactions, [ ], 0))
+		self.assertEqual([ ], filter_rules([ ], 0))
 
 	def test_filter_rules_minconf_equal(self):
 		"""
@@ -451,8 +477,8 @@ class TestApriori(unittest.TestCase):
 		transactions = [ { 'A', 'B', 'C' }, { 'A', 'B', 'D' } ]
 		antecedent = { 'A', 'B' }
 		consequent = { 'C' }
-		rule = (antecedent, consequent)
-		self.assertEqual([ rule ], filter_rules(transactions, [ rule ], 0.5))
+		rule = (antecedent, consequent, 0.5)
+		self.assertEqual([ rule ], filter_rules([ rule ], 0.5))
 
 	def test_filter_rules_minconf_higher(self):
 		"""
@@ -462,8 +488,8 @@ class TestApriori(unittest.TestCase):
 		transactions = [ { 'A', 'B', 'C' }, { 'A', 'B', 'D' } ]
 		antecedent = { 'A', 'B' }
 		consequent = { 'C' }
-		rule = (antecedent, consequent)
-		self.assertEqual([ ], filter_rules(transactions, [ rule ], 0.6))
+		rule = (antecedent, consequent, 0.5)
+		self.assertEqual([ ], filter_rules([ rule ], 0.6))
 
 	def test_filter_rules_minconf_lower(self):
 		"""
@@ -473,8 +499,8 @@ class TestApriori(unittest.TestCase):
 		transactions = [ { 'A', 'B', 'C' }, { 'A', 'B', 'D' } ]
 		antecedent = { 'A', 'B' }
 		consequent = { 'C' }
-		rule = (antecedent, consequent)
-		self.assertEqual([ rule ], filter_rules(transactions, [ rule ], 0.4))
+		rule = (antecedent, consequent, 0.5)
+		self.assertEqual([ rule ], filter_rules([ rule ], 0.4))
 
 	def test_filter_rules_multi(self):
 		"""
@@ -484,10 +510,10 @@ class TestApriori(unittest.TestCase):
 		transactions = [ { 'A', 'B', 'C', 'D' }, { 'A', 'B', 'D' } ]
 		antecedent = { 'A', 'B' }
 		consequent = { 'C', 'D' }
-		rule = (antecedent, consequent)
-		self.assertEqual([ rule ], filter_rules(transactions, [ rule ], 0.4))
-		self.assertEqual([ rule ], filter_rules(transactions, [ rule ], 0.5))
-		self.assertEqual([ ], filter_rules(transactions, [ rule ], 0.6))
+		rule = (antecedent, consequent, 0.5)
+		self.assertEqual([ rule ], filter_rules([ rule ], 0.4))
+		self.assertEqual([ rule ], filter_rules([ rule ], 0.5))
+		self.assertEqual([ ], filter_rules([ rule ], 0.6))
 
 	def test_filter_rules_duplicate(self):
 		"""
@@ -497,8 +523,8 @@ class TestApriori(unittest.TestCase):
 		transactions = [ { 'A', 'B', 'C', 'D' }, { 'A', 'B', 'D' } ]
 		antecedent = { 'A', 'B' }
 		consequent = { 'C', 'D' }
-		rule = (antecedent, consequent)
+		rule = (antecedent, consequent, 0.5)
 		rules = [ rule ] * 2
-		self.assertEqual([ rule ], filter_rules(transactions, [ rule ], 0.4))
-		self.assertEqual([ rule ], filter_rules(transactions, [ rule ], 0.5))
-		self.assertEqual([ ], filter_rules(transactions, [ rule ], 0.6))
+		self.assertEqual([ rule ], filter_rules([ rule ], 0.4))
+		self.assertEqual([ rule ], filter_rules([ rule ], 0.5))
+		self.assertEqual([ ], filter_rules([ rule ], 0.6))
