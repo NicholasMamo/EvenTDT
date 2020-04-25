@@ -258,6 +258,17 @@ class TestApriori(unittest.TestCase):
 		transactions = [ { 'A', 'B' }, { 'B', 'C', 'D' } ]
 		self.assertEqual([ { 'A', 'B' }, { 'B', 'C' }, { 'B', 'D'}, { 'C', 'D' } ], filter_itemsets(transactions, itemsets, 0.5))
 
+	def test_filter_itemsets_duplicate(self):
+		"""
+		Test that duplicate itemsets are removed.
+		"""
+
+		vocabulary = [ [ digit ] for digit in string.digits ]
+		itemsets = get_itemsets(vocabulary, 2) * 2
+		filtered = filter_itemsets([ ], itemsets, 0)
+		self.assertEqual(len(itemsets) / 2., len(filtered))
+		self.assertTrue(all(filtered.count(itemset) == 1 for itemset in filtered))
+
 	def test_next_rules_empty_antecedent(self):
 		"""
 		Test that when the antecedent is empty, no rules are created.

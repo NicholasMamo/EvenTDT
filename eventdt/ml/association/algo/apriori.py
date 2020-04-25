@@ -115,6 +115,15 @@ def filter_itemsets(transactions, itemsets, minsup):
 	if not 0 <= minsup <= 1:
 		raise ValueError(f"The minimum support needs to be between 0 and 1; received {minsup}")
 
+	"""
+	Remove any duplicate itemsets.
+	"""
+	unique_itemsets = [ ]
+	for itemset in itemsets:
+		if itemset not in unique_itemsets:
+			unique_itemsets.append(itemset)
+	itemsets = unique_itemsets
+
 	return [ itemset for itemset in itemsets if association.support(transactions, itemset) >= minsup ]
 
 def next_rules(antecedent, consequent=None):
