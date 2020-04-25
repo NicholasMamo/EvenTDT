@@ -215,11 +215,11 @@ class TestApriori(unittest.TestCase):
 
 	def test_filter_itemsets_empty_itemsets(self):
 		"""
-		Test that when filtering an empty list of itemsets, anoher empty list is returned.
+		Test that when filtering an empty list of itemsets, another empty list is returned.
 		"""
 
 		transactions = [ { letter } for letter in string.ascii_letters + string.digits ]
-		self.assertEqual([ ], filter_itemsets(transactions, [ ], 0.1))
+		self.assertEqual([ ], filter_itemsets(transactions, [ ], 0))
 
 	def test_filter_itemsets_minsup_equal(self):
 		"""
@@ -333,3 +333,119 @@ class TestApriori(unittest.TestCase):
 		consequent = { letter for letter in string.digits }
 		rules = next_rules(antecedent, consequent)
 		self.assertEqual(len(antecedent), len(rules))
+
+	def test_filter_rules_minconf_negative(self):
+		"""
+		Test that when the minimum confidence is negative, a ValueError is raised.
+		"""
+
+		self.assertRaises(ValueError, filter_rules, [ ], [ ], -1)
+
+	def test_filter_rules_minconf_zero(self):
+		"""
+		Test that when the minimum confidence is zero, no ValueError is raised.
+		"""
+
+		filter_rules([ ], [ ], 0)
+
+	def test_filter_rules_minconf_one(self):
+		"""
+		Test that when the minimum confidence is one, no ValueError is raised.
+		"""
+
+		filter_rules([ ], [ ], 1)
+
+	def test_filter_rules_minconf_high(self):
+		"""
+		Test that when the minimum confidence is bigger than 1, a ValueError is raised.
+		"""
+
+		self.assertRaises(ValueError, filter_rules, [ ], [ ], 1.1)
+
+	def test_filter_rules_empty_transactions(self):
+		"""
+		Test that when filtering a list of rules with empty transactions, an empty list is returned.
+		"""
+
+		antecedent = { 'A', 'A', 'B' }
+		consequent = { 'C' }
+		rules = next_rules(antecedent, consequent)
+		self.assertEqual([ ], filter_rules([ ], rules, 0.1))
+
+	def test_filter_rules_empty_transactions_minsup_zero(self):
+		"""
+		Test that when filtering a list of itemsets with empty transactions, but with a support of 0, the original itemsets are returned.
+		"""
+
+		antecedent = { 'A', 'A', 'B' }
+		consequent = { 'C' }
+		rules = next_rules(antecedent, consequent)
+		self.assertEqual(rules, filter_rules([ ], rules, 0))
+
+	def test_filter_rules_empty_rules(self):
+		"""
+		Test that when filtering an empty list of rules, another empty list is returned.
+		"""
+
+		transactions = [ { letter } for letter in string.ascii_letters + string.digits ]
+		self.assertEqual([ ], filter_rules(transactions, [ ], 0))
+
+	def test_filter_rules_minconf_equal(self):
+		"""
+		Test that when filtering rules, those with a confidence equal to the minimum confidence are returned.
+		"""
+
+		transactions = [ { 'A', 'B', 'C' }, { 'A', 'B', 'D' } ]
+		antecedent = { 'A', 'B' }
+		consequent = { 'C' }
+		rule = (antecedent, consequent)
+		self.assertEqual([ rule ], filter_rules(transactions, [ rule ], 0.5))
+
+	def test_filter_rules_minconf_higher(self):
+		"""
+		Test that when filtering rules, those with a confidence higher than the minimum confidence are returned.
+		"""
+
+		transactions = [ { 'A', 'B', 'C' }, { 'A', 'B', 'D' } ]
+		antecedent = { 'A', 'B' }
+		consequent = { 'C' }
+		rule = (antecedent, consequent)
+		self.assertEqual([ ], filter_rules(transactions, [ rule ], 0.6))
+
+	def test_filter_rules_minconf_lower(self):
+		"""
+		Test that when filtering rules, those with a confidence lower than the minimum confidence are excluded returned.
+		"""
+
+		transactions = [ { 'A', 'B', 'C' }, { 'A', 'B', 'D' } ]
+		antecedent = { 'A', 'B' }
+		consequent = { 'C' }
+		rule = (antecedent, consequent)
+		self.assertEqual([ rule ], filter_rules(transactions, [ rule ], 0.4))
+
+	def test_filter_rules_multi(self):
+		"""
+		Test that when filtering rules with multiple items, the same rules are respected.
+		"""
+
+		transactions = [ { 'A', 'B', 'C', 'D' }, { 'A', 'B', 'D' } ]
+		antecedent = { 'A', 'B' }
+		consequent = { 'C', 'D' }
+		rule = (antecedent, consequent)
+		self.assertEqual([ rule ], filter_rules(transactions, [ rule ], 0.4))
+		self.assertEqual([ rule ], filter_rules(transactions, [ rule ], 0.5))
+		self.assertEqual([ ], filter_rules(transactions, [ rule ], 0.6))
+
+	def test_filter_rules_duplicate(self):
+		"""
+		Test that duplicate rules are removed.
+		"""
+
+		transactions = [ { 'A', 'B', 'C', 'D' }, { 'A', 'B', 'D' } ]
+		antecedent = { 'A', 'B' }
+		consequent = { 'C', 'D' }
+		rule = (antecedent, consequent)
+		rules = [ rule ] * 2
+		self.assertEqual([ rule ], filter_rules(transactions, [ rule ], 0.4))
+		self.assertEqual([ rule ], filter_rules(transactions, [ rule ], 0.5))
+		self.assertEqual([ ], filter_rules(transactions, [ rule ], 0.6))

@@ -124,7 +124,8 @@ def filter_itemsets(transactions, itemsets, minsup):
 			unique_itemsets.append(itemset)
 	itemsets = unique_itemsets
 
-	return [ itemset for itemset in itemsets if association.support(transactions, itemset) >= minsup ]
+	return [ itemset for itemset in itemsets
+			 if association.support(transactions, itemset) >= minsup ]
 
 def next_rules(antecedent, consequent=None):
 	"""
@@ -153,3 +154,37 @@ def next_rules(antecedent, consequent=None):
 		rules.append((copy, consequent.union(set(item))))
 
 	return rules
+
+def filter_rules(transactions, rules, minconf):
+	"""
+	Filter the rules to retain only those having a minimum confidence.
+
+	:param transactions: A list of transactions, each containing any number of items.
+	:type transactions: list of list or list of set
+	:param rules: The rules to filter.
+	:type rules: list of tuple
+	:param minconf: The minimum confidence of an association rule to be accepted.
+				   It is bound between 0 and 1 and is inclusive.
+	:type minconf: float
+
+	:return: The filtered rules.
+			 All rules have at least a confidence equivalent to the given minimum.
+	:rtype: list of set
+
+	:raises ValueError: When the minimum confidence is not between 0 and 1.
+	"""
+
+	if not 0 <= minconf <= 1:
+		raise ValueError(f"The minimum confidence needs to be between 0 and 1; received {minconf}")
+
+	"""
+	Remove any duplicate rules.
+	"""
+	unique_rules = [ ]
+	for rule in rules:
+		if rule not in unique_rules:
+			unique_rules.append(rule)
+	rules = unique_rules
+
+	return [ (antecedent, consequent) for (antecedent, consequent) in rules
+			 if association.confidence(transactions, antecedent, consequent) >= minconf ]
