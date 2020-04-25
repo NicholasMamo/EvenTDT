@@ -30,7 +30,7 @@ def apriori(transactions, minsup=0, minconf=0):
 	:type minconf: float
 
 	:return: A list of association rules.
-			 Each rule is a three-tuple made up of the antecedent, consequent and confidence respectively.
+			 Each rule is a four-tuple made up of the antecedent, consequent, confidence and support respectively.
 	:rtype: list of tuple
 
 	:raises ValueError: When the minimum support is not between 0 and 1.
@@ -79,6 +79,12 @@ def apriori(transactions, minsup=0, minconf=0):
 			rules.extend(next)
 			next = [ next_rule for antecedent, consequent, _ in next
 			 				   for next_rule in next_rules(transactions, antecedent, consequent) ]
+
+	"""
+	Calculate the support for each remaining rule.
+	"""
+	rules = [ (antecedent, consequent, confidence, association.support(transactions, antecedent.union(consequent)))
+	 		  for antecedent, consequent, confidence in rules ]
 
 	return rules
 

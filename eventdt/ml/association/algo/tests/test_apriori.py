@@ -97,8 +97,8 @@ class TestApriori(unittest.TestCase):
 		]
 
 		rules = apriori(transactions, 0.5, 0.5)
-		self.assertTrue(( { 'A' }, { 'C' }, 2/3.) in rules)
-		self.assertTrue(( { 'C' }, { 'A' }, 1) in rules)
+		self.assertTrue(( { 'A' }, { 'C' }, 2/3., 0.5) in rules)
+		self.assertTrue(( { 'C' }, { 'A' }, 1, 0.5) in rules)
 
 	def test_apriori_example_2(self):
 		"""
@@ -114,18 +114,18 @@ class TestApriori(unittest.TestCase):
 		]
 
 		rules = apriori(transactions, 0.4, 0.5)
-		self.assertTrue(any( antecedent == { 'Milk', 'Diaper' } and consequent == { 'Beer' } and round(confidence, 10) == round(2/3., 10)
-							 for antecedent, consequent, confidence in rules))
-		self.assertTrue(any( antecedent == { 'Milk', 'Beer' } and consequent == { 'Diaper' } and round(confidence, 10) == round(1, 10)
-							 for antecedent, consequent, confidence in rules))
-		self.assertTrue(any( antecedent == { 'Diaper', 'Beer' } and consequent == { 'Milk' } and round(confidence, 10) == round(2/3., 10)
-							 for antecedent, consequent, confidence in rules))
-		self.assertTrue(any( antecedent == { 'Beer' } and consequent == { 'Milk', 'Diaper' } and round(confidence, 10) == round(2/3., 10)
-							 for antecedent, consequent, confidence in rules))
-		self.assertTrue(any( antecedent == { 'Diaper' } and consequent == { 'Milk', 'Beer' } and round(confidence, 10) == round(1/2., 10)
-							 for antecedent, consequent, confidence in rules))
-		self.assertTrue(any( antecedent == { 'Milk' } and consequent == { 'Diaper', 'Beer' } and round(confidence, 10) == round(1/2., 10)
-							 for antecedent, consequent, confidence in rules))
+		self.assertTrue(any( antecedent == { 'Milk', 'Diaper' } and consequent == { 'Beer' } and round(confidence, 10) == round(2/3., 10) and support == 0.4
+							 for antecedent, consequent, confidence, support in rules))
+		self.assertTrue(any( antecedent == { 'Milk', 'Beer' } and consequent == { 'Diaper' } and round(confidence, 10) == round(1, 10) and support == 0.4
+							 for antecedent, consequent, confidence, support in rules))
+		self.assertTrue(any( antecedent == { 'Diaper', 'Beer' } and consequent == { 'Milk' } and round(confidence, 10) == round(2/3., 10) and support == 0.4
+							 for antecedent, consequent, confidence, support in rules))
+		self.assertTrue(any( antecedent == { 'Beer' } and consequent == { 'Milk', 'Diaper' } and round(confidence, 10) == round(2/3., 10) and support == 0.4
+							 for antecedent, consequent, confidence, support in rules))
+		self.assertTrue(any( antecedent == { 'Diaper' } and consequent == { 'Milk', 'Beer' } and round(confidence, 10) == round(1/2., 10) and support == 0.4
+							 for antecedent, consequent, confidence, support in rules))
+		self.assertTrue(any( antecedent == { 'Milk' } and consequent == { 'Diaper', 'Beer' } and round(confidence, 10) == round(1/2., 10) and support == 0.4
+							 for antecedent, consequent, confidence, support in rules))
 
 	def test_get_items_empty_transactions(self):
 		"""
