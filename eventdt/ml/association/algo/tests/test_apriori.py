@@ -35,7 +35,7 @@ class TestApriori(unittest.TestCase):
 
 		apriori([ ], 0, 0)
 
-	def test_minsup_zero(self):
+	def test_minsup_one(self):
 		"""
 		Test that when the minimum support is one, no ValueError is raised.
 		"""
@@ -63,7 +63,7 @@ class TestApriori(unittest.TestCase):
 
 		apriori([ ], 0, 0)
 
-	def test_minconf_zero(self):
+	def test_minconf_one(self):
 		"""
 		Test that when the minimum confidence is one, no ValueError is raised.
 		"""
@@ -168,3 +168,92 @@ class TestApriori(unittest.TestCase):
 		vocabulary = [ [ letter ] for letter in string.ascii_letters + string.digits ]
 		itemsets = get_itemsets(vocabulary, 2)
 		self.assertEqual(len(vocabulary) * (len(vocabulary) - 1) / 2., len(itemsets))
+
+	def test_filter_itemsets_minsup_negative(self):
+		"""
+		Test that when the minimum support is negative, a ValueError is raised.
+		"""
+
+		self.assertRaises(ValueError, filter_itemsets, [ ], { }, -1)
+
+	def test_filter_itemsets_minsup_zero(self):
+		"""
+		Test that when the minimum support is zero, no ValueError is raised.
+		"""
+
+		filter_itemsets([ ], { }, 0)
+
+	def test_filter_itemsets_minsup_one(self):
+		"""
+		Test that when the minimum support is one, no ValueError is raised.
+		"""
+
+		filter_itemsets([ ], { }, 1)
+
+	def test_filter_itemsets_minsup_high(self):
+		"""
+		Test that when the minimum support is bigger than 1, a ValueError is raised.
+		"""
+
+		self.assertRaises(ValueError, filter_itemsets, [ ], { }, 1.1)
+
+	def test_filter_itemsets_empty_transactions(self):
+		"""
+		Test that when filtering a list of itemsets with empty transactions, an empty list is returned.
+		"""
+
+		itemsets = [ { letter } for letter in string.ascii_letters + string.digits ]
+		self.assertEqual([ ], filter_itemsets([ ], itemsets, 0.1))
+
+	def test_filter_itemsets_empty_transactions_minsup_zero(self):
+		"""
+		Test that when filtering a list of itemsets with empty transactions, but with a support of 0, the original itemsets are returned.
+		"""
+
+		itemsets = [ { letter } for letter in string.ascii_letters + string.digits ]
+		self.assertEqual(itemsets, filter_itemsets([ ], itemsets, 0))
+
+	def test_filter_itemsets_empty_itemsets(self):
+		"""
+		Test that when filtering an empty list of itemsets, anoher empty list is returned.
+		"""
+
+		transactions = [ { letter } for letter in string.ascii_letters + string.digits ]
+		self.assertEqual([ ], filter_itemsets(transactions, [ ], 0.1))
+
+	def test_filter_itemsets_minsup_equal(self):
+		"""
+		Test that when filtering itemsets, those with a support equal to the minimum support are returned.
+		"""
+
+		transactions = [ { 'A' }, { 'B' } ]
+		itemsets = [ { letter } for letter in string.ascii_letters + string.digits ]
+		self.assertEqual([ { 'A' }, { 'B' } ], filter_itemsets(transactions, itemsets, 0.5))
+
+	def test_filter_itemsets_minsup_higher(self):
+		"""
+		Test that when filtering itemsets, those with a support higher than the minimum support are returned.
+		"""
+
+		transactions = [ { 'A' }, { 'B' }, { 'A', 'B', 'C' } ]
+		itemsets = [ { letter } for letter in string.ascii_letters + string.digits ]
+		self.assertEqual([ { 'A' }, { 'B' } ], filter_itemsets(transactions, itemsets, 0.5))
+
+	def test_filter_itemsets_minsup_lower(self):
+		"""
+		Test that when filtering itemsets, those with a support lower than the minimum support are excluded returned.
+		"""
+
+		transactions = [ { 'A' }, { 'B' }, { 'A', 'B' }, { 'C' } ]
+		itemsets = [ { letter } for letter in string.ascii_letters + string.digits ]
+		self.assertEqual([ { 'A' }, { 'B' } ], filter_itemsets(transactions, itemsets, 0.5))
+
+	def test_filter_itemsets_multi(self):
+		"""
+		Test that when filtering itemsets with multiple items, the same rules are respected.
+		"""
+
+		vocabulary = [ [ letter ] for letter in string.ascii_letters + string.digits ]
+		itemsets = get_itemsets(vocabulary, 2)
+		transactions = [ { 'A', 'B' }, { 'B', 'C', 'D' } ]
+		self.assertEqual([ { 'A', 'B' }, { 'B', 'C' }, { 'B', 'D'}, { 'C', 'D' } ], filter_itemsets(transactions, itemsets, 0.5))

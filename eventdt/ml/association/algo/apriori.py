@@ -7,6 +7,15 @@ To restrain the depth of association rules, the Apriori algorithm accepts two pa
 	2. `minconf`: The minimum confidence of an association rule to be accepted.
 """
 
+import os
+import sys
+
+path = os.path.join(os.path.dirname(__file__), '..', '..')
+if path not in sys.path:
+    sys.path.append(path)
+
+import association
+
 def apriori(transactions, minsup=0, minconf=0):
 	"""
 	Perform the Apriori algorithm over the given transactions.
@@ -14,18 +23,18 @@ def apriori(transactions, minsup=0, minconf=0):
 	:param transactions: A list of transactions, each containing any number of items.
 	:type transactions: list of list or list of set
 	:param minsup: The minimum support of an itemset to be part of a rule.
-				   It is bound between 0 and 1.
+				   It is bound between 0 and 1 and is inclusive.
 	:type minsup: float
 	:param minconf: The minimum confidence of an association rule to be accepted.
-				   It is bound between 0 and 1.
+				   It is bound between 0 and 1 and is inclusive.
 	:type minconf: float
 
 	:return: A list of association rules.
 			 Each rule is a two-tuple made up of the antecedent and consequent respectively.
 	:rtype: list of tuple
 
-	:raises ValueError: When the minimum support is not bound between 0 and 1.
-	:raises ValueError: When the minimum confidence is not bound between 0 and 1.
+	:raises ValueError: When the minimum support is not between 0 and 1.
+	:raises ValueError: When the minimum confidence is not between 0 and 1.
 	"""
 
 	if not 0 <= minsup <= 1:
@@ -83,3 +92,27 @@ def get_itemsets(itemsets, length):
 	"""
 	expanded = [ itemset for itemset in expanded if len(itemset) == length ]
 	return expanded
+
+def filter_itemsets(transactions, itemsets, minsup):
+	"""
+	Filter the itemsets to retain only those having a minimum support.
+
+	:param transactions: A list of transactions, each containing any number of items.
+	:type transactions: list of list or list of set
+	:param itemsets: The itemsets to filter.
+	:type itemsets: list of list or list of set
+	:param minsup: The minimum support of an itemset to be part of a rule.
+				   It is bound between 0 and 1 and is inclusive.
+	:type minsup: float
+
+	:return: The filtered itemsets.
+			 All itemsets have at least a support equivalent to the given minimum.
+	:rtype: list of set
+
+	:raises ValueError: When the minimum support is not between 0 and 1.
+	"""
+
+	if not 0 <= minsup <= 1:
+		raise ValueError(f"The minimum support needs to be between 0 and 1; received {minsup}")
+
+	return [ itemset for itemset in itemsets if association.support(transactions, itemset) >= minsup ]
