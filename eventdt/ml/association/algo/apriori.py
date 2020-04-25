@@ -179,8 +179,8 @@ def next_rules(transactions, antecedent, consequent=None):
 	for item in antecedent:
 		copy = set(antecedent)
 		copy.remove(item)
-		confidence = association.confidence(transactions, copy, consequent.union(set(item)))
-		rules.append((copy, consequent.union(set(item)), confidence))
+		confidence = association.confidence(transactions, copy, consequent.union({ item }))
+		rules.append((copy, consequent.union({ item }), confidence))
 
 	return rules
 

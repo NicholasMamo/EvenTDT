@@ -413,6 +413,18 @@ class TestApriori(unittest.TestCase):
 		self.assertTrue(({ 'A', 'C', 'D' }, { 'B' }, 0.5) in next_rules(transactions, antecedent, None))
 		self.assertTrue(({ 'B', 'C', 'D' }, { 'A' }, 1) in next_rules(transactions, antecedent, None))
 
+	def test_next_rules_multiword(self):
+		"""
+		Test that rules with items that are made up of multiple words are not split into characters.
+		"""
+
+		transactions = [ { 'Milk', 'Beer', 'Cheese' }, { 'Milk', 'Beer', 'Cheese', 'Diapers' }, { 'Milk', 'Cheese', 'Diapers' } ]
+		antecedent = [ 'Milk', 'Beer', 'Cheese', 'Diapers' ]
+		self.assertTrue(({ 'Milk', 'Beer', 'Cheese' }, { 'Diapers' }, 0.5) in next_rules(transactions, antecedent, None))
+		self.assertTrue(({ 'Milk', 'Beer', 'Diapers' }, { 'Cheese' }, 1) in next_rules(transactions, antecedent, None))
+		self.assertTrue(({ 'Milk', 'Cheese', 'Diapers' }, { 'Beer' }, 0.5) in next_rules(transactions, antecedent, None))
+		self.assertTrue(({ 'Beer', 'Cheese', 'Diapers' }, { 'Milk' }, 1) in next_rules(transactions, antecedent, None))
+
 	def test_filter_rules_minconf_negative(self):
 		"""
 		Test that when the minimum confidence is negative, a ValueError is raised.
