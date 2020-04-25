@@ -77,6 +77,49 @@ class TestApriori(unittest.TestCase):
 
 		self.assertRaises(ValueError, apriori, [ ], 0, 2)
 
+	def test_get_items_empty_transactions(self):
+		"""
+		Test that when getting items from an empty transaction list, nothing is returned.
+		"""
+
+		self.assertEqual([ ], get_items([ ]))
+
+	def test_get_items_as_itemsets(self):
+		"""
+		Test tht when getting items from a transaction list, they are returned as itemsets.
+		"""
+
+		items = get_items([ [ 'A', 'B' ], [ 'C', 'D' ] ])
+		self.assertEqual(4, len(items))
+		self.assertTrue({ 'A' } in items)
+		self.assertTrue({ 'B' } in items)
+		self.assertTrue({ 'C' } in items)
+		self.assertTrue({ 'D' } in items)
+
+	def test_get_items_from_sets(self):
+		"""
+		Test tht when getting items from a transaction list of sets, they are returned as itemsets.
+		"""
+
+		items = get_items([ { 'A', 'B' }, { 'C', 'D' } ])
+		self.assertEqual(4, len(items))
+		self.assertTrue({ 'A' } in items)
+		self.assertTrue({ 'B' } in items)
+		self.assertTrue({ 'C' } in items)
+		self.assertTrue({ 'D' } in items)
+
+	def test_get_items_unique(self):
+		"""
+		Test tht when getting items from a transaction list, only unique items are returned.
+		"""
+
+		items = get_items([ [ 'A', 'B', 'A' ], [ 'C', 'D', 'A' ] ])
+		self.assertEqual(4, len(items))
+		self.assertTrue({ 'A' } in items)
+		self.assertTrue({ 'B' } in items)
+		self.assertTrue({ 'C' } in items)
+		self.assertTrue({ 'D' } in items)
+
 	def test_get_itemsets_length_float(self):
 		"""
 		Test that when the length of itemsets is a float, a ValueError is raised.

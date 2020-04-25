@@ -43,6 +43,22 @@ def apriori(transactions, minsup=0, minconf=0):
 	if not 0 <= minconf <= 1:
 		raise ValueError(f"The minimum confidence needs to be between 0 and 1; received {minsup}")
 
+def get_items(transactions):
+	"""
+	Extract all items from the transactions.
+
+	:param transactions: A list of transactions, each containing any number of items.
+	:type transactions: list of list or list of set
+
+	:return: A list of items in the transactions.
+			 Each item is returned as an itemset on its own.
+	:rtype: list of set
+	"""
+
+	items = set([ item for transaction in transactions
+					   for item in transaction ])
+	return [ { item } for item in items ]
+
 def get_itemsets(itemsets, length):
 	"""
 	Construct new itemsets from the given ones.
