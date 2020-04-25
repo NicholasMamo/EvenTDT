@@ -377,6 +377,16 @@ class TestApriori(unittest.TestCase):
 		rules = next_rules(antecedent, consequent)
 		self.assertEqual(len(antecedent), len(rules))
 
+	def test_next_rules_one_antecedent(self):
+		"""
+		Test that rules with one antecedent cannot create any new rules.
+		"""
+
+		antecedent = [ 'A' ]
+		consequent = { letter for letter in string.digits }
+		rules = next_rules(antecedent, consequent)
+		self.assertEqual([ ], rules)
+
 	def test_filter_rules_minconf_negative(self):
 		"""
 		Test that when the minimum confidence is negative, a ValueError is raised.

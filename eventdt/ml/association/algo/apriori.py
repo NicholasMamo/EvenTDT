@@ -164,6 +164,16 @@ def next_rules(antecedent, consequent=None):
 	antecedent = set(antecedent)
 	consequent = consequent or set()
 
+	"""
+	A rule must have both an antecedent and a consequent.
+	Therefore if there is only one antecedent, then no new rules can be extracted.
+	"""
+	if len(antecedent) <= 1:
+		return [ ]
+
+	"""
+	Go through each item in the antecedent and move it to the consequent to create a new rule.
+	"""
 	for item in antecedent:
 		copy = set(antecedent)
 		copy.remove(item)
