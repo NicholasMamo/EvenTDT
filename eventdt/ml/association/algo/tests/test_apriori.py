@@ -21,61 +21,111 @@ class TestApriori(unittest.TestCase):
 	Test the functionality of the Apriori algorithm.
 	"""
 
-	def test_minsup_negative(self):
+	def test_apriori_minsup_negative(self):
 		"""
 		Test that when the minimum support is negative, a ValueError is raised.
 		"""
 
 		self.assertRaises(ValueError, apriori, [ ], -1, 0)
 
-	def test_minsup_zero(self):
+	def test_apriori_minsup_zero(self):
 		"""
 		Test that when the minimum support is zero, no ValueError is raised.
 		"""
 
 		apriori([ ], 0, 0)
 
-	def test_minsup_one(self):
+	def test_apriori_minsup_one(self):
 		"""
 		Test that when the minimum support is one, no ValueError is raised.
 		"""
 
 		apriori([ ], 1, 0)
 
-	def test_minsup_high(self):
+	def test_apriori_minsup_high(self):
 		"""
 		Test that when the minimum support is bigger than 1, a ValueError is raised.
 		"""
 
 		self.assertRaises(ValueError, apriori, [ ], 2, 0)
 
-	def test_minconf_negative(self):
+	def test_apriori_minconf_negative(self):
 		"""
 		Test that when the minimum confidence is negative, a ValueError is raised.
 		"""
 
 		self.assertRaises(ValueError, apriori, [ ], 0, -1)
 
-	def test_minconf_zero(self):
+	def test_apriori_minconf_zero(self):
 		"""
 		Test that when the minimum confidence is zero, no ValueError is raised.
 		"""
 
 		apriori([ ], 0, 0)
 
-	def test_minconf_one(self):
+	def test_apriori_minconf_one(self):
 		"""
 		Test that when the minimum confidence is one, no ValueError is raised.
 		"""
 
 		apriori([ ], 0, 1)
 
-	def test_minconf_high(self):
+	def test_apriori_minconf_high(self):
 		"""
 		Test that when the minimum confidence is bigger than 1, a ValueError is raised.
 		"""
 
 		self.assertRaises(ValueError, apriori, [ ], 0, 2)
+
+	def test_apriori_empty_transactions(self):
+		"""
+		Test that when the list of transactions is empty, an empty list of rules is returned.
+		"""
+
+		self.assertEqual([ ], apriori([ ], 0, 0))
+
+	def test_apriori_example_1(self):
+		"""
+		Test an Apriori example from `these notes <https://paginas.fe.up.pt/~ec/files_0506/slides/04_AssociationRules.pdf>`_.
+		"""
+
+		transactions = [
+			[ 'A', 'D' ],
+			[ 'A', 'C' ],
+			[ 'A', 'B', 'C' ],
+			[ 'B', 'E', 'F' ],
+		]
+
+		rules = apriori(transactions, 0.5, 0.5)
+		self.assertTrue(( { 'A' }, { 'C' }, 2/3.) in rules)
+		self.assertTrue(( { 'C' }, { 'A' }, 1) in rules)
+
+	def test_apriori_example_2(self):
+		"""
+		Test an Apriori example from `these notes <http://user.it.uu.se/~kostis/Teaching/DM-05/Slides/association1.pdf>`_.
+		"""
+
+		transactions = [
+			[ 'Bread', 'Milk' ],
+			[ 'Bread', 'Diaper', 'Beer', 'Eggs' ],
+			[ 'Milk', 'Diaper', 'Beer', 'Coke' ],
+			[ 'Bread', 'Milk', 'Diaper', 'Beer' ],
+			[ 'Bread', 'Milk', 'Diaper', 'Coke' ],
+		]
+
+		rules = apriori(transactions, 0.4, 0.5)
+		self.assertTrue(any( antecedent == { 'Milk', 'Diaper' } and consequent == { 'Beer' } and round(confidence, 10) == round(2/3., 10)
+							 for antecedent, consequent, confidence in rules))
+		self.assertTrue(any( antecedent == { 'Milk', 'Beer' } and consequent == { 'Diaper' } and round(confidence, 10) == round(1, 10)
+							 for antecedent, consequent, confidence in rules))
+		self.assertTrue(any( antecedent == { 'Diaper', 'Beer' } and consequent == { 'Milk' } and round(confidence, 10) == round(2/3., 10)
+							 for antecedent, consequent, confidence in rules))
+		self.assertTrue(any( antecedent == { 'Beer' } and consequent == { 'Milk', 'Diaper' } and round(confidence, 10) == round(2/3., 10)
+							 for antecedent, consequent, confidence in rules))
+		self.assertTrue(any( antecedent == { 'Diaper' } and consequent == { 'Milk', 'Beer' } and round(confidence, 10) == round(1/2., 10)
+							 for antecedent, consequent, confidence in rules))
+		self.assertTrue(any( antecedent == { 'Milk' } and consequent == { 'Diaper', 'Beer' } and round(confidence, 10) == round(1/2., 10)
+							 for antecedent, consequent, confidence in rules))
 
 	def test_get_items_empty_transactions(self):
 		"""

@@ -30,18 +30,57 @@ def apriori(transactions, minsup=0, minconf=0):
 	:type minconf: float
 
 	:return: A list of association rules.
-			 Each rule is a two-tuple made up of the antecedent and consequent respectively.
+			 Each rule is a three-tuple made up of the antecedent, consequent and confidence respectively.
 	:rtype: list of tuple
 
 	:raises ValueError: When the minimum support is not between 0 and 1.
 	:raises ValueError: When the minimum confidence is not between 0 and 1.
 	"""
 
+	rules = [ ]
+
 	if not 0 <= minsup <= 1:
 		raise ValueError(f"The minimum support needs to be between 0 and 1; received {minsup}")
 
 	if not 0 <= minconf <= 1:
 		raise ValueError(f"The minimum confidence needs to be between 0 and 1; received {minsup}")
+
+	"""
+	Extract all items from the transactions.
+	These are the unit itemsets.
+	"""
+	items = get_items(transactions)
+	sets = items
+
+	"""
+	Repeatedly filter the itemsets and extract the next itemset until no new itemsets can be extracted.
+	"""
+	itemsets = [ ]
+	for length in range(2, len(items) + 1):
+		sets = filter_itemsets(transactions, sets, minsup)
+		if not sets:
+			break
+
+		itemsets.extend(sets)
+		sets = get_itemsets(sets, length)
+
+	"""
+	Go through all itemsets and extract association rules from them.
+	This process first extracts the initial rule from the itemset.
+	Then, it repeatedly extracts all possible rules and filters them until no new rules can be extracted.
+	"""
+	for itemset in itemsets:
+		next = next_rules(transactions, itemset)
+		for i in range(len(itemset)):
+			next = filter_rules(next, minconf)
+			if not next:
+				break
+
+			rules.extend(next)
+			next = [ next_rule for antecedent, consequent, _ in next
+			 				   for next_rule in next_rules(transactions, antecedent, consequent) ]
+
+	return rules
 
 def get_items(transactions):
 	"""
