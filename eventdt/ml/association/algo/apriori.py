@@ -33,3 +33,53 @@ def apriori(transactions, minsup=0, minconf=0):
 
 	if not 0 <= minconf <= 1:
 		raise ValueError(f"The minimum confidence needs to be between 0 and 1; received {minsup}")
+
+def get_itemsets(itemsets, length):
+	"""
+	Construct new itemsets from the given ones.
+	All new itemsets have the given length.
+
+	:param itemsets: The itemset from which to which to create the new itemsets.
+	:type itemsets: list of list or list of set
+	:param length: The length of the new itemsets.
+				   This is usually one bigger than the length of any given itemset.
+	:type length: int
+
+	:return: The new itemsets, created by combining the given itemsets.
+			 All itemsets have the same length, as given in the parameters.
+	:rtype: list of set
+
+	:raises ValueError: When the length is not an integer.
+	:raises ValueError: When the length is not positive.
+	"""
+
+	if type(length) is not int and length % 1:
+		raise ValueError(f"The itemset length has to be an integer; received {length} ({type(length)})")
+
+	if length <= 0:
+		raise ValueError(f"The itemset length has to be positive; received {length}")
+
+	"""
+	Convert all the itemsets to sets first.
+	Then, make sure that there are no duplicate itemsets.
+	"""
+	itemsets = [ set(itemset) for itemset in itemsets ]
+	unique_itemsets = [ ]
+	for itemset in itemsets:
+		if itemset not in unique_itemsets:
+			unique_itemsets.append(itemset)
+	itemsets = unique_itemsets
+
+	"""
+	Expand the itemsets.
+	"""
+	expanded = [ ]
+	for n, itemset_1 in enumerate(itemsets):
+		for itemset_2 in itemsets[n + 1:]:
+			expanded.append(itemset_1.union(itemset_2))
+
+	"""
+	Filter out itemsets that do not match the given length.
+	"""
+	expanded = [ itemset for itemset in expanded if len(itemset) == length ]
+	return expanded
