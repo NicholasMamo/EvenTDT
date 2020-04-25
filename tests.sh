@@ -55,6 +55,7 @@ base_tests() {
 ml_tests() {
 	echo -e "${HIGHLIGHT}Association rules${DEFAULT}"
 	python -m unittest eventdt.ml.association.tests.test_package
+	python -m unittest eventdt.ml.association.algo.tests.test_apriori
 }
 
 nlp_tests() {
