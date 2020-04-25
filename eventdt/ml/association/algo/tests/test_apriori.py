@@ -257,3 +257,68 @@ class TestApriori(unittest.TestCase):
 		itemsets = get_itemsets(vocabulary, 2)
 		transactions = [ { 'A', 'B' }, { 'B', 'C', 'D' } ]
 		self.assertEqual([ { 'A', 'B' }, { 'B', 'C' }, { 'B', 'D'}, { 'C', 'D' } ], filter_itemsets(transactions, itemsets, 0.5))
+
+	def test_next_rules_empty_antecedent(self):
+		"""
+		Test that when the antecedent is empty, no rules are created.
+		"""
+
+		self.assertEqual([ ], next_rules({ }, { 'A' }))
+
+	def test_next_rules_empty_consequent(self):
+		"""
+		Test that when the consequent is empty, all new rules' consequents are unit items.
+		"""
+
+		antecedent = [ letter for letter in string.ascii_letters + string.digits ]
+		rules = next_rules(antecedent, { })
+		self.assertTrue(all(len(consequent) == 1 for _, consequent in rules))
+		self.assertTrue(all(len(rule_antecedent) == len(antecedent) -1 for rule_antecedent, _ in rules))
+		self.assertEqual(len(antecedent), len(rules))
+		self.assertEqual(set(antecedent), set(list(consequent)[0] for _, consequent in rules))
+
+	def test_next_rules_no_consequent(self):
+		"""
+		Test that when no consequent is given, it is treated as an empty consequent.
+		"""
+
+		antecedent = [ letter for letter in string.ascii_letters + string.digits ]
+		rules = next_rules(antecedent)
+		self.assertTrue(all(len(consequent) == 1 for _, consequent in rules))
+		self.assertTrue(all(len(rule_antecedent) == len(antecedent) -1 for rule_antecedent, _ in rules))
+		self.assertEqual(len(antecedent), len(rules))
+		self.assertEqual(set(antecedent), set(list(consequent)[0] for _, consequent in rules))
+
+	def test_next_rules_overlapping(self):
+		"""
+		Test that when the antecedent and the consequent have overlapping items, they are ignored in the consequent.
+		"""
+
+		antecedent = { 'A', 'B' }
+		consequent = { 'A' }
+		rules = next_rules(antecedent, consequent)
+		self.assertEqual(2, len(rules))
+		self.assertTrue(({ 'B' }, { 'A' }) in rules)
+		self.assertTrue(({ 'A' }, { 'A', 'B' }) in  rules)
+
+	def test_next_rules_duplicate_antecedent(self):
+		"""
+		Test that when there are duplicate items in the antecedent, they are removed.
+		"""
+
+		antecedent = { 'A', 'A', 'B' }
+		consequent = { 'C' }
+		rules = next_rules(antecedent, consequent)
+		self.assertEqual(2, len(rules))
+		self.assertTrue(({ 'A' }, { 'B', 'C' }) in rules)
+		self.assertTrue(({ 'B' }, { 'A', 'C' }) in  rules)
+
+	def test_next_rules_count(self):
+		"""
+		Test that the number of next rules is equivalent to the length of the antecedent.
+		"""
+
+		antecedent = [ letter for letter in string.ascii_letters ]
+		consequent = { letter for letter in string.digits }
+		rules = next_rules(antecedent, consequent)
+		self.assertEqual(len(antecedent), len(rules))

@@ -116,3 +116,31 @@ def filter_itemsets(transactions, itemsets, minsup):
 		raise ValueError(f"The minimum support needs to be between 0 and 1; received {minsup}")
 
 	return [ itemset for itemset in itemsets if association.support(transactions, itemset) >= minsup ]
+
+def next_rules(antecedent, consequent=None):
+	"""
+	Generate the next rules from the given antecedent and consequent.
+	The function generates rules by taking one item from the antecedent and adding it to the consequent.
+
+	:param antecedent: The antecedent is the condition for the association rule.
+					   It is presented as a set of items.
+	:type antecedent: list or set
+	:param consequent: The consequent is the conclusion of the antecedent.
+	:type consequent: list or set or None
+
+	:return: A list of association rules.
+			 Each rule is a two-tuple made up of the antecedent and consequent respectively.
+	:rtype: list of tuple
+	"""
+
+	rules = [ ]
+
+	antecedent = set(antecedent)
+	consequent = consequent or set()
+
+	for item in antecedent:
+		copy = set(antecedent)
+		copy.remove(item)
+		rules.append((copy, consequent.union(set(item))))
+
+	return rules
