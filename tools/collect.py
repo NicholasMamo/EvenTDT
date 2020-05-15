@@ -4,8 +4,9 @@
 A tool to collect tweets.
 
 The tool collects a corpus of tweets.
-Each event, described by the first tracking keyword, has its own directory.
-All related corpora are stored together in this directory.
+A corpus can be split into an understanding and an event corpus.
+Both can be collected by specifying tracking keywords.
+All related corpora are stored together in the same directory.
 Each corpus is a JSON file, where each line is one tweet.
 
 To run the script, use:
@@ -13,15 +14,24 @@ To run the script, use:
 .. code-block:: bash
 
     ./tools/collect.py \\
+	-o data/#ARSWAT \\
 	-t '#ARSWAT' Arsenal Watford \\
-	-o data \\
+	-U -u 60 \\
+	-E -e 60
+
+If no tracking keywords are specified, a sample of all tweets is collected.
+
+.. code-block:: bash
+
+    ./tools/collect.py \\
+	-o data/sample \\
 	-U -u 60 \\
 	-E -e 60
 
 Accepted arguments:
 
-	- ``-t --track``			*<Required>* A list of tracking keywords.
 	- ``-o --output``			*<Required>* The data directory where the corpus should be written.
+	- ``-t --track``			*<Optional>* A list of tracking keywords. If none are given, the sample stream is used.
 	- ``-u --understanding``	*<Optional>* The length of the understanding period in minutes. Defaults to an hour and must be a natural number.
 	- ``-e --event``			*<Optional>* The length of the event period in minutes. Defaults to an hour and must be a natural number.
 	- ``-a --account``			*<Optional>* The account to use to collect the corpus with, as an index of the configuration's accounts. Defaults to the first account.
@@ -58,8 +68,8 @@ def setup_args():
 
 	Accepted arguments:
 
-		- ``-t --track``			*<Required>* A list of tracking keywords.
 		- ``-o --output``			*<Required>* The data directory where the corpus should be written.
+		- ``-t --track``			*<Optional>* A list of tracking keywords. If none are given, the sample stream is used.
 		- ``-U``					*<Optional>* Collect the understanding corpus.
 		- ``-u --understanding``	*<Optional>* The length of the understanding period in minutes. Defaults to an hour and must be a natural number.
 		- ``-E``					*<Optional>* Collect the event corpus.
@@ -76,10 +86,10 @@ def setup_args():
 	Parameters that define how the corpus should be collected.
 	"""
 
-	parser.add_argument('-t', '--track', nargs='+', type=str, required=True,
-						action='append', help='<Required> The initial tracking keywords.')
-	parser.add_argument('-o', '--output', nargs=1, type=str, required=True,
+	parser.add_argument('-o', '--output', type=str, required=True,
 						help='<Required> The data directory where the corpus should be written.')
+	parser.add_argument('-t', '--track', nargs='+', type=str, required=False,
+						action='append', help='<Optional> The initial tracking keywords. If none are given, the sample stream is used.')
 	parser.add_argument('-u', '--understanding', nargs='?', type=int,
 						default=60, required=False,
 						help='<Optional> The length of the understanding period in minutes. Defaults to an hour.')
@@ -112,10 +122,8 @@ def main():
 	"""
 	Create the data directory if it does not exist.
 	"""
-	output, track = args.output[0], args.track[0]
-	data_dir = os.path.join(output, track[0])
-	if not os.path.exists(data_dir):
-		os.makedirs(data_dir)
+	if not os.path.exists(args.output):
+		os.makedirs(args.output)
 
 	"""
 	Set up the authentication with the Twitter Stream API.
@@ -132,15 +140,15 @@ def main():
 		if args.understanding <= 0:
 			raise ValueError("The understanding period must be longer than 0 minutes")
 
-		filename = os.path.join(data_dir, 'understanding.json')
+		filename = os.path.join(args.output, 'understanding.json')
 
 		start = time.time()
 		logger.info('Starting to collect understanding corpus')
-		collect(auth, track, filename, args.understanding * 60)
+		collect(auth, args.track, filename, args.understanding * 60)
 		logger.info('Understanding corpus collected')
 		end = time.time()
 		meta.append({
-			'keywords': track,
+			'keywords': args.track,
 			'output': filename,
 			'start': start,
 			'end': end
@@ -150,22 +158,22 @@ def main():
 		if args.event <= 0:
 			raise ValueError("The event period must be longer than 0 minutes")
 
-		filename = os.path.join(data_dir, 'event.json')
+		filename = os.path.join(args.output, 'event.json')
 
 		start = time.time()
 		logger.info('Starting to collect event corpus')
-		collect(auth, track, filename, args.event * 60)
+		collect(auth, args.track, filename, args.event * 60)
 		logger.info('Event corpus collected')
 		end = time.time()
 		meta.append({
-			'keywords': track,
+			'keywords': args.track,
 			'output': filename,
 			'start': start,
 			'end': end
 		})
 
 	if meta:
-		save_meta(os.path.join(data_dir, 'meta.json'), meta)
+		save_meta(os.path.join(args.output, 'meta.json'), meta)
 
 def collect(auth, track, filename, max_time, lang=None, *args, **kwargs):
 	"""
@@ -192,7 +200,10 @@ def collect(auth, track, filename, max_time, lang=None, *args, **kwargs):
 		with open(filename, 'w') as file:
 			listener = TweetListener(file, max_time=max_time, *args, **kwargs)
 			stream = Stream(auth, listener)
-			stream.filter(track=track, languages=lang)
+			if track:
+				stream.filter(track=track, languages=lang)
+			else:
+				stream.sample(languages=lang)
 	except (Exception) as e:
 		elapsed = time.time() - start
 		logger.warning(f"{e.__class__.__name__} after {elapsed} seconds, restarting for {max_time - elapsed} seconds")
