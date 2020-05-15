@@ -135,7 +135,7 @@ def main():
 	"""
 	Start collecting tweets.
 	"""
-	meta = []
+	meta = { }
 	if args.U:
 		if args.understanding <= 0:
 			raise ValueError("The understanding period must be longer than 0 minutes")
@@ -147,30 +147,30 @@ def main():
 		collect(auth, args.track, filename, args.understanding * 60)
 		logger.info('Understanding corpus collected')
 		end = time.time()
-		meta.append({
+		meta['understanding'] = {
 			'keywords': args.track,
 			'output': filename,
 			'start': start,
 			'end': end
-		})
+		}
 
 	if args.E:
 		if args.event <= 0:
 			raise ValueError("The event period must be longer than 0 minutes")
 
-		filename = os.path.join(args.output, 'event.json')
+		filename = os.path.join(args.output, ('event.json' if args.track else 'sample.json'))
 
 		start = time.time()
 		logger.info('Starting to collect event corpus')
 		collect(auth, args.track, filename, args.event * 60)
 		logger.info('Event corpus collected')
 		end = time.time()
-		meta.append({
+		meta['event'] = {
 			'keywords': args.track,
 			'output': filename,
 			'start': start,
 			'end': end
-		})
+		}
 
 	if meta:
 		save_meta(os.path.join(args.output, 'meta.json'), meta)
@@ -218,10 +218,21 @@ def save_meta(filename, meta):
 	:param meta: The metadata to save.
 	:type meta: list of dict
 	"""
-	meta_filename = os.path.join(filename)
-	with open(meta_filename, 'w') as meta_file:
-		for collection in meta:
-			meta_file.write(json.dumps(collection) + "\n")
+
+	"""
+	Load the existing metadata if it exists.
+	"""
+	if os.path.exists(filename):
+		with open(filename, 'r') as meta_file:
+			existing = json.loads(meta_file.readline())
+			existing.update(meta)
+			meta = existing
+
+	"""
+	Save the metadata to the file.
+	"""
+	with open(filename, 'w') as meta_file:
+		meta_file.write(json.dumps(meta) + "\n")
 
 if __name__ == "__main__":
 	main()
