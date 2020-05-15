@@ -88,8 +88,7 @@ def setup_args():
 
 	parser.add_argument('-o', '--output', type=str, required=True,
 						help='<Required> The data directory where the corpus should be written.')
-	parser.add_argument('-t', '--track', nargs='+', type=str, required=False,
-						action='append', help='<Optional> The initial tracking keywords. If none are given, the sample stream is used.')
+	parser.add_argument('-t', '--track', nargs='+', required=False, help='<Optional> The initial tracking keywords. If none are given, the sample stream is used.')
 	parser.add_argument('-u', '--understanding', nargs='?', type=int,
 						default=60, required=False,
 						help='<Optional> The length of the understanding period in minutes. Defaults to an hour.')
