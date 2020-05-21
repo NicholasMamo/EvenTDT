@@ -312,9 +312,13 @@ class TestTokenizer(unittest.TestCase):
 		Test that word normalization reduces normalized characters.
 		"""
 
-		s = "YYYYYEEESSSSSSSSS OOXXXXXXXXXXXX!!!"
 		t = Tokenizer(normalize_words=True, character_normalization_count=2, stem=False, min_length=2)
+
+		s = "YYYYYEEESSSSSSSSS OOXXXXXXXXXXXX!!!"
 		self.assertEqual([ "yes", "ox" ], t.tokenize(s))
+
+		s = "GOOOOOOOOOOOOOOAAAAALL!!!"
+		self.assertEqual([ "goal" ], t.tokenize(s))
 
 	def test_word_normalization_character_limit(self):
 		"""
