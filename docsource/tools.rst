@@ -23,11 +23,6 @@ Data Collection
    :private-members:
    :special-members:
 
-.. automodule:: tools.sample
-   :members:
-   :private-members:
-   :special-members:
-
 ======
 TF-IDF
 ======
