@@ -76,5 +76,37 @@ def main():
 
 	args = setup_args()
 
+def tokenize(tweet, tokenizer):
+	"""
+	Tokenize the given tweet.
+	The text used depends on the type of tweet.
+	The full text is always sought.
+
+	:param tweet: The tweet to tokenize.
+	:type tweet: dict
+	:param tokenizer: The tokenizer to use to tokenize the tweet.
+	:type tokenizer: :class:`~nlp.tokenizer.Tokenizer`
+
+	:return: A list of tokens from the tweet.
+	:rtype: list of str
+	"""
+
+	"""
+	The text used for the document depend on what kind of tweet it is.
+	If the tweet is too long to fit in the tweet, the full text is used;
+
+	Retain the comment of a quoted status.
+	However, if the tweet is a plain retweet, get the full text.
+	"""
+	while "retweeted_status" in tweet:
+		tweet = tweet["retweeted_status"]
+
+	if "extended_tweet" in tweet:
+		text = tweet["extended_tweet"].get("full_text", tweet.get("text", ""))
+	else:
+		text = tweet.get("text", "")
+
+	return tokenizer.tokenize(text)
+
 if __name__ == "__main__":
 	main()
