@@ -151,3 +151,54 @@ class TestTokenizer(unittest.TestCase):
 		with open(output, 'r') as outfile:
 			for line in outfile:
 				self.assertTrue('text' in json.loads(line))
+
+	def test_tokenize_corpus_no_keep(self):
+		"""
+		Test that when specifying no attribute to keep, the only attributes kept are the tweet ID, text and tokens.
+		"""
+
+		file = 'tools/tests/corpus.json'
+		output = 'tools/tests/.out/tokenized.json'
+
+		"""
+		Tokenize the corpus and ensure that the ID is present in all tweets.
+		"""
+		tool.prepare_output(output)
+		tool.tokenize_corpus(file, output, Tokenizer())
+		with open(output, 'r') as outfile:
+			for line in outfile:
+				self.assertEqual({ 'id', 'text', 'tokens' }, set(json.loads(line)))
+
+	def test_tokenize_corpus_keep(self):
+		"""
+		Test that when specifying attributes to keep, they are always stored.
+		"""
+
+		file = 'tools/tests/corpus.json'
+		output = 'tools/tests/.out/tokenized.json'
+
+		"""
+		Tokenize the corpus and ensure that the ID is present in all tweets.
+		"""
+		tool.prepare_output(output)
+		tool.tokenize_corpus(file, output, Tokenizer(), keep=[ 'timestamp_ms' ])
+		with open(output, 'r') as outfile:
+			for line in outfile:
+				self.assertEqual({ 'id', 'text', 'tokens', 'timestamp_ms' }, set(json.loads(line)))
+
+	def test_tokenize_corpus_keep_multiple(self):
+		"""
+		Test that when specifying multiple attributes to keep, they are always stored.
+		"""
+
+		file = 'tools/tests/corpus.json'
+		output = 'tools/tests/.out/tokenized.json'
+
+		"""
+		Tokenize the corpus and ensure that the ID is present in all tweets.
+		"""
+		tool.prepare_output(output)
+		tool.tokenize_corpus(file, output, Tokenizer(), keep=[ 'timestamp_ms', 'id_str' ])
+		with open(output, 'r') as outfile:
+			for line in outfile:
+				self.assertEqual({ 'id', 'text', 'tokens', 'timestamp_ms', 'id_str' }, set(json.loads(line)))

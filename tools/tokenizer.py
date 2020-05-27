@@ -108,7 +108,7 @@ def prepare_output(output):
 	if not os.path.exists(dir):
 		os.makedirs(dir)
 
-def tokenize_corpus(file, output, tokenizer):
+def tokenize_corpus(file, output, tokenizer, keep=None):
 	"""
 	Tokenize the corpus represented by the given file.
 	The function iterates over each tweet, tokenizes it and saves it to the file.
@@ -120,7 +120,12 @@ def tokenize_corpus(file, output, tokenizer):
 	:type output: str
 	:param tokenizer: The tokenizer to use to create the tokenized corpus.
 	:type tokenizer: :class:`~nlp.tokenizer.Tokenizer`
+	:param keep: The list of tweet attributes to store for each tweet.
+				 By default, the tweet ID is always kept.
+	:type keep: list or None
 	"""
+
+	keep = keep or [ ]
 
 	with open(file, 'r') as infile, \
 		  open(output, 'w') as outfile:
@@ -129,11 +134,22 @@ def tokenize_corpus(file, output, tokenizer):
 			text = get_text(tweet)
 			tokens = tokenizer.tokenize(text)
 
-			object = {
-				'id': tweet['id'],
-				'text': tweet['text'],
-				'tokens': tokens
-			}
+			"""
+			By default, each tweet object stores:
+
+			- The tweet ID,
+			- The text used to extract tokens, and
+			- The tokens themselves.
+			"""
+			object = { 'id': tweet['id'], 'text': tweet['text'],
+					   'tokens': tokens }
+
+			"""
+			Other attributes can be specified as arguments.
+			"""
+			for attribute in keep:
+				object[attribute] = tweet[attribute]
+
 			outfile.write(f"{ json.dumps(object) }\n")
 
 def get_text(tweet):
