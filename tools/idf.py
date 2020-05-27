@@ -7,10 +7,10 @@ To run the script, use:
 
 .. code-block:: bash
 
-    ./implementation/idf.py \\
+    ./tool/idf.py \\
 	-f data/sample.json \\
 	-o data/idf.json \\
-	--remove-unicode-entities
+	--remove-unicode-entities \\
 	--normalize-words --stem
 
 Accepted arguments:

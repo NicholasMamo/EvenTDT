@@ -15,7 +15,7 @@ To run the script, use:
 
 .. code-block:: bash
 
-    ./implementation/consume.py \\
+    ./tools/consume.py \\
 	-f data/event/event.json \\
 	-c PrintConsumer
 
