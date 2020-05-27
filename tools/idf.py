@@ -7,7 +7,7 @@ To run the script, use:
 
 .. code-block:: bash
 
-    ./tool/idf.py \\
+    ./tools/idf.py \\
 	-f data/sample.json \\
 	-o data/idf.json \\
 	--remove-unicode-entities \\
@@ -176,6 +176,13 @@ def save(tfidf, output):
 	:param output: The path to the file where to save the TF-IDF scheme.
 	:type output: str
 	"""
+
+	"""
+	Create the data directory if it does not exist.
+	"""
+	dir = os.path.dirname(output)
+	if not os.path.exists(dir):
+		os.makedirs(dir)
 
 	tfidf = { 'tfidf': tfidf }
 	with open(output, 'w') as f:
