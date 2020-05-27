@@ -21,6 +21,7 @@ Accepted arguments:
 
 	- ``-f --file``							*<Required>* The file to use to construct the tokenized corpus.
 	- ``-o --output``						*<Required>* The file where to save the tokenized corpus.
+	- ``-k --keep``							*<Optional>* The tweet attributes to store.
 	- ``--remove-unicode-entities``			*<Optional>* Remove unicode entities from the tweets.
 	- ``--normalize-words``					*<Optional>* Normalize words with repeating characters in them.
 	- ``--character-normalization-count``	*<Optional>* The number of times a character must repeat for it to be normalized. Used only with the ``--normalize-words`` flag.
@@ -47,6 +48,7 @@ def setup_args():
 
 		- ``-f --file``							*<Required>* The file to use to construct the tokenized corpus.
 		- ``-o --output``						*<Required>* The file where to save the tokenized corpus.
+		- ``-k --keep``							*<Optional>* The tweet attributes to store.
 		- ``--remove-unicode-entities``			*<Optional>* Remove unicode entities from the tweets.
 		- ``--normalize-words``					*<Optional>* Normalize words with repeating characters in them.
 		- ``--character-normalization-count``	*<Optional>* The number of times a character must repeat for it to be normalized. Used only with the ``--normalize-words`` flag.
@@ -66,6 +68,8 @@ def setup_args():
 						help='<Required> The file to use to construct the tokenized corpus.')
 	parser.add_argument('-o', '--output', type=str, required=True,
 						help='<Required> The file where to save the tokenized corpus.')
+	parser.add_argument('-k', '--keep', type=str, nargs='+', required=False,
+						help='<Optional> The tweet attributes to store.')
 	parser.add_argument('--remove-unicode-entities', action="store_true",
 						help='<Optional> Remove unicode entities from the tweets.')
 	parser.add_argument('--normalize-words', action="store_true",
