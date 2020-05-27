@@ -83,15 +83,21 @@ def main():
 	Main program loop.
 	"""
 
+	"""
+	Set up the arguments, create the tokenizer and prepare the data directory.
+	"""
 	args = setup_args()
 	tokenizer = Tokenizer(normalize_words=args.normalize_words,
 						  character_normalization_count=args.character_normalization_count,
 						  remove_unicode_entities=args.remove_unicode_entities, stem=args.stem)
+	prepare_output(args.output)
 
+def prepare_output(output):
 	"""
 	Create the data directory if it does not exist.
 	"""
-	dir = os.path.dirname(args.output)
+
+	dir = os.path.dirname(output)
 	if not os.path.exists(dir):
 		os.makedirs(dir)
 
