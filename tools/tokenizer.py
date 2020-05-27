@@ -88,6 +88,12 @@ def main():
 						  character_normalization_count=args.character_normalization_count,
 						  remove_unicode_entities=args.remove_unicode_entities, stem=args.stem)
 
+	"""
+	Create the data directory if it does not exist.
+	"""
+	dir = os.path.dirname(args.output)
+	if not os.path.exists(dir):
+		os.makedirs(dir)
 
 def tokenize(tweet, tokenizer):
 	"""
