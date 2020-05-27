@@ -5,7 +5,7 @@ A tool to tokenize a corpus of tweets.
 The tokenizer can be used to pre-process a corpus.
 
 Each line in the tokenizer corresponds to a tweet.
-Each line is a JSON object containing, at minimum, the tweet ID and the tokens.
+Each line is a JSON object containing, at minimum, the tweet ID, the text used for the tokenization and the tokens.
 
 To run the script, use:
 
@@ -107,16 +107,17 @@ def prepare_output(output):
 def tokenize(tweet, tokenizer):
 	"""
 	Tokenize the given tweet.
+def get_text(tweet):
+	"""
+	Extract the text from the given tweet.
 	The text used depends on the type of tweet.
 	The full text is always sought.
 
 	:param tweet: The tweet to tokenize.
 	:type tweet: dict
-	:param tokenizer: The tokenizer to use to tokenize the tweet.
-	:type tokenizer: :class:`~nlp.tokenizer.Tokenizer`
 
-	:return: A list of tokens from the tweet.
-	:rtype: list of str
+	:return: The text to tokenize from the tweet.
+	:rtype: str
 	"""
 
 	"""
@@ -130,11 +131,9 @@ def tokenize(tweet, tokenizer):
 		tweet = tweet["retweeted_status"]
 
 	if "extended_tweet" in tweet:
-		text = tweet["extended_tweet"].get("full_text", tweet.get("text", ""))
+		return tweet["extended_tweet"].get("full_text", tweet.get("text", ""))
 	else:
-		text = tweet.get("text", "")
-
-	return tokenizer.tokenize(text)
+		return tweet.get("text", "")
 
 if __name__ == "__main__":
 	main()
