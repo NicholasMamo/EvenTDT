@@ -40,3 +40,12 @@ Consumption
    :members:
    :private-members:
    :special-members:
+
+==============
+Pre-processing
+==============
+
+.. automodule:: tools.tokenizer
+   :members:
+   :private-members:
+   :special-members:
