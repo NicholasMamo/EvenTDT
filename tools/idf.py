@@ -120,6 +120,8 @@ def construct(file, *args, **kwargs):
 def tokenize(tweet, tokenizer):
 	"""
 	Convert the given tweet into a document.
+	The text used depends on the type of tweet.
+	The full text is always sought.
 
 	:param tweet: The tweet to tokenize.
 	:type tweet: dict
