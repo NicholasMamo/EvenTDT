@@ -29,6 +29,15 @@ Accepted arguments:
 """
 
 import argparse
+import json
+import os
+import sys
+
+path = os.path.join(os.path.dirname(__file__), '..', 'eventdt')
+if path not in sys.path:
+    sys.path.append(path)
+
+from nlp.tokenizer import Tokenizer
 
 def setup_args():
 	"""
@@ -75,6 +84,10 @@ def main():
 	"""
 
 	args = setup_args()
+	tokenizer = Tokenizer(normalize_words=args.normalize_words,
+						  character_normalization_count=args.character_normalization_count,
+						  remove_unicode_entities=args.remove_unicode_entities, stem=args.stem)
+
 
 def tokenize(tweet, tokenizer):
 	"""
