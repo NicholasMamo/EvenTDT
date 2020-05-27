@@ -91,10 +91,11 @@ def main():
 	Set up the arguments, create the tokenizer and prepare the data directory.
 	"""
 	args = setup_args()
+	prepare_output(args.output)
 	tokenizer = Tokenizer(normalize_words=args.normalize_words,
 						  character_normalization_count=args.character_normalization_count,
 						  remove_unicode_entities=args.remove_unicode_entities, stem=args.stem)
-	prepare_output(args.output)
+	tokenize_corpus(args.file, args.output, tokenizer, args.keep)
 
 def prepare_output(output):
 	"""
