@@ -186,6 +186,23 @@ class TestTokenizer(unittest.TestCase):
 			for line in outfile:
 				self.assertEqual({ 'id', 'text', 'tokens', 'timestamp_ms' }, set(json.loads(line)))
 
+	def test_tokenize_corpus_keep_occasional(self):
+		"""
+		Test that when specifying attributes to keep, an attribute that appears occasionally is still stored, but as `None`, when not found.
+		"""
+
+		file = 'tools/tests/corpus.json'
+		output = 'tools/tests/.out/tokenized.json'
+
+		"""
+		Tokenize the corpus and ensure that the ID is present in all tweets.
+		"""
+		tool.prepare_output(output)
+		tool.tokenize_corpus(file, output, Tokenizer(), keep=[ 'retweeted_status' ])
+		with open(output, 'r') as outfile:
+			for line in outfile:
+				self.assertEqual({ 'id', 'text', 'tokens', 'retweeted_status' }, set(json.loads(line)))
+
 	def test_tokenize_corpus_keep_multiple(self):
 		"""
 		Test that when specifying multiple attributes to keep, they are always stored.

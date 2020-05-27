@@ -149,7 +149,7 @@ def tokenize_corpus(file, output, tokenizer, keep=None):
 			Other attributes can be specified as arguments.
 			"""
 			for attribute in keep:
-				object[attribute] = tweet[attribute]
+				object[attribute] = tweet.get(attribute)
 
 			outfile.write(f"{ json.dumps(object) }\n")
 
