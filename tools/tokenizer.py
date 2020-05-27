@@ -95,6 +95,9 @@ def main():
 def prepare_output(output):
 	"""
 	Create the data directory if it does not exist.
+
+	:param output: The output path.
+	:type output: str
 	"""
 
 	dir = os.path.dirname(output)
