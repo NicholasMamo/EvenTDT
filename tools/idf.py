@@ -54,7 +54,7 @@ def setup_args():
 	:rtype: list
 	"""
 
-	parser = argparse.ArgumentParser(description="Consume a corpus of tweets.")
+	parser = argparse.ArgumentParser(description="Create a TF-IDF scheme from a corpus of tweets.")
 
 	"""
 	Parameters that define how the corpus should be collected.
