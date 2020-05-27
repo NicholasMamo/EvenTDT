@@ -104,9 +104,34 @@ def prepare_output(output):
 	if not os.path.exists(dir):
 		os.makedirs(dir)
 
-def tokenize(tweet, tokenizer):
+def tokenize_corpus(file, output, tokenizer):
 	"""
-	Tokenize the given tweet.
+	Tokenize the corpus represented by the given file.
+	The function iterates over each tweet, tokenizes it and saves it to the file.
+
+	:param file: The path to the corpus file.
+	:type file: str
+	:param output: The output path.
+				   This function assumes that the directory path exists.
+	:type output: str
+	:param tokenizer: The tokenizer to use to create the tokenized corpus.
+	:type tokenizer: :class:`~nlp.tokenizer.Tokenizer`
+	"""
+
+	with open(file, 'r') as infile, \
+		  open(output, 'w') as outfile:
+		for line in infile:
+			tweet = json.loads(line)
+			text = get_text(tweet)
+			tokens = tokenizer.tokenize(text)
+
+			object = {
+				'id': tweet['id'],
+				'text': tweet['text'],
+				'tokens': tokens
+			}
+			outfile.write(f"{ json.dumps(object) }\n")
+
 def get_text(tweet):
 	"""
 	Extract the text from the given tweet.
