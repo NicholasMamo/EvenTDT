@@ -231,26 +231,26 @@ class TestProbability(unittest.TestCase):
 		"""
 
 		x = [ ]
-		y = [ 'a', 'b' ]
-		self.assertEqual([ ('a', ), ('b', ) ], joint_vocabulary(x, y))
+		y = [ 'ab', 'cd' ]
+		self.assertEqual([ ('ab', ), ('cd', ) ], joint_vocabulary(x, y))
 
 	def test_joint_vocabulary_empty_y(self):
 		"""
 		Test that when `y` is empty, the joint vocabulary is also made up of `x`.
 		"""
 
-		x = [ 'a', 'b' ]
+		x = [ 'ab', 'cd' ]
 		y = [ ]
-		self.assertEqual([ ('a', ), ('b', ) ], joint_vocabulary(x, y))
+		self.assertEqual([ ('ab', ), ('cd', ) ], joint_vocabulary(x, y))
 
 	def test_joint_vocabulary_strings_only(self):
 		"""
 		Test that both `x` and `y` are strings, they are converted into a list.
 		"""
 
-		x = 'a'
-		y = 'b'
-		self.assertEqual([ ( 'a', 'b' ) ], joint_vocabulary(x, y))
+		x = 'ab'
+		y = 'cd'
+		self.assertEqual([ ( 'ab', 'cd' ) ], joint_vocabulary(x, y))
 
 	def test_joint_vocabulary_tuple_only(self):
 		"""
@@ -266,19 +266,19 @@ class TestProbability(unittest.TestCase):
 		Test that both `x` and `y` are tuples with multiple elements, they are converted into a list.
 		"""
 
-		x = ('a', 'b' )
-		y = ('c', 'd' )
-		self.assertEqual([ ( 'a', 'b', 'c', 'd' ) ], joint_vocabulary(x, y))
+		x = ('ab', 'cd' )
+		y = ('ef', 'gh' )
+		self.assertEqual([ ( 'ab', 'cd', 'ef', 'gh' ) ], joint_vocabulary(x, y))
 
 	def test_joint_vocabulary_cross(self):
 		"""
 		Test that the cross-product is returned in the joint vocabulary.
 		"""
 
-		x = [ 'a', 'b' ]
-		y = [ 'c', 'd' ]
-		self.assertEqual([ ( 'a', 'c' ), ( 'a', 'd' ),
-		 				   ( 'b', 'c' ), ( 'b', 'd' ) ], joint_vocabulary(x, y))
+		x = [ 'ab', 'cd' ]
+		y = [ 'ef', 'gh' ]
+		self.assertEqual([ ( 'ab', 'ef' ), ( 'ab', 'gh' ),
+		 				   ( 'cd', 'ef' ), ( 'cd', 'gh' ) ], joint_vocabulary(x, y))
 
 		x = list(string.ascii_letters)
 		y = list(string.digits)

@@ -132,10 +132,10 @@ def joint_vocabulary(x, y):
 	Immediately return if either `x` or `y` are empty.
 	"""
 	if not x:
-		return [ tuple(item) for item in y ]
+		return [ tuple(item) if type(item) is not str else (item, ) for item in y ]
 
 	if not y:
-		return [ tuple(item) for item in x ]
+		return [ tuple(item) if type(item) is not str else (item, ) for item in x ]
 
 	"""
 	Create the vocabulary.
