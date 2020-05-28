@@ -8,6 +8,7 @@ import sys
 import unittest
 
 from datetime import datetime
+from nltk.corpus import stopwords
 
 paths = [ os.path.join(os.path.dirname(__file__), '..'),
  		  os.path.join(os.path.dirname(__file__), '..', '..') ]
@@ -219,3 +220,43 @@ class TestTokenizer(unittest.TestCase):
 		with open(output, 'r') as outfile:
 			for line in outfile:
 				self.assertEqual({ 'id', 'text', 'tokens', 'timestamp_ms', 'id_str' }, set(json.loads(line)))
+
+	def test_tokenize_corpus_keep_stopwords(self):
+		"""
+		Test that when tokenizing a corpus without removing stopwords, they are retained.
+		"""
+
+		file = 'tools/tests/corpus.json'
+		output = 'tools/tests/.out/tokenized.json'
+
+		"""
+		Tokenize the corpus and again collect the lines in the tokenized corpus.
+		"""
+		tool.prepare_output(output)
+		tool.tokenize_corpus(file, output, Tokenizer(stem=False, stopwords={ }))
+		with open(output, 'r') as outfile:
+			self.assertTrue(any( 'while' in json.loads(line)['tokens'] for line in outfile.readlines() ))
+			outfile.seek(0)
+			self.assertTrue(any( 'the' in json.loads(line)['tokens'] for line in outfile.readlines() ))
+			outfile.seek(0)
+			self.assertTrue(any( 'this' in json.loads(line)['tokens'] for line in outfile.readlines() ))
+
+	def test_tokenize_corpus_remove_stopwords(self):
+		"""
+		Test that when tokenizing a corpus and removing stopwords, no stopwords remain.
+		"""
+
+		file = 'tools/tests/corpus.json'
+		output = 'tools/tests/.out/tokenized.json'
+
+		"""
+		Tokenize the corpus and again collect the lines in the tokenized corpus.
+		"""
+		tool.prepare_output(output)
+		tool.tokenize_corpus(file, output, Tokenizer(stem=False, stopwords=stopwords.words('english')))
+		with open(output, 'r') as outfile:
+			self.assertTrue(not any( 'while' in json.loads(line)['tokens'] for line in outfile.readlines() ))
+			outfile.seek(0)
+			self.assertTrue(not any( 'the' in json.loads(line)['tokens'] for line in outfile.readlines() ))
+			outfile.seek(0)
+			self.assertTrue(not any( 'this' in json.loads(line)['tokens'] for line in outfile.readlines() ))

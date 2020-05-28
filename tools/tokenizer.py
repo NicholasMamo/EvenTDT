@@ -15,6 +15,7 @@ To run the script, use:
 	-f data/sample.json \\
 	-o data/idf.json \\
 	--remove-unicode-entities \\
+	--remove-stopwords \\
 	--normalize-words --stem
 
 Accepted arguments:
@@ -25,6 +26,7 @@ Accepted arguments:
 	- ``--remove-unicode-entities``			*<Optional>* Remove unicode entities from the tweets.
 	- ``--normalize-words``					*<Optional>* Normalize words with repeating characters in them.
 	- ``--character-normalization-count``	*<Optional>* The number of times a character must repeat for it to be normalized. Used only with the ``--normalize-words`` flag.
+	- ``--remove-stopwords``				*<Optional>* Remove stopwords from the tokens.
 	- ``-stem``								*<Optional>* Stem the tokens when constructing the tokenized corpus.
 
 """
@@ -33,6 +35,8 @@ import argparse
 import json
 import os
 import sys
+
+from nltk.corpus import stopwords
 
 path = os.path.join(os.path.dirname(__file__), '..', 'eventdt')
 if path not in sys.path:
@@ -52,6 +56,7 @@ def setup_args():
 		- ``--remove-unicode-entities``			*<Optional>* Remove unicode entities from the tweets.
 		- ``--normalize-words``					*<Optional>* Normalize words with repeating characters in them.
 		- ``--character-normalization-count``	*<Optional>* The number of times a character must repeat for it to be normalized. Used only with the ``--normalize-words`` flag.
+		- ``--remove-stopwords``				*<Optional>* Remove stopwords from the tokens.
 		- ``-stem``								*<Optional>* Stem the tokens when constructing the tokenized corpus.
 
 	:return: The command-line arguments.
@@ -72,6 +77,8 @@ def setup_args():
 						help='<Optional> The tweet attributes to store.')
 	parser.add_argument('--remove-unicode-entities', action="store_true",
 						help='<Optional> Remove unicode entities from the tweets.')
+	parser.add_argument('--remove-stopwords', action="store_true",
+						help='<Optional> Remove stopwords from the tokens.')
 	parser.add_argument('--normalize-words', action="store_true",
 						help='<Optional> Normalize words with repeating characters in them.')
 	parser.add_argument('--character-normalization-count', type=int, required=False, default=3,
@@ -94,7 +101,8 @@ def main():
 	prepare_output(args.output)
 	tokenizer = Tokenizer(normalize_words=args.normalize_words,
 						  character_normalization_count=args.character_normalization_count,
-						  remove_unicode_entities=args.remove_unicode_entities, stem=args.stem)
+						  remove_unicode_entities=args.remove_unicode_entities, stem=args.stem,
+						  stopwords=({ } if not args.remove_stopwords else stopwords.words('english')))
 	tokenize_corpus(args.file, args.output, tokenizer, args.keep)
 
 def prepare_output(output):
