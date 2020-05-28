@@ -91,3 +91,62 @@ def p(corpora, focus=None):
 		return { token: count / tokens for token, count in counts.items() }
 
 	return { }
+def joint_vocabulary(x, y):
+	"""
+	Get the joint vocabulary by creating the cross-product from `x` and `y`.
+
+	:param x: The tokens for which to compute the probability.
+			  These tokens are combined as a cross-product with all tokens in `y`.
+			  The tokens can be provided as:
+
+			  - A single word,
+			  - A list of tokens,
+			  - A tuple, or
+			  - A list of tuples.
+
+			  A tuple translates to joint probabilities.
+	:type x: str or list of str or tuple or list of tuple
+	:param y: The tokens for which to compute the probability.
+			  These tokens are combined as a cross-product with all tokens in `x`.
+			  The tokens can be provided as:
+
+			  - A single word,
+			  - A list of tokens,
+			  - A tuple, or
+			  - A list of tuples.
+
+			  A tuple translates to joint probabilities.
+	:type y: str or list of str or tuple or list of tuple
+	"""
+
+	vocabulary = [ ]
+
+	"""
+	The list of tokens in `x` and `y` is always made into a list, even if it's a list of one string or tuple.
+	"""
+	x, y = x or [ ], y or [ ]
+	x = [ x ] if type(x) is tuple or type(x) is str else x
+	y = [ y ] if type(y) is tuple or type(y) is str else y
+
+	"""
+	Immediately return if either `x` or `y` are empty.
+	"""
+	if not x:
+		return [ tuple(item) for item in y ]
+
+	if not y:
+		return [ tuple(item) for item in x ]
+
+	"""
+	Create the vocabulary.
+	"""
+	for i in x:
+		"""
+		Always convert the elements into a list, whether they are a string or a tuple.
+		"""
+		i = list([ i ] if type(i) is str else i)
+		for j in y:
+			j = list([ j ] if type(j) is str else j)
+			vocabulary.append(tuple(i + j))
+
+	return vocabulary

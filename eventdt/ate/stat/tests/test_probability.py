@@ -4,6 +4,7 @@ Test the functionality of the probability functions.
 
 import json
 import os
+import string
 import sys
 import unittest
 
@@ -93,7 +94,7 @@ class TestProbability(unittest.TestCase):
 		"""
 		Compute the probability for one token.
 		"""
-		subset = p(paths, only='yellow')
+		subset = p(paths, focus='yellow')
 		self.assertEqual(1, len(subset))
 		self.assertEqual({ 'yellow' }, set(subset.keys()))
 		self.assertLess(0, sum(subset.values()))
@@ -117,7 +118,7 @@ class TestProbability(unittest.TestCase):
 		"""
 		Compute the probability for a few tokens.
 		"""
-		subset = p(paths, only=[ 'yellow', 'card' ])
+		subset = p(paths, focus=[ 'yellow', 'card' ])
 		self.assertEqual(2, len(subset))
 		self.assertEqual({ 'yellow', 'card' }, set(subset.keys()))
 		self.assertLess(0, sum(subset.values()))
@@ -141,7 +142,7 @@ class TestProbability(unittest.TestCase):
 		"""
 		Compute the probability for a few tokens.
 		"""
-		subset = p(paths, only=( 'yellow', 'card' ))
+		subset = p(paths, focus=( 'yellow', 'card' ))
 		self.assertEqual(1, len(subset))
 		self.assertEqual({ ('yellow', 'card') }, set(subset.keys()))
 		self.assertLess(0, sum(subset.values()))
@@ -170,7 +171,7 @@ class TestProbability(unittest.TestCase):
 		"""
 		Compute the probability for a few tokens.
 		"""
-		subset = p(paths, only=[ ( 'yellow', 'card' ), ( 'free', 'kick' ) ])
+		subset = p(paths, focus=[ ( 'yellow', 'card' ), ( 'free', 'kick' ) ])
 		self.assertEqual(2, len(subset))
 		self.assertEqual({ ('yellow', 'card'), ( 'free', 'kick' ) }, set(subset.keys()))
 		self.assertLess(0, sum(subset.values()))
@@ -199,7 +200,7 @@ class TestProbability(unittest.TestCase):
 		"""
 		Compute the probability for a few tokens.
 		"""
-		subset = p(paths, only=[ ( 'yellow', 'card' ), 'kick' ])
+		subset = p(paths, focus=[ ( 'yellow', 'card' ), 'kick' ])
 		self.assertEqual(2, len(subset))
 		self.assertEqual({ ('yellow', 'card'), 'kick' }, set(subset.keys()))
 		self.assertLess(0, sum(subset.values()))
@@ -216,3 +217,96 @@ class TestProbability(unittest.TestCase):
 
 			total_probability = sum( probability[token] for token in tokens )
 			self.assertGreater(total_probability, subset[tokens])
+
+	def test_joint_vocabulary_empty_x_y(self):
+		"""
+		Test that when `x` and `y` are empty, the joint vocabulary is also empty.
+		"""
+
+		self.assertEqual([ ], joint_vocabulary([ ], [ ]))
+
+	def test_joint_vocabulary_empty_x(self):
+		"""
+		Test that when `x` is empty, the joint vocabulary is also made up of `y`.
+		"""
+
+		x = [ ]
+		y = [ 'a', 'b' ]
+		self.assertEqual([ ('a', ), ('b', ) ], joint_vocabulary(x, y))
+
+	def test_joint_vocabulary_empty_y(self):
+		"""
+		Test that when `y` is empty, the joint vocabulary is also made up of `x`.
+		"""
+
+		x = [ 'a', 'b' ]
+		y = [ ]
+		self.assertEqual([ ('a', ), ('b', ) ], joint_vocabulary(x, y))
+
+	def test_joint_vocabulary_strings_only(self):
+		"""
+		Test that both `x` and `y` are strings, they are converted into a list.
+		"""
+
+		x = 'a'
+		y = 'b'
+		self.assertEqual([ ( 'a', 'b' ) ], joint_vocabulary(x, y))
+
+	def test_joint_vocabulary_tuple_only(self):
+		"""
+		Test that both `x` and `y` are tuples, they are converted into a list.
+		"""
+
+		x = ('a', )
+		y = ('b', )
+		self.assertEqual([ ( 'a', 'b' ) ], joint_vocabulary(x, y))
+
+	def test_joint_vocabulary_multiple_tuple(self):
+		"""
+		Test that both `x` and `y` are tuples with multiple elements, they are converted into a list.
+		"""
+
+		x = ('a', 'b' )
+		y = ('c', 'd' )
+		self.assertEqual([ ( 'a', 'b', 'c', 'd' ) ], joint_vocabulary(x, y))
+
+	def test_joint_vocabulary_cross(self):
+		"""
+		Test that the cross-product is returned in the joint vocabulary.
+		"""
+
+		x = [ 'a', 'b' ]
+		y = [ 'c', 'd' ]
+		self.assertEqual([ ( 'a', 'c' ), ( 'a', 'd' ),
+		 				   ( 'b', 'c' ), ( 'b', 'd' ) ], joint_vocabulary(x, y))
+
+		x = list(string.ascii_letters)
+		y = list(string.digits)
+		self.assertEqual(len(x) * len(y), len(joint_vocabulary(x, y)))
+
+	def test_joint_vocabulary_empty_x_returns_tuples(self):
+		"""
+		Test that when creating the joint vocabulary, each item is a tuple when `x` is empty.
+		"""
+
+		x = [ ]
+		y = list(string.digits)
+		self.assertTrue(all(type(item) is tuple for item in joint_vocabulary(x, y)))
+
+	def test_joint_vocabulary_empty_y_returns_tuples(self):
+		"""
+		Test that when creating the joint vocabulary, each item is a tuple when `y` is empty.
+		"""
+
+		x = list(string.ascii_letters)
+		y = [ ]
+		self.assertTrue(all(type(item) is tuple for item in joint_vocabulary(x, y)))
+
+	def test_joint_vocabulary_returns_tuples(self):
+		"""
+		Test that when creating the joint vocabulary, each item is a tuple.
+		"""
+
+		x = list(string.ascii_letters)
+		y = list(string.digits)
+		self.assertTrue(all(type(item) is tuple for item in joint_vocabulary(x, y)))
