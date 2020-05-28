@@ -4,7 +4,7 @@ Methods that evaluate unithood or termhood based on probability.
 
 import json
 
-def p(corpora, only=None):
+def p(corpora, focus=None):
 	"""
 	Calculate the probability of tokens appearing in the corpus.
 	The probability is computed in terms of all tokens.
@@ -19,21 +19,23 @@ def p(corpora, only=None):
 					If a string is given, it is assumed to be one corpus.
 					If a list is given, it is assumed to be a list of corpora.
 
-					It is assumed that the corpora were extracted using the tokenizer tool.
-					Therefore each line should be a JSON string representing a document.
-					Each document should have a `tokens` attribute.
+					.. note::
+
+						It is assumed that the corpora were extracted using the tokenizer tool.
+						Therefore each line should be a JSON string representing a document.
+						Each document should have a `tokens` attribute.
 	:type corpora: str or list of str
-	:param only: The tokens for which to compute the probability.
+	:param focus: The tokens for which to compute the probability.
 				 If nothing is given, the probability is calculated for all tokens.
 				 The tokens can be provided as:
 
 				 - A single word,
 				 - A list of tokens,
-				 - A tuple,
+				 - A tuple, or
 				 - A list of tuples.
 
 				 A tuple can be used to compute joint probabilities.
-	:type only: None or str or list of str or tuple or list of tuple
+	:type focus: None or str or list of str or tuple or list of tuple
 
 	:return: A dictionary with tokens as keys and probabilities as values.
 	:rtype: dict
@@ -44,8 +46,8 @@ def p(corpora, only=None):
 	The list of tokens is always made into a list, even if it's a list of one string or tuple.
 	"""
 	corpora = [ corpora ] if type(corpora) is str else corpora
-	only = only or [ ]
-	only = [ only ] if type(only) is tuple or type(only) is str else only
+	focus = focus or [ ]
+	focus = [ focus ] if type(focus) is tuple or type(focus) is str else focus
 
 	"""
 	Count the total number of tokens encountered and a separate count for each token.
@@ -65,14 +67,14 @@ def p(corpora, only=None):
 				"""
 				If there is no specification for which tokens to compute probability, compute the prior probability for all tokens.
 				"""
-				if not only:
+				if not focus:
 					for token in document['tokens']:
 						counts[token] = counts.get(token, 0) + 1
 				else:
 					"""
 					Convert each item in the list of tokens for which to compute the probability into a tuple.
 					"""
-					for item_set in only:
+					for item_set in focus:
 						item_set = (item_set, ) if type(item_set) is str else item_set
 						min_count = min(document['tokens'].count(item) for item in item_set )
 
