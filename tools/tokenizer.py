@@ -23,6 +23,7 @@ Accepted arguments:
 	- ``-f --file``							*<Required>* The file to use to construct the tokenized corpus.
 	- ``-o --output``						*<Required>* The file where to save the tokenized corpus.
 	- ``-k --keep``							*<Optional>* The tweet attributes to store.
+	- ``--remove-retweets``					*<Optional>* Exclude retweets from the corpus.
 	- ``--remove-unicode-entities``			*<Optional>* Remove unicode entities from the tweets.
 	- ``--normalize-words``					*<Optional>* Normalize words with repeating characters in them.
 	- ``--character-normalization-count``	*<Optional>* The number of times a character must repeat for it to be normalized. Used only with the ``--normalize-words`` flag.
@@ -53,6 +54,7 @@ def setup_args():
 		- ``-f --file``							*<Required>* The file to use to construct the tokenized corpus.
 		- ``-o --output``						*<Required>* The file where to save the tokenized corpus.
 		- ``-k --keep``							*<Optional>* The tweet attributes to store.
+		- ``--remove-retweets``					*<Optional>* Exclude retweets from the corpus.
 		- ``--remove-unicode-entities``			*<Optional>* Remove unicode entities from the tweets.
 		- ``--normalize-words``					*<Optional>* Normalize words with repeating characters in them.
 		- ``--character-normalization-count``	*<Optional>* The number of times a character must repeat for it to be normalized. Used only with the ``--normalize-words`` flag.
@@ -75,6 +77,8 @@ def setup_args():
 						help='<Required> The file where to save the tokenized corpus.')
 	parser.add_argument('-k', '--keep', type=str, nargs='+', required=False,
 						help='<Optional> The tweet attributes to store.')
+	parser.add_argument('--remove-retweets', action="store_true",
+						help='<Optional> Exclude retweets from the corpus.')
 	parser.add_argument('--remove-unicode-entities', action="store_true",
 						help='<Optional> Remove unicode entities from the tweets.')
 	parser.add_argument('--remove-stopwords', action="store_true",
@@ -103,7 +107,7 @@ def main():
 						  character_normalization_count=args.character_normalization_count,
 						  remove_unicode_entities=args.remove_unicode_entities, stem=args.stem,
 						  stopwords=({ } if not args.remove_stopwords else stopwords.words('english')))
-	tokenize_corpus(args.file, args.output, tokenizer, args.keep)
+	tokenize_corpus(args.file, args.output, tokenizer, args.keep, args.remove_retweets)
 
 def prepare_output(output):
 	"""
@@ -117,7 +121,7 @@ def prepare_output(output):
 	if not os.path.exists(dir):
 		os.makedirs(dir)
 
-def tokenize_corpus(file, output, tokenizer, keep=None):
+def tokenize_corpus(file, output, tokenizer, keep=None, remove_retweets=False):
 	"""
 	Tokenize the corpus represented by the given file.
 	The function iterates over each tweet, tokenizes it and saves it to the file.
@@ -132,6 +136,8 @@ def tokenize_corpus(file, output, tokenizer, keep=None):
 	:param keep: The list of tweet attributes to store for each tweet.
 				 By default, the tweet ID is always kept.
 	:type keep: list or None
+	:param remove_retweets: A boolean indicating whether to xclude retweets from the corpus.
+	:type remove_retweets: bool
 	"""
 
 	keep = keep or [ ]
@@ -140,6 +146,13 @@ def tokenize_corpus(file, output, tokenizer, keep=None):
 		  open(output, 'w') as outfile:
 		for line in infile:
 			tweet = json.loads(line)
+
+			"""
+			Skip the tweet if retweets should be excluded.
+			"""
+			if remove_retweets and 'retweeted_status' in tweet:
+				continue
+
 			text = get_text(tweet)
 			tokens = tokenizer.tokenize(text)
 

@@ -221,6 +221,94 @@ class TestTokenizer(unittest.TestCase):
 			for line in outfile:
 				self.assertEqual({ 'id', 'text', 'tokens', 'timestamp_ms', 'id_str' }, set(json.loads(line)))
 
+	def test_tokenize_corpus_keep_retweets(self):
+		"""
+		Test that when keeping retweets, the number of lines remains the same.
+		"""
+
+		file = 'tools/tests/corpus.json'
+		output = 'tools/tests/.out/tokenized.json'
+
+		"""
+		Count the number of lines in the corpus.
+		"""
+		inlines = 0
+		with open(file, 'r') as infile:
+			for line in infile:
+				inlines += 1
+
+		"""
+		Tokenize the corpus and again count the number of lines in the tokenized corpus.
+		"""
+		tool.prepare_output(output)
+		tool.tokenize_corpus(file, output, Tokenizer(), remove_retweets=False)
+		outlines = 0
+		with open(output, 'r') as outfile:
+			for line in outfile:
+				outlines += 1
+
+		self.assertEqual(inlines, outlines)
+
+	def test_tokenize_corpus_remove_retweets(self):
+		"""
+		Test that when removing retweets, the number of lines should decrease.
+		"""
+
+		file = 'tools/tests/corpus.json'
+		output = 'tools/tests/.out/tokenized.json'
+
+		"""
+		Count the number of lines in the corpus.
+		"""
+		inlines = 0
+		with open(file, 'r') as infile:
+			for line in infile:
+				inlines += 1
+
+		"""
+		Tokenize the corpus and again count the number of lines in the tokenized corpus.
+		"""
+		tool.prepare_output(output)
+		tool.tokenize_corpus(file, output, Tokenizer(), remove_retweets=True)
+		outlines = 0
+		with open(output, 'r') as outfile:
+			for line in outfile:
+				outlines += 1
+
+		self.assertGreater(inlines, outlines)
+
+	def test_tokenize_corpus_remove_retweets_retweeted_status(self):
+		"""
+		Test that when removing retweets, the `retweeted_status` attribute is never present.
+		"""
+
+		file = 'tools/tests/corpus.json'
+		output = 'tools/tests/.out/tokenized.json'
+
+		"""
+		Tokenize the corpus and ensure that the ID is present in all tweets.
+		"""
+		tool.prepare_output(output)
+		tool.tokenize_corpus(file, output, Tokenizer(), keep=[ 'retweeted_status' ], remove_retweets=True)
+		with open(output, 'r') as outfile:
+			self.assertTrue(not any( json.loads(line)['retweeted_status'] in json.loads(line) for line in outfile ))
+
+	def test_tokenize_corpus_remove_retweets_keep_quoted(self):
+		"""
+		Test that when removing retweets, quoted statuses are retained.
+		"""
+
+		file = 'tools/tests/corpus.json'
+		output = 'tools/tests/.out/tokenized.json'
+
+		"""
+		Tokenize the corpus and ensure that the ID is present in all tweets.
+		"""
+		tool.prepare_output(output)
+		tool.tokenize_corpus(file, output, Tokenizer(), keep=[ 'quoted_status' ], remove_retweets=True)
+		with open(output, 'r') as outfile:
+			self.assertTrue(any( json.loads(line)['quoted_status'] for line in outfile ))
+
 	def test_tokenize_corpus_keep_stopwords(self):
 		"""
 		Test that when tokenizing a corpus without removing stopwords, they are retained.
