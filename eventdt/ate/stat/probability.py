@@ -3,6 +3,7 @@ Methods that evaluate unithood or termhood based on probability.
 """
 
 import json
+import math
 
 def p(corpora, focus=None):
 	"""
@@ -91,6 +92,31 @@ def p(corpora, focus=None):
 		return { token: count / tokens for token, count in counts.items() }
 
 	return { }
+def _pmi(prob, x, y, base):
+	"""
+	Calculate the Pointwise Mutual Information (PMI) of `x` and `y` based on the given probabilities.
+
+	:param prob: A probability calculation, possibly calculated using the :func:`ate.stat.probability.p` function.
+				 This is used as cache for the probabilities.
+				 The keys are the tokens, including the joint probability of `x` and `y`, and the values are their probabilities.
+	:type prob: dict
+	:param x: The first token or tuple of tokens to use to calculate the PMI.
+	:type x: str or tuple of str
+	:param y: The second token or tuple of tokens to use to calculate the PMI.
+	:type y: str or tuple of str
+	:param base: The base of the logarithm, defaults to 2.
+	:type base: float
+
+	:return: The PMI of `x` and `y`.
+	:rtype: float
+	"""
+
+	joint = joint_vocabulary(x, y)[0]
+	if not prob[x] or not prob[y] or not prob[joint]:
+		return 0
+
+	return math.log(prob[joint]/( prob[x] * prob[y] ), base)
+
 def joint_vocabulary(x, y):
 	"""
 	Get the joint vocabulary by creating the cross-product from `x` and `y`.

@@ -12,6 +12,7 @@ path = os.path.join(os.path.dirname(__file__), '..')
 if path not in sys.path:
     sys.path.append(path)
 
+import probability
 from probability import *
 
 class TestProbability(unittest.TestCase):
@@ -217,6 +218,74 @@ class TestProbability(unittest.TestCase):
 
 			total_probability = sum( probability[token] for token in tokens )
 			self.assertGreater(total_probability, subset[tokens])
+
+	def test_pmi_zero_x(self):
+		"""
+		Test that when calculating the PMI and `x` has a probability of 0, 0 is returned.
+		"""
+
+		prob = { 'x': 0, 'y': 0.2, ('x', 'y'): 0.1 }
+		self.assertEqual(0, probability._pmi(prob, 'x', 'y', base=2))
+
+	def test_pmi_zero_y(self):
+		"""
+		Test that when calculating the PMI and `y` has a probability of 0, 0 is returned.
+		"""
+
+		prob = { 'x': 0.2, 'y': 0, ('x', 'y'): 0.1 }
+		self.assertEqual(0, probability._pmi(prob, 'x', 'y', base=2))
+
+	def test_pmi_zero_joint(self):
+		"""
+		Test that when calculating the PMI and the joint probability of `x` and `y` is 0, 0 is returned.
+		"""
+
+		prob = { 'x': 0.3, 'y': 0.2, ('x', 'y'): 0 }
+		self.assertEqual(0, probability._pmi(prob, 'x', 'y', base=2))
+
+	def test_pmi_example(self):
+		"""
+		Test the PMI calculation using `example from Wikipedia <https://en.wikipedia.org/wiki/Pointwise_mutual_information>`_.
+		"""
+
+		prob = {
+			'!x': 0.8,
+			'x' : 0.2,
+			'!y': 0.25,
+			'y' : 0.75,
+
+			('!x', '!y'): 0.1,
+			('!x', 'y') : 0.7,
+			('x', '!y') : 0.15,
+			('x', 'y')  : 0.05,
+		}
+
+		self.assertEqual(-1, probability._pmi(prob, '!x', '!y', base=2))
+		self.assertEqual(0.222392, round(probability._pmi(prob, '!x', 'y', base=2), 6))
+		self.assertEqual(1.584963, round(probability._pmi(prob, 'x', '!y', base=2), 6))
+		self.assertEqual(-1.584963, round(probability._pmi(prob, 'x', 'y', base=2), 6))
+
+	def test_pmi_example_symmetric(self):
+		"""
+		Test that the PMI calculation is symmetric using `example from Wikipedia <https://en.wikipedia.org/wiki/Pointwise_mutual_information>`_.
+		"""
+
+		prob = {
+			'!x': 0.8,
+			'x' : 0.2,
+			'!y': 0.25,
+			'y' : 0.75,
+
+			('!y', '!x'): 0.1,
+			('y', '!x') : 0.7,
+			('!y', 'x') : 0.15,
+			('y', 'x')  : 0.05,
+		}
+
+		self.assertEqual(-1, probability._pmi(prob, '!y', '!x', base=2))
+		self.assertEqual(0.222392, round(probability._pmi(prob, 'y', '!x', base=2), 6))
+		self.assertEqual(1.584963, round(probability._pmi(prob, '!y', 'x', base=2), 6))
+		self.assertEqual(-1.584963, round(probability._pmi(prob, 'y', 'x', base=2), 6))
 
 	def test_joint_vocabulary_empty_x_y(self):
 		"""
