@@ -83,15 +83,12 @@ def p(corpora, focus=None):
 					"""
 					Convert each item in the list of tokens for which to compute the probability into a tuple.
 					"""
-					for item_set in focus:
-						item_set = (item_set, ) if type(item_set) is str else item_set
-						min_count = min(document['tokens'].count(item) for item in item_set )
+					for itemset in focus:
+						if not all( item in document['tokens'] for item in itemset ):
+							continue
 
-						if len(item_set) > 1:
-							counts[item_set] = counts.get(item_set, 0) + min_count
-						else:
-							item = item_set[0]
-							counts[item] = counts.get(item, 0) + min_count
+						min_count = min( document['tokens'].count(item) for item in itemset )
+						counts[itemset if len(itemset) > 1 else itemset[0]] += min_count
 
 	"""
 	Compute the probability by dividing the count by the number of tokens.
