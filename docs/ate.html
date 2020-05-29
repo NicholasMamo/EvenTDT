@@ -1,0 +1,447 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta content="The Automatic Term Extraction (ATE) library" name="description" />
+<meta content="Python, TDT, ATE" name="keywords" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>11. Automatic Term Extraction (ATE) &mdash; EvenTDT 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="12. Other" href="other.html" />
+    <link rel="prev" title="10. Machine Learning" href="ml.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> EvenTDT
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="config.html">0. Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">1. Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vsm.html">2. Vector Space Model (VSM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nlp.html">3. Natural Language Processing (NLP)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wikinterface.html">4. Wikinterface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="apd.html">5. Automatic Participant Detection (APD)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tdt.html">6. Topic Detection and Tracking (TDT)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="summarization.html">7. Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="twitter.html">8. Twitter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="consumers.html">9. Consumers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ml.html">10. Machine Learning</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">11. Automatic Term Extraction (ATE)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-ate.linguistic">Linguistic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-ate.stat">Statistical</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-ate.stat.probability">Probability</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">12. Other</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">EvenTDT</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>11. Automatic Term Extraction (ATE)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/ate.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="automatic-term-extraction-ate">
+<h1>11. Automatic Term Extraction (ATE)<a class="headerlink" href="#automatic-term-extraction-ate" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-ate"></span><div class="section" id="module-ate.linguistic">
+<span id="linguistic"></span><h2>Linguistic<a class="headerlink" href="#module-ate.linguistic" title="Permalink to this headline">¶</a></h2>
+<p>General functions available to all ATE functions.</p>
+<dl class="function">
+<dt id="ate.linguistic.vocabulary">
+<code class="sig-name descname">vocabulary</code><span class="sig-paren">(</span><em class="sig-param">corpora</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.linguistic.vocabulary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the vocabulary from the given corpora.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>corpora</strong> (<em>str</em><em> or </em><em>list of str</em>) – <p>A corpus, or corpora, of documents.
+If a string is given, it is assumed to be one corpus.
+If a list is given, it is assumed to be a list of corpora.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is assumed that the corpora were extracted using the tokenizer tool.
+Therefore each line should be a JSON string representing a document.
+Each document should have a <cite>tokens</cite> attribute.</p>
+</div>
+</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of tokens in the corpora.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ate.stat">
+<span id="statistical"></span><h2>Statistical<a class="headerlink" href="#module-ate.stat" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-ate.stat.probability">
+<span id="probability"></span><h3>Probability<a class="headerlink" href="#module-ate.stat.probability" title="Permalink to this headline">¶</a></h3>
+<p>Methods that evaluate unithood or termhood based on probability.</p>
+<dl class="function">
+<dt id="ate.stat.probability.p">
+<code class="sig-name descname">p</code><span class="sig-paren">(</span><em class="sig-param">corpora</em>, <em class="sig-param">focus=None</em>, <em class="sig-param">cache=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.stat.probability.p" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the probability of tokens appearing in the corpus.
+The probability is computed in terms of all tokens.</p>
+<p>Apart from calculating the probability of single tokens, the joint probability can be calculated by providing tuples.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The joint probability is the minimum count of any token in each document.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpora</strong> (<em>str</em><em> or </em><em>list of str</em>) – <p>A corpus, or corpora, of documents.
+If a string is given, it is assumed to be one corpus.
+If a list is given, it is assumed to be a list of corpora.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is assumed that the corpora were extracted using the tokenizer tool.
+Therefore each line should be a JSON string representing a document.
+Each document should have a <cite>tokens</cite> attribute.</p>
+</div>
+</p></li>
+<li><p><strong>focus</strong> (<em>None</em><em> or </em><em>str</em><em> or </em><em>list of str</em><em> or </em><em>tuple</em><em> or </em><em>list of tuple</em>) – <p>The tokens for which to compute the probability.
+If nothing is given, the probability is calculated for all tokens.
+The tokens can be provided as:</p>
+<ul>
+<li><p>A single word,</p></li>
+<li><p>A list of tokens,</p></li>
+<li><p>A tuple, or</p></li>
+<li><p>A list of tuples.</p></li>
+</ul>
+<p>A tuple can be used to compute joint probabilities.</p>
+</p></li>
+<li><p><strong>cache</strong> (<em>list of str</em>) – <p>A list of terms that are re-used often and which should be cached.
+If an empty list is given, no cache is used.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Cache should be used when there is a lot of repetition.
+For example, <cite>x</cite> can be used as cache when <cite>x</cite> is small and <cite>y</cite> is large.
+If the data is small, using cache can be detrimental.</p>
+</div>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary with tokens as keys and probabilities as values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ate.stat.probability.PMI">
+<code class="sig-name descname">PMI</code><span class="sig-paren">(</span><em class="sig-param">corpora</em>, <em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">base=2</em>, <em class="sig-param">cache=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.stat.probability.PMI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the Pointwise Mutual-Information (PMI) between two variables.
+PMI is symmetric and computed as:</p>
+<div class="math notranslate nohighlight">
+\[PMI(x,y) = \log( \frac{p(x,y)}{p(x)p(y)} )\]</div>
+<p>The function accepts multiple values for both variables, and returns the PMI separately.
+The return value is a dictionary, where the keys are the cross product between <cite>x</cite> and <cite>y</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpora</strong> (<em>str</em><em> or </em><em>list of str</em>) – <p>A corpus, or corpora, of documents.
+If a string is given, it is assumed to be one corpus.
+If a list is given, it is assumed to be a list of corpora.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is assumed that the corpora were extracted using the tokenizer tool.
+Therefore each line should be a JSON string representing a document.
+Each document should have a <cite>tokens</cite> attribute.</p>
+</div>
+</p></li>
+<li><p><strong>x</strong> (<em>str</em><em> or </em><em>list of str</em><em> or </em><em>tuple</em><em> or </em><em>list of tuple</em>) – <p>The tokens for which to compute the probability.
+These tokens are combined as a cross-product with all tokens in <cite>y</cite>.
+The tokens can be provided as:</p>
+<ul>
+<li><p>A single word,</p></li>
+<li><p>A list of tokens,</p></li>
+<li><p>A tuple, or</p></li>
+<li><p>A list of tuples.</p></li>
+</ul>
+<p>A tuple translates to joint probabilities.
+If nothing is given, it is replaced with the corpora’s vocabulary.</p>
+</p></li>
+<li><p><strong>y</strong> (<em>str</em><em> or </em><em>list of str</em><em> or </em><em>tuple</em><em> or </em><em>list of tuple</em>) – <p>The tokens for which to compute the probability.
+These tokens are combined as a cross-product with all tokens in <cite>x</cite>.
+The tokens can be provided as:</p>
+<ul>
+<li><p>A single word,</p></li>
+<li><p>A list of tokens,</p></li>
+<li><p>A tuple, or</p></li>
+<li><p>A list of tuples.</p></li>
+</ul>
+<p>A tuple translates to joint probabilities.
+If nothing is given, it is replaced with the corpora’s vocabulary.</p>
+</p></li>
+<li><p><strong>base</strong> (<em>float</em>) – The base of the logarithm, defaults to 2.</p></li>
+<li><p><strong>cache</strong> (<em>list of str</em>) – <p>A list of terms that are re-used often and which should be cached.
+If an empty list is given, no cache is used.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Cache should be used when there is a lot of repetition.
+For example, <cite>x</cite> can be used as cache when <cite>x</cite> is small and <cite>y</cite> is large.
+If the data is small, using cache can be detrimental.</p>
+</div>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary with pairs of <cite>x</cite> and <cite>y</cite> variables as keys, and their PMi as values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ate.stat.probability._pmi">
+<code class="sig-name descname">_pmi</code><span class="sig-paren">(</span><em class="sig-param">prob</em>, <em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">base</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.stat.probability._pmi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the Pointwise Mutual Information (PMI) of <cite>x</cite> and <cite>y</cite> based on the given probabilities.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prob</strong> (<em>dict</em>) – A probability calculation, possibly calculated using the <a class="reference internal" href="#ate.stat.probability.p" title="ate.stat.probability.p"><code class="xref py py-func docutils literal notranslate"><span class="pre">ate.stat.probability.p()</span></code></a> function.
+This is used as cache for the probabilities.
+The keys are the tokens, including the joint probability of <cite>x</cite> and <cite>y</cite>, and the values are their probabilities.</p></li>
+<li><p><strong>x</strong> (<em>str</em><em> or </em><em>tuple of str</em>) – The first token or tuple of tokens to use to calculate the PMI.</p></li>
+<li><p><strong>y</strong> (<em>str</em><em> or </em><em>tuple of str</em>) – The second token or tuple of tokens to use to calculate the PMI.</p></li>
+<li><p><strong>base</strong> (<em>float</em>) – The base of the logarithm, defaults to 2.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The PMI of <cite>x</cite> and <cite>y</cite>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ate.stat.probability.joint_vocabulary">
+<code class="sig-name descname">joint_vocabulary</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.stat.probability.joint_vocabulary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the joint vocabulary by creating the cross-product from <cite>x</cite> and <cite>y</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>str</em><em> or </em><em>list of str</em><em> or </em><em>tuple</em><em> or </em><em>list of tuple</em>) – <p>The tokens for which to compute the probability.
+These tokens are combined as a cross-product with all tokens in <cite>y</cite>.
+The tokens can be provided as:</p>
+<ul>
+<li><p>A single word,</p></li>
+<li><p>A list of tokens,</p></li>
+<li><p>A tuple, or</p></li>
+<li><p>A list of tuples.</p></li>
+</ul>
+<p>A tuple translates to joint probabilities.</p>
+</p></li>
+<li><p><strong>y</strong> (<em>str</em><em> or </em><em>list of str</em><em> or </em><em>tuple</em><em> or </em><em>list of tuple</em>) – <p>The tokens for which to compute the probability.
+These tokens are combined as a cross-product with all tokens in <cite>x</cite>.
+The tokens can be provided as:</p>
+<ul>
+<li><p>A single word,</p></li>
+<li><p>A list of tokens,</p></li>
+<li><p>A tuple, or</p></li>
+<li><p>A list of tuples.</p></li>
+</ul>
+<p>A tuple translates to joint probabilities.</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The joint vocabulary, which is the cross-product of each item in <cite>x</cite> with each item in <cite>y</cite>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="other.html" class="btn btn-neutral float-right" title="12. Other" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ml.html" class="btn btn-neutral float-left" title="10. Machine Learning" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Nicholas Mamo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

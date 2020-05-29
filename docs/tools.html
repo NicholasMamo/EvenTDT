@@ -102,7 +102,8 @@
 <li class="toctree-l1"><a class="reference internal" href="twitter.html">8. Twitter</a></li>
 <li class="toctree-l1"><a class="reference internal" href="consumers.html">9. Consumers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ml.html">10. Machine Learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="other.html">11. Other</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ate.html">11. Automatic Term Extraction (ATE)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">12. Other</a></li>
 </ul>
 
             
@@ -726,6 +727,7 @@ Each line is a JSON object containing, at minimum, the tweet ID, the text used f
     -f data/sample.json <span class="se">\</span>
     -o data/idf.json <span class="se">\</span>
     --remove-unicode-entities <span class="se">\</span>
+    --remove-stopwords <span class="se">\</span>
     --normalize-words --stem
 </pre></div>
 </div>
@@ -735,9 +737,11 @@ Each line is a JSON object containing, at minimum, the tweet ID, the text used f
 <li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--file</span></code>                                                 <em>&lt;Required&gt;</em> The file to use to construct the tokenized corpus.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-o</span> <span class="pre">--output</span></code>                                               <em>&lt;Required&gt;</em> The file where to save the tokenized corpus.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-k</span> <span class="pre">--keep</span></code>                                                 <em>&lt;Optional&gt;</em> The tweet attributes to store.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--remove-retweets</span></code>                                 <em>&lt;Optional&gt;</em> Exclude retweets from the corpus.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--remove-unicode-entities</span></code>                 <em>&lt;Optional&gt;</em> Remove unicode entities from the tweets.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--normalize-words</span></code>                                 <em>&lt;Optional&gt;</em> Normalize words with repeating characters in them.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--character-normalization-count</span></code>   <em>&lt;Optional&gt;</em> The number of times a character must repeat for it to be normalized. Used only with the <code class="docutils literal notranslate"><span class="pre">--normalize-words</span></code> flag.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--remove-stopwords</span></code>                                <em>&lt;Optional&gt;</em> Remove stopwords from the tokens.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-stem</span></code>                                                             <em>&lt;Optional&gt;</em> Stem the tokens when constructing the tokenized corpus.</p></li>
 </ul>
 </div></blockquote>
@@ -751,9 +755,11 @@ Each line is a JSON object containing, at minimum, the tweet ID, the text used f
 <li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--file</span></code>                                                 <em>&lt;Required&gt;</em> The file to use to construct the tokenized corpus.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-o</span> <span class="pre">--output</span></code>                                               <em>&lt;Required&gt;</em> The file where to save the tokenized corpus.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-k</span> <span class="pre">--keep</span></code>                                                 <em>&lt;Optional&gt;</em> The tweet attributes to store.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--remove-retweets</span></code>                                 <em>&lt;Optional&gt;</em> Exclude retweets from the corpus.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--remove-unicode-entities</span></code>                 <em>&lt;Optional&gt;</em> Remove unicode entities from the tweets.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--normalize-words</span></code>                                 <em>&lt;Optional&gt;</em> Normalize words with repeating characters in them.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--character-normalization-count</span></code>   <em>&lt;Optional&gt;</em> The number of times a character must repeat for it to be normalized. Used only with the <code class="docutils literal notranslate"><span class="pre">--normalize-words</span></code> flag.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--remove-stopwords</span></code>                                <em>&lt;Optional&gt;</em> Remove stopwords from the tokens.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-stem</span></code>                                                             <em>&lt;Optional&gt;</em> Stem the tokens when constructing the tokenized corpus.</p></li>
 </ul>
 </div></blockquote>
@@ -786,7 +792,7 @@ Each line is a JSON object containing, at minimum, the tweet ID, the text used f
 
 <dl class="function">
 <dt id="tools.tokenizer.tokenize_corpus">
-<code class="sig-name descname">tokenize_corpus</code><span class="sig-paren">(</span><em class="sig-param">file</em>, <em class="sig-param">output</em>, <em class="sig-param">tokenizer</em>, <em class="sig-param">keep=None</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.tokenizer.tokenize_corpus" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">tokenize_corpus</code><span class="sig-paren">(</span><em class="sig-param">file</em>, <em class="sig-param">output</em>, <em class="sig-param">tokenizer</em>, <em class="sig-param">keep=None</em>, <em class="sig-param">remove_retweets=False</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.tokenizer.tokenize_corpus" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tokenize the corpus represented by the given file.
 The function iterates over each tweet, tokenizes it and saves it to the file.</p>
 <dl class="field-list simple">
@@ -798,6 +804,7 @@ This function assumes that the directory path exists.</p></li>
 <li><p><strong>tokenizer</strong> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer to use to create the tokenized corpus.</p></li>
 <li><p><strong>keep</strong> (<em>list</em><em> or </em><em>None</em>) – The list of tweet attributes to store for each tweet.
 By default, the tweet ID is always kept.</p></li>
+<li><p><strong>remove_retweets</strong> (<em>bool</em>) – A boolean indicating whether to xclude retweets from the corpus.</p></li>
 </ul>
 </dd>
 </dl>

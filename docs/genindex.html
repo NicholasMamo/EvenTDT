@@ -93,7 +93,8 @@
 <li class="toctree-l1"><a class="reference internal" href="twitter.html">8. Twitter</a></li>
 <li class="toctree-l1"><a class="reference internal" href="consumers.html">9. Consumers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ml.html">10. Machine Learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="other.html">11. Other</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ate.html">11. Automatic Term Extraction (ATE)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">12. Other</a></li>
 </ul>
 
             
@@ -170,6 +171,7 @@
  | <a href="#G"><strong>G</strong></a>
  | <a href="#H"><strong>H</strong></a>
  | <a href="#I"><strong>I</strong></a>
+ | <a href="#J"><strong>J</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#N"><strong>N</strong></a>
@@ -520,6 +522,8 @@
         <li><a href="apd.html#apd.scorers.local.tf_scorer.TFScorer._normalize">(TFScorer method)</a>
 </li>
       </ul></li>
+      <li><a href="ate.html#ate.stat.probability._pmi">_pmi() (in module ate.stat.probability)</a>
+</li>
       <li><a href="consumers.html#queues.consumers.buffered_consumer.BufferedConsumer._process">_process() (BufferedConsumer method)</a>
 
       <ul>
@@ -658,12 +662,12 @@
 </li>
       <li><a href="apd.html#module-apd.filters.local.threshold_filter">apd.filters.local.threshold_filter (module)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apd.html#module-apd.ner_participant_detector">apd.ner_participant_detector (module)</a>
 </li>
       <li><a href="apd.html#module-apd.participant_detector">apd.participant_detector (module)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apd.html#module-apd.postprocessors.external.wikipedia_postprocessor">apd.postprocessors.external.wikipedia_postprocessor (module)</a>
 </li>
       <li><a href="apd.html#module-apd.postprocessors.postprocessor">apd.postprocessors.postprocessor (module)</a>
@@ -693,6 +697,14 @@
       <li><a href="ml.html#ml.association.algo.apriori.apriori">apriori() (in module ml.association.algo.apriori)</a>
 </li>
       <li><a href="wikinterface.html#wikinterface.info.ArticleType">ArticleType (class in wikinterface.info)</a>
+</li>
+      <li><a href="ate.html#module-ate">ate (module)</a>
+</li>
+      <li><a href="ate.html#module-ate.linguistic">ate.linguistic (module)</a>
+</li>
+      <li><a href="ate.html#module-ate.stat">ate.stat (module)</a>
+</li>
+      <li><a href="ate.html#module-ate.stat.probability">ate.stat.probability (module)</a>
 </li>
       <li><a href="other.html#objects.attributable.Attributable">Attributable (class in objects.attributable)</a>
 </li>
@@ -1013,6 +1025,14 @@
   </ul></td>
 </tr></table>
 
+<h2 id="J">J</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ate.html#ate.stat.probability.joint_vocabulary">joint_vocabulary() (in module ate.stat.probability)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -1156,7 +1176,11 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="ate.html#ate.stat.probability.p">p() (in module ate.stat.probability)</a>
+</li>
       <li><a href="apd.html#apd.participant_detector.ParticipantDetector">ParticipantDetector (class in apd.participant_detector)</a>
+</li>
+      <li><a href="ate.html#ate.stat.probability.PMI">PMI() (in module ate.stat.probability)</a>
 </li>
       <li><a href="apd.html#apd.postprocessors.postprocessor.Postprocessor.postprocess">postprocess() (Postprocessor method)</a>
 
@@ -1522,12 +1546,14 @@
 </li>
       <li><a href="vsm.html#vsm.vector.VectorSpace">VectorSpace (class in vsm.vector)</a>
 </li>
-      <li><a href="vsm.html#module-vsm">vsm (module)</a>
+      <li><a href="ate.html#ate.linguistic.vocabulary">vocabulary() (in module ate.linguistic)</a>
 </li>
-      <li><a href="vsm.html#module-vsm.clustering.algorithms.clustering">vsm.clustering.algorithms.clustering (module)</a>
+      <li><a href="vsm.html#module-vsm">vsm (module)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="vsm.html#module-vsm.clustering.algorithms.clustering">vsm.clustering.algorithms.clustering (module)</a>
+</li>
       <li><a href="vsm.html#module-vsm.clustering.algorithms.no_k_means">vsm.clustering.algorithms.no_k_means (module)</a>
 </li>
       <li><a href="vsm.html#module-vsm.clustering.algorithms.temporal_no_k_means">vsm.clustering.algorithms.temporal_no_k_means (module)</a>

@@ -50,7 +50,7 @@ def p(corpora, focus=None, cache=None):
 
 				  .. note::
 
-				      Cache should be used when there is a lot of repetition.
+					  Cache should be used when there is a lot of repetition.
 					  For example, `x` can be used as cache when `x` is small and `y` is large.
 					  If the data is small, using cache can be detrimental.
 	:type cache: list of str
@@ -205,7 +205,7 @@ def PMI(corpora, x, y, base=2, cache=None):
 
 				  .. note::
 
-				      Cache should be used when there is a lot of repetition.
+					  Cache should be used when there is a lot of repetition.
 					  For example, `x` can be used as cache when `x` is small and `y` is large.
 					  If the data is small, using cache can be detrimental.
 	:type cache: list of str
