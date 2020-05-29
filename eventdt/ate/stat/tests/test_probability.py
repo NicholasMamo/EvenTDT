@@ -219,6 +219,24 @@ class TestProbability(unittest.TestCase):
 			total_probability = sum( probability[token] for token in tokens )
 			self.assertGreater(total_probability, subset[tokens])
 
+	def test_probability_missing_token(self):
+		"""
+		Test that the probability of a missing token is recorded correctly.
+		"""
+
+		path = os.path.join(os.path.dirname(__file__), 'e.json')
+		probability = p(path, focus='z')
+		self.assertEqual(0, probability['z'])
+
+	def test_probability_missing_tuple(self):
+		"""
+		Test that the probability of a missing tuple is recorded correctly.
+		"""
+
+		path = os.path.join(os.path.dirname(__file__), 'e.json')
+		probability = p(path, focus=('x', 'z'))
+		self.assertEqual(0, probability[('x', 'z')])
+
 	def test_pmi_zero_x(self):
 		"""
 		Test that when calculating the PMI and `x` has a probability of 0, 0 is returned.

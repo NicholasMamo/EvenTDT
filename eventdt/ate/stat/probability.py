@@ -49,12 +49,20 @@ def p(corpora, focus=None):
 	corpora = [ corpora ] if type(corpora) is str else corpora
 	focus = focus or [ ]
 	focus = [ focus ] if type(focus) is tuple or type(focus) is str else focus
+	focus = [ (itemset, ) if type(itemset) is str else itemset for itemset in focus ]
+
+	"""
+	Create the initial counts for all tokens and joint probabilities.
+	This avoids returning missing probabilities for tokens or joint tokens that never appear.
+	"""
+	counts = { }
+	for itemset in focus:
+		counts[itemset if len(itemset) > 1 else itemset[0]] = 0
 
 	"""
 	Count the total number of tokens encountered and a separate count for each token.
 	"""
 	tokens = 0
-	counts = { }
 	for corpus in corpora:
 		with open(corpus, 'r') as f:
 			for line in f:
