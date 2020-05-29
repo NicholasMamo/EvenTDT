@@ -143,6 +143,9 @@ def joint_vocabulary(x, y):
 
 			  A tuple translates to joint probabilities.
 	:type y: str or list of str or tuple or list of tuple
+
+	:return: The joint vocabulary, which is the cross-product of each item in `x` with each item in `y`.
+	:rtype: list of tuple
 	"""
 
 	vocabulary = [ ]
