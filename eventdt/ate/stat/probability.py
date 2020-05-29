@@ -13,7 +13,7 @@ if path not in sys.path:
 
 import linguistic
 
-def p(corpora, focus=None):
+def p(corpora, focus=None, cache=None):
 	"""
 	Calculate the probability of tokens appearing in the corpus.
 	The probability is computed in terms of all tokens.
@@ -45,6 +45,15 @@ def p(corpora, focus=None):
 
 				 A tuple can be used to compute joint probabilities.
 	:type focus: None or str or list of str or tuple or list of tuple
+	:param cache: A list of terms that are re-used often and which should be cached.
+				  If an empty list is given, no cache is used.
+
+				  .. note::
+
+				      Cache should be used when there is a lot of repetition.
+					  For example, `x` can be used as cache when `x` is small and `y` is large.
+					  If the data is small, using cache can be detrimental.
+	:type cache: list of str
 
 	:return: A dictionary with tokens as keys and probabilities as values.
 	:rtype: dict
@@ -66,6 +75,43 @@ def p(corpora, focus=None):
 	counts = { }
 	for itemset in focus:
 		counts[itemset if len(itemset) > 1 else itemset[0]] = 0
+
+	"""
+	If cache is defined, generate a list of documents for each cached token.
+	This reduces the number of documents to go over.
+	"""
+	if cache:
+		for token in cache:
+			"""
+			If no itemset contains the token, skip the cache.
+			"""
+			if not any( token in itemset for itemset in focus ):
+				continue
+
+			"""
+			Compile the documents that mention the token.
+			"""
+			documents = [ ]
+			for corpus in corpora:
+				with open(corpus, 'r') as f:
+					for line in f:
+						document = json.loads(line)
+						if token in document['tokens']:
+							documents.append(document)
+
+			"""
+			Look for item sets that mention the token.
+			"""
+			itemsets = [ tuple for tuple in focus if token in tuple ]
+			for document in documents:
+				for itemset in itemsets:
+					if not all( item in document['tokens'] for item in itemset ):
+						continue
+
+					min_count = min( document['tokens'].count(item) for item in itemset )
+					counts[itemset if len(itemset) > 1 else itemset[0]] += min_count
+
+			focus = [ tuple for tuple in focus if token not in tuple ]
 
 	"""
 	Count the total number of tokens encountered and a separate count for each token.
@@ -106,7 +152,7 @@ def p(corpora, focus=None):
 
 	return { }
 
-def PMI(corpora, x, y, base=2):
+def PMI(corpora, x, y, base=2, cache=None):
 	"""
 	Calculate the Pointwise Mutual-Information (PMI) between two variables.
 	PMI is symmetric and computed as:
@@ -154,6 +200,15 @@ def PMI(corpora, x, y, base=2):
 	:type y: str or list of str or tuple or list of tuple
 	:param base: The base of the logarithm, defaults to 2.
 	:type base: float
+	:param cache: A list of terms that are re-used often and which should be cached.
+				  If an empty list is given, no cache is used.
+
+				  .. note::
+
+				      Cache should be used when there is a lot of repetition.
+					  For example, `x` can be used as cache when `x` is small and `y` is large.
+					  If the data is small, using cache can be detrimental.
+	:type cache: list of str
 
 	:return: A dictionary with pairs of `x` and `y` variables as keys, and their PMi as values.
 	:rtype: dict
@@ -179,7 +234,7 @@ def PMI(corpora, x, y, base=2):
 	This vocabulary is made up of all the elements in `x` and `y`, as well as the cross-product between them.
 	"""
 	prior = list(set(x + y))
-	prob = p(corpora, focus=prior+joint_vocabulary(x, y))
+	prob = p(corpora, focus=prior+joint_vocabulary(x, y), cache=cache)
 
 	"""
 	Calculate the PMI from the probabilities.

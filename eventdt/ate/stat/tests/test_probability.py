@@ -237,6 +237,15 @@ class TestProbability(unittest.TestCase):
 		probability = p(path, focus=('x', 'z'))
 		self.assertEqual(0, probability[('x', 'z')])
 
+	def test_probability_cache(self):
+		"""
+		Test that the probability using cache is the same as the probability without cache.
+		"""
+
+		path = os.path.join(os.path.dirname(__file__), 'c1.json')
+		focus = [ 'yellow', 'card', ('yellow', 'foul') ]
+		self.assertEqual(p(path, focus=focus), p(path, focus=focus, cache='yellow'))
+
 	def test_pmi_zero_x(self):
 		"""
 		Test that when calculating the PMI and `x` has a probability of 0, 0 is returned.
