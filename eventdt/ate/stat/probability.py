@@ -4,6 +4,14 @@ Methods that evaluate unithood or termhood based on probability.
 
 import json
 import math
+import os
+import sys
+
+path = os.path.join(os.path.dirname(__file__), '..')
+if path not in sys.path:
+    sys.path.append(path)
+
+import linguistic
 
 def p(corpora, focus=None):
 	"""
@@ -97,6 +105,91 @@ def p(corpora, focus=None):
 		return { token: count / tokens for token, count in counts.items() }
 
 	return { }
+
+def PMI(corpora, x, y, base=2):
+	"""
+	Calculate the Pointwise Mutual-Information (PMI) between two variables.
+	PMI is symmetric and computed as:
+
+	.. math::
+
+		PMI(x,y) = \\log( \\frac{p(x,y)}{p(x)p(y)} )
+
+	The function accepts multiple values for both variables, and returns the PMI separately.
+	The return value is a dictionary, where the keys are the cross product between `x` and `y`.
+
+	:param corpora: A corpus, or corpora, of documents.
+					If a string is given, it is assumed to be one corpus.
+					If a list is given, it is assumed to be a list of corpora.
+
+					.. note::
+
+						It is assumed that the corpora were extracted using the tokenizer tool.
+						Therefore each line should be a JSON string representing a document.
+						Each document should have a `tokens` attribute.
+	:type corpora: str or list of str
+	:param x: The tokens for which to compute the probability.
+			  These tokens are combined as a cross-product with all tokens in `y`.
+			  The tokens can be provided as:
+
+			  - A single word,
+			  - A list of tokens,
+			  - A tuple, or
+			  - A list of tuples.
+
+			  A tuple translates to joint probabilities.
+			  If nothing is given, it is replaced with the corpora's vocabulary.
+	:type x: str or list of str or tuple or list of tuple
+	:param y: The tokens for which to compute the probability.
+			  These tokens are combined as a cross-product with all tokens in `x`.
+			  The tokens can be provided as:
+
+			  - A single word,
+			  - A list of tokens,
+			  - A tuple, or
+			  - A list of tuples.
+
+			  A tuple translates to joint probabilities.
+			  If nothing is given, it is replaced with the corpora's vocabulary.
+	:type y: str or list of str or tuple or list of tuple
+	:param base: The base of the logarithm, defaults to 2.
+	:type base: float
+
+	:return: A dictionary with pairs of `x` and `y` variables as keys, and their PMi as values.
+	:rtype: dict
+	"""
+
+	pmi = { }
+
+	"""
+	The list of tokens in `x` and `y` is always made into a list, even if it's a list of one string or tuple.
+	"""
+	x, y = x or [ ], y or [ ]
+	x = [ x ] if type(x) is tuple or type(x) is str else x
+	y = [ y ] if type(y) is tuple or type(y) is str else y
+
+	if not x:
+		x = linguistic.vocabulary(corpora)
+
+	if not y:
+		y = linguistic.vocabulary(corpora)
+
+	"""
+	Get the 'vocabulary' for which to compute probabilities.
+	This vocabulary is made up of all the elements in `x` and `y`, as well as the cross-product between them.
+	"""
+	prior = list(set(x + y))
+	prob = p(corpora, focus=prior+joint_vocabulary(x, y))
+
+	"""
+	Calculate the PMI from the probabilities.
+	"""
+	for i in x:
+		for j in y:
+			pmi[(i, j)] = _pmi(prob, i, j, base)
+
+	return pmi
+
 def _pmi(prob, x, y, base):
 	"""
 	Calculate the Pointwise Mutual Information (PMI) of `x` and `y` based on the given probabilities.

@@ -397,3 +397,83 @@ class TestProbability(unittest.TestCase):
 		x = list(string.ascii_letters)
 		y = list(string.digits)
 		self.assertTrue(all(type(item) is tuple for item in joint_vocabulary(x, y)))
+
+	def test_PMI_example(self):
+		"""
+		Test the PMI calculation using `example from Wikipedia <https://en.wikipedia.org/wiki/Pointwise_mutual_information>`_.
+		Note that the results aren't quite the same because the original probabilities don't add up to 1.
+		"""
+
+		path = os.path.join(os.path.dirname(__file__), 'e.json')
+		vocab = [ '!x', 'x', '!y', 'y', ('!x', '!y'), ('!x', 'y'), ('x', '!y'), ('x', 'y') ]
+		pmi = PMI(path, x=[ '!x', 'x' ], y=[ '!y', 'y' ], base=2)
+
+		prob = p(path, focus=vocab)
+		self.assertEqual(probability._pmi(prob, '!x', '!y', 2), pmi[('!x', '!y')])
+		self.assertEqual(probability._pmi(prob, '!x', 'y', 2), pmi[('!x', 'y')])
+		self.assertEqual(probability._pmi(prob, 'x', '!y', 2), pmi[('x', '!y')])
+		self.assertEqual(probability._pmi(prob, 'x', 'y', 2), pmi[('x', 'y')])
+
+	def test_PMI_no_x(self):
+		"""
+		Text that when the `x` is not given, the entire vocabulary is used instead.
+		"""
+
+		path = os.path.join(os.path.dirname(__file__), 'e.json')
+		pmi = PMI(path, x=None, y=[ '!y', 'y' ])
+		self.assertEqual({ ('!x', '!y'), ('!x', 'y'),
+		 				   ('x', '!y'), ('x', 'y'),
+		 				   ('!y', '!y'), ('!y', 'y'),
+		 				   ('y', '!y'), ('y', 'y') },
+						 set(pmi.keys()))
+
+		vocab = [ '!x', 'x', '!y', 'y', ('!x', '!y'), ('!x', 'y'), ('x', '!y'), ('x', 'y') ]
+		prob = p(path, focus=vocab)
+		self.assertEqual(probability._pmi(prob, '!x', '!y', 2), pmi[('!x', '!y')])
+		self.assertEqual(probability._pmi(prob, '!x', 'y', 2), pmi[('!x', 'y')])
+		self.assertEqual(probability._pmi(prob, 'x', '!y', 2), pmi[('x', '!y')])
+		self.assertEqual(probability._pmi(prob, 'x', 'y', 2), pmi[('x', 'y')])
+
+	def test_PMI_no_y(self):
+		"""
+		Text that when the `y` is not given, the entire vocabulary is used instead.
+		"""
+
+		path = os.path.join(os.path.dirname(__file__), 'e.json')
+		pmi = PMI(path, x=[ '!x', 'x' ], y=None)
+		self.assertEqual({ ('!x', '!x'), ('!x', 'x'),
+		 				   ('x', '!x'), ('x', 'x'),
+		 				   ('!x', '!y'), ('!x', 'y'),
+				   		   ('x', '!y'), ('x', 'y'), },
+						 set(pmi.keys()))
+
+		vocab = [ '!x', 'x', '!y', 'y', ('!x', '!y'), ('!x', 'y'), ('x', '!y'), ('x', 'y') ]
+		prob = p(path, focus=vocab)
+		self.assertEqual(probability._pmi(prob, '!x', '!y', 2), pmi[('!x', '!y')])
+		self.assertEqual(probability._pmi(prob, '!x', 'y', 2), pmi[('!x', 'y')])
+		self.assertEqual(probability._pmi(prob, 'x', '!y', 2), pmi[('x', '!y')])
+		self.assertEqual(probability._pmi(prob, 'x', 'y', 2), pmi[('x', 'y')])
+
+	def test_PMI_no_x_y(self):
+		"""
+		Text that when the `x` and `y` are not given, the entire vocabulary is used instead.
+		"""
+
+		path = os.path.join(os.path.dirname(__file__), 'e.json')
+		pmi = PMI(path, x=None, y=None)
+		self.assertEqual({ ('!x', '!x'), ('!x', 'x'),
+		 				   ('x', '!x'), ('x', 'x'),
+		 				   ('!x', '!y'), ('!x', 'y'),
+				   		   ('x', '!y'), ('x', 'y'),
+						   ('!y', '!x'), ('!y', 'x'),
+   		 				   ('y', '!x'), ('y', 'x'),
+   		 				   ('!y', '!y'), ('!y', 'y'),
+   				   		   ('y', '!y'), ('y', 'y'), },
+						 set(pmi.keys()))
+
+		vocab = [ '!x', 'x', '!y', 'y', ('!x', '!y'), ('!x', 'y'), ('x', '!y'), ('x', 'y') ]
+		prob = p(path, focus=vocab)
+		self.assertEqual(probability._pmi(prob, '!x', '!y', 2), pmi[('!x', '!y')])
+		self.assertEqual(probability._pmi(prob, '!x', 'y', 2), pmi[('!x', 'y')])
+		self.assertEqual(probability._pmi(prob, 'x', '!y', 2), pmi[('x', '!y')])
+		self.assertEqual(probability._pmi(prob, 'x', 'y', 2), pmi[('x', 'y')])
