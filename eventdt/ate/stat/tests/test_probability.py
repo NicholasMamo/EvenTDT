@@ -246,6 +246,86 @@ class TestProbability(unittest.TestCase):
 		focus = [ 'yellow', 'card', ('yellow', 'foul') ]
 		self.assertEqual(p(path, focus=focus), p(path, focus=focus, cache='yellow'))
 
+	def test_PMI_example(self):
+		"""
+		Test the PMI calculation using `example from Wikipedia <https://en.wikipedia.org/wiki/Pointwise_mutual_information>`_.
+		Note that the results aren't quite the same because the original probabilities don't add up to 1.
+		"""
+
+		path = os.path.join(os.path.dirname(__file__), 'e.json')
+		vocab = [ '!x', 'x', '!y', 'y', ('!x', '!y'), ('!x', 'y'), ('x', '!y'), ('x', 'y') ]
+		pmi = PMI(path, x=[ '!x', 'x' ], y=[ '!y', 'y' ], base=2)
+
+		prob = p(path, focus=vocab)
+		self.assertEqual(probability._pmi(prob, '!x', '!y', 2), pmi[('!x', '!y')])
+		self.assertEqual(probability._pmi(prob, '!x', 'y', 2), pmi[('!x', 'y')])
+		self.assertEqual(probability._pmi(prob, 'x', '!y', 2), pmi[('x', '!y')])
+		self.assertEqual(probability._pmi(prob, 'x', 'y', 2), pmi[('x', 'y')])
+
+	def test_PMI_no_x(self):
+		"""
+		Text that when the `x` is not given, the entire vocabulary is used instead.
+		"""
+
+		path = os.path.join(os.path.dirname(__file__), 'e.json')
+		pmi = PMI(path, x=None, y=[ '!y', 'y' ])
+		self.assertEqual({ ('!x', '!y'), ('!x', 'y'),
+		 				   ('x', '!y'), ('x', 'y'),
+		 				   ('!y', '!y'), ('!y', 'y'),
+		 				   ('y', '!y'), ('y', 'y') },
+						 set(pmi.keys()))
+
+		vocab = [ '!x', 'x', '!y', 'y', ('!x', '!y'), ('!x', 'y'), ('x', '!y'), ('x', 'y') ]
+		prob = p(path, focus=vocab)
+		self.assertEqual(probability._pmi(prob, '!x', '!y', 2), pmi[('!x', '!y')])
+		self.assertEqual(probability._pmi(prob, '!x', 'y', 2), pmi[('!x', 'y')])
+		self.assertEqual(probability._pmi(prob, 'x', '!y', 2), pmi[('x', '!y')])
+		self.assertEqual(probability._pmi(prob, 'x', 'y', 2), pmi[('x', 'y')])
+
+	def test_PMI_no_y(self):
+		"""
+		Text that when the `y` is not given, the entire vocabulary is used instead.
+		"""
+
+		path = os.path.join(os.path.dirname(__file__), 'e.json')
+		pmi = PMI(path, x=[ '!x', 'x' ], y=None)
+		self.assertEqual({ ('!x', '!x'), ('!x', 'x'),
+		 				   ('x', '!x'), ('x', 'x'),
+		 				   ('!x', '!y'), ('!x', 'y'),
+				   		   ('x', '!y'), ('x', 'y'), },
+						 set(pmi.keys()))
+
+		vocab = [ '!x', 'x', '!y', 'y', ('!x', '!y'), ('!x', 'y'), ('x', '!y'), ('x', 'y') ]
+		prob = p(path, focus=vocab)
+		self.assertEqual(probability._pmi(prob, '!x', '!y', 2), pmi[('!x', '!y')])
+		self.assertEqual(probability._pmi(prob, '!x', 'y', 2), pmi[('!x', 'y')])
+		self.assertEqual(probability._pmi(prob, 'x', '!y', 2), pmi[('x', '!y')])
+		self.assertEqual(probability._pmi(prob, 'x', 'y', 2), pmi[('x', 'y')])
+
+	def test_PMI_no_x_y(self):
+		"""
+		Text that when the `x` and `y` are not given, the entire vocabulary is used instead.
+		"""
+
+		path = os.path.join(os.path.dirname(__file__), 'e.json')
+		pmi = PMI(path, x=None, y=None)
+		self.assertEqual({ ('!x', '!x'), ('!x', 'x'),
+		 				   ('x', '!x'), ('x', 'x'),
+		 				   ('!x', '!y'), ('!x', 'y'),
+				   		   ('x', '!y'), ('x', 'y'),
+						   ('!y', '!x'), ('!y', 'x'),
+   		 				   ('y', '!x'), ('y', 'x'),
+   		 				   ('!y', '!y'), ('!y', 'y'),
+   				   		   ('y', '!y'), ('y', 'y'), },
+						 set(pmi.keys()))
+
+		vocab = [ '!x', 'x', '!y', 'y', ('!x', '!y'), ('!x', 'y'), ('x', '!y'), ('x', 'y') ]
+		prob = p(path, focus=vocab)
+		self.assertEqual(probability._pmi(prob, '!x', '!y', 2), pmi[('!x', '!y')])
+		self.assertEqual(probability._pmi(prob, '!x', 'y', 2), pmi[('!x', 'y')])
+		self.assertEqual(probability._pmi(prob, 'x', '!y', 2), pmi[('x', '!y')])
+		self.assertEqual(probability._pmi(prob, 'x', 'y', 2), pmi[('x', 'y')])
+
 	def test_pmi_zero_x(self):
 		"""
 		Test that when calculating the PMI and `x` has a probability of 0, 0 is returned.
@@ -313,6 +393,77 @@ class TestProbability(unittest.TestCase):
 		self.assertEqual(0.222392, round(probability._pmi(prob, 'y', '!x', base=2), 6))
 		self.assertEqual(1.584963, round(probability._pmi(prob, '!y', 'x', base=2), 6))
 		self.assertEqual(-1.584963, round(probability._pmi(prob, 'y', 'x', base=2), 6))
+
+	def test_cache_invalid_token(self):
+		"""
+		Test that when caching with a token that does not appear in the corpora, an empty list is returned.
+		"""
+
+		path = os.path.join(os.path.dirname(__file__), 'e.json')
+		cache = probability._cache(path, 'yellow')
+		self.assertFalse(cache)
+
+	def test_cache_empty_corpus(self):
+		"""
+		Test that generating the cache from an empty corpus returns an empty list of documents.
+		"""
+
+		path = os.path.join(os.path.dirname(__file__), 'empty.json')
+		cache = probability._cache(path, 'yellow')
+		self.assertFalse(cache)
+
+	def test_cache_one_corpus(self):
+		"""
+		Test that generating the cache from one corpus returns only the documents from that corpus.
+		"""
+
+		path = os.path.join(os.path.dirname(__file__), 'c1.json')
+		cache = probability._cache(path, 'yellow')
+		self.assertTrue(cache)
+
+	def test_cache_multiple_corppra(self):
+		"""
+		Test that generating the cache from multiple corppra returns all the documents from all corpora.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'c1.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'c2.json') ]
+		cache = probability._cache(paths, 'yellow')
+		self.assertTrue(cache)
+
+	def test_cache_all_contain_token(self):
+		"""
+		Test that all documents in the cache contain the given token.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'c1.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'c2.json') ]
+		cache = probability._cache(paths, 'yellow')
+		self.assertTrue(all( 'yellow' in document['tokens'] for document in cache ))
+
+	def test_cache_all_valid_retrieved(self):
+		"""
+		Test that all documents containing the token are retrieved.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'c1.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'c2.json') ]
+		cache = probability._cache(paths, 'yellow')
+
+		"""
+		Go over all the documents in the corpora.
+		"""
+		read = 0
+		for path in paths:
+			with open(path, 'r') as f:
+				for line in f:
+					document = json.loads(line)
+					if 'yellow' in document['tokens']:
+						self.assertTrue(document in cache)
+						read += 1
+
+		self.assertGreater(read, 0)
+		self.assertEqual(read, len(cache))
 
 	def test_joint_vocabulary_empty_x_y(self):
 		"""
@@ -406,154 +557,3 @@ class TestProbability(unittest.TestCase):
 		x = list(string.ascii_letters)
 		y = list(string.digits)
 		self.assertTrue(all(type(item) is tuple for item in joint_vocabulary(x, y)))
-
-	def test_PMI_example(self):
-		"""
-		Test the PMI calculation using `example from Wikipedia <https://en.wikipedia.org/wiki/Pointwise_mutual_information>`_.
-		Note that the results aren't quite the same because the original probabilities don't add up to 1.
-		"""
-
-		path = os.path.join(os.path.dirname(__file__), 'e.json')
-		vocab = [ '!x', 'x', '!y', 'y', ('!x', '!y'), ('!x', 'y'), ('x', '!y'), ('x', 'y') ]
-		pmi = PMI(path, x=[ '!x', 'x' ], y=[ '!y', 'y' ], base=2)
-
-		prob = p(path, focus=vocab)
-		self.assertEqual(probability._pmi(prob, '!x', '!y', 2), pmi[('!x', '!y')])
-		self.assertEqual(probability._pmi(prob, '!x', 'y', 2), pmi[('!x', 'y')])
-		self.assertEqual(probability._pmi(prob, 'x', '!y', 2), pmi[('x', '!y')])
-		self.assertEqual(probability._pmi(prob, 'x', 'y', 2), pmi[('x', 'y')])
-
-	def test_PMI_no_x(self):
-		"""
-		Text that when the `x` is not given, the entire vocabulary is used instead.
-		"""
-
-		path = os.path.join(os.path.dirname(__file__), 'e.json')
-		pmi = PMI(path, x=None, y=[ '!y', 'y' ])
-		self.assertEqual({ ('!x', '!y'), ('!x', 'y'),
-		 				   ('x', '!y'), ('x', 'y'),
-		 				   ('!y', '!y'), ('!y', 'y'),
-		 				   ('y', '!y'), ('y', 'y') },
-						 set(pmi.keys()))
-
-		vocab = [ '!x', 'x', '!y', 'y', ('!x', '!y'), ('!x', 'y'), ('x', '!y'), ('x', 'y') ]
-		prob = p(path, focus=vocab)
-		self.assertEqual(probability._pmi(prob, '!x', '!y', 2), pmi[('!x', '!y')])
-		self.assertEqual(probability._pmi(prob, '!x', 'y', 2), pmi[('!x', 'y')])
-		self.assertEqual(probability._pmi(prob, 'x', '!y', 2), pmi[('x', '!y')])
-		self.assertEqual(probability._pmi(prob, 'x', 'y', 2), pmi[('x', 'y')])
-
-	def test_PMI_no_y(self):
-		"""
-		Text that when the `y` is not given, the entire vocabulary is used instead.
-		"""
-
-		path = os.path.join(os.path.dirname(__file__), 'e.json')
-		pmi = PMI(path, x=[ '!x', 'x' ], y=None)
-		self.assertEqual({ ('!x', '!x'), ('!x', 'x'),
-		 				   ('x', '!x'), ('x', 'x'),
-		 				   ('!x', '!y'), ('!x', 'y'),
-				   		   ('x', '!y'), ('x', 'y'), },
-						 set(pmi.keys()))
-
-		vocab = [ '!x', 'x', '!y', 'y', ('!x', '!y'), ('!x', 'y'), ('x', '!y'), ('x', 'y') ]
-		prob = p(path, focus=vocab)
-		self.assertEqual(probability._pmi(prob, '!x', '!y', 2), pmi[('!x', '!y')])
-		self.assertEqual(probability._pmi(prob, '!x', 'y', 2), pmi[('!x', 'y')])
-		self.assertEqual(probability._pmi(prob, 'x', '!y', 2), pmi[('x', '!y')])
-		self.assertEqual(probability._pmi(prob, 'x', 'y', 2), pmi[('x', 'y')])
-
-	def test_PMI_no_x_y(self):
-		"""
-		Text that when the `x` and `y` are not given, the entire vocabulary is used instead.
-		"""
-
-		path = os.path.join(os.path.dirname(__file__), 'e.json')
-		pmi = PMI(path, x=None, y=None)
-		self.assertEqual({ ('!x', '!x'), ('!x', 'x'),
-		 				   ('x', '!x'), ('x', 'x'),
-		 				   ('!x', '!y'), ('!x', 'y'),
-				   		   ('x', '!y'), ('x', 'y'),
-						   ('!y', '!x'), ('!y', 'x'),
-   		 				   ('y', '!x'), ('y', 'x'),
-   		 				   ('!y', '!y'), ('!y', 'y'),
-   				   		   ('y', '!y'), ('y', 'y'), },
-						 set(pmi.keys()))
-
-		vocab = [ '!x', 'x', '!y', 'y', ('!x', '!y'), ('!x', 'y'), ('x', '!y'), ('x', 'y') ]
-		prob = p(path, focus=vocab)
-		self.assertEqual(probability._pmi(prob, '!x', '!y', 2), pmi[('!x', '!y')])
-		self.assertEqual(probability._pmi(prob, '!x', 'y', 2), pmi[('!x', 'y')])
-		self.assertEqual(probability._pmi(prob, 'x', '!y', 2), pmi[('x', '!y')])
-		self.assertEqual(probability._pmi(prob, 'x', 'y', 2), pmi[('x', 'y')])
-
-	def test_cache_invalid_token(self):
-		"""
-		Test that when caching with a token that does not appear in the corpora, an empty list is returned.
-		"""
-
-		path = os.path.join(os.path.dirname(__file__), 'e.json')
-		cache = probability._cache(path, 'yellow')
-		self.assertFalse(cache)
-
-	def test_cache_empty_corpus(self):
-		"""
-		Test that generating the cache from an empty corpus returns an empty list of documents.
-		"""
-
-		path = os.path.join(os.path.dirname(__file__), 'empty.json')
-		cache = probability._cache(path, 'yellow')
-		self.assertFalse(cache)
-
-	def test_cache_one_corpus(self):
-		"""
-		Test that generating the cache from one corpus returns only the documents from that corpus.
-		"""
-
-		path = os.path.join(os.path.dirname(__file__), 'c1.json')
-		cache = probability._cache(path, 'yellow')
-		self.assertTrue(cache)
-
-	def test_cache_multiple_corppra(self):
-		"""
-		Test that generating the cache from multiple corppra returns all the documents from all corpora.
-		"""
-
-		paths = [ os.path.join(os.path.dirname(__file__), 'c1.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'c2.json') ]
-		cache = probability._cache(paths, 'yellow')
-		self.assertTrue(cache)
-
-	def test_cache_all_contain_token(self):
-		"""
-		Test that all documents in the cache contain the given token.
-		"""
-
-		paths = [ os.path.join(os.path.dirname(__file__), 'c1.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'c2.json') ]
-		cache = probability._cache(paths, 'yellow')
-		self.assertTrue(all( 'yellow' in document['tokens'] for document in cache ))
-
-	def test_cache_all_valid_retrieved(self):
-		"""
-		Test that all documents containing the token are retrieved.
-		"""
-
-		paths = [ os.path.join(os.path.dirname(__file__), 'c1.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'c2.json') ]
-		cache = probability._cache(paths, 'yellow')
-
-		"""
-		Go over all the documents in the corpora.
-		"""
-		read = 0
-		for path in paths:
-			with open(path, 'r') as f:
-				for line in f:
-					document = json.loads(line)
-					if 'yellow' in document['tokens']:
-						self.assertTrue(document in cache)
-						read += 1
-
-		self.assertGreater(read, 0)
-		self.assertEqual(read, len(cache))
