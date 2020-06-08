@@ -418,9 +418,13 @@ def _chi(table):
 	N = sum(table)
 	A, B, C, D = table
 
-	if not N:
+	"""
+	If any value in the denominator is 0, return 0.
+	This is an unspecified case that results in division by 0.
+	"""
+	if not all([ A + C, B + D, A + B, C + D ]):
 		return 0
-	
+
 	return ((N * (A * D - C * B) ** 2) /
 		    ( (A + C) * (B + D) * (A + B) * (C + D) ))
 

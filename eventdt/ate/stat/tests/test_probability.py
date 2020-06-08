@@ -598,6 +598,29 @@ class TestProbability(unittest.TestCase):
 		self.assertEqual(0, probability._chi(table))
 
 	def test_cache_invalid_token(self):
+	def test_chi_empty_combinations(self):
+		"""
+		Test that the chi-square statistic of a table that is not empty, except for a few combinations, is 0.
+		"""
+
+		table = (0, 1, 0, 1) # A + C = 0
+		self.assertEqual(0, probability._chi(table))
+
+		table = (1, 0, 1, 0) # B + D = 0
+		self.assertEqual(0, probability._chi(table))
+
+		table = (0, 0, 1, 1) # A + B = 0
+		self.assertEqual(0, probability._chi(table))
+
+		table = (1, 1, 0, 0) # C + D = 0
+		self.assertEqual(0, probability._chi(table))
+
+		table = (1, 0, 0, 1) # B + C = 0
+		self.assertLess(0, probability._chi(table))
+
+		table = (0, 1, 1, 0) # A + D = 0
+		self.assertLess(0, probability._chi(table))
+
 		"""
 		Test that when caching with a token that does not appear in the corpora, an empty list is returned.
 		"""
