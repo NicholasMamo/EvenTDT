@@ -23,7 +23,7 @@ def p(corpora, focus=None, cache=None):
 
 	.. note::
 
-		The joint probability is the minimum count of any token in each document.
+		The joint probability is the minimum count of any token in the joint set in each document.
 
 	:param corpora: A corpus, or corpora, of documents.
 					If a string is given, it is assumed to be one corpus.

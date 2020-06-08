@@ -171,7 +171,34 @@
             
   <div class="section" id="automatic-term-extraction-ate">
 <h1>11. Automatic Term Extraction (ATE)<a class="headerlink" href="#automatic-term-extraction-ate" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-ate"></span><div class="section" id="module-ate.linguistic">
+<span class="target" id="module-ate"></span><p>Package-level functions that are likely to be useful to both linguistic and statistical approaches.</p>
+<dl class="function">
+<dt id="ate.total_documents">
+<code class="sig-name descname">total_documents</code><span class="sig-paren">(</span><em class="sig-param">corpora</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.total_documents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Count the total number of documents in the given corpora.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>corpora</strong> (<em>str</em><em> or </em><em>list of str</em>) – <p>A corpus, or corpora, of documents.
+If a string is given, it is assumed to be one corpus.
+If a list is given, it is assumed to be a list of corpora.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is assumed that the corpora were extracted using the tokenizer tool.
+Therefore each line should be a JSON string representing a document.
+Each document should have a <cite>tokens</cite> attribute.</p>
+</div>
+</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The number of documents in the given corpora.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="section" id="module-ate.linguistic">
 <span id="linguistic"></span><h2>Linguistic<a class="headerlink" href="#module-ate.linguistic" title="Permalink to this headline">¶</a></h2>
 <p>General functions available to all ATE functions.</p>
 <dl class="function">
@@ -214,7 +241,7 @@ The probability is computed in terms of all tokens.</p>
 <p>Apart from calculating the probability of single tokens, the joint probability can be calculated by providing tuples.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The joint probability is the minimum count of any token in each document.</p>
+<p>The joint probability is the minimum count of any token in the joint set in each document.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -347,6 +374,165 @@ The keys are the tokens, including the joint probability of <cite>x</cite> and <
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ate.stat.probability.CHI">
+<code class="sig-name descname">CHI</code><span class="sig-paren">(</span><em class="sig-param">corpora</em>, <em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">cache=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.stat.probability.CHI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the chi-square statistic on the given corpora for the two given tokens.
+The statistic is based on how many documents tokens co-occur in.
+The order of the two tokens does not matter since the chi-square statistic is symmetric.</p>
+<p>All the tokens in <cite>x</cite> are matched with all tokens in <cite>y</cite> in a cross-product fashion.
+The chi-square statistic is computed for each such pair (one token in <cite>x</cite>, one token in <cite>y</cite>).</p>
+<p>The chi-square statistic is 0 if the two variables are independent.
+The higher the statistic, the more dependent the two variables are.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpora</strong> (<em>str</em><em> or </em><em>list of str</em>) – <p>A corpus, or corpora, of documents.
+If a string is given, it is assumed to be one corpus.
+If a list is given, it is assumed to be a list of corpora.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is assumed that the corpora were extracted using the tokenizer tool.
+Therefore each line should be a JSON string representing a document.
+Each document should have a <cite>tokens</cite> attribute.</p>
+</div>
+</p></li>
+<li><p><strong>x</strong> (<em>str</em><em> or </em><em>list of str</em>) – The first token or list of tokens in the comparison.
+Alternatively, a list of tokens can be provided.
+This is more efficient because it can allow caching.</p></li>
+<li><p><strong>y</strong> (<em>str</em><em> or </em><em>list of str</em>) – The second token or list of tokens in the comparison.
+Alternatively, a list of tokens can be provided.
+This is more efficient because it can allow caching.</p></li>
+<li><p><strong>cache</strong> (<em>list of str</em>) – <p>A list of terms that are re-used often and which should be cached.
+If an empty list is given, no cache is used.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Cache should be used when there is a lot of repetition.
+For example, <cite>x</cite> can be used as cache when <cite>x</cite> is small and <cite>y</cite> is large.
+If the data is small, using cache can be detrimental.</p>
+</div>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The chi-square statistic for all pairs of x and y as a dictionary.
+The keys are the pairs, and the values the chi-square statistic.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ate.stat.probability._contingency_table">
+<code class="sig-name descname">_contingency_table</code><span class="sig-paren">(</span><em class="sig-param">corpora</em>, <em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">cache=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.stat.probability._contingency_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the contingency tables for all the pairs of tokens in <cite>x</cite> and <cite>y</cite>.
+All the tokens in <cite>x</cite> are matched with all tokens in <cite>y</cite> in a cross-product fashion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpora</strong> (<em>list of str</em>) – <p>The list of corpora to use to create the contingency table.
+.. note:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>It is assumed that the corpora were extracted using the tokenizer tool.
+Therefore each line should be a JSON string representing a document.
+Each document should have a `tokens` attribute.
+</pre></div>
+</div>
+</p></li>
+<li><p><strong>x</strong> (<em>list of str</em>) – The first list of tokens to use to create the contingency tables.</p></li>
+<li><p><strong>y</strong> (<em>list of str</em>) – The second list of tokens to use to create the contingency tables.</p></li>
+<li><p><strong>cache</strong> (<em>list of str</em>) – <p>A list of terms that are re-used often and which should be cached.
+If an empty list is given, no cache is used.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Cache should be used when there is a lot of repetition.
+For example, <cite>x</cite> can be used as cache when <cite>x</cite> is small and <cite>y</cite> is large.
+If the data is small, using cache can be detrimental.</p>
+</div>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>A dictionary of contingency tables.
+The keys are the pairs of the tokens.
+The values are four-tuples representing the values of cells in the order:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Top-left,</p></li>
+<li><p>Top-right,</p></li>
+<li><p>Bottom-left, and</p></li>
+<li><p>Bottom-right.</p></li>
+</ol>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ate.stat.probability._chi">
+<code class="sig-name descname">_chi</code><span class="sig-paren">(</span><em class="sig-param">table</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.stat.probability._chi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the chi-square statistic from the given table.
+The chi-square statistic is 0 if the two variables are independent.
+The higher the statistic, the more dependent the two variables are.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>table</strong> (<em>tuple of int</em>) – <p>The contingency table as a four-tuple.
+The values are four-tuples representing the values of cells in the order:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Top-left,</p></li>
+<li><p>Top-right,</p></li>
+<li><p>Bottom-left, and</p></li>
+<li><p>Bottom-right.</p></li>
+</ol>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The chi-square statistic.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ate.stat.probability._cache">
+<code class="sig-name descname">_cache</code><span class="sig-paren">(</span><em class="sig-param">corpora</em>, <em class="sig-param">token</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.stat.probability._cache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compile all the documents in the given corpora that mention the token.
+These documents can be used as cache.
+In this way, the files do not have to be re-opened and documents without the token do not have to be iterated over.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpora</strong> (<em>str</em><em> or </em><em>list of str</em>) – <p>A corpus, or corpora, of documents.
+If a string is given, it is assumed to be one corpus.
+If a list is given, it is assumed to be a list of corpora.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is assumed that the corpora were extracted using the tokenizer tool.
+Therefore each line should be a JSON string representing a document.
+Each document should have a <cite>tokens</cite> attribute.</p>
+</div>
+</p></li>
+<li><p><strong>token</strong> (<em>str</em>) – The token to look for in the documents.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of documents, each represented as a dictionary, that contain the given token.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of dict</p>
 </dd>
 </dl>
 </dd></dl>
