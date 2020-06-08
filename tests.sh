@@ -42,6 +42,9 @@ apd_tests() {
 }
 
 ate_tests() {
+	echo -e "${HIGHLIGHT}ATE${DEFAULT}"
+	python3 -m unittest eventdt.ate.tests.test_package
+
 	echo -e "${HIGHLIGHT}Linguistic${DEFAULT}"
 	python3 -m unittest eventdt.ate.linguistic.tests.test_package
 
