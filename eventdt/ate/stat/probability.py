@@ -67,6 +67,8 @@ def p(corpora, focus=None, cache=None):
 	focus = focus or [ ]
 	focus = [ focus ] if type(focus) is tuple or type(focus) is str else focus
 	focus = [ (itemset, ) if type(itemset) is str else itemset for itemset in focus ]
+	cache = cache or [ ]
+	cache = [ cache ] if type(cache) is str else cache
 
 	"""
 	Create the initial counts for all tokens and joint probabilities.
@@ -94,7 +96,7 @@ def p(corpora, focus=None, cache=None):
 			documents = _cache(corpora, token)
 
 			"""
-			Look for item sets that mention the token.
+			Look for item sets that mention the cached token.
 			"""
 			itemsets = [ tuple for tuple in focus if token in tuple ]
 			for document in documents:
