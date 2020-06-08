@@ -7,11 +7,12 @@ import math
 import os
 import sys
 
-path = os.path.join(os.path.dirname(__file__), '..')
+path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
-import linguistic
+import ate
+from ate import linguistic
 
 def p(corpora, focus=None, cache=None):
 	"""
@@ -265,6 +266,135 @@ def _pmi(prob, x, y, base):
 		return 0
 
 	return math.log(prob[joint]/( prob[x] * prob[y] ), base)
+
+def _contingency_table(corpora, x, y, cache=None):
+	"""
+	Create the contingency tables for all the pairs of tokens in `x` and `y`.
+	All the tokens in `x` are matched with all tokens in `y` in a cross-product fashion.
+
+	:param corpora: The list of corpora to use to create the contingency table.
+					.. note::
+
+						It is assumed that the corpora were extracted using the tokenizer tool.
+						Therefore each line should be a JSON string representing a document.
+						Each document should have a `tokens` attribute.
+	:type corpora: list of str
+	:param x: The first list of tokens to use to create the contingency tables.
+	:type x: list of str
+	:param y: The second list of tokens to use to create the contingency tables.
+	:type y: list of str
+	:param cache: A list of terms that are re-used often and which should be cached.
+				  If an empty list is given, no cache is used.
+
+				  .. note::
+
+					  Cache should be used when there is a lot of repetition.
+					  For example, `x` can be used as cache when `x` is small and `y` is large.
+					  If the data is small, using cache can be detrimental.
+	:type cache: list of str
+
+	:return: A dictionary of contingency tables.
+			 The keys are the pairs of the tokens.
+			 The values are four-tuples representing the values of cells in the order:
+
+			 	1. Top-left,
+				2. Top-right,
+				3. Bottom-left, and
+				4. Bottom-right.
+	:rtype: dict
+	"""
+
+	tables = { }
+
+	"""
+	Convert the corpora and tokens into a list if they aren't already.
+	"""
+	corpora = [ corpora ] if type(corpora) is str else corpora
+	x = [ x ] if type(x) is str else x
+	y = [ y ] if type(y) is str else y
+	cache = cache or [ ]
+	cache = [ cache ] if type(cache) is str else cache
+
+	"""
+	Get the total number of documents in the corpora.
+	Initially, the token counts will be calculated only for tokens that are not cached.
+	The token counts for tokens that are cached can be calculated in the cache routine.
+	"""
+	total = ate.total_documents(corpora)
+	counts = { token: len(_cache(corpora, token)) for token in set(x + y) }
+
+	"""
+	Generate the pairs for which the chi-square statistic will be computed.
+	Then, initialize the contingency table for each pair.
+	"""
+	pairs = joint_vocabulary(x, y)
+	tables = { pair: (0, 0, 0, 0) for pair in pairs }
+
+	"""
+	If cache is defined, generate a list of documents for each cached token.
+	This reduces the number of documents to go over.
+	"""
+	if cache:
+		for token in cache:
+			"""
+			Look for pairs that mention the cached token.
+			"""
+			cached_pairs = [ pair for pair in pairs if token in pair ]
+
+			"""
+			Create the cache.
+			Update the A in the tables for the cached token.
+			This value represents the number of documents in which both the cached token and the other token appear.
+			"""
+			documents = _cache(corpora, token)
+			counts[token] = len(documents)
+			for document in documents:
+				for a, b in cached_pairs:
+					if a in document['tokens'] and b in document['tokens']:
+						A, B, C, D = tables[(a, b)]
+						A += 1
+						tables[(a, b)] = (A, B, C, D)
+
+			"""
+			Complete the contingency tables.
+			"""
+			for (a, b) in cached_pairs:
+				 A, B, C, D = tables[(a, b)]
+				 B = counts[a] - A # documents in which the first token appears without the second token
+				 C = counts[b] - A # documents in which the second token appears without the first token
+				 D = total - (A + B + C) # documents in which neither the first nor the second token appears
+				 tables[(a, b)] = (A, B, C, D)
+
+			"""
+			Remove the already-created contingency tables from the pairs.
+			"""
+			pairs = [ pair for pair in pairs if token not in pair ]
+
+	"""
+	Create any remaining contingency tables.
+	"""
+	if pairs:
+		for corpus in corpora:
+			with open(corpus, 'r') as f:
+				for line in f:
+					document = json.loads(line)
+					for a, b in pairs:
+						if a in document['tokens'] and b in document['tokens']:
+							A, B, C, D = tables[(a, b)]
+							A += 1
+							tables[(a, b)] = (A, B, C, D)
+
+		"""
+		Complete the contingency tables.
+		"""
+		for (a, b) in pairs:
+			 A, B, C, D = tables[(a, b)]
+			 B = counts[a] - A # documents in which the first token appears without the second token
+			 C = counts[b] - A # documents in which the second token appears without the first token
+			 D = total - (A + B + C) # documents in which neither the first nor the second token appears
+			 tables[(a, b)] = (A, B, C, D)
+
+	return tables
 
 def _cache(corpora, token):
 	"""
