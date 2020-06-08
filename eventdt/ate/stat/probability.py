@@ -288,7 +288,7 @@ def _cache(corpora, token):
 	"""
 
 	"""
-	Convert the corpora and tokens into a list if they aren't already.
+	Convert the corpora into a list if they aren't already.
 	"""
 	corpora = [ corpora ] if type(corpora) is str else corpora
 
