@@ -486,3 +486,74 @@ class TestProbability(unittest.TestCase):
 		self.assertEqual(probability._pmi(prob, '!x', 'y', 2), pmi[('!x', 'y')])
 		self.assertEqual(probability._pmi(prob, 'x', '!y', 2), pmi[('x', '!y')])
 		self.assertEqual(probability._pmi(prob, 'x', 'y', 2), pmi[('x', 'y')])
+
+	def test_cache_invalid_token(self):
+		"""
+		Test that when caching with a token that does not appear in the corpora, an empty list is returned.
+		"""
+
+		path = os.path.join(os.path.dirname(__file__), 'e.json')
+		cache = probability._cache(path, 'yellow')
+		self.assertFalse(cache)
+
+	def test_cache_empty_corpus(self):
+		"""
+		Test that generating the cache from an empty corpus returns an empty list of documents.
+		"""
+
+		path = os.path.join(os.path.dirname(__file__), 'empty.json')
+		cache = probability._cache(path, 'yellow')
+		self.assertFalse(cache)
+
+	def test_cache_one_corpus(self):
+		"""
+		Test that generating the cache from one corpus returns only the documents from that corpus.
+		"""
+
+		path = os.path.join(os.path.dirname(__file__), 'c1.json')
+		cache = probability._cache(path, 'yellow')
+		self.assertTrue(cache)
+
+	def test_cache_multiple_corppra(self):
+		"""
+		Test that generating the cache from multiple corppra returns all the documents from all corpora.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'c1.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'c2.json') ]
+		cache = probability._cache(paths, 'yellow')
+		self.assertTrue(cache)
+
+	def test_cache_all_contain_token(self):
+		"""
+		Test that all documents in the cache contain the given token.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'c1.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'c2.json') ]
+		cache = probability._cache(paths, 'yellow')
+		self.assertTrue(all( 'yellow' in document['tokens'] for document in cache ))
+
+	def test_cache_all_valid_retrieved(self):
+		"""
+		Test that all documents containing the token are retrieved.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'c1.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'c2.json') ]
+		cache = probability._cache(paths, 'yellow')
+
+		"""
+		Go over all the documents in the corpora.
+		"""
+		read = 0
+		for path in paths:
+			with open(path, 'r') as f:
+				for line in f:
+					document = json.loads(line)
+					if 'yellow' in document['tokens']:
+						self.assertTrue(document in cache)
+						read += 1
+
+		self.assertGreater(read, 0)
+		self.assertEqual(read, len(cache))

@@ -89,15 +89,9 @@ def p(corpora, focus=None, cache=None):
 				continue
 
 			"""
-			Compile the documents that mention the token.
+			Create the cache.
 			"""
-			documents = [ ]
-			for corpus in corpora:
-				with open(corpus, 'r') as f:
-					for line in f:
-						document = json.loads(line)
-						if token in document['tokens']:
-							documents.append(document)
+			documents = _cache(corpora, token)
 
 			"""
 			Look for item sets that mention the token.
@@ -269,6 +263,44 @@ def _pmi(prob, x, y, base):
 		return 0
 
 	return math.log(prob[joint]/( prob[x] * prob[y] ), base)
+
+def _cache(corpora, token):
+	"""
+	Compile all the documents in the given corpora that mention the token.
+	These documents can be used as cache.
+	In this way, the files do not have to be re-opened and documents without the token do not have to be iterated over.
+
+	:param corpora: A corpus, or corpora, of documents.
+					If a string is given, it is assumed to be one corpus.
+					If a list is given, it is assumed to be a list of corpora.
+
+					.. note::
+
+						It is assumed that the corpora were extracted using the tokenizer tool.
+						Therefore each line should be a JSON string representing a document.
+						Each document should have a `tokens` attribute.
+	:type corpora: str or list of str
+	:param token: The token to look for in the documents.
+	:type token: str
+
+	:return: A list of documents, each represented as a dictionary, that contain the given token.
+	:rtype: list of dict
+	"""
+
+	"""
+	Convert the corpora and tokens into a list if they aren't already.
+	"""
+	corpora = [ corpora ] if type(corpora) is str else corpora
+
+	documents = [ ]
+	for corpus in corpora:
+		with open(corpus, 'r') as f:
+			for line in f:
+				document = json.loads(line)
+				if token in document['tokens']:
+					documents.append(document)
+
+	return documents
 
 def joint_vocabulary(x, y):
 	"""
