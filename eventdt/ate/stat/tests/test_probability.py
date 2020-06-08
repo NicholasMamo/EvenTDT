@@ -685,6 +685,17 @@ class TestProbability(unittest.TestCase):
 		self.assertEqual(2, table[2])
 		self.assertEqual(14, table[3])
 
+	def test_contingency_table_x_y_cached(self):
+		"""
+		Test that when both `x` and `y` are cached, their document frequencies are created immediately.
+		"""
+
+		path = os.path.join(os.path.dirname(__file__), 'e.json')
+
+		x, y = 'x', 'y'
+		table = probability._contingency_table(path, x, y, cache=[ x, y ])
+		self.assertTrue(table)
+
 	def test_chi(self):
 		"""
 		Test the chi-square calculation.
