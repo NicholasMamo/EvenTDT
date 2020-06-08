@@ -578,6 +578,25 @@ class TestProbability(unittest.TestCase):
 		self.assertEqual(2, table[2])
 		self.assertEqual(14, table[3])
 
+	def test_chi(self):
+		"""
+		Test the chi-square calculation.
+		"""
+
+		table = (600, 200, 300, 1000)
+		self.assertEqual(545.1923, round(probability._chi(table), 4))
+
+		table = (30, 20, 331, 3218)
+		self.assertEqual(140.2925, round(probability._chi(table), 4))
+
+	def test_chi_empty(self):
+		"""
+		Test that the chi-square statistic of an empty table is 0.
+		"""
+
+		table = (0, 0, 0, 0)
+		self.assertEqual(0, probability._chi(table))
+
 	def test_cache_invalid_token(self):
 		"""
 		Test that when caching with a token that does not appear in the corpora, an empty list is returned.

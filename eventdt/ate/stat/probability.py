@@ -396,6 +396,34 @@ def _contingency_table(corpora, x, y, cache=None):
 
 	return tables
 
+def _chi(table):
+	"""
+	Calculate the chi-square statistic from the given table.
+	The chi-square statistic is 0 if the two variables are independent.
+	The higher the statistic, the more dependent the two variables are.
+
+	:param table: The contingency table as a four-tuple.
+				  The values are four-tuples representing the values of cells in the order:
+
+	 			 	1. Top-left,
+	 				2. Top-right,
+	 				3. Bottom-left, and
+	 				4. Bottom-right.
+	:type table: tuple of int
+
+	:return: The chi-square statistic.
+	:rtype: float
+	"""
+
+	N = sum(table)
+	A, B, C, D = table
+
+	if not N:
+		return 0
+	
+	return ((N * (A * D - C * B) ** 2) /
+		    ( (A + C) * (B + D) * (A + B) * (C + D) ))
+
 def _cache(corpora, token):
 	"""
 	Compile all the documents in the given corpora that mention the token.
