@@ -395,6 +395,113 @@ class TestProbability(unittest.TestCase):
 		self.assertEqual(1.584963, round(probability._pmi(prob, '!y', 'x', base=2), 6))
 		self.assertEqual(-1.584963, round(probability._pmi(prob, 'y', 'x', base=2), 6))
 
+	def test_CHI_empty_corpus(self):
+		"""
+		Test that when calculating the chi-square statistic on an empty corpus, all statistics are zero.
+		"""
+
+		path = os.path.join(os.path.dirname(__file__), 'empty.json')
+		x, y = [ 'yellow' ], [ 'foul', 'tackl' ]
+		chi = probability.CHI(path, x, y)
+		self.assertTrue(all( 0 == value for value in chi.values() ))
+
+	def test_CHI_str_x(self):
+		"""
+		Test that when `x` is a string, it is treated as such.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'c1.json'),
+				  os.path.join(os.path.dirname(__file__), 'c2.json') ]
+		x, y = 'yellow', [ 'foul', 'tackl' ]
+		chi = probability.CHI(paths, x, y)
+		self.assertTrue(('yellow', 'foul') in chi)
+		self.assertTrue(('yellow', 'tackl') in chi)
+
+	def test_CHI_str_y(self):
+		"""
+		Test that when `y` is a string, it is treated as such.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'c1.json'),
+				  os.path.join(os.path.dirname(__file__), 'c2.json') ]
+		x, y = [ 'foul', 'tackl' ], 'yellow'
+		chi = probability.CHI(paths, x, y)
+		self.assertTrue(('foul', 'yellow') in chi)
+		self.assertTrue(('tackl', 'yellow') in chi)
+
+	def test_CHI_list_x(self):
+		"""
+		Test that when `x` is a list, it is treated as such.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'c1.json'),
+				  os.path.join(os.path.dirname(__file__), 'c2.json') ]
+		x, y = [ 'foul', 'tackl' ], 'yellow'
+		chi = probability.CHI(paths, x, y)
+		self.assertTrue(('foul', 'yellow') in chi)
+		self.assertTrue(('tackl', 'yellow') in chi)
+
+	def test_CHI_list_y(self):
+		"""
+		Test that when `y` is a list, it is treated as such.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'c1.json'),
+				  os.path.join(os.path.dirname(__file__), 'c2.json') ]
+		x, y = 'yellow', [ 'foul', 'tackl' ]
+		chi = probability.CHI(paths, x, y)
+		self.assertTrue(('yellow', 'foul') in chi)
+		self.assertTrue(('yellow', 'tackl') in chi)
+
+	def test_CHI_str_x_y(self):
+		"""
+		Test that when `x` and `y` are strings, only one pair is returned.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'c1.json'),
+				  os.path.join(os.path.dirname(__file__), 'c2.json') ]
+		x, y = 'yellow', 'foul'
+		chi = probability.CHI(paths, x, y)
+		self.assertEqual({ ('yellow', 'foul') }, set(chi.keys()))
+
+	def test_CHI_list_x_y(self):
+		"""
+		Test that when `x` and `y` are lists, their cross-product is returned.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'c1.json'),
+				  os.path.join(os.path.dirname(__file__), 'c2.json') ]
+		x, y = [ 'yellow', 'red' ], [ 'foul', 'tackl' ]
+		chi = probability.CHI(paths, x, y)
+		self.assertEqual({ ('yellow', 'foul'), ('yellow', 'tackl'),
+		 				   ('red', 'foul'), ('red', 'tackl') },
+						 set(chi.keys()))
+
+	def test_CHI_nonexisting_word(self):
+		"""
+		Test that non-existing words are also included in the chi-statistic.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'c1.json'),
+				  os.path.join(os.path.dirname(__file__), 'c2.json') ]
+		x, y = 'yellow', 'superlongword'
+		chi = probability.CHI(paths, x, y)
+		self.assertTrue(('yellow', 'superlongword') in chi)
+		self.assertEqual(0, chi[('yellow', 'superlongword')])
+
+	def test_CHI_example(self):
+		"""
+		Test with an example chi-square value.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'c1.json'),
+				  os.path.join(os.path.dirname(__file__), 'c2.json') ]
+		x, y = [ 'yellow', 'shoot' ], [ 'foul', 'tackl', 'save' ]
+		chi = probability.CHI(paths, x, y)
+		self.assertGreater(chi[('yellow', 'tackl')], chi['shoot', 'tackl'])
+		self.assertGreater(chi[('yellow', 'foul')], chi['shoot', 'foul'])
+		self.assertGreater(chi[('shoot', 'save')], chi['yellow', 'save'])
+
 	def test_contingency_table_empty_corpus(self):
 		"""
 		Test that when creating the contingency table of an empty corpus results in all zeroes.
@@ -597,7 +704,6 @@ class TestProbability(unittest.TestCase):
 		table = (0, 0, 0, 0)
 		self.assertEqual(0, probability._chi(table))
 
-	def test_cache_invalid_token(self):
 	def test_chi_empty_combinations(self):
 		"""
 		Test that the chi-square statistic of a table that is not empty, except for a few combinations, is 0.
@@ -621,6 +727,7 @@ class TestProbability(unittest.TestCase):
 		table = (0, 1, 1, 0) # A + D = 0
 		self.assertLess(0, probability._chi(table))
 
+	def test_cache_invalid_token(self):
 		"""
 		Test that when caching with a token that does not appear in the corpora, an empty list is returned.
 		"""

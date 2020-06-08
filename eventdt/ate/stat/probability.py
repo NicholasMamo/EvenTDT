@@ -267,6 +267,69 @@ def _pmi(prob, x, y, base):
 
 	return math.log(prob[joint]/( prob[x] * prob[y] ), base)
 
+def CHI(corpora, x, y, cache=None):
+	"""
+	Calculate the chi-square statistic on the given corpora for the two given tokens.
+	The statistic is based on how many documents tokens co-occur in.
+	The order of the two tokens does not matter since the chi-square statistic is symmetric.
+
+	All the tokens in `x` are matched with all tokens in `y` in a cross-product fashion.
+	The chi-square statistic is computed for each such pair (one token in `x`, one token in `y`).
+
+	The chi-square statistic is 0 if the two variables are independent.
+	The higher the statistic, the more dependent the two variables are.
+
+	:param corpora: A corpus, or corpora, of documents.
+					If a string is given, it is assumed to be one corpus.
+					If a list is given, it is assumed to be a list of corpora.
+
+					.. note::
+
+						It is assumed that the corpora were extracted using the tokenizer tool.
+						Therefore each line should be a JSON string representing a document.
+						Each document should have a `tokens` attribute.
+	:type corpora: str or list of str
+	:param x: The first token or list of tokens in the comparison.
+			  Alternatively, a list of tokens can be provided.
+			  This is more efficient because it can allow caching.
+	:type x: str or list of str
+	:param y: The second token or list of tokens in the comparison.
+			  Alternatively, a list of tokens can be provided.
+			  This is more efficient because it can allow caching.
+	:type y: str or list of str
+	:param cache: A list of terms that are re-used often and which should be cached.
+				  If an empty list is given, no cache is used.
+
+				  .. note::
+
+					  Cache should be used when there is a lot of repetition.
+					  For example, `x` can be used as cache when `x` is small and `y` is large.
+					  If the data is small, using cache can be detrimental.
+	:type cache: list of str
+
+	:return: The chi-square statistic for all pairs of x and y as a dictionary.
+			 The keys are the pairs, and the values the chi-square statistic.
+	:rtype: dict
+	"""
+
+	chi = { }
+
+	"""
+	Convert the corpora and tokens into a list if they aren't already.
+	The list of tokens is always made into a list, even if it's a list of one string.
+	"""
+	corpora = [ corpora ] if type(corpora) is str else corpora
+	x = [ x ] if type(x) is str else x
+	y = [ y ] if type(y) is str else y
+
+	"""
+	Create the contingency tables and calculate the chi statistic for each pair.
+	"""
+	tables = _contingency_table(corpora, x, y, cache=cache)
+	chi = { pair: _chi(table) for pair, table in tables.items() }
+
+	return chi
+
 def _contingency_table(corpora, x, y, cache=None):
 	"""
 	Create the contingency tables for all the pairs of tokens in `x` and `y`.
