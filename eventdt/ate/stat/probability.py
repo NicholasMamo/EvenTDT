@@ -384,8 +384,7 @@ def _contingency_table(corpora, x, y, cache=None):
 	The token counts for tokens that are cached can be calculated in the cache routine.
 	"""
 	total = ate.total_documents(corpora)
-	counts = ate.total_documents(corpora,
-								 focus=[ token for token in set(x + y) if token not in cache ])
+	counts = ate.total_documents(corpora, focus=list(set(x + y)))
 
 	"""
 	Generate the pairs for which the chi-square statistic will be computed.
@@ -411,7 +410,6 @@ def _contingency_table(corpora, x, y, cache=None):
 			This value represents the number of documents in which both the cached token and the other token appear.
 			"""
 			documents = _cache(corpora, token)
-			counts[token] = len(documents)
 			for document in documents:
 				for a, b in cached_pairs:
 					if a in document['tokens'] and b in document['tokens']:
