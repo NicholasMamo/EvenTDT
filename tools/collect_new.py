@@ -15,7 +15,7 @@ stream_url = "https://api.twitter.com/labs/1/tweets/stream/filter?format=detaile
 rules_url = "https://api.twitter.com/labs/1/tweets/stream/filter/rules"
 
 sample_rules = [
-	{ 'value': '(frankfurt OR benfica) lang:en', 'tag': 'single' },
+	{ 'value': '("bayern munich" OR "benfica") lang:en', 'tag': 'single' },
 	# { 'value': 'madrid', 'tag': 'single' },
 	# { 'value': 'tottenham', 'tag': 'single' },
 	# { 'value': 'atletico', 'tag': 'single' },
