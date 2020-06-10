@@ -11,11 +11,11 @@ from requests.auth import HTTPBasicAuth
 consumer_key = "Qg4UBCaYSTQyco38M6DACls8y"	# Add your API key here
 consumer_secret = "eCIhph66A48sqOPQZNDFLLWjeJnCegKU7JvDGzImnQNnT7ze9g"	# Add your API secret key here
 
-stream_url = "https://api.twitter.com/labs/2/tweets/stream/filter?format=detailed&expansions=referenced_tweets.id,entities.mentions.username&user.format=detailed"
-rules_url = "https://api.twitter.com/labs/2/tweets/stream/filter/rules"
+stream_url = "https://api.twitter.com/labs/1/tweets/stream/filter?format=detailed&expansions=referenced_tweets.id,entities.mentions.username&user.format=detailed"
+rules_url = "https://api.twitter.com/labs/1/tweets/stream/filter/rules"
 
 sample_rules = [
-	{ 'value': 'chelsea lang:en', 'tag': 'single' },
+	{ 'value': '(frankfurt OR benfica) lang:en', 'tag': 'single' },
 	# { 'value': 'madrid', 'tag': 'single' },
 	# { 'value': 'tottenham', 'tag': 'single' },
 	# { 'value': 'atletico', 'tag': 'single' },
@@ -107,13 +107,13 @@ def stream_connect(auth):
 			if 'data' in response_data:
 				if '…' in response_data['data']['text']:
 					# pprint(response_data)
-					# print(response_data['data']['text'])
+					print('>', response_data['data']['text'])
 					pass
 				else:
-					# print(response_data['data']['text'])
+					print('>', response_data['data']['text'])
 					pass
 			else:
-				# pprint(response_data)
+				pprint(response_data)
 				pass
 
 bearer_token = BearerTokenAuth(consumer_key, consumer_secret)
