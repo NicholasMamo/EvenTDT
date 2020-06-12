@@ -174,11 +174,12 @@
 <span class="target" id="module-ate"></span><p>Package-level functions that are likely to be useful to both linguistic and statistical approaches.</p>
 <dl class="function">
 <dt id="ate.total_documents">
-<code class="sig-name descname">total_documents</code><span class="sig-paren">(</span><em class="sig-param">corpora</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.total_documents" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">total_documents</code><span class="sig-paren">(</span><em class="sig-param">corpora</em>, <em class="sig-param">focus=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.total_documents" title="Permalink to this definition">¶</a></dt>
 <dd><p>Count the total number of documents in the given corpora.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>corpora</strong> (<em>str</em><em> or </em><em>list of str</em>) – <p>A corpus, or corpora, of documents.
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpora</strong> (<em>str</em><em> or </em><em>list of str</em>) – <p>A corpus, or corpora, of documents.
 If a string is given, it is assumed to be one corpus.
 If a list is given, it is assumed to be a list of corpora.</p>
 <div class="admonition note">
@@ -187,13 +188,27 @@ If a list is given, it is assumed to be a list of corpora.</p>
 Therefore each line should be a JSON string representing a document.
 Each document should have a <cite>tokens</cite> attribute.</p>
 </div>
-</p>
+</p></li>
+<li><p><strong>focus</strong> (<em>None</em><em> or </em><em>str</em><em> or </em><em>list of str</em><em> or </em><em>tuple</em><em> or </em><em>list of tuple</em>) – <p>The tokens for which to compute the document frequency.
+If nothing is given, the document frequency is calculated for all tokens.
+The tokens can be provided as:</p>
+<ul>
+<li><p>A single word,</p></li>
+<li><p>A list of tokens,</p></li>
+<li><p>A tuple, or</p></li>
+<li><p>A list of tuples.</p></li>
+</ul>
+<p>A tuple can be used to compute joint frequencies.</p>
+</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The number of documents in the given corpora.</p>
+<dd class="field-even"><p>The number of documents in the given corpora.
+If one token or one tuple is given, the number of documents in which the token or tuple appears are returned.
+If multiple tokens or tuples are given, a dictionary is given with the separate counts.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p>int or dict</p>
 </dd>
 </dl>
 </dd></dl>

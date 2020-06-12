@@ -196,7 +196,7 @@ def collect(auth, track, filename, max_time, lang=None, *args, **kwargs):
 
 	start = time.time()
 	try:
-		with open(filename, 'w') as file:
+		with open(filename, 'a') as file:
 			listener = TweetListener(file, max_time=max_time, *args, **kwargs)
 			stream = Stream(auth, listener)
 			if track:
