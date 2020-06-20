@@ -45,11 +45,11 @@ ate_tests() {
 	echo -e "${HIGHLIGHT}ATE${DEFAULT}"
 	python3 -m unittest eventdt.ate.tests.test_package
 
+	echo -e "${HIGHLIGHT}Bootstrapping${DEFAULT}"
+	python3 -m unittest eventdt.ate.bootstrapping.tests.test_probability
+
 	echo -e "${HIGHLIGHT}Linguistic${DEFAULT}"
 	python3 -m unittest eventdt.ate.linguistic.tests.test_package
-
-	echo -e "${HIGHLIGHT}Statistical${DEFAULT}"
-	python3 -m unittest eventdt.ate.stat.tests.test_probability
 }
 
 base_tests() {

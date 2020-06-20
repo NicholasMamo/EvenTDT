@@ -13,8 +13,8 @@ if path not in sys.path:
     sys.path.append(path)
 
 import ate
-from ate.stat import probability
-from ate.stat.probability import *
+from ate.bootstrapping import probability
+from ate.bootstrapping.probability import *
 
 class TestProbability(unittest.TestCase):
 	"""
