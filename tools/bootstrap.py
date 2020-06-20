@@ -18,6 +18,7 @@ Accepted arguments:
 	- ``--m --method``		*<Required>* The method to use to look for similar keywords; supported: `PMI`, `CHI`.
 	- ``-i --iterations``	*<Optional>* The number of iterations to spend bootstrapping; defaults to 1.
 	- ``-k --keep``			*<Optional>* The number of keywords to keep after each iteration; defaults to 5.
+	- ``-c --cutoff``		*<Optional>* The number of candidate keywords to consider, based on probability from the given corpora; defaults to 100.
 """
 
 import argparse
@@ -31,7 +32,7 @@ lib = os.path.join(root, 'eventdt')
 sys.path.insert(-1, root)
 sys.path.insert(-1, lib)
 
-from ate.bootstrapping.probability import PMI, CHI
+from ate.bootstrapping.probability import p, PMI, CHI
 
 def setup_args():
 	"""
@@ -44,6 +45,7 @@ def setup_args():
 		- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `PMI`, `CHI`.
 		- ``-i --iterations``	*<Optional>* The number of iterations to spend bootstrapping; defaults to 1.
 		- ``-k --keep``			*<Optional>* The number of keywords to keep after each iteration; defaults to 5.
+		- ``-c --cutoff``		*<Optional>* The number of candidate keywords to consider, based on probability from the given corpora; defaults to 100.
 
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
@@ -66,6 +68,9 @@ def setup_args():
 	parser.add_argument('-k', '--keep',
 						type=int, required=False, default=5,
 						help='<Optional> The number of keywords to keep after each iteration; defaults to 5.')
+	parser.add_argument('-c', '--cutoff',
+						type=int, required=False, default=100,
+						help='<Optional> The number of candidate keywords to consider, based on probability from the given corpora; defaults to 100.')
 
 	args = parser.parse_args()
 	return args
