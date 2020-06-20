@@ -154,9 +154,83 @@ class TestEvent(unittest.TestCase):
 				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
 				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
 		ef = event.EF(paths)
-		
+
 		logef = event.logEF(paths, base=2)
 		self.assertTrue(all( math.log(ef[term], 2) == logef[term] for term in ef ))
 
 		logef = event.logEF(paths, base=10)
 		self.assertTrue(all( math.log(ef[term], 10) == logef[term] for term in ef ))
+
+	def test_efidf(self):
+		"""
+		Test that the EF-IDF scores are assigned correctly.
+		"""
+
+		idf_path = os.path.join(os.path.dirname(__file__), 'corpora', 'idf.json')
+		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+
+		"""
+		Calculate the EF-IDF manually.
+		"""
+		ef = event.EF(paths)
+		with open(idf_path, 'r') as f:
+			idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
+
+		"""
+		Ensure that the scores line up.
+		"""
+		efidf = event.EFIDF(paths, idf)
+		self.assertTrue(all( efidf[term] == ef[term] * idf.create([ term ]).dimensions[term]
+		 					 for term in efidf ))
+
+	def test_efidf_log(self):
+ 		"""
+ 		Test that when a base is given, the EF-IDF scores are based on the logarithmic event frequency.
+ 		"""
+
+ 		idf_path = os.path.join(os.path.dirname(__file__), 'corpora', 'idf.json')
+ 		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
+ 		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
+ 				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
+ 				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+
+ 		"""
+ 		Calculate the EF-IDF manually.
+ 		"""
+ 		ef = event.logEF(paths, 10)
+ 		with open(idf_path, 'r') as f:
+ 			idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
+
+ 		"""
+ 		Ensure that the scores line up.
+ 		"""
+ 		efidf = event.EFIDF(paths, idf, base=10)
+ 		self.assertTrue(all( efidf[term] == ef[term] * idf.create([ term ]).dimensions[term]
+ 		 					 for term in efidf ))
+
+	def test_efidf_all_terms(self):
+		"""
+		Test that the EF-IDF scores include all terms.
+		"""
+
+		idf_path = os.path.join(os.path.dirname(__file__), 'corpora', 'idf.json')
+		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+
+		"""
+		Calculate the EF to get a list of terms.
+		"""
+		ef = event.EF(paths)
+		with open(idf_path, 'r') as f:
+			idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
+
+		"""
+		Calculate the EF-IDF and ensure that all terms are present.
+		"""
+		efidf = event.EFIDF(paths, idf)
+		self.assertEqual(ef.keys(), efidf.keys())

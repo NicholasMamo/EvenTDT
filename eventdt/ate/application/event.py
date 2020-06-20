@@ -83,3 +83,35 @@ def logEF(timelines, base=2):
 	ef = EF(timelines)
 	ef = { term: math.log(value, base) for term, value in ef.items() }
 	return ef
+
+def EFIDF(timelines, idf, base=None):
+	"""
+	Calculate the event-frequency-inverse-document-frequency metric for terms.
+	This is a local-global weighting scheme.
+	The local scheme is the event frequency, and the global scheme is the inverse-document-frequency.
+	If a logarithmic base is provided, the logarithmic event frequency is used instead.
+
+	:param timelines: The path to a timeline or a list of paths to timelines.
+					  If a string is given, it is assumed to be one event timeline.
+					  If a list is given, it is assumed to be a list of event timelines.
+
+					  .. note::
+
+					      It is assumed that the event timelines were extracted using the collection tool.
+						  Therefore each file should be a JSON string representing a :class:`~summarization.timeline.timeline.Timeline`.
+	:type timelines: str or list of str
+	:param idf: The IDF table to use to score terms.
+	:type idf: :class:`~nlp.term_weighting.global_schemes.idf.IDF`
+	:param base: The logarithmic base.
+	:type base: floa
+
+	:return: A dictionary with terms as keys and their EF-IDF score as the values.
+	:rtype: dict
+	"""
+
+	efidf = { }
+
+	ef = logEF(timelines, base) if base else EF(timelines)
+	efidf = { term: ef[term] * idf.create([ term ]).dimensions[term] for term in ef }
+
+	return efidf
