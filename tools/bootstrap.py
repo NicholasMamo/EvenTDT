@@ -8,11 +8,13 @@ To run the script, use:
 .. code-block:: bash
 
     ./tools/bootstrap.py \\
-	./tools/bootstrap.py -s foul yellow
+	-s foul yellow \\
+	-f data/tokenized_corpus.json
 
 Accepted arguments:
 
 	- ``-s --seed``			*<Required>* The seed set of keywords.
+	- ``-f --files``		*<Required>* The input corpora where to look for similar keywords.
 """
 
 import argparse
@@ -24,6 +26,7 @@ def setup_args():
 	Accepted arguments:
 
 		- ``-s --seed``			*<Required>* The seed set of keywords.
+		- ``-f --files``		*<Required>* The input corpora where to look for similar keywords.
 
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
@@ -31,8 +34,12 @@ def setup_args():
 
 	parser = argparse.ArgumentParser(description="Bootstrap a seed set of terms.")
 
-	parser.add_argument('-s', '--seed', nargs='+', required=True,
-										help='<Required> The seed set of keywords.')
+	parser.add_argument('-s', '--seed',
+						nargs='+', required=True,
+						help='<Required> The seed set of keywords.')
+	parser.add_argument('-f', '--files',
+						nargs='+', required=True,
+						help='<Required> The input corpora where to look for similar keywords.')
 
 	args = parser.parse_args()
 	return args
