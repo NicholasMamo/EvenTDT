@@ -7,7 +7,12 @@ To run the script, use:
 
 .. code-block:: bash
 
-    ./tools/bootstrap.py
+    ./tools/bootstrap.py \\
+	./tools/bootstrap.py -s foul yellow
+
+Accepted arguments:
+
+	- ``-s --seed``			*<Required>* The seed set of keywords.
 """
 
 import argparse
@@ -15,11 +20,20 @@ import argparse
 def setup_args():
 	"""
 	Set up and get the list of command-line arguments.
+
+	Accepted arguments:
+
+		- ``-s --seed``			*<Required>* The seed set of keywords.
+
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
 	"""
 
 	parser = argparse.ArgumentParser(description="Bootstrap a seed set of terms.")
+
+	parser.add_argument('-s', '--seed', nargs='+', required=True,
+										help='<Required> The seed set of keywords.')
+
 	args = parser.parse_args()
 	return args
 
