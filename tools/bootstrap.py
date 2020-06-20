@@ -21,6 +21,7 @@ Accepted arguments:
 """
 
 import argparse
+import copy
 import os
 import sys
 
@@ -75,7 +76,27 @@ def main():
 	"""
 
 	args = setup_args()
-	print(args)
+
+	"""
+	Get the meta arguments.
+	"""
+	cmd = meta(args)
+	print(cmd)
+
+def meta(args):
+	"""
+	Get the meta arguments.
+
+	:param args: The command-line arguments.
+	:type args: :class:`argparse.Namespace`
+
+	:return: The meta arguments as a dictionary.
+	:rtype: dict
+	"""
+
+	meta = copy.deepcopy(vars(args))
+	meta['method'] = str(meta['method'])
+	return meta
 
 def method(method):
 	"""
