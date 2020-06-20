@@ -11,6 +11,7 @@ path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
+from ate.bootstrapping import probability
 from objects.exportable import Exportable
 
 def EF(timelines):
@@ -101,7 +102,7 @@ def EFIDF(timelines, idf, base=None):
 						  Therefore each file should be a JSON string representing a :class:`~summarization.timeline.timeline.Timeline`.
 	:type timelines: str or list of str
 	:param idf: The IDF table to use to score terms.
-	:type idf: :class:`~nlp.term_weighting.global_schemes.idf.IDF`
+	:type idf: :class:`~nlp.term_weighting.global_schemes.tfidf.TFIDF`
 	:param base: The logarithmic base.
 	:type base: floa
 
@@ -116,6 +117,48 @@ def EFIDF(timelines, idf, base=None):
 
 	return efidf
 
+def variability(term, idfs):
+	"""
+	Calculate how variable the term is across events.
+	A term is highly-variable if it appears disproportionately in one or a few events.
+	A low variability indicates that the term appears consistently across all events.
+
+	The method follows the leave-one-out principle: each event is compared against all other events.
+	The final result is an average weightg according to the event sizes.
+
+	:param term: The term for which to calculate the variability.
+	:type term: str
+	:param idfs: A list of IDFs, one for each event.
+	:type idfs: list of :class:`~nlp.term_weighting.tfidf.TFIDF`
+
+	:return: The variability of the term.
+			 A term is highly-variable if it appears disproportionately in one or a few events.
+			 A low variability indicates that the term appears consistently across all events.
+	:rtype: float
+	"""
+
+	v = 0
+
+	"""
+	Calculate the number of documents across all events.
+	This is the size of the contingency table.
+	"""
+	all_documents = sum(idf.global_scheme.documents for idf in idfs)
+
+	"""
+	For each event, compare the appearance of the term in the event with its appearance in other events.
+	"""
+	for idf in idfs:
+		"""
+		Create the contingency table and compute the chi-square value.
+		The statistic's weight is based on the size of the current event.
+		"""
+		comparison = [ other for other in idfs if other is not idf ]
+		table = _variability_contingency_table(term, idf, comparison)
+		chi = probability._chi(table)
+		v += chi * idf.global_scheme.documents / all_documents
+
+	return v
 
 def _variability_contingency_table(term, current, comparison):
 	"""
