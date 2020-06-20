@@ -115,3 +115,50 @@ def EFIDF(timelines, idf, base=None):
 	efidf = { term: ef[term] * idf.create([ term ]).dimensions[term] for term in ef }
 
 	return efidf
+
+
+def _variability_contingency_table(term, current, comparison):
+	"""
+	Create the contingency table comparing the term's appearance in the current event versus other events.
+
+	:param term: The term for which to create the contingency table.
+	:type term: str
+	:param current: The current event's IDF table.
+	:type current: :class:`~nlp.term_weighting.tfidf.TFIDF`
+	:param comparison: A list of IDFs, one for each event.
+	:type comparison: list of :class:`~nlp.term_weighting.tfidf.TFIDF`
+
+	:return: The contingency table for the term, contrasting the current event with all other events.
+			 The first row is the total number of documents in the current event.
+			 The second row is the total number of documents in the comparison events.
+			 The totals of both rows sum up to the total number of documents.
+			 The contingency table is returned as a tuple with four floats.
+			 These correspond to the first and second rows respectively.
+	:rtype: tuple of float
+	"""
+
+	current_documents = current.global_scheme.documents
+	comparison_documents = sum(idf.global_scheme.documents for idf in comparison)
+
+	"""
+	`A` is the number of current event documents in which the term appears.
+	"""
+	A = current.global_scheme.idf.get(term, 0)
+
+	"""
+	`B` is the number of current event documents in which the term does not appear
+	"""
+	B = current_documents - A
+
+	"""
+	`C` is the number of other events in which the term appears.
+	It is computed as the number of times the term appears in all events minus `A`.
+	"""
+	C = sum(idf.global_scheme.idf.get(term, 0) for idf in comparison)
+
+	"""
+	`D` is the number of other events in which the term does not appear.
+	"""
+	D = comparison_documents - C
+
+	return (A, B, C, D)

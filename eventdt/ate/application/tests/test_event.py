@@ -234,3 +234,239 @@ class TestEvent(unittest.TestCase):
 		"""
 		efidf = event.EFIDF(paths, idf)
 		self.assertEqual(ef.keys(), efidf.keys())
+
+	def test_variability_contingency_table_total(self):
+		"""
+		Test that the variability contingency table sums up to the total number of documents in all IDFs.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_idf.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_idf.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		"""
+		Calculate the total number of documents in all the IDFs.
+		"""
+		total = sum([ idf.global_scheme.documents for idf in idfs ])
+
+		"""
+		Assert that the total number of documents in each contingency table sums up to the total.
+		"""
+		for idf in idfs:
+			comparison = [ other for other in idfs if other is not idf ]
+			table = event._variability_contingency_table('liverpool', idf, comparison)
+			self.assertEqual(total, sum(table))
+
+	def test_variability_contingency_table_four_cells(self):
+		"""
+		Test that the variability contingency table has four cells.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_idf.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_idf.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		"""
+		Calculate the total number of documents in all the IDFs.
+		"""
+		total = sum([ idf.global_scheme.documents for idf in idfs ])
+
+		"""
+		Assert that the total number of documents in each contingency table sums up to the total.
+		"""
+		for idf in idfs:
+			comparison = [ other for other in idfs if other is not idf ]
+			table = event._variability_contingency_table('liverpool', idf, comparison)
+			self.assertEqual(4, len(table))
+
+	def test_variability_contingency_table_integer_cells(self):
+		"""
+		Test that the variability contingency table is made up of integers.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_idf.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_idf.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		"""
+		Calculate the total number of documents in all the IDFs.
+		"""
+		total = sum([ idf.global_scheme.documents for idf in idfs ])
+
+		"""
+		Assert that the total number of documents in each contingency table sums up to the total.
+		"""
+		for idf in idfs:
+			comparison = [ other for other in idfs if other is not idf ]
+			table = event._variability_contingency_table('liverpool', idf, comparison)
+			self.assertTrue(all(type(cell) is int for cell in table))
+
+	def test_variability_contingency_table_positive_cells(self):
+		"""
+		Test that the variability contingency table is made up of positive numbers.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_idf.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_idf.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		"""
+		Calculate the total number of documents in all the IDFs.
+		"""
+		total = sum([ idf.global_scheme.documents for idf in idfs ])
+
+		"""
+		Assert that the total number of documents in each contingency table sums up to the total.
+		"""
+		for idf in idfs:
+			comparison = [ other for other in idfs if other is not idf ]
+			table = event._variability_contingency_table('zaha', idf, comparison)
+			self.assertTrue(all(cell >= 0 for cell in table))
+
+	def test_variability_contingency_table_event_total(self):
+		"""
+		Test that the first variability contingency table row sums up to the total number of documents in the event IDF.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_idf.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_idf.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		"""
+		Assert that the total number of documents in each contingency table sums up to the total.
+		"""
+		for idf in idfs:
+			comparison = [ other for other in idfs if other is not idf ]
+			(A, B, C, D) = event._variability_contingency_table('liverpool', idf, comparison)
+			self.assertEqual(idf.global_scheme.documents, A + B)
+
+	def test_variability_contingency_table_comparison_total(self):
+		"""
+		Test that the second variability contingency table row sums up to the total number of documents in the comparison IDFs.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_idf.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_idf.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		"""
+		Assert that the total number of documents in each contingency table sums up to the total.
+		"""
+		for idf in idfs:
+			comparison = [ other for other in idfs if other is not idf ]
+			(A, B, C, D) = event._variability_contingency_table('liverpool', idf, comparison)
+			self.assertEqual(sum([ idf.global_scheme.documents for idf in comparison ]), C + D)
+
+	def test_variability_contingency_table_unknown_event_word(self):
+		"""
+		Test that when a word is unknown in an event, the first cell is 0.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_idf.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_idf.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		"""
+		Assert that the total number of documents in each contingency table sums up to the total.
+		"""
+		(A, B, C, D) = event._variability_contingency_table('mertens', idfs[0], idfs[1:])
+		self.assertEqual(0, A)
+
+	def test_variability_contingency_table_unknown_event_word(self):
+		"""
+		Test that when a word is unknown in an event, the first cell is 0.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_idf.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_idf.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		"""
+		Assert that the total number of documents in each contingency table sums up to the total.
+		"""
+		(A, B, C, D) = event._variability_contingency_table('mertens', idfs[0], idfs[1:])
+		self.assertEqual(0, A)
+		self.assertEqual(idfs[0].global_scheme.documents, B)
+
+	def test_variability_contingency_table_unique_event_word(self):
+		"""
+		Test that when a word appears in only one event, the comparison events' cells sum up to zero.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_idf.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_idf.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		"""
+		Assert that the total number of documents in each contingency table sums up to the total.
+		"""
+		(A, B, C, D) = event._variability_contingency_table('wickham', idfs[0], idfs[1:])
+		self.assertEqual(0, C)
+		self.assertEqual(sum([ idf.global_scheme.documents for idf in idfs[1:] ]), D)
+
+	def test_variability_contingency_table_correct_counts(self):
+		"""
+		Test that the variability contingency table counts are correct.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_idf.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_idf.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		"""
+		Assert that the total number of documents in each contingency table sums up to the total.
+		"""
+		term = 'liverpool'
+		(A, B, C, D) = event._variability_contingency_table(term, idfs[0], idfs[1:])
+		self.assertEqual(idfs[0].global_scheme.idf[term], A)
+		self.assertEqual(sum([ idf.global_scheme.idf[term] for idf in idfs[1:] ]), C)
