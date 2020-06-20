@@ -15,7 +15,8 @@ Accepted arguments:
 
 	- ``-s --seed``			*<Required>* The seed set of keywords.
 	- ``-f --files``		*<Required>* The input corpora where to look for similar keywords.
-	- ``--m -method``		*<Required>* The method to use to look for similar keywords; supported: `PMI`, `CHI`.
+	- ``--m --method``		*<Required>* The method to use to look for similar keywords; supported: `PMI`, `CHI`.
+	- ``-i --iterations``	*<Optional>* The number of iterations to spend bootstrapping; defaults to 1.
 """
 
 import argparse
@@ -39,6 +40,7 @@ def setup_args():
 		- ``-s --seed``			*<Required>* The seed set of keywords.
 		- ``-f --files``		*<Required>* The input corpora where to look for similar keywords.
 		- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `PMI`, `CHI`.
+		- ``-i --iterations``	*<Optional>* The number of iterations to spend bootstrapping; defaults to 1.
 
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
@@ -55,6 +57,9 @@ def setup_args():
 	parser.add_argument('-m', '--method',
 						type=method, required=True,
 						help='<Required> The method to use to look for similar keywords; supported: `PMI`, `CHI`.')
+	parser.add_argument('-i', '--iterations',
+						type=int, required=False, default=1,
+						help='<Optional> The number of iterations to spend bootstrapping; defaults to 1.')
 
 	args = parser.parse_args()
 	return args
@@ -65,7 +70,7 @@ def main():
 	"""
 
 	args = setup_args()
-	print(args.method)
+	print(args)
 
 def method(method):
 	"""
