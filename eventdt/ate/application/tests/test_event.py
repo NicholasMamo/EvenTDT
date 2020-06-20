@@ -3,6 +3,7 @@ Test the functionality of the event-based ATE approaches.
 """
 
 import json
+import math
 import os
 import string
 import sys
@@ -106,3 +107,56 @@ class TestEvent(unittest.TestCase):
 		Assert that all terms are in the event frequency.
 		"""
 		self.assertEqual(all_terms, set(ef))
+
+	def test_ef_all_terms(self):
+		"""
+		Test that the event frequency includes all breaking terms.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+
+		self.assertEqual(event.EF(paths).keys(), event.logEF(paths).keys())
+
+	def test_log_ef_lower_limit(self):
+		"""
+		Test that the minimum logarithmic event frequency is 0, not 1.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+		ef = event.logEF(paths)
+		self.assertEqual(0, min(ef.values()))
+
+	def test_log_ef_max_limit(self):
+		"""
+		Test that the maximum logarithmic event frequency is equivalent to the logarithm of the number of timelines provided.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+		ef = event.logEF(paths)
+		self.assertEqual(math.log(len(paths), 2), max(ef.values()))
+
+	def test_log_ef_base(self):
+		"""
+		Test that the logarithmic event frequency is just the event frequency  with a logarithm.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+		ef = event.EF(paths)
+		
+		logef = event.logEF(paths, base=2)
+		self.assertTrue(all( math.log(ef[term], 2) == logef[term] for term in ef ))
+
+		logef = event.logEF(paths, base=10)
+		self.assertTrue(all( math.log(ef[term], 10) == logef[term] for term in ef ))
