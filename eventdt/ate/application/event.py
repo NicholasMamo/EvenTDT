@@ -26,7 +26,7 @@ def EF(timelines):
 
 					      It is assumed that the event timelines were extracted using the collection tool.
 						  Therefore each file should be a JSON string representing a :class:`~summarization.timeline.timeline.Timeline`.
-	:type corpora: str or list of str
+	:type timelines: str or list of str
 
 	:return: A dictionary with terms as keys and their event frequency as the values.
 	:rtype: dict
@@ -72,7 +72,7 @@ def logEF(timelines, base=2):
 
 					      It is assumed that the event timelines were extracted using the collection tool.
 						  Therefore each file should be a JSON string representing a :class:`~summarization.timeline.timeline.Timeline`.
-	:type corpora: str or list of str
+	:type timelines: str or list of str
 	:param base: The logarithmic base.
 	:type base: floa
 
