@@ -77,7 +77,7 @@ def setup_args():
 		- ``-a --account``			*<Optional>* The account to use to collect the corpus with, as an index of the configuration's accounts. Defaults to the first account.
 
 	:return: The command-line arguments.
-	:rtype: list
+	:rtype: :class:`argparse.Namespace`
 	"""
 
 	parser = argparse.ArgumentParser(description="Collect a corpus of tweets.")

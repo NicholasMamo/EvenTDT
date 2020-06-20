@@ -76,7 +76,7 @@ def setup_args():
 		- ``--max-intra-similarity``	*<Optional>* The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
 
 	:return: The command-line arguments.
-	:rtype: list
+	:rtype: :class:`argparse.Namespace`
 	"""
 
 	parser = argparse.ArgumentParser(description="Consume a corpus of tweets.")

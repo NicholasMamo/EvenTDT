@@ -15,6 +15,8 @@ import argparse
 def setup_args():
 	"""
 	Set up and get the list of command-line arguments.
+	:return: The command-line arguments.
+	:rtype: :class:`argparse.Namespace`
 	"""
 
 	parser = argparse.ArgumentParser(description="Bootstrap a seed set of terms.")

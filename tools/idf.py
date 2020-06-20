@@ -51,7 +51,7 @@ def setup_args():
 		- ``--stem``							*<Optional>* Stem the tokens when constructing the TF-IDF scheme.
 
 	:return: The command-line arguments.
-	:rtype: list
+	:rtype: :class:`argparse.Namespace`
 	"""
 
 	parser = argparse.ArgumentParser(description="Create a TF-IDF scheme from a corpus of tweets.")

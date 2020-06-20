@@ -62,7 +62,7 @@ def setup_args():
 		- ``-stem``								*<Optional>* Stem the tokens when constructing the tokenized corpus.
 
 	:return: The command-line arguments.
-	:rtype: list
+	:rtype: :class:`argparse.Namespace`
 	"""
 
 	parser = argparse.ArgumentParser(description="Tokenize a corpus of tweets.")
