@@ -17,6 +17,7 @@ Accepted arguments:
 	- ``-f --files``		*<Required>* The input corpora where to look for similar keywords.
 	- ``--m --method``		*<Required>* The method to use to look for similar keywords; supported: `PMI`, `CHI`.
 	- ``-i --iterations``	*<Optional>* The number of iterations to spend bootstrapping; defaults to 1.
+	- ``-k --keep``			*<Optional>* The number of keywords to keep after each iteration; defaults to 5.
 """
 
 import argparse
@@ -41,6 +42,7 @@ def setup_args():
 		- ``-f --files``		*<Required>* The input corpora where to look for similar keywords.
 		- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `PMI`, `CHI`.
 		- ``-i --iterations``	*<Optional>* The number of iterations to spend bootstrapping; defaults to 1.
+		- ``-k --keep``			*<Optional>* The number of keywords to keep after each iteration; defaults to 5.
 
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
@@ -60,6 +62,9 @@ def setup_args():
 	parser.add_argument('-i', '--iterations',
 						type=int, required=False, default=1,
 						help='<Optional> The number of iterations to spend bootstrapping; defaults to 1.')
+	parser.add_argument('-k', '--keep',
+						type=int, required=False, default=5,
+						help='<Optional> The number of keywords to keep after each iteration; defaults to 5.')
 
 	args = parser.parse_args()
 	return args
