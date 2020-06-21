@@ -8,12 +8,12 @@ To run the script, use:
 .. code-block:: bash
 
     ./tools/bootstrap.py \\
-	-s foul yellow \\
+	-s data/seed.txt \\
 	-f data/tokenized_corpus.json
 
 Accepted arguments:
 
-	- ``-s --seed``			*<Required>* The seed set of keywords.
+	- ``-s --seed``			*<Required>* The path to the file containing seed keywords, expected to contain one keyword on each line.
 	- ``-f --files``		*<Required>* The input corpora where to look for similar keywords.
 	- ``--m --method``		*<Required>* The method to use to look for similar keywords; supported: `PMI`, `CHI`.
 	- ``-i --iterations``	*<Optional>* The number of iterations to spend bootstrapping; defaults to 1.
@@ -40,7 +40,7 @@ def setup_args():
 
 	Accepted arguments:
 
-		- ``-s --seed``			*<Required>* The seed set of keywords.
+		- ``-s --seed``			*<Required>* The path to the file containing seed keywords, expected to contain one keyword on each line.
 		- ``-f --files``		*<Required>* The input corpora where to look for similar keywords.
 		- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `PMI`, `CHI`.
 		- ``-i --iterations``	*<Optional>* The number of iterations to spend bootstrapping; defaults to 1.
@@ -54,8 +54,8 @@ def setup_args():
 	parser = argparse.ArgumentParser(description="Bootstrap a seed set of terms.")
 
 	parser.add_argument('-s', '--seed',
-						nargs='+', required=True,
-						help='<Required> The seed set of keywords.')
+						required=True,
+						help='<Required> The path to the file containing seed keywords, expected to contain one keyword on each line.')
 	parser.add_argument('-f', '--files',
 						nargs='+', required=True,
 						help='<Required> The input corpora where to look for similar keywords.')
@@ -86,7 +86,30 @@ def main():
 	Get the meta arguments.
 	"""
 	cmd = meta(args)
+
+	seed = load_seed(args.seed)
+	cmd['seed'] = seed
 	print(cmd)
+
+def load_seed(seed_file):
+	"""
+	Load the seed words from the given seed file.
+	The function expects a file with one seed word on each line.
+
+	:param seed_file: The path to the seed file.
+	:type seed_file: str
+
+	:return: A list of seed words.
+	:rtype: list of str
+	"""
+
+	seed_list = [ ]
+
+	with open(seed_file, 'r') as f:
+		seed_list.extend(f.readlines())
+
+	seed_list = [ word.strip() for word in seed_list ]
+	return seed_list
 
 def meta(args):
 	"""
