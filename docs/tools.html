@@ -87,10 +87,9 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="config.html">0. Configuration</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">1. Tools</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-tools.collect">Data Collection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-tools.idf">TF-IDF</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-tools.consume">Consumption</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tools.collect">Data Collection and Processing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-tools.tokenizer">Pre-processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tools.bootstrap">Algorithms</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="vsm.html">2. Vector Space Model (VSM)</a></li>
@@ -173,7 +172,7 @@
 <p>EvenTDT comes with tools to help you collect corpora from Twitter and create timelines from them.
 Keep reading to learn more about the different tools available in EvenTDT.</p>
 <span class="target" id="module-tools"></span><div class="section" id="module-tools.collect">
-<span id="data-collection"></span><h2>Data Collection<a class="headerlink" href="#module-tools.collect" title="Permalink to this headline">¶</a></h2>
+<span id="data-collection-and-processing"></span><h2>Data Collection and Processing<a class="headerlink" href="#module-tools.collect" title="Permalink to this headline">¶</a></h2>
 <p>A tool to collect tweets.</p>
 <p>The tool collects a corpus of tweets.
 A corpus can be split into an understanding and an event corpus.
@@ -233,7 +232,7 @@ Each corpus is a JSON file, where each line is one tweet.</p>
 <dd class="field-odd"><p>The command-line arguments.</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>list</p>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">argparse.Namespace</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -277,144 +276,7 @@ Any additional arguments or keyword arguments are passed on to the <code class="
 </dl>
 </dd></dl>
 
-</div>
-<div class="section" id="module-tools.idf">
-<span id="tf-idf"></span><h2>TF-IDF<a class="headerlink" href="#module-tools.idf" title="Permalink to this headline">¶</a></h2>
-<p>A tool to create a TF-IDF scheme from a corpus of tweets.</p>
-<p>To run the script, use:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./tools/idf.py <span class="se">\</span>
-    -f data/sample.json <span class="se">\</span>
-    -o data/idf.json <span class="se">\</span>
-    --remove-unicode-entities <span class="se">\</span>
-    --normalize-words --stem
-</pre></div>
-</div>
-<p>Accepted arguments:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--file</span></code>                                                 <em>&lt;Required&gt;</em> The file to use to construct the TF-IDF scheme.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-o</span> <span class="pre">--output</span></code>                                               <em>&lt;Required&gt;</em> The file where to save the TF-IDF scheme.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--remove-unicode-entities</span></code>                 <em>&lt;Optional&gt;</em> Remove unicode entities from the TF-IDF scheme.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--normalize-words</span></code>                                 <em>&lt;Optional&gt;</em> Normalize words with repeating characters in them.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--character-normalization-count</span></code>   <em>&lt;Optional&gt;</em> The number of times a character must repeat for it to be normalized. Used only with the <code class="docutils literal notranslate"><span class="pre">--normalize-words</span></code> flag.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-stem</span></code>                                                             <em>&lt;Optional&gt;</em> Stem the tokens when constructing the TF-IDF scheme.</p></li>
-</ul>
-</div></blockquote>
-<dl class="function">
-<dt id="tools.idf.setup_args">
-<code class="sig-name descname">setup_args</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.idf.setup_args" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set up and get the list of command-line arguments.</p>
-<p>Accepted arguments:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--file</span></code>                                                 <em>&lt;Required&gt;</em> The file to use to construct the TF-IDF scheme.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-o</span> <span class="pre">--output</span></code>                                               <em>&lt;Required&gt;</em> The file where to save the TF-IDF scheme.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--remove-unicode-entities</span></code>                 <em>&lt;Optional&gt;</em> Remove unicode entities from the TF-IDF scheme.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--normalize-words</span></code>                                 <em>&lt;Optional&gt;</em> Normalize words with repeating characters in them.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--character-normalization-count</span></code>   <em>&lt;Optional&gt;</em> The number of times a character must repeat for it to be normalized. Used only with the <code class="docutils literal notranslate"><span class="pre">--normalize-words</span></code> flag.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--stem</span></code>                                                    <em>&lt;Optional&gt;</em> Stem the tokens when constructing the TF-IDF scheme.</p></li>
-</ul>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The command-line arguments.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>list</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.idf.main">
-<code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.idf.main" title="Permalink to this definition">¶</a></dt>
-<dd><p>Main program loop.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.idf.construct">
-<code class="sig-name descname">construct</code><span class="sig-paren">(</span><em class="sig-param">file</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.idf.construct" title="Permalink to this definition">¶</a></dt>
-<dd><p>Construct the TF-IDF scheme from the file.
-The scheme is constructed one line at a time.</p>
-<p>Any additional arguments and keyword arguments are passed on to the <a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer.__init__" title="nlp.tokenizer.Tokenizer.__init__"><code class="xref py py-func docutils literal notranslate"><span class="pre">__init__()</span></code></a> constructor.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>file</strong> (<em>str</em>) – The path to the file to use to construct the TF-IDF scheme.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The TF-IDF scheme constructed from the file.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.idf.tokenize">
-<code class="sig-name descname">tokenize</code><span class="sig-paren">(</span><em class="sig-param">tweet</em>, <em class="sig-param">tokenizer</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.idf.tokenize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert the given tweet into a document.
-The text used depends on the type of tweet.
-The full text is always sought.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>tweet</strong> (<em>dict</em>) – The tweet to tokenize.</p></li>
-<li><p><strong>tokenizer</strong> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer to use to tokenize the tweet.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list of tokens from the tweet.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list of str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.idf.update">
-<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param">idf</em>, <em class="sig-param">tokens</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.idf.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the given IDF table with the given tokens.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>idf</strong> (<em>dict</em>) – The IDF table as a dictionary.
-The keys are the tokens and the values are the document frequencies.</p></li>
-<li><p><strong>tokens</strong> – The tokens to add to the IDF.
-The function automatically gets the set of tokens to remove duplicates.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Type</dt>
-<dd class="field-even"><p>list of str</p>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The updated IDF table.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.idf.save">
-<code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param">tfidf</em>, <em class="sig-param">output</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.idf.save" title="Permalink to this definition">¶</a></dt>
-<dd><p>Save the given TF-IDF scheme to file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>tfidf</strong> – The TF-IDF scheme.</p></li>
-<li><p><strong>output</strong> (<em>str</em>) – The path to the file where to save the TF-IDF scheme.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</div>
-<div class="section" id="module-tools.consume">
-<span id="consumption"></span><h2>Consumption<a class="headerlink" href="#module-tools.consume" title="Permalink to this headline">¶</a></h2>
-<p>The consumer receives an input file and consumes it with one of the given consumers.
+<span class="target" id="module-tools.consume"></span><p>The consumer receives an input file and consumes it with one of the given consumers.
 This consumer is split into two asynchronous tasks.
 The first task reads the file, and the second consumes it.</p>
 <p>If an understanding file is provided, it is used for the understanding task.
@@ -466,7 +328,7 @@ The first task reads the file, and the second consumes it, this time to understa
 <dd class="field-odd"><p>The command-line arguments.</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>list</p>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">argparse.Namespace</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -768,7 +630,7 @@ Each line is a JSON object containing, at minimum, the tweet ID, the text used f
 <dd class="field-odd"><p>The command-line arguments.</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>list</p>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">argparse.Namespace</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -825,6 +687,361 @@ The full text is always sought.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<span class="target" id="module-tools.idf"></span><p>A tool to create a TF-IDF scheme from a corpus of tweets.</p>
+<p>To run the script, use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./tools/idf.py <span class="se">\</span>
+    -f data/sample.json <span class="se">\</span>
+    -o data/idf.json <span class="se">\</span>
+    --remove-unicode-entities <span class="se">\</span>
+    --normalize-words --stem
+</pre></div>
+</div>
+<p>Accepted arguments:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--file</span></code>                                                 <em>&lt;Required&gt;</em> The file to use to construct the TF-IDF scheme.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-o</span> <span class="pre">--output</span></code>                                               <em>&lt;Required&gt;</em> The file where to save the TF-IDF scheme.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--remove-unicode-entities</span></code>                 <em>&lt;Optional&gt;</em> Remove unicode entities from the TF-IDF scheme.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--normalize-words</span></code>                                 <em>&lt;Optional&gt;</em> Normalize words with repeating characters in them.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--character-normalization-count</span></code>   <em>&lt;Optional&gt;</em> The number of times a character must repeat for it to be normalized. Used only with the <code class="docutils literal notranslate"><span class="pre">--normalize-words</span></code> flag.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-stem</span></code>                                                             <em>&lt;Optional&gt;</em> Stem the tokens when constructing the TF-IDF scheme.</p></li>
+</ul>
+</div></blockquote>
+<dl class="function">
+<dt id="tools.idf.setup_args">
+<code class="sig-name descname">setup_args</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.idf.setup_args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up and get the list of command-line arguments.</p>
+<p>Accepted arguments:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--file</span></code>                                                 <em>&lt;Required&gt;</em> The file to use to construct the TF-IDF scheme.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-o</span> <span class="pre">--output</span></code>                                               <em>&lt;Required&gt;</em> The file where to save the TF-IDF scheme.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--remove-unicode-entities</span></code>                 <em>&lt;Optional&gt;</em> Remove unicode entities from the TF-IDF scheme.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--normalize-words</span></code>                                 <em>&lt;Optional&gt;</em> Normalize words with repeating characters in them.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--character-normalization-count</span></code>   <em>&lt;Optional&gt;</em> The number of times a character must repeat for it to be normalized. Used only with the <code class="docutils literal notranslate"><span class="pre">--normalize-words</span></code> flag.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--stem</span></code>                                                    <em>&lt;Optional&gt;</em> Stem the tokens when constructing the TF-IDF scheme.</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The command-line arguments.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">argparse.Namespace</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.idf.main">
+<code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.idf.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main program loop.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.idf.construct">
+<code class="sig-name descname">construct</code><span class="sig-paren">(</span><em class="sig-param">file</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.idf.construct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct the TF-IDF scheme from the file.
+The scheme is constructed one line at a time.</p>
+<p>Any additional arguments and keyword arguments are passed on to the <a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer.__init__" title="nlp.tokenizer.Tokenizer.__init__"><code class="xref py py-func docutils literal notranslate"><span class="pre">__init__()</span></code></a> constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file</strong> (<em>str</em>) – The path to the file to use to construct the TF-IDF scheme.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The TF-IDF scheme constructed from the file.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.idf.tokenize">
+<code class="sig-name descname">tokenize</code><span class="sig-paren">(</span><em class="sig-param">tweet</em>, <em class="sig-param">tokenizer</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.idf.tokenize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the given tweet into a document.
+The text used depends on the type of tweet.
+The full text is always sought.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tweet</strong> (<em>dict</em>) – The tweet to tokenize.</p></li>
+<li><p><strong>tokenizer</strong> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer to use to tokenize the tweet.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of tokens from the tweet.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.idf.update">
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param">idf</em>, <em class="sig-param">tokens</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.idf.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the given IDF table with the given tokens.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>idf</strong> (<em>dict</em>) – The IDF table as a dictionary.
+The keys are the tokens and the values are the document frequencies.</p></li>
+<li><p><strong>tokens</strong> – The tokens to add to the IDF.
+The function automatically gets the set of tokens to remove duplicates.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p>list of str</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The updated IDF table.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.idf.save">
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param">tfidf</em>, <em class="sig-param">output</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.idf.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the given TF-IDF scheme to file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tfidf</strong> – The TF-IDF scheme.</p></li>
+<li><p><strong>output</strong> (<em>str</em>) – The path to the file where to save the TF-IDF scheme.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-tools.bootstrap">
+<span id="algorithms"></span><h2>Algorithms<a class="headerlink" href="#module-tools.bootstrap" title="Permalink to this headline">¶</a></h2>
+<p>A tool that receives a seed set of terms and looks for similar terms in the given corpora.</p>
+<p>To run the script, use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./tools/bootstrap.py <span class="se">\</span>
+    -s data/seed.txt <span class="se">\</span>
+    -c data/candidates.txt <span class="se">\</span>
+    -f data/tokenized_corpus.json
+</pre></div>
+</div>
+<p>Accepted arguments:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-s</span> <span class="pre">--seed</span></code>                 <em>&lt;Required&gt;</em> The path to the file containing seed keywords, expected to contain one keyword on each line.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--files</span></code>                <em>&lt;Required&gt;</em> The input corpora where to look for similar keywords, expected to be already tokenized by the <cite>tokenize</cite> tool.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">--method</span></code>               <em>&lt;Required&gt;</em> The method to use to look for similar keywords; supported: <cite>PMI</cite>, <cite>CHI</cite>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">--candidates</span></code>   <em>&lt;Optional&gt;</em> The path to the file containing candidate keywords, expected to contain one keyword on each line; if not given, all vocabulary keywords are considered candidates.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-i</span> <span class="pre">--iterations</span></code>   <em>&lt;Optional&gt;</em> The number of iterations to spend bootstrapping; defaults to 1.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-k</span> <span class="pre">--keep</span></code>                 <em>&lt;Optional&gt;</em> The number of keywords to keep after each iteration; defaults to 5.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--cutoff</span></code>                  <em>&lt;Optional&gt;</em> The number of keywords to generate if no candidates are provided.</p></li>
+</ul>
+</div></blockquote>
+<dl class="function">
+<dt id="tools.bootstrap.setup_args">
+<code class="sig-name descname">setup_args</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.bootstrap.setup_args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up and get the list of command-line arguments.</p>
+<p>Accepted arguments:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-s</span> <span class="pre">--seed</span></code>                 <em>&lt;Required&gt;</em> The path to the file containing seed keywords, expected to contain one keyword on each line.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--files</span></code>                <em>&lt;Required&gt;</em> The input corpora where to look for similar keywords, expected to be already tokenized by the <cite>tokenize</cite> tool.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">--method</span></code>               <em>&lt;Required&gt;</em> The method to use to look for similar keywords; supported: <cite>PMI</cite>, <cite>CHI</cite>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">--candidates</span></code>   <em>&lt;Optional&gt;</em> The path to the file containing candidate keywords, expected to contain one keyword on each line; if not given, all vocabulary keywords are considered candidates.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-i</span> <span class="pre">--iterations</span></code>   <em>&lt;Optional&gt;</em> The number of iterations to spend bootstrapping; defaults to 1.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-k</span> <span class="pre">--keep</span></code>                 <em>&lt;Optional&gt;</em> The number of keywords to keep after each iteration; defaults to 5.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--cutoff</span></code>                  <em>&lt;Optional&gt;</em> The number of keywords to generate if no candidates are provided.</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The command-line arguments.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">argparse.Namespace</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.bootstrap.main">
+<code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.bootstrap.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main program loop.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.bootstrap.bootstrap">
+<code class="sig-name descname">bootstrap</code><span class="sig-paren">(</span><em class="sig-param">files</em>, <em class="sig-param">seed</em>, <em class="sig-param">method</em>, <em class="sig-param">iterations</em>, <em class="sig-param">keep</em>, <em class="sig-param">candidates</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.bootstrap.bootstrap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bootstrap the given seed set from the given files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>files</strong> (<em>list of str</em>) – The input corpora where to look for similar keywords.</p></li>
+<li><p><strong>seed</strong> (<em>list of str</em>) – The seed set of keywords.</p></li>
+<li><p><strong>method</strong> (<em>function</em>) – The method to use to look for similar keywords.</p></li>
+<li><p><strong>iterations</strong> (<em>int</em>) – The number of iterations to spend bootstrapping.</p></li>
+<li><p><strong>keep</strong> (<em>int</em>) – The number of keywords to keep after each iteration.</p></li>
+<li><p><strong>candidates</strong> (<em>list of str</em><em> or </em><em>None</em>) – The list of candidate keywords. If <cite>None</cite> is given, all vocabulary keywords are considered candidates.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of bootstrapped keywords.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.bootstrap.load_seed">
+<code class="sig-name descname">load_seed</code><span class="sig-paren">(</span><em class="sig-param">seed_file</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.bootstrap.load_seed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the seed words from the given seed file.
+The function expects a file with one seed word on each line.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>seed_file</strong> (<em>str</em>) – The path to the seed file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of seed words.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.bootstrap.load_candidates">
+<code class="sig-name descname">load_candidates</code><span class="sig-paren">(</span><em class="sig-param">candidate_file</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.bootstrap.load_candidates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the candidate words from the given candidate file.
+The function expects a file with one candidate word on each line.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>candidate_file</strong> (<em>str</em>) – The path to the candidate file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of candidate words.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.bootstrap.generate_candidates">
+<code class="sig-name descname">generate_candidates</code><span class="sig-paren">(</span><em class="sig-param">files</em>, <em class="sig-param">cutoff</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.bootstrap.generate_candidates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate candidates by looking for the most common keywords in the given files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>files</strong> (<em>list of str</em><em> or </em><em>str</em>) – The input corpora where to look for candidate keywords.</p></li>
+<li><p><strong>cutoff</strong> (<em>int</em>) – The maximum number of candidate keywords to generate.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of candidate keywords.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.bootstrap.filter_candidates">
+<code class="sig-name descname">filter_candidates</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">seed</em>, <em class="sig-param">bootstrapped</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.bootstrap.filter_candidates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter out candidates that were in the original seed set or which were bootstrapped.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>candidates</strong> (<em>dict</em>) – A dictionary with candidates as keys and their scores as values.</p></li>
+<li><p><strong>seed</strong> (<em>list of str</em>) – The original seed set.</p></li>
+<li><p><strong>bootstrapped</strong> (<em>list of str</em>) – Candidates that have already been bootstrapped.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The list of candidates as a dictionary without words that have already been used for bootstrapping.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.bootstrap.update_scores">
+<code class="sig-name descname">update_scores</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">scores</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.bootstrap.update_scores" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the scores of the candidates.
+The maximum score is always retained.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>candidates</strong> (<em>dict</em>) – A dictionary with candidates as keys and their scores as values.</p></li>
+<li><p><strong>scores</strong> (<em>dict</em>) – The new scores as a dictionary.
+The keys are tuples: the keyword that extracted the candidate, and the candidate itself.
+Only the candidate is considered.
+The values are the corresponding values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An updated dictionary of candidates with their new scores.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.bootstrap.meta">
+<code class="sig-name descname">meta</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.bootstrap.meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the meta arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>args</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">argparse.Namespace</span></code>) – The command-line arguments.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The meta arguments as a dictionary.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.bootstrap.method">
+<code class="sig-name descname">method</code><span class="sig-paren">(</span><em class="sig-param">method</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.bootstrap.method" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the given string into a bootstrapping function.
+The accepted methods are:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">PMI()</span></code>,</p></li>
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">CHI()</span></code></p></li>
+</ol>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>method</strong> (<em>str</em>) – The method string.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The function that corresponds to the given method.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>function</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>argparse.ArgumentTypeError</strong> – When the given method string is invalid.</p>
 </dd>
 </dl>
 </dd></dl>

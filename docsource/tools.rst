@@ -14,27 +14,14 @@ Keep reading to learn more about the different tools available in EvenTDT.
    :private-members:
    :special-members:
 
-===============
-Data Collection
-===============
+==============================
+Data Collection and Processing
+==============================
 
 .. automodule:: tools.collect
    :members:
    :private-members:
    :special-members:
-
-======
-TF-IDF
-======
-
-.. automodule:: tools.idf
-   :members:
-   :private-members:
-   :special-members:
-
-===========
-Consumption
-===========
 
 .. automodule:: tools.consume
    :members:
@@ -46,6 +33,20 @@ Pre-processing
 ==============
 
 .. automodule:: tools.tokenizer
+   :members:
+   :private-members:
+   :special-members:
+
+.. automodule:: tools.idf
+   :members:
+   :private-members:
+   :special-members:
+
+==========
+Algorithms
+==========
+
+.. automodule:: tools.bootstrap
    :members:
    :private-members:
    :special-members:
