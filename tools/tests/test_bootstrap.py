@@ -113,3 +113,46 @@ class TestBootstrap(unittest.TestCase):
 		Assert that the candidates list is returned as a list.
 		"""
 		self.assertTrue(all( '\n' not in word for word in candidates ))
+
+	def test_generate_candidates_cutoff(self):
+		"""
+		Test that when generating candidates, the cutoff is respected.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), 'corpora', 'tokenized.json')
+
+		"""
+		Assert that the number of candidates is correct.
+		"""
+		candidates = bootstrap.generate_candidates(file, cutoff=100)
+		self.assertEqual(100, len(candidates))
+
+		candidates = bootstrap.generate_candidates(file, cutoff=250)
+		self.assertEqual(250, len(candidates))
+
+	def test_generate_candidates_words_only(self):
+		"""
+		Test that when generating candidates, only words are returned.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), 'corpora', 'tokenized.json')
+
+		"""
+		Assert that all items in the list are words.
+		"""
+		candidates = bootstrap.generate_candidates(file, cutoff=100)
+		self.assertEqual(list, type(candidates))
+		self.assertTrue(all(str == type(word) for word in candidates))
+
+	def test_generate_candidates(self):
+		"""
+		Test that when generating candidates, the returned candidates make sense
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), 'corpora', 'tokenized.json')
+
+		"""
+		Assert that all items in the list are words.
+		"""
+		candidates = bootstrap.generate_candidates(file, cutoff=500)
+		self.assertTrue('goal' in candidates)

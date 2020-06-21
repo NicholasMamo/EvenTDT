@@ -99,10 +99,12 @@ def main():
 	seed = load_seed(args.seed)
 	cmd['seed'] = seed
 
-	if args.candidates:
-		candidates = load_candidates(args.candidates)
-		cmd['candidates'] = candidates
-	
+	"""
+	If no candidates are provided, select them from among the most common candidates in the given corpora.
+	"""
+	candidates = load_candidates(args.candidates) if args.candidates else generate_candidates(args.files, cutoff=args.cutoff)
+	cmd['candidates'] = candidates
+
 	print(cmd)
 
 def load_seed(seed_file):
@@ -144,6 +146,23 @@ def load_candidates(candidate_file):
 
 	candidate_list = [ word.strip() for word in candidate_list ]
 	return candidate_list
+
+def generate_candidates(files, cutoff):
+	"""
+	Generate candidates by looking for the most common keywords in the given files.
+
+	:param files: The input corpora where to look for candidate keywords.
+	:type files: list of str or str
+	:param cutoff: The maximum number of candidate keywords to generate.
+	:type cutoff: int
+
+	:return: A list of candidate keywords.
+	:rtype: list of str
+	"""
+
+	vocabulary = p(files)
+	vocabulary = sorted(vocabulary, key=vocabulary.get, reverse=True)
+	return vocabulary[:cutoff]
 
 def meta(args):
 	"""
