@@ -134,6 +134,14 @@ topic_detection_tests() {
 	python3 -m unittest eventdt.tdt.algorithms.tests.test_eld
 }
 
+tools_tests() {
+	echo -e "${HIGHLIGHT}Tokenizer${DEFAULT}"
+	python3 -m unittest tools.tests.test_tokenizer
+
+	echo -e "${HIGHLIGHT}Bootstrap${DEFAULT}"
+	python3 -m unittest tools.tests.test_bootstrap
+}
+
 twitter_tests() {
 	echo -e "${HIGHLIGHT}Twitter${DEFAULT}"
 	python3 -m unittest eventdt.twitter.tests.test_package
@@ -202,6 +210,9 @@ then
 		tdt)
 			topic_detection_tests
 			;;
+		tools)
+			tools_tests
+			;;
 		twitter)
 			twitter_tests
 			;;
@@ -225,6 +236,7 @@ else
 	queue_tests
 	summarization_tests
 	topic_detection_tests
+	tools_tests
 	twitter_tests
 	vector_tests
 	wikipedia_tests
