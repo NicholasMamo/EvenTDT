@@ -36,7 +36,6 @@ Accepted arguments:
 
 import argparse
 import asyncio
-import copy
 import json
 import os
 import signal
@@ -51,6 +50,7 @@ lib = os.path.join(root, 'eventdt')
 sys.path.insert(-1, root)
 sys.path.insert(-1, lib)
 
+import tools
 from logger import logger
 from objects.exportable import Exportable
 from nlp.term_weighting.scheme import TermWeightingScheme
@@ -123,7 +123,9 @@ def main():
 	"""
 	Get the meta arguments.
 	"""
-	cmd = meta(args)
+	cmd = tools.meta(args)
+	cmd['consumer'] = str(vars(args)['consumer'])
+	cmd['scheme'] = str(type(vars(args)['scheme']))
 
 	"""
 	Register the queue in the base manager.
@@ -168,22 +170,6 @@ def main():
 	logger.info("Event period ended")
 
 	asyncio.get_event_loop().close()
-
-def meta(args):
-	"""
-	Get the meta arguments.
-
-	:param args: The command-line arguments.
-	:type args: :class:`argparse.Namespace`
-
-	:return: The meta arguments as a dictionary.
-	:rtype: dict
-	"""
-
-	meta = copy.deepcopy(vars(args))
-	meta['consumer'] = str(meta['consumer'])
-	meta['scheme'] = str(type(meta['scheme']))
-	return meta
 
 def understand(understanding, consumer, scheme=None, *args, **kwargs):
 	"""

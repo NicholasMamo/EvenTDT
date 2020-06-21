@@ -34,6 +34,7 @@ lib = os.path.join(root, 'eventdt')
 sys.path.insert(-1, root)
 sys.path.insert(-1, lib)
 
+import tools
 from ate.bootstrapping.probability import p, PMI, CHI
 from logger import logger
 
@@ -92,7 +93,8 @@ def main():
 	"""
 	Get the meta arguments.
 	"""
-	cmd = meta(args)
+	cmd = tools.meta(args)
+	cmd['method'] = str(vars(args)['method'])
 
 	"""
 	Load the seed and candidate keywords.
@@ -293,21 +295,6 @@ def update_scores(candidates, scores):
 			candidates[candidate] = max(candidates.get(candidate), score)
 
 	return candidates
-
-def meta(args):
-	"""
-	Get the meta arguments.
-
-	:param args: The command-line arguments.
-	:type args: :class:`argparse.Namespace`
-
-	:return: The meta arguments as a dictionary.
-	:rtype: dict
-	"""
-
-	meta = copy.deepcopy(vars(args))
-	meta['method'] = str(meta['method'])
-	return meta
 
 def method(method):
 	"""
