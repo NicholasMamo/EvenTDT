@@ -184,6 +184,38 @@ def filter_candidates(candidates, seed, bootstrapped):
 									if candidate not in seed + bootstrapped }
 	return candidates
 
+def update_scores(candidates, scores):
+	"""
+	Update the scores of the candidates.
+	The maximum score is always retained.
+
+	:param candidates: A dictionary with candidates as keys and their scores as values.
+	:type candidates: dict
+	:param scores: The new scores as a dictionary.
+				   The keys are tuples: the keyword that extracted the candidate, and the candidate itself.
+				   Only the candidate is considered.
+				   The values are the corresponding values.
+	:type scores: dict
+
+	:return: An updated dictionary of candidates with their new scores.
+	:rtype: dict
+	"""
+
+	candidates = dict(candidates)
+	for (seed, candidate), score in scores.items():
+		"""
+		If the seed and the candidate are the same, skip it.
+		"""
+		if seed == candidate:
+			continue
+
+		if candidate not in candidates:
+			candidates[candidate] = score
+		else:
+			candidates[candidate] = max(candidates.get(candidate), score)
+
+	return candidates
+
 def meta(args):
 	"""
 	Get the meta arguments.

@@ -241,3 +241,77 @@ class TestBootstrap(unittest.TestCase):
 		filtered = bootstrap.filter_candidates(candidates, seed[:10], [ ])
 		for i, word in enumerate(seed[10:]):
 			self.assertEqual(i + 10, filtered[word])
+
+	def test_update_scores_lower(self):
+		"""
+		Test that when updating the scores, lower scores are not considered.
+		"""
+
+		candidates = { 'ff': 2 }
+		scores = { ('goal', 'ff'): 1 }
+		self.assertEqual(candidates, bootstrap.update_scores(candidates, scores))
+
+	def test_update_scores_higher(self):
+		"""
+		Test that when updating the scores, higher scores replace lower scores.
+		"""
+
+		candidates = { 'ff': 2 }
+		scores = { ('goal', 'ff'): 3 }
+		self.assertEqual({ 'ff': 3 }, bootstrap.update_scores(candidates, scores))
+
+	def test_update_scores_same(self):
+		"""
+		Test that when updating the scores, scores where the seed and candidate words are the same are ignored.
+		"""
+
+		candidates = { 'ff': 2 }
+		scores = { ('ff', 'ff'): 3 }
+		self.assertEqual(candidates, bootstrap.update_scores(candidates, scores))
+
+	def test_update_scores_missing_candidate(self):
+		"""
+		Test that when updating the scores, new terms are added to the candidate list.
+		"""
+
+		candidates = { 'ff': 2 }
+		scores = { ('goal', 'wtf'): 3 }
+		self.assertEqual({ 'ff': 2, 'wtf': 3 }, bootstrap.update_scores(candidates, scores))
+
+	def test_update_scores_missing_score(self):
+		"""
+		Test that when updating the scores, existing terms without a new score are not touched
+		"""
+
+		candidates = { 'ff': 2 }
+		scores = { ('goal', 'wtf'): 3 }
+		self.assertEqual({ 'ff': 2, 'wtf': 3 }, bootstrap.update_scores(candidates, scores))
+
+	def test_update_scores_empty_candidates(self):
+		"""
+		Test that when updating the scores of no candidates, the new scores are returned.
+		"""
+
+		candidates = { }
+		scores = { ('goal', 'wtf'): 3 }
+		self.assertEqual({ 'wtf': 3 }, bootstrap.update_scores(candidates, scores))
+
+	def test_update_scores_empty_scores(self):
+		"""
+		Test that when updating the scores with no scores, the candidates are returned.
+		"""
+
+		candidates = { 'ff': 2 }
+		scores = { }
+		self.assertEqual(candidates, bootstrap.update_scores(candidates, scores))
+
+	def test_update_scores_copy(self):
+		"""
+		Test that when updating the scores, the original candidates are not changed.
+		"""
+
+		candidates = { 'ff': 2 }
+		scores = { ('goal', 'ff'): 3 }
+		updated = bootstrap.update_scores(candidates, scores)
+		self.assertEqual({ 'ff': 2 }, candidates)
+		self.assertEqual({ 'ff': 3 }, updated)
