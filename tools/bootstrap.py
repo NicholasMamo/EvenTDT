@@ -9,16 +9,17 @@ To run the script, use:
 
     ./tools/bootstrap.py \\
 	-s data/seed.txt \\
+	-c data/candidates.txt \\
 	-f data/tokenized_corpus.json
 
 Accepted arguments:
 
 	- ``-s --seed``			*<Required>* The path to the file containing seed keywords, expected to contain one keyword on each line.
 	- ``-f --files``		*<Required>* The input corpora where to look for similar keywords.
-	- ``--m --method``		*<Required>* The method to use to look for similar keywords; supported: `PMI`, `CHI`.
+	- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `PMI`, `CHI`.
+	- ``-c --candidates``	*<Optional>* The path to the file containing candidate keywords, expected to contain one keyword on each line; if not given, all vocabulary keywords are considered candidates.
 	- ``-i --iterations``	*<Optional>* The number of iterations to spend bootstrapping; defaults to 1.
 	- ``-k --keep``			*<Optional>* The number of keywords to keep after each iteration; defaults to 5.
-	- ``-c --cutoff``		*<Optional>* The number of candidate keywords to consider, based on probability from the given corpora; defaults to 100.
 """
 
 import argparse
@@ -43,9 +44,9 @@ def setup_args():
 		- ``-s --seed``			*<Required>* The path to the file containing seed keywords, expected to contain one keyword on each line.
 		- ``-f --files``		*<Required>* The input corpora where to look for similar keywords.
 		- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `PMI`, `CHI`.
+		- ``-c --candidates``	*<Optional>* The path to the file containing candidate keywords, expected to contain one keyword on each line; if not given, all vocabulary keywords are considered candidates.
 		- ``-i --iterations``	*<Optional>* The number of iterations to spend bootstrapping; defaults to 1.
 		- ``-k --keep``			*<Optional>* The number of keywords to keep after each iteration; defaults to 5.
-		- ``-c --cutoff``		*<Optional>* The number of candidate keywords to consider, based on probability from the given corpora; defaults to 100.
 
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
@@ -62,15 +63,15 @@ def setup_args():
 	parser.add_argument('-m', '--method',
 						type=method, required=True,
 						help='<Required> The method to use to look for similar keywords; supported: `PMI`, `CHI`.')
+	parser.add_argument('-c', '--candidates',
+						required=False, default=None,
+						help='<Required> The path to the file containing candidate keywords, expected to contain one keyword on each line; if not given, all vocabulary keywords are considered candidates.')
 	parser.add_argument('-i', '--iterations',
 						type=int, required=False, default=1,
 						help='<Optional> The number of iterations to spend bootstrapping; defaults to 1.')
 	parser.add_argument('-k', '--keep',
 						type=int, required=False, default=5,
 						help='<Optional> The number of keywords to keep after each iteration; defaults to 5.')
-	parser.add_argument('-c', '--cutoff',
-						type=int, required=False, default=100,
-						help='<Optional> The number of candidate keywords to consider, based on probability from the given corpora; defaults to 100.')
 
 	args = parser.parse_args()
 	return args
@@ -87,8 +88,16 @@ def main():
 	"""
 	cmd = meta(args)
 
+	"""
+	Load the seed and candidate keywords.
+	"""
 	seed = load_seed(args.seed)
 	cmd['seed'] = seed
+
+	if args.candidates:
+		candidates = load_candidates(args.candidates)
+		cmd['candidates'] = candidates
+	
 	print(cmd)
 
 def load_seed(seed_file):
@@ -110,6 +119,26 @@ def load_seed(seed_file):
 
 	seed_list = [ word.strip() for word in seed_list ]
 	return seed_list
+
+def load_candidates(candidate_file):
+	"""
+	Load the candidate words from the given candidate file.
+	The function expects a file with one candidate word on each line.
+
+	:param candidate_file: The path to the candidate file.
+	:type candidate_file: str
+
+	:return: A list of candidate words.
+	:rtype: list of str
+	"""
+
+	candidate_list = [ ]
+
+	with open(candidate_file, 'r') as f:
+		candidate_list.extend(f.readlines())
+
+	candidate_list = [ word.strip() for word in candidate_list ]
+	return candidate_list
 
 def meta(args):
 	"""

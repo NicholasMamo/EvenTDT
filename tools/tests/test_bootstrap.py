@@ -67,3 +67,49 @@ class TestBootstrap(unittest.TestCase):
 		Assert that the seed list is returned as a list.
 		"""
 		self.assertTrue(all( '\n' not in word for word in seed ))
+
+	def test_load_candidates_all_words(self):
+		"""
+		Test that when loading the candidates words, all words are returned.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), 'corpora', 'candidates.txt')
+		candidates = bootstrap.load_candidates(file)
+
+		"""
+		Assert that the correct number of candidates words are loaded.
+		"""
+		self.assertEqual(500, len(candidates))
+
+		"""
+		Load each candidates set separately and ensure it has been loaded.
+		"""
+		with open(file, 'r') as f:
+			for word in f:
+				self.assertTrue(word.strip() in candidates)
+
+	def test_load_candidates_list(self):
+		"""
+		Test that when loading the candidates words, they are returned as a list.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), 'corpora', 'candidates.txt')
+		candidates = bootstrap.load_candidates(file)
+
+		"""
+		Assert that the candidates list is returned as a list.
+		"""
+		self.assertEqual(list, type(candidates))
+
+	def test_load_candidates_no_newlines(self):
+		"""
+		Test that when loading the candidates words, the newline symbol is removed.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), 'corpora', 'candidates.txt')
+		candidates = bootstrap.load_candidates(file)
+
+		"""
+		Assert that the candidates list is returned as a list.
+		"""
+		self.assertTrue(all( '\n' not in word for word in candidates ))
