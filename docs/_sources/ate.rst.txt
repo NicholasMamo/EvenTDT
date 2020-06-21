@@ -19,6 +19,19 @@ Linguistic
    :private-members:
    :special-members:
 
+Application
+===========
+
+.. automodule:: ate.application
+   :members:
+   :private-members:
+   :special-members:
+
+.. automodule:: ate.application.event
+   :members:
+   :private-members:
+   :special-members:
+
 Bootstrapping
 =============
 

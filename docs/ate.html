@@ -98,6 +98,7 @@
 <li class="toctree-l1"><a class="reference internal" href="ml.html">10. Machine Learning</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">11. Automatic Term Extraction (ATE)</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-ate.linguistic">Linguistic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-ate.application">Application</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-ate.bootstrapping">Bootstrapping</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module-ate.bootstrapping.probability">Probability</a></li>
 </ul>
@@ -238,6 +239,157 @@ Each document should have a <cite>tokens</cite> attribute.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ate.application">
+<span id="application"></span><h2>Application<a class="headerlink" href="#module-ate.application" title="Permalink to this headline">¶</a></h2>
+<p>Application-based approaches use the target application to learn the domain lexicon.</p>
+<span class="target" id="module-ate.application.event"></span><p>Event-based ATE approaches use either event corpora or the output timelines to score and rank domain terms.</p>
+<dl class="function">
+<dt id="ate.application.event.EF">
+<code class="sig-name descname">EF</code><span class="sig-paren">(</span><em class="sig-param">timelines</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.application.event.EF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the event frequency of terms from the given timelines.
+The event frequency is simply the number of events in which term appears in a development.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>timelines</strong> (<em>str</em><em> or </em><em>list of str</em>) – <p>The path to a timeline or a list of paths to timelines.
+If a string is given, it is assumed to be one event timeline.
+If a list is given, it is assumed to be a list of event timelines.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<dl class="simple">
+<dt>It is assumed that the event timelines were extracted using the collection tool.</dt><dd><p>Therefore each file should be a JSON string representing a <a class="reference internal" href="summarization.html#summarization.timeline.timeline.Timeline" title="summarization.timeline.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a>.</p>
+</dd>
+</dl>
+</div>
+</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary with terms as keys and their event frequency as the values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ate.application.event.logEF">
+<code class="sig-name descname">logEF</code><span class="sig-paren">(</span><em class="sig-param">timelines</em>, <em class="sig-param">base=2</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.application.event.logEF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the logarithmic event frequency of terms from the given timelines.
+The event frequency is simply the number of events in which term appears in a development.</p>
+<p>This weighting scheme is based on the <a class="reference internal" href="#ate.application.event.EF" title="ate.application.event.EF"><code class="xref py py-func docutils literal notranslate"><span class="pre">EF()</span></code></a> weighting scheme.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timelines</strong> (<em>str</em><em> or </em><em>list of str</em>) – <p>The path to a timeline or a list of paths to timelines.
+If a string is given, it is assumed to be one event timeline.
+If a list is given, it is assumed to be a list of event timelines.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<dl class="simple">
+<dt>It is assumed that the event timelines were extracted using the collection tool.</dt><dd><p>Therefore each file should be a JSON string representing a <a class="reference internal" href="summarization.html#summarization.timeline.timeline.Timeline" title="summarization.timeline.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a>.</p>
+</dd>
+</dl>
+</div>
+</p></li>
+<li><p><strong>base</strong> (<em>floa</em>) – The logarithmic base.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary with terms as keys and their event frequency as the values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ate.application.event.EFIDF">
+<code class="sig-name descname">EFIDF</code><span class="sig-paren">(</span><em class="sig-param">timelines</em>, <em class="sig-param">idf</em>, <em class="sig-param">base=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.application.event.EFIDF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the event-frequency-inverse-document-frequency metric for terms.
+This is a local-global weighting scheme.
+The local scheme is the event frequency, and the global scheme is the inverse-document-frequency.
+If a logarithmic base is provided, the logarithmic event frequency is used instead.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timelines</strong> (<em>str</em><em> or </em><em>list of str</em>) – <p>The path to a timeline or a list of paths to timelines.
+If a string is given, it is assumed to be one event timeline.
+If a list is given, it is assumed to be a list of event timelines.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<dl class="simple">
+<dt>It is assumed that the event timelines were extracted using the collection tool.</dt><dd><p>Therefore each file should be a JSON string representing a <a class="reference internal" href="summarization.html#summarization.timeline.timeline.Timeline" title="summarization.timeline.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a>.</p>
+</dd>
+</dl>
+</div>
+</p></li>
+<li><p><strong>idf</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code>) – The IDF table to use to score terms.</p></li>
+<li><p><strong>base</strong> (<em>floa</em>) – The logarithmic base.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary with terms as keys and their EF-IDF score as the values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ate.application.event.variability">
+<code class="sig-name descname">variability</code><span class="sig-paren">(</span><em class="sig-param">term</em>, <em class="sig-param">idfs</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.application.event.variability" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate how variable the term is across events.
+A term is highly-variable if it appears disproportionately in one or a few events.
+A low variability indicates that the term appears consistently across all events.</p>
+<p>The method follows the leave-one-out principle: each event is compared against all other events.
+The final result is an average weightg according to the event sizes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>term</strong> (<em>str</em>) – The term for which to calculate the variability.</p></li>
+<li><p><strong>idfs</strong> (list of <a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a>) – A list of IDFs, one for each event.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The variability of the term.
+A term is highly-variable if it appears disproportionately in one or a few events.
+A low variability indicates that the term appears consistently across all events.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ate.application.event._variability_contingency_table">
+<code class="sig-name descname">_variability_contingency_table</code><span class="sig-paren">(</span><em class="sig-param">term</em>, <em class="sig-param">current</em>, <em class="sig-param">comparison</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.application.event._variability_contingency_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the contingency table comparing the term’s appearance in the current event versus other events.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>term</strong> (<em>str</em>) – The term for which to create the contingency table.</p></li>
+<li><p><strong>current</strong> (<a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a>) – The current event’s IDF table.</p></li>
+<li><p><strong>comparison</strong> (list of <a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a>) – A list of IDFs, one for each event.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The contingency table for the term, contrasting the current event with all other events.
+The first row is the total number of documents in the current event.
+The second row is the total number of documents in the comparison events.
+The totals of both rows sum up to the total number of documents.
+The contingency table is returned as a tuple with four floats.
+These correspond to the first and second rows respectively.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple of float</p>
 </dd>
 </dl>
 </dd></dl>
