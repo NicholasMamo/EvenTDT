@@ -17,6 +17,7 @@ Accepted arguments:
 	- ``-s --seed``			*<Required>* The path to the file containing seed keywords, expected to contain one keyword on each line.
 	- ``-f --files``		*<Required>* The input corpora where to look for similar keywords, expected to be already tokenized by the `tokenize` tool.
 	- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `PMI`, `CHI`.
+	- ``-o --output``		*<Required>* The path to the file where to store the bootstrapped keywords.
 	- ``-c --candidates``	*<Optional>* The path to the file containing candidate keywords, expected to contain one keyword on each line; if not given, all vocabulary keywords are considered candidates.
 	- ``-i --iterations``	*<Optional>* The number of iterations to spend bootstrapping; defaults to 1.
 	- ``-k --keep``			*<Optional>* The number of keywords to keep after each iteration; defaults to 5.
@@ -47,6 +48,7 @@ def setup_args():
 		- ``-s --seed``			*<Required>* The path to the file containing seed keywords, expected to contain one keyword on each line.
 		- ``-f --files``		*<Required>* The input corpora where to look for similar keywords, expected to be already tokenized by the `tokenize` tool.
 		- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `PMI`, `CHI`.
+		- ``-o --output``		*<Required>* The path to the file where to store the bootstrapped keywords.
 		- ``-c --candidates``	*<Optional>* The path to the file containing candidate keywords, expected to contain one keyword on each line; if not given, all vocabulary keywords are considered candidates.
 		- ``-i --iterations``	*<Optional>* The number of iterations to spend bootstrapping; defaults to 1.
 		- ``-k --keep``			*<Optional>* The number of keywords to keep after each iteration; defaults to 5.
@@ -67,6 +69,9 @@ def setup_args():
 	parser.add_argument('-m', '--method',
 						type=method, required=True,
 						help='<Required> The method to use to look for similar keywords; supported: `PMI`, `CHI`.')
+	parser.add_argument('-o', '--output',
+						type=str, required=True,
+						help='<Required> The path to the file where to store the bootstrapped keywords.')
 	parser.add_argument('-c', '--candidates',
 						required=False, default=None,
 						help='<Required> The path to the file containing candidate keywords, expected to contain one keyword on each line; if not given, all vocabulary keywords are considered candidates.')
@@ -108,9 +113,11 @@ def main():
 	candidates = load_candidates(args.candidates) if args.candidates else generate_candidates(args.files, cutoff=args.cutoff)
 	cmd['candidates'] = candidates
 
-	bootstrap(args.files, seed, args.method,
-			  args.iterations, args.keep,
-			  candidates=candidates)
+	bootstrapped = bootstrap(args.files, seed, args.method,
+							 args.iterations, args.keep,
+							 candidates=candidates)
+
+	tools.save(args.output, { 'meta': cmd, 'bootstrapped': bootstrapped })
 
 def bootstrap(files, seed, method, iterations, keep, candidates):
 	"""
