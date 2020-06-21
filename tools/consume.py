@@ -154,7 +154,7 @@ def main():
 		if args['no_cache'] or not cache_exists(args['understanding']):
 			logger.info("Starting understanding period")
 			understanding = understand(**args)['understanding']
-			save(cache, understanding)
+			tools.save(cache, understanding)
 			args.update(understanding)
 			logger.info("Understanding period ended")
 		else:
@@ -166,7 +166,7 @@ def main():
 	logger.info("Starting event period")
 	timeline = consume(**args)
 	timeline['meta'] = cmd
-	save(os.path.join(dir, '.out', filename), timeline)
+	tools.save(os.path.join(dir, '.out', filename), timeline)
 	logger.info("Event period ended")
 
 	asyncio.get_event_loop().close()
@@ -444,35 +444,6 @@ def cache_exists(file, cache_dir='.cache'):
 		return os.path.exists(cache_file) and os.path.isfile(cache_file)
 
 	return False
-
-def save(file, data):
-	"""
-	Save the data to the given file.
-	The function saves the data as a JSON file.
-
-	:param file: The path to the file where to save the data.
-	:type file: str
-	:param data: The data to save.
-				  The function expects a dictionary that can be JSON serializable.
-				  The function tries to convert the values that cannot be serialized to arrays.
-				  Only classes that inherit the :class:`~objects.exportable.Exportable` can be converted to arrays.
-				  This is done through the :func:`~objects.exportable.Exportable.to_array` function.
-	:type data: dict
-	"""
-
-	"""
-	Create the directory if it doesn't exist.
-	"""
-	dir = os.path.dirname(file)
-	if not os.path.exists(dir):
-		os.mkdir(dir)
-
-	"""
-	Encode the data and save it.
-	"""
-	data = Exportable.encode(data)
-	with open(file, 'w') as f:
-		f.write(json.dumps(data))
 
 def load(file):
 	"""
