@@ -156,3 +156,88 @@ class TestBootstrap(unittest.TestCase):
 		"""
 		candidates = bootstrap.generate_candidates(file, cutoff=500)
 		self.assertTrue('goal' in candidates)
+
+	def test_filter_candidates_empty_seed_bootstrapped(self):
+		"""
+		Test that when empty seed set and bootstrapped keywords are given, the original dictionary is returned.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), 'corpora', 'seed.txt')
+		seed = bootstrap.load_seed(file)
+		candidates = { word: i for i, word in enumerate(seed) }
+
+		self.assertEqual(candidates, bootstrap.filter_candidates(candidates, [ ], [ ]))
+
+	def test_filter_candidates_copy(self):
+		"""
+		Test that the filtered candidate dictionary is a copy.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), 'corpora', 'seed.txt')
+		seed = bootstrap.load_seed(file)
+		candidates = { word: i for i, word in enumerate(seed) }
+
+		filtered = bootstrap.filter_candidates(candidates, seed, [ ])
+		self.assertEqual(30, len(candidates))
+		self.assertEqual(0, len(filtered))
+
+	def test_filter_candidates_all(self):
+		"""
+		Test that when all candidates are filtered, an empty dictionary is returned.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), 'corpora', 'seed.txt')
+		seed = bootstrap.load_seed(file)
+		candidates = { word: i for i, word in enumerate(seed) }
+
+		filtered = bootstrap.filter_candidates(candidates, seed, [ ])
+		self.assertEqual({ }, filtered)
+
+	def test_filter_candidates_seed(self):
+		"""
+		Test filtering by the seed set.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), 'corpora', 'seed.txt')
+		seed = bootstrap.load_seed(file)
+		candidates = { word: i for i, word in enumerate(seed) }
+
+		filtered = bootstrap.filter_candidates(candidates, seed[:10], [ ])
+		self.assertTrue(all( word not in filtered for word in seed[:10] ))
+
+	def test_filter_candidates_bootstrapped(self):
+		"""
+		Test filtering by the bootstrapped keywords.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), 'corpora', 'seed.txt')
+		seed = bootstrap.load_seed(file)
+		candidates = { word: i for i, word in enumerate(seed) }
+
+		filtered = bootstrap.filter_candidates(candidates, [ ], seed[:10])
+		self.assertTrue(all( word not in filtered for word in seed[:10] ))
+
+	def test_filter_candidates_combination(self):
+		"""
+		Test filtering by the seed set and bootstrapped keywords.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), 'corpora', 'seed.txt')
+		seed = bootstrap.load_seed(file)
+		candidates = { word: i for i, word in enumerate(seed) }
+
+		filtered = bootstrap.filter_candidates(candidates, seed[:10], seed[10:20])
+		self.assertTrue(all( word not in filtered for word in seed[:20] ))
+
+	def test_filter_candidates_scores_retained(self):
+		"""
+		Test that when filtering candidates, the scores are retained.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), 'corpora', 'seed.txt')
+		seed = bootstrap.load_seed(file)
+		candidates = { word: i for i, word in enumerate(seed) }
+
+		filtered = bootstrap.filter_candidates(candidates, seed[:10], [ ])
+		for i, word in enumerate(seed[10:]):
+			self.assertEqual(i + 10, filtered[word])

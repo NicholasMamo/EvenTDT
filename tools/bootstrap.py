@@ -164,6 +164,26 @@ def generate_candidates(files, cutoff):
 	vocabulary = sorted(vocabulary, key=vocabulary.get, reverse=True)
 	return vocabulary[:cutoff]
 
+def filter_candidates(candidates, seed, bootstrapped):
+	"""
+	Filter out candidates that were in the original seed set or which were bootstrapped.
+
+	:param candidates: A dictionary with candidates as keys and their scores as values.
+	:type candidates: dict
+	:param seed: The original seed set.
+	:type seed: list of str
+	:param bootstrapped: Candidates that have already been bootstrapped.
+	:type bootstrapped: list of str
+
+	:return: The list of candidates as a dictionary without words that have already been used for bootstrapping.
+	:rtype: dict
+	"""
+
+	candidates = dict(candidates) # create a copy of the dictionary
+	candidates = { candidate: score for candidate, score in candidates.items()
+									if candidate not in seed + bootstrapped }
+	return candidates
+
 def meta(args):
 	"""
 	Get the meta arguments.
