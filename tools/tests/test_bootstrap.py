@@ -16,11 +16,75 @@ for path in paths:
 	    sys.path.append(path)
 
 import bootstrap
+from eventdt.ate.bootstrapping.probability import PMI
+from logger import logger
+
+logger.set_logging_level(logger.LogLevel.ERROR)
 
 class TestBootstrap(unittest.TestCase):
 	"""
 	Test the functionality of the bootstrap tool.
 	"""
+
+	def test_bootstrap_list(self):
+		"""
+		Test that bootstrapping returns a list of keywords.
+		"""
+
+		files = [ os.path.join(os.path.dirname(__file__), 'corpora', 'tokenized.json') ]
+		candidates = bootstrap.generate_candidates(files, cutoff=200)
+
+		bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMI, 1, 5, candidates)
+		self.assertEqual(list, type(bootstrapped))
+
+	def test_bootstrap_iterations(self):
+		"""
+		Test that bootstrapping repeats for a number of iterations.
+		"""
+
+		files = [ os.path.join(os.path.dirname(__file__), 'corpora', 'tokenized.json') ]
+		candidates = bootstrap.generate_candidates(files, cutoff=200)
+
+		bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMI, 1, 1, candidates)
+		self.assertEqual(1, len(bootstrapped))
+		bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMI, 2, 1, candidates)
+		self.assertEqual(2, len(bootstrapped))
+
+	def test_bootstrap_keep(self):
+		"""
+		Test that bootstrapping keeps only a number of terms at each iteration
+		"""
+
+		files = [ os.path.join(os.path.dirname(__file__), 'corpora', 'tokenized.json') ]
+		candidates = bootstrap.generate_candidates(files, cutoff=200)
+
+		bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMI, 1, 2, candidates)
+		self.assertEqual(2, len(bootstrapped))
+		bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMI, 2, 2, candidates)
+		self.assertEqual(4, len(bootstrapped))
+
+	def test_bootstrap_unique(self):
+		"""
+		Test that bootstrapping returns a unique list of terms.
+		"""
+
+		files = [ os.path.join(os.path.dirname(__file__), 'corpora', 'tokenized.json') ]
+		candidates = bootstrap.generate_candidates(files, cutoff=200)
+
+		bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMI, 2, 5, candidates)
+		self.assertEqual(sorted(list(set(bootstrapped))), sorted(bootstrapped))
+
+	def test_bootstrap(self):
+		"""
+		Test that bootstrapping results make sense
+		"""
+
+		files = [ os.path.join(os.path.dirname(__file__), 'corpora', 'tokenized.json') ]
+		candidates = bootstrap.generate_candidates(files, cutoff=200)
+
+		bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMI, 1, 5, candidates)
+		self.assertTrue('second' in bootstrapped)
+		self.assertTrue('first' in bootstrapped)
 
 	def test_load_seed_all_words(self):
 		"""

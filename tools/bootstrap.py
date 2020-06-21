@@ -35,6 +35,7 @@ sys.path.insert(-1, root)
 sys.path.insert(-1, lib)
 
 from ate.bootstrapping.probability import p, PMI, CHI
+from logger import logger
 
 def setup_args():
 	"""
@@ -105,7 +106,84 @@ def main():
 	candidates = load_candidates(args.candidates) if args.candidates else generate_candidates(args.files, cutoff=args.cutoff)
 	cmd['candidates'] = candidates
 
-	print(cmd)
+	bootstrap(args.files, seed, args.method,
+			  args.iterations, args.keep,
+			  candidates=candidates)
+
+def bootstrap(files, seed, method, iterations, keep, candidates):
+	"""
+	Bootstrap the given seed set from the given files.
+
+	:param files: The input corpora where to look for similar keywords.
+	:type files: list of str
+	:param seed: The seed set of keywords.
+	:type seed: list of str
+	:param method: The method to use to look for similar keywords.
+	:type method: function
+	:param iterations: The number of iterations to spend bootstrapping.
+	:type iterations: int
+	:param keep: The number of keywords to keep after each iteration.
+	:type keep: int
+	:param candidates: The list of candidate keywords. If `None` is given, all vocabulary keywords are considered candidates.
+	:type candidates: list of str or None
+
+	:return: A list of bootstrapped keywords.
+	:rtype: list of str
+	"""
+
+	bootstrapped = [ ]
+
+	"""
+	For each iteration:
+
+		1. Select the best candidates so far to bootstrap the next candidates,
+		2. Use the new candidates to bootstrap new keywords,
+		3. Update the scores.
+	"""
+	candidate_scores = { } # the list of candidates and their best scores yet
+	for i in range(iterations):
+		"""
+		Select the next seeds.
+		In the first iteration, the original seeds are used.
+		In subsequent iterations, the highest scoring candidates are used instead.
+		"""
+		if i == 0:
+			next_seed = seed
+		else:
+			"""
+			Filter out candidates that have already been reviewed.
+			Then, Choose the top seeds to bootstrap with next.
+			"""
+			candidate_scores = filter_candidates(candidate_scores, seed, bootstrapped)
+			next_seed = sorted(candidate_scores, key=candidate_scores.get, reverse=True)[:keep]
+			bootstrapped.extend(next_seed)
+
+		"""
+		If there are no promising candidates left, stop looking.
+		"""
+		if not next_seed:
+			break
+
+		"""
+		Bootstrap the next seed keywords and save them as bootstrapped.
+		"""
+		logger.info(f"Bootstrapping with { ', '.join(next_seed) }")
+		scores = method(files, next_seed, y=candidates, cache=next_seed)
+
+		"""
+		Get the scores of the new candidates.
+		"""
+		candidate_scores = update_scores(candidate_scores, scores)
+
+	"""
+	Add the top candidates to the list of bootstrapped keywords.
+	"""
+	candidate_scores = filter_candidates(candidate_scores, seed, bootstrapped)
+	final = sorted(candidate_scores, key=candidate_scores.get, reverse=True)[:keep]
+	bootstrapped.extend(final)
+	logger.info(f"Bootstrapped { ', '.join(bootstrapped) }")
+
+	return bootstrapped
 
 def load_seed(seed_file):
 	"""
