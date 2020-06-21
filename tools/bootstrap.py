@@ -15,7 +15,7 @@ To run the script, use:
 Accepted arguments:
 
 	- ``-s --seed``			*<Required>* The path to the file containing seed keywords, expected to contain one keyword on each line.
-	- ``-f --files``		*<Required>* The input corpora where to look for similar keywords.
+	- ``-f --files``		*<Required>* The input corpora where to look for similar keywords, expected to be already tokenized by the `tokenize` tool.
 	- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `PMI`, `CHI`.
 	- ``-c --candidates``	*<Optional>* The path to the file containing candidate keywords, expected to contain one keyword on each line; if not given, all vocabulary keywords are considered candidates.
 	- ``-i --iterations``	*<Optional>* The number of iterations to spend bootstrapping; defaults to 1.
@@ -42,7 +42,7 @@ def setup_args():
 	Accepted arguments:
 
 		- ``-s --seed``			*<Required>* The path to the file containing seed keywords, expected to contain one keyword on each line.
-		- ``-f --files``		*<Required>* The input corpora where to look for similar keywords.
+		- ``-f --files``		*<Required>* The input corpora where to look for similar keywords, expected to be already tokenized by the `tokenize` tool.
 		- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `PMI`, `CHI`.
 		- ``-c --candidates``	*<Optional>* The path to the file containing candidate keywords, expected to contain one keyword on each line; if not given, all vocabulary keywords are considered candidates.
 		- ``-i --iterations``	*<Optional>* The number of iterations to spend bootstrapping; defaults to 1.
@@ -59,7 +59,7 @@ def setup_args():
 						help='<Required> The path to the file containing seed keywords, expected to contain one keyword on each line.')
 	parser.add_argument('-f', '--files',
 						nargs='+', required=True,
-						help='<Required> The input corpora where to look for similar keywords.')
+						help='<Required> The input corpora where to look for similar keywords, expected to be already tokenized by the `tokenize` tool.')
 	parser.add_argument('-m', '--method',
 						type=method, required=True,
 						help='<Required> The method to use to look for similar keywords; supported: `PMI`, `CHI`.')
