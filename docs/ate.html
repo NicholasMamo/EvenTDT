@@ -98,8 +98,8 @@
 <li class="toctree-l1"><a class="reference internal" href="ml.html">10. Machine Learning</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">11. Automatic Term Extraction (ATE)</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-ate.linguistic">Linguistic</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-ate.stat">Statistical</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#probability">Probability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-ate.bootstrapping">Bootstrapping</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-ate.bootstrapping.probability">Probability</a></li>
 </ul>
 </li>
 </ul>
@@ -243,10 +243,355 @@ Each document should have a <cite>tokens</cite> attribute.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-ate.stat">
-<span id="statistical"></span><h2>Statistical<a class="headerlink" href="#module-ate.stat" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="probability">
-<h3>Probability<a class="headerlink" href="#probability" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="module-ate.bootstrapping">
+<span id="bootstrapping"></span><h2>Bootstrapping<a class="headerlink" href="#module-ate.bootstrapping" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-ate.bootstrapping.probability">
+<span id="probability"></span><h3>Probability<a class="headerlink" href="#module-ate.bootstrapping.probability" title="Permalink to this headline">¶</a></h3>
+<p>Methods that evaluate unithood or termhood based on probability.</p>
+<dl class="function">
+<dt id="ate.bootstrapping.probability.p">
+<code class="sig-name descname">p</code><span class="sig-paren">(</span><em class="sig-param">corpora</em>, <em class="sig-param">focus=None</em>, <em class="sig-param">cache=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.bootstrapping.probability.p" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the probability of tokens appearing in the corpus.
+The probability is computed in terms of all tokens.</p>
+<p>Apart from calculating the probability of single tokens, the joint probability can be calculated by providing tuples.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The joint probability is the minimum count of any token in the joint set in each document.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpora</strong> (<em>str</em><em> or </em><em>list of str</em>) – <p>A corpus, or corpora, of documents.
+If a string is given, it is assumed to be one corpus.
+If a list is given, it is assumed to be a list of corpora.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is assumed that the corpora were extracted using the tokenizer tool.
+Therefore each line should be a JSON string representing a document.
+Each document should have a <cite>tokens</cite> attribute.</p>
+</div>
+</p></li>
+<li><p><strong>focus</strong> (<em>None</em><em> or </em><em>str</em><em> or </em><em>list of str</em><em> or </em><em>tuple</em><em> or </em><em>list of tuple</em>) – <p>The tokens for which to compute the probability.
+If nothing is given, the probability is calculated for all tokens.
+The tokens can be provided as:</p>
+<ul>
+<li><p>A single word,</p></li>
+<li><p>A list of tokens,</p></li>
+<li><p>A tuple, or</p></li>
+<li><p>A list of tuples.</p></li>
+</ul>
+<p>A tuple can be used to compute joint probabilities.</p>
+</p></li>
+<li><p><strong>cache</strong> (<em>list of str</em>) – <p>A list of terms that are re-used often and which should be cached.
+If an empty list is given, no cache is used.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Cache should be used when there is a lot of repetition.
+For example, <cite>x</cite> can be used as cache when <cite>x</cite> is small and <cite>y</cite> is large.
+If the data is small, using cache can be detrimental.</p>
+</div>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary with tokens as keys and probabilities as values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ate.bootstrapping.probability.PMI">
+<code class="sig-name descname">PMI</code><span class="sig-paren">(</span><em class="sig-param">corpora</em>, <em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">base=2</em>, <em class="sig-param">cache=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.bootstrapping.probability.PMI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the Pointwise Mutual-Information (PMI) between two variables.
+PMI is symmetric and computed as:</p>
+<div class="math notranslate nohighlight">
+\[PMI(x,y) = \log( \frac{p(x,y)}{p(x)p(y)} )\]</div>
+<p>The function accepts multiple values for both variables, and returns the PMI separately.
+The return value is a dictionary, where the keys are the cross product between <cite>x</cite> and <cite>y</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpora</strong> (<em>str</em><em> or </em><em>list of str</em>) – <p>A corpus, or corpora, of documents.
+If a string is given, it is assumed to be one corpus.
+If a list is given, it is assumed to be a list of corpora.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is assumed that the corpora were extracted using the tokenizer tool.
+Therefore each line should be a JSON string representing a document.
+Each document should have a <cite>tokens</cite> attribute.</p>
+</div>
+</p></li>
+<li><p><strong>x</strong> (<em>str</em><em> or </em><em>list of str</em><em> or </em><em>tuple</em><em> or </em><em>list of tuple</em>) – <p>The tokens for which to compute the probability.
+These tokens are combined as a cross-product with all tokens in <cite>y</cite>.
+The tokens can be provided as:</p>
+<ul>
+<li><p>A single word,</p></li>
+<li><p>A list of tokens,</p></li>
+<li><p>A tuple, or</p></li>
+<li><p>A list of tuples.</p></li>
+</ul>
+<p>A tuple translates to joint probabilities.
+If nothing is given, it is replaced with the corpora’s vocabulary.</p>
+</p></li>
+<li><p><strong>y</strong> (<em>str</em><em> or </em><em>list of str</em><em> or </em><em>tuple</em><em> or </em><em>list of tuple</em>) – <p>The tokens for which to compute the probability.
+These tokens are combined as a cross-product with all tokens in <cite>x</cite>.
+The tokens can be provided as:</p>
+<ul>
+<li><p>A single word,</p></li>
+<li><p>A list of tokens,</p></li>
+<li><p>A tuple, or</p></li>
+<li><p>A list of tuples.</p></li>
+</ul>
+<p>A tuple translates to joint probabilities.
+If nothing is given, it is replaced with the corpora’s vocabulary.</p>
+</p></li>
+<li><p><strong>base</strong> (<em>float</em>) – The base of the logarithm, defaults to 2.</p></li>
+<li><p><strong>cache</strong> (<em>list of str</em>) – <p>A list of terms that are re-used often and which should be cached.
+If an empty list is given, no cache is used.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Cache should be used when there is a lot of repetition.
+For example, <cite>x</cite> can be used as cache when <cite>x</cite> is small and <cite>y</cite> is large.
+If the data is small, using cache can be detrimental.</p>
+</div>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary with pairs of <cite>x</cite> and <cite>y</cite> variables as keys, and their PMi as values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ate.bootstrapping.probability._pmi">
+<code class="sig-name descname">_pmi</code><span class="sig-paren">(</span><em class="sig-param">prob</em>, <em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">base</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.bootstrapping.probability._pmi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the Pointwise Mutual Information (PMI) of <cite>x</cite> and <cite>y</cite> based on the given probabilities.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prob</strong> (<em>dict</em>) – A probability calculation, possibly calculated using the <code class="xref py py-func docutils literal notranslate"><span class="pre">ate.stat.probability.p()</span></code> function.
+This is used as cache for the probabilities.
+The keys are the tokens, including the joint probability of <cite>x</cite> and <cite>y</cite>, and the values are their probabilities.</p></li>
+<li><p><strong>x</strong> (<em>str</em><em> or </em><em>tuple of str</em>) – The first token or tuple of tokens to use to calculate the PMI.</p></li>
+<li><p><strong>y</strong> (<em>str</em><em> or </em><em>tuple of str</em>) – The second token or tuple of tokens to use to calculate the PMI.</p></li>
+<li><p><strong>base</strong> (<em>float</em>) – The base of the logarithm, defaults to 2.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The PMI of <cite>x</cite> and <cite>y</cite>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ate.bootstrapping.probability.CHI">
+<code class="sig-name descname">CHI</code><span class="sig-paren">(</span><em class="sig-param">corpora</em>, <em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">cache=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.bootstrapping.probability.CHI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the chi-square statistic on the given corpora for the two given tokens.
+The statistic is based on how many documents tokens co-occur in.
+The order of the two tokens does not matter since the chi-square statistic is symmetric.</p>
+<p>All the tokens in <cite>x</cite> are matched with all tokens in <cite>y</cite> in a cross-product fashion.
+The chi-square statistic is computed for each such pair (one token in <cite>x</cite>, one token in <cite>y</cite>).</p>
+<p>The chi-square statistic is 0 if the two variables are independent.
+The higher the statistic, the more dependent the two variables are.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpora</strong> (<em>str</em><em> or </em><em>list of str</em>) – <p>A corpus, or corpora, of documents.
+If a string is given, it is assumed to be one corpus.
+If a list is given, it is assumed to be a list of corpora.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is assumed that the corpora were extracted using the tokenizer tool.
+Therefore each line should be a JSON string representing a document.
+Each document should have a <cite>tokens</cite> attribute.</p>
+</div>
+</p></li>
+<li><p><strong>x</strong> (<em>str</em><em> or </em><em>list of str</em>) – The first token or list of tokens in the comparison.
+Alternatively, a list of tokens can be provided.
+This is more efficient because it can allow caching.</p></li>
+<li><p><strong>y</strong> (<em>str</em><em> or </em><em>list of str</em>) – The second token or list of tokens in the comparison.
+Alternatively, a list of tokens can be provided.
+This is more efficient because it can allow caching.</p></li>
+<li><p><strong>cache</strong> (<em>list of str</em>) – <p>A list of terms that are re-used often and which should be cached.
+If an empty list is given, no cache is used.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Cache should be used when there is a lot of repetition.
+For example, <cite>x</cite> can be used as cache when <cite>x</cite> is small and <cite>y</cite> is large.
+If the data is small, using cache can be detrimental.</p>
+</div>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The chi-square statistic for all pairs of x and y as a dictionary.
+The keys are the pairs, and the values the chi-square statistic.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ate.bootstrapping.probability._contingency_table">
+<code class="sig-name descname">_contingency_table</code><span class="sig-paren">(</span><em class="sig-param">corpora</em>, <em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">cache=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.bootstrapping.probability._contingency_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the contingency tables for all the pairs of tokens in <cite>x</cite> and <cite>y</cite>.
+All the tokens in <cite>x</cite> are matched with all tokens in <cite>y</cite> in a cross-product fashion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpora</strong> (<em>list of str</em>) – <p>The list of corpora to use to create the contingency table.
+.. note:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>It is assumed that the corpora were extracted using the tokenizer tool.
+Therefore each line should be a JSON string representing a document.
+Each document should have a `tokens` attribute.
+</pre></div>
+</div>
+</p></li>
+<li><p><strong>x</strong> (<em>list of str</em>) – The first list of tokens to use to create the contingency tables.</p></li>
+<li><p><strong>y</strong> (<em>list of str</em>) – The second list of tokens to use to create the contingency tables.</p></li>
+<li><p><strong>cache</strong> (<em>list of str</em>) – <p>A list of terms that are re-used often and which should be cached.
+If an empty list is given, no cache is used.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Cache should be used when there is a lot of repetition.
+For example, <cite>x</cite> can be used as cache when <cite>x</cite> is small and <cite>y</cite> is large.
+If the data is small, using cache can be detrimental.</p>
+</div>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>A dictionary of contingency tables.
+The keys are the pairs of the tokens.
+The values are four-tuples representing the values of cells in the order:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Top-left,</p></li>
+<li><p>Top-right,</p></li>
+<li><p>Bottom-left, and</p></li>
+<li><p>Bottom-right.</p></li>
+</ol>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ate.bootstrapping.probability._chi">
+<code class="sig-name descname">_chi</code><span class="sig-paren">(</span><em class="sig-param">table</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.bootstrapping.probability._chi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the chi-square statistic from the given table.
+The chi-square statistic is 0 if the two variables are independent.
+The higher the statistic, the more dependent the two variables are.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>table</strong> (<em>tuple of int</em>) – <p>The contingency table as a four-tuple.
+The values are four-tuples representing the values of cells in the order:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Top-left,</p></li>
+<li><p>Top-right,</p></li>
+<li><p>Bottom-left, and</p></li>
+<li><p>Bottom-right.</p></li>
+</ol>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The chi-square statistic.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ate.bootstrapping.probability._cache">
+<code class="sig-name descname">_cache</code><span class="sig-paren">(</span><em class="sig-param">corpora</em>, <em class="sig-param">token</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.bootstrapping.probability._cache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compile all the documents in the given corpora that mention the token.
+These documents can be used as cache.
+In this way, the files do not have to be re-opened and documents without the token do not have to be iterated over.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpora</strong> (<em>str</em><em> or </em><em>list of str</em>) – <p>A corpus, or corpora, of documents.
+If a string is given, it is assumed to be one corpus.
+If a list is given, it is assumed to be a list of corpora.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is assumed that the corpora were extracted using the tokenizer tool.
+Therefore each line should be a JSON string representing a document.
+Each document should have a <cite>tokens</cite> attribute.</p>
+</div>
+</p></li>
+<li><p><strong>token</strong> (<em>str</em>) – The token to look for in the documents.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of documents, each represented as a dictionary, that contain the given token.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ate.bootstrapping.probability.joint_vocabulary">
+<code class="sig-name descname">joint_vocabulary</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.bootstrapping.probability.joint_vocabulary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the joint vocabulary by creating the cross-product from <cite>x</cite> and <cite>y</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>str</em><em> or </em><em>list of str</em><em> or </em><em>tuple</em><em> or </em><em>list of tuple</em>) – <p>The tokens for which to compute the probability.
+These tokens are combined as a cross-product with all tokens in <cite>y</cite>.
+The tokens can be provided as:</p>
+<ul>
+<li><p>A single word,</p></li>
+<li><p>A list of tokens,</p></li>
+<li><p>A tuple, or</p></li>
+<li><p>A list of tuples.</p></li>
+</ul>
+<p>A tuple translates to joint probabilities.</p>
+</p></li>
+<li><p><strong>y</strong> (<em>str</em><em> or </em><em>list of str</em><em> or </em><em>tuple</em><em> or </em><em>list of tuple</em>) – <p>The tokens for which to compute the probability.
+These tokens are combined as a cross-product with all tokens in <cite>x</cite>.
+The tokens can be provided as:</p>
+<ul>
+<li><p>A single word,</p></li>
+<li><p>A list of tokens,</p></li>
+<li><p>A tuple, or</p></li>
+<li><p>A list of tuples.</p></li>
+</ul>
+<p>A tuple translates to joint probabilities.</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The joint vocabulary, which is the cross-product of each item in <cite>x</cite> with each item in <cite>y</cite>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 </div>
 </div>

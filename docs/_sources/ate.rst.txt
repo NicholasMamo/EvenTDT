@@ -19,10 +19,10 @@ Linguistic
    :private-members:
    :special-members:
 
-Statistical
-===========
+Bootstrapping
+=============
 
-.. automodule:: ate.stat
+.. automodule:: ate.bootstrapping
    :members:
    :private-members:
    :special-members:
@@ -30,7 +30,7 @@ Statistical
 Probability
 -----------
 
-.. automodule:: ate.stat.probability
+.. automodule:: ate.bootstrapping.probability
    :members:
    :private-members:
    :special-members:
