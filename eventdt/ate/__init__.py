@@ -1,5 +1,5 @@
 """
-Package-level functions that are likely to be useful to both linguistic and statistical approaches.
+Package-level functions and classes that are likely to be useful to all ATE approaches.
 """
 
 import json
