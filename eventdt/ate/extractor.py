@@ -43,3 +43,21 @@ class Extractor(ABC):
 
 		return corpora if type(corpora) is list else [ corpora ]
 
+class DummyExtractor(Extractor):
+	"""
+	A dummy extractor that does nothing and returns an empty list of terms.
+	It is used only for testing purposes.
+	"""
+
+	def extract(self, corpora):
+		"""
+		Return an empty list of terms.
+
+		:param corpora: A path to a corpus or a list of paths to corpora where to look for terms.
+		:type corpora: str or list of str
+
+		:return: An empty list of terms.
+		:rtype: list of str
+		"""
+
+		return [ ]
