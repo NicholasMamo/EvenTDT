@@ -171,7 +171,43 @@
 <h1>1. Tools<a class="headerlink" href="#tools" title="Permalink to this headline">¶</a></h1>
 <p>EvenTDT comes with tools to help you collect corpora from Twitter and create timelines from them.
 Keep reading to learn more about the different tools available in EvenTDT.</p>
-<span class="target" id="module-tools"></span><div class="section" id="module-tools.collect">
+<span class="target" id="module-tools"></span><dl class="function">
+<dt id="tools.meta">
+<code class="sig-name descname">meta</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the meta arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>args</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">argparse.Namespace</span></code>) – The command-line arguments.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The meta arguments as a dictionary.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.save">
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param">file</em>, <em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the data to the given file.
+The function saves the data as a JSON file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file</strong> (<em>str</em>) – The path to the file where to save the data.</p></li>
+<li><p><strong>data</strong> (<em>dict</em>) – The data to save.
+The function expects a dictionary that can be JSON serializable.
+The function tries to convert the values that cannot be serialized to arrays.
+Only classes that inherit the <a class="reference internal" href="other.html#objects.exportable.Exportable" title="objects.exportable.Exportable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exportable</span></code></a> can be converted to arrays.
+This is done through the <a class="reference internal" href="other.html#objects.exportable.Exportable.to_array" title="objects.exportable.Exportable.to_array"><code class="xref py py-func docutils literal notranslate"><span class="pre">to_array()</span></code></a> function.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="section" id="module-tools.collect">
 <span id="data-collection-and-processing"></span><h2>Data Collection and Processing<a class="headerlink" href="#module-tools.collect" title="Permalink to this headline">¶</a></h2>
 <p>A tool to collect tweets.</p>
 <p>The tool collects a corpus of tweets.
@@ -340,23 +376,6 @@ The first task reads the file, and the second consumes it, this time to understa
 </dd></dl>
 
 <dl class="function">
-<dt id="tools.consume.meta">
-<code class="sig-name descname">meta</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.consume.meta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the meta arguments.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>args</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">argparse.Namespace</span></code>) – The command-line arguments.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The meta arguments as a dictionary.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
 <dt id="tools.consume.understand">
 <code class="sig-name descname">understand</code><span class="sig-paren">(</span><em class="sig-param">understanding</em>, <em class="sig-param">consumer</em>, <em class="sig-param">scheme=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.consume.understand" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the understanding process.
@@ -490,25 +509,6 @@ This is relative to the file’s directory.</p></li>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.consume.save">
-<code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param">file</em>, <em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.consume.save" title="Permalink to this definition">¶</a></dt>
-<dd><p>Save the data to the given file.
-The function saves the data as a JSON file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>file</strong> (<em>str</em>) – The path to the file where to save the data.</p></li>
-<li><p><strong>data</strong> (<em>dict</em>) – The data to save.
-The function expects a dictionary that can be JSON serializable.
-The function tries to convert the values that cannot be serialized to arrays.
-Only classes that inherit the <a class="reference internal" href="other.html#objects.exportable.Exportable" title="objects.exportable.Exportable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exportable</span></code></a> can be converted to arrays.
-This is done through the <a class="reference internal" href="other.html#objects.exportable.Exportable.to_array" title="objects.exportable.Exportable.to_array"><code class="xref py py-func docutils literal notranslate"><span class="pre">to_array()</span></code></a> function.</p></li>
-</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -830,7 +830,8 @@ The function automatically gets the set of tokens to remove duplicates.</p></li>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./tools/bootstrap.py <span class="se">\</span>
     -s data/seed.txt <span class="se">\</span>
     -c data/candidates.txt <span class="se">\</span>
-    -f data/tokenized_corpus.json
+    -o data/bootstrapped.txt <span class="se">\</span>
+    -f data/tokenized_corpus.json <span class="se">\</span>
 </pre></div>
 </div>
 <p>Accepted arguments:</p>
@@ -839,6 +840,7 @@ The function automatically gets the set of tokens to remove duplicates.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-s</span> <span class="pre">--seed</span></code>                 <em>&lt;Required&gt;</em> The path to the file containing seed keywords, expected to contain one keyword on each line.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--files</span></code>                <em>&lt;Required&gt;</em> The input corpora where to look for similar keywords, expected to be already tokenized by the <cite>tokenize</cite> tool.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">--method</span></code>               <em>&lt;Required&gt;</em> The method to use to look for similar keywords; supported: <cite>PMI</cite>, <cite>CHI</cite>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-o</span> <span class="pre">--output</span></code>               <em>&lt;Required&gt;</em> The path to the file where to store the bootstrapped keywords.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">--candidates</span></code>   <em>&lt;Optional&gt;</em> The path to the file containing candidate keywords, expected to contain one keyword on each line; if not given, all vocabulary keywords are considered candidates.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-i</span> <span class="pre">--iterations</span></code>   <em>&lt;Optional&gt;</em> The number of iterations to spend bootstrapping; defaults to 1.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-k</span> <span class="pre">--keep</span></code>                 <em>&lt;Optional&gt;</em> The number of keywords to keep after each iteration; defaults to 5.</p></li>
@@ -855,6 +857,7 @@ The function automatically gets the set of tokens to remove duplicates.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-s</span> <span class="pre">--seed</span></code>                 <em>&lt;Required&gt;</em> The path to the file containing seed keywords, expected to contain one keyword on each line.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--files</span></code>                <em>&lt;Required&gt;</em> The input corpora where to look for similar keywords, expected to be already tokenized by the <cite>tokenize</cite> tool.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">--method</span></code>               <em>&lt;Required&gt;</em> The method to use to look for similar keywords; supported: <cite>PMI</cite>, <cite>CHI</cite>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-o</span> <span class="pre">--output</span></code>               <em>&lt;Required&gt;</em> The path to the file where to store the bootstrapped keywords.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">--candidates</span></code>   <em>&lt;Optional&gt;</em> The path to the file containing candidate keywords, expected to contain one keyword on each line; if not given, all vocabulary keywords are considered candidates.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-i</span> <span class="pre">--iterations</span></code>   <em>&lt;Optional&gt;</em> The number of iterations to spend bootstrapping; defaults to 1.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-k</span> <span class="pre">--keep</span></code>                 <em>&lt;Optional&gt;</em> The number of keywords to keep after each iteration; defaults to 5.</p></li>
@@ -1003,31 +1006,14 @@ The values are the corresponding values.</p></li>
 </dd></dl>
 
 <dl class="function">
-<dt id="tools.bootstrap.meta">
-<code class="sig-name descname">meta</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.bootstrap.meta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the meta arguments.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>args</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">argparse.Namespace</span></code>) – The command-line arguments.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The meta arguments as a dictionary.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
 <dt id="tools.bootstrap.method">
 <code class="sig-name descname">method</code><span class="sig-paren">(</span><em class="sig-param">method</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.bootstrap.method" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert the given string into a bootstrapping function.
 The accepted methods are:</p>
 <blockquote>
 <div><ol class="arabic simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">PMI()</span></code>,</p></li>
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">CHI()</span></code></p></li>
+<li><p><a class="reference internal" href="ate.html#ate.bootstrapping.probability.PMI" title="ate.bootstrapping.probability.PMI"><code class="xref py py-func docutils literal notranslate"><span class="pre">PMI()</span></code></a>,</p></li>
+<li><p><a class="reference internal" href="ate.html#ate.bootstrapping.probability.CHI" title="ate.bootstrapping.probability.CHI"><code class="xref py py-func docutils literal notranslate"><span class="pre">CHI()</span></code></a></p></li>
 </ol>
 </div></blockquote>
 <dl class="field-list simple">

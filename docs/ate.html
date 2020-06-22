@@ -172,7 +172,7 @@
             
   <div class="section" id="automatic-term-extraction-ate">
 <h1>11. Automatic Term Extraction (ATE)<a class="headerlink" href="#automatic-term-extraction-ate" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-ate"></span><p>Package-level functions that are likely to be useful to both linguistic and statistical approaches.</p>
+<span class="target" id="module-ate"></span><p>Package-level functions and classes that are likely to be useful to all ATE approaches.</p>
 <dl class="function">
 <dt id="ate.total_documents">
 <code class="sig-name descname">total_documents</code><span class="sig-paren">(</span><em class="sig-param">corpora</em>, <em class="sig-param">focus=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.total_documents" title="Permalink to this definition">¶</a></dt>
@@ -212,6 +212,84 @@ If multiple tokens or tuples are given, a dictionary is given with the separate 
 <dd class="field-odd"><p>int or dict</p>
 </dd>
 </dl>
+</dd></dl>
+
+<span class="target" id="module-ate.extractor"></span><p>The extractor outlines the functionality that all ATE approaches should offer.
+The abstract class is very simple and all extractors must, at least, provide functionality to extract terms from a corpus or corpora.</p>
+<dl class="class">
+<dt id="ate.extractor.Extractor">
+<em class="property">class </em><code class="sig-name descname">Extractor</code><a class="headerlink" href="#ate.extractor.Extractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>An abstract class that defines what all ATE extractors should be able to do.
+This simple class necessitates only that all extractors accept a corpus or corpora and returns a list of terms.</p>
+<dl class="method">
+<dt id="ate.extractor.Extractor.extract">
+<em class="property">abstract </em><code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">corpora</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.extractor.Extractor.extract" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract terms from the given corpora.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>corpora</strong> (<em>str</em><em> or </em><em>list of str</em>) – A path to a corpus or a list of paths to corpora where to look for terms.
+The basic extractor does not place any restrictions of the corpora.
+Linguistic or hybrid approaches might need the original text to be available in the corpora.
+For statistical approaches, a tokenized corpus might suffice.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of terms.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ate.extractor.Extractor.to_list">
+<code class="sig-name descname">to_list</code><span class="sig-paren">(</span><em class="sig-param">corpora</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.extractor.Extractor.to_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the given corpora to a list of corpora.
+This function can be invoked when the input is either a list or a single path.
+If a list of corpora is provided, this function returns the original input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>corpora</strong> (<em>str</em><em> or </em><em>list of str</em>) – A path to a corpus or paths to corpora.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of corpora.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ate.extractor.Extractor.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#ate.extractor.Extractor.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ate.extractor.DummyExtractor">
+<em class="property">class </em><code class="sig-name descname">DummyExtractor</code><a class="headerlink" href="#ate.extractor.DummyExtractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dummy extractor that does nothing and returns an empty list of terms.
+It is used only for testing purposes.</p>
+<dl class="method">
+<dt id="ate.extractor.DummyExtractor.extract">
+<code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">corpora</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.extractor.DummyExtractor.extract" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an empty list of terms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>corpora</strong> (<em>str</em><em> or </em><em>list of str</em>) – A path to a corpus or a list of paths to corpora where to look for terms.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An empty list of terms.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <div class="section" id="module-ate.linguistic">

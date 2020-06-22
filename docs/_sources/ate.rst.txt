@@ -11,6 +11,11 @@
    :private-members:
    :special-members:
 
+.. automodule:: ate.extractor
+   :members:
+   :private-members:
+   :special-members:
+
 Linguistic
 ==========
 
