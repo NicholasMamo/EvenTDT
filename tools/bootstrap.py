@@ -11,7 +11,7 @@ To run the script, use:
 	-s data/seed.txt \\
 	-c data/candidates.txt \\
 	-o data/bootstrapped.txt \\
-	-f data/tokenized_corpus.json \\
+	-f data/tokenized_corpus.json
 
 Accepted arguments:
 
