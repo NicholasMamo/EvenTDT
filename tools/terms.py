@@ -7,7 +7,7 @@ To run the script, use:
 
 .. code-block:: bash
 
-    ./tools/ate.py \\
+    ./tools/terms.py \\
 	-f data/tokenized_corpus.json \\
 	-m tfidf
 
@@ -15,6 +15,7 @@ Accepted arguments:
 
 	- ``-f --files``		*<Required>* The input corpora from where to extract domain-specific terms.
 	- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `TFIDF`.
+	- ``--tfidf``			*<Required>* The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).
 """
 
 import argparse
@@ -30,6 +31,7 @@ sys.path.insert(-1, lib)
 import tools
 from ate.stat.tfidf import TFIDFExtractor
 
+parser = argparse.ArgumentParser(description="Extract terms from domain-specific corpora.")
 def setup_args():
 	"""
 	Set up and get the list of command-line arguments.
@@ -38,18 +40,20 @@ def setup_args():
 
 		- ``-f --files``		*<Required>* The input corpora from where to extract domain-specific terms.
 		- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `TFIDF`.
+		- ``--tfidf``			*<Required>* The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).
 
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
 	"""
 
-	parser = argparse.ArgumentParser(description="Extract terms from domain-specific corpora.")
 	parser.add_argument('-f', '--files',
 						nargs='+', required=True,
 						help='<Required> The input corpora from where to extract domain-specific terms.')
 	parser.add_argument('-m', '--method',
 						type=method, required=True,
 						help='<Required> The method to use to look for similar keywords; supported: `TFIDF`.')
+	parser.add_argument('--tfidf', required=False,
+						help='<Required> The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).')
 
 	args = parser.parse_args()
 	return args
@@ -67,6 +71,8 @@ def main():
 	cmd = tools.meta(args)
 	print(cmd)
 
+	:rtype: :class:`~ate.extractor.Extractor`
+	"""
 def method(method):
 	"""
 	Convert the given string into an ATE class.
