@@ -158,7 +158,7 @@ def main():
 			args.update(understanding)
 			logger.info("Understanding period ended")
 		else:
-			args.update(load(cache))
+			args.update(tools.load(cache))
 
 	"""
 	Consume the event with the main file.
@@ -444,27 +444,6 @@ def cache_exists(file, cache_dir='.cache'):
 		return os.path.exists(cache_file) and os.path.isfile(cache_file)
 
 	return False
-
-def load(file):
-	"""
-	Load the data from the given file.
-
-	:param file: The path to the file from where to load the data.
-	:type file: str
-
-	:return: A new dictionary with the loaded data.
-	:rtype: dict
-	"""
-
-	"""
-	Read the data as a JSON string.
-	Then, decode the data and return it.
-	"""
-	with open(file, 'r') as f:
-		line = f.readline()
-		data = json.loads(line)
-
-	return Exportable.decode(data)
 
 def consumer(consumer):
 	"""

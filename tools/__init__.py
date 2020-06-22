@@ -53,3 +53,24 @@ def save(file, data):
 	data = Exportable.encode(data)
 	with open(file, 'w') as f:
 		f.write(json.dumps(data))
+
+def load(file):
+	"""
+	Load the data from the given file.
+
+	:param file: The path to the file from where to load the data.
+	:type file: str
+
+	:return: A new dictionary with the loaded data.
+	:rtype: dict
+	"""
+
+	"""
+	Read the data as a JSON string.
+	Then, decode the data and return it.
+	"""
+	with open(file, 'r') as f:
+		line = f.readline()
+		data = json.loads(line)
+
+	return Exportable.decode(data)
