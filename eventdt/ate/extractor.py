@@ -22,8 +22,8 @@ class Extractor(ABC):
 						For statistical approaches, a tokenized corpus might suffice.
 		:type corpora: str or list of str
 
-		:return: A list of terms.
-		:rtype: list of str
+		:return: A dictionary with terms as keys and their scores as values.
+		:rtype: dict
 		"""
 
 		pass
