@@ -16,6 +16,16 @@ Accepted arguments:
 """
 
 import argparse
+import os
+import sys
+
+file_path = os.path.dirname(os.path.abspath(__file__))
+root = os.path.join(file_path, '..')
+lib = os.path.join(root, 'eventdt')
+sys.path.insert(-1, root)
+sys.path.insert(-1, lib)
+
+import tools
 
 def setup_args():
 	"""
@@ -43,6 +53,12 @@ def main():
 	"""
 
 	args = setup_args()
+
+	"""
+	Get the meta arguments.
+	"""
+	cmd = tools.meta(args)
+	print(cmd)
 
 if __name__ == "__main__":
 	main()
