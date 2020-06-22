@@ -10,7 +10,7 @@ To run the script, use:
     ./tools/bootstrap.py \\
 	-s data/seed.txt \\
 	-c data/candidates.txt \\
-	-o data/bootstrapped.txt \\
+	-o data/bootstrapped.json \\
 	-f data/tokenized_corpus.json
 
 Accepted arguments:

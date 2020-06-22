@@ -10,13 +10,15 @@ To run the script, use:
     ./tools/terms.py \\
 	-f data/tokenized_corpus.json \\
 	-m tfidf \\
-	--tfidf data/idf.json
+	--tfidf data/idf.json \\
+	-o data/bootstrapped.json
 
 Accepted arguments:
 
 	- ``-f --files``		*<Required>* The input corpora from where to extract domain-specific terms.
 	- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `TFIDF`.
 	- ``--tfidf``			*<Required>* The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).
+	- ``-o --output``		*<Required>* The path to the file where to store the extracted terms.
 """
 
 import argparse
@@ -42,6 +44,7 @@ def setup_args():
 		- ``-f --files``		*<Required>* The input corpora from where to extract domain-specific terms.
 		- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `TFIDF`.
 		- ``--tfidf``			*<Required>* The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).
+		- ``-o --output``		*<Required>* The path to the file where to store the extracted terms.
 
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
@@ -53,6 +56,9 @@ def setup_args():
 	parser.add_argument('-m', '--method',
 						type=method, required=True,
 						help='<Required> The method to use to look for similar keywords; supported: `TFIDF`.')
+	parser.add_argument('-o', '--output',
+						type=str, required=True,
+						help='<Required> The path to the file where to store the extracted terms.')
 	parser.add_argument('--tfidf', required=False,
 						help='<Required> The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).')
 
@@ -70,10 +76,11 @@ def main():
 	Get the meta arguments.
 	"""
 	cmd = tools.meta(args)
+	cmd['method'] = str(vars(args)['method'])
 
 	extractor = instantiate(args)
-	
-	print(cmd)
+
+	tools.save(args.output, { 'meta': cmd })
 
 def instantiate(args):
 	"""
