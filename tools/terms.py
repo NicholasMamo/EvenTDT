@@ -9,7 +9,8 @@ To run the script, use:
 
     ./tools/terms.py \\
 	-f data/tokenized_corpus.json \\
-	-m tfidf
+	-m tfidf \\
+	--tfidf data/idf.json
 
 Accepted arguments:
 
@@ -69,10 +70,28 @@ def main():
 	Get the meta arguments.
 	"""
 	cmd = tools.meta(args)
+
+	extractor = instantiate(args)
+	
 	print(cmd)
 
+def instantiate(args):
+	"""
+	Instantiate the method based on the arguments that it accepts.
+
+	:param args: The command-line arguments.
+	:type args: :class:`argparse.Namespace`
+
+	:return: The created extractor.
 	:rtype: :class:`~ate.extractor.Extractor`
 	"""
+
+	if args.method == TFIDFExtractor:
+		if not args.tfidf:
+			parser.error("The TF-IDF scheme is required with the TF-IDF method.")
+
+		return args.method(tools.load(args.tfidf))
+
 def method(method):
 	"""
 	Convert the given string into an ATE class.
