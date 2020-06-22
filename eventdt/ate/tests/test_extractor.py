@@ -14,9 +14,9 @@ if path not in sys.path:
 
 from extractor import DummyExtractor
 
-class TestPackage(unittest.TestCase):
+class TestExtractor(unittest.TestCase):
 	"""
-	Test the functionality of the ATE package-level functions.
+	Test the functionality of the abstract extractor class.
 	"""
 
 	def test_to_list_one_corpus(self):
