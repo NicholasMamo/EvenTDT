@@ -9,3 +9,13 @@ To run the script, use:
 
     ./tools/ate.py
 """
+
+def main():
+	"""
+	Main program loop.
+	"""
+
+	pass
+
+if __name__ == "__main__":
+	main()
