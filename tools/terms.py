@@ -97,7 +97,7 @@ def instantiate(args):
 		if not args.tfidf:
 			parser.error("The TF-IDF scheme is required with the TF-IDF method.")
 
-		return args.method(tools.load(args.tfidf))
+		return args.method(tools.load(args.tfidf)['tfidf'])
 
 def method(method):
 	"""
