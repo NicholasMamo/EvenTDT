@@ -26,7 +26,6 @@ Accepted arguments:
 """
 
 import argparse
-import copy
 import os
 import sys
 
