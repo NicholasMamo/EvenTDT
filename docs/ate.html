@@ -98,6 +98,7 @@
 <li class="toctree-l1"><a class="reference internal" href="ml.html">10. Machine Learning</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">11. Automatic Term Extraction (ATE)</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-ate.linguistic">Linguistic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-ate.stat">Statistical</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-ate.application">Application</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-ate.bootstrapping">Bootstrapping</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module-ate.bootstrapping.probability">Probability</a></li>
@@ -233,10 +234,10 @@ Linguistic or hybrid approaches might need the original text to be available in 
 For statistical approaches, a tokenized corpus might suffice.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list of terms.</p>
+<dd class="field-even"><p>A dictionary with terms as keys and their scores as values.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list of str</p>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
@@ -319,6 +320,52 @@ Each document should have a <cite>tokens</cite> attribute.</p>
 <dd class="field-odd"><p>list of str</p>
 </dd>
 </dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ate.stat">
+<span id="statistical"></span><h2>Statistical<a class="headerlink" href="#module-ate.stat" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-ate.stat.tfidf"></span><p>TF-IDF is a strong and common baseline for ATE tasks.
+The approach scores tokens based on their accumulated TF-IDF score.</p>
+<dl class="class">
+<dt id="ate.stat.tfidf.TFIDFExtractor">
+<em class="property">class </em><code class="sig-name descname">TFIDFExtractor</code><span class="sig-paren">(</span><em class="sig-param">scheme</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.stat.tfidf.TFIDFExtractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>The TF-IDF extractor uses a TF-IDF scheme to score all tokens in the given corpora.
+The class expects tokenized corpora.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><p><a class="reference internal" href="nlp.html#module-nlp.term_weighting.scheme" title="nlp.term_weighting.scheme"><strong>scheme</strong></a> (<a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a>) – The scheme used by the TF-IDF extractor to score tokens.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="ate.stat.tfidf.TFIDFExtractor.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">scheme</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.stat.tfidf.TFIDFExtractor.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the TF-IDF extractor with the given scheme.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a>) – The scheme used by the TF-IDF extractor to score tokens.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ate.stat.tfidf.TFIDFExtractor.extract">
+<code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">corpora</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.stat.tfidf.TFIDFExtractor.extract" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract terms from the given corpora.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>corpora</strong> (<em>str</em><em> or </em><em>list of str</em>) – A path to a corpus or a list of paths to corpora where to look for terms.
+This extractor expects the corpora to be tokenized.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary with terms as keys and their scores as values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>

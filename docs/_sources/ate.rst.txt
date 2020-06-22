@@ -24,6 +24,19 @@ Linguistic
    :private-members:
    :special-members:
 
+Statistical
+===========
+
+.. automodule:: ate.stat
+   :members:
+   :private-members:
+   :special-members:
+
+.. automodule:: ate.stat.tfidf
+   :members:
+   :private-members:
+   :special-members:
+
 Application
 ===========
 
