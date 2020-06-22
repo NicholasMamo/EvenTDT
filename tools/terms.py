@@ -78,9 +78,15 @@ def main():
 	cmd = tools.meta(args)
 	cmd['method'] = str(vars(args)['method'])
 
+	"""
+	Create the extractor and extract the terms.
+	"""
 	extractor = instantiate(args)
+	terms = extractor.extract(args.files)
+	terms = sorted(terms.items(), key=lambda term: term[1], reverse=True)
+	terms = [ { 'term': term, 'score': score, 'rank': rank + 1 } for rank, (term, score) in enumerate(terms) ]
 
-	tools.save(args.output, { 'meta': cmd })
+	tools.save(args.output, { 'meta': cmd, 'terms': terms })
 
 def instantiate(args):
 	"""
