@@ -106,9 +106,12 @@ class LogEF(EF):
 		:rtype: dict
 		"""
 
+		timelines = self.to_list(timelines)
+
 		extractor = EF()
 		terms = extractor.extract(timelines)
 		terms = { term: math.log(value, self.base) for term, value in terms.items() }
+
 		return terms
 
 class EFIDF(Extractor):
@@ -162,97 +165,128 @@ class EFIDF(Extractor):
 
 		efidf = { }
 
+		timelines = self.to_list(timelines)
+
 		extractor = EF() if not self.base else LogEF(base=self.base)
 		terms = extractor.extract(timelines)
 		efidf = { term: terms[term] * self.scheme.create([ term ]).dimensions[term] for term in terms }
 
 		return efidf
 
-def variability(term, idfs):
+class Variability(Extractor):
 	"""
-	Calculate how variable the term is across events.
-	A term is highly-variable if it appears disproportionately in one or a few events.
-	A low variability indicates that the term appears consistently across all events.
-
-	The method follows the leave-one-out principle: each event is compared against all other events.
-	The final result is an average weightg according to the event sizes.
-
-	:param term: The term for which to calculate the variability.
-	:type term: str
-	:param idfs: A list of IDFs, one for each event.
-	:type idfs: list of :class:`~nlp.term_weighting.tfidf.TFIDF`
-
-	:return: The variability of the term.
-			 A term is highly-variable if it appears disproportionately in one or a few events.
-			 A low variability indicates that the term appears consistently across all events.
-	:rtype: float
+	Variability is a metric that measures the consistency of appearance of a term across different events.
+	The variability metric is based on the chi-square statistic.
+	The intuition is that terms that appear more consistently in different events are more likely to belong to the domain.
 	"""
 
-	v = 0
-
-	"""
-	Calculate the number of documents across all events.
-	This is the size of the contingency table.
-	"""
-	all_documents = sum(idf.global_scheme.documents for idf in idfs)
-
-	"""
-	For each event, compare the appearance of the term in the event with its appearance in other events.
-	"""
-	for idf in idfs:
+	def extract(self, idfs):
 		"""
-		Create the contingency table and compute the chi-square value.
-		The statistic's weight is based on the size of the current event.
+		Calculate how variable the term is across events.
+		A term is highly-variable if it appears disproportionately in one or a few events.
+		A low variability indicates that the term appears consistently across all events.
+		To reflect this behavior in the score, the inverse of the variability is returned.
+
+		The method follows the leave-one-out principle: each event is compared against all other events.
+		The final result is an average weightg according to the event sizes.
+
+		:param idfs: A list of IDFs, one for each event.
+		:type idfs: list of :class:`~nlp.term_weighting.tfidf.TFIDF`
+
+		:return: A dictionary with terms as keys and their inverse variability score as the values.
+				 A term is highly-variable if it appears disproportionately in one or a few events.
+				 A low variability indicates that the term appears consistently across all events.
+				 To reflect this behavior in the score, the inverse of the variability is returned.
+		:rtype: dict
 		"""
-		comparison = [ other for other in idfs if other is not idf ]
-		table = _variability_contingency_table(term, idf, comparison)
-		chi = probability._chi(table)
-		v += chi * idf.global_scheme.documents / all_documents
 
-	return v
+		variability = { }
 
-def _variability_contingency_table(term, current, comparison):
-	"""
-	Create the contingency table comparing the term's appearance in the current event versus other events.
+		"""
+		Calculate the number of documents across all events.
+		This is the size of the contingency table.
+		"""
+		all_documents = sum(idf.global_scheme.documents for idf in idfs)
 
-	:param term: The term for which to create the contingency table.
-	:type term: str
-	:param current: The current event's IDF table.
-	:type current: :class:`~nlp.term_weighting.tfidf.TFIDF`
-	:param comparison: A list of IDFs, one for each event.
-	:type comparison: list of :class:`~nlp.term_weighting.tfidf.TFIDF`
+		"""
+		Go through each term and compute the variability.
+		For each event, compare the appearance of the term in the event with its appearance in other events.
+		"""
+		for term in self._vocabulary(idfs):
+			v = 0
+			for idf in idfs:
+				"""
+				Create the contingency table and compute the chi-square value.
+				The statistic's weight is based on the size of the current event.
+				"""
+				comparison = [ other for other in idfs if other is not idf ]
+				table = self._variability_contingency_table(term, idf, comparison)
+				chi = probability._chi(table)
+				v += chi * idf.global_scheme.documents / all_documents
 
-	:return: The contingency table for the term, contrasting the current event with all other events.
-			 The first row is the total number of documents in the current event.
-			 The second row is the total number of documents in the comparison events.
-			 The totals of both rows sum up to the total number of documents.
-			 The contingency table is returned as a tuple with four floats.
-			 These correspond to the first and second rows respectively.
-	:rtype: tuple of float
-	"""
+			variability[term] = 1/v if v else 0
 
-	current_documents = current.global_scheme.documents
-	comparison_documents = sum(idf.global_scheme.documents for idf in comparison)
+		return variability
 
-	"""
-	`A` is the number of current event documents in which the term appears.
-	"""
-	A = current.global_scheme.idf.get(term, 0)
+	def _vocabulary(self, idfs):
+		"""
+		Extract the vocabulary from the given IDFs.
 
-	"""
-	`B` is the number of current event documents in which the term does not appear
-	"""
-	B = current_documents - A
+		:param idfs: A list of IDFs, one for each event.
+		:type idfs: list of :class:`~nlp.term_weighting.tfidf.TFIDF`
 
-	"""
-	`C` is the number of other events in which the term appears.
-	It is computed as the number of times the term appears in all events minus `A`.
-	"""
-	C = sum(idf.global_scheme.idf.get(term, 0) for idf in comparison)
+		:return: A list of terms in the given IDFs.
+		:rtype: list of str
+		"""
 
-	"""
-	`D` is the number of other events in which the term does not appear.
-	"""
-	D = comparison_documents - C
+		vocabulary = [ ]
+		for idf in idfs:
+			vocabulary.extend(list(idf.global_scheme.idf.keys()))
 
-	return (A, B, C, D)
+		return list(set(vocabulary))
+
+	def _variability_contingency_table(self, term, current, comparison):
+		"""
+		Create the contingency table comparing the term's appearance in the current event versus other events.
+
+		:param term: The term for which to create the contingency table.
+		:type term: str
+		:param current: The current event's IDF table.
+		:type current: :class:`~nlp.term_weighting.tfidf.TFIDF`
+		:param comparison: A list of IDFs, one for each event.
+		:type comparison: list of :class:`~nlp.term_weighting.tfidf.TFIDF`
+
+		:return: The contingency table for the term, contrasting the current event with all other events.
+				 The first row is the total number of documents in the current event.
+				 The second row is the total number of documents in the comparison events.
+				 The totals of both rows sum up to the total number of documents.
+				 The contingency table is returned as a tuple with four floats.
+				 These correspond to the first and second rows respectively.
+		:rtype: tuple of float
+		"""
+
+		current_documents = current.global_scheme.documents
+		comparison_documents = sum(idf.global_scheme.documents for idf in comparison)
+
+		"""
+		`A` is the number of current event documents in which the term appears.
+		"""
+		A = current.global_scheme.idf.get(term, 0)
+
+		"""
+		`B` is the number of current event documents in which the term does not appear
+		"""
+		B = current_documents - A
+
+		"""
+		`C` is the number of other events in which the term appears.
+		It is computed as the number of times the term appears in all events minus `A`.
+		"""
+		C = sum(idf.global_scheme.idf.get(term, 0) for idf in comparison)
+
+		"""
+		`D` is the number of other events in which the term does not appear.
+		"""
+		D = comparison_documents - C
+
+		return (A, B, C, D)
