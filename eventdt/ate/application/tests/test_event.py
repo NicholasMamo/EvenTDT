@@ -125,10 +125,12 @@ class TestEvent(unittest.TestCase):
 				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
 
 		extractor = event.EF()
-		terms = extractor.extract(paths)
-		self.assertEqual(terms.keys(), event.logEF(paths).keys())
+		ef_terms = extractor.extract(paths)
+		extractor = event.LogEF()
+		log_ef_terms = extractor.extract(paths)
+		self.assertEqual(ef_terms.keys(), log_ef_terms.keys())
 
-	def no_test_log_ef_lower_limit(self):
+	def test_log_ef_lower_limit(self):
 		"""
 		Test that the minimum logarithmic event frequency is 0, not 1.
 		"""
@@ -137,10 +139,11 @@ class TestEvent(unittest.TestCase):
 		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
 				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
 				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
-		ef = event.logEF(paths)
-		self.assertEqual(0, min(ef.values()))
+		extractor = event.LogEF()
+		terms = extractor.extract(paths)
+		self.assertEqual(0, min(terms.values()))
 
-	def no_test_log_ef_max_limit(self):
+	def test_log_ef_max_limit(self):
 		"""
 		Test that the maximum logarithmic event frequency is equivalent to the logarithm of the number of timelines provided.
 		"""
@@ -149,10 +152,11 @@ class TestEvent(unittest.TestCase):
 		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
 				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
 				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
-		ef = event.logEF(paths)
-		self.assertEqual(math.log(len(paths), 2), max(ef.values()))
+		extractor = event.LogEF()
+		terms = extractor.extract(paths)
+		self.assertEqual(math.log(len(paths), 2), max(terms.values()))
 
-	def no_test_log_ef_base(self):
+	def test_log_ef_base(self):
 		"""
 		Test that the logarithmic event frequency is just the event frequency  with a logarithm.
 		"""
@@ -161,13 +165,16 @@ class TestEvent(unittest.TestCase):
 		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
 				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
 				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
-		ef = event.EF(paths)
+		extractor = event.EF()
+		ef_terms = extractor.extract(paths)
 
-		logef = event.logEF(paths, base=2)
-		self.assertTrue(all( math.log(ef[term], 2) == logef[term] for term in ef ))
+		extractor = event.LogEF(base=2)
+		log_ef_terms = extractor.extract(paths)
+		self.assertTrue(all( math.log(ef_terms[term], 2) == log_ef_terms[term] for term in ef_terms ))
 
-		logef = event.logEF(paths, base=10)
-		self.assertTrue(all( math.log(ef[term], 10) == logef[term] for term in ef ))
+		extractor = event.LogEF(base=10)
+		log_ef_terms = extractor.extract(paths)
+		self.assertTrue(all( math.log(ef_terms[term], 10) == log_ef_terms[term] for term in ef_terms ))
 
 	def no_test_efidf(self):
 		"""

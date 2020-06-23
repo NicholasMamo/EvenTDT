@@ -65,32 +65,51 @@ class EF(Extractor):
 
 		return ef
 
-def logEF(timelines, base=2):
+class LogEF(EF):
 	"""
-	Calculate the logarithmic event frequency of terms from the given timelines.
-	The event frequency is simply the number of events in which term appears in a development.
+	The logarithmic Event Frequency (EF) extractor looks for terms in timelines.
+	The scoring is the logarithm of the simple frequency, as calculated in :class:`~ate.application.event.EF`.
 
-	This weighting scheme is based on the :func:`~ate.application.event.EF` weighting scheme.
-
-	:param timelines: The path to a timeline or a list of paths to timelines.
-					  If a string is given, it is assumed to be one event timeline.
-					  If a list is given, it is assumed to be a list of event timelines.
-
-					  .. note::
-
-					      It is assumed that the event timelines were extracted using the collection tool.
-						  Therefore each file should be a JSON string representing a :class:`~summarization.timeline.timeline.Timeline`.
-	:type timelines: str or list of str
-	:param base: The logarithmic base.
-	:type base: floa
-
-	:return: A dictionary with terms as keys and their event frequency as the values.
-	:rtype: dict
+	:ivar base: The logarithmic base.
+	:vartype base: float
 	"""
 
-	ef = EF(timelines)
-	ef = { term: math.log(value, base) for term, value in ef.items() }
-	return ef
+	def __init__(self, base=2):
+		"""
+		Create the logarithmic EF extractor with the base.
+
+		:param base: The logarithmic base.
+		:type base: float
+		"""
+
+		super().__init__()
+		self.base = base
+
+	def extract(self, timelines):
+		"""
+		Calculate the logarithmic event frequency of terms from the given timelines.
+		The event frequency is simply the number of events in which term appears in a development.
+
+		This weighting scheme is based on the :func:`~ate.application.event.EF` weighting scheme.
+
+		:param timelines: The path to a timeline or a list of paths to timelines.
+						  If a string is given, it is assumed to be one event timeline.
+						  If a list is given, it is assumed to be a list of event timelines.
+
+						  .. note::
+
+						      It is assumed that the event timelines were extracted using the collection tool.
+							  Therefore each file should be a JSON string representing a :class:`~summarization.timeline.timeline.Timeline`.
+		:type timelines: str or list of str
+
+		:return: A dictionary with terms as keys and their event frequency as the values.
+		:rtype: dict
+		"""
+
+		extractor = EF()
+		terms = extractor.extract(timelines)
+		terms = { term: math.log(value, self.base) for term, value in terms.items() }
+		return terms
 
 def EFIDF(timelines, idf, base=None):
 	"""
@@ -111,7 +130,7 @@ def EFIDF(timelines, idf, base=None):
 	:param idf: The IDF table to use to score terms.
 	:type idf: :class:`~nlp.term_weighting.global_schemes.tfidf.TFIDF`
 	:param base: The logarithmic base.
-	:type base: floa
+	:type base: float
 
 	:return: A dictionary with terms as keys and their EF-IDF score as the values.
 	:rtype: dict
