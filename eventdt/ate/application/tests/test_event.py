@@ -176,7 +176,7 @@ class TestEvent(unittest.TestCase):
 		log_ef_terms = extractor.extract(paths)
 		self.assertTrue(all( math.log(ef_terms[term], 10) == log_ef_terms[term] for term in ef_terms ))
 
-	def no_test_efidf(self):
+	def test_efidf(self):
 		"""
 		Test that the EF-IDF scores are assigned correctly.
 		"""
@@ -190,43 +190,47 @@ class TestEvent(unittest.TestCase):
 		"""
 		Calculate the EF-IDF manually.
 		"""
-		ef = event.EF(paths)
+		extractor = event.EF()
+		ef_terms = extractor.extract(paths)
 		with open(idf_path, 'r') as f:
 			idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
 
 		"""
 		Ensure that the scores line up.
 		"""
-		efidf = event.EFIDF(paths, idf)
-		self.assertTrue(all( efidf[term] == ef[term] * idf.create([ term ]).dimensions[term]
-		 					 for term in efidf ))
+		extractor = event.EFIDF(idf)
+		terms = extractor.extract(paths)
+		self.assertTrue(all( terms[term] == ef_terms[term] * idf.create([ term ]).dimensions[term]
+		 					 for term in ef_terms ))
 
-	def no_test_efidf_log(self):
- 		"""
- 		Test that when a base is given, the EF-IDF scores are based on the logarithmic event frequency.
- 		"""
+	def test_efidf_log(self):
+		"""
+		Test that when a base is given, the EF-IDF scores are based on the logarithmic event frequency.
+		"""
 
- 		idf_path = os.path.join(os.path.dirname(__file__), 'corpora', 'idf.json')
- 		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
- 		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
- 				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
- 				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+		idf_path = os.path.join(os.path.dirname(__file__), 'corpora', 'idf.json')
+		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
 
- 		"""
- 		Calculate the EF-IDF manually.
- 		"""
- 		ef = event.logEF(paths, 10)
- 		with open(idf_path, 'r') as f:
- 			idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
+		"""
+		Calculate the EF-IDF manually.
+		"""
+		extractor = event.LogEF(10)
+		ef_terms = extractor.extract(paths)
+		with open(idf_path, 'r') as f:
+			idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
 
- 		"""
- 		Ensure that the scores line up.
- 		"""
- 		efidf = event.EFIDF(paths, idf, base=10)
- 		self.assertTrue(all( efidf[term] == ef[term] * idf.create([ term ]).dimensions[term]
- 		 					 for term in efidf ))
+		"""
+		Ensure that the scores line up.
+		"""
+		extractor = event.EFIDF(idf, base=10)
+		terms = extractor.extract(paths)
+		self.assertTrue(all( terms[term] == ef_terms[term] * idf.create([ term ]).dimensions[term]
+							 for term in ef_terms ))
 
-	def no_test_efidf_all_terms(self):
+	def test_efidf_all_terms(self):
 		"""
 		Test that the EF-IDF scores include all terms.
 		"""
@@ -240,15 +244,17 @@ class TestEvent(unittest.TestCase):
 		"""
 		Calculate the EF to get a list of terms.
 		"""
-		ef = event.EF(paths)
+		extractor = event.EF()
+		ef_terms = extractor.extract(paths)
 		with open(idf_path, 'r') as f:
 			idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
 
 		"""
 		Calculate the EF-IDF and ensure that all terms are present.
 		"""
-		efidf = event.EFIDF(paths, idf)
-		self.assertEqual(ef.keys(), efidf.keys())
+		extractor = event.EFIDF(idf)
+		terms = extractor.extract(paths)
+		self.assertEqual(ef_terms.keys(), terms.keys())
 
 	def no_test_variability_made_up_word(self):
 		"""

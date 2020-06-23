@@ -76,7 +76,7 @@ class LogEF(EF):
 
 	def __init__(self, base=2):
 		"""
-		Create the logarithmic EF extractor with the base.
+		Create the logarithmic EF extractor with the logarithmic base.
 
 		:param base: The logarithmic base.
 		:type base: float
@@ -111,37 +111,62 @@ class LogEF(EF):
 		terms = { term: math.log(value, self.base) for term, value in terms.items() }
 		return terms
 
-def EFIDF(timelines, idf, base=None):
+class EFIDF(Extractor):
 	"""
-	Calculate the event-frequency-inverse-document-frequency metric for terms.
-	This is a local-global weighting scheme.
-	The local scheme is the event frequency, and the global scheme is the inverse-document-frequency.
-	If a logarithmic base is provided, the logarithmic event frequency is used instead.
+	The EF-IDF extractor combines the event frequency with the inverse document frequency.
 
-	:param timelines: The path to a timeline or a list of paths to timelines.
-					  If a string is given, it is assumed to be one event timeline.
-					  If a list is given, it is assumed to be a list of event timelines.
-
-					  .. note::
-
-					      It is assumed that the event timelines were extracted using the collection tool.
-						  Therefore each file should be a JSON string representing a :class:`~summarization.timeline.timeline.Timeline`.
-	:type timelines: str or list of str
-	:param idf: The IDF table to use to score terms.
-	:type idf: :class:`~nlp.term_weighting.global_schemes.tfidf.TFIDF`
-	:param base: The logarithmic base.
-	:type base: float
-
-	:return: A dictionary with terms as keys and their EF-IDF score as the values.
-	:rtype: dict
+	:ivar scheme: The IDF table to use to score terms.
+	:vartype scheme: :class:`~nlp.term_weighting.global_schemes.tfidf.TFIDF`
+	:ivar base: The logarithmic base.
+				If it is given, the :class:`~ate.application.event.LogEF` class is used.
+				Otherwise, the :class:`~ate.application.event.EF` class is used.
+	:vartype base: None or float
 	"""
 
-	efidf = { }
+	def __init__(self, scheme, base=None):
+		"""
+		Create the EF-IDF extractor with the scheme used to score terms and the logarithmic base.
 
-	ef = logEF(timelines, base) if base else EF(timelines)
-	efidf = { term: ef[term] * idf.create([ term ]).dimensions[term] for term in ef }
+		:ivar idf: The IDF table to use to score terms.
+		:vartype idf: :class:`~nlp.term_weighting.global_schemes.tfidf.TFIDF`
+		:ivar base: The logarithmic base.
+					If it is given, the :class:`~ate.application.event.LogEF` class is used.
+					Otherwise, the :class:`~ate.application.event.EF` class is used.
+		:vartype base: None or float
+		"""
 
-	return efidf
+		super().__init__()
+		self.scheme = scheme
+		self.base = base
+
+	def extract(self, timelines):
+		"""
+		Calculate the event-frequency-inverse-document-frequency metric for terms.
+		This is a local-global weighting scheme.
+		The local scheme is the event frequency, and the global scheme is the inverse-document-frequency.
+		If a logarithmic base is provided, the logarithmic event frequency is used instead.
+
+		:param timelines: The path to a timeline or a list of paths to timelines.
+						  If a string is given, it is assumed to be one event timeline.
+						  If a list is given, it is assumed to be a list of event timelines.
+
+						  .. note::
+
+						      It is assumed that the event timelines were extracted using the collection tool.
+							  Therefore each file should be a JSON string representing a :class:`~summarization.timeline.timeline.Timeline`.
+		:type timelines: str or list of str
+
+		:return: A dictionary with terms as keys and their EF-IDF score as the values.
+		:rtype: dict
+		"""
+
+		efidf = { }
+
+		extractor = EF() if not self.base else LogEF(base=self.base)
+		terms = extractor.extract(timelines)
+		efidf = { term: terms[term] * self.scheme.create([ term ]).dimensions[term] for term in terms }
+
+		return efidf
 
 def variability(term, idfs):
 	"""
