@@ -257,6 +257,29 @@ class TestEvent(unittest.TestCase):
 		terms = extractor.extract(paths)
 		self.assertEqual(ef_terms.keys(), terms.keys())
 
+	def test_variability_base(self):
+		"""
+		Test that the variability score is applied before the inverse.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_idf.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_idf.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		"""
+		Calculate the variability.
+		"""
+		extractor = event.Variability(base=2)
+		variability_2 = extractor.extract(idfs)
+		extractor = event.Variability(base=10)
+		variability_10 = extractor.extract(idfs)
+		self.assertGreater(variability_10['yellow'], variability_2['liverpool'])
+
 	def test_variability_consistent_word(self):
 		"""
 		Test that the variability score of a consistent word is higher than a specific word.

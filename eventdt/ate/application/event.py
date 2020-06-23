@@ -130,12 +130,12 @@ class EFIDF(Extractor):
 		"""
 		Create the EF-IDF extractor with the scheme used to score terms and the logarithmic base.
 
-		:ivar idf: The IDF table to use to score terms.
-		:vartype idf: :class:`~nlp.term_weighting.global_schemes.tfidf.TFIDF`
-		:ivar base: The logarithmic base.
+		:param idf: The IDF table to use to score terms.
+		:type idf: :class:`~nlp.term_weighting.global_schemes.tfidf.TFIDF`
+		:param base: The logarithmic base.
 					If it is given, the :class:`~ate.application.event.LogEF` class is used.
 					Otherwise, the :class:`~ate.application.event.EF` class is used.
-		:vartype base: None or float
+		:type base: None or float
 		"""
 
 		super().__init__()
@@ -178,7 +178,24 @@ class Variability(Extractor):
 	Variability is a metric that measures the consistency of appearance of a term across different events.
 	The variability metric is based on the chi-square statistic.
 	The intuition is that terms that appear more consistently in different events are more likely to belong to the domain.
+
+	:ivar base: The logarithmic base.
+	:vartype base: float
 	"""
+
+	def __init__(self, base=10):
+		"""
+		Create the variability extractor with a logarithmic base.
+		This base is used because the variability score is the inverse of the chi-square.
+		Therefore scores end up being very close to each other without a logarithm.
+
+		:param base: The logarithmic base.
+		:type base: float
+		"""
+
+		super().__init__()
+
+		self.base = base
 
 	def extract(self, idfs):
 		"""
@@ -224,7 +241,7 @@ class Variability(Extractor):
 				chi = probability._chi(table)
 				v += chi * idf.global_scheme.documents / all_documents
 
-			variability[term] = 1/v if v else 0
+			variability[term] = 1./math.log(v, self.base) if v else 0
 
 		return variability
 
