@@ -23,57 +23,62 @@ class TestEvent(unittest.TestCase):
 	Test the functionality of the event-based ATE approaches.
 	"""
 
-	def no_test_ef_one_timeline(self):
+	def test_ef_one_timeline(self):
 		"""
 		Test that when providing one timeline, the algorithm extracts terms only from it.
 		"""
 
 		path = os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json')
-		self.assertTrue(event.EF(path))
+		extractor = event.EF()
+		self.assertTrue(extractor.extract(path))
 
-	def no_test_ef_multiple_timeline(self):
+	def test_ef_multiple_timeline(self):
 		"""
 		Test that when providing multiple timelines, the algorithm extracts terms from all of them.
 		"""
 
 		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
 		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json') ]
-		ef = event.EF(paths)
-		self.assertTrue(ef)
-		self.assertTrue(all( term in ef for term in event.EF(paths[0]) ))
-		self.assertTrue(all( term in ef for term in event.EF(paths[1]) ))
+		extractor = event.EF()
+		terms = extractor.extract(paths)
+		self.assertTrue(terms)
+		self.assertTrue(all( term in terms for term in extractor.extract(paths[0]) ))
+		self.assertTrue(all( term in terms for term in extractor.extract(paths[1]) ))
 
-	def no_test_ef_lower_limit(self):
+	def test_ef_lower_limit(self):
 		"""
 		Test that the minimum event frequency is 1, not 0.
 		"""
 
 		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
 		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json') ]
-		ef = event.EF(paths)
-		self.assertEqual(1, min(ef.values()))
+		extractor = event.EF()
+		terms = extractor.extract(paths)
+		self.assertEqual(1, min(terms.values()))
 
-	def no_test_ef_max_limit(self):
+	def test_ef_max_limit(self):
 		"""
 		Test that the maximum event frequency is equivalent to the number of timelines provided.
 		"""
 
 		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
 		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json') ]
-		ef = event.EF(paths)
-		self.assertEqual(len(paths), max(ef.values()))
+		extractor = event.EF()
+		terms = extractor.extract(paths)
+		self.assertEqual(len(paths), max(terms.values()))
 
-	def no_test_ef_integers(self):
+	def test_ef_integers(self):
 		"""
 		Test that the event frequency is always an integer.
 		"""
 
 		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
 		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json') ]
-		ef = event.EF(paths)
-		self.assertTrue(all( type(value) == int for value in ef.values() ))
+		extractor = event.EF()
+		terms = extractor.extract(paths)
+		self.assertTrue(all( type(value) == int for value in terms.values() ))
 
-	def no_test_ef_all_terms(self):
+	def test_ef_all_terms(self):
 		"""
 		Test that the event frequency includes all breaking terms.
 		"""
@@ -84,7 +89,8 @@ class TestEvent(unittest.TestCase):
 		"""
 		Calculate the event frequency.
 		"""
-		ef = event.EF(paths)
+		extractor = event.EF()
+		ef_terms = extractor.extract(path)
 
 		"""
 		Extract all terms from the timelines.
@@ -106,9 +112,9 @@ class TestEvent(unittest.TestCase):
 		"""
 		Assert that all terms are in the event frequency.
 		"""
-		self.assertEqual(all_terms, set(ef))
+		self.assertEqual(all_terms, set(ef_terms))
 
-	def no_test_ef_all_terms(self):
+	def test_ef_all_terms(self):
 		"""
 		Test that the event frequency includes all breaking terms.
 		"""
@@ -118,7 +124,9 @@ class TestEvent(unittest.TestCase):
 				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
 				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
 
-		self.assertEqual(event.EF(paths).keys(), event.logEF(paths).keys())
+		extractor = event.EF()
+		terms = extractor.extract(paths)
+		self.assertEqual(terms.keys(), event.logEF(paths).keys())
 
 	def no_test_log_ef_lower_limit(self):
 		"""
@@ -235,7 +243,7 @@ class TestEvent(unittest.TestCase):
 		efidf = event.EFIDF(paths, idf)
 		self.assertEqual(ef.keys(), efidf.keys())
 
-	def test_variability_made_up_word(self):
+	def no_test_variability_made_up_word(self):
 		"""
 		Test that the variability of a made-up word is 0.
 		"""
@@ -254,7 +262,7 @@ class TestEvent(unittest.TestCase):
 		"""
 		self.assertEqual(0, event.variability('superlongword', idfs))
 
-	def test_variability_consistent_word(self):
+	def no_test_variability_consistent_word(self):
 		"""
 		Test that the variability of a consistent word is lower than a specific word.
 		"""
@@ -273,7 +281,7 @@ class TestEvent(unittest.TestCase):
 		"""
 		self.assertLess(event.variability('yellow', idfs), event.variability('liverpool', idfs))
 
-	def test_variability_specific_words(self):
+	def no_test_variability_specific_words(self):
 		"""
 		Test that the variability of two specific words prefers those that appear in multiple corpora.
 		"""
@@ -292,7 +300,7 @@ class TestEvent(unittest.TestCase):
 		"""
 		self.assertLess(event.variability('manchester', idfs), event.variability('chelsea', idfs))
 
-	def test_variability_changing_corpora(self):
+	def no_test_variability_changing_corpora(self):
 		"""
 		Test that when changing the corpora, the variability changes.
 		"""
@@ -311,7 +319,7 @@ class TestEvent(unittest.TestCase):
 		"""
 		self.assertLess(event.variability('liverpool', idfs[:2]), event.variability('liverpool', idfs))
 
-	def test_variability_contingency_table_total(self):
+	def no_test_variability_contingency_table_total(self):
 		"""
 		Test that the variability contingency table sums up to the total number of documents in all IDFs.
 		"""
@@ -338,7 +346,7 @@ class TestEvent(unittest.TestCase):
 			table = event._variability_contingency_table('liverpool', idf, comparison)
 			self.assertEqual(total, sum(table))
 
-	def test_variability_contingency_table_four_cells(self):
+	def no_test_variability_contingency_table_four_cells(self):
 		"""
 		Test that the variability contingency table has four cells.
 		"""
@@ -365,7 +373,7 @@ class TestEvent(unittest.TestCase):
 			table = event._variability_contingency_table('liverpool', idf, comparison)
 			self.assertEqual(4, len(table))
 
-	def test_variability_contingency_table_integer_cells(self):
+	def no_test_variability_contingency_table_integer_cells(self):
 		"""
 		Test that the variability contingency table is made up of integers.
 		"""
@@ -392,7 +400,7 @@ class TestEvent(unittest.TestCase):
 			table = event._variability_contingency_table('liverpool', idf, comparison)
 			self.assertTrue(all(type(cell) is int for cell in table))
 
-	def test_variability_contingency_table_positive_cells(self):
+	def no_test_variability_contingency_table_positive_cells(self):
 		"""
 		Test that the variability contingency table is made up of positive numbers.
 		"""
@@ -419,7 +427,7 @@ class TestEvent(unittest.TestCase):
 			table = event._variability_contingency_table('zaha', idf, comparison)
 			self.assertTrue(all(cell >= 0 for cell in table))
 
-	def test_variability_contingency_table_event_total(self):
+	def no_test_variability_contingency_table_event_total(self):
 		"""
 		Test that the first variability contingency table row sums up to the total number of documents in the event IDF.
 		"""
@@ -441,7 +449,7 @@ class TestEvent(unittest.TestCase):
 			(A, B, C, D) = event._variability_contingency_table('liverpool', idf, comparison)
 			self.assertEqual(idf.global_scheme.documents, A + B)
 
-	def test_variability_contingency_table_comparison_total(self):
+	def no_test_variability_contingency_table_comparison_total(self):
 		"""
 		Test that the second variability contingency table row sums up to the total number of documents in the comparison IDFs.
 		"""
@@ -463,7 +471,7 @@ class TestEvent(unittest.TestCase):
 			(A, B, C, D) = event._variability_contingency_table('liverpool', idf, comparison)
 			self.assertEqual(sum([ idf.global_scheme.documents for idf in comparison ]), C + D)
 
-	def test_variability_contingency_table_unknown_event_word(self):
+	def no_test_variability_contingency_table_unknown_event_word(self):
 		"""
 		Test that when a word is unknown in an event, the first cell is 0.
 		"""
@@ -483,7 +491,7 @@ class TestEvent(unittest.TestCase):
 		(A, B, C, D) = event._variability_contingency_table('merten', idfs[0], idfs[1:])
 		self.assertEqual(0, A)
 
-	def test_variability_contingency_table_unknown_event_word(self):
+	def no_test_variability_contingency_table_unknown_event_word(self):
 		"""
 		Test that when a word is unknown in an event, the first cell is 0.
 		"""
@@ -504,7 +512,7 @@ class TestEvent(unittest.TestCase):
 		self.assertEqual(0, A)
 		self.assertEqual(idfs[0].global_scheme.documents, B)
 
-	def test_variability_contingency_table_unique_event_word(self):
+	def no_test_variability_contingency_table_unique_event_word(self):
 		"""
 		Test that when a word appears in only one event, the comparison events' cells sum up to zero.
 		"""
@@ -525,7 +533,7 @@ class TestEvent(unittest.TestCase):
 		self.assertEqual(0, C)
 		self.assertEqual(sum([ idf.global_scheme.documents for idf in idfs[1:] ]), D)
 
-	def test_variability_contingency_table_correct_counts(self):
+	def no_test_variability_contingency_table_correct_counts(self):
 		"""
 		Test that the variability contingency table counts are correct.
 		"""
