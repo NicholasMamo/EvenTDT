@@ -207,7 +207,7 @@ class Variability(Extractor):
 
 		self.base = base
 
-	def extract(self, idfs):
+	def extract(self, idfs, candidates=None):
 		"""
 		Calculate how variable the term is across events.
 		A term is highly-variable if it appears disproportionately in one or a few events.
@@ -219,6 +219,9 @@ class Variability(Extractor):
 
 		:param idfs: A list of IDFs, one for each event.
 		:type idfs: list of :class:`~nlp.term_weighting.tfidf.TFIDF`
+		:param candidates: A list of terms for which to calculate a score.
+						   If `None` is given, all words are considered to be candidates.
+		:type candidates: None or list of str
 
 		:return: A dictionary with terms as keys and their inverse variability score as the values.
 				 A term is highly-variable if it appears disproportionately in one or a few events.
@@ -239,7 +242,8 @@ class Variability(Extractor):
 		Go through each term and compute the variability.
 		For each event, compare the appearance of the term in the event with its appearance in other events.
 		"""
-		for term in self._vocabulary(idfs):
+		vocabulary = candidates or self._vocabulary(idfs)
+		for term in vocabulary:
 			v = 0
 			for idf in idfs:
 				"""

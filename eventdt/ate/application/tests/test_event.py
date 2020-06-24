@@ -287,7 +287,7 @@ class TestEvent(unittest.TestCase):
 		"""
 		Ensure that the scores line up.
 		"""
-		extractor = event.EFIDF(idf, base=2)
+		extractor = event.EFIDF(idf)
 		terms = extractor.extract(paths)
 		self.assertTrue(all( terms[term] == ef_terms[term] * idf.create([ term ]).dimensions[term]
 		 					 for term in ef_terms ))
@@ -539,6 +539,62 @@ class TestEvent(unittest.TestCase):
 		"""
 		extractor = event.Variability()
 		self.assertGreater(extractor.extract(idfs[:2])['liverpool'], extractor.extract(idfs)['liverpool'])
+
+	def test_variability_extract_candidates(self):
+		"""
+		Test that the variability extractor extracts scores for only select candidates if they are given.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_idf.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_idf.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		extractor = event.Variability()
+		terms = extractor.extract(idfs, candidates=[ 'chelsea', 'goal' ])
+		self.assertEqual({ 'chelsea', 'goal' }, set(terms.keys()))
+
+	def test_variability_extract_candidates_same_scores(self):
+		"""
+		Test that the variability extractor's scores for known candidates are the same as when candidates are not known.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_idf.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_idf.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		extractor = event.Variability()
+		candidate_terms = extractor.extract(idfs, candidates=[ 'chelsea', 'goal' ])
+		terms = extractor.extract(idfs)
+		self.assertEqual(terms['chelsea'], candidate_terms['chelsea'])
+		self.assertEqual(terms['goal'], candidate_terms['goal'])
+
+	def test_variability_extract_candidates_unknown_word(self):
+		"""
+		Test that the variability extractor's score for an unknown word is 0.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_idf.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_idf.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		extractor = event.Variability()
+		terms = extractor.extract(idfs, candidates=[ 'superlongword' ])
+		self.assertEqual({ 'superlongword': 0 }, terms)
 
 	def test_vocabulary_all_one_corpus(self):
 		"""
