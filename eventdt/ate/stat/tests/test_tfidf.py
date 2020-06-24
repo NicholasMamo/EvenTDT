@@ -107,3 +107,47 @@ class TestTFIDFExtractor(unittest.TestCase):
 		extractor = TFIDFExtractor(idf)
 		terms = extractor.extract(corpora)
 		self.assertTrue(all( term in terms for term in vocabulary ))
+
+	def test_extract_candidates(self):
+		"""
+		Test that the TF-IDF extractor extracts scores for only select candidates if they are given.
+		"""
+
+		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE.json')
+		idf = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')
+		with open(idf, 'r') as f:
+			idf = Exportable.decode(json.loads(f.readline()))['tfidf']
+
+		extractor = TFIDFExtractor(idf)
+		terms = extractor.extract(corpora, candidates=[ 'chelsea', 'goal' ])
+		self.assertEqual({ 'chelsea', 'goal' }, set(terms.keys()))
+
+	def test_extract_candidates_same_scores(self):
+		"""
+		Test that the TF-IDF extractor's scores for known candidates are the same as when candidates are not known.
+		"""
+
+		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE.json')
+		idf = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')
+		with open(idf, 'r') as f:
+			idf = Exportable.decode(json.loads(f.readline()))['tfidf']
+
+		extractor = TFIDFExtractor(idf)
+		candidate_terms = extractor.extract(corpora, candidates=[ 'chelsea', 'goal' ])
+		terms = extractor.extract(corpora)
+		self.assertEqual(terms['chelsea'], candidate_terms['chelsea'])
+		self.assertEqual(terms['goal'], candidate_terms['goal'])
+
+	def test_extract_candidates_unknown_word(self):
+		"""
+		Test that the TF-IDF extractor's score for an unknown word is 0.
+		"""
+
+		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE.json')
+		idf = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')
+		with open(idf, 'r') as f:
+			idf = Exportable.decode(json.loads(f.readline()))['tfidf']
+
+		extractor = TFIDFExtractor(idf)
+		terms = extractor.extract(corpora, candidates=[ 'superlongword' ])
+		self.assertEqual({ 'superlongword': 0 }, terms)

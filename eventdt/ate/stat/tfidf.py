@@ -32,19 +32,22 @@ class TFIDFExtractor(Extractor):
 
 		self.scheme = scheme
 
-	def extract(self, corpora):
+	def extract(self, corpora, candidates=None):
 		"""
 		Extract terms from the given corpora.
 
 		:param corpora: A path to a corpus or a list of paths to corpora where to look for terms.
 						This extractor expects the corpora to be tokenized.
 		:type corpora: str or list of str
+		:param candidates: A list of terms for which to calculate a score.
+					 If `None` is given, all words are considered to be candidates.
+		:type candidates: None or list of str
 
 		:return: A dictionary with terms as keys and their scores as values.
 		:rtype: dict
 		"""
 
-		scores = { }
+		scores = { } if not candidates else dict.fromkeys(candidates, 0)
 
 		corpora = self.to_list(corpora)
 		for corpus in corpora:
@@ -52,6 +55,7 @@ class TFIDFExtractor(Extractor):
 				for line in f:
 					document = self.scheme.create(json.loads(line)['tokens'])
 					for term, score in document.dimensions.items():
-						scores[term] = scores.get(term, 0) + score
+						if (candidates and term in candidates) or not candidates:
+							scores[term] = scores.get(term, 0) + score
 
 		return scores
