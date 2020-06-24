@@ -19,8 +19,6 @@ Accepted arguments:
 	- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `TFIDF`.
 	- ``--tfidf``			*<Required>* The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).
 	- ``-o --output``		*<Required>* The path to the file where to store the extracted terms.
-	- ``--nouns``			*<Optional>* If specified, only nouns are considered as candidates terms.
-	- ``--no-cache``		*<Optional>* If specified, the cached nouns are not used. The new nouns are cached instead.
 """
 
 import argparse
@@ -34,6 +32,8 @@ sys.path.insert(-1, root)
 sys.path.insert(-1, lib)
 
 import tools
+from logger import logger
+from ate import linguistic
 from ate.stat.tfidf import TFIDFExtractor
 
 parser = argparse.ArgumentParser(description="Extract terms from domain-specific corpora.")
@@ -47,8 +47,6 @@ def setup_args():
 		- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `TFIDF`.
 		- ``--tfidf``			*<Required>* The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).
 		- ``-o --output``		*<Required>* The path to the file where to store the extracted terms.
-		- ``--nouns``			*<Optional>* If specified, only nouns are considered as candidates terms.
-		- ``--no-cache``		*<Optional>* If specified, the cached nouns are not used. The new nouns are cached instead.
 
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
@@ -65,10 +63,6 @@ def setup_args():
 						help='<Required> The path to the file where to store the extracted terms.')
 	parser.add_argument('--tfidf', required=False,
 						help='<Required> The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).')
-	parser.add_argument('--nouns', action="store_true",
-						help='<Optional> If specified, only nouns are considered as candidates terms.')
-	parser.add_argument('--no-cache', action="store_true",
-						help='<Optional> If specified, the cached nouns are not used. The new nouns are cached instead.')
 
 	args = parser.parse_args()
 	return args
