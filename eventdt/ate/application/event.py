@@ -21,7 +21,7 @@ class EF(Extractor):
 	The scoring is based on simple frequency.
 	"""
 
-	def extract(self, timelines):
+	def extract(self, timelines, candidates=None):
 		"""
 		Calculate the event frequency of terms from the given timelines.
 		The event frequency is simply the number of events in which term appears in a development.
@@ -35,12 +35,15 @@ class EF(Extractor):
 						      It is assumed that the event timelines were extracted using the collection tool.
 							  Therefore each file should be a JSON string representing a :class:`~summarization.timeline.timeline.Timeline`.
 		:type timelines: str or list of str
+		:param candidates: A list of terms for which to calculate a score.
+						   If `None` is given, all words are considered to be candidates.
+		:type candidates: None or list of str
 
 		:return: A dictionary with terms as keys and their event frequency as the values.
 		:rtype: dict
 		"""
 
-		ef = { }
+		ef = { } if not candidates else dict.fromkeys(candidates, 0)
 
 		timelines = self.to_list(timelines)
 
@@ -57,9 +60,10 @@ class EF(Extractor):
 								  for term in topic.dimensions )
 
 				"""
-				Increment the event frequency of all the terms in the timeline.
+				Increment the event frequency of all the candidates terms—if any—in the timeline.
 				"""
-
+				terms = terms if not candidates else [ term for term in terms
+				 											if term in candidates ]
 				for term in terms:
 					ef[term] = ef.get(term, 0) + 1
 

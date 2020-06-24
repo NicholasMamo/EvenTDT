@@ -131,6 +131,50 @@ class TestEvent(unittest.TestCase):
 		log_ef_terms = extractor.extract(paths)
 		self.assertEqual(ef_terms.keys(), log_ef_terms.keys())
 
+	def test_ef_extract_candidates(self):
+		"""
+		Test that the EF extractor extracts scores for only select candidates if they are given.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+
+		extractor = event.EF()
+		terms = extractor.extract(paths, candidates=[ 'chelsea', 'goal' ])
+		self.assertEqual({ 'chelsea', 'goal' }, set(terms.keys()))
+
+	def test_ef_extract_candidates_same_scores(self):
+		"""
+		Test that the EF extractor's scores for known candidates are the same as when candidates are not known.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+
+		extractor = event.EF()
+		candidate_terms = extractor.extract(paths, candidates=[ 'chelsea', 'goal' ])
+		terms = extractor.extract(paths)
+		self.assertEqual(terms['chelsea'], candidate_terms['chelsea'])
+		self.assertEqual(terms['goal'], candidate_terms['goal'])
+
+	def test_ef_extract_candidates_unknown_word(self):
+		"""
+		Test that the EF extractor's score for an unknown word is 0.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+
+		extractor = event.EF()
+		terms = extractor.extract(paths, candidates=[ 'superlongword' ])
+		self.assertEqual({ 'superlongword': 0 }, terms)
+
 	def test_log_ef_lower_limit(self):
 		"""
 		Test that the minimum logarithmic event frequency is 0, not 1.
