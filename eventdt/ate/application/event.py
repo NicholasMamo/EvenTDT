@@ -149,7 +149,7 @@ class EFIDF(Extractor):
 		self.scheme = scheme
 		self.base = base
 
-	def extract(self, timelines):
+	def extract(self, timelines, candidates=None):
 		"""
 		Calculate the event-frequency-inverse-document-frequency metric for terms.
 		This is a local-global weighting scheme.
@@ -165,8 +165,11 @@ class EFIDF(Extractor):
 						      It is assumed that the event timelines were extracted using the collection tool.
 							  Therefore each file should be a JSON string representing a :class:`~summarization.timeline.timeline.Timeline`.
 		:type timelines: str or list of str
+		:param candidates: A list of terms for which to calculate a score.
+						   If `None` is given, all words are considered to be candidates.
+		:type candidates: None or list of str
 
-		:return: A dictionary with terms as keys and their EF-IDF score as the values.
+		:return: A dictionary with terms as keys and their EF-IDF scores as the values.
 		:rtype: dict
 		"""
 
@@ -175,7 +178,7 @@ class EFIDF(Extractor):
 		timelines = self.to_list(timelines)
 
 		extractor = EF() if not self.base else LogEF(base=self.base)
-		terms = extractor.extract(timelines)
+		terms = extractor.extract(timelines, candidates=candidates)
 		efidf = { term: terms[term] * self.scheme.create([ term ]).dimensions[term] for term in terms }
 
 		return efidf

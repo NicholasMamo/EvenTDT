@@ -287,7 +287,7 @@ class TestEvent(unittest.TestCase):
 		"""
 		Ensure that the scores line up.
 		"""
-		extractor = event.EFIDF(idf)
+		extractor = event.EFIDF(idf, base=2)
 		terms = extractor.extract(paths)
 		self.assertTrue(all( terms[term] == ef_terms[term] * idf.create([ term ]).dimensions[term]
 		 					 for term in ef_terms ))
@@ -344,6 +344,118 @@ class TestEvent(unittest.TestCase):
 		extractor = event.EFIDF(idf)
 		terms = extractor.extract(paths)
 		self.assertEqual(ef_terms.keys(), terms.keys())
+
+	def test_efidf_extract_candidates(self):
+		"""
+		Test that the EF-IDF extractor extracts scores for only select candidates if they are given.
+		"""
+
+		idf_path = os.path.join(os.path.dirname(__file__), 'corpora', 'idf.json')
+		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+
+		with open(idf_path, 'r') as f:
+			idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
+
+		extractor = event.EFIDF(idf)
+		terms = extractor.extract(paths, candidates=[ 'chelsea', 'goal' ])
+		self.assertEqual({ 'chelsea', 'goal' }, set(terms.keys()))
+
+	def test_efidf_extract_candidates_same_scores(self):
+		"""
+		Test that the EF-IDF extractor's scores for known candidates are the same as when candidates are not known.
+		"""
+
+		idf_path = os.path.join(os.path.dirname(__file__), 'corpora', 'idf.json')
+		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+
+		with open(idf_path, 'r') as f:
+			idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
+
+		extractor = event.EFIDF(idf)
+		candidate_terms = extractor.extract(paths, candidates=[ 'chelsea', 'goal' ])
+		terms = extractor.extract(paths)
+		self.assertEqual(terms['chelsea'], candidate_terms['chelsea'])
+		self.assertEqual(terms['goal'], candidate_terms['goal'])
+
+	def test_efidf_extract_candidates_unknown_word(self):
+		"""
+		Test that the EF-IDF extractor's score for an unknown word is 0.
+		"""
+
+		idf_path = os.path.join(os.path.dirname(__file__), 'corpora', 'idf.json')
+		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+
+		with open(idf_path, 'r') as f:
+			idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
+
+		extractor = event.EFIDF(idf)
+		terms = extractor.extract(paths, candidates=[ 'superlongword' ])
+		self.assertEqual({ 'superlongword': 0 }, terms)
+
+	def test_efidf_log_extract_candidates(self):
+		"""
+		Test that the logarithmic EF-IDF extractor extracts scores for only select candidates if they are given.
+		"""
+
+		idf_path = os.path.join(os.path.dirname(__file__), 'corpora', 'idf.json')
+		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+
+		with open(idf_path, 'r') as f:
+			idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
+
+		extractor = event.EFIDF(idf)
+		terms = extractor.extract(paths, candidates=[ 'chelsea', 'goal' ])
+		self.assertEqual({ 'chelsea', 'goal' }, set(terms.keys()))
+
+	def test_efidf_log_extract_candidates_same_scores(self):
+		"""
+		Test that the logarithmic EF-IDF extractor's scores for known candidates are the same as when candidates are not known.
+		"""
+
+		idf_path = os.path.join(os.path.dirname(__file__), 'corpora', 'idf.json')
+		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+
+		with open(idf_path, 'r') as f:
+			idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
+
+		extractor = event.EFIDF(idf, base=2)
+		candidate_terms = extractor.extract(paths, candidates=[ 'chelsea', 'goal' ])
+		terms = extractor.extract(paths)
+		self.assertEqual(terms['chelsea'], candidate_terms['chelsea'])
+		self.assertEqual(terms['goal'], candidate_terms['goal'])
+
+	def test_efidf_log_extract_candidates_unknown_word(self):
+		"""
+		Test that the logarithmic EF-IDF extractor's score for an unknown word is 0.
+		"""
+
+		idf_path = os.path.join(os.path.dirname(__file__), 'corpora', 'idf.json')
+		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+
+		with open(idf_path, 'r') as f:
+			idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
+
+		extractor = event.EFIDF(idf, base=2)
+		terms = extractor.extract(paths, candidates=[ 'superlongword' ])
+		self.assertEqual({ 'superlongword': 0 }, terms)
 
 	def test_variability_base(self):
 		"""
