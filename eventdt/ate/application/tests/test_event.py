@@ -221,6 +221,50 @@ class TestEvent(unittest.TestCase):
 		log_ef_terms = extractor.extract(paths)
 		self.assertTrue(all( math.log(ef_terms[term], 10) == log_ef_terms[term] for term in ef_terms ))
 
+	def test_log_ef_extract_candidates(self):
+		"""
+		Test that the logarithmic EF extractor extracts scores for only select candidates if they are given.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+
+		extractor = event.LogEF()
+		terms = extractor.extract(paths, candidates=[ 'chelsea', 'goal' ])
+		self.assertEqual({ 'chelsea', 'goal' }, set(terms.keys()))
+
+	def test_log_ef_extract_candidates_same_scores(self):
+		"""
+		Test that the logarithmic EF extractor's scores for known candidates are the same as when candidates are not known.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+
+		extractor = event.LogEF()
+		candidate_terms = extractor.extract(paths, candidates=[ 'chelsea', 'goal' ])
+		terms = extractor.extract(paths)
+		self.assertEqual(terms['chelsea'], candidate_terms['chelsea'])
+		self.assertEqual(terms['goal'], candidate_terms['goal'])
+
+	def test_log_ef_extract_candidates_unknown_word(self):
+		"""
+		Test that the logarithmic EF extractor's score for an unknown word is 0.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
+		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
+				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+
+		extractor = event.LogEF()
+		terms = extractor.extract(paths, candidates=[ 'superlongword' ])
+		self.assertEqual({ 'superlongword': 0 }, terms)
+
 	def test_efidf(self):
 		"""
 		Test that the EF-IDF scores are assigned correctly.
