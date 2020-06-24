@@ -629,3 +629,78 @@ class TestTokenizer(unittest.TestCase):
 		s = 'Ċikku żar lil Ġanni il-Ħamrun'
 		t = Tokenizer(stem=False, normalize_special_characters=True)
 		self.assertEqual([ 'cikku', 'zar', 'lil', 'ganni', 'ħamrun' ], t.tokenize(s))
+
+	def test_tokenize_nouns_only(self):
+		"""
+		Test extracting tokens with only nouns.
+		"""
+
+		text = "I've gone through many revisions of this area, but I think this might be the one."
+		t = Tokenizer(nouns_only=True)
+		self.assertEqual([ 'taxi', 'day', 'age' ], t.tokenize('Taxis can really go everywhere in this day and age'))
+
+	def test_tokenize_tokens(self):
+		"""
+		Test extracting tokens with not just nouns.
+		"""
+
+		text = "I've gone through many revisions of this area, but I think this might be the one."
+		t = Tokenizer(nouns_only=False, min_length=2)
+		self.assertEqual([ 'taxi', 'can', 'realli', 'go', 'everywher', 'in', 'thi', 'day', 'and', 'age' ], t.tokenize('Taxis can really go everywhere in this day and age'))
+
+	def test_tokenize_tokens_nouns_subset(self):
+		"""
+		Test that the extracted noun tokens are a subset of all tokens.
+		"""
+
+		text = "I've gone through many revisions of this area, but I think this might be the one."
+		t = Tokenizer(nouns_only=False, min_length=2)
+		tokens = t.tokenize('Taxis can really go everywhere in this day and age')
+		t = Tokenizer(nouns_only=True)
+		nouns = t.tokenize('Taxis can really go everywhere in this day and age')
+		self.assertTrue(all( noun in tokens for noun in nouns ))
+
+	def test_nouns_only_one_sentence(self):
+		"""
+		Test extracting nouns from a single sentence.
+		"""
+
+		text = "I have no idea how we balance this but with a midfield with Pogba and Ndombele its curtains for the low blocks that once haunted us."
+		t = Tokenizer()
+		self.assertEqual([ 'idea', 'midfield', 'Pogba', 'Ndombele', 'curtains', 'blocks' ], t._nouns(text))
+
+	def test_nouns_only_multiple_sentence(self):
+		"""
+		Test extracting nouns from multiple sentences.
+		"""
+
+		text = "Night Call is now out on Xbox One and Nintendo Switch! We're so proud to see the game there and hope you'll enjoy your ride in Paris."
+		t = Tokenizer()
+		self.assertEqual([ 'Night', 'Call', 'Xbox', 'One', 'Nintendo', 'Switch', 'game', 'ride', 'Paris' ], t._nouns(text))
+
+	def test_nouns_only_punctuation(self):
+		"""
+		Test that no sentence-delimiting punctuation is retained when extracting nouns.
+		"""
+
+		text = "Night Call is now out on Xbox One, Android and Nintendo Switch! We're so proud to see the game there and hope you'll enjoy your ride in Paris."
+		t = Tokenizer()
+		self.assertFalse(any( any( p in noun for p in [ '!', ',', '.' ] ) for noun in t._nouns(text) ))
+
+	def test_nouns_only_retain_case(self):
+		"""
+		Test that when extracting nouns, the case is retained.
+		"""
+
+		text = "A week in the life of Arsenal Football Club"
+		t = Tokenizer()
+		self.assertEqual([ 'week', 'life', 'Arsenal', 'Football', 'Club' ], t._nouns(text))
+
+	def test_nouns_proper(self):
+		"""
+		Test that proper nouns are extracted from text.
+		"""
+
+		text = "Tanguy Ndombele told Jose Mourinho he never wants to play for him again following a clash earlier this week"
+		t = Tokenizer()
+		self.assertEqual([ 'Tanguy', 'Ndombele', 'Jose', 'Mourinho', 'clash', 'week' ], t._nouns(text))

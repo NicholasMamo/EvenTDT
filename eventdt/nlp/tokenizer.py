@@ -21,6 +21,7 @@ Creating and using a tokenizer is very simple:
 	Stemming is based on, and requires, NLTK.
 """
 
+from nltk import sent_tokenize, word_tokenize, pos_tag
 from nltk.stem.porter import *
 
 import os
@@ -97,13 +98,16 @@ class Tokenizer(object):
 	:vartype tokenize_pattern: :class:`re.Pattern`
 	:ivar camel_case_pattern: The pattern used to identify camel-case letters.
 	:vartype camel_case_pattern: :class:`re.Pattern`
+	:ivar nouns_only: A boolean indicating whether to extract only nouns.
+	:vartype nouns_only: bool
 	"""
 
 	def __init__(self, remove_mentions=True, remove_hashtags=False, split_hashtags=True,
 				 remove_numbers=True, remove_urls=True, remove_alt_codes=True,
 				 normalize_words=False, character_normalization_count=3, case_fold=True,
 				 remove_punctuation=True, remove_unicode_entities=False,
-				 min_length=3, stopwords=None, stem=True, normalize_special_characters=True):
+				 min_length=3, stopwords=None, stem=True, normalize_special_characters=True,
+				 nouns_only=False):
 		"""
 		Initialize the tokenizer.
 
@@ -145,6 +149,8 @@ class Tokenizer(object):
 		:type stem: bool
 		:param normalize_special_characters: A boolean indicating whether accents should be removed and replaced with simple unicode characters.
 		:type normalize_special_characters: bool
+		:param nouns_only: A boolean indicating whether to extract only nouns.
+		:type nouns_only: bool
 		"""
 
 		# TODO: Add number normalization (to remove commas)
@@ -173,6 +179,7 @@ class Tokenizer(object):
 		self.stopwords = stopwords
 		self.stem_tokens = stem
 		self.normalize_special_characters = normalize_special_characters
+		self.nouns_only = nouns_only
 
 		self.stem_cache = { }
 
@@ -217,7 +224,8 @@ class Tokenizer(object):
 		text = self.hashtag_pattern.sub("", text) if self.remove_hashtags else self.hashtag_pattern.sub("\g<1>", text)
 		text = self.number_pattern.sub("", text) if self.remove_numbers else text
 		text = ''.join([ char if char not in string.punctuation else ' ' for char in text ]) if self.remove_punctuation else text
-		tokens = self.tokenize_pattern.split(text)
+
+		tokens = self._nouns(text) if self.nouns_only else self.tokenize_pattern.split(text)
 
 		"""
 		Post-process the tokens.
@@ -255,6 +263,26 @@ class Tokenizer(object):
 				string = string.replace(f"#{hashtag}", components)
 
 		return string
+
+	def _nouns(self, string):
+		"""
+		Extract the nouns from the given string.
+		This process is based on NLTK.
+		It first splits sentences, then it tags words and finally extracts only nouns.
+
+		:param string: The string from which to extract nouns.
+		:type string: str
+
+		:return: A list of noun tokens.
+		:rtype: list of str
+		"""
+
+		sentences = sent_tokenize(string)
+		tags = [ tag for sentence in sentences
+					 for tag in pos_tag(word_tokenize(sentence)) ]
+		nouns = [ word for (word, tag) in tags
+					   if tag.startswith('N') ]
+		return nouns
 
 	def _stem(self, tokens):
 		"""
