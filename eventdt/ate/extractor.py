@@ -12,7 +12,7 @@ class Extractor(ABC):
 	"""
 
 	@abstractmethod
-	def extract(self, corpora):
+	def extract(self, corpora, candidates=None):
 		"""
 		Extract terms from the given corpora.
 
@@ -21,6 +21,10 @@ class Extractor(ABC):
 						Linguistic or hybrid approaches might need the original text to be available in the corpora.
 						For statistical approaches, a tokenized corpus might suffice.
 		:type corpora: str or list of str
+		:param candidates: A list of terms which may be extracted.
+					 This is useful when calculating scores takes a long time and the list of candidate terms are known in advance.
+					 If `None` is given, all words are considered to be candidates.
+		:type candidates: None or list of str
 
 		:return: A dictionary with terms as keys and their scores as values.
 		:rtype: dict
@@ -49,12 +53,16 @@ class DummyExtractor(Extractor):
 	It is used only for testing purposes.
 	"""
 
-	def extract(self, corpora):
+	def extract(self, corpora, candidates=None):
 		"""
 		Return an empty list of terms.
 
 		:param corpora: A path to a corpus or a list of paths to corpora where to look for terms.
 		:type corpora: str or list of str
+		:param candidates: A list of terms which may be extracted.
+					 This is useful when calculating scores takes a long time and the list of candidate terms are known in advance.
+					 If `None` is given, all words are considered to be candidates.
+		:type candidates: None or list of str
 
 		:return: An empty list of terms.
 		:rtype: list of str
