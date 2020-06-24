@@ -223,7 +223,7 @@ class Tokenizer(object):
 		text = self.mention_pattern.sub("", text) if self.remove_mentions else text
 		text = self.hashtag_pattern.sub("", text) if self.remove_hashtags else self.hashtag_pattern.sub("\g<1>", text)
 		text = self.number_pattern.sub("", text) if self.remove_numbers else text
-		text = ''.join([ char if char not in string.punctuation else ' ' for char in text ]) if self.remove_punctuation else text
+		text = ''.join([ char if char not in string.punctuation + '’' else ' ' for char in text ]) if self.remove_punctuation else text
 
 		tokens = self._nouns(text) if self.nouns_only else self.tokenize_pattern.split(text)
 

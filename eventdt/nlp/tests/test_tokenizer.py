@@ -510,6 +510,17 @@ class TestTokenizer(unittest.TestCase):
 		t = Tokenizer(remove_punctuation=False, stem=False)
 		self.assertEqual([ "toko-ekambi", "scores,", "assisted", "mendes!" ], t.tokenize(s))
 
+	def test_punctuation_removes_strange_characters(self):
+		"""
+		Test that punctuation removal includes strange characters.
+		"""
+
+		s = "Today’s line-up includes Kane"
+		t = Tokenizer(remove_punctuation=False, stem=False)
+		self.assertEqual([ "today’s", "line-up", "includes", "kane" ], t.tokenize(s))
+		t = Tokenizer(remove_punctuation=True, stem=False)
+		self.assertEqual([ "today", "line", "includes", "kane" ], t.tokenize(s))
+
 	def test_punctuation_retains_emojis(self):
 		"""
 		Test that punctuation removal does not remove emojis.
