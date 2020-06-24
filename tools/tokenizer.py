@@ -29,6 +29,7 @@ Accepted arguments:
 	- ``--character-normalization-count``	*<Optional>* The number of times a character must repeat for it to be normalized. Used only with the ``--normalize-words`` flag.
 	- ``--remove-stopwords``				*<Optional>* Remove stopwords from the tokens.
 	- ``-stem``								*<Optional>* Stem the tokens when constructing the tokenized corpus.
+	- ``--nouns-only``						*<Optional>* Extract only nouns from the corpus.
 
 """
 
@@ -60,6 +61,7 @@ def setup_args():
 		- ``--character-normalization-count``	*<Optional>* The number of times a character must repeat for it to be normalized. Used only with the ``--normalize-words`` flag.
 		- ``--remove-stopwords``				*<Optional>* Remove stopwords from the tokens.
 		- ``-stem``								*<Optional>* Stem the tokens when constructing the tokenized corpus.
+		- ``--nouns-only``						*<Optional>* Extract only nouns from the corpus.
 
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
@@ -89,6 +91,8 @@ def setup_args():
 						help='<Optional> The number of times a character must repeat for it to be normalized. Used only with the --normalize-words flag.')
 	parser.add_argument('--stem', action="store_true",
 						help='<Optional> Stem the tokens when constructing the tokenized corpus.')
+	parser.add_argument('--nouns-only', action="store_true",
+						help='<Optional>*Extract only nouns from the corpus.')
 
 	args = parser.parse_args()
 	return args
@@ -103,7 +107,7 @@ def main():
 	"""
 	args = setup_args()
 	prepare_output(args.output)
-	tokenizer = Tokenizer(normalize_words=args.normalize_words,
+	tokenizer = Tokenizer(normalize_words=args.normalize_words, nouns_only=args.nouns_only,
 						  character_normalization_count=args.character_normalization_count,
 						  remove_unicode_entities=args.remove_unicode_entities, stem=args.stem,
 						  stopwords=({ } if not args.remove_stopwords else stopwords.words('english')))

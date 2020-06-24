@@ -348,3 +348,47 @@ class TestTokenizer(unittest.TestCase):
 			self.assertTrue(not any( 'the' in json.loads(line)['tokens'] for line in outfile.readlines() ))
 			outfile.seek(0)
 			self.assertTrue(not any( 'this' in json.loads(line)['tokens'] for line in outfile.readlines() ))
+
+	def test_tokenize_corpus_nouns(self):
+		"""
+		Test that when tokenizing a corpus and retaining only nouns, other words do not remain.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'CRYCHE-100.json')
+		output = 'tools/tests/.out/tokenized.json'
+
+		"""
+		Tokenize the corpus and again collect the lines in the tokenized corpus.
+		"""
+		tool.prepare_output(output)
+		tool.tokenize_corpus(file, output, Tokenizer(nouns_only=True))
+		with open(output, 'r') as outfile:
+			self.assertTrue(not any( 'while' in json.loads(line)['tokens'] for line in outfile.readlines() ))
+			outfile.seek(0)
+			self.assertTrue(not any( 'feel' in json.loads(line)['tokens'] for line in outfile.readlines() ))
+			outfile.seek(0)
+			self.assertTrue(any( 'chelsea' in json.loads(line)['tokens'] for line in outfile.readlines() ))
+
+	def test_tokenize_corpus_nouns_subset(self):
+		"""
+		Test that when tokenizing a corpus and retaining only nouns, the tokens are a subset of the original tokenized corpus.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'CRYCHE-100.json')
+		output = [ 'tools/tests/.out/nouns.json',
+				   'tools/tests/.out/tokenized.json' ]
+
+		"""
+		Tokenize the corpus and again collect the lines in the tokenized corpus.
+		"""
+		tool.prepare_output(output[0])
+		tool.prepare_output(output[1])
+		tool.tokenize_corpus(file, output[0], Tokenizer(nouns_only=True, remove_punctuation=True))
+		tool.tokenize_corpus(file, output[1], Tokenizer(nouns_only=False, remove_punctuation=True))
+
+		with open(output[0], 'r') as nounfile, \
+			 open(output[1], 'r') as tokenfile:
+			for line in nounfile:
+				nouns = json.loads(line)['tokens']
+				tokens = json.loads(tokenfile.readline())['tokens']
+				self.assertTrue(all( noun in tokens for noun in nouns ))
