@@ -57,7 +57,7 @@ class TestPackage(unittest.TestCase):
 
 	def test_vocabulary_corpora(self):
 		"""
-		Test getting the vocabulary from multiple corpus.
+		Test getting the vocabulary from multiple corpora.
 		"""
 
 		paths = [ os.path.join(os.path.dirname(__file__), 'c1.json'),
@@ -91,3 +91,57 @@ class TestPackage(unittest.TestCase):
 
 		all_tokens = vocabulary(paths)
 		self.assertEqual(len(set(all_tokens)), len(all_tokens))
+
+	def test_nouns_empty_corpus(self):
+		"""
+		Test that the nouns of an empty corpus is an empty list.
+		"""
+
+		path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'tokenized', 'empty.json')
+		self.assertEqual([ ], nouns(path))
+
+	def test_nouns_single_corpus(self):
+		"""
+		Test extracting nouns from a corpus.
+		"""
+
+		path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json')
+		tokens = nouns(path)
+		self.assertTrue('corner' in tokens)
+		self.assertFalse('give' in tokens)
+		self.assertFalse('lost' in tokens)
+
+	def test_nouns_multiple_corpora(self):
+		"""
+		Test extracting nouns from multiple corpora.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'tokenized', 'BVBFCB-100.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json') ]
+		tokens = nouns(paths)
+		self.assertTrue('corner' in tokens)
+		self.assertFalse('give' in tokens)
+		self.assertFalse('lost' in tokens)
+
+	def test_nouns_set(self):
+		"""
+		Test that the returned nouns are a set with no duplicates.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'tokenized', 'BVBFCB-100.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json') ]
+
+		tokens = nouns(paths)
+		self.assertEqual(len(set(tokens)), len(tokens))
+
+	def test_nouns_no_stem(self):
+		"""
+		Test that when no stemming is specified, the words are not stemmed.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'tokenized', 'BVBFCB-100.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json') ]
+
+		tokens = nouns(paths, stem=False)
+		self.assertTrue('feeling' in tokens)
+		self.assertFalse('feel' in tokens)
