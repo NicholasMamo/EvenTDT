@@ -98,8 +98,15 @@ class Tokenizer(object):
 	:vartype tokenize_pattern: :class:`re.Pattern`
 	:ivar camel_case_pattern: The pattern used to identify camel-case letters.
 	:vartype camel_case_pattern: :class:`re.Pattern`
-	:ivar nouns_only: A boolean indicating whether to extract only nouns.
-	:vartype nouns_only: bool
+	:ivar pos: The parts of speech tags to keep.
+			   If `None` is given, all tokens are retained.
+			   For a list of possible tags and their meanings, run:
+
+			   .. code-block:: python
+
+			       import nltk
+				   nltk.help.upenn_tagset()
+	:vartype pos: None or list of str
 	"""
 
 	def __init__(self, remove_mentions=True, remove_hashtags=False, split_hashtags=True,
@@ -107,7 +114,7 @@ class Tokenizer(object):
 				 normalize_words=False, character_normalization_count=3, case_fold=True,
 				 remove_punctuation=True, remove_unicode_entities=False,
 				 min_length=3, stopwords=None, stem=True, normalize_special_characters=True,
-				 nouns_only=False):
+				 pos=None):
 		"""
 		Initialize the tokenizer.
 
@@ -149,8 +156,15 @@ class Tokenizer(object):
 		:type stem: bool
 		:param normalize_special_characters: A boolean indicating whether accents should be removed and replaced with simple unicode characters.
 		:type normalize_special_characters: bool
-		:param nouns_only: A boolean indicating whether to extract only nouns.
-		:type nouns_only: bool
+		:param pos: The parts of speech tags to keep.
+					If `None` is given, all tokens are retained.
+					For a list of possible tags and their meanings, run:
+
+					.. code-block:: python
+
+						import nltk
+						nltk.help.upenn_tagset()
+		:type pos: None or list of str
 		"""
 
 		# TODO: Add number normalization (to remove commas)
@@ -179,7 +193,7 @@ class Tokenizer(object):
 		self.stopwords = stopwords
 		self.stem_tokens = stem
 		self.normalize_special_characters = normalize_special_characters
-		self.nouns_only = nouns_only
+		self.pos = pos
 
 		self.stem_cache = { }
 
@@ -226,8 +240,8 @@ class Tokenizer(object):
 		"""
 		After pre-processing, certain steps occur differently depending on whether POS tagging is applied.
 		"""
-		if self.nouns_only:
-			tokens = self._nouns(text)
+		if self.pos:
+			tokens = self._pos(text)
 		else:
 			text = ''.join([ char if char not in string.punctuation + '’' else ' ' for char in text ]) if self.remove_punctuation else text
 			tokens = self.tokenize_pattern.split(text)
@@ -270,11 +284,11 @@ class Tokenizer(object):
 
 		return string
 
-	def _nouns(self, string):
+	def _pos(self, string):
 		"""
-		Extract the nouns from the given string.
+		Extract the words having the tokenizer's indicated parts-of-speech tags from the given string.
 		This process is based on NLTK.
-		It first splits sentences, then it tags words and finally extracts only nouns.
+		It first splits sentences, then it tags words and finally extracts only words tagged with the correct tags.
 
 		:param string: The string from which to extract nouns.
 		:type string: str
@@ -287,7 +301,7 @@ class Tokenizer(object):
 		tags = [ tag for sentence in sentences
 					 for tag in pos_tag(word_tokenize(sentence)) ]
 		nouns = [ word for (word, tag) in tags
-					   if tag.startswith('N') ]
+					   if tag in self.pos ]
 		return nouns
 
 	def _stem(self, tokens):

@@ -647,8 +647,52 @@ class TestTokenizer(unittest.TestCase):
 		"""
 
 		text = "I've gone through many revisions of this area, but I think this might be the one."
-		t = Tokenizer(nouns_only=True)
+		t = Tokenizer(pos=[ 'NN', 'NNS', 'NNP', 'NNPS' ])
 		self.assertEqual([ 'taxi', 'day', 'age' ], t.tokenize('Taxis can really go everywhere in this day and age'))
+
+	def test_tokenize_verbs_only(self):
+		"""
+		Test extracting verbs.
+		"""
+
+		text = "I have no idea how we balance this but with a midfield with Pogba and Ndombele its curtains for the low blocks that once haunted us."
+		t = Tokenizer(pos=[ 'VB', 'VBG', 'VBD', 'VBN', 'VBP', 'VBZ' ], stem=False)
+		self.assertEqual([ 'have', 'balance', 'haunted' ], t.tokenize(text))
+
+		t = Tokenizer(pos=[ 'VB', 'VBG', 'VBD', 'VBN', 'VBP', 'VBZ' ], stem=False)
+		text = "Is Rojo really starting if he doesn't shoot from 40 yards"
+		self.assertEqual([ 'starting', 'does', 'shoot' ], t.tokenize(text))
+
+	def test_tokenize_verbs_with_stemming(self):
+		"""
+		Test extracting verbs with stemming.
+		"""
+
+		text = "I have no idea how we balance this but with a midfield with Pogba and Ndombele its curtains for the low blocks that once haunted us."
+		t = Tokenizer(pos=[ 'VB', 'VBG', 'VBD', 'VBN', 'VBP', 'VBZ' ], stem=True)
+		self.assertEqual([ 'have', 'balanc', 'haunt' ], t.tokenize(text))
+
+		t = Tokenizer(pos=[ 'VB', 'VBG', 'VBD', 'VBN', 'VBP', 'VBZ' ], stem=True)
+		text = "Is Rojo really starting if he doesn't shoot from 40 yards"
+		self.assertEqual([ 'start', 'doe', 'shoot' ], t.tokenize(text))
+
+	def test_tokenize_adjectives_only(self):
+		"""
+		Test extracting adjectives.
+		"""
+
+		text = "Last match of the year at @ChelseaFC.. please win it for me."
+		t = Tokenizer(pos=[ 'JJ', 'JJR', 'JJS' ], stem=True)
+		self.assertEqual([ 'last' ], t.tokenize(text))
+
+	def test_tokenize_pos_multiple_sentences(self):
+		"""
+		Test extracting tokens using parts of speech from multiple sentences.
+		"""
+
+		text = "Come on boys. Let's get the 3 points!"
+		t = Tokenizer(pos=[ 'NN', 'NNS', 'NNP', 'NNPS' ])
+		self.assertEqual([ 'boy', 'point' ], t.tokenize(text))
 
 	def test_tokenize_tokens(self):
 		"""
@@ -656,7 +700,7 @@ class TestTokenizer(unittest.TestCase):
 		"""
 
 		text = "I've gone through many revisions of this area, but I think this might be the one."
-		t = Tokenizer(nouns_only=False, min_length=2)
+		t = Tokenizer(pos=None, min_length=2)
 		self.assertEqual([ 'taxi', 'can', 'realli', 'go', 'everywher', 'in', 'thi', 'day', 'and', 'age' ], t.tokenize('Taxis can really go everywhere in this day and age'))
 
 	def test_tokenize_tokens_nouns_subset(self):
@@ -665,9 +709,9 @@ class TestTokenizer(unittest.TestCase):
 		"""
 
 		text = "I've gone through many revisions of this area, but I think this might be the one."
-		t = Tokenizer(nouns_only=False, min_length=2)
+		t = Tokenizer(pos=None, min_length=2)
 		tokens = t.tokenize('Taxis can really go everywhere in this day and age')
-		t = Tokenizer(nouns_only=True)
+		t = Tokenizer(pos=[ 'NN', 'NNS', 'NNP', 'NNPS' ])
 		nouns = t.tokenize('Taxis can really go everywhere in this day and age')
 		self.assertTrue(all( noun in tokens for noun in nouns ))
 
@@ -677,10 +721,10 @@ class TestTokenizer(unittest.TestCase):
 		"""
 
 		text = "I have no idea how we balance this but with a midfield with Pogba and Ndombele its curtains for the low blocks that once haunted us."
-		t = Tokenizer()
-		self.assertEqual([ 'idea', 'midfield', 'Pogba', 'Ndombele', 'curtains', 'blocks' ], t._nouns(text))
+		t = Tokenizer(pos=[ 'NN', 'NNS', 'NNP', 'NNPS' ])
+		self.assertEqual([ 'idea', 'midfield', 'Pogba', 'Ndombele', 'curtains', 'blocks' ], t._pos(text))
 
-		t = Tokenizer(nouns_only=True)
+		t = Tokenizer(pos=[ 'NN', 'NNS', 'NNP', 'NNPS' ])
 		text = "Is Rojo really starting if he doesn't shoot from 40 yards"
 		self.assertEqual([ 'rojo', 'yard' ], t.tokenize(text))
 
@@ -690,8 +734,8 @@ class TestTokenizer(unittest.TestCase):
 		"""
 
 		text = "Night Call is now out on Xbox One and Nintendo Switch! We're so proud to see the game there and hope you'll enjoy your ride in Paris."
-		t = Tokenizer()
-		self.assertEqual([ 'Night', 'Call', 'Xbox', 'One', 'Nintendo', 'Switch', 'game', 'ride', 'Paris' ], t._nouns(text))
+		t = Tokenizer(pos=[ 'NN', 'NNS', 'NNP', 'NNPS' ])
+		self.assertEqual([ 'Night', 'Call', 'Xbox', 'One', 'Nintendo', 'Switch', 'game', 'ride', 'Paris' ], t._pos(text))
 
 	def test_nouns_only_punctuation(self):
 		"""
@@ -699,8 +743,8 @@ class TestTokenizer(unittest.TestCase):
 		"""
 
 		text = "Night Call is now out on Xbox One, Android and Nintendo Switch! We're so proud to see the game there and hope you'll enjoy your ride in Paris."
-		t = Tokenizer()
-		self.assertFalse(any( any( p in noun for p in [ '!', ',', '.' ] ) for noun in t._nouns(text) ))
+		t = Tokenizer(pos=[ 'NN', 'NNS', 'NNP', 'NNPS' ])
+		self.assertFalse(any( any( p in noun for p in [ '!', ',', '.' ] ) for noun in t._pos(text) ))
 
 	def test_nouns_only_retain_case(self):
 		"""
@@ -708,8 +752,8 @@ class TestTokenizer(unittest.TestCase):
 		"""
 
 		text = "A week in the life of Arsenal Football Club"
-		t = Tokenizer()
-		self.assertEqual([ 'week', 'life', 'Arsenal', 'Football', 'Club' ], t._nouns(text))
+		t = Tokenizer(pos=[ 'NN', 'NNS', 'NNP', 'NNPS' ])
+		self.assertEqual([ 'week', 'life', 'Arsenal', 'Football', 'Club' ], t._pos(text))
 
 	def test_nouns_proper(self):
 		"""
@@ -717,5 +761,5 @@ class TestTokenizer(unittest.TestCase):
 		"""
 
 		text = "Tanguy Ndombele told Jose Mourinho he never wants to play for him again following a clash earlier this week"
-		t = Tokenizer()
-		self.assertEqual([ 'Tanguy', 'Ndombele', 'Jose', 'Mourinho', 'clash', 'week' ], t._nouns(text))
+		t = Tokenizer(pos=[ 'NN', 'NNS', 'NNP', 'NNPS' ])
+		self.assertEqual([ 'Tanguy', 'Ndombele', 'Jose', 'Mourinho', 'clash', 'week' ], t._pos(text))
