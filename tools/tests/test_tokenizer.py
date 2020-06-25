@@ -46,6 +46,70 @@ class TestTokenizer(unittest.TestCase):
 		self.assertTrue(os.path.exists(dir))
 		os.rmdir(dir)
 
+	def test_get_tags_none(self):
+		"""
+		Test that when getting no tags, `None is returned`
+		"""
+
+		self.assertEqual(None,
+						 tool.get_tags(nouns=False, proper_nouns=False, verbs=False, adjectives=False))
+
+	def test_get_tags_nouns(self):
+		"""
+		Test getting the noun tags.
+		"""
+
+		self.assertEqual([ 'NN', 'NNS' ],
+						 tool.get_tags(nouns=True, proper_nouns=False, verbs=False, adjectives=False))
+
+	def test_get_tags_proper_nouns(self):
+		"""
+		Test getting the proper noun tags.
+		"""
+
+		self.assertEqual([ 'NNP', 'NNPS' ],
+						 tool.get_tags(nouns=False, proper_nouns=True, verbs=False, adjectives=False))
+
+	def test_get_tags_verbs(self):
+		"""
+		Test getting the verb tags.
+		"""
+
+		self.assertEqual([ 'VB', 'VBG', 'VBD', 'VBN', 'VBP', 'VBZ' ],
+						 tool.get_tags(nouns=False, proper_nouns=False, verbs=True, adjectives=False))
+
+	def test_get_tags_adjectives(self):
+		"""
+		Test getting the adjective tags.
+		"""
+
+		self.assertEqual([ 'JJ', 'JJR', 'JJS' ],
+						 tool.get_tags(nouns=False, proper_nouns=False, verbs=False, adjectives=True))
+
+	def test_get_tags_all_nouns(self):
+		"""
+		Test getting all noun tags.
+		"""
+
+		self.assertEqual([ 'NN', 'NNS', 'NNP', 'NNPS' ],
+						 tool.get_tags(nouns=True, proper_nouns=True, verbs=False, adjectives=False))
+
+	def test_get_tags_mix(self):
+		"""
+		Test getting mixed tags.
+		"""
+
+		self.assertEqual([ 'NN', 'NNS', 'JJ', 'JJR', 'JJS' ],
+						 tool.get_tags(nouns=True, proper_nouns=False, verbs=False, adjectives=True))
+
+	def test_get_tags_all(self):
+		"""
+		Test getting all tags.
+		"""
+
+		self.assertEqual([ 'NN', 'NNS', 'NNP', 'NNPS', 'VB', 'VBG', 'VBD', 'VBN', 'VBP', 'VBZ', 'JJ', 'JJR', 'JJS' ],
+						 tool.get_tags(nouns=True, proper_nouns=True, verbs=True, adjectives=True))
+
 	def test_get_text_full(self):
 		"""
 		Test that when getting the text from tweets, the full text is returned.
@@ -361,34 +425,11 @@ class TestTokenizer(unittest.TestCase):
 		Tokenize the corpus and again collect the lines in the tokenized corpus.
 		"""
 		tool.prepare_output(output)
-		tool.tokenize_corpus(file, output, Tokenizer(nouns_only=True))
+		tags = tool.get_tags(nouns=True, proper_nouns=False, verbs=False, adjectives=False)
+		tool.tokenize_corpus(file, output, Tokenizer(pos=tags))
 		with open(output, 'r') as outfile:
 			self.assertTrue(not any( 'while' in json.loads(line)['tokens'] for line in outfile.readlines() ))
 			outfile.seek(0)
 			self.assertTrue(not any( 'feel' in json.loads(line)['tokens'] for line in outfile.readlines() ))
 			outfile.seek(0)
 			self.assertTrue(any( 'chelsea' in json.loads(line)['tokens'] for line in outfile.readlines() ))
-
-	def test_tokenize_corpus_nouns_subset(self):
-		"""
-		Test that when tokenizing a corpus and retaining only nouns, the tokens are a subset of the original tokenized corpus.
-		"""
-
-		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'CRYCHE-100.json')
-		output = [ 'tools/tests/.out/nouns.json',
-				   'tools/tests/.out/tokenized.json' ]
-
-		"""
-		Tokenize the corpus and again collect the lines in the tokenized corpus.
-		"""
-		tool.prepare_output(output[0])
-		tool.prepare_output(output[1])
-		tool.tokenize_corpus(file, output[0], Tokenizer(nouns_only=True, remove_punctuation=True))
-		tool.tokenize_corpus(file, output[1], Tokenizer(nouns_only=False, remove_punctuation=True))
-
-		with open(output[0], 'r') as nounfile, \
-			 open(output[1], 'r') as tokenfile:
-			for line in nounfile:
-				nouns = json.loads(line)['tokens']
-				tokens = json.loads(tokenfile.readline())['tokens']
-				self.assertTrue(all( noun in tokens for noun in nouns ))

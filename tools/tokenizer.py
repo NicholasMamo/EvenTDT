@@ -122,7 +122,9 @@ def main():
 	"""
 	args = setup_args()
 	prepare_output(args.output)
-	tokenizer = Tokenizer(normalize_words=args.normalize_words, nouns_only=args.nouns_only,
+	tags = get_tags(nouns=args.nouns, proper_nouns=args.proper_nouns,
+					verbs=args.verbs, adjectives=args.adjectives)
+	tokenizer = Tokenizer(normalize_words=args.normalize_words, pos=tags,
 						  character_normalization_count=args.character_normalization_count,
 						  remove_unicode_entities=args.remove_unicode_entities, stem=args.stem,
 						  stopwords=({ } if not args.remove_stopwords else stopwords.words('english')))
@@ -139,6 +141,53 @@ def prepare_output(output):
 	dir = os.path.dirname(output)
 	if not os.path.exists(dir):
 		os.makedirs(dir)
+
+def get_tags(nouns, proper_nouns, verbs, adjectives):
+	"""
+	Get the parts-of-speech tags based on the command-line arguments.
+	If neither of the tags are given, `None` is returned.
+
+	:param nouns: A boolean indicating whether to extract nouns.
+	:type nouns: bool
+	:param proper_nouns: A boolean indicating whether to extract proper nouns.
+	:type proper_nouns: bool
+	:param verbs: A boolean indicating whether to extract verbs.
+	:type verbs: bool
+	:param adjectives: A boolean indicating whether to extract adjectives.
+	:type adjectives: bool
+
+	:return: A list of parts-of-speech tags corresponding to the given flags, or `None` if all tags should be collected.
+	:rtype: None or list of str
+	"""
+
+	"""
+	If no command-line arguments for parts-of-speech tags are given, collect all tags.
+	This happens by returning `None`.
+	"""
+	if not any([ nouns, proper_nouns, verbs, adjectives ]):
+		return None
+
+	map = {
+		'nouns': [ 'NN', 'NNS' ],
+		'proper_nouns': [ 'NNP', 'NNPS' ],
+		'verbs': [ 'VB', 'VBG', 'VBD', 'VBN', 'VBP', 'VBZ' ],
+		'adjectives': [ 'JJ', 'JJR', 'JJS' ]
+	}
+
+	tags = [ ]
+	if nouns:
+		tags.extend(map['nouns'])
+
+	if proper_nouns:
+		tags.extend(map['proper_nouns'])
+
+	if verbs:
+		tags.extend(map['verbs'])
+
+	if adjectives:
+		tags.extend(map['adjectives'])
+
+	return tags
 
 def tokenize_corpus(file, output, tokenizer, keep=None, remove_retweets=False):
 	"""
