@@ -474,6 +474,16 @@ class TestTokenizer(unittest.TestCase):
 		t = Tokenizer(stem=False, stopwords=list(stopwords.words("english")))
 		self.assertEqual([ 'gelson', 'martins', 'tries', 'shove', 'referee' ], t.tokenize(s))
 
+	@ignore_warnings
+	def test_stopwords_nltk_beginning(self):
+		"""
+		Test that when the list of NLTK stopwords is provided, the terms are removed even from the beginning of the sentence.
+		"""
+
+		s = "The Premier League clubs have spent 291M on agent fees"
+		t = Tokenizer(stem=False, stopwords=list(stopwords.words("english")))
+		self.assertEqual([ 'premier', 'league', 'clubs', 'spent', '291m', 'agent', 'fees' ], t.tokenize(s))
+
 	def test_case_folding(self):
 		"""
 		Test that when case folding is set, all tokens are set to lower-case.

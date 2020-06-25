@@ -249,9 +249,9 @@ class Tokenizer(object):
 		"""
 		Post-process the tokens.
 		"""
+		tokens = [ token.lower() for token in tokens ] if self.case_fold else tokens
 		tokens = [ token for token in tokens if token not in self.stopword_dict ]
 		tokens = [ token for token in tokens if len(token) >= self.min_length ]
-		tokens = [ token.lower() for token in tokens ] if self.case_fold else tokens
 		tokens = self._stem(tokens) if self.stem_tokens else tokens
 
 		return tokens
