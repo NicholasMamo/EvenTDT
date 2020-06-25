@@ -680,6 +680,10 @@ class TestTokenizer(unittest.TestCase):
 		t = Tokenizer()
 		self.assertEqual([ 'idea', 'midfield', 'Pogba', 'Ndombele', 'curtains', 'blocks' ], t._nouns(text))
 
+		t = Tokenizer(nouns_only=True)
+		text = "Is Rojo really starting if he doesn't shoot from 40 yards"
+		self.assertEqual([ 'rojo', 'yard' ], t.tokenize(text))
+
 	def test_nouns_only_multiple_sentence(self):
 		"""
 		Test extracting nouns from multiple sentences.

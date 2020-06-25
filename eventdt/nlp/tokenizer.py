@@ -210,7 +210,6 @@ class Tokenizer(object):
 		Split hashtags, casefold and remove accents.
 		"""
 		text = self._split_hashtags(text) if self.split_hashtags else text
-		text = text.lower() if self.case_fold else text
 		text = ''.join((c for c in unicodedata.normalize('NFD', text) if unicodedata.category(c) != 'Mn')) if self.normalize_special_characters else text
 
 		"""
@@ -223,15 +222,22 @@ class Tokenizer(object):
 		text = self.mention_pattern.sub("", text) if self.remove_mentions else text
 		text = self.hashtag_pattern.sub("", text) if self.remove_hashtags else self.hashtag_pattern.sub("\g<1>", text)
 		text = self.number_pattern.sub("", text) if self.remove_numbers else text
-		text = ''.join([ char if char not in string.punctuation + '’' else ' ' for char in text ]) if self.remove_punctuation else text
 
-		tokens = self._nouns(text) if self.nouns_only else self.tokenize_pattern.split(text)
+		"""
+		After pre-processing, certain steps occur differently depending on whether POS tagging is applied.
+		"""
+		if self.nouns_only:
+			tokens = self._nouns(text)
+		else:
+			text = ''.join([ char if char not in string.punctuation + '’' else ' ' for char in text ]) if self.remove_punctuation else text
+			tokens = self.tokenize_pattern.split(text)
 
 		"""
 		Post-process the tokens.
 		"""
 		tokens = [ token for token in tokens if token not in self.stopword_dict ]
 		tokens = [ token for token in tokens if len(token) >= self.min_length ]
+		tokens = [ token.lower() for token in tokens ] if self.case_fold else tokens
 		tokens = self._stem(tokens) if self.stem_tokens else tokens
 
 		return tokens
