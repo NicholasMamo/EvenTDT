@@ -7,6 +7,9 @@ The tokenizer can be used to pre-process a corpus.
 Each line in the tokenizer corresponds to a tweet.
 Each line is a JSON object containing, at minimum, the tweet ID, the text used for the tokenization and the tokens.
 
+Part-of-speech extraction can be specified by using the `--nouns`, `--proper-nouns`, `--verbs` and `--adjectives` arguments.
+If none are given, all tokens are collected, including other parts-of-speech, like adverbs.
+
 To run the script, use:
 
 .. code-block:: bash
@@ -29,7 +32,10 @@ Accepted arguments:
 	- ``--character-normalization-count``	*<Optional>* The number of times a character must repeat for it to be normalized. Used only with the ``--normalize-words`` flag.
 	- ``--remove-stopwords``				*<Optional>* Remove stopwords from the tokens.
 	- ``-stem``								*<Optional>* Stem the tokens when constructing the tokenized corpus.
-	- ``--nouns-only``						*<Optional>* Extract only nouns from the corpus.
+	- ``--nouns``							*<Optional>* Extract nouns from the corpus.
+	- ``--proper-nouns``					*<Optional>* Extract proper nouns from the corpus.
+	- ``--verbs``							*<Optional>* Extract verbs from the corpus.
+	- ``--adjectives``						*<Optional>* Extract adjectives from the corpus.
 
 """
 
@@ -61,7 +67,10 @@ def setup_args():
 		- ``--character-normalization-count``	*<Optional>* The number of times a character must repeat for it to be normalized. Used only with the ``--normalize-words`` flag.
 		- ``--remove-stopwords``				*<Optional>* Remove stopwords from the tokens.
 		- ``-stem``								*<Optional>* Stem the tokens when constructing the tokenized corpus.
-		- ``--nouns-only``						*<Optional>* Extract only nouns from the corpus.
+		- ``--nouns``							*<Optional>* Extract nouns from the corpus.
+		- ``--proper-nouns``					*<Optional>* Extract proper nouns from the corpus.
+		- ``--verbs``							*<Optional>* Extract verbs from the corpus.
+		- ``--adjectives``						*<Optional>* Extract adjectives from the corpus.
 
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
@@ -91,8 +100,14 @@ def setup_args():
 						help='<Optional> The number of times a character must repeat for it to be normalized. Used only with the --normalize-words flag.')
 	parser.add_argument('--stem', action="store_true",
 						help='<Optional> Stem the tokens when constructing the tokenized corpus.')
-	parser.add_argument('--nouns-only', action="store_true",
-						help='<Optional>*Extract only nouns from the corpus.')
+	parser.add_argument('--nouns', action="store_true",
+						help='<Optional> Extract nouns from the corpus.')
+	parser.add_argument('--proper-nouns', action="store_true",
+						help='<Optional> Extract proper nouns from the corpus.')
+	parser.add_argument('--verbs', action="store_true",
+						help='<Optional> Extract verbs from the corpus.')
+	parser.add_argument('--adjectives', action="store_true",
+						help='<Optional> Extract adjectives from the corpus.')
 
 	args = parser.parse_args()
 	return args
