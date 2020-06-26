@@ -323,6 +323,7 @@ class ELDConsumer(Consumer):
 			"""
 			active = await self._wait_for_input(max_inactivity=max_inactivity)
 			if not active:
+				logger.info(f"No input for { max_inactivity }s")
 				break
 
 			if self.queue.length():
