@@ -26,6 +26,7 @@ Accepted arguments:
 	- ``-u --understanding``		*<Optional>* The understanding file used to understand the event.
 	- ``-s --speed``				*<Optional>* The speed at which the file is consumed, defaults to 1.
 	- ``--skip``					*<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
+	- ``--max-inactivity``			*<Optional>* The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.
 	- ``--no-cache``				*<Optional>* If specified, the cached understanding is not used. The new understanding is cached instead.
 	- ``--scheme``					*<Optional>* If specified, the path to the :class:`~nlp.term_weighting.scheme.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.term_weighting.tf.TF` scheme is used.
 	- ``--min-size``				*<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
@@ -68,8 +69,9 @@ def setup_args():
 		- ``-c --class``				*<Required>* The consumer to use; supported: `ELDConsumer`, `FIREConsumer`, `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.
 		- ``-u --understanding``		*<Optional>* The understanding file used to understand the event.
 		- ``-s --speed``				*<Optional>* The speed at which the file is consumed, defaults to 1.
-		- ``--no-cache``				*<Optional>* If specified, the cached understanding is not used. The new understanding is cached instead.
 		- ``--skip``					*<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
+		- ``--max-inactivity``			*<Optional>* The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.
+		- ``--no-cache``				*<Optional>* If specified, the cached understanding is not used. The new understanding is cached instead.
 		- ``--scheme``					*<Optional>* If specified, the path to the :class:`~nlp.term_weighting.scheme.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.term_weighting.tf.TF` scheme is used. This can be overwritten if there is event understanding.
 		- ``--min-size``				*<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
 		- ``--threshold``				*<Optional>* The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
@@ -93,10 +95,12 @@ def setup_args():
 						help='<Optional> The understanding file used to understand the event.')
 	parser.add_argument('-s', '--speed', type=float, required=False, default=1,
 						help='<Optional> The understanding file used to understand the event.')
-	parser.add_argument('--no-cache', action="store_true",
-						help='<Optional> If specified, the cached understanding is not used. The new understanding is cached instead.')
 	parser.add_argument('--skip', type=int, required=False, default=0,
 						help='<Optional> The amount of time to skip from the beginning of the file in minutes, defaults to 0.')
+	parser.add_argument('--max-inactivity', type=int, required=False, default=60,
+						help='<Optional> The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.')
+	parser.add_argument('--no-cache', action="store_true",
+						help='<Optional> If specified, the cached understanding is not used. The new understanding is cached instead.')
 	parser.add_argument('--scheme', type=scheme, required=False, default=None,
 						help="""<Optional> If specified, the path to the term-weighting scheme file.
 								If it is not specified, the term frequency scheme is used instead.
@@ -171,7 +175,7 @@ def main():
 
 	asyncio.get_event_loop().close()
 
-def understand(understanding, consumer, scheme=None, *args, **kwargs):
+def understand(understanding, consumer, max_inactivity, scheme=None, *args, **kwargs):
 	"""
 	Run the understanding process.
 	The arguments and keyword arguments should be the command-line arguments.
@@ -191,6 +195,8 @@ def understand(understanding, consumer, scheme=None, *args, **kwargs):
 	:type understanding: str
 	:param consumer: The type of consumer to use.
 	:type consumer: :class:`~queues.consumers.consumer.Consumer`
+	:param max_inactivity: The maximum time, in seconds, to wait for new tweets to arrive before stopping.
+	:type max_inactivity: int
 	:param scheme: The scheme to use when consuming the file.
 	:type scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
 
@@ -220,7 +226,7 @@ def understand(understanding, consumer, scheme=None, *args, **kwargs):
 	stream = Process(target=stream_process,
 					 args=(loop, queue, understanding, ),
 					 kwargs={ 'speed': 120 })
-	understand = Process(target=understand_process, args=(comm, loop, consumer, ))
+	understand = Process(target=understand_process, args=(comm, loop, consumer, max_inactivity, ))
 	stream.start()
 	understand.start()
 	stream.join()
@@ -235,7 +241,7 @@ def understand(understanding, consumer, scheme=None, *args, **kwargs):
 
 	return understanding
 
-def consume(file, consumer, speed, scheme=None, skip=0,
+def consume(file, consumer, speed, max_inactivity, scheme=None, skip=0,
 			min_size=3, threshold=0.5, max_intra_similarity=0.8, *args, **kwargs):
 	"""
 	Run the consumption process.
@@ -254,6 +260,8 @@ def consume(file, consumer, speed, scheme=None, skip=0,
 	:type consumer: :class:`~queues.consumers.consumer.Consumer`
 	:param speed: The speed with which to read the file.
 	:type speed: float
+	:param max_inactivity: The maximum time, in seconds, to wait for new tweets to arrive before stopping.
+	:type max_inactivity: int
 	:param scheme: The scheme to use when consuming the file.
 	:type scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
 	:param skip: The amount of time to skip from the beginning of the file in minutes, defaults to 0.
@@ -292,7 +300,7 @@ def consume(file, consumer, speed, scheme=None, skip=0,
 	stream = Process(target=stream_process,
 					 args=(loop, queue, file, ),
 					 kwargs={ 'speed': speed, 'skip_time': skip * 60 })
-	consume = Process(target=consume_process, args=(comm, loop, consumer, ))
+	consume = Process(target=consume_process, args=(comm, loop, consumer, max_inactivity, ))
 	stream.start()
 	consume.start()
 
@@ -353,7 +361,7 @@ def stream_process(loop, queue, file, skip_time=0, speed=1, *args, **kwargs):
 
 	logger.info("Streaming ended")
 
-def understand_process(comm, loop, consumer):
+def understand_process(comm, loop, consumer, max_inactivity):
 	"""
 	Consume the incoming tweets to understand the event.
 
@@ -363,14 +371,18 @@ def understand_process(comm, loop, consumer):
 	:type loop: :class:`asyncio.unix_events._UnixSelectorEventLoop`
 	:param consumer: The consumer to use to process tweets.
 	:type consumer: :class:`~queues.consumers.consumer.Consumer`
+	:param max_inactivity: The maximum time, in seconds, to wait for new tweets to arrive before stopping.
+	:type max_inactivity: int
 	"""
 
-	async def understand(consumer):
+	async def understand(consumer, max_inactivity):
 		"""
 		Understand the queue's tweets.
 
 		:param consumer: The consumer to use to process tweets.
 		:type consumer: :class:`~queues.consumers.consumer.Consumer`
+		:param max_inactivity: The maximum time, in seconds, to wait for new tweets to arrive before stopping.
+		:type max_inactivity: int
 		"""
 
 		"""
@@ -382,12 +394,12 @@ def understand_process(comm, loop, consumer):
 
 		signal.signal(signal.SIGINT, sigint_handler)
 
-		return await consumer.understand(max_inactivity=60)
+		return await consumer.understand(max_inactivity=max_inactivity)
 
-	comm['understanding'] = loop.run_until_complete(asyncio.gather(understand(consumer)))[0]
+	comm['understanding'] = loop.run_until_complete(asyncio.gather(understand(consumer, max_inactivity)))[0]
 	logger.info("Understanding ended")
 
-def consume_process(comm, loop, consumer):
+def consume_process(comm, loop, consumer, max_inactivity):
 	"""
 	Consume the incoming tweets.
 
@@ -397,14 +409,18 @@ def consume_process(comm, loop, consumer):
 	:type loop: :class:`asyncio.unix_events._UnixSelectorEventLoop`
 	:param consumer: The consumer to use to process tweets.
 	:type consumer: :class:`~queues.consumers.consumer.Consumer`
+	:param max_inactivity: The maximum time, in seconds, to wait for new tweets to arrive before stopping.
+	:type max_inactivity: int
 	"""
 
-	async def consume(consumer):
+	async def consume(consumer, max_inactivity):
 		"""
 		Consume the queue's tweets.
 
 		:param consumer: The consumer to use to process tweets.
 		:type consumer: :class:`~queues.consumers.consumer.Consumer`
+		:param max_inactivity: The maximum time, in seconds, to wait for new tweets to arrive before stopping.
+		:type max_inactivity: int
 		"""
 
 		"""
@@ -416,9 +432,9 @@ def consume_process(comm, loop, consumer):
 
 		signal.signal(signal.SIGINT, sigint_handler)
 
-		return await consumer.run(max_inactivity=60)
+		return await consumer.run(max_inactivity=max_inactivity)
 
-	comm['timeline'] = loop.run_until_complete(consume(consumer))[0]
+	comm['timeline'] = loop.run_until_complete(consume(consumer, max_inactivity))[0]
 	logger.info("Consumption ended")
 
 def consumer(consumer):
