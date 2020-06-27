@@ -1,5 +1,5 @@
 """
-TF-IDF is a strong and common baseline for ATE tasks.
+Term Frequency-Inverse Document Frequency (TF-IDF) is a common and strong baseline for ATE tasks.
 The approach scores tokens based on their accumulated TF-IDF score.
 """
 
@@ -43,7 +43,7 @@ class TFIDFExtractor(Extractor):
 						   If `None` is given, all words are considered to be candidates.
 		:type candidates: None or list of str
 
-		:return: A dictionary with terms as keys and their scores as values.
+		:return: A dictionary with terms as keys and their TF-IDF scores as values.
 		:rtype: dict
 		"""
 
