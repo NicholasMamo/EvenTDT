@@ -98,7 +98,15 @@
 <li class="toctree-l1"><a class="reference internal" href="ml.html">10. Machine Learning</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">11. Automatic Term Extraction (ATE)</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-ate.linguistic">Linguistic</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-ate.stat">Statistical</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-ate.stat">Statistical</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-ate.stat.tf">Term Frequency</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-ate.stat.tfidf">Term Frequency-Inverse Document Frequency</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-ate.stat.corpus">Corpus Comparison</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-ate.stat.corpus.tfdcf">TF-DCF</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#module-ate.application">Application</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-ate.bootstrapping">Bootstrapping</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module-ate.bootstrapping.probability">Probability</a></li>
@@ -224,14 +232,19 @@ The abstract class is very simple and all extractors must, at least, provide fun
 This simple class necessitates only that all extractors accept a corpus or corpora and returns a list of terms.</p>
 <dl class="method">
 <dt id="ate.extractor.Extractor.extract">
-<em class="property">abstract </em><code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">corpora</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.extractor.Extractor.extract" title="Permalink to this definition">¶</a></dt>
+<em class="property">abstract </em><code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">corpora</em>, <em class="sig-param">candidates=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.extractor.Extractor.extract" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract terms from the given corpora.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>corpora</strong> (<em>str</em><em> or </em><em>list of str</em>) – A path to a corpus or a list of paths to corpora where to look for terms.
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpora</strong> (<em>str</em><em> or </em><em>list of str</em>) – A path to a corpus or a list of paths to corpora where to look for terms.
 The basic extractor does not place any restrictions of the corpora.
 Linguistic or hybrid approaches might need the original text to be available in the corpora.
-For statistical approaches, a tokenized corpus might suffice.</p>
+For statistical approaches, a tokenized corpus might suffice.</p></li>
+<li><p><strong>candidates</strong> (<em>None</em><em> or </em><em>list of str</em>) – A list of terms which may be extracted.
+This is useful when calculating scores takes a long time and the list of candidate terms are known in advance.
+If <cite>None</cite> is given, all words are considered to be candidates.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A dictionary with terms as keys and their scores as values.</p>
@@ -276,17 +289,22 @@ If a list of corpora is provided, this function returns the original input.</p>
 It is used only for testing purposes.</p>
 <dl class="method">
 <dt id="ate.extractor.DummyExtractor.extract">
-<code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">corpora</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.extractor.DummyExtractor.extract" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">corpora</em>, <em class="sig-param">candidates=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.extractor.DummyExtractor.extract" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return an empty list of terms.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>corpora</strong> (<em>str</em><em> or </em><em>list of str</em>) – A path to a corpus or a list of paths to corpora where to look for terms.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpora</strong> (<em>str</em><em> or </em><em>list of str</em>) – A path to a corpus or a list of paths to corpora where to look for terms.</p></li>
+<li><p><strong>candidates</strong> (<em>None</em><em> or </em><em>list of str</em>) – A list of terms which may be extracted.
+This is useful when calculating scores takes a long time and the list of candidate terms are known in advance.
+If <cite>None</cite> is given, all words are considered to be candidates.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>An empty list of terms.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list of str</p>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
@@ -322,10 +340,74 @@ Each document should have a <cite>tokens</cite> attribute.</p>
 </dl>
 </dd></dl>
 
+<dl class="function">
+<dt id="ate.linguistic.nouns">
+<code class="sig-name descname">nouns</code><span class="sig-paren">(</span><em class="sig-param">corpora</em>, <em class="sig-param">stem=True</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.linguistic.nouns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the nouns from the given corpora.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpora</strong> (<em>str</em><em> or </em><em>list of str</em>) – <p>A corpus, or corpora, of documents.
+If a string is given, it is assumed to be one corpus.
+If a list is given, it is assumed to be a list of corpora.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is assumed that the corpora were extracted using the tokenizer tool.
+Therefore each line should be a JSON string representing a document.
+Each document should have a <cite>tokens</cite> attribute.</p>
+</div>
+</p></li>
+<li><p><strong>stem</strong> (<em>bool</em>) – A boolean indicating whether the nouns should be stemmed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of tokens in the corpora.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 <div class="section" id="module-ate.stat">
 <span id="statistical"></span><h2>Statistical<a class="headerlink" href="#module-ate.stat" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-ate.stat.tfidf"></span><p>TF-IDF is a strong and common baseline for ATE tasks.
+<div class="section" id="module-ate.stat.tf">
+<span id="term-frequency"></span><h3>Term Frequency<a class="headerlink" href="#module-ate.stat.tf" title="Permalink to this headline">¶</a></h3>
+<p>Term Frequency (TF) is a simple ATE approach that ranks terms based on the number of times that they appear.</p>
+<dl class="class">
+<dt id="ate.stat.tf.TFExtractor">
+<em class="property">class </em><code class="sig-name descname">TFExtractor</code><a class="headerlink" href="#ate.stat.tf.TFExtractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>The TF extractor uses the TF term-weighting scheme to score all tokens in the given corpora.
+The class expects tokenized corpora.</p>
+<dl class="method">
+<dt id="ate.stat.tf.TFExtractor.extract">
+<code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">corpora</em>, <em class="sig-param">candidates=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.stat.tf.TFExtractor.extract" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract terms from the given corpora.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpora</strong> (<em>str</em><em> or </em><em>list of str</em>) – A path to a corpus or a list of paths to corpora where to look for terms.
+This extractor expects the corpora to be tokenized.</p></li>
+<li><p><strong>candidates</strong> (<em>None</em><em> or </em><em>list of str</em>) – A list of terms for which to calculate a score.
+If <cite>None</cite> is given, all words are considered to be candidates.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary with terms as keys and their TF scores as values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ate.stat.tfidf">
+<span id="term-frequency-inverse-document-frequency"></span><h3>Term Frequency-Inverse Document Frequency<a class="headerlink" href="#module-ate.stat.tfidf" title="Permalink to this headline">¶</a></h3>
+<p>Term Frequency-Inverse Document Frequency (TF-IDF) is a common and strong baseline for ATE tasks.
 The approach scores tokens based on their accumulated TF-IDF score.</p>
 <dl class="class">
 <dt id="ate.stat.tfidf.TFIDFExtractor">
@@ -350,15 +432,19 @@ The class expects tokenized corpora.</p>
 
 <dl class="method">
 <dt id="ate.stat.tfidf.TFIDFExtractor.extract">
-<code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">corpora</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.stat.tfidf.TFIDFExtractor.extract" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">corpora</em>, <em class="sig-param">candidates=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.stat.tfidf.TFIDFExtractor.extract" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract terms from the given corpora.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>corpora</strong> (<em>str</em><em> or </em><em>list of str</em>) – A path to a corpus or a list of paths to corpora where to look for terms.
-This extractor expects the corpora to be tokenized.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpora</strong> (<em>str</em><em> or </em><em>list of str</em>) – A path to a corpus or a list of paths to corpora where to look for terms.
+This extractor expects the corpora to be tokenized.</p></li>
+<li><p><strong>candidates</strong> (<em>None</em><em> or </em><em>list of str</em>) – A list of terms for which to calculate a score.
+If <cite>None</cite> is given, all words are considered to be candidates.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A dictionary with terms as keys and their scores as values.</p>
+<dd class="field-even"><p>A dictionary with terms as keys and their TF-IDF scores as values.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dict</p>
@@ -369,18 +455,121 @@ This extractor expects the corpora to be tokenized.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-ate.stat.corpus">
+<span id="corpus-comparison"></span><h3>Corpus Comparison<a class="headerlink" href="#module-ate.stat.corpus" title="Permalink to this headline">¶</a></h3>
+<p>Corpus comparison ATE approaches extract domain terms by comparing term incidence in domain corpora with their incidence in general domains.</p>
+<dl class="class">
+<dt id="ate.stat.corpus.ComparisonExtractor">
+<em class="property">class </em><code class="sig-name descname">ComparisonExtractor</code><span class="sig-paren">(</span><em class="sig-param">general</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.stat.corpus.ComparisonExtractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>The corpus comparison extractor stores the general corpora as a class variable.
+All domain comparisons use these general corpora to extract terms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><p><strong>general</strong> (<em>list of str</em>) – A list of paths to general corpora, to be used for comparison.
+Corpus comparison approaches expect the corpora to be tokenized.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="ate.stat.corpus.ComparisonExtractor.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">general</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.stat.corpus.ComparisonExtractor.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the corpus comparison extractor with the general corpora.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>general</strong> (<em>str</em><em> or </em><em>list of str</em>) – A path or a list of paths to general corpora, to be used for comparison.
+Corpus comparison approaches expect the corpora to be tokenized.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ate.stat.corpus.DummyComparisonExtractor">
+<em class="property">class </em><code class="sig-name descname">DummyComparisonExtractor</code><span class="sig-paren">(</span><em class="sig-param">general</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.stat.corpus.DummyComparisonExtractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dummy comparison extractor that does nothing and returns an empty list of terms.
+It is used only for testing purposes.</p>
+<dl class="method">
+<dt id="ate.stat.corpus.DummyComparisonExtractor.extract">
+<code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">corpora</em>, <em class="sig-param">candidates=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.stat.corpus.DummyComparisonExtractor.extract" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an empty list of terms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpora</strong> (<em>str</em><em> or </em><em>list of str</em>) – A path to a corpus or a list of paths to corpora where to look for terms.</p></li>
+<li><p><strong>candidates</strong> (<em>None</em><em> or </em><em>list of str</em>) – A list of terms which may be extracted.
+This is useful when calculating scores takes a long time and the list of candidate terms are known in advance.
+If <cite>None</cite> is given, all words are considered to be candidates.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An empty list of terms.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="module-ate.stat.corpus.tfdcf">
+<span id="tf-dcf"></span><h4>TF-DCF<a class="headerlink" href="#module-ate.stat.corpus.tfdcf" title="Permalink to this headline">¶</a></h4>
+<p>Term Frequency-Disjoint Corpora Frequency (TF-DCF) is an ATE approach proposed by Lopes et al.
+TF-DCF compares the term frequency of a term in a domain corpus against general corpora.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Implementation based on the algorithm outlined in <a class="reference external" href="https://www.sciencedirect.com/science/article/abs/pii/S0950705115004979">Estimating term domain relevance through term frequency, disjoint corpora frequency - tf-dcf by Lopes et al. (2016)</a>.
+This paper is based on an earlier paper by the same authors.</p>
+</div>
+<dl class="class">
+<dt id="ate.stat.corpus.tfdcf.TFDCFExtractor">
+<em class="property">class </em><code class="sig-name descname">TFDCFExtractor</code><span class="sig-paren">(</span><em class="sig-param">general</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.stat.corpus.tfdcf.TFDCFExtractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>The TF-DCF extractor stores a list of general corpora.
+It uses these corpora to identify terms that appear very often in domain-specific corpora than in the general corpora.</p>
+<dl class="method">
+<dt id="ate.stat.corpus.tfdcf.TFDCFExtractor.extract">
+<code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">corpora</em>, <em class="sig-param">candidates=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.stat.corpus.tfdcf.TFDCFExtractor.extract" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract terms by scoring them using TF-DCF.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpora</strong> (<em>str</em><em> or </em><em>list of str</em>) – A path to a corpus or a list of paths to corpora where to look for terms.</p></li>
+<li><p><strong>candidates</strong> (<em>None</em><em> or </em><em>list of str</em>) – A list of terms which may be extracted.
+If <cite>None</cite> is given, all words are considered to be candidates.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary with terms as keys and their TF-DCF scores as values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+</div>
 <div class="section" id="module-ate.application">
 <span id="application"></span><h2>Application<a class="headerlink" href="#module-ate.application" title="Permalink to this headline">¶</a></h2>
 <p>Application-based approaches use the target application to learn the domain lexicon.</p>
 <span class="target" id="module-ate.application.event"></span><p>Event-based ATE approaches use either event corpora or the output timelines to score and rank domain terms.</p>
-<dl class="function">
+<dl class="class">
 <dt id="ate.application.event.EF">
-<code class="sig-name descname">EF</code><span class="sig-paren">(</span><em class="sig-param">timelines</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.application.event.EF" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">EF</code><a class="headerlink" href="#ate.application.event.EF" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Event Frequency (EF) extractor looks for terms in timelines.
+The scoring is based on simple frequency.</p>
+<dl class="method">
+<dt id="ate.application.event.EF.extract">
+<code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">timelines</em>, <em class="sig-param">candidates=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.application.event.EF.extract" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the event frequency of terms from the given timelines.
 The event frequency is simply the number of events in which term appears in a development.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>timelines</strong> (<em>str</em><em> or </em><em>list of str</em>) – <p>The path to a timeline or a list of paths to timelines.
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timelines</strong> (<em>str</em><em> or </em><em>list of str</em>) – <p>The path to a timeline or a list of paths to timelines.
 If a string is given, it is assumed to be one event timeline.
 If a list is given, it is assumed to be a list of event timelines.</p>
 <div class="admonition note">
@@ -390,7 +579,10 @@ If a list is given, it is assumed to be a list of event timelines.</p>
 </dd>
 </dl>
 </div>
-</p>
+</p></li>
+<li><p><strong>candidates</strong> (<em>None</em><em> or </em><em>list of str</em>) – A list of terms for which to calculate a score.
+If <cite>None</cite> is given, all words are considered to be candidates.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A dictionary with terms as keys and their event frequency as the values.</p>
@@ -401,9 +593,32 @@ If a list is given, it is assumed to be a list of event timelines.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="ate.application.event.logEF">
-<code class="sig-name descname">logEF</code><span class="sig-paren">(</span><em class="sig-param">timelines</em>, <em class="sig-param">base=2</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.application.event.logEF" title="Permalink to this definition">¶</a></dt>
+</dd></dl>
+
+<dl class="class">
+<dt id="ate.application.event.LogEF">
+<em class="property">class </em><code class="sig-name descname">LogEF</code><span class="sig-paren">(</span><em class="sig-param">base=2</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.application.event.LogEF" title="Permalink to this definition">¶</a></dt>
+<dd><p>The logarithmic Event Frequency (EF) extractor looks for terms in timelines.
+The scoring is the logarithm of the simple frequency, as calculated in <a class="reference internal" href="#ate.application.event.EF" title="ate.application.event.EF"><code class="xref py py-class docutils literal notranslate"><span class="pre">EF</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><p><strong>base</strong> (<em>float</em>) – The logarithmic base.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="ate.application.event.LogEF.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">base=2</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.application.event.LogEF.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the logarithmic EF extractor with the logarithmic base.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>base</strong> (<em>float</em>) – The logarithmic base.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ate.application.event.LogEF.extract">
+<code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">timelines</em>, <em class="sig-param">candidates=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.application.event.LogEF.extract" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the logarithmic event frequency of terms from the given timelines.
 The event frequency is simply the number of events in which term appears in a development.</p>
 <p>This weighting scheme is based on the <a class="reference internal" href="#ate.application.event.EF" title="ate.application.event.EF"><code class="xref py py-func docutils literal notranslate"><span class="pre">EF()</span></code></a> weighting scheme.</p>
@@ -421,11 +636,12 @@ If a list is given, it is assumed to be a list of event timelines.</p>
 </dl>
 </div>
 </p></li>
-<li><p><strong>base</strong> (<em>floa</em>) – The logarithmic base.</p></li>
+<li><p><strong>candidates</strong> (<em>None</em><em> or </em><em>list of str</em>) – A list of terms for which to calculate a score.
+If <cite>None</cite> is given, all words are considered to be candidates.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A dictionary with terms as keys and their event frequency as the values.</p>
+<dd class="field-even"><p>A dictionary with terms as keys and their logarithmic event frequency as the values.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dict</p>
@@ -433,9 +649,41 @@ If a list is given, it is assumed to be a list of event timelines.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+</dd></dl>
+
+<dl class="class">
 <dt id="ate.application.event.EFIDF">
-<code class="sig-name descname">EFIDF</code><span class="sig-paren">(</span><em class="sig-param">timelines</em>, <em class="sig-param">idf</em>, <em class="sig-param">base=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.application.event.EFIDF" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">EFIDF</code><span class="sig-paren">(</span><em class="sig-param">scheme</em>, <em class="sig-param">base=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.application.event.EFIDF" title="Permalink to this definition">¶</a></dt>
+<dd><p>The EF-IDF extractor combines the event frequency with the inverse document frequency.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="nlp.html#module-nlp.term_weighting.scheme" title="nlp.term_weighting.scheme"><strong>scheme</strong></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code>) – The IDF table to use to score terms.</p></li>
+<li><p><strong>base</strong> (<em>None</em><em> or </em><em>float</em>) – The logarithmic base.
+If it is given, the <a class="reference internal" href="#ate.application.event.LogEF" title="ate.application.event.LogEF"><code class="xref py py-class docutils literal notranslate"><span class="pre">LogEF</span></code></a> class is used.
+Otherwise, the <a class="reference internal" href="#ate.application.event.EF" title="ate.application.event.EF"><code class="xref py py-class docutils literal notranslate"><span class="pre">EF</span></code></a> class is used.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="ate.application.event.EFIDF.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">scheme</em>, <em class="sig-param">base=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.application.event.EFIDF.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the EF-IDF extractor with the scheme used to score terms and the logarithmic base.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>idf</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code>) – The IDF table to use to score terms.</p></li>
+<li><p><strong>base</strong> (<em>None</em><em> or </em><em>float</em>) – The logarithmic base.
+If it is given, the <a class="reference internal" href="#ate.application.event.LogEF" title="ate.application.event.LogEF"><code class="xref py py-class docutils literal notranslate"><span class="pre">LogEF</span></code></a> class is used.
+Otherwise, the <a class="reference internal" href="#ate.application.event.EF" title="ate.application.event.EF"><code class="xref py py-class docutils literal notranslate"><span class="pre">EF</span></code></a> class is used.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ate.application.event.EFIDF.extract">
+<code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">timelines</em>, <em class="sig-param">candidates=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.application.event.EFIDF.extract" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the event-frequency-inverse-document-frequency metric for terms.
 This is a local-global weighting scheme.
 The local scheme is the event frequency, and the global scheme is the inverse-document-frequency.
@@ -454,12 +702,12 @@ If a list is given, it is assumed to be a list of event timelines.</p>
 </dl>
 </div>
 </p></li>
-<li><p><strong>idf</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code>) – The IDF table to use to score terms.</p></li>
-<li><p><strong>base</strong> (<em>floa</em>) – The logarithmic base.</p></li>
+<li><p><strong>candidates</strong> (<em>None</em><em> or </em><em>list of str</em>) – A list of terms for which to calculate a score.
+If <cite>None</cite> is given, all words are considered to be candidates.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A dictionary with terms as keys and their EF-IDF score as the values.</p>
+<dd class="field-even"><p>A dictionary with terms as keys and their EF-IDF scores as the values.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dict</p>
@@ -467,35 +715,81 @@ If a list is given, it is assumed to be a list of event timelines.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="ate.application.event.variability">
-<code class="sig-name descname">variability</code><span class="sig-paren">(</span><em class="sig-param">term</em>, <em class="sig-param">idfs</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.application.event.variability" title="Permalink to this definition">¶</a></dt>
+</dd></dl>
+
+<dl class="class">
+<dt id="ate.application.event.Variability">
+<em class="property">class </em><code class="sig-name descname">Variability</code><span class="sig-paren">(</span><em class="sig-param">base=10</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.application.event.Variability" title="Permalink to this definition">¶</a></dt>
+<dd><p>Variability is a metric that measures the consistency of appearance of a term across different events.
+The variability metric is based on the chi-square statistic.
+The intuition is that terms that appear more consistently in different events are more likely to belong to the domain.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><p><strong>base</strong> (<em>float</em>) – The logarithmic base.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="ate.application.event.Variability.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">base=10</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.application.event.Variability.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the variability extractor with a logarithmic base.
+This base is used because the variability score is the inverse of the chi-square.
+Therefore scores end up being very close to each other without a logarithm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>base</strong> (<em>float</em>) – The logarithmic base.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ate.application.event.Variability.extract">
+<code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">idfs</em>, <em class="sig-param">candidates=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.application.event.Variability.extract" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate how variable the term is across events.
 A term is highly-variable if it appears disproportionately in one or a few events.
-A low variability indicates that the term appears consistently across all events.</p>
+A low variability indicates that the term appears consistently across all events.
+To reflect this behavior in the score, the inverse of the variability is returned.</p>
 <p>The method follows the leave-one-out principle: each event is compared against all other events.
 The final result is an average weightg according to the event sizes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>term</strong> (<em>str</em>) – The term for which to calculate the variability.</p></li>
 <li><p><strong>idfs</strong> (list of <a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a>) – A list of IDFs, one for each event.</p></li>
+<li><p><strong>candidates</strong> (<em>None</em><em> or </em><em>list of str</em>) – A list of terms for which to calculate a score.
+If <cite>None</cite> is given, all words are considered to be candidates.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The variability of the term.
+<dd class="field-even"><p>A dictionary with terms as keys and their inverse variability score as the values.
 A term is highly-variable if it appears disproportionately in one or a few events.
-A low variability indicates that the term appears consistently across all events.</p>
+A low variability indicates that the term appears consistently across all events.
+To reflect this behavior in the score, the inverse of the variability is returned.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="ate.application.event._variability_contingency_table">
-<code class="sig-name descname">_variability_contingency_table</code><span class="sig-paren">(</span><em class="sig-param">term</em>, <em class="sig-param">current</em>, <em class="sig-param">comparison</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.application.event._variability_contingency_table" title="Permalink to this definition">¶</a></dt>
+<dl class="method">
+<dt id="ate.application.event.Variability._vocabulary">
+<code class="sig-name descname">_vocabulary</code><span class="sig-paren">(</span><em class="sig-param">idfs</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.application.event.Variability._vocabulary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the vocabulary from the given IDFs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>idfs</strong> (list of <a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a>) – A list of IDFs, one for each event.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of terms in the given IDFs.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ate.application.event.Variability._variability_contingency_table">
+<code class="sig-name descname">_variability_contingency_table</code><span class="sig-paren">(</span><em class="sig-param">term</em>, <em class="sig-param">current</em>, <em class="sig-param">comparison</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.application.event.Variability._variability_contingency_table" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the contingency table comparing the term’s appearance in the current event versus other events.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -517,6 +811,8 @@ These correspond to the first and second rows respectively.</p>
 <dd class="field-odd"><p>tuple of float</p>
 </dd>
 </dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>

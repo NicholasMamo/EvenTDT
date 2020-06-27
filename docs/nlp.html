@@ -106,7 +106,9 @@
 <li class="toctree-l1"><a class="reference internal" href="summarization.html">7. Summarization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="twitter.html">8. Twitter</a></li>
 <li class="toctree-l1"><a class="reference internal" href="consumers.html">9. Consumers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="other.html">10. Other</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ml.html">10. Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ate.html">11. Automatic Term Extraction (ATE)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other.html">12. Other</a></li>
 </ul>
 
             
@@ -322,7 +324,7 @@ Creating and using a tokenizer is very simple:</p>
 </div>
 <dl class="class">
 <dt id="nlp.tokenizer.Tokenizer">
-<em class="property">class </em><code class="sig-name descname">Tokenizer</code><span class="sig-paren">(</span><em class="sig-param">remove_mentions=True</em>, <em class="sig-param">remove_hashtags=False</em>, <em class="sig-param">split_hashtags=True</em>, <em class="sig-param">remove_numbers=True</em>, <em class="sig-param">remove_urls=True</em>, <em class="sig-param">remove_alt_codes=True</em>, <em class="sig-param">normalize_words=False</em>, <em class="sig-param">character_normalization_count=3</em>, <em class="sig-param">case_fold=True</em>, <em class="sig-param">remove_punctuation=True</em>, <em class="sig-param">remove_unicode_entities=False</em>, <em class="sig-param">min_length=3</em>, <em class="sig-param">stopwords=None</em>, <em class="sig-param">stem=True</em>, <em class="sig-param">normalize_special_characters=True</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.tokenizer.Tokenizer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Tokenizer</code><span class="sig-paren">(</span><em class="sig-param">remove_mentions=True</em>, <em class="sig-param">remove_hashtags=False</em>, <em class="sig-param">split_hashtags=True</em>, <em class="sig-param">remove_numbers=True</em>, <em class="sig-param">remove_urls=True</em>, <em class="sig-param">remove_alt_codes=True</em>, <em class="sig-param">normalize_words=False</em>, <em class="sig-param">character_normalization_count=3</em>, <em class="sig-param">case_fold=True</em>, <em class="sig-param">remove_punctuation=True</em>, <em class="sig-param">remove_unicode_entities=False</em>, <em class="sig-param">min_length=3</em>, <em class="sig-param">stopwords=None</em>, <em class="sig-param">stem=True</em>, <em class="sig-param">normalize_special_characters=True</em>, <em class="sig-param">pos=None</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.tokenizer.Tokenizer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The tokenizer takes in strings and converts them into tokens.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
@@ -361,12 +363,20 @@ The keys are the original tokens and the values are their stems.</p></li>
 <li><p><strong>number_pattern</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">re.Pattern</span></code>) – The pattern used to identify numbers in the text.</p></li>
 <li><p><strong>tokenize_pattern</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">re.Pattern</span></code>) – The pattern used to split the text into tokens.</p></li>
 <li><p><strong>camel_case_pattern</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">re.Pattern</span></code>) – The pattern used to identify camel-case letters.</p></li>
+<li><p><strong>pos</strong> (<em>None</em><em> or </em><em>list of str</em>) – <p>The parts of speech tags to keep.
+If <cite>None</cite> is given, all tokens are retained.
+For a list of possible tags and their meanings, run:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">nltk</span>
+    <span class="n">nltk</span><span class="o">.</span><span class="n">help</span><span class="o">.</span><span class="n">upenn_tagset</span><span class="p">()</span>
+</pre></div>
+</div>
+</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="method">
 <dt id="nlp.tokenizer.Tokenizer.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">remove_mentions=True</em>, <em class="sig-param">remove_hashtags=False</em>, <em class="sig-param">split_hashtags=True</em>, <em class="sig-param">remove_numbers=True</em>, <em class="sig-param">remove_urls=True</em>, <em class="sig-param">remove_alt_codes=True</em>, <em class="sig-param">normalize_words=False</em>, <em class="sig-param">character_normalization_count=3</em>, <em class="sig-param">case_fold=True</em>, <em class="sig-param">remove_punctuation=True</em>, <em class="sig-param">remove_unicode_entities=False</em>, <em class="sig-param">min_length=3</em>, <em class="sig-param">stopwords=None</em>, <em class="sig-param">stem=True</em>, <em class="sig-param">normalize_special_characters=True</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.tokenizer.Tokenizer.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">remove_mentions=True</em>, <em class="sig-param">remove_hashtags=False</em>, <em class="sig-param">split_hashtags=True</em>, <em class="sig-param">remove_numbers=True</em>, <em class="sig-param">remove_urls=True</em>, <em class="sig-param">remove_alt_codes=True</em>, <em class="sig-param">normalize_words=False</em>, <em class="sig-param">character_normalization_count=3</em>, <em class="sig-param">case_fold=True</em>, <em class="sig-param">remove_punctuation=True</em>, <em class="sig-param">remove_unicode_entities=False</em>, <em class="sig-param">min_length=3</em>, <em class="sig-param">stopwords=None</em>, <em class="sig-param">stem=True</em>, <em class="sig-param">normalize_special_characters=True</em>, <em class="sig-param">pos=None</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.tokenizer.Tokenizer.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the tokenizer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -394,6 +404,14 @@ This approach is adopted since Python uses hashing to check whether a key is in 
 However, they may also be provided as a dict directly.</p></li>
 <li><p><strong>stem</strong> (<em>bool</em>) – A boolean indicating whether the tokens should be stemmed.</p></li>
 <li><p><strong>normalize_special_characters</strong> (<em>bool</em>) – A boolean indicating whether accents should be removed and replaced with simple unicode characters.</p></li>
+<li><p><strong>pos</strong> (<em>None</em><em> or </em><em>list of str</em>) – <p>The parts of speech tags to keep.
+If <cite>None</cite> is given, all tokens are retained.
+For a list of possible tags and their meanings, run:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">nltk</span>
+<span class="n">nltk</span><span class="o">.</span><span class="n">help</span><span class="o">.</span><span class="n">upenn_tagset</span><span class="p">()</span>
+</pre></div>
+</div>
+</p></li>
 </ul>
 </dd>
 </dl>
@@ -435,6 +453,25 @@ However, they may also be provided as a dict directly.</p></li>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nlp.tokenizer.Tokenizer._pos">
+<code class="sig-name descname">_pos</code><span class="sig-paren">(</span><em class="sig-param">string</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.tokenizer.Tokenizer._pos" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the words having the tokenizer’s indicated parts-of-speech tags from the given string.
+This process is based on NLTK.
+It first splits sentences, then it tags words and finally extracts only words tagged with the correct tags.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>string</strong> (<em>str</em>) – The string from which to extract nouns.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of noun tokens.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of str</p>
 </dd>
 </dl>
 </dd></dl>

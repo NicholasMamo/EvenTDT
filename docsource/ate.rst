@@ -32,7 +32,34 @@ Statistical
    :private-members:
    :special-members:
 
+Term Frequency
+--------------
+
+.. automodule:: ate.stat.tf
+   :members:
+   :private-members:
+   :special-members:
+
+Term Frequency-Inverse Document Frequency
+-----------------------------------------
+
 .. automodule:: ate.stat.tfidf
+   :members:
+   :private-members:
+   :special-members:
+
+Corpus Comparison
+-----------------
+
+.. automodule:: ate.stat.corpus
+   :members:
+   :private-members:
+   :special-members:
+
+TF-DCF
+^^^^^^
+
+.. automodule:: ate.stat.corpus.tfdcf
    :members:
    :private-members:
    :special-members:
@@ -44,6 +71,9 @@ Application
    :members:
    :private-members:
    :special-members:
+
+Events
+^^^^^^
 
 .. automodule:: ate.application.event
    :members:
