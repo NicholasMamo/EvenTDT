@@ -149,14 +149,15 @@ class WikipediaExtrapolator(Extrapolator):
 		second_level = links.collect(frequent_links, introduction_only=False, separate=True)
 		link_frequency = self._link_frequency(second_level)
 		link_frequency = { link: frequency for link, frequency in link_frequency.items() if not self._has_year(self._remove_brackets(link)) }
-		cutoff = sorted(link_frequency.values(), reverse=True)[self.second_level_links - 1] if len(link_frequency) >= self.second_level_links else max(link_frequency.values())
-		frequent_links = [ link for link in link_frequency if link_frequency.get(link) >= cutoff ]
-		frequent_links = [ link for link in frequent_links if link not in list(graph.nodes) ]
-		second_level = {
-			article: [ link for link in second_level.get(article) if link in frequent_links ]
-					   for article in second_level
-		}
-		self._add_to_graph(graph, second_level, threshold=self.second_level_similarity)
+		if link_frequency:
+			cutoff = sorted(link_frequency.values(), reverse=True)[self.second_level_links - 1] if len(link_frequency) >= self.second_level_links else max(link_frequency.values())
+			frequent_links = [ link for link in link_frequency if link_frequency.get(link) >= cutoff ]
+			frequent_links = [ link for link in frequent_links if link not in list(graph.nodes) ]
+			second_level = {
+				article: [ link for link in second_level.get(article) if link in frequent_links ]
+						   for article in second_level
+			}
+			self._add_to_graph(graph, second_level, threshold=self.second_level_similarity)
 
 		"""
 		Partition the graph into communities.
