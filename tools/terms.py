@@ -16,9 +16,10 @@ To run the script, use:
 Accepted arguments:
 
 	- ``-f --files``		*<Required>* The input corpora from where to extract domain-specific terms.
-	- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `TF`, `TFIDF`.
-	- ``--tfidf``			*<Required>* The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).
+	- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `TF`, `TFIDF`, `TFDCF`.
 	- ``-o --output``		*<Required>* The path to the file where to store the extracted terms.
+	- ``--tfidf``			*<Optional>* The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).
+	- ``--general``			*<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `TF-DCF` method).
 """
 
 import argparse
@@ -35,6 +36,7 @@ import tools
 from logger import logger
 from ate import linguistic
 from ate.stat import TFExtractor, TFIDFExtractor
+from ate.stat.corpus import TFDCFExtractor
 
 parser = argparse.ArgumentParser(description="Extract terms from domain-specific corpora.")
 def setup_args():
@@ -44,9 +46,10 @@ def setup_args():
 	Accepted arguments:
 
 		- ``-f --files``		*<Required>* The input corpora from where to extract domain-specific terms.
-		- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `TF`, `TFIDF`.
-		- ``--tfidf``			*<Required>* The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).
+		- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `TF`, `TFIDF`, `TFDCF`.
 		- ``-o --output``		*<Required>* The path to the file where to store the extracted terms.
+		- ``--tfidf``			*<Optional>* The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).
+		- ``--general``			*<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `TF-DCF` method).
 
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
@@ -57,12 +60,15 @@ def setup_args():
 						help='<Required> The input corpora from where to extract domain-specific terms.')
 	parser.add_argument('-m', '--method',
 						type=method, required=True,
-						help='<Required> The method to use to look for similar keywords; supported: `TF,` `TFIDF`.')
+						help='<Required> The method to use to look for similar keywords; supported: `TF`, `TFIDF`, `TFDCF`.')
 	parser.add_argument('-o', '--output',
 						type=str, required=True,
 						help='<Required> The path to the file where to store the extracted terms.')
 	parser.add_argument('--tfidf', required=False,
-						help='<Required> The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).')
+						help='<Optional> The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).')
+	parser.add_argument('--general',
+						nargs='+', required=False,
+						help='<Optional> A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `TF-DCF` method).')
 
 	args = parser.parse_args()
 	return args
@@ -106,6 +112,11 @@ def instantiate(args):
 			parser.error("The TF-IDF scheme is required with the TF-IDF method.")
 
 		return args.method(tools.load(args.tfidf)['tfidf'])
+	elif args.method == TFDCFExtractor:
+		if not args.general:
+			parser.error("One or more paths to general corpora are required with TF-DCF method.")
+
+		return args.method(args.general)
 
 	return args.method()
 
@@ -116,6 +127,7 @@ def method(method):
 
 		#. :func:`~ate.stat.tfidf.TFExtractor`,
 		#. :func:`~ate.stat.tfidf.TFIDFExtractor`
+		#. :func:`~ate.stat.corpus.tfdcf.TFDCFExtractor`
 
 	:param method: The method string.
 	:type method: str
@@ -129,6 +141,7 @@ def method(method):
 	methods = {
 		'tf': TFExtractor,
 		'tfidf': TFIDFExtractor,
+		'tfdcf': TFDCFExtractor,
 	}
 
 	if method.lower() in methods:
