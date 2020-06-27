@@ -1,5 +1,5 @@
 """
-Test the functionality of the TF-IDF extractor.
+Test the functionality of the TF extractor.
 """
 
 import json
@@ -14,13 +14,13 @@ for path in paths:
 	if path not in sys.path:
 	    sys.path.append(path)
 
-from tfidf import TFIDFExtractor
+from tf import TFExtractor
 from ate import linguistic
 from objects.exportable import Exportable
 
-class TestTFIDFExtractor(unittest.TestCase):
+class TestTFExtractor(unittest.TestCase):
 	"""
-	Test the functionality of the TF-IDF extractor.
+	Test the functionality of the TF extractor.
 	"""
 
 	def test_extract(self):
@@ -29,11 +29,8 @@ class TestTFIDFExtractor(unittest.TestCase):
 		"""
 
 		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE.json')
-		idf = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')
-		with open(idf, 'r') as f:
-			idf = Exportable.decode(json.loads(f.readline()))['tfidf']
 
-		extractor = TFIDFExtractor(idf)
+		extractor = TFExtractor()
 		terms = extractor.extract(corpora)
 		terms = sorted(terms, key=terms.get, reverse=True)
 		self.assertTrue('chelsea' in terms[:10])
@@ -48,13 +45,21 @@ class TestTFIDFExtractor(unittest.TestCase):
 		"""
 
 		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE.json')
-		idf = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')
-		with open(idf, 'r') as f:
-			idf = Exportable.decode(json.loads(f.readline()))['tfidf']
 
-		extractor = TFIDFExtractor(idf)
+		extractor = TFExtractor()
 		terms = extractor.extract(corpora)
 		self.assertLess(0, min(terms.values()))
+
+	def test_extract_integers(self):
+		"""
+		Test that the scores of all extracted terms are integers.
+		"""
+
+		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE.json')
+
+		extractor = TFExtractor()
+		terms = extractor.extract(corpora)
+		self.assertTrue(all( not score % 1 for score in terms.values() ))
 
 	def test_extract_accumulates(self):
 		"""
@@ -63,11 +68,8 @@ class TestTFIDFExtractor(unittest.TestCase):
 
 		corpora = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE.json'),
 		 			os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'tokenized', 'BVBFCB.json') ]
-		idf = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')
-		with open(idf, 'r') as f:
-			idf = Exportable.decode(json.loads(f.readline()))['tfidf']
 
-		extractor = TFIDFExtractor(idf)
+		extractor = TFExtractor()
 		terms_1 = extractor.extract(corpora[0])
 		terms_2 = extractor.extract(corpora[1])
 		terms_combined = extractor.extract(corpora)
@@ -77,16 +79,13 @@ class TestTFIDFExtractor(unittest.TestCase):
 
 	def test_extract_all_multiple_corpora(self):
 		"""
-		Test that the TF-IDF extractor extracts all terms from multiple corpora.
+		Test that the TF extractor extracts all terms from multiple corpora.
 		"""
 
 		corpora = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE.json'),
 		 			os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'tokenized', 'BVBFCB.json') ]
-		idf = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')
-		with open(idf, 'r') as f:
-			idf = Exportable.decode(json.loads(f.readline()))['tfidf']
 
-		extractor = TFIDFExtractor(idf)
+		extractor = TFExtractor()
 		terms_1 = extractor.extract(corpora[0])
 		terms_2 = extractor.extract(corpora[1])
 		terms_combined = extractor.extract(corpora)
@@ -95,44 +94,35 @@ class TestTFIDFExtractor(unittest.TestCase):
 
 	def test_extract_all(self):
 		"""
-		Test that the TF-IDF extractor extracts all terms.
+		Test that the TF extractor extracts all terms.
 		"""
 
 		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE.json')
-		idf = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')
-		with open(idf, 'r') as f:
-			idf = Exportable.decode(json.loads(f.readline()))['tfidf']
 
 		vocabulary = linguistic.vocabulary(corpora)
-		extractor = TFIDFExtractor(idf)
+		extractor = TFExtractor()
 		terms = extractor.extract(corpora)
 		self.assertTrue(all( term in terms for term in vocabulary ))
 
 	def test_extract_candidates(self):
 		"""
-		Test that the TF-IDF extractor extracts scores for only select candidates if they are given.
+		Test that the TF extractor extracts scores for only select candidates if they are given.
 		"""
 
 		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE.json')
-		idf = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')
-		with open(idf, 'r') as f:
-			idf = Exportable.decode(json.loads(f.readline()))['tfidf']
 
-		extractor = TFIDFExtractor(idf)
+		extractor = TFExtractor()
 		terms = extractor.extract(corpora, candidates=[ 'chelsea', 'goal' ])
 		self.assertEqual({ 'chelsea', 'goal' }, set(terms.keys()))
 
 	def test_extract_candidates_same_scores(self):
 		"""
-		Test that the TF-IDF extractor's scores for known candidates are the same as when candidates are not given.
+		Test that the TF extractor's scores for known candidates are the same as when candidates are not given.
 		"""
 
 		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE.json')
-		idf = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')
-		with open(idf, 'r') as f:
-			idf = Exportable.decode(json.loads(f.readline()))['tfidf']
 
-		extractor = TFIDFExtractor(idf)
+		extractor = TFExtractor()
 		candidate_terms = extractor.extract(corpora, candidates=[ 'chelsea', 'goal' ])
 		terms = extractor.extract(corpora)
 		self.assertEqual(terms['chelsea'], candidate_terms['chelsea'])
@@ -140,14 +130,11 @@ class TestTFIDFExtractor(unittest.TestCase):
 
 	def test_extract_candidates_unknown_word(self):
 		"""
-		Test that the TF-IDF extractor's score for an unknown word is 0.
+		Test that the TF extractor's score for an unknown word is 0.
 		"""
 
 		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE.json')
-		idf = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')
-		with open(idf, 'r') as f:
-			idf = Exportable.decode(json.loads(f.readline()))['tfidf']
 
-		extractor = TFIDFExtractor(idf)
+		extractor = TFExtractor()
 		terms = extractor.extract(corpora, candidates=[ 'superlongword' ])
 		self.assertEqual({ 'superlongword': 0 }, terms)
