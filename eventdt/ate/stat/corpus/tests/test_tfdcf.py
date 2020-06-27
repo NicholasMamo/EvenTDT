@@ -13,7 +13,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from ate.stat import TFExtractor
-from ate.stat.corpus.tfdcf import TFDCFExtractor
+from ate.stat.corpus import TFDCFExtractor
 from ate import linguistic
 
 class TestTFDCFExtractor(unittest.TestCase):

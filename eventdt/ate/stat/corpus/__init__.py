@@ -55,3 +55,5 @@ class DummyComparisonExtractor(ComparisonExtractor):
 		"""
 
 		return { }
+
+from .tfdcf import TFDCFExtractor
