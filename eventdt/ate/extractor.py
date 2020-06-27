@@ -65,7 +65,7 @@ class DummyExtractor(Extractor):
 		:type candidates: None or list of str
 
 		:return: An empty list of terms.
-		:rtype: list of str
+		:rtype: dict
 		"""
 
 		return [ ]
