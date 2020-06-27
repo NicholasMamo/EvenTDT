@@ -68,4 +68,4 @@ class DummyExtractor(Extractor):
 		:rtype: dict
 		"""
 
-		return [ ]
+		return { }

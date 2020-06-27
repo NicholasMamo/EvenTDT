@@ -54,4 +54,4 @@ class DummyComparisonExtractor(ComparisonExtractor):
 		:rtype: dict
 		"""
 
-		return [ ]
+		return { }
