@@ -1,5 +1,7 @@
 """
 Corpus comparison ATE approaches extract domain terms by comparing term incidence in domain corpora with their incidence in general domains.
+This package provides a new extractor meant especially for corpus comparison approaches.
+Since all corpus comparison approaches require one or more general corpora, they can be provided in the constructor.
 """
 
 import os

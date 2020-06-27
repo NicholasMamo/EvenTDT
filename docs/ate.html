@@ -97,6 +97,7 @@
 <li class="toctree-l1"><a class="reference internal" href="consumers.html">9. Consumers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ml.html">10. Machine Learning</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">11. Automatic Term Extraction (ATE)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-ate.extractor">Extractor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-ate.linguistic">Linguistic</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-ate.stat">Statistical</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module-ate.stat.tf">Term Frequency</a></li>
@@ -107,7 +108,16 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#module-ate.application">Application</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-ate.application">Application</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-ate.application.event">Events</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#event-frequency-ef">Event Frequency (EF)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#logarithmic-event-frequency-ef">Logarithmic Event Frequency (EF)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#event-frequency-inverse-document-frequency-ef-idf">Event Frequency-Inverse Document Frequency (EF-IDF)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#variability">Variability</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#module-ate.bootstrapping">Bootstrapping</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module-ate.bootstrapping.probability">Probability</a></li>
 </ul>
@@ -181,7 +191,11 @@
             
   <div class="section" id="automatic-term-extraction-ate">
 <h1>11. Automatic Term Extraction (ATE)<a class="headerlink" href="#automatic-term-extraction-ate" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-ate"></span><p>Package-level functions and classes that are likely to be useful to all ATE approaches.</p>
+<p>Automatic Term Extraction (ATE) is a research that automatically extracts domain-specific terms.
+The package includes algorithms that extract terms and bootstrap terms from a seed set.
+These algorithms are both those that are popular as baselines and peer-reviewed algorithms.
+Included are general functions that are likely to be useful for all algorithms.</p>
+<span class="target" id="module-ate"></span><p>The ATE package includes functions and classes that are likely to be useful to all approaches.</p>
 <dl class="function">
 <dt id="ate.total_documents">
 <code class="sig-name descname">total_documents</code><span class="sig-paren">(</span><em class="sig-param">corpora</em>, <em class="sig-param">focus=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.total_documents" title="Permalink to this definition">¶</a></dt>
@@ -223,8 +237,11 @@ If multiple tokens or tuples are given, a dictionary is given with the separate 
 </dl>
 </dd></dl>
 
-<span class="target" id="module-ate.extractor"></span><p>The extractor outlines the functionality that all ATE approaches should offer.
-The abstract class is very simple and all extractors must, at least, provide functionality to extract terms from a corpus or corpora.</p>
+<div class="section" id="module-ate.extractor">
+<span id="extractor"></span><h2>Extractor<a class="headerlink" href="#module-ate.extractor" title="Permalink to this headline">¶</a></h2>
+<p>The extractor outlines the functionality that all ATE approaches should offer.
+The abstract class is very simple.
+It requires only that all extractors must provide functionality to extract terms from a corpus or corpora.</p>
 <dl class="class">
 <dt id="ate.extractor.Extractor">
 <em class="property">class </em><code class="sig-name descname">Extractor</code><a class="headerlink" href="#ate.extractor.Extractor" title="Permalink to this definition">¶</a></dt>
@@ -311,9 +328,13 @@ If <cite>None</cite> is given, all words are considered to be candidates.</p></l
 
 </dd></dl>
 
+</div>
 <div class="section" id="module-ate.linguistic">
 <span id="linguistic"></span><h2>Linguistic<a class="headerlink" href="#module-ate.linguistic" title="Permalink to this headline">¶</a></h2>
-<p>General functions available to all ATE functions.</p>
+<p>Linguistic approaches are those ATE algorithms that primarily use linguistic patterns to identify domain terms.
+These kind of algorithms mostly focus on shallow parsing, or chunking, and look for common patterns or sequences of parts-of-speech.</p>
+<p>The ATE linguistic package includes functions that are likely to be useful to all linguistic or hybrid algorithms.
+These include methods to extract the vocabulary or a subset of it from a corpus or corpora.</p>
 <dl class="function">
 <dt id="ate.linguistic.vocabulary">
 <code class="sig-name descname">vocabulary</code><span class="sig-paren">(</span><em class="sig-param">corpora</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.linguistic.vocabulary" title="Permalink to this definition">¶</a></dt>
@@ -372,6 +393,10 @@ Each document should have a <cite>tokens</cite> attribute.</p>
 </div>
 <div class="section" id="module-ate.stat">
 <span id="statistical"></span><h2>Statistical<a class="headerlink" href="#module-ate.stat" title="Permalink to this headline">¶</a></h2>
+<p>Statistical approaches perform little linguistic processing.
+These ATE algorithms range from simple metrics to more complex scoring mechanisms that rank tokens.
+Although statistical approaches are not hybrid, many of them may be combined with linguistic approaches.
+For example, statistical ATE algorithms often assume that only nouns can be terms.</p>
 <div class="section" id="module-ate.stat.tf">
 <span id="term-frequency"></span><h3>Term Frequency<a class="headerlink" href="#module-ate.stat.tf" title="Permalink to this headline">¶</a></h3>
 <p>Term Frequency (TF) is a simple ATE approach that ranks terms based on the number of times that they appear.</p>
@@ -457,7 +482,9 @@ If <cite>None</cite> is given, all words are considered to be candidates.</p></l
 </div>
 <div class="section" id="module-ate.stat.corpus">
 <span id="corpus-comparison"></span><h3>Corpus Comparison<a class="headerlink" href="#module-ate.stat.corpus" title="Permalink to this headline">¶</a></h3>
-<p>Corpus comparison ATE approaches extract domain terms by comparing term incidence in domain corpora with their incidence in general domains.</p>
+<p>Corpus comparison ATE approaches extract domain terms by comparing term incidence in domain corpora with their incidence in general domains.
+This package provides a new extractor meant especially for corpus comparison approaches.
+Since all corpus comparison approaches require one or more general corpora, they can be provided in the constructor.</p>
 <dl class="class">
 <dt id="ate.stat.corpus.ComparisonExtractor">
 <em class="property">class </em><code class="sig-name descname">ComparisonExtractor</code><span class="sig-paren">(</span><em class="sig-param">general</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.stat.corpus.ComparisonExtractor" title="Permalink to this definition">¶</a></dt>
@@ -555,7 +582,11 @@ If <cite>None</cite> is given, all words are considered to be candidates.</p></l
 <div class="section" id="module-ate.application">
 <span id="application"></span><h2>Application<a class="headerlink" href="#module-ate.application" title="Permalink to this headline">¶</a></h2>
 <p>Application-based approaches use the target application to learn the domain lexicon.</p>
-<span class="target" id="module-ate.application.event"></span><p>Event-based ATE approaches use either event corpora or the output timelines to score and rank domain terms.</p>
+<div class="section" id="module-ate.application.event">
+<span id="events"></span><h3>Events<a class="headerlink" href="#module-ate.application.event" title="Permalink to this headline">¶</a></h3>
+<p>Event-based ATE approaches use either event corpora or the output timelines to score and rank domain terms.</p>
+<div class="section" id="event-frequency-ef">
+<h4>Event Frequency (EF)<a class="headerlink" href="#event-frequency-ef" title="Permalink to this headline">¶</a></h4>
 <dl class="class">
 <dt id="ate.application.event.EF">
 <em class="property">class </em><code class="sig-name descname">EF</code><a class="headerlink" href="#ate.application.event.EF" title="Permalink to this definition">¶</a></dt>
@@ -595,6 +626,9 @@ If <cite>None</cite> is given, all words are considered to be candidates.</p></l
 
 </dd></dl>
 
+</div>
+<div class="section" id="logarithmic-event-frequency-ef">
+<h4>Logarithmic Event Frequency (EF)<a class="headerlink" href="#logarithmic-event-frequency-ef" title="Permalink to this headline">¶</a></h4>
 <dl class="class">
 <dt id="ate.application.event.LogEF">
 <em class="property">class </em><code class="sig-name descname">LogEF</code><span class="sig-paren">(</span><em class="sig-param">base=2</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.application.event.LogEF" title="Permalink to this definition">¶</a></dt>
@@ -651,10 +685,14 @@ If <cite>None</cite> is given, all words are considered to be candidates.</p></l
 
 </dd></dl>
 
+</div>
+<div class="section" id="event-frequency-inverse-document-frequency-ef-idf">
+<h4>Event Frequency-Inverse Document Frequency (EF-IDF)<a class="headerlink" href="#event-frequency-inverse-document-frequency-ef-idf" title="Permalink to this headline">¶</a></h4>
 <dl class="class">
 <dt id="ate.application.event.EFIDF">
 <em class="property">class </em><code class="sig-name descname">EFIDF</code><span class="sig-paren">(</span><em class="sig-param">scheme</em>, <em class="sig-param">base=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.application.event.EFIDF" title="Permalink to this definition">¶</a></dt>
-<dd><p>The EF-IDF extractor combines the event frequency with the inverse document frequency.</p>
+<dd><p>The EF-IDF extractor combines the event frequency with the inverse document frequency.
+The algorithm can be made to work with the <a class="reference internal" href="#ate.application.event.LogEF" title="ate.application.event.LogEF"><code class="xref py py-class docutils literal notranslate"><span class="pre">LogEF</span></code></a> class instead of the <a class="reference internal" href="#ate.application.event.EF" title="ate.application.event.EF"><code class="xref py py-class docutils literal notranslate"><span class="pre">EF</span></code></a> class by providing a logarithmic base.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
@@ -717,6 +755,9 @@ If <cite>None</cite> is given, all words are considered to be candidates.</p></l
 
 </dd></dl>
 
+</div>
+<div class="section" id="variability">
+<h4>Variability<a class="headerlink" href="#variability" title="Permalink to this headline">¶</a></h4>
 <dl class="class">
 <dt id="ate.application.event.Variability">
 <em class="property">class </em><code class="sig-name descname">Variability</code><span class="sig-paren">(</span><em class="sig-param">base=10</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.application.event.Variability" title="Permalink to this definition">¶</a></dt>
@@ -815,6 +856,8 @@ These correspond to the first and second rows respectively.</p>
 
 </dd></dl>
 
+</div>
+</div>
 </div>
 <div class="section" id="module-ate.bootstrapping">
 <span id="bootstrapping"></span><h2>Bootstrapping<a class="headerlink" href="#module-ate.bootstrapping" title="Permalink to this headline">¶</a></h2>

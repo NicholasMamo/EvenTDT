@@ -1,5 +1,9 @@
 """
-General functions available to all ATE functions.
+Linguistic approaches are those ATE algorithms that primarily use linguistic patterns to identify domain terms.
+These kind of algorithms mostly focus on shallow parsing, or chunking, and look for common patterns or sequences of parts-of-speech.
+
+The ATE linguistic package includes functions that are likely to be useful to all linguistic or hybrid algorithms.
+These include methods to extract the vocabulary or a subset of it from a corpus or corpora.
 """
 
 from nltk import sent_tokenize, word_tokenize, pos_tag

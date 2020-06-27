@@ -1,5 +1,5 @@
 """
-Package-level functions and classes that are likely to be useful to all ATE approaches.
+The ATE package includes functions and classes that are likely to be useful to all approaches.
 """
 
 import json

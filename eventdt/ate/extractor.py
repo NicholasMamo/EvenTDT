@@ -1,6 +1,7 @@
 """
 The extractor outlines the functionality that all ATE approaches should offer.
-The abstract class is very simple and all extractors must, at least, provide functionality to extract terms from a corpus or corpora.
+The abstract class is very simple.
+It requires only that all extractors must provide functionality to extract terms from a corpus or corpora.
 """
 
 from abc import ABC, abstractmethod

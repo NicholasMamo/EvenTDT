@@ -124,6 +124,7 @@ class LogEF(EF):
 class EFIDF(Extractor):
 	"""
 	The EF-IDF extractor combines the event frequency with the inverse document frequency.
+	The algorithm can be made to work with the :class:`~ate.application.event.LogEF` class instead of the :class:`~ate.application.event.EF` class by providing a logarithmic base.
 
 	:ivar scheme: The IDF table to use to score terms.
 	:vartype scheme: :class:`~nlp.term_weighting.global_schemes.tfidf.TFIDF`
