@@ -16,7 +16,7 @@ To run the script, use:
 Accepted arguments:
 
 	- ``-f --files``		*<Required>* The input corpora from where to extract domain-specific terms.
-	- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `TFIDF`.
+	- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `TF`, `TFIDF`.
 	- ``--tfidf``			*<Required>* The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).
 	- ``-o --output``		*<Required>* The path to the file where to store the extracted terms.
 """
@@ -34,7 +34,7 @@ sys.path.insert(-1, lib)
 import tools
 from logger import logger
 from ate import linguistic
-from ate.stat.tfidf import TFIDFExtractor
+from ate.stat import TFExtractor, TFIDFExtractor
 
 parser = argparse.ArgumentParser(description="Extract terms from domain-specific corpora.")
 def setup_args():
@@ -44,7 +44,7 @@ def setup_args():
 	Accepted arguments:
 
 		- ``-f --files``		*<Required>* The input corpora from where to extract domain-specific terms.
-		- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `TFIDF`.
+		- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `TF`, `TFIDF`.
 		- ``--tfidf``			*<Required>* The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).
 		- ``-o --output``		*<Required>* The path to the file where to store the extracted terms.
 
@@ -57,7 +57,7 @@ def setup_args():
 						help='<Required> The input corpora from where to extract domain-specific terms.')
 	parser.add_argument('-m', '--method',
 						type=method, required=True,
-						help='<Required> The method to use to look for similar keywords; supported: `TFIDF`.')
+						help='<Required> The method to use to look for similar keywords; supported: `TF,` `TFIDF`.')
 	parser.add_argument('-o', '--output',
 						type=str, required=True,
 						help='<Required> The path to the file where to store the extracted terms.')
@@ -107,12 +107,15 @@ def instantiate(args):
 
 		return args.method(tools.load(args.tfidf)['tfidf'])
 
+	return args.method()
+
 def method(method):
 	"""
 	Convert the given string into an ATE class.
 	The accepted classes are:
 
-		#. :func:`~ate.stat.tfidf.TFIDFExtractor`,
+		#. :func:`~ate.stat.tfidf.TFExtractor`,
+		#. :func:`~ate.stat.tfidf.TFIDFExtractor`
 
 	:param method: The method string.
 	:type method: str
@@ -124,6 +127,7 @@ def method(method):
 	"""
 
 	methods = {
+		'tf': TFExtractor,
 		'tfidf': TFIDFExtractor,
 	}
 
