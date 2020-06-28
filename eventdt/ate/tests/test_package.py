@@ -24,7 +24,7 @@ class TestPackage(unittest.TestCase):
 		Test that the number of documents in an empty corpus is 0.
 		"""
 
-		path = os.path.join(os.path.dirname(__file__), 'empty.json')
+		path = os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'tokenized', 'empty.json')
 		documents = ate.total_documents(path)
 		self.assertEqual(0, documents)
 
@@ -33,7 +33,7 @@ class TestPackage(unittest.TestCase):
 		Test getting the number of documents from one corpus.
 		"""
 
-		path = os.path.join(os.path.dirname(__file__), 'c1.json')
+		path = os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json')
 		documents = ate.total_documents(path)
 
 		"""
@@ -47,8 +47,8 @@ class TestPackage(unittest.TestCase):
 		Test getting the number of documents from multiple corpora.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'c1.json'),
-				  os.path.join(os.path.dirname(__file__), 'c2.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'tokenized', 'BVBFCB-100.json') ]
 		documents = ate.total_documents(paths)
 
 		"""
@@ -66,8 +66,8 @@ class TestPackage(unittest.TestCase):
 		Test that when no focus tokens or tuples are given, an integer is returned.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'c1.json'),
-				  os.path.join(os.path.dirname(__file__), 'c2.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'tokenized', 'BVBFCB-100.json') ]
 		documents = ate.total_documents(paths)
 		self.assertEqual(int, type(documents))
 
@@ -76,8 +76,8 @@ class TestPackage(unittest.TestCase):
 		Test that when computing the number of documents in which one token appears, the frequency is correct.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'c1.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'c2.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'tokenized', 'BVBFCB-100.json') ]
 
 		"""
 		Compute the probability for all tokens in the corpora first.
@@ -104,8 +104,8 @@ class TestPackage(unittest.TestCase):
 		Test that when computing the number of documents in which one tuple appears, the frequency is correct.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'c1.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'c2.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'tokenized', 'BVBFCB-100.json') ]
 
 		"""
 		Compute the probability for all tokens in the corpora first.
@@ -132,8 +132,8 @@ class TestPackage(unittest.TestCase):
 		Test that when computing the number of documents in which tokens appear, the frequencies are correct.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'c1.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'c2.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'tokenized', 'BVBFCB-100.json') ]
 
 		"""
 		Compute the probability for all tokens in the corpora first.
@@ -162,8 +162,8 @@ class TestPackage(unittest.TestCase):
 		Test that when computing the number of documents in which tuples appear, the frequencies are correct.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'c1.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'c2.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'tokenized', 'BVBFCB-100.json') ]
 
 		"""
 		Compute the probability for all tokens in the corpora first.
@@ -192,8 +192,8 @@ class TestPackage(unittest.TestCase):
 		Test that when computing the number of documents in which a mix of tokens and tuples appear, the frequencies are correct.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'c1.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'c2.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'tokenized', 'BVBFCB-100.json') ]
 
 		"""
 		Compute the probability for all tokens in the corpora first.
