@@ -40,8 +40,11 @@ Statistical
    :private-members:
    :special-members:
 
+Algorithms
+----------
+
 Term Frequency
---------------
+^^^^^^^^^^^^^^
 
 .. automodule:: ate.stat.tf
    :members:
@@ -49,9 +52,17 @@ Term Frequency
    :special-members:
 
 Term Frequency-Inverse Document Frequency
------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: ate.stat.tfidf
+   :members:
+   :private-members:
+   :special-members:
+
+Probability
+-----------
+
+.. automodule:: ate.stat.probability
    :members:
    :private-members:
    :special-members:

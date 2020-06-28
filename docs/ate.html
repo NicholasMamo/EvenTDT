@@ -100,8 +100,12 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-ate.extractor">Extractor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-ate.linguistic">Linguistic</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-ate.stat">Statistical</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module-ate.stat.tf">Term Frequency</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-ate.stat.tfidf">Term Frequency-Inverse Document Frequency</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#algorithms">Algorithms</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-ate.stat.tf">Term Frequency</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ate.stat.tfidf">Term Frequency-Inverse Document Frequency</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-ate.stat.probability">Probability</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ate.stat.corpus">Corpus Comparison</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#module-ate.stat.corpus.tfdcf">TF-DCF</a></li>
 </ul>
@@ -119,7 +123,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-ate.bootstrapping">Bootstrapping</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module-ate.bootstrapping.probability">Probability</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Probability</a></li>
 </ul>
 </li>
 </ul>
@@ -397,8 +401,10 @@ Each document should have a <cite>tokens</cite> attribute.</p>
 These ATE algorithms range from simple metrics to more complex scoring mechanisms that rank tokens.
 Although statistical approaches are not hybrid, many of them may be combined with linguistic approaches.
 For example, statistical ATE algorithms often assume that only nouns can be terms.</p>
+<div class="section" id="algorithms">
+<h3>Algorithms<a class="headerlink" href="#algorithms" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="module-ate.stat.tf">
-<span id="term-frequency"></span><h3>Term Frequency<a class="headerlink" href="#module-ate.stat.tf" title="Permalink to this headline">¶</a></h3>
+<span id="term-frequency"></span><h4>Term Frequency<a class="headerlink" href="#module-ate.stat.tf" title="Permalink to this headline">¶</a></h4>
 <p>Term Frequency (TF) is a simple ATE approach that ranks terms based on the number of times that they appear.</p>
 <dl class="class">
 <dt id="ate.stat.tf.TFExtractor">
@@ -431,7 +437,7 @@ If <cite>None</cite> is given, all words are considered to be candidates.</p></l
 
 </div>
 <div class="section" id="module-ate.stat.tfidf">
-<span id="term-frequency-inverse-document-frequency"></span><h3>Term Frequency-Inverse Document Frequency<a class="headerlink" href="#module-ate.stat.tfidf" title="Permalink to this headline">¶</a></h3>
+<span id="term-frequency-inverse-document-frequency"></span><h4>Term Frequency-Inverse Document Frequency<a class="headerlink" href="#module-ate.stat.tfidf" title="Permalink to this headline">¶</a></h4>
 <p>Term Frequency-Inverse Document Frequency (TF-IDF) is a common and strong baseline for ATE tasks.
 The approach scores tokens based on their accumulated TF-IDF score.</p>
 <dl class="class">
@@ -477,6 +483,138 @@ If <cite>None</cite> is given, all words are considered to be candidates.</p></l
 </dl>
 </dd></dl>
 
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="module-ate.stat.probability">
+<span id="probability"></span><h3>Probability<a class="headerlink" href="#module-ate.stat.probability" title="Permalink to this headline">¶</a></h3>
+<p>The probability package includes probability-based ATE approaches.
+In addition, the package comes with functions that are likely to be useful to probability-based algorithms.
+This includes caching functionality, which collects all documents across all corpora that mention a particular token.</p>
+<dl class="function">
+<dt id="ate.stat.probability.p">
+<code class="sig-name descname">p</code><span class="sig-paren">(</span><em class="sig-param">corpora</em>, <em class="sig-param">focus=None</em>, <em class="sig-param">cache=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.stat.probability.p" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the probability of tokens appearing in the corpus.
+The probability is computed in terms of all tokens.</p>
+<p>Apart from calculating the probability of single tokens, the joint probability can be calculated by providing tuples.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The joint probability is the minimum count of any token in the joint set in each document.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpora</strong> (<em>str</em><em> or </em><em>list of str</em>) – <p>A corpus, or corpora, of documents.
+If a string is given, it is assumed to be one corpus.
+If a list is given, it is assumed to be a list of corpora.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is assumed that the corpora were extracted using the tokenizer tool.
+Therefore each line should be a JSON string representing a document.
+Each document should have a <cite>tokens</cite> attribute.</p>
+</div>
+</p></li>
+<li><p><strong>focus</strong> (<em>None</em><em> or </em><em>str</em><em> or </em><em>list of str</em><em> or </em><em>tuple</em><em> or </em><em>list of tuple</em>) – <p>The tokens for which to compute the probability.
+If nothing is given, the probability is calculated for all tokens.
+The tokens can be provided as:</p>
+<ul>
+<li><p>A single word,</p></li>
+<li><p>A list of tokens,</p></li>
+<li><p>A tuple, or</p></li>
+<li><p>A list of tuples.</p></li>
+</ul>
+<p>A tuple can be used to compute joint probabilities.</p>
+</p></li>
+<li><p><strong>cache</strong> (<em>list of str</em>) – <p>A list of terms that are re-used often and which should be cached.
+If an empty list is given, no cache is used.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Cache should be used when there is a lot of repetition.
+For example, <cite>x</cite> can be used as cache when <cite>x</cite> is small and <cite>y</cite> is large.
+If the data is small, using cache can be detrimental.</p>
+</div>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary with tokens as keys and probabilities as values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ate.stat.probability.joint_vocabulary">
+<code class="sig-name descname">joint_vocabulary</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.stat.probability.joint_vocabulary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the joint vocabulary by creating the cross-product from <cite>x</cite> and <cite>y</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>str</em><em> or </em><em>list of str</em><em> or </em><em>tuple</em><em> or </em><em>list of tuple</em>) – <p>The tokens for which to compute the probability.
+These tokens are combined as a cross-product with all tokens in <cite>y</cite>.
+The tokens can be provided as:</p>
+<ul>
+<li><p>A single word,</p></li>
+<li><p>A list of tokens,</p></li>
+<li><p>A tuple, or</p></li>
+<li><p>A list of tuples.</p></li>
+</ul>
+<p>A tuple translates to joint probabilities.</p>
+</p></li>
+<li><p><strong>y</strong> (<em>str</em><em> or </em><em>list of str</em><em> or </em><em>tuple</em><em> or </em><em>list of tuple</em>) – <p>The tokens for which to compute the probability.
+These tokens are combined as a cross-product with all tokens in <cite>x</cite>.
+The tokens can be provided as:</p>
+<ul>
+<li><p>A single word,</p></li>
+<li><p>A list of tokens,</p></li>
+<li><p>A tuple, or</p></li>
+<li><p>A list of tuples.</p></li>
+</ul>
+<p>A tuple translates to joint probabilities.</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The joint vocabulary, which is the cross-product of each item in <cite>x</cite> with each item in <cite>y</cite>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ate.stat.probability.cached">
+<code class="sig-name descname">cached</code><span class="sig-paren">(</span><em class="sig-param">corpora</em>, <em class="sig-param">token</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.stat.probability.cached" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compile all the documents in the given corpora that mention the token.
+These documents can be used as cache.
+In this way, the files do not have to be re-opened and documents without the token do not have to be iterated over.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpora</strong> (<em>str</em><em> or </em><em>list of str</em>) – <p>A corpus, or corpora, of documents.
+If a string is given, it is assumed to be one corpus.
+If a list is given, it is assumed to be a list of corpora.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is assumed that the corpora were extracted using the tokenizer tool.
+Therefore each line should be a JSON string representing a document.
+Each document should have a <cite>tokens</cite> attribute.</p>
+</div>
+</p></li>
+<li><p><strong>token</strong> (<em>str</em>) – The token to look for in the documents.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of documents, each represented as a dictionary, that contain the given token.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of dict</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -861,63 +999,9 @@ These correspond to the first and second rows respectively.</p>
 </div>
 <div class="section" id="module-ate.bootstrapping">
 <span id="bootstrapping"></span><h2>Bootstrapping<a class="headerlink" href="#module-ate.bootstrapping" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="module-ate.bootstrapping.probability">
-<span id="probability"></span><h3>Probability<a class="headerlink" href="#module-ate.bootstrapping.probability" title="Permalink to this headline">¶</a></h3>
-<p>Methods that evaluate unithood or termhood based on probability.</p>
-<dl class="function">
-<dt id="ate.bootstrapping.probability.p">
-<code class="sig-name descname">p</code><span class="sig-paren">(</span><em class="sig-param">corpora</em>, <em class="sig-param">focus=None</em>, <em class="sig-param">cache=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.bootstrapping.probability.p" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate the probability of tokens appearing in the corpus.
-The probability is computed in terms of all tokens.</p>
-<p>Apart from calculating the probability of single tokens, the joint probability can be calculated by providing tuples.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The joint probability is the minimum count of any token in the joint set in each document.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>corpora</strong> (<em>str</em><em> or </em><em>list of str</em>) – <p>A corpus, or corpora, of documents.
-If a string is given, it is assumed to be one corpus.
-If a list is given, it is assumed to be a list of corpora.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>It is assumed that the corpora were extracted using the tokenizer tool.
-Therefore each line should be a JSON string representing a document.
-Each document should have a <cite>tokens</cite> attribute.</p>
-</div>
-</p></li>
-<li><p><strong>focus</strong> (<em>None</em><em> or </em><em>str</em><em> or </em><em>list of str</em><em> or </em><em>tuple</em><em> or </em><em>list of tuple</em>) – <p>The tokens for which to compute the probability.
-If nothing is given, the probability is calculated for all tokens.
-The tokens can be provided as:</p>
-<ul>
-<li><p>A single word,</p></li>
-<li><p>A list of tokens,</p></li>
-<li><p>A tuple, or</p></li>
-<li><p>A list of tuples.</p></li>
-</ul>
-<p>A tuple can be used to compute joint probabilities.</p>
-</p></li>
-<li><p><strong>cache</strong> (<em>list of str</em>) – <p>A list of terms that are re-used often and which should be cached.
-If an empty list is given, no cache is used.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Cache should be used when there is a lot of repetition.
-For example, <cite>x</cite> can be used as cache when <cite>x</cite> is small and <cite>y</cite> is large.
-If the data is small, using cache can be detrimental.</p>
-</div>
-</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A dictionary with tokens as keys and probabilities as values.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
+<div class="section" id="id1">
+<h3>Probability<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<span class="target" id="module-ate.bootstrapping.probability"></span><p>Methods that evaluate unithood or termhood based on probability.</p>
 <dl class="function">
 <dt id="ate.bootstrapping.probability.PMI">
 <code class="sig-name descname">PMI</code><span class="sig-paren">(</span><em class="sig-param">corpora</em>, <em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">base=2</em>, <em class="sig-param">cache=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.bootstrapping.probability.PMI" title="Permalink to this definition">¶</a></dt>
@@ -992,7 +1076,7 @@ If the data is small, using cache can be detrimental.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>prob</strong> (<em>dict</em>) – A probability calculation, possibly calculated using the <code class="xref py py-func docutils literal notranslate"><span class="pre">ate.stat.probability.p()</span></code> function.
+<li><p><strong>prob</strong> (<em>dict</em>) – A probability calculation, possibly calculated using the <a class="reference internal" href="#ate.stat.probability.p" title="ate.stat.probability.p"><code class="xref py py-func docutils literal notranslate"><span class="pre">ate.stat.probability.p()</span></code></a> function.
 This is used as cache for the probabilities.
 The keys are the tokens, including the joint probability of <cite>x</cite> and <cite>y</cite>, and the values are their probabilities.</p></li>
 <li><p><strong>x</strong> (<em>str</em><em> or </em><em>tuple of str</em>) – The first token or tuple of tokens to use to calculate the PMI.</p></li>
@@ -1133,77 +1217,6 @@ The values are four-tuples representing the values of cells in the order:</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="ate.bootstrapping.probability._cache">
-<code class="sig-name descname">_cache</code><span class="sig-paren">(</span><em class="sig-param">corpora</em>, <em class="sig-param">token</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.bootstrapping.probability._cache" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compile all the documents in the given corpora that mention the token.
-These documents can be used as cache.
-In this way, the files do not have to be re-opened and documents without the token do not have to be iterated over.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>corpora</strong> (<em>str</em><em> or </em><em>list of str</em>) – <p>A corpus, or corpora, of documents.
-If a string is given, it is assumed to be one corpus.
-If a list is given, it is assumed to be a list of corpora.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>It is assumed that the corpora were extracted using the tokenizer tool.
-Therefore each line should be a JSON string representing a document.
-Each document should have a <cite>tokens</cite> attribute.</p>
-</div>
-</p></li>
-<li><p><strong>token</strong> (<em>str</em>) – The token to look for in the documents.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list of documents, each represented as a dictionary, that contain the given token.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list of dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="ate.bootstrapping.probability.joint_vocabulary">
-<code class="sig-name descname">joint_vocabulary</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.bootstrapping.probability.joint_vocabulary" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the joint vocabulary by creating the cross-product from <cite>x</cite> and <cite>y</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>str</em><em> or </em><em>list of str</em><em> or </em><em>tuple</em><em> or </em><em>list of tuple</em>) – <p>The tokens for which to compute the probability.
-These tokens are combined as a cross-product with all tokens in <cite>y</cite>.
-The tokens can be provided as:</p>
-<ul>
-<li><p>A single word,</p></li>
-<li><p>A list of tokens,</p></li>
-<li><p>A tuple, or</p></li>
-<li><p>A list of tuples.</p></li>
-</ul>
-<p>A tuple translates to joint probabilities.</p>
-</p></li>
-<li><p><strong>y</strong> (<em>str</em><em> or </em><em>list of str</em><em> or </em><em>tuple</em><em> or </em><em>list of tuple</em>) – <p>The tokens for which to compute the probability.
-These tokens are combined as a cross-product with all tokens in <cite>x</cite>.
-The tokens can be provided as:</p>
-<ul>
-<li><p>A single word,</p></li>
-<li><p>A list of tokens,</p></li>
-<li><p>A tuple, or</p></li>
-<li><p>A list of tuples.</p></li>
-</ul>
-<p>A tuple translates to joint probabilities.</p>
-</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The joint vocabulary, which is the cross-product of each item in <cite>x</cite> with each item in <cite>y</cite>.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list of tuple</p>
 </dd>
 </dl>
 </dd></dl>

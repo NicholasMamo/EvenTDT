@@ -1008,7 +1008,7 @@ It tokenizes words with the given tokenizer and tries to map each candidate to t
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="nlp.html#module-nlp.tokenizer" title="nlp.tokenizer"><strong>tokenizer</strong></a> (None or <a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer used to extract the tokens anew.</p></li>
-<li><p><strong>corpus</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The corpus of documents.
+<li><p><a class="reference internal" href="ate.html#module-ate.stat.corpus" title="ate.stat.corpus"><strong>corpus</strong></a> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The corpus of documents.
 This corpus is used to look for the terms that map to the tokens given as candidates.</p></li>
 <li><p><strong>case_fold</strong> (<em>bool</em>) – A boolean indicating whether terms should be case-folded.</p></li>
 </ul>
@@ -1113,7 +1113,7 @@ It then maps the candidate to that page by returning the page name instead of th
 These documents are used to compare the similarity with the domain of the candidates.</p></li>
 <li><p><a class="reference internal" href="nlp.html#module-nlp.tokenizer" title="nlp.tokenizer"><strong>tokenizer</strong></a> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer to use to create documents.</p></li>
 <li><p><strong>threshold</strong> (<em>float.</em>) – The threshold below which candidates become unresolved.</p></li>
-<li><p><strong>corpus</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The corpus of documents.</p></li>
+<li><p><a class="reference internal" href="ate.html#module-ate.stat.corpus" title="ate.stat.corpus"><strong>corpus</strong></a> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The corpus of documents.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1229,7 +1229,7 @@ These documents are used to compare the similarity with the domain of the candid
 <li><p><strong>threshold</strong> (<em>float</em>) – The threshold below which candidates become unresolved.</p></li>
 <li><p><a class="reference internal" href="nlp.html#module-nlp.tokenizer" title="nlp.tokenizer"><strong>tokenizer</strong></a> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer to use to create documents.</p></li>
 <li><p><strong>threshold</strong> – The similarity threshold beyond which candidate participants are resolved.</p></li>
-<li><p><strong>corpus</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The corpus of documents.</p></li>
+<li><p><a class="reference internal" href="ate.html#module-ate.stat.corpus" title="ate.stat.corpus"><strong>corpus</strong></a> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The corpus of documents.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1420,7 +1420,7 @@ This definition is based on a graph, and communities are extracted using the Gir
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>corpus</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The corpus of documents.</p></li>
+<li><p><a class="reference internal" href="ate.html#module-ate.stat.corpus" title="ate.stat.corpus"><strong>corpus</strong></a> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The corpus of documents.</p></li>
 <li><p><a class="reference internal" href="nlp.html#module-nlp.tokenizer" title="nlp.tokenizer"><strong>tokenizer</strong></a> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer to use to create documents.</p></li>
 <li><p><a class="reference internal" href="nlp.html#module-nlp.term_weighting.scheme" title="nlp.term_weighting.scheme"><strong>scheme</strong></a> (<a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme to use to create documents from Wikipedia pages.
 These documents are used to compare the similarity with the domain of the candidates.</p></li>
