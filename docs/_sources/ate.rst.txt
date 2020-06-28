@@ -13,7 +13,6 @@ Included are general functions that are likely to be useful for all algorithms.
 
 .. automodule:: ate
    :members:
-   :private-members:
    :special-members:
 
 Extractor
@@ -21,7 +20,6 @@ Extractor
 
 .. automodule:: ate.extractor
    :members:
-   :private-members:
    :special-members:
 
 Linguistic
@@ -29,7 +27,6 @@ Linguistic
 
 .. automodule:: ate.linguistic
    :members:
-   :private-members:
    :special-members:
 
 Statistical
@@ -37,7 +34,6 @@ Statistical
 
 .. automodule:: ate.stat
    :members:
-   :private-members:
    :special-members:
 
 Algorithms
@@ -48,7 +44,6 @@ Term Frequency
 
 .. automodule:: ate.stat.tf
    :members:
-   :private-members:
    :special-members:
 
 Term Frequency-Inverse Document Frequency
@@ -56,7 +51,6 @@ Term Frequency-Inverse Document Frequency
 
 .. automodule:: ate.stat.tfidf
    :members:
-   :private-members:
    :special-members:
 
 Probability
@@ -64,7 +58,6 @@ Probability
 
 .. automodule:: ate.stat.probability
    :members:
-   :private-members:
    :special-members:
 
 Corpus Comparison
@@ -72,7 +65,6 @@ Corpus Comparison
 
 .. automodule:: ate.stat.corpus
    :members:
-   :private-members:
    :special-members:
 
 TF-DCF
@@ -80,7 +72,6 @@ TF-DCF
 
 .. automodule:: ate.stat.corpus.tfdcf
    :members:
-   :private-members:
    :special-members:
 
 Application
@@ -88,7 +79,6 @@ Application
 
 .. automodule:: ate.application
    :members:
-   :private-members:
    :special-members:
 
 Events
@@ -101,7 +91,6 @@ Event Frequency (EF)
 
 .. autoclass:: ate.application.event.EF
    :members:
-   :private-members:
    :special-members:
 
 Logarithmic Event Frequency (EF)
@@ -109,7 +98,6 @@ Logarithmic Event Frequency (EF)
 
 .. autoclass:: ate.application.event.LogEF
    :members:
-   :private-members:
    :special-members:
 
 Event Frequency-Inverse Document Frequency (EF-IDF)
@@ -117,7 +105,6 @@ Event Frequency-Inverse Document Frequency (EF-IDF)
 
 .. autoclass:: ate.application.event.EFIDF
    :members:
-   :private-members:
    :special-members:
 
 Variability
@@ -125,7 +112,6 @@ Variability
 
 .. autoclass:: ate.application.event.Variability
    :members:
-   :private-members:
    :special-members:
 
 Bootstrapping
@@ -133,7 +119,6 @@ Bootstrapping
 
 .. automodule:: ate.bootstrapping
    :members:
-   :private-members:
    :special-members:
 
 Probability
@@ -141,7 +126,6 @@ Probability
 
 .. automodule:: ate.bootstrapping.probability
    :members:
-   :private-members:
    :special-members:
 
 Pointwise Mutual Information (PMI)
@@ -149,7 +133,6 @@ Pointwise Mutual Information (PMI)
 
 .. automodule:: ate.bootstrapping.probability.pmi
    :members:
-   :private-members:
    :special-members:
 
 Chi-Square
@@ -157,5 +140,4 @@ Chi-Square
 
 .. automodule:: ate.bootstrapping.probability.chi
    :members:
-   :private-members:
    :special-members:
