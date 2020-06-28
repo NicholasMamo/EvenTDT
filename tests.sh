@@ -50,7 +50,9 @@ ate_tests() {
 	python3 -m unittest eventdt.ate.application.tests.test_event
 
 	echo -e "${HIGHLIGHT}Bootstrapping${DEFAULT}"
-	python3 -m unittest eventdt.ate.bootstrapping.tests.test_probability
+	python3 -m unittest eventdt.ate.bootstrapping.tests.test_package
+	python3 -m unittest eventdt.ate.bootstrapping.probability.tests.test_chi
+	python3 -m unittest eventdt.ate.bootstrapping.probability.tests.test_pmi
 
 	echo -e "${HIGHLIGHT}Linguistic${DEFAULT}"
 	python3 -m unittest eventdt.ate.linguistic.tests.test_package

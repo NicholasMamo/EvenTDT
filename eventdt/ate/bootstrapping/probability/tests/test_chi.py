@@ -335,7 +335,7 @@ class TestChiBootstrapper(unittest.TestCase):
 		self.assertEqual(2, table[2])
 		self.assertEqual(14, table[3])
 
-	def test_contingency_table_x_y_cached(self):
+	def test_contingency_table_seed_candidates_cached(self):
 		"""
 		Test that when both `seed` and `candidates` are cached, their document frequencies are created immediately.
 		"""
