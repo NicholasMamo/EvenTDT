@@ -669,7 +669,7 @@ class TestEvent(unittest.TestCase):
 		"""
 		for idf in idfs:
 			comparison = [ other for other in idfs if other is not idf ]
-			table = extractor._variability_contingency_table('liverpool', idf, comparison)
+			table = extractor._contingency_table('liverpool', idf, comparison)
 			self.assertEqual(total, sum(table))
 
 	def test_variability_contingency_table_four_cells(self):
@@ -697,7 +697,7 @@ class TestEvent(unittest.TestCase):
 		extractor = event.Variability()
 		for idf in idfs:
 			comparison = [ other for other in idfs if other is not idf ]
-			table = extractor._variability_contingency_table('liverpool', idf, comparison)
+			table = extractor._contingency_table('liverpool', idf, comparison)
 			self.assertEqual(4, len(table))
 
 	def test_variability_contingency_table_integer_cells(self):
@@ -725,7 +725,7 @@ class TestEvent(unittest.TestCase):
 		extractor = event.Variability()
 		for idf in idfs:
 			comparison = [ other for other in idfs if other is not idf ]
-			table = extractor._variability_contingency_table('liverpool', idf, comparison)
+			table = extractor._contingency_table('liverpool', idf, comparison)
 			self.assertTrue(all(type(cell) is int for cell in table))
 
 	def test_variability_contingency_table_positive_cells(self):
@@ -753,7 +753,7 @@ class TestEvent(unittest.TestCase):
 		extractor = event.Variability()
 		for idf in idfs:
 			comparison = [ other for other in idfs if other is not idf ]
-			table = extractor._variability_contingency_table('zaha', idf, comparison)
+			table = extractor._contingency_table('zaha', idf, comparison)
 			self.assertTrue(all(cell >= 0 for cell in table))
 
 	def test_variability_contingency_table_event_total(self):
@@ -776,7 +776,7 @@ class TestEvent(unittest.TestCase):
 		extractor = event.Variability()
 		for idf in idfs:
 			comparison = [ other for other in idfs if other is not idf ]
-			(A, B, C, D) = extractor._variability_contingency_table('liverpool', idf, comparison)
+			(A, B, C, D) = extractor._contingency_table('liverpool', idf, comparison)
 			self.assertEqual(idf.global_scheme.documents, A + B)
 
 	def test_variability_contingency_table_comparison_total(self):
@@ -799,7 +799,7 @@ class TestEvent(unittest.TestCase):
 		extractor = event.Variability()
 		for idf in idfs:
 			comparison = [ other for other in idfs if other is not idf ]
-			(A, B, C, D) = extractor._variability_contingency_table('liverpool', idf, comparison)
+			(A, B, C, D) = extractor._contingency_table('liverpool', idf, comparison)
 			self.assertEqual(sum([ idf.global_scheme.documents for idf in comparison ]), C + D)
 
 	def test_variability_contingency_table_unknown_event_word(self):
@@ -820,7 +820,7 @@ class TestEvent(unittest.TestCase):
 		Assert that the total number of documents in each contingency table sums up to the total.
 		"""
 		extractor = event.Variability()
-		(A, B, C, D) = extractor._variability_contingency_table('merten', idfs[0], idfs[1:])
+		(A, B, C, D) = extractor._contingency_table('merten', idfs[0], idfs[1:])
 		self.assertEqual(0, A)
 
 	def test_variability_contingency_table_unknown_event_word(self):
@@ -841,7 +841,7 @@ class TestEvent(unittest.TestCase):
 		Assert that the total number of documents in each contingency table sums up to the total.
 		"""
 		extractor = event.Variability()
-		(A, B, C, D) = extractor._variability_contingency_table('milik', idfs[0], idfs[1:])
+		(A, B, C, D) = extractor._contingency_table('milik', idfs[0], idfs[1:])
 		self.assertEqual(0, A)
 		self.assertEqual(idfs[0].global_scheme.documents, B)
 
@@ -863,7 +863,7 @@ class TestEvent(unittest.TestCase):
 		Assert that the total number of documents in each contingency table sums up to the total.
 		"""
 		extractor = event.Variability()
-		(A, B, C, D) = extractor._variability_contingency_table('wickham', idfs[0], idfs[1:])
+		(A, B, C, D) = extractor._contingency_table('wickham', idfs[0], idfs[1:])
 		self.assertEqual(0, C)
 		self.assertEqual(sum([ idf.global_scheme.documents for idf in idfs[1:] ]), D)
 
@@ -886,6 +886,54 @@ class TestEvent(unittest.TestCase):
 		"""
 		term = 'liverpool'
 		extractor = event.Variability()
-		(A, B, C, D) = extractor._variability_contingency_table(term, idfs[0], idfs[1:])
+		(A, B, C, D) = extractor._contingency_table(term, idfs[0], idfs[1:])
 		self.assertEqual(idfs[0].global_scheme.idf[term], A)
 		self.assertEqual(sum([ idf.global_scheme.idf[term] for idf in idfs[1:] ]), C)
+
+	def test_variablity_chi(self):
+		"""
+		Test the chi-square calculation.
+		"""
+
+		extractor = event.Variability()
+
+		table = (600, 200, 300, 1000)
+		self.assertEqual(545.1923, round(extractor._chi(table), 4))
+
+		table = (30, 20, 331, 3218)
+		self.assertEqual(140.2925, round(extractor._chi(table), 4))
+
+	def test_variablity_chi_empty(self):
+		"""
+		Test that the chi-square statistic of an empty table is 0.
+		"""
+
+		extractor = event.Variability()
+
+		table = (0, 0, 0, 0)
+		self.assertEqual(0, extractor._chi(table))
+
+	def test_variablity_chi_empty_combinations(self):
+		"""
+		Test that the chi-square statistic of a table that is not empty, except for a few combinations, is 0.
+		"""
+
+		extractor = event.Variability()
+
+		table = (0, 1, 0, 1) # A + C = 0
+		self.assertEqual(0, extractor._chi(table))
+
+		table = (1, 0, 1, 0) # B + D = 0
+		self.assertEqual(0, extractor._chi(table))
+
+		table = (0, 0, 1, 1) # A + B = 0
+		self.assertEqual(0, extractor._chi(table))
+
+		table = (1, 1, 0, 0) # C + D = 0
+		self.assertEqual(0, extractor._chi(table))
+
+		table = (1, 0, 0, 1) # B + C = 0
+		self.assertLess(0, extractor._chi(table))
+
+		table = (0, 1, 1, 0) # A + D = 0
+		self.assertLess(0, extractor._chi(table))

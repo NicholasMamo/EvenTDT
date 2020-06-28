@@ -252,8 +252,8 @@ class Variability(Extractor):
 				The statistic's weight is based on the size of the current event.
 				"""
 				comparison = [ other for other in idfs if other is not idf ]
-				table = self._variability_contingency_table(term, idf, comparison)
-				chi = probability._chi(table)
+				table = self._contingency_table(term, idf, comparison)
+				chi = self._chi(table)
 				v += chi * idf.global_scheme.documents / all_documents
 
 			variability[term] = 1./math.log(v, self.base) if v else 0
@@ -277,7 +277,7 @@ class Variability(Extractor):
 
 		return list(set(vocabulary))
 
-	def _variability_contingency_table(self, term, current, comparison):
+	def _contingency_table(self, term, current, comparison):
 		"""
 		Create the contingency table comparing the term's appearance in the current event versus other events.
 
@@ -322,3 +322,35 @@ class Variability(Extractor):
 		D = comparison_documents - C
 
 		return (A, B, C, D)
+
+	def _chi(self, table):
+		"""
+		Calculate the chi-square statistic from the given table.
+		The chi-square statistic is 0 if the two variables are independent.
+		The higher the statistic, the more dependent the two variables are.
+
+		:param table: The contingency table as a four-tuple.
+					  The values are four-tuples representing the values of cells in the order:
+
+		 			 	1. Top-left,
+		 				2. Top-right,
+		 				3. Bottom-left, and
+		 				4. Bottom-right.
+		:type table: tuple of int
+
+		:return: The chi-square statistic.
+		:rtype: float
+		"""
+
+		N = sum(table)
+		A, B, C, D = table
+
+		"""
+		If any value in the denominator is 0, return 0.
+		This is an unspecified case that results in division by 0.
+		"""
+		if not all([ A + C, B + D, A + B, C + D ]):
+			return 0
+
+		return ((N * (A * D - C * B) ** 2) /
+			    ( (A + C) * (B + D) * (A + B) * (C + D) ))
