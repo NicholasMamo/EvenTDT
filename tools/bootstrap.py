@@ -36,7 +36,8 @@ sys.path.insert(-1, root)
 sys.path.insert(-1, lib)
 
 import tools
-from ate.bootstrapping.probability import p, PMI, CHI
+from ate.stat import probability
+from ate.bootstrapping.probability import PMIBootstrapper, ChiBootstrapper
 from logger import logger
 
 def setup_args():
@@ -177,7 +178,8 @@ def bootstrap(files, seed, method, iterations, keep, candidates):
 		Bootstrap the next seed keywords and save them as bootstrapped.
 		"""
 		logger.info(f"Bootstrapping with { ', '.join(next_seed) }")
-		scores = method(files, next_seed, y=candidates, cache=next_seed)
+		bootstrapper = method()
+		scores = bootstrapper.bootstrap(files, seed=next_seed, candidates=candidates, cache=next_seed)
 
 		"""
 		Get the scores of the new candidates.
@@ -247,7 +249,7 @@ def generate_candidates(files, cutoff):
 	:rtype: list of str
 	"""
 
-	vocabulary = p(files)
+	vocabulary = probability.p(files)
 	vocabulary = sorted(vocabulary, key=vocabulary.get, reverse=True)
 	return vocabulary[:cutoff]
 
@@ -308,8 +310,8 @@ def method(method):
 	Convert the given string into a bootstrapping function.
 	The accepted methods are:
 
-		#. :func:`~ate.bootstrapping.probability.PMI`,
-		#. :func:`~ate.bootstrapping.probability.CHI`
+		#. :func:`~ate.bootstrapping.probability.pmi.PMIBootstrapper`,
+		#. :func:`~ate.bootstrapping.probability.chi.ChiBootstrapper`
 
 	:param method: The method string.
 	:type method: str
@@ -321,8 +323,8 @@ def method(method):
 	"""
 
 	methods = {
-		'pmi': PMI,
-		'chi': CHI,
+		'pmi': PMIBootstrapper,
+		'chi': ChiBootstrapper,
 	}
 
 	if method.lower() in methods:
