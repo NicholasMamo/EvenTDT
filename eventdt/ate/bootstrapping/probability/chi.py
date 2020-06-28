@@ -4,7 +4,7 @@ It is calculated using a two-by-two contingency table as:
 
 .. math::
 
-	CHI(x, y) = \\frac{(((A + B + C + D) \\cdot (A \\cdot D - C \\cdot B)^2)}{(A + C) * (B + D) * (A + B) * (C + D) )}
+	CHI(x, y) = \\frac{(A + B + C + D) \\times (A \\times D - C \\times B)^2}{(A + C) \\times (B + D) \\times (A + B) \\times (C + D) )}
 
 where `A`, `B`, `C` and `D` are the cells in the contingency table.
 The values `A`, `B`, `C` and `D` are placed in the contingency table as follows.

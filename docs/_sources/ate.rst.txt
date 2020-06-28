@@ -143,3 +143,19 @@ Probability
    :members:
    :private-members:
    :special-members:
+
+Pointwise Mutual Information (PMI)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: ate.bootstrapping.probability.pmi
+   :members:
+   :private-members:
+   :special-members:
+
+Chi-Square
+^^^^^^^^^^
+
+.. automodule:: ate.bootstrapping.probability.chi
+   :members:
+   :private-members:
+   :special-members:
