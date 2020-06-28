@@ -14,8 +14,8 @@ for path in paths:
 	if path not in sys.path:
 	    sys.path.append(path)
 
-from tfidf import TFIDFExtractor
 from ate import linguistic
+from ate.stat import TFIDFExtractor
 from objects.exportable import Exportable
 
 class TestTFIDFExtractor(unittest.TestCase):
