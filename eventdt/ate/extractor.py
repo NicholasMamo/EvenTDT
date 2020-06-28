@@ -50,7 +50,7 @@ class Extractor(ABC):
 
 class DummyExtractor(Extractor):
 	"""
-	A dummy extractor that does nothing and returns an empty list of terms.
+	A dummy extractor that does nothing and returns an empty dictionary of terms.
 	It is used only for testing purposes.
 	"""
 
