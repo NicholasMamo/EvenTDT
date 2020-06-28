@@ -684,7 +684,12 @@ If <cite>None</cite> is given, all words are considered to be candidates.</p></l
 <div class="section" id="module-ate.stat.corpus.tfdcf">
 <span id="tf-dcf"></span><h4>TF-DCF<a class="headerlink" href="#module-ate.stat.corpus.tfdcf" title="Permalink to this headline">¶</a></h4>
 <p>Term Frequency-Disjoint Corpora Frequency (TF-DCF) is an ATE approach proposed by Lopes et al.
-TF-DCF compares the term frequency of a term in a domain corpus against general corpora.</p>
+TF-DCF compares the term frequency of a term in a domain corpus against general corpora:</p>
+<div class="math notranslate nohighlight">
+\[tf-dcf_t^{(c)} = \frac{tf_t^{(c)}}{\prod_{\forall g \in G} 1 + \log( 1 + tf_t^{(g)} )}\]</div>
+<p>where <span class="math notranslate nohighlight">\(t\)</span> is the term for which TF-DCF is being calculated.
+<span class="math notranslate nohighlight">\(c\)</span> and <span class="math notranslate nohighlight">\(G\)</span> are the domain-specific corpus and the general corpora respectively.
+<span class="math notranslate nohighlight">\(tf_t^{(c)}\)</span> is the term frequency of term <span class="math notranslate nohighlight">\(t\)</span> in corpus <span class="math notranslate nohighlight">\((c)\)</span>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Implementation based on the algorithm outlined in <a class="reference external" href="https://www.sciencedirect.com/science/article/abs/pii/S0950705115004979">Estimating term domain relevance through term frequency, disjoint corpora frequency - tf-dcf by Lopes et al. (2016)</a>.

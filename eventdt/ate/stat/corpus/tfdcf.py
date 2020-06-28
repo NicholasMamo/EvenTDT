@@ -1,6 +1,14 @@
 """
 Term Frequency-Disjoint Corpora Frequency (TF-DCF) is an ATE approach proposed by Lopes et al.
-TF-DCF compares the term frequency of a term in a domain corpus against general corpora.
+TF-DCF compares the term frequency of a term in a domain corpus against general corpora:
+
+.. math::
+
+	tf-dcf_t^{(c)} = \\frac{tf_t^{(c)}}{\\prod_{\\forall g \\in G} 1 + \\log( 1 + tf_t^{(g)} )}
+
+where :math:`t` is the term for which TF-DCF is being calculated.
+:math:`c` and :math:`G` are the domain-specific corpus and the general corpora respectively.
+:math:`tf_t^{(c)}` is the term frequency of term :math:`t` in corpus :math:`(c)`.
 
 .. note::
 
