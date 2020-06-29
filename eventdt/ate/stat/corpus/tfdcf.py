@@ -12,7 +12,7 @@ where :math:`t` is the term for which TF-DCF is being calculated.
 
 .. note::
 
-	Implementation based on the algorithm outlined in `Estimating term domain relevance through term frequency, disjoint corpora frequency - tf-dcf by Lopes et al. (2016) <https://www.sciencedirect.com/science/article/abs/pii/S0950705115004979>`_.
+	Implementation based on the metric outlined in `Estimating term domain relevance through term frequency, disjoint corpora frequency - tf-dcf by Lopes et al. (2016) <https://www.sciencedirect.com/science/article/abs/pii/S0950705115004979>`_.
 	This paper is based on an earlier paper by the same authors.
 """
 

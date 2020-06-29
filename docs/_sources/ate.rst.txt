@@ -67,8 +67,15 @@ Corpus Comparison
    :members:
    :special-members:
 
-TF-DCF
-^^^^^^
+Domain Specificity
+^^^^^^^^^^^^^^^^^^
+
+.. automodule:: ate.stat.corpus.specificity
+   :members:
+   :special-members:
+
+Term Frequency-Disjoint Corpora Frequency
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: ate.stat.corpus.tfdcf
    :members:

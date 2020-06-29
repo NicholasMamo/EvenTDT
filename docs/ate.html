@@ -107,7 +107,8 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ate.stat.probability">Probability</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ate.stat.corpus">Corpus Comparison</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#module-ate.stat.corpus.tfdcf">TF-DCF</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ate.stat.corpus.specificity">Domain Specificity</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ate.stat.corpus.tfdcf">Term Frequency-Disjoint Corpora Frequency</a></li>
 </ul>
 </li>
 </ul>
@@ -681,8 +682,25 @@ If <cite>None</cite> is given, all words are considered to be candidates.</p></l
 
 </dd></dl>
 
+<div class="section" id="module-ate.stat.corpus.specificity">
+<span id="domain-specificity"></span><h4>Domain Specificity<a class="headerlink" href="#module-ate.stat.corpus.specificity" title="Permalink to this headline">¶</a></h4>
+<p>Domain specificity is a corpus comparison approach proposed by Park et al.
+The metric promotes terms that appears in the domain corpus more frequently than in general corpora:</p>
+<div class="math notranslate nohighlight">
+\[specificity(w) = \frac{p_d(w)}{p_g(w)} = \frac{\frac{c_d(w)}{N_d}}{\frac{c_g(w)}{N_g}}\]</div>
+<p>where <span class="math notranslate nohighlight">\(w\)</span> is the word for which domain specificity is calculated.
+<span class="math notranslate nohighlight">\(p_d(w)\)</span> and <span class="math notranslate nohighlight">\(p_g(w)\)</span> are the probabilities that the word <span class="math notranslate nohighlight">\(w\)</span> appears in the domain-specific corpus <span class="math notranslate nohighlight">\(d\)</span> and the general corpus <span class="math notranslate nohighlight">\(g\)</span> respectively.
+Domain specificity can also be expressed in terms of token frequency.
+<span class="math notranslate nohighlight">\(c_d(w)\)</span> and <span class="math notranslate nohighlight">\(c_g(w)\)</span> are word <span class="math notranslate nohighlight">\(w\)</span>’s frequency in the domain-specific corpus <span class="math notranslate nohighlight">\(d\)</span> and the general corpus <span class="math notranslate nohighlight">\(g\)</span> respectively.
+Similarly, <span class="math notranslate nohighlight">\(N_d\)</span> and <span class="math notranslate nohighlight">\(N_g\)</span> are the number of words in the domain-specific corpus <span class="math notranslate nohighlight">\(d\)</span> and the general corpus <span class="math notranslate nohighlight">\(g\)</span> respectively.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Implementation based on the metric described in <a class="reference external" href="https://www.isca-speech.org/archive/interspeech_2008/i08_2070.html">An Empirical Analysis of Word Error Rate and Keyword Error Rate by Park et al. (2008)</a>.
+Domain specificity was also used in the field of ATE by <a class="reference external" href="https://www.jbe-platform.com/content/journals/10.1075/term.9.2.05chu">Chung et al. (2003) in A Corpus Comparison Approach for Terminology Extraction</a>, among others.</p>
+</div>
+</div>
 <div class="section" id="module-ate.stat.corpus.tfdcf">
-<span id="tf-dcf"></span><h4>TF-DCF<a class="headerlink" href="#module-ate.stat.corpus.tfdcf" title="Permalink to this headline">¶</a></h4>
+<span id="term-frequency-disjoint-corpora-frequency"></span><h4>Term Frequency-Disjoint Corpora Frequency<a class="headerlink" href="#module-ate.stat.corpus.tfdcf" title="Permalink to this headline">¶</a></h4>
 <p>Term Frequency-Disjoint Corpora Frequency (TF-DCF) is an ATE approach proposed by Lopes et al.
 TF-DCF compares the term frequency of a term in a domain corpus against general corpora:</p>
 <div class="math notranslate nohighlight">
@@ -692,7 +710,7 @@ TF-DCF compares the term frequency of a term in a domain corpus against general 
 <span class="math notranslate nohighlight">\(tf_t^{(c)}\)</span> is the term frequency of term <span class="math notranslate nohighlight">\(t\)</span> in corpus <span class="math notranslate nohighlight">\((c)\)</span>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Implementation based on the algorithm outlined in <a class="reference external" href="https://www.sciencedirect.com/science/article/abs/pii/S0950705115004979">Estimating term domain relevance through term frequency, disjoint corpora frequency - tf-dcf by Lopes et al. (2016)</a>.
+<p>Implementation based on the metric outlined in <a class="reference external" href="https://www.sciencedirect.com/science/article/abs/pii/S0950705115004979">Estimating term domain relevance through term frequency, disjoint corpora frequency - tf-dcf by Lopes et al. (2016)</a>.
 This paper is based on an earlier paper by the same authors.</p>
 </div>
 <dl class="class">
