@@ -15,8 +15,8 @@ Included are general functions that are likely to be useful for all algorithms.
    :members:
    :special-members:
 
-Extractor
-=========
+The Basic Extractor
+===================
 
 .. automodule:: ate.extractor
    :members:
