@@ -698,6 +698,65 @@ Similarly, <span class="math notranslate nohighlight">\(N_d\)</span> and <span c
 <p>Implementation based on the metric described in <a class="reference external" href="https://www.isca-speech.org/archive/interspeech_2008/i08_2070.html">An Empirical Analysis of Word Error Rate and Keyword Error Rate by Park et al. (2008)</a>.
 Domain specificity was also used in the field of ATE by <a class="reference external" href="https://www.jbe-platform.com/content/journals/10.1075/term.9.2.05chu">Chung et al. (2003) in A Corpus Comparison Approach for Terminology Extraction</a>, among others.</p>
 </div>
+<dl class="class">
+<dt id="ate.stat.corpus.specificity.SpecificityExtractor">
+<em class="property">class </em><code class="sig-name descname">SpecificityExtractor</code><span class="sig-paren">(</span><em class="sig-param">general</em>, <em class="sig-param">ignore_unknown=True</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.stat.corpus.specificity.SpecificityExtractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>The domain specificity extractor stores a list of general corpora.
+It uses these corpora to identify terms that appear very often in domain-specific corpora than in the general corpora.
+Since this metric is based on probability in the general corpora, the specificity of an unknown word is infinite.
+Therefore the domain specificity extractor allows a policy to ignore unknown words.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><p><strong>ignore_unknown</strong> (<em>bool</em>) – A boolean indicating whether to ignore words that do not appear in the general corpora.
+If <cite>True</cite>, unknown words are ignored and not included in the scores.
+If <cite>False</cite>, the score of unknown words is set to be higher than the scores of known words.
+The more often an unknown word appears in the domain-specific corpora, the higher its score.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="ate.stat.corpus.specificity.SpecificityExtractor.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">general</em>, <em class="sig-param">ignore_unknown=True</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.stat.corpus.specificity.SpecificityExtractor.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the corpus comparison extractor with the general corpora and the policy to deal with unknown words.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>general</strong> (<em>str</em><em> or </em><em>list of str</em>) – A path or a list of paths to general corpora, to be used for comparison.
+Corpus comparison approaches expect the corpora to be tokenized.</p></li>
+<li><p><strong>ignore_unknown</strong> (<em>bool</em>) – A boolean indicating whether to ignore words that do not appear in the general corpora.
+If <cite>True</cite>, unknown words are ignored and not included in the scores.
+If <cite>False</cite>, the score of unknown words is set to be higher than the scores of known words.
+The more often an unknown word appears in the domain-specific corpora, the higher its score.
+The policy defaults to ignoring unknown words.
+This is because Twitter suffers from misspellings and informal writing.
+This behavior leads to many unknown words.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ate.stat.corpus.specificity.SpecificityExtractor.extract">
+<code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">corpora</em>, <em class="sig-param">candidates=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.stat.corpus.specificity.SpecificityExtractor.extract" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract terms by scoring them using domain specificity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpora</strong> (<em>str</em><em> or </em><em>list of str</em>) – A path to a corpus or a list of paths to corpora where to look for terms.</p></li>
+<li><p><strong>candidates</strong> (<em>None</em><em> or </em><em>list of str</em>) – A list of terms which may be extracted.
+If <cite>None</cite> is given, all words are considered to be candidates.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary with terms as keys and their domain specificity scores as values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="module-ate.stat.corpus.tfdcf">
 <span id="term-frequency-disjoint-corpora-frequency"></span><h4>Term Frequency-Disjoint Corpora Frequency<a class="headerlink" href="#module-ate.stat.corpus.tfdcf" title="Permalink to this headline">¶</a></h4>
