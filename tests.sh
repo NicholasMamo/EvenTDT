@@ -59,6 +59,7 @@ ate_tests() {
 
 	echo -e "${HIGHLIGHT}Statistical${DEFAULT}"
 	python3 -m unittest eventdt.ate.stat.corpus.tests.test_package
+	python3 -m unittest eventdt.ate.stat.corpus.tests.test_specificity
 	python3 -m unittest eventdt.ate.stat.corpus.tests.test_tfdcf
 	python3 -m unittest eventdt.ate.stat.probability.tests.test_package
 	python3 -m unittest eventdt.ate.stat.tests.test_tf
