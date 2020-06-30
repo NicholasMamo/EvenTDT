@@ -130,9 +130,8 @@ class SpecificityExtractor(ComparisonExtractor):
 
 		.. note::
 
-			The function ignores words that are unknown, but which do not have a probability.
-			These words might have had a probability of 0 in the general domain, but do not appear in the domain words.
-			This would be akin to a fraction :math:`\\frac{0}{0}`.
+			Terms that appear neither in the domain nor in the general corpora are akin to a fraction :math:`\\frac{0}{0}`.
+			In this case, the function gives them a score of 0.
 
 		:param unknown: A list of unknown words.
 		:type unknown: list of str
@@ -155,7 +154,7 @@ class SpecificityExtractor(ComparisonExtractor):
 		"""
 		terms = [ term for term in unknown
 					   if term in probabilities and
-					      probabilities.get(term) ]
+					   	  probabilities.get(term) ]
 
 		"""
 		Get the maximum score of known words.
@@ -172,7 +171,10 @@ class SpecificityExtractor(ComparisonExtractor):
 		"""
 		Rank the unknown terms.
 		The scores start from the maximum score and increase with an increment of 1.
+		Terms that appear neither in the domain nor in the general corpora get a score of 0.
 		"""
 		unknown_scores.update({ term: max_score + (i + 1) for (i, term) in enumerate(terms) })
+		unknown_scores.update({ term: 0 for term in unknown
+		 								if not probabilities.get(term) })
 
 		return unknown_scores

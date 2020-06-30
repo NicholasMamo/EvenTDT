@@ -153,6 +153,28 @@ class TestSpecificityExtractor(unittest.TestCase):
 		terms = extractor.extract(corpora, candidates=[ 'chelsea', 'goal', 'cesc' ])
 		self.assertEqual({ 'chelsea', 'goal', 'cesc' }, set(terms.keys()))
 
+	def test_extract_candidates_ignore_unknown_domain(self):
+		"""
+		Test that the domain specificity extractor extracts scores for select candidates even if they are unknown in the domain and in the general corpora.
+		"""
+
+		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json')
+		general = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json')
+
+		extractor = SpecificityExtractor(general, ignore_unknown=True)
+
+		"""
+		Ensure that 'superlongword' is an unknown word and therefore missing from the extracted terms.
+		"""
+		terms = extractor.extract(corpora)
+		self.assertFalse('superlongword' in terms)
+
+		"""
+		Specifically look for the same term.
+		"""
+		terms = extractor.extract(corpora, candidates=[ 'chelsea', 'goal', 'superlongword' ])
+		self.assertEqual({ 'chelsea', 'goal', 'superlongword' }, set(terms.keys()))
+
 	def test_extract_candidates_same_scores(self):
 		"""
 		Test that the domain specificity extractor's scores for known candidates are the same as when candidates are not given.
@@ -281,7 +303,7 @@ class TestSpecificityExtractor(unittest.TestCase):
 
 	def test_rank_unknown_words_not_in_domain(self):
 		"""
-		Test that when ranking unknown words, words that do not appear in the domain are excluded.
+		Test that when ranking unknown words, words that do not appear in the domain get a score of 0.
 		"""
 
 		domain = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json')
@@ -300,11 +322,11 @@ class TestSpecificityExtractor(unittest.TestCase):
 		unknown_words.append('superlongword')
 
 		unknown_scores = extractor._rank_unknown_words(unknown_words, scores, probabilities)
-		self.assertFalse('superlongword' in unknown_scores)
+		self.assertEqual(0, unknown_scores['superlongword'])
 
 	def test_rank_unknown_words_probability_zero(self):
 		"""
-		Test that when ranking unknown words with a probability of zero in the domain, they are excluded.
+		Test that when ranking unknown words with a probability of zero in the domain, they get a score of 0.
 		"""
 
 		domain = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json')
@@ -324,7 +346,7 @@ class TestSpecificityExtractor(unittest.TestCase):
 		probabilities['superlongword'] = 0
 
 		unknown_scores = extractor._rank_unknown_words(unknown_words, scores, probabilities)
-		self.assertFalse('superlongword' in unknown_scores)
+		self.assertEqual(0, unknown_scores['superlongword'])
 
 	def test_rank_unknown_words_empty_scores(self):
 		"""
