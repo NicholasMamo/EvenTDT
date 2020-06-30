@@ -22,6 +22,46 @@ class TestRankExtractor(unittest.TestCase):
 	"""
 
 	def test_extract(self):
+	def test_cutoff_str(self):
+		"""
+		Test that the rank extractor does not accept a string cutoff value.
+		"""
+
+		general = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json')
+		self.assertRaises(ValueError, RankExtractor, general, "1")
+
+	def test_cutoff_float(self):
+		"""
+		Test that the rank extractor does not accept a float cutoff value.
+		"""
+
+		general = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json')
+		self.assertRaises(ValueError, RankExtractor, general, 1.0)
+
+	def test_cutoff_zero(self):
+		"""
+		Test that the rank extractor does not accept a cutoff value of zero.
+		"""
+
+		general = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json')
+		self.assertRaises(ValueError, RankExtractor, general, 0)
+
+	def test_cutoff_negative(self):
+		"""
+		Test that the rank extractor does not accept a negative cutoff value.
+		"""
+
+		general = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json')
+		self.assertRaises(ValueError, RankExtractor, general, -1)
+
+	def test_cutoff_positive(self):
+		"""
+		Test that the rank extractor accepts a positive cutoff value.
+		"""
+
+		general = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json')
+		self.assertTrue(RankExtractor(general, 1))
+
 		"""
 		Test that the extracted terms make sense.
 		"""

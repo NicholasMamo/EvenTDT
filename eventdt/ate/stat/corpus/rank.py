@@ -44,7 +44,40 @@ class RankExtractor(ComparisonExtractor):
 	The rank difference extractor stores a list of general corpora.
 	It calculates the rank of terms in the general corpora.
 	Then, the algorithm compares them with the terms' ranks in the domain.
+
+	Since Twitter corpora include many typos and informal conversation habits, the distribution of words is very long-tailed.
+	This means that the standard rank extractor implementation punishes terms that appear a few times in the general corpora.
+	This is because even terms that appear 5 times are ranked very highly.
+	Therefore this implementation allows a cutoff value that excludes terms with a lower term frequency.
+
+	:ivar cutoff: The minimum term frequency of a term to be considered.
+	:vartype cutoff: float
 	"""
+
+	def __init__(self, general, cutoff=1):
+		"""
+		Create the corpus comparison extractor with the general corpora and the policy to deal with unknown words.
+
+		:param general: A path or a list of paths to general corpora, to be used for comparison.
+						Corpus comparison approaches expect the corpora to be tokenized.
+		:type general: str or list of str
+		:param cutoff: The minimum term frequency of a term to be considered.
+					   The value is inclusive, so the default value of 1 includes all terms.
+		:type cutoff: float
+
+		:raises ValueError: When the cutoff is not an integer.
+		:raises ValueError: When the cutoff is not positive.
+		"""
+
+		super().__init__(general)
+
+		"""
+		Validate the cutoff.
+		"""
+		if type(cutoff) is not int or cutoff < 1:
+			raise ValueError("The cutoff value must be a positive integer")
+
+		self.cutoff = cutoff
 
 	def extract(self, corpora, candidates=None):
 		"""
