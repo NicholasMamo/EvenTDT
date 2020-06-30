@@ -105,3 +105,59 @@ class SpecificityExtractor(ComparisonExtractor):
 		unknown.extend([ word for word in general_words
 		 					  if not general_words[word] ])
 		return unknown
+
+	def _rank_unknown_words(self, unknown, scores, probabilities):
+		"""
+		Rank the unknown terms.
+		All unknown terms have a higher score than the known terms (because their score should be, theoretically, infinite).
+		However, since not all unknown words are equal, the scores are not all infinite.
+		Instead, the scores start from the highest known score.
+
+		.. note::
+
+			The function ignores words that are unknown, but which do not have a probability.
+			These words might have had a probability of 0 in the general domain, but do not appear in the domain words.
+			This would be akin to a fraction :math:`\\frac{0}{0}`.
+
+		:param unknown: A list of unknown words.
+		:type unknown: list of str
+		:param scores: The current known scores as a dictionary.
+					   The terms are the keys and the values are the corresponding scores.
+		:type scores: dict
+		:param probabilities: The probabilities of the domain words.
+							  The terms are the keys and the values are the corresponding probabilities.
+		:type probabilities: dict
+
+		:return: A dictionary of scores for the unknown terms.
+				 The terms are the keys and the values are the corresponding scores.
+		:rtype: dict
+		"""
+
+		scores = { }
+
+		"""
+		Remove unknown terms that do not appear in the domain either.
+		"""
+		terms = [ term for term in unknown
+					   if term in probabilities and
+					      probabilities.get(term) ]
+
+		"""
+		Get the maximum score of known words.
+		If there are no known words, start from 0.
+		This may happen when all domain words are unknown.
+		"""
+		max_score = max(scores.values()) if scores else 0
+
+		"""
+		Sort the terms in ascending order of their probability of appearing in the domain.
+		"""
+		terms = sorted(terms, key=probabilities.get, reverse=False)
+
+		"""
+		Rank the unknown terms.
+		The scores start from the maximum score and increase with an increment of 1.
+		"""
+		scores.update({ term: max_score + (i + 1) for (i, term) in enumerate(terms) })
+
+		return scores
