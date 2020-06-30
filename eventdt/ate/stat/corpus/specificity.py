@@ -133,7 +133,7 @@ class SpecificityExtractor(ComparisonExtractor):
 		:rtype: dict
 		"""
 
-		scores = { }
+		unknown_scores = { }
 
 		"""
 		Remove unknown terms that do not appear in the domain either.
@@ -158,6 +158,6 @@ class SpecificityExtractor(ComparisonExtractor):
 		Rank the unknown terms.
 		The scores start from the maximum score and increase with an increment of 1.
 		"""
-		scores.update({ term: max_score + (i + 1) for (i, term) in enumerate(terms) })
+		unknown_scores.update({ term: max_score + (i + 1) for (i, term) in enumerate(terms) })
 
-		return scores
+		return unknown_scores

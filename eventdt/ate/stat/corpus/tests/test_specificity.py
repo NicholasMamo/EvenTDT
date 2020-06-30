@@ -152,7 +152,27 @@ class TestSpecificityExtractor(unittest.TestCase):
 		scores = probabilities
 		unknown_scores = extractor._rank_unknown_words(unknown_words, scores, probabilities)
 
-		self.assertTrue(all( score > 0 for score in scores.values() ))
+		self.assertTrue(all( score > 0 for score in unknown_scores.values() ))
+
+	def test_rank_unknown_words_with_scores(self):
+		"""
+		Test that when there are scores of known words, the rankings start from the maximum score.
+		"""
+
+		domain = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json')
+		general = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json')
+
+		domain_words = linguistic.vocabulary(domain)
+		general_words = linguistic.vocabulary(general)
+		general_words = dict.fromkeys(general_words, 1/len(general_words))
+
+		extractor = SpecificityExtractor(general)
+		unknown_words = extractor._unknown(domain_words, general_words)
+		probabilities = probability.p(domain)
+		scores = probabilities
+		unknown_scores = extractor._rank_unknown_words(unknown_words, scores, probabilities)
+
+		self.assertTrue(all( score > max(scores.values()) for score in unknown_scores.values() ))
 
 	def test_rank_unknown_words_order(self):
 		"""
