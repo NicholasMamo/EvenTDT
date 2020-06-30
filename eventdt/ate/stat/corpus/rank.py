@@ -27,3 +27,39 @@ This special case of a score of :math:`-1` occurs when a word does not appear in
 
 	Implementation based on the metric described in `Measuring mono-word termhood by rank difference via corpus comparison by Kit and Liu (2008) <https://benjamins.com/catalog/term.14.2.05kit>`_.
 """
+
+import os
+import sys
+
+path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
+if path not in sys.path:
+    sys.path.append(path)
+
+from ate.stat.corpus import ComparisonExtractor
+from ate.stat import TFExtractor
+
+class RankExtractor(ComparisonExtractor):
+	"""
+	The rank difference extractor stores a list of general corpora.
+	It calculates the rank of terms in the general corpora.
+	Then, the algorithm compares them with the terms' ranks in the domain.
+	"""
+
+	def extract(self, corpora, candidates=None):
+		"""
+		Extract terms by scoring them using rank difference.
+
+		:param corpora: A path to a corpus or a list of paths to corpora where to look for terms.
+		:type corpora: str or list of str
+		:param candidates: A list of terms which may be extracted.
+						   If `None` is given, all words are considered to be candidates.
+		:type candidates: None or list of str
+
+		:return: A dictionary with terms as keys and their rank difference scores as values.
+		:rtype: dict
+		"""
+
+		scores = { }
+
+		return { }
+		
