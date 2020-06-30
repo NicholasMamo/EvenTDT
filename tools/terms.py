@@ -20,6 +20,7 @@ Accepted arguments:
 	- ``-o --output``		*<Required>* The path to the file where to store the extracted terms.
 	- ``--tfidf``			*<Optional>* The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).
 	- ``--general``			*<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `Rank`, `Specificity` and `TF-DCF` methods).
+	- ``--cutoff``			*<Optional>* The minimum term frequency to consider when ranking terms (used only with the `Specificity` method).
 """
 
 import argparse
@@ -50,6 +51,7 @@ def setup_args():
 		- ``-o --output``		*<Required>* The path to the file where to store the extracted terms.
 		- ``--tfidf``			*<Optional>* The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).
 		- ``--general``			*<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `Rank`, `Specificity` and `TF-DCF` methods).
+		- ``--cutoff``			*<Optional>* The minimum term frequency to consider when ranking terms (used only with the `Specificity` method).
 
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
@@ -69,6 +71,9 @@ def setup_args():
 	parser.add_argument('--general',
 						nargs='+', required=False,
 						help='<Optional> A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `Rank`, `Specificity` and `TF-DCF` methods).')
+	parser.add_argument('--cutoff',
+						type=int, default=1, required=False,
+						help='<Optional> The minimum term frequency to consider when ranking terms (used only with the `Specificity` method).')
 
 	args = parser.parse_args()
 	return args
@@ -126,7 +131,7 @@ def instantiate(args):
 		if not args.general:
 			parser.error("One or more paths to general corpora are required with rank difference method.")
 
-		return args.method(args.general)
+		return args.method(args.general, cutoff=args.cutoff)
 
 	return args.method()
 
