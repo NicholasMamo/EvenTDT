@@ -21,6 +21,135 @@ class TestRankExtractor(unittest.TestCase):
 	Test the functionality of the rank difference extractor functions.
 	"""
 
+	def test_extract(self):
+		"""
+		Test that the extracted terms make sense.
+		"""
+
+		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json')
+		general = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json'),
+					os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-2.json') ]
+
+		extractor = RankExtractor(general)
+		terms = extractor.extract(corpora)
+		terms = sorted(terms, key=terms.get, reverse=True)
+		self.assertTrue('chelsea' in terms[:10])
+		self.assertTrue('hazard' in terms[:10])
+		self.assertTrue('willian' in terms[:10])
+
+	def test_extract_upper_bound(self):
+		"""
+		Test that no score is greater than 1.
+		"""
+
+		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'BVBFCB-100.json')
+		general = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json'),
+					os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-2.json') ]
+
+		"""
+		Ensure that the top domain term is not in the general corpora.
+		"""
+		extractor = TFExtractor()
+		terms = extractor.extract(corpora)
+		self.assertTrue(max(terms, key=terms.get) not in extractor.extract(general))
+
+		extractor = RankExtractor(general)
+		terms = extractor.extract(corpora)
+		self.assertEqual(1, max(terms.values()))
+		self.assertTrue(all( score <= 1 for score in terms.values() ))
+
+	def test_extract_lower_bound(self):
+		"""
+		Test that no score is less than or equal to -1.
+		"""
+
+		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'BVBFCB-100.json')
+		general = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json'),
+					os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-2.json') ]
+
+		extractor = RankExtractor(general)
+		terms = extractor.extract(corpora)
+		self.assertTrue(all( score > -1 for score in terms.values() ))
+
+	def test_extract_negative(self):
+		"""
+		Test that scores may be negative.
+		"""
+
+		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'BVBFCB-100.json')
+		general = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json'),
+					os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-2.json') ]
+
+		extractor = RankExtractor(general)
+		terms = extractor.extract(corpora)
+		self.assertTrue(any( score < 0 for score in terms.values() ))
+
+	def test_extract_all(self):
+		"""
+		Test that the rank difference extractor extracts all terms from the vocabulary.
+		"""
+
+		corpora = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json'),
+		 			os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'BVBFCB-100.json') ]
+		general = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json')
+
+		extractor = RankExtractor(general)
+		terms = extractor.extract(corpora)
+		vocabulary = linguistic.vocabulary(corpora)
+		self.assertTrue(all( term in terms for term in vocabulary ))
+
+	def test_extract_all_multiple_corpora(self):
+		"""
+		Test that the rank difference extractor extracts all terms from multiple corpora.
+		"""
+
+		corpora = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json'),
+		 			os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'BVBFCB-100.json') ]
+		general = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json')
+
+		extractor = RankExtractor(general)
+		terms_1 = extractor.extract(corpora[0])
+		terms_2 = extractor.extract(corpora[1])
+		terms_combined = extractor.extract(corpora)
+		self.assertTrue(all( term in terms_combined for term in terms_1 ))
+		self.assertTrue(all( term in terms_combined for term in terms_2 ))
+
+	def test_extract_candidates(self):
+		"""
+		Test that the rank difference extractor extracts scores for only select candidates if they are given.
+		"""
+
+		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json')
+		general = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json')
+
+		extractor = RankExtractor(general)
+		terms = extractor.extract(corpora, candidates=[ 'chelsea', 'goal' ])
+		self.assertEqual({ 'chelsea', 'goal' }, set(terms.keys()))
+
+	def test_extract_candidate_unknown(self):
+		"""
+		Test that when extracting a candidate that does not appear in the domain or background, its score is zero.
+		"""
+
+		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json')
+		general = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json')
+
+		extractor = RankExtractor(general)
+		terms = extractor.extract(corpora, candidates=[ 'chelsea', 'goal', 'superlongword' ])
+		self.assertEqual(0, terms['superlongword'])
+
+	def test_extract_empty_general(self):
+		"""
+		Test that when extracting terms with an empty general corpus, all scores are positive.
+		"""
+
+		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json')
+		general = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'empty.json')
+
+		extractor = RankExtractor(general)
+		terms = extractor.extract(corpora)
+		self.assertTrue(all( score > 0 for score in terms.values() ))
+
 	def test_rank_empty_dict(self):
 		"""
 		Test that when ranking an empty dictionary, an empty dictionary is returned.

@@ -35,6 +35,7 @@ path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
+from ate import linguistic
 from ate.stat.corpus import ComparisonExtractor
 from ate.stat import TFExtractor
 
@@ -61,8 +62,37 @@ class RankExtractor(ComparisonExtractor):
 
 		scores = { }
 
-		return { }
-		
+		"""
+		Count the term frequencies of the terms in the domain and in the general corpora.
+		"""
+		extractor = TFExtractor()
+		tf_d = extractor.extract(corpora, candidates)
+		tf_b = extractor.extract(self.general, candidates)
+
+		"""
+		Rank the terms in ascending order of their term frequency.
+		"""
+		r_d = self._rank(tf_d)
+		r_b = self._rank(tf_b)
+
+		"""
+		Count the length of the rankings.
+		"""
+		V_d = len(r_d)
+		V_b = len(r_b)
+
+		"""
+		To simplify the calculation, the rankings are converted into dictionaries.
+		The algorithm uses it to calculate the scores for all domain terms.
+		"""
+		r_d = { term: r + 1 for r, term in enumerate(r_d) }
+		r_b = { term: r + 1 for r, term in enumerate(r_b) }
+		if V_b:
+			scores.update({ term: r_d[term] / V_d - r_b.get(term, 0) / V_b for term in r_d })
+		else:
+			scores.update({ term: r_d[term] / V_d for term in r_d })
+
+		return scores
 
 	def _rank(self, tf):
 		"""
