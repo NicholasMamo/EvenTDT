@@ -63,3 +63,45 @@ class SpecificityExtractor(ComparisonExtractor):
 		super().__init__(general)
 		self.ignore_unknown = ignore_unknown
 
+	def extract(self, corpora, candidates=None):
+		"""
+		Extract terms by scoring them using domain specificity.
+
+		:param corpora: A path to a corpus or a list of paths to corpora where to look for terms.
+		:type corpora: str or list of str
+		:param candidates: A list of terms which may be extracted.
+						   If `None` is given, all words are considered to be candidates.
+		:type candidates: None or list of str
+
+		:return: A dictionary with terms as keys and their domain specificity scores as values.
+		:rtype: dict
+		"""
+
+		scores = { }
+
+		"""
+		Calculate the word probabilities.
+		"""
+		p_d = probability.p(corpora, candidates)
+		p_g = probability.p(self.general, candidates)
+
+
+	def _unknown(self, domain_words, general_words):
+		"""
+		Get the list of the unknown words in the general words.
+		These are either words that are not in the domain words, or words that have a probability of 0.
+
+		:param domain_words: A list of words found in the domain.
+		:type domain_words: list of str or dict
+		:param general_words: A dictionary with words as keys and their probabilities of appearing in the general corpora as values.
+		:type general_words: dict
+
+		:return: A list of words that either appear in the domain, but not in the general corpora, or which have a probability of 0 of appearing in the general corpora.
+		:rtype: list of str
+		"""
+
+		unknown = [ word for word in domain_words
+						 if word not in general_words ]
+		unknown.extend([ word for word in general_words
+		 					  if not general_words[word] ])
+		return unknown
