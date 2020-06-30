@@ -290,19 +290,19 @@ class Tokenizer(object):
 		This process is based on NLTK.
 		It first splits sentences, then it tags words and finally extracts only words tagged with the correct tags.
 
-		:param string: The string from which to extract nouns.
+		:param string: The string from which to extract words.
 		:type string: str
 
-		:return: A list of noun tokens.
+		:return: A list of words that match the parts-of-speech tags defined for this tokenizer.
 		:rtype: list of str
 		"""
 
 		sentences = sent_tokenize(string)
 		tags = [ tag for sentence in sentences
 					 for tag in pos_tag(word_tokenize(sentence)) ]
-		nouns = [ word for (word, tag) in tags
+		words = [ word for (word, tag) in tags
 					   if tag in self.pos ]
-		return nouns
+		return words
 
 	def _stem(self, tokens):
 		"""
