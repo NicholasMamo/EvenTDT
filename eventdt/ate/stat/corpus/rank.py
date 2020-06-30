@@ -127,6 +127,22 @@ class RankExtractor(ComparisonExtractor):
 
 		return scores
 
+	def _filter_terms(self, tf):
+		"""
+		Filter out terms with a lower term frequency than the extractor's cutoff point.
+
+		:param tf: A dictionary containing term frequencies.
+				   The keys are the terms, and the values are their frequencies.
+		:type tf: dict
+
+		:return: A new term frequency dictionary with terms having a term frequency equal to or higher than the cutoff point.
+				 The keys are the terms, and the values are their frequencies.
+		:rtype: dict
+		"""
+
+		return { term: score for term, score in tf.items()
+		 					 if score >= self.cutoff }
+
 	def _rank(self, tf):
 		"""
 		Rank the given terms in ascending order of their term frequency.

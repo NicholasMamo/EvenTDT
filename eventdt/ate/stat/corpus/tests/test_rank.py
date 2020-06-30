@@ -191,6 +191,68 @@ class TestRankExtractor(unittest.TestCase):
 		self.assertTrue(all( score > 0 for score in terms.values() ))
 
 	def test_rank_empty_dict(self):
+	def test_filter_cutoff_1(self):
+		"""
+		Test that when the cutoff is 1, the same input dictionary is returned after filtering.
+		"""
+
+		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'BVBFCB-100.json')
+		general = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json'),
+					os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-2.json') ]
+
+		extractor = TFExtractor()
+		terms = extractor.extract(corpora)
+		extractor = RankExtractor(general, cutoff=1)
+		self.assertEqual(terms, extractor._filter_terms(terms))
+
+	def test_filter_cutoff_inclusive(self):
+		"""
+		Test that the cutoff value is inclusive when filtering terms.
+		"""
+
+		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'BVBFCB-100.json')
+		general = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json'),
+					os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-2.json') ]
+
+		extractor = TFExtractor()
+		terms = extractor.extract(corpora)
+		extractor = RankExtractor(general, cutoff=2)
+		self.assertEqual(2, min(extractor._filter_terms(terms).values()))
+
+	def test_filter_cutoff_all_equal_greater(self):
+		"""
+		Test that when filtering, all terms with a value greater than or equal to the cutoff value are retained.
+		"""
+
+		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'BVBFCB-100.json')
+		general = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json'),
+					os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-2.json') ]
+
+		extractor = TFExtractor()
+		terms = extractor.extract(corpora)
+		extractor = RankExtractor(general, cutoff=2)
+		filtered = extractor._filter_terms(terms)
+		for term, score in terms.items():
+			if score >= 2:
+				self.assertTrue(term in filtered)
+				self.assertTrue(filtered[term] == score)
+
+	def test_filter_input_unchanged(self):
+		"""
+		Test that when filtering, the input dictionary is not changed.
+		"""
+
+		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'BVBFCB-100.json')
+		general = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json'),
+					os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-2.json') ]
+
+		extractor = TFExtractor()
+		terms = extractor.extract(corpora)
+		copy = dict(terms)
+		extractor = RankExtractor(general, cutoff=2)
+		filtered = extractor._filter_terms(terms)
+		self.assertEqual(copy, terms)
+
 		"""
 		Test that when ranking an empty dictionary, an empty dictionary is returned.
 		"""
