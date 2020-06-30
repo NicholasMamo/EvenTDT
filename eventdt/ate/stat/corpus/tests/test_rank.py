@@ -21,7 +21,6 @@ class TestRankExtractor(unittest.TestCase):
 	Test the functionality of the rank difference extractor functions.
 	"""
 
-	def test_extract(self):
 	def test_cutoff_str(self):
 		"""
 		Test that the rank extractor does not accept a string cutoff value.
@@ -62,6 +61,49 @@ class TestRankExtractor(unittest.TestCase):
 		general = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json')
 		self.assertTrue(RankExtractor(general, 1))
 
+	def test_extract_cutoff_1(self):
+		"""
+		Test that when the cutoff is 1, all terms are extracted.
+		"""
+
+		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json')
+		general = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json'),
+					os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-2.json') ]
+
+		extractor = RankExtractor(general, cutoff=1)
+		terms = extractor.extract(corpora)
+		vocabulary = linguistic.vocabulary(corpora)
+		self.assertEqual(sorted(vocabulary), sorted(terms))
+
+	def test_extract_cutoff_2(self):
+		"""
+		Test that when the cutoff is 2, a subset of the vocabulary is retained.
+		"""
+
+		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json')
+		general = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json'),
+					os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-2.json') ]
+
+		extractor = RankExtractor(general, cutoff=2)
+		terms = extractor.extract(corpora)
+		vocabulary = linguistic.vocabulary(corpora)
+		self.assertTrue(any( term not in terms for term in vocabulary ))
+		self.assertTrue(all( term in vocabulary for term in terms ))
+
+	def test_extract_candidates_ignore_cutoff(self):
+		"""
+		Test that when candidates are given, the cutoff value is ignored.
+		"""
+
+		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json')
+		general = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json'),
+					os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-2.json') ]
+
+		extractor = RankExtractor(general, cutoff=101)
+		terms = extractor.extract(corpora, candidates=[ 'chelsea', 'goal', 'willian', 'superlongword' ])
+		self.assertEqual({ 'chelsea', 'goal', 'willian', 'superlongword' }, set(terms.keys()))
+
+	def test_extract(self):
 		"""
 		Test that the extracted terms make sense.
 		"""
@@ -190,7 +232,6 @@ class TestRankExtractor(unittest.TestCase):
 		terms = extractor.extract(corpora)
 		self.assertTrue(all( score > 0 for score in terms.values() ))
 
-	def test_rank_empty_dict(self):
 	def test_filter_cutoff_1(self):
 		"""
 		Test that when the cutoff is 1, the same input dictionary is returned after filtering.
@@ -253,6 +294,7 @@ class TestRankExtractor(unittest.TestCase):
 		filtered = extractor._filter_terms(terms)
 		self.assertEqual(copy, terms)
 
+	def test_rank_empty_dict(self):
 		"""
 		Test that when ranking an empty dictionary, an empty dictionary is returned.
 		"""

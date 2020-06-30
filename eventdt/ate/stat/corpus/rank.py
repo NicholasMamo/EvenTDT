@@ -87,6 +87,10 @@ class RankExtractor(ComparisonExtractor):
 		:type corpora: str or list of str
 		:param candidates: A list of terms which may be extracted.
 						   If `None` is given, all words are considered to be candidates.
+
+						   .. note::
+
+						       If candidates are given, the cutoff point is ignored.
 		:type candidates: None or list of str
 
 		:return: A dictionary with terms as keys and their rank difference scores as values.
@@ -101,6 +105,13 @@ class RankExtractor(ComparisonExtractor):
 		extractor = TFExtractor()
 		tf_d = extractor.extract(corpora, candidates)
 		tf_b = extractor.extract(self.general, candidates)
+
+		"""
+		Filter the candidates if no candidates are given.
+		"""
+		if not candidates:
+			tf_d = self._filter_terms(tf_d)
+			tf_b = self._filter_terms(tf_b)
 
 		"""
 		Rank the terms in ascending order of their term frequency.
