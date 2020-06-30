@@ -108,6 +108,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-ate.stat.probability">Probability</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-ate.stat.corpus">Corpus Comparison</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#module-ate.stat.corpus.specificity">Domain Specificity</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ate.stat.corpus.rank">Rank Difference</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-ate.stat.corpus.tfdcf">Term Frequency-Disjoint Corpora Frequency</a></li>
 </ul>
 </li>
@@ -743,7 +744,8 @@ This behavior leads to many unknown words.</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>corpora</strong> (<em>str</em><em> or </em><em>list of str</em>) – A path to a corpus or a list of paths to corpora where to look for terms.</p></li>
 <li><p><strong>candidates</strong> (<em>None</em><em> or </em><em>list of str</em>) – A list of terms which may be extracted.
-If <cite>None</cite> is given, all words are considered to be candidates.</p></li>
+If <cite>None</cite> is given, all words are considered to be candidates.
+If candidate terms are given, the <cite>ignore_unknown</cite> policy is overriden.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -757,6 +759,31 @@ If <cite>None</cite> is given, all words are considered to be candidates.</p></l
 
 </dd></dl>
 
+</div>
+<div class="section" id="module-ate.stat.corpus.rank">
+<span id="rank-difference"></span><h4>Rank Difference<a class="headerlink" href="#module-ate.stat.corpus.rank" title="Permalink to this headline">¶</a></h4>
+<p>Rank difference is a corpus comparison approach proposed by Kit and Liu.
+The metric compares the rank of a term in the domain versus its rank in general corpora:</p>
+<div class="math notranslate nohighlight">
+\[τ(w) = \frac{r_D(w)}{|V_D|} - \frac{r_B(w)}{|V_B|}\]</div>
+<p>where <span class="math notranslate nohighlight">\(w\)</span> is the word for which rank difference is calculated.
+<span class="math notranslate nohighlight">\(r_D(w)\)</span> and <span class="math notranslate nohighlight">\(r_B(w)\)</span> are the ranks of the word <span class="math notranslate nohighlight">\(w\)</span> in the domain and background corpora respectively.
+Similarly, <span class="math notranslate nohighlight">\(V_D\)</span> and <span class="math notranslate nohighlight">\(V_B\)</span> are the total number of words in the domain and background corpora respectively.</p>
+<p>The ranking mechanism can be any metric.
+In this implementation, like in Kit and Liu’s first approach, we use term frequency.
+Note that rank 1 is the least common word.</p>
+<p>The rank difference is bound in the range <span class="math notranslate nohighlight">\([1, -1)\)</span>:</p>
+<ul class="simple">
+<li><p>The maximum score, <span class="math notranslate nohighlight">\(1\)</span>, is obtained when the word is at the top of its ranking in the domain—<span class="math notranslate nohighlight">\(r_D(w) = |V_D|\)</span>—and the word does not appear in the background—<span class="math notranslate nohighlight">\(r_B(w) = 0\)</span>.</p></li>
+<li><p>The minimum score, <span class="math notranslate nohighlight">\(-1\)</span>, is exclusive.
+The rank difference tends to <span class="math notranslate nohighlight">\(-1\)</span> when the word appears least frequently in the domain —<span class="math notranslate nohighlight">\(r_D(w) = 1\)</span>—and the word is the most frequent in the background—<span class="math notranslate nohighlight">\(r_B(w) = |V_B|\)</span>.</p></li>
+</ul>
+<p>This approach actually bounds the rank difference in the range <span class="math notranslate nohighlight">\([1, -1]\)</span>.
+This special case of a score of <span class="math notranslate nohighlight">\(-1\)</span> occurs when a word does not appear in the domain, but it is the most frequent in the background.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Implementation based on the metric described in <a class="reference external" href="https://benjamins.com/catalog/term.14.2.05kit">Measuring mono-word termhood by rank difference via corpus comparison by Kit and Liu (2008)</a>.</p>
+</div>
 </div>
 <div class="section" id="module-ate.stat.corpus.tfdcf">
 <span id="term-frequency-disjoint-corpora-frequency"></span><h4>Term Frequency-Disjoint Corpora Frequency<a class="headerlink" href="#module-ate.stat.corpus.tfdcf" title="Permalink to this headline">¶</a></h4>

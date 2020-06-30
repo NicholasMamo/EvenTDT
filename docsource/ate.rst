@@ -74,6 +74,13 @@ Domain Specificity
    :members:
    :special-members:
 
+Rank Difference
+^^^^^^^^^^^^^^^
+
+.. automodule:: ate.stat.corpus.rank
+   :members:
+   :special-members:
+
 Term Frequency-Disjoint Corpora Frequency
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
