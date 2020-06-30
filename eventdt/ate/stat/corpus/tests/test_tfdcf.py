@@ -81,6 +81,7 @@ class TestTFDCFExtractor(unittest.TestCase):
 		terms_2 = extractor.extract(corpora[1])
 		terms_combined = extractor.extract(corpora)
 		self.assertTrue(all( term in terms_combined for term in terms_1 ))
+		self.assertTrue(all( term in terms_combined for term in terms_2 ))
 
 	def test_extract_all(self):
 		"""
