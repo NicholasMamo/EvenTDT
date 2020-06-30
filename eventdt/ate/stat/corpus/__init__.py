@@ -59,4 +59,5 @@ class DummyComparisonExtractor(ComparisonExtractor):
 		return { }
 
 from .tfdcf import TFDCFExtractor
+from .rank import RankExtractor
 from .specificity import SpecificityExtractor
