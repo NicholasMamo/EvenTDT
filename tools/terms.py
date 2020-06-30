@@ -16,10 +16,10 @@ To run the script, use:
 Accepted arguments:
 
 	- ``-f --files``		*<Required>* The input corpora from where to extract domain-specific terms.
-	- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `TF`, `TFIDF`, `Specificity`, `TFDCF`.
+	- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `TF`, `TFIDF`, `Rank`, `Specificity`, `TFDCF`.
 	- ``-o --output``		*<Required>* The path to the file where to store the extracted terms.
 	- ``--tfidf``			*<Optional>* The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).
-	- ``--general``			*<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `TF-DCF` method).
+	- ``--general``			*<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `Rank`, `Specificity` and `TF-DCF` methods).
 """
 
 import argparse
@@ -36,7 +36,7 @@ import tools
 from logger import logger
 from ate import linguistic
 from ate.stat import TFExtractor, TFIDFExtractor
-from ate.stat.corpus import SpecificityExtractor, TFDCFExtractor
+from ate.stat.corpus import RankExtractor, SpecificityExtractor, TFDCFExtractor
 
 parser = argparse.ArgumentParser(description="Extract terms from domain-specific corpora.")
 def setup_args():
@@ -46,10 +46,10 @@ def setup_args():
 	Accepted arguments:
 
 		- ``-f --files``		*<Required>* The input corpora from where to extract domain-specific terms.
-		- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `TF`, `TFIDF`, `Specificity`, `TFDCF`.
+		- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `TF`, `TFIDF`, `Rank`, `Specificity`, `TFDCF`.
 		- ``-o --output``		*<Required>* The path to the file where to store the extracted terms.
 		- ``--tfidf``			*<Optional>* The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).
-		- ``--general``			*<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `TF-DCF` method).
+		- ``--general``			*<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `Rank`, `Specificity` and `TF-DCF` methods).
 
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
@@ -60,7 +60,7 @@ def setup_args():
 						help='<Required> The input corpora from where to extract domain-specific terms.')
 	parser.add_argument('-m', '--method',
 						type=method, required=True,
-						help='<Required> The method to use to look for similar keywords; supported: `TF`, `TFIDF`, `Specificity`, `TFDCF`.')
+						help='<Required> The method to use to look for similar keywords; supported: `TF`, `TFIDF`, `Rank`, `Specificity`, `TFDCF`.')
 	parser.add_argument('-o', '--output',
 						type=str, required=True,
 						help='<Required> The path to the file where to store the extracted terms.')
@@ -68,7 +68,7 @@ def setup_args():
 						help='<Optional> The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).')
 	parser.add_argument('--general',
 						nargs='+', required=False,
-						help='<Optional> A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `TF-DCF` method).')
+						help='<Optional> A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `Rank`, `Specificity` and `TF-DCF` methods).')
 
 	args = parser.parse_args()
 	return args
@@ -122,6 +122,11 @@ def instantiate(args):
 			parser.error("One or more paths to general corpora are required with domain specificity method.")
 
 		return args.method(args.general)
+	elif args.method == RankExtractor:
+		if not args.general:
+			parser.error("One or more paths to general corpora are required with rank difference method.")
+
+		return args.method(args.general)
 
 	return args.method()
 
@@ -132,6 +137,7 @@ def method(method):
 
 		#. :func:`~ate.stat.tfidf.TFExtractor`,
 		#. :func:`~ate.stat.tfidf.TFIDFExtractor`
+		#. :func:`~ate.stat.corpus.rank.RankExtractor`
 		#. :func:`~ate.stat.corpus.specificity.SpecificityExtractor`
 		#. :func:`~ate.stat.corpus.tfdcf.TFDCFExtractor`
 
@@ -147,6 +153,7 @@ def method(method):
 	methods = {
 		'tf': TFExtractor,
 		'tfidf': TFIDFExtractor,
+		'rank': RankExtractor,
 		'specificity': SpecificityExtractor,
 		'tfdcf': TFDCFExtractor,
 	}
