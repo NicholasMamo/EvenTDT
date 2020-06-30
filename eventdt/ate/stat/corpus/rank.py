@@ -63,3 +63,17 @@ class RankExtractor(ComparisonExtractor):
 
 		return { }
 		
+
+	def _rank(self, tf):
+		"""
+		Rank the given terms in ascending order of their term frequency.
+
+		:param tf: A dictionary containing term frequencies.
+				   The keys are the terms, and the values are their frequencies.
+		:type tf: dict
+
+		:return: A sorted list of terms in ascending order of their frequencies.
+		:rtype: list of str
+		"""
+
+		return sorted(tf, key=tf.get, reverse=False)
