@@ -71,6 +71,7 @@ class SpecificityExtractor(ComparisonExtractor):
 		:type corpora: str or list of str
 		:param candidates: A list of terms which may be extracted.
 						   If `None` is given, all words are considered to be candidates.
+						   If candidate terms are given, the `ignore_unknown` policy is overriden.
 		:type candidates: None or list of str
 
 		:return: A dictionary with terms as keys and their domain specificity scores as values.
@@ -85,6 +86,20 @@ class SpecificityExtractor(ComparisonExtractor):
 		p_d = probability.p(corpora, candidates)
 		p_g = probability.p(self.general, candidates)
 
+		"""
+		Calculate the scores for all known words.
+		"""
+		unknown_words = self._unknown(p_d, p_g)
+		scores.update({ term: p_d[term] / p_g[term] for term in p_d
+		 											if term not in unknown_words })
+
+		"""
+		If unknown words should not be ignored, set their score.
+		"""
+		if not self.ignore_unknown or candidates:
+			scores.update(self._rank_unknown_words(unknown_words, scores, p_d))
+
+		return scores
 
 	def _unknown(self, domain_words, general_words):
 		"""

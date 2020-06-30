@@ -21,6 +21,198 @@ class TestSpecificityExtractor(unittest.TestCase):
 	Test the functionality of the domain specificity extractor functions.
 	"""
 
+	def test_extract(self):
+		"""
+		Test that the extracted terms make sense.
+		"""
+
+		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json')
+		general = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json')
+
+		extractor = SpecificityExtractor(general)
+		terms = extractor.extract(corpora)
+		terms = sorted(terms, key=terms.get, reverse=True)
+		self.assertTrue('chelsea' in terms[:10])
+		self.assertTrue('crystal' in terms[:10])
+		self.assertTrue('hazard' in terms[:10])
+		self.assertTrue('cfc' in terms[:10])
+
+	def test_extract_positive(self):
+		"""
+		Test that the scores of all extracted terms are positive.
+		"""
+
+		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json')
+		general = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json')
+
+		extractor = SpecificityExtractor(general)
+		terms = extractor.extract(corpora)
+		self.assertLess(0, min(terms.values()))
+
+	def test_extract_ignore_unknown_excludes_words_from_one_corpus(self):
+		"""
+		Test that the domain specificity extractor excludes unknown terms from one corpus when the policy is set to ignore unknown terms.
+		"""
+
+		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json'),
+		general = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json')
+
+		extractor = SpecificityExtractor(general, ignore_unknown=True)
+		vocabulary = linguistic.vocabulary(corpora)
+		terms = extractor.extract(corpora)
+		self.assertTrue(any( term not in terms for term in vocabulary ))
+
+	def test_extract_ignore_unknown_excludes_words_from_multiple_corpora(self):
+		"""
+		Test that the domain specificity extractor excludes unknown terms from multiple corpora when the policy is set to ignore unknown terms.
+		"""
+
+		corpora = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json'),
+		 			os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'BVBFCB-100.json') ]
+		general = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json')
+
+		extractor = SpecificityExtractor(general, ignore_unknown=True)
+		vocabulary = linguistic.vocabulary(corpora)
+		terms = extractor.extract(corpora)
+		self.assertTrue(any( term not in terms for term in vocabulary ))
+
+	def test_extract_not_ignore_unknown_includes_all_words_from_one_corpus(self):
+		"""
+		Test that the domain specificity extractor includes unknown terms from one corpus when the policy is set not to ignore unknown terms.
+		"""
+
+		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json'),
+		general = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json')
+
+		extractor = SpecificityExtractor(general, ignore_unknown=False)
+		vocabulary = linguistic.vocabulary(corpora)
+		terms = extractor.extract(corpora)
+		self.assertFalse(any( term not in terms for term in vocabulary ))
+
+	def test_extract_not_ignore_unknown_includes_all_words_from_multiple_corpora(self):
+		"""
+		Test that the domain specificity extractor includes unknown terms from multiple corpora when the policy is set not to ignore unknown terms.
+		"""
+
+		corpora = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json'),
+		 			os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'BVBFCB-100.json') ]
+		general = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json')
+
+		extractor = SpecificityExtractor(general, ignore_unknown=False)
+		vocabulary = linguistic.vocabulary(corpora)
+		terms = extractor.extract(corpora)
+		self.assertFalse(any( term not in terms for term in vocabulary ))
+
+	def test_extract_all_multiple_corpora(self):
+		"""
+		Test that the domain specificity extractor extracts all terms from multiple corpora.
+		"""
+
+		corpora = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json'),
+		 			os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'BVBFCB-100.json') ]
+		general = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json')
+
+		extractor = SpecificityExtractor(general)
+		terms_1 = extractor.extract(corpora[0])
+		terms_2 = extractor.extract(corpora[1])
+		terms_combined = extractor.extract(corpora)
+		self.assertTrue(all( term in terms_combined for term in terms_1 ))
+		self.assertTrue(all( term in terms_combined for term in terms_2 ))
+
+	def test_extract_candidates(self):
+		"""
+		Test that the domain specificity extractor extracts scores for only select candidates if they are given.
+		"""
+
+		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json')
+		general = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json')
+
+		extractor = SpecificityExtractor(general)
+		terms = extractor.extract(corpora, candidates=[ 'chelsea', 'goal' ])
+		self.assertEqual({ 'chelsea', 'goal' }, set(terms.keys()))
+
+	def test_extract_candidates_ignore_unknown(self):
+		"""
+		Test that the domain specificity extractor extracts scores for select candidates even if they are unknown.
+		"""
+
+		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json')
+		general = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json')
+
+		extractor = SpecificityExtractor(general, ignore_unknown=True)
+
+		"""
+		Ensure that 'cesc' is an unknown word and therefore missing from the extracted terms.
+		"""
+		terms = extractor.extract(corpora)
+		self.assertFalse('cesc' in terms)
+
+		"""
+		Specifically look for the same term.
+		"""
+		terms = extractor.extract(corpora, candidates=[ 'chelsea', 'goal', 'cesc' ])
+		self.assertEqual({ 'chelsea', 'goal', 'cesc' }, set(terms.keys()))
+
+	def test_extract_candidates_same_scores(self):
+		"""
+		Test that the domain specificity extractor's scores for known candidates are the same as when candidates are not given.
+		"""
+
+		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json')
+		general = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json')
+
+		extractor = SpecificityExtractor(general)
+		candidate_terms = extractor.extract(corpora, candidates=[ 'chelsea', 'goal' ])
+		terms = extractor.extract(corpora)
+		self.assertEqual(terms['chelsea'], candidate_terms['chelsea'])
+		self.assertEqual(terms['goal'], candidate_terms['goal'])
+
+	def test_extract_unknown_above_known(self):
+		"""
+		Test that the domain specificity extractor ranks unknown words above known words.
+		"""
+
+		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json')
+		general = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json')
+
+		"""
+		Ensure that 'cesc' is an unknown word and therefore missing from the extracted terms.
+		"""
+		extractor = SpecificityExtractor(general, ignore_unknown=True)
+		terms = extractor.extract(corpora)
+		self.assertFalse('cesc' in terms)
+
+		"""
+		Include unknown words and ensure that they rank higher than known words.
+		"""
+		extractor = SpecificityExtractor(general, ignore_unknown=False)
+		terms = extractor.extract(corpora)
+		self.assertGreater(terms['cesc'], terms['chelsea'])
+		self.assertGreater(terms['cesc'], terms['goal'])
+
+	def test_extract_unknown_popular_above_unknown_unpopular(self):
+		"""
+		Test that the domain specificity extractor ranks popular unknown words above unpopular unknown words.
+		"""
+
+		corpora = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json')
+		general = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'sample-1.json')
+
+		"""
+		Ensure that 'cesc' is an unknown word and therefore missing from the extracted terms.
+		"""
+		extractor = SpecificityExtractor(general, ignore_unknown=True)
+		terms = extractor.extract(corpora)
+		self.assertFalse('cesc' in terms)
+		self.assertFalse('sarri' in terms)
+
+		"""
+		Include unknown words and ensure that they rank higher than known words.
+		"""
+		extractor = SpecificityExtractor(general, ignore_unknown=False)
+		terms = extractor.extract(corpora)
+		self.assertGreater(terms['sarri'], terms['cesc'])
+
 	def test_unknown_words_all_not_in_domain(self):
 		"""
 		Test that all unknown words are not in the domain words.
