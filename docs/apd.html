@@ -194,26 +194,24 @@
 <span class="target" id="module-apd"></span><p>Automatic Participant Detection (APD) is a six-step process:</p>
 <blockquote>
 <div><ol class="arabic simple">
-<li><p><a class="reference internal" href="#module-apd.extractors.extractor" title="apd.extractors.extractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Extraction</span></code></a></p></li>
-<li><p><a class="reference internal" href="#module-apd.scorers.scorer" title="apd.scorers.scorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scoring</span></code></a></p></li>
-<li><p><a class="reference internal" href="#module-apd.filters.filter" title="apd.filters.filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Filtering</span></code></a></p></li>
-<li><p><a class="reference internal" href="#module-apd.resolvers.resolver" title="apd.resolvers.resolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">Resolution</span></code></a></p></li>
-<li><p><a class="reference internal" href="#module-apd.extrapolators.extrapolator" title="apd.extrapolators.extrapolator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Extrapolation</span></code></a></p></li>
-<li><p><a class="reference internal" href="#module-apd.postprocessors.postprocessor" title="apd.postprocessors.postprocessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Postprocesing</span></code></a></p></li>
+<li><p><a class="reference internal" href="#module-apd.extractors.extractor" title="apd.extractors.extractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Extract</span></code></a> candidate participants,</p></li>
+<li><p><a class="reference internal" href="#module-apd.scorers.scorer" title="apd.scorers.scorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Score</span></code></a> the candidates,</p></li>
+<li><p><a class="reference internal" href="#module-apd.filters.filter" title="apd.filters.filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Filter</span></code></a> out infrequent candidates,</p></li>
+<li><p><a class="reference internal" href="#module-apd.resolvers.resolver" title="apd.resolvers.resolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">Resolve</span></code></a> the candidates to an alternate representation (such as a Wikipedia concept) to make them participants,</p></li>
+<li><p><a class="reference internal" href="#module-apd.extrapolators.extrapolator" title="apd.extrapolators.extrapolator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Extrapolate</span></code></a> new participants, and</p></li>
+<li><p><a class="reference internal" href="#module-apd.postprocessors.postprocessor" title="apd.postprocessors.postprocessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Postprocess</span></code></a> the final list of participants.</p></li>
 </ol>
 </div></blockquote>
 <p>The APD process revolves around a central class: the <a class="reference internal" href="#apd.participant_detector.ParticipantDetector" title="apd.participant_detector.ParticipantDetector"><code class="xref py py-class docutils literal notranslate"><span class="pre">ParticipantDetector</span></code></a>.
 The class constructor accepts classes representing these six steps, and calls their main functions.
-All of the step implementations are separated into local (using the corpus) or external (using a different source).</p>
+All of the step implementations are separated into local (using the corpus) or external (using a different source) methods.</p>
 <p>Each step is represented by a base class.
 Base classes define the minimum inputs and describe the expected outputs of each step.
 Each base class also has a central function around which processing revolves.
-For example, the <a class="reference internal" href="#module-apd.extractors.extractor" title="apd.extractors.extractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">extractor</span></code></a> class has a <a class="reference internal" href="#apd.extractors.extractor.Extractor.extract" title="apd.extractors.extractor.Extractor.extract"><code class="xref py py-func docutils literal notranslate"><span class="pre">extract()</span></code></a> function.
-These classes go through the <a class="reference internal" href="#apd.participant_detector.ParticipantDetector" title="apd.participant_detector.ParticipantDetector"><code class="xref py py-class docutils literal notranslate"><span class="pre">ParticipantDetector</span></code></a>
-Therefore inherited classes should accept any parameters not specified in these base functions as constructor parameters.</p>
+For example, the <a class="reference internal" href="#apd.extractors.extractor.Extractor" title="apd.extractors.extractor.Extractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Extractor</span></code></a> class has a <a class="reference internal" href="#apd.extractors.extractor.Extractor.extract" title="apd.extractors.extractor.Extractor.extract"><code class="xref py py-func docutils literal notranslate"><span class="pre">extract()</span></code></a> function.</p>
 <p>All APD functionality usually goes through the <a class="reference internal" href="#apd.participant_detector.ParticipantDetector" title="apd.participant_detector.ParticipantDetector"><code class="xref py py-class docutils literal notranslate"><span class="pre">ParticipantDetector</span></code></a>.
 This class represents APD’s six steps.
-It takes as inputs the classes and calls them one after the other.</p>
+It takes as inputs instances of the classes and calls them one after the other.</p>
 <span class="target" id="module-apd.participant_detector"></span><p>The participant detector class is a simple class that takes in each of the six steps of APD as instances.
 Then, it calls them, one after the other.</p>
 <p>The process of the participant detector can be emulated by calling the main functions of the six steps in order.
