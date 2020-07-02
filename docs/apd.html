@@ -907,20 +907,25 @@ The input candidates should be the product of a <a class="reference internal" hr
 </div>
 <div class="section" id="module-apd.resolvers.resolver">
 <span id="resolvers"></span><h2>Resolvers<a class="headerlink" href="#module-apd.resolvers.resolver" title="Permalink to this headline">¶</a></h2>
-<p>The resolver is the fourth step of APD.
-Its job is to take a list of candidate participants and try to transform them into actual participants.</p>
-<p>The input candidates should be the product of a <a class="reference internal" href="#apd.filters.filter.Filter" title="apd.filters.filter.Filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Filter</span></code></a> process.</p>
-<p>The representation between candidates and participants can remain almost identical.
-For example a stemmed token can be replaced by a proper term.
-It can also change the representation radically.
-For example, it can map a named entity to a Wikipedia concept.</p>
-<p>Resolvers return a tuple, containing resolved and unresolved candidates.
-The unresolved candidates are usually discarded.</p>
-<p>The functionality revolves around one method: the <a class="reference internal" href="#apd.resolvers.resolver.Resolver.resolve" title="apd.resolvers.resolver.Resolver.resolve"><code class="xref py py-func docutils literal notranslate"><span class="pre">resolve()</span></code></a> method.</p>
+<p>Resolution is the fourth step of the APD process.
+This step assigns maps a candidate to an alternate, preferably more semantic, representation.
+For example, the <a class="reference internal" href="#apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver" title="apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">WikipediaNameResolver</span></code></a> resolves candidates to Wikipedia concepts.</p>
+<p>Resolution does not have to map every candidate participant to an alternate representation.
+Resolvers may have failing conditions.
+If a candidate participant cannot be resolved, then it is usually rejected.
+Those that can be resolved are accepted as valid participants.
+Both resolved and unresolved candidates are returned as a tuple.</p>
+<p>The functionality revolves around the <a class="reference internal" href="#apd.resolvers.resolver.Resolver" title="apd.resolvers.resolver.Resolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">Resolver</span></code></a>’s <a class="reference internal" href="#apd.resolvers.resolver.Resolver.resolve" title="apd.resolvers.resolver.Resolver.resolve"><code class="xref py py-func docutils literal notranslate"><span class="pre">resolve()</span></code></a> method.</p>
 <dl class="class">
 <dt id="apd.resolvers.resolver.Resolver">
 <em class="property">class </em><code class="sig-name descname">Resolver</code><a class="headerlink" href="#apd.resolvers.resolver.Resolver" title="Permalink to this definition">¶</a></dt>
-<dd><p>The simplest resolver returns all candidates without any resolution.</p>
+<dd><p>The simplest resolver returns all candidates as resolved participants.
+This can be thought of as a mapping from a candidate to the same candidate.</p>
+<p>However, the resolver, as a class, represents the kind of functionality that all sub-classes should be able to offer.
+This functionality is namely the ability to resolve candidates.</p>
+<p>The functionality revolves around one the <a class="reference internal" href="#apd.resolvers.resolver.Resolver.resolve" title="apd.resolvers.resolver.Resolver.resolve"><code class="xref py py-func docutils literal notranslate"><span class="pre">resolve()</span></code></a> method
+The input candidates should be the product of a <a class="reference internal" href="#apd.scorers.scorer.Scorer" title="apd.scorers.scorer.Scorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scorer</span></code></a> process.
+In other words, they should be a dictionary, with the keys being the candidates and the values being the score.</p>
 <dl class="method">
 <dt id="apd.resolvers.resolver.Resolver.resolve">
 <code class="sig-name descname">resolve</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.resolver.Resolver.resolve" title="Permalink to this definition">¶</a></dt>
@@ -934,7 +939,7 @@ The keys should be the candidates, and the values the scores.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A tuple containing the resolved and unresolved candidates respectively.
-The function resolves all candidates.
+The base resolver resolves all candidates to the same candidates.
 Therefore unresolved candidates are empty.</p>
 </dd>
 <dt class="field-odd">Return type</dt>

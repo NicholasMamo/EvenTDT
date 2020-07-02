@@ -1,23 +1,28 @@
 """
-The resolver is the fourth step of APD.
-Its job is to take a list of candidate participants and try to transform them into actual participants.
+Resolution is the fourth step of the APD process.
+This step assigns maps a candidate to an alternate, preferably more semantic, representation.
+For example, the :class:`~apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver` resolves candidates to Wikipedia concepts.
 
-The input candidates should be the product of a :class:`~apd.filters.filter.Filter` process.
+Resolution does not have to map every candidate participant to an alternate representation.
+Resolvers may have failing conditions.
+If a candidate participant cannot be resolved, then it is usually rejected.
+Those that can be resolved are accepted as valid participants.
+Both resolved and unresolved candidates are returned as a tuple.
 
-The representation between candidates and participants can remain almost identical.
-For example a stemmed token can be replaced by a proper term.
-It can also change the representation radically.
-For example, it can map a named entity to a Wikipedia concept.
-
-Resolvers return a tuple, containing resolved and unresolved candidates.
-The unresolved candidates are usually discarded.
-
-The functionality revolves around one method: the :func:`~apd.resolvers.resolver.Resolver.resolve` method.
+The functionality revolves around the :class:`~apd.resolvers.resolver.Resolver`'s :func:`~apd.resolvers.resolver.Resolver.resolve` method.
 """
 
 class Resolver(object):
 	"""
-	The simplest resolver returns all candidates without any resolution.
+	The simplest resolver returns all candidates as resolved participants.
+	This can be thought of as a mapping from a candidate to the same candidate.
+
+	However, the resolver, as a class, represents the kind of functionality that all sub-classes should be able to offer.
+	This functionality is namely the ability to resolve candidates.
+
+	The functionality revolves around one the :func:`~apd.resolvers.resolver.Resolver.resolve` method
+	The input candidates should be the product of a :class:`~apd.scorers.scorer.Scorer` process.
+	In other words, they should be a dictionary, with the keys being the candidates and the values being the score.
 	"""
 
 	def resolve(self, candidates, *args, **kwargs):
@@ -31,7 +36,7 @@ class Resolver(object):
 		:type candidates: dict
 
 		:return: A tuple containing the resolved and unresolved candidates respectively.
-				 The function resolves all candidates.
+				 The base resolver resolves all candidates to the same candidates.
 				 Therefore unresolved candidates are empty.
 		:rtype: tuple of lists
 		"""
