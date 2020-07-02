@@ -1,5 +1,6 @@
 """
-The document frequency scorer assigns a score to candidates that is proportional to their document frequency.
+The document frequency (DF) scorer assigns a score to candidate participants based on the number of documents in which they appear.
+This approach does not favor candidates if they appear multiple times in the same document.
 """
 
 import math
@@ -8,13 +9,14 @@ from ..scorer import Scorer
 
 class DFScorer(Scorer):
 	"""
-	The basic summation scorer assigns a score to tokens based on document frequency.
+	The document frequency scorer counts the number of documents in which each candidate participant appears.
+	This becomes the candidate participant's score.
 	"""
 
 	def score(self, candidates, normalize_scores=True, *args, **kwargs):
 		"""
 		Score the given candidates based on their relevance within the corpus.
-		The score is normalized using the maximum score
+		The score is normalized using the maximum score.
 
 		:param candidates: A list of candidates participants that were found earlier.
 		:type candidates: list

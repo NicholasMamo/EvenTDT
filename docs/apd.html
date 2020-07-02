@@ -568,16 +568,18 @@ Here, normalization means rescaling between 0 and 1.</p></li>
 <span class="target" id="module-apd.scorers.local"></span><p>Local scorers assign a score to candidate participants based on evidence from the event’s corpus.</p>
 <div class="section" id="module-apd.scorers.local.df_scorer">
 <span id="document-frequency-scorer"></span><h4>Document Frequency Scorer<a class="headerlink" href="#module-apd.scorers.local.df_scorer" title="Permalink to this headline">¶</a></h4>
-<p>The document frequency scorer assigns a score to candidates that is proportional to their document frequency.</p>
+<p>The document frequency (DF) scorer assigns a score to candidate participants based on the number of documents in which they appear.
+This approach does not favor candidates if they appear multiple times in the same document.</p>
 <dl class="class">
 <dt id="apd.scorers.local.df_scorer.DFScorer">
 <em class="property">class </em><code class="sig-name descname">DFScorer</code><a class="headerlink" href="#apd.scorers.local.df_scorer.DFScorer" title="Permalink to this definition">¶</a></dt>
-<dd><p>The basic summation scorer assigns a score to tokens based on document frequency.</p>
+<dd><p>The document frequency scorer counts the number of documents in which each candidate participant appears.
+This becomes the candidate participant’s score.</p>
 <dl class="method">
 <dt id="apd.scorers.local.df_scorer.DFScorer.score">
 <code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">normalize_scores=True</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.df_scorer.DFScorer.score" title="Permalink to this definition">¶</a></dt>
 <dd><p>Score the given candidates based on their relevance within the corpus.
-The score is normalized using the maximum score</p>
+The score is normalized using the maximum score.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
