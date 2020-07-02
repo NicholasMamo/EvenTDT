@@ -126,7 +126,11 @@
 <li class="toctree-l4"><a class="reference internal" href="#module-apd.resolvers.local.token_resolver">Token Resolver</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#module-apd.resolvers.external">External</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-apd.resolvers.external">External</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-apd.resolvers.external.wikipedia_name_resolver">Wikipedia Name Resolver</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-apd.resolvers.external.wikipedia_search_resolver">Wikipedia Search Resolver</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-apd.extrapolators.extrapolator">Extrapolators</a><ul>
@@ -1031,7 +1035,9 @@ The keys should be the candidates, and the values the scores.</p>
 <span id="external"></span><h3>External<a class="headerlink" href="#module-apd.resolvers.external" title="Permalink to this headline">¶</a></h3>
 <p>External resolvers map candidate participants in the event’s corpus to an alternate representation.
 These resolvers are useful because they can transform participants into semantic concepts that are not available in the corpus.</p>
-<span class="target" id="module-apd.resolvers.external.wikipedia_name_resolver"></span><p>The Wikipedia name resolver looks to map candidates to pages that include their name.</p>
+<div class="section" id="module-apd.resolvers.external.wikipedia_name_resolver">
+<span id="wikipedia-name-resolver"></span><h4>Wikipedia Name Resolver<a class="headerlink" href="#module-apd.resolvers.external.wikipedia_name_resolver" title="Permalink to this headline">¶</a></h4>
+<p>The Wikipedia name resolver looks to map candidates to pages that include their name.</p>
 <dl class="class">
 <dt id="apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver">
 <em class="property">class </em><code class="sig-name descname">WikipediaNameResolver</code><span class="sig-paren">(</span><em class="sig-param">scheme</em>, <em class="sig-param">tokenizer</em>, <em class="sig-param">threshold</em>, <em class="sig-param">corpus</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver" title="Permalink to this definition">¶</a></dt>
@@ -1089,7 +1095,10 @@ The keys should be the candidates, and the values the scores.</p>
 
 </dd></dl>
 
-<span class="target" id="module-apd.resolvers.external.wikipedia_search_resolver"></span><p>The Wikipedia search resolver is similar to the <a class="reference internal" href="#apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver" title="apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">WikipediaNameResolver</span></code></a>.
+</div>
+<div class="section" id="module-apd.resolvers.external.wikipedia_search_resolver">
+<span id="wikipedia-search-resolver"></span><h4>Wikipedia Search Resolver<a class="headerlink" href="#module-apd.resolvers.external.wikipedia_search_resolver" title="Permalink to this headline">¶</a></h4>
+<p>The Wikipedia search resolver is similar to the <a class="reference internal" href="#apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver" title="apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">WikipediaNameResolver</span></code></a>.
 In contrast with the name resolver, the search resolver searches for candidates on Wikipedia.
 The resolver tries to map candidates to one of the results.</p>
 <p>The aim of this resolver is to overcome common problems with the name resolver.
@@ -1151,6 +1160,7 @@ They are sorted according to their score.</p>
 
 </dd></dl>
 
+</div>
 </div>
 </div>
 <div class="section" id="module-apd.extrapolators.extrapolator">

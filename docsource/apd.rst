@@ -172,9 +172,15 @@ External
    :members:
    :special-members:
 
+Wikipedia Name Resolver
+^^^^^^^^^^^^^^^^^^^^^^^
+
 .. automodule:: apd.resolvers.external.wikipedia_name_resolver
    :members:
    :special-members:
+
+Wikipedia Search Resolver
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: apd.resolvers.external.wikipedia_search_resolver
    :members:
