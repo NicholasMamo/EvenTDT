@@ -56,9 +56,17 @@ Extractors
 Local
 -----
 
+Local extractors look for candidate participants in the event's corpus.
+
+Token Extractor
+^^^^^^^^^^^^^^^
+
 .. automodule:: apd.extractors.local.token_extractor
    :members:
    :special-members:
+
+Entity Extractor
+^^^^^^^^^^^^^^^^
 
 .. automodule:: apd.extractors.local.entity_extractor
    :members:
