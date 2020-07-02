@@ -1,16 +1,7 @@
 """
-The scorer is the second step of the APD process.
-It is responsible for assigning a score to each candidate that is provided.
-Thus, it pairs up each participant with a score.
-
-The input candidates should be the product of a :class:`~apd.extractors.extractor.Extractor` process.
-In other words, they should be a list, representing documents.
-Each such list contains another list of candidates.
-
-The functionality revolves around one method: the :func:`~apd.scorers.scorer.Scorer.score` method.
-The function returns a dictionary of candidate participants and their scores.
-The scores may be normalized to make them comparable.
-This can be a simple rescaling function.
+Scoring is the second step of the APD process.
+This step assigns a score to each candidate that is provided.
+The functionality revolves around the :func:`~apd.scorers.scorer.Scorer.score` method.
 """
 
 from abc import ABC, abstractmethod
@@ -18,6 +9,14 @@ from abc import ABC, abstractmethod
 class Scorer(ABC):
 	"""
 	The scorer returns a score for each candidate participant found in the corpus.
+
+	The scorer expects candidates to be the product of a :class:`~apd.extractors.extractor.Extractor` process.
+	In other words, they should be a list, representing documents.
+	Each such list is made up of a list of candidates.
+
+	The :func:`~apd.scorers.scorer.Scorer.score` function returns a dictionary of candidate participants and their scores.
+	The scores may be normalized to make them comparable.
+	This can be a simple rescaling function.
 	"""
 
 	@abstractmethod
