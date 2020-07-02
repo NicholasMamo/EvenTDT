@@ -1,6 +1,9 @@
 """
 The logarithmic document frequency scorer is based on the document frequency scorer.
-The difference is that it applies a logarithm to decrease the difference between candidates that appear very often and those which do not.
+Like the document frequency scorer, it does not favor candidate participants that appear several times in the same document.
+
+The difference is that the logarithmic version decreases the difference between candidates that appear very often and those which do not.
+The intuition is that if a candidate participants appears in 1000 documents and another appears in 1200 documents, the difference is not significant.
 """
 
 import math
@@ -9,9 +12,10 @@ from .df_scorer import DFScorer
 
 class LogDFScorer(DFScorer):
 	"""
-	The log scorer is based on normal summation.
-	However, the logarithms of the scores are taken.
-	In this way, the candidates are not overly-biased towards candidates that appear disproportionately.
+	The logarithmic document frequency scorer is based on the normal document frequency summation.
+	The difference is that before normalization, the scorer takes the the logarithm of the scores.
+	In this way, the scores are not overly-biased towards candidate participants that appear disproportionately.
+	To calculate the logarithm, the scorer accepts the logarithmic base in the constructor.
 
 	:ivar base: The base of the logarithm.
 	:vartype base: int
