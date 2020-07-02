@@ -463,43 +463,6 @@ Each inner list is the candidates in that document.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="apd.extractors.local.entity_extractor.EntityExtractor._extract_entities">
-<code class="sig-name descname">_extract_entities</code><span class="sig-paren">(</span><em class="sig-param">sentence</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.local.entity_extractor.EntityExtractor._extract_entities" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract the named entities from the given sentence.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>sentence</strong> (<em>str</em>) – The sentence from where to extract named entities.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list of chunks, which may be simple strings or named entities.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list of str or nltk.tree.Tree</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="apd.extractors.local.entity_extractor.EntityExtractor._combine_adjacent_entities">
-<code class="sig-name descname">_combine_adjacent_entities</code><span class="sig-paren">(</span><em class="sig-param">chunks</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.local.entity_extractor.EntityExtractor._combine_adjacent_entities" title="Permalink to this definition">¶</a></dt>
-<dd><p>Combine the chunks appearing in the given list.
-The function assumes that the list represents one sentence.
-If two tokens next to each other have the same type, the function combines them into a single string.
-The function returns only the named entities.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>chunks</strong> (<em>list of str</em><em> or </em><em>nltk.tree.Tree</em>) – The list of chunks.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list of named entities.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list of str</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 </div>
@@ -542,24 +505,6 @@ Here, normalization means rescaling between 0 and 1.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="apd.scorers.scorer.Scorer._normalize">
-<code class="sig-name descname">_normalize</code><span class="sig-paren">(</span><em class="sig-param">scores</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.scorer.Scorer._normalize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Normalize the scores.
-The default function returns the scores as it founds them.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>scores</strong> (<em>dict</em>) – A list of candidate participants and their scores.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A dictionary of candidate participants and their associated scores.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="apd.scorers.scorer.Scorer.__weakref__">
 <code class="sig-name descname">__weakref__</code><a class="headerlink" href="#apd.scorers.scorer.Scorer.__weakref__" title="Permalink to this definition">¶</a></dt>
@@ -590,41 +535,6 @@ Here, normalization means rescaling between 0 and 1.</p></li>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A dictionary of participants and their associated scores.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="apd.scorers.local.df_scorer.DFScorer._sum">
-<code class="sig-name descname">_sum</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.df_scorer.DFScorer._sum" title="Permalink to this definition">¶</a></dt>
-<dd><p>Score the given candidates based on the number of times they appear—a simple summation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>candidates</strong> (<em>list</em>) – A list of candidates participants that were found earlier.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A dictionary of candidate participants and their scores.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="apd.scorers.local.df_scorer.DFScorer._normalize">
-<code class="sig-name descname">_normalize</code><span class="sig-paren">(</span><em class="sig-param">scores</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.df_scorer.DFScorer._normalize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Normalize the scores.
-The function rescales them between 0 and 1, where 1 is the maximum score of the candidates.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>scores</strong> (<em>dict</em>) – The candidate participants and the number of times that they appeared.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A dictionary of candidate participants and their associated, normalized scores.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dict</p>
@@ -702,41 +612,6 @@ Here, normalization means rescaling between 0 and 1.</p></li>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A dictionary of participants and their associated scores.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="apd.scorers.local.tf_scorer.TFScorer._sum">
-<code class="sig-name descname">_sum</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.tf_scorer.TFScorer._sum" title="Permalink to this definition">¶</a></dt>
-<dd><p>Score the given candidates based on the number of times they appear across all documents—a simple summation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>candidates</strong> (<em>list</em>) – A list of candidates participants that were found earlier.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A dictionary of candidate participants and their scores.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="apd.scorers.local.tf_scorer.TFScorer._normalize">
-<code class="sig-name descname">_normalize</code><span class="sig-paren">(</span><em class="sig-param">scores</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.tf_scorer.TFScorer._normalize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Normalize the scores.
-The function rescales them between 0 and 1, where 1 is the maximum score of the candidates.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>scores</strong> (<em>dict</em>) – The candidate participants and the number of times that they appeared.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A dictionary of candidate participants and their associated, normalized scores.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dict</p>
@@ -836,24 +711,6 @@ Here, normalization means rescaling between 0 and 1.</p></li>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A dictionary of participants and their associated scores.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="apd.scorers.local.tfidf_scorer.TFIDFScorer._normalize">
-<code class="sig-name descname">_normalize</code><span class="sig-paren">(</span><em class="sig-param">scores</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.tfidf_scorer.TFIDFScorer._normalize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Normalize the scores.
-The function rescales them between 0 and 1, where 1 is the maximum score of the candidates.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>scores</strong> (<em>dict</em>) – The candidate participants and the number of times that they appeared.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A dictionary of candidate participants and their associated, normalized scores.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dict</p>
@@ -1050,51 +907,6 @@ The keys should be the candidates, and the values the scores.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="apd.resolvers.local.token_resolver.TokenResolver._construct_inverted_index">
-<code class="sig-name descname">_construct_inverted_index</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.local.token_resolver.TokenResolver._construct_inverted_index" title="Permalink to this definition">¶</a></dt>
-<dd><p>Construct an inverted index from the given corpus using the tokenizer.
-The inverted index is a nested dictionary.
-The topmost level is a list of tokens.
-Each token is associated with another dictionary.
-This inner dictionary is a list of terms that generate that token.
-The values of this inner dictionary is the number of times that the term is tokenized into the token.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>An inverted index as a dictionary.
-The tokens are the keys, and the values are dictionaries.
-The keys of these inner dictionaries are the terms that generate the tokens.
-The values are the frequencies of the terms.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="apd.resolvers.local.token_resolver.TokenResolver._minimize_inverted_index">
-<code class="sig-name descname">_minimize_inverted_index</code><span class="sig-paren">(</span><em class="sig-param">inverted_index</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.local.token_resolver.TokenResolver._minimize_inverted_index" title="Permalink to this definition">¶</a></dt>
-<dd><p>Minimize the inverted index.
-This operation retains only the most common term for each token.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>inverted_index</strong> (<em>dict</em>) – The inverted index, with tokens as keys.
-Each token is associated with another dictionary.
-This dictionary has terms that generate the token.
-The values are the number of times that they generate the token.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The minimized inverted index as a dictionary.
-The tokens remain as the keys.
-The values are the terms that most-commonly generate the token.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 </div>
@@ -1152,57 +964,6 @@ The keys should be the candidates, and the values the scores.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>tuple of lists</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver._resolve_unambiguous_candidates">
-<code class="sig-name descname">_resolve_unambiguous_candidates</code><span class="sig-paren">(</span><em class="sig-param">candidates</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver._resolve_unambiguous_candidates" title="Permalink to this definition">¶</a></dt>
-<dd><p>Resolve the candidates that are unambiguous.
-The function handles three possiblities:</p>
-<blockquote>
-<div><ol class="arabic simple">
-<li><p>There are candidates that have a page, and therefore the candidate is resolved to them.</p></li>
-<li><p>Others have a disambiguation page and are thus ambiguous.
-These candidates are resolved elsewhere.</p></li>
-<li><p>Other candidates return an empty result.
-In this case, they are said to be unresolved.</p></li>
-</ol>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>candidates</strong> (<em>dict</em>) – The candidates to resolve.
-The candidates should be in the form of a dictionary.
-The keys should be the candidates, and the values the scores.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A tuple containing the resolved, unresolved and ambiguous candidates respectively.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>tuple of lists</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver._disambiguate">
-<code class="sig-name descname">_disambiguate</code><span class="sig-paren">(</span><em class="sig-param">pages</em>, <em class="sig-param">domain</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver._disambiguate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Disambiguate a candidate by finding the link that is most similar to the domain.
-The function returns the link’s page name and the associated score.
-Only one page is returned: the one with the highest score.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pages</strong> (<em>list of str</em>) – A list of page titles.</p></li>
-<li><p><strong>domain</strong> (<a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – A document that represents the domain.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A tuple containing the most similar page and its similarity score.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>tuple</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1265,88 +1026,6 @@ They are sorted according to their score.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>tuple of lists</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver._has_year">
-<code class="sig-name descname">_has_year</code><span class="sig-paren">(</span><em class="sig-param">title</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver._has_year" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check whether the given title has a year in it.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>title</strong> (<em>str</em>) – The title of the article.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A boolean indicating whether the title includes a year in it.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver._remove_brackets">
-<code class="sig-name descname">_remove_brackets</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver._remove_brackets" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove brackets from the given text.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – The text from which to remove brackets.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The text without any components in the brackets.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver._get_first_sentence">
-<code class="sig-name descname">_get_first_sentence</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver._get_first_sentence" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the first sentence from the given text.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – The text from which to extract the first sentence.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The first sentence from the given text.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver._compute_score">
-<code class="sig-name descname">_compute_score</code><span class="sig-paren">(</span><em class="sig-param">candidate</em>, <em class="sig-param">title</em>, <em class="sig-param">domain</em>, <em class="sig-param">sentence</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver._compute_score" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the score of an article in terms of its relevance.
-The score is made up of two factors:</p>
-<blockquote>
-<div><ol class="arabic simple">
-<li><p>The similarity between the article name and the candidate;</p></li>
-<li><p>The similarity between the first sentence of the article and the domain.</p></li>
-</ol>
-</div></blockquote>
-<p>These two factors are multipled together to get the score.
-The score is bound between 0 and 1.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>candidate</strong> (<cite>nlp.document.Document</cite>) – The candidate name.</p></li>
-<li><p><strong>title</strong> (<cite>nlp.document.Document</cite>) – The title of the article.</p></li>
-<li><p><strong>domain</strong> (<cite>nlp.document.Document</cite>) – The domain of the event.</p></li>
-<li><p><strong>sentence</strong> (<cite>nlp.document.Document</cite>) – The first sentence of the article.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The relevance score of the article.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1472,121 +1151,6 @@ This means that all participants share their name with a Wikipedia page.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator._has_year">
-<code class="sig-name descname">_has_year</code><span class="sig-paren">(</span><em class="sig-param">title</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator._has_year" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check whether the given title has a year in it.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>title</strong> (<em>str</em>) – The title of the article.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A boolean indicating whether the title includes a year in it.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator._remove_brackets">
-<code class="sig-name descname">_remove_brackets</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator._remove_brackets" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove brackets from the given text.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – The text from which to remove brackets.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The text without any components in the brackets.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator._get_first_sentence">
-<code class="sig-name descname">_get_first_sentence</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator._get_first_sentence" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the first sentence from the given text.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – The text from which to extract the first sentence.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The first sentence from the given text.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator._link_frequency">
-<code class="sig-name descname">_link_frequency</code><span class="sig-paren">(</span><em class="sig-param">articles</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator._link_frequency" title="Permalink to this definition">¶</a></dt>
-<dd><p>Count the link frequency in the given set.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>articles</strong> (<em>dict</em>) – The dictionary of articles with their outgoing links.
-The keys are the article titles.
-The values are the outgoing links.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A dictionary of the outgoing links (the values of the dictionary).
-The keys are the outgoing links.
-The values are the frequency across all articles.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator._add_to_graph">
-<code class="sig-name descname">_add_to_graph</code><span class="sig-paren">(</span><em class="sig-param">graph</em>, <em class="sig-param">outgoing_links</em>, <em class="sig-param">threshold=0</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator._add_to_graph" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add the links to the graph.
-The function fetches the article text and uses it to add to the weighted graph.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The weight of edges is <cite>1 - similarity</cite>.
-The higher the similarity, the less weight.
-Therefore more paths go through that edge.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>graph</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Graph</span></code>) – The graph to which to add the new nodes and edges.</p></li>
-<li><p><strong>outgoing_links</strong> (<em>dict</em>) – The dictionary of links.
-The keys should be the source articles.
-The values should be the outgoing links from these articles.</p></li>
-<li><p><strong>threshold</strong> (<em>float</em>) – The minimum similarity between the source and target articles to add an edge between them.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator._most_central_edge">
-<code class="sig-name descname">_most_central_edge</code><span class="sig-paren">(</span><em class="sig-param">graph</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator._most_central_edge" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find the most central edge in the given graph.
-The algorithm uses NetworkX’s betweenness centrality, but it is based on weight.
-The lower the weight, the more shortest paths could go through it.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>graph</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Graph</span></code>) – The graph on which the algorithm operates.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The most central edge, made up of the source and edge nodes.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>tuple</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 </div>
@@ -1686,60 +1250,6 @@ It is assumed that all map to a Wikipedia page.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>list of str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor._get_surname">
-<code class="sig-name descname">_get_surname</code><span class="sig-paren">(</span><em class="sig-param">participant</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor._get_surname" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the surname of the given participant.
-If the participant has brackets, they are removed.
-The surname is assumed to be all components except the first one.
-If the participant’s surname is a word, the whole participant name is returned.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>participant</strong> (<em>str</em>) – The participant whose surname will be removed.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The participant’s surname.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor._remove_brackets">
-<code class="sig-name descname">_remove_brackets</code><span class="sig-paren">(</span><em class="sig-param">participant</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor._remove_brackets" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove the accents from the given participant.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>participant</strong> (<em>str</em>) – The participant whose brackets will be removed.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The participant without any brackets.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor._remove_accents">
-<code class="sig-name descname">_remove_accents</code><span class="sig-paren">(</span><em class="sig-param">participant</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor._remove_accents" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove the accents from the given participant.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>participant</strong> (<em>str</em>) – The participant whose accents will be removed.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The participant without any accents.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 </dd></dl>

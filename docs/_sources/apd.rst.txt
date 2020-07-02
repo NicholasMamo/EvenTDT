@@ -8,7 +8,6 @@
 
 .. automodule:: apd
    :members:
-   :private-members:
    :special-members:
 
 Automatic Participant Detection (APD) is a six-step process:
@@ -37,12 +36,10 @@ It takes as inputs the classes and calls them one after the other.
 
 .. automodule:: apd.participant_detector
    :members:
-   :private-members:
    :special-members:
 
 .. automodule:: apd.ner_participant_detector
    :members:
-   :private-members:
    :special-members:
 
 Extractors
@@ -50,7 +47,6 @@ Extractors
 
 .. automodule:: apd.extractors.extractor
    :members:
-   :private-members:
    :special-members:
 
 Local
@@ -58,12 +54,10 @@ Local
 
 .. automodule:: apd.extractors.local.token_extractor
    :members:
-   :private-members:
    :special-members:
 
 .. automodule:: apd.extractors.local.entity_extractor
    :members:
-   :private-members:
    :special-members:
 
 Scorers
@@ -71,7 +65,6 @@ Scorers
 
 .. automodule:: apd.scorers.scorer
    :members:
-   :private-members:
    :special-members:
 
 Local
@@ -79,27 +72,22 @@ Local
 
 .. automodule:: apd.scorers.local.df_scorer
    :members:
-   :private-members:
    :special-members:
 
 .. automodule:: apd.scorers.local.log_df_scorer
    :members:
-   :private-members:
    :special-members:
 
 .. automodule:: apd.scorers.local.tf_scorer
    :members:
-   :private-members:
    :special-members:
 
 .. automodule:: apd.scorers.local.log_tf_scorer
    :members:
-   :private-members:
    :special-members:
 
 .. automodule:: apd.scorers.local.tfidf_scorer
    :members:
-   :private-members:
    :special-members:
 
 Filters
@@ -107,7 +95,6 @@ Filters
 
 .. automodule:: apd.filters.filter
    :members:
-   :private-members:
    :special-members:
 
 Local
@@ -115,7 +102,6 @@ Local
 
 .. automodule:: apd.filters.local.threshold_filter
    :members:
-   :private-members:
    :special-members:
 
 Resolvers
@@ -123,7 +109,6 @@ Resolvers
 
 .. automodule:: apd.resolvers.resolver
    :members:
-   :private-members:
    :special-members:
 
 Local
@@ -131,7 +116,6 @@ Local
 
 .. automodule:: apd.resolvers.local.token_resolver
    :members:
-   :private-members:
    :special-members:
 
 External
@@ -139,12 +123,10 @@ External
 
 .. automodule:: apd.resolvers.external.wikipedia_name_resolver
    :members:
-   :private-members:
    :special-members:
 
 .. automodule:: apd.resolvers.external.wikipedia_search_resolver
    :members:
-   :private-members:
    :special-members:
 
 Extrapolators
@@ -152,7 +134,6 @@ Extrapolators
 
 .. automodule:: apd.extrapolators.extrapolator
    :members:
-   :private-members:
    :special-members:
 
 External
@@ -160,7 +141,6 @@ External
 
 .. automodule:: apd.extrapolators.external.wikipedia_extrapolator
    :members:
-   :private-members:
    :special-members:
 
 Postprocessors
@@ -168,7 +148,6 @@ Postprocessors
 
 .. automodule:: apd.postprocessors.postprocessor
    :members:
-   :private-members:
    :special-members:
 
 External
@@ -176,5 +155,4 @@ External
 
 .. automodule:: apd.postprocessors.external.wikipedia_postprocessor
    :members:
-   :private-members:
    :special-members:
