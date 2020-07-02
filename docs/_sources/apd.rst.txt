@@ -56,6 +56,10 @@ Extractors
 Local
 -----
 
+.. automodule:: apd.extractors.local
+   :members:
+   :special-members:
+
 Token Extractor
 ^^^^^^^^^^^^^^^
 
@@ -79,6 +83,10 @@ Scorers
 
 Local
 -----
+
+.. automodule:: apd.scorers.local
+   :members:
+   :special-members:
 
 .. automodule:: apd.scorers.local.df_scorer
    :members:

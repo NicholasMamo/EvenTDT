@@ -96,7 +96,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-apd.extractors.extractor">Extractors</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#local">Local</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-apd.extractors.local">Local</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#module-apd.extractors.local.token_extractor">Token Extractor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-apd.extractors.local.entity_extractor">Entity Extractor</a></li>
 </ul>
@@ -388,8 +388,9 @@ Each inner list is the candidates in that document.</p>
 
 </dd></dl>
 
-<div class="section" id="local">
-<h3>Local<a class="headerlink" href="#local" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="module-apd.extractors.local">
+<span id="local"></span><h3>Local<a class="headerlink" href="#module-apd.extractors.local" title="Permalink to this headline">¶</a></h3>
+<p>Local extractors look for candidate participants in the event’s corpus.</p>
 <div class="section" id="module-apd.extractors.local.token_extractor">
 <span id="token-extractor"></span><h4>Token Extractor<a class="headerlink" href="#module-apd.extractors.local.token_extractor" title="Permalink to this headline">¶</a></h4>
 <p>The token extractor considers all the tokens in the corpus to be candidate participants.
@@ -557,6 +558,7 @@ Here, normalization means rescaling between 0 and 1.</p></li>
 
 <div class="section" id="id1">
 <h3>Local<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<span class="target" id="module-apd.scorers.local"></span><p>Local scorers assign a score to candidate participants based on evidence from the event’s corpus.</p>
 <span class="target" id="module-apd.scorers.local.df_scorer"></span><p>The document frequency scorer assigns a score to candidates that is proportional to their document frequency.</p>
 <dl class="class">
 <dt id="apd.scorers.local.df_scorer.DFScorer">
