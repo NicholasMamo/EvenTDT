@@ -744,12 +744,23 @@ Here, normalization means rescaling between 0 and 1.</p></li>
 </div>
 <div class="section" id="module-apd.scorers.local.tfidf_scorer">
 <span id="term-frequency-inverse-document-frequency-scorer"></span><h4>Term Frequency-Inverse Document Frequency Scorer<a class="headerlink" href="#module-apd.scorers.local.tfidf_scorer" title="Permalink to this headline">¶</a></h4>
-<p>The TF-IDF scorer assigns a score the candidate participants similarly to the <a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a> term-weighting scheme.</p>
+<p>The TF-IDF scorer assigns a score the candidate participants similarly to the <a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a> term-weighting scheme.
+The IDF table does not have to use the event corpus.
+Therefore this scorer can be used to promote candidate participants that appear frequently in the event corpus, but rarely outside of it.</p>
 <dl class="class">
 <dt id="apd.scorers.local.tfidf_scorer.TFIDFScorer">
 <em class="property">class </em><code class="sig-name descname">TFIDFScorer</code><span class="sig-paren">(</span><em class="sig-param">idf</em>, <em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.tfidf_scorer.TFIDFScorer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The TF-IDF scorer assigns a score the candidate participants similarly to the <a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a> term-weighting scheme.
-Therefore the scorer depends on an IDF table, given as a dictionary.</p>
+Therefore the scorer depends on an IDF table, given as a dictionary, and the number of documents in it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="nlp.html#module-nlp.term_weighting.global_schemes.idf" title="nlp.term_weighting.global_schemes.idf"><strong>idf</strong></a> (<em>dict</em>) – The IDF table used in conjunction with term weighting.
+The keys are the terms, and the corresponding values are the number of documents in which they appear.</p></li>
+<li><p><a class="reference internal" href="summarization.html#summarization.summary.Summary.documents" title="summarization.summary.Summary.documents"><strong>documents</strong></a> (<em>int</em>) – The number of documents in the IDF table.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="method">
 <dt id="apd.scorers.local.tfidf_scorer.TFIDFScorer.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">idf</em>, <em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.tfidf_scorer.TFIDFScorer.__init__" title="Permalink to this definition">¶</a></dt>

@@ -1,5 +1,7 @@
 """
 The TF-IDF scorer assigns a score the candidate participants similarly to the :class:`~nlp.term_weighting.tfidf.TFIDF` term-weighting scheme.
+The IDF table does not have to use the event corpus.
+Therefore this scorer can be used to promote candidate participants that appear frequently in the event corpus, but rarely outside of it.
 """
 
 import math
@@ -9,7 +11,13 @@ from ..scorer import Scorer
 class TFIDFScorer(Scorer):
 	"""
 	The TF-IDF scorer assigns a score the candidate participants similarly to the :class:`~nlp.term_weighting.tfidf.TFIDF` term-weighting scheme.
-	Therefore the scorer depends on an IDF table, given as a dictionary.
+	Therefore the scorer depends on an IDF table, given as a dictionary, and the number of documents in it.
+
+	:ivar idf: The IDF table used in conjunction with term weighting.
+			   The keys are the terms, and the corresponding values are the number of documents in which they appear.
+	:vartype idf: dict
+	:ivar documents: The number of documents in the IDF table.
+	:vartype documents: int
 	"""
 
 	def __init__(self, idf, documents):
