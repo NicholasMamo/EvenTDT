@@ -154,6 +154,10 @@ Resolvers
 Local
 -----
 
+.. automodule:: apd.resolvers.local
+   :members:
+   :special-members:
+
 .. automodule:: apd.resolvers.local.token_resolver
    :members:
    :special-members:
