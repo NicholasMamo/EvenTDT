@@ -1,5 +1,13 @@
 """
-The Wikipedia name resolver looks to map candidates to pages that include their name.
+The Wikipedia name resolver maps candidate participants to pages with a similar name.
+This covers two cases:
+
+	#. Candidate participants who have a Wikipedia page with the same name.
+	#. Candidate participants who lead to a disambiguation Wikipedia page.
+	   In this case, the resolver disambiguates using cosine similarity.
+
+For candidate participants that could be resolved, the resolver returns the page name.
+This acts as a link to the concept.
 """
 
 import os
@@ -25,6 +33,16 @@ class WikipediaNameResolver(Resolver):
 	"""
 	The Wikipedia name resolver looks for pages that match the candidate's name.
 	It then maps the candidate to that page by returning the page name instead of the candidate.
+
+	To resolve ambiguous participants, this resolver needs to calculate cosine similarity.
+	Cosine similarity considers the domain, or the event's corpus.
+	Apart from the corpus, the resolver also requires:
+
+		- A :class:`~nlp.tokenizer.Tokenizer` to extract tokens, which then make up the documents,
+		- A term-weighting scheme to create documents, and
+		- A threshold above which ambiguous candidate participants are resolved.
+
+	These are all instance variables and are required in the constructor.
 
 	:ivar ~.scheme: The term-weighting scheme to use to create documents from Wikipedia pages.
 				   These documents are used to compare the similarity with the domain of the candidates.
