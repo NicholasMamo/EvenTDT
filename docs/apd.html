@@ -91,6 +91,10 @@
 <li class="toctree-l1"><a class="reference internal" href="nlp.html">3. Natural Language Processing (NLP)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="wikinterface.html">4. Wikinterface</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">5. Automatic Participant Detection (APD)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-apd.participant_detector">Participant Detectors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-apd.ner_participant_detector">Named Entity Recognition Participant Detector</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#module-apd.extractors.extractor">Extractors</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module-apd.extractors.local.token_extractor">Local</a></li>
 </ul>
@@ -196,7 +200,7 @@
 <div><ol class="arabic simple">
 <li><p><a class="reference internal" href="#module-apd.extractors.extractor" title="apd.extractors.extractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Extract</span></code></a> candidate participants,</p></li>
 <li><p><a class="reference internal" href="#module-apd.scorers.scorer" title="apd.scorers.scorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Score</span></code></a> the candidates,</p></li>
-<li><p><a class="reference internal" href="#module-apd.filters.filter" title="apd.filters.filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Filter</span></code></a> out infrequent candidates,</p></li>
+<li><p><a class="reference internal" href="#module-apd.filters.filter" title="apd.filters.filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Filter</span></code></a> out low-scoring candidates,</p></li>
 <li><p><a class="reference internal" href="#module-apd.resolvers.resolver" title="apd.resolvers.resolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">Resolve</span></code></a> the candidates to an alternate representation (such as a Wikipedia concept) to make them participants,</p></li>
 <li><p><a class="reference internal" href="#module-apd.extrapolators.extrapolator" title="apd.extrapolators.extrapolator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Extrapolate</span></code></a> new participants, and</p></li>
 <li><p><a class="reference internal" href="#module-apd.postprocessors.postprocessor" title="apd.postprocessors.postprocessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Postprocess</span></code></a> the final list of participants.</p></li>
@@ -212,17 +216,20 @@ For example, the <a class="reference internal" href="#apd.extractors.extractor.E
 <p>All APD functionality usually goes through the <a class="reference internal" href="#apd.participant_detector.ParticipantDetector" title="apd.participant_detector.ParticipantDetector"><code class="xref py py-class docutils literal notranslate"><span class="pre">ParticipantDetector</span></code></a>.
 This class represents APD’s six steps.
 It takes as inputs instances of the classes and calls them one after the other.</p>
-<span class="target" id="module-apd.participant_detector"></span><p>The participant detector class is a simple class that takes in each of the six steps of APD as instances.
-Then, it calls them, one after the other.</p>
+<div class="section" id="module-apd.participant_detector">
+<span id="participant-detectors"></span><h2>Participant Detectors<a class="headerlink" href="#module-apd.participant_detector" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="#apd.participant_detector.ParticipantDetector" title="apd.participant_detector.ParticipantDetector"><code class="xref py py-class docutils literal notranslate"><span class="pre">ParticipantDetector</span></code></a> is a simple class that takes in each of the six steps of APD as instances.
+Then, it calls the main functions, one after the other.</p>
 <p>The process of the participant detector can be emulated by calling the main functions of the six steps in order.
 The reason why this class exists is so that it can be extended into particular types of participant detectors.
-The steps are identical to APD:</p>
+For example, the <a class="reference internal" href="#apd.ner_participant_detector.NERParticipantDetector" title="apd.ner_participant_detector.NERParticipantDetector"><code class="xref py py-class docutils literal notranslate"><span class="pre">NERParticipantDetector</span></code></a> automatically creates a participant detector with steps that focus only on named entities.</p>
+<p>The participant detector’s steps are identical to APD:</p>
 <blockquote>
 <div><ol class="arabic simple">
 <li><p>Extract candidate participants;</p></li>
 <li><p>Score the candidates;</p></li>
 <li><p>Filter out low-scoring candidates;</p></li>
-<li><p>Resolve the candidates into alternative representations to make the participants;</p></li>
+<li><p>Resolve the candidates into alternative representations to make them participants;</p></li>
 <li><p>Extrapolate the participants, analogous to entity set expansion; and</p></li>
 <li><p>Postprocess the participants.</p></li>
 </ol>
@@ -304,7 +311,9 @@ This component modifies the found participants.</p></li>
 
 </dd></dl>
 
-<span class="target" id="module-apd.ner_participant_detector"></span><p>The Named Entity Recognition (NER) participant detector is one that assumes that all participants are named entities.
+<div class="section" id="module-apd.ner_participant_detector">
+<span id="named-entity-recognition-participant-detector"></span><h3>Named Entity Recognition Participant Detector<a class="headerlink" href="#module-apd.ner_participant_detector" title="Permalink to this headline">¶</a></h3>
+<p>The Named Entity Recognition (NER) participant detector is one that assumes that all participants are named entities.
 This participant detector does not seek to resolve named entities or extrapolate.
 It simply extracts named entities and ranks them based on frequency.
 Due to its simplicity, the NER participant detector is also a baseline for APD.</p>
@@ -323,6 +332,8 @@ The frequency is computed using the <a class="reference internal" href="#apd.sco
 
 </dd></dl>
 
+</div>
+</div>
 <div class="section" id="module-apd.extractors.extractor">
 <span id="extractors"></span><h2>Extractors<a class="headerlink" href="#module-apd.extractors.extractor" title="Permalink to this headline">¶</a></h2>
 <p>The extractor is the first step in the APD process.

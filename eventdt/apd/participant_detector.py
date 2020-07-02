@@ -1,15 +1,17 @@
 """
-The participant detector class is a simple class that takes in each of the six steps of APD as instances.
-Then, it calls them, one after the other.
+The :class:`~apd.participant_detector.ParticipantDetector` is a simple class that takes in each of the six steps of APD as instances.
+Then, it calls the main functions, one after the other.
 
 The process of the participant detector can be emulated by calling the main functions of the six steps in order.
 The reason why this class exists is so that it can be extended into particular types of participant detectors.
-The steps are identical to APD:
+For example, the :class:`~apd.ner_participant_detector.NERParticipantDetector` automatically creates a participant detector with steps that focus only on named entities.
+
+The participant detector's steps are identical to APD:
 
 	#. Extract candidate participants;
 	#. Score the candidates;
 	#. Filter out low-scoring candidates;
-	#. Resolve the candidates into alternative representations to make the participants;
+	#. Resolve the candidates into alternative representations to make them participants;
 	#. Extrapolate the participants, analogous to entity set expansion; and
 	#. Postprocess the participants.
 
