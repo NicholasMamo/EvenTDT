@@ -1,18 +1,19 @@
 """
-The extractor is the first step in the APD process.
-An extractor looks for candidate participants in the corpus of documents.
-All extractors take the corpus as an input.
-
-The extractor returns the candidates in each document.
-The functionality revolves around one method: the :func:`~apd.extractors.extractor.Extractor.extract` method.
+Extraction is the first step in APD.
+The extractor's job is to identify candidate participants.
+All extractors must start from a corpus, but they may also look for candidates elsewhere.
+The functionality revolves around the :func:`~apd.extractors.extractor.Extractor.extract` method.
 """
 
 from abc import ABC, abstractmethod
 
 class Extractor(ABC):
 	"""
-	The extractor returns any participants that it finds.
+	The base extractor defines what all ATE extractors should be able to do.
+	All extractors should accept a corpus and be able to return a list of candidate participants related to it.
+
 	The functionality revolves around one method: the :func:`~apd.extractors.extractor.Extractor.extract` method.
+	This function returns the candidates, separated based on the documents in which they appear.
 	"""
 
 	@abstractmethod

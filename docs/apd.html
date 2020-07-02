@@ -345,16 +345,17 @@ To extract named entities, the participant detector automatically creates an ext
 </div>
 <div class="section" id="module-apd.extractors.extractor">
 <span id="extractors"></span><h2>Extractors<a class="headerlink" href="#module-apd.extractors.extractor" title="Permalink to this headline">¶</a></h2>
-<p>The extractor is the first step in the APD process.
-An extractor looks for candidate participants in the corpus of documents.
-All extractors take the corpus as an input.</p>
-<p>The extractor returns the candidates in each document.
-The functionality revolves around one method: the <a class="reference internal" href="#apd.extractors.extractor.Extractor.extract" title="apd.extractors.extractor.Extractor.extract"><code class="xref py py-func docutils literal notranslate"><span class="pre">extract()</span></code></a> method.</p>
+<p>Extraction is the first step in APD.
+The extractor’s job is to identify candidate participants.
+All extractors must start from a corpus, but they may also look for candidates elsewhere.
+The functionality revolves around the <a class="reference internal" href="#apd.extractors.extractor.Extractor.extract" title="apd.extractors.extractor.Extractor.extract"><code class="xref py py-func docutils literal notranslate"><span class="pre">extract()</span></code></a> method.</p>
 <dl class="class">
 <dt id="apd.extractors.extractor.Extractor">
 <em class="property">class </em><code class="sig-name descname">Extractor</code><a class="headerlink" href="#apd.extractors.extractor.Extractor" title="Permalink to this definition">¶</a></dt>
-<dd><p>The extractor returns any participants that it finds.
-The functionality revolves around one method: the <a class="reference internal" href="#apd.extractors.extractor.Extractor.extract" title="apd.extractors.extractor.Extractor.extract"><code class="xref py py-func docutils literal notranslate"><span class="pre">extract()</span></code></a> method.</p>
+<dd><p>The base extractor defines what all ATE extractors should be able to do.
+All extractors should accept a corpus and be able to return a list of candidate participants related to it.</p>
+<p>The functionality revolves around one method: the <a class="reference internal" href="#apd.extractors.extractor.Extractor.extract" title="apd.extractors.extractor.Extractor.extract"><code class="xref py py-func docutils literal notranslate"><span class="pre">extract()</span></code></a> method.
+This function returns the candidates, separated based on the documents in which they appear.</p>
 <dl class="method">
 <dt id="apd.extractors.extractor.Extractor.extract">
 <em class="property">abstract </em><code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">corpus</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.extractor.Extractor.extract" title="Permalink to this definition">¶</a></dt>
