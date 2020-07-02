@@ -13,9 +13,9 @@ class TFIDFScorer(Scorer):
 	The TF-IDF scorer assigns a score the candidate participants similarly to the :class:`~nlp.term_weighting.tfidf.TFIDF` term-weighting scheme.
 	Therefore the scorer depends on an IDF table, given as a dictionary, and the number of documents in it.
 
-	:ivar idf: The IDF table used in conjunction with term weighting.
-			   The keys are the terms, and the corresponding values are the number of documents in which they appear.
-	:vartype idf: dict
+	:ivar ~.idf: The IDF table used in conjunction with term weighting.
+				 The keys are the terms, and the corresponding values are the number of documents in which they appear.
+	:vartype ~.idf: dict
 	:ivar documents: The number of documents in the IDF table.
 	:vartype documents: int
 	"""

@@ -48,11 +48,11 @@ class WikipediaExtrapolator(Extrapolator):
 
 	:ivar corpus: The corpus of documents.
 	:vartype corpus: list of :class:`~nlp.document.Document`
-	:ivar tokenizer: The tokenizer to use to create documents.
-	:vartype tokenizer: :class:`~nlp.tokenizer.Tokenizer`
-	:ivar scheme: The term-weighting scheme to use to create documents from Wikipedia pages.
-				  These documents are used to compare the similarity with the domain of the candidates.
-	:vartype scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
+	:ivar ~.tokenizer: The tokenizer to use to create documents.
+	:vartype ~.tokenizer: :class:`~nlp.tokenizer.Tokenizer`
+	:ivar ~.scheme: The term-weighting scheme to use to create documents from Wikipedia pages.
+					These documents are used to compare the similarity with the domain of the candidates.
+	:vartype ~.scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
 	:ivar threshold: The similarity threshold beyond which new participants are are added.
 	:vartype threshold: float
 	:ivar first_level_links: The number of first-level links to retain.

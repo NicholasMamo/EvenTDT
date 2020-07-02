@@ -45,8 +45,8 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 
 	:ivar store: The nutrition store used to store the volume.
 	:vartype store: :class:`~tdt.nutrition.store.NutritionStore`
-	:ivar scheme: The term-weighting scheme used to create documents.
-	:vartype scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
+	:ivar ~.scheme: The term-weighting scheme used to create documents.
+	:vartype ~.scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
 	:ivar documents: The documents that can still be used for summarization.
 					 Older documents are automatically cleared.
 	:vartype documents: :class:`~nlp.document.Document`

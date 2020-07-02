@@ -19,8 +19,8 @@ class TokenResolver(Resolver):
 	"""
 	The token resolver tries to map tokens to actual terms.
 
-	:ivar tokenizer: The tokenizer used to extract the tokens anew.
-	:vartype tokenizer: None or :class:`~nlp.tokenizer.Tokenizer`
+	:ivar ~.tokenizer: The tokenizer used to extract the tokens anew.
+	:vartype ~.tokenizer: None or :class:`~nlp.tokenizer.Tokenizer`
 	:ivar corpus: The corpus of documents.
 				  This corpus is used to look for the terms that map to the tokens given as candidates.
 	:vartype corpus: list of :class:`~nlp.document.Document`

@@ -70,8 +70,8 @@ class ELDConsumer(Consumer):
 
 	:ivar time_window: The time (in seconds) to spend consuming the queue.
 	:vartype time_window: int
-	:ivar scheme: The term-weighting scheme used to create documents.
-	:vartype scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
+	:ivar ~.scheme: The term-weighting scheme used to create documents.
+	:vartype ~.scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
 	:ivar min_size: The minimum size of a cluster to be considered valid.
 	:vartype min_size: int
 	:ivar cooldown: The minimum time (in seconds) between consecutive checks of a cluster.
@@ -91,8 +91,8 @@ class ELDConsumer(Consumer):
 	:vartype store: :class:`~tdt.nutrition.store.NutritionStore`
 	:ivar buffer: A buffer of tweets that have been processed, but which are not part of a checkpoint yet.
 	:vartype buffer: :class:`~queues.queue.Queue`
-	:ivar tokenizer: The tokenizer used to create documents and create the IDF table, among others.
-	:vartype tokenizer: :class:`~nlp.tokenizer.Tokenizer`
+	:ivar ~.tokenizer: The tokenizer used to create documents and create the IDF table, among others.
+	:vartype ~.tokenizer: :class:`~nlp.tokenizer.Tokenizer`
 	:ivar clustering: The clustering algorithm to use.
 	:vartype clustering: :class:`~vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans`
 	:ivar tdt: The TDT algorithm used to detect breaking developments.

@@ -32,13 +32,13 @@ class WikipediaSearchResolver(Resolver):
 	The Wikipedia API automatically ranks articles by relevance.
 	This resolver exploits that to try and match the candidate with any of the top results.
 
-	:ivar scheme: The term-weighting scheme to use to create documents from Wikipedia pages.
+	:ivar ~.scheme: The term-weighting scheme to use to create documents from Wikipedia pages.
 				  These documents are used to compare the similarity with the domain of the candidates.
-	:vartype scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
+	:vartype ~.scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
 	:ivar threshold: The threshold below which candidates become unresolved.
 	:vartype threshold: float.
-	:ivar tokenizer: The tokenizer to use to create documents.
-	:vartype tokenizer: :class:`~nlp.tokenizer.Tokenizer`
+	:ivar ~.tokenizer: The tokenizer to use to create documents.
+	:vartype ~.tokenizer: :class:`~nlp.tokenizer.Tokenizer`
 	:ivar threshold: The similarity threshold beyond which candidate participants are resolved.
 	:vartype threshold: float
 	:ivar corpus: The corpus of documents.

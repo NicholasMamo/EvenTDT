@@ -48,8 +48,8 @@ class FIREConsumer(SimulatedBufferedConsumer):
 
 	:ivar store: The nutrition store used to store the volume changes of individual terms.
 	:vartype store: :class:`~tdt.nutrition.store.NutritionStore`
-	:ivar scheme: The term-weighting scheme used to create documents.
-	:vartype scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
+	:ivar ~.scheme: The term-weighting scheme used to create documents.
+	:vartype ~.scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
 	:ivar sets: The number of time windows that are considered when computing burst.
 				The higher this number, the more precise the calculations.
 				However, because of the decay in :class:`~tdt.algorithms.cataldi.Cataldi`, old time windows do not affect the result by a big margin.
@@ -58,8 +58,8 @@ class FIREConsumer(SimulatedBufferedConsumer):
 	:ivar min_size: The minimum size for a cluster to be considered to be a candidate breaking topic.
 					This value is inclusive.
 	:vartype min_size: int
-	:ivar tokenizer: The tokenizer used to create documents.
-	:vartype tokenizer: :class:`~nlp.tokenizer.Tokenizer`
+	:ivar ~.tokenizer: The tokenizer used to create documents.
+	:vartype ~.tokenizer: :class:`~nlp.tokenizer.Tokenizer`
 	:ivar clustering: The clustering algorithm to use.
 	:vartype clustering: :class:`~vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans`
 	:ivar summarization: The summarization algorithm to use.

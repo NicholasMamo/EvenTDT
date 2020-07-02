@@ -26,11 +26,11 @@ class WikipediaNameResolver(Resolver):
 	The Wikipedia name resolver looks for pages that match the candidate's name.
 	It then maps the candidate to that page by returning the page name instead of the candidate.
 
-	:ivar scheme: The term-weighting scheme to use to create documents from Wikipedia pages.
+	:ivar ~.scheme: The term-weighting scheme to use to create documents from Wikipedia pages.
 				   These documents are used to compare the similarity with the domain of the candidates.
-	:vartype scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
-	:ivar tokenizer: The tokenizer to use to create documents.
-	:vartype tokenizer: :class:`~nlp.tokenizer.Tokenizer`
+	:vartype ~.scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
+	:ivar ~.tokenizer: The tokenizer to use to create documents.
+	:vartype ~.tokenizer: :class:`~nlp.tokenizer.Tokenizer`
 	:ivar threshold: The threshold below which candidates become unresolved.
 	:vartype threshold: float.
 	:ivar corpus: The corpus of documents.

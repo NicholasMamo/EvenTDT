@@ -16,10 +16,10 @@ class TokenExtractor(Extractor):
 		Document dimensions are unique: if a token appears twice in a document, it will still have one dimension.
 		Therefore a token extractor without a tokenizer returns only unique terms from each document.
 
-	:ivar tokenizer: The tokenizer used to extract the tokens.
-					 If it is given, the tokens are extracted anew.
-					 Otherwise, the document dimensions are used instead.
-	:vartype tokenizer: :class:`~nlp.tokenizer.Tokenizer` or None
+	:ivar ~.tokenizer: The tokenizer used to extract the tokens.
+					   If it is given, the tokens are extracted anew.
+					   Otherwise, the document dimensions are used instead.
+	:vartype ~.tokenizer: :class:`~nlp.tokenizer.Tokenizer` or None
 	"""
 
 	def __init__(self, tokenizer=None):
