@@ -115,7 +115,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-apd.filters.filter">Filters</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id2">Local</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Local</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-apd.filters.local.threshold_filter">Threshold Filter</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-apd.resolvers.resolver">Resolvers</a><ul>
@@ -855,17 +858,21 @@ The input candidates should be the product of a <a class="reference internal" hr
 <h3>Local<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <span class="target" id="module-apd.filters.local"></span><p>Local filtering strategies consider only the scores of candidate participants to decide whether they are credible.
 Therefore these kind of filters are usually very limited in what they can do.</p>
-<span class="target" id="module-apd.filters.local.threshold_filter"></span><p>The threshold filter excludes candidate participants with a score that is lower than a specified threshold.</p>
+<div class="section" id="module-apd.filters.local.threshold_filter">
+<span id="threshold-filter"></span><h4>Threshold Filter<a class="headerlink" href="#module-apd.filters.local.threshold_filter" title="Permalink to this headline">¶</a></h4>
+<p>The threshold filter follows a simple rule: only candidate participants with a score that is above a certain threshold are credible.
+Anything else is filtered out.</p>
 <dl class="class">
 <dt id="apd.filters.local.threshold_filter.ThresholdFilter">
 <em class="property">class </em><code class="sig-name descname">ThresholdFilter</code><span class="sig-paren">(</span><em class="sig-param">threshold</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.filters.local.threshold_filter.ThresholdFilter" title="Permalink to this definition">¶</a></dt>
-<dd><p>The threshold filter excludes candidate participants with a score that is lower than a specified threshold.</p>
+<dd><p>The threshold filter excludes candidate participants with a score that is lower than a specified threshold.
+This threshold is stored as an instance variable and re-used by the <a class="reference internal" href="#apd.filters.local.threshold_filter.ThresholdFilter.filter" title="apd.filters.local.threshold_filter.ThresholdFilter.filter"><code class="xref py py-func docutils literal notranslate"><span class="pre">filter()</span></code></a> method.</p>
 <dl class="field-list simple">
 </dl>
 <dl class="method">
 <dt id="apd.filters.local.threshold_filter.ThresholdFilter.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">threshold</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.filters.local.threshold_filter.ThresholdFilter.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create the filter.</p>
+<dd><p>Create the filter with the threshold that will decide whether candidate participants will be retained.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>threshold</strong> (<em>float</em>) – The threshold below which candidate participants are removed.
@@ -895,6 +902,7 @@ The input candidates should be the product of a <a class="reference internal" hr
 
 </dd></dl>
 
+</div>
 </div>
 </div>
 <div class="section" id="module-apd.resolvers.resolver">
