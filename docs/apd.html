@@ -811,17 +811,18 @@ Here, normalization means rescaling between 0 and 1.</p></li>
 </div>
 <div class="section" id="module-apd.filters.filter">
 <span id="filters"></span><h2>Filters<a class="headerlink" href="#module-apd.filters.filter" title="Permalink to this headline">¶</a></h2>
-<p>The filter is the third step of the APD process.
-It is responsible for removing candidates that it deems to be invalid.
-The output is still a dictionary of candidate participants and their scores.</p>
-<p>The input candidates should be the product of a <a class="reference internal" href="#apd.scorers.scorer.Scorer" title="apd.scorers.scorer.Scorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scorer</span></code></a> process.
-In other words, they should be a dictionary, with the keys being the candidates and the values being the score.</p>
-<p>The functionality revolves around one method: the <a class="reference internal" href="#apd.filters.filter.Filter.filter" title="apd.filters.filter.Filter.filter"><code class="xref py py-func docutils literal notranslate"><span class="pre">filter()</span></code></a> method.
-The function returns a dictionary of candidate participants and their scores.</p>
+<p>Scoring is the third step of the APD process.
+This step removes candidate participants that are unlikely to be participants.
+Possibly, they are removed on the basis of a low score.
+The functionality revolves around the <a class="reference internal" href="#apd.filters.filter.Filter" title="apd.filters.filter.Filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Filter</span></code></a>’s <a class="reference internal" href="#apd.filters.filter.Filter.filter" title="apd.filters.filter.Filter.filter"><code class="xref py py-func docutils literal notranslate"><span class="pre">filter()</span></code></a> method.</p>
 <dl class="class">
 <dt id="apd.filters.filter.Filter">
 <em class="property">class </em><code class="sig-name descname">Filter</code><a class="headerlink" href="#apd.filters.filter.Filter" title="Permalink to this definition">¶</a></dt>
-<dd><p>The filter goes through candidate participants and removes candidates that are not credible enough.</p>
+<dd><p>The filter goes through candidate participants and removes those that are unlikely to be valid participants.</p>
+<p>The functionality revolves around one method: the <a class="reference internal" href="#apd.filters.filter.Filter.filter" title="apd.filters.filter.Filter.filter"><code class="xref py py-func docutils literal notranslate"><span class="pre">filter()</span></code></a> method.
+The input candidates should be the product of a <a class="reference internal" href="#apd.scorers.scorer.Scorer" title="apd.scorers.scorer.Scorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scorer</span></code></a> process.
+In other words, they should be a dictionary, with the keys being the candidates and the values being the score.
+The function returns a subset of the input candidates (and their scores) that passed the filtering test.</p>
 <dl class="method">
 <dt id="apd.filters.filter.Filter.filter">
 <code class="sig-name descname">filter</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.filters.filter.Filter.filter" title="Permalink to this definition">¶</a></dt>
