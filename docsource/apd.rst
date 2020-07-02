@@ -133,6 +133,10 @@ Filters
 Local
 -----
 
+.. automodule:: apd.filters.local
+   :members:
+   :special-members:
+
 .. automodule:: apd.filters.local.threshold_filter
    :members:
    :special-members:
