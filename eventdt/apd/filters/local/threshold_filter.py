@@ -1,5 +1,6 @@
 """
-The threshold filter excludes candidate participants with a score that is lower than a specified threshold.
+The threshold filter follows a simple rule: only candidate participants with a score that is above a certain threshold are credible.
+Anything else is filtered out.
 """
 
 import math
@@ -9,6 +10,7 @@ from ..filter import Filter
 class ThresholdFilter(Filter):
 	"""
 	The threshold filter excludes candidate participants with a score that is lower than a specified threshold.
+	This threshold is stored as an instance variable and re-used by the :func:`~apd.filters.local.threshold_filter.ThresholdFilter.filter` method.
 
 	:vartype threshold: The threshold below which candidate participants are removed.
 						The threshold is applied over the candidate participant scores.

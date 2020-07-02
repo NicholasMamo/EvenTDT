@@ -137,6 +137,9 @@ Local
    :members:
    :special-members:
 
+Threshold Filter
+^^^^^^^^^^^^^^^^
+
 .. automodule:: apd.filters.local.threshold_filter
    :members:
    :special-members:
