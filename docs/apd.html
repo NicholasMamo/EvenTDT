@@ -104,7 +104,14 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-apd.scorers.scorer">Scorers</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id1">Local</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Local</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-apd.scorers.local.df_scorer">Document Frequency Scorer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-apd.scorers.local.log_df_scorer">Logarithmic Document Frequency Scorer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-apd.scorers.local.tf_scorer">Term Frequency Scorer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-apd.scorers.local.log_tf_scorer">Logarithmic Term Frequency Scorer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-apd.scorers.local.tfidf_scorer">Term Frequency-Inverse Document Frequency Scorer</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-apd.filters.filter">Filters</a><ul>
@@ -559,7 +566,9 @@ Here, normalization means rescaling between 0 and 1.</p></li>
 <div class="section" id="id1">
 <h3>Local<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <span class="target" id="module-apd.scorers.local"></span><p>Local scorers assign a score to candidate participants based on evidence from the event’s corpus.</p>
-<span class="target" id="module-apd.scorers.local.df_scorer"></span><p>The document frequency scorer assigns a score to candidates that is proportional to their document frequency.</p>
+<div class="section" id="module-apd.scorers.local.df_scorer">
+<span id="document-frequency-scorer"></span><h4>Document Frequency Scorer<a class="headerlink" href="#module-apd.scorers.local.df_scorer" title="Permalink to this headline">¶</a></h4>
+<p>The document frequency scorer assigns a score to candidates that is proportional to their document frequency.</p>
 <dl class="class">
 <dt id="apd.scorers.local.df_scorer.DFScorer">
 <em class="property">class </em><code class="sig-name descname">DFScorer</code><a class="headerlink" href="#apd.scorers.local.df_scorer.DFScorer" title="Permalink to this definition">¶</a></dt>
@@ -588,7 +597,10 @@ Here, normalization means rescaling between 0 and 1.</p></li>
 
 </dd></dl>
 
-<span class="target" id="module-apd.scorers.local.log_df_scorer"></span><p>The logarithmic document frequency scorer is based on the document frequency scorer.
+</div>
+<div class="section" id="module-apd.scorers.local.log_df_scorer">
+<span id="logarithmic-document-frequency-scorer"></span><h4>Logarithmic Document Frequency Scorer<a class="headerlink" href="#module-apd.scorers.local.log_df_scorer" title="Permalink to this headline">¶</a></h4>
+<p>The logarithmic document frequency scorer is based on the document frequency scorer.
 The difference is that it applies a logarithm to decrease the difference between candidates that appear very often and those which do not.</p>
 <dl class="class">
 <dt id="apd.scorers.local.log_df_scorer.LogDFScorer">
@@ -636,7 +648,10 @@ Here, normalization means rescaling between 0 and 1.</p></li>
 
 </dd></dl>
 
-<span class="target" id="module-apd.scorers.local.tf_scorer"></span><p>The term frequency scorer assigns a score to candidates that is proportional to their term frequency.</p>
+</div>
+<div class="section" id="module-apd.scorers.local.tf_scorer">
+<span id="term-frequency-scorer"></span><h4>Term Frequency Scorer<a class="headerlink" href="#module-apd.scorers.local.tf_scorer" title="Permalink to this headline">¶</a></h4>
+<p>The term frequency scorer assigns a score to candidates that is proportional to their term frequency.</p>
 <dl class="class">
 <dt id="apd.scorers.local.tf_scorer.TFScorer">
 <em class="property">class </em><code class="sig-name descname">TFScorer</code><a class="headerlink" href="#apd.scorers.local.tf_scorer.TFScorer" title="Permalink to this definition">¶</a></dt>
@@ -665,7 +680,10 @@ Here, normalization means rescaling between 0 and 1.</p></li>
 
 </dd></dl>
 
-<span class="target" id="module-apd.scorers.local.log_tf_scorer"></span><p>The logarithmic term frequency scorer is based on the term frequency scorer.
+</div>
+<div class="section" id="module-apd.scorers.local.log_tf_scorer">
+<span id="logarithmic-term-frequency-scorer"></span><h4>Logarithmic Term Frequency Scorer<a class="headerlink" href="#module-apd.scorers.local.log_tf_scorer" title="Permalink to this headline">¶</a></h4>
+<p>The logarithmic term frequency scorer is based on the term frequency scorer.
 The difference is that it applies a logarithm to decrease the difference between candidates that appear very often and those which do not.</p>
 <dl class="class">
 <dt id="apd.scorers.local.log_tf_scorer.LogTFScorer">
@@ -713,7 +731,10 @@ Here, normalization means rescaling between 0 and 1.</p></li>
 
 </dd></dl>
 
-<span class="target" id="module-apd.scorers.local.tfidf_scorer"></span><p>The TF-IDF scorer assigns a score the candidate participants similarly to the <a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a> term-weighting scheme.</p>
+</div>
+<div class="section" id="module-apd.scorers.local.tfidf_scorer">
+<span id="term-frequency-inverse-document-frequency-scorer"></span><h4>Term Frequency-Inverse Document Frequency Scorer<a class="headerlink" href="#module-apd.scorers.local.tfidf_scorer" title="Permalink to this headline">¶</a></h4>
+<p>The TF-IDF scorer assigns a score the candidate participants similarly to the <a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a> term-weighting scheme.</p>
 <dl class="class">
 <dt id="apd.scorers.local.tfidf_scorer.TFIDFScorer">
 <em class="property">class </em><code class="sig-name descname">TFIDFScorer</code><span class="sig-paren">(</span><em class="sig-param">idf</em>, <em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.tfidf_scorer.TFIDFScorer" title="Permalink to this definition">¶</a></dt>
@@ -764,6 +785,7 @@ Here, normalization means rescaling between 0 and 1.</p></li>
 
 </dd></dl>
 
+</div>
 </div>
 </div>
 <div class="section" id="module-apd.filters.filter">

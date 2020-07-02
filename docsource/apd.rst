@@ -88,21 +88,36 @@ Local
    :members:
    :special-members:
 
+Document Frequency Scorer
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
 .. automodule:: apd.scorers.local.df_scorer
    :members:
    :special-members:
+
+Logarithmic Document Frequency Scorer
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: apd.scorers.local.log_df_scorer
    :members:
    :special-members:
 
+Term Frequency Scorer
+^^^^^^^^^^^^^^^^^^^^^
+
 .. automodule:: apd.scorers.local.tf_scorer
    :members:
    :special-members:
 
+Logarithmic Term Frequency Scorer
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 .. automodule:: apd.scorers.local.log_tf_scorer
    :members:
    :special-members:
+
+Term Frequency-Inverse Document Frequency Scorer
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: apd.scorers.local.tfidf_scorer
    :members:
