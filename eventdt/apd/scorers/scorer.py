@@ -1,7 +1,7 @@
 """
 Scoring is the second step of the APD process.
 This step assigns a score to each candidate that is provided.
-The functionality revolves around the :func:`~apd.scorers.scorer.Scorer.score` method.
+The functionality revolves around the :class:`~apd.scorers.scorer.Scorer`'s :func:`~apd.scorers.scorer.Scorer.score` method.
 """
 
 from abc import ABC, abstractmethod

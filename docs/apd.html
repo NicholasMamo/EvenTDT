@@ -359,7 +359,7 @@ To extract named entities, the participant detector automatically creates an ext
 <p>Extraction is the first step in APD.
 The extractor’s job is to identify candidate participants.
 All extractors must start from a corpus, but they may also look for candidates elsewhere.
-The functionality revolves around the <a class="reference internal" href="#apd.extractors.extractor.Extractor.extract" title="apd.extractors.extractor.Extractor.extract"><code class="xref py py-func docutils literal notranslate"><span class="pre">extract()</span></code></a> method.</p>
+The functionality revolves around the <a class="reference internal" href="#apd.extractors.extractor.Extractor" title="apd.extractors.extractor.Extractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Extractor</span></code></a>’s <a class="reference internal" href="#apd.extractors.extractor.Extractor.extract" title="apd.extractors.extractor.Extractor.extract"><code class="xref py py-func docutils literal notranslate"><span class="pre">extract()</span></code></a> method.</p>
 <dl class="class">
 <dt id="apd.extractors.extractor.Extractor">
 <em class="property">class </em><code class="sig-name descname">Extractor</code><a class="headerlink" href="#apd.extractors.extractor.Extractor" title="Permalink to this definition">¶</a></dt>
@@ -522,7 +522,7 @@ Each inner list is the candidates in that document.</p>
 <span id="scorers"></span><h2>Scorers<a class="headerlink" href="#module-apd.scorers.scorer" title="Permalink to this headline">¶</a></h2>
 <p>Scoring is the second step of the APD process.
 This step assigns a score to each candidate that is provided.
-The functionality revolves around the <a class="reference internal" href="#apd.scorers.scorer.Scorer.score" title="apd.scorers.scorer.Scorer.score"><code class="xref py py-func docutils literal notranslate"><span class="pre">score()</span></code></a> method.</p>
+The functionality revolves around the <a class="reference internal" href="#apd.scorers.scorer.Scorer" title="apd.scorers.scorer.Scorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scorer</span></code></a>’s <a class="reference internal" href="#apd.scorers.scorer.Scorer.score" title="apd.scorers.scorer.Scorer.score"><code class="xref py py-func docutils literal notranslate"><span class="pre">score()</span></code></a> method.</p>
 <dl class="class">
 <dt id="apd.scorers.scorer.Scorer">
 <em class="property">class </em><code class="sig-name descname">Scorer</code><a class="headerlink" href="#apd.scorers.scorer.Scorer" title="Permalink to this definition">¶</a></dt>

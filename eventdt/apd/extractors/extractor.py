@@ -2,7 +2,7 @@
 Extraction is the first step in APD.
 The extractor's job is to identify candidate participants.
 All extractors must start from a corpus, but they may also look for candidates elsewhere.
-The functionality revolves around the :func:`~apd.extractors.extractor.Extractor.extract` method.
+The functionality revolves around the :class:`~apd.extractors.extractor.Extractor`'s :func:`~apd.extractors.extractor.Extractor.extract` method.
 """
 
 from abc import ABC, abstractmethod
