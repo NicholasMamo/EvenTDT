@@ -168,6 +168,10 @@ Token Resolver
 External
 --------
 
+.. automodule:: apd.resolvers.external
+   :members:
+   :special-members:
+
 .. automodule:: apd.resolvers.external.wikipedia_name_resolver
    :members:
    :special-members:
