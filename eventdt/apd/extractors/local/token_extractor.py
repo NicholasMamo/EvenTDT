@@ -7,8 +7,14 @@ from ..extractor import Extractor
 
 class TokenExtractor(Extractor):
 	"""
-	The token extractor does not perform any filtering whatsoever on the corpus.
-	It returns all tokens as potential candidates.
+	The token extractor returns all tokens as potential candidates.
+	To extract tokens, the token extractor needs a tokenizer, but it is optional.
+	If no tokenizer is given, the token extractor uses documents' dimensions as tokens.
+
+	.. note::
+
+		Document dimensions are unique: if a token appears twice in a document, it will still have one dimension.
+		Therefore a token extractor without a tokenizer returns only unique terms from each document.
 
 	:ivar tokenizer: The tokenizer used to extract the tokens.
 					 If it is given, the tokens are extracted anew.
@@ -18,7 +24,7 @@ class TokenExtractor(Extractor):
 
 	def __init__(self, tokenizer=None):
 		"""
-		Create the extractor.
+		Create the extractor with a tokenizer.
 
 		:param tokenizer: The tokenizer used to extract the tokens.
 						  If it is given, the tokens are extracted anew.
