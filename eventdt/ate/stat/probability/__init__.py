@@ -236,8 +236,17 @@ def cached(corpora, token):
 	for corpus in corpora:
 		with open(corpus, 'r') as f:
 			for line in f:
-				document = json.loads(line)
-				if token in document['tokens']:
-					documents.append(document)
+				"""
+				The check is in two steps:
+
+					1. Check whether the token appears in the line string; and
+					2. If it appears in the line string, decode the line and double-check that the token is in the document tokens.
+
+				This saves a lot of time from needlessly decoding lines, most of which do not contain the token.
+				"""
+				if token in line:
+					document = json.loads(line)
+					if token in document['tokens']:
+						documents.append(document)
 
 	return documents

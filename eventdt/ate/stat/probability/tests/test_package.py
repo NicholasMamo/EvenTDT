@@ -284,8 +284,8 @@ class TestPackage(unittest.TestCase):
 		Test that all documents in the cache contain the given token.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json'),
-		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'BVBFCB-100.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'LIVMUN.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'BVBFCB.json') ]
 		cache = cached(paths, 'yellow')
 		self.assertTrue(all( 'yellow' in document['tokens'] for document in cache ))
 
