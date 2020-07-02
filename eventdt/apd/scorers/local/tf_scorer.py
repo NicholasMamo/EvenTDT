@@ -1,5 +1,6 @@
 """
-The term frequency scorer assigns a score to candidates that is proportional to their term frequency.
+The term frequency (TF) scorer assigns a score to candidate participants based on the number of times in which they appear.
+Unlike the :class:`~apd.scorers.local.df_scorer.DFScorer`, candidates that appear several times in the same document are boosted.
 """
 
 import math
@@ -8,7 +9,8 @@ from ..scorer import Scorer
 
 class TFScorer(Scorer):
 	"""
-	The basic summation scorer assigns a score to tokens based on term frequency.
+	The term frequency scorer counts the number of times a candidate participant appears in the event corpus.
+	This becomes the candidate participant's score.
 	"""
 
 	def score(self, candidates, normalize_scores=True, *args, **kwargs):
