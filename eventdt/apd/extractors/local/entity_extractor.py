@@ -53,7 +53,7 @@ class EntityExtractor(Extractor):
 		:type corpus: list
 
 		:return: A list of candidates separated by the document in which they were found.
-		:rtype: list
+		:rtype: list of list of str
 		"""
 
 		candidates = [ ]
