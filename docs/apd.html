@@ -1120,17 +1120,32 @@ The keys should be the candidates, and the values the scores.</p>
 <div class="section" id="module-apd.resolvers.external.wikipedia_search_resolver">
 <span id="wikipedia-search-resolver"></span><h4>Wikipedia Search Resolver<a class="headerlink" href="#module-apd.resolvers.external.wikipedia_search_resolver" title="Permalink to this headline">¶</a></h4>
 <p>The Wikipedia search resolver is similar to the <a class="reference internal" href="#apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver" title="apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">WikipediaNameResolver</span></code></a>.
-In contrast with the name resolver, the search resolver searches for candidates on Wikipedia.
-The resolver tries to map candidates to one of the results.</p>
+However, instead of looking for similarly-named Wikipedia articles, the search resolver searches for candidate participants on Wikipedia.
+The resolver tries to map candidates to one of the top-ranked results.</p>
 <p>The aim of this resolver is to overcome common problems with the name resolver.
 In many cases, colloquial names of candidates are not the same as their formal names.
-For example, <cite>FC Barcelona</cite> is referred to simply as <cite>Barcelona</cite>.</p>
+For example, <cite>FC Barcelona</cite> is commonly referred to simply as <cite>Barcelona</cite>.</p>
+<p>For candidate participants that could be resolved, the resolver returns the page name.
+This acts as a link to the concept.</p>
 <dl class="class">
 <dt id="apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver">
 <em class="property">class </em><code class="sig-name descname">WikipediaSearchResolver</code><span class="sig-paren">(</span><em class="sig-param">scheme</em>, <em class="sig-param">tokenizer</em>, <em class="sig-param">threshold</em>, <em class="sig-param">corpus</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver" title="Permalink to this definition">¶</a></dt>
 <dd><p>The Wikipedia search resolver looks for pages that include candidate names.
-The Wikipedia API automatically ranks articles by relevance.
-This resolver exploits that to try and match the candidate with any of the top results.</p>
+The matches can be both in the title, but also in the content itself.</p>
+<p>The Wikipedia API automatically ranks articles by relevance.
+This resolver exploits the ranking to try and match the candidate with any of the top results.
+Out of these top results, the <a class="reference internal" href="#apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver" title="apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">WikipediaSearchResolver</span></code></a> chooses the most similar page.
+The resolver bases the choice on cosine similarity.</p>
+<p>Cosine similarity considers the domain, or the event’s corpus.
+Apart from the corpus, the resolver also requires:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>A <a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a> to extract tokens, which then make up the documents,</p></li>
+<li><p>A term-weighting scheme to create documents, and</p></li>
+<li><p>A threshold above which candidate participants are resolved to a Wikipedia page.</p></li>
+</ul>
+</div></blockquote>
+<p>These are all instance variables and are required in the constructor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">

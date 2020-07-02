@@ -1,11 +1,14 @@
 """
 The Wikipedia search resolver is similar to the :class:`~apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver`.
-In contrast with the name resolver, the search resolver searches for candidates on Wikipedia.
-The resolver tries to map candidates to one of the results.
+However, instead of looking for similarly-named Wikipedia articles, the search resolver searches for candidate participants on Wikipedia.
+The resolver tries to map candidates to one of the top-ranked results.
 
 The aim of this resolver is to overcome common problems with the name resolver.
 In many cases, colloquial names of candidates are not the same as their formal names.
-For example, `FC Barcelona` is referred to simply as `Barcelona`.
+For example, `FC Barcelona` is commonly referred to simply as `Barcelona`.
+
+For candidate participants that could be resolved, the resolver returns the page name.
+This acts as a link to the concept.
 """
 
 import os
@@ -29,8 +32,21 @@ from ..resolver import Resolver
 class WikipediaSearchResolver(Resolver):
 	"""
 	The Wikipedia search resolver looks for pages that include candidate names.
+	The matches can be both in the title, but also in the content itself.
+
 	The Wikipedia API automatically ranks articles by relevance.
-	This resolver exploits that to try and match the candidate with any of the top results.
+	This resolver exploits the ranking to try and match the candidate with any of the top results.
+	Out of these top results, the :class:`~apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver` chooses the most similar page.
+	The resolver bases the choice on cosine similarity.
+
+	Cosine similarity considers the domain, or the event's corpus.
+	Apart from the corpus, the resolver also requires:
+
+		- A :class:`~nlp.tokenizer.Tokenizer` to extract tokens, which then make up the documents,
+		- A term-weighting scheme to create documents, and
+		- A threshold above which candidate participants are resolved to a Wikipedia page.
+
+	These are all instance variables and are required in the constructor.
 
 	:ivar ~.scheme: The term-weighting scheme to use to create documents from Wikipedia pages.
 				  These documents are used to compare the similarity with the domain of the candidates.
