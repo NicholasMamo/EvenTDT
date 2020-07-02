@@ -158,6 +158,9 @@ Local
    :members:
    :special-members:
 
+Token Resolver
+^^^^^^^^^^^^^^
+
 .. automodule:: apd.resolvers.local.token_resolver
    :members:
    :special-members:
