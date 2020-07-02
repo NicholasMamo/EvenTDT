@@ -602,7 +602,7 @@ Here, normalization means rescaling between 0 and 1.</p></li>
 </div>
 <div class="section" id="module-apd.scorers.local.log_df_scorer">
 <span id="logarithmic-document-frequency-scorer"></span><h4>Logarithmic Document Frequency Scorer<a class="headerlink" href="#module-apd.scorers.local.log_df_scorer" title="Permalink to this headline">¶</a></h4>
-<p>The logarithmic document frequency scorer is based on the document frequency scorer.
+<p>The logarithmic document frequency scorer is based on the <a class="reference internal" href="#apd.scorers.local.df_scorer.DFScorer" title="apd.scorers.local.df_scorer.DFScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DFScorer</span></code></a>.
 Like the document frequency scorer, it does not favor candidate participants that appear several times in the same document.</p>
 <p>The difference is that the logarithmic version decreases the difference between candidates that appear very often and those which do not.
 The intuition is that if a candidate participants appears in 1000 documents and another appears in 1200 documents, the difference is not significant.</p>
@@ -656,8 +656,8 @@ Here, normalization means rescaling between 0 and 1.</p></li>
 </div>
 <div class="section" id="module-apd.scorers.local.tf_scorer">
 <span id="term-frequency-scorer"></span><h4>Term Frequency Scorer<a class="headerlink" href="#module-apd.scorers.local.tf_scorer" title="Permalink to this headline">¶</a></h4>
-<p>The term frequency (DF) scorer assigns a score to candidate participants based on the number of times in which they appear.
-Unlike the <a class="reference internal" href="#apd.scorers.local.df_scorer.DFScorer" title="apd.scorers.local.df_scorer.DFScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">apd.scorers.local.df_scorer.DFScorer</span></code></a>, candidates that appear several times in the same document are boosted.</p>
+<p>The term frequency (TF) scorer assigns a score to candidate participants based on the number of times in which they appear.
+Unlike the <a class="reference internal" href="#apd.scorers.local.df_scorer.DFScorer" title="apd.scorers.local.df_scorer.DFScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DFScorer</span></code></a>, candidates that appear several times in the same document are boosted.</p>
 <dl class="class">
 <dt id="apd.scorers.local.tf_scorer.TFScorer">
 <em class="property">class </em><code class="sig-name descname">TFScorer</code><a class="headerlink" href="#apd.scorers.local.tf_scorer.TFScorer" title="Permalink to this definition">¶</a></dt>
@@ -690,14 +690,17 @@ Here, normalization means rescaling between 0 and 1.</p></li>
 </div>
 <div class="section" id="module-apd.scorers.local.log_tf_scorer">
 <span id="logarithmic-term-frequency-scorer"></span><h4>Logarithmic Term Frequency Scorer<a class="headerlink" href="#module-apd.scorers.local.log_tf_scorer" title="Permalink to this headline">¶</a></h4>
-<p>The logarithmic term frequency scorer is based on the term frequency scorer.
-The difference is that it applies a logarithm to decrease the difference between candidates that appear very often and those which do not.</p>
+<p>The logarithmic term scorer is based on the <a class="reference internal" href="#apd.scorers.local.tf_scorer.TFScorer" title="apd.scorers.local.tf_scorer.TFScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFScorer</span></code></a>.
+Like the term scorer, it favors candidate participants that appear several times in the same document.</p>
+<p>The difference is that the logarithmic version decreases the difference between candidates that appear very often and those which do not.
+The intuition is that if a candidate participants appears 1000 times and another appears 1200 times, the difference is not significant.</p>
 <dl class="class">
 <dt id="apd.scorers.local.log_tf_scorer.LogTFScorer">
 <em class="property">class </em><code class="sig-name descname">LogTFScorer</code><span class="sig-paren">(</span><em class="sig-param">base=10</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.log_tf_scorer.LogTFScorer" title="Permalink to this definition">¶</a></dt>
-<dd><p>The log scorer is based on normal summation.
-However, the logarithms of the scores are taken.
-In this way, the candidates are not overly-biased towards candidates that appear disproportionately.</p>
+<dd><p>The logarithmic term frequency scorer is based on the normal term frequency summation.
+The difference is that before normalization, the scorer takes the the logarithm of the scores.
+In this way, the scores are not overly-biased towards candidate participants that appear disproportionately.
+To calculate the logarithm, the scorer accepts the logarithmic base in the constructor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><p><strong>base</strong> (<em>int</em>) – The base of the logarithm.</p>

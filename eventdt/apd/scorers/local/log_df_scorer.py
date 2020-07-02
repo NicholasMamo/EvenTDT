@@ -1,5 +1,5 @@
 """
-The logarithmic document frequency scorer is based on the document frequency scorer.
+The logarithmic document frequency scorer is based on the :class:`~apd.scorers.local.df_scorer.DFScorer`.
 Like the document frequency scorer, it does not favor candidate participants that appear several times in the same document.
 
 The difference is that the logarithmic version decreases the difference between candidates that appear very often and those which do not.
@@ -34,7 +34,7 @@ class LogDFScorer(DFScorer):
 	def score(self, candidates, normalize_scores=True, *args, **kwargs):
 		"""
 		Score the given candidates based on their relevance within the corpus.
-		The score is normalized using the maximum score
+		The score is normalized using the maximum score.
 
 		:param candidates: A list of candidates participants that were found earlier.
 		:type candidates: list
