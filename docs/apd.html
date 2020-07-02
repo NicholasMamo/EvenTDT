@@ -313,17 +313,26 @@ This component modifies the found participants.</p></li>
 
 <div class="section" id="module-apd.ner_participant_detector">
 <span id="named-entity-recognition-participant-detector"></span><h3>Named Entity Recognition Participant Detector<a class="headerlink" href="#module-apd.ner_participant_detector" title="Permalink to this headline">¶</a></h3>
-<p>The Named Entity Recognition (NER) participant detector is one that assumes that all participants are named entities.
-This participant detector does not seek to resolve named entities or extrapolate.
-It simply extracts named entities and ranks them based on frequency.
-Due to its simplicity, the NER participant detector is also a baseline for APD.</p>
+<p>The Named Entity Recognition (NER) participant detector is a simple approach that assumes that all participants are named entities.
+This participant detector does not resolve named entities to an alternate representation.
+Nor does it extrapolate named entities: it simply extracts named entities and ranks them based on frequency.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Due to its simplicity, the NER participant detector is a good baseline for APD.
+The first paper that proposed APD used named entities as a baseline: <a class="reference external" href="https://dl.acm.org/doi/abs/10.1145/3342220.3344921">ELD: Event TimeLine Detection – A Participant-Based Approach to Tracking Events by Mamo et al. (2019)</a>.</p>
+</div>
 <dl class="class">
 <dt id="apd.ner_participant_detector.NERParticipantDetector">
 <em class="property">class </em><code class="sig-name descname">NERParticipantDetector</code><a class="headerlink" href="#apd.ner_participant_detector.NERParticipantDetector" title="Permalink to this definition">¶</a></dt>
-<dd><p>The Named Entity Recognition (NER) participant detector extracts named entities from the corpus.
-The NER participant detector is based on a normal participant detector.
-It uses the <a class="reference internal" href="#apd.extractors.local.entity_extractor.EntityExtractor" title="apd.extractors.local.entity_extractor.EntityExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">EntityExtractor</span></code></a> to extract named entities.
-The frequency is computed using the <a class="reference internal" href="#apd.scorers.local.tf_scorer.TFScorer" title="apd.scorers.local.tf_scorer.TFScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFScorer</span></code></a></p>
+<dd><p>The NER participant detector is based on a normal participant detector.
+To extract named entities, the participant detector automatically creates an extractor and a scorer:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference internal" href="#apd.extractors.local.entity_extractor.EntityExtractor" title="apd.extractors.local.entity_extractor.EntityExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">EntityExtractor</span></code></a> to extract named entities, and</p></li>
+<li><p><a class="reference internal" href="#apd.scorers.local.tf_scorer.TFScorer" title="apd.scorers.local.tf_scorer.TFScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFScorer</span></code></a> to score named entities.</p></li>
+</ul>
+</div></blockquote>
+<p>The NER participant detector performs no filtering, resolution, extrapolation or post-processing.</p>
 <dl class="method">
 <dt id="apd.ner_participant_detector.NERParticipantDetector.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#apd.ner_participant_detector.NERParticipantDetector.__init__" title="Permalink to this definition">¶</a></dt>
