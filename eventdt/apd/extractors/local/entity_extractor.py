@@ -1,7 +1,10 @@
 """
 The entity extractor considers only named entities to be candidate participants.
-This extractor requires `NLTK <http://nltk.org/>`_ to work.
-It does not distinguish between named entity types.
+
+.. note::
+
+	The entity extractor uses `NLTK <http://nltk.org/>`_ to extract candidate participants.
+	If NLTK is not installed, this extractor will fail.
 """
 
 import os
@@ -14,6 +17,12 @@ from ..extractor import Extractor
 class EntityExtractor(Extractor):
 	"""
 	The entity extractor uses NLTK to extract named entities from a corpus of documents.
+	Apart from extracting named entities, the entity extractor combines adjacent named entities into one string.
+
+	Named entities may be persons, organizations or locations.
+	If two adjacent named entities have different types, they are normally not combined.
+	However, if the binary flag is set as `True`, the entity extractor does not distinguish between these types.
+	In this case, even if adjacent named entities have a different type, the extractor combines them.
 
 	:ivar binary: A boolean indicating whether named entity extraction should be binary.
 				  If true, all named entities have the same type.
@@ -23,7 +32,7 @@ class EntityExtractor(Extractor):
 
 	def __init__(self, binary=True):
 		"""
-		Create the extractor.
+		Create the extractor with the binary flag.
 
 		:param binary: A boolean indicating whether named entity extraction should be binary.
 					   If true, all named entities have the same type.

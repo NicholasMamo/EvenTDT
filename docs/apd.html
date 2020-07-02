@@ -451,13 +451,21 @@ Each inner list is the candidates in that document.</p>
 </div>
 <div class="section" id="module-apd.extractors.local.entity_extractor">
 <span id="entity-extractor"></span><h4>Entity Extractor<a class="headerlink" href="#module-apd.extractors.local.entity_extractor" title="Permalink to this headline">¶</a></h4>
-<p>The entity extractor considers only named entities to be candidate participants.
-This extractor requires <a class="reference external" href="http://nltk.org/">NLTK</a> to work.
-It does not distinguish between named entity types.</p>
+<p>The entity extractor considers only named entities to be candidate participants.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The entity extractor uses <a class="reference external" href="http://nltk.org/">NLTK</a> to extract candidate participants.
+If NLTK is not installed, this extractor will fail.</p>
+</div>
 <dl class="class">
 <dt id="apd.extractors.local.entity_extractor.EntityExtractor">
 <em class="property">class </em><code class="sig-name descname">EntityExtractor</code><span class="sig-paren">(</span><em class="sig-param">binary=True</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.local.entity_extractor.EntityExtractor" title="Permalink to this definition">¶</a></dt>
-<dd><p>The entity extractor uses NLTK to extract named entities from a corpus of documents.</p>
+<dd><p>The entity extractor uses NLTK to extract named entities from a corpus of documents.
+Apart from extracting named entities, the entity extractor combines adjacent named entities into one string.</p>
+<p>Named entities may be persons, organizations or locations.
+If two adjacent named entities have different types, they are normally not combined.
+However, if the binary flag is set as <cite>True</cite>, the entity extractor does not distinguish between these types.
+In this case, even if adjacent named entities have a different type, the extractor combines them.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><p><strong>binary</strong> (<em>bool</em>) – A boolean indicating whether named entity extraction should be binary.
@@ -468,7 +476,7 @@ This is enabled by default to minimize false negatives.</p>
 <dl class="method">
 <dt id="apd.extractors.local.entity_extractor.EntityExtractor.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">binary=True</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.local.entity_extractor.EntityExtractor.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create the extractor.</p>
+<dd><p>Create the extractor with the binary flag.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>binary</strong> (<em>bool</em>) – A boolean indicating whether named entity extraction should be binary.
