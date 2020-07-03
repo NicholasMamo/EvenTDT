@@ -1,14 +1,16 @@
 """
-The postprocessor is the sixth and last step in the APD process.
-A postprocessor formats the participants.
+Post-processing is the sixth and last step in the APD process.
+This step modifies the final participants to make them more useful to how they will be used.
 
-The postprocessor returns the same number of participants with any changes to them.
 The functionality revolves around one method: the :func:`~apd.postprocessors.postprocessor.Postprocessor.postprocess` method.
+This function returns all participants, but with some changes made to them.
 """
 
 class Postprocessor(object):
 	"""
-	The simplest postprocessor returns the participants without any changes.
+	The simplest post-processor returns the participants without any changes.
+	All other post-processors may add functionality to change participants.
+	However, all post-processors must return all participants and in the same order.
 	"""
 
 	def postprocess(self, participants, *args, **kwargs):

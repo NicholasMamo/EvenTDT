@@ -1355,14 +1355,16 @@ This means that all participants share their name with a Wikipedia page.</p>
 </div>
 <div class="section" id="module-apd.postprocessors.postprocessor">
 <span id="postprocessors"></span><h2>Postprocessors<a class="headerlink" href="#module-apd.postprocessors.postprocessor" title="Permalink to this headline">¶</a></h2>
-<p>The postprocessor is the sixth and last step in the APD process.
-A postprocessor formats the participants.</p>
-<p>The postprocessor returns the same number of participants with any changes to them.
-The functionality revolves around one method: the <a class="reference internal" href="#apd.postprocessors.postprocessor.Postprocessor.postprocess" title="apd.postprocessors.postprocessor.Postprocessor.postprocess"><code class="xref py py-func docutils literal notranslate"><span class="pre">postprocess()</span></code></a> method.</p>
+<p>Post-processing is the sixth and last step in the APD process.
+This step modifies the final participants to make them more useful to how they will be used.</p>
+<p>The functionality revolves around one method: the <a class="reference internal" href="#apd.postprocessors.postprocessor.Postprocessor.postprocess" title="apd.postprocessors.postprocessor.Postprocessor.postprocess"><code class="xref py py-func docutils literal notranslate"><span class="pre">postprocess()</span></code></a> method.
+This function returns all participants, but with some changes made to them.</p>
 <dl class="class">
 <dt id="apd.postprocessors.postprocessor.Postprocessor">
 <em class="property">class </em><code class="sig-name descname">Postprocessor</code><a class="headerlink" href="#apd.postprocessors.postprocessor.Postprocessor" title="Permalink to this definition">¶</a></dt>
-<dd><p>The simplest postprocessor returns the participants without any changes.</p>
+<dd><p>The simplest post-processor returns the participants without any changes.
+All other post-processors may add functionality to change participants.
+However, all post-processors must return all participants and in the same order.</p>
 <dl class="method">
 <dt id="apd.postprocessors.postprocessor.Postprocessor.postprocess">
 <code class="sig-name descname">postprocess</code><span class="sig-paren">(</span><em class="sig-param">participants</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.postprocessors.postprocessor.Postprocessor.postprocess" title="Permalink to this definition">¶</a></dt>
