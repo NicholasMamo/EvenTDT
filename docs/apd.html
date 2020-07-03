@@ -1201,19 +1201,19 @@ They are sorted according to their score.</p>
 </div>
 <div class="section" id="module-apd.extrapolators.extrapolator">
 <span id="extrapolators"></span><h2>Extrapolators<a class="headerlink" href="#module-apd.extrapolators.extrapolator" title="Permalink to this headline">¶</a></h2>
-<p>The extrapolator is the fifth step of APD.
-The extrapolator receives a list of participants and tries to find other relevant participants.
-This step is analogous to entity set expansion.
+<p>Extrapolation is the fifth step of the APD process.
+This step is analogous to entity set expansion: it looks for similar participants to those that were resolved previously.</p>
+<p>The functionality revolves around the <a class="reference internal" href="#apd.extrapolators.extrapolator.Extrapolator" title="apd.extrapolators.extrapolator.Extrapolator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Extrapolator</span></code></a>’s <a class="reference internal" href="#apd.extrapolators.extrapolator.Extrapolator.extrapolate" title="apd.extrapolators.extrapolator.Extrapolator.extrapolate"><code class="xref py py-func docutils literal notranslate"><span class="pre">extrapolate()</span></code></a> method.
+The main function returns the participants in descending order of their relevance to the event’s corpus.
 The participants should be ranked in descending order of their relevance.</p>
-<p>The input participants should be the product of a <a class="reference internal" href="#apd.resolvers.resolver.Resolver" title="apd.resolvers.resolver.Resolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">Resolver</span></code></a> process.
-This input is a simple list of strings, each representing a participant.</p>
-<p>Extrapolators return a list of new participants: simple strings as well.
-The functionality revolves around one method: the <a class="reference internal" href="#apd.extrapolators.extrapolator.Extrapolator.extrapolate" title="apd.extrapolators.extrapolator.Extrapolator.extrapolate"><code class="xref py py-func docutils literal notranslate"><span class="pre">extrapolate()</span></code></a> method.
-The function should return participants in descending order of their relevance to the domain.</p>
 <dl class="class">
 <dt id="apd.extrapolators.extrapolator.Extrapolator">
 <em class="property">class </em><code class="sig-name descname">Extrapolator</code><a class="headerlink" href="#apd.extrapolators.extrapolator.Extrapolator" title="Permalink to this definition">¶</a></dt>
-<dd><p>The simplest extrapolator returns no new participants.</p>
+<dd><p>The simplest extrapolator returns no new participants.
+However, it defines the functionality that is common to all other extrapolators.</p>
+<p>The functionality revolves around the <a class="reference internal" href="#apd.extrapolators.extrapolator.Extrapolator.extrapolate" title="apd.extrapolators.extrapolator.Extrapolator.extrapolate"><code class="xref py py-func docutils literal notranslate"><span class="pre">extrapolate()</span></code></a> method.
+The input participants should be the product of a <a class="reference internal" href="#apd.resolvers.resolver.Resolver" title="apd.resolvers.resolver.Resolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">Resolver</span></code></a> process: a list of strings representing participants.
+The output, then, is a list of new participants that the extrapolator considers valid for the event.</p>
 <dl class="method">
 <dt id="apd.extrapolators.extrapolator.Extrapolator.extrapolate">
 <code class="sig-name descname">extrapolate</code><span class="sig-paren">(</span><em class="sig-param">participants</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extrapolators.extrapolator.Extrapolator.extrapolate" title="Permalink to this definition">¶</a></dt>
