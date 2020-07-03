@@ -1400,18 +1400,37 @@ These post-processors are useful when resolution or extrapolation maps participa
 In these cases, the extra information can be used to post-process participants.</p>
 <div class="section" id="module-apd.postprocessors.external.wikipedia_postprocessor">
 <span id="wikipedia-post-processor"></span><h4>Wikipedia Post-processor<a class="headerlink" href="#module-apd.postprocessors.external.wikipedia_postprocessor" title="Permalink to this headline">¶</a></h4>
-<p>The Wikipedia postprocessor uses Wikipedia to get information about participants.
-It uses this information to postprocess participants.
-For example, participants that are persons can be reduced to a surname.</p>
+<p>The Wikipedia post-processor uses information from the participants’ Wikipedia pages to post-process them.
+This post-processor is best suited as a follow-up to the Wikipedia resolvers and extrapolators.
+For example, it is capable of removing text in brackets, which is normally there for disambiguation.
+The Wikipedia post-processor also removes accents from participant names and, if they are a person, keeps only their surname.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The Wikipedia postprocessor assumes that the given participants map to Wikipedia pages.</p>
+<p>The Wikipedia postprocessor assumes that the given participants map to Wikipedia pages.
+Therefore Wikipedia-based resolvers and extrapolators make for good candidates before post-processing.
+The <a class="reference internal" href="#apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver" title="apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">WikipediaNameResolver</span></code></a> and the <a class="reference internal" href="#apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver" title="apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">WikipediaSearchResolver</span></code></a>,
+as well as the <a class="reference internal" href="#apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator" title="apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator"><code class="xref py py-class docutils literal notranslate"><span class="pre">WikipediaExtrapolator</span></code></a> return participants as Wikipedia concepts.</p>
 </div>
 <dl class="class">
 <dt id="apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor">
 <em class="property">class </em><code class="sig-name descname">WikipediaPostprocessor</code><span class="sig-paren">(</span><em class="sig-param">remove_accents=True</em>, <em class="sig-param">remove_brackets=True</em>, <em class="sig-param">surname_only=True</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor" title="Permalink to this definition">¶</a></dt>
-<dd><p>The Wikipedia postprocessor assumes that the given participants map to Wikipedia pages.
-It uses this knowledge to get additional information about participants and postprocess the .</p>
+<dd><p>The Wikipedia post-processor assumes that the given participants map to Wikipedia pages.
+It uses this knowledge to get additional information about participants and post-process them.</p>
+<p>The post-processor can be set up to:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Remove accents:
+users rarely write accents on Twitter, and Twitter’s filtering does not pay any attention to accents.</p></li>
+<li><p>Remove brackets:
+brackets in Wikipedia article names are generally used to disambiguate pages with the same name.</p></li>
+<li><p>Retain only surnames:
+if a participant is a person, the Wikipedia post-processor can retain only the surname.
+Users normally prefer to mention participants by their surname instead of their full name or first name.
+The only exception that the Wikipedia post-processor makes is when a surname is also a word in the English language.
+In this case, the full name is retained so that it does not introduce noise.</p></li>
+</ul>
+</div></blockquote>
+<p>This configuration is passed on to the constructor and stored as instance variables.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">

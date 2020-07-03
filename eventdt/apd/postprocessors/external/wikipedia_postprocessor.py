@@ -1,11 +1,15 @@
 """
-The Wikipedia postprocessor uses Wikipedia to get information about participants.
-It uses this information to postprocess participants.
-For example, participants that are persons can be reduced to a surname.
+The Wikipedia post-processor uses information from the participants' Wikipedia pages to post-process them.
+This post-processor is best suited as a follow-up to the Wikipedia resolvers and extrapolators.
+For example, it is capable of removing text in brackets, which is normally there for disambiguation.
+The Wikipedia post-processor also removes accents from participant names and, if they are a person, keeps only their surname.
 
 .. note::
 
 	The Wikipedia postprocessor assumes that the given participants map to Wikipedia pages.
+	Therefore Wikipedia-based resolvers and extrapolators make for good candidates before post-processing.
+	The :class:`~apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver` and the :class:`~apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver`,
+	as well as the :class:`~apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator` return participants as Wikipedia concepts.
 """
 
 import os
@@ -28,8 +32,22 @@ from ..postprocessor import Postprocessor
 
 class WikipediaPostprocessor(Postprocessor):
 	"""
-	The Wikipedia postprocessor assumes that the given participants map to Wikipedia pages.
-	It uses this knowledge to get additional information about participants and postprocess the .
+	The Wikipedia post-processor assumes that the given participants map to Wikipedia pages.
+	It uses this knowledge to get additional information about participants and post-process them.
+
+	The post-processor can be set up to:
+
+		- Remove accents:
+		  users rarely write accents on Twitter, and Twitter's filtering does not pay any attention to accents.
+		- Remove brackets:
+		  brackets in Wikipedia article names are generally used to disambiguate pages with the same name.
+		- Retain only surnames:
+		  if a participant is a person, the Wikipedia post-processor can retain only the surname.
+		  Users normally prefer to mention participants by their surname instead of their full name or first name.
+		  The only exception that the Wikipedia post-processor makes is when a surname is also a word in the English language.
+		  In this case, the full name is retained so that it does not introduce noise.
+
+	This configuration is passed on to the constructor and stored as instance variables.
 
 	:ivar remove_accents: A boolean that indicates whether accents should be removed.
 	:vartype remove_accents: bool
