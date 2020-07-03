@@ -207,8 +207,8 @@ Wikipedia Extrapolator
    :members:
    :special-members:
 
-Postprocessors
-==============
+Post-processors
+===============
 
 .. automodule:: apd.postprocessors.postprocessor
    :members:
@@ -216,6 +216,13 @@ Postprocessors
 
 External
 --------
+
+.. automodule:: apd.postprocessors.external
+   :members:
+   :special-members:
+
+Wikipedia Post-processor
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: apd.postprocessors.external.wikipedia_postprocessor
    :members:

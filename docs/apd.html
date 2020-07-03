@@ -140,8 +140,11 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#module-apd.postprocessors.postprocessor">Postprocessors</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id5">External</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-apd.postprocessors.postprocessor">Post-processors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id5">External</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-apd.postprocessors.external.wikipedia_postprocessor">Wikipedia Post-processor</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -1354,7 +1357,7 @@ This means that all participants share their name with a Wikipedia page.</p>
 </div>
 </div>
 <div class="section" id="module-apd.postprocessors.postprocessor">
-<span id="postprocessors"></span><h2>Postprocessors<a class="headerlink" href="#module-apd.postprocessors.postprocessor" title="Permalink to this headline">¶</a></h2>
+<span id="post-processors"></span><h2>Post-processors<a class="headerlink" href="#module-apd.postprocessors.postprocessor" title="Permalink to this headline">¶</a></h2>
 <p>Post-processing is the sixth and last step in the APD process.
 This step modifies the final participants to make them more useful to how they will be used.</p>
 <p>The functionality revolves around one method: the <a class="reference internal" href="#apd.postprocessors.postprocessor.Postprocessor.postprocess" title="apd.postprocessors.postprocessor.Postprocessor.postprocess"><code class="xref py py-func docutils literal notranslate"><span class="pre">postprocess()</span></code></a> method.
@@ -1392,7 +1395,9 @@ However, all post-processors must return all participants and in the same order.
 
 <div class="section" id="id5">
 <h3>External<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
-<span class="target" id="module-apd.postprocessors.external.wikipedia_postprocessor"></span><p>The Wikipedia postprocessor uses Wikipedia to get information about participants.
+<span class="target" id="module-apd.postprocessors.external"></span><div class="section" id="module-apd.postprocessors.external.wikipedia_postprocessor">
+<span id="wikipedia-post-processor"></span><h4>Wikipedia Post-processor<a class="headerlink" href="#module-apd.postprocessors.external.wikipedia_postprocessor" title="Permalink to this headline">¶</a></h4>
+<p>The Wikipedia postprocessor uses Wikipedia to get information about participants.
 It uses this information to postprocess participants.
 For example, participants that are persons can be reduced to a surname.</p>
 <div class="admonition note">
@@ -1456,6 +1461,7 @@ It is assumed that all map to a Wikipedia page.</p>
 
 </dd></dl>
 
+</div>
 </div>
 </div>
 </div>
