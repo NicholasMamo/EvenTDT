@@ -1395,7 +1395,10 @@ However, all post-processors must return all participants and in the same order.
 
 <div class="section" id="id5">
 <h3>External<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
-<span class="target" id="module-apd.postprocessors.external"></span><div class="section" id="module-apd.postprocessors.external.wikipedia_postprocessor">
+<span class="target" id="module-apd.postprocessors.external"></span><p>External post-processors use information from outside the event’s corpus to modify participants.
+These post-processors are useful when resolution or extrapolation maps participants to semantic concepts, like Wikipedia articles.
+In these cases, the extra information can be used to post-process participants.</p>
+<div class="section" id="module-apd.postprocessors.external.wikipedia_postprocessor">
 <span id="wikipedia-post-processor"></span><h4>Wikipedia Post-processor<a class="headerlink" href="#module-apd.postprocessors.external.wikipedia_postprocessor" title="Permalink to this headline">¶</a></h4>
 <p>The Wikipedia postprocessor uses Wikipedia to get information about participants.
 It uses this information to postprocess participants.
