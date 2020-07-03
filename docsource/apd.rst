@@ -196,6 +196,10 @@ Extrapolators
 External
 --------
 
+.. automodule:: apd.extrapolators.external
+   :members:
+   :special-members:
+
 .. automodule:: apd.extrapolators.external.wikipedia_extrapolator
    :members:
    :special-members:
