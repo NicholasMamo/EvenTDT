@@ -104,7 +104,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-apd.scorers.scorer">Scorers</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id1">Local</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Local</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#module-apd.scorers.local.df_scorer">Document Frequency Scorer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-apd.scorers.local.log_df_scorer">Logarithmic Document Frequency Scorer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-apd.scorers.local.tf_scorer">Term Frequency Scorer</a></li>
@@ -115,14 +115,14 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-apd.filters.filter">Filters</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id2">Local</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Local</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#module-apd.filters.local.threshold_filter">Threshold Filter</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-apd.resolvers.resolver">Resolvers</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id3">Local</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id4">Local</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#module-apd.resolvers.local.token_resolver">Token Resolver</a></li>
 </ul>
 </li>
@@ -134,14 +134,14 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-apd.extrapolators.extrapolator">Extrapolators</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id4">External</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id5">External</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#module-apd.extrapolators.external.wikipedia_extrapolator">Wikipedia Extrapolator</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-apd.postprocessors.postprocessor">Post-processors</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id5">External</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id6">External</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#module-apd.postprocessors.external.wikipedia_postprocessor">Wikipedia Post-processor</a></li>
 </ul>
 </li>
@@ -222,13 +222,19 @@
             
   <div class="section" id="automatic-participant-detection-apd">
 <h1>5. Automatic Participant Detection (APD)<a class="headerlink" href="#automatic-participant-detection-apd" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-apd"></span><p>Automatic Participant Detection (APD) is a six-step process:</p>
+<span class="target" id="module-apd"></span><p>Automatic Participant Detection (APD) is a research area originally proposed in <a class="reference external" href="https://dl.acm.org/doi/abs/10.1145/3342220.3344921">ELD: Event TimeLine Detection – A Participant-Based Approach to Tracking Events by Mamo et al. (2019)</a>.
+In the paper, Mamo et al. describe APD as a way of extracting event participants before the event starts.
+With this in mind, APD is a six-step process that looks for participants that are mentioned in the event’s corpus, and others that may have been missed.</p>
+<p>APD’s first three steps identify participants from the event’s corpus.
+Resolution then maps these participants to alternative, possibly semantic, representations.
+Extrapolation looks for related participants, which might be too unpopular to capture immediately from the event’s corpus.
+The entire process is as follows:</p>
 <blockquote>
 <div><ol class="arabic simple">
 <li><p><a class="reference internal" href="#module-apd.extractors.extractor" title="apd.extractors.extractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Extract</span></code></a> candidate participants,</p></li>
 <li><p><a class="reference internal" href="#module-apd.scorers.scorer" title="apd.scorers.scorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Score</span></code></a> the candidates,</p></li>
 <li><p><a class="reference internal" href="#module-apd.filters.filter" title="apd.filters.filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Filter</span></code></a> out low-scoring candidates,</p></li>
-<li><p><a class="reference internal" href="#module-apd.resolvers.resolver" title="apd.resolvers.resolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">Resolve</span></code></a> the candidates to an alternate representation (such as a Wikipedia concept) to make them participants,</p></li>
+<li><p><a class="reference internal" href="#module-apd.resolvers.resolver" title="apd.resolvers.resolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">Resolve</span></code></a> the candidates to an alternative representation (such as a Wikipedia concept) to make them participants,</p></li>
 <li><p><a class="reference internal" href="#module-apd.extrapolators.extrapolator" title="apd.extrapolators.extrapolator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Extrapolate</span></code></a> new participants, and</p></li>
 <li><p><a class="reference internal" href="#module-apd.postprocessors.postprocessor" title="apd.postprocessors.postprocessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Post-process</span></code></a> the final list of participants.</p></li>
 </ol>
@@ -579,8 +585,8 @@ Here, normalization means rescaling between 0 and 1.</p></li>
 
 </dd></dl>
 
-<div class="section" id="id1">
-<h3>Local<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id2">
+<h3>Local<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <span class="target" id="module-apd.scorers.local"></span><p>Local scorers assign a score to candidate participants based on evidence from the event’s corpus.</p>
 <div class="section" id="module-apd.scorers.local.df_scorer">
 <span id="document-frequency-scorer"></span><h4>Document Frequency Scorer<a class="headerlink" href="#module-apd.scorers.local.df_scorer" title="Permalink to this headline">¶</a></h4>
@@ -867,8 +873,8 @@ The input candidates should be the product of a <a class="reference internal" hr
 
 </dd></dl>
 
-<div class="section" id="id2">
-<h3>Local<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id3">
+<h3>Local<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <span class="target" id="module-apd.filters.local"></span><p>Local filtering strategies consider only the scores of candidate participants to decide whether they are credible.
 Therefore these kind of filters are usually very limited in what they can do.</p>
 <div class="section" id="module-apd.filters.local.threshold_filter">
@@ -969,8 +975,8 @@ Therefore unresolved candidates are empty.</p>
 
 </dd></dl>
 
-<div class="section" id="id3">
-<h3>Local<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id4">
+<h3>Local<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <span class="target" id="module-apd.resolvers.local"></span><p>Local resolvers try to map candidate participants to something in the event’s corpus.
 For example, the <a class="reference internal" href="#apd.resolvers.local.token_resolver.TokenResolver" title="apd.resolvers.local.token_resolver.TokenResolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">TokenResolver</span></code></a> resolves candidates to tokens in the event’s corpus.</p>
 <div class="section" id="module-apd.resolvers.local.token_resolver">
@@ -1246,8 +1252,8 @@ This extrapolator returns no new participants.</p>
 
 </dd></dl>
 
-<div class="section" id="id4">
-<h3>External<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h3>External<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <span class="target" id="module-apd.extrapolators.external"></span><p>External extrapolators look for new participants outside of the event’s corpus.
 This allows extrapolation to bypass limitations in the corpus.
 For example, a corpus may be too small, or too biased, to capture all of the event’s participants.</p>
@@ -1393,8 +1399,8 @@ However, all post-processors must return all participants and in the same order.
 
 </dd></dl>
 
-<div class="section" id="id5">
-<h3>External<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h3>External<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <span class="target" id="module-apd.postprocessors.external"></span><p>External post-processors use information from outside the event’s corpus to modify participants.
 These post-processors are useful when resolution or extrapolation maps participants to semantic concepts, like Wikipedia articles.
 In these cases, the extra information can be used to post-process participants.</p>
