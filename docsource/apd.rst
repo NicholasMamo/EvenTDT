@@ -200,6 +200,9 @@ External
    :members:
    :special-members:
 
+Wikipedia Extrapolator
+^^^^^^^^^^^^^^^^^^^^^^
+
 .. automodule:: apd.extrapolators.external.wikipedia_extrapolator
    :members:
    :special-members:

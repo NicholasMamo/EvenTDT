@@ -134,7 +134,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-apd.extrapolators.extrapolator">Extrapolators</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id4">External</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">External</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-apd.extrapolators.external.wikipedia_extrapolator">Wikipedia Extrapolator</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-apd.postprocessors.postprocessor">Postprocessors</a><ul>
@@ -1245,25 +1248,51 @@ This extrapolator returns no new participants.</p>
 <span class="target" id="module-apd.extrapolators.external"></span><p>External extrapolators look for new participants outside of the event’s corpus.
 This allows extrapolation to bypass limitations in the corpus.
 For example, a corpus may be too small, or too biased, to capture all of the event’s participants.</p>
-<span class="target" id="module-apd.extrapolators.external.wikipedia_extrapolator"></span><p>The Wikipedia extrapolator looks for new participants that are tightly-linked with resolved participants.
-The extrapolator looks for outgoing links twice.
-First, it looks for outgoing links from the resolved participants.
-Secondly, it looks for outgoing links from the first set of links.</p>
-<p>All of these articles are added to a graph, subject to certain constraints.
-The extrapolator uses the Girvan-Newman algorithm to extract communities.
+<div class="section" id="module-apd.extrapolators.external.wikipedia_extrapolator">
+<span id="wikipedia-extrapolator"></span><h4>Wikipedia Extrapolator<a class="headerlink" href="#module-apd.extrapolators.external.wikipedia_extrapolator" title="Permalink to this headline">¶</a></h4>
+<p>This extrapolator uses Wikipedia to find participants that are related to those found in the event’s corpus.
+This algorithm exploits Wikipedia’s graph structure to find new participants.
+Articles that are tightly-linked with the articles of resolved participants are extrapolated.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The algorithm assumes that all resolved participants map to a Wikipedia page.
+Therefore Wikipedia-based resolvers make for good candidates before extrapolation.
+Both the <a class="reference internal" href="#apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver" title="apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">WikipediaNameResolver</span></code></a> and the <a class="reference internal" href="#apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver" title="apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">WikipediaSearchResolver</span></code></a> return participants as Wikipedia concepts.</p>
+</div>
+<p>The extrapolator looks for outgoing links twice:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Outgoing links from the resolved participants, and</p></li>
+<li><p>Outgoing links from the first set of links.</p></li>
+</ol>
+</div></blockquote>
+<p>All of these Wikipedia articles are added to a graph, subject to certain constraints.
+The extrapolator uses the Girvan-Newman algorithm to extract communities of Wikipedia articles.
 Large communities of tightly-linked articles are considered to be candidate participants.
 The most relevant articles in these communities are scored for relevance by the extrapolator.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>This extrapolator retrieves articles from Wikipedia twice.
 Therefore the process is very slow and can take minutes to conclude.
-For this reason, care should be taken with the paramaters that are provided.</p>
+For this reason, you should be careful with the paramaters that you provide.</p>
 </div>
 <dl class="class">
 <dt id="apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator">
 <em class="property">class </em><code class="sig-name descname">WikipediaExtrapolator</code><span class="sig-paren">(</span><em class="sig-param">corpus</em>, <em class="sig-param">tokenizer</em>, <em class="sig-param">scheme</em>, <em class="sig-param">threshold=0</em>, <em class="sig-param">first_level_links=100</em>, <em class="sig-param">second_level_links=1000</em>, <em class="sig-param">first_level_similarity=0</em>, <em class="sig-param">second_level_similarity=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator" title="Permalink to this definition">¶</a></dt>
 <dd><p>The Wikipedia extrapolator looks for new participants that are tightly-linked with resolved participants.
 This definition is based on a graph, and communities are extracted using the Girvan-Newman algorithm.</p>
+<p>To resolve ambiguous participants, this resolver needs to calculate cosine similarity.
+Cosine similarity considers the domain, or the event’s corpus.
+Apart from the corpus, the resolver also requires:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>A <a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a> to extract tokens, which then make up the documents,</p></li>
+<li><p>A term-weighting scheme to create documents, and</p></li>
+<li><p>A threshold above which ambiguous candidate participants are resolved.</p></li>
+</ul>
+</div></blockquote>
+<p>These are all instance variables and are required in the constructor.</p>
+<p>Other parameters control how many links the algorithm fetches, and the minimum similarity between articles to create an edge between them.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
@@ -1321,6 +1350,7 @@ This means that all participants share their name with a Wikipedia page.</p>
 
 </dd></dl>
 
+</div>
 </div>
 </div>
 <div class="section" id="module-apd.postprocessors.postprocessor">

@@ -1,11 +1,21 @@
 """
-The Wikipedia extrapolator looks for new participants that are tightly-linked with resolved participants.
-The extrapolator looks for outgoing links twice.
-First, it looks for outgoing links from the resolved participants.
-Secondly, it looks for outgoing links from the first set of links.
+This extrapolator uses Wikipedia to find participants that are related to those found in the event's corpus.
+This algorithm exploits Wikipedia's graph structure to find new participants.
+Articles that are tightly-linked with the articles of resolved participants are extrapolated.
 
-All of these articles are added to a graph, subject to certain constraints.
-The extrapolator uses the Girvan-Newman algorithm to extract communities.
+.. note::
+
+	The algorithm assumes that all resolved participants map to a Wikipedia page.
+	Therefore Wikipedia-based resolvers make for good candidates before extrapolation.
+	Both the :class:`~apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver` and the :class:`~apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver` return participants as Wikipedia concepts.
+
+The extrapolator looks for outgoing links twice:
+
+	1. Outgoing links from the resolved participants, and
+	2. Outgoing links from the first set of links.
+
+All of these Wikipedia articles are added to a graph, subject to certain constraints.
+The extrapolator uses the Girvan-Newman algorithm to extract communities of Wikipedia articles.
 Large communities of tightly-linked articles are considered to be candidate participants.
 The most relevant articles in these communities are scored for relevance by the extrapolator.
 
@@ -13,7 +23,7 @@ The most relevant articles in these communities are scored for relevance by the 
 
 	This extrapolator retrieves articles from Wikipedia twice.
 	Therefore the process is very slow and can take minutes to conclude.
-	For this reason, care should be taken with the paramaters that are provided.
+	For this reason, you should be careful with the paramaters that you provide.
 """
 
 import asyncio
@@ -45,6 +55,18 @@ class WikipediaExtrapolator(Extrapolator):
 	"""
 	The Wikipedia extrapolator looks for new participants that are tightly-linked with resolved participants.
 	This definition is based on a graph, and communities are extracted using the Girvan-Newman algorithm.
+
+	To resolve ambiguous participants, this resolver needs to calculate cosine similarity.
+	Cosine similarity considers the domain, or the event's corpus.
+	Apart from the corpus, the resolver also requires:
+
+		- A :class:`~nlp.tokenizer.Tokenizer` to extract tokens, which then make up the documents,
+		- A term-weighting scheme to create documents, and
+		- A threshold above which ambiguous candidate participants are resolved.
+
+	These are all instance variables and are required in the constructor.
+
+	Other parameters control how many links the algorithm fetches, and the minimum similarity between articles to create an edge between them.
 
 	:ivar corpus: The corpus of documents.
 	:vartype corpus: list of :class:`~nlp.document.Document`
