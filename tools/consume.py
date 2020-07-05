@@ -27,6 +27,7 @@ Accepted arguments:
 	- ``-s --speed``				*<Optional>* The speed at which the file is consumed, defaults to 1.
 	- ``--skip``					*<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
 	- ``--max-inactivity``			*<Optional>* The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.
+	- ``--max-time``				*<Optional>* The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.
 	- ``--no-cache``				*<Optional>* If specified, the cached understanding is not used. The new understanding is cached instead.
 	- ``--scheme``					*<Optional>* If specified, the path to the :class:`~nlp.term_weighting.scheme.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.term_weighting.tf.TF` scheme is used.
 	- ``--min-size``				*<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
@@ -71,6 +72,7 @@ def setup_args():
 		- ``-s --speed``				*<Optional>* The speed at which the file is consumed, defaults to 1.
 		- ``--skip``					*<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
 		- ``--max-inactivity``			*<Optional>* The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.
+		- ``--max-time``				*<Optional>* The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.
 		- ``--no-cache``				*<Optional>* If specified, the cached understanding is not used. The new understanding is cached instead.
 		- ``--scheme``					*<Optional>* If specified, the path to the :class:`~nlp.term_weighting.scheme.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.term_weighting.tf.TF` scheme is used. This can be overwritten if there is event understanding.
 		- ``--min-size``				*<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
@@ -99,6 +101,8 @@ def setup_args():
 						help='<Optional> The amount of time to skip from the beginning of the file in minutes, defaults to 0.')
 	parser.add_argument('--max-inactivity', type=int, required=False, default=60,
 						help='<Optional> The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.')
+	parser.add_argument('--max-time', type=int, required=False, default=-1,
+						help='<Optional> The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.')
 	parser.add_argument('--no-cache', action="store_true",
 						help='<Optional> If specified, the cached understanding is not used. The new understanding is cached instead.')
 	parser.add_argument('--scheme', type=scheme, required=False, default=None,
@@ -241,8 +245,8 @@ def understand(understanding, consumer, max_inactivity, scheme=None, *args, **kw
 
 	return understanding
 
-def consume(file, consumer, speed, max_inactivity, scheme=None, skip=0,
-			min_size=3, threshold=0.5, max_intra_similarity=0.8, *args, **kwargs):
+def consume(file, consumer, speed, max_inactivity, max_time=-1, skip=0,
+			scheme=None, min_size=3, threshold=0.5, max_intra_similarity=0.8, *args, **kwargs):
 	"""
 	Run the consumption process.
 	The arguments and keyword arguments should be the command-line arguments.
@@ -262,10 +266,12 @@ def consume(file, consumer, speed, max_inactivity, scheme=None, skip=0,
 	:type speed: float
 	:param max_inactivity: The maximum time, in seconds, to wait for new tweets to arrive before stopping.
 	:type max_inactivity: int
-	:param scheme: The scheme to use when consuming the file.
-	:type scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
+	:param max_time: The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.
+	:type max_time: int
 	:param skip: The amount of time to skip from the beginning of the file in minutes, defaults to 0.
 	:type skip: int
+	:param scheme: The scheme to use when consuming the file.
+	:type scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
 	:param min_size: The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
 	:type min_size: int
 	:param threshold: The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
@@ -299,7 +305,8 @@ def consume(file, consumer, speed, max_inactivity, scheme=None, skip=0,
 	"""
 	stream = Process(target=stream_process,
 					 args=(loop, queue, file, ),
-					 kwargs={ 'speed': speed, 'skip_time': skip * 60 })
+					 kwargs={ 'speed': speed, 'skip_time': skip * 60,
+					 		  'max_time': (max_time * 60 if max_time >= 0 else max_time) })
 	consume = Process(target=consume_process, args=(comm, loop, consumer, max_inactivity, ))
 	stream.start()
 	consume.start()
@@ -320,7 +327,7 @@ def consume(file, consumer, speed, max_inactivity, scheme=None, skip=0,
 
 	return timeline
 
-def stream_process(loop, queue, file, skip_time=0, speed=1, *args, **kwargs):
+def stream_process(loop, queue, file, skip_time=0, speed=1, max_time=-1, *args, **kwargs):
 	"""
 	Stream the file and add its tweets to the queue.
 
@@ -334,6 +341,8 @@ def stream_process(loop, queue, file, skip_time=0, speed=1, *args, **kwargs):
 	:type skip_time: int
 	:param speed: The speed at which the file is consumed, defaults to 1.
 	:type speed: float
+	:param max_time: The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.
+	:type max_time: int
 	"""
 
 	async def read(reader):
@@ -356,7 +365,7 @@ def stream_process(loop, queue, file, skip_time=0, speed=1, *args, **kwargs):
 		await reader.read()
 
 	with open(file, 'r') as f:
-		reader = SimulatedFileReader(queue, f, skip_time=skip_time, speed=speed)
+		reader = SimulatedFileReader(queue, f, skip_time=skip_time, speed=speed, max_time=max_time)
 		loop.run_until_complete(read(reader))
 
 	logger.info("Streaming ended")
