@@ -462,10 +462,10 @@ class TestEvent(unittest.TestCase):
 		Test that the variability score is applied before the inverse.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_idf.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json') ]
 		idfs = [ ]
 		for path in paths:
 			with open(path, 'r') as f:
@@ -485,10 +485,10 @@ class TestEvent(unittest.TestCase):
 		Test that the variability score of a consistent word is higher than a specific word.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_idf.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json') ]
 		idfs = [ ]
 		for path in paths:
 			with open(path, 'r') as f:
@@ -562,10 +562,10 @@ class TestEvent(unittest.TestCase):
 		Test that the variability score of two specific words prefers those that appear in multiple corpora.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_idf.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json') ]
 		idfs = [ ]
 		for path in paths:
 			with open(path, 'r') as f:
@@ -582,10 +582,10 @@ class TestEvent(unittest.TestCase):
 		Test that when changing the corpora, the variability changes.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json') ]
 		idfs = [ ]
 		for path in paths:
 			with open(path, 'r') as f:
@@ -602,10 +602,10 @@ class TestEvent(unittest.TestCase):
 		Test that the variability extractor extracts scores for only select candidates if they are given.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json') ]
 		idfs = [ ]
 		for path in paths:
 			with open(path, 'r') as f:
@@ -620,10 +620,10 @@ class TestEvent(unittest.TestCase):
 		Test that the variability extractor's scores for known candidates are the same as when candidates are not known.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json') ]
 		idfs = [ ]
 		for path in paths:
 			with open(path, 'r') as f:
@@ -640,10 +640,10 @@ class TestEvent(unittest.TestCase):
 		Test that the variability extractor's score for an unknown word is 1 because it 'appears' equally across corpora.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json') ]
 		idfs = [ ]
 		for path in paths:
 			with open(path, 'r') as f:
@@ -658,7 +658,7 @@ class TestEvent(unittest.TestCase):
 		Test that the vocabulary of one corpus includes all terms.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json') ]
 		idfs = [ ]
 		for path in paths:
 			with open(path, 'r') as f:
@@ -672,8 +672,8 @@ class TestEvent(unittest.TestCase):
 		Test that the vocabulary of multiple corpora includes all terms.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json') ]
 		idfs = [ ]
 		for path in paths:
 			with open(path, 'r') as f:
@@ -689,8 +689,8 @@ class TestEvent(unittest.TestCase):
 		Test that the vocabulary does not include duplicates.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json') ]
 		idfs = [ ]
 		for path in paths:
 			with open(path, 'r') as f:
@@ -705,10 +705,10 @@ class TestEvent(unittest.TestCase):
 		Test that the variability contingency table sums up to the total number of documents in all IDFs.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_idf.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json') ]
 		idfs = [ ]
 		for path in paths:
 			with open(path, 'r') as f:
@@ -734,10 +734,10 @@ class TestEvent(unittest.TestCase):
 		Test that the variability contingency table has four cells.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_idf.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json') ]
 		idfs = [ ]
 		for path in paths:
 			with open(path, 'r') as f:
@@ -762,10 +762,10 @@ class TestEvent(unittest.TestCase):
 		Test that the variability contingency table is made up of integers.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_idf.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json') ]
 		idfs = [ ]
 		for path in paths:
 			with open(path, 'r') as f:
@@ -790,10 +790,10 @@ class TestEvent(unittest.TestCase):
 		Test that the variability contingency table is made up of positive numbers.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_idf.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json') ]
 		idfs = [ ]
 		for path in paths:
 			with open(path, 'r') as f:
@@ -818,10 +818,10 @@ class TestEvent(unittest.TestCase):
 		Test that the first variability contingency table row sums up to the total number of documents in the event IDF.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_idf.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json') ]
 		idfs = [ ]
 		for path in paths:
 			with open(path, 'r') as f:
@@ -841,10 +841,10 @@ class TestEvent(unittest.TestCase):
 		Test that the second variability contingency table row sums up to the total number of documents in the comparison IDFs.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_idf.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json') ]
 		idfs = [ ]
 		for path in paths:
 			with open(path, 'r') as f:
@@ -864,10 +864,10 @@ class TestEvent(unittest.TestCase):
 		Test that when a word is unknown in an event, the first cell is 0.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_idf.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json') ]
 		idfs = [ ]
 		for path in paths:
 			with open(path, 'r') as f:
@@ -885,10 +885,10 @@ class TestEvent(unittest.TestCase):
 		Test that when a word is unknown in an event, the first cell is 0.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_idf.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json') ]
 		idfs = [ ]
 		for path in paths:
 			with open(path, 'r') as f:
@@ -907,10 +907,10 @@ class TestEvent(unittest.TestCase):
 		Test that when a word appears in only one event, the comparison events' cells sum up to zero.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_idf.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json') ]
 		idfs = [ ]
 		for path in paths:
 			with open(path, 'r') as f:
@@ -929,10 +929,10 @@ class TestEvent(unittest.TestCase):
 		Test that the variability contingency table counts are correct.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_idf.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_idf.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_idf.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json') ]
 		idfs = [ ]
 		for path in paths:
 			with open(path, 'r') as f:
