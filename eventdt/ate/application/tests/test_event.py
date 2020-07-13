@@ -500,6 +500,63 @@ class TestEvent(unittest.TestCase):
 		extractor = event.Variability()
 		self.assertGreater(extractor.extract(idfs)['yellow'], extractor.extract(idfs)['liverpool'])
 
+	def test_variability_chi_less_1(self):
+		"""
+		Test that when the variability is less than 1, the variability is not negative.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'chi-less1-1.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'chi-less1-2.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		extractor = event.Variability()
+
+		"""
+		Confirm that the chi is between 0 and 1.
+		"""
+		table = extractor._contingency_table('fastest', idfs[0], [ idfs[1] ])
+		self.assertLess(0, extractor._chi(table))
+		self.assertLess(extractor._chi(table), 1)
+		table = extractor._contingency_table('fastest', idfs[1], [ idfs[0] ])
+		self.assertLess(0, extractor._chi(table))
+		self.assertLess(extractor._chi(table), 1)
+
+		"""
+		Confirm that the variability is between 0 and 1.
+		"""
+		self.assertGreater(extractor.extract(idfs, candidates=[ 'fastest' ])['fastest'], 0)
+		self.assertLess(extractor.extract(idfs, candidates=[ 'fastest' ])['fastest'], 1)
+
+	def test_variability_chi_equal_1(self):
+		"""
+		Test that when the variability is equal to 1, the variability is 1.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'chi-equal1-1.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'chi-equal1-2.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		extractor = event.Variability()
+
+		"""
+		Confirm that the chi is 1.
+		"""
+		table = extractor._contingency_table('fastest', idfs[0], [ idfs[1] ])
+		self.assertEqual(0, extractor._chi(table))
+		table = extractor._contingency_table('fastest', idfs[1], [ idfs[0] ])
+		self.assertEqual(0, extractor._chi(table))
+
+		"""
+		Confirm that the variability is 1.
+		"""
+		self.assertEqual(1, extractor.extract(idfs, candidates=[ 'fastest' ])['fastest'])
+
 	def test_variability_specific_words(self):
 		"""
 		Test that the variability score of two specific words prefers those that appear in multiple corpora.
@@ -580,7 +637,7 @@ class TestEvent(unittest.TestCase):
 
 	def test_variability_extract_candidates_unknown_word(self):
 		"""
-		Test that the variability extractor's score for an unknown word is 0.
+		Test that the variability extractor's score for an unknown word is 1 because it 'appears' equally across corpora.
 		"""
 
 		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_idf.json'),
@@ -594,9 +651,9 @@ class TestEvent(unittest.TestCase):
 
 		extractor = event.Variability()
 		terms = extractor.extract(idfs, candidates=[ 'superlongword' ])
-		self.assertEqual({ 'superlongword': 0 }, terms)
+		self.assertEqual({ 'superlongword': 1 }, terms)
 
-	def test_vocabulary_all_one_corpus(self):
+	def test_variability_vocabulary_all_one_corpus(self):
 		"""
 		Test that the vocabulary of one corpus includes all terms.
 		"""
@@ -610,7 +667,7 @@ class TestEvent(unittest.TestCase):
 		extractor = event.Variability()
 		self.assertEqual(set(idfs[0].global_scheme.idf.keys()), set(extractor._vocabulary(idfs)))
 
-	def test_vocabulary_all_multiple_corpora(self):
+	def test_variability_vocabulary_all_multiple_corpora(self):
 		"""
 		Test that the vocabulary of multiple corpora includes all terms.
 		"""
@@ -627,7 +684,7 @@ class TestEvent(unittest.TestCase):
 		self.assertTrue(all( term in vocabulary for term in idfs[0].global_scheme.idf ))
 		self.assertTrue(all( term in vocabulary for term in idfs[1].global_scheme.idf ))
 
-	def test_vocabulary_unique(self):
+	def test_variability_vocabulary_unique(self):
 		"""
 		Test that the vocabulary does not include duplicates.
 		"""

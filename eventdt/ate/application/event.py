@@ -190,6 +190,11 @@ class Variability(Extractor):
 	The variability metric is based on the chi-square statistic.
 	The intuition is that terms that appear more consistently in different events are more likely to belong to the domain.
 
+	Variability is bound between 0 and 1.
+	1 is when the chi-square is 0.
+	That is, 1 is when the term appears perfectly consistently across all event corpora.
+	Variability tends to 0 when the chi-square tends to infinity.
+
 	:ivar base: The logarithmic base.
 	:vartype base: float
 	"""
@@ -256,7 +261,7 @@ class Variability(Extractor):
 				chi = self._chi(table)
 				v += chi * idf.global_scheme.documents / all_documents
 
-			variability[term] = 1./math.log(v, self.base) if v else 0
+			variability[term] = 1./math.log(v + self.base, self.base)
 
 		return variability
 
