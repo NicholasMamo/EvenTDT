@@ -5,7 +5,7 @@ Then, periodically, it calculates the burst of these terms.
 Burst is a measure of how much a term is bursting.
 
 The calculations for burst are based on time windows.
-Therefore calls to :meth:`~tdt.algorithms.cataldi.Cataldi.draw` should give the timestamp of the time window with respect to which the burst is to be calculated.
+Therefore calls to :func:`~tdt.algorithms.cataldi.Cataldi.detect` should give the timestamp of the time window with respect to which the burst is to be calculated.
 
 This implementation calculates the burst of terms based on the given nutrition.
 
