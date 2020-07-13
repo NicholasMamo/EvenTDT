@@ -29,7 +29,7 @@ class TestEvent(unittest.TestCase):
 		Test that when providing one timeline, the algorithm extracts terms only from it.
 		"""
 
-		path = os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json')
+		path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json')
 		extractor = event.EF()
 		self.assertTrue(extractor.extract(path))
 
@@ -38,8 +38,8 @@ class TestEvent(unittest.TestCase):
 		Test that when providing multiple timelines, the algorithm extracts terms from all of them.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json') ]
 		extractor = event.EF()
 		terms = extractor.extract(paths)
 		self.assertTrue(terms)
@@ -51,8 +51,8 @@ class TestEvent(unittest.TestCase):
 		Test that the minimum event frequency is 1, not 0.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json') ]
 		extractor = event.EF()
 		terms = extractor.extract(paths)
 		self.assertEqual(1, min(terms.values()))
@@ -62,8 +62,8 @@ class TestEvent(unittest.TestCase):
 		Test that the maximum event frequency is equivalent to the number of timelines provided.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json') ]
 		extractor = event.EF()
 		terms = extractor.extract(paths)
 		self.assertEqual(len(paths), max(terms.values()))
@@ -73,8 +73,8 @@ class TestEvent(unittest.TestCase):
 		Test that the event frequency is always an integer.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json') ]
 		extractor = event.EF()
 		terms = extractor.extract(paths)
 		self.assertTrue(all( type(value) == int for value in terms.values() ))
@@ -84,8 +84,8 @@ class TestEvent(unittest.TestCase):
 		Test that the event frequency includes all breaking terms.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json') ]
 
 		"""
 		Calculate the event frequency.
@@ -120,10 +120,10 @@ class TestEvent(unittest.TestCase):
 		Test that the event frequency includes all breaking terms.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
 
 		extractor = event.EF()
 		ef_terms = extractor.extract(paths)
@@ -136,10 +136,10 @@ class TestEvent(unittest.TestCase):
 		Test that the EF extractor extracts scores for only select candidates if they are given.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
 
 		extractor = event.EF()
 		terms = extractor.extract(paths, candidates=[ 'chelsea', 'goal' ])
@@ -150,10 +150,10 @@ class TestEvent(unittest.TestCase):
 		Test that the EF extractor's scores for known candidates are the same as when candidates are not known.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
 
 		extractor = event.EF()
 		candidate_terms = extractor.extract(paths, candidates=[ 'chelsea', 'goal' ])
@@ -166,10 +166,10 @@ class TestEvent(unittest.TestCase):
 		Test that the EF extractor's score for an unknown word is 0.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
 
 		extractor = event.EF()
 		terms = extractor.extract(paths, candidates=[ 'superlongword' ])
@@ -180,10 +180,10 @@ class TestEvent(unittest.TestCase):
 		Test that the minimum logarithmic event frequency is 0, not 1.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
 		extractor = event.LogEF()
 		terms = extractor.extract(paths)
 		self.assertEqual(0, min(terms.values()))
@@ -193,10 +193,10 @@ class TestEvent(unittest.TestCase):
 		Test that the maximum logarithmic event frequency is equivalent to the logarithm of the number of timelines provided.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
 		extractor = event.LogEF()
 		terms = extractor.extract(paths)
 		self.assertEqual(math.log(len(paths), 2), max(terms.values()))
@@ -206,10 +206,10 @@ class TestEvent(unittest.TestCase):
 		Test that the logarithmic event frequency is just the event frequency  with a logarithm.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
 		extractor = event.EF()
 		ef_terms = extractor.extract(paths)
 
@@ -226,10 +226,10 @@ class TestEvent(unittest.TestCase):
 		Test that the logarithmic EF extractor extracts scores for only select candidates if they are given.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
 
 		extractor = event.LogEF()
 		terms = extractor.extract(paths, candidates=[ 'chelsea', 'goal' ])
@@ -240,10 +240,10 @@ class TestEvent(unittest.TestCase):
 		Test that the logarithmic EF extractor's scores for known candidates are the same as when candidates are not known.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
 
 		extractor = event.LogEF()
 		candidate_terms = extractor.extract(paths, candidates=[ 'chelsea', 'goal' ])
@@ -256,10 +256,10 @@ class TestEvent(unittest.TestCase):
 		Test that the logarithmic EF extractor's score for an unknown word is 0.
 		"""
 
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
 
 		extractor = event.LogEF()
 		terms = extractor.extract(paths, candidates=[ 'superlongword' ])
@@ -270,11 +270,11 @@ class TestEvent(unittest.TestCase):
 		Test that the EF-IDF scores are assigned correctly.
 		"""
 
-		idf_path = os.path.join(os.path.dirname(__file__), 'corpora', 'idf.json')
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+		idf_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
 
 		"""
 		Calculate the EF-IDF manually.
@@ -297,11 +297,11 @@ class TestEvent(unittest.TestCase):
 		Test that when a base is given, the EF-IDF scores are based on the logarithmic event frequency.
 		"""
 
-		idf_path = os.path.join(os.path.dirname(__file__), 'corpora', 'idf.json')
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+		idf_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
 
 		"""
 		Calculate the EF-IDF manually.
@@ -324,11 +324,11 @@ class TestEvent(unittest.TestCase):
 		Test that the EF-IDF scores include all terms.
 		"""
 
-		idf_path = os.path.join(os.path.dirname(__file__), 'corpora', 'idf.json')
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+		idf_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
 
 		"""
 		Calculate the EF to get a list of terms.
@@ -350,11 +350,11 @@ class TestEvent(unittest.TestCase):
 		Test that the EF-IDF extractor extracts scores for only select candidates if they are given.
 		"""
 
-		idf_path = os.path.join(os.path.dirname(__file__), 'corpora', 'idf.json')
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+		idf_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
 
 		with open(idf_path, 'r') as f:
 			idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
@@ -368,11 +368,11 @@ class TestEvent(unittest.TestCase):
 		Test that the EF-IDF extractor's scores for known candidates are the same as when candidates are not known.
 		"""
 
-		idf_path = os.path.join(os.path.dirname(__file__), 'corpora', 'idf.json')
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+		idf_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
 
 		with open(idf_path, 'r') as f:
 			idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
@@ -388,11 +388,11 @@ class TestEvent(unittest.TestCase):
 		Test that the EF-IDF extractor's score for an unknown word is 0.
 		"""
 
-		idf_path = os.path.join(os.path.dirname(__file__), 'corpora', 'idf.json')
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+		idf_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
 
 		with open(idf_path, 'r') as f:
 			idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
@@ -406,11 +406,11 @@ class TestEvent(unittest.TestCase):
 		Test that the logarithmic EF-IDF extractor extracts scores for only select candidates if they are given.
 		"""
 
-		idf_path = os.path.join(os.path.dirname(__file__), 'corpora', 'idf.json')
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+		idf_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
 
 		with open(idf_path, 'r') as f:
 			idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
@@ -424,11 +424,11 @@ class TestEvent(unittest.TestCase):
 		Test that the logarithmic EF-IDF extractor's scores for known candidates are the same as when candidates are not known.
 		"""
 
-		idf_path = os.path.join(os.path.dirname(__file__), 'corpora', 'idf.json')
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+		idf_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
 
 		with open(idf_path, 'r') as f:
 			idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
@@ -444,11 +444,11 @@ class TestEvent(unittest.TestCase):
 		Test that the logarithmic EF-IDF extractor's score for an unknown word is 0.
 		"""
 
-		idf_path = os.path.join(os.path.dirname(__file__), 'corpora', 'idf.json')
-		paths = [ os.path.join(os.path.dirname(__file__), 'corpora', 'CRYCHE_FUL.json'),
-		 		  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVNAP_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'LIVMUN_FUL.json'),
-				  os.path.join(os.path.dirname(__file__), 'corpora', 'MUNARS_FUL.json') ]
+		idf_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
 
 		with open(idf_path, 'r') as f:
 			idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
