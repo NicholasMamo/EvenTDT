@@ -17,6 +17,7 @@ Accepted arguments:
 
 	- ``-f --file``							*<Required>* The file to use to construct the TF-IDF scheme.
 	- ``-o --output``						*<Required>* The file where to save the TF-IDF scheme.
+	- ``--remove-retweets``					*<Optional>* Exclude retweets from the corpus.
 	- ``--remove-unicode-entities``			*<Optional>* Remove unicode entities from the TF-IDF scheme.
 	- ``--normalize-words``					*<Optional>* Normalize words with repeating characters in them.
 	- ``--character-normalization-count``	*<Optional>* The number of times a character must repeat for it to be normalized. Used only with the ``--normalize-words`` flag.
@@ -45,6 +46,7 @@ def setup_args():
 
 		- ``-f --file``							*<Required>* The file to use to construct the TF-IDF scheme.
 		- ``-o --output``						*<Required>* The file where to save the TF-IDF scheme.
+		- ``--remove-retweets``					*<Optional>* Exclude retweets from the corpus.
 		- ``--remove-unicode-entities``			*<Optional>* Remove unicode entities from the TF-IDF scheme.
 		- ``--normalize-words``					*<Optional>* Normalize words with repeating characters in them.
 		- ``--character-normalization-count``	*<Optional>* The number of times a character must repeat for it to be normalized. Used only with the ``--normalize-words`` flag.
@@ -64,6 +66,8 @@ def setup_args():
 						help='<Required> The file to use to construct the TF-IDF scheme.')
 	parser.add_argument('-o', '--output', type=str, required=True,
 						help='<Required> The file where to save the TF-IDF scheme.')
+	parser.add_argument('--remove-retweets', action="store_true",
+						help='<Optional> Exclude retweets from the corpus.')
 	parser.add_argument('--remove-unicode-entities', action="store_true",
 						help='<Optional> Remove unicode entities from the TF-IDF scheme.')
 	parser.add_argument('--normalize-words', action="store_true",
@@ -82,12 +86,12 @@ def main():
 	"""
 
 	args = setup_args()
-	tfidf = construct(file=args.file, normalize_words=args.normalize_words,
+	tfidf = construct(file=args.file, remove_retweets=args.remove_retweets, normalize_words=args.normalize_words,
 					  character_normalization_count=args.character_normalization_count,
 					  remove_unicode_entities=args.remove_unicode_entities, stem=args.stem)
 	save(tfidf, args.output)
 
-def construct(file, *args, **kwargs):
+def construct(file, remove_retweets, *args, **kwargs):
 	"""
 	Construct the TF-IDF scheme from the file.
 	The scheme is constructed one line at a time.
@@ -96,6 +100,8 @@ def construct(file, *args, **kwargs):
 
 	:param file: The path to the file to use to construct the TF-IDF scheme.
 	:type file: str
+	:param remove_retweets: A boolean indicating whether to xclude retweets from the corpus.
+	:type remove_retweets: bool
 
 	:return: The TF-IDF scheme constructed from the file.
 	:rtype: :class:`~nlp.term_weighting.tfidf.TFIDF`
@@ -110,8 +116,15 @@ def construct(file, *args, **kwargs):
 	"""
 	with open(file, 'r') as f:
 		for line in f:
-			documents = documents + 1
 			tweet = json.loads(line)
+
+			"""
+			Skip the tweet if retweets should be excluded.
+			"""
+			if remove_retweets and 'retweeted_status' in tweet:
+				continue
+
+			documents = documents + 1
 			tokens = tokenize(tweet, tokenizer)
 			idf = update(idf, tokens)
 
