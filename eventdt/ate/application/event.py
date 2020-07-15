@@ -221,7 +221,6 @@ class Variability(Extractor):
 		To reflect this behavior in the score, the inverse of the variability is returned.
 
 		The method follows the leave-one-out principle: each event is compared against all other events.
-		The final result is an average weightg according to the event sizes.
 
 		:param idfs: A list of IDFs, one for each event.
 		:type idfs: list of :class:`~nlp.term_weighting.tfidf.TFIDF`
@@ -254,12 +253,11 @@ class Variability(Extractor):
 			for idf in idfs:
 				"""
 				Create the contingency table and compute the chi-square value.
-				The statistic's weight is based on the size of the current event.
 				"""
 				comparison = [ other for other in idfs if other is not idf ]
 				table = self._contingency_table(term, idf, comparison)
 				chi = self._chi(table)
-				v += chi * idf.global_scheme.documents / all_documents
+				v += chi
 
 			variability[term] = 1./math.log(v + self.base, self.base)
 
