@@ -176,10 +176,17 @@
             
   <div class="section" id="vector-space-model-vsm">
 <h1>2. Vector Space Model (VSM)<a class="headerlink" href="#vector-space-model-vsm" title="Permalink to this headline">¶</a></h1>
-<p>Most document representation occurs in the Vector Space Model (VSM).
-EvenTDT provides classes to help you work with the VSM.
-Keep reading to learn more about the different VSM classes available in EvenTDT.</p>
-<span class="target" id="module-vsm"></span><div class="section" id="module-vsm.vector">
+<span class="target" id="module-vsm"></span><p>Document representation in EvenTDT uses the Vector Space Model (VSM).
+The library represents documents as vectors, where each feature can mean a different word.</p>
+<p>EvenTDT builds the VSM from scratch.
+First, there is the <a class="reference internal" href="#vsm.vector.VectorSpace" title="vsm.vector.VectorSpace"><code class="xref py py-class docutils literal notranslate"><span class="pre">VectorSpace</span></code></a> class, which is a special dictionary that represents the VSM.
+Second, there is the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> class, which is a vector in the <a class="reference internal" href="#vsm.vector.VectorSpace" title="vsm.vector.VectorSpace"><code class="xref py py-class docutils literal notranslate"><span class="pre">VectorSpace</span></code></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Documents are special vectors that have text.
+You can read more about documents in the <a class="reference internal" href="nlp.html#nlp"><span class="std std-ref">NLP chapter</span></a>.</p>
+</div>
+<div class="section" id="module-vsm.vector">
 <span id="vectors"></span><h2>Vectors<a class="headerlink" href="#module-vsm.vector" title="Permalink to this headline">¶</a></h2>
 <p>The <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> is the basis of the Vector Space Model (VSM).
 The class contains is used in clustering and Natural Language Processing (NLP) to represent documents.</p>
