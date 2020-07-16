@@ -45,9 +45,15 @@ Algorithms
    :members:
    :special-members:
 
+No-K-Means
+^^^^^^^^^^
+
 .. automodule:: vsm.clustering.algorithms.no_k_means
    :members:
    :special-members:
+
+Temporal No-K-Means
+^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: vsm.clustering.algorithms.temporal_no_k_means
    :members:

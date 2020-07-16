@@ -91,7 +91,11 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-vsm.vector">Vectors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-vsm.vector_math">Vector Math</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-vsm.clustering.cluster">Clustering</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module-vsm.clustering.algorithms.clustering">Algorithms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-vsm.clustering.algorithms.clustering">Algorithms</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-vsm.clustering.algorithms.no_k_means">No-K-Means</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-vsm.clustering.algorithms.temporal_no_k_means">Temporal No-K-Means</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -680,7 +684,9 @@ The function returns the active clusters.</p>
 
 </dd></dl>
 
-<span class="target" id="module-vsm.clustering.algorithms.no_k_means"></span><p>The No-K-Means algorithm is an incremental clustering algorithm, described in research by <a class="reference external" href="https://www.researchgate.net/profile/Colin_Layfield/publication/303893387_Extended_No-K-Means_for_Search_Results_Clustering/links/575acd4208ae9a9c95518dfd.pdf">Azzopardi et al. in 2016</a>.
+<div class="section" id="module-vsm.clustering.algorithms.no_k_means">
+<span id="no-k-means"></span><h4>No-K-Means<a class="headerlink" href="#module-vsm.clustering.algorithms.no_k_means" title="Permalink to this headline">¶</a></h4>
+<p>The No-K-Means algorithm is an incremental clustering algorithm, described in research by <a class="reference external" href="https://www.researchgate.net/profile/Colin_Layfield/publication/303893387_Extended_No-K-Means_for_Search_Results_Clustering/links/575acd4208ae9a9c95518dfd.pdf">Azzopardi et al. in 2016</a>.
 The algorithm compares incoming vectors to existing clusters.
 The vector is added to the most similar cluster if the similarity exceeds a certain threshold.
 Otherwise, the vector is added to a new cluster.</p>
@@ -746,7 +752,10 @@ Any additional arguments and keyword arguments are passed on to the <code class=
 
 </dd></dl>
 
-<span class="target" id="module-vsm.clustering.algorithms.temporal_no_k_means"></span><p>The temporal No-K-Means is a variant of the No-K-Means.
+</div>
+<div class="section" id="module-vsm.clustering.algorithms.temporal_no_k_means">
+<span id="temporal-no-k-means"></span><h4>Temporal No-K-Means<a class="headerlink" href="#module-vsm.clustering.algorithms.temporal_no_k_means" title="Permalink to this headline">¶</a></h4>
+<p>The temporal No-K-Means is a variant of the No-K-Means.
 Differently from the No-K-Means, clusters are frozen if they have been inactive for a long period of time.
 In the No-K-Means, the freeze period is based on the number of received vectors.</p>
 <dl class="class">
@@ -805,6 +814,7 @@ The time value is expected to be a float or integer.</p></li>
 
 </dd></dl>
 
+</div>
 </div>
 </div>
 </div>
