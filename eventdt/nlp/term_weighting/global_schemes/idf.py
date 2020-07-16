@@ -28,7 +28,7 @@ class IDF(Exportable, SchemeScorer):
 	The Inverse Document Frequency (TF-IDF) is one of the most common term-weighting schemes.
 	This scheme promotes uncommon tokens.
 
-	:ivar idf: The IDF table used in conjunction with term weighting.
+	:ivar ~.idf: The IDF table used in conjunction with term weighting.
 	:vartype idf: dict
 	"""
 

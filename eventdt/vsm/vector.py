@@ -1,6 +1,7 @@
 """
-The :class:`~vsm.vector.Vector` is the basis of the Vector Space Model (VSM).
-The class contains is used in clustering and Natural Language Processing (NLP) to represent documents.
+The basis for vectors is the :class:`~VectorSpace`, or the space of all vector dimensions.
+A :class:`~Vector` is made up of dimensions in the :class:`~VectorSpace` which make up its direction.
+Therefore the :class:`~VectorSpace` is one of the most important classes in EvenTDT because it is the basis for a lot of the vector-related functionality.
 """
 
 import os
@@ -16,20 +17,26 @@ from vsm import vector_math
 
 class VectorSpace(dict):
 	"""
-	The vector space is the space of all dimensions.
-	This class is based on a normal dictionary.
-	The only thing that changes is that when a non-existent dimension is requested, a value of 0 is returned.
+	The :class:`~VectorSpace` represents the space of all :class:`~Vector` dimensions.
+	This class is based on a normal Python ``dict``:
+
+	- The keys of this dictionary represent the feature or dimension name.
+	- The corresponding values represent the magnitude of the :class:`~Vector` along that dimension.
+
+	The only change from the normal dictionary is that the value of an unspecified dimension is not undefined or ``None``.
+	Instead, the :class:`~VectorSpace` returns 0: a :class:`~Vector` is made up of all dimensions, but some (or many) of them have a magnitude of 0.
+	This functionality is implemented in the :func:`~VectorSpace.__getitem__` function.
 	"""
 
 	def __getitem__(self, key):
 		"""
-		Get the dimension represented by the given key.
-		If the dimension does not exist, 0 is returned instead.
+		Get the value, or magnitude, of the dimension having the given key as name.
+		If the :class:`~Vector` has no dimension with that name, the function returns a magnitude of 0.
 
-		:param key: The name of the dimension whose value will be fetched.
+		:param key: The name of the dimension whose magnitude will be fetched.
 		:type key: str
 
-		:return: The magnitude of the dimension, or 0 if it does not exist.
+		:return: The magnitude of the dimension, or 0 if the :class:`~Vector` does not have a value for the dimension.
 		:rtype: float
 		"""
 
