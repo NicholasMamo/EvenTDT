@@ -196,10 +196,12 @@ Therefore the <a class="reference internal" href="#vsm.vector.VectorSpace" title
 <em class="property">class </em><code class="sig-name descname">VectorSpace</code><a class="headerlink" href="#vsm.vector.VectorSpace" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference internal" href="#vsm.vector.VectorSpace" title="vsm.vector.VectorSpace"><code class="xref py py-class docutils literal notranslate"><span class="pre">VectorSpace</span></code></a> represents the space of all <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> dimensions.
 This class is based on a normal Python <code class="docutils literal notranslate"><span class="pre">dict</span></code>:</p>
-<ul class="simple">
+<blockquote>
+<div><ul class="simple">
 <li><p>The keys of this dictionary represent the feature or dimension name.</p></li>
 <li><p>The corresponding values represent the magnitude of the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> along that dimension.</p></li>
 </ul>
+</div></blockquote>
 <p>The only change from the normal dictionary is that the value of an unspecified dimension is not undefined or <code class="docutils literal notranslate"><span class="pre">None</span></code>.
 Instead, the <a class="reference internal" href="#vsm.vector.VectorSpace" title="vsm.vector.VectorSpace"><code class="xref py py-class docutils literal notranslate"><span class="pre">VectorSpace</span></code></a> returns 0: a <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> is made up of all dimensions, but some (or many) of them have a magnitude of 0.
 This functionality is implemented in the <a class="reference internal" href="#vsm.vector.VectorSpace.__getitem__" title="vsm.vector.VectorSpace.__getitem__"><code class="xref py py-func docutils literal notranslate"><span class="pre">__getitem__()</span></code></a> function.</p>
@@ -232,24 +234,33 @@ If the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector
 <dl class="class">
 <dt id="vsm.vector.Vector">
 <em class="property">class </em><code class="sig-name descname">Vector</code><span class="sig-paren">(</span><em class="sig-param">dimensions=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector.Vector" title="Permalink to this definition">¶</a></dt>
-<dd><p>The <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> class is the smallest building block in the Vector Space Model (VSM).
-It is used for tasks such as clustering and to represent documents.
-Vectors are based on <code class="xref py py-class docutils literal notranslate"><span class="pre">Attributable</span></code> so that they may have additional properties.</p>
+<dd><p>The <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> class is a manifestation of a vector in the <a class="reference internal" href="#vsm.vector.VectorSpace" title="vsm.vector.VectorSpace"><code class="xref py py-class docutils literal notranslate"><span class="pre">VectorSpace</span></code></a>.
+In this library, it is the basic building block for many other classes, such as the <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> and the <a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>.</p>
+<p>The <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> is based on two other classes that add some functionality to the basics:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference internal" href="other.html#objects.attributable.Attributable" title="objects.attributable.Attributable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Attributable</span></code></a>: allows <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> instances to accept additional attributes.</p></li>
+<li><p><a class="reference internal" href="other.html#objects.exportable.Exportable" title="objects.exportable.Exportable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exportable</span></code></a>: allows <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> instances to be exported as an associative array and imported back again.</p></li>
+</ul>
+</div></blockquote>
+<p>The <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> stores its make-up information in the <a class="reference internal" href="#vsm.vector.VectorSpace" title="vsm.vector.VectorSpace"><code class="xref py py-class docutils literal notranslate"><span class="pre">VectorSpace</span></code></a>.
+This can be accessed through the <code class="docutils literal notranslate"><span class="pre">dimensions</span></code> property.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#vsm.vector.Vector.dimensions" title="vsm.vector.Vector.dimensions"><strong>dimensions</strong></a> (<em>dict</em>) – The dimensions—name-value pairs—of the vector.</p>
+<dd class="field-odd"><p><a class="reference internal" href="#vsm.vector.Vector.dimensions" title="vsm.vector.Vector.dimensions"><strong>dimensions</strong></a> (<a class="reference internal" href="#vsm.vector.VectorSpace" title="vsm.vector.VectorSpace"><code class="xref py py-class docutils literal notranslate"><span class="pre">VectorSpace</span></code></a>) – The dimensions of the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> in the <a class="reference internal" href="#vsm.vector.VectorSpace" title="vsm.vector.VectorSpace"><code class="xref py py-class docutils literal notranslate"><span class="pre">VectorSpace</span></code></a>.
+The keys are the dimension names.
+The corresponding values are the magnitude of the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> in that direction.</p>
 </dd>
 </dl>
 <dl class="method">
 <dt id="vsm.vector.Vector.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">dimensions=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector.Vector.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>By default, the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> object has no dimensions.
-The <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> object is represented using an associative array (dictionary).
-Any additional attributes can be passed as arguments or keyword arguments.</p>
+<dd><p>Create the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>.
+By default, it has no dimensions, but you can provide initial values as a <code class="docutils literal notranslate"><span class="pre">dict</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>dimensions</strong> (<em>dict</em>) – The initial dimensions of the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> object.
-If none are given, they are initialized to an empty dict.</p>
+<dd class="field-odd"><p><strong>dimensions</strong> (dict or <a class="reference internal" href="#vsm.vector.VectorSpace" title="vsm.vector.VectorSpace"><code class="xref py py-class docutils literal notranslate"><span class="pre">VectorSpace</span></code></a> or None) – The initial dimensions of the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>.
+If <code class="docutils literal notranslate"><span class="pre">None</span></code> is given, the class initializes the dimensions as an empty <code class="docutils literal notranslate"><span class="pre">dict</span></code>.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -257,10 +268,11 @@ If none are given, they are initialized to an empty dict.</p>
 <dl class="method">
 <dt id="vsm.vector.Vector.dimensions">
 <em class="property">property </em><code class="sig-name descname">dimensions</code><a class="headerlink" href="#vsm.vector.Vector.dimensions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the dimensions of the vector.</p>
+<dd><p>Get the dimensions of the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>.
+The dimensions are returned as a <a class="reference internal" href="#vsm.vector.VectorSpace" title="vsm.vector.VectorSpace"><code class="xref py py-class docutils literal notranslate"><span class="pre">VectorSpace</span></code></a>, which is based on a <code class="docutils literal notranslate"><span class="pre">dict</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The dimensions of the vector.</p>
+<dd class="field-odd"><p>The dimensions of the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference internal" href="#vsm.vector.VectorSpace" title="vsm.vector.VectorSpace"><code class="xref py py-class docutils literal notranslate"><span class="pre">VectorSpace</span></code></a></p>
@@ -271,16 +283,21 @@ If none are given, they are initialized to an empty dict.</p>
 <dl class="method">
 <dt id="vsm.vector.Vector.normalize">
 <code class="sig-name descname">normalize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector.Vector.normalize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Normalize the vector.</p>
+<dd><p>Normalize the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> so that its magnitude is 1.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can read more about <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> normalization <a class="reference internal" href="#vsm.vector_math.normalize" title="vsm.vector_math.normalize"><code class="xref py py-func docutils literal notranslate"><span class="pre">here</span></code></a>.</p>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="vsm.vector.Vector.copy">
 <code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector.Vector.copy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a copy of the vector.</p>
+<dd><p>Create a copy of the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>.
+The copy has the same <a class="reference internal" href="#vsm.vector.VectorSpace" title="vsm.vector.VectorSpace"><code class="xref py py-class docutils literal notranslate"><span class="pre">VectorSpace</span></code></a> dimensions and attributes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>A copy of the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> object</p>
+<dd class="field-odd"><p>A copy of this <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> instance.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a></p>
@@ -291,10 +308,18 @@ If none are given, they are initialized to an empty dict.</p>
 <dl class="method">
 <dt id="vsm.vector.Vector.to_array">
 <code class="sig-name descname">to_array</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector.Vector.to_array" title="Permalink to this definition">¶</a></dt>
-<dd><p>Export the vector as an associative array.</p>
+<dd><p>Export the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> as <code class="docutils literal notranslate"><span class="pre">dict</span></code>.
+This <code class="docutils literal notranslate"><span class="pre">dict</span></code> has three keys:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>The class name, used when re-creating the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>;</p></li>
+<li><p>The <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>’s attributes as a <code class="docutils literal notranslate"><span class="pre">dict</span></code>; and</p></li>
+<li><p>The <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>’s dimensions as a <code class="docutils literal notranslate"><span class="pre">dict</span></code>.</p></li>
+</ol>
+</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The vector as an associative array.</p>
+<dd class="field-odd"><p>The <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> as <code class="docutils literal notranslate"><span class="pre">dict</span></code>.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>dict</p>
@@ -305,13 +330,21 @@ If none are given, they are initialized to an empty dict.</p>
 <dl class="method">
 <dt id="vsm.vector.Vector.from_array">
 <em class="property">static </em><code class="sig-name descname">from_array</code><span class="sig-paren">(</span><em class="sig-param">array</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector.Vector.from_array" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create an instance of the vector from the given associative array.</p>
+<dd><p>Create an instance of the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> from the given <code class="docutils literal notranslate"><span class="pre">dict</span></code>.
+This function expects the array to have been generated by the <a class="reference internal" href="#vsm.vector.Vector.to_array" title="vsm.vector.Vector.to_array"><code class="xref py py-func docutils literal notranslate"><span class="pre">to_array()</span></code></a>, and must have these keys:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>The class name,</p></li>
+<li><p>The <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>’s attributes as a <code class="docutils literal notranslate"><span class="pre">dict</span></code>, and</p></li>
+<li><p>The <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>’s dimensions as a <code class="docutils literal notranslate"><span class="pre">dict</span></code>.</p></li>
+</ol>
+</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>array</strong> (<em>dict</em>) – The associative array with the attributes to create the vector.</p>
+<dd class="field-odd"><p><strong>array</strong> (<em>dict</em>) – The <code class="docutils literal notranslate"><span class="pre">dict</span></code> with the attributes to create the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A new instance of the vector with the same attributes stored in the object.</p>
+<dd class="field-even"><p>A new instance of the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> with the same attributes stored in the object.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a></p>

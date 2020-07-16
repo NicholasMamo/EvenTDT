@@ -20,8 +20,8 @@ class VectorSpace(dict):
 	The :class:`~VectorSpace` represents the space of all :class:`~Vector` dimensions.
 	This class is based on a normal Python ``dict``:
 
-	- The keys of this dictionary represent the feature or dimension name.
-	- The corresponding values represent the magnitude of the :class:`~Vector` along that dimension.
+		- The keys of this dictionary represent the feature or dimension name.
+		- The corresponding values represent the magnitude of the :class:`~Vector` along that dimension.
 
 	The only change from the normal dictionary is that the value of an unspecified dimension is not undefined or ``None``.
 	Instead, the :class:`~VectorSpace` returns 0: a :class:`~Vector` is made up of all dimensions, but some (or many) of them have a magnitude of 0.
@@ -44,23 +44,31 @@ class VectorSpace(dict):
 
 class Vector(Attributable, Exportable):
 	"""
-	The :class:`~vsm.vector.Vector` class is the smallest building block in the Vector Space Model (VSM).
-	It is used for tasks such as clustering and to represent documents.
-	Vectors are based on :class:`~objects.Attributable` so that they may have additional properties.
+	The :class:`~Vector` class is a manifestation of a vector in the :class:`~VectorSpace`.
+	In this library, it is the basic building block for many other classes, such as the :class:`~nlp.document.Document` and the :class:`~vsm.clustering.cluster.Cluster`.
 
-	:ivar dimensions: The dimensions—name-value pairs—of the vector.
-	:vartype dimensions: dict
+	The :class:`~Vector` is based on two other classes that add some functionality to the basics:
+
+		- :class:`~objects.attributable.Attributable`: allows :class:`~Vector` instances to accept additional attributes.
+		- :class:`~objects.exportable.Exportable`: allows :class:`~Vector` instances to be exported as an associative array and imported back again.
+
+	The :class:`~Vector` stores its make-up information in the :class:`~VectorSpace`.
+	This can be accessed through the ``dimensions`` property.
+
+	:ivar dimensions: The dimensions of the :class:`~Vector` in the :class:`~VectorSpace`.
+					  The keys are the dimension names.
+					  The corresponding values are the magnitude of the :class:`~Vector` in that direction.
+	:vartype dimensions: :class:`~VectorSpace`
 	"""
 
 	def __init__(self, dimensions=None, *args, **kwargs):
 		"""
-		By default, the :class:`~vsm.vector.Vector` object has no dimensions.
-		The :class:`~vsm.vector.Vector` object is represented using an associative array (dictionary).
-		Any additional attributes can be passed as arguments or keyword arguments.
+		Create the :class:`~Vector`.
+		By default, it has no dimensions, but you can provide initial values as a ``dict``.
 
-		:param dimensions: The initial dimensions of the :class:`~vsm.vector.Vector` object.
-			If none are given, they are initialized to an empty dict.
-		:type dimensions: dict
+		:param dimensions: The initial dimensions of the :class:`~Vector`.
+						   If ``None`` is given, the class initializes the dimensions as an empty ``dict``.
+		:type dimensions: dict or :class:`~VectorSpace` or None
 		"""
 
 		super(Vector, self).__init__(*args, **kwargs)
@@ -69,10 +77,11 @@ class Vector(Attributable, Exportable):
 	@property
 	def dimensions(self):
 		"""
-		Get the dimensions of the vector.
+		Get the dimensions of the :class:`~Vector`.
+		The dimensions are returned as a :class:`~VectorSpace`, which is based on a ``dict``.
 
-		:return: The dimensions of the vector.
-		:rtype: :class:`~vsm.vector.VectorSpace`
+		:return: The dimensions of the :class:`~Vector`.
+		:rtype: :class:`~VectorSpace`
 		"""
 
 		return self.__dimensions
@@ -80,39 +89,48 @@ class Vector(Attributable, Exportable):
 	@dimensions.setter
 	def dimensions(self, dimensions=None):
 		"""
-		Reset the list of dimensions.
-		If a dictionary is given, its keys are used as the new dimensions.
-		Otherwise, a new vector space is initialized.
+		Set the dimensions to the given dictionary or :class:`~VectorSpace`.
+		If you provide ``None`` as the dimensions, the function resets the :class:`~Vector`'s :class:`~VectorSpace`.
 
 		:param dimensions: The new dimensions as a dictionary.
-						   If `None` is given, an empty vector space is initialized instead.
-		:type dimensions: dict or `None`
+						   If `None` is given, the class initializes the dimensions with an empty :class:`~VectorSpace` instead.
+		:type dimensions: dict or :class:`~VectorSpace` or `None`
 		"""
 
 		self.__dimensions = VectorSpace() if dimensions is None else VectorSpace(dimensions)
 
 	def normalize(self):
 		"""
-		Normalize the vector.
+		Normalize the :class:`~Vector` so that its magnitude is 1.
+
+		.. note::
+
+			You can read more about :class:`~Vector` normalization :func:`here <vsm.vector_math.normalize>`.
 		"""
 
 		self.dimensions = vector_math.normalize(self).dimensions
 
 	def copy(self):
 		"""
-		Create a copy of the vector.
+		Create a copy of the :class:`~Vector`.
+		The copy has the same :class:`~VectorSpace` dimensions and attributes.
 
-		:return: A copy of the :class:`~vsm.vector.Vector` object
-		:rtype: :class:`~vsm.vector.Vector`
+		:return: A copy of this :class:`~Vector` instance.
+		:rtype: :class:`~Vector`
 		"""
 
 		return Vector(self.dimensions.copy(), self.attributes.copy())
 
 	def to_array(self):
 		"""
-		Export the vector as an associative array.
+		Export the :class:`~Vector` as ``dict``.
+		This ``dict`` has three keys:
 
-		:return: The vector as an associative array.
+			1. The class name, used when re-creating the :class:`~Vector`;
+			2. The :class:`~Vector`'s attributes as a ``dict``; and
+			3. The :class:`~Vector`'s dimensions as a ``dict``.
+
+		:return: The :class:`~Vector` as ``dict``.
 		:rtype: dict
 		"""
 
@@ -125,13 +143,18 @@ class Vector(Attributable, Exportable):
 	@staticmethod
 	def from_array(array):
 		"""
-		Create an instance of the vector from the given associative array.
+		Create an instance of the :class:`~Vector` from the given ``dict``.
+		This function expects the array to have been generated by the :func:`~Vector.to_array`, and must have these keys:
 
-		:param array: The associative array with the attributes to create the vector.
+			1. The class name,
+			2. The :class:`~Vector`'s attributes as a ``dict``, and
+			3. The :class:`~Vector`'s dimensions as a ``dict``.
+
+		:param array: The ``dict`` with the attributes to create the :class:`~Vector`.
 		:type array: dict
 
-		:return: A new instance of the vector with the same attributes stored in the object.
-		:rtype: :class:`~vsm.vector.Vector`
+		:return: A new instance of the :class:`~Vector` with the same attributes stored in the object.
+		:rtype: :class:`~Vector`
 		"""
 
 		return Vector(dimensions=array.get('dimensions'), attributes=array.get('attributes'))
