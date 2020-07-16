@@ -373,6 +373,7 @@ The first task reads the file, and the second consumes it, this time to understa
 <li><p><code class="docutils literal notranslate"><span class="pre">-s</span> <span class="pre">--speed</span></code>                                <em>&lt;Optional&gt;</em> The speed at which the file is consumed, defaults to 1.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--skip</span></code>                                    <em>&lt;Optional&gt;</em> The amount of time to skip from the beginning of the file in minutes, defaults to 0.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--max-inactivity</span></code>                  <em>&lt;Optional&gt;</em> The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--max-time</span></code>                                <em>&lt;Optional&gt;</em> The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--no-cache</span></code>                                <em>&lt;Optional&gt;</em> If specified, the cached understanding is not used. The new understanding is cached instead.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--scheme</span></code>                                  <em>&lt;Optional&gt;</em> If specified, the path to the <a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a> to use. If it is not specified, the <a class="reference internal" href="nlp.html#nlp.term_weighting.tf.TF" title="nlp.term_weighting.tf.TF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TF</span></code></a> scheme is used.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--min-size</span></code>                                <em>&lt;Optional&gt;</em> The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.</p></li>
@@ -393,6 +394,7 @@ The first task reads the file, and the second consumes it, this time to understa
 <li><p><code class="docutils literal notranslate"><span class="pre">-s</span> <span class="pre">--speed</span></code>                                <em>&lt;Optional&gt;</em> The speed at which the file is consumed, defaults to 1.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--skip</span></code>                                    <em>&lt;Optional&gt;</em> The amount of time to skip from the beginning of the file in minutes, defaults to 0.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--max-inactivity</span></code>                  <em>&lt;Optional&gt;</em> The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--max-time</span></code>                                <em>&lt;Optional&gt;</em> The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--no-cache</span></code>                                <em>&lt;Optional&gt;</em> If specified, the cached understanding is not used. The new understanding is cached instead.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--scheme</span></code>                                  <em>&lt;Optional&gt;</em> If specified, the path to the <a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a> to use. If it is not specified, the <a class="reference internal" href="nlp.html#nlp.term_weighting.tf.TF" title="nlp.term_weighting.tf.TF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TF</span></code></a> scheme is used. This can be overwritten if there is event understanding.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--min-size</span></code>                                <em>&lt;Optional&gt;</em> The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.</p></li>
@@ -453,7 +455,7 @@ The arguments and keyword arguments should be the command-line arguments.</p>
 
 <dl class="function">
 <dt id="tools.consume.consume">
-<code class="sig-name descname">consume</code><span class="sig-paren">(</span><em class="sig-param">file</em>, <em class="sig-param">consumer</em>, <em class="sig-param">speed</em>, <em class="sig-param">max_inactivity</em>, <em class="sig-param">scheme=None</em>, <em class="sig-param">skip=0</em>, <em class="sig-param">min_size=3</em>, <em class="sig-param">threshold=0.5</em>, <em class="sig-param">max_intra_similarity=0.8</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.consume.consume" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">consume</code><span class="sig-paren">(</span><em class="sig-param">file</em>, <em class="sig-param">consumer</em>, <em class="sig-param">speed</em>, <em class="sig-param">max_inactivity</em>, <em class="sig-param">max_time=-1</em>, <em class="sig-param">skip=0</em>, <em class="sig-param">scheme=None</em>, <em class="sig-param">min_size=3</em>, <em class="sig-param">threshold=0.5</em>, <em class="sig-param">max_intra_similarity=0.8</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.consume.consume" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the consumption process.
 The arguments and keyword arguments should be the command-line arguments.</p>
 <p>Consumption uses two processes:</p>
@@ -471,8 +473,9 @@ The arguments and keyword arguments should be the command-line arguments.</p>
 <li><p><strong>consumer</strong> (<a class="reference internal" href="consumers.html#queues.consumers.consumer.Consumer" title="queues.consumers.consumer.Consumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code></a>) – The type of consumer to use.</p></li>
 <li><p><strong>speed</strong> (<em>float</em>) – The speed with which to read the file.</p></li>
 <li><p><strong>max_inactivity</strong> (<em>int</em>) – The maximum time, in seconds, to wait for new tweets to arrive before stopping.</p></li>
-<li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The scheme to use when consuming the file.</p></li>
+<li><p><strong>max_time</strong> (<em>int</em>) – The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.</p></li>
 <li><p><strong>skip</strong> (<em>int</em>) – The amount of time to skip from the beginning of the file in minutes, defaults to 0.</p></li>
+<li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The scheme to use when consuming the file.</p></li>
 <li><p><strong>min_size</strong> (<em>int</em>) – The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.</p></li>
 <li><p><strong>threshold</strong> (<em>float</em>) – The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.</p></li>
 <li><p><strong>max_intra_similarity</strong> (<em>float</em>) – The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.</p></li>
@@ -489,7 +492,7 @@ The arguments and keyword arguments should be the command-line arguments.</p>
 
 <dl class="function">
 <dt id="tools.consume.stream_process">
-<code class="sig-name descname">stream_process</code><span class="sig-paren">(</span><em class="sig-param">loop</em>, <em class="sig-param">queue</em>, <em class="sig-param">file</em>, <em class="sig-param">skip_time=0</em>, <em class="sig-param">speed=1</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.consume.stream_process" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">stream_process</code><span class="sig-paren">(</span><em class="sig-param">loop</em>, <em class="sig-param">queue</em>, <em class="sig-param">file</em>, <em class="sig-param">skip_time=0</em>, <em class="sig-param">speed=1</em>, <em class="sig-param">max_time=-1</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.consume.stream_process" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stream the file and add its tweets to the queue.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -499,6 +502,7 @@ The arguments and keyword arguments should be the command-line arguments.</p>
 <li><p><strong>file</strong> (<em>str</em>) – The path to the file to read.</p></li>
 <li><p><strong>skip_time</strong> (<em>int</em>) – The amount of time to skip from the beginning of the file in minutes, defaults to 0.</p></li>
 <li><p><strong>speed</strong> (<em>float</em>) – The speed at which the file is consumed, defaults to 1.</p></li>
+<li><p><strong>max_time</strong> (<em>int</em>) – The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.</p></li>
 </ul>
 </dd>
 </dl>
@@ -744,6 +748,7 @@ The full text is always sought.</p>
 <div><ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--file</span></code>                                                 <em>&lt;Required&gt;</em> The file to use to construct the TF-IDF scheme.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-o</span> <span class="pre">--output</span></code>                                               <em>&lt;Required&gt;</em> The file where to save the TF-IDF scheme.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--remove-retweets</span></code>                                 <em>&lt;Optional&gt;</em> Exclude retweets from the corpus.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--remove-unicode-entities</span></code>                 <em>&lt;Optional&gt;</em> Remove unicode entities from the TF-IDF scheme.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--normalize-words</span></code>                                 <em>&lt;Optional&gt;</em> Normalize words with repeating characters in them.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--character-normalization-count</span></code>   <em>&lt;Optional&gt;</em> The number of times a character must repeat for it to be normalized. Used only with the <code class="docutils literal notranslate"><span class="pre">--normalize-words</span></code> flag.</p></li>
@@ -759,6 +764,7 @@ The full text is always sought.</p>
 <div><ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--file</span></code>                                                 <em>&lt;Required&gt;</em> The file to use to construct the TF-IDF scheme.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-o</span> <span class="pre">--output</span></code>                                               <em>&lt;Required&gt;</em> The file where to save the TF-IDF scheme.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--remove-retweets</span></code>                                 <em>&lt;Optional&gt;</em> Exclude retweets from the corpus.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--remove-unicode-entities</span></code>                 <em>&lt;Optional&gt;</em> Remove unicode entities from the TF-IDF scheme.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--normalize-words</span></code>                                 <em>&lt;Optional&gt;</em> Normalize words with repeating characters in them.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--character-normalization-count</span></code>   <em>&lt;Optional&gt;</em> The number of times a character must repeat for it to be normalized. Used only with the <code class="docutils literal notranslate"><span class="pre">--normalize-words</span></code> flag.</p></li>
@@ -783,13 +789,16 @@ The full text is always sought.</p>
 
 <dl class="function">
 <dt id="tools.idf.construct">
-<code class="sig-name descname">construct</code><span class="sig-paren">(</span><em class="sig-param">file</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.idf.construct" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">construct</code><span class="sig-paren">(</span><em class="sig-param">file</em>, <em class="sig-param">remove_retweets</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.idf.construct" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct the TF-IDF scheme from the file.
 The scheme is constructed one line at a time.</p>
 <p>Any additional arguments and keyword arguments are passed on to the <a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer.__init__" title="nlp.tokenizer.Tokenizer.__init__"><code class="xref py py-func docutils literal notranslate"><span class="pre">__init__()</span></code></a> constructor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>file</strong> (<em>str</em>) – The path to the file to use to construct the TF-IDF scheme.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file</strong> (<em>str</em>) – The path to the file to use to construct the TF-IDF scheme.</p></li>
+<li><p><strong>remove_retweets</strong> (<em>bool</em>) – A boolean indicating whether to xclude retweets from the corpus.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The TF-IDF scheme constructed from the file.</p>

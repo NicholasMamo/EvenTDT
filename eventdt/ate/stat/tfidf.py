@@ -18,7 +18,7 @@ class TFIDFExtractor(Extractor):
 	The TF-IDF extractor uses a TF-IDF scheme to score all tokens in the given corpora.
 	The class expects tokenized corpora.
 
-	:ivar scheme: The scheme used by the TF-IDF extractor to score tokens.
+	:ivar ~.scheme: The scheme used by the TF-IDF extractor to score tokens.
 	:vartype scheme: :class:`~nlp.term_weighting.tfidf.TFIDF`
 	"""
 

@@ -6,7 +6,7 @@
    :description: The Automatic Term Extraction (ATE) library
    :keywords: Python, TDT, ATE
 
-Automatic Term Extraction (ATE) is a research that automatically extracts domain-specific terms.
+Automatic Term Extraction (ATE) is a research area that automatically extracts domain-specific terms.
 The package includes algorithms that extract terms and bootstrap terms from a seed set.
 These algorithms are both those that are popular as baselines and peer-reviewed algorithms.
 Included are general functions that are likely to be useful for all algorithms.

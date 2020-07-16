@@ -201,7 +201,7 @@
             
   <div class="section" id="automatic-term-extraction-ate">
 <h1>11. Automatic Term Extraction (ATE)<a class="headerlink" href="#automatic-term-extraction-ate" title="Permalink to this headline">¶</a></h1>
-<p>Automatic Term Extraction (ATE) is a research that automatically extracts domain-specific terms.
+<p>Automatic Term Extraction (ATE) is a research area that automatically extracts domain-specific terms.
 The package includes algorithms that extract terms and bootstrap terms from a seed set.
 These algorithms are both those that are popular as baselines and peer-reviewed algorithms.
 Included are general functions that are likely to be useful for all algorithms.</p>
@@ -453,7 +453,7 @@ The approach scores tokens based on their accumulated TF-IDF score.</p>
 The class expects tokenized corpora.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
-<dd class="field-odd"><p><a class="reference internal" href="nlp.html#module-nlp.term_weighting.scheme" title="nlp.term_weighting.scheme"><strong>scheme</strong></a> (<a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a>) – The scheme used by the TF-IDF extractor to score tokens.</p>
+<dd class="field-odd"><p><strong>scheme</strong> – The scheme used by the TF-IDF extractor to score tokens.</p>
 </dd>
 </dl>
 <dl class="method">
@@ -1008,7 +1008,7 @@ The algorithm can be made to work with the <a class="reference internal" href="#
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="nlp.html#module-nlp.term_weighting.scheme" title="nlp.term_weighting.scheme"><strong>scheme</strong></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code>) – The IDF table to use to score terms.</p></li>
+<li><p><strong>scheme</strong> – The IDF table to use to score terms.</p></li>
 <li><p><strong>base</strong> (<em>None</em><em> or </em><em>float</em>) – The logarithmic base.
 If it is given, the <a class="reference internal" href="#ate.application.event.LogEF" title="ate.application.event.LogEF"><code class="xref py py-class docutils literal notranslate"><span class="pre">LogEF</span></code></a> class is used.
 Otherwise, the <a class="reference internal" href="#ate.application.event.EF" title="ate.application.event.EF"><code class="xref py py-class docutils literal notranslate"><span class="pre">EF</span></code></a> class is used.</p></li>
@@ -1074,6 +1074,10 @@ If <cite>None</cite> is given, all words are considered to be candidates.</p></l
 <dd><p>Variability is a metric that measures the consistency of appearance of a term across different events.
 The variability metric is based on the chi-square statistic.
 The intuition is that terms that appear more consistently in different events are more likely to belong to the domain.</p>
+<p>Variability is bound between 0 and 1.
+1 is when the chi-square is 0.
+That is, 1 is when the term appears perfectly consistently across all event corpora.
+Variability tends to 0 when the chi-square tends to infinity.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><p><strong>base</strong> (<em>float</em>) – The logarithmic base.</p>
@@ -1099,8 +1103,7 @@ Therefore scores end up being very close to each other without a logarithm.</p>
 A term is highly-variable if it appears disproportionately in one or a few events.
 A low variability indicates that the term appears consistently across all events.
 To reflect this behavior in the score, the inverse of the variability is returned.</p>
-<p>The method follows the leave-one-out principle: each event is compared against all other events.
-The final result is an average weightg according to the event sizes.</p>
+<p>The method follows the leave-one-out principle: each event is compared against all other events.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
