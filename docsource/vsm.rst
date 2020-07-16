@@ -18,9 +18,8 @@ Vectors
    :members:
    :special-members:
 
-===========
 Vector Math
-===========
+-----------
 
 .. automodule:: vsm.vector_math
    :members:

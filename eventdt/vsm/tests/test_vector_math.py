@@ -28,6 +28,7 @@ class TestVectorMath(unittest.TestCase):
 		v = Vector({ "x": 3, "y": 2, "z": 1 })
 		self.assertEqual(math.sqrt(14), magnitude(v))
 		self.assertEqual({"x": 3./math.sqrt(14), "y": math.sqrt(4./14), "z": math.sqrt(1./14)}, normalize(v).dimensions)
+		self.assertEqual(1, magnitude(normalize(v)))
 
 	def test_normalize_empty_vector(self):
 		"""
