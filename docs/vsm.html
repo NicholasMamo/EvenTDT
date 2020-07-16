@@ -744,86 +744,6 @@ Any additional arguments and keyword arguments are passed on to the <code class=
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="vsm.clustering.algorithms.no_k_means.NoKMeans._update_age">
-<code class="sig-name descname">_update_age</code><span class="sig-paren">(</span><em class="sig-param">cluster</em>, <em class="sig-param">increment=1</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.no_k_means.NoKMeans._update_age" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the age of the given cluster.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>cluster</strong> (<a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>) – The cluster whose age will be incremented.</p></li>
-<li><p><strong>increment</strong> (<em>int</em>) – The amount by which to increment the age.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="vsm.clustering.algorithms.no_k_means.NoKMeans._to_freeze">
-<code class="sig-name descname">_to_freeze</code><span class="sig-paren">(</span><em class="sig-param">cluster</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.no_k_means.NoKMeans._to_freeze" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if the cluster’s age is high enough that the cluster should be frozen.
-A cluster should be frozen if its age is longer than the freeze period.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>cluster</strong> (<a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>) – The cluster whose age will be incremented.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A boolean indicating whether the cluster should be frozen.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="vsm.clustering.algorithms.no_k_means.NoKMeans._freeze">
-<code class="sig-name descname">_freeze</code><span class="sig-paren">(</span><em class="sig-param">cluster</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.no_k_means.NoKMeans._freeze" title="Permalink to this definition">¶</a></dt>
-<dd><p>Freeze the given cluster.
-This removes the cluster from the list of active clusters.
-Simultaneously, it is added to the list of frozen clusters.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>cluster</strong> (<a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>) – The cluster whose age will be incremented.</p>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>ValueError</strong> – When the cluster is not active.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="vsm.clustering.algorithms.no_k_means.NoKMeans._closest_cluster">
-<code class="sig-name descname">_closest_cluster</code><span class="sig-paren">(</span><em class="sig-param">vector</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.no_k_means.NoKMeans._closest_cluster" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the closest cluster to the vector and return the similarity score.
-This function only compares the vector with active clusters.
-Any additional arguments and keyword arguments are passed on to the <code class="xref py py-func docutils literal notranslate"><span class="pre">similarity()</span></code> function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>vector</strong> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>) – The vector to compare with all clusters.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A tuple consisting of the closest cluster and the similarity between it and the vector.
-If there are no active clusters, <cite>None</cite> is returned instead.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>tuple or None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="vsm.clustering.algorithms.no_k_means.NoKMeans._reset_age">
-<code class="sig-name descname">_reset_age</code><span class="sig-paren">(</span><em class="sig-param">cluster</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.no_k_means.NoKMeans._reset_age" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reset the cluster age to zero.
-This function is called when an existing cluster receives a new vector.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>cluster</strong> (<a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>) – The cluster whose age will be incremented.</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 <span class="target" id="module-vsm.clustering.algorithms.temporal_no_k_means"></span><p>The temporal No-K-Means is a variant of the No-K-Means.
@@ -879,31 +799,6 @@ The time value is expected to be a float or integer.</p></li>
 </dd>
 <dt class="field-odd">Rtpye</dt>
 <dd class="field-odd"><p>list of <a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans._update_age">
-<code class="sig-name descname">_update_age</code><span class="sig-paren">(</span><em class="sig-param">cluster</em>, <em class="sig-param">timestamp</em>, <em class="sig-param">time</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans._update_age" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the age of the given cluster.
-The age is calculated by subtracting from the current timestamp the time of the last vector in the cluster.
-It is assumed that the last vector in the cluster is the most recently-published.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>cluster</strong> (<a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>) – The cluster whose age will be incremented.</p></li>
-<li><p><strong>timestamp</strong> (<em>int</em>) – The current timestamp of the clustering algorithm.
-This is equivalent to the last received vector.</p></li>
-<li><p><strong>time</strong> (<em>str</em>) – The name of the vector attribute used to get the timestamp value.
-The time value is expected to be a float or integer.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>IndexError</strong> – When the cluster has no vectors.</p></li>
-<li><p><strong>TypeError</strong> – When the vector has no time attribute.</p></li>
-</ul>
 </dd>
 </dl>
 </dd></dl>

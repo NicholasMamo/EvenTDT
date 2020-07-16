@@ -12,7 +12,6 @@ Keep reading to learn more about the different VSM classes available in EvenTDT.
 
 .. automodule:: vsm
    :members:
-   :private-members:
    :special-members:
 
 =======
@@ -21,7 +20,6 @@ Vectors
 
 .. automodule:: vsm.vector
    :members:
-   :private-members:
    :special-members:
 
 ===========
@@ -30,7 +28,6 @@ Vector Math
 
 .. automodule:: vsm.vector_math
    :members:
-   :private-members:
    :special-members:
 
 ==========
@@ -39,24 +36,19 @@ Clustering
 
 .. automodule:: vsm.clustering.cluster
    :members:
-   :private-members:
    :special-members:
-
 
 Algorithms
 ----------
 
 .. automodule:: vsm.clustering.algorithms.clustering
    :members:
-   :private-members:
    :special-members:
 
 .. automodule:: vsm.clustering.algorithms.no_k_means
    :members:
-   :private-members:
    :special-members:
 
 .. automodule:: vsm.clustering.algorithms.temporal_no_k_means
    :members:
-   :private-members:
    :special-members:
