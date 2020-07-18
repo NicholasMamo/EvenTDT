@@ -372,6 +372,16 @@ class Entropy(Extractor):
 	This class' intuition is that if a term is equally-distributed across events (and thus has a high entropy), it belongs to the domain.
 	Therefore the higher the entropy, the better.
 
+	The entropy of a term :math:`s` is calculated as following:
+
+	.. math::
+
+		H_b(s) = - \\sum_{i=1}^{n} p_i log_bp_i
+
+	where :math:`b` is the logarithmic base.
+	:math:`n` is the number of possible outcomes of the term.
+	In this case, :math:`n` is the number of events, so the entropy is the term's distribution across events.
+
 	:ivar base: The logarithmic base.
 	:vartype base: float
 	"""
@@ -474,6 +484,15 @@ class Entropy(Extractor):
 	def _entropy(self, probabilities):
 		"""
 		Calculate the entropy of the given probabilities.
+		The entropy of a term :math:`s` is calculated as following:
+
+		.. math::
+
+			H_b(s) = - \\sum_{i=1}^{n} p_i log_bp_i
+
+		where :math:`b` is the logarithmic base.
+		:math:`n` is the number of possible outcomes of the term.
+		In this case, :math:`n` is the number of events, so the entropy is the term's distribution across events.
 
 		:param probabilities: A list of probabilities.
 		:type probabilities: list of float

@@ -1141,6 +1141,12 @@ If a variable’s possible outcomes are all equally-positive, then entropy is at
 If one of the outcomes is more possible than any other outcome, then the variable is not as surprising, and therefore has a lower entropy.</p>
 <p>This class’ intuition is that if a term is equally-distributed across events (and thus has a high entropy), it belongs to the domain.
 Therefore the higher the entropy, the better.</p>
+<p>The entropy of a term <span class="math notranslate nohighlight">\(s\)</span> is calculated as following:</p>
+<div class="math notranslate nohighlight">
+\[H_b(s) = - \sum_{i=1}^{n} p_i log_bp_i\]</div>
+<p>where <span class="math notranslate nohighlight">\(b\)</span> is the logarithmic base.
+<span class="math notranslate nohighlight">\(n\)</span> is the number of possible outcomes of the term.
+In this case, <span class="math notranslate nohighlight">\(n\)</span> is the number of events, so the entropy is the term’s distribution across events.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><p><strong>base</strong> (<em>float</em>) – The logarithmic base.</p>
