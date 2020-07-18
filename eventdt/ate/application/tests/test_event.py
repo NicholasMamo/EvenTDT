@@ -15,8 +15,8 @@ for path in paths:
 	if path not in sys.path:
 	    sys.path.append(path)
 
-from objects.exportable import Exportable
 import event
+from objects.exportable import Exportable
 from nlp.term_weighting import TFIDF
 
 class TestEvent(unittest.TestCase):
@@ -457,7 +457,7 @@ class TestEvent(unittest.TestCase):
 		terms = extractor.extract(paths, candidates=[ 'superlongword' ])
 		self.assertEqual({ 'superlongword': 0 }, terms)
 
-	def test_variability_base(self):
+	def test_variability_extract_base(self):
 		"""
 		Test that the variability score is applied before the inverse.
 		"""
@@ -480,7 +480,7 @@ class TestEvent(unittest.TestCase):
 		variability_10 = extractor.extract(idfs)
 		self.assertGreater(variability_10['yellow'], variability_2['liverpool'])
 
-	def test_variability_consistent_word(self):
+	def test_variability_extract_consistent_word(self):
 		"""
 		Test that the variability score of a consistent word is higher than a specific word.
 		"""
@@ -500,7 +500,7 @@ class TestEvent(unittest.TestCase):
 		extractor = event.Variability()
 		self.assertGreater(extractor.extract(idfs)['yellow'], extractor.extract(idfs)['liverpool'])
 
-	def test_variability_chi_less_1(self):
+	def test_variability_extract_chi_less_1(self):
 		"""
 		Test that when the variability is less than 1, the variability is not negative.
 		"""
@@ -530,7 +530,7 @@ class TestEvent(unittest.TestCase):
 		self.assertGreater(extractor.extract(idfs, candidates=[ 'fastest' ])['fastest'], 0)
 		self.assertLess(extractor.extract(idfs, candidates=[ 'fastest' ])['fastest'], 1)
 
-	def test_variability_chi_equal_1(self):
+	def test_variability_extract_chi_equal_1(self):
 		"""
 		Test that when the variability is equal to 1, the variability is 1.
 		"""
@@ -557,7 +557,7 @@ class TestEvent(unittest.TestCase):
 		"""
 		self.assertEqual(1, extractor.extract(idfs, candidates=[ 'fastest' ])['fastest'])
 
-	def test_variability_specific_words(self):
+	def test_variability_extract_specific_words(self):
 		"""
 		Test that the variability score of two specific words prefers those that appear in multiple corpora.
 		"""
@@ -577,7 +577,7 @@ class TestEvent(unittest.TestCase):
 		extractor = event.Variability()
 		self.assertGreater(extractor.extract(idfs)['manchest'], extractor.extract(idfs)['chelsea'])
 
-	def test_variability_changing_corpora(self):
+	def test_variability_extract_changing_corpora(self):
 		"""
 		Test that when changing the corpora, the variability changes.
 		"""
@@ -596,6 +596,24 @@ class TestEvent(unittest.TestCase):
 		"""
 		extractor = event.Variability()
 		self.assertGreater(extractor.extract(idfs[:2])['liverpool'], extractor.extract(idfs)['liverpool'])
+
+	def test_variability_no_candidates(self):
+		"""
+		Test that the variability extractor extracts scores for all terms if no candidates are given.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		extractor = event.Variability()
+		terms = extractor.extract(idfs)
+		self.assertEqual(set(extractor._vocabulary(idfs)), set(terms.keys()))
 
 	def test_variability_extract_candidates(self):
 		"""
@@ -995,6 +1013,140 @@ class TestEvent(unittest.TestCase):
 		table = (0, 1, 1, 0) # A + D = 0
 		self.assertLess(0, extractor._chi(table))
 
+	def test_entropy_extract_consistent_word(self):
+		"""
+		Test that the entropy score of a consistent word is higher than the entropy of a specific word.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		"""
+		Calculate the variability.
+		"""
+		extractor = event.Entropy()
+		self.assertGreater(extractor.extract(idfs)['yellow'], extractor.extract(idfs)['liverpool'])
+
+	def test_entropy_extract_specific_words(self):
+		"""
+		Test that the entropy score of two specific words prefers those that appear in multiple corpora.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		"""
+		Calculate the entropy.
+		"""
+		extractor = event.Entropy()
+		self.assertGreater(extractor.extract(idfs)['rashford'], extractor.extract(idfs)['salah'])
+
+	def test_entropy_extract_changing_corpora(self):
+		"""
+		Test that when changing the corpora, the entropy changes.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		"""
+		Calculate the entropy.
+		"""
+		extractor = event.Entropy()
+		self.assertLess(extractor.extract(idfs[:2])['liverpool'], extractor.extract(idfs)['liverpool'])
+
+	def test_entropy_no_candidates(self):
+		"""
+		Test that the entropy extractor extracts scores for all terms if no candidates are given.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		extractor = event.Entropy()
+		terms = extractor.extract(idfs)
+		self.assertEqual(set(extractor._vocabulary(idfs)), set(terms.keys()))
+
+	def test_entropy_extract_candidates(self):
+		"""
+		Test that the entropy extractor extracts scores for only select candidates if they are given.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		extractor = event.Entropy()
+		terms = extractor.extract(idfs, candidates=[ 'chelsea', 'goal' ])
+		self.assertEqual({ 'chelsea', 'goal' }, set(terms.keys()))
+
+	def test_entropy_extract_candidates_same_scores(self):
+		"""
+		Test that the entropy extractor's scores for known candidates are the same as when candidates are not known.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		extractor = event.Entropy()
+		candidate_terms = extractor.extract(idfs, candidates=[ 'chelsea', 'goal' ])
+		terms = extractor.extract(idfs)
+		self.assertEqual(terms['chelsea'], candidate_terms['chelsea'])
+		self.assertEqual(terms['goal'], candidate_terms['goal'])
+
+	def test_entropy_extract_candidates_unknown_word(self):
+		"""
+		Test that the entropy extractor's score for an unknown word is 0 because it doesn't appear.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		extractor = event.Entropy()
+		terms = extractor.extract(idfs, candidates=[ 'superlongword' ])
+		self.assertEqual({ 'superlongword': 0 }, terms)
+
 	def test_entropy_vocabulary_all_one_corpus(self):
 		"""
 		Test that the vocabulary of one corpus includes all terms.
@@ -1042,7 +1194,6 @@ class TestEvent(unittest.TestCase):
 		vocabulary = extractor._vocabulary(idfs)
 		self.assertEqual(len(set(vocabulary)), len(vocabulary))
 
-	def test_entropy_total_no_idfs(self):
 	def test_entropy_probabilities_no_idfs(self):
 		"""
 		Test that the probabilities of no IDFs is an empty list.
@@ -1106,7 +1257,7 @@ class TestEvent(unittest.TestCase):
 
 	def test_entropy_probabilities_equal_events(self):
 		"""
-		Test that the number of probabilities is always the same number of events.
+		Test that the number of probabilities is always the same as the number of events.
 		"""
 
 		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json'),
@@ -1205,6 +1356,7 @@ class TestEvent(unittest.TestCase):
 			probabilities = extractor._probabilities(idfs, term)
 			self.assertTrue(all( p <= 1 for p in probabilities ))
 
+	def test_entropy_total_no_idfs(self):
 		"""
 		Test that when calculating the total mentions of a term without any IDFs, the total is 0.
 		"""

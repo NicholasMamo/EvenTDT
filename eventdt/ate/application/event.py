@@ -389,6 +389,34 @@ class Entropy(Extractor):
 
 		self.base = base
 
+	def extract(self, idfs, candidates=None):
+		"""
+		:param idfs: A list of IDFs, one for each event.
+		:type idfs: list of :class:`~nlp.term_weighting.tfidf.TFIDF`
+		:param candidates: A list of terms for which to calculate a score.
+						   If `None` is given, all words are considered to be candidates.
+		:type candidates: None or list of str
+
+		:return: A dictionary with terms as keys and their entropy score as the values.
+				 A term that has a high entropy is equally common across all events.
+				 A term that has a low entropy indicates that the term appears inconsistently across events.
+		:rtype: dict
+		"""
+
+		entropy = { }
+
+		"""
+		Go through each term and compute the entropy.
+		For each event, compare the appearance of the term in the event with its appearance in other events.
+		"""
+		vocabulary = candidates or self._vocabulary(idfs)
+		entropy = dict.fromkeys(vocabulary, 0)
+		for term in vocabulary:
+			p = self._probabilities(idfs, term)
+			entropy[term] = self._entropy(p)
+
+		return entropy
+
 	def _vocabulary(self, idfs):
 		"""
 		Extract the vocabulary from the given IDFs.
