@@ -442,3 +442,18 @@ class Entropy(Extractor):
 		"""
 
 		return sum(idf.global_scheme.idf.get(term, 0) for idf in idfs)
+
+	def _entropy(self, probabilities):
+		"""
+		Calculate the entropy of the given probabilities.
+
+		:param probabilities: A list of probabilities.
+		:type probabilities: list of float
+
+		:return: The entropy of the given probabilities.
+		:rtype: float
+		"""
+
+		probabilities = [ p for p in probabilities if p ]
+
+		return - sum( p * math.log(p, self.base) for p in probabilities )

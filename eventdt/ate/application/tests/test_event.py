@@ -1268,3 +1268,133 @@ class TestEvent(unittest.TestCase):
 		extractor = event.Entropy()
 		self.assertTrue(not any( 'superlongword' in idf.global_scheme.idf for idf in idfs ))
 		self.assertEqual(0, extractor._total(idfs, 'superlongword'))
+
+	def test_entropy_entropy_empty(self):
+		"""
+		Test that the entropy of an empty list of probabilities is 0.
+		"""
+
+		extractor = event.Entropy()
+		self.assertEqual(0, extractor._entropy([ ]))
+
+	def test_entropy_entropy_zero_probabilities(self):
+		"""
+		Test that the entropy of a list of zero probabilities is 0.
+		"""
+
+		extractor = event.Entropy()
+		self.assertEqual(0, extractor._entropy([ 0, 0, 0 ]))
+
+	def test_entropy_entropy_one_probability(self):
+		"""
+		Test that the entropy of one probability is 0.
+		"""
+
+		extractor = event.Entropy()
+		self.assertEqual(0, extractor._entropy([ 1 ]))
+
+	def test_entropy_entropy_coin_toss(self):
+		"""
+		Test that the entropy of a coin toss is the maximum.
+		"""
+
+		extractor = event.Entropy()
+		self.assertEqual(0.30103, round(extractor._entropy([ 0.5, 0.5 ]), 5))
+
+	def test_entropy_entropy_base(self):
+		"""
+		Test that the entropy uses the instance variable's base.
+		"""
+
+		extractor = event.Entropy(base=2)
+		self.assertEqual(1, round(extractor._entropy([ 0.5, 0.5 ]), 5))
+
+	def test_entropy_entropy_lower_bound(self):
+		"""
+		Test that the entropy is greater than or equal to 0.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		extractor = event.Entropy()
+		vocabulary = extractor._vocabulary(idfs)
+		for term in vocabulary:
+			probabilities = extractor._probabilities(idfs, term)
+			self.assertLessEqual(0, extractor._entropy(probabilities))
+
+	def test_entropy_entropy_upper_bound(self):
+		"""
+		Test that the entropy is at its highest when all probabilities are equal.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		extractor = event.Entropy()
+		vocabulary = extractor._vocabulary(idfs)
+		for term in vocabulary:
+			probabilities = extractor._probabilities(idfs, term)
+			self.assertLessEqual(math.log(1/len(idfs), 10), extractor._entropy(probabilities))
+
+	def test_entropy_entropy_upper_bound_depends_events(self):
+		"""
+		Test that the entropy's upper bound depends on the number of events.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		extractor = event.Entropy()
+		vocabulary = extractor._vocabulary(idfs)
+		for term in vocabulary:
+			extractor = event.Entropy()
+			probabilities = extractor._probabilities(idfs, term)
+			self.assertLessEqual(math.log(1/len(idfs), 10), extractor._entropy(probabilities))
+
+			extractor = event.Entropy()
+			probabilities = extractor._probabilities(idfs[:-1], term)
+			self.assertLessEqual(math.log(1/len(idfs[:-1]), 10), extractor._entropy(probabilities))
+
+	def test_entropy_entropy_upper_bound_depends_base(self):
+		"""
+		Test that the entropy's upper bound depends on the logarithmic base.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		extractor = event.Entropy()
+		vocabulary = extractor._vocabulary(idfs)
+		for term in vocabulary:
+			extractor = event.Entropy(base=10)
+			probabilities = extractor._probabilities(idfs, term)
+			self.assertLessEqual(math.log(1/len(idfs), 10), extractor._entropy(probabilities))
+
+			extractor = event.Entropy(base=2)
+			probabilities = extractor._probabilities(idfs, term)
+			self.assertLessEqual(math.log(1/len(idfs), 2), extractor._entropy(probabilities))
