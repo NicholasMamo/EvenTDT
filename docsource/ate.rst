@@ -128,6 +128,13 @@ Variability
    :members:
    :special-members:
 
+Entropy
+^^^^^^^
+
+.. autoclass:: ate.application.event.Entropy
+   :members:
+   :special-members:
+
 Bootstrapping
 =============
 

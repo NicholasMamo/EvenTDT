@@ -120,6 +120,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#logarithmic-event-frequency-ef">Logarithmic Event Frequency (EF)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#event-frequency-inverse-document-frequency-ef-idf">Event Frequency-Inverse Document Frequency (EF-IDF)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#variability">Variability</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#entropy">Entropy</a></li>
 </ul>
 </li>
 </ul>
@@ -1072,7 +1073,8 @@ If <cite>None</cite> is given, all words are considered to be candidates.</p></l
 <dt id="ate.application.event.Variability">
 <em class="property">class </em><code class="sig-name descname">Variability</code><span class="sig-paren">(</span><em class="sig-param">base=10</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.application.event.Variability" title="Permalink to this definition">¶</a></dt>
 <dd><p>Variability is a metric that measures the consistency of appearance of a term across different events.
-The variability metric is based on the chi-square statistic.
+The variability metric is based on the number of documents in which a term appears.</p>
+<p>To compute variability, this class uses the chi-square statistic.
 The intuition is that terms that appear more consistently in different events are more likely to belong to the domain.</p>
 <p>Variability is bound between 0 and 1.
 1 is when the chi-square is 0.
@@ -1117,6 +1119,60 @@ If <cite>None</cite> is given, all words are considered to be candidates.</p></l
 A term is highly-variable if it appears disproportionately in one or a few events.
 A low variability indicates that the term appears consistently across all events.
 To reflect this behavior in the score, the inverse of the variability is returned.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="entropy">
+<h4>Entropy<a class="headerlink" href="#entropy" title="Permalink to this headline">¶</a></h4>
+<dl class="class">
+<dt id="ate.application.event.Entropy">
+<em class="property">class </em><code class="sig-name descname">Entropy</code><span class="sig-paren">(</span><em class="sig-param">base=10</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.application.event.Entropy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Entropy is a metric that measures the consistence of appearance of a term across different events.
+The entropy metric is based on the number of documents in which a term appears.</p>
+<p>Information entropy measures ‘surprise’.
+If a variable’s possible outcomes are all equally-positive, then entropy is at its maximum.
+If one of the outcomes is more possible than any other outcome, then the variable is not as surprising, and therefore has a lower entropy.</p>
+<p>This class’ intuition is that if a term is equally-distributed across events (and thus has a high entropy), it belongs to the domain.
+Therefore the higher the entropy, the better.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><p><strong>base</strong> (<em>float</em>) – The logarithmic base.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="ate.application.event.Entropy.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">base=10</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.application.event.Entropy.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the entropy extractor with a logarithmic base.
+This base is used to calculate the information entropy score.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>base</strong> (<em>float</em>) – The logarithmic base.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ate.application.event.Entropy.extract">
+<code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">idfs</em>, <em class="sig-param">candidates=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.application.event.Entropy.extract" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>idfs</strong> (list of <a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a>) – A list of IDFs, one for each event.</p></li>
+<li><p><strong>candidates</strong> (<em>None</em><em> or </em><em>list of str</em>) – A list of terms for which to calculate a score.
+If <cite>None</cite> is given, all words are considered to be candidates.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary with terms as keys and their entropy score as the values.
+A term that has a high entropy is equally common across all events.
+A term that has a low entropy indicates that the term appears inconsistently across events.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dict</p>
