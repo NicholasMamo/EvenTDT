@@ -187,7 +187,9 @@ class EFIDF(Extractor):
 class Variability(Extractor):
 	"""
 	Variability is a metric that measures the consistency of appearance of a term across different events.
-	The variability metric is based on the chi-square statistic.
+	The variability metric is based on the number of documents in which a term appears.
+
+	To compute variability, this class uses the chi-square statistic.
 	The intuition is that terms that appear more consistently in different events are more likely to belong to the domain.
 
 	Variability is bound between 0 and 1.
@@ -357,3 +359,33 @@ class Variability(Extractor):
 
 		return ((N * (A * D - C * B) ** 2) /
 			    ( (A + C) * (B + D) * (A + B) * (C + D) ))
+
+class Entropy(Extractor):
+	"""
+	Entropy is a metric that measures the consistence of appearance of a term across different events.
+	The entropy metric is based on the number of documents in which a term appears.
+
+	Information entropy measures 'surprise'.
+	If a variable's possible outcomes are all equally-positive, then entropy is at its maximum.
+	If one of the outcomes is more possible than any other outcome, then the variable is not as surprising, and therefore has a lower entropy.
+
+	This class' intuition is that if a term is equally-distributed across events (and thus has a high entropy), it belongs to the domain.
+	Therefore the higher the entropy, the better.
+
+	:ivar base: The logarithmic base.
+	:vartype base: float
+	"""
+
+	def __init__(self, base=10):
+		"""
+		Create the entropy extractor with a logarithmic base.
+		This base is used to calculate the information entropy score.
+
+		:param base: The logarithmic base.
+		:type base: float
+		"""
+
+		super().__init__()
+
+		self.base = base
+
