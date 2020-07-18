@@ -406,3 +406,17 @@ class Entropy(Extractor):
 
 		return list(set(vocabulary))
 
+	def _total(self, idfs, term):
+		"""
+		Get the total number of mentions of the term across all events.
+
+		:param idfs: A list of IDFs, one for each event.
+		:type idfs: list of :class:`~nlp.term_weighting.tfidf.TFIDF`
+		:param term: The candidate term for which to calculate the total number off mentions.
+		:type term: str
+
+		:return: The total number of mentions of the term across all events.
+		:rtype: float
+		"""
+
+		return sum(idf.global_scheme.idf.get(term, 0) for idf in idfs)

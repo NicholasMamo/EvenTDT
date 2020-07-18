@@ -1041,3 +1041,68 @@ class TestEvent(unittest.TestCase):
 		extractor = event.Entropy()
 		vocabulary = extractor._vocabulary(idfs)
 		self.assertEqual(len(set(vocabulary)), len(vocabulary))
+
+	def test_entropy_total_no_idfs(self):
+		"""
+		Test that when calculating the total mentions of a term without any IDFs, the total is 0.
+		"""
+
+		extractor = event.Entropy()
+		self.assertEqual(0, extractor._total([ ], 'yellow'))
+
+	def test_entropy_total_one_idf(self):
+		"""
+		Test that when calculating the total mentions of a term with one IDF, the total is equal to the number of times the term appears in that event.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		extractor = event.Entropy()
+		vocabulary = extractor._vocabulary(idfs)
+		self.assertTrue(all( extractor._total(idfs, term) == idfs[0].global_scheme.idf.get(term, 0)
+							 for term in vocabulary ))
+
+	def test_entropy_total_multiple_idfs(self):
+		"""
+		Test that when calculating the total mentions of a term with several IDFs, the total is equal to the number of times the term appears in those events.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		extractor = event.Entropy()
+		vocabulary = extractor._vocabulary(idfs)
+		for term in vocabulary:
+			total = 0
+			for idf in idfs:
+				total += idf.global_scheme.idf.get(term, 0)
+
+			self.assertEqual(extractor._total(idfs, term), total)
+
+	def test_entropy_total_unknown_word(self):
+		"""
+		Test that the total mentions of an unknown term is zero.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		extractor = event.Entropy()
+		self.assertTrue(not any( 'superlongword' in idf.global_scheme.idf for idf in idfs ))
+		self.assertEqual(0, extractor._total(idfs, 'superlongword'))
