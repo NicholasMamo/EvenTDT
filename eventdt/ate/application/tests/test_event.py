@@ -994,3 +994,50 @@ class TestEvent(unittest.TestCase):
 
 		table = (0, 1, 1, 0) # A + D = 0
 		self.assertLess(0, extractor._chi(table))
+
+	def test_entropy_vocabulary_all_one_corpus(self):
+		"""
+		Test that the vocabulary of one corpus includes all terms.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		extractor = event.Entropy()
+		self.assertEqual(set(idfs[0].global_scheme.idf.keys()), set(extractor._vocabulary(idfs)))
+
+	def test_entropy_vocabulary_all_multiple_corpora(self):
+		"""
+		Test that the vocabulary of multiple corpora includes all terms.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		extractor = event.Entropy()
+		vocabulary = extractor._vocabulary(idfs)
+		self.assertTrue(all( term in vocabulary for term in idfs[0].global_scheme.idf ))
+		self.assertTrue(all( term in vocabulary for term in idfs[1].global_scheme.idf ))
+
+	def test_entropy_vocabulary_unique(self):
+		"""
+		Test that the vocabulary does not include duplicates.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		extractor = event.Entropy()
+		vocabulary = extractor._vocabulary(idfs)
+		self.assertEqual(len(set(vocabulary)), len(vocabulary))

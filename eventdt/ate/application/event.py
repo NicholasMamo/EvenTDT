@@ -389,3 +389,20 @@ class Entropy(Extractor):
 
 		self.base = base
 
+	def _vocabulary(self, idfs):
+		"""
+		Extract the vocabulary from the given IDFs.
+
+		:param idfs: A list of IDFs, one for each event.
+		:type idfs: list of :class:`~nlp.term_weighting.tfidf.TFIDF`
+
+		:return: A list of terms in the given IDFs.
+		:rtype: list of str
+		"""
+
+		vocabulary = [ ]
+		for idf in idfs:
+			vocabulary.extend(list(idf.global_scheme.idf.keys()))
+
+		return list(set(vocabulary))
+
