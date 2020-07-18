@@ -1043,6 +1043,168 @@ class TestEvent(unittest.TestCase):
 		self.assertEqual(len(set(vocabulary)), len(vocabulary))
 
 	def test_entropy_total_no_idfs(self):
+	def test_entropy_probabilities_no_idfs(self):
+		"""
+		Test that the probabilities of no IDFs is an empty list.
+		"""
+
+		extractor = event.Entropy()
+		probabilities = extractor._probabilities([ ], 'yellow')
+		self.assertEqual([ ], probabilities)
+
+	def test_entropy_probabilities_one_idf(self):
+		"""
+		Test that the probability of a term from one IDF is 1.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		extractor = event.Entropy()
+		probabilities = extractor._probabilities(idfs, 'yellow')
+		self.assertEqual(1, len(probabilities))
+		self.assertEqual(1, probabilities[0])
+
+	def test_entropy_probabilities_identical_idfs(self):
+		"""
+		Test that the probabilities from two identical IDFs is equal.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		extractor = event.Entropy()
+		probabilities = extractor._probabilities(idfs, 'yellow')
+		self.assertEqual(2, len(probabilities))
+		self.assertTrue(all( 1/2 == p for p in probabilities ))
+
+	def test_entropy_probabilities_sum_one(self):
+		"""
+		Test that the sum of probabilities sums up to 1.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		extractor = event.Entropy()
+		vocabulary = extractor._vocabulary(idfs)
+		self.assertTrue(all( round(sum(extractor._probabilities(idfs, term)), 5) in [ 0, 1 ]
+							 for term in vocabulary ))
+
+	def test_entropy_probabilities_equal_events(self):
+		"""
+		Test that the number of probabilities is always the same number of events.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		extractor = event.Entropy()
+		vocabulary = extractor._vocabulary(idfs)
+		self.assertTrue(all( len(idfs) == len(extractor._probabilities(idfs, term))
+							 for term in vocabulary ))
+
+	def test_entropy_probabilities_few_events(self):
+		"""
+		Test that the probability of a term that appears in a subset of events is equal to 0 in the other events.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		"""
+		Check that the term appears in a few, but not all of the events.
+		"""
+		self.assertTrue(any( 'guaita' not in idf.global_scheme.idf for idf in idfs ))
+		self.assertTrue(any( 'guaita' in idf.global_scheme.idf for idf in idfs ))
+		extractor = event.Entropy()
+		self.assertTrue(any( p == 0 for p in extractor._probabilities(idfs, 'guaita') ))
+
+	def test_entropy_probabilities_unknown_word(self):
+		"""
+		Test that the probabilities of an unknown term is zero.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		extractor = event.Entropy()
+		self.assertTrue(not any( 'superlongword' in idf.global_scheme.idf for idf in idfs ))
+		probabilities = extractor._probabilities(idfs, 'superlongword')
+		self.assertEqual(4, len(probabilities))
+		self.assertTrue(all( 0 == p for p in probabilities ))
+
+	def test_entropy_probabilities_lower_bound(self):
+		"""
+		Test that the probabilities of all terms is greater than or equal to 0.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		extractor = event.Entropy()
+		vocabulary = extractor._vocabulary(idfs)
+		for term in vocabulary:
+			probabilities = extractor._probabilities(idfs, term)
+			self.assertTrue(all( p >= 0 for p in probabilities ))
+
+	def test_entropy_probabilities_upper_bound(self):
+		"""
+		Test that the probabilities of all terms is less than or equal to 1.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		extractor = event.Entropy()
+		vocabulary = extractor._vocabulary(idfs)
+		for term in vocabulary:
+			probabilities = extractor._probabilities(idfs, term)
+			self.assertTrue(all( p <= 1 for p in probabilities ))
+
 		"""
 		Test that when calculating the total mentions of a term without any IDFs, the total is 0.
 		"""

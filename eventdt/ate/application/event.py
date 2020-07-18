@@ -406,6 +406,28 @@ class Entropy(Extractor):
 
 		return list(set(vocabulary))
 
+	def _probabilities(self, idfs, term):
+		"""
+		Calculate the probability distribution of the term across all events.
+
+		:param idfs: A list of IDFs, one for each event.
+		:type idfs: list of :class:`~nlp.term_weighting.tfidf.TFIDF`
+		:param term: The candidate term for which to calculate the total number off mentions.
+		:type term: str
+
+		:return: A list of probabilities of the term across all events.
+		:rtype: list of float
+		"""
+
+		p = [ ]
+
+		total = self._total(idfs, term)
+		if not total:
+			return [ 0 ] * len(idfs)
+
+		p = [ idf.global_scheme.idf.get(term, 0) / total for idf in idfs]
+		return p
+
 	def _total(self, idfs, term):
 		"""
 		Get the total number of mentions of the term across all events.
