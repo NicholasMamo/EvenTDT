@@ -52,6 +52,13 @@ Entity Extractor
    :members:
    :special-members:
 
+TwitterNER Entity Extractor
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: apd.extractors.local.twitterner_entity_extractor
+   :members:
+   :special-members:
+
 Scorers
 =======
 

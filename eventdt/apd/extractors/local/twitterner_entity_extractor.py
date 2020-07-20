@@ -18,6 +18,7 @@ The difference between the :class:`TwitterNEREntityExtractor` and the :class:`~a
 
 import os
 import sys
+import inspect
 
 paths = [ os.path.join(os.path.dirname(__file__), 'TwitterNER', 'NoisyNLP'),
  		  os.path.join(os.path.dirname(__file__), '..', '..', '..') ]
@@ -35,7 +36,8 @@ class TwitterNEREntityExtractor(Extractor):
 	The :class:`TwitterNEREntityExtractor` uses TwitterNER to extract entities from documents.
 	This class is built specifically for tweets.
 
-	:cvar ner:
+	:cvar ner: The NER extractor used by this class.
+	:vartype ner: :class:`TwitterNER.run_ner.TwitterNER`
 	"""
 
 	if 'sphinx-build' not in inspect.stack()[-1].filename:

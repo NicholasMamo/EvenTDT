@@ -99,6 +99,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-apd.extractors.local">Local</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#module-apd.extractors.local.token_extractor">Token Extractor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-apd.extractors.local.entity_extractor">Entity Extractor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-apd.extractors.local.twitterner_entity_extractor">TwitterNER Entity Extractor</a></li>
 </ul>
 </li>
 </ul>
@@ -518,6 +519,56 @@ This is enabled by default to minimize false negatives.</p>
 <dl class="method">
 <dt id="apd.extractors.local.entity_extractor.EntityExtractor.extract">
 <code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">corpus</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.local.entity_extractor.EntityExtractor.extract" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract all the named entities from the corpus.
+The output is a list of lists.
+Each outer list represents a document.
+Each inner list is the candidates in that document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>corpus</strong> (<em>list</em>) – The corpus of documents where to extract candidate participants.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of candidates separated by the document in which they were found.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apd.extractors.local.twitterner_entity_extractor">
+<span id="twitterner-entity-extractor"></span><h4>TwitterNER Entity Extractor<a class="headerlink" href="#module-apd.extractors.local.twitterner_entity_extractor" title="Permalink to this headline">¶</a></h4>
+<p>The TwitterNER entity extractor uses TwitterNER to exctract named entities.
+Like the <a class="reference internal" href="#apd.extractors.local.entity_extractor.EntityExtractor" title="apd.extractors.local.entity_extractor.EntityExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">EntityExtractor</span></code></a>, it considers these named entities to be candidate participants.
+The difference between the <a class="reference internal" href="#apd.extractors.local.twitterner_entity_extractor.TwitterNEREntityExtractor" title="apd.extractors.local.twitterner_entity_extractor.TwitterNEREntityExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">TwitterNEREntityExtractor</span></code></a> and the <a class="reference internal" href="#apd.extractors.local.entity_extractor.EntityExtractor" title="apd.extractors.local.entity_extractor.EntityExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">EntityExtractor</span></code></a> is that the former uses a NER tool built specificially for Twitter.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>TwitterNER loads a lot of data every time it is invoked.
+Therefore this class creates a class-wide extractor when the module is loaded.
+This can be used by all instances of the <a class="reference internal" href="#apd.extractors.local.twitterner_entity_extractor.TwitterNEREntityExtractor" title="apd.extractors.local.twitterner_entity_extractor.TwitterNEREntityExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">TwitterNEREntityExtractor</span></code></a>.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A copy of TwitterNER is available in this directory.
+However, the data has to be downloaded.
+The data, and more instructions on how to get GloVe pre-trained on Twitter are available in <a class="reference external" href="https://github.com/napsternxg/TwitterNER">TwitterNER’s GitHub repository</a>.</p>
+</div>
+<dl class="class">
+<dt id="apd.extractors.local.twitterner_entity_extractor.TwitterNEREntityExtractor">
+<em class="property">class </em><code class="sig-name descname">TwitterNEREntityExtractor</code><a class="headerlink" href="#apd.extractors.local.twitterner_entity_extractor.TwitterNEREntityExtractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <a class="reference internal" href="#apd.extractors.local.twitterner_entity_extractor.TwitterNEREntityExtractor" title="apd.extractors.local.twitterner_entity_extractor.TwitterNEREntityExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">TwitterNEREntityExtractor</span></code></a> uses TwitterNER to extract entities from documents.
+This class is built specifically for tweets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><p><strong>ner</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">TwitterNER.run_ner.TwitterNER</span></code>) – The NER extractor used by this class.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="apd.extractors.local.twitterner_entity_extractor.TwitterNEREntityExtractor.extract">
+<code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">corpus</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.local.twitterner_entity_extractor.TwitterNEREntityExtractor.extract" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract all the named entities from the corpus.
 The output is a list of lists.
 Each outer list represents a document.
