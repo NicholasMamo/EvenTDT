@@ -3,6 +3,12 @@ The TwitterNER entity extractor uses TwitterNER to exctract named entities.
 Like the :class:`~apd.extractors.local.entity_extractor.EntityExtractor`, it considers these named entities to be candidate participants.
 The difference between the :class:`TwitterNEREntityExtractor` and the :class:`~apd.extractors.local.entity_extractor.EntityExtractor` is that the former uses a NER tool built specificially for Twitter.
 
+.. warning::
+
+	TwitterNER loads a lot of data every time it is invoked.
+	Therefore this class creates a class-wide extractor when the module is loaded.
+	This can be used by all instances of the :class:`TwitterNEREntityExtractor`.
+
 .. note::
 
 	A copy of TwitterNER is available in this directory.
@@ -13,15 +19,27 @@ The difference between the :class:`TwitterNEREntityExtractor` and the :class:`~a
 import os
 import sys
 
-import nltk
+paths = [ os.path.join(os.path.dirname(__file__), 'TwitterNER', 'NoisyNLP'),
+ 		  os.path.join(os.path.dirname(__file__), '..', '..', '..') ]
+for path in paths:
+	if path not in sys.path:
+	    sys.path.append(path)
 
 from ..extractor import Extractor
+from logger import logger
+from run_ner import TwitterNER
+from twokenize import tokenizeRawTweetText
 
 class TwitterNEREntityExtractor(Extractor):
 	"""
 	The :class:`TwitterNEREntityExtractor` uses TwitterNER to extract entities from documents.
 	This class is built specifically for tweets.
+
+	:cvar ner:
 	"""
+
+	ner = TwitterNER()
+	logger.info("TwitterNER finished loading features")
 
 	def extract(self, corpus, *args, **kwargs):
 		"""
