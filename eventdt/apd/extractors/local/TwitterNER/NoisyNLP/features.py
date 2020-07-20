@@ -56,7 +56,7 @@ class RegexFeatures(object):
             if p.match(word):
                 features[k] = True
         return features
-    
+
 
 def preprocess_token(x, to_lower=False):
     for k in ENTITY_MAPPINGS.keys():
@@ -66,8 +66,8 @@ def preprocess_token(x, to_lower=False):
         x = x.lower()
     return x
 
-    
-    
+
+
 WORD_SPLITTER = re.compile(r'[\p{Punct}\s]+')
 class DictionaryFeatures(object):
     def __init__(self, dictDir):
@@ -80,21 +80,22 @@ class DictionaryFeatures(object):
             self.dictionaries.append(d)
             if d == '.svn':
                 continue
-            for line in open(dictDir + "/" + d):
-                word = line.rstrip('\n')
-                word = word.strip(' ').lower()
-                word = WORD_SPLITTER.sub(" ", word)
-                word_hashtag = "".join(WORD_SPLITTER.split(word))
-                if word not in self.word2dictionaries:
-                    self.word2dictionaries[word] = str(i)
-                else:   
-                    self.word2dictionaries[word] += "\t%s" % i
-                if word_hashtag not in self.word2hashtagdictionaries:
-                    self.word2hashtagdictionaries[word_hashtag] = str(i)
-                else:
-                    self.word2hashtagdictionaries[word_hashtag] += "\t%s" % i
+            with open(dictDir + "/" + d) as f:
+	            for line in f:
+	                word = line.rstrip('\n')
+	                word = word.strip(' ').lower()
+	                word = WORD_SPLITTER.sub(" ", word)
+	                word_hashtag = "".join(WORD_SPLITTER.split(word))
+	                if word not in self.word2dictionaries:
+	                    self.word2dictionaries[word] = str(i)
+	                else:
+	                    self.word2dictionaries[word] += "\t%s" % i
+	                if word_hashtag not in self.word2hashtagdictionaries:
+	                    self.word2hashtagdictionaries[word_hashtag] = str(i)
+	                else:
+	                    self.word2hashtagdictionaries[word_hashtag] += "\t%s" % i
             i += 1
-    
+
     MAX_WINDOW_SIZE=6
     def GetDictFeatures(self, words, i):
         features = []
@@ -122,7 +123,7 @@ class DictionaryFeatures(object):
                 if phrase in self.word2dictionaries:
                     for j in self.word2dictionaries[phrase].split('\t'):
                         features.append('DICTBCK[-%s]=%s' % (window, self.dictionaries[int(j)]))
-            ## Window        
+            ## Window
             start = i - window
             end =i+window+1
             if start > -1 and end < len(words) + 1:
@@ -131,7 +132,7 @@ class DictionaryFeatures(object):
                 if phrase in self.word2dictionaries:
                     for j in self.word2dictionaries[phrase].split('\t'):
                         features.append('DICTWIN[%s]=%s' % (window, self.dictionaries[int(j)]))
-                        
+
         """
         for window in range(1,self.MAX_WINDOW_SIZE):
             start=max(i-window+1, 0)
@@ -143,10 +144,10 @@ class DictionaryFeatures(object):
                     features.append('DICT=%s' % self.dictionaries[int(j)])
                     if window > 1:
                         features.append('DICTWIN[%s]=%s' % (window, self.dictionaries[int(j)]))
-                        
-        """                
+
+        """
         return list(set(features))
-    
+
     def GetHashtagDictFeatures(self, word):
         features = []
         if len(word) < 2 or word[0] != "#":
@@ -157,7 +158,7 @@ class DictionaryFeatures(object):
                 features.append('DICT_HASHTAG=%s' % self.dictionaries[int(j)])
         return list(set(features))
 
-    
+
 
 
 class WordVectors(object):
@@ -171,17 +172,17 @@ class WordVectors(object):
             for i in six.moves.range(enrich_iters):
                 self.model.train(sentences, total_examples=len(sentences), epochs=self.model.iter)
         self.model.init_sims(replace=True)
-        
-    
+
+
     def get_clusters(self, n_clusters=50):
         self.cluster_model_ = AgglomerativeClustering(n_clusters=n_clusters, affinity="cosine", linkage="average")
         cluster_ids = self.cluster_model_.fit_predict(self.model.syn0norm)
         self.cluster_mappings = {
-            k: cluster_ids[v.index] 
+            k: cluster_ids[v.index]
             for k,v in six.iteritems(self.model.vocab)
                                 }
         return self.cluster_mappings
-    
+
 
 class ClusterFeatures(object):
     def __init__(self,  cluster_dir, cluster_type="brown", n_clusters=100):
@@ -191,10 +192,10 @@ class ClusterFeatures(object):
         #self.cluster_vocab = None
         self.exec_paths = dict()
         self.cluster_file_path = None
-        
+
     def set_exec_path(self, path):
         self.exec_paths[self.cluster_type]=path
-        
+
     def set_cluster_file_path(self, path=None):
         if path is None:
             if self.cluster_type == "brown":
@@ -203,7 +204,7 @@ class ClusterFeatures(object):
                 path = "%s/clark_clusters.%s.txt" % (self.cluster_dir,
                                                      self.n_clusters)
         self.cluster_file_path = path
-        
+
     def gen_training_data(self, sentences, filename):
         with open(filename, "w", encoding="utf-8") as fp:
             for seq in sentences:
@@ -214,7 +215,7 @@ class ClusterFeatures(object):
                     print("\n", file=fp)
                 else:
                     raise("Error: incorrect cluster type")
-    
+
     def _gen_brown_clusters(self, input_data_path):
         """
         ! /home/entity/Downloads/brown-cluster/wcluster --text all_sequences.txt --c 100 --output_dir word_clusters
@@ -224,9 +225,9 @@ class ClusterFeatures(object):
                     "--text", input_data_path,
                     "--c", self.n_clusters,
                     "--output_dir", self.cluster_dir]
-        
+
         return commands
-        
+
     def _gen_clark_clusters(self, input_data_path):
         """
         ! /home/entity/Downloads/clark_pos_induction/src/bin/cluster_neyessenmorph -s 10 -m 1 -i 10 -x all_sequences.clark.txt all_sequences.clark.txt 32 > all_sequences.clark_clusters.32.txt 2> clark.err
@@ -238,7 +239,7 @@ class ClusterFeatures(object):
                     input_data_path, self.n_clusters,
                     ">", self.cluster_file_path]
         return commands
-    
+
     def gen_clusters(self,  input_data_path, output_dir_path, n_clusters=None):
         self.cluster_dir=output_dir_path
         if n_clusters is None:
@@ -250,17 +251,17 @@ class ClusterFeatures(object):
             commands = self._gen_clark_clusters(input_data_path)
         cmd = " ".join(str(c) for c in commands)
         subprocess.check_call(cmd, shell=True)
-        
-        
+
+
     def read_clusters(self):
         if self.cluster_type == "brown":
             return self._read_brown_clusters()
         elif self.cluster_type == "clark":
             return self._read_clark_clusters()
-    
-    
-    
-    
+
+
+
+
     def _read_brown_clusters(self):
         cluster_vocab=dict()
         with open(self.cluster_file_path) as fp:
@@ -268,7 +269,7 @@ class ClusterFeatures(object):
                 cid, word, counts = line.strip().split("\t")
                 cluster_vocab[word] = cid
         return cluster_vocab
-    
+
     def _read_clark_clusters(self):
         cluster_vocab=dict()
         with open(self.cluster_file_path) as fp:
@@ -280,13 +281,13 @@ class ClusterFeatures(object):
                     ## Skipping line
                     pass
         return cluster_vocab
-        
-        
+
+
 #### Predict tweet type
 
 
 class GlobalFeatures(object):
-    
+
     def __init__(self, word2vec_model=None, cluster_vocabs=None,
                        dict_features=None, cat_names=None, WORD_IDX=0):
         self.word2vec_model = word2vec_model
@@ -294,8 +295,8 @@ class GlobalFeatures(object):
         self.dict_features = dict_features
         self.WORD_IDX = WORD_IDX
         self.cat_names = cat_names
-        
-        
+
+
     def get_global_sequence_features(self, sent, predictions=None):
         features = dict()
         sent_length = len(sent) * 1.
@@ -313,8 +314,8 @@ class GlobalFeatures(object):
             for k, prob in six.iteritems(predictions):
                 features["_MODEL_=%s" % k] = prob
         return [features for word in sent]
-        
-    
+
+
     def tweet_features(self, sent):
         features = {}
         sent_length = len(sent) * 1.
@@ -336,27 +337,27 @@ class GlobalFeatures(object):
                     features[k] = dict.get(features, k, 0) + 1
         #features = {k: v / sent_length for k,v in six.iteritems(features)}
         return features
-            
+
     def get_sequence_features(self, sequences):
         features = [self.tweet_features(sent) for sent in sequences]
         return features
-    
+
     def is_tweet_type(self, sent, cat_type):
         for t in sent:
             if t.tag != "O":
                 if t.tag[2:] == cat_type:
                     return 1
         return 0
-    
+
     def fit_feature_dict(self, sequences):
         train_data = self.get_sequence_features(sequences)
         self.feature2matrix = DictVectorizer()
         self.feature2matrix.fit(train_data)
-        
+
     def tranform_sequence2feature(self, sequences):
         train_data = self.get_sequence_features(sequences)
         return self.feature2matrix.transform(train_data)
-   
+
     def fit_model(self, train_sequences, test_sequences=None):
         if test_sequences is None:
             test_sequences = train_sequences
@@ -373,8 +374,8 @@ class GlobalFeatures(object):
             y_pred = model.predict(tweet_X_test)
             print(classification_report(y_test, y_pred))
             self.models[cat_type] = model
-            
-            
+
+
     def get_global_predictions(self, sequences):
         predictions = {}
         X_train = self.tranform_sequence2feature(sequences)
@@ -383,11 +384,11 @@ class GlobalFeatures(object):
             predictions[k] = y_pred
         keys = predictions.keys()
         predictions = [dict(zip(keys, v)) for v in zip(*predictions.values())]
-        return predictions  
-    
-        
-        
-        
+        return predictions
+
+
+
+
 #### MODEL FEATURES
 
 
@@ -395,7 +396,7 @@ def get_word_form(word, vocab=None, lower=False):
     if lower:
         word = word.lower()
     if vocab:
-        vocab_search_word = word.lower() 
+        vocab_search_word = word.lower()
         word = "OOV" if vocab_search_word not in vocab else word
     return word
 
@@ -405,7 +406,7 @@ def get_clust_tag_value(lookup_key, cluster_vocab, cluster_tag,
     if clust_values_tuple:
         cluster_tag = "{}={}".format(cluster_tag, v[0])
         v = v[1]
-    return (cluster_tag, v)    
+    return (cluster_tag, v)
 
 
 def get_word(sent, widx, WORD_IDX):
@@ -414,7 +415,7 @@ def get_word(sent, widx, WORD_IDX):
     return sent[widx][WORD_IDX]
 
 
-def gen_cluster_features(sent, widx, cid, lookup_key, cluster_vocab, WORD_IDX=0, 
+def gen_cluster_features(sent, widx, cid, lookup_key, cluster_vocab, WORD_IDX=0,
                          cluster_tag="_CLUST_", dropout=0, clust_values_tuple=False,
                         interactions=False):
     features = {}
@@ -426,7 +427,7 @@ def gen_cluster_features(sent, widx, cid, lookup_key, cluster_vocab, WORD_IDX=0,
         if widx > 0:
             lookup_key_prev = preprocess_token(get_word(sent, widx-1, WORD_IDX), to_lower=True)
             if lookup_key_prev in cluster_vocab:
-                prev_word_f = get_clust_tag_value(lookup_key_prev, cluster_vocab, 
+                prev_word_f = get_clust_tag_value(lookup_key_prev, cluster_vocab,
                                                  "{}[-1]".format(cluster_tag),
                                                   clust_values_tuple=clust_values_tuple)
                 features.setdefault(*prev_word_f)
@@ -442,7 +443,7 @@ def gen_cluster_features(sent, widx, cid, lookup_key, cluster_vocab, WORD_IDX=0,
         if widx < len(sent) -1:
             lookup_key_next = preprocess_token(get_word(sent, widx+1, WORD_IDX), to_lower=True)
             if lookup_key_next in cluster_vocab:
-                next_word_f = get_clust_tag_value(lookup_key_next, cluster_vocab, 
+                next_word_f = get_clust_tag_value(lookup_key_next, cluster_vocab,
                                                  "{}[+1]".format(cluster_tag),
                                                  clust_values_tuple=clust_values_tuple)
                 features.setdefault(*next_word_f)
@@ -464,7 +465,7 @@ def gen_cluster_features(sent, widx, cid, lookup_key, cluster_vocab, WORD_IDX=0,
                 raise
         """
         return features
-    
+
 
 def word2features(sent, widx, WORD_IDX=0,
                   extra_features={},
@@ -507,7 +508,7 @@ def word2features(sent, widx, WORD_IDX=0,
                     cluster_tag = "__{}_CLUSTER_{}__".format(cluster_type, cid)
                     clust_features = gen_cluster_features(
                         sent, widx, cid, lookup_key, cluster_vocab, WORD_IDX=WORD_IDX,
-                        cluster_tag=cluster_tag, dropout=dropout, 
+                        cluster_tag=cluster_tag, dropout=dropout,
                         clust_values_tuple=clust_values_tuple, interactions=interactions)
                     if clust_features:
                         features.update(clust_features)
@@ -572,7 +573,7 @@ def word2features(sent, widx, WORD_IDX=0,
             features["word_original"] = word
     curr_word_normed = get_word_form(word, lower=lowercase, vocab=vocab)
     #features["normed_word"] = curr_word_normed
-    
+
     """
     if widx > 0:
         prev_word = get_word_form(sent[widx-1][WORD_IDX], lower=lowercase)
@@ -597,8 +598,3 @@ def sent2features(sent, extra_features=None, **kwargs):
 
 def sent2labels(sent, lbl_id=1):
     return [k[lbl_id] for k in sent]
-
-
-
-
-
