@@ -28,6 +28,8 @@ lib = os.path.join(root, 'eventdt')
 sys.path.insert(-1, root)
 sys.path.insert(-1, lib)
 
+import tools
+
 parser = argparse.ArgumentParser(description="Extract terms from domain-specific corpora.")
 def setup_args():
 	"""
@@ -58,6 +60,13 @@ def main():
 
 	args = setup_args()
 	print(args)
+
+	"""
+	Get the meta arguments.
+	"""
+	cmd = tools.meta(args)
+
+	tools.save(args.output, { 'meta': cmd })
 
 if __name__ == "__main__":
 	main()
