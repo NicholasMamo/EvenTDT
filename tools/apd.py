@@ -8,8 +8,12 @@ To run the script, use:
 
 .. code-block:: bash
 
-    ./tools/apd.py
+    ./tools/apd.py \\
+	-f data/understanding.json
 
+Accepted arguments:
+
+	- ``-f --file``		*<Required>* The input corpus from where to extract participants.
 """
 
 import argparse
@@ -27,9 +31,16 @@ def setup_args():
 	"""
 	Set up and get the list of command-line arguments.
 
+	Accepted arguments:
+
+		- ``-f --file``		*<Required>* The input corpus from where to extract participants.
+
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
 	"""
+
+	parser.add_argument('-f', '--file', nargs=1, required=True,
+						help='<Required> The input corpus from where to extract participants.')
 
 	args = parser.parse_args()
 	return args
@@ -40,6 +51,7 @@ def main():
 	"""
 
 	args = setup_args()
+	print(args)
 
 if __name__ == "__main__":
 	main()
