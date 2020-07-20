@@ -18,6 +18,7 @@ Accepted arguments:
 	- ``-f --file``			*<Required>* The input corpus from where to extract participants.
 	- ``-e --extractor``	*<Required>* The extractor to use to extract candidate participants; supported: `EntityExtractor`, `TokenExtractor`, `TwitterNEREntityExtractor`.
 	- ``-o --output``		*<Required>* The path to the file where to store the extracted participants.
+	- ``-s --scorer``		*<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
 """
 
 import argparse
@@ -34,6 +35,7 @@ sys.path.insert(-1, lib)
 import tools
 from apd import ParticipantDetector
 from apd.extractors import local
+from apd.scorers.local import *
 from nlp.document import Document
 from nlp.tokenizer import Tokenizer
 
@@ -47,6 +49,7 @@ def setup_args():
 		- ``-f --file``			*<Required>* The input corpus from where to extract participants.
 		- ``-e --extractor``	*<Required>* The extractor to use to extract candidate participants; supported: `EntityExtractor`, `TokenExtractor`, `TwitterNEREntityExtractor`.
 		- ``-o --output``		*<Required>* The path to the file where to store the extracted participants.
+		- ``-s --scorer``		*<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
 
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
@@ -55,9 +58,11 @@ def setup_args():
 	parser.add_argument('-f', '--file', type=str, required=True,
 						help='<Required> The input corpus from where to extract participants.')
 	parser.add_argument('-e', '--extractor', type=extractor, required=True,
-						help='<Required> he extractor to use to extract candidate participants; supported: `EntityExtractor`, `TokenExtractor`, `TwitterNEREntityExtractor`.')
+						help='<Required> The extractor to use to extract candidate participants; supported: `EntityExtractor`, `TokenExtractor`, `TwitterNEREntityExtractor`.')
 	parser.add_argument('-o', '--output', type=str, required=True,
 						help='<Required> The path to the file where to store the extracted terms.')
+	parser.add_argument('-s', '--scorer', type=scorer, required=False, default=TFScorer,
+						help='<Required> The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`')
 
 	args = parser.parse_args()
 	return args
@@ -74,6 +79,7 @@ def main():
 	"""
 	cmd = tools.meta(args)
 	cmd['extractor'] = str(vars(args)['extractor'])
+	cmd['scorer'] = str(vars(args)['scorer'])
 
 	participants = detect(args.file, args.extractor)
 	tools.save(args.output, { 'meta': cmd, 'participants': participants })
@@ -136,6 +142,35 @@ def extractor(method):
 	elif method.lower() == 'twitternerentityextractor':
 		from apd.extractors.local.twitterner_entity_extractor import TwitterNEREntityExtractor
 		return TwitterNEREntityExtractor
+
+	raise argparse.ArgumentTypeError(f"Invalid method value: {method}")
+
+def scorer(method):
+	"""
+	Convert the given string into a scorer class.
+	The accepted classes are:
+
+		#. :func:`~apd.scorers.local.DFScorer`
+		#. :func:`~apd.scorers.local.LogDFScorer`
+		#. :func:`~apd.scorers.local.LogTFScorer`
+		#. :func:`~apd.scorers.local.TFScorer`
+
+	:param method: The extractor string.
+	:type method: str
+
+	:return: The extractor type that corresponds to the given method.
+	:rtype: class
+	"""
+
+	methods = {
+		'dfscorer': DFScorer,
+		'logdfscorer': LogDFScorer,
+		'logtfscorer': LogTFScorer,
+		'tfscorer': TFScorer,
+	}
+
+	if method.lower() in methods:
+		return methods[method.lower()]
 
 	raise argparse.ArgumentTypeError(f"Invalid method value: {method}")
 
