@@ -305,6 +305,28 @@ class TestWikipediaSearchResolver(unittest.TestCase):
 		self.assertFalse(len(resolved))
 		self.assertFalse(len(unresolved))
 
+	def test_resolve_no_duplicates(self):
+		"""
+		Test that resolution does not include duplicates.
+		"""
+
+		"""
+		Create the test data
+		"""
+		tokenizer = Tokenizer(min_length=2, stem=True, stopwords=list(stopwords.words("english")))
+		posts = [
+			"Tottenham fighting for the English Premiear League",
+			"Tottenham Hotspur keep Champions Leagues hopes alive",
+			"Premier League: Tottenham on the brink of Champions League football",
+		]
+		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+
+		candidates = { 'tottenham': 1, 'tottenham hotspur': 1, 'hotspur': 1 }
+		resolver = WikipediaSearchResolver(TF(), tokenizer, 0, corpus)
+		resolved, unresolved = resolver.resolve(candidates)
+		self.assertEqual(list(set(resolved)), resolved)
+		self.assertEqual([ 'Tottenham Hotspur F.C.' ], resolved)
+
 	def test_sorting(self):
 		"""
 		Test that the resolver sorts the named entities in descending order of score.
