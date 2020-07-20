@@ -21,6 +21,7 @@ Accepted arguments:
 """
 
 import argparse
+import json
 import os
 import sys
 
@@ -33,6 +34,8 @@ sys.path.insert(-1, lib)
 import tools
 from apd import ParticipantDetector
 from apd.extractors import local
+from nlp.document import Document
+from nlp.tokenizer import Tokenizer
 
 parser = argparse.ArgumentParser(description="Extract terms from domain-specific corpora.")
 def setup_args():
@@ -65,7 +68,6 @@ def main():
 	"""
 
 	args = setup_args()
-	print(args)
 
 	"""
 	Get the meta arguments.
@@ -73,7 +75,40 @@ def main():
 	cmd = tools.meta(args)
 	cmd['extractor'] = str(vars(args)['extractor'])
 
-	tools.save(args.output, { 'meta': cmd })
+	participants = detect(args.file, args.extractor)
+	tools.save(args.output, { 'meta': cmd, 'participants': participants })
+
+def detect(filename, extractor):
+	"""
+	Detect participants from the given corpus.
+
+	:param filename: The path to the corpus from where to detect participants.
+	:type filename: str
+	:param extractor: The class of the extractor with which to extract candidate participants.
+	:type extractor: :class:`~apd.extractors.extractor.Extractor`
+
+	:return: A list of participants detected in the corpus.
+	:rtype: list of str
+	"""
+
+	detector = ParticipantDetector(extractor())
+	corpus = [ ]
+	with open(filename) as f:
+		for line in f:
+			tweet = json.loads(line)
+			while "retweeted_status" in tweet:
+				tweet = tweet["retweeted_status"]
+
+			if "extended_tweet" in tweet:
+				text = tweet["extended_tweet"].get("full_text", tweet.get("text", ""))
+			else:
+				text = tweet.get("text", "")
+
+			document = Document(text)
+			corpus.append(document)
+
+	participants, _, _, = detector.detect(corpus)
+	return participants
 
 def extractor(method):
 	"""
