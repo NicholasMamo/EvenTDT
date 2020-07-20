@@ -28,3 +28,5 @@ All APD functionality usually goes through the :class:`~apd.participant_detector
 This class represents APD's six steps.
 It takes as inputs instances of the classes and calls them one after the other.
 """
+
+from .participant_detector import ParticipantDetector
