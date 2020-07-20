@@ -15,8 +15,9 @@ The participant detector's steps are identical to APD:
 	#. Extrapolate the participants, analogous to entity set expansion; and
 	#. Postprocess the participants.
 
-Of these steps, only the first two are required:
+Of these steps, only the first one is required:
 
+	#. If the scorer is not given, simple frequency is used;
 	#. If the filter is not given, all candidates are retained;
 	#. If the resolver is not given, the extractor's inputs are all returned as participants;
 	#. If the extrapolator is not given, no additional participants are returned; and
@@ -31,6 +32,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from scorers.scorer import Scorer
+from scorers.local import TFScorer
 from filters.filter import Filter
 from resolvers.resolver import Resolver
 from extrapolators.extrapolator import Extrapolator
@@ -59,7 +61,7 @@ class ParticipantDetector(object):
 	:vartype postprocessor: :class:`~apd.postprocessors.postprocessor.Postprocessor` or None
 	"""
 
-	def __init__(self,  extractor, scorer, filter=None,
+	def __init__(self,  extractor, scorer=None, filter=None,
 				 resolver=None, extrapolator=None, postprocessor=None):
 		"""
 		Create the participant detector, which is made up of a number of components.
@@ -69,20 +71,20 @@ class ParticipantDetector(object):
 		:type extractor: :class:`~apd.extractors.extractor.Extractor`
 		:param scorer: The participant detector's scorer.
 					   This component is used to give a score to the extractor's candidate participants.
-		:type scorer: :class:`~apd.scorers.scorer.Scorer`
+		:type scorer: None or :class:`~apd.scorers.scorer.Scorer`
 		:param resolver: The participant detector's resolver.
 						 This component looks for the real keywords associated with a participant.
-		:type resolver: :class:`~apd.resolvers.resolver.Resolver`
+		:type resolver: None or :class:`~apd.resolvers.resolver.Resolver`
 		:param extrapolator: The participant detector's extrapolator.
 							 This component looks for additional participants that might not be in the corpus.
-		:type extrapolator: :class:`~apd.extrapolators.extrapolator.Extrapolator`
+		:type extrapolator: None or :class:`~apd.extrapolators.extrapolator.Extrapolator`
 		:param postprocessor: The participant detector's postprocessor.
 							  This component modifies the found participants.
-		:type postprocessor: :class:`~apd.postprocessors.postprocessor.Postprocessor`
+		:type postprocessor: None or :class:`~apd.postprocessors.postprocessor.Postprocessor`
 		"""
 
 		self.extractor = extractor
-		self.scorer = scorer
+		self.scorer = TFScorer() if scorer is None else scorer
 		self.filter = Filter() if filter is None else filter
 		self.resolver = Resolver() if resolver is None else resolver
 		self.extrapolator = Extrapolator() if extrapolator is None else extrapolator
