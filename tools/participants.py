@@ -8,7 +8,7 @@ To run the script, use:
 
 .. code-block:: bash
 
-    ./tools/apd.py \\
+    ./tools/participants.py \\
 	-f data/understanding.json \\
 	-o data/participants.json
 
