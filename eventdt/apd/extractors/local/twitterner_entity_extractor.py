@@ -38,8 +38,9 @@ class TwitterNEREntityExtractor(Extractor):
 	:cvar ner:
 	"""
 
-	ner = TwitterNER()
-	logger.info("TwitterNER finished loading features")
+	if 'sphinx-build' not in inspect.stack()[-1].filename:
+		ner = TwitterNER()
+		logger.info("TwitterNER finished loading features")
 
 	def extract(self, corpus, *args, **kwargs):
 		"""
