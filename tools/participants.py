@@ -29,6 +29,7 @@ sys.path.insert(-1, root)
 sys.path.insert(-1, lib)
 
 import tools
+from apd import ParticipantDetector
 
 parser = argparse.ArgumentParser(description="Extract terms from domain-specific corpora.")
 def setup_args():
