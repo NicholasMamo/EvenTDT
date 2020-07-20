@@ -44,10 +44,9 @@ def setup_args():
 	:rtype: :class:`argparse.Namespace`
 	"""
 
-	parser.add_argument('-f', '--file', nargs=1, required=True,
+	parser.add_argument('-f', '--file', type=str, required=True,
 						help='<Required> The input corpus from where to extract participants.')
-	parser.add_argument('-o', '--output',
-						type=str, required=True,
+	parser.add_argument('-o', '--output', type=str, required=True,
 						help='<Required> The path to the file where to store the extracted terms.')
 
 	args = parser.parse_args()
