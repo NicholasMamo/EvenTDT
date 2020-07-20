@@ -34,3 +34,187 @@ class TestTwitterNERExtractor(unittest.TestCase):
 		"""
 
 		self.assertTrue(TwitterNEREntityExtractor.ner)
+
+	def test_extract_example(self):
+		"""
+		Test extracting the entities using the example tweet from the GitHub repository.
+		"""
+
+		extractor = TwitterNEREntityExtractor()
+		corpus = [ Document(text='Beautiful day in Chicago! Nice to get away from the Florida heat.') ]
+		self.assertEqual([ 'chicago', 'florida' ], extractor.extract(corpus)[0])
+
+	def test_extract(self):
+		"""
+		Test the entity extractor with normal input.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		tokenizer = Tokenizer(stem=False)
+		posts = [
+			"Liverpool falter against Tottenham Hotspur",
+			"Mourinho under pressure as Tottenham follow with a loss",
+		]
+		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+
+		extractor = TwitterNEREntityExtractor()
+		candidates = extractor.extract(corpus)
+		self.assertEqual([ "liverpool", "tottenham" ], candidates[0])
+		self.assertEqual([ "tottenham" ], candidates[1])
+
+	def test_extract_empty_corpus(self):
+		"""
+		Test that when extracting the entities from an empty corpus, an empty list is returned.
+		"""
+
+		extractor = TwitterNEREntityExtractor()
+		self.assertFalse(extractor.extract([ ]))
+
+	def test_extract_return_length(self):
+		"""
+		Test that the TwitterNER entity extractor returns as many candidate sets as the number of documents given.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		tokenizer = Tokenizer(stem=False)
+		posts = [
+			"Liverpool falter against Tottenham Hotspur",
+			"",
+		]
+		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+
+		extractor = TwitterNEREntityExtractor()
+		candidates = extractor.extract(corpus)
+		self.assertEqual(2, len(candidates))
+		self.assertEqual([ "liverpool", "tottenham" ], candidates[0])
+		self.assertEqual([ ], candidates[1])
+
+	def test_extract_named_entity_at_start(self):
+		"""
+		Test that the TwitterNER entity extractor is capable of extracting named entities at the start of a sentence.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		tokenizer = Tokenizer(stem=False)
+		posts = [
+			"Liverpool falter again",
+		]
+		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+
+		extractor = TwitterNEREntityExtractor()
+		candidates = extractor.extract(corpus)
+		self.assertTrue("liverpool" in candidates[0])
+
+	def test_extract_named_entity_at_end(self):
+		"""
+		Test that the TwitterNER entity extractor is capable of extracting named entities at the end of a sentence.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		tokenizer = Tokenizer(stem=False)
+		posts = [
+			"Spiral continues for Lyon",
+		]
+		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+
+		extractor = TwitterNEREntityExtractor()
+		candidates = extractor.extract(corpus)
+		self.assertTrue("lyon" in set(candidates[0]))
+
+	def test_extract_multiple_sentences(self):
+		"""
+		Test that the TwitterNER entity extractor is capable of extracting named entities from multiple sentences.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		tokenizer = Tokenizer(stem=False)
+		posts = [
+			"The downward spiral continues for Lyon. Bruno Genesio under threat.",
+		]
+		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+
+		extractor = TwitterNEREntityExtractor()
+		candidates = extractor.extract(corpus)
+		self.assertEqual([ "lyon", "bruno genesio" ], candidates[0])
+
+	def test_extract_repeated_named_entities(self):
+		"""
+		Test that the TwitterNER entity extractor does not filter named entities that appear multiple times.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		tokenizer = Tokenizer(stem=False)
+		posts = [
+			"The downward spiral continues for Lyon. Lyon coach Bruno Genesio under threat.",
+		]
+		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+
+		extractor = TwitterNEREntityExtractor()
+		candidates = extractor.extract(corpus)
+		self.assertEqual([ "lyon", "bruno genesio" ], candidates[0])
+
+	def test_extract_multiword_entities(self):
+		"""
+		Test that the TwitterNER entity extractor is capable of extracting multi-word entities.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		tokenizer = Tokenizer(stem=False)
+		posts = [
+			"Lyon were delivered by Karl Toko Ekambi",
+		]
+		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+
+		extractor = TwitterNEREntityExtractor()
+		candidates = extractor.extract(corpus)
+		self.assertEqual([ 'lyon', 'karl toko ekambi' ], candidates[0])
+
+	def test_extract_comma_separated_entities(self):
+		"""
+		Test that comma-separated named entities are returned individually.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		tokenizer = Tokenizer(stem=False)
+		posts = [
+			"Memphis Depay, Leo Dubois, Martin Terrier and Karl Toko Ekambi all out injured",
+		]
+		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+
+		extractor = TwitterNEREntityExtractor()
+		candidates = extractor.extract(corpus)
+		self.assertEqual([ "memphis depay", 'leo dubois', 'martin terrier', 'karl toko ekambi' ], candidates[0])
+
+	def test_extract_order(self):
+		"""
+		Test that the named entities are returned in the correct order.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		tokenizer = Tokenizer(stem=False)
+		posts = [
+			"Memphis Depay, Leo Dubois, Martin Terrier and Karl Toko Ekambi all out injured",
+		]
+		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+
+		extractor = TwitterNEREntityExtractor()
+		candidates = extractor.extract(corpus)
+		self.assertEqual([ "memphis depay", 'leo dubois', 'martin terrier', 'karl toko ekambi' ], candidates[0])

@@ -55,4 +55,14 @@ class TwitterNEREntityExtractor(Extractor):
 		:rtype: list of list of str
 		"""
 
-		return [ ]
+		candidates = [ ]
+
+		for document in corpus:
+			document_entities = [ ]
+			tokens = tokenizeRawTweetText(document.text)
+
+			entities = TwitterNEREntityExtractor.ner.get_entities(tokens)
+			candidates.append([ " ".join(tokens[start:end]).lower()
+								for (start, end, type) in entities ])
+
+		return candidates
