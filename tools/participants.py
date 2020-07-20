@@ -39,7 +39,7 @@ from apd.scorers.local import *
 from nlp.document import Document
 from nlp.tokenizer import Tokenizer
 
-parser = argparse.ArgumentParser(description="Extract terms from domain-specific corpora.")
+parser = argparse.ArgumentParser(description="Extract event participants from the understanding corpora.")
 def setup_args():
 	"""
 	Set up and get the list of command-line arguments.
