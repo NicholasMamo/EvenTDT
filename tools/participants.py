@@ -10,12 +10,14 @@ To run the script, use:
 
     ./tools/participants.py \\
 	-f data/understanding.json \\
+	--extractor EntityExtractor \\
 	-o data/participants.json
 
 Accepted arguments:
 
-	- ``-f --file``		*<Required>* The input corpus from where to extract participants.
-	- ``-o --output``	*<Required>* The path to the file where to store the extracted participants.
+	- ``-f --file``			*<Required>* The input corpus from where to extract participants.
+	- ``-e --extractor``	*<Required>* The extractor to use to extract candidate participants; supported: `EntityExtractor`, `TokenExtractor`, `TwitterNEREntityExtractor`.
+	- ``-o --output``		*<Required>* The path to the file where to store the extracted participants.
 """
 
 import argparse
@@ -30,6 +32,7 @@ sys.path.insert(-1, lib)
 
 import tools
 from apd import ParticipantDetector
+from apd.extractors import local
 
 parser = argparse.ArgumentParser(description="Extract terms from domain-specific corpora.")
 def setup_args():
@@ -38,8 +41,9 @@ def setup_args():
 
 	Accepted arguments:
 
-		- ``-f --file``		*<Required>* The input corpus from where to extract participants.
-		- ``-o --output``	*<Required>* The path to the file where to store the extracted participants.
+		- ``-f --file``			*<Required>* The input corpus from where to extract participants.
+		- ``-e --extractor``	*<Required>* The extractor to use to extract candidate participants; supported: `EntityExtractor`, `TokenExtractor`, `TwitterNEREntityExtractor`.
+		- ``-o --output``		*<Required>* The path to the file where to store the extracted participants.
 
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
@@ -47,6 +51,8 @@ def setup_args():
 
 	parser.add_argument('-f', '--file', type=str, required=True,
 						help='<Required> The input corpus from where to extract participants.')
+	parser.add_argument('-e', '--extractor', type=extractor, required=True,
+						help='<Required> he extractor to use to extract candidate participants; supported: `EntityExtractor`, `TokenExtractor`, `TwitterNEREntityExtractor`.')
 	parser.add_argument('-o', '--output', type=str, required=True,
 						help='<Required> The path to the file where to store the extracted terms.')
 
@@ -65,8 +71,38 @@ def main():
 	Get the meta arguments.
 	"""
 	cmd = tools.meta(args)
+	cmd['extractor'] = str(vars(args)['extractor'])
 
 	tools.save(args.output, { 'meta': cmd })
+
+def extractor(method):
+	"""
+	Convert the given string into an extractor class.
+	The accepted classes are:
+
+		#. :func:`~apd.extractors.local.EntityExtractor`
+		#. :func:`~apd.extractors.local.TokenExtractor`
+		#. :func:`~apd.extractors.local.TwitterNEREntityExtractor`
+
+	:param method: The extractor string.
+	:type method: str
+
+	:return: The extractor type that corresponds to the given method.
+	:rtype: class
+	"""
+
+	methods = {
+		'entityextractor': local.EntityExtractor,
+		'tokenextractor': local.TokenExtractor,
+	}
+
+	if method.lower() in methods:
+		return methods[method.lower()]
+	elif method.lower() == 'twitternerentityextractor':
+		from apd.extractors.local.twitterner_entity_extractor import TwitterNEREntityExtractor
+		return TwitterNEREntityExtractor
+
+	raise argparse.ArgumentTypeError(f"Invalid method value: {method}")
 
 if __name__ == "__main__":
 	main()

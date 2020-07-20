@@ -140,7 +140,7 @@ def method(method):
 	Convert the given string into an ATE class.
 	The accepted classes are:
 
-		#. :func:`~ate.stat.tfidf.TFExtractor`,
+		#. :func:`~ate.stat.tfidf.TFExtractor`
 		#. :func:`~ate.stat.tfidf.TFIDFExtractor`
 		#. :func:`~ate.stat.corpus.rank.RankExtractor`
 		#. :func:`~ate.stat.corpus.specificity.SpecificityExtractor`
