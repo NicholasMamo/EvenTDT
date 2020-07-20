@@ -9,11 +9,13 @@ To run the script, use:
 .. code-block:: bash
 
     ./tools/apd.py \\
-	-f data/understanding.json
+	-f data/understanding.json \\
+	-o data/participants.json
 
 Accepted arguments:
 
 	- ``-f --file``		*<Required>* The input corpus from where to extract participants.
+	- ``-o --output``	*<Required>* The path to the file where to store the extracted participants.
 """
 
 import argparse
@@ -34,6 +36,7 @@ def setup_args():
 	Accepted arguments:
 
 		- ``-f --file``		*<Required>* The input corpus from where to extract participants.
+		- ``-o --output``	*<Required>* The path to the file where to store the extracted participants.
 
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
@@ -41,6 +44,9 @@ def setup_args():
 
 	parser.add_argument('-f', '--file', nargs=1, required=True,
 						help='<Required> The input corpus from where to extract participants.')
+	parser.add_argument('-o', '--output',
+						type=str, required=True,
+						help='<Required> The path to the file where to store the extracted terms.')
 
 	args = parser.parse_args()
 	return args
