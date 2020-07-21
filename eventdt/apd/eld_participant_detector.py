@@ -26,7 +26,6 @@ for path in paths:
 	    sys.path.append(path)
 
 from participant_detector import ParticipantDetector
-from extractors.local.twitterner_entity_extractor import TwitterNEREntityExtractor
 from scorers.local import TFScorer
 from filters.local import RankFilter
 from resolvers.external import WikipediaSearchResolver
@@ -90,7 +89,9 @@ class ELDParticipantDetector(ParticipantDetector):
 							  normalize_words=True, character_normalization_count=3,
 							  remove_unicode_entities=True)
 
-		extractor = extractor or TwitterNEREntityExtractor()
+		if not extractor:
+			from extractors.local.twitterner_entity_extractor import TwitterNEREntityExtractor
+			extractor = TwitterNEREntityExtractor()
 		scorer = scorer or TFScorer()
 		filter = filter or RankFilter(20)
 		resolver = resolver or WikipediaSearchResolver(scheme, tokenizer, 0.05, corpus)
