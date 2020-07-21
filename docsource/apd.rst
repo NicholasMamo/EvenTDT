@@ -129,6 +129,13 @@ Threshold Filter
    :members:
    :special-members:
 
+Rank Filter
+^^^^^^^^^^^
+
+.. automodule:: apd.filters.local.rank_filter
+   :members:
+   :special-members:
+
 Resolvers
 =========
 
