@@ -104,7 +104,8 @@ class ELDParticipantDetector(ParticipantDetector):
 		scorer = scorer or TFScorer()
 		filter = filter or RankFilter(20)
 		resolver = resolver or WikipediaSearchResolver(scheme, tokenizer, 0.01, corpus)
-		extrapolator = extrapolator or WikipediaExtrapolator(corpus, tokenizer, scheme, 0.01)
+		extrapolator = extrapolator or WikipediaExtrapolator(corpus, tokenizer, scheme, 0.01,
+															 first_level_links=100, second_level_links=500)
 		postprocessor = postprocessor or WikipediaPostprocessor()
 
 		super().__init__(extractor, scorer, filter, resolver, extrapolator, postprocessor)
