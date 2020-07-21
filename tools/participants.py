@@ -84,7 +84,7 @@ def main():
 	participants = detect(args.file, args.extractor)
 	tools.save(args.output, { 'meta': cmd, 'participants': participants })
 
-def detect(filename, extractor):
+def detect(filename, extractor, *args, **kwargs):
 	"""
 	Detect participants from the given corpus.
 
@@ -97,7 +97,8 @@ def detect(filename, extractor):
 	:rtype: list of str
 	"""
 
-	detector = ParticipantDetector(extractor())
+	extractor = create_extractor(extractor, *args, **kwargs)
+	detector = ParticipantDetector(extractor)
 	corpus = [ ]
 	with open(filename) as f:
 		for line in f:
@@ -115,6 +116,16 @@ def detect(filename, extractor):
 
 	participants, _, _, = detector.detect(corpus)
 	return participants
+
+def create_extractor(extractor, *args, **kwargs):
+	"""
+	Create an extractor from the given class.
+
+	:param extractor: The class of the extractor with which to extract candidate participants.
+	:type extractor: :class:`~apd.extractors.extractor.Extractor`
+	"""
+
+	return extractor()
 
 def extractor(method):
 	"""
