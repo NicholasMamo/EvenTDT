@@ -27,10 +27,13 @@ Of these steps, only the first one is required:
 import os
 import sys
 
-path = os.path.join(os.path.dirname(__file__))
-if path not in sys.path:
-    sys.path.append(path)
+paths = [ os.path.join(os.path.dirname(__file__)),
+ 		  os.path.join(os.path.dirname(__file__), '..') ]
+for path in paths:
+	if path not in sys.path:
+	    sys.path.append(path)
 
+from logger import logger
 from scorers.scorer import Scorer
 from scorers.local import TFScorer
 from filters.filter import Filter
@@ -107,8 +110,10 @@ class ParticipantDetector(object):
 		candidates = self.extractor.extract(corpus)
 		candidates = self.scorer.score(candidates)
 		candidates = self.filter.filter(candidates)
+		logger.info(f"Resolving { ', '.join(sorted(candidates, key=candidates.get, reverse=True)) }")
 
 		resolved, unresolved = self.resolver.resolve(candidates)
+		logger.info(f"Resolved { ', '.join(resolved) }")
 		extrapolated = self.extrapolator.extrapolate(resolved)
 		resolved = self.postprocessor.postprocess(resolved)
 		extrapolated = self.postprocessor.postprocess(extrapolated)
