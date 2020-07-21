@@ -12,7 +12,7 @@ To run the script, use:
 	-f data/understanding.json \\
 	--extractor EntityExtractor \\
 	--scorer TFScorer \\
-	--filter RankFilter \\
+	--filter RankFilter -k 10 \\
 	-o data/participants.json
 
 Accepted arguments:
@@ -22,6 +22,7 @@ Accepted arguments:
 	- ``--extractor``		*<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.
 	- ``--scorer``			*<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
 	- ``--filter``			*<Optional>* The filter to use to filter candidate participants; supported: `RankFilter`, `ThresholdFilter`; defaults to no filter.
+	- ``-k``				*<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
 """
 
 import argparse
@@ -56,6 +57,7 @@ def setup_args():
 		- ``--extractor``		*<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.
 		- ``--scorer``			*<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
 		- ``--filter``			*<Optional>* The filter to use to filter candidate participants; supported: `RankFilter`, `ThresholdFilter`; defaults to no filter.
+		- ``-k``				*<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
 
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
@@ -70,7 +72,9 @@ def setup_args():
 	parser.add_argument('--scorer', type=scorer, required=False, default=TFScorer,
 						help='<Optional> The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.')
 	parser.add_argument('--filter', type=filter, required=False, default=Filter,
-						help='<Optional> The filter to use to filter candidate participants; supported: `RankFilter`, `ThresholdFilter`; defaults to no filter.`')
+						help='<Optional> The filter to use to filter candidate participants; supported: `RankFilter`, `ThresholdFilter`; defaults to no filter.')
+	parser.add_argument('-k', required=False,
+						help='<Optional> The number of candidates to retain when filtering candidates (used only with the `RankFilter`).')
 
 	args = parser.parse_args()
 	return args
@@ -90,8 +94,10 @@ def main():
 	cmd['scorer'] = str(vars(args)['scorer'])
 	cmd['filter'] = str(vars(args)['filter'])
 
-	participants = detect(args.file, args.extractor, args.scorer, args.filter)
-	tools.save(args.output, { 'meta': cmd, 'participants': participants })
+	args = vars(args)
+	participants = detect(filename=args.pop('file'), extractor=args.pop('extractor'),
+						  scorer=args.pop('scorer'), filter=args.pop('filter'), **args)
+	tools.save(args['output'], { 'meta': cmd, 'participants': participants })
 
 def detect(filename, extractor, scorer, filter, *args, **kwargs):
 	"""
@@ -159,13 +165,23 @@ def create_scorer(scorer, *args, **kwargs):
 
 	return scorer()
 
-def create_filter(filter, *args, **kwargs):
+def create_filter(filter, k=None, *args, **kwargs):
 	"""
 	Create a filter from the given class.
 
 	:param filter: The class of the filter with which to filter candidate participants.
 	:type filter: :class:`~apd.filters.filter.Filter`
+	:param k: The number of candidates to retain when filtering.
+			  This is used only with the :class:`~apd.filters.local.rank_filter.RankFilter`.
+	:type k: int
+
+	:raises ValueError: When a :class:`~apd.filters.local.rank_filter.RankFilter` is to be created, but _k_ is not given.
 	"""
+
+	if filter.__name__ == RankFilter.__name__:
+		if not k:
+			raise ValueError("The Rank Filter requires the `k` parameter (the number of candidates to retain).")
+		return filter(int(k))
 
 	return filter()
 
