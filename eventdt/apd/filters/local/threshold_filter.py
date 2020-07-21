@@ -32,7 +32,7 @@ class ThresholdFilter(Filter):
 		"""
 		Filter candidate participants that are not credible.
 
-		:param candidates: A dictionary of candidate praticipants and their scores.
+		:param candidates: A dictionary of candidate participants and their scores.
 		 				   The keys are the candidate names, and the values are their scores.
 						   The input candidates should be the product of a :class:`~apd.scorers.scorer.Scorer` process.
 		:type candidates: dict
