@@ -85,10 +85,19 @@ class ELDParticipantDetector(ParticipantDetector):
 		:type postprocessor: None or :class:`~apd.postprocessors.postprocessor.Postprocessor`
 		"""
 
+		"""
+		Tokenize the corpus.
+		"""
 		tokenizer = Tokenizer(stopwords=stopwords.words('english'),
 							  normalize_words=True, character_normalization_count=3,
 							  remove_unicode_entities=True)
+		if scheme:
+			corpus = [ scheme.create(text=document.text, tokens=tokenizer.tokenize(document.text))
+			 		   for document in corpus ]
 
+		"""
+		Set up the ELD participant detector.
+		"""
 		if not extractor:
 			from extractors.local.twitterner_entity_extractor import TwitterNEREntityExtractor
 			extractor = TwitterNEREntityExtractor()
