@@ -65,3 +65,53 @@ class TestRankFilter(unittest.TestCase):
 		"""
 
 		self.assertTrue(RankFilter(1))
+
+	def test_filter_empty(self):
+		"""
+		Test that when filtering an empty set of candidates, nothing is returned.
+		"""
+
+		filter = RankFilter(10)
+		self.assertEqual({ }, filter.filter({ }))
+
+	def test_filter_few(self):
+		"""
+		Test that when filtering a number of candidates that is less than _k_, all candidates are returned.
+		"""
+
+		filter = RankFilter(10)
+		candidates = [ 'a', 'b', 'c', 'd', 'e' ]
+		candidates = { candidate: 1 for candidate in candidates }
+		self.assertEqual(candidates, filter.filter(candidates))
+
+	def test_filter_all(self):
+		"""
+		Test that when filtering a number of candidates that is equal to _k_, all candidates are returned.
+		"""
+
+		filter = RankFilter(10)
+		candidates = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' ]
+		candidates = { candidate: 1 for candidate in candidates }
+		self.assertEqual(candidates, filter.filter(candidates))
+
+	def test_filter_top(self):
+		"""
+		Test that when filtering candidates, the top candidates are returned.
+		"""
+
+		filter = RankFilter(5)
+		vocabulary = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' ]
+		candidates = { candidate: i for i, candidate in enumerate(vocabulary) }
+		self.assertEqual(set(vocabulary[-5:]), set(filter.filter(candidates).keys()))
+
+	def test_filter_scores(self):
+		"""
+		Test that when filtering candidates, the scores are retained the same.
+		"""
+
+		filter = RankFilter(5)
+		vocabulary = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' ]
+		candidates = { candidate: i for i, candidate in enumerate(vocabulary) }
+		filtered = filter.filter(candidates)
+		self.assertTrue(all( candidates[candidate] == score
+							 for candidate, score in filtered.items() ))
