@@ -14,7 +14,7 @@ for path in paths:
 	    sys.path.append(path)
 
 from tools import participants as apd
-from eventdt.apd import ParticipantDetector
+from eventdt.apd import ELDParticipantDetector, ParticipantDetector
 from eventdt.apd.extractors.local import EntityExtractor
 from eventdt.apd.scorers.local import LogTFScorer, TFScorer
 from eventdt.apd.filters import Filter
@@ -88,6 +88,14 @@ class TestAPD(unittest.TestCase):
 	def test_threshold_filter_missing_threshold(self):
 		"""
 		Test that when using the threshold filter without a threshold, a ValueError is raised.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+		self.assertRaises(ValueError, apd.detect, file, ParticipantDetector, EntityExtractor, TFScorer, ThresholdFilter)
+
+	def test_eld_participant_detector_missing_tfidf(self):
+		"""
+		Test that when using the ELDParticipantDetector without a TF-IDF scheme, a ValueError is raised.
 		"""
 
 		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')

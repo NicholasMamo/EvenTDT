@@ -10,7 +10,8 @@ To use a ready-made model, use:
 
     ./tools/participants.py \\
 	-f data/understanding.json \\
-	-m ELDParticipantDetector \\
+	--model ELDParticipantDetector \\
+	--tfidf data/idf.json \\
 	-o data/participants.json
 
 Alternatively, you can create your own model:
@@ -31,7 +32,8 @@ For example, this snippet uses the :class:`~apd.extractors.local.entity_extracto
 
     ./tools/participants.py \\
 	-f data/understanding.json \\
-	-m ELDParticipantDetector \\
+	--model ELDParticipantDetector \\
+	--tfidf data/idf.json \\
 	--extractor EntityExtractor \\
 	-o data/participants.json
 
@@ -45,6 +47,7 @@ Accepted arguments:
 	- ``--filter``			*<Optional>* The filter to use to filter candidate participants; supported: `RankFilter`, `ThresholdFilter`; defaults to no filter.
 	- ``-k``				*<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
 	- ``--threshold``		*<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).
+	- ``--tfidf``			*<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
 """
 
 import argparse
@@ -83,6 +86,7 @@ def setup_args():
 		- ``--filter``			*<Optional>* The filter to use to filter candidate participants; supported: `RankFilter`, `ThresholdFilter`; defaults to no filter.
 		- ``-k``				*<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
 		- ``--threshold``		*<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).
+		- ``--tfidf``			*<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
 
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
@@ -104,6 +108,8 @@ def setup_args():
 						help='<Optional> The number of candidates to retain when filtering candidates (used only with the `RankFilter`).')
 	parser.add_argument('--threshold', required=False,
 						help='<Optional> The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).')
+	parser.add_argument('--tfidf', required=False, default=None,
+						help='<Optional> The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).')
 
 	args = parser.parse_args()
 	return args
@@ -198,7 +204,7 @@ def load_corpus(filename):
 
 	return corpus
 
-def create_model(model, extractor, scorer, filter, corpus, *args, **kwargs):
+def create_model(model, extractor, scorer, filter, corpus, tfidf=None, *args, **kwargs):
 	"""
 	Create a participant detector model from the given components.
 
@@ -212,13 +218,20 @@ def create_model(model, extractor, scorer, filter, corpus, *args, **kwargs):
 	:type filter: :class:`~apd.filters.filter.Filter`
 	:param corpus: A list of :class:`~nlp.document.Document` making up the corpus.
 	:type corpus: list of :class:`~nlp.document.Document`
+	:param tfidf: The path the TF-IDF scheme.
+	:type tfidf: str
 
 	:return: A new participant detector model.
 	:rtype: :class:`~apd.participant_detector.ParticipantDetector`
+
+	:raises ValueError: When the TF-IDF scheme is not given.
 	"""
 
 	if model.__name__ == ELDParticipantDetector.__name__:
-		return model(corpus=corpus, extractor=extractor, scorer=scorer, filter=filter)
+		if not tfidf:
+			raise ValueError("The TF-IDF scheme is required with the ELDParticipantDetector model.")
+		scheme = tools.load(tfidf)['tfidf']
+		return model(scheme=scheme, corpus=corpus, extractor=extractor, scorer=scorer, filter=filter)
 	elif model.__name__ == ParticipantDetector.__name__:
 		extractor = extractor or local.EntityExtractor()
 		scorer = scorer or TFScorer()
