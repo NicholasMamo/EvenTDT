@@ -103,8 +103,8 @@ class ELDParticipantDetector(ParticipantDetector):
 			extractor = TwitterNEREntityExtractor()
 		scorer = scorer or TFScorer()
 		filter = filter or RankFilter(20)
-		resolver = resolver or WikipediaSearchResolver(scheme, tokenizer, 0.05, corpus)
-		extrapolator = extrapolator or WikipediaExtrapolator(corpus, tokenizer, scheme, 0.05)
+		resolver = resolver or WikipediaSearchResolver(scheme, tokenizer, 0.01, corpus)
+		extrapolator = extrapolator or WikipediaExtrapolator(corpus, tokenizer, scheme, 0.01)
 		postprocessor = postprocessor or WikipediaPostprocessor()
 
 		super().__init__(extractor, scorer, filter, resolver, extrapolator, postprocessor)
