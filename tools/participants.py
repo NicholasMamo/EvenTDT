@@ -173,8 +173,8 @@ def detect(filename, model, extractor, scorer, filter, *args, **kwargs):
 	logger.info(f"Extrapolator: { type(detector.extrapolator).__name__ }")
 	logger.info(f"Postprocessor: { type(detector.postprocessor).__name__ }")
 
-	participants, _, _, = detector.detect(corpus)
-	return participants
+	resolved, _, extrapolated, = detector.detect(corpus)
+	return resolved + extrapolated
 
 def load_corpus(filename):
 	"""
