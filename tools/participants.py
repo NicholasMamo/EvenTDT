@@ -64,6 +64,7 @@ from apd.extractors import local
 from apd.scorers.local import *
 from apd.filters import Filter
 from apd.filters.local import *
+from logger import logger
 from nlp.document import Document
 from nlp.tokenizer import Tokenizer
 
@@ -154,6 +155,12 @@ def detect(filename, model, extractor, scorer, filter, *args, **kwargs):
 	scorer = create_scorer(scorer, *args, **kwargs)
 	filter = create_filter(filter, *args, **kwargs)
 	detector = create_model(model, extractor, scorer, filter, *args, **kwargs)
+	logger.info(f"Extractor: { type(detector.extractor).__name__ }")
+	logger.info(f"Scorer: { type(detector.scorer).__name__ }")
+	logger.info(f"Filter: { type(detector.filter).__name__ }")
+	logger.info(f"Resolver: { type(detector.resolver).__name__ }")
+	logger.info(f"Extrapolator: { type(detector.extrapolator).__name__ }")
+	logger.info(f"Postprocessor: { type(detector.postprocessor).__name__ }")
 
 	"""
 	Load the corpus.
