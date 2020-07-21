@@ -72,6 +72,9 @@ class ParticipantDetector(object):
 		:param scorer: The participant detector's scorer.
 					   This component is used to give a score to the extractor's candidate participants.
 		:type scorer: None or :class:`~apd.scorers.scorer.Scorer`
+		:param filter: The participant detector's filter.
+					   This component is used to exclude candidates that are unlikely to be participants.
+		:type filter: None or :class:`~apd.filters.filter.Filter`
 		:param resolver: The participant detector's resolver.
 						 This component looks for the real keywords associated with a participant.
 		:type resolver: None or :class:`~apd.resolvers.resolver.Resolver`
