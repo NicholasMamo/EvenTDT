@@ -1016,7 +1016,7 @@ This also removes whitespaces just before periods.</p>
 <span class="target" id="module-nlp.cleaners.tweet_cleaner"></span><p>The tweet cleaner builds on the base cleaner, but adds Twitter-specific functionality.</p>
 <dl class="class">
 <dt id="nlp.cleaners.tweet_cleaner.TweetCleaner">
-<em class="property">class </em><code class="sig-name descname">TweetCleaner</code><span class="sig-paren">(</span><em class="sig-param">remove_unicode_entities=False</em>, <em class="sig-param">remove_urls=False</em>, <em class="sig-param">remove_hashtags=False</em>, <em class="sig-param">split_hashtags=False</em>, <em class="sig-param">remove_retweet_prefix=False</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.tweet_cleaner.TweetCleaner" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">TweetCleaner</code><span class="sig-paren">(</span><em class="sig-param">remove_unicode_entities=False</em>, <em class="sig-param">remove_urls=False</em>, <em class="sig-param">remove_hashtags=False</em>, <em class="sig-param">split_hashtags=False</em>, <em class="sig-param">remove_retweet_prefix=False</em>, <em class="sig-param">replace_mentions=False</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.tweet_cleaner.TweetCleaner" title="Permalink to this definition">¶</a></dt>
 <dd><p>The tweet cleaner removes needless information from a text to make it presentable.
 This includes retweet syntax and URLs.</p>
 <dl class="field-list simple">
@@ -1028,12 +1028,13 @@ Note that this also includes emojis.</p></li>
 <li><p><strong>remove_hashtags</strong> (<em>bool</em>) – A boolean indicating whether hashtags that cannot be split should be removed.</p></li>
 <li><p><strong>split_hashtags</strong> (<em>bool</em>) – A boolean indicating whether hashtags should be split.</p></li>
 <li><p><strong>remove_retweet_prefix</strong> (<em>bool</em>) – A boolean indicating whether the retweet prefix should be removed.</p></li>
+<li><p><strong>replace_mentions</strong> (<em>bool</em>) – A boolean indicating whether mentions should be replaced with the user’s display name.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="method">
 <dt id="nlp.cleaners.tweet_cleaner.TweetCleaner.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">remove_unicode_entities=False</em>, <em class="sig-param">remove_urls=False</em>, <em class="sig-param">remove_hashtags=False</em>, <em class="sig-param">split_hashtags=False</em>, <em class="sig-param">remove_retweet_prefix=False</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.tweet_cleaner.TweetCleaner.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">remove_unicode_entities=False</em>, <em class="sig-param">remove_urls=False</em>, <em class="sig-param">remove_hashtags=False</em>, <em class="sig-param">split_hashtags=False</em>, <em class="sig-param">remove_retweet_prefix=False</em>, <em class="sig-param">replace_mentions=False</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.tweet_cleaner.TweetCleaner.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the tweet cleaner.</p>
 <p>The same configuration accepted by the <a class="reference internal" href="#nlp.cleaners.cleaner.Cleaner" title="nlp.cleaners.cleaner.Cleaner"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cleaner</span></code></a> are accepted as arguments and keyword arguments.
 They are then passed on to the parent constructor, <a class="reference internal" href="#nlp.cleaners.cleaner.Cleaner.__init__" title="nlp.cleaners.cleaner.Cleaner.__init__"><code class="xref py py-func docutils literal notranslate"><span class="pre">__init__()</span></code></a>.</p>
@@ -1046,6 +1047,7 @@ Note that this also includes emojis.</p></li>
 <li><p><strong>remove_hashtags</strong> (<em>bool</em>) – A boolean indicating whether hashtags that cannot be split should be removed.</p></li>
 <li><p><strong>split_hashtags</strong> (<em>bool</em>) – A boolean indicating whether hashtags should be split.</p></li>
 <li><p><strong>remove_retweet_prefix</strong> (<em>bool</em>) – A boolean indicating whether the retweet prefix should be removed.</p></li>
+<li><p><strong>replace_mentions</strong> (<em>bool</em>) – A boolean indicating whether mentions should be replaced with the user’s display name.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1053,12 +1055,16 @@ Note that this also includes emojis.</p></li>
 
 <dl class="method">
 <dt id="nlp.cleaners.tweet_cleaner.TweetCleaner.clean">
-<code class="sig-name descname">clean</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.tweet_cleaner.TweetCleaner.clean" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">clean</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">tweet=None</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.tweet_cleaner.TweetCleaner.clean" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clean the given text.
 The basic cleaner always strips empty whitespaces before any pre-processing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – The text to clean.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – The text to clean.</p></li>
+<li><p><strong>tweet</strong> (<em>dict</em>) – The tweet to use to clean the tweet.
+This is only used when mentioned users’ names are replaced in the text.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The cleaned text.</p>
@@ -1151,6 +1157,29 @@ Retweets start with the text ‘RT &#64;user: ‘</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="nlp.cleaners.tweet_cleaner.TweetCleaner._replace_mentions">
+<code class="sig-name descname">_replace_mentions</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">tweet</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.tweet_cleaner.TweetCleaner._replace_mentions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replace all mentions in the text with the user’s display name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – The text to clean.</p></li>
+<li><p><strong>tweet</strong> (<em>dict</em>) – The tweet dictionary.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The cleaned text.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – When the tweet is not given and the mentions should be replaced.</p>
 </dd>
 </dl>
 </dd></dl>

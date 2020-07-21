@@ -24,6 +24,13 @@ Named Entity Recognition Participant Detector
    :members:
    :special-members:
 
+ELD Participant Detector
+------------------------
+
+.. automodule:: apd.eld_participant_detector
+   :members:
+   :special-members:
+
 Extractors
 ==========
 

@@ -93,6 +93,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">5. Automatic Participant Detection (APD)</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-apd.participant_detector">Participant Detectors</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module-apd.ner_participant_detector">Named Entity Recognition Participant Detector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-apd.eld_participant_detector">ELD Participant Detector</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-apd.extractors.extractor">Extractors</a><ul>
@@ -105,7 +106,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-apd.scorers.scorer">Scorers</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id2">Local</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id4">Local</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#module-apd.scorers.local.df_scorer">Document Frequency Scorer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-apd.scorers.local.log_df_scorer">Logarithmic Document Frequency Scorer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-apd.scorers.local.tf_scorer">Term Frequency Scorer</a></li>
@@ -116,14 +117,15 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-apd.filters.filter">Filters</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id3">Local</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id5">Local</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#module-apd.filters.local.threshold_filter">Threshold Filter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-apd.filters.local.rank_filter">Rank Filter</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-apd.resolvers.resolver">Resolvers</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id4">Local</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id6">Local</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#module-apd.resolvers.local.token_resolver">Token Resolver</a></li>
 </ul>
 </li>
@@ -135,14 +137,14 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-apd.extrapolators.extrapolator">Extrapolators</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id5">External</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id7">External</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#module-apd.extrapolators.external.wikipedia_extrapolator">Wikipedia Extrapolator</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-apd.postprocessors.postprocessor">Post-processors</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id6">External</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id8">External</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#module-apd.postprocessors.external.wikipedia_postprocessor">Wikipedia Post-processor</a></li>
 </ul>
 </li>
@@ -268,9 +270,10 @@ For example, the <a class="reference internal" href="#apd.ner_participant_detect
 <li><p>Postprocess the participants.</p></li>
 </ol>
 </div></blockquote>
-<p>Of these steps, only the first two are required:</p>
+<p>Of these steps, only the first one is required:</p>
 <blockquote>
 <div><ol class="arabic simple">
+<li><p>If the scorer is not given, simple frequency is used;</p></li>
 <li><p>If the filter is not given, all candidates are retained;</p></li>
 <li><p>If the resolver is not given, the extractor’s inputs are all returned as participants;</p></li>
 <li><p>If the extrapolator is not given, no additional participants are returned; and</p></li>
@@ -279,7 +282,7 @@ For example, the <a class="reference internal" href="#apd.ner_participant_detect
 </div></blockquote>
 <dl class="class">
 <dt id="apd.participant_detector.ParticipantDetector">
-<em class="property">class </em><code class="sig-name descname">ParticipantDetector</code><span class="sig-paren">(</span><em class="sig-param">extractor</em>, <em class="sig-param">scorer</em>, <em class="sig-param">filter=None</em>, <em class="sig-param">resolver=None</em>, <em class="sig-param">extrapolator=None</em>, <em class="sig-param">postprocessor=None</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.participant_detector.ParticipantDetector" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">ParticipantDetector</code><span class="sig-paren">(</span><em class="sig-param">extractor</em>, <em class="sig-param">scorer=None</em>, <em class="sig-param">filter=None</em>, <em class="sig-param">resolver=None</em>, <em class="sig-param">extrapolator=None</em>, <em class="sig-param">postprocessor=None</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.participant_detector.ParticipantDetector" title="Permalink to this definition">¶</a></dt>
 <dd><p>The basic participant detector accepts all steps as individual instances.
 The participant detector chains them together to identify the event’s participants.</p>
 <dl class="field-list simple">
@@ -300,20 +303,22 @@ If it is not given, the participants are returned as found.</p></li>
 </dl>
 <dl class="method">
 <dt id="apd.participant_detector.ParticipantDetector.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">extractor</em>, <em class="sig-param">scorer</em>, <em class="sig-param">filter=None</em>, <em class="sig-param">resolver=None</em>, <em class="sig-param">extrapolator=None</em>, <em class="sig-param">postprocessor=None</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.participant_detector.ParticipantDetector.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">extractor</em>, <em class="sig-param">scorer=None</em>, <em class="sig-param">filter=None</em>, <em class="sig-param">resolver=None</em>, <em class="sig-param">extrapolator=None</em>, <em class="sig-param">postprocessor=None</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.participant_detector.ParticipantDetector.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the participant detector, which is made up of a number of components.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>extractor</strong> (<a class="reference internal" href="#apd.extractors.extractor.Extractor" title="apd.extractors.extractor.Extractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Extractor</span></code></a>) – The participant detector’s extractor.
 This component is used to find candidate participants.</p></li>
-<li><p><strong>scorer</strong> (<a class="reference internal" href="#apd.scorers.scorer.Scorer" title="apd.scorers.scorer.Scorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scorer</span></code></a>) – The participant detector’s scorer.
+<li><p><strong>scorer</strong> (None or <a class="reference internal" href="#apd.scorers.scorer.Scorer" title="apd.scorers.scorer.Scorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scorer</span></code></a>) – The participant detector’s scorer.
 This component is used to give a score to the extractor’s candidate participants.</p></li>
-<li><p><strong>resolver</strong> (<a class="reference internal" href="#apd.resolvers.resolver.Resolver" title="apd.resolvers.resolver.Resolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">Resolver</span></code></a>) – The participant detector’s resolver.
+<li><p><strong>filter</strong> (None or <a class="reference internal" href="#apd.filters.filter.Filter" title="apd.filters.filter.Filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Filter</span></code></a>) – The participant detector’s filter.
+This component is used to exclude candidates that are unlikely to be participants.</p></li>
+<li><p><strong>resolver</strong> (None or <a class="reference internal" href="#apd.resolvers.resolver.Resolver" title="apd.resolvers.resolver.Resolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">Resolver</span></code></a>) – The participant detector’s resolver.
 This component looks for the real keywords associated with a participant.</p></li>
-<li><p><strong>extrapolator</strong> (<a class="reference internal" href="#apd.extrapolators.extrapolator.Extrapolator" title="apd.extrapolators.extrapolator.Extrapolator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Extrapolator</span></code></a>) – The participant detector’s extrapolator.
+<li><p><strong>extrapolator</strong> (None or <a class="reference internal" href="#apd.extrapolators.extrapolator.Extrapolator" title="apd.extrapolators.extrapolator.Extrapolator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Extrapolator</span></code></a>) – The participant detector’s extrapolator.
 This component looks for additional participants that might not be in the corpus.</p></li>
-<li><p><strong>postprocessor</strong> (<a class="reference internal" href="#apd.postprocessors.postprocessor.Postprocessor" title="apd.postprocessors.postprocessor.Postprocessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Postprocessor</span></code></a>) – The participant detector’s postprocessor.
+<li><p><strong>postprocessor</strong> (None or <a class="reference internal" href="#apd.postprocessors.postprocessor.Postprocessor" title="apd.postprocessors.postprocessor.Postprocessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Postprocessor</span></code></a>) – The participant detector’s postprocessor.
 This component modifies the found participants.</p></li>
 </ul>
 </dd>
@@ -371,6 +376,77 @@ To extract named entities, the participant detector automatically creates an ext
 <dt id="apd.ner_participant_detector.NERParticipantDetector.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#apd.ner_participant_detector.NERParticipantDetector.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the NER participant detector.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apd.eld_participant_detector">
+<span id="eld-participant-detector"></span><h3>ELD Participant Detector<a class="headerlink" href="#module-apd.eld_participant_detector" title="Permalink to this headline">¶</a></h3>
+<p>The ELD participant detector is a complete solution based on the one proposed in <a class="reference external" href="https://dl.acm.org/doi/abs/10.1145/3342220.3344921">ELD: Event TimeLine Detection – A Participant-Based Approach to Tracking Events by Mamo et al. (2019)</a>.
+By default, this participant detector uses the following configuration:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p><a class="reference internal" href="#apd.extractors.local.twitterner_entity_extractor.TwitterNEREntityExtractor" title="apd.extractors.local.twitterner_entity_extractor.TwitterNEREntityExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">TwitterNEREntityExtractor</span></code></a>,</p></li>
+<li><p><a class="reference internal" href="#apd.scorers.local.tf_scorer.TFScorer" title="apd.scorers.local.tf_scorer.TFScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFScorer</span></code></a>,</p></li>
+<li><p><a class="reference internal" href="#apd.filters.local.rank_filter.RankFilter" title="apd.filters.local.rank_filter.RankFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">RankFilter</span></code></a> with a <code class="docutils literal notranslate"><span class="pre">k</span></code> of 20,</p></li>
+<li><p><a class="reference internal" href="#apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver" title="apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">WikipediaSearchResolver</span></code></a>,</p></li>
+<li><p><a class="reference internal" href="#apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator" title="apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator"><code class="xref py py-class docutils literal notranslate"><span class="pre">WikipediaExtrapolator</span></code></a>, and</p></li>
+<li><p><a class="reference internal" href="#apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor" title="apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">WikipediaPostprocessor</span></code></a>.</p></li>
+</ol>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Implementation based on the algorithm outlined in <a class="reference external" href="https://dl.acm.org/doi/abs/10.1145/3342220.3344921">ELD: Event TimeLine Detection – A Participant-Based Approach to Tracking Events by Mamo et al. (2019)</a>.
+This version contains some changes, such as by using a <a class="reference internal" href="#apd.filters.local.rank_filter.RankFilter" title="apd.filters.local.rank_filter.RankFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">RankFilter</span></code></a> instead of a <a class="reference internal" href="#apd.filters.local.threshold_filter.ThresholdFilter" title="apd.filters.local.threshold_filter.ThresholdFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">ThresholdFilter</span></code></a>.</p>
+</div>
+<dl class="class">
+<dt id="apd.eld_participant_detector.ELDParticipantDetector">
+<em class="property">class </em><code class="sig-name descname">ELDParticipantDetector</code><span class="sig-paren">(</span><em class="sig-param">scheme=None</em>, <em class="sig-param">corpus=None</em>, <em class="sig-param">extractor=None</em>, <em class="sig-param">scorer=None</em>, <em class="sig-param">filter=None</em>, <em class="sig-param">resolver=None</em>, <em class="sig-param">extrapolator=None</em>, <em class="sig-param">postprocessor=None</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.eld_participant_detector.ELDParticipantDetector" title="Permalink to this definition">¶</a></dt>
+<dd><p>By defaulthe ELD participant detector uses the following configuration:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p><a class="reference internal" href="#apd.extractors.local.twitterner_entity_extractor.TwitterNEREntityExtractor" title="apd.extractors.local.twitterner_entity_extractor.TwitterNEREntityExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">TwitterNEREntityExtractor</span></code></a>,</p></li>
+<li><p><a class="reference internal" href="#apd.scorers.local.tf_scorer.TFScorer" title="apd.scorers.local.tf_scorer.TFScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFScorer</span></code></a>,</p></li>
+<li><p><a class="reference internal" href="#apd.filters.local.rank_filter.RankFilter" title="apd.filters.local.rank_filter.RankFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">RankFilter</span></code></a> with a <code class="docutils literal notranslate"><span class="pre">k</span></code> of 20,</p></li>
+<li><p><a class="reference internal" href="#apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver" title="apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">WikipediaSearchResolver</span></code></a>,</p></li>
+<li><p><a class="reference internal" href="#apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator" title="apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator"><code class="xref py py-class docutils literal notranslate"><span class="pre">WikipediaExtrapolator</span></code></a>, and</p></li>
+<li><p><a class="reference internal" href="#apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor" title="apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">WikipediaPostprocessor</span></code></a>.</p></li>
+</ol>
+</div></blockquote>
+<p>However, they can be overriden in the constructor.</p>
+<dl class="method">
+<dt id="apd.eld_participant_detector.ELDParticipantDetector.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">scheme=None</em>, <em class="sig-param">corpus=None</em>, <em class="sig-param">extractor=None</em>, <em class="sig-param">scorer=None</em>, <em class="sig-param">filter=None</em>, <em class="sig-param">resolver=None</em>, <em class="sig-param">extrapolator=None</em>, <em class="sig-param">postprocessor=None</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.eld_participant_detector.ELDParticipantDetector.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the ELD participant detector.
+Any parameter that is not given uses the default configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme to use by the <a class="reference internal" href="#apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver" title="apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">WikipediaSearchResolver</span></code></a> and <a class="reference internal" href="#apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator" title="apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator"><code class="xref py py-class docutils literal notranslate"><span class="pre">WikipediaExtrapolator</span></code></a>.
+These documents are used to compare the similarity with the domain of the candidates.</p></li>
+<li><p><strong>corpus</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The corpus of documents.</p></li>
+<li><p><strong>extractor</strong> (None <a class="reference internal" href="#apd.extractors.extractor.Extractor" title="apd.extractors.extractor.Extractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Extractor</span></code></a>) – The participant detector’s extractor.
+This component is used to find candidate participants.
+If it is not given, it defaults to the <a class="reference internal" href="#apd.extractors.local.twitterner_entity_extractor.TwitterNEREntityExtractor" title="apd.extractors.local.twitterner_entity_extractor.TwitterNEREntityExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">TwitterNEREntityExtractor</span></code></a>.</p></li>
+<li><p><strong>scorer</strong> (None or <a class="reference internal" href="#apd.scorers.scorer.Scorer" title="apd.scorers.scorer.Scorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scorer</span></code></a>) – The participant detector’s scorer.
+This component is used to give a score to the extractor’s candidate participants.
+If it is not given, it defaults to the <a class="reference internal" href="#apd.scorers.local.tf_scorer.TFScorer" title="apd.scorers.local.tf_scorer.TFScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFScorer</span></code></a>.</p></li>
+<li><p><strong>filter</strong> (None or <a class="reference internal" href="#apd.filters.filter.Filter" title="apd.filters.filter.Filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Filter</span></code></a>) – The participant detector’s filter.
+This component is used to exclude candidates that are unlikely to be participants.
+If it is not given, it defaults to the <a class="reference internal" href="#apd.filters.local.rank_filter.RankFilter" title="apd.filters.local.rank_filter.RankFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">RankFilter</span></code></a> with a <code class="docutils literal notranslate"><span class="pre">k</span></code> of 20.</p></li>
+<li><p><strong>resolver</strong> (None or <a class="reference internal" href="#apd.resolvers.resolver.Resolver" title="apd.resolvers.resolver.Resolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">Resolver</span></code></a>) – The participant detector’s resolver.
+This component looks for the real keywords associated with a participant.
+If it is not given, it defaults to the <a class="reference internal" href="#apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver" title="apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">WikipediaSearchResolver</span></code></a>.</p></li>
+<li><p><strong>extrapolator</strong> (None or <a class="reference internal" href="#apd.extrapolators.extrapolator.Extrapolator" title="apd.extrapolators.extrapolator.Extrapolator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Extrapolator</span></code></a>) – The participant detector’s extrapolator.
+This component looks for additional participants that might not be in the corpus.
+If it is not given, it defaults to the <a class="reference internal" href="#apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator" title="apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator"><code class="xref py py-class docutils literal notranslate"><span class="pre">WikipediaExtrapolator</span></code></a>.</p></li>
+<li><p><strong>postprocessor</strong> (None or <a class="reference internal" href="#apd.postprocessors.postprocessor.Postprocessor" title="apd.postprocessors.postprocessor.Postprocessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Postprocessor</span></code></a>) – The participant detector’s postprocessor.
+This component modifies the found participants.
+If it is not given, it defaults to the <a class="reference internal" href="#apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor" title="apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">WikipediaPostprocessor</span></code></a>.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -636,8 +712,8 @@ Here, normalization means rescaling between 0 and 1.</p></li>
 
 </dd></dl>
 
-<div class="section" id="id2">
-<h3>Local<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id4">
+<h3>Local<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <span class="target" id="module-apd.scorers.local"></span><p>Local scorers assign a score to candidate participants based on evidence from the event’s corpus.</p>
 <div class="section" id="module-apd.scorers.local.df_scorer">
 <span id="document-frequency-scorer"></span><h4>Document Frequency Scorer<a class="headerlink" href="#module-apd.scorers.local.df_scorer" title="Permalink to this headline">¶</a></h4>
@@ -924,8 +1000,8 @@ The input candidates should be the product of a <a class="reference internal" hr
 
 </dd></dl>
 
-<div class="section" id="id3">
-<h3>Local<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h3>Local<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <span class="target" id="module-apd.filters.local"></span><p>Local filtering strategies consider only the scores of candidate participants to decide whether they are credible.
 Therefore these kind of filters are usually very limited in what they can do.</p>
 <div class="section" id="module-apd.filters.local.threshold_filter">
@@ -957,7 +1033,59 @@ The threshold is applied over the candidate participant scores.</p>
 <dd><p>Filter candidate participants that are not credible.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>candidates</strong> (<em>dict</em>) – A dictionary of candidate praticipants and their scores.
+<dd class="field-odd"><p><strong>candidates</strong> (<em>dict</em>) – A dictionary of candidate participants and their scores.
+The keys are the candidate names, and the values are their scores.
+The input candidates should be the product of a <a class="reference internal" href="#apd.scorers.scorer.Scorer" title="apd.scorers.scorer.Scorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scorer</span></code></a> process.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary of filtered candidate participants and their associated scores.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apd.filters.local.rank_filter">
+<span id="rank-filter"></span><h4>Rank Filter<a class="headerlink" href="#module-apd.filters.local.rank_filter" title="Permalink to this headline">¶</a></h4>
+<p>The rank filter extracts the top _k_ candidates.
+Anything else is filtered out.</p>
+<dl class="class">
+<dt id="apd.filters.local.rank_filter.RankFilter">
+<em class="property">class </em><code class="sig-name descname">RankFilter</code><span class="sig-paren">(</span><em class="sig-param">k</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.filters.local.rank_filter.RankFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>The rank filter is used to extract the top _k_ candidates.
+The _k_ parameter is passed on to the constructor and stored as an instance variable.
+It is then re-used by the <a class="reference internal" href="#apd.filters.local.rank_filter.RankFilter.filter" title="apd.filters.local.rank_filter.RankFilter.filter"><code class="xref py py-func docutils literal notranslate"><span class="pre">filter()</span></code></a> method.</p>
+<dl class="field-list simple">
+</dl>
+<dl class="method">
+<dt id="apd.filters.local.rank_filter.RankFilter.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">k</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.filters.local.rank_filter.RankFilter.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the filter with the k that will decide whether candidate participants will be retained.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>k</strong> (<em>int</em>) – The number of candidates to retain.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – When _k_ is not an integer.</p></li>
+<li><p><strong>ValueError</strong> – When _k_ is not positive.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="apd.filters.local.rank_filter.RankFilter.filter">
+<code class="sig-name descname">filter</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.filters.local.rank_filter.RankFilter.filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter candidate participants that are not credible.
+The function sorts the candidates by score and then retains only the top _k_ candidates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>candidates</strong> (<em>dict</em>) – A dictionary of candidate participants and their scores.
 The keys are the candidate names, and the values are their scores.
 The input candidates should be the product of a <a class="reference internal" href="#apd.scorers.scorer.Scorer" title="apd.scorers.scorer.Scorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scorer</span></code></a> process.</p>
 </dd>
@@ -1026,8 +1154,8 @@ Therefore unresolved candidates are empty.</p>
 
 </dd></dl>
 
-<div class="section" id="id4">
-<h3>Local<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h3>Local<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <span class="target" id="module-apd.resolvers.local"></span><p>Local resolvers try to map candidate participants to something in the event’s corpus.
 For example, the <a class="reference internal" href="#apd.resolvers.local.token_resolver.TokenResolver" title="apd.resolvers.local.token_resolver.TokenResolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">TokenResolver</span></code></a> resolves candidates to tokens in the event’s corpus.</p>
 <div class="section" id="module-apd.resolvers.local.token_resolver">
@@ -1303,8 +1431,8 @@ This extrapolator returns no new participants.</p>
 
 </dd></dl>
 
-<div class="section" id="id5">
-<h3>External<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id7">
+<h3>External<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <span class="target" id="module-apd.extrapolators.external"></span><p>External extrapolators look for new participants outside of the event’s corpus.
 This allows extrapolation to bypass limitations in the corpus.
 For example, a corpus may be too small, or too biased, to capture all of the event’s participants.</p>
@@ -1450,8 +1578,8 @@ However, all post-processors must return all participants and in the same order.
 
 </dd></dl>
 
-<div class="section" id="id6">
-<h3>External<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id8">
+<h3>External<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <span class="target" id="module-apd.postprocessors.external"></span><p>External post-processors use information from outside the event’s corpus to modify participants.
 These post-processors are useful when resolution or extrapolation maps participants to semantic concepts, like Wikipedia articles.
 In these cases, the extra information can be used to post-process participants.</p>

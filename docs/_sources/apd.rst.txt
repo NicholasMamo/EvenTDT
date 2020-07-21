@@ -24,6 +24,13 @@ Named Entity Recognition Participant Detector
    :members:
    :special-members:
 
+ELD Participant Detector
+------------------------
+
+.. automodule:: apd.eld_participant_detector
+   :members:
+   :special-members:
+
 Extractors
 ==========
 
@@ -126,6 +133,13 @@ Threshold Filter
 ^^^^^^^^^^^^^^^^
 
 .. automodule:: apd.filters.local.threshold_filter
+   :members:
+   :special-members:
+
+Rank Filter
+^^^^^^^^^^^
+
+.. automodule:: apd.filters.local.rank_filter
    :members:
    :special-members:
 
