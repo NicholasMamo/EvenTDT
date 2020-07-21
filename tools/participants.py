@@ -149,6 +149,11 @@ def detect(filename, model, extractor, scorer, filter, *args, **kwargs):
 	"""
 
 	"""
+	Load the corpus.
+	"""
+	corpus = load_corpus(filename)
+
+	"""
 	Create all the components of the participant detector.
 	"""
 	extractor = create_extractor(extractor, *args, **kwargs)
@@ -162,9 +167,20 @@ def detect(filename, model, extractor, scorer, filter, *args, **kwargs):
 	logger.info(f"Extrapolator: { type(detector.extrapolator).__name__ }")
 	logger.info(f"Postprocessor: { type(detector.postprocessor).__name__ }")
 
+	participants, _, _, = detector.detect(corpus)
+	return participants
+
+def load_corpus(filename):
 	"""
-	Load the corpus.
+	Load the corpus from the given filename.
+
+	:param filename: The path to the corpus from where to detect participants.
+	:type filename: str
+
+	:return: A list of :class:`~nlp.document.Document` making up the corpus.
+	:rtype: list of :class:`~nlp.document.Document`
 	"""
+
 	corpus = [ ]
 	with open(filename) as f:
 		for line in f:
@@ -180,8 +196,7 @@ def detect(filename, model, extractor, scorer, filter, *args, **kwargs):
 			document = Document(text)
 			corpus.append(document)
 
-	participants, _, _, = detector.detect(corpus)
-	return participants
+	return corpus
 
 def create_model(model, extractor, scorer, filter, *args, **kwargs):
 	"""
