@@ -159,7 +159,7 @@ def detect(filename, model, extractor, scorer, filter, *args, **kwargs):
 	extractor = create_extractor(extractor, *args, **kwargs)
 	scorer = create_scorer(scorer, *args, **kwargs)
 	filter = create_filter(filter, *args, **kwargs)
-	detector = create_model(model, extractor, scorer, filter, *args, **kwargs)
+	detector = create_model(model, extractor, scorer, filter, corpus=corpus, *args, **kwargs)
 	logger.info(f"Extractor: { type(detector.extractor).__name__ }")
 	logger.info(f"Scorer: { type(detector.scorer).__name__ }")
 	logger.info(f"Filter: { type(detector.filter).__name__ }")
@@ -198,7 +198,7 @@ def load_corpus(filename):
 
 	return corpus
 
-def create_model(model, extractor, scorer, filter, *args, **kwargs):
+def create_model(model, extractor, scorer, filter, corpus, *args, **kwargs):
 	"""
 	Create a participant detector model from the given components.
 
@@ -210,13 +210,15 @@ def create_model(model, extractor, scorer, filter, *args, **kwargs):
 	:type scorer: :class:`~apd.scorers.scorer.Scorer`
 	:param filter: The filter with which to filter candidate participants.
 	:type filter: :class:`~apd.filters.filter.Filter`
+	:param corpus: A list of :class:`~nlp.document.Document` making up the corpus.
+	:type corpus: list of :class:`~nlp.document.Document`
 
 	:return: A new participant detector model.
 	:rtype: :class:`~apd.participant_detector.ParticipantDetector`
 	"""
 
 	if model.__name__ == ELDParticipantDetector.__name__:
-		return model(extractor=extractor, scorer=scorer, filter=filter)
+		return model(corpus=corpus, extractor=extractor, scorer=scorer, filter=filter)
 	elif model.__name__ == ParticipantDetector.__name__:
 		extractor = extractor or local.EntityExtractor()
 		scorer = scorer or TFScorer()
