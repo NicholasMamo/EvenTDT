@@ -44,7 +44,7 @@ Accepted arguments:
 
 	- ``-f --file``			*<Required>* The input corpus from where to extract participants.
 	- ``-o --output``		*<Required>* The path to the file where to store the extracted participants.
-	- ``--clean``			*<Optional>* Clean the tweets before extracting participants. This uses all the parameters in the :class:`~nlp.cleaners.tweet_cleaner.TweetCleaner`.
+	- ``--clean``			*<Optional>* Clean the tweets before extracting participants. This replaces tweet mentions with the display name using the :class:`~nlp.cleaners.tweet_cleaner.TweetCleaner`.
 	- ``-m --model``		*<Optional>* The type of model to use; supported: `ELDParticipantDetector`; defaults to a normal participant detector.
 	- ``--extractor``		*<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.
 	- ``--scorer``			*<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
@@ -85,7 +85,7 @@ def setup_args():
 
 		- ``-f --file``			*<Required>* The input corpus from where to extract participants.
 		- ``-o --output``		*<Required>* The path to the file where to store the extracted participants.
-		- ``--clean``			*<Optional>* Clean the tweets before extracting participants. This uses all the parameters in the :class:`~nlp.cleaners.tweet_cleaner.TweetCleaner`.
+		- ``--clean``			*<Optional>* Clean the tweets before extracting participants. This replaces tweet mentions with the display name using the :class:`~nlp.cleaners.tweet_cleaner.TweetCleaner`.
 		- ``-m --model``		*<Optional>* The type of model to use; supported: `ELDParticipantDetector`; defaults to a normal participant detector.
 		- ``--extractor``		*<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.
 		- ``--scorer``			*<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
@@ -103,7 +103,7 @@ def setup_args():
 	parser.add_argument('-o', '--output', type=str, required=True,
 						help='<Required> The path to the file where to store the extracted terms.')
 	parser.add_argument('--clean', action='store_true', required=False, default=False,
-						help='<Optional> Clean the tweets before extracting participants. This uses all the parameters in the TweetCleaner.')
+						help='<Optional> Clean the tweets before extracting participants. This replaces tweet mentions with the display name using the TweetCleaner.')
 	parser.add_argument('-m', '--model', type=model, required=False, default=ParticipantDetector,
 						help='<Optional> The type of model to use; supported: `ELDParticipantDetector`; defaults to a normal participant detector.')
 	parser.add_argument('--extractor', type=extractor, required=False, default=None,
@@ -199,15 +199,11 @@ def load_corpus(filename, clean):
 	:rtype: list of :class:`~nlp.document.Document`
 	"""
 
-	cleaner = TweetCleaner(remove_alt_codes=True, complete_sentences=True,
-						   collapse_new_lines=True, collapse_whitespaces=True,
-						   remove_unicode_entities=True, remove_urls=True,
-						   remove_hashtags=True, split_hashtags=True,
-						   remove_retweet_prefix=True, replace_mentions=True)
+	cleaner = TweetCleaner(replace_mentions=True)
 
 	corpus = [ ]
 	with open(filename) as f:
-		for line in f:
+		for i, line in enumerate(f):
 			tweet = json.loads(line)
 			original = tweet
 			while "retweeted_status" in tweet:
