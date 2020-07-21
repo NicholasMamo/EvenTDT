@@ -11,6 +11,7 @@ To run the script, use:
     ./tools/participants.py \\
 	-f data/understanding.json \\
 	--extractor EntityExtractor \\
+	--scorer TFScorer \\
 	-o data/participants.json
 
 Accepted arguments:
@@ -81,10 +82,10 @@ def main():
 	cmd['extractor'] = str(vars(args)['extractor'])
 	cmd['scorer'] = str(vars(args)['scorer'])
 
-	participants = detect(args.file, args.extractor)
+	participants = detect(args.file, args.extractor, args.scorer)
 	tools.save(args.output, { 'meta': cmd, 'participants': participants })
 
-def detect(filename, extractor, *args, **kwargs):
+def detect(filename, extractor, scorer, *args, **kwargs):
 	"""
 	Detect participants from the given corpus.
 
@@ -92,13 +93,23 @@ def detect(filename, extractor, *args, **kwargs):
 	:type filename: str
 	:param extractor: The class of the extractor with which to extract candidate participants.
 	:type extractor: :class:`~apd.extractors.extractor.Extractor`
+	:param scorer: The class of the scorer with which to score candidate participants.
+	:type scorer: :class:`~apd.scorers.scorer.Scorer`
 
 	:return: A list of participants detected in the corpus.
 	:rtype: list of str
 	"""
 
+	"""
+	Create all the components of the participant detector.
+	"""
 	extractor = create_extractor(extractor, *args, **kwargs)
-	detector = ParticipantDetector(extractor)
+	scorer = create_scorer(scorer, *args, **kwargs)
+	detector = ParticipantDetector(extractor, scorer)
+
+	"""
+	Load the corpus.
+	"""
 	corpus = [ ]
 	with open(filename) as f:
 		for line in f:
@@ -127,6 +138,16 @@ def create_extractor(extractor, *args, **kwargs):
 
 	return extractor()
 
+def create_scorer(scorer, *args, **kwargs):
+	"""
+	Create a scorer from the given class.
+
+	:param scorer: The class of the scorer with which to score candidate participants.
+	:type scorer: :class:`~apd.scorers.scorer.Scorer`
+	"""
+
+	return scorer()
+
 def extractor(method):
 	"""
 	Convert the given string into an extractor class.
@@ -140,7 +161,7 @@ def extractor(method):
 	:type method: str
 
 	:return: The extractor type that corresponds to the given method.
-	:rtype: class
+	:rtype: :class:`~apd.extractors.extractor.Extractor`
 	"""
 
 	methods = {
@@ -170,7 +191,7 @@ def scorer(method):
 	:type method: str
 
 	:return: The extractor type that corresponds to the given method.
-	:rtype: class
+	:rtype: :class:`~apd.scorers.scorer.Scorer`
 	"""
 
 	methods = {
