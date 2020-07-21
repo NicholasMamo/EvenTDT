@@ -23,6 +23,7 @@ Accepted arguments:
 	- ``--scorer``			*<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
 	- ``--filter``			*<Optional>* The filter to use to filter candidate participants; supported: `RankFilter`, `ThresholdFilter`; defaults to no filter.
 	- ``-k``				*<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
+	- ``--threshold``		*<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).
 """
 
 import argparse
@@ -58,6 +59,7 @@ def setup_args():
 		- ``--scorer``			*<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
 		- ``--filter``			*<Optional>* The filter to use to filter candidate participants; supported: `RankFilter`, `ThresholdFilter`; defaults to no filter.
 		- ``-k``				*<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
+		- ``--threshold``		*<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).
 
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
@@ -75,6 +77,8 @@ def setup_args():
 						help='<Optional> The filter to use to filter candidate participants; supported: `RankFilter`, `ThresholdFilter`; defaults to no filter.')
 	parser.add_argument('-k', required=False,
 						help='<Optional> The number of candidates to retain when filtering candidates (used only with the `RankFilter`).')
+	parser.add_argument('--threshold', required=False,
+						help='<Optional> The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).')
 
 	args = parser.parse_args()
 	return args
@@ -165,7 +169,7 @@ def create_scorer(scorer, *args, **kwargs):
 
 	return scorer()
 
-def create_filter(filter, k=None, *args, **kwargs):
+def create_filter(filter, k=None, threshold=None, *args, **kwargs):
 	"""
 	Create a filter from the given class.
 
@@ -174,14 +178,21 @@ def create_filter(filter, k=None, *args, **kwargs):
 	:param k: The number of candidates to retain when filtering.
 			  This is used only with the :class:`~apd.filters.local.rank_filter.RankFilter`.
 	:type k: int
+	:param threshold: The score threshold to use when filtering candidates.
+	 				  This is used only with the :class:`~appd.filters.local.threshold_filter.ThresholdFilter`.
 
 	:raises ValueError: When a :class:`~apd.filters.local.rank_filter.RankFilter` is to be created, but _k_ is not given.
+	:raises ValueError: When a :class:`~appd.filters.local.threshold_filter.ThresholdFilter` is to be created, but the threshold is not given.
 	"""
 
 	if filter.__name__ == RankFilter.__name__:
 		if not k:
 			raise ValueError("The Rank Filter requires the `k` parameter (the number of candidates to retain).")
 		return filter(int(k))
+	if filter.__name__ == ThresholdFilter.__name__:
+		if not threshold:
+			raise ValueError("The Threshold Filter requires the `threshold` parameter (the minimum score of a candidate to retain it).")
+		return filter(float(threshold))
 
 	return filter()
 
