@@ -17,9 +17,9 @@ To run the script, use:
 Accepted arguments:
 
 	- ``-f --file``			*<Required>* The input corpus from where to extract participants.
-	- ``-e --extractor``	*<Required>* The extractor to use to extract candidate participants; supported: `EntityExtractor`, `TokenExtractor`, `TwitterNEREntityExtractor`.
 	- ``-o --output``		*<Required>* The path to the file where to store the extracted participants.
-	- ``-s --scorer``		*<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
+	- ``--extractor``		*<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.
+	- ``--scorer``			*<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
 """
 
 import argparse
@@ -48,9 +48,9 @@ def setup_args():
 	Accepted arguments:
 
 		- ``-f --file``			*<Required>* The input corpus from where to extract participants.
-		- ``-e --extractor``	*<Required>* The extractor to use to extract candidate participants; supported: `EntityExtractor`, `TokenExtractor`, `TwitterNEREntityExtractor`.
 		- ``-o --output``		*<Required>* The path to the file where to store the extracted participants.
-		- ``-s --scorer``		*<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
+		- ``--extractor``		*<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.
+		- ``--scorer``			*<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
 
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
@@ -58,11 +58,11 @@ def setup_args():
 
 	parser.add_argument('-f', '--file', type=str, required=True,
 						help='<Required> The input corpus from where to extract participants.')
-	parser.add_argument('-e', '--extractor', type=extractor, required=True,
-						help='<Required> The extractor to use to extract candidate participants; supported: `EntityExtractor`, `TokenExtractor`, `TwitterNEREntityExtractor`.')
 	parser.add_argument('-o', '--output', type=str, required=True,
 						help='<Required> The path to the file where to store the extracted terms.')
-	parser.add_argument('-s', '--scorer', type=scorer, required=False, default=TFScorer,
+	parser.add_argument('--extractor', type=extractor, required=False, default=local.EntityExtractor,
+						help='<Required> The extractor to use to extract candidate participants; supported: `EntityExtractor`, `TokenExtractor`, `TwitterNEREntityExtractor`.')
+	parser.add_argument('--scorer', type=scorer, required=False, default=TFScorer,
 						help='<Required> The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`')
 
 	args = parser.parse_args()
