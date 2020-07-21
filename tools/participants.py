@@ -139,9 +139,10 @@ def main():
 	cmd['filter'] = str(vars(args)['filter'])
 
 	args = vars(args)
-	participants = detect(filename=args.pop('file'), model=args.pop('model'),
-						  extractor=args.pop('extractor'), scorer=args.pop('scorer'), filter=args.pop('filter'), **args)
-	tools.save(args['output'], { 'meta': cmd, 'participants': participants })
+	resolved, extrapolated = detect(filename=args.pop('file'), model=args.pop('model'),
+									extractor=args.pop('extractor'), scorer=args.pop('scorer'),
+									filter=args.pop('filter'), **args)
+	tools.save(args['output'], { 'meta': cmd, 'resolved': resolved, 'extrapolated': extrapolated })
 
 def detect(filename, model, extractor, scorer, filter, clean=False, *args, **kwargs):
 	"""
@@ -184,7 +185,7 @@ def detect(filename, model, extractor, scorer, filter, clean=False, *args, **kwa
 	logger.info(f"Postprocessor: { type(detector.postprocessor).__name__ }")
 
 	resolved, _, extrapolated, = detector.detect(corpus)
-	return resolved + extrapolated
+	return resolved, extrapolated
 
 def load_corpus(filename, clean):
 	"""
