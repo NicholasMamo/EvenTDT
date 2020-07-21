@@ -4,7 +4,16 @@
 A tool to automatically extract participants from the given corpora.
 This tool is meant to run on the understanding corpora to extract the event's participants.
 
-To run the script, use:
+To use a ready-made model, use:
+
+.. code-block:: bash
+
+    ./tools/participants.py \\
+	-f data/understanding.json \\
+	-m ELDParticipantDetector \\
+	-o data/participants.json
+
+Alternatively, you can create your own model:
 
 .. code-block:: bash
 
@@ -15,10 +24,22 @@ To run the script, use:
 	--filter RankFilter -k 10 \\
 	-o data/participants.json
 
+You can modify an existing model by providing the components yourself.
+For example, this snippet uses the :class:`~apd.extractors.local.entity_extractor.EntityExtractor` instead of the default :class:`~apd.extractors.local.twitterner_entity_extractor.TwitterNEREntityExtractor`:
+
+.. code-block:: bash
+
+    ./tools/participants.py \\
+	-f data/understanding.json \\
+	-m ELDParticipantDetector \\
+	--extractor EntityExtractor \\
+	-o data/participants.json
+
 Accepted arguments:
 
 	- ``-f --file``			*<Required>* The input corpus from where to extract participants.
 	- ``-o --output``		*<Required>* The path to the file where to store the extracted participants.
+	- ``-m --model``		*<Optional>* The type of model to use; supported: `ELDParticipantDetector`; defaults to a normal participant detector.
 	- ``--extractor``		*<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.
 	- ``--scorer``			*<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
 	- ``--filter``			*<Optional>* The filter to use to filter candidate participants; supported: `RankFilter`, `ThresholdFilter`; defaults to no filter.
@@ -38,7 +59,7 @@ sys.path.insert(-1, root)
 sys.path.insert(-1, lib)
 
 import tools
-from apd import ParticipantDetector
+from apd import ParticipantDetector, ELDParticipantDetector
 from apd.extractors import local
 from apd.scorers.local import *
 from apd.filters import Filter
@@ -55,6 +76,7 @@ def setup_args():
 
 		- ``-f --file``			*<Required>* The input corpus from where to extract participants.
 		- ``-o --output``		*<Required>* The path to the file where to store the extracted participants.
+		- ``-m --model``		*<Optional>* The type of model to use; supported: `ELDParticipantDetector`; defaults to a normal participant detector.
 		- ``--extractor``		*<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.
 		- ``--scorer``			*<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
 		- ``--filter``			*<Optional>* The filter to use to filter candidate participants; supported: `RankFilter`, `ThresholdFilter`; defaults to no filter.
@@ -69,11 +91,13 @@ def setup_args():
 						help='<Required> The input corpus from where to extract participants.')
 	parser.add_argument('-o', '--output', type=str, required=True,
 						help='<Required> The path to the file where to store the extracted terms.')
-	parser.add_argument('--extractor', type=extractor, required=False, default=local.EntityExtractor,
-						help='<Optional> The extractor to use to extract candidate participants; supported: `EntityExtractor`, `TokenExtractor`, `TwitterNEREntityExtractor`.')
-	parser.add_argument('--scorer', type=scorer, required=False, default=TFScorer,
+	parser.add_argument('-m', '--model', type=model, required=False, default=ParticipantDetector,
+						help='<Optional> The type of model to use; supported: `ELDParticipantDetector`; defaults to a normal participant detector.')
+	parser.add_argument('--extractor', type=extractor, required=False, default=None,
+						help='<Optional> The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.')
+	parser.add_argument('--scorer', type=scorer, required=False, default=None,
 						help='<Optional> The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.')
-	parser.add_argument('--filter', type=filter, required=False, default=Filter,
+	parser.add_argument('--filter', type=filter, required=False, default=None,
 						help='<Optional> The filter to use to filter candidate participants; supported: `RankFilter`, `ThresholdFilter`; defaults to no filter.')
 	parser.add_argument('-k', required=False,
 						help='<Optional> The number of candidates to retain when filtering candidates (used only with the `RankFilter`).')
@@ -94,21 +118,24 @@ def main():
 	Get the meta arguments.
 	"""
 	cmd = tools.meta(args)
+	cmd['model'] = str(vars(args)['model'])
 	cmd['extractor'] = str(vars(args)['extractor'])
 	cmd['scorer'] = str(vars(args)['scorer'])
 	cmd['filter'] = str(vars(args)['filter'])
 
 	args = vars(args)
-	participants = detect(filename=args.pop('file'), extractor=args.pop('extractor'),
-						  scorer=args.pop('scorer'), filter=args.pop('filter'), **args)
+	participants = detect(filename=args.pop('file'), model=args.pop('model'),
+						  extractor=args.pop('extractor'), scorer=args.pop('scorer'), filter=args.pop('filter'), **args)
 	tools.save(args['output'], { 'meta': cmd, 'participants': participants })
 
-def detect(filename, extractor, scorer, filter, *args, **kwargs):
+def detect(filename, model, extractor, scorer, filter, *args, **kwargs):
 	"""
 	Detect participants from the given corpus.
 
 	:param filename: The path to the corpus from where to detect participants.
 	:type filename: str
+	:param model: The class of the participant detector to use to extract participants.
+	:type model: :class:`~apd.participant_detector.ParticipantDetector`
 	:param extractor: The class of the extractor with which to extract candidate participants.
 	:type extractor: :class:`~apd.extractors.extractor.Extractor`
 	:param scorer: The class of the scorer with which to score candidate participants.
@@ -126,7 +153,7 @@ def detect(filename, extractor, scorer, filter, *args, **kwargs):
 	extractor = create_extractor(extractor, *args, **kwargs)
 	scorer = create_scorer(scorer, *args, **kwargs)
 	filter = create_filter(filter, *args, **kwargs)
-	detector = ParticipantDetector(extractor, scorer, filter)
+	detector = create_model(model, extractor, scorer, filter, *args, **kwargs)
 
 	"""
 	Load the corpus.
@@ -149,6 +176,30 @@ def detect(filename, extractor, scorer, filter, *args, **kwargs):
 	participants, _, _, = detector.detect(corpus)
 	return participants
 
+def create_model(model, extractor, scorer, filter, *args, **kwargs):
+	"""
+	Create a participant detector model from the given components.
+
+	:param model: The class of the participant detector to use to extract participants.
+	:type model: :class:`~apd.participant_detector.ParticipantDetector`
+	:param extractor: The extractor with which to extract candidate participants.
+	:type extractor: :class:`~apd.extractors.extractor.Extractor`
+	:param scorer: The scorer with which to score candidate participants.
+	:type scorer: :class:`~apd.scorers.scorer.Scorer`
+	:param filter: The filter with which to filter candidate participants.
+	:type filter: :class:`~apd.filters.filter.Filter`
+
+	:return: A new participant detector model.
+	:rtype: :class:`~apd.participant_detector.ParticipantDetector`
+	"""
+
+	if model.__name__ == ELDParticipantDetector.__name__:
+		return model(extractor=extractor, scorer=scorer, filter=filter)
+	elif model.__name__ == ParticipantDetector.__name__:
+		extractor = extractor or local.EntityExtractor()
+		scorer = scorer or TFScorer()
+		return model(extractor, scorer, filter)
+
 def create_extractor(extractor, *args, **kwargs):
 	"""
 	Create an extractor from the given class.
@@ -157,7 +208,7 @@ def create_extractor(extractor, *args, **kwargs):
 	:type extractor: :class:`~apd.extractors.extractor.Extractor`
 	"""
 
-	return extractor()
+	return extractor() if extractor else extractor
 
 def create_scorer(scorer, *args, **kwargs):
 	"""
@@ -167,7 +218,7 @@ def create_scorer(scorer, *args, **kwargs):
 	:type scorer: :class:`~apd.scorers.scorer.Scorer`
 	"""
 
-	return scorer()
+	return scorer() if scorer else scorer
 
 def create_filter(filter, k=None, threshold=None, *args, **kwargs):
 	"""
@@ -185,6 +236,9 @@ def create_filter(filter, k=None, threshold=None, *args, **kwargs):
 	:raises ValueError: When a :class:`~appd.filters.local.threshold_filter.ThresholdFilter` is to be created, but the threshold is not given.
 	"""
 
+	if not filter:
+		return filter
+
 	if filter.__name__ == RankFilter.__name__:
 		if not k:
 			raise ValueError("The Rank Filter requires the `k` parameter (the number of candidates to retain).")
@@ -196,14 +250,33 @@ def create_filter(filter, k=None, threshold=None, *args, **kwargs):
 
 	return filter()
 
+def model(method):
+	"""
+	Convert the given string into a model class.
+	The accepted classes are:
+
+		#. :class:`~apd.eld_participant_detector.ELDParticipantDetector`
+
+	:param method: The model string.
+	:type method: str
+
+	:return: The participant detector type that corresponds to the given method.
+	:rtype: :class:`~apd.participant_detector.ParticipantDetector`
+	"""
+
+	if method.lower() == 'eldparticipantdetector':
+		return ELDParticipantDetector
+
+	raise argparse.ArgumentTypeError(f"Invalid model: {method}")
+
 def extractor(method):
 	"""
 	Convert the given string into an extractor class.
 	The accepted classes are:
 
-		#. :func:`~apd.extractors.local.EntityExtractor`
-		#. :func:`~apd.extractors.local.TokenExtractor`
-		#. :func:`~apd.extractors.local.TwitterNEREntityExtractor`
+		#. :class:`~apd.extractors.local.EntityExtractor`
+		#. :class:`~apd.extractors.local.TokenExtractor`
+		#. :class:`~apd.extractors.local.TwitterNEREntityExtractor`
 
 	:param method: The extractor string.
 	:type method: str
@@ -230,10 +303,10 @@ def scorer(method):
 	Convert the given string into a scorer class.
 	The accepted classes are:
 
-		#. :func:`~apd.scorers.local.DFScorer`
-		#. :func:`~apd.scorers.local.LogDFScorer`
-		#. :func:`~apd.scorers.local.LogTFScorer`
-		#. :func:`~apd.scorers.local.TFScorer`
+		#. :class:`~apd.scorers.local.DFScorer`
+		#. :class:`~apd.scorers.local.LogDFScorer`
+		#. :class:`~apd.scorers.local.LogTFScorer`
+		#. :class:`~apd.scorers.local.TFScorer`
 
 	:param method: The scorer string.
 	:type method: str
@@ -259,8 +332,8 @@ def filter(method):
 	Convert the given string into a filter class.
 	The accepted classes are:
 
-		#. :func:`~apd.filters.local.RankFilter`
-		#. :func:`~apd.filters.local.ThresholdFilter`
+		#. :class:`~apd.filters.local.RankFilter`
+		#. :class:`~apd.filters.local.ThresholdFilter`
 
 	:param method: The filter string.
 	:type method: str

@@ -14,6 +14,7 @@ for path in paths:
 	    sys.path.append(path)
 
 from tools import participants as apd
+from eventdt.apd import ParticipantDetector
 from eventdt.apd.extractors.local import EntityExtractor
 from eventdt.apd.scorers.local import LogTFScorer, TFScorer
 from eventdt.apd.filters import Filter
@@ -30,8 +31,8 @@ class TestAPD(unittest.TestCase):
 		"""
 
 		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-		all_participants = apd.detect(file, EntityExtractor, TFScorer, Filter)
-		top_participants = apd.detect(file, EntityExtractor, TFScorer, RankFilter, k=10)
+		all_participants = apd.detect(file, ParticipantDetector, EntityExtractor, TFScorer, Filter)
+		top_participants = apd.detect(file, ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
 		self.assertTrue(all( participant in all_participants for participant in top_participants ))
 
 	def test_rank_filter_subset_k(self):
@@ -40,8 +41,8 @@ class TestAPD(unittest.TestCase):
 		"""
 
 		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-		lenient = apd.detect(file, EntityExtractor, TFScorer, RankFilter, k=20)
-		strict = apd.detect(file, EntityExtractor, TFScorer, RankFilter, k=10)
+		lenient = apd.detect(file, ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=20)
+		strict = apd.detect(file, ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
 		self.assertEqual(20, len(lenient))
 		self.assertEqual(10, len(strict))
 		self.assertTrue(all( participant in lenient for participant in strict ))
@@ -52,7 +53,7 @@ class TestAPD(unittest.TestCase):
 		"""
 
 		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-		self.assertRaises(ValueError, apd.detect, file, EntityExtractor, TFScorer, RankFilter)
+		self.assertRaises(ValueError, apd.detect, file, ParticipantDetector, EntityExtractor, TFScorer, RankFilter)
 
 	def test_rank_filter_length(self):
 		"""
@@ -60,7 +61,7 @@ class TestAPD(unittest.TestCase):
 		"""
 
 		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-		participants = apd.detect(file, EntityExtractor, TFScorer, RankFilter, k=10)
+		participants = apd.detect(file, ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
 		self.assertEqual(10, len(participants))
 
 	def test_threshold_filter_subset(self):
@@ -69,8 +70,8 @@ class TestAPD(unittest.TestCase):
 		"""
 
 		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-		all_participants = apd.detect(file, EntityExtractor, TFScorer, Filter)
-		top_participants = apd.detect(file, EntityExtractor, TFScorer, ThresholdFilter, threshold=1)
+		all_participants = apd.detect(file, ParticipantDetector, EntityExtractor, TFScorer, Filter)
+		top_participants = apd.detect(file, ParticipantDetector, EntityExtractor, TFScorer, ThresholdFilter, threshold=1)
 		self.assertTrue(all( participant in all_participants for participant in top_participants ))
 
 	def test_rank_filter_float_threshold(self):
@@ -79,8 +80,8 @@ class TestAPD(unittest.TestCase):
 		"""
 
 		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-		lenient = apd.detect(file, EntityExtractor, LogTFScorer, ThresholdFilter, threshold=0.2)
-		strict = apd.detect(file, EntityExtractor, LogTFScorer, ThresholdFilter, threshold=0.8)
+		lenient = apd.detect(file, ParticipantDetector, EntityExtractor, LogTFScorer, ThresholdFilter, threshold=0.2)
+		strict = apd.detect(file, ParticipantDetector, EntityExtractor, LogTFScorer, ThresholdFilter, threshold=0.8)
 		self.assertTrue(all( participant in lenient for participant in strict ))
 		self.assertLess(len(strict), len(lenient))
 
@@ -90,4 +91,4 @@ class TestAPD(unittest.TestCase):
 		"""
 
 		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-		self.assertRaises(ValueError, apd.detect, file, EntityExtractor, TFScorer, ThresholdFilter)
+		self.assertRaises(ValueError, apd.detect, file, ParticipantDetector, EntityExtractor, TFScorer, ThresholdFilter)
