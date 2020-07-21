@@ -154,6 +154,7 @@ class WikipediaExtrapolator(Extrapolator):
 		first_level = links.collect(participants, introduction_only=False, separate=True)
 		link_frequency = self._link_frequency(first_level)
 		link_frequency = { link: frequency for link, frequency in link_frequency.items() if not self._has_year(self._remove_brackets(link)) }
+		link_frequency = { link: frequency for link, frequency in link_frequency.items() if not link.startswith('List of') }
 		link_frequency = sorted(link_frequency.keys(), key=lambda link: link_frequency.get(link), reverse=True)
 		frequent_links = link_frequency[:self.first_level_links]
 		first_level = {
@@ -171,6 +172,7 @@ class WikipediaExtrapolator(Extrapolator):
 		second_level = links.collect(frequent_links, introduction_only=False, separate=True)
 		link_frequency = self._link_frequency(second_level)
 		link_frequency = { link: frequency for link, frequency in link_frequency.items() if not self._has_year(self._remove_brackets(link)) }
+		link_frequency = { link: frequency for link, frequency in link_frequency.items() if not link.startswith('List of') }
 		if link_frequency:
 			cutoff = sorted(link_frequency.values(), reverse=True)[self.second_level_links - 1] if len(link_frequency) >= self.second_level_links else max(link_frequency.values())
 			frequent_links = [ link for link in link_frequency if link_frequency.get(link) >= cutoff ]
