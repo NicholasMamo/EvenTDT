@@ -10,7 +10,7 @@ To use a ready-made model, use:
 
     ./tools/participants.py \\
 	-f data/understanding.json \\
-	-- clean \\
+	--clean \\
 	--model ELDParticipantDetector \\
 	--tfidf data/idf.json \\
 	-o data/participants.json
@@ -21,7 +21,7 @@ Alternatively, you can create your own model:
 
     ./tools/participants.py \\
 	-f data/understanding.json \\
-	-- clean \\
+	--clean \\
 	--extractor EntityExtractor \\
 	--scorer TFScorer \\
 	--filter RankFilter -k 10 \\
@@ -34,7 +34,7 @@ For example, this snippet uses the :class:`~apd.extractors.local.entity_extracto
 
     ./tools/participants.py \\
 	-f data/understanding.json \\
-	-- clean \\
+	--clean \\
 	--model ELDParticipantDetector \\
 	--tfidf data/idf.json \\
 	--extractor EntityExtractor \\
