@@ -13,7 +13,7 @@ apd_tests() {
 	echo -e "${HIGHLIGHT}APD${DEFAULT}"
 
 	echo -e "${HIGHLIGHT}Extractors${DEFAULT}"
-	python -m unittest eventdt.apd.extractors.local.tests.test_twitterner_entity_extractor
+	python3 -m unittest eventdt.apd.extractors.local.tests.test_twitterner_entity_extractor
 	python3 -m unittest eventdt.apd.extractors.local.tests.test_entity_extractor
 	python3 -m unittest eventdt.apd.extractors.local.tests.test_token_extractor
 
@@ -25,6 +25,7 @@ apd_tests() {
 	python3 -m unittest eventdt.apd.scorers.local.tests.test_tfidf_scorer
 
 	echo -e "${HIGHLIGHT}Filters${DEFAULT}"
+	python3 -m unittest eventdt.apd.filters.local.tests.test_rank_filter
 	python3 -m unittest eventdt.apd.filters.local.tests.test_threshold_filter
 
 	echo -e "${HIGHLIGHT}Resolvers${DEFAULT}"
@@ -40,6 +41,7 @@ apd_tests() {
 
 	echo -e "${HIGHLIGHT}Participant detectors${DEFAULT}"
 	python3 -m unittest eventdt.apd.tests.test_ner_participant_detector
+	python3 -m unittest eventdt.apd.tests.test_eld_participant_detector
 }
 
 ate_tests() {
@@ -81,8 +83,8 @@ base_tests() {
 
 ml_tests() {
 	echo -e "${HIGHLIGHT}Association rules${DEFAULT}"
-	python -m unittest eventdt.ml.association.tests.test_package
-	python -m unittest eventdt.ml.association.algo.tests.test_apriori
+	python3 -m unittest eventdt.ml.association.tests.test_package
+	python3 -m unittest eventdt.ml.association.algo.tests.test_apriori
 }
 
 nlp_tests() {
@@ -168,7 +170,7 @@ twitter_tests() {
 	python3 -m unittest eventdt.twitter.file.tests.test_staggered_reader
 
 	echo -e "${HIGHLIGHT}Corpus${DEFAULT}"
-	python -m unittest eventdt.twitter.corpus.tests.test_aggregate
+	python3 -m unittest eventdt.twitter.corpus.tests.test_aggregate
 }
 
 vector_tests() {
