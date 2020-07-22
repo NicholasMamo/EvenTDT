@@ -208,3 +208,26 @@ class TestAPD(unittest.TestCase):
 					continue
 
 				self.fail()
+
+	def test_quoted_and_retweeted(self):
+		"""
+		Test that in the case of a retweeted quoted tweet, the quoted tweet's text is loaded.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE.json')
+		corpus = apd.load_corpus(file, clean=False)
+		with open(file) as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			self.assertTrue(any( 'retweeted_status' in tweet for tweet in tweets ))
+			self.assertTrue(any( 'quoted_status' in tweet for tweet in tweets ))
+			for document, tweet in zip(corpus, tweets):
+				if tweet['id'] == 1079327490907271168:
+					self.assertFalse(document.text.lower().startswith('rt'))
+					self.assertTrue(document.text.startswith('This is a great article for those wishing to read a bit more of an insight into Christian Pulisic.'))
+
+				if tweet['id'] == 1079342260788056064:
+					self.assertFalse(document.text.lower().startswith('rt'))
+					self.assertTrue(document.text.startswith('1). Reports are saying RLC is still not 100% fit'))
+					self.assertTrue('…' in tweet['text'])
+					self.assertFalse('…' in document.text)
