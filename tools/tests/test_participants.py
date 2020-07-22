@@ -4,6 +4,7 @@ Test the functionality of the APD tool.
 
 import json
 import os
+import re
 import sys
 import unittest
 
@@ -20,6 +21,9 @@ from eventdt.apd.scorers.local import LogTFScorer, TFScorer
 from eventdt.apd.filters import Filter
 from eventdt.apd.filters.local import RankFilter, ThresholdFilter
 
+from logger import logger
+logger.set_logging_level(logger.LogLevel.WARNING)
+
 class TestAPD(unittest.TestCase):
 	"""
 	Test the functionality of the APD tool.
@@ -31,8 +35,8 @@ class TestAPD(unittest.TestCase):
 		"""
 
 		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-		all_participants = apd.detect(file, ParticipantDetector, EntityExtractor, TFScorer, Filter)
-		top_participants = apd.detect(file, ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
+		all_participants, _ = apd.detect(file, ParticipantDetector, EntityExtractor, TFScorer, Filter)
+		top_participants, _ = apd.detect(file, ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
 		self.assertTrue(all( participant in all_participants for participant in top_participants ))
 
 	def test_rank_filter_subset_k(self):
@@ -41,8 +45,8 @@ class TestAPD(unittest.TestCase):
 		"""
 
 		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-		lenient = apd.detect(file, ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=20)
-		strict = apd.detect(file, ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
+		lenient, _ = apd.detect(file, ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=20)
+		strict, _ = apd.detect(file, ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
 		self.assertEqual(20, len(lenient))
 		self.assertEqual(10, len(strict))
 		self.assertTrue(all( participant in lenient for participant in strict ))
@@ -61,7 +65,7 @@ class TestAPD(unittest.TestCase):
 		"""
 
 		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-		participants = apd.detect(file, ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
+		participants, _ = apd.detect(file, ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
 		self.assertEqual(10, len(participants))
 
 	def test_threshold_filter_subset(self):
@@ -70,9 +74,19 @@ class TestAPD(unittest.TestCase):
 		"""
 
 		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-		all_participants = apd.detect(file, ParticipantDetector, EntityExtractor, TFScorer, Filter)
-		top_participants = apd.detect(file, ParticipantDetector, EntityExtractor, TFScorer, ThresholdFilter, threshold=1)
+		all_participants, _ = apd.detect(file, ParticipantDetector, EntityExtractor, TFScorer, Filter)
+		top_participants, _ = apd.detect(file, ParticipantDetector, EntityExtractor, TFScorer, ThresholdFilter, threshold=0.5)
 		self.assertTrue(all( participant in all_participants for participant in top_participants ))
+
+	def test_threshold_filter_all(self):
+		"""
+		Test that when using the minimum threshold filter, all participants are returned.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+		all_participants, _ = apd.detect(file, ParticipantDetector, EntityExtractor, TFScorer, Filter)
+		top_participants, _ = apd.detect(file, ParticipantDetector, EntityExtractor, TFScorer, ThresholdFilter, threshold=0)
+		self.assertEqual(all_participants, top_participants)
 
 	def test_rank_filter_float_threshold(self):
 		"""
@@ -80,8 +94,8 @@ class TestAPD(unittest.TestCase):
 		"""
 
 		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-		lenient = apd.detect(file, ParticipantDetector, EntityExtractor, LogTFScorer, ThresholdFilter, threshold=0.2)
-		strict = apd.detect(file, ParticipantDetector, EntityExtractor, LogTFScorer, ThresholdFilter, threshold=0.8)
+		lenient, _ = apd.detect(file, ParticipantDetector, EntityExtractor, LogTFScorer, ThresholdFilter, threshold=0.2)
+		strict, _ = apd.detect(file, ParticipantDetector, EntityExtractor, LogTFScorer, ThresholdFilter, threshold=0.8)
 		self.assertTrue(all( participant in lenient for participant in strict ))
 		self.assertLess(len(strict), len(lenient))
 
@@ -100,3 +114,77 @@ class TestAPD(unittest.TestCase):
 
 		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
 		self.assertRaises(ValueError, apd.detect, file, ParticipantDetector, EntityExtractor, TFScorer, ThresholdFilter)
+
+	def test_load_corpus_all_lines(self):
+		"""
+		Test that when loading the corpus, all tweets are loaded.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE.json')
+		with open(file) as f:
+			tweets = len(f.readlines())
+
+		corpus = apd.load_corpus(file, True)
+		self.assertTrue(len(corpus))
+		self.assertEqual(tweets, len(corpus))
+
+	def test_load_corpus_complete_tweets(self):
+		"""
+		Test that when loading the corpus, there are generally no ellipses (the tweets are complete).
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE.json')
+		corpus = apd.load_corpus(file, True)
+		self.assertTrue(len(corpus))
+
+		"""
+		This check does not have access to tweet IDs.
+		These tweets are not incomplete, but are published with the ellipses in them.
+		"""
+		incomplete = 0
+		for tweet in corpus:
+			if '…' in tweet.text:
+				incomplete += 1
+		self.assertGreater(50, incomplete)
+
+	def test_load_corpus_no_clean(self):
+		"""
+		Test that when tweets are not cleaned, some mentions remain.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE.json')
+		corpus = apd.load_corpus(file, False)
+		self.assertTrue(len(corpus))
+		self.assertTrue(any( '@' in tweet.text for tweet in corpus ))
+
+	def test_load_corpus_clean(self):
+		"""
+		Test that when loading and cleaning tweets, there are no mentions.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE.json')
+		corpus = apd.load_corpus(file, True)
+		self.assertTrue(len(corpus))
+
+		"""
+		Make some exceptions for mentions that aren't really mentions.
+		Some of them may look like mentions but refer to accounts that don't exist.
+		"""
+		wrong_pattern = re.compile("@[0-9,\\s…]")
+		no_space_pattern = re.compile("[^\\s]@")
+		end_pattern = re.compile('@$')
+		not_accounts = [ 'EPL', 'real_realestsounds', 'nevilleiesta', 'naija927', 'naijafm92.7', 'manchesterunited', 'ManchesterUnited',
+						 'clintasena', 'Maksakal88', 'Aubamayeng7', 'JustWenginIt', 'marcosrojo5', 'btsportsfootball',
+						 'Nsibirwahall', 'YouTubeより', 'juniorpepaseed', 'Mezieblog', 'UtdAlamin', 'spurs_vincente' ]
+		for tweet in corpus:
+			if '@' in tweet.text:
+				if '@@' in tweet.text or ' @ ' in tweet.text or '@&gt;' in tweet.text or any(account in tweet.text for account in not_accounts):
+					continue
+				if end_pattern.findall(tweet.text):
+					continue
+				if no_space_pattern.findall(tweet.text):
+					continue
+				if wrong_pattern.findall(tweet.text):
+					continue
+
+				self.fail()
