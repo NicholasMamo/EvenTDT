@@ -133,10 +133,6 @@ def main():
 	Get the meta arguments.
 	"""
 	cmd = tools.meta(args)
-	cmd['model'] = str(vars(args)['model'])
-	cmd['extractor'] = str(vars(args)['extractor'])
-	cmd['scorer'] = str(vars(args)['scorer'])
-	cmd['filter'] = str(vars(args)['filter'])
 
 	args = vars(args)
 	corpus = load_corpus(filename=args.pop('file'), clean=args.pop('clean'))
@@ -144,6 +140,14 @@ def main():
 							   scorer=args.pop('scorer'), filter=args.pop('filter'),
 							   corpus=corpus, **args)
 	resolved, extrapolated = detect(detector=detector, corpus=corpus)
+
+	cmd['model'] = str(type(detector).__name__)
+	cmd['extractor'] = str(type(detector.extractor).__name__)
+	cmd['scorer'] = str(type(detector.scorer).__name__)
+	cmd['filter'] = str(type(detector.filter).__name__)
+	cmd['resolver'] = str(type(detector.resolver).__name__)
+	cmd['extraploator'] = str(type(detector.extrapolator).__name__)
+	cmd['postprocessor'] = str(type(detector.postprocessor).__name__)
 	tools.save(args['output'], { 'meta': cmd, 'resolved': resolved, 'extrapolated': extrapolated })
 
 def create_detector(model, extractor, scorer, filter, corpus=None, *args, **kwargs):
