@@ -93,7 +93,7 @@ class ELDParticipantDetector(ParticipantDetector):
 							  normalize_words=True, character_normalization_count=3,
 							  remove_unicode_entities=True)
 		if scheme:
-			self._tokenize_corpus(corpus, scheme, tokenizer)
+			corpus = self._tokenize_corpus(corpus, scheme, tokenizer)
 
 		"""
 		Set up the ELD participant detector.
