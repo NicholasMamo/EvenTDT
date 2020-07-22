@@ -72,6 +72,23 @@ class TestTwitterNERExtractor(unittest.TestCase):
 		extractor = TwitterNEREntityExtractor()
 		self.assertFalse(extractor.extract([ ]))
 
+	def test_extract_empty_tweet(self):
+		"""
+		Test that the TwitterNER entity extractor returns no candidates from an empty tweet.
+		"""
+
+		"""
+		Create the test data.
+		"""
+		tokenizer = Tokenizer(stem=False)
+		posts = [ "" ]
+		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+
+		extractor = TwitterNEREntityExtractor()
+		candidates = extractor.extract(corpus)
+		self.assertEqual(1, len(candidates))
+		self.assertEqual([ ], candidates[0])
+
 	def test_extract_return_length(self):
 		"""
 		Test that the TwitterNER entity extractor returns as many candidate sets as the number of documents given.
@@ -157,13 +174,13 @@ class TestTwitterNERExtractor(unittest.TestCase):
 		"""
 		tokenizer = Tokenizer(stem=False)
 		posts = [
-			"The downward spiral continues for Lyon. Lyon coach Bruno Genesio under threat.",
+			"The downward spiral continues for Lyon. Meanwhile, Lyon coach Bruno Genesio remains under threat.",
 		]
 		corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
 
 		extractor = TwitterNEREntityExtractor()
 		candidates = extractor.extract(corpus)
-		self.assertEqual([ "lyon", "bruno genesio" ], candidates[0])
+		self.assertEqual([ "lyon", "lyon", "bruno genesio" ], candidates[0])
 
 	def test_extract_multiword_entities(self):
 		"""
