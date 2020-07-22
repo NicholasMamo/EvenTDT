@@ -40,6 +40,9 @@ class TwitterNEREntityExtractor(Extractor):
 	:vartype ner: :class:`TwitterNER.run_ner.TwitterNER`
 	"""
 
+	"""
+	Do not create the TwitterNER object if this file is being used only for its documentation.
+	"""
 	if 'sphinx-build' not in inspect.stack()[-1].filename:
 		ner = TwitterNER()
 		logger.info("TwitterNER finished loading features")
