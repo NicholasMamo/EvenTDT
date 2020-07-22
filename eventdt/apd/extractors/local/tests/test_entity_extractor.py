@@ -2,6 +2,7 @@
 Test the functionality of the entity extractor.
 """
 
+import json
 import os
 import sys
 import unittest
@@ -182,3 +183,34 @@ class TestExtractors(unittest.TestCase):
 		extractor = EntityExtractor()
 		candidates = extractor.extract(corpus)
 		self.assertEqual(set([ "memphis depay", "oumar solet", 'leo dubois', 'youssouf kone' ]), set(candidates[0]))
+
+	def test_extract_from_text(self):
+		"""
+		Test that the entity extractor's named entities do appear in the corresponding tweet.
+		"""
+
+		"""
+		Load the corpus.
+		"""
+		filename = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+		corpus = [ ]
+		with open(filename) as f:
+			for i, line in enumerate(f):
+				tweet = json.loads(line)
+				original = tweet
+				while "retweeted_status" in tweet:
+					tweet = tweet["retweeted_status"]
+
+				if "extended_tweet" in tweet:
+					text = tweet["extended_tweet"].get("full_text", tweet.get("text", ""))
+				else:
+					text = tweet.get("text", "")
+
+				document = Document(text)
+				corpus.append(document)
+
+		extractor = EntityExtractor()
+		candidates = extractor.extract(corpus)
+		for (document, candidate_set) in zip(corpus, candidates):
+			text = document.text.lower().replace('\n', ' ').replace('  ', ' ')
+			self.assertTrue(all( candidate in text.lower() for candidate in candidate_set ))

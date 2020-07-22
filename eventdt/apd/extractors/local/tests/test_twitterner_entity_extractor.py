@@ -2,7 +2,9 @@
 Test the functionality of the TwitterNER entity extractor.
 """
 
+import json
 import os
+import re
 import sys
 import unittest
 import warnings
@@ -235,3 +237,36 @@ class TestTwitterNERExtractor(unittest.TestCase):
 		extractor = TwitterNEREntityExtractor()
 		candidates = extractor.extract(corpus)
 		self.assertEqual([ "memphis depay", 'leo dubois', 'martin terrier', 'karl toko ekambi' ], candidates[0])
+
+	def test_extract_from_text(self):
+		"""
+		Test that TwitterNER's named entities do appear in the corresponding tweet.
+		"""
+
+		"""
+		Load the corpus.
+		"""
+		filename = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+		corpus = [ ]
+		with open(filename) as f:
+			for i, line in enumerate(f):
+				tweet = json.loads(line)
+				original = tweet
+				while "retweeted_status" in tweet:
+					tweet = tweet["retweeted_status"]
+
+				if "extended_tweet" in tweet:
+					text = tweet["extended_tweet"].get("full_text", tweet.get("text", ""))
+				else:
+					text = tweet.get("text", "")
+
+				document = Document(text)
+				corpus.append(document)
+
+		extractor = TwitterNEREntityExtractor()
+		candidates = extractor.extract(corpus)
+		collapse_spaces = re.compile('\\s+')
+		for (document, candidate_set) in zip(corpus, candidates):
+			text = document.text.lower().replace('\n', ' ')
+			text = collapse_spaces.sub(' ', text)
+			self.assertTrue(all( candidate in text.lower() for candidate in candidate_set ))
