@@ -58,6 +58,7 @@ class ELDParticipantDetector(ParticipantDetector):
 					   These documents are used to compare the similarity with the domain of the candidates.
 		:type scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
 		:param corpus: The corpus of documents.
+					   These documents may be tokenized already, but this class re-tokenizes them with its own :class:`~nlp.tokenizer.Tokenizer`.
 		:type corpus: list of :class:`~nlp.document.Document`
 		:param extractor: The participant detector's extractor.
 						  This component is used to find candidate participants.
@@ -92,8 +93,7 @@ class ELDParticipantDetector(ParticipantDetector):
 							  normalize_words=True, character_normalization_count=3,
 							  remove_unicode_entities=True)
 		if scheme:
-			corpus = [ scheme.create(text=document.text, tokens=tokenizer.tokenize(document.text))
-			 		   for document in corpus ]
+			self._tokenize_corpus(corpus, scheme, tokenizer)
 
 		"""
 		Set up the ELD participant detector.
@@ -109,3 +109,25 @@ class ELDParticipantDetector(ParticipantDetector):
 		postprocessor = postprocessor or WikipediaPostprocessor()
 
 		super().__init__(extractor, scorer, filter, resolver, extrapolator, postprocessor)
+
+	def _tokenize_corpus(self, corpus, scheme, tokenizer):
+		"""
+		Tokenize the corpus.
+
+		:param corpus: The corpus of documents to tokenize.
+		:type corpus: list of :class:`~nlp.document.Document`
+		:param scheme: The term-weighting scheme to use by the :class:`~apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver` and :class:`~apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator`.
+					   These documents are used to compare the similarity with the domain of the candidates.
+		:type scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
+		:param tokenizer: The tokenizer to use to create the new documents.
+		:type tokenizer: :class:`~nlp.tokenizer.Tokenizer`
+
+		:return: The corpus, tokenized anew.
+		:rtype: list of :class:`~nlp.document.Document`
+		"""
+
+		corpus = [ scheme.create(text=document.text, tokens=tokenizer.tokenize(document.text))
+				   for document in corpus ]
+		for document in corpus:
+			document.normalize()
+		return corpus
