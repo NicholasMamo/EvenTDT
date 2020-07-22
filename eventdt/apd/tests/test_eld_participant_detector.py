@@ -14,11 +14,15 @@ for path in paths:
 
 from eld_participant_detector import ELDParticipantDetector
 from extractors.local import EntityExtractor
-from scorers.local import LogTFScorer
-from filters.local import ThresholdFilter
+from extractors.local.twitterner_entity_extractor import TwitterNEREntityExtractor
+from scorers.local import TFScorer, LogTFScorer
+from filters.local import RankFilter, ThresholdFilter
 from resolvers import Resolver
+from resolvers.external import WikipediaSearchResolver
 from extrapolators import Extrapolator
+from extrapolators.external import WikipediaExtrapolator
 from postprocessors import Postprocessor
+from postprocessors.external import WikipediaPostprocessor
 
 class TestELDParticipantDetector(unittest.TestCase):
 	"""
@@ -72,3 +76,29 @@ class TestELDParticipantDetector(unittest.TestCase):
 
 		apd = ELDParticipantDetector(postprocessor=Postprocessor())
 		self.assertEqual(Postprocessor, type(apd.postprocessor))
+
+	def test_default_configuration(self):
+		"""
+		Test the default configuration of the ELD participant detector.
+		"""
+
+		apd = ELDParticipantDetector()
+		self.assertEqual(TwitterNEREntityExtractor, type(apd.extractor))
+		self.assertEqual(TFScorer, type(apd.scorer))
+		self.assertEqual(RankFilter, type(apd.filter))
+		self.assertEqual(WikipediaSearchResolver, type(apd.resolver))
+		self.assertEqual(WikipediaExtrapolator, type(apd.extrapolator))
+		self.assertEqual(WikipediaPostprocessor, type(apd.postprocessor))
+
+	def test_default_configuration_with_overload(self):
+		"""
+		Test the default configuration of the ELD participant detector when overloading certain components.
+		"""
+
+		apd = ELDParticipantDetector(scorer=LogTFScorer(), filter=ThresholdFilter(1))
+		self.assertEqual(TwitterNEREntityExtractor, type(apd.extractor))
+		self.assertEqual(LogTFScorer, type(apd.scorer))
+		self.assertEqual(ThresholdFilter, type(apd.filter))
+		self.assertEqual(WikipediaSearchResolver, type(apd.resolver))
+		self.assertEqual(WikipediaExtrapolator, type(apd.extrapolator))
+		self.assertEqual(WikipediaPostprocessor, type(apd.postprocessor))
