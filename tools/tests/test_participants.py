@@ -35,8 +35,11 @@ class TestAPD(unittest.TestCase):
 		"""
 
 		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-		all_participants, _ = apd.detect(file, ParticipantDetector, EntityExtractor, TFScorer, Filter)
-		top_participants, _ = apd.detect(file, ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
+		corpus = apd.load_corpus(file, True)
+		detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, Filter)
+		all_participants, _ = apd.detect(detector, corpus)
+		detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
+		top_participants, _ = apd.detect(detector, corpus)
 		self.assertTrue(all( participant in all_participants for participant in top_participants ))
 
 	def test_rank_filter_subset_k(self):
@@ -45,8 +48,11 @@ class TestAPD(unittest.TestCase):
 		"""
 
 		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-		lenient, _ = apd.detect(file, ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=20)
-		strict, _ = apd.detect(file, ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
+		corpus = apd.load_corpus(file, True)
+		detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=20)
+		lenient, _ = apd.detect(detector, corpus)
+		detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
+		strict, _ = apd.detect(detector, corpus)
 		self.assertEqual(20, len(lenient))
 		self.assertEqual(10, len(strict))
 		self.assertTrue(all( participant in lenient for participant in strict ))
@@ -57,7 +63,8 @@ class TestAPD(unittest.TestCase):
 		"""
 
 		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-		self.assertRaises(ValueError, apd.detect, file, ParticipantDetector, EntityExtractor, TFScorer, RankFilter)
+		corpus = apd.load_corpus(file, True)
+		self.assertRaises(ValueError, apd.create_detector, ParticipantDetector, EntityExtractor, TFScorer, RankFilter)
 
 	def test_rank_filter_length(self):
 		"""
@@ -65,7 +72,9 @@ class TestAPD(unittest.TestCase):
 		"""
 
 		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-		participants, _ = apd.detect(file, ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
+		corpus = apd.load_corpus(file, True)
+		detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
+		participants, _ = apd.detect(detector, corpus)
 		self.assertEqual(10, len(participants))
 
 	def test_threshold_filter_subset(self):
@@ -74,8 +83,11 @@ class TestAPD(unittest.TestCase):
 		"""
 
 		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-		all_participants, _ = apd.detect(file, ParticipantDetector, EntityExtractor, TFScorer, Filter)
-		top_participants, _ = apd.detect(file, ParticipantDetector, EntityExtractor, TFScorer, ThresholdFilter, threshold=0.5)
+		corpus = apd.load_corpus(file, True)
+		detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, Filter)
+		all_participants, _ = apd.detect(detector, corpus)
+		detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, ThresholdFilter, threshold=0.5)
+		top_participants, _ = apd.detect(detector, corpus)
 		self.assertTrue(all( participant in all_participants for participant in top_participants ))
 
 	def test_threshold_filter_all(self):
@@ -84,8 +96,11 @@ class TestAPD(unittest.TestCase):
 		"""
 
 		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-		all_participants, _ = apd.detect(file, ParticipantDetector, EntityExtractor, TFScorer, Filter)
-		top_participants, _ = apd.detect(file, ParticipantDetector, EntityExtractor, TFScorer, ThresholdFilter, threshold=0)
+		corpus = apd.load_corpus(file, True)
+		detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, Filter)
+		all_participants, _ = apd.detect(detector, corpus)
+		detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, ThresholdFilter, threshold=0)
+		top_participants, _ = apd.detect(detector, corpus)
 		self.assertEqual(all_participants, top_participants)
 
 	def test_rank_filter_float_threshold(self):
@@ -94,8 +109,11 @@ class TestAPD(unittest.TestCase):
 		"""
 
 		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-		lenient, _ = apd.detect(file, ParticipantDetector, EntityExtractor, LogTFScorer, ThresholdFilter, threshold=0.2)
-		strict, _ = apd.detect(file, ParticipantDetector, EntityExtractor, LogTFScorer, ThresholdFilter, threshold=0.8)
+		corpus = apd.load_corpus(file, True)
+		detector = apd.create_detector(ParticipantDetector, EntityExtractor, LogTFScorer, ThresholdFilter, threshold=0.2)
+		lenient, _ = apd.detect(detector, corpus)
+		detector = apd.create_detector(ParticipantDetector, EntityExtractor, LogTFScorer, ThresholdFilter, threshold=0.8)
+		strict, _ = apd.detect(detector, corpus)
 		self.assertTrue(all( participant in lenient for participant in strict ))
 		self.assertLess(len(strict), len(lenient))
 
@@ -105,7 +123,8 @@ class TestAPD(unittest.TestCase):
 		"""
 
 		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-		self.assertRaises(ValueError, apd.detect, file, ParticipantDetector, EntityExtractor, TFScorer, ThresholdFilter)
+		corpus = apd.load_corpus(file, True)
+		self.assertRaises(ValueError, apd.create_detector, ParticipantDetector, EntityExtractor, TFScorer, ThresholdFilter)
 
 	def test_eld_participant_detector_missing_tfidf(self):
 		"""
@@ -113,7 +132,8 @@ class TestAPD(unittest.TestCase):
 		"""
 
 		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-		self.assertRaises(ValueError, apd.detect, file, ParticipantDetector, EntityExtractor, TFScorer, ThresholdFilter)
+		corpus = apd.load_corpus(file, True)
+		self.assertRaises(ValueError, apd.create_detector, ParticipantDetector, EntityExtractor, TFScorer, ThresholdFilter)
 
 	def test_load_corpus_all_lines(self):
 		"""

@@ -139,17 +139,17 @@ def main():
 	cmd['filter'] = str(vars(args)['filter'])
 
 	args = vars(args)
-	resolved, extrapolated = detect(filename=args.pop('file'), model=args.pop('model'),
-									extractor=args.pop('extractor'), scorer=args.pop('scorer'),
-									filter=args.pop('filter'), **args)
+	corpus = load_corpus(filename=args.pop('file'), clean=args.pop('clean'))
+	detector = create_detector(model=args.pop('model'), extractor=args.pop('extractor'),
+							   scorer=args.pop('scorer'), filter=args.pop('filter'),
+							   corpus=corpus, **args)
+	resolved, extrapolated = detect(detector=detector, corpus=corpus)
 	tools.save(args['output'], { 'meta': cmd, 'resolved': resolved, 'extrapolated': extrapolated })
 
-def detect(filename, model, extractor, scorer, filter, clean=False, *args, **kwargs):
+def create_detector(model, extractor, scorer, filter, corpus=None, *args, **kwargs):
 	"""
-	Detect participants from the given corpus.
+	Create all the components of the participant detector.
 
-	:param filename: The path to the corpus from where to detect participants.
-	:type filename: str
 	:param model: The class of the participant detector to use to extract participants.
 	:type model: :class:`~apd.participant_detector.ParticipantDetector`
 	:param extractor: The class of the extractor with which to extract candidate participants.
@@ -158,21 +158,13 @@ def detect(filename, model, extractor, scorer, filter, clean=False, *args, **kwa
 	:type scorer: :class:`~apd.scorers.scorer.Scorer`
 	:param filter: The class of the filter with which to filter candidate participants.
 	:type filter: :class:`~apd.filters.filter.Filter`
-	:param clean: A boolean indicating whether tweets should be cleaned before processing them.
-	:type clean: bool
+	:param corpus: A list of :class:`~nlp.document.Document` making up the corpus.
+	:type corpus: list of :class:`~nlp.document.Document`
 
-	:return: A list of participants detected in the corpus.
-	:rtype: list of str
+	:return: The created participant detector.
+	:rtype: :class:`~apd.participant_detector.ParticipantDetector`
 	"""
 
-	"""
-	Load the corpus.
-	"""
-	corpus = load_corpus(filename, clean=clean)
-
-	"""
-	Create all the components of the participant detector.
-	"""
 	extractor = create_extractor(extractor, *args, **kwargs)
 	scorer = create_scorer(scorer, *args, **kwargs)
 	filter = create_filter(filter, *args, **kwargs)
@@ -183,6 +175,21 @@ def detect(filename, model, extractor, scorer, filter, clean=False, *args, **kwa
 	logger.info(f"Resolver: { type(detector.resolver).__name__ }")
 	logger.info(f"Extrapolator: { type(detector.extrapolator).__name__ }")
 	logger.info(f"Postprocessor: { type(detector.postprocessor).__name__ }")
+
+	return detector
+
+def detect(detector, corpus):
+	"""
+	Detect participants from the given corpus.
+
+	:param detector: The participant detector to use to extract participants.
+	:type detector: :class:`~apd.participant_detector.ParticipantDetector`
+	:param corpus: A list of :class:`~nlp.document.Document` making up the corpus.
+	:type corpus: list of :class:`~nlp.document.Document`
+
+	:return: Two list of participants detected in the corpus: the resolved and extrapolated participants.
+	:rtype: tuple of list of str
+	"""
 
 	resolved, _, extrapolated, = detector.detect(corpus)
 	return resolved, extrapolated
