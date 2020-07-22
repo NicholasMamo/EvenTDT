@@ -245,7 +245,7 @@ def create_model(model, extractor, scorer, filter, corpus, tfidf=None, *args, **
 	"""
 
 	if model.__name__ == ELDParticipantDetector.__name__:
-		if not tfidf:
+		if tfidf is None:
 			raise ValueError("The TF-IDF scheme is required with the ELDParticipantDetector model.")
 		scheme = tools.load(tfidf)['tfidf']
 		return model(scheme=scheme, corpus=corpus, extractor=extractor, scorer=scorer, filter=filter)
@@ -294,11 +294,11 @@ def create_filter(filter, k=None, threshold=None, *args, **kwargs):
 		return filter
 
 	if filter.__name__ == RankFilter.__name__:
-		if not k:
+		if k is None:
 			raise ValueError("The Rank Filter requires the `k` parameter (the number of candidates to retain).")
 		return filter(int(k))
 	if filter.__name__ == ThresholdFilter.__name__:
-		if not threshold:
+		if threshold is None:
 			raise ValueError("The Threshold Filter requires the `threshold` parameter (the minimum score of a candidate to retain it).")
 		return filter(float(threshold))
 
