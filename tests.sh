@@ -29,6 +29,7 @@ apd_tests() {
 	python3 -m unittest eventdt.apd.filters.local.tests.test_threshold_filter
 
 	echo -e "${HIGHLIGHT}Resolvers${DEFAULT}"
+	python3 -m unittest eventdt.apd.resolvers.tests.test_resolver
 	python3 -m unittest eventdt.apd.resolvers.local.tests.test_token_resolver
 	python3 -m unittest eventdt.apd.resolvers.external.tests.test_wikipedia_name_resolver
 	python3 -m unittest eventdt.apd.resolvers.external.tests.test_wikipedia_search_resolver
