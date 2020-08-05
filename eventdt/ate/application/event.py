@@ -452,6 +452,7 @@ class Entropy(Extractor):
 		"""
 
 		entropy = { }
+		idfs = self._load_idfs(idfs)
 
 		"""
 		Go through each term and compute the entropy.
@@ -464,6 +465,38 @@ class Entropy(Extractor):
 			entropy[term] = self._entropy(p)
 
 		return entropy
+
+	def _load_idfs(self, idfs):
+		"""
+		Load the IDFs if paths to files are given.
+
+		:param idfs: A list of IDFs, one for each event, or paths to IDFs.
+		:type idfs: list of str or list of :class:`~nlp.term_weighting.tfidf.TFIDF`
+
+		:return: A list of TF-IDF schemes, loaded from files where necessary.
+		:rtype: list of :class:`~nlp.term_weighting.tfidf.TFIDF`
+
+		:raises ValueError: When the given file does not contain a TF-IDF scheme.
+		"""
+
+		_idfs = [ ]
+
+		for idf in idfs:
+			if type(idf) is str:
+				with open(idf, 'r') as f:
+					data = json.loads(''.join(f.readlines()))
+
+					"""
+					Decode the TF-IDF scheme.
+					"""
+					data = Exportable.decode(data)
+					if 'tfidf' not in data:
+						raise ValueError(f"The variability requires a TF-IDF file, received { ', '.join(list(data.keys())) }")
+					_idfs.append(data['tfidf'])
+			else:
+				_idfs.append(idf)
+
+		return _idfs
 
 	def _vocabulary(self, idfs):
 		"""
