@@ -4,3 +4,4 @@ Application-based approaches use the target application to learn the domain lexi
 
 from .event import EF
 from .event import LogEF
+from .event import EFIDF
