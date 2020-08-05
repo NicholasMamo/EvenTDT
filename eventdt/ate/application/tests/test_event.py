@@ -24,7 +24,7 @@ class TestEvent(unittest.TestCase):
 	Test the functionality of the event-based ATE approaches.
 	"""
 
-	def no_test_ef_not_timeline(self):
+	def test_ef_not_timeline(self):
 		"""
 		Test that when the EF extractor does not receive a timeline, it raises a ValueError.
 		"""
@@ -33,7 +33,7 @@ class TestEvent(unittest.TestCase):
 		extractor = event.EF()
 		self.assertRaises(ValueError, extractor.extract, path)
 
-	def no_test_ef_all_timeline(self):
+	def test_ef_all_timeline(self):
 		"""
 		Test that when the EF extractor receives any file that is not a timeline, it raises a ValueError.
 		"""
@@ -43,7 +43,7 @@ class TestEvent(unittest.TestCase):
 		extractor = event.EF()
 		self.assertRaises(ValueError, extractor.extract, paths)
 
-	def no_test_ef_one_timeline(self):
+	def test_ef_one_timeline(self):
 		"""
 		Test that when providing one timeline, the algorithm extracts terms only from it.
 		"""
@@ -52,7 +52,7 @@ class TestEvent(unittest.TestCase):
 		extractor = event.EF()
 		self.assertTrue(extractor.extract(path))
 
-	def no_test_ef_multiple_timeline(self):
+	def test_ef_multiple_timeline(self):
 		"""
 		Test that when providing multiple timelines, the algorithm extracts terms from all of them.
 		"""
@@ -65,7 +65,7 @@ class TestEvent(unittest.TestCase):
 		self.assertTrue(all( term in terms for term in extractor.extract(paths[0]) ))
 		self.assertTrue(all( term in terms for term in extractor.extract(paths[1]) ))
 
-	def no_test_ef_lower_limit(self):
+	def test_ef_lower_limit(self):
 		"""
 		Test that the minimum event frequency is 1, not 0.
 		"""
@@ -76,7 +76,7 @@ class TestEvent(unittest.TestCase):
 		terms = extractor.extract(paths)
 		self.assertEqual(1, min(terms.values()))
 
-	def no_test_ef_max_limit(self):
+	def test_ef_max_limit(self):
 		"""
 		Test that the maximum event frequency is equivalent to the number of timelines provided.
 		"""
@@ -87,7 +87,7 @@ class TestEvent(unittest.TestCase):
 		terms = extractor.extract(paths)
 		self.assertEqual(len(paths), max(terms.values()))
 
-	def no_test_ef_integers(self):
+	def test_ef_integers(self):
 		"""
 		Test that the event frequency is always an integer.
 		"""
@@ -98,7 +98,7 @@ class TestEvent(unittest.TestCase):
 		terms = extractor.extract(paths)
 		self.assertTrue(all( type(value) == int for value in terms.values() ))
 
-	def no_test_ef_all_terms(self):
+	def test_ef_all_terms(self):
 		"""
 		Test that the event frequency includes all breaking terms.
 		"""
@@ -134,7 +134,7 @@ class TestEvent(unittest.TestCase):
 		"""
 		self.assertEqual(all_terms, set(ef_terms))
 
-	def no_test_ef_all_terms(self):
+	def test_ef_all_terms(self):
 		"""
 		Test that the event frequency includes all breaking terms.
 		"""
@@ -150,7 +150,7 @@ class TestEvent(unittest.TestCase):
 		log_ef_terms = extractor.extract(paths)
 		self.assertEqual(ef_terms.keys(), log_ef_terms.keys())
 
-	def no_test_ef_extract_candidates(self):
+	def test_ef_extract_candidates(self):
 		"""
 		Test that the EF extractor extracts scores for only select candidates if they are given.
 		"""
@@ -164,7 +164,7 @@ class TestEvent(unittest.TestCase):
 		terms = extractor.extract(paths, candidates=[ 'chelsea', 'goal' ])
 		self.assertEqual({ 'chelsea', 'goal' }, set(terms.keys()))
 
-	def no_test_ef_extract_candidates_same_scores(self):
+	def test_ef_extract_candidates_same_scores(self):
 		"""
 		Test that the EF extractor's scores for known candidates are the same as when candidates are not known.
 		"""
@@ -180,7 +180,7 @@ class TestEvent(unittest.TestCase):
 		self.assertEqual(terms['chelsea'], candidate_terms['chelsea'])
 		self.assertEqual(terms['goal'], candidate_terms['goal'])
 
-	def no_test_ef_extract_candidates_unknown_word(self):
+	def test_ef_extract_candidates_unknown_word(self):
 		"""
 		Test that the EF extractor's score for an unknown word is 0.
 		"""
@@ -194,7 +194,7 @@ class TestEvent(unittest.TestCase):
 		terms = extractor.extract(paths, candidates=[ 'superlongword' ])
 		self.assertEqual({ 'superlongword': 0 }, terms)
 
-	def no_test_log_ef_lower_limit(self):
+	def test_log_ef_lower_limit(self):
 		"""
 		Test that the minimum logarithmic event frequency is 0, not 1.
 		"""
@@ -207,7 +207,7 @@ class TestEvent(unittest.TestCase):
 		terms = extractor.extract(paths)
 		self.assertEqual(0, min(terms.values()))
 
-	def no_test_log_ef_max_limit(self):
+	def test_log_ef_max_limit(self):
 		"""
 		Test that the maximum logarithmic event frequency is equivalent to the logarithm of the number of timelines provided.
 		"""
@@ -220,7 +220,7 @@ class TestEvent(unittest.TestCase):
 		terms = extractor.extract(paths)
 		self.assertEqual(math.log(len(paths), 2), max(terms.values()))
 
-	def no_test_log_ef_base(self):
+	def test_log_ef_base(self):
 		"""
 		Test that the logarithmic event frequency is just the event frequency  with a logarithm.
 		"""
@@ -240,7 +240,7 @@ class TestEvent(unittest.TestCase):
 		log_ef_terms = extractor.extract(paths)
 		self.assertTrue(all( math.log(ef_terms[term], 10) == log_ef_terms[term] for term in ef_terms ))
 
-	def no_test_log_ef_extract_candidates(self):
+	def test_log_ef_extract_candidates(self):
 		"""
 		Test that the logarithmic EF extractor extracts scores for only select candidates if they are given.
 		"""
@@ -254,7 +254,7 @@ class TestEvent(unittest.TestCase):
 		terms = extractor.extract(paths, candidates=[ 'chelsea', 'goal' ])
 		self.assertEqual({ 'chelsea', 'goal' }, set(terms.keys()))
 
-	def no_test_log_ef_extract_candidates_same_scores(self):
+	def test_log_ef_extract_candidates_same_scores(self):
 		"""
 		Test that the logarithmic EF extractor's scores for known candidates are the same as when candidates are not known.
 		"""
@@ -270,7 +270,7 @@ class TestEvent(unittest.TestCase):
 		self.assertEqual(terms['chelsea'], candidate_terms['chelsea'])
 		self.assertEqual(terms['goal'], candidate_terms['goal'])
 
-	def no_test_log_ef_extract_candidates_unknown_word(self):
+	def test_log_ef_extract_candidates_unknown_word(self):
 		"""
 		Test that the logarithmic EF extractor's score for an unknown word is 0.
 		"""
@@ -284,7 +284,7 @@ class TestEvent(unittest.TestCase):
 		terms = extractor.extract(paths, candidates=[ 'superlongword' ])
 		self.assertEqual({ 'superlongword': 0 }, terms)
 
-	def no_test_efidf(self):
+	def test_efidf(self):
 		"""
 		Test that the EF-IDF scores are assigned correctly.
 		"""
@@ -311,7 +311,7 @@ class TestEvent(unittest.TestCase):
 		self.assertTrue(all( terms[term] == ef_terms[term] * idf.create([ term ]).dimensions[term]
 		 					 for term in ef_terms ))
 
-	def no_test_efidf_log(self):
+	def test_efidf_log(self):
 		"""
 		Test that when a base is given, the EF-IDF scores are based on the logarithmic event frequency.
 		"""
@@ -338,7 +338,7 @@ class TestEvent(unittest.TestCase):
 		self.assertTrue(all( terms[term] == ef_terms[term] * idf.create([ term ]).dimensions[term]
 							 for term in ef_terms ))
 
-	def no_test_efidf_all_terms(self):
+	def test_efidf_all_terms(self):
 		"""
 		Test that the EF-IDF scores include all terms.
 		"""
@@ -364,7 +364,7 @@ class TestEvent(unittest.TestCase):
 		terms = extractor.extract(paths)
 		self.assertEqual(ef_terms.keys(), terms.keys())
 
-	def no_test_efidf_extract_candidates(self):
+	def test_efidf_extract_candidates(self):
 		"""
 		Test that the EF-IDF extractor extracts scores for only select candidates if they are given.
 		"""
@@ -382,7 +382,7 @@ class TestEvent(unittest.TestCase):
 		terms = extractor.extract(paths, candidates=[ 'chelsea', 'goal' ])
 		self.assertEqual({ 'chelsea', 'goal' }, set(terms.keys()))
 
-	def no_test_efidf_extract_candidates_same_scores(self):
+	def test_efidf_extract_candidates_same_scores(self):
 		"""
 		Test that the EF-IDF extractor's scores for known candidates are the same as when candidates are not known.
 		"""
@@ -402,7 +402,7 @@ class TestEvent(unittest.TestCase):
 		self.assertEqual(terms['chelsea'], candidate_terms['chelsea'])
 		self.assertEqual(terms['goal'], candidate_terms['goal'])
 
-	def no_test_efidf_extract_candidates_unknown_word(self):
+	def test_efidf_extract_candidates_unknown_word(self):
 		"""
 		Test that the EF-IDF extractor's score for an unknown word is 0.
 		"""
@@ -420,7 +420,7 @@ class TestEvent(unittest.TestCase):
 		terms = extractor.extract(paths, candidates=[ 'superlongword' ])
 		self.assertEqual({ 'superlongword': 0 }, terms)
 
-	def no_test_efidf_log_extract_candidates(self):
+	def test_efidf_log_extract_candidates(self):
 		"""
 		Test that the logarithmic EF-IDF extractor extracts scores for only select candidates if they are given.
 		"""
@@ -438,7 +438,7 @@ class TestEvent(unittest.TestCase):
 		terms = extractor.extract(paths, candidates=[ 'chelsea', 'goal' ])
 		self.assertEqual({ 'chelsea', 'goal' }, set(terms.keys()))
 
-	def no_test_efidf_log_extract_candidates_same_scores(self):
+	def test_efidf_log_extract_candidates_same_scores(self):
 		"""
 		Test that the logarithmic EF-IDF extractor's scores for known candidates are the same as when candidates are not known.
 		"""
@@ -458,7 +458,7 @@ class TestEvent(unittest.TestCase):
 		self.assertEqual(terms['chelsea'], candidate_terms['chelsea'])
 		self.assertEqual(terms['goal'], candidate_terms['goal'])
 
-	def no_test_efidf_log_extract_candidates_unknown_word(self):
+	def test_efidf_log_extract_candidates_unknown_word(self):
 		"""
 		Test that the logarithmic EF-IDF extractor's score for an unknown word is 0.
 		"""
@@ -476,7 +476,24 @@ class TestEvent(unittest.TestCase):
 		terms = extractor.extract(paths, candidates=[ 'superlongword' ])
 		self.assertEqual({ 'superlongword': 0 }, terms)
 
-	def no_test_variability_extract_base(self):
+	def test_variability_no_idfs(self):
+		"""
+		Test that the variability raises a ValueError when no IDFs are given.
+		"""
+
+		extractor = event.Variability(base=2)
+		self.assertRaises(ValueError, extractor.extract, [ ])
+
+	def test_variability_one_idf(self):
+		"""
+		Test that the variability raises a ValueError when one IDF is given.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json') ]
+		extractor = event.Variability(base=2)
+		self.assertRaises(ValueError, extractor.extract, paths)
+
+	def test_variability_extract_base(self):
 		"""
 		Test that the variability score is applied before the inverse.
 		"""
@@ -499,7 +516,7 @@ class TestEvent(unittest.TestCase):
 		variability_10 = extractor.extract(idfs)
 		self.assertGreater(variability_10['yellow'], variability_2['liverpool'])
 
-	def no_test_variability_extract_consistent_word(self):
+	def test_variability_extract_consistent_word(self):
 		"""
 		Test that the variability score of a consistent word is higher than a specific word.
 		"""
@@ -519,7 +536,7 @@ class TestEvent(unittest.TestCase):
 		extractor = event.Variability()
 		self.assertGreater(extractor.extract(idfs)['yellow'], extractor.extract(idfs)['liverpool'])
 
-	def no_test_variability_extract_chi_less_1(self):
+	def test_variability_extract_chi_less_1(self):
 		"""
 		Test that when the variability is less than 1, the variability is not negative.
 		"""
@@ -549,7 +566,7 @@ class TestEvent(unittest.TestCase):
 		self.assertGreater(extractor.extract(idfs, candidates=[ 'fastest' ])['fastest'], 0)
 		self.assertLess(extractor.extract(idfs, candidates=[ 'fastest' ])['fastest'], 1)
 
-	def no_test_variability_extract_chi_equal_1(self):
+	def test_variability_extract_chi_equal_1(self):
 		"""
 		Test that when the variability is equal to 1, the variability is 1.
 		"""
@@ -576,7 +593,7 @@ class TestEvent(unittest.TestCase):
 		"""
 		self.assertEqual(1, extractor.extract(idfs, candidates=[ 'fastest' ])['fastest'])
 
-	def no_test_variability_extract_specific_words(self):
+	def test_variability_extract_specific_words(self):
 		"""
 		Test that the variability score of two specific words prefers those that appear in multiple corpora.
 		"""
@@ -596,7 +613,7 @@ class TestEvent(unittest.TestCase):
 		extractor = event.Variability()
 		self.assertGreater(extractor.extract(idfs)['manchest'], extractor.extract(idfs)['chelsea'])
 
-	def no_test_variability_extract_changing_corpora(self):
+	def test_variability_extract_changing_corpora(self):
 		"""
 		Test that when changing the corpora, the variability changes.
 		"""
@@ -664,7 +681,7 @@ class TestEvent(unittest.TestCase):
 		extractor = event.Variability()
 		self.assertEqual(idfs[3], extractor._load_idfs(paths)[3])
 
-	def no_test_variability_no_candidates(self):
+	def test_variability_no_candidates(self):
 		"""
 		Test that the variability extractor extracts scores for all terms if no candidates are given.
 		"""
@@ -682,7 +699,7 @@ class TestEvent(unittest.TestCase):
 		terms = extractor.extract(idfs)
 		self.assertEqual(set(extractor._vocabulary(idfs)), set(terms.keys()))
 
-	def no_test_variability_extract_candidates(self):
+	def test_variability_extract_candidates(self):
 		"""
 		Test that the variability extractor extracts scores for only select candidates if they are given.
 		"""
@@ -700,7 +717,7 @@ class TestEvent(unittest.TestCase):
 		terms = extractor.extract(idfs, candidates=[ 'chelsea', 'goal' ])
 		self.assertEqual({ 'chelsea', 'goal' }, set(terms.keys()))
 
-	def no_test_variability_extract_candidates_same_scores(self):
+	def test_variability_extract_candidates_same_scores(self):
 		"""
 		Test that the variability extractor's scores for known candidates are the same as when candidates are not known.
 		"""
@@ -720,7 +737,7 @@ class TestEvent(unittest.TestCase):
 		self.assertEqual(terms['chelsea'], candidate_terms['chelsea'])
 		self.assertEqual(terms['goal'], candidate_terms['goal'])
 
-	def no_test_variability_extract_candidates_unknown_word(self):
+	def test_variability_extract_candidates_unknown_word(self):
 		"""
 		Test that the variability extractor's score for an unknown word is 1 because it 'appears' equally across corpora.
 		"""
@@ -738,7 +755,7 @@ class TestEvent(unittest.TestCase):
 		terms = extractor.extract(idfs, candidates=[ 'superlongword' ])
 		self.assertEqual({ 'superlongword': 1 }, terms)
 
-	def no_test_variability_vocabulary_all_one_corpus(self):
+	def test_variability_vocabulary_all_one_corpus(self):
 		"""
 		Test that the vocabulary of one corpus includes all terms.
 		"""
@@ -752,7 +769,7 @@ class TestEvent(unittest.TestCase):
 		extractor = event.Variability()
 		self.assertEqual(set(idfs[0].global_scheme.idf.keys()), set(extractor._vocabulary(idfs)))
 
-	def no_test_variability_vocabulary_all_multiple_corpora(self):
+	def test_variability_vocabulary_all_multiple_corpora(self):
 		"""
 		Test that the vocabulary of multiple corpora includes all terms.
 		"""
@@ -769,7 +786,7 @@ class TestEvent(unittest.TestCase):
 		self.assertTrue(all( term in vocabulary for term in idfs[0].global_scheme.idf ))
 		self.assertTrue(all( term in vocabulary for term in idfs[1].global_scheme.idf ))
 
-	def no_test_variability_vocabulary_unique(self):
+	def test_variability_vocabulary_unique(self):
 		"""
 		Test that the vocabulary does not include duplicates.
 		"""
@@ -785,7 +802,7 @@ class TestEvent(unittest.TestCase):
 		vocabulary = extractor._vocabulary(idfs)
 		self.assertEqual(len(set(vocabulary)), len(vocabulary))
 
-	def no_test_variability_contingency_table_total(self):
+	def test_variability_contingency_table_total(self):
 		"""
 		Test that the variability contingency table sums up to the total number of documents in all IDFs.
 		"""
@@ -814,7 +831,7 @@ class TestEvent(unittest.TestCase):
 			table = extractor._contingency_table('liverpool', idf, comparison)
 			self.assertEqual(total, sum(table))
 
-	def no_test_variability_contingency_table_four_cells(self):
+	def test_variability_contingency_table_four_cells(self):
 		"""
 		Test that the variability contingency table has four cells.
 		"""
@@ -842,7 +859,7 @@ class TestEvent(unittest.TestCase):
 			table = extractor._contingency_table('liverpool', idf, comparison)
 			self.assertEqual(4, len(table))
 
-	def no_test_variability_contingency_table_integer_cells(self):
+	def test_variability_contingency_table_integer_cells(self):
 		"""
 		Test that the variability contingency table is made up of integers.
 		"""
@@ -870,7 +887,7 @@ class TestEvent(unittest.TestCase):
 			table = extractor._contingency_table('liverpool', idf, comparison)
 			self.assertTrue(all(type(cell) is int for cell in table))
 
-	def no_test_variability_contingency_table_positive_cells(self):
+	def test_variability_contingency_table_positive_cells(self):
 		"""
 		Test that the variability contingency table is made up of positive numbers.
 		"""
@@ -898,7 +915,7 @@ class TestEvent(unittest.TestCase):
 			table = extractor._contingency_table('zaha', idf, comparison)
 			self.assertTrue(all(cell >= 0 for cell in table))
 
-	def no_test_variability_contingency_table_event_total(self):
+	def test_variability_contingency_table_event_total(self):
 		"""
 		Test that the first variability contingency table row sums up to the total number of documents in the event IDF.
 		"""
@@ -921,7 +938,7 @@ class TestEvent(unittest.TestCase):
 			(A, B, C, D) = extractor._contingency_table('liverpool', idf, comparison)
 			self.assertEqual(idf.global_scheme.documents, A + B)
 
-	def no_test_variability_contingency_table_comparison_total(self):
+	def test_variability_contingency_table_comparison_total(self):
 		"""
 		Test that the second variability contingency table row sums up to the total number of documents in the comparison IDFs.
 		"""
@@ -944,7 +961,7 @@ class TestEvent(unittest.TestCase):
 			(A, B, C, D) = extractor._contingency_table('liverpool', idf, comparison)
 			self.assertEqual(sum([ idf.global_scheme.documents for idf in comparison ]), C + D)
 
-	def no_test_variability_contingency_table_unknown_event_word(self):
+	def test_variability_contingency_table_unknown_event_word(self):
 		"""
 		Test that when a word is unknown in an event, the first cell is 0.
 		"""
@@ -965,7 +982,7 @@ class TestEvent(unittest.TestCase):
 		(A, B, C, D) = extractor._contingency_table('merten', idfs[0], idfs[1:])
 		self.assertEqual(0, A)
 
-	def no_test_variability_contingency_table_unknown_event_word(self):
+	def test_variability_contingency_table_unknown_event_word(self):
 		"""
 		Test that when a word is unknown in an event, the first cell is 0.
 		"""
@@ -987,7 +1004,7 @@ class TestEvent(unittest.TestCase):
 		self.assertEqual(0, A)
 		self.assertEqual(idfs[0].global_scheme.documents, B)
 
-	def no_test_variability_contingency_table_unique_event_word(self):
+	def test_variability_contingency_table_unique_event_word(self):
 		"""
 		Test that when a word appears in only one event, the comparison events' cells sum up to zero.
 		"""
@@ -1009,7 +1026,7 @@ class TestEvent(unittest.TestCase):
 		self.assertEqual(0, C)
 		self.assertEqual(sum([ idf.global_scheme.documents for idf in idfs[1:] ]), D)
 
-	def no_test_variability_contingency_table_correct_counts(self):
+	def test_variability_contingency_table_correct_counts(self):
 		"""
 		Test that the variability contingency table counts are correct.
 		"""
@@ -1032,7 +1049,7 @@ class TestEvent(unittest.TestCase):
 		self.assertEqual(idfs[0].global_scheme.idf[term], A)
 		self.assertEqual(sum([ idf.global_scheme.idf[term] for idf in idfs[1:] ]), C)
 
-	def no_test_variablity_chi(self):
+	def test_variablity_chi(self):
 		"""
 		Test the chi-square calculation.
 		"""
@@ -1045,7 +1062,7 @@ class TestEvent(unittest.TestCase):
 		table = (30, 20, 331, 3218)
 		self.assertEqual(140.2925, round(extractor._chi(table), 4))
 
-	def no_test_variablity_chi_empty(self):
+	def test_variablity_chi_empty(self):
 		"""
 		Test that the chi-square statistic of an empty table is 0.
 		"""
@@ -1055,7 +1072,7 @@ class TestEvent(unittest.TestCase):
 		table = (0, 0, 0, 0)
 		self.assertEqual(0, extractor._chi(table))
 
-	def no_test_variablity_chi_empty_combinations(self):
+	def test_variablity_chi_empty_combinations(self):
 		"""
 		Test that the chi-square statistic of a table that is not empty, except for a few combinations, is 0.
 		"""
@@ -1080,7 +1097,7 @@ class TestEvent(unittest.TestCase):
 		table = (0, 1, 1, 0) # A + D = 0
 		self.assertLess(0, extractor._chi(table))
 
-	def no_test_entropy_extract_consistent_word(self):
+	def test_entropy_extract_consistent_word(self):
 		"""
 		Test that the entropy score of a consistent word is higher than the entropy of a specific word.
 		"""
@@ -1100,7 +1117,7 @@ class TestEvent(unittest.TestCase):
 		extractor = event.Entropy()
 		self.assertGreater(extractor.extract(idfs)['yellow'], extractor.extract(idfs)['liverpool'])
 
-	def no_test_entropy_extract_specific_words(self):
+	def test_entropy_extract_specific_words(self):
 		"""
 		Test that the entropy score of two specific words prefers those that appear in multiple corpora.
 		"""
@@ -1120,7 +1137,7 @@ class TestEvent(unittest.TestCase):
 		extractor = event.Entropy()
 		self.assertGreater(extractor.extract(idfs)['rashford'], extractor.extract(idfs)['salah'])
 
-	def no_test_entropy_extract_changing_corpora(self):
+	def test_entropy_extract_changing_corpora(self):
 		"""
 		Test that when changing the corpora, the entropy changes.
 		"""
@@ -1140,7 +1157,7 @@ class TestEvent(unittest.TestCase):
 		extractor = event.Entropy()
 		self.assertLess(extractor.extract(idfs[:2])['liverpool'], extractor.extract(idfs)['liverpool'])
 
-	def no_test_entropy_no_candidates(self):
+	def test_entropy_no_candidates(self):
 		"""
 		Test that the entropy extractor extracts scores for all terms if no candidates are given.
 		"""
@@ -1158,7 +1175,7 @@ class TestEvent(unittest.TestCase):
 		terms = extractor.extract(idfs)
 		self.assertEqual(set(extractor._vocabulary(idfs)), set(terms.keys()))
 
-	def no_test_entropy_extract_candidates(self):
+	def test_entropy_extract_candidates(self):
 		"""
 		Test that the entropy extractor extracts scores for only select candidates if they are given.
 		"""
@@ -1176,7 +1193,7 @@ class TestEvent(unittest.TestCase):
 		terms = extractor.extract(idfs, candidates=[ 'chelsea', 'goal' ])
 		self.assertEqual({ 'chelsea', 'goal' }, set(terms.keys()))
 
-	def no_test_entropy_extract_candidates_same_scores(self):
+	def test_entropy_extract_candidates_same_scores(self):
 		"""
 		Test that the entropy extractor's scores for known candidates are the same as when candidates are not known.
 		"""
@@ -1196,7 +1213,7 @@ class TestEvent(unittest.TestCase):
 		self.assertEqual(terms['chelsea'], candidate_terms['chelsea'])
 		self.assertEqual(terms['goal'], candidate_terms['goal'])
 
-	def no_test_entropy_extract_candidates_unknown_word(self):
+	def test_entropy_extract_candidates_unknown_word(self):
 		"""
 		Test that the entropy extractor's score for an unknown word is 0 because it doesn't appear.
 		"""
@@ -1262,7 +1279,7 @@ class TestEvent(unittest.TestCase):
 		extractor = event.Entropy()
 		self.assertEqual(idfs[3], extractor._load_idfs(paths)[3])
 
-	def no_test_entropy_vocabulary_all_one_corpus(self):
+	def test_entropy_vocabulary_all_one_corpus(self):
 		"""
 		Test that the vocabulary of one corpus includes all terms.
 		"""
@@ -1276,7 +1293,7 @@ class TestEvent(unittest.TestCase):
 		extractor = event.Entropy()
 		self.assertEqual(set(idfs[0].global_scheme.idf.keys()), set(extractor._vocabulary(idfs)))
 
-	def no_test_entropy_vocabulary_all_multiple_corpora(self):
+	def test_entropy_vocabulary_all_multiple_corpora(self):
 		"""
 		Test that the vocabulary of multiple corpora includes all terms.
 		"""
@@ -1293,7 +1310,7 @@ class TestEvent(unittest.TestCase):
 		self.assertTrue(all( term in vocabulary for term in idfs[0].global_scheme.idf ))
 		self.assertTrue(all( term in vocabulary for term in idfs[1].global_scheme.idf ))
 
-	def no_test_entropy_vocabulary_unique(self):
+	def test_entropy_vocabulary_unique(self):
 		"""
 		Test that the vocabulary does not include duplicates.
 		"""
@@ -1309,7 +1326,7 @@ class TestEvent(unittest.TestCase):
 		vocabulary = extractor._vocabulary(idfs)
 		self.assertEqual(len(set(vocabulary)), len(vocabulary))
 
-	def no_test_entropy_probabilities_no_idfs(self):
+	def test_entropy_probabilities_no_idfs(self):
 		"""
 		Test that the probabilities of no IDFs is an empty list.
 		"""
@@ -1318,7 +1335,7 @@ class TestEvent(unittest.TestCase):
 		probabilities = extractor._probabilities([ ], 'yellow')
 		self.assertEqual([ ], probabilities)
 
-	def no_test_entropy_probabilities_one_idf(self):
+	def test_entropy_probabilities_one_idf(self):
 		"""
 		Test that the probability of a term from one IDF is 1.
 		"""
@@ -1334,7 +1351,7 @@ class TestEvent(unittest.TestCase):
 		self.assertEqual(1, len(probabilities))
 		self.assertEqual(1, probabilities[0])
 
-	def no_test_entropy_probabilities_identical_idfs(self):
+	def test_entropy_probabilities_identical_idfs(self):
 		"""
 		Test that the probabilities from two identical IDFs is equal.
 		"""
@@ -1351,7 +1368,7 @@ class TestEvent(unittest.TestCase):
 		self.assertEqual(2, len(probabilities))
 		self.assertTrue(all( 1/2 == p for p in probabilities ))
 
-	def no_test_entropy_probabilities_sum_one(self):
+	def test_entropy_probabilities_sum_one(self):
 		"""
 		Test that the sum of probabilities sums up to 1.
 		"""
@@ -1370,7 +1387,7 @@ class TestEvent(unittest.TestCase):
 		self.assertTrue(all( round(sum(extractor._probabilities(idfs, term)), 5) in [ 0, 1 ]
 							 for term in vocabulary ))
 
-	def no_test_entropy_probabilities_equal_events(self):
+	def test_entropy_probabilities_equal_events(self):
 		"""
 		Test that the number of probabilities is always the same as the number of events.
 		"""
@@ -1389,7 +1406,7 @@ class TestEvent(unittest.TestCase):
 		self.assertTrue(all( len(idfs) == len(extractor._probabilities(idfs, term))
 							 for term in vocabulary ))
 
-	def no_test_entropy_probabilities_few_events(self):
+	def test_entropy_probabilities_few_events(self):
 		"""
 		Test that the probability of a term that appears in a subset of events is equal to 0 in the other events.
 		"""
@@ -1411,7 +1428,7 @@ class TestEvent(unittest.TestCase):
 		extractor = event.Entropy()
 		self.assertTrue(any( p == 0 for p in extractor._probabilities(idfs, 'guaita') ))
 
-	def no_test_entropy_probabilities_unknown_word(self):
+	def test_entropy_probabilities_unknown_word(self):
 		"""
 		Test that the probabilities of an unknown term is zero.
 		"""
@@ -1431,7 +1448,7 @@ class TestEvent(unittest.TestCase):
 		self.assertEqual(4, len(probabilities))
 		self.assertTrue(all( 0 == p for p in probabilities ))
 
-	def no_test_entropy_probabilities_lower_bound(self):
+	def test_entropy_probabilities_lower_bound(self):
 		"""
 		Test that the probabilities of all terms is greater than or equal to 0.
 		"""
@@ -1451,7 +1468,7 @@ class TestEvent(unittest.TestCase):
 			probabilities = extractor._probabilities(idfs, term)
 			self.assertTrue(all( p >= 0 for p in probabilities ))
 
-	def no_test_entropy_probabilities_upper_bound(self):
+	def test_entropy_probabilities_upper_bound(self):
 		"""
 		Test that the probabilities of all terms is less than or equal to 1.
 		"""
@@ -1471,7 +1488,7 @@ class TestEvent(unittest.TestCase):
 			probabilities = extractor._probabilities(idfs, term)
 			self.assertTrue(all( p <= 1 for p in probabilities ))
 
-	def no_test_entropy_total_no_idfs(self):
+	def test_entropy_total_no_idfs(self):
 		"""
 		Test that when calculating the total mentions of a term without any IDFs, the total is 0.
 		"""
@@ -1479,7 +1496,7 @@ class TestEvent(unittest.TestCase):
 		extractor = event.Entropy()
 		self.assertEqual(0, extractor._total([ ], 'yellow'))
 
-	def no_test_entropy_total_one_idf(self):
+	def test_entropy_total_one_idf(self):
 		"""
 		Test that when calculating the total mentions of a term with one IDF, the total is equal to the number of times the term appears in that event.
 		"""
@@ -1495,7 +1512,7 @@ class TestEvent(unittest.TestCase):
 		self.assertTrue(all( extractor._total(idfs, term) == idfs[0].global_scheme.idf.get(term, 0)
 							 for term in vocabulary ))
 
-	def no_test_entropy_total_multiple_idfs(self):
+	def test_entropy_total_multiple_idfs(self):
 		"""
 		Test that when calculating the total mentions of a term with several IDFs, the total is equal to the number of times the term appears in those events.
 		"""
@@ -1518,7 +1535,7 @@ class TestEvent(unittest.TestCase):
 
 			self.assertEqual(extractor._total(idfs, term), total)
 
-	def no_test_entropy_total_unknown_word(self):
+	def test_entropy_total_unknown_word(self):
 		"""
 		Test that the total mentions of an unknown term is zero.
 		"""
@@ -1536,7 +1553,7 @@ class TestEvent(unittest.TestCase):
 		self.assertTrue(not any( 'superlongword' in idf.global_scheme.idf for idf in idfs ))
 		self.assertEqual(0, extractor._total(idfs, 'superlongword'))
 
-	def no_test_entropy_entropy_empty(self):
+	def test_entropy_entropy_empty(self):
 		"""
 		Test that the entropy of an empty list of probabilities is 0.
 		"""
@@ -1544,7 +1561,7 @@ class TestEvent(unittest.TestCase):
 		extractor = event.Entropy()
 		self.assertEqual(0, extractor._entropy([ ]))
 
-	def no_test_entropy_entropy_zero_probabilities(self):
+	def test_entropy_entropy_zero_probabilities(self):
 		"""
 		Test that the entropy of a list of zero probabilities is 0.
 		"""
@@ -1552,7 +1569,7 @@ class TestEvent(unittest.TestCase):
 		extractor = event.Entropy()
 		self.assertEqual(0, extractor._entropy([ 0, 0, 0 ]))
 
-	def no_test_entropy_entropy_one_probability(self):
+	def test_entropy_entropy_one_probability(self):
 		"""
 		Test that the entropy of one probability is 0.
 		"""
@@ -1560,7 +1577,7 @@ class TestEvent(unittest.TestCase):
 		extractor = event.Entropy()
 		self.assertEqual(0, extractor._entropy([ 1 ]))
 
-	def no_test_entropy_entropy_coin_toss(self):
+	def test_entropy_entropy_coin_toss(self):
 		"""
 		Test that the entropy of a coin toss is the maximum.
 		"""
@@ -1568,7 +1585,7 @@ class TestEvent(unittest.TestCase):
 		extractor = event.Entropy()
 		self.assertEqual(0.30103, round(extractor._entropy([ 0.5, 0.5 ]), 5))
 
-	def no_test_entropy_entropy_base(self):
+	def test_entropy_entropy_base(self):
 		"""
 		Test that the entropy uses the instance variable's base.
 		"""
@@ -1576,7 +1593,7 @@ class TestEvent(unittest.TestCase):
 		extractor = event.Entropy(base=2)
 		self.assertEqual(1, round(extractor._entropy([ 0.5, 0.5 ]), 5))
 
-	def no_test_entropy_entropy_lower_bound(self):
+	def test_entropy_entropy_lower_bound(self):
 		"""
 		Test that the entropy is greater than or equal to 0.
 		"""
@@ -1596,7 +1613,7 @@ class TestEvent(unittest.TestCase):
 			probabilities = extractor._probabilities(idfs, term)
 			self.assertLessEqual(0, extractor._entropy(probabilities))
 
-	def no_test_entropy_entropy_upper_bound(self):
+	def test_entropy_entropy_upper_bound(self):
 		"""
 		Test that the entropy is at its highest when all probabilities are equal.
 		"""
@@ -1616,7 +1633,7 @@ class TestEvent(unittest.TestCase):
 			probabilities = extractor._probabilities(idfs, term)
 			self.assertLessEqual(math.log(1/len(idfs), 10), extractor._entropy(probabilities))
 
-	def no_test_entropy_entropy_upper_bound_depends_events(self):
+	def test_entropy_entropy_upper_bound_depends_events(self):
 		"""
 		Test that the entropy's upper bound depends on the number of events.
 		"""
@@ -1641,7 +1658,7 @@ class TestEvent(unittest.TestCase):
 			probabilities = extractor._probabilities(idfs[:-1], term)
 			self.assertLessEqual(math.log(1/len(idfs[:-1]), 10), extractor._entropy(probabilities))
 
-	def no_test_entropy_entropy_upper_bound_depends_base(self):
+	def test_entropy_entropy_upper_bound_depends_base(self):
 		"""
 		Test that the entropy's upper bound depends on the logarithmic base.
 		"""

@@ -240,10 +240,15 @@ class Variability(Extractor):
 				 A low variability indicates that the term appears consistently across all events.
 				 To reflect this behavior in the score, the inverse of the variability is returned.
 		:rtype: dict
+
+		:raises ValueError: When only one or no IDFs are given.
 		"""
 
 		variability = { }
 		idfs = self._load_idfs(idfs)
+
+		if len(idfs) < 2:
+			raise ValueError(f"Variability expects 2 or more TF-IDF schemes; received { len(idfs) }")
 
 		"""
 		Calculate the number of documents across all events.
