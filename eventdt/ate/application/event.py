@@ -52,27 +52,20 @@ class EF(Extractor):
 		timelines = self._load_timelines(timelines)
 
 		for timeline in timelines:
-			with open(timeline, 'r') as f:
-				data = json.loads(''.join(f.readlines()))
+			"""
+			Extract all the topical terms from the timeline.
+			"""
+			terms = set( term for node in timeline.nodes
+							  for topic in node.topics
+							  for term in topic.dimensions )
 
-				"""
-				Decode the timeline and extract all the terms in it.
-				"""
-				data = Exportable.decode(data)
-				if 'timeline' not in data:
-					raise ValueError(f"The event frequency requires a corpus of timeline, received { ', '.join(list(data.keys())) }")
-				timeline = data['timeline']
-				terms = set( term for node in timeline.nodes
-								  for topic in node.topics
-								  for term in topic.dimensions )
-
-				"""
-				Increment the event frequency of all the candidates terms—if any—in the timeline.
-				"""
-				terms = terms if not candidates else [ term for term in terms
-				 											if term in candidates ]
-				for term in terms:
-					ef[term] = ef.get(term, 0) + 1
+			"""
+			Increment the event frequency of all the candidates terms—if any—in the timeline.
+			"""
+			terms = terms if not candidates else [ term for term in terms
+			 											if term in candidates ]
+			for term in terms:
+				ef[term] = ef.get(term, 0) + 1
 
 		return ef
 
