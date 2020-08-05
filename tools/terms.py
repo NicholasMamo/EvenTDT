@@ -98,9 +98,7 @@ def main():
 	args = var(args)
 	extractor = instantiate(args['method'],
 							tfidf=args['tfidf'], general=args['general'], cutoff=args['cutoff'])
-	terms = extractor.extract(args['files'])
-	terms = sorted(terms.items(), key=lambda term: term[1], reverse=True)
-	terms = [ { 'term': term, 'score': score, 'rank': rank + 1 } for rank, (term, score) in enumerate(terms) ]
+	terms = extract(extractor=extractor, files=args['files'])
 
 	tools.save(args.output, { 'meta': cmd, 'terms': terms })
 
@@ -147,7 +145,31 @@ def instantiate(method, tfidf=None, general=None, cutoff=None):
 		if tfidf is None:
 			parser.error("The TF-IDF scheme is required with the EF-IDF method.")
 
-	return args.method()
+		return method(tfidf)
+
+	return method()
+
+def extract(extractor, files):
+	"""
+	Extract terms using the given extractor from the given files.
+
+	:param extractor: The extractor to use to extract terms.
+	:type extractor: :class:`~ate.extractor.Extractor`
+	:param files: The input corpora from where to extract domain-specific terms
+	:type files: str or list of str
+
+	:return: A list of terms, each as a dictionary including its:
+
+			 - ``term``,
+			 - ``score``, and
+			 - ``rank``.
+	:rtype: list of dict
+	"""
+
+	terms = extractor.extract(files)
+	terms = sorted(terms.items(), key=lambda term: term[1], reverse=True)
+	terms = [ { 'term': term, 'score': score, 'rank': rank + 1 } for rank, (term, score) in enumerate(terms) ]
+	return terms
 
 def method(method):
 	"""
