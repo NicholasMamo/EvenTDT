@@ -18,6 +18,7 @@ Accepted arguments:
 	- ``-f --files``		*<Required>* The input corpora from where to extract domain-specific terms.
 	- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `TF`, `TFIDF`, `Rank`, `Specificity`, `TFDCF`, `EFIDF`.
 	- ``-o --output``		*<Required>* The path to the file where to store the extracted terms.
+	- ``-r --rerank``		*<Optional>* The method to use to re-rank terms; supported: `Variability`, `Entropy`; defaults to no re-ranking.
 	- ``--tfidf``			*<Optional>* The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).
 	- ``--general``			*<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `Rank`, `Specificity` and `TF-DCF` methods).
 	- ``--cutoff``			*<Optional>* The minimum term frequency to consider when ranking terms (used only with the `Specificity` method).
@@ -37,7 +38,7 @@ sys.path.insert(-1, lib)
 import tools
 from logger import logger
 from ate import linguistic
-from ate.application import EFIDF
+from ate.application import EFIDF, Entropy, Variability
 from ate.stat import TFExtractor, TFIDFExtractor
 from ate.stat.corpus import RankExtractor, SpecificityExtractor, TFDCFExtractor
 
@@ -51,6 +52,7 @@ def setup_args():
 		- ``-f --files``		*<Required>* The input corpora from where to extract domain-specific terms.
 		- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `TF`, `TFIDF`, `Rank`, `Specificity`, `TFDCF`, `EFIDF`.
 		- ``-o --output``		*<Required>* The path to the file where to store the extracted terms.
+		- ``-r --rerank``		*<Optional>* The method to use to re-rank terms; supported: `Variability`, `Entropy`; defaults to no re-ranking.
 		- ``--tfidf``			*<Optional>* The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).
 		- ``--general``			*<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `Rank`, `Specificity` and `TF-DCF` methods).
 		- ``--cutoff``			*<Optional>* The minimum term frequency to consider when ranking terms (used only with the `Specificity` method).
@@ -69,6 +71,9 @@ def setup_args():
 	parser.add_argument('-o', '--output',
 						type=str, required=True,
 						help='<Required> The path to the file where to store the extracted terms.')
+	parser.add_argument('-r', '--rerank',
+						type=reranker, required=False,
+						help='<Optional> The method to use to re-rank terms; supported: `Variability`, `Entropy`; defaults to no re-ranking.')
 	parser.add_argument('--tfidf', required=False,
 						help='<Optional> The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).')
 	parser.add_argument('--general',
@@ -96,6 +101,7 @@ def main():
 	"""
 	cmd = tools.meta(args)
 	cmd['method'] = str(vars(args)['method'])
+	cmd['rerank'] = str(vars(args)['rerank'])
 
 	"""
 	Create the extractor and extract the terms.
@@ -215,6 +221,33 @@ def method(method):
 		return methods[method.lower()]
 
 	raise argparse.ArgumentTypeError(f"Invalid method value: { method }")
+
+def reranker(method):
+	"""
+	Convert the given string into an ATE class used for re-ranking.
+	The accepted classes are:
+
+		#. :class:`~ate.application.event.Variability`
+		#. :class:`~ate.application.event.Entropy`
+
+	:param method: The method string.
+	:type method: str
+
+	:return: The class type that corresponds to the given method.
+	:rtype: :class:`~ate.extractor.Extractor`
+
+	:raises argparse.ArgumentTypeError: When the given method string is invalid.
+	"""
+
+	methods = {
+		'variability': Variability,
+		'entropy': Entropy,
+	}
+
+	if method.lower() in methods:
+		return methods[method.lower()]
+
+	raise argparse.ArgumentTypeError(f"Invalid re-ranker value: { method }")
 
 if __name__ == "__main__":
 	main()
