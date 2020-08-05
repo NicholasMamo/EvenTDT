@@ -454,11 +454,15 @@ class Entropy(Extractor):
 				 A term that has a high entropy is equally common across all events.
 				 A term that has a low entropy indicates that the term appears inconsistently across events.
 		:rtype: dict
+
+		:raises ValueError: When only one or no IDFs are given.
 		"""
 
 		entropy = { }
 		idfs = self._load_idfs(idfs)
-
+		if len(idfs) < 2:
+			raise ValueError(f"Variability expects 2 or more TF-IDF schemes; received { len(idfs) }")
+		
 		"""
 		Go through each term and compute the entropy.
 		For each event, compare the appearance of the term in the event with its appearance in other events.

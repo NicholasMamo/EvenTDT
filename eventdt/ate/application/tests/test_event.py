@@ -1097,6 +1097,23 @@ class TestEvent(unittest.TestCase):
 		table = (0, 1, 1, 0) # A + D = 0
 		self.assertLess(0, extractor._chi(table))
 
+	def test_entropy_extract_no_idfs(self):
+		"""
+		Test that the entropy raises a ValueError when no IDFs are given.
+		"""
+
+		extractor = event.Entropy(base=2)
+		self.assertRaises(ValueError, extractor.extract, [ ])
+
+	def test_entropy_extract_one_idf(self):
+		"""
+		Test that the entropy raises a ValueError when one IDF is given.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json') ]
+		extractor = event.Entropy(base=2)
+		self.assertRaises(ValueError, extractor.extract, paths)
+
 	def test_entropy_extract_consistent_word(self):
 		"""
 		Test that the entropy score of a consistent word is higher than the entropy of a specific word.
