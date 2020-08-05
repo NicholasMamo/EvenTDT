@@ -100,13 +100,13 @@ def main():
 	"""
 	Create the extractor and extract the terms.
 	"""
-	args = var(args)
+	args = vars(args)
 	extractor = instantiate(args['method'],
 							tfidf=args['tfidf'], general=args['general'], cutoff=args['cutoff'],
 							base=args['base'])
 	terms = extract(extractor=extractor, files=args['files'])
 
-	tools.save(args.output, { 'meta': cmd, 'terms': terms })
+	tools.save(args['output'], { 'meta': cmd, 'terms': terms })
 
 def instantiate(method, tfidf=None, general=None, cutoff=None, base=None):
 	"""
