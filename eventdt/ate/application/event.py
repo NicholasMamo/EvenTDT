@@ -229,8 +229,8 @@ class Variability(Extractor):
 
 		The method follows the leave-one-out principle: each event is compared against all other events.
 
-		:param idfs: A list of IDFs, one for each event.
-		:type idfs: list of :class:`~nlp.term_weighting.tfidf.TFIDF`
+		:param idfs: A list of IDFs, one for each event, or paths to where they are stored.
+		:type idfs: str or list of :class:`~nlp.term_weighting.tfidf.TFIDF`
 		:param candidates: A list of terms for which to calculate a score.
 						   If `None` is given, all words are considered to be candidates.
 		:type candidates: None or list of str
@@ -243,6 +243,7 @@ class Variability(Extractor):
 		"""
 
 		variability = { }
+		idfs = self._load_idfs(idfs)
 
 		"""
 		Calculate the number of documents across all events.
@@ -269,6 +270,38 @@ class Variability(Extractor):
 			variability[term] = 1./math.log(v + self.base, self.base)
 
 		return variability
+
+	def _load_idfs(self, idfs):
+		"""
+		Load the IDFs if paths to files are given.
+
+		:param idfs: A list of IDFs, one for each event, or paths to IDFs.
+		:type idfs: list of str or list of :class:`~nlp.term_weighting.tfidf.TFIDF`
+
+		:return: A list of TF-IDF schemes, loaded from files where necessary.
+		:rtype: list of :class:`~nlp.term_weighting.tfidf.TFIDF`
+
+		:raises ValueError: When the given file does not contain a TF-IDF scheme.
+		"""
+
+		_idfs = [ ]
+
+		for idf in idfs:
+			if type(idf) is str:
+				with open(idf, 'r') as f:
+					data = json.loads(''.join(f.readlines()))
+
+					"""
+					Decode the TF-IDF scheme.
+					"""
+					data = Exportable.decode(data)
+					if 'tfidf' not in data:
+						raise ValueError(f"The variability requires a TF-IDF file, received { ', '.join(list(data.keys())) }")
+					_idfs.append(data['tfidf'])
+			else:
+				_idfs.append(idf)
+
+		return _idfs
 
 	def _vocabulary(self, idfs):
 		"""

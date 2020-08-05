@@ -616,6 +616,54 @@ class TestEvent(unittest.TestCase):
 		extractor = event.Variability()
 		self.assertGreater(extractor.extract(idfs[:2])['liverpool'], extractor.extract(idfs)['liverpool'])
 
+	def test_variability_load_idfs_not_idf(self):
+		"""
+		Test that when loading IDFs from paths, a file that is not an IDF raises a ValueError.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json') ]
+
+		extractor = event.Variability()
+		self.assertRaises(ValueError, extractor._load_idfs, paths)
+
+	def test_variability_load_idfs(self):
+		"""
+		Test that when loading IDFs from paths, the same schemes are loaded as when loaded manually.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		extractor = event.Variability()
+		self.assertTrue(all( [ idf.global_scheme.idf == extracted.global_scheme.idf for (idf, extracted) in zip(idfs, extractor._load_idfs(paths)) ] ))
+
+	def test_variability_load_idfs_already_loaded(self):
+		"""
+		Test that when loading IDFs from paths, a scheme that is already loaded is not loaded again.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'MUNARS.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json') ]
+		idfs = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
+
+		paths[3] = idfs[3]
+		extractor = event.Variability()
+		self.assertEqual(idfs[3], extractor._load_idfs(paths)[3])
+
 	def test_variability_no_candidates(self):
 		"""
 		Test that the variability extractor extracts scores for all terms if no candidates are given.
