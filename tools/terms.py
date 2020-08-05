@@ -21,6 +21,7 @@ Accepted arguments:
 	- ``--tfidf``			*<Optional>* The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).
 	- ``--general``			*<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `Rank`, `Specificity` and `TF-DCF` methods).
 	- ``--cutoff``			*<Optional>* The minimum term frequency to consider when ranking terms (used only with the `Specificity` method).
+	- ``--base``			*<Optional>* The logarithmic base (used only with the `EF-IDF` method).
 """
 
 import argparse
@@ -53,6 +54,7 @@ def setup_args():
 		- ``--tfidf``			*<Optional>* The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).
 		- ``--general``			*<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `Rank`, `Specificity` and `TF-DCF` methods).
 		- ``--cutoff``			*<Optional>* The minimum term frequency to consider when ranking terms (used only with the `Specificity` method).
+		- ``--base``			*<Optional>* The logarithmic base (used only with the `EF-IDF` method).
 
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
@@ -75,6 +77,9 @@ def setup_args():
 	parser.add_argument('--cutoff',
 						type=int, default=1, required=False,
 						help='<Optional> The minimum term frequency to consider when ranking terms (used only with the `Specificity` method).')
+	parser.add_argument('--base',
+						type=int, default=None, required=False,
+						help='<Optional> The logarithmic base (used only with the `EF-IDF` method).')
 
 	args = parser.parse_args()
 	return args
@@ -97,12 +102,13 @@ def main():
 	"""
 	args = var(args)
 	extractor = instantiate(args['method'],
-							tfidf=args['tfidf'], general=args['general'], cutoff=args['cutoff'])
+							tfidf=args['tfidf'], general=args['general'], cutoff=args['cutoff'],
+							base=args['base'])
 	terms = extract(extractor=extractor, files=args['files'])
 
 	tools.save(args.output, { 'meta': cmd, 'terms': terms })
 
-def instantiate(method, tfidf=None, general=None, cutoff=None):
+def instantiate(method, tfidf=None, general=None, cutoff=None, base=None):
 	"""
 	Instantiate the method based on the arguments that it accepts.
 
@@ -116,6 +122,8 @@ def instantiate(method, tfidf=None, general=None, cutoff=None):
 	:type general: None or str or list of str
 	:param cutoff: The cut-off to use with the :class:`~ate.stat.corpus.rank.RankExtractor`.
 	:type cutoff: None or int
+	:param base: The logarithmic base to use with the :class:`~ate.application.event.EFIDF`.
+	:type base None or float
 
 	:return: The created extractor.
 	:rtype: :class:`~ate.extractor.Extractor`
@@ -145,7 +153,9 @@ def instantiate(method, tfidf=None, general=None, cutoff=None):
 		if tfidf is None:
 			parser.error("The TF-IDF scheme is required with the EF-IDF method.")
 
-		return method(tfidf)
+		tfidf = tools.load(tfidf)['tfidf']
+		base = int(base) if base else base
+		return method(tfidf, base=base)
 
 	return method()
 
