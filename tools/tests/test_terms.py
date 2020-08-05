@@ -22,12 +22,12 @@ class TestTerms(unittest.TestCase):
 	Test the functionality of the terms tool.
 	"""
 
-	def test_instantiate_efidf_missing_idf(self):
+	def test_create_extractor_efidf_missing_idf(self):
 		"""
 		Test that when the TF-IDF scheme is not given for the EF-IDF, a SystemExit is raised.
 		"""
 
-		self.assertRaises(SystemExit, terms.instantiate, EFIDF)
+		self.assertRaises(SystemExit, terms.create_extractor, EFIDF)
 
 	def test_extract_efidf_with_corpora(self):
 		"""
@@ -36,7 +36,7 @@ class TestTerms(unittest.TestCase):
 
 		idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
 		path = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf', 'LIVMUN.json')
-		extractor = terms.instantiate(EFIDF, tfidf=idf)
+		extractor = terms.create_extractor(EFIDF, tfidf=idf)
 		self.assertRaises(ValueError, extractor.extract, path)
 
 	def test_extract_efidf_results(self):
@@ -47,7 +47,7 @@ class TestTerms(unittest.TestCase):
 		idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
 		events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
 		files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
-		extractor = terms.instantiate(EFIDF, tfidf=idf, base=2)
+		extractor = terms.create_extractor(EFIDF, tfidf=idf, base=2)
 		extracted = terms.extract(extractor, files)
 		self.assertEqual([ 'offsid', 'alisson', 'foul', 'tackl', 'goalkeep' ],
 						 list( term['term'] for term in extracted[:5] ))
@@ -65,7 +65,7 @@ class TestTerms(unittest.TestCase):
 		idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
 		events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
 		files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
-		extractor = terms.instantiate(EFIDF, tfidf=idf)
+		extractor = terms.create_extractor(EFIDF, tfidf=idf)
 		extracted = terms.extract(extractor, files)
 		self.assertEqual([ 'offsid', 'alisson', 'foul', 'tackl', 'goalkeep' ],
 						 list( term['term'] for term in extracted[:5] ))
@@ -83,7 +83,7 @@ class TestTerms(unittest.TestCase):
 		idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
 		events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
 		files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
-		extractor = terms.instantiate(EFIDF, tfidf=idf)
+		extractor = terms.create_extractor(EFIDF, tfidf=idf)
 		extracted = terms.extract(extractor, files)
 		for i in range(0, len(extracted) - 1):
 			self.assertLess(extracted[i]['rank'], extracted[i + 1]['rank'])
@@ -96,7 +96,7 @@ class TestTerms(unittest.TestCase):
 		idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
 		events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
 		files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
-		extractor = terms.instantiate(EFIDF, tfidf=idf)
+		extractor = terms.create_extractor(EFIDF, tfidf=idf)
 		extracted = terms.extract(extractor, files)
 		for i in range(0, len(extracted) - 1):
 			self.assertGreaterEqual(extracted[i]['score'], extracted[i + 1]['score'])
