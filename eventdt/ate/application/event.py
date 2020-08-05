@@ -41,6 +41,8 @@ class EF(Extractor):
 
 		:return: A dictionary with terms as keys and their event frequency as the values.
 		:rtype: dict
+
+		:raises ValueError: When the given data is are not timelines.
 		"""
 
 		ef = { } if not candidates else dict.fromkeys(candidates, 0)
@@ -54,7 +56,10 @@ class EF(Extractor):
 				"""
 				Decode the timeline and extract all the terms in it.
 				"""
-				timeline = Exportable.decode(data)['timeline']
+				data = Exportable.decode(data)
+				if 'timeline' not in data:
+					raise ValueError(f"The event frequency requires a corpus of timeline, received { ', '.join(list(data.keys())) }")
+				timeline = data['timeline']
 				terms = set( term for node in timeline.nodes
 								  for topic in node.topics
 								  for term in topic.dimensions )

@@ -24,6 +24,25 @@ class TestEvent(unittest.TestCase):
 	Test the functionality of the event-based ATE approaches.
 	"""
 
+	def test_ef_not_timeline(self):
+		"""
+		Test that when the EF extractor does not receive a timeline, it raises a ValueError.
+		"""
+
+		path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json')
+		extractor = event.EF()
+		self.assertRaises(ValueError, extractor.extract, path)
+
+	def test_ef_all_timeline(self):
+		"""
+		Test that when the EF extractor receives any file that is not a timeline, it raises a ValueError.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+		 		  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'CRYCHE.json') ]
+		extractor = event.EF()
+		self.assertRaises(ValueError, extractor.extract, paths)
+
 	def test_ef_one_timeline(self):
 		"""
 		Test that when providing one timeline, the algorithm extracts terms only from it.
