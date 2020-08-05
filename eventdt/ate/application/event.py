@@ -29,12 +29,13 @@ class EF(Extractor):
 		:param timelines: The path to a timeline or a list of paths to timelines.
 						  If a string is given, it is assumed to be one event timeline.
 						  If a list is given, it is assumed to be a list of event timelines.
+						  The timelines can also be provided loaded already.
 
 						  .. note::
 
 						      It is assumed that the event timelines were extracted using the collection tool.
 						      Therefore each file should be a JSON string representing a :class:`~summarization.timeline.timeline.Timeline`.
-		:type timelines: str or list of str
+		:type timelines: str or list of str or :class:`~summarization.timeline.timeline.Timeline` or list of :class:`~summarization.timeline.timeline.Timeline`
 		:param candidates: A list of terms for which to calculate a score.
 						   If `None` is given, all words are considered to be candidates.
 		:type candidates: None or list of str
@@ -48,6 +49,7 @@ class EF(Extractor):
 		ef = { } if not candidates else dict.fromkeys(candidates, 0)
 
 		timelines = self.to_list(timelines)
+		timelines = self._load_timelines(timelines)
 
 		for timeline in timelines:
 			with open(timeline, 'r') as f:
@@ -73,6 +75,38 @@ class EF(Extractor):
 					ef[term] = ef.get(term, 0) + 1
 
 		return ef
+
+	def _load_timelines(self, timelines):
+		"""
+		Load the timelines if paths to files are given.
+
+		:param timelines: A list of timelines, one for each event, or paths to timelines.
+		:type timelines: list of str or list of :class:`~summarization.timeline.timeline.Timeline`
+
+		:return: A list of timelines, loaded from files where necessary.
+		:rtype: list of :class:`~summarization.timeline.timeline.Timeline`
+
+		:raises ValueError: When the given file does not contain a timeline.
+		"""
+
+		_timelines = [ ]
+
+		for timeline in timelines:
+			if type(timeline) is str:
+				with open(timeline, 'r') as f:
+					data = json.loads(''.join(f.readlines()))
+
+					"""
+					Decode the timeline.
+					"""
+					data = Exportable.decode(data)
+					if 'timeline' not in data:
+						raise ValueError(f"The event frequency extractor requires a timeline file, received { ', '.join(list(data.keys())) }")
+					_timelines.append(data['timeline'])
+			else:
+				_timelines.append(timeline)
+
+		return _timelines
 
 class LogEF(EF):
 	"""
@@ -301,7 +335,7 @@ class Variability(Extractor):
 					"""
 					data = Exportable.decode(data)
 					if 'tfidf' not in data:
-						raise ValueError(f"The variability requires a TF-IDF file, received { ', '.join(list(data.keys())) }")
+						raise ValueError(f"The variability extractor requires a TF-IDF file, received { ', '.join(list(data.keys())) }")
 					_idfs.append(data['tfidf'])
 			else:
 				_idfs.append(idf)
@@ -462,7 +496,7 @@ class Entropy(Extractor):
 		idfs = self._load_idfs(idfs)
 		if len(idfs) < 2:
 			raise ValueError(f"Variability expects 2 or more TF-IDF schemes; received { len(idfs) }")
-		
+
 		"""
 		Go through each term and compute the entropy.
 		For each event, compare the appearance of the term in the event with its appearance in other events.
@@ -500,7 +534,7 @@ class Entropy(Extractor):
 					"""
 					data = Exportable.decode(data)
 					if 'tfidf' not in data:
-						raise ValueError(f"The variability requires a TF-IDF file, received { ', '.join(list(data.keys())) }")
+						raise ValueError(f"The entropy extractor requires a TF-IDF file, received { ', '.join(list(data.keys())) }")
 					_idfs.append(data['tfidf'])
 			else:
 				_idfs.append(idf)

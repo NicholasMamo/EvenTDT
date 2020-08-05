@@ -220,6 +220,56 @@ class TestEvent(unittest.TestCase):
 		terms = extractor.extract(paths)
 		self.assertEqual(math.log(len(paths), 2), max(terms.values()))
 
+	def test_ef_load_timelines_not_timeline(self):
+		"""
+		Test that when loading timelines from paths, a file that is not a timeline raises a ValueError.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json') ]
+
+		extractor = event.EF()
+		self.assertRaises(ValueError, extractor._load_timelines, paths)
+
+	def test_ef_load_timelines(self):
+		"""
+		Test that when loading timelines from paths, the same timelines are loaded as when loaded manually.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json') ]
+		timelines = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				timelines.append(Exportable.decode(json.loads(''.join(f.readlines())))['timeline'])
+
+		extractor = event.EF()
+		self.assertTrue(all( [ timeline.nodes[i].created_at == extracted.nodes[i].created_at
+							   for (timeline, extracted) in zip(timelines, extractor._load_timelines(paths))
+							   for i in range(len(timeline.nodes)) ] ))
+
+	def test_ef_load_timelines_already_loaded(self):
+		"""
+		Test that when loading IDFs from paths, a scheme that is already loaded is not loaded again.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json') ]
+		timelines = [ ]
+		for path in paths:
+			with open(path, 'r') as f:
+				timelines.append(Exportable.decode(json.loads(''.join(f.readlines())))['timeline'])
+
+		paths[3] = timelines[3]
+		extractor = event.EF()
+		self.assertEqual(timelines[3], extractor._load_timelines(paths)[3])
+
 	def test_log_ef_base(self):
 		"""
 		Test that the logarithmic event frequency is just the event frequency  with a logarithm.
