@@ -18,11 +18,12 @@ Accepted arguments:
 	- ``-f --files``		*<Required>* The input corpora from where to extract domain-specific terms.
 	- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `TF`, `TFIDF`, `Rank`, `Specificity`, `TFDCF`, `EFIDF`.
 	- ``-o --output``		*<Required>* The path to the file where to store the extracted terms.
-	- ``-r --rerank``		*<Optional>* The method to use to re-rank terms; supported: `Variability`, `Entropy`; defaults to no re-ranking.
+	- ``-r --reranker``		*<Optional>* The method to use to re-rank terms; supported: `Entropy`, `Variability`; defaults to no re-ranking.
 	- ``--tfidf``			*<Optional>* The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).
 	- ``--general``			*<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `Rank`, `Specificity` and `TF-DCF` methods).
 	- ``--cutoff``			*<Optional>* The minimum term frequency to consider when ranking terms (used only with the `Specificity` method).
 	- ``--base``			*<Optional>* The logarithmic base (used only with the `EF-IDF` method).
+	- ``--reranker-base``	*<Optional>* The logarithmic base (used only with the `Variability` and `Entropy` re-rankers).
 """
 
 import argparse
@@ -52,11 +53,12 @@ def setup_args():
 		- ``-f --files``		*<Required>* The input corpora from where to extract domain-specific terms.
 		- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `TF`, `TFIDF`, `Rank`, `Specificity`, `TFDCF`, `EFIDF`.
 		- ``-o --output``		*<Required>* The path to the file where to store the extracted terms.
-		- ``-r --rerank``		*<Optional>* The method to use to re-rank terms; supported: `Variability`, `Entropy`; defaults to no re-ranking.
+		- ``-r --reranker``		*<Optional>* The method to use to re-rank terms; supported: `Entropy`, `Variability`; defaults to no re-ranking.
 		- ``--tfidf``			*<Optional>* The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).
 		- ``--general``			*<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `Rank`, `Specificity` and `TF-DCF` methods).
 		- ``--cutoff``			*<Optional>* The minimum term frequency to consider when ranking terms (used only with the `Specificity` method).
 		- ``--base``			*<Optional>* The logarithmic base (used only with the `EF-IDF` method).
+		- ``--reranker-base``	*<Optional>* The logarithmic base (used only with the `Variability` and `Entropy` re-rankers).
 
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
@@ -71,9 +73,9 @@ def setup_args():
 	parser.add_argument('-o', '--output',
 						type=str, required=True,
 						help='<Required> The path to the file where to store the extracted terms.')
-	parser.add_argument('-r', '--rerank',
+	parser.add_argument('-r', '--reranker',
 						type=reranker, required=False,
-						help='<Optional> The method to use to re-rank terms; supported: `Variability`, `Entropy`; defaults to no re-ranking.')
+						help='<Optional> The method to use to re-rank terms; supported: `Entropy`, `Variability`; defaults to no re-ranking.')
 	parser.add_argument('--tfidf', required=False,
 						help='<Optional> The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).')
 	parser.add_argument('--general',
@@ -85,6 +87,9 @@ def setup_args():
 	parser.add_argument('--base',
 						type=int, default=None, required=False,
 						help='<Optional> The logarithmic base (used only with the `EF-IDF` method).')
+	parser.add_argument('--reranker-base',
+						type=int, default=None, required=False,
+						help='<Optional> The logarithmic base (used only with the `Variability` and `Entropy` re-rankers).')
 
 	args = parser.parse_args()
 	return args
@@ -101,7 +106,7 @@ def main():
 	"""
 	cmd = tools.meta(args)
 	cmd['method'] = str(vars(args)['method'])
-	cmd['rerank'] = str(vars(args)['rerank'])
+	cmd['reranker'] = str(vars(args)['reranker'])
 
 	"""
 	Create the extractor and extract the terms.
@@ -111,6 +116,13 @@ def main():
 								 tfidf=args['tfidf'], general=args['general'], cutoff=args['cutoff'],
 								 base=args['base'])
 	terms = extract(extractor=extractor, files=args['files'])
+
+	"""
+	Create the re-ranker if it is given.
+	"""
+	if args['reranker']:
+		reranker = create_reranker(args['reranker'], base=args['reranker_base'])
+		candidates = [ term['term'] for term in terms ]
 
 	tools.save(args['output'], { 'meta': cmd, 'terms': terms })
 
@@ -129,7 +141,7 @@ def create_extractor(method, tfidf=None, general=None, cutoff=None, base=None):
 	:param cutoff: The cut-off to use with the :class:`~ate.stat.corpus.rank.RankExtractor`.
 	:type cutoff: None or int
 	:param base: The logarithmic base to use with the :class:`~ate.application.event.EFIDF`.
-	:type base None or float
+	:type base: None or float
 
 	:return: The created extractor.
 	:rtype: :class:`~ate.extractor.Extractor`
@@ -162,6 +174,25 @@ def create_extractor(method, tfidf=None, general=None, cutoff=None, base=None):
 		tfidf = tools.load(tfidf)['tfidf']
 		base = int(base) if base else base
 		return method(tfidf, base=base)
+
+	return method()
+
+def create_reranker(method, base=None):
+	"""
+	Instantiate the reranker based on the arguments that it accepts.
+
+	:param method: The class type of the reranker to instantiate.
+	:type method: :class:`~ate.extractor.Extractor`
+	:param base: The logarithmic base to use with the :class:`~ate.application.event.Entropy` or :class:`~ate.application.event.Variability` extractors.
+	:type base: None or float
+
+	:return: The created extractor.
+	:rtype: :class:`~ate.extractor.Extractor`
+	"""
+
+	if method == Variability or method == Entropy:
+		base = int(base) if base else base
+		return method(base=base)
 
 	return method()
 
