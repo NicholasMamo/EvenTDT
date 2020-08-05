@@ -29,7 +29,7 @@ class TestTerms(unittest.TestCase):
 
 		self.assertRaises(SystemExit, terms.instantiate, EFIDF)
 
-	def no_test_extract_efidf_with_corpora(self):
+	def test_extract_efidf_with_corpora(self):
 		"""
 		Test that when the EF-IDF receives corpora, it raises a ValueError.
 		"""
@@ -39,7 +39,7 @@ class TestTerms(unittest.TestCase):
 		extractor = terms.instantiate(EFIDF, tfidf=idf)
 		self.assertRaises(ValueError, extractor.extract, path)
 
-	def no_test_extract_efidf_results(self):
+	def test_extract_efidf_results(self):
 		"""
 		Test that when exctracting terms using EF-IDF, the correct results are returned.
 		"""
@@ -66,7 +66,6 @@ class TestTerms(unittest.TestCase):
 		events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
 		files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
 		extractor = terms.instantiate(EFIDF, tfidf=idf)
-		print(extractor.base)
 		extracted = terms.extract(extractor, files)
 		self.assertEqual([ 'offsid', 'alisson', 'foul', 'tackl', 'goalkeep' ],
 						 list( term['term'] for term in extracted[:5] ))
@@ -75,3 +74,29 @@ class TestTerms(unittest.TestCase):
 		self.assertEqual(15.499975, round(extracted[2]['score'], 6))
 		self.assertEqual(14.923619, round(extracted[3]['score'], 6))
 		self.assertEqual(13.639141, round(extracted[4]['score'], 6))
+
+	def test_extract_ranks_ascending(self):
+		"""
+		Test that when extracting terms, the ranks are in ascending order.
+		"""
+
+		idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+		events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+		files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+		extractor = terms.instantiate(EFIDF, tfidf=idf)
+		extracted = terms.extract(extractor, files)
+		for i in range(0, len(extracted) - 1):
+			self.assertLess(extracted[i]['rank'], extracted[i + 1]['rank'])
+
+	def test_extract_scores_descending(self):
+		"""
+		Test that when extracting terms, the scores are in descending order.
+		"""
+
+		idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+		events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+		files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+		extractor = terms.instantiate(EFIDF, tfidf=idf)
+		extracted = terms.extract(extractor, files)
+		for i in range(0, len(extracted) - 1):
+			self.assertGreaterEqual(extracted[i]['score'], extracted[i + 1]['score'])
