@@ -31,7 +31,7 @@ class TestBootstrap(unittest.TestCase):
 		Test that bootstrapping returns a list of keywords.
 		"""
 
-		files = [ os.path.join(os.path.dirname(__file__), 'corpora', 'tokenized.json') ]
+		files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'tokenized', 'CRYCHE.json') ]
 		candidates = bootstrap.generate_candidates(files, cutoff=200)
 
 		bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMIBootstrapper, 1, 5, candidates)
@@ -42,7 +42,7 @@ class TestBootstrap(unittest.TestCase):
 		Test that bootstrapping repeats for a number of iterations.
 		"""
 
-		files = [ os.path.join(os.path.dirname(__file__), 'corpora', 'tokenized.json') ]
+		files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'tokenized', 'CRYCHE.json') ]
 		candidates = bootstrap.generate_candidates(files, cutoff=200)
 
 		bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMIBootstrapper, 1, 1, candidates)
@@ -55,7 +55,7 @@ class TestBootstrap(unittest.TestCase):
 		Test that bootstrapping keeps only a number of terms at each iteration
 		"""
 
-		files = [ os.path.join(os.path.dirname(__file__), 'corpora', 'tokenized.json') ]
+		files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'tokenized', 'CRYCHE.json') ]
 		candidates = bootstrap.generate_candidates(files, cutoff=200)
 
 		bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMIBootstrapper, 1, 2, candidates)
@@ -68,7 +68,7 @@ class TestBootstrap(unittest.TestCase):
 		Test that bootstrapping returns a unique list of terms.
 		"""
 
-		files = [ os.path.join(os.path.dirname(__file__), 'corpora', 'tokenized.json') ]
+		files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'tokenized', 'CRYCHE.json') ]
 		candidates = bootstrap.generate_candidates(files, cutoff=200)
 
 		bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMIBootstrapper, 2, 5, candidates)
@@ -76,10 +76,10 @@ class TestBootstrap(unittest.TestCase):
 
 	def test_bootstrap(self):
 		"""
-		Test that bootstrapping results make sense
+		Test that bootstrapping results make sense.
 		"""
 
-		files = [ os.path.join(os.path.dirname(__file__), 'corpora', 'tokenized.json') ]
+		files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'tokenized', 'CRYCHE.json') ]
 		candidates = bootstrap.generate_candidates(files, cutoff=200)
 
 		bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMIBootstrapper, 1, 5, candidates)
@@ -91,7 +91,7 @@ class TestBootstrap(unittest.TestCase):
 		Test that when loading the seed words, all words are returned.
 		"""
 
-		file = os.path.join(os.path.dirname(__file__), 'corpora', 'seed.txt')
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.txt')
 		seed = bootstrap.load_seed(file)
 
 		"""
@@ -111,7 +111,7 @@ class TestBootstrap(unittest.TestCase):
 		Test that when loading the seed words, they are returned as a list.
 		"""
 
-		file = os.path.join(os.path.dirname(__file__), 'corpora', 'seed.txt')
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.txt')
 		seed = bootstrap.load_seed(file)
 
 		"""
@@ -124,7 +124,7 @@ class TestBootstrap(unittest.TestCase):
 		Test that when loading the seed words, the newline symbol is removed.
 		"""
 
-		file = os.path.join(os.path.dirname(__file__), 'corpora', 'seed.txt')
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.txt')
 		seed = bootstrap.load_seed(file)
 
 		"""
@@ -137,7 +137,7 @@ class TestBootstrap(unittest.TestCase):
 		Test that when loading the candidates words, all words are returned.
 		"""
 
-		file = os.path.join(os.path.dirname(__file__), 'corpora', 'candidates.txt')
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'candidates.txt')
 		candidates = bootstrap.load_candidates(file)
 
 		"""
@@ -157,7 +157,7 @@ class TestBootstrap(unittest.TestCase):
 		Test that when loading the candidates words, they are returned as a list.
 		"""
 
-		file = os.path.join(os.path.dirname(__file__), 'corpora', 'candidates.txt')
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'candidates.txt')
 		candidates = bootstrap.load_candidates(file)
 
 		"""
@@ -170,7 +170,7 @@ class TestBootstrap(unittest.TestCase):
 		Test that when loading the candidates words, the newline symbol is removed.
 		"""
 
-		file = os.path.join(os.path.dirname(__file__), 'corpora', 'candidates.txt')
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'candidates.txt')
 		candidates = bootstrap.load_candidates(file)
 
 		"""
@@ -183,7 +183,7 @@ class TestBootstrap(unittest.TestCase):
 		Test that when generating candidates, the cutoff is respected.
 		"""
 
-		file = os.path.join(os.path.dirname(__file__), 'corpora', 'tokenized.json')
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'tokenized', 'CRYCHE.json')
 
 		"""
 		Assert that the number of candidates is correct.
@@ -199,7 +199,7 @@ class TestBootstrap(unittest.TestCase):
 		Test that when generating candidates, only words are returned.
 		"""
 
-		file = os.path.join(os.path.dirname(__file__), 'corpora', 'tokenized.json')
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'tokenized', 'CRYCHE.json')
 
 		"""
 		Assert that all items in the list are words.
@@ -213,7 +213,7 @@ class TestBootstrap(unittest.TestCase):
 		Test that when generating candidates, the returned candidates make sense
 		"""
 
-		file = os.path.join(os.path.dirname(__file__), 'corpora', 'tokenized.json')
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'tokenized', 'CRYCHE.json')
 
 		"""
 		Assert that all items in the list are words.
@@ -226,7 +226,7 @@ class TestBootstrap(unittest.TestCase):
 		Test that when empty seed set and bootstrapped keywords are given, the original dictionary is returned.
 		"""
 
-		file = os.path.join(os.path.dirname(__file__), 'corpora', 'seed.txt')
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.txt')
 		seed = bootstrap.load_seed(file)
 		candidates = { word: i for i, word in enumerate(seed) }
 
@@ -237,7 +237,7 @@ class TestBootstrap(unittest.TestCase):
 		Test that the filtered candidate dictionary is a copy.
 		"""
 
-		file = os.path.join(os.path.dirname(__file__), 'corpora', 'seed.txt')
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.txt')
 		seed = bootstrap.load_seed(file)
 		candidates = { word: i for i, word in enumerate(seed) }
 
@@ -250,7 +250,7 @@ class TestBootstrap(unittest.TestCase):
 		Test that when all candidates are filtered, an empty dictionary is returned.
 		"""
 
-		file = os.path.join(os.path.dirname(__file__), 'corpora', 'seed.txt')
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.txt')
 		seed = bootstrap.load_seed(file)
 		candidates = { word: i for i, word in enumerate(seed) }
 
@@ -262,7 +262,7 @@ class TestBootstrap(unittest.TestCase):
 		Test filtering by the seed set.
 		"""
 
-		file = os.path.join(os.path.dirname(__file__), 'corpora', 'seed.txt')
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.txt')
 		seed = bootstrap.load_seed(file)
 		candidates = { word: i for i, word in enumerate(seed) }
 
@@ -274,7 +274,7 @@ class TestBootstrap(unittest.TestCase):
 		Test filtering by the bootstrapped keywords.
 		"""
 
-		file = os.path.join(os.path.dirname(__file__), 'corpora', 'seed.txt')
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.txt')
 		seed = bootstrap.load_seed(file)
 		candidates = { word: i for i, word in enumerate(seed) }
 
@@ -286,7 +286,7 @@ class TestBootstrap(unittest.TestCase):
 		Test filtering by the seed set and bootstrapped keywords.
 		"""
 
-		file = os.path.join(os.path.dirname(__file__), 'corpora', 'seed.txt')
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.txt')
 		seed = bootstrap.load_seed(file)
 		candidates = { word: i for i, word in enumerate(seed) }
 
@@ -298,7 +298,7 @@ class TestBootstrap(unittest.TestCase):
 		Test that when filtering candidates, the scores are retained.
 		"""
 
-		file = os.path.join(os.path.dirname(__file__), 'corpora', 'seed.txt')
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.txt')
 		seed = bootstrap.load_seed(file)
 		candidates = { word: i for i, word in enumerate(seed) }
 
