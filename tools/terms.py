@@ -13,6 +13,20 @@ To run the script, use:
 	--tfidf data/idf.json \\
 	-o data/bootstrapped.json
 
+Apart from providing the main method to extract terms, it is possible to pass on a re-ranker method.
+The re-ranker extracts terms separately.
+This tool multiplies the ATE method's scores with the re-ranker term's scores.
+
+.. code-block:: bash
+
+    ./tools/terms.py \\
+	-f data/tokenized_corpus.json \\
+	-m tfidf \\
+	--tfidf data/idf.json \\
+	-o data/bootstrapped.json
+	--reranker entropy \\
+	--reranker-files data/idf.json
+
 Accepted arguments:
 
 	- ``-f --files``		*<Required>* The input corpora from where to extract domain-specific terms.
