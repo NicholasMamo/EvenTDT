@@ -146,6 +146,59 @@ class TestBootstrap(unittest.TestCase):
 		"""
 		self.assertTrue(all( '\n' not in word for word in seed ))
 
+	def test_load_seed_max_seed_zero(self):
+		"""
+		Test that when loading the seed words and keeping zero words, a ValueError is raised.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.txt')
+		self.assertRaises(ValueError, bootstrap.load_seed, file, 0)
+
+	def test_load_seed_max_seed_negative(self):
+		"""
+		Test that when loading the seed words and keeping negative words, a ValueError is raised.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.txt')
+		self.assertRaises(ValueError, bootstrap.load_seed, file, -1)
+
+	def test_load_seed_max_seed_respected(self):
+		"""
+		Test that when loading the seed words, the specified number of words are returned.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.txt')
+		seed = bootstrap.load_seed(file, 10)
+		self.assertEqual(10, len(seed))
+
+	def test_load_seed_max_seed_top_words(self):
+		"""
+		Test that when loading the seed words with a cutoff, the top words are returned.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.txt')
+		all = bootstrap.load_seed(file)
+		seed = bootstrap.load_seed(file, 10)
+		self.assertEqual(all[:10], seed)
+
+	def test_load_seed_max_seed_very_large(self):
+		"""
+		Test that when loading the seed words with a large cutoff, all words are retained.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.txt')
+		seed = bootstrap.load_seed(file, 50)
+		self.assertEqual(30, len(seed))
+
+	def test_load_seed_max_seed_none(self):
+		"""
+		Test that when loading the seed words with no specified cutoff, all words are retained.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.txt')
+		seed = bootstrap.load_seed(file, None)
+		self.assertEqual(30, len(seed))
+
 	def test_load_candidates_all_words(self):
 		"""
 		Test that when loading the candidates words, all words are returned.

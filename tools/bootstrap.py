@@ -26,6 +26,7 @@ Accepted arguments:
 	- ``-i --iterations``	*<Optional>* The number of iterations to spend bootstrapping; defaults to 1.
 	- ``-k --keep``			*<Optional>* The number of keywords to keep after each iteration; defaults to 5.
 	- ``--generate``		*<Optional>* The number of candidate keywords to generate if no candidates are provided; defaults to 100.
+	- ``--max-seed``		*<Optional>* The number of seed words to use from the given files; defaults to all words.
 """
 
 import argparse
@@ -59,6 +60,7 @@ def setup_args():
 		- ``-i --iterations``	*<Optional>* The number of iterations to spend bootstrapping; defaults to 1.
 		- ``-k --keep``			*<Optional>* The number of keywords to keep after each iteration; defaults to 5.
 		- ``--generate``		*<Optional>* The number of candidate keywords to generate if no candidates are provided; defaults to 100.
+		- ``--max-seed``		*<Optional>* The number of seed words to use from the given files; defaults to all words.
 
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
@@ -90,6 +92,9 @@ def setup_args():
 	parser.add_argument('--generate',
 						type=int, required=False, default=100,
 						help='<Optional> The number of candidate keywords to generate if no candidates are provided; defaults to 100.')
+	parser.add_argument('--max_seed',
+						type=int, required=False, default=None,
+						help='<Optional> The number of seed words to use from the given files; defaults to all words.')
 
 	args = parser.parse_args()
 	return args
@@ -110,7 +115,7 @@ def main():
 	"""
 	Load the seed and candidate keywords.
 	"""
-	seed = load_seed(args.seed)
+	seed = load_seed(args.seed, args.max_seed)
 	cmd['seed'] = seed
 
 	"""
@@ -201,17 +206,25 @@ def bootstrap(files, seed, method, iterations, keep, candidates):
 
 	return bootstrapped
 
-def load_seed(seed_file):
+def load_seed(seed_file, max_seed=None):
 	"""
 	Load the seed words from the given seed file.
 	The function expects a file with one seed word on each line.
 
 	:param seed_file: The path to the seed file.
 	:type seed_file: str
+	:param max_seed: The number of seed words to retain.
+					 If ``None`` is given, the function retains all seed words.
+	:type max_seed: None or int
 
 	:return: A list of seed words.
 	:rtype: list of str
+
+	:raises ValueError: When zero or fewer seed words should be retained.
 	"""
+
+	if max_seed is not None and max_seed <= 0:
+		raise ValueError(f"At least one seed word must be used; received { max_seed }")
 
 	seed_list = [ ]
 
@@ -223,7 +236,8 @@ def load_seed(seed_file):
 			seed_list.extend(f.readlines())
 			seed_list = [ word.strip() for word in seed_list ]
 
-	return seed_list
+	max_seed = max_seed or len(seed_list)
+	return seed_list[:max_seed]
 
 def load_candidates(candidate_file):
 	"""
