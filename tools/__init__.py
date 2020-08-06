@@ -98,3 +98,17 @@ def cache_exists(file, cache_dir='.cache'):
 		return os.path.exists(cache_file) and os.path.isfile(cache_file)
 
 	return False
+
+def is_json(file):
+	"""
+	Check whether the given file is JSON-encoded.
+	The function checks only if the filename ends with the ``json`` suffix.
+
+	:param file: The path to the file to check if it is JSON-encoded.
+	:type file: str
+
+	:return: A boolean indicating whether the file is JSON-encoded.
+	:rtype: bool
+	"""
+
+	return file.endswith('.json')
