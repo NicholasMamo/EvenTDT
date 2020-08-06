@@ -179,6 +179,20 @@ class TestBootstrap(unittest.TestCase):
 		"""
 		self.assertEqual(list, type(candidates))
 
+	def test_load_candidates_from_terms(self):
+		"""
+		Test that when loading the candidate words from the terms tool's output, they are returned as a list.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'candidates.json')
+		candidates = bootstrap.load_candidates(file)
+
+		"""
+		Assert that the candidates list is returned as a list.
+		"""
+		self.assertEqual(list, type(candidates))
+		self.assertTrue(len(candidates))
+
 	def test_load_candidates_no_newlines(self):
 		"""
 		Test that when loading the candidates words, the newline symbol is removed.

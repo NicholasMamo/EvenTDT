@@ -237,9 +237,13 @@ def load_candidates(candidate_file):
 	candidate_list = [ ]
 
 	with open(candidate_file, 'r') as f:
-		candidate_list.extend(f.readlines())
+		if tools.is_json(candidate_file):
+			candidate_list = Exportable.decode(json.loads(f.readline()))['terms']
+			candidate_list = [ term['term'] for term in candidate_list ]
+		else:
+			candidate_list.extend(f.readlines())
+			candidate_list = [ word.strip() for word in candidate_list ]
 
-	candidate_list = [ word.strip() for word in candidate_list ]
 	return candidate_list
 
 def generate_candidates(files, generate):
