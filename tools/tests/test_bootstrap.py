@@ -312,6 +312,14 @@ class TestBootstrap(unittest.TestCase):
 		candidates = bootstrap.load_candidates(file, None)
 		self.assertEqual(500, len(candidates))
 
+	def test_load_candidates_empty(self):
+		"""
+		Test that when the candidates file is empty, a ValueError is raised.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'empty.txt')
+		self.assertRaises(ValueError, bootstrap.load_candidates, file, 0)
+
 	def test_generate_candidates_cutoff(self):
 		"""
 		Test that when generating candidates, the cutoff is respected.

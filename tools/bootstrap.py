@@ -259,6 +259,7 @@ def load_candidates(candidate_file, max_candidates=None):
 	:rtype: list of str
 
 	:raises ValueError: When zero or fewer candidate words should be retained.
+	:raises ValueError: When no candidate words are found.
 	"""
 
 	if max_candidates is not None and max_candidates <= 0:
@@ -275,6 +276,8 @@ def load_candidates(candidate_file, max_candidates=None):
 			candidate_list = [ word.strip() for word in candidate_list ]
 
 	max_candidates = max_candidates or len(candidate_list)
+	if not candidate_list:
+		raise ValueError("The candidate list cannot be empty if it is given")
 	return candidate_list[:max_candidates]
 
 def generate_candidates(files, generate):
