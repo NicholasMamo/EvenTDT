@@ -22,7 +22,7 @@ Accepted arguments:
 	- ``-c --candidates``	*<Optional>* The path to the file containing candidate keywords, expected to contain one keyword on each line; if not given, all vocabulary keywords are considered candidates.
 	- ``-i --iterations``	*<Optional>* The number of iterations to spend bootstrapping; defaults to 1.
 	- ``-k --keep``			*<Optional>* The number of keywords to keep after each iteration; defaults to 5.
-	- ``--cutoff``			*<Optional>* The number of keywords to generate if no candidates are provided.
+	- ``--generate``		*<Optional>* The number of candidate keywords to generate if no candidates are provided; defaults to 100.
 """
 
 import argparse
@@ -53,7 +53,7 @@ def setup_args():
 		- ``-c --candidates``	*<Optional>* The path to the file containing candidate keywords, expected to contain one keyword on each line; if not given, all vocabulary keywords are considered candidates.
 		- ``-i --iterations``	*<Optional>* The number of iterations to spend bootstrapping; defaults to 1.
 		- ``-k --keep``			*<Optional>* The number of keywords to keep after each iteration; defaults to 5.
-		- ``--cutoff``			*<Optional>* The number of keywords to generate if no candidates are provided.
+		- ``--generate``		*<Optional>* The number of candidate keywords to generate if no candidates are provided; defaults to 100.
 
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
@@ -82,7 +82,7 @@ def setup_args():
 	parser.add_argument('-k', '--keep',
 						type=int, required=False, default=5,
 						help='<Optional> The number of keywords to keep after each iteration; defaults to 5.')
-	parser.add_argument('--cutoff',
+	parser.add_argument('--generate',
 						type=int, required=False, default=100,
 						help='<Optional> The number of candidate keywords to generate if no candidates are provided; defaults to 100.')
 
@@ -111,7 +111,7 @@ def main():
 	"""
 	If no candidates are provided, select them from among the most common candidates in the given corpora.
 	"""
-	candidates = load_candidates(args.candidates) if args.candidates else generate_candidates(args.files, cutoff=args.cutoff)
+	candidates = load_candidates(args.candidates) if args.candidates else generate_candidates(args.files, generate=args.generate)
 	cmd['candidates'] = candidates
 
 	bootstrapped = bootstrap(args.files, seed, args.method,
@@ -236,14 +236,14 @@ def load_candidates(candidate_file):
 	candidate_list = [ word.strip() for word in candidate_list ]
 	return candidate_list
 
-def generate_candidates(files, cutoff):
+def generate_candidates(files, generate):
 	"""
 	Generate candidates by looking for the most common keywords in the given files.
 
 	:param files: The input corpora where to look for candidate keywords.
 	:type files: list of str or str
-	:param cutoff: The maximum number of candidate keywords to generate.
-	:type cutoff: int
+	:param generate: The maximum number of candidate keywords to generate.
+	:type generate: int
 
 	:return: A list of candidate keywords.
 	:rtype: list of str
@@ -251,7 +251,7 @@ def generate_candidates(files, cutoff):
 
 	vocabulary = probability.p(files)
 	vocabulary = sorted(vocabulary, key=vocabulary.get, reverse=True)
-	return vocabulary[:cutoff]
+	return vocabulary[:generate]
 
 def filter_candidates(candidates, seed, bootstrapped):
 	"""

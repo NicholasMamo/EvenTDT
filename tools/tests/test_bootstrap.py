@@ -32,7 +32,7 @@ class TestBootstrap(unittest.TestCase):
 		"""
 
 		files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'tokenized', 'CRYCHE.json') ]
-		candidates = bootstrap.generate_candidates(files, cutoff=200)
+		candidates = bootstrap.generate_candidates(files, generate=200)
 
 		bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMIBootstrapper, 1, 5, candidates)
 		self.assertEqual(list, type(bootstrapped))
@@ -43,7 +43,7 @@ class TestBootstrap(unittest.TestCase):
 		"""
 
 		files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'tokenized', 'CRYCHE.json') ]
-		candidates = bootstrap.generate_candidates(files, cutoff=200)
+		candidates = bootstrap.generate_candidates(files, generate=200)
 
 		bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMIBootstrapper, 1, 1, candidates)
 		self.assertEqual(1, len(bootstrapped))
@@ -56,7 +56,7 @@ class TestBootstrap(unittest.TestCase):
 		"""
 
 		files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'tokenized', 'CRYCHE.json') ]
-		candidates = bootstrap.generate_candidates(files, cutoff=200)
+		candidates = bootstrap.generate_candidates(files, generate=200)
 
 		bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMIBootstrapper, 1, 2, candidates)
 		self.assertEqual(2, len(bootstrapped))
@@ -69,7 +69,7 @@ class TestBootstrap(unittest.TestCase):
 		"""
 
 		files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'tokenized', 'CRYCHE.json') ]
-		candidates = bootstrap.generate_candidates(files, cutoff=200)
+		candidates = bootstrap.generate_candidates(files, generate=200)
 
 		bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMIBootstrapper, 2, 5, candidates)
 		self.assertEqual(sorted(list(set(bootstrapped))), sorted(bootstrapped))
@@ -80,7 +80,7 @@ class TestBootstrap(unittest.TestCase):
 		"""
 
 		files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'tokenized', 'CRYCHE.json') ]
-		candidates = bootstrap.generate_candidates(files, cutoff=200)
+		candidates = bootstrap.generate_candidates(files, generate=200)
 
 		bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMIBootstrapper, 1, 5, candidates)
 		self.assertTrue('second' in bootstrapped)
@@ -188,10 +188,10 @@ class TestBootstrap(unittest.TestCase):
 		"""
 		Assert that the number of candidates is correct.
 		"""
-		candidates = bootstrap.generate_candidates(file, cutoff=100)
+		candidates = bootstrap.generate_candidates(file, generate=100)
 		self.assertEqual(100, len(candidates))
 
-		candidates = bootstrap.generate_candidates(file, cutoff=250)
+		candidates = bootstrap.generate_candidates(file, generate=250)
 		self.assertEqual(250, len(candidates))
 
 	def test_generate_candidates_words_only(self):
@@ -204,7 +204,7 @@ class TestBootstrap(unittest.TestCase):
 		"""
 		Assert that all items in the list are words.
 		"""
-		candidates = bootstrap.generate_candidates(file, cutoff=100)
+		candidates = bootstrap.generate_candidates(file, generate=100)
 		self.assertEqual(list, type(candidates))
 		self.assertTrue(all(str == type(word) for word in candidates))
 
@@ -218,7 +218,7 @@ class TestBootstrap(unittest.TestCase):
 		"""
 		Assert that all items in the list are words.
 		"""
-		candidates = bootstrap.generate_candidates(file, cutoff=500)
+		candidates = bootstrap.generate_candidates(file, generate=500)
 		self.assertTrue('goal' in candidates)
 
 	def test_filter_candidates_empty_seed_bootstrapped(self):
