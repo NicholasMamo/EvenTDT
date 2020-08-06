@@ -115,7 +115,7 @@ class TestTokenizer(unittest.TestCase):
 		Test that when getting the text from tweets, the full text is returned.
 		"""
 
-		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'CRYCHE-100.json'), 'r') as f:
 			for line in f:
 				tweet = json.loads(line)
 				if '…' in tweet['text']:
@@ -132,7 +132,7 @@ class TestTokenizer(unittest.TestCase):
 		Test that when tokenizing a corpus, the same number of lines are outputted.
 		"""
 
-		file = 'tools/tests/corpus.json'
+		file = 'eventdt/tests/corpora/CRYCHE-100.json'
 		output = 'tools/tests/.out/tokenized.json'
 
 		"""
@@ -160,7 +160,7 @@ class TestTokenizer(unittest.TestCase):
 		Test that when tokenizing a corpus, the tweets are saved in the correct order.
 		"""
 
-		file = 'tools/tests/corpus.json'
+		file = 'eventdt/tests/corpora/CRYCHE-100.json'
 		output = 'tools/tests/.out/tokenized.json'
 
 		"""
@@ -188,7 +188,7 @@ class TestTokenizer(unittest.TestCase):
 		Test that when tokenizing a corpus, the ID is saved alongside each tweet.
 		"""
 
-		file = 'tools/tests/corpus.json'
+		file = 'eventdt/tests/corpora/CRYCHE-100.json'
 		output = 'tools/tests/.out/tokenized.json'
 
 		"""
@@ -205,7 +205,7 @@ class TestTokenizer(unittest.TestCase):
 		Test that when tokenizing a corpus, the text is saved alongside each tweet.
 		"""
 
-		file = 'tools/tests/corpus.json'
+		file = 'eventdt/tests/corpora/CRYCHE-100.json'
 		output = 'tools/tests/.out/tokenized.json'
 
 		"""
@@ -222,7 +222,7 @@ class TestTokenizer(unittest.TestCase):
 		Test that when specifying no attribute to keep, the only attributes kept are the tweet ID, text and tokens.
 		"""
 
-		file = 'tools/tests/corpus.json'
+		file = 'eventdt/tests/corpora/CRYCHE-100.json'
 		output = 'tools/tests/.out/tokenized.json'
 
 		"""
@@ -239,7 +239,7 @@ class TestTokenizer(unittest.TestCase):
 		Test that when specifying attributes to keep, they are always stored.
 		"""
 
-		file = 'tools/tests/corpus.json'
+		file = 'eventdt/tests/corpora/CRYCHE-100.json'
 		output = 'tools/tests/.out/tokenized.json'
 
 		"""
@@ -256,7 +256,7 @@ class TestTokenizer(unittest.TestCase):
 		Test that when specifying attributes to keep, an attribute that appears occasionally is still stored, but as `None`, when not found.
 		"""
 
-		file = 'tools/tests/corpus.json'
+		file = 'eventdt/tests/corpora/CRYCHE-100.json'
 		output = 'tools/tests/.out/tokenized.json'
 
 		"""
@@ -273,7 +273,7 @@ class TestTokenizer(unittest.TestCase):
 		Test that when specifying multiple attributes to keep, they are always stored.
 		"""
 
-		file = 'tools/tests/corpus.json'
+		file = 'eventdt/tests/corpora/CRYCHE-100.json'
 		output = 'tools/tests/.out/tokenized.json'
 
 		"""
@@ -290,7 +290,7 @@ class TestTokenizer(unittest.TestCase):
 		Test that when keeping retweets, the number of lines remains the same.
 		"""
 
-		file = 'tools/tests/corpus.json'
+		file = 'eventdt/tests/corpora/CRYCHE-100.json'
 		output = 'tools/tests/.out/tokenized.json'
 
 		"""
@@ -318,7 +318,7 @@ class TestTokenizer(unittest.TestCase):
 		Test that when removing retweets, the number of lines should decrease.
 		"""
 
-		file = 'tools/tests/corpus.json'
+		file = 'eventdt/tests/corpora/CRYCHE-100.json'
 		output = 'tools/tests/.out/tokenized.json'
 
 		"""
@@ -346,7 +346,7 @@ class TestTokenizer(unittest.TestCase):
 		Test that when removing retweets, the `retweeted_status` attribute is never present.
 		"""
 
-		file = 'tools/tests/corpus.json'
+		file = 'eventdt/tests/corpora/CRYCHE-100.json'
 		output = 'tools/tests/.out/tokenized.json'
 
 		"""
@@ -362,7 +362,7 @@ class TestTokenizer(unittest.TestCase):
 		Test that when removing retweets, quoted statuses are retained.
 		"""
 
-		file = 'tools/tests/corpus.json'
+		file = 'eventdt/tests/corpora/CRYCHE-100.json'
 		output = 'tools/tests/.out/tokenized.json'
 
 		"""
@@ -378,7 +378,7 @@ class TestTokenizer(unittest.TestCase):
 		Test that when tokenizing a corpus without removing stopwords, they are retained.
 		"""
 
-		file = 'tools/tests/corpus.json'
+		file = 'eventdt/tests/corpora/CRYCHE-500.json'
 		output = 'tools/tests/.out/tokenized.json'
 
 		"""
@@ -398,7 +398,7 @@ class TestTokenizer(unittest.TestCase):
 		Test that when tokenizing a corpus and removing stopwords, no stopwords remain.
 		"""
 
-		file = 'tools/tests/corpus.json'
+		file = 'eventdt/tests/corpora/CRYCHE-100.json'
 		output = 'tools/tests/.out/tokenized.json'
 
 		"""
