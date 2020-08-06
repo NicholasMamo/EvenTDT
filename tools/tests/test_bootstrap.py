@@ -259,6 +259,59 @@ class TestBootstrap(unittest.TestCase):
 		"""
 		self.assertTrue(all( '\n' not in word for word in candidates ))
 
+	def test_load_candidates_max_candidates_zero(self):
+		"""
+		Test that when loading the candidates words and keeping zero words, a ValueError is raised.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'candidates.txt')
+		self.assertRaises(ValueError, bootstrap.load_candidates, file, 0)
+
+	def test_load_candidates_max_candidates_negative(self):
+		"""
+		Test that when loading the candidates words and keeping negative words, a ValueError is raised.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'candidates.txt')
+		self.assertRaises(ValueError, bootstrap.load_candidates, file, -1)
+
+	def test_load_candidates_max_candidates_respected(self):
+		"""
+		Test that when loading the candidates words, the specified number of words are returned.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'candidates.txt')
+		candidates = bootstrap.load_candidates(file, 10)
+		self.assertEqual(10, len(candidates))
+
+	def test_load_candidates_max_candidates_top_words(self):
+		"""
+		Test that when loading the candidates words with a cutoff, the top words are returned.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'candidates.txt')
+		all = bootstrap.load_candidates(file)
+		candidates = bootstrap.load_candidates(file, 10)
+		self.assertEqual(all[:10], candidates)
+
+	def test_load_candidates_max_candidates_very_large(self):
+		"""
+		Test that when loading the candidates words with a large cutoff, all words are retained.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'candidates.txt')
+		candidates = bootstrap.load_candidates(file, 600)
+		self.assertEqual(500, len(candidates))
+
+	def test_load_candidates_max_candidates_none(self):
+		"""
+		Test that when loading the seed words with no specified cutoff, all words are retained.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'candidates.txt')
+		candidates = bootstrap.load_candidates(file, None)
+		self.assertEqual(500, len(candidates))
+
 	def test_generate_candidates_cutoff(self):
 		"""
 		Test that when generating candidates, the cutoff is respected.
