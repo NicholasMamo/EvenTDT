@@ -26,6 +26,7 @@ Accepted arguments:
 """
 
 import argparse
+import json
 import os
 import sys
 
@@ -38,6 +39,7 @@ sys.path.insert(-1, lib)
 import tools
 from ate.stat import probability
 from ate.bootstrapping.probability import PMIBootstrapper, ChiBootstrapper
+from objects.exportable import Exportable
 from logger import logger
 
 def setup_args():
@@ -211,9 +213,13 @@ def load_seed(seed_file):
 	seed_list = [ ]
 
 	with open(seed_file, 'r') as f:
-		seed_list.extend(f.readlines())
+		if tools.is_json(seed_file):
+			seed_list = Exportable.decode(json.loads(f.readline()))['terms']
+			seed_list = [ term['term'] for term in seed_list ]
+		else:
+			seed_list.extend(f.readlines())
+			seed_list = [ word.strip() for word in seed_list ]
 
-	seed_list = [ word.strip() for word in seed_list ]
 	return seed_list
 
 def load_candidates(candidate_file):

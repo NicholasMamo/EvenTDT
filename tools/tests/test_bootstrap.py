@@ -119,6 +119,20 @@ class TestBootstrap(unittest.TestCase):
 		"""
 		self.assertEqual(list, type(seed))
 
+	def test_load_seed_from_terms(self):
+		"""
+		Test that when loading the seed words from the terms tool's output, they are returned as a list.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.json')
+		seed = bootstrap.load_seed(file)
+
+		"""
+		Assert that the seed list is returned as a list.
+		"""
+		self.assertEqual(list, type(seed))
+		self.assertTrue(len(seed))
+
 	def test_load_seed_no_newlines(self):
 		"""
 		Test that when loading the seed words, the newline symbol is removed.
