@@ -242,6 +242,8 @@ def load_seed(seed_file, max_seed=None):
 			seed_list = [ word.strip() for word in seed_list ]
 
 	max_seed = max_seed or len(seed_list)
+	if not seed_list:
+		raise ValueError("The seed list cannot be empty if it is given")
 	return seed_list[:max_seed]
 
 def load_candidates(candidate_file, max_candidates=None):

@@ -199,6 +199,14 @@ class TestBootstrap(unittest.TestCase):
 		seed = bootstrap.load_seed(file, None)
 		self.assertEqual(30, len(seed))
 
+	def test_load_seed_empty(self):
+		"""
+		Test that when the seed file is empty, a ValueError is raised.
+		"""
+
+		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'empty.txt')
+		self.assertRaises(ValueError, bootstrap.load_seed, file)
+
 	def test_load_candidates_all_words(self):
 		"""
 		Test that when loading the candidates words, all words are returned.
@@ -318,7 +326,7 @@ class TestBootstrap(unittest.TestCase):
 		"""
 
 		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'empty.txt')
-		self.assertRaises(ValueError, bootstrap.load_candidates, file, 0)
+		self.assertRaises(ValueError, bootstrap.load_candidates, file)
 
 	def test_generate_candidates_cutoff(self):
 		"""
