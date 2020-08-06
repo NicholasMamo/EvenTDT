@@ -23,7 +23,8 @@ Accepted arguments:
 	- ``--general``			*<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `Rank`, `Specificity` and `TF-DCF` methods).
 	- ``--cutoff``			*<Optional>* The minimum term frequency to consider when ranking terms (used only with the `Specificity` method).
 	- ``--base``			*<Optional>* The logarithmic base (used only with the `EF-IDF` method).
-	- ``--reranker-base``	*<Optional>* The logarithmic base (used only with the `Variability` and `Entropy` re-rankers).
+	- ``--reranker-base``	*<Optional>* The logarithmic base (used only with the `Variability` and `Entropy` re-rankers); defaults to 10.
+	- ``--reranker-files``	*<Optional>* The input corpora to use for the re-ranker.
 """
 
 import argparse
@@ -58,7 +59,8 @@ def setup_args():
 		- ``--general``			*<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `Rank`, `Specificity` and `TF-DCF` methods).
 		- ``--cutoff``			*<Optional>* The minimum term frequency to consider when ranking terms (used only with the `Specificity` method).
 		- ``--base``			*<Optional>* The logarithmic base (used only with the `EF-IDF` method).
-		- ``--reranker-base``	*<Optional>* The logarithmic base (used only with the `Variability` and `Entropy` re-rankers).
+		- ``--reranker-base``	*<Optional>* The logarithmic base (used only with the `Variability` and `Entropy` re-rankers); defaults to 10.
+		- ``--reranker-files``	*<Optional>* The input corpora to use for the re-ranker.
 
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
@@ -88,8 +90,11 @@ def setup_args():
 						type=int, default=None, required=False,
 						help='<Optional> The logarithmic base (used only with the `EF-IDF` method).')
 	parser.add_argument('--reranker-base',
-						type=int, default=None, required=False,
-						help='<Optional> The logarithmic base (used only with the `Variability` and `Entropy` re-rankers).')
+						type=int, default=10, required=False,
+						help='<Optional> The logarithmic base (used only with the `Variability` and `Entropy` re-rankers); defaults to 10.')
+	parser.add_argument('--reranker-files',
+						nargs='+', required=False,
+						help='<Optional> The input corpora to use for the re-ranker.')
 
 	args = parser.parse_args()
 	return args
@@ -122,7 +127,9 @@ def main():
 	"""
 	if args['reranker']:
 		reranker = create_reranker(args['reranker'], base=args['reranker_base'])
-		candidates = [ term['term'] for term in terms ]
+		if not args['reranker_files']:
+			parser.error("One or more paths to corpora are required when using a re-ranker (use the ``--reranker-files`` command-line parameter).")
+		terms = rerank(reranker, args['reranker_files'], terms)
 
 	tools.save(args['output'], { 'meta': cmd, 'terms': terms })
 
@@ -202,7 +209,7 @@ def extract(extractor, files):
 
 	:param extractor: The extractor to use to extract terms.
 	:type extractor: :class:`~ate.extractor.Extractor`
-	:param files: The input corpora from where to extract domain-specific terms
+	:param files: The input corpora from where to extract domain-specific terms.
 	:type files: str or list of str
 
 	:return: A list of terms, each as a dictionary including its:
@@ -216,6 +223,36 @@ def extract(extractor, files):
 	terms = extractor.extract(files)
 	terms = sorted(terms.items(), key=lambda term: term[1], reverse=True)
 	terms = [ { 'term': term, 'score': score, 'rank': rank + 1 } for rank, (term, score) in enumerate(terms) ]
+	return terms
+
+def rerank(reranker, files, terms):
+	"""
+	Re-rank the given terms by using the given re-ranker.
+	The re-ranker first scores terms from the given files.
+	Then, it multiplies the original scores with the re-ranker's scores.
+
+	:param reranker: The reranker to use to score the terms.
+	:type reranker: :class:`~ate.extractor.Extractor`
+	:param files: The input corpora from where to extract domain-specific terms.
+	:type files: str or list of str
+	:param terms: The list of terms to re-rank.
+				  This list must be a list of dictionaries extracted by the :func:`~tools.terms.extract` function.
+	:type terms: list of dict
+
+	:return: A list of terms, each as a dictionary including its:
+
+			 - ``term``,
+			 - ``score``, and
+			 - ``rank``.
+	:rtype: list of dict
+	"""
+
+	terms = list( dict( term ) for term in terms ) # make a copy
+	candidates = [ term['term'] for term in terms ]
+	reranked = reranker.extract(files, candidates=candidates)
+	terms = [ { 'term': term['term'], 'score': term['score'] * reranked[term['term']] } for term in terms ]
+	terms = sorted(terms, key=lambda term: term.get('score'), reverse=True)
+	terms = [ { 'term': term['term'], 'score': term['score'], 'rank': rank + 1 } for rank, term in enumerate(terms) ]
 	return terms
 
 def method(method):
