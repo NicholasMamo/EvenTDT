@@ -22,6 +22,7 @@ Accepted arguments:
 """
 
 import argparse
+import json
 import os
 import sys
 
@@ -80,7 +81,51 @@ def main():
 	cmd = tools.meta(args)
 	cmd['method'] = str(vars(args)['method'])
 
-	tools.save(args.output, { 'meta': cmd })
+	"""
+	Calculate the correlation.
+	"""
+	extractor = create_extractor(args.method)
+	correlation = extract(extractor, args.files, args.terms)
+
+	tools.save(args.output, { 'meta': cmd, 'correlation': correlation })
+
+def create_extractor(cls):
+	"""
+	Instantiate the method based on the arguments that it accepts.
+
+	:param cls: The class type of the method to instantiate.
+	:type cls: :class:`~ate.bootstrapping.Bootstrapper`
+
+	:return: The created extractor.
+	:rtype: :class:`~ate.bootstrapping.Bootstrapper`
+	"""
+
+	return cls()
+
+def extract(extractor, files, terms):
+	"""
+	Calculate the correlation of the given terms from the given files.
+
+	:param extractor: The created extractor.
+	:type extractor: :class:`~ate.bootstrapping.Bootstrapper`
+	:param files: A list of paths to files from which to calculate the correlation.
+	:type files: list of str
+	:param terms: A list of terms for which to compute the correlation.
+	:type terms: list of str
+
+	:return: The correlation between all given terms.
+			 This is returned as a dictionary of dictionaries.
+			 The outer level is each term.
+			 The inner level is the outer level term's correlation with the other terms.
+	:rtype: dict of dict
+	"""
+
+	correlation = extractor.bootstrap(files, terms, terms)
+	correlation = { term: { t2: c for (t1, t2), c in correlation.items()
+								  if t1 is term }
+						  for term in terms }
+
+	return correlation
 
 def method(method):
 	"""
