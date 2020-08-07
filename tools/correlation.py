@@ -13,6 +13,14 @@ To run the script, use:
 	--method CHI \\
 	--output data/correlation.json
 
+If the terms are stored in a file (one word on each line) you can load them as follows:
+
+	./tools/correlation.py \\
+	--terms $( cat data/terms.txt ) \\
+	--files data/tokenized_corpus.json \\
+	--method CHI \\
+	--output data/correlation.json
+
 Accepted arguments:
 
 	- ``-t --terms``		*<Required>* The list of words for which to calculate the correlation.
