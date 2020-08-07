@@ -7,7 +7,12 @@ To run the script, use:
 
 .. code-block:: bash
 
-    ./tools/correlation.py
+    ./tools/correlation.py \\
+	-f data/tokenized_corpus.json
+
+Accepted arguments:
+
+	- ``-f --files``		*<Required>* The input corpora from which to calculate the correlation betwee terms, expected to be already tokenized by the `tokenize` tool.
 
 """
 
@@ -17,11 +22,20 @@ def setup_args():
 	"""
 	Set up and get the list of command-line arguments.
 
+	Accepted arguments:
+
+		- ``-f --files``		*<Required>* The input corpora from which to calculate the correlation betwee terms, expected to be already tokenized by the `tokenize` tool.
+
+
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
 	"""
 
 	parser = argparse.ArgumentParser(description="Calculate the correlation between the given set of terms.")
+
+	parser.add_argument('-f', '--files',
+						nargs='+', required=True,
+						help='<Required> The input corpora from which to calculate the correlation betwee terms, expected to be already tokenized by the `tokenize tool.')
 
 	args = parser.parse_args()
 	return args
