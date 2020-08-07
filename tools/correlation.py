@@ -8,12 +8,13 @@ To run the script, use:
 .. code-block:: bash
 
     ./tools/correlation.py \\
-	-f data/tokenized_corpus.json
+	--files data/tokenized_corpus.json \\
+	--output data/correlation.json
 
 Accepted arguments:
 
 	- ``-f --files``		*<Required>* The input corpora from which to calculate the correlation betwee terms, expected to be already tokenized by the `tokenize` tool.
-
+	- ``-o --output``		*<Required>* The path to the file where to store the correlation values.
 """
 
 import argparse
@@ -25,7 +26,7 @@ def setup_args():
 	Accepted arguments:
 
 		- ``-f --files``		*<Required>* The input corpora from which to calculate the correlation betwee terms, expected to be already tokenized by the `tokenize` tool.
-
+		- ``-o --output``		*<Required>* The path to the file where to store the correlation values.
 
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
@@ -36,6 +37,9 @@ def setup_args():
 	parser.add_argument('-f', '--files',
 						nargs='+', required=True,
 						help='<Required> The input corpora from which to calculate the correlation betwee terms, expected to be already tokenized by the `tokenize tool.')
+	parser.add_argument('-o', '--output',
+						type=str, required=True,
+						help='<Required> The path to the file where to store the correlation values.')
 
 	args = parser.parse_args()
 	return args
