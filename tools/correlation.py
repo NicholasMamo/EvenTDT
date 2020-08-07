@@ -8,12 +8,14 @@ To run the script, use:
 .. code-block:: bash
 
     ./tools/correlation.py \\
+	--terms first half
 	--files data/tokenized_corpus.json \\
 	--method CHI \\
 	--output data/correlation.json
 
 Accepted arguments:
 
+	- ``-t --terms``		*<Required>* The list of words for which to calculate the correlation.
 	- ``-f --files``		*<Required>* The input corpora from which to calculate the correlation betwee terms, expected to be already tokenized by the `tokenize` tool.
 	- ``-m --method``		*<Required>* The method to use to compute the correlation values; supported: `PMI`, `CHI`.
 	- ``-o --output``		*<Required>* The path to the file where to store the correlation values.
@@ -38,6 +40,7 @@ def setup_args():
 
 	Accepted arguments:
 
+		- ``-t --terms``		*<Required>* The list of words for which to calculate the correlation.
 		- ``-f --files``		*<Required>* The input corpora from which to calculate the correlation betwee terms, expected to be already tokenized by the `tokenize` tool.
 		- ``-m --method``		*<Required>* The method to use to compute the correlation values; supported: `PMI`, `CHI`.
 		- ``-o --output``		*<Required>* The path to the file where to store the correlation values.
@@ -48,6 +51,9 @@ def setup_args():
 
 	parser = argparse.ArgumentParser(description="Calculate the correlation between the given set of terms.")
 
+	parser.add_argument('-t', '--terms',
+						nargs='+', required=True,
+						help='<Required> The list of words for which to calculate the correlation.')
 	parser.add_argument('-f', '--files',
 						nargs='+', required=True,
 						help='<Required> The input corpora from which to calculate the correlation betwee terms, expected to be already tokenized by the `tokenize tool.')
