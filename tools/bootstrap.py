@@ -126,7 +126,7 @@ def main():
 	"""
 	If no candidates are provided, select them from among the most common candidates in the given corpora.
 	"""
-	candidates = load_candidates(args.candidates) if args.candidates else generate_candidates(args.files, generate=args.generate)
+	candidates = load_candidates(args.candidates, args.max_candidates) if args.candidates else generate_candidates(args.files, generate=args.generate)
 	cmd['candidates'] = candidates
 
 	bootstrapped = bootstrap(args.files, seed, args.method,
