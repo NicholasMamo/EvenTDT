@@ -20,7 +20,7 @@ Accepted arguments:
 
 	- ``-s --seed``			*<Required>* The path to the file containing seed keywords, expected to contain one keyword on each line. Alternatively, the output from the ``terms`` tool can be provided.
 	- ``-f --files``		*<Required>* The input corpora where to look for similar keywords, expected to be already tokenized by the `tokenize` tool.
-	- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `PMI`, `CHI`.
+	- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `CHI`, `Log`, `PMI`.
 	- ``-o --output``		*<Required>* The path to the file where to store the bootstrapped keywords.
 	- ``-c --candidates``	*<Optional>* The path to the file containing candidate keywords, expected to contain one keyword on each line. Alternatively, the output from the ``terms`` tool can be provided. If no candidates are given, all vocabulary keywords are considered candidates.
 	- ``-i --iterations``	*<Optional>* The number of iterations to spend bootstrapping; defaults to 1.
@@ -43,7 +43,7 @@ sys.path.insert(-1, lib)
 
 import tools
 from ate.stat import probability
-from ate.bootstrapping.probability import PMIBootstrapper, ChiBootstrapper
+from ate.bootstrapping.probability import ChiBootstrapper, LogLikelihoodRatioBootstrapper, PMIBootstrapper
 from objects.exportable import Exportable
 from logger import logger
 
@@ -55,7 +55,7 @@ def setup_args():
 
 		- ``-s --seed``			*<Required>* The path to the file containing seed keywords, expected to contain one keyword on each line. Alternatively, the output from the ``terms`` tool can be provided.
 		- ``-f --files``		*<Required>* The input corpora where to look for similar keywords, expected to be already tokenized by the `tokenize` tool.
-		- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `PMI`, `CHI`.
+		- ``-m --method``		*<Required>* The method to use to look for similar keywords; supported: `CHI`, `Log`, `PMI`.
 		- ``-o --output``		*<Required>* The path to the file where to store the bootstrapped keywords.
 		- ``-c --candidates``	*<Optional>* The path to the file containing candidate keywords, expected to contain one keyword on each line. Alternatively, the output from the ``terms`` tool can be provided. If no candidates are given, all vocabulary keywords are considered candidates.
 		- ``-i --iterations``	*<Optional>* The number of iterations to spend bootstrapping; defaults to 1.
@@ -78,7 +78,7 @@ def setup_args():
 						help='<Required> The input corpora where to look for similar keywords, expected to be already tokenized by the `tokenize` tool.')
 	parser.add_argument('-m', '--method',
 						type=method, required=True,
-						help='<Required> The method to use to look for similar keywords; supported: `PMI`, `CHI`.')
+						help='<Required> The method to use to look for similar keywords; supported: `CHI`, `Log`, `PMI`.')
 	parser.add_argument('-o', '--output',
 						type=str, required=True,
 						help='<Required> The path to the file where to store the bootstrapped keywords.')
@@ -371,6 +371,7 @@ def method(method):
 	methods = {
 		'pmi': PMIBootstrapper,
 		'chi': ChiBootstrapper,
+		'log': LogLikelihoodRatioBootstrapper,
 	}
 
 	if method.lower() in methods:
