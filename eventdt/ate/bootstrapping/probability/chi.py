@@ -58,7 +58,7 @@ class ChiBootstrapper(Bootstrapper):
 							Each document should have a `tokens` attribute.
 		:type corpora: str or list of str
 		:param seed: The terms for which to compute the chi-square statistic.
-					 These terms are combined as a cross-product with all terms in `candidates`.
+					 These terms are combined as a cross-product with all terms in ``candidates``.
 					 The terms can be provided as:
 
 					 - A single word,
@@ -70,7 +70,7 @@ class ChiBootstrapper(Bootstrapper):
 					 If nothing is given, it is replaced with the corpora's vocabulary.
 		:type seed: None or str or list of str or tuple or list of tuple
 		:param candidates: The terms for which to compute the chi-square statistic.
-						   These terms are combined as a cross-product with all terms in `seed`.
+						   These terms are combined as a cross-product with all terms in ``seed``.
 						   The terms can be provided as:
 
 						   - A single word,
@@ -87,7 +87,7 @@ class ChiBootstrapper(Bootstrapper):
 					  .. note::
 
 						  Cache should be used when there is a lot of repetition.
-						  For example, `seed` can be used as cache when `seed` is small and `candidates` is large.
+						  For example, ``seed`` can be used as cache when ``seed`` is small and ``candidates`` is large.
 						  If the data is small, using cache can be detrimental.
 		:type cache: None or list of str
 
@@ -119,8 +119,8 @@ class ChiBootstrapper(Bootstrapper):
 
 	def _contingency_table(self, corpora, seed, candidates, cache=None):
 		"""
-		Create the contingency tables for all the pairs of terms in `seed` and `candidates`.
-		All the terms in `seed` are matched with all terms in `candidates` in a cross-product fashion.
+		Create the contingency tables for all the pairs of terms in ``seed`` and ``candidates``.
+		All the terms in ``seed`` are matched with all terms in ``candidates`` in a cross-product fashion.
 
 		:param corpora: A corpus, or corpora, of documents.
 						If a string is given, it is assumed to be one corpus.
@@ -133,7 +133,7 @@ class ChiBootstrapper(Bootstrapper):
 							Each document should have a `tokens` attribute.
 		:type corpora: str or list of str
 		:param seed: The terms for which to compute the chi-square statistic.
-					 These terms are combined as a cross-product with all terms in `candidates`.
+					 These terms are combined as a cross-product with all terms in ``candidates``.
 					 The terms can be provided as:
 
 					 - A single word,
@@ -145,7 +145,7 @@ class ChiBootstrapper(Bootstrapper):
 					 If nothing is given, it is replaced with the corpora's vocabulary.
 		:type seed: None or str or list of str or tuple or list of tuple
 		:param candidates: The terms for which to compute the chi-square statistic.
-						   These terms are combined as a cross-product with all terms in `seed`.
+						   These terms are combined as a cross-product with all terms in ``seed``.
 						   The terms can be provided as:
 
 						   - A single word,
@@ -162,7 +162,7 @@ class ChiBootstrapper(Bootstrapper):
 					  .. note::
 
 						  Cache should be used when there is a lot of repetition.
-						  For example, `seed` can be used as cache when `seed` is small and `candidates` is large.
+						  For example, ``seed`` can be used as cache when ``seed`` is small and ``candidates`` is large.
 						  If the data is small, using cache can be detrimental.
 		:type cache: None or list of str
 

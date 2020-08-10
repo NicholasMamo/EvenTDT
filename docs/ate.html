@@ -1515,7 +1515,7 @@ It is calculated using a two-by-two contingency table as:</p>
 <dl class="method">
 <dt id="ate.bootstrapping.probability.chi.ChiBootstrapper.bootstrap">
 <code class="sig-name descname">bootstrap</code><span class="sig-paren">(</span><em class="sig-param">corpora</em>, <em class="sig-param">seed=None</em>, <em class="sig-param">candidates=None</em>, <em class="sig-param">cache=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.bootstrapping.probability.chi.ChiBootstrapper.bootstrap" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate the chi-square statistic of co-occurrence for the seed set terms and the candidate terms..</p>
+<dd><p>Calculate the chi-square statistic of co-occurrence for the seed set terms and the candidate terms.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -1529,8 +1529,8 @@ Therefore each line should be a JSON string representing a document.
 Each document should have a <cite>tokens</cite> attribute.</p>
 </div>
 </p></li>
-<li><p><strong>seed</strong> (<em>None</em><em> or </em><em>str</em><em> or </em><em>list of str</em><em> or </em><em>tuple</em><em> or </em><em>list of tuple</em>) – <p>The terms for which to compute the probability.
-These terms are combined as a cross-product with all terms in <cite>candidates</cite>.
+<li><p><strong>seed</strong> (<em>None</em><em> or </em><em>str</em><em> or </em><em>list of str</em><em> or </em><em>tuple</em><em> or </em><em>list of tuple</em>) – <p>The terms for which to compute the chi-square statistic.
+These terms are combined as a cross-product with all terms in <code class="docutils literal notranslate"><span class="pre">candidates</span></code>.
 The terms can be provided as:</p>
 <ul>
 <li><p>A single word,</p></li>
@@ -1541,8 +1541,8 @@ The terms can be provided as:</p>
 <p>A tuple translates to joint probabilities.
 If nothing is given, it is replaced with the corpora’s vocabulary.</p>
 </p></li>
-<li><p><strong>candidates</strong> (<em>None</em><em> or </em><em>str</em><em> or </em><em>list of str</em><em> or </em><em>tuple</em><em> or </em><em>list of tuple</em>) – <p>The terms for which to compute the probability.
-These terms are combined as a cross-product with all terms in <cite>seed</cite>.
+<li><p><strong>candidates</strong> (<em>None</em><em> or </em><em>str</em><em> or </em><em>list of str</em><em> or </em><em>tuple</em><em> or </em><em>list of tuple</em>) – <p>The terms for which to compute the chi-square statistic.
+These terms are combined as a cross-product with all terms in <code class="docutils literal notranslate"><span class="pre">seed</span></code>.
 The terms can be provided as:</p>
 <ul>
 <li><p>A single word,</p></li>
@@ -1558,7 +1558,7 @@ If an empty list or <cite>None</cite> is given, no cache is used.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Cache should be used when there is a lot of repetition.
-For example, <cite>seed</cite> can be used as cache when <cite>seed</cite> is small and <cite>candidates</cite> is large.
+For example, <code class="docutils literal notranslate"><span class="pre">seed</span></code> can be used as cache when <code class="docutils literal notranslate"><span class="pre">seed</span></code> is small and <code class="docutils literal notranslate"><span class="pre">candidates</span></code> is large.
 If the data is small, using cache can be detrimental.</p>
 </div>
 </p></li>
@@ -1635,6 +1635,77 @@ The <span class="math notranslate nohighlight">\(O\)</span> before the logarithm
 <li><p><cite>C</cite>: terms <span class="math notranslate nohighlight">\(t_1\)</span> appears, but <span class="math notranslate nohighlight">\(t_2\)</span> doesn’t; and</p></li>
 <li><p><cite>D</cite>: neither terms <span class="math notranslate nohighlight">\(t_1\)</span> nor <span class="math notranslate nohighlight">\(t_2\)</span> appear.</p></li>
 </ul>
+<dl class="class">
+<dt id="ate.bootstrapping.probability.llratio.LogLikelihoodRatioBootstrapper">
+<em class="property">class </em><code class="sig-name descname">LogLikelihoodRatioBootstrapper</code><a class="headerlink" href="#ate.bootstrapping.probability.llratio.LogLikelihoodRatioBootstrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>The log-likelihood ratio bootstrapper scores candidate terms based on how often they appear with seed terms.</p>
+<dl class="method">
+<dt id="ate.bootstrapping.probability.llratio.LogLikelihoodRatioBootstrapper.bootstrap">
+<code class="sig-name descname">bootstrap</code><span class="sig-paren">(</span><em class="sig-param">corpora</em>, <em class="sig-param">seed=None</em>, <em class="sig-param">candidates=None</em>, <em class="sig-param">cache=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ate.bootstrapping.probability.llratio.LogLikelihoodRatioBootstrapper.bootstrap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the log-likelihood ratio statistic of co-occurrence for the seed set terms and the candidate terms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpora</strong> (<em>str</em><em> or </em><em>list of str</em>) – <p>A corpus, or corpora, of documents.
+If a string is given, it is assumed to be one corpus.
+If a list is given, it is assumed to be a list of corpora.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is assumed that the corpora were extracted using the tokenizer tool.
+Therefore each line should be a JSON string representing a document.
+Each document should have a <cite>tokens</cite> attribute.</p>
+</div>
+</p></li>
+<li><p><strong>seed</strong> (<em>None</em><em> or </em><em>str</em><em> or </em><em>list of str</em><em> or </em><em>tuple</em><em> or </em><em>list of tuple</em>) – <p>The terms for which to compute the probability.
+These terms are combined as a cross-product with all terms in <cite>candidates</cite>.
+The terms can be provided as:</p>
+<ul>
+<li><p>A single word,</p></li>
+<li><p>A list of terms,</p></li>
+<li><p>A tuple, or</p></li>
+<li><p>A list of tuples.</p></li>
+</ul>
+<p>A tuple translates to joint probabilities.
+If nothing is given, it is replaced with the corpora’s vocabulary.</p>
+</p></li>
+<li><p><strong>candidates</strong> (<em>None</em><em> or </em><em>str</em><em> or </em><em>list of str</em><em> or </em><em>tuple</em><em> or </em><em>list of tuple</em>) – <p>The terms for which to compute the probability.
+These terms are combined as a cross-product with all terms in <cite>seed</cite>.
+The terms can be provided as:</p>
+<ul>
+<li><p>A single word,</p></li>
+<li><p>A list of terms,</p></li>
+<li><p>A tuple, or</p></li>
+<li><p>A list of tuples.</p></li>
+</ul>
+<p>A tuple translates to joint probabilities.
+If nothing is given, it is replaced with the corpora’s vocabulary.</p>
+</p></li>
+<li><p><strong>cache</strong> (<em>None</em><em> or </em><em>list of str</em>) – <p>A list of terms that are re-used often and which should be cached.
+If an empty list or <cite>None</cite> is given, no cache is used.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Cache should be used when there is a lot of repetition.
+For example, <cite>seed</cite> can be used as cache when <cite>seed</cite> is small and <cite>candidates</cite> is large.
+If the data is small, using cache can be detrimental.</p>
+</div>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The scores of each seed term for each candidate.
+Bootstrapping computes a score for the cross-product of the seed set and candidates.
+In other words, there is a score for every possible combination of terms in the seed set, and terms in the candidates.
+The chi-square statistic scores are returned as a dictionary.
+The keys are these pairs, and their chi-square statistics are the values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 </div>
 </div>
