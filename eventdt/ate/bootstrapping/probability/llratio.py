@@ -188,7 +188,96 @@ class LogLikelihoodRatioBootstrapper(Bootstrapper):
 		:rtype: dict
 		"""
 
-		return { }
+		tables = { }
+
+		"""
+		Convert the corpora and terms into a list if they aren't already.
+		"""
+		corpora = [ corpora ] if type(corpora) is str else corpora
+		seed = [ seed ] if type(seed) is str else seed
+		candidates = [ candidates ] if type(candidates) is str else candidates
+		cache = cache or [ ]
+		cache = [ cache ] if type(cache) is str else cache
+
+		"""
+		Get the total number of documents in the corpora.
+		Initially, the term counts will be calculated only for terms that are not cached.
+		The term counts for terms that are cached can be calculated in the cache routine.
+		"""
+		total = ate.total_documents(corpora)
+		counts = ate.total_documents(corpora, focus=list(set(seed + candidates)))
+
+		"""
+		Generate the pairs for which the chi-square statistic will be computed.
+		Then, initialize the contingency table for each pair.
+		"""
+		pairs = probability.joint_vocabulary(seed, candidates)
+		tables = { pair: (0, 0, 0, 0) for pair in pairs }
+
+		"""
+		If cache is defined, generate a list of documents for each cached term.
+		This reduces the number of documents to go over.
+		"""
+		if cache:
+			for term in cache:
+				"""
+				Look for pairs that mention the cached term.
+				"""
+				cached_pairs = [ pair for pair in pairs if term in pair ]
+
+				"""
+				Create the cache.
+				Update the A in the tables for the cached term.
+				This value represents the number of documents in which both the cached term and the other term appear.
+				"""
+				documents = probability.cached(corpora, term)
+				for document in documents:
+					for a, b in cached_pairs:
+						if a in document['tokens'] and b in document['tokens']:
+							A, B, C, D = tables[(a, b)]
+							A += 1
+							tables[(a, b)] = (A, B, C, D)
+
+				"""
+				Complete the contingency tables.
+				"""
+				for (a, b) in cached_pairs:
+					 A, B, C, D = tables[(a, b)]
+					 B = counts[a] - A # documents in which the first term appears without the second term
+					 C = counts[b] - A # documents in which the second term appears without the first term
+					 D = total - (A + B + C) # documents in which neither the first nor the second term appears
+					 tables[(a, b)] = (A, B, C, D)
+
+				"""
+				Remove the already-created contingency tables from the pairs.
+				"""
+				pairs = [ pair for pair in pairs if term not in pair ]
+
+		"""
+		Create any remaining contingency tables.
+		"""
+		if pairs:
+			for corpus in corpora:
+				with open(corpus, 'r') as f:
+					for line in f:
+						document = json.loads(line)
+						for a, b in pairs:
+							if a in document['tokens'] and b in document['tokens']:
+								A, B, C, D = tables[(a, b)]
+								A += 1
+								tables[(a, b)] = (A, B, C, D)
+
+			"""
+			Complete the contingency tables.
+			"""
+			for (a, b) in pairs:
+				 A, B, C, D = tables[(a, b)]
+				 B = counts[a] - A # documents in which the first term appears without the second term
+				 C = counts[b] - A # documents in which the second term appears without the first term
+				 D = total - (A + B + C) # documents in which neither the first nor the second term appears
+				 tables[(a, b)] = (A, B, C, D)
+
+		return tables
 
 	def _ratio(self, table):
 		"""
