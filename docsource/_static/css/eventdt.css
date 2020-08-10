@@ -1,0 +1,9 @@
+table .line-block {
+	vertical-align: middle;
+    display: table-cell;
+}
+
+table th p {
+	display: table-cell;
+	vertical-align: middle;
+}
