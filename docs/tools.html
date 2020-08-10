@@ -246,6 +246,24 @@ This is relative to the file’s directory.</p></li>
 </dl>
 </dd></dl>
 
+<dl class="function">
+<dt id="tools.is_json">
+<code class="sig-name descname">is_json</code><span class="sig-paren">(</span><em class="sig-param">file</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.is_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check whether the given file is JSON-encoded.
+The function checks only if the filename ends with the <code class="docutils literal notranslate"><span class="pre">json</span></code> suffix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file</strong> (<em>str</em>) – The path to the file to check if it is JSON-encoded.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A boolean indicating whether the file is JSON-encoded.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="section" id="module-tools.collect">
 <span id="data-collection-and-processing"></span><h2>Data Collection and Processing<a class="headerlink" href="#module-tools.collect" title="Permalink to this headline">¶</a></h2>
 <p>A tool to collect tweets.</p>
@@ -882,17 +900,21 @@ The function automatically gets the set of tokens to remove duplicates.</p></li>
     -f data/tokenized_corpus.json
 </pre></div>
 </div>
+<p>The seed and candidates files can be either text files or the output from the <code class="docutils literal notranslate"><span class="pre">terms</span></code> tool.
+If a text file is given, this tool expects one word on each line.</p>
 <p>Accepted arguments:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">-s</span> <span class="pre">--seed</span></code>                 <em>&lt;Required&gt;</em> The path to the file containing seed keywords, expected to contain one keyword on each line.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-s</span> <span class="pre">--seed</span></code>                 <em>&lt;Required&gt;</em> The path to the file containing seed keywords, expected to contain one keyword on each line. Alternatively, the output from the <code class="docutils literal notranslate"><span class="pre">terms</span></code> tool can be provided.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--files</span></code>                <em>&lt;Required&gt;</em> The input corpora where to look for similar keywords, expected to be already tokenized by the <cite>tokenize</cite> tool.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">--method</span></code>               <em>&lt;Required&gt;</em> The method to use to look for similar keywords; supported: <cite>PMI</cite>, <cite>CHI</cite>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-o</span> <span class="pre">--output</span></code>               <em>&lt;Required&gt;</em> The path to the file where to store the bootstrapped keywords.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">--candidates</span></code>   <em>&lt;Optional&gt;</em> The path to the file containing candidate keywords, expected to contain one keyword on each line; if not given, all vocabulary keywords are considered candidates.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">--candidates</span></code>   <em>&lt;Optional&gt;</em> The path to the file containing candidate keywords, expected to contain one keyword on each line. Alternatively, the output from the <code class="docutils literal notranslate"><span class="pre">terms</span></code> tool can be provided. If no candidates are given, all vocabulary keywords are considered candidates.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-i</span> <span class="pre">--iterations</span></code>   <em>&lt;Optional&gt;</em> The number of iterations to spend bootstrapping; defaults to 1.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-k</span> <span class="pre">--keep</span></code>                 <em>&lt;Optional&gt;</em> The number of keywords to keep after each iteration; defaults to 5.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--cutoff</span></code>                  <em>&lt;Optional&gt;</em> The number of keywords to generate if no candidates are provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--generate</span></code>                <em>&lt;Optional&gt;</em> The number of candidate keywords to generate if no candidates are provided; defaults to 100.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--max-seed</span></code>                <em>&lt;Optional&gt;</em> The number of seed words to use from the given files; defaults to all words.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--max-candidates</span></code>  <em>&lt;Optional&gt;</em> The number of candidate words to use from the given files; defaults to all words.</p></li>
 </ul>
 </div></blockquote>
 <dl class="function">
@@ -902,14 +924,16 @@ The function automatically gets the set of tokens to remove duplicates.</p></li>
 <p>Accepted arguments:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">-s</span> <span class="pre">--seed</span></code>                 <em>&lt;Required&gt;</em> The path to the file containing seed keywords, expected to contain one keyword on each line.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-s</span> <span class="pre">--seed</span></code>                 <em>&lt;Required&gt;</em> The path to the file containing seed keywords, expected to contain one keyword on each line. Alternatively, the output from the <code class="docutils literal notranslate"><span class="pre">terms</span></code> tool can be provided.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--files</span></code>                <em>&lt;Required&gt;</em> The input corpora where to look for similar keywords, expected to be already tokenized by the <cite>tokenize</cite> tool.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">--method</span></code>               <em>&lt;Required&gt;</em> The method to use to look for similar keywords; supported: <cite>PMI</cite>, <cite>CHI</cite>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-o</span> <span class="pre">--output</span></code>               <em>&lt;Required&gt;</em> The path to the file where to store the bootstrapped keywords.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">--candidates</span></code>   <em>&lt;Optional&gt;</em> The path to the file containing candidate keywords, expected to contain one keyword on each line; if not given, all vocabulary keywords are considered candidates.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">--candidates</span></code>   <em>&lt;Optional&gt;</em> The path to the file containing candidate keywords, expected to contain one keyword on each line. Alternatively, the output from the <code class="docutils literal notranslate"><span class="pre">terms</span></code> tool can be provided. If no candidates are given, all vocabulary keywords are considered candidates.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-i</span> <span class="pre">--iterations</span></code>   <em>&lt;Optional&gt;</em> The number of iterations to spend bootstrapping; defaults to 1.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-k</span> <span class="pre">--keep</span></code>                 <em>&lt;Optional&gt;</em> The number of keywords to keep after each iteration; defaults to 5.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--cutoff</span></code>                  <em>&lt;Optional&gt;</em> The number of keywords to generate if no candidates are provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--generate</span></code>                <em>&lt;Optional&gt;</em> The number of candidate keywords to generate if no candidates are provided; defaults to 100.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--max-seed</span></code>                <em>&lt;Optional&gt;</em> The number of seed words to use from the given files; defaults to all words.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--max-candidates</span></code>  <em>&lt;Optional&gt;</em> The number of candidate words to use from the given files; defaults to all words.</p></li>
 </ul>
 </div></blockquote>
 <dl class="field-list simple">
@@ -954,12 +978,16 @@ The function automatically gets the set of tokens to remove duplicates.</p></li>
 
 <dl class="function">
 <dt id="tools.bootstrap.load_seed">
-<code class="sig-name descname">load_seed</code><span class="sig-paren">(</span><em class="sig-param">seed_file</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.bootstrap.load_seed" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">load_seed</code><span class="sig-paren">(</span><em class="sig-param">seed_file</em>, <em class="sig-param">max_seed=None</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.bootstrap.load_seed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load the seed words from the given seed file.
 The function expects a file with one seed word on each line.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>seed_file</strong> (<em>str</em>) – The path to the seed file.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>seed_file</strong> (<em>str</em>) – The path to the seed file.</p></li>
+<li><p><strong>max_seed</strong> (<em>None</em><em> or </em><em>int</em>) – The number of seed words to retain.
+If <code class="docutils literal notranslate"><span class="pre">None</span></code> is given, the function retains all seed words.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A list of seed words.</p>
@@ -967,17 +995,24 @@ The function expects a file with one seed word on each line.</p>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>list of str</p>
 </dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – When zero or fewer seed words should be retained.</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="tools.bootstrap.load_candidates">
-<code class="sig-name descname">load_candidates</code><span class="sig-paren">(</span><em class="sig-param">candidate_file</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.bootstrap.load_candidates" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">load_candidates</code><span class="sig-paren">(</span><em class="sig-param">candidate_file</em>, <em class="sig-param">max_candidates=None</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.bootstrap.load_candidates" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load the candidate words from the given candidate file.
 The function expects a file with one candidate word on each line.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>candidate_file</strong> (<em>str</em>) – The path to the candidate file.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>candidate_file</strong> (<em>str</em>) – The path to the candidate file.</p></li>
+<li><p><strong>max_candidates</strong> (<em>None</em><em> or </em><em>int</em>) – The number of candidates words to retain.
+If <code class="docutils literal notranslate"><span class="pre">None</span></code> is given, the function retains all candidates words.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A list of candidate words.</p>
@@ -985,18 +1020,24 @@ The function expects a file with one candidate word on each line.</p>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>list of str</p>
 </dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – When zero or fewer candidate words should be retained.</p></li>
+<li><p><strong>ValueError</strong> – When no candidate words are found.</p></li>
+</ul>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="tools.bootstrap.generate_candidates">
-<code class="sig-name descname">generate_candidates</code><span class="sig-paren">(</span><em class="sig-param">files</em>, <em class="sig-param">cutoff</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.bootstrap.generate_candidates" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">generate_candidates</code><span class="sig-paren">(</span><em class="sig-param">files</em>, <em class="sig-param">generate</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.bootstrap.generate_candidates" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate candidates by looking for the most common keywords in the given files.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>files</strong> (<em>list of str</em><em> or </em><em>str</em>) – The input corpora where to look for candidate keywords.</p></li>
-<li><p><strong>cutoff</strong> (<em>int</em>) – The maximum number of candidate keywords to generate.</p></li>
+<li><p><strong>generate</strong> (<em>int</em>) – The maximum number of candidate keywords to generate.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>

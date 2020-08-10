@@ -129,6 +129,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#id1">Probability</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#module-ate.bootstrapping.probability.pmi">Pointwise Mutual Information (PMI)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-ate.bootstrapping.probability.chi">Chi-Square</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ate.bootstrapping.probability.llratio">Log-Likelihood Ratio</a></li>
 </ul>
 </li>
 </ul>
@@ -917,9 +918,10 @@ The event frequency is simply the number of events in which term appears in a de
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>timelines</strong> (<em>str</em><em> or </em><em>list of str</em>) – <p>The path to a timeline or a list of paths to timelines.
+<li><p><strong>timelines</strong> (str or list of str or <a class="reference internal" href="summarization.html#summarization.timeline.timeline.Timeline" title="summarization.timeline.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a> or list of <a class="reference internal" href="summarization.html#summarization.timeline.timeline.Timeline" title="summarization.timeline.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a>) – <p>The path to a timeline or a list of paths to timelines.
 If a string is given, it is assumed to be one event timeline.
-If a list is given, it is assumed to be a list of event timelines.</p>
+If a list is given, it is assumed to be a list of event timelines.
+The timelines can also be provided loaded already.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is assumed that the event timelines were extracted using the collection tool.
@@ -935,6 +937,9 @@ If <cite>None</cite> is given, all words are considered to be candidates.</p></l
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dict</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – When the given data is are not timelines.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1109,7 +1114,7 @@ To reflect this behavior in the score, the inverse of the variability is returne
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>idfs</strong> (list of <a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a>) – A list of IDFs, one for each event.</p></li>
+<li><p><strong>idfs</strong> (str or list of <a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a>) – A list of IDFs, one for each event, or paths to where they are stored.</p></li>
 <li><p><strong>candidates</strong> (<em>None</em><em> or </em><em>list of str</em>) – A list of terms for which to calculate a score.
 If <cite>None</cite> is given, all words are considered to be candidates.</p></li>
 </ul>
@@ -1122,6 +1127,9 @@ To reflect this behavior in the score, the inverse of the variability is returne
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dict</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – When only one or no IDFs are given.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1182,6 +1190,9 @@ A term that has a low entropy indicates that the term appears inconsistently acr
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dict</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – When only one or no IDFs are given.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1537,6 +1548,62 @@ The keys are these pairs, and their chi-square statistics are the values.</p>
 
 </dd></dl>
 
+</div>
+<div class="section" id="module-ate.bootstrapping.probability.llratio">
+<span id="log-likelihood-ratio"></span><h4>Log-Likelihood Ratio<a class="headerlink" href="#module-ate.bootstrapping.probability.llratio" title="Permalink to this headline">¶</a></h4>
+<p>The log-likelihood ratio compares the observed co-occurrence of terms with their expected co-occurrence.
+The expected co-occurrence, or the null hypothesis, is the number of times two terms appear if they were independent of each other.</p>
+<p>The log-likelihood ratio is calculated as follows:</p>
+<div class="math notranslate nohighlight">
+\[-2ln(\lambda) = 2 \cdot O ln(\frac{O}{E})\]</div>
+<p>where <span class="math notranslate nohighlight">\(E\)</span> is the expected number of co-occurrences of two terms and <span class="math notranslate nohighlight">\(O\)</span> is the actual number of observed co-occurrences.
+The <span class="math notranslate nohighlight">\(O\)</span> before the logarithm boosts common terms.</p>
+<p>With this equation:</p>
+<ul class="simple">
+<li><p>Terms that appear more often than expected (that is, they are not independent) will have a positive logarithm;</p></li>
+<li><p>Terms that appear as often as expected (that is, they are independent) will have a logarithm of 0; and</p></li>
+<li><p>Terms that appear less often as expected (that is, they are negatively correlated), will have a negative logarithm.</p></li>
+</ul>
+<p>To calculate the log-likelihood ratio, this algorithm uses a contingency table:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head"><div class="line-block">
+<div class="line"><span class="math notranslate nohighlight">\(t_1\)</span></div>
+</div>
+</th>
+<th class="head"><p><span class="math notranslate nohighlight">\(\overline{t_1}\)</span></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(t_2\)</span></p></td>
+<td><div class="line-block">
+<div class="line">A</div>
+</div>
+</td>
+<td><p>B</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(\overline{t_2}\)</span></p></td>
+<td><div class="line-block">
+<div class="line">C</div>
+</div>
+</td>
+<td><p>D</p></td>
+</tr>
+</tbody>
+</table>
+<p>In this table, the cells represent the following:</p>
+<ul class="simple">
+<li><p><cite>A</cite>: terms <span class="math notranslate nohighlight">\(t_1\)</span> and <span class="math notranslate nohighlight">\(t_2\)</span> co-occur;</p></li>
+<li><p><cite>B</cite>: terms <span class="math notranslate nohighlight">\(t_2\)</span> appears, but <span class="math notranslate nohighlight">\(t_1\)</span> doesn’t;</p></li>
+<li><p><cite>C</cite>: terms <span class="math notranslate nohighlight">\(t_1\)</span> appears, but <span class="math notranslate nohighlight">\(t_2\)</span> doesn’t; and</p></li>
+<li><p><cite>D</cite>: neither terms <span class="math notranslate nohighlight">\(t_1\)</span> nor <span class="math notranslate nohighlight">\(t_2\)</span> appear.</p></li>
+</ul>
 </div>
 </div>
 </div>

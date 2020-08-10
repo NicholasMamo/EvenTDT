@@ -162,3 +162,10 @@ Chi-Square
 .. automodule:: ate.bootstrapping.probability.chi
    :members:
    :special-members:
+
+Log-Likelihood Ratio
+^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: ate.bootstrapping.probability.llratio
+   :members:
+   :special-members:
