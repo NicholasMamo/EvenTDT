@@ -57,7 +57,7 @@ class ChiBootstrapper(Bootstrapper):
 							Therefore each line should be a JSON string representing a document.
 							Each document should have a `tokens` attribute.
 		:type corpora: str or list of str
-		:param seed: The terms for which to compute the probability.
+		:param seed: The terms for which to compute the chi-square statistic.
 					 These terms are combined as a cross-product with all terms in `candidates`.
 					 The terms can be provided as:
 
@@ -69,7 +69,7 @@ class ChiBootstrapper(Bootstrapper):
 					 A tuple translates to joint probabilities.
 					 If nothing is given, it is replaced with the corpora's vocabulary.
 		:type seed: None or str or list of str or tuple or list of tuple
-		:param candidates: The terms for which to compute the probability.
+		:param candidates: The terms for which to compute the chi-square statistic.
 						   These terms are combined as a cross-product with all terms in `seed`.
 						   The terms can be provided as:
 
@@ -132,7 +132,7 @@ class ChiBootstrapper(Bootstrapper):
 							Therefore each line should be a JSON string representing a document.
 							Each document should have a `tokens` attribute.
 		:type corpora: str or list of str
-		:param seed: The terms for which to compute the probability.
+		:param seed: The terms for which to compute the chi-square statistic.
 					 These terms are combined as a cross-product with all terms in `candidates`.
 					 The terms can be provided as:
 
@@ -144,7 +144,7 @@ class ChiBootstrapper(Bootstrapper):
 					 A tuple translates to joint probabilities.
 					 If nothing is given, it is replaced with the corpora's vocabulary.
 		:type seed: None or str or list of str or tuple or list of tuple
-		:param candidates: The terms for which to compute the probability.
+		:param candidates: The terms for which to compute the chi-square statistic.
 						   These terms are combined as a cross-product with all terms in `seed`.
 						   The terms can be provided as:
 
