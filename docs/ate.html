@@ -1598,9 +1598,10 @@ The <span class="math notranslate nohighlight">\(O\)</span> before the logarithm
 <p>To calculate the log-likelihood ratio, this algorithm uses a contingency table:</p>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"></th>
@@ -1609,6 +1610,7 @@ The <span class="math notranslate nohighlight">\(O\)</span> before the logarithm
 </div>
 </th>
 <th class="head"><p><span class="math notranslate nohighlight">\(\overline{t_1}\)</span></p></th>
+<th class="head"></th>
 </tr>
 </thead>
 <tbody>
@@ -1618,6 +1620,7 @@ The <span class="math notranslate nohighlight">\(O\)</span> before the logarithm
 </div>
 </td>
 <td><p>B</p></td>
+<td><p>A + B</p></td>
 </tr>
 <tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(\overline{t_2}\)</span></p></td>
 <td><div class="line-block">
@@ -1625,6 +1628,15 @@ The <span class="math notranslate nohighlight">\(O\)</span> before the logarithm
 </div>
 </td>
 <td><p>D</p></td>
+<td><p>C + D</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><div class="line-block">
+<div class="line">A + C</div>
+</div>
+</td>
+<td><p>B + D</p></td>
+<td><p>A + B + C + D</p></td>
 </tr>
 </tbody>
 </table>
@@ -1635,6 +1647,26 @@ The <span class="math notranslate nohighlight">\(O\)</span> before the logarithm
 <li><p><cite>C</cite>: terms <span class="math notranslate nohighlight">\(t_1\)</span> appears, but <span class="math notranslate nohighlight">\(t_2\)</span> doesn’t; and</p></li>
 <li><p><cite>D</cite>: neither terms <span class="math notranslate nohighlight">\(t_1\)</span> nor <span class="math notranslate nohighlight">\(t_2\)</span> appear.</p></li>
 </ul>
+<p>The last column and row represent the following:</p>
+<ul class="simple">
+<li><p><cite>A + B</cite>: the total number of documents in which <span class="math notranslate nohighlight">\(t_2\)</span> appears;</p></li>
+<li><p><cite>C + D</cite>: the total number of documents in which <span class="math notranslate nohighlight">\(t_2\)</span> does not appear;</p></li>
+<li><p><cite>A + C</cite>: the total number of documents in which <span class="math notranslate nohighlight">\(t_1\)</span> appears;</p></li>
+<li><p><cite>B + D</cite>: the total number of documents in which <span class="math notranslate nohighlight">\(t_1\)</span> does not appear; and</p></li>
+<li><p><cite>A + B + C + D</cite>: the total number of documents in the corpora.</p></li>
+</ul>
+<p>These cells can be converted into probabilities easily:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\frac{A + B}{A + B + C + D}\)</span> is the probability of observing <span class="math notranslate nohighlight">\(t_2\)</span>, and</p></li>
+<li><p><span class="math notranslate nohighlight">\(\frac{A + C}{A + B + C + D}\)</span> is the probability of observing <span class="math notranslate nohighlight">\(t_1\)</span>.</p></li>
+</ul>
+<p>These are the observed probabilities.
+The expected number of times that <span class="math notranslate nohighlight">\(t_1\)</span> and <span class="math notranslate nohighlight">\(t_2\)</span> co-occur is given as:</p>
+<div class="math notranslate nohighlight">
+\[\frac{(A + B) \cdot (A + C)}{A + B + C + D}\]</div>
+<p>This can similarly be represented as a probability:</p>
+<div class="math notranslate nohighlight">
+\[\frac{(A + B) \cdot (A + C)}{(A + B + C + D)^2}\]</div>
 <dl class="class">
 <dt id="ate.bootstrapping.probability.llratio.LogLikelihoodRatioBootstrapper">
 <em class="property">class </em><code class="sig-name descname">LogLikelihoodRatioBootstrapper</code><a class="headerlink" href="#ate.bootstrapping.probability.llratio.LogLikelihoodRatioBootstrapper" title="Permalink to this definition">¶</a></dt>
@@ -1656,8 +1688,8 @@ Therefore each line should be a JSON string representing a document.
 Each document should have a <cite>tokens</cite> attribute.</p>
 </div>
 </p></li>
-<li><p><strong>seed</strong> (<em>None</em><em> or </em><em>str</em><em> or </em><em>list of str</em><em> or </em><em>tuple</em><em> or </em><em>list of tuple</em>) – <p>The terms for which to compute the probability.
-These terms are combined as a cross-product with all terms in <cite>candidates</cite>.
+<li><p><strong>seed</strong> (<em>None</em><em> or </em><em>str</em><em> or </em><em>list of str</em><em> or </em><em>tuple</em><em> or </em><em>list of tuple</em>) – <p>The terms for which to compute the log-likelihood ratio.
+These terms are combined as a cross-product with all terms in <code class="docutils literal notranslate"><span class="pre">candidates</span></code>.
 The terms can be provided as:</p>
 <ul>
 <li><p>A single word,</p></li>
@@ -1668,8 +1700,8 @@ The terms can be provided as:</p>
 <p>A tuple translates to joint probabilities.
 If nothing is given, it is replaced with the corpora’s vocabulary.</p>
 </p></li>
-<li><p><strong>candidates</strong> (<em>None</em><em> or </em><em>str</em><em> or </em><em>list of str</em><em> or </em><em>tuple</em><em> or </em><em>list of tuple</em>) – <p>The terms for which to compute the probability.
-These terms are combined as a cross-product with all terms in <cite>seed</cite>.
+<li><p><strong>candidates</strong> (<em>None</em><em> or </em><em>str</em><em> or </em><em>list of str</em><em> or </em><em>tuple</em><em> or </em><em>list of tuple</em>) – <p>The terms for which to compute the log-likelihood ratio.
+These terms are combined as a cross-product with all terms in <code class="docutils literal notranslate"><span class="pre">seed</span></code>.
 The terms can be provided as:</p>
 <ul>
 <li><p>A single word,</p></li>
@@ -1685,7 +1717,7 @@ If an empty list or <cite>None</cite> is given, no cache is used.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Cache should be used when there is a lot of repetition.
-For example, <cite>seed</cite> can be used as cache when <cite>seed</cite> is small and <cite>candidates</cite> is large.
+For example, <code class="docutils literal notranslate"><span class="pre">seed</span></code> can be used as cache when <code class="docutils literal notranslate"><span class="pre">seed</span></code> is small and <code class="docutils literal notranslate"><span class="pre">candidates</span></code> is large.
 If the data is small, using cache can be detrimental.</p>
 </div>
 </p></li>
@@ -1695,8 +1727,8 @@ If the data is small, using cache can be detrimental.</p>
 <dd class="field-even"><p>The scores of each seed term for each candidate.
 Bootstrapping computes a score for the cross-product of the seed set and candidates.
 In other words, there is a score for every possible combination of terms in the seed set, and terms in the candidates.
-The chi-square statistic scores are returned as a dictionary.
-The keys are these pairs, and their chi-square statistics are the values.</p>
+The log-likelihood ratio statistic scores are returned as a dictionary.
+The keys are these pairs, and their log-likelihood ratio statistics are the values.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dict</p>

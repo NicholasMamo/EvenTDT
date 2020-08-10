@@ -19,13 +19,15 @@ With this equation:
 
 To calculate the log-likelihood ratio, this algorithm uses a contingency table:
 
-+-------------------------+-------------------------+-------------------------+
-|                         || :math:`t_1`            | :math:`\\overline{t_1}`  |
-+=========================+=========================+=========================+
-| :math:`t_2`             || A                      | B                       |
-+-------------------------+-------------------------+-------------------------+
-| :math:`\\overline{t_2}`  || C                      | D                       |
-+-------------------------+-------------------------+-------------------------+
++-------------------------+-------------------------+-------------------------+-------------------------+
+|                         || :math:`t_1`            | :math:`\\overline{t_1}`  |                         |
++=========================+=========================+=========================+=========================+
+| :math:`t_2`             || A                      | B                       | A + B                   |
++-------------------------+-------------------------+-------------------------+-------------------------+
+| :math:`\\overline{t_2}`  || C                      | D                       | C + D                   |
++-------------------------+-------------------------+-------------------------+-------------------------+
+|                         || A + C                  | B + D                   | A + B + C + D           |
++-------------------------+-------------------------+-------------------------+-------------------------+
 
 In this table, the cells represent the following:
 
@@ -33,6 +35,32 @@ In this table, the cells represent the following:
 - `B`: terms :math:`t_2` appears, but :math:`t_1` doesn't;
 - `C`: terms :math:`t_1` appears, but :math:`t_2` doesn't; and
 - `D`: neither terms :math:`t_1` nor :math:`t_2` appear.
+
+The last column and row represent the following:
+
+- `A + B`: the total number of documents in which :math:`t_2` appears;
+- `C + D`: the total number of documents in which :math:`t_2` does not appear;
+- `A + C`: the total number of documents in which :math:`t_1` appears;
+- `B + D`: the total number of documents in which :math:`t_1` does not appear; and
+- `A + B + C + D`: the total number of documents in the corpora.
+
+These cells can be converted into probabilities easily:
+
+- :math:`\\frac{A + B}{A + B + C + D}` is the probability of observing :math:`t_2`, and
+- :math:`\\frac{A + C}{A + B + C + D}` is the probability of observing :math:`t_1`.
+
+These are the observed probabilities.
+The expected number of times that :math:`t_1` and :math:`t_2` co-occur is given as:
+
+.. math::
+
+	\\frac{(A + B) \\cdot (A + C)}{A + B + C + D}
+
+This can similarly be represented as a probability:
+
+.. math::
+
+	\\frac{(A + B) \\cdot (A + C)}{(A + B + C + D)^2}
 """
 
 import json
