@@ -330,3 +330,27 @@ class LogLikelihoodRatioBootstrapper(Bootstrapper):
 		"""
 
 		return 0
+	def _observed(self, table):
+		"""
+		Calculate the actual probability of the two terms co-occurring.
+
+		:param table: The contingency table as a four-tuple.
+					  The values are four-tuples representing the values of cells in the order:
+
+		 			 	1. Top-left,
+		 				2. Top-right,
+		 				3. Bottom-left, and
+		 				4. Bottom-right.
+		:type table: tuple of int
+
+		:return: The probability of the two terms co-occurring in the corpora.
+		:rtype: float
+		"""
+
+		N = sum(table)
+		if not N:
+			return 0
+
+		A, B, C, D = table
+		return A / N
+

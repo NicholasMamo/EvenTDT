@@ -13,6 +13,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 import ate
+from ate import linguistic
 from ate.bootstrapping.probability import LogLikelihoodRatioBootstrapper
 from ate.stat import probability
 
@@ -231,3 +232,69 @@ class TestLogLikelihoodRatioBootstrapper(unittest.TestCase):
 		bootstrapper = LogLikelihoodRatioBootstrapper()
 		table = bootstrapper._contingency_table(path, seed, candidates, cache=[ seed, candidates ])
 		self.assertTrue(table)
+
+	def test_observed_N_0(self):
+		"""
+		Test that when the contingency table is empty, the observed probability is 0.
+		"""
+
+		bootstrapper = LogLikelihoodRatioBootstrapper()
+		self.assertEqual(0, bootstrapper._observed((0, 0, 0, 0)))
+
+	def test_observed_never_cooccur(self):
+		"""
+		Test that when two terms do not co-occur, the observed probability is 0.
+		"""
+
+		bootstrapper = LogLikelihoodRatioBootstrapper()
+		self.assertEqual(0, bootstrapper._observed((0, 30, 30, 40)))
+
+	def test_observed_always_cooccur(self):
+		"""
+		Test that when two terms always co-occur and are always present, the observed probability is 1.
+		"""
+
+		bootstrapper = LogLikelihoodRatioBootstrapper()
+		self.assertEqual(1, bootstrapper._observed((100, 0, 0, 0)))
+
+	def test_observed(self):
+		"""
+		Test calculating the observed probability from the contingency table.
+		"""
+
+		bootstrapper = LogLikelihoodRatioBootstrapper()
+		self.assertEqual(0.25, bootstrapper._observed((25, 25, 25, 25)))
+
+	def test_observed_lower_bound(self):
+		"""
+		Test that the observed probability has a lower-bound of 0.
+		"""
+
+		path = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json')
+
+		"""
+		Get the first 100 words.
+		"""
+		vocabulary = linguistic.vocabulary(path)[:100]
+
+		bootstrapper = LogLikelihoodRatioBootstrapper()
+		tables = bootstrapper._contingency_table([ path ], vocabulary, vocabulary)
+		self.assertEqual(10000, len(tables))
+		self.assertTrue(all( bootstrapper._observed(table) >= 0 for table in tables.values() ))
+
+	def test_observed_upper_bound(self):
+		"""
+		Test that the observed probability has an upper-bound of 1.
+		"""
+
+		path = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json')
+
+		"""
+		Get the first 100 words.
+		"""
+		vocabulary = linguistic.vocabulary(path)[:100]
+
+		bootstrapper = LogLikelihoodRatioBootstrapper()
+		tables = bootstrapper._contingency_table([ path ], vocabulary, vocabulary)
+		self.assertEqual(10000, len(tables))
+		self.assertTrue(all( bootstrapper._observed(table) <= 1 for table in tables.values() ))
