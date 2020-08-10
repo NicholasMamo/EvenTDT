@@ -354,3 +354,29 @@ class LogLikelihoodRatioBootstrapper(Bootstrapper):
 		A, B, C, D = table
 		return A / N
 
+	def _expected(self, table):
+		"""
+		Calculate the expected probability of the two terms co-occurring if they are independent.
+
+		:param table: The contingency table as a four-tuple.
+					  The values are four-tuples representing the values of cells in the order:
+
+		 			 	1. Top-left,
+		 				2. Top-right,
+		 				3. Bottom-left, and
+		 				4. Bottom-right.
+		:type table: tuple of int
+
+		:return: The probability of the two terms co-occurring if they are independent.
+		:rtype: float
+		"""
+
+		"""
+		If the table sums up to 0, return 0.
+		"""
+		N = sum(table)
+		if not N:
+			return 0
+
+		A, B, C, D = table
+		return (A + B) * (A + C) / N ** 2

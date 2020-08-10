@@ -264,6 +264,7 @@ class TestLogLikelihoodRatioBootstrapper(unittest.TestCase):
 
 		bootstrapper = LogLikelihoodRatioBootstrapper()
 		self.assertEqual(0.25, bootstrapper._observed((25, 25, 25, 25)))
+		self.assertEqual(0.35, bootstrapper._observed((35, 20, 20, 25)))
 
 	def test_observed_lower_bound(self):
 		"""
@@ -298,3 +299,70 @@ class TestLogLikelihoodRatioBootstrapper(unittest.TestCase):
 		tables = bootstrapper._contingency_table([ path ], vocabulary, vocabulary)
 		self.assertEqual(10000, len(tables))
 		self.assertTrue(all( bootstrapper._observed(table) <= 1 for table in tables.values() ))
+
+	def test_expected_N_0(self):
+		"""
+		Test that when the contingency table is empty, the expected probability is 0.
+		"""
+
+		bootstrapper = LogLikelihoodRatioBootstrapper()
+		self.assertEqual(0, bootstrapper._expected((0, 0, 0, 0)))
+
+	def test_expected_never_cooccur(self):
+		"""
+		Test that when two terms do not co-occur, the expected probability is 0.
+		"""
+
+		bootstrapper = LogLikelihoodRatioBootstrapper()
+		self.assertEqual(0.09, bootstrapper._expected((0, 30, 30, 40)))
+
+	def test_expected_always_cooccur(self):
+		"""
+		Test that when two terms always co-occur and are always present, the expected probability is 1.
+		"""
+
+		bootstrapper = LogLikelihoodRatioBootstrapper()
+		self.assertEqual(1, bootstrapper._expected((100, 0, 0, 0)))
+
+	def test_expected(self):
+		"""
+		Test calculating the expected probability from the contingency table.
+		"""
+
+		bootstrapper = LogLikelihoodRatioBootstrapper()
+		self.assertEqual(0.25, bootstrapper._expected((25, 25, 25, 25)))
+		self.assertEqual(0.25, bootstrapper._expected((0, 50, 50, 0)))
+
+	def test_expected_lower_bound(self):
+		"""
+		Test that the expected probability has a lower-bound of 0.
+		"""
+
+		path = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json')
+
+		"""
+		Get the first 100 words.
+		"""
+		vocabulary = linguistic.vocabulary(path)[:100]
+
+		bootstrapper = LogLikelihoodRatioBootstrapper()
+		tables = bootstrapper._contingency_table([ path ], vocabulary, vocabulary)
+		self.assertEqual(10000, len(tables))
+		self.assertTrue(all( bootstrapper._expected(table) >= 0 for table in tables.values() ))
+
+	def test_expected_upper_bound(self):
+		"""
+		Test that the expected probability has an upper-bound of 1.
+		"""
+
+		path = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json')
+
+		"""
+		Get the first 100 words.
+		"""
+		vocabulary = linguistic.vocabulary(path)[:100]
+
+		bootstrapper = LogLikelihoodRatioBootstrapper()
+		tables = bootstrapper._contingency_table([ path ], vocabulary, vocabulary)
+		self.assertEqual(10000, len(tables))
+		self.assertTrue(all( bootstrapper._expected(table) <= 1 for table in tables.values() ))
