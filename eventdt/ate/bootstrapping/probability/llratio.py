@@ -329,7 +329,24 @@ class LogLikelihoodRatioBootstrapper(Bootstrapper):
 		:rtype: float
 		"""
 
-		return 0
+		N = sum(table)
+		A, B, C, D = table
+
+		"""
+		The observed value is the actual probability that the two terms co-occur.
+		"""
+		O = self._observed(table)
+
+		"""
+		The expected value is the probability of the two terms co-occurring if they are independent.
+		"""
+		E = self._expected(table)
+
+		if O == 0 or E == 0:
+			return 0
+		else:
+			return 2 * O * math.log(O / E)
+
 	def _observed(self, table):
 		"""
 		Calculate the actual probability of the two terms co-occurring.

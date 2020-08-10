@@ -233,6 +233,64 @@ class TestLogLikelihoodRatioBootstrapper(unittest.TestCase):
 		table = bootstrapper._contingency_table(path, seed, candidates, cache=[ seed, candidates ])
 		self.assertTrue(table)
 
+	def test_ratio_expected_0(self):
+		"""
+		Test that when the expected co-occurrence is 0, the ratio is also 0.
+		"""
+
+		bootstrapper = LogLikelihoodRatioBootstrapper()
+		table = (0, 0, 0, 100)
+		self.assertEqual(0, bootstrapper._ratio(table))
+
+	def test_ratio_observed_0(self):
+		"""
+		Test that when the observed co-occurrence is 0, the ratio is also 0.
+		"""
+
+		bootstrapper = LogLikelihoodRatioBootstrapper()
+		table = (0, 50, 50, 0)
+		self.assertEqual(0, bootstrapper._ratio(table))
+
+	def test_ratio_positive_correlation(self):
+		"""
+		Test that when two terms are positively correlated, the ratio is positive.
+		"""
+
+		bootstrapper = LogLikelihoodRatioBootstrapper()
+		table = (30, 20, 20, 30)
+		self.assertGreater(bootstrapper._ratio(table), 0)
+
+	def test_ratio_independent(self):
+		"""
+		Test that when two terms are independent, the ratio is 0.
+		"""
+
+		bootstrapper = LogLikelihoodRatioBootstrapper()
+		table = (25, 25, 25, 25)
+		self.assertEqual(0, bootstrapper._ratio(table))
+
+	def test_ratio_negative_correlation(self):
+		"""
+		Test that when two terms are negatively correlated, the ratio is negative.
+		"""
+
+		bootstrapper = LogLikelihoodRatioBootstrapper()
+		table = (10, 30, 30, 30)
+		self.assertLess(bootstrapper._ratio(table), 0)
+
+	def test_ratio_proportional_to_observed(self):
+		"""
+		Test that when two pairs of terms are equally correlated, the one with the higher probability of observing it has a higher ratio.
+		"""
+
+		bootstrapper = LogLikelihoodRatioBootstrapper()
+		t1, t2 = (5, 15, 15, 65), (10, 22, 22, 74)
+		O1, E1 = bootstrapper._observed(t1), bootstrapper._expected(t1)
+		O2, E2 = bootstrapper._observed(t2), bootstrapper._expected(t2)
+		self.assertGreater(O1/E1, 1)
+		self.assertEqual(O1/E1, O2/E2)
+		self.assertGreater(bootstrapper._ratio(t2), bootstrapper._ratio(t1))
+
 	def test_observed_N_0(self):
 		"""
 		Test that when the contingency table is empty, the observed probability is 0.
