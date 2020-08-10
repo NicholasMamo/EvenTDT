@@ -13,7 +13,7 @@ The :math:`O` before the logarithm boosts common terms.
 
 With this equation:
 
-- Terms that appear more often than expected (that is, they are not independent) will have a positive logarithm;
+- Terms that appear more often than expected (that is, they are positively correlated) will have a positive logarithm;
 - Terms that appear as often as expected (that is, they are independent) will have a logarithm of 0; and
 - Terms that appear less often as expected (that is, they are negatively correlated), will have a negative logarithm.
 
