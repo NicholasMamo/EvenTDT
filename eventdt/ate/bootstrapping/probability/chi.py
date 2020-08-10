@@ -45,7 +45,7 @@ class ChiBootstrapper(Bootstrapper):
 
 	def bootstrap(self, corpora, seed=None, candidates=None, cache=None):
 		"""
-		Calculate the chi-square statistic of co-occurrence for the seed set terms and the candidate terms..
+		Calculate the chi-square statistic of co-occurrence for the seed set terms and the candidate terms.
 
 		:param corpora: A corpus, or corpora, of documents.
 						If a string is given, it is assumed to be one corpus.
