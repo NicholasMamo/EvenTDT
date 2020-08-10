@@ -6,13 +6,22 @@ It is calculated using a two-by-two contingency table as:
 
 	CHI(x, y) = \\frac{(A + B + C + D) \\times (A \\times D - C \\times B)^2}{(A + C) \\times (B + D) \\times (A + B) \\times (C + D) )}
 
-where `A`, `B`, `C` and `D` are the cells in the contingency table.
-The values `A`, `B`, `C` and `D` are placed in the contingency table as follows.
+To calculate the chi-square statistic, this algorithm uses a contingency table:
 
-	1. Top-left,
-	2. Top-right,
-	3. Bottom-left, and
-	4. Bottom-right.
++-------------------------+-------------------------+-------------------------+
+|                         || :math:`t_1`            | :math:`\\overline{t_1}`  |
++=========================+=========================+=========================+
+| :math:`t_2`             || A                      | B                       |
++-------------------------+-------------------------+-------------------------+
+| :math:`\\overline{t_2}`  || C                      | D                       |
++-------------------------+-------------------------+-------------------------+
+
+In this table, the cells represent the following:
+
+- `A`: terms :math:`t_1` and :math:`t_2` co-occur;
+- `B`: terms :math:`t_2` appears, but :math:`t_1` doesn't;
+- `C`: terms :math:`t_1` appears, but :math:`t_2` doesn't; and
+- `D`: neither terms :math:`t_1` nor :math:`t_2` appear.
 """
 
 import json

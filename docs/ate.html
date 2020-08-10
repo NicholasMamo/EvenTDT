@@ -1467,16 +1467,46 @@ The keys are these pairs, and their PMI are the values.</p>
 It is calculated using a two-by-two contingency table as:</p>
 <div class="math notranslate nohighlight">
 \[CHI(x, y) = \frac{(A + B + C + D) \times (A \times D - C \times B)^2}{(A + C) \times (B + D) \times (A + B) \times (C + D) )}\]</div>
-<p>where <cite>A</cite>, <cite>B</cite>, <cite>C</cite> and <cite>D</cite> are the cells in the contingency table.
-The values <cite>A</cite>, <cite>B</cite>, <cite>C</cite> and <cite>D</cite> are placed in the contingency table as follows.</p>
-<blockquote>
-<div><ol class="arabic simple">
-<li><p>Top-left,</p></li>
-<li><p>Top-right,</p></li>
-<li><p>Bottom-left, and</p></li>
-<li><p>Bottom-right.</p></li>
-</ol>
-</div></blockquote>
+<p>To calculate the chi-square statistic, this algorithm uses a contingency table:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head"><div class="line-block">
+<div class="line"><span class="math notranslate nohighlight">\(t_1\)</span></div>
+</div>
+</th>
+<th class="head"><p><span class="math notranslate nohighlight">\(\overline{t_1}\)</span></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(t_2\)</span></p></td>
+<td><div class="line-block">
+<div class="line">A</div>
+</div>
+</td>
+<td><p>B</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(\overline{t_2}\)</span></p></td>
+<td><div class="line-block">
+<div class="line">C</div>
+</div>
+</td>
+<td><p>D</p></td>
+</tr>
+</tbody>
+</table>
+<p>In this table, the cells represent the following:</p>
+<ul class="simple">
+<li><p><cite>A</cite>: terms <span class="math notranslate nohighlight">\(t_1\)</span> and <span class="math notranslate nohighlight">\(t_2\)</span> co-occur;</p></li>
+<li><p><cite>B</cite>: terms <span class="math notranslate nohighlight">\(t_2\)</span> appears, but <span class="math notranslate nohighlight">\(t_1\)</span> doesn’t;</p></li>
+<li><p><cite>C</cite>: terms <span class="math notranslate nohighlight">\(t_1\)</span> appears, but <span class="math notranslate nohighlight">\(t_2\)</span> doesn’t; and</p></li>
+<li><p><cite>D</cite>: neither terms <span class="math notranslate nohighlight">\(t_1\)</span> nor <span class="math notranslate nohighlight">\(t_2\)</span> appear.</p></li>
+</ul>
 <dl class="class">
 <dt id="ate.bootstrapping.probability.chi.ChiBootstrapper">
 <em class="property">class </em><code class="sig-name descname">ChiBootstrapper</code><a class="headerlink" href="#ate.bootstrapping.probability.chi.ChiBootstrapper" title="Permalink to this definition">¶</a></dt>
