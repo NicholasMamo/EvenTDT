@@ -22,6 +22,121 @@ class TestLogLikelihoodRatioBootstrapper(unittest.TestCase):
 	Test the functionality of the log-likelihood ratio bootstrapper.
 	"""
 
+	def test_bootstrap_empty_corpus(self):
+		"""
+		Test that when calculating the log likelihood ratio statistic on an empty corpus, all statistics are zero.
+		"""
+
+		path = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'empty.json')
+		seed, candidates = [ 'yellow' ], [ 'foul', 'tackl' ]
+		bootstrapper = LogLikelihoodRatioBootstrapper()
+		llratio = bootstrapper.bootstrap(path, seed, candidates)
+		self.assertTrue(all( 0 == value for value in llratio.values() ))
+
+	def test_bootstrap_str_seed(self):
+		"""
+		Test that when `seed` is a string, it is treated as such.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'BVBFCB-100.json') ]
+		seed, candidates = 'yellow', [ 'foul', 'tackl' ]
+		bootstrapper = LogLikelihoodRatioBootstrapper()
+		llratio = bootstrapper.bootstrap(paths, seed, candidates)
+		self.assertTrue(('yellow', 'foul') in llratio)
+		self.assertTrue(('yellow', 'tackl') in llratio)
+
+	def test_bootstrap_str_candidates(self):
+		"""
+		Test that when `candidates` is a string, it is treated as such.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'BVBFCB-100.json') ]
+		seed, candidates = [ 'foul', 'tackl' ], 'yellow'
+		bootstrapper = LogLikelihoodRatioBootstrapper()
+		llratio = bootstrapper.bootstrap(paths, seed, candidates)
+		self.assertTrue(('foul', 'yellow') in llratio)
+		self.assertTrue(('tackl', 'yellow') in llratio)
+
+	def test_bootstrap_list_seed(self):
+		"""
+		Test that when `seed` is a list, it is treated as such.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'BVBFCB-100.json') ]
+		seed, candidates = [ 'foul', 'tackl' ], 'yellow'
+		bootstrapper = LogLikelihoodRatioBootstrapper()
+		llratio = bootstrapper.bootstrap(paths, seed, candidates)
+		self.assertTrue(('foul', 'yellow') in llratio)
+		self.assertTrue(('tackl', 'yellow') in llratio)
+
+	def test_bootstrap_list_candidates(self):
+		"""
+		Test that when `candidates` is a list, it is treated as such.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'BVBFCB-100.json') ]
+		seed, candidates = 'yellow', [ 'foul', 'tackl' ]
+		bootstrapper = LogLikelihoodRatioBootstrapper()
+		llratio = bootstrapper.bootstrap(paths, seed, candidates)
+		self.assertTrue(('yellow', 'foul') in llratio)
+		self.assertTrue(('yellow', 'tackl') in llratio)
+
+	def test_bootstrap_str_seed_candidates(self):
+		"""
+		Test that when `seed` and `candidates` are strings, only one pair is returned.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'BVBFCB-100.json') ]
+		seed, candidates = 'yellow', 'foul'
+		bootstrapper = LogLikelihoodRatioBootstrapper()
+		llratio = bootstrapper.bootstrap(paths, seed, candidates)
+		self.assertEqual({ ('yellow', 'foul') }, set(llratio.keys()))
+
+	def test_bootstrap_list_x_y(self):
+		"""
+		Test that when `seed` and `candidates` are lists, their cross-product is returned.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'BVBFCB-100.json') ]
+		seed, candidates = [ 'yellow', 'red' ], [ 'foul', 'tackl' ]
+		bootstrapper = LogLikelihoodRatioBootstrapper()
+		llratio = bootstrapper.bootstrap(paths, seed, candidates)
+		self.assertEqual({ ('yellow', 'foul'), ('yellow', 'tackl'),
+		 				   ('red', 'foul'), ('red', 'tackl') },
+						 set(llratio.keys()))
+
+	def test_bootstrap_nonexisting_word(self):
+		"""
+		Test that non-existing words are also included in the llratio-statistic.
+		"""
+
+		paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'BVBFCB-100.json') ]
+		seed, candidates = 'yellow', 'superlongword'
+		bootstrapper = LogLikelihoodRatioBootstrapper()
+		llratio = bootstrapper.bootstrap(paths, seed, candidates)
+		self.assertTrue(('yellow', 'superlongword') in llratio)
+		self.assertEqual(0, llratio[('yellow', 'superlongword')])
+
+	def test_bootstrap_example(self):
+		"""
+		Test with an example log likelihood ratio value.
+		"""
+
+		path = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE.json')
+		seed, candidates = [ 'yellow', 'shoot' ], [ 'foul', 'tackl', 'save' ]
+		bootstrapper = LogLikelihoodRatioBootstrapper()
+		llratio = bootstrapper.bootstrap(path, seed, candidates)
+		self.assertGreater(llratio[('yellow', 'tackl')], llratio['shoot', 'tackl'])
+		self.assertGreater(llratio[('yellow', 'foul')], llratio['shoot', 'foul'])
+		self.assertGreater(llratio[('shoot', 'save')], llratio['yellow', 'save'])
+
 	def test_contingency_table_empty_corpus(self):
 		"""
 		Test that when creating the contingency table of an empty corpus results in all zeroes.
