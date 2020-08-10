@@ -25,7 +25,7 @@ Accepted arguments:
 
 	- ``-t --terms``		*<Required>* The list of words for which to calculate the correlation.
 	- ``-f --files``		*<Required>* The input corpora from which to calculate the correlation betwee terms, expected to be already tokenized by the `tokenize` tool.
-	- ``-m --method``		*<Required>* The method to use to compute the correlation values; supported: `PMI`, `CHI`.
+	- ``-m --method``		*<Required>* The method to use to compute the correlation values; supported: `PMI`, `CHI`, `Log`.
 	- ``-o --output``		*<Required>* The path to the file where to store the correlation values.
 """
 
@@ -41,7 +41,7 @@ sys.path.insert(-1, root)
 sys.path.insert(-1, lib)
 
 import tools
-from ate.bootstrapping.probability import PMIBootstrapper, ChiBootstrapper
+from ate.bootstrapping.probability import ChiBootstrapper, LogLikelihoodRatioBootstrapper, PMIBootstrapper
 
 def setup_args():
 	"""
@@ -51,7 +51,7 @@ def setup_args():
 
 		- ``-t --terms``		*<Required>* The list of words for which to calculate the correlation.
 		- ``-f --files``		*<Required>* The input corpora from which to calculate the correlation betwee terms, expected to be already tokenized by the `tokenize` tool.
-		- ``-m --method``		*<Required>* The method to use to compute the correlation values; supported: `PMI`, `CHI`.
+		- ``-m --method``		*<Required>* The method to use to compute the correlation values; supported: `PMI`, `CHI`, `Log`.
 		- ``-o --output``		*<Required>* The path to the file where to store the correlation values.
 
 	:return: The command-line arguments.
@@ -68,7 +68,7 @@ def setup_args():
 						help='<Required> The input corpora from which to calculate the correlation betwee terms, expected to be already tokenized by the `tokenize tool.')
 	parser.add_argument('-m', '--method',
 						type=method, required=True,
-						help='<Required> The method to use to compute the correlation values; supported: `PMI`, `CHI`.')
+						help='<Required> The method to use to compute the correlation values; supported: `PMI`, `CHI`, `Log`.')
 	parser.add_argument('-o', '--output',
 						type=str, required=True,
 						help='<Required> The path to the file where to store the correlation values.')
@@ -155,6 +155,7 @@ def method(method):
 	methods = {
 		'pmi': PMIBootstrapper,
 		'chi': ChiBootstrapper,
+		'log': LogLikelihoodRatioBootstrapper,
 	}
 
 	if method.lower() in methods:
