@@ -26,6 +26,90 @@ class TestCorrelation(unittest.TestCase):
 	Test the functionality of the correlation tool.
 	"""
 
+	def test_load_terms_all_terms(self):
+		"""
+		Test that when loading terms and they are given explicitly, they are used.
+		"""
+
+		terms = [ 'first', 'second', 'half', 'underway' ]
+		self.assertTrue(all( term in correlation.load_terms(terms) for term in terms ))
+
+	def test_load_terms_order(self):
+		"""
+		Test that when loading terms, they are kept in the same order as given.
+		"""
+
+		terms = [ 'first', 'second', 'half', 'underway' ]
+		self.assertEqual(terms, correlation.load_terms(terms))
+
+	def test_load_terms_extracted(self):
+		"""
+		Test that when loading terms from the output of the ``terms`` tool, the terms themselves are loaded.
+		"""
+
+		files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.json') ]
+		terms = correlation.load_terms(files)
+		self.assertTrue(all( type(term) is str for term in terms ))
+		with open(files[0]) as f:
+			original = json.loads(''.join(f.readlines()))['terms']
+			original = [ term['term'] for term in original ]
+		self.assertEqual(len(original), len(terms))
+
+	def test_load_terms_extracted_order(self):
+		"""
+		Test that when loading terms from the output of the ``terms`` tool, they are loaded in order of rank.
+		"""
+
+		files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.json') ]
+		terms = correlation.load_terms(files)
+		with open(files[0]) as f:
+			original = json.loads(''.join(f.readlines()))['terms']
+			original = [ term['term'] for term in original ]
+		self.assertEqual(original, terms)
+
+	def test_load_terms_bootstrapped(self):
+		"""
+		Test that when loading terms from the output of the ``bootstrap`` tool, the terms themselves are loaded.
+		"""
+
+		files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'bootstrapped.json') ]
+		terms = correlation.load_terms(files)
+		self.assertTrue(all( type(term) is str for term in terms ))
+		with open(files[0]) as f:
+			data = json.loads(''.join(f.readlines()))
+			original = data['meta']['seed'] + data['bootstrapped']
+		self.assertEqual(len(original), len(terms))
+
+	def test_load_terms_bootstrapped_order(self):
+		"""
+		Test that when loading terms from the output of the ``bootstrap`` tool, the seed terms are first, followed by the bootstrapped terms.
+		"""
+
+		files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'bootstrapped.json') ]
+		terms = correlation.load_terms(files)
+		with open(files[0]) as f:
+			data = json.loads(''.join(f.readlines()))
+			original = data['meta']['seed'] + data['bootstrapped']
+		self.assertEqual(original, terms)
+
+	def test_load_terms_mix(self):
+		"""
+		Test that when loading terms from a mix of words and files, they are all loaded in the same order.
+		"""
+
+		files = [ 'yellow', 'card',
+				  os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.json'),
+				  os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'bootstrapped.json') ]
+		terms = correlation.load_terms(files)
+		original = files[:2]
+		with open(files[2]) as f:
+			data = json.loads(''.join(f.readlines()))
+			original.extend([ term['term'] for term in data['terms'] ])
+		with open(files[3]) as f:
+			data = json.loads(''.join(f.readlines()))
+			original.extend(data['meta']['seed'] + data['bootstrapped'])
+		self.assertEqual(original, terms)
+
 	def test_extract_dict(self):
 		"""
 		Test that the correlation returns a dictionary of keywords.

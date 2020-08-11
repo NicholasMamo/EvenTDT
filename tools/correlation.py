@@ -13,17 +13,17 @@ To run the script, use:
 	--method CHI \\
 	--output data/correlation.json
 
-If the terms are stored in a file (one word on each line) you can load them as follows:
+If the terms are stored in a file produced by the ``terms`` or ``bootstrap`` scripts, you can load them as follows:
 
 	./tools/correlation.py \\
-	--terms $( cat data/terms.txt ) \\
+	--terms data/terms.json \\
 	--files data/tokenized_corpus.json \\
 	--method CHI \\
 	--output data/correlation.json
 
 Accepted arguments:
 
-	- ``-t --terms``		*<Required>* The list of words for which to calculate the correlation.
+	- ``-t --terms``		*<Required>* A list of terms, or the path to the file containing a list of terms for which to calculate the correlation. It can be the output from the ``terms`` and ``bootstrap`` tool.
 	- ``-f --files``		*<Required>* The input corpora from which to calculate the correlation betwee terms, expected to be already tokenized by the `tokenize` tool.
 	- ``-m --method``		*<Required>* The method to use to compute the correlation values; supported: `PMI`, `CHI`, `Log`.
 	- ``-o --output``		*<Required>* The path to the file where to store the correlation values.
@@ -50,7 +50,7 @@ def setup_args():
 
 	Accepted arguments:
 
-		- ``-t --terms``		*<Required>* The list of words for which to calculate the correlation.
+		- ``-t --terms``		*<Required>* A list of terms, or the path to the file containing a list of terms for which to calculate the correlation. It can be the output from the ``terms`` and ``bootstrap`` tool.
 		- ``-f --files``		*<Required>* The input corpora from which to calculate the correlation betwee terms, expected to be already tokenized by the `tokenize` tool.
 		- ``-m --method``		*<Required>* The method to use to compute the correlation values; supported: `PMI`, `CHI`, `Log`.
 		- ``-o --output``		*<Required>* The path to the file where to store the correlation values.
@@ -63,7 +63,7 @@ def setup_args():
 
 	parser.add_argument('-t', '--terms',
 						nargs='+', required=True,
-						help='<Required> The list of words for which to calculate the correlation.')
+						help='<Required> A list of terms, or the path to the file containing a list of terms for which to calculate the correlation. It can be the output from the ``terms`` and ``bootstrap`` tool.')
 	parser.add_argument('-f', '--files',
 						nargs='+', required=True,
 						help='<Required> The input corpora from which to calculate the correlation betwee terms, expected to be already tokenized by the `tokenize tool.')
@@ -91,12 +91,56 @@ def main():
 	cmd['method'] = str(vars(args)['method'])
 
 	"""
+	Load the terms.
+	"""
+	terms = load_terms(args.terms)
+	cmd['terms'] = terms
+
+	"""
 	Calculate the correlation.
 	"""
 	extractor = create_extractor(args.method)
-	correlation = extract(extractor, args.files, args.terms)
+	correlation = extract(extractor, args.files, terms)
 
 	tools.save(args.output, { 'meta': cmd, 'correlation': correlation })
+
+def load_terms(terms):
+	"""
+	Load the terms from the given list.
+	If a list includes files, they are parsed accordingly:
+
+	- If the file is the output of the ``terms`` tool, all terms are loaded from it.
+	- If the file is the output of the ``bootstrap`` tool, the seed words and the bootstrapped words are loaded from it.
+
+	:param terms: A list of terms, or the path to the file containing a list of terms for which to calculate the correlation.
+				  It can be the output from the ``terms`` and ``bootstrap`` tool.
+	:type terms: list of str
+
+	:return: A list of terms.
+	:rtype: list of str
+	"""
+
+	_terms = [ ]
+	
+	for term in terms:
+		if tools.is_file(term):
+			with open(term) as f:
+				data = json.loads(''.join(f.readlines()))
+
+				"""
+				Check if this is the output of a tool.
+				"""
+				if 'meta' in data:
+					meta = data['meta']
+					if 'seed' in meta:
+						_terms.extend(meta['seed'])
+						_terms.extend(data['bootstrapped'])
+					elif 'terms' in data:
+						_terms.extend([ term['term'] for term in data['terms'] ])
+		else:
+			_terms.append(term)
+
+	return _terms
 
 def create_extractor(cls):
 	"""
