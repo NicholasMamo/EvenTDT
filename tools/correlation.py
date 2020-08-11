@@ -42,6 +42,7 @@ sys.path.insert(-1, lib)
 
 import tools
 from ate.bootstrapping.probability import ChiBootstrapper, LogLikelihoodRatioBootstrapper, PMIBootstrapper
+from logger import logger
 
 def setup_args():
 	"""
@@ -128,11 +129,14 @@ def extract(extractor, files, terms):
 	:rtype: dict of dict
 	"""
 
+	logger.info(f"Calculating the correlation between { ', '.join(terms) }")
+
 	correlation = extractor.bootstrap(files, terms, terms)
 	correlation = { term: { t2: c for (t1, t2), c in correlation.items()
 								  if t1 is term }
 						  for term in terms }
 
+	logger.info(f"Finished calculating the correlation")
 	return correlation
 
 def method(method):
