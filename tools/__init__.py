@@ -1,6 +1,7 @@
 import copy
 import json
 import os
+import re
 import sys
 
 file_path = os.path.dirname(os.path.abspath(__file__))
@@ -112,3 +113,17 @@ def is_json(file):
 	"""
 
 	return file.endswith('.json')
+
+def is_file(string):
+	"""
+	Check whether the given string is a file path.
+
+	:param string: The string to check if it is a file path.
+	:type string: str
+
+	:return: A boolean indicating whether the given string is a file path.
+	:rtype: str
+	"""
+
+	pattern = re.compile('.*\..*')
+	return pattern.match(string)

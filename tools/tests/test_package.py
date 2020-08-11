@@ -34,3 +34,32 @@ class TestPackage(unittest.TestCase):
 		"""
 
 		self.assertFalse(tools.is_json('/path/to/file.txt'))
+
+	def test_is_file_string(self):
+		"""
+		Test that when given a string, it is not recognized as a file path.
+		"""
+
+		self.assertFalse(tools.is_file('a string'))
+
+	def test_is_file_path(self):
+		"""
+		Test that when given a file path, it is recognized as a file path.
+		"""
+
+		self.assertTrue(tools.is_file('file.txt'))
+		self.assertTrue(tools.is_file('file.json'))
+
+	def test_is_file_path_with_slashes(self):
+		"""
+		Test that when given a file path with slashes, it is recognized as a file path.
+		"""
+
+		self.assertTrue(tools.is_file('data/file.txt'))
+
+	def test_is_file_path_with_multiple_extensions(self):
+		"""
+		Test that when given a file path with multiple extensions, it is recognized as a file path.
+		"""
+
+		self.assertTrue(tools.is_file('data/file.tar.gz'))
