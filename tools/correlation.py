@@ -27,6 +27,7 @@ Accepted arguments:
 	- ``-f --files``		*<Required>* The input corpora from which to calculate the correlation betwee terms, expected to be already tokenized by the `tokenize` tool.
 	- ``-m --method``		*<Required>* The method to use to compute the correlation values; supported: `PMI`, `CHI`, `Log`.
 	- ``-o --output``		*<Required>* The path to the file where to store the correlation values.
+	- ``--max-terms``		*<Optional>* The maximum number of terms to use, useful when loading terms from files; defaults to all terms.
 """
 
 import argparse
@@ -54,6 +55,7 @@ def setup_args():
 		- ``-f --files``		*<Required>* The input corpora from which to calculate the correlation betwee terms, expected to be already tokenized by the `tokenize` tool.
 		- ``-m --method``		*<Required>* The method to use to compute the correlation values; supported: `PMI`, `CHI`, `Log`.
 		- ``-o --output``		*<Required>* The path to the file where to store the correlation values.
+		- ``--max-terms``		*<Optional>* The maximum number of terms to use, useful when loading terms from files; defaults to all terms.
 
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
@@ -73,6 +75,9 @@ def setup_args():
 	parser.add_argument('-o', '--output',
 						type=str, required=True,
 						help='<Required> The path to the file where to store the correlation values.')
+	parser.add_argument('--max-terms',
+						type=int, required=False, default=None,
+						help='<Optional> The maximum number of terms to use, useful when loading terms from files; defaults to all terms.')
 
 	args = parser.parse_args()
 	return args
@@ -93,7 +98,7 @@ def main():
 	"""
 	Load the terms.
 	"""
-	terms = load_terms(args.terms)
+	terms = load_terms(args.terms, args.max_terms)
 	cmd['terms'] = terms
 
 	"""
@@ -104,7 +109,7 @@ def main():
 
 	tools.save(args.output, { 'meta': cmd, 'correlation': correlation })
 
-def load_terms(terms):
+def load_terms(terms, max_terms=None):
 	"""
 	Load the terms from the given list.
 	If a list includes files, they are parsed accordingly:
@@ -115,13 +120,22 @@ def load_terms(terms):
 	:param terms: A list of terms, or the path to the file containing a list of terms for which to calculate the correlation.
 				  It can be the output from the ``terms`` and ``bootstrap`` tool.
 	:type terms: list of str
+	:param max_terms: The maximum number of terms to keep.
+					  The priority of the terms is the order in which they are given.
+					  If ``None`` is given, all terms are retained.
+	:type max_terms: int or None
 
 	:return: A list of terms.
 	:rtype: list of str
+
+	:raises ValueError: If the maximum number of terms is less than 2.
 	"""
 
+	if max_terms is not None and max_terms < 2:
+		raise ValueError(f"At least two terms must be given; received { max_terms }")
+
 	_terms = [ ]
-	
+
 	for term in terms:
 		if tools.is_file(term):
 			with open(term) as f:
@@ -140,7 +154,8 @@ def load_terms(terms):
 		else:
 			_terms.append(term)
 
-	return _terms
+	max_terms = max_terms if max_terms else len(_terms)
+	return _terms[:max_terms]
 
 def create_extractor(cls):
 	"""

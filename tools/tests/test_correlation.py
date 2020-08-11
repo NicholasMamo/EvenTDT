@@ -110,6 +110,38 @@ class TestCorrelation(unittest.TestCase):
 			original.extend(data['meta']['seed'] + data['bootstrapped'])
 		self.assertEqual(original, terms)
 
+	def test_load_terms_max_terms_less_than_two(self):
+		"""
+		Test that when the number of maximum terms is less than 2, a ValueError is raised.
+		"""
+
+		terms = [ 'card', 'yellow', 'foul', 'tackl', 'red', 'var', 'refere', 'ref' ]
+		self.assertRaises(ValueError, correlation.load_terms, terms, max_terms=1)
+
+	def test_load_terms_max_terms_two(self):
+		"""
+		Test that when the maximum number of terms is 2, the first 2 terms are returned.
+		"""
+
+		terms = [ 'card', 'yellow', 'foul', 'tackl', 'red', 'var', 'refere', 'ref' ]
+		self.assertEqual(terms[:2], correlation.load_terms(terms, max_terms=2))
+
+	def test_load_terms_no_max_terms(self):
+		"""
+		Test that when no maximum number of terms is given, all terms are retained.
+		"""
+
+		terms = [ 'card', 'yellow', 'foul', 'tackl', 'red', 'var', 'refere', 'ref' ]
+		self.assertEqual(terms, correlation.load_terms(terms, max_terms=None))
+
+	def test_load_terms_max_terms(self):
+		"""
+		Test that when the maximum number of terms is given, the first few terms are returned.
+		"""
+
+		terms = [ 'card', 'yellow', 'foul', 'tackl', 'red', 'var', 'refere', 'ref' ]
+		self.assertEqual(terms[:3], correlation.load_terms(terms, max_terms=3))
+
 	def test_extract_dict(self):
 		"""
 		Test that the correlation returns a dictionary of keywords.
