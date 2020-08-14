@@ -15,7 +15,6 @@ Keep reading to learn more about the different NLP classes available in EvenTDT.
 
 .. automodule:: nlp
    :members:
-   :private-members:
    :special-members:
 
 =========
@@ -24,7 +23,6 @@ Documents
 
 .. automodule:: nlp.document
    :members:
-   :private-members:
    :special-members:
 
 ============
@@ -33,7 +31,6 @@ Tokenization
 
 .. automodule:: nlp.tokenizer
    :members:
-   :private-members:
    :special-members:
 
 ==============
@@ -42,12 +39,10 @@ Term-Weighting
 
 .. automodule:: nlp.term_weighting
    :members:
-   :private-members:
    :special-members:
 
 .. automodule:: nlp.term_weighting.scheme
    :members:
-   :private-members:
    :special-members:
 
 Common Term-Weighting Schemes
@@ -55,12 +50,10 @@ Common Term-Weighting Schemes
 
 .. automodule:: nlp.term_weighting.tf
    :members:
-   :private-members:
    :special-members:
 
 .. automodule:: nlp.term_weighting.tfidf
    :members:
-   :private-members:
    :special-members:
 
 Local Term-Weighting Schemes
@@ -68,12 +61,10 @@ Local Term-Weighting Schemes
 
 .. automodule:: nlp.term_weighting.local_schemes.boolean
    :members:
-   :private-members:
    :special-members:
 
 .. automodule:: nlp.term_weighting.local_schemes.tf
    :members:
-   :private-members:
    :special-members:
 
 Global Term-Weighting Schemes
@@ -81,12 +72,10 @@ Global Term-Weighting Schemes
 
 .. automodule:: nlp.term_weighting.global_schemes.filler
    :members:
-   :private-members:
    :special-members:
 
 .. automodule:: nlp.term_weighting.global_schemes.idf
    :members:
-   :private-members:
    :special-members:
 
 ========
@@ -98,10 +87,8 @@ These can be used, for example, to clean summaries.
 
 .. automodule:: nlp.cleaners.cleaner
    :members:
-   :private-members:
    :special-members:
 
 .. automodule:: nlp.cleaners.tweet_cleaner
    :members:
-   :private-members:
    :special-members:

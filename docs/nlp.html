@@ -441,65 +441,10 @@ For a list of possible tags and their meanings, run:</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="nlp.tokenizer.Tokenizer._split_hashtags">
-<code class="sig-name descname">_split_hashtags</code><span class="sig-paren">(</span><em class="sig-param">string</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.tokenizer.Tokenizer._split_hashtags" title="Permalink to this definition">¶</a></dt>
-<dd><p>Split the hashtags in the given string based on camel-case notation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>string</strong> (<em>str</em>) – The string to normalize.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The normalized string.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="nlp.tokenizer.Tokenizer._pos">
-<code class="sig-name descname">_pos</code><span class="sig-paren">(</span><em class="sig-param">string</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.tokenizer.Tokenizer._pos" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract the words having the tokenizer’s indicated parts-of-speech tags from the given string.
-This process is based on NLTK.
-It first splits sentences, then it tags words and finally extracts only words tagged with the correct tags.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>string</strong> (<em>str</em>) – The string from which to extract words.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list of words that match the parts-of-speech tags defined for this tokenizer.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list of str</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="nlp.tokenizer.Tokenizer.__weakref__">
 <code class="sig-name descname">__weakref__</code><a class="headerlink" href="#nlp.tokenizer.Tokenizer.__weakref__" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of weak references to the object (if defined)</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="nlp.tokenizer.Tokenizer._stem">
-<code class="sig-name descname">_stem</code><span class="sig-paren">(</span><em class="sig-param">tokens</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.tokenizer.Tokenizer._stem" title="Permalink to this definition">¶</a></dt>
-<dd><p>Stem the given tokens.
-Stemming is an expensive operation.
-Therefore the function uses a stem cache to avoid re-stemming previously-seen tokens.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>tokens</strong> (<em>list of str</em>) – The tokens to stem.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list of stemmed tokens.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list of str</p>
-</dd>
-</dl>
 </dd></dl>
 
 </dd></dl>
@@ -946,66 +891,6 @@ The basic cleaner always strips empty whitespaces before and after all processin
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="nlp.cleaners.cleaner.Cleaner._collapse_new_lines">
-<code class="sig-name descname">_collapse_new_lines</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.cleaner.Cleaner._collapse_new_lines" title="Permalink to this definition">¶</a></dt>
-<dd><p>Collapse new lines into white spaces.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="nlp.cleaners.cleaner.Cleaner._remove_alt_codes">
-<code class="sig-name descname">_remove_alt_codes</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.cleaner.Cleaner._remove_alt_codes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove alt-codes from the given text.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – The text to clean.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The text without alt-codes.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="nlp.cleaners.cleaner.Cleaner._complete_sentences">
-<code class="sig-name descname">_complete_sentences</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.cleaner.Cleaner._complete_sentences" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add a period if the sentence does not end with punctuation.
-There is one exception to this rule: if the sentence ends with a quote.
-In this case, the period is added before the quote if there is no punctuation there..</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – The text to clean.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The text without alt-codes.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="nlp.cleaners.cleaner.Cleaner._collapse_whitespaces">
-<code class="sig-name descname">_collapse_whitespaces</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.cleaner.Cleaner._collapse_whitespaces" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove consecutive whitespaces and tabs, and replace them with a single space.
-This also removes whitespaces just before periods.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – The text to clean.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The text without any consectuive spaces or tabs.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="nlp.cleaners.cleaner.Cleaner.__weakref__">
 <code class="sig-name descname">__weakref__</code><a class="headerlink" href="#nlp.cleaners.cleaner.Cleaner.__weakref__" title="Permalink to this definition">¶</a></dt>
@@ -1072,115 +957,6 @@ This is only used when mentioned users’ names are replaced in the text.</p></l
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="nlp.cleaners.tweet_cleaner.TweetCleaner._remove_unicode_entities">
-<code class="sig-name descname">_remove_unicode_entities</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.tweet_cleaner.TweetCleaner._remove_unicode_entities" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove unicode entities, including emojis, from the given text.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – The tweet to be cleaned.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The tweet without unicode entities.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="nlp.cleaners.tweet_cleaner.TweetCleaner._remove_urls">
-<code class="sig-name descname">_remove_urls</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.tweet_cleaner.TweetCleaner._remove_urls" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove Twitter short URLs from the text.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – The text to clean().</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The text without URLs.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="nlp.cleaners.tweet_cleaner.TweetCleaner._split_hashtags">
-<code class="sig-name descname">_split_hashtags</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.tweet_cleaner.TweetCleaner._split_hashtags" title="Permalink to this definition">¶</a></dt>
-<dd><p>Split the hashtags in the given text based on camel-case notation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – The text to normalize.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The text with split hashtags.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="nlp.cleaners.tweet_cleaner.TweetCleaner._remove_hashtags">
-<code class="sig-name descname">_remove_hashtags</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.tweet_cleaner.TweetCleaner._remove_hashtags" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove hashtags from the given text.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – The text to clean.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The text without any hashtags.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="nlp.cleaners.tweet_cleaner.TweetCleaner._remove_retweet_prefix">
-<code class="sig-name descname">_remove_retweet_prefix</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.tweet_cleaner.TweetCleaner._remove_retweet_prefix" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove retweet syntax from a tweet.
-Retweets start with the text ‘RT &#64;user: ‘</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – The text to clean.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The cleaned text.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="nlp.cleaners.tweet_cleaner.TweetCleaner._replace_mentions">
-<code class="sig-name descname">_replace_mentions</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">tweet</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.tweet_cleaner.TweetCleaner._replace_mentions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Replace all mentions in the text with the user’s display name.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>text</strong> (<em>str</em>) – The text to clean.</p></li>
-<li><p><strong>tweet</strong> (<em>dict</em>) – The tweet dictionary.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The cleaned text.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>ValueError</strong> – When the tweet is not given and the mentions should be replaced.</p>
 </dd>
 </dl>
 </dd></dl>
