@@ -1,18 +1,22 @@
 """
-Clusters are normally the product of clustering algorithms
-A clustering algorithm takes in vectors or documents and clusters them.
+Although you can create a :class:`~vsm.clustering.cluster.Cluster` yourself, it is more likely you will be receiving clusters from a clustering algorithm.
+Clustering algorithms take in :class:`~vsm.vector.Vector` instances, or other instances derived from them, and cluster them automatically.
 
-Clustering algorithms are represented as classes so that they maintain their state.
-Each class stores, at least, a list of :class:`~vsm.clustering.cluster.Cluster` instances.
-New documents can be clustered by calling the :func:`~vsm.clustering.algorithms.clustering.ClusteringAlgorithm.cluster` method.
+The :class:`~vsm.clustering.algorithms.clustering.ClusteringAlgorithm` exists so that all algorithms have a uniform interface.
+For example, you can cluster :class:`~vsm.vector.Vector` instances using the :func:`~vsm.clustering.algorithms.clustering.ClusteringAlgorithm.cluster` method.
 """
 
 from abc import ABC, abstractmethod
 
 class ClusteringAlgorithm(ABC):
 	"""
-	Clustering algorithms maintain a state.
-	The state is, at least, a list of :class:`~vsm.clustering.cluster.Cluster` instances.
+	In EvenTDT, clustering algorithms maintain a state.
+	That state contains, at least, a list of :class:`~vsm.clustering.cluster.Cluster` instances.
+	This state is not always needed, although approaches like :class:`~vsm.clustering.algorithms.no_k_means.NoKMeans` do use it.
+	If the algorithm does not need to use the state, it can store the latest generated clusters there.
+
+	Aside from the state, all clustering algorithms must, at least, provide the :func:`~vsm.clustering.algorithms.clustering.ClusteringAlgorithm.cluster` functionality.
+	This function receives a list of :class:`~vsm.vector.Vector` instances and clusters them.
 
 	:ivar clusters: A list of clusters.
 	:vartype clusters: list of :class:`~vsm.clustering.cluster.Cluster`
@@ -30,7 +34,7 @@ class ClusteringAlgorithm(ABC):
 	def cluster(self, vectors, *args, **kwargs):
 		"""
 		Cluster the given vectors.
-		The function returns the active clusters.
+		The function returns the list of clusters produced so far, or a selection of it.
 
 		:param vectors: The vectors to cluster.
 		:type vectors: list of :class:`~vsm.vector.Vector`

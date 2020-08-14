@@ -780,16 +780,19 @@ The centroid is not included as it is calculated every time it is requested.</p>
 
 <div class="section" id="module-vsm.clustering.algorithms.clustering">
 <span id="algorithms"></span><h3>Algorithms<a class="headerlink" href="#module-vsm.clustering.algorithms.clustering" title="Permalink to this headline">¶</a></h3>
-<p>Clusters are normally the product of clustering algorithms
-A clustering algorithm takes in vectors or documents and clusters them.</p>
-<p>Clustering algorithms are represented as classes so that they maintain their state.
-Each class stores, at least, a list of <a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instances.
-New documents can be clustered by calling the <a class="reference internal" href="#vsm.clustering.algorithms.clustering.ClusteringAlgorithm.cluster" title="vsm.clustering.algorithms.clustering.ClusteringAlgorithm.cluster"><code class="xref py py-func docutils literal notranslate"><span class="pre">cluster()</span></code></a> method.</p>
+<p>Although you can create a <a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> yourself, it is more likely you will be receiving clusters from a clustering algorithm.
+Clustering algorithms take in <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> instances, or other instances derived from them, and cluster them automatically.</p>
+<p>The <a class="reference internal" href="#vsm.clustering.algorithms.clustering.ClusteringAlgorithm" title="vsm.clustering.algorithms.clustering.ClusteringAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClusteringAlgorithm</span></code></a> exists so that all algorithms have a uniform interface.
+For example, you can cluster <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> instances using the <a class="reference internal" href="#vsm.clustering.algorithms.clustering.ClusteringAlgorithm.cluster" title="vsm.clustering.algorithms.clustering.ClusteringAlgorithm.cluster"><code class="xref py py-func docutils literal notranslate"><span class="pre">cluster()</span></code></a> method.</p>
 <dl class="class">
 <dt id="vsm.clustering.algorithms.clustering.ClusteringAlgorithm">
 <em class="property">class </em><code class="sig-name descname">ClusteringAlgorithm</code><a class="headerlink" href="#vsm.clustering.algorithms.clustering.ClusteringAlgorithm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Clustering algorithms maintain a state.
-The state is, at least, a list of <a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instances.</p>
+<dd><p>In EvenTDT, clustering algorithms maintain a state.
+That state contains, at least, a list of <a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instances.
+This state is not always needed, although approaches like <a class="reference internal" href="#vsm.clustering.algorithms.no_k_means.NoKMeans" title="vsm.clustering.algorithms.no_k_means.NoKMeans"><code class="xref py py-class docutils literal notranslate"><span class="pre">NoKMeans</span></code></a> do use it.
+If the algorithm does not need to use the state, it can store the latest generated clusters there.</p>
+<p>Aside from the state, all clustering algorithms must, at least, provide the <a class="reference internal" href="#vsm.clustering.algorithms.clustering.ClusteringAlgorithm.cluster" title="vsm.clustering.algorithms.clustering.ClusteringAlgorithm.cluster"><code class="xref py py-func docutils literal notranslate"><span class="pre">cluster()</span></code></a> functionality.
+This function receives a list of <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> instances and clusters them.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><p><strong>clusters</strong> (list of <a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>) – A list of clusters.</p>
@@ -805,7 +808,7 @@ The state is, at least, a list of <a class="reference internal" href="#vsm.clust
 <dt id="vsm.clustering.algorithms.clustering.ClusteringAlgorithm.cluster">
 <em class="property">abstract </em><code class="sig-name descname">cluster</code><span class="sig-paren">(</span><em class="sig-param">vectors</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.clustering.ClusteringAlgorithm.cluster" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cluster the given vectors.
-The function returns the active clusters.</p>
+The function returns the list of clusters produced so far, or a selection of it.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>vectors</strong> (list of <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>) – The vectors to cluster.</p>
