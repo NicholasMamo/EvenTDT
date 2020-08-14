@@ -94,7 +94,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-vsm.clustering.cluster">Clustering</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module-vsm.clustering.algorithms.clustering">Algorithms</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#algorithms">Algorithms</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#module-vsm.clustering.algorithms.no_k_means">No-K-Means</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-vsm.clustering.algorithms.temporal_no_k_means">Temporal No-K-Means</a></li>
 </ul>
@@ -585,7 +585,7 @@ To achieve this goal, good clusters:</p>
 <li><p>Have a high distance between them if they (or, their instances) represent different topics, and</p></li>
 <li><p>Have a small distance between their own <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> instances.</p></li>
 </ol>
-<p>Although you can create a <a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instance yourself, it is more common to generate clusters automatically using a <a class="reference internal" href="#vsm.clustering.algorithms.clustering.ClusteringAlgorithm" title="vsm.clustering.algorithms.clustering.ClusteringAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClusteringAlgorithm</span></code></a>.</p>
+<p>Although you can create a <a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instance yourself, it is more common to generate clusters automatically using a <code class="xref py py-class docutils literal notranslate"><span class="pre">ClusteringAlgorithm</span></code>.</p>
 <dl class="class">
 <dt id="vsm.clustering.cluster.Cluster">
 <em class="property">class </em><code class="sig-name descname">Cluster</code><span class="sig-paren">(</span><em class="sig-param">vectors=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.cluster.Cluster" title="Permalink to this definition">¶</a></dt>
@@ -778,67 +778,29 @@ The centroid is not included as it is calculated every time it is requested.</p>
 
 </dd></dl>
 
-<div class="section" id="module-vsm.clustering.algorithms.clustering">
-<span id="algorithms"></span><h3>Algorithms<a class="headerlink" href="#module-vsm.clustering.algorithms.clustering" title="Permalink to this headline">¶</a></h3>
-<p>Although you can create a <a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> yourself, it is more likely you will be receiving clusters from a clustering algorithm.
-Clustering algorithms take in <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> instances, or other instances derived from them, and cluster them automatically.</p>
-<p>The <a class="reference internal" href="#vsm.clustering.algorithms.clustering.ClusteringAlgorithm" title="vsm.clustering.algorithms.clustering.ClusteringAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClusteringAlgorithm</span></code></a> exists so that all algorithms have a uniform interface.
-For example, you can cluster <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> instances using the <a class="reference internal" href="#vsm.clustering.algorithms.clustering.ClusteringAlgorithm.cluster" title="vsm.clustering.algorithms.clustering.ClusteringAlgorithm.cluster"><code class="xref py py-func docutils literal notranslate"><span class="pre">cluster()</span></code></a> method.</p>
-<dl class="class">
-<dt id="vsm.clustering.algorithms.clustering.ClusteringAlgorithm">
-<em class="property">class </em><code class="sig-name descname">ClusteringAlgorithm</code><a class="headerlink" href="#vsm.clustering.algorithms.clustering.ClusteringAlgorithm" title="Permalink to this definition">¶</a></dt>
-<dd><p>In EvenTDT, clustering algorithms maintain a state.
-That state contains, at least, a list of <a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instances.
-This state is not always needed, although approaches like <a class="reference internal" href="#vsm.clustering.algorithms.no_k_means.NoKMeans" title="vsm.clustering.algorithms.no_k_means.NoKMeans"><code class="xref py py-class docutils literal notranslate"><span class="pre">NoKMeans</span></code></a> do use it.
-If the algorithm does not need to use the state, it can store the latest generated clusters there.</p>
-<p>Aside from the state, all clustering algorithms must, at least, provide the <a class="reference internal" href="#vsm.clustering.algorithms.clustering.ClusteringAlgorithm.cluster" title="vsm.clustering.algorithms.clustering.ClusteringAlgorithm.cluster"><code class="xref py py-func docutils literal notranslate"><span class="pre">cluster()</span></code></a> functionality.
-This function receives a list of <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> instances and clusters them.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Variables</dt>
-<dd class="field-odd"><p><strong>clusters</strong> (list of <a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>) – A list of clusters.</p>
-</dd>
-</dl>
-<dl class="method">
-<dt id="vsm.clustering.algorithms.clustering.ClusteringAlgorithm.__init__">
-<em class="property">abstract </em><code class="sig-name descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.clustering.ClusteringAlgorithm.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize the state of the clustering algorithm with an empty list of clusters.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="vsm.clustering.algorithms.clustering.ClusteringAlgorithm.cluster">
-<em class="property">abstract </em><code class="sig-name descname">cluster</code><span class="sig-paren">(</span><em class="sig-param">vectors</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.clustering.ClusteringAlgorithm.cluster" title="Permalink to this definition">¶</a></dt>
-<dd><p>Cluster the given vectors.
-The function returns the list of clusters produced so far, or a selection of it.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>vectors</strong> (list of <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>) – The vectors to cluster.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The clusters in the algorithm state.</p>
-</dd>
-<dt class="field-odd">Rtpye</dt>
-<dd class="field-odd"><p>list of <a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="vsm.clustering.algorithms.clustering.ClusteringAlgorithm.__weakref__">
-<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#vsm.clustering.algorithms.clustering.ClusteringAlgorithm.__weakref__" title="Permalink to this definition">¶</a></dt>
-<dd><p>list of weak references to the object (if defined)</p>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="algorithms">
+<h3>Algorithms<a class="headerlink" href="#algorithms" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="module-vsm.clustering.algorithms.no_k_means">
 <span id="no-k-means"></span><h4>No-K-Means<a class="headerlink" href="#module-vsm.clustering.algorithms.no_k_means" title="Permalink to this headline">¶</a></h4>
-<p>The No-K-Means algorithm is an incremental clustering algorithm, described in research by <a class="reference external" href="https://www.researchgate.net/profile/Colin_Layfield/publication/303893387_Extended_No-K-Means_for_Search_Results_Clustering/links/575acd4208ae9a9c95518dfd.pdf">Azzopardi et al. in 2016</a>.
-The algorithm compares incoming vectors to existing clusters.
-The vector is added to the most similar cluster if the similarity exceeds a certain threshold.
-Otherwise, the vector is added to a new cluster.</p>
-<p>Since clusters accumulate over time, the algorithm also has a freeze period.
-Clusters that have not been updated with new vectors for an equivalent period are frozen.
-No new vectors can be added to frozen clusters.</p>
+<p>The No-K-Means algorithm is a one-pass incremental clustering algorithm.
+Breaking that down, it means that the algorithm:</p>
+<ol class="arabic simple">
+<li><p>Needs to read vectors only once to assign them to a cluster, and</p></li>
+<li><p>Adds vectors to clusters, but does not remove them.</p></li>
+</ol>
+<p>The algorithm compares incoming vectors to existing clusters.
+The technique adds the vector to the most similar cluster if the similarity exceeds a certain threshold.
+Otherwise, it creates a new cluster with the vector.</p>
+<p>Therefore the complexity of the algorithm is <span class="math notranslate nohighlight">\(O(nm)\)</span>, where <span class="math notranslate nohighlight">\(n\)</span> is the number of vectors and <span class="math notranslate nohighlight">\(m\)</span> is the number of clusters.
+Since incremental approaches are often used in online settings, where timeliness is just as important as performance, the algorithm also has a freeze period.</p>
+<p>The algorithm retires clusters that have not been updated after seeing a number of vectors, equivalent to the freeze period.
+That means that if the freeze period is <span class="math notranslate nohighlight">\(f\)</span>, and the cluster does not receive any vectors from any of the last <span class="math notranslate nohighlight">\(f\)</span> vectors, the algorithm freezes it.
+Frozen clusters cannot receive new vectors, and thus the algorithm can skip many checks, improving the efficiency.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This implementation is based on the algorithm outlined in <a class="reference external" href="https://www.researchgate.net/profile/Colin_Layfield/publication/303893387_Extended_No-K-Means_for_Search_Results_Clustering/links/575acd4208ae9a9c95518dfd.pdf">this paper by Azzopardi et al. in 2016</a>.
+The concept of one-pass incremental algorithms is very general, however, so you will find approaches like this one elsewhere.</p>
+</div>
 <dl class="class">
 <dt id="vsm.clustering.algorithms.no_k_means.NoKMeans">
 <em class="property">class </em><code class="sig-name descname">NoKMeans</code><span class="sig-paren">(</span><em class="sig-param">threshold</em>, <em class="sig-param">freeze_period</em>, <em class="sig-param">store_frozen=False</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.no_k_means.NoKMeans" title="Permalink to this definition">¶</a></dt>

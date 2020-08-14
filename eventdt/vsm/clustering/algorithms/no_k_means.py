@@ -1,12 +1,25 @@
 """
-The No-K-Means algorithm is an incremental clustering algorithm, described in research by `Azzopardi et al. in 2016 <https://www.researchgate.net/profile/Colin_Layfield/publication/303893387_Extended_No-K-Means_for_Search_Results_Clustering/links/575acd4208ae9a9c95518dfd.pdf>`_.
-The algorithm compares incoming vectors to existing clusters.
-The vector is added to the most similar cluster if the similarity exceeds a certain threshold.
-Otherwise, the vector is added to a new cluster.
+The No-K-Means algorithm is a one-pass incremental clustering algorithm.
+Breaking that down, it means that the algorithm:
 
-Since clusters accumulate over time, the algorithm also has a freeze period.
-Clusters that have not been updated with new vectors for an equivalent period are frozen.
-No new vectors can be added to frozen clusters.
+1. Needs to read vectors only once to assign them to a cluster, and
+2. Adds vectors to clusters, but does not remove them.
+
+The algorithm compares incoming vectors to existing clusters.
+The technique adds the vector to the most similar cluster if the similarity exceeds a certain threshold.
+Otherwise, it creates a new cluster with the vector.
+
+Therefore the complexity of the algorithm is :math:`O(nm)`, where :math:`n` is the number of vectors and :math:`m` is the number of clusters.
+Since incremental approaches are often used in online settings, where timeliness is just as important as performance, the algorithm also has a freeze period.
+
+The algorithm retires clusters that have not been updated after seeing a number of vectors, equivalent to the freeze period.
+That means that if the freeze period is :math:`f`, and the cluster does not receive any vectors from any of the last :math:`f` vectors, the algorithm freezes it.
+Frozen clusters cannot receive new vectors, and thus the algorithm can skip many checks, improving the efficiency.
+
+.. note::
+
+	This implementation is based on the algorithm outlined in `this paper by Azzopardi et al. in 2016 <https://www.researchgate.net/profile/Colin_Layfield/publication/303893387_Extended_No-K-Means_for_Search_Results_Clustering/links/575acd4208ae9a9c95518dfd.pdf>`_.
+	The concept of one-pass incremental algorithms is very general, however, so you will find approaches like this one elsewhere.
 """
 
 import os
