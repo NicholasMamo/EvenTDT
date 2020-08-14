@@ -17,7 +17,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from algorithms.clustering import ClusteringAlgorithm
-# from cluster import Cluster
+from cluster import Cluster
 
 class NoKMeans(ClusteringAlgorithm):
 	"""
