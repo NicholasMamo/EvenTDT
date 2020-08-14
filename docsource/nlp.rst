@@ -8,11 +8,6 @@
 
 .. _nlp:
 
-Documents find their basis in the Vector Space Model (VSM).
-For this reason, EvenTDT's documents are based on the :class:`~eventdt.vsm.vector.Vector` class.
-EvenTDT adds functionality to make it easier to work with documents, including by storing the original text.
-Keep reading to learn more about the different NLP classes available in EvenTDT.
-
 .. automodule:: nlp
    :members:
    :special-members:
