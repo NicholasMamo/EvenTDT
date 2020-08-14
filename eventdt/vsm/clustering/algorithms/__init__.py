@@ -2,8 +2,8 @@
 Although you can create a :class:`~vsm.clustering.cluster.Cluster` yourself, it is more likely you will be receiving clusters from a clustering algorithm.
 Clustering algorithms take in :class:`~vsm.vector.Vector` instances, or other instances derived from them, and cluster them automatically.
 
-The :class:`~vsm.clustering.algorithms.clustering.ClusteringAlgorithm` exists so that all algorithms have a uniform interface.
-For example, you can cluster :class:`~vsm.vector.Vector` instances using the :func:`~vsm.clustering.algorithms.clustering.ClusteringAlgorithm.cluster` method.
+The :class:`~vsm.clustering.algorithms.ClusteringAlgorithm` exists so that all algorithms have a uniform interface.
+For example, you can cluster :class:`~vsm.vector.Vector` instances using the :func:`~vsm.clustering.algorithms.ClusteringAlgorithm.cluster` method.
 """
 
 from abc import ABC, abstractmethod
@@ -15,7 +15,7 @@ class ClusteringAlgorithm(ABC):
 	This state is not always needed, although approaches like :class:`~vsm.clustering.algorithms.no_k_means.NoKMeans` do use it.
 	If the algorithm does not need to use the state, it can store the latest generated clusters there.
 
-	Aside from the state, all clustering algorithms must, at least, provide the :func:`~vsm.clustering.algorithms.clustering.ClusteringAlgorithm.cluster` functionality.
+	Aside from the state, all clustering algorithms must, at least, provide the :func:`~vsm.clustering.algorithms.ClusteringAlgorithm.cluster` functionality.
 	This function receives a list of :class:`~vsm.vector.Vector` instances and clusters them.
 
 	:ivar clusters: A list of clusters.

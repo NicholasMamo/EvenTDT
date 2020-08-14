@@ -34,16 +34,16 @@ from cluster import Cluster
 
 class NoKMeans(ClusteringAlgorithm):
 	"""
-	The No-K-Means algorithm is an incremental clustering algorithm.
-	Incoming vectors are added to the most similar cluster if the similarity exceeds a threshold.
-	Otherwise, a new cluster is created just for them.
+	The No-K-Means algorithm class maintains two variables in its state:
 
-	This class contains one additional field: the frozen clusters.
-	Inactive clusters are frozen out, and are not checked with incoming vectors anymore.
+	1. The clusters that are active, or which have not been frozen yet; and
+	2. The frozen clusters, which may not receive new vectors.
 
 	.. warning::
 
-		By default, frozen clusters are not retained because they hog memory over time.
+		By default, the algorithm does not store frozen clusters because they hog memory over time.
+		You can specify that the algorithm should store frozen clusters by initializing the algorithm with the ``store_frozen`` parameter set to ``True``.
+		Normally, algorithms (such as the :class:`~queues.consumers.eld_consumer.ELDConsumer`) can retain the clusters that they need themselves, and the algorithm removes the unused, frozen clusters.
 
 	:ivar frozen_clusters: A list of clusters that have been retired.
 	:vartype frozen_clusters: list of :class:`~vsm.clustering.cluster.Cluster` instances
@@ -58,7 +58,13 @@ class NoKMeans(ClusteringAlgorithm):
 
 	def __init__(self, threshold, freeze_period, store_frozen=False):
 		"""
-		Initialize the algorithm with the clusters.
+		Initialize the algorithm with an empty set of active and frozen clusters.
+		The No-K-Means takes in two algorithm-related parameters:
+
+		1. The threshold, or the minimum similarity to add a vector to a cluster; and
+		2. The freeze period, or how long a cluster can go without receiving new vectors before being frozen.
+
+		By default, the algorithm does not retain clusters once they are frozen, but you can change this behavior by setting the ``store_frozen`` parameter to ``True``.
 
 		:param threshold: The minimum similarity between a vector and a cluster's centroid.
 						  If any cluster exceeds this threshold, the vector is added to that cluster.
@@ -79,12 +85,20 @@ class NoKMeans(ClusteringAlgorithm):
 	def cluster(self, vectors, *args, **kwargs):
 		"""
 		Cluster the given vectors.
+		This function uses the ``clusters`` property as a list of active clusters.
+		It automatically freezes inactive clusters as it iterates through the vectors.
+
 		Any additional arguments and keyword arguments are passed on to the :func:`~vsm.cluster.cluster.Cluster.similarity` function.
+
+		.. note::
+
+			This function only returns the clusters that received new vectors during the function call.
+			To get a list of _all_ active clusters, use the ``clusters`` property.
 
 		:param vectors: The list of vectors to cluster.
 		:type vectors: list of :class:`~vsm.vector.Vector`
 
-		:return: The clusters that received vectors.
+		:return: The clusters that received vectors during this function call.
 		:rtpye: list of :class:`~vsm.clustering.cluster.Cluster` instances
 		"""
 

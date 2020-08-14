@@ -36,7 +36,7 @@ Clustering
 Algorithms
 ----------
 
-.. automodule:: vsm.clustering.algorithms.clustering
+.. automodule:: vsm.clustering.algorithms
    :members:
    :special-members:
 
