@@ -265,6 +265,23 @@ The function checks only if the filename ends with the <code class="docutils lit
 </dl>
 </dd></dl>
 
+<dl class="function">
+<dt id="tools.is_file">
+<code class="sig-name descname">is_file</code><span class="sig-paren">(</span><em class="sig-param">string</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.is_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check whether the given string is a file path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>string</strong> (<em>str</em>) – The string to check if it is a file path.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A boolean indicating whether the given string is a file path.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
 <div class="section" id="module-tools.collect">
 <span id="data-collection-and-processing"></span><h2>Data Collection and Processing<a class="headerlink" href="#module-tools.collect" title="Permalink to this headline">¶</a></h2>
 <p>A tool to collect tweets.</p>
@@ -908,7 +925,7 @@ If a text file is given, this tool expects one word on each line.</p>
 <div><ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">-s</span> <span class="pre">--seed</span></code>                 <em>&lt;Required&gt;</em> The path to the file containing seed keywords, expected to contain one keyword on each line. Alternatively, the output from the <code class="docutils literal notranslate"><span class="pre">terms</span></code> tool can be provided.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--files</span></code>                <em>&lt;Required&gt;</em> The input corpora where to look for similar keywords, expected to be already tokenized by the <cite>tokenize</cite> tool.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">--method</span></code>               <em>&lt;Required&gt;</em> The method to use to look for similar keywords; supported: <cite>PMI</cite>, <cite>CHI</cite>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">--method</span></code>               <em>&lt;Required&gt;</em> The method to use to look for similar keywords; supported: <cite>CHI</cite>, <cite>Log</cite>, <cite>PMI</cite>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-o</span> <span class="pre">--output</span></code>               <em>&lt;Required&gt;</em> The path to the file where to store the bootstrapped keywords.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">--candidates</span></code>   <em>&lt;Optional&gt;</em> The path to the file containing candidate keywords, expected to contain one keyword on each line. Alternatively, the output from the <code class="docutils literal notranslate"><span class="pre">terms</span></code> tool can be provided. If no candidates are given, all vocabulary keywords are considered candidates.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-i</span> <span class="pre">--iterations</span></code>   <em>&lt;Optional&gt;</em> The number of iterations to spend bootstrapping; defaults to 1.</p></li>
@@ -927,7 +944,7 @@ If a text file is given, this tool expects one word on each line.</p>
 <div><ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">-s</span> <span class="pre">--seed</span></code>                 <em>&lt;Required&gt;</em> The path to the file containing seed keywords, expected to contain one keyword on each line. Alternatively, the output from the <code class="docutils literal notranslate"><span class="pre">terms</span></code> tool can be provided.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--files</span></code>                <em>&lt;Required&gt;</em> The input corpora where to look for similar keywords, expected to be already tokenized by the <cite>tokenize</cite> tool.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">--method</span></code>               <em>&lt;Required&gt;</em> The method to use to look for similar keywords; supported: <cite>PMI</cite>, <cite>CHI</cite>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">--method</span></code>               <em>&lt;Required&gt;</em> The method to use to look for similar keywords; supported: <cite>CHI</cite>, <cite>Log</cite>, <cite>PMI</cite>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-o</span> <span class="pre">--output</span></code>               <em>&lt;Required&gt;</em> The path to the file where to store the bootstrapped keywords.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">--candidates</span></code>   <em>&lt;Optional&gt;</em> The path to the file containing candidate keywords, expected to contain one keyword on each line. Alternatively, the output from the <code class="docutils literal notranslate"><span class="pre">terms</span></code> tool can be provided. If no candidates are given, all vocabulary keywords are considered candidates.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-i</span> <span class="pre">--iterations</span></code>   <em>&lt;Optional&gt;</em> The number of iterations to spend bootstrapping; defaults to 1.</p></li>

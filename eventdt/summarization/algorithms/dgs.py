@@ -34,8 +34,8 @@ class DGS(SummarizationAlgorithm):
 	The Document Graph Summarizer (DGS) is an algorithm that minimizes redundancy by splitting documents into communities.
 	The algorithm receives documents and builds a summary from the largest communities to capture all facets.
 
-	:ivar tokenizer: The tokenizer used to calculate the brevity score.
-	:vartype tokenizer: :class:`~nlp.tokenizer.Tokenizer`
+	:ivar ~.tokenizer: The tokenizer used to calculate the brevity score.
+	:vartype ~.tokenizer: :class:`~nlp.tokenizer.Tokenizer`
 	"""
 
 	def __init__(self):
