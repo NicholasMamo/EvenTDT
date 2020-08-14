@@ -935,9 +935,8 @@ In other words, it’s possible that the algorithm freezes a cluster because a l
 <dl class="class">
 <dt id="vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans">
 <em class="property">class </em><code class="sig-name descname">TemporalNoKMeans</code><span class="sig-paren">(</span><em class="sig-param">threshold</em>, <em class="sig-param">freeze_period</em>, <em class="sig-param">store_frozen=False</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans" title="Permalink to this definition">¶</a></dt>
-<dd><p>The temporal No-K-Means is a variant of the No-K-Means.
-Differently from the No-K-Means, clusters are frozen if they have been inactive for a long period of time.
-In the No-K-Means, the freeze period is based on the number of received vectors.</p>
+<dd><p>The temporal No-K-Means maintains the same state as the <a class="reference internal" href="#vsm.clustering.algorithms.no_k_means.NoKMeans" title="vsm.clustering.algorithms.no_k_means.NoKMeans"><code class="xref py py-class docutils literal notranslate"><span class="pre">NoKMeans</span></code></a>.
+Differently from it, however, the temporal No-K-Means’ freeze period is in terms of seconds, not in terms of vectors.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
@@ -968,7 +967,9 @@ If any cluster exceeds this threshold, the vector is added to that cluster.</p><
 <dt id="vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans.cluster">
 <code class="sig-name descname">cluster</code><span class="sig-paren">(</span><em class="sig-param">vectors</em>, <em class="sig-param">time='timestamp'</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans.cluster" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cluster the given vectors.
-Any additional arguments and keyword arguments are passed on to the <code class="xref py py-func docutils literal notranslate"><span class="pre">similarity()</span></code> function.</p>
+To freeze clusters, this method needs to know the timestamp of vectors.
+By default, it looks for a <code class="docutils literal notranslate"><span class="pre">timestamp</span></code> attribute, but you can specify a different attribute.</p>
+<p>Any additional arguments and keyword arguments are passed on to the <a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>’s <a class="reference internal" href="#vsm.clustering.cluster.Cluster.similarity" title="vsm.clustering.cluster.Cluster.similarity"><code class="xref py py-func docutils literal notranslate"><span class="pre">similarity()</span></code></a> function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">

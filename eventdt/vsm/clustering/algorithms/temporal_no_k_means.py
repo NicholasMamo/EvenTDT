@@ -17,9 +17,8 @@ from vsm.clustering.cluster import Cluster
 
 class TemporalNoKMeans(NoKMeans):
 	"""
-	The temporal No-K-Means is a variant of the No-K-Means.
-	Differently from the No-K-Means, clusters are frozen if they have been inactive for a long period of time.
-	In the No-K-Means, the freeze period is based on the number of received vectors.
+	The temporal No-K-Means maintains the same state as the :class:`~vsm.clustering.algorithms.no_k_means.NoKMeans`.
+	Differently from it, however, the temporal No-K-Means' freeze period is in terms of seconds, not in terms of vectors.
 
 	:ivar threshold: The minimum similarity between a vector and a cluster's centroid.
 					 If any cluster exceeds this threshold, the vector is added to that cluster.
@@ -48,7 +47,10 @@ class TemporalNoKMeans(NoKMeans):
 	def cluster(self, vectors, time="timestamp", *args, **kwargs):
 		"""
 		Cluster the given vectors.
-		Any additional arguments and keyword arguments are passed on to the :func:`~vsm.cluster.cluster.Cluster.similarity` function.
+		To freeze clusters, this method needs to know the timestamp of vectors.
+		By default, it looks for a ``timestamp`` attribute, but you can specify a different attribute.
+
+		Any additional arguments and keyword arguments are passed on to the :class:`~vsm.clustering.cluster.Cluster`'s :func:`~vsm.clustering.cluster.Cluster.similarity` function.
 
 		:param vectors: The list of vectors to cluster.
 		:type vectors: list of :class:`~vsm.vector.Vector`
