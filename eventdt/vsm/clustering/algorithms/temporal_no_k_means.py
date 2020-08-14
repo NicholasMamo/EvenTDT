@@ -1,7 +1,8 @@
 """
-The temporal No-K-Means is a variant of the No-K-Means.
-Differently from the No-K-Means, clusters are frozen if they have been inactive for a long period of time.
-In the No-K-Means, the freeze period is based on the number of received vectors.
+The temporal No-K-Means is a variant of the :class:`~vsm.clustering.algorithms.no_k_means.NoKMeans` clustering algorithm.
+The main change in the :class:`~vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans` is that the freeze period is not based on the number of observed vectors since one was added to a cluster.
+Instead, it is based on the time that has elapsed since a cluster last received a vector.
+In other words, it's possible that the algorithm freezes a cluster because a lot of time has passed since it was active, even if it has received no new vectors!
 """
 
 import os

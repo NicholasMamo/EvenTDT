@@ -928,9 +928,10 @@ To get a list of _all_ active clusters, use the <code class="docutils literal no
 </div>
 <div class="section" id="module-vsm.clustering.algorithms.temporal_no_k_means">
 <span id="temporal-no-k-means"></span><h4>Temporal No-K-Means<a class="headerlink" href="#module-vsm.clustering.algorithms.temporal_no_k_means" title="Permalink to this headline">¶</a></h4>
-<p>The temporal No-K-Means is a variant of the No-K-Means.
-Differently from the No-K-Means, clusters are frozen if they have been inactive for a long period of time.
-In the No-K-Means, the freeze period is based on the number of received vectors.</p>
+<p>The temporal No-K-Means is a variant of the <a class="reference internal" href="#vsm.clustering.algorithms.no_k_means.NoKMeans" title="vsm.clustering.algorithms.no_k_means.NoKMeans"><code class="xref py py-class docutils literal notranslate"><span class="pre">NoKMeans</span></code></a> clustering algorithm.
+The main change in the <a class="reference internal" href="#vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans" title="vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans"><code class="xref py py-class docutils literal notranslate"><span class="pre">TemporalNoKMeans</span></code></a> is that the freeze period is not based on the number of observed vectors since one was added to a cluster.
+Instead, it is based on the time that has elapsed since a cluster last received a vector.
+In other words, it’s possible that the algorithm freezes a cluster because a lot of time has passed since it was active, even if it has received no new vectors!</p>
 <dl class="class">
 <dt id="vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans">
 <em class="property">class </em><code class="sig-name descname">TemporalNoKMeans</code><span class="sig-paren">(</span><em class="sig-param">threshold</em>, <em class="sig-param">freeze_period</em>, <em class="sig-param">store_frozen=False</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans" title="Permalink to this definition">¶</a></dt>
