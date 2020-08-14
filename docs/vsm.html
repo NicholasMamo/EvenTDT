@@ -585,18 +585,22 @@ To achieve this goal, good clusters:</p>
 <li><p>Have a high distance between them if they (or, their instances) represent different topics, and</p></li>
 <li><p>Have a small distance between their own <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> instances.</p></li>
 </ol>
-<p>Although you can create a <code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code> instance yourself, it is more common to generate clusters automatically using a <a class="reference internal" href="#vsm.clustering.algorithms.clustering.ClusteringAlgorithm" title="vsm.clustering.algorithms.clustering.ClusteringAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClusteringAlgorithm</span></code></a>.</p>
+<p>Although you can create a <a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instance yourself, it is more common to generate clusters automatically using a <a class="reference internal" href="#vsm.clustering.algorithms.clustering.ClusteringAlgorithm" title="vsm.clustering.algorithms.clustering.ClusteringAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClusteringAlgorithm</span></code></a>.</p>
 <dl class="class">
 <dt id="vsm.clustering.cluster.Cluster">
 <em class="property">class </em><code class="sig-name descname">Cluster</code><span class="sig-paren">(</span><em class="sig-param">vectors=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.cluster.Cluster" title="Permalink to this definition">¶</a></dt>
-<dd><p>The cluster class is a collection of vectors, or documents.
-It also has a centroid.
-Clusters are based on <code class="xref py py-class docutils literal notranslate"><span class="pre">Attributable</span></code> so that they may have additional properties.</p>
+<dd><p>The <a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> class is a collection of <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> instances, or inherited classes, like <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>.
+You can add <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> instances to the <a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> using the <code class="docutils literal notranslate"><span class="pre">vectors</span></code> property.
+This property wraps a <code class="docutils literal notranslate"><span class="pre">list</span></code>, which means that you can also use it to retrieve the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> instances.</p>
+<p>The <a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> also has a special property: <code class="docutils literal notranslate"><span class="pre">centroid</span></code>.
+The centroid is a <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> that represents the cluster’s general direction.
+It is calculated as an average over all the dimensions of the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> instances making up the cluster.</p>
+<p>Clusters are based on the <a class="reference internal" href="other.html#objects.attributable.Attributable" title="objects.attributable.Attributable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Attributable</span></code></a> class so they may have additional properties.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="#vsm.clustering.cluster.Cluster.vectors" title="vsm.clustering.cluster.Cluster.vectors"><strong>vectors</strong></a> (list of <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>) – The list of vectors that make up the cluster.</p></li>
-<li><p><a class="reference internal" href="#vsm.clustering.cluster.Cluster.centroid" title="vsm.clustering.cluster.Cluster.centroid"><strong>centroid</strong></a> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>) – The centroid of the cluster, representing the average vector.</p></li>
+<li><p><a class="reference internal" href="#vsm.clustering.cluster.Cluster.centroid" title="vsm.clustering.cluster.Cluster.centroid"><strong>centroid</strong></a> (<a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>) – The centroid of the cluster, representing the average vector in the cluster.</p></li>
 </ul>
 </dd>
 </dl>
@@ -607,7 +611,7 @@ Clusters are based on <code class="xref py py-class docutils literal notranslate
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>vectors</strong> (list of <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> or <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> or <cite>None</cite>) – An initial list of vectors, or a single vector.
-If <cite>None</cite> is given, an empty list is initialized instead.</p>
+If <code class="docutils literal notranslate"><span class="pre">None</span></code> is given, an empty list is initialized instead.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -615,7 +619,9 @@ If <cite>None</cite> is given, an empty list is initialized instead.</p>
 <dl class="method">
 <dt id="vsm.clustering.cluster.Cluster.similarity">
 <code class="sig-name descname">similarity</code><span class="sig-paren">(</span><em class="sig-param">vector</em>, <em class="sig-param">similarity_measure=&lt;function cosine&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.cluster.Cluster.similarity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate the similarity between the given vector and this cluster’s centroid.</p>
+<dd><p>Calculate the similarity between the given vector and this cluster’s centroid.
+The similarity and its bounds depends on the similarity measure that is used.
+The similarity measure defaults to <a class="reference internal" href="#vsm.vector_math.cosine" title="vsm.vector_math.cosine"><code class="xref py py-func docutils literal notranslate"><span class="pre">cosine()</span></code></a>, but a different measure can be provided.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -635,13 +641,26 @@ If <cite>None</cite> is given, an empty list is initialized instead.</p>
 <dl class="method">
 <dt id="vsm.clustering.cluster.Cluster.recalculate_centroid">
 <code class="sig-name descname">recalculate_centroid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.cluster.Cluster.recalculate_centroid" title="Permalink to this definition">¶</a></dt>
-<dd><p>Recalculate the centroid.</p>
+<dd><p>Recalculate the centroid.
+The centroid is the average value of all dimensions across all vectors.
+For example, the centroid’s magnitude <span class="math notranslate nohighlight">\(c_f\)</span> of feature <span class="math notranslate nohighlight">\(f\)</span> is calculated as:</p>
+<div class="math notranslate nohighlight">
+\[c_f = \frac{1}{|V|} \sum^{v \in V} v_f\]</div>
+<p>where <span class="math notranslate nohighlight">\(V\)</span> is the list of vectors in the cluster and <span class="math notranslate nohighlight">\(v_f\)</span> is the magnitude of feature <span class="math notranslate nohighlight">\(f\)</span> in vector <span class="math notranslate nohighlight">\(V\)</span>.
+After calculating the centroid, the function automatically normalizes it so that the centroid’s magnitude is 1.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Normally, you wouldn’t need to call this function.
+In fact, this function does not return the centroid.
+This function is invoked automatically when you fetch the centroid.</p>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="vsm.clustering.cluster.Cluster.centroid">
 <em class="property">property </em><code class="sig-name descname">centroid</code><a class="headerlink" href="#vsm.clustering.cluster.Cluster.centroid" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the cluster’s centroid.</p>
+<dd><p>Get the cluster’s centroid.
+Before returning the centroid, this function automatically re-calculates it.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>The cluster’s centroid.</p>
@@ -670,8 +689,8 @@ If <cite>None</cite> is given, an empty list is initialized instead.</p>
 <dt id="vsm.clustering.cluster.Cluster.get_representative_vectors">
 <code class="sig-name descname">get_representative_vectors</code><span class="sig-paren">(</span><em class="sig-param">vectors=1</em>, <em class="sig-param">similarity_measure=&lt;function cosine&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.cluster.Cluster.get_representative_vectors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the vectors that are closest to the centroid.
-If the number of vectors that is sought is one, only the vector is returned.
-Otherwise, a list of vectors is returned.</p>
+By default, <a class="reference internal" href="#vsm.vector_math.cosine" title="vsm.vector_math.cosine"><code class="xref py py-func docutils literal notranslate"><span class="pre">cosine()</span></code></a> is used to calculate the similarity between a vector and the centroid.
+However, a different similarity measure can be provided.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -680,7 +699,9 @@ Otherwise, a list of vectors is returned.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The representative vectors.</p>
+<dd class="field-even"><p>The representative vectors.
+If the number of vectors that is sought is one, only the closest vector is returned.
+Otherwise, a list of vectors is returned.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> or list of <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a></p>
@@ -691,7 +712,11 @@ Otherwise, a list of vectors is returned.</p>
 <dl class="method">
 <dt id="vsm.clustering.cluster.Cluster.get_intra_similarity">
 <code class="sig-name descname">get_intra_similarity</code><span class="sig-paren">(</span><em class="sig-param">similarity_measure=&lt;function cosine&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.cluster.Cluster.get_intra_similarity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the average similarity between vectors and the cluster.</p>
+<dd><p>Get the average similarity between vectors and the cluster.
+This is calculated by comparing each vector with the cluster’s centroid individually.
+At the end, the function calculates the average similarity.</p>
+<p>By default, <a class="reference internal" href="#vsm.vector_math.cosine" title="vsm.vector_math.cosine"><code class="xref py py-func docutils literal notranslate"><span class="pre">cosine()</span></code></a> is used to calculate the similarity between vectors in the cluster.
+However, a different similarity measure can be provided.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>similarity_measure</strong> (<em>func</em>) – The similarity function to use to compare the likeliness of the vector with the cluster.</p>
@@ -723,7 +748,7 @@ Otherwise, a list of vectors is returned.</p>
 <dt id="vsm.clustering.cluster.Cluster.to_array">
 <code class="sig-name descname">to_array</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.cluster.Cluster.to_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export the cluster as an associative array.
-The centroid is not included as it is calculated upon instantiation.</p>
+The centroid is not included as it is calculated every time it is requested.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>The cluster as an associative array.</p>
@@ -737,7 +762,7 @@ The centroid is not included as it is calculated upon instantiation.</p>
 <dl class="method">
 <dt id="vsm.clustering.cluster.Cluster.from_array">
 <em class="property">static </em><code class="sig-name descname">from_array</code><span class="sig-paren">(</span><em class="sig-param">array</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.cluster.Cluster.from_array" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create an instance of the cluster from the given associative array.</p>
+<dd><p>Create a <a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instance from the given associative array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>array</strong> (<em>dict</em>) – The associative array with the attributes to create the cluster.</p>
@@ -746,7 +771,7 @@ The centroid is not included as it is calculated upon instantiation.</p>
 <dd class="field-even"><p>A new instance of an object with the same attributes stored in the object.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></p>
+<dd class="field-odd"><p><a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
