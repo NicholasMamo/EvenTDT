@@ -1,11 +1,15 @@
 """
-Documents are the basis in NLP tasks.
-The :class:`~nlp.document.Document` class builds on the :class:`~vsm.vector.Vector` class.
-In addition to the normal VSM functionality, it stores the original text for any later changes.
+Many NLP tasks represent text as documents.
+The :class:`~nlp.document.Document` class helps you do just that.
+The :class:`~nlp.document.Document` class builds on the :class:`~vsm.vector.Vector` class, which means it represents text in the :class:`~vsm.vector.VectorSpace`.
+The big change between the :class:`~vsm.vector.Vector` and the :class:`~nlp.document.Document` is that the latter stores the original text alongside the VSM dimensions.
 
-Creating documents is a two-step process.
-First, the text needs to be converted into tokens using the :class:`~nlp.tokenizer.Tokenizer` class.
-Second, those tokens need to be weighted using a :class:`~nlp.term_weighting.scheme.TermWeightingScheme`, transforming them into document features, or vector dimensions.
+You can create documents by instantiating the :class:`~nlp.document.Document` class.
+However, more generally you would follow these two steps:
+
+1. Convert the text into tokens using a :class:`~nlp.tokenizer.Tokenizer`.
+2. Weight the tokens using a :class:`~nlp.term_weighting.scheme.TermWeightingScheme`.
+   This automatically transforms tokens into :class:`~vsm.vector.Vector` dimensions and create a :class:`~nlp.document.Document` for you.
 """
 
 import math
