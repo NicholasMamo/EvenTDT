@@ -90,8 +90,8 @@ Filler
    :members:
    :special-members:
 
-Inverse Document Frequency
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+Inverse Document Frequency (IDF)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: nlp.weighting.global_schemes.idf
    :members:

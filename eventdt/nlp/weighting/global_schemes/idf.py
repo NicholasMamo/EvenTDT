@@ -1,7 +1,7 @@
 """
-The Inverse Document Frequency (IDF) global term-weighting scheme penalizes common terms.
-The reasoning is that common terms are not informative.
-Terms that appear often in one document but rarely outside characterize that document.
+The Inverse Document Frequency (IDF) global term-weighting scheme penalizes common terms when assigning weight.
+The reasoning is that tokens that are very common in a corpus are not informative generally.
+On the other hand, terms that appear often in one document but rarely outside characterize that document.
 
 The IDF :math:`idf_{t}` for term :math:`t` is computed as follows:
 
@@ -9,7 +9,7 @@ The IDF :math:`idf_{t}` for term :math:`t` is computed as follows:
 
 	idf_{t} = \\log{\\frac{N}{n_t}}
 
-where :math:`N` is the total number of documents and :math:`n_t` is the total number of documents in :math:`N` that contain term :math:`t`.
+where :math:`N` is the total number of documents in the corpus, and :math:`n_t` is the total number of documents that contain term :math:`t`.
 """
 
 import math
@@ -25,11 +25,25 @@ from nlp.weighting import SchemeScorer
 
 class IDF(Exportable, SchemeScorer):
 	"""
-	The Inverse Document Frequency (TF-IDF) is one of the most common term-weighting schemes.
-	This scheme promotes uncommon tokens.
+	The Inverse Document Frequency (IDF) is one of the most common term-weighting schemes.
+	This scheme promotes tokens that are common in one document, and uncommon in the rest of the corpus.
+	As part of the calculation, the IDF scheme needs two pieces of information:
+
+	1. The number of documents in which tokens appear, and
+	2. The number of documents in the corpus.
+
+	.. note::
+
+		In order to mitigate for tokens that are not present in the corpus, this class uses Laplace smoothing.
+
+	In addition to the standard :func:`~nlp.weighting.global_schemes.idf.IDF.score` function, this class also the :func:`~nlp.weighting.global_schemes.idf.IDF.from_documents` function.
+	This function receives a corpus and constructs the IDF table from it.
+	The number of documents in the corpus, which is required by this class, can be extracted trivially.
 
 	:ivar ~.idf: The IDF table used in conjunction with term weighting.
 	:vartype idf: dict
+	:ivar documents: The number of documents in the corpus.
+	:vartype documents: int
 	"""
 
 	def __init__(self, idf, documents):
@@ -61,7 +75,10 @@ class IDF(Exportable, SchemeScorer):
 
 	def score(self, tokens):
 		"""
-		Score the given tokens.
+		Score the given tokens based on the number of documents they appear.
+		Tokens that appear in many documents receive a low score, whereas those that do not receive a high score.
+
+		Since the denominator is 0 if the token does not appear in the corpus, this function uses Laplace smoothing.
 
 		:param tokens: The list of tokens to weigh.
 		:type tokens: list of str
@@ -105,6 +122,13 @@ class IDF(Exportable, SchemeScorer):
 	def from_documents(documents):
 		"""
 		Create the IDF table from the given set of documents.
+		This function extracts all unique terms from the documents' dimensions and counts the number of documents in which they appear at least once.
+
+
+		.. note::
+
+			This function does not return the number of documents, but only the IDF table.
+			The number of documents can be extracted easily using the :func:`len` function.
 
 		:param documents: The documents from which the IDF table will be created.
 		:type documents: list of :class:`~nlp.document.Document`
