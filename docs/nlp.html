@@ -727,8 +727,7 @@ The keys are the terms, and the corresponding values are the number of documents
 This type of term-weighting schemes is very simple, and is usually accompanied by <a class="reference internal" href="#nlp-global"><span class="std std-ref">a global term-weighting scheme</span></a>.</p>
 <div class="section" id="module-nlp.weighting.local_schemes.boolean">
 <span id="boolean"></span><h4>Boolean<a class="headerlink" href="#module-nlp.weighting.local_schemes.boolean" title="Permalink to this headline">¶</a></h4>
-<p>A simple local term-weighting scheme that sets the weight of a term to 1 if it appears in the document.
-The weight <span class="math notranslate nohighlight">\(bool_{t,d}\)</span> of a feature <span class="math notranslate nohighlight">\(t\)</span> is simply 1 if it appears in a document <span class="math notranslate nohighlight">\(d\)</span>, 0 otherwise.</p>
+<p>The boolean term-weighting scheme is a simple scheme that gives a score of 1 if the term appears in the list of tokens, and 0 otherwise:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}bool_{t,d} = \begin{cases}
                              1 &amp; \text{if } t \in d \\
@@ -737,8 +736,10 @@ The weight <span class="math notranslate nohighlight">\(bool_{t,d}\)</span> of a
 <dl class="class">
 <dt id="nlp.weighting.local_schemes.boolean.Boolean">
 <em class="property">class </em><code class="sig-name descname">Boolean</code><a class="headerlink" href="#nlp.weighting.local_schemes.boolean.Boolean" title="Permalink to this definition">¶</a></dt>
-<dd><p>The boolean term-weighting scheme is one of the simplest term weighting schemes that is used.
-The weight of a feature is 1 if it appears in a document, 0 otherwise.</p>
+<dd><p>The boolean term-weighting scheme is a simple scheme that gives a score of 1 if the term appears in the list of tokens, and 0 otherwise.
+In reality, this term-weighting scheme is not aware of all possible tokens.
+Therefore it only gives a score of 1 if the term appears in the list of tokens.
+The <a class="reference internal" href="#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a> automatically assumes the score of a token is 0 if it is not set.</p>
 <dl class="method">
 <dt id="nlp.weighting.local_schemes.boolean.Boolean.score">
 <code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param">tokens</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.local_schemes.boolean.Boolean.score" title="Permalink to this definition">¶</a></dt>

@@ -1,6 +1,5 @@
 """
-A simple local term-weighting scheme that sets the weight of a term to 1 if it appears in the document.
-The weight :math:`bool_{t,d}` of a feature :math:`t` is simply 1 if it appears in a document :math:`d`, 0 otherwise.
+The boolean term-weighting scheme is a simple scheme that gives a score of 1 if the term appears in the list of tokens, and 0 otherwise:
 
 .. math::
 
@@ -21,8 +20,10 @@ from weighting import SchemeScorer
 
 class Boolean(SchemeScorer):
 	"""
-	The boolean term-weighting scheme is one of the simplest term weighting schemes that is used.
-	The weight of a feature is 1 if it appears in a document, 0 otherwise.
+	The boolean term-weighting scheme is a simple scheme that gives a score of 1 if the term appears in the list of tokens, and 0 otherwise.
+	In reality, this term-weighting scheme is not aware of all possible tokens.
+	Therefore it only gives a score of 1 if the term appears in the list of tokens.
+	The :class:`~nlp.weighting.TermWeightingScheme` automatically assumes the score of a token is 0 if it is not set.
 	"""
 
 	def score(self, tokens, *args, **kwargs):
