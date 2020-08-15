@@ -29,7 +29,7 @@ Accepted arguments:
 	- ``--max-inactivity``			*<Optional>* The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.
 	- ``--max-time``				*<Optional>* The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.
 	- ``--no-cache``				*<Optional>* If specified, the cached understanding is not used. The new understanding is cached instead.
-	- ``--scheme``					*<Optional>* If specified, the path to the :class:`~nlp.weighting.scheme.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used.
+	- ``--scheme``					*<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used.
 	- ``--min-size``				*<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
 	- ``--threshold``				*<Optional>* The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
 	- ``--max-intra-similarity``	*<Optional>* The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
@@ -74,7 +74,7 @@ def setup_args():
 		- ``--max-inactivity``			*<Optional>* The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.
 		- ``--max-time``				*<Optional>* The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.
 		- ``--no-cache``				*<Optional>* If specified, the cached understanding is not used. The new understanding is cached instead.
-		- ``--scheme``					*<Optional>* If specified, the path to the :class:`~nlp.weighting.scheme.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used. This can be overwritten if there is event understanding.
+		- ``--scheme``					*<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used. This can be overwritten if there is event understanding.
 		- ``--min-size``				*<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
 		- ``--threshold``				*<Optional>* The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
 		- ``--max-intra-similarity``	*<Optional>* The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
@@ -202,7 +202,7 @@ def understand(understanding, consumer, max_inactivity, scheme=None, *args, **kw
 	:param max_inactivity: The maximum time, in seconds, to wait for new tweets to arrive before stopping.
 	:type max_inactivity: int
 	:param scheme: The scheme to use when consuming the file.
-	:type scheme: :class:`~nlp.weighting.scheme.TermWeightingScheme`
+	:type scheme: :class:`~nlp.weighting.TermWeightingScheme`
 
 	:return: A dictionary containing the understanding.
 	:rtype: dict
@@ -271,7 +271,7 @@ def consume(file, consumer, speed, max_inactivity, max_time=-1, skip=0,
 	:param skip: The amount of time to skip from the beginning of the file in minutes, defaults to 0.
 	:type skip: int
 	:param scheme: The scheme to use when consuming the file.
-	:type scheme: :class:`~nlp.weighting.scheme.TermWeightingScheme`
+	:type scheme: :class:`~nlp.weighting.TermWeightingScheme`
 	:param min_size: The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
 	:type min_size: int
 	:param threshold: The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
@@ -487,7 +487,7 @@ def scheme(file):
 	:type file: str
 
 	:return: The term-weighting scheme in the given file.
-	:rtype: :class:`~nlp.weighting.scheme.TermWeightingScheme`
+	:rtype: :class:`~nlp.weighting.TermWeightingScheme`
 	"""
 
 	"""

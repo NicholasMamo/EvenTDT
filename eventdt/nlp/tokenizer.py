@@ -1,7 +1,7 @@
 """
 The tokenizer is the first step to create a :class:`~nlp.document.Document`.
 The tokenizer takes in plain text and splits it into tokens, often words, that make up the :class:`~nlp.document.Document`'s dimensions.
-You would usually follow up tokenization with a :class:`~nlp.weighting.scheme.TermWeightingScheme` to assign a weight to the tokens.
+You would usually follow up tokenization with a :class:`~nlp.weighting.TermWeightingScheme` to assign a weight to the tokens.
 
 The tokenizer has many capabilities, and these are all enabled or disabled in the constructor.
 In this way, all documents are tokenized in the same way.

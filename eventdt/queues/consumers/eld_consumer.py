@@ -71,7 +71,7 @@ class ELDConsumer(Consumer):
 	:ivar time_window: The time (in seconds) to spend consuming the queue.
 	:vartype time_window: int
 	:ivar ~.scheme: The term-weighting scheme used to create documents.
-	:vartype ~.scheme: :class:`~nlp.weighting.scheme.TermWeightingScheme`
+	:vartype ~.scheme: :class:`~nlp.weighting.TermWeightingScheme`
 	:ivar min_size: The minimum size of a cluster to be considered valid.
 	:vartype min_size: int
 	:ivar cooldown: The minimum time (in seconds) between consecutive checks of a cluster.
@@ -121,7 +121,7 @@ class ELDConsumer(Consumer):
 		:type time_window: int
 		:param scheme: The term-weighting scheme that is used to create dimensions.
 					   If `None` is given, the :class:`~nlp.weighting.tf.TF` term-weighting scheme is used.
-		:type scheme: None or :class:`~nlp.weighting.scheme.TermWeightingScheme`
+		:type scheme: None or :class:`~nlp.weighting.TermWeightingScheme`
 		:param threshold: The similarity threshold to use for the :class:`~vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans` incremental clustering approach.
 						  Documents are added to an existing cluster if their similarity with the centroid is greater than or equal to this threshold.
 		:type threshold: float

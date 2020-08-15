@@ -56,7 +56,7 @@ class ELDParticipantDetector(ParticipantDetector):
 
 		:param scheme: The term-weighting scheme to use by the :class:`~apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver` and :class:`~apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator`.
 					   These documents are used to compare the similarity with the domain of the candidates.
-		:type scheme: :class:`~nlp.weighting.scheme.TermWeightingScheme`
+		:type scheme: :class:`~nlp.weighting.TermWeightingScheme`
 		:param corpus: The corpus of documents.
 					   These documents may be tokenized already, but this class re-tokenizes them with its own :class:`~nlp.tokenizer.Tokenizer`.
 		:type corpus: list of :class:`~nlp.document.Document`
@@ -118,7 +118,7 @@ class ELDParticipantDetector(ParticipantDetector):
 		:type corpus: list of :class:`~nlp.document.Document`
 		:param scheme: The term-weighting scheme to use by the :class:`~apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver` and :class:`~apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator`.
 					   These documents are used to compare the similarity with the domain of the candidates.
-		:type scheme: :class:`~nlp.weighting.scheme.TermWeightingScheme`
+		:type scheme: :class:`~nlp.weighting.TermWeightingScheme`
 		:param tokenizer: The tokenizer to use to create the new documents.
 		:type tokenizer: :class:`~nlp.tokenizer.Tokenizer`
 

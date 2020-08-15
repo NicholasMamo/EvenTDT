@@ -49,7 +49,7 @@ class FIREConsumer(SimulatedBufferedConsumer):
 	:ivar store: The nutrition store used to store the volume changes of individual terms.
 	:vartype store: :class:`~tdt.nutrition.store.NutritionStore`
 	:ivar ~.scheme: The term-weighting scheme used to create documents.
-	:vartype ~.scheme: :class:`~nlp.weighting.scheme.TermWeightingScheme`
+	:vartype ~.scheme: :class:`~nlp.weighting.TermWeightingScheme`
 	:ivar sets: The number of time windows that are considered when computing burst.
 				The higher this number, the more precise the calculations.
 				However, because of the decay in :class:`~tdt.algorithms.cataldi.Cataldi`, old time windows do not affect the result by a big margin.
@@ -81,7 +81,7 @@ class FIREConsumer(SimulatedBufferedConsumer):
 		:type periodicity: int
 		:param scheme: The term-weighting scheme that is used to create dimensions.
 					   If `None` is given, the :class:`~nlp.weighting.tf.TF` term-weighting scheme is used.
-		:type scheme: None or :class:`~nlp.weighting.scheme.TermWeightingScheme`
+		:type scheme: None or :class:`~nlp.weighting.TermWeightingScheme`
 		:param sets: The number of time windows that are considered when computing burst.
 					 The higher this number, the more precise the calculations.
 					 However, because of the decay in :class:`~tdt.algorithms.cataldi.Cataldi`, old time windows do not affect the result by a big margin.

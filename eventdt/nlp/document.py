@@ -8,7 +8,7 @@ You can create documents by instantiating the :class:`~nlp.document.Document` cl
 However, more generally you would follow these two steps:
 
 1. Convert the text into tokens using a :class:`~nlp.tokenizer.Tokenizer`.
-2. Weight the tokens using a :class:`~nlp.weighting.scheme.TermWeightingScheme`.
+2. Weight the tokens using a :class:`~nlp.weighting.TermWeightingScheme`.
    This automatically transforms tokens into :class:`~vsm.vector.Vector` dimensions and create a :class:`~nlp.document.Document` for you.
 """
 
@@ -131,7 +131,7 @@ class Document(Vector):
 		Any additional keyword arguments, such as attributes, are passed on to the :class:`~nlp.document.Document` constructor.
 
 		:param scheme: The term-weighting scheme to use to create the concatenated document.
-		:type scheme: :class:`~nlp.weighting.scheme.TermWeightingScheme`
+		:type scheme: :class:`~nlp.weighting.TermWeightingScheme`
 		:param tokenizer: The tokenizer to use to construct the concatenated document.
 		:type tokenizer: :class:`~nlp.tokenizer.Tokenizer`
 

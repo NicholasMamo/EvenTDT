@@ -181,7 +181,7 @@ EvenTDT provides functionality to make it easier to work with documents:</p>
 <ol class="arabic simple">
 <li><p>The <a class="reference internal" href="#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> class, based on the <a class="reference internal" href="vsm.html#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> class, but with text-specific functionality;</p></li>
 <li><p>The <a class="reference internal" href="#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a> class to split a piece of text into tokens; and</p></li>
-<li><p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code> abstract class, as well as different term-weighting schemes, to assign weight to terms.</p></li>
+<li><p>The <a class="reference internal" href="#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a> abstract class, as well as different term-weighting schemes, to assign weight to terms.</p></li>
 </ol>
 <div class="section" id="module-nlp.document">
 <span id="documents"></span><h2>Documents<a class="headerlink" href="#module-nlp.document" title="Permalink to this headline">¶</a></h2>
@@ -193,7 +193,7 @@ The big change between the <a class="reference internal" href="vsm.html#vsm.vect
 However, more generally you would follow these two steps:</p>
 <ol class="arabic simple">
 <li><p>Convert the text into tokens using a <a class="reference internal" href="#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>.</p></li>
-<li><p>Weight the tokens using a <code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code>.
+<li><p>Weight the tokens using a <a class="reference internal" href="#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>.
 This automatically transforms tokens into <a class="reference internal" href="vsm.html#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> dimensions and create a <a class="reference internal" href="#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> for you.</p></li>
 </ol>
 <dl class="class">
@@ -304,7 +304,7 @@ To concatenate the documents, the function:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>scheme</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code>) – The term-weighting scheme to use to create the concatenated document.</p></li>
+<li><p><strong>scheme</strong> (<a class="reference internal" href="#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme to use to create the concatenated document.</p></li>
 <li><p><strong>tokenizer</strong> (<a class="reference internal" href="#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer to use to construct the concatenated document.</p></li>
 </ul>
 </dd>
@@ -325,7 +325,7 @@ The document is not normalized.</p>
 <span id="tokenization"></span><h2>Tokenization<a class="headerlink" href="#module-nlp.tokenizer" title="Permalink to this headline">¶</a></h2>
 <p>The tokenizer is the first step to create a <a class="reference internal" href="#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>.
 The tokenizer takes in plain text and splits it into tokens, often words, that make up the <a class="reference internal" href="#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>’s dimensions.
-You would usually follow up tokenization with a <code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code> to assign a weight to the tokens.</p>
+You would usually follow up tokenization with a <a class="reference internal" href="#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a> to assign a weight to the tokens.</p>
 <p>The tokenizer has many capabilities, and these are all enabled or disabled in the constructor.
 In this way, all documents are tokenized in the same way.
 After creating a <a class="reference internal" href="#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>, use the <a class="reference internal" href="#nlp.tokenizer.Tokenizer.tokenize" title="nlp.tokenizer.Tokenizer.tokenize"><code class="xref py py-func docutils literal notranslate"><span class="pre">tokenize()</span></code></a> function to extract the tokens:</p>
@@ -492,7 +492,7 @@ Term-weighting schemes are made up of:</p>
 <li><p>A global component, which scores terms based on their appearance in a corpus.</p></li>
 <li><p>Optionally, a normalization component to make all documents similar.</p></li>
 </ol>
-<p>This package represents term-weighting schemes in the same way.
+<p>This package represents term-weighting schemes in the same way, but without normalization.
 So, a <a class="reference internal" href="#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a> has two components:</p>
 <ol class="arabic simple">
 <li><p>A local component (you can read more about them <a class="reference internal" href="#nlp-local"><span class="std std-ref">here</span></a>), and</p></li>
@@ -502,7 +502,7 @@ So, a <a class="reference internal" href="#nlp.weighting.TermWeightingScheme" ti
 This function combines the score using a simple product.</p>
 <p>You can combine any local term-weighting scheme with any other global term-weighting scheme.
 All local and global term-weighting schemes inherit the <a class="reference internal" href="#nlp.weighting.SchemeScorer" title="nlp.weighting.SchemeScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SchemeScorer</span></code></a>.
-That means all term-weighting schemes must implement the <code class="xref py py-class docutils literal notranslate"><span class="pre">Scheme</span></code>’s <code class="xref py py-func docutils literal notranslate"><span class="pre">score()</span></code> to assign a score to terms.</p>
+That means all term-weighting schemes must implement the <a class="reference internal" href="#nlp.weighting.SchemeScorer" title="nlp.weighting.SchemeScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SchemeScorer</span></code></a>’s <code class="xref py py-func docutils literal notranslate"><span class="pre">score()</span></code> to assign a score to terms.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Normally, you don’t have to create your own term-weighting schemes.
@@ -516,26 +516,29 @@ You can read more about these readily-available term-weighting schemes <a class=
 <dl class="class">
 <dt id="nlp.weighting.TermWeightingScheme">
 <em class="property">class </em><code class="sig-name descname">TermWeightingScheme</code><span class="sig-paren">(</span><em class="sig-param">local_scheme</em>, <em class="sig-param">global_scheme</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.TermWeightingScheme" title="Permalink to this definition">¶</a></dt>
-<dd><p>This class defines a list of properties that all term-weighting schemes must have.
-The class can be instantiated by providing a local term-weighting scheme and a global term-weighting scheme.
-The scheme then multiplies the scores of each to <code class="xref py py-func docutils literal notranslate"><span class="pre">create()</span></code> a <a class="reference internal" href="#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>.</p>
+<dd><p>A term-weighting scheme is made up of a local term-weighting scheme and a global term-weighting scheme.
+Each one gives a score to a token, and the term-weighting scheme combines the scores into one weight.</p>
+<p>This class stores the local and global term-weighting schemes.
+You can provide any combination of schemes in the constructor.
+After creating a term-weighting scheme, use the <a class="reference internal" href="#nlp.weighting.TermWeightingScheme.create" title="nlp.weighting.TermWeightingScheme.create"><code class="xref py py-func docutils literal notranslate"><span class="pre">create()</span></code></a> function to convert tokens into a document.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>local_scheme</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Scheme</span></code>) – The local term-weighting scheme.</p></li>
-<li><p><strong>global_scheme</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Scheme</span></code>) – The global term-weighting scheme.</p></li>
+<li><p><strong>local_scheme</strong> (<a class="reference internal" href="#nlp.weighting.SchemeScorer" title="nlp.weighting.SchemeScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SchemeScorer</span></code></a>) – The local term-weighting scheme.</p></li>
+<li><p><strong>global_scheme</strong> (<a class="reference internal" href="#nlp.weighting.SchemeScorer" title="nlp.weighting.SchemeScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SchemeScorer</span></code></a>) – The global term-weighting scheme.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="method">
 <dt id="nlp.weighting.TermWeightingScheme.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">local_scheme</em>, <em class="sig-param">global_scheme</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.TermWeightingScheme.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>A term-weighting scheme is made up of a local component and a global component.</p>
+<dd><p>A term-weighting scheme is made up of a local component and a global component.
+Each term-weighting scheme contributes a score, which when multiplied give the final token weight.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>local_scheme</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Scheme</span></code>) – The local term-weighting scheme.</p></li>
-<li><p><strong>global_scheme</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Scheme</span></code>) – The global term-weighting scheme.</p></li>
+<li><p><strong>local_scheme</strong> (<a class="reference internal" href="#nlp.weighting.SchemeScorer" title="nlp.weighting.SchemeScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SchemeScorer</span></code></a>) – The local term-weighting scheme.</p></li>
+<li><p><strong>global_scheme</strong> (<a class="reference internal" href="#nlp.weighting.SchemeScorer" title="nlp.weighting.SchemeScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SchemeScorer</span></code></a>) – The global term-weighting scheme.</p></li>
 </ul>
 </dd>
 </dl>
@@ -544,17 +547,18 @@ The scheme then multiplies the scores of each to <code class="xref py py-func do
 <dl class="method">
 <dt id="nlp.weighting.TermWeightingScheme.create">
 <code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param">tokens</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.TermWeightingScheme.create" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a document from the given tokens.
-The function multiplies the local and global scores of each token.
-The function accepts other arguments or keyword arguments, such as the document text or attributes.
-These are passed on to the <a class="reference internal" href="#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> constructor.</p>
+<dd><p>Create a <a class="reference internal" href="#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> from the given tokens.
+This function calls the <a class="reference internal" href="#nlp.weighting.SchemeScorer.score" title="nlp.weighting.SchemeScorer.score"><code class="xref py py-func docutils literal notranslate"><span class="pre">score()</span></code></a> function on the local and global term-weighting schemes.
+Then, it multiplies them together to get the final token weight.</p>
+<p>The function accepts other arguments or keyword arguments and passes them on to the <a class="reference internal" href="#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> constructor.
+You can use these arguments to instantiate the <a class="reference internal" href="#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> with <code class="docutils literal notranslate"><span class="pre">text</span></code> or <code class="docutils literal notranslate"><span class="pre">attributes</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>tokens</strong> (<em>list of str</em>) – A list of tokens that can be converted into dimensions.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A new document with the given tokens as the dimensions.
-The dimensions’ weights depend on the term-weighting scheme.</p>
+The dimensions’ weights depend on the local and global term-weighting scheme.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a></p>
@@ -574,11 +578,11 @@ The dimensions’ weights depend on the term-weighting scheme.</p>
 <dt id="nlp.weighting.SchemeScorer">
 <em class="property">class </em><code class="sig-name descname">SchemeScorer</code><a class="headerlink" href="#nlp.weighting.SchemeScorer" title="Permalink to this definition">¶</a></dt>
 <dd><p>A scheme is used to score documents’ tokens.
-It is important to distinguish between <code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code> and <code class="xref py py-class docutils literal notranslate"><span class="pre">SchemeScorer</span></code>.
+It is important to distinguish between <a class="reference internal" href="#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a> and <a class="reference internal" href="#nlp.weighting.SchemeScorer" title="nlp.weighting.SchemeScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SchemeScorer</span></code></a>.
 The former is a complete term-weighting scheme that takes local and global scheme scorers.
 The latter is the actual scorer.
-A <code class="xref py py-class docutils literal notranslate"><span class="pre">SchemeScorer</span></code> is a component of a term-weighting scheme.
-A <code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code> combines local and global scorers to create documents.</p>
+A <a class="reference internal" href="#nlp.weighting.SchemeScorer" title="nlp.weighting.SchemeScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SchemeScorer</span></code></a> is a component of a term-weighting scheme.
+A <a class="reference internal" href="#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a> combines local and global scorers to create documents.</p>
 <dl class="method">
 <dt id="nlp.weighting.SchemeScorer.score">
 <em class="property">abstract </em><code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param">tokens</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.SchemeScorer.score" title="Permalink to this definition">¶</a></dt>
