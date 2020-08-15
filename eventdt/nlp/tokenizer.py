@@ -41,16 +41,33 @@ import unicodedata
 
 class Tokenizer(object):
 	"""
-	The tokenizer takes in strings and converts them into tokens.
+	The tokenizer takes in plain text and converts it into tokens.
+	The way it extracts tokens depends on how you create the tokenizer.
+	All of the settings are passed on to the constructor so that the tokenizer always extracts tokens in the same way.
+
+	.. note::
+
+		Not all settings are required.
+		In fact, it is very uncommon that you would need to specify all options.
+
+	Apart from the settings you provide, the tokenizer also creates a stemmer and stores it as an instance variable.
+	The tokenizer re-uses this stemmer to save time.
+	In addition, it caches stems so that if it encounters a word multiple times, it re-uses the old stem.
+
+	After creating the tokenizer, call the :func:`~nlp.tokenizer.Tokenizer.tokenize` to split text into tokens.
 
 	:ivar stemmer: The Porter Stemmer used by the class.
-	:vartype stemmer: :class:`~nltk.stem.porter.PorterStemmer`
-	:ivar remove_mentions: A boolean indicating whether mentions (@) should be removed.
+	:vartype stemmer: :class:`nltk.stem.porter.PorterStemmer`
+	:ivar stem_cache: A mapping from tokens to their stems.
+					  The keys are the original tokens and the values are their stems.
+					  This is used to speed up tokenization of large corpora.
+	:vartype stem_cache: dict
+	:ivar remove_mentions: A boolean indicating whether mentions (such as `@NicholasMamo`) should be removed.
 	:vartype remove_mentions: bool
-	:ivar remove_hashtags: A boolean indicating whether hashtags (#) should be removed.
+	:ivar remove_hashtags: A boolean indicating whether hashtags (`#EvenTDT`) should be removed.
 	:vartype remove_hashtags: bool
-	:ivar split_hashtags: A boolean indicating whether hashtags (#) should be normalized.
-		This converts hashtags of the type #HashTag to `Hash Tag`, based on camel-case.
+	:ivar split_hashtags: A boolean indicating whether hashtags should be normalized.
+						  This converts hashtags of the type #ManchesterUnited to `Manchester United`, based on camel-case.
 	:vartype split_hashtags: bool
 	:ivar remove_numbers: A boolean indicating whether numbers should be removed.
 	:vartype remove_numbers: bool
@@ -59,8 +76,9 @@ class Tokenizer(object):
 	:ivar remove_alt_codes: A boolean indicating whether ALT-codes should be removed.
 	:vartype remove_alt_codes: bool
 	:ivar normalize_words: A boolean indicating whether words should be normalized.
-		This removes repeated characters.
-		The number of repeated characters that are removed is controlled using the `character_normalization_count` parameter.
+						   This removes repeated characters.
+						   For example, `goooaaaal` becomes `goal`.
+						   The number of repeated characters that are removed is controlled using the `character_normalization_count` parameter.
 	:vartype normalize_words: bool
 	:ivar character_normalization_count: The number of times a character is repeated before they are reduced to one.
 	:vartype character_normalization_count: int
@@ -73,19 +91,15 @@ class Tokenizer(object):
 	:ivar min_length: The minimum length of tokens that should be retained.
 	:vartype min_length: int
 	:ivar stopwords: A list of stopwords.
-		Stopwords are common words that are removed from token lists.
-		This is based on the assumption that they are not very expressive.
-		Normally, stopwords are provided as a list, and then converted into a dict, where the stopwords are the keys.
-		This approach is adopted since Python uses hashing to check whether a key is in a dict.
-		However, they may also be provided as a dict directly.
+					 Stopwords are common words that are removed from token lists because they are not very expressive.
+					 Normally, stopwords are provided as a list, and then converted into a dict, where the stopwords are the keys.
+					 This approach is adopted since Python uses hashing to check whether a key is in a dict.
+					 However, they may also be provided as a dict directly.
 	:vartype stopwords: list
 	:ivar stem: A boolean indicating whether the tokens should be stemmed.
 	:vartype stem: bool
 	:ivar normalize_special_characters: A boolean indicating whether accents should be removed and replaced with simple unicode characters.
 	:vartype normalize_special_characters: bool
-	:ivar stem_cache: A mapping of tokens and their stems.
-					  The keys are the original tokens and the values are their stems.
-	:vartype stem_cache: dict
 	:ivar url_pattern: The pattern used to identify URLs in the text.
 	:vartype url_pattern: :class:`re.Pattern`
 	:ivar alt_code_pattern: The pattern used to identify and remove alt-codes from the text.
@@ -109,7 +123,7 @@ class Tokenizer(object):
 			   .. code-block:: python
 
 			       import nltk
-				   nltk.help.upenn_tagset()
+			       nltk.help.upenn_tagset()
 	:vartype pos: None or list of str
 	"""
 
@@ -122,12 +136,12 @@ class Tokenizer(object):
 		"""
 		Initialize the tokenizer.
 
-		:param remove_mentions: A boolean indicating whether mentions (@) should be removed.
+		:param remove_mentions: A boolean indicating whether mentions (such as `@NicholasMamo`) should be removed.
 		:type remove_mentions: bool
-		:param remove_hashtags: A boolean indicating whether hashtags (#) should be removed.
+		:param remove_hashtags: A boolean indicating whether hashtags (`#EvenTDT`) should be removed.
 		:type remove_hashtags: bool
-		:param split_hashtags: A boolean indicating whether hashtags (#) should be normalized.
-			This converts hashtags of the type #HashTag to `Hash Tag`, based on camel-case.
+		:param split_hashtags: A boolean indicating whether hashtags should be normalized.
+							   This converts hashtags of the type #ManchesterUnited to `Manchester United`, based on camel-case.
 		:type split_hashtags: bool
 		:param remove_numbers: A boolean indicating whether numbers should be removed.
 		:type remove_numbers: bool
@@ -137,6 +151,7 @@ class Tokenizer(object):
 		:type remove_alt_codes: bool
 		:param normalize_words: A boolean indicating whether words should be normalized.
 								This removes repeated characters.
+								For example, `goooaaaal` becomes `goal`.
 								The number of repeated characters that are removed is controlled using the `character_normalization_count` parameter.
 		:type normalize_words: bool
 		:param character_normalization_count: The number of times a character is repeated before they are reduced to one.
@@ -166,8 +181,8 @@ class Tokenizer(object):
 
 					.. code-block:: python
 
-						import nltk
-						nltk.help.upenn_tagset()
+					    import nltk
+					    nltk.help.upenn_tagset()
 		:type pos: None or list of str
 		"""
 
@@ -181,6 +196,7 @@ class Tokenizer(object):
 		self.stopword_dict = stopwords if type(stopwords) == dict else { stopword: 0 for stopword in stopwords }
 
 		self.stemmer = PorterStemmer()
+		self.stem_cache = { }
 
 		self.remove_mentions = remove_mentions
 		self.remove_hashtags = remove_hashtags
@@ -199,8 +215,6 @@ class Tokenizer(object):
 		self.normalize_special_characters = normalize_special_characters
 		self.pos = pos
 
-		self.stem_cache = { }
-
 		"""
 		The list of regular expressions to be used.
 		"""
@@ -215,7 +229,7 @@ class Tokenizer(object):
 
 	def tokenize(self, text):
 		"""
-		Tokenize the given text.
+		Tokenize the given text based on the parameters specified in the constructor.
 
 		:param text: The text to tokenize.
 		:type text: str

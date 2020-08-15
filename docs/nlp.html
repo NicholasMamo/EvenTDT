@@ -346,20 +346,35 @@ If you receive an error, pay attention and follow the on-screen suggestions to d
 <dl class="class">
 <dt id="nlp.tokenizer.Tokenizer">
 <em class="property">class </em><code class="sig-name descname">Tokenizer</code><span class="sig-paren">(</span><em class="sig-param">remove_mentions=True</em>, <em class="sig-param">remove_hashtags=False</em>, <em class="sig-param">split_hashtags=True</em>, <em class="sig-param">remove_numbers=True</em>, <em class="sig-param">remove_urls=True</em>, <em class="sig-param">remove_alt_codes=True</em>, <em class="sig-param">normalize_words=False</em>, <em class="sig-param">character_normalization_count=3</em>, <em class="sig-param">case_fold=True</em>, <em class="sig-param">remove_punctuation=True</em>, <em class="sig-param">remove_unicode_entities=False</em>, <em class="sig-param">min_length=3</em>, <em class="sig-param">stopwords=None</em>, <em class="sig-param">stem=True</em>, <em class="sig-param">normalize_special_characters=True</em>, <em class="sig-param">pos=None</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.tokenizer.Tokenizer" title="Permalink to this definition">¶</a></dt>
-<dd><p>The tokenizer takes in strings and converts them into tokens.</p>
+<dd><p>The tokenizer takes in plain text and converts it into tokens.
+The way it extracts tokens depends on how you create the tokenizer.
+All of the settings are passed on to the constructor so that the tokenizer always extracts tokens in the same way.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Not all settings are required.
+In fact, it is very uncommon that you would need to specify all options.</p>
+</div>
+<p>Apart from the settings you provide, the tokenizer also creates a stemmer and stores it as an instance variable.
+The tokenizer re-uses this stemmer to save time.
+In addition, it caches stems so that if it encounters a word multiple times, it re-uses the old stem.</p>
+<p>After creating the tokenizer, call the <a class="reference internal" href="#nlp.tokenizer.Tokenizer.tokenize" title="nlp.tokenizer.Tokenizer.tokenize"><code class="xref py py-func docutils literal notranslate"><span class="pre">tokenize()</span></code></a> to split text into tokens.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>stemmer</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">PorterStemmer</span></code>) – The Porter Stemmer used by the class.</p></li>
-<li><p><strong>remove_mentions</strong> (<em>bool</em>) – A boolean indicating whether mentions (&#64;) should be removed.</p></li>
-<li><p><strong>remove_hashtags</strong> (<em>bool</em>) – A boolean indicating whether hashtags (#) should be removed.</p></li>
-<li><p><strong>split_hashtags</strong> (<em>bool</em>) – A boolean indicating whether hashtags (#) should be normalized.
-This converts hashtags of the type #HashTag to <cite>Hash Tag</cite>, based on camel-case.</p></li>
+<li><p><strong>stemmer</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">nltk.stem.porter.PorterStemmer</span></code>) – The Porter Stemmer used by the class.</p></li>
+<li><p><strong>stem_cache</strong> (<em>dict</em>) – A mapping from tokens to their stems.
+The keys are the original tokens and the values are their stems.
+This is used to speed up tokenization of large corpora.</p></li>
+<li><p><strong>remove_mentions</strong> (<em>bool</em>) – A boolean indicating whether mentions (such as <cite>&#64;NicholasMamo</cite>) should be removed.</p></li>
+<li><p><strong>remove_hashtags</strong> (<em>bool</em>) – A boolean indicating whether hashtags (<cite>#EvenTDT</cite>) should be removed.</p></li>
+<li><p><strong>split_hashtags</strong> (<em>bool</em>) – A boolean indicating whether hashtags should be normalized.
+This converts hashtags of the type #ManchesterUnited to <cite>Manchester United</cite>, based on camel-case.</p></li>
 <li><p><strong>remove_numbers</strong> (<em>bool</em>) – A boolean indicating whether numbers should be removed.</p></li>
 <li><p><strong>remove_urls</strong> (<em>bool</em>) – A boolean indicating whether URLs should be removed.</p></li>
 <li><p><strong>remove_alt_codes</strong> (<em>bool</em>) – A boolean indicating whether ALT-codes should be removed.</p></li>
 <li><p><strong>normalize_words</strong> (<em>bool</em>) – A boolean indicating whether words should be normalized.
 This removes repeated characters.
+For example, <cite>goooaaaal</cite> becomes <cite>goal</cite>.
 The number of repeated characters that are removed is controlled using the <cite>character_normalization_count</cite> parameter.</p></li>
 <li><p><strong>character_normalization_count</strong> (<em>int</em>) – The number of times a character is repeated before they are reduced to one.</p></li>
 <li><p><strong>case_fold</strong> (<em>bool</em>) – A boolean indicating whether the tokens should be case-folded to lowercase.</p></li>
@@ -367,15 +382,12 @@ The number of repeated characters that are removed is controlled using the <cite
 <li><p><strong>remove_unicode_entities</strong> (<em>bool</em>) – A boolean indicating whether unicode entities should be removed.</p></li>
 <li><p><strong>min_length</strong> (<em>int</em>) – The minimum length of tokens that should be retained.</p></li>
 <li><p><strong>stopwords</strong> (<em>list</em>) – A list of stopwords.
-Stopwords are common words that are removed from token lists.
-This is based on the assumption that they are not very expressive.
+Stopwords are common words that are removed from token lists because they are not very expressive.
 Normally, stopwords are provided as a list, and then converted into a dict, where the stopwords are the keys.
 This approach is adopted since Python uses hashing to check whether a key is in a dict.
 However, they may also be provided as a dict directly.</p></li>
 <li><p><strong>stem</strong> (<em>bool</em>) – A boolean indicating whether the tokens should be stemmed.</p></li>
 <li><p><strong>normalize_special_characters</strong> (<em>bool</em>) – A boolean indicating whether accents should be removed and replaced with simple unicode characters.</p></li>
-<li><p><a class="reference internal" href="#nlp.tokenizer.Tokenizer.stem_cache" title="nlp.tokenizer.Tokenizer.stem_cache"><strong>stem_cache</strong></a> (<em>dict</em>) – A mapping of tokens and their stems.
-The keys are the original tokens and the values are their stems.</p></li>
 <li><p><strong>url_pattern</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">re.Pattern</span></code>) – The pattern used to identify URLs in the text.</p></li>
 <li><p><strong>alt_code_pattern</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">re.Pattern</span></code>) – The pattern used to identify and remove alt-codes from the text.</p></li>
 <li><p><strong>mention_pattern</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">re.Pattern</span></code>) – The pattern used to identify mentions in the text.</p></li>
@@ -384,11 +396,11 @@ The keys are the original tokens and the values are their stems.</p></li>
 <li><p><strong>number_pattern</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">re.Pattern</span></code>) – The pattern used to identify numbers in the text.</p></li>
 <li><p><strong>tokenize_pattern</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">re.Pattern</span></code>) – The pattern used to split the text into tokens.</p></li>
 <li><p><strong>camel_case_pattern</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">re.Pattern</span></code>) – The pattern used to identify camel-case letters.</p></li>
-<li><p><strong>pos</strong> (<em>None</em><em> or </em><em>list of str</em>) – <p>The parts of speech tags to keep.
+<li><p><a class="reference internal" href="#nlp.tokenizer.Tokenizer.pos" title="nlp.tokenizer.Tokenizer.pos"><strong>pos</strong></a> (<em>None</em><em> or </em><em>list of str</em>) – <p>The parts of speech tags to keep.
 If <cite>None</cite> is given, all tokens are retained.
 For a list of possible tags and their meanings, run:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">nltk</span>
-    <span class="n">nltk</span><span class="o">.</span><span class="n">help</span><span class="o">.</span><span class="n">upenn_tagset</span><span class="p">()</span>
+<span class="n">nltk</span><span class="o">.</span><span class="n">help</span><span class="o">.</span><span class="n">upenn_tagset</span><span class="p">()</span>
 </pre></div>
 </div>
 </p></li>
@@ -402,15 +414,16 @@ For a list of possible tags and their meanings, run:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>remove_mentions</strong> (<em>bool</em>) – A boolean indicating whether mentions (&#64;) should be removed.</p></li>
-<li><p><strong>remove_hashtags</strong> (<em>bool</em>) – A boolean indicating whether hashtags (#) should be removed.</p></li>
-<li><p><strong>split_hashtags</strong> (<em>bool</em>) – A boolean indicating whether hashtags (#) should be normalized.
-This converts hashtags of the type #HashTag to <cite>Hash Tag</cite>, based on camel-case.</p></li>
+<li><p><strong>remove_mentions</strong> (<em>bool</em>) – A boolean indicating whether mentions (such as <cite>&#64;NicholasMamo</cite>) should be removed.</p></li>
+<li><p><strong>remove_hashtags</strong> (<em>bool</em>) – A boolean indicating whether hashtags (<cite>#EvenTDT</cite>) should be removed.</p></li>
+<li><p><strong>split_hashtags</strong> (<em>bool</em>) – A boolean indicating whether hashtags should be normalized.
+This converts hashtags of the type #ManchesterUnited to <cite>Manchester United</cite>, based on camel-case.</p></li>
 <li><p><strong>remove_numbers</strong> (<em>bool</em>) – A boolean indicating whether numbers should be removed.</p></li>
 <li><p><strong>remove_urls</strong> (<em>bool</em>) – A boolean indicating whether URLs should be removed.</p></li>
 <li><p><strong>remove_alt_codes</strong> (<em>bool</em>) – A boolean indicating whether ALT-codes should be removed.</p></li>
 <li><p><strong>normalize_words</strong> (<em>bool</em>) – A boolean indicating whether words should be normalized.
 This removes repeated characters.
+For example, <cite>goooaaaal</cite> becomes <cite>goal</cite>.
 The number of repeated characters that are removed is controlled using the <cite>character_normalization_count</cite> parameter.</p></li>
 <li><p><strong>character_normalization_count</strong> (<em>int</em>) – The number of times a character is repeated before they are reduced to one.</p></li>
 <li><p><strong>case_fold</strong> (<em>bool</em>) – A boolean indicating whether the tokens should be case-folded to lowercase.</p></li>
@@ -439,15 +452,15 @@ For a list of possible tags and their meanings, run:</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="nlp.tokenizer.Tokenizer.stem_cache">
-<code class="sig-name descname">stem_cache</code><em class="property"> = None</em><a class="headerlink" href="#nlp.tokenizer.Tokenizer.stem_cache" title="Permalink to this definition">¶</a></dt>
+<dt id="nlp.tokenizer.Tokenizer.pos">
+<code class="sig-name descname">pos</code><em class="property"> = None</em><a class="headerlink" href="#nlp.tokenizer.Tokenizer.pos" title="Permalink to this definition">¶</a></dt>
 <dd><p>The list of regular expressions to be used.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="nlp.tokenizer.Tokenizer.tokenize">
 <code class="sig-name descname">tokenize</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.tokenizer.Tokenizer.tokenize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tokenize the given text.</p>
+<dd><p>Tokenize the given text based on the parameters specified in the constructor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – The text to tokenize.</p>
