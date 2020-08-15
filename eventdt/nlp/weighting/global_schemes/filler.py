@@ -1,13 +1,6 @@
 """
 The filler global term-weighting scheme is used when there is no need for a global term-weighting scheme.
-The scheme assigns the same score :math:`fill_{t,d}` to all terms :math:`t` if they appear in the document :math:`d`, 0 otherwise:
-
-.. math::
-
-	fill_{t,d} = \\begin{cases}
-				     1 & \\text{if } t \\in d \\\\
-					 0 & \\text{otherwise}
-				 \\end{cases}
+The scheme assigns a score of 1 to all tokens such that it does not influence their overall score assigned by the :class:`~nlp.weighting.TermWeightingScheme`.
 """
 
 import math
@@ -22,13 +15,13 @@ from weighting import SchemeScorer
 
 class Filler(SchemeScorer):
 	"""
-	The filler global term-weighting scheme is used when there is no need for a global term-weighting scheme.
-	The scheme assigns the same score to all terms: 1.
+	The filler global term-weighting scheme is used when there is no need for a global term-weighting scheme because it does not change the overall weight of tokens.
 	"""
 
 	def score(self, tokens):
 		"""
-		Score the given tokens.
+		Give a constant score the given tokens.
+		The chosen constant is 1 so that the :class:`~nlp.weighting.TermWeightingScheme` is not influenced at al..
 
 		:param tokens: The list of tokens to weigh.
 		:type tokens: list of str

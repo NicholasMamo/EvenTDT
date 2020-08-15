@@ -801,21 +801,16 @@ This kind of term-weighting schemes is usually accompanied by <a class="referenc
 <div class="section" id="module-nlp.weighting.global_schemes.filler">
 <span id="filler"></span><h4>Filler<a class="headerlink" href="#module-nlp.weighting.global_schemes.filler" title="Permalink to this headline">¶</a></h4>
 <p>The filler global term-weighting scheme is used when there is no need for a global term-weighting scheme.
-The scheme assigns the same score <span class="math notranslate nohighlight">\(fill_{t,d}\)</span> to all terms <span class="math notranslate nohighlight">\(t\)</span> if they appear in the document <span class="math notranslate nohighlight">\(d\)</span>, 0 otherwise:</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}fill_{t,d} = \begin{cases}
-                             1 &amp; \text{if } t \in d \\
-                                 0 &amp; \text{otherwise}
-                         \end{cases}\end{split}\]</div>
+The scheme assigns a score of 1 to all tokens such that it does not influence their overall score assigned by the <a class="reference internal" href="#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>.</p>
 <dl class="class">
 <dt id="nlp.weighting.global_schemes.filler.Filler">
 <em class="property">class </em><code class="sig-name descname">Filler</code><a class="headerlink" href="#nlp.weighting.global_schemes.filler.Filler" title="Permalink to this definition">¶</a></dt>
-<dd><p>The filler global term-weighting scheme is used when there is no need for a global term-weighting scheme.
-The scheme assigns the same score to all terms: 1.</p>
+<dd><p>The filler global term-weighting scheme is used when there is no need for a global term-weighting scheme because it does not change the overall weight of tokens.</p>
 <dl class="method">
 <dt id="nlp.weighting.global_schemes.filler.Filler.score">
 <code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param">tokens</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.global_schemes.filler.Filler.score" title="Permalink to this definition">¶</a></dt>
-<dd><p>Score the given tokens.</p>
+<dd><p>Give a constant score the given tokens.
+The chosen constant is 1 so that the <a class="reference internal" href="#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a> is not influenced at al..</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>tokens</strong> (<em>list of str</em>) – The list of tokens to weigh.</p>
