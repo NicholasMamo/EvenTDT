@@ -10,7 +10,6 @@ Wikinterface is an easy-to-use interface for Wikipedia's API.
 
 .. automodule:: wikinterface
    :members:
-   :private-members:
    :special-members:
 
 Info
@@ -18,7 +17,6 @@ Info
 
 .. automodule:: wikinterface.info
    :members:
-   :private-members:
    :special-members:
 
 Links
@@ -26,7 +24,6 @@ Links
 
 .. automodule:: wikinterface.links
    :members:
-   :private-members:
    :special-members:
 
 Search
@@ -34,7 +31,6 @@ Search
 
 .. automodule:: wikinterface.search
    :members:
-   :private-members:
    :special-members:
 
 Text
@@ -42,5 +38,4 @@ Text
 
 .. automodule:: wikinterface.text
    :members:
-   :private-members:
    :special-members:

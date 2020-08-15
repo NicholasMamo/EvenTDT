@@ -366,48 +366,6 @@ If they are, the links are returned separated by the page in which they appear.<
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="wikinterface.links._get_intro_links">
-<code class="sig-name descname">_get_intro_links</code><span class="sig-paren">(</span><em class="sig-param">page</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.links._get_intro_links" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a list of outgoing links from the introduction of the given page.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>page</strong> (<em>dict</em>) – The page from where to get the introduction.
-The function expects a <cite>revisions</cite> key containing the text of the latest revision.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list of outgoing links found in the given text.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list of str</p>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>ValueError</strong> – when no revisions are found in the page.</p></li>
-<li><p><strong>ValueError</strong> – when no text is found in the revision.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="wikinterface.links._get_all_links">
-<code class="sig-name descname">_get_all_links</code><span class="sig-paren">(</span><em class="sig-param">page</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.links._get_all_links" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a list of outgoing links from the given page.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>page</strong> (<em>dict</em>) – The page from where to get the text.
-The function expects a <cite>links</cite> key containing the list of links in the article</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list of outgoing links found in the given text.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list of str</p>
-</dd>
-</dl>
-</dd></dl>
-
 </div>
 <div class="section" id="module-wikinterface.search">
 <span id="search"></span><h2>Search<a class="headerlink" href="#module-wikinterface.search" title="Permalink to this headline">¶</a></h2>
