@@ -96,12 +96,17 @@ class TermWeightingScheme(object):
 
 class SchemeScorer(ABC):
 	"""
-	A scheme is used to score documents' tokens.
-	It is important to distinguish between :class:`~nlp.weighting.TermWeightingScheme` and :class:`~nlp.weighting.SchemeScorer`.
-	The former is a complete term-weighting scheme that takes local and global scheme scorers.
-	The latter is the actual scorer.
-	A :class:`~nlp.weighting.SchemeScorer` is a component of a term-weighting scheme.
-	A :class:`~nlp.weighting.TermWeightingScheme` combines local and global scorers to create documents.
+	The :class:`~nlp.weighting.TermWeightingScheme` combines two :class:`~nlp.weighting.SchemeScorer` scores to weight tokens.
+	This class defines the functionality that all local and global term-weighting schemes must have at least.
+
+	Essentially, the :func:`~nlp.weighting.SchemeScorer.score` function needs to be implemented.
+	This function receives a list of tokens and assigns them a score.
+
+	.. note::
+
+		It is important to distinguish between :class:`~nlp.weighting.TermWeightingScheme` and :class:`~nlp.weighting.SchemeScorer`.
+		The former is a complete term-weighting scheme that takes local and global scheme scorers and combines their token scores.
+		The latter is the component that actually scores tokens.
 	"""
 
 	@abstractmethod

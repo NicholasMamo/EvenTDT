@@ -577,12 +577,16 @@ The dimensions’ weights depend on the local and global term-weighting scheme.<
 <dl class="class">
 <dt id="nlp.weighting.SchemeScorer">
 <em class="property">class </em><code class="sig-name descname">SchemeScorer</code><a class="headerlink" href="#nlp.weighting.SchemeScorer" title="Permalink to this definition">¶</a></dt>
-<dd><p>A scheme is used to score documents’ tokens.
-It is important to distinguish between <a class="reference internal" href="#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a> and <a class="reference internal" href="#nlp.weighting.SchemeScorer" title="nlp.weighting.SchemeScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SchemeScorer</span></code></a>.
-The former is a complete term-weighting scheme that takes local and global scheme scorers.
-The latter is the actual scorer.
-A <a class="reference internal" href="#nlp.weighting.SchemeScorer" title="nlp.weighting.SchemeScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SchemeScorer</span></code></a> is a component of a term-weighting scheme.
-A <a class="reference internal" href="#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a> combines local and global scorers to create documents.</p>
+<dd><p>The <a class="reference internal" href="#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a> combines two <a class="reference internal" href="#nlp.weighting.SchemeScorer" title="nlp.weighting.SchemeScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SchemeScorer</span></code></a> scores to weight tokens.
+This class defines the functionality that all local and global term-weighting schemes must have at least.</p>
+<p>Essentially, the <a class="reference internal" href="#nlp.weighting.SchemeScorer.score" title="nlp.weighting.SchemeScorer.score"><code class="xref py py-func docutils literal notranslate"><span class="pre">score()</span></code></a> function needs to be implemented.
+This function receives a list of tokens and assigns them a score.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is important to distinguish between <a class="reference internal" href="#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a> and <a class="reference internal" href="#nlp.weighting.SchemeScorer" title="nlp.weighting.SchemeScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SchemeScorer</span></code></a>.
+The former is a complete term-weighting scheme that takes local and global scheme scorers and combines their token scores.
+The latter is the component that actually scores tokens.</p>
+</div>
 <dl class="method">
 <dt id="nlp.weighting.SchemeScorer.score">
 <em class="property">abstract </em><code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param">tokens</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.SchemeScorer.score" title="Permalink to this definition">¶</a></dt>
