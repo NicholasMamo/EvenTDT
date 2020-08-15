@@ -1,5 +1,5 @@
 """
-Run unit tests on the :class:`~nlp.term_weighting.global_schemes.filler.Filler` class.
+Run unit tests on the :class:`~nlp.weighting.local_schemes.boolean.Boolean` class.
 """
 
 import os
@@ -10,11 +10,11 @@ path = os.path.join(os.path.dirname(__file__), '..')
 if path not in sys.path:
     sys.path.append(path)
 
-from filler import Filler
+from boolean import Boolean
 
-class TestFiller(unittest.TestCase):
+class TestBoolean(unittest.TestCase):
 	"""
-	Test the :class:`~nlp.term_weighting.global_schemes.filler.Filler` class.
+	Test the :class:`~nlp.weighting.local_schemes.boolean.Boolean` class.
 	"""
 
 	def test_empty_list_score(self):
@@ -23,7 +23,7 @@ class TestFiller(unittest.TestCase):
 		"""
 
 		tokens = []
-		scheme = Filler()
+		scheme = Boolean()
 		self.assertEqual({ }, scheme.score(tokens))
 
 	def test_list_score(self):
@@ -32,7 +32,7 @@ class TestFiller(unittest.TestCase):
 		"""
 
 		tokens = [ 'a', 'b' ]
-		scheme = Filler()
+		scheme = Boolean()
 		self.assertEqual({ 'a': 1, 'b': 1 }, scheme.score(tokens))
 
 	def test_repeated_score(self):
@@ -41,5 +41,5 @@ class TestFiller(unittest.TestCase):
 		"""
 
 		tokens = [ 'a', 'b', 'a' ]
-		scheme = Filler()
+		scheme = Boolean()
 		self.assertEqual({ 'a': 1, 'b': 1 }, scheme.score(tokens))

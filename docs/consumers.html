@@ -606,7 +606,7 @@ It is siplit into two steps:</p>
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>time_window</strong> (<em>int</em>) – The time (in seconds) to spend consuming the queue.</p></li>
-<li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme used to create documents.</p></li>
+<li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.weighting.scheme.TermWeightingScheme" title="nlp.weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme used to create documents.</p></li>
 <li><p><strong>min_size</strong> (<em>int</em>) – The minimum size of a cluster to be considered valid.</p></li>
 <li><p><strong>cooldown</strong> (<em>float</em>) – The minimum time (in seconds) between consecutive checks of a cluster.</p></li>
 <li><p><strong>max_intra_similarity</strong> (<em>float</em>) – The maximum average similarity, between 0 and 1, of the cluster’s documents with the centroid.
@@ -641,8 +641,8 @@ This buffer is used to store tweets until they are made into a checkpoint.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>queue</strong> (<a class="reference internal" href="#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that is consumed.</p></li>
 <li><p><strong>time_window</strong> (<em>int</em>) – The size of the window after which checkpoints are created.</p></li>
-<li><p><strong>scheme</strong> (None or <a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme that is used to create dimensions.
-If <cite>None</cite> is given, the <a class="reference internal" href="nlp.html#nlp.term_weighting.tf.TF" title="nlp.term_weighting.tf.TF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TF</span></code></a> term-weighting scheme is used.</p></li>
+<li><p><strong>scheme</strong> (None or <a class="reference internal" href="nlp.html#nlp.weighting.scheme.TermWeightingScheme" title="nlp.weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme that is used to create dimensions.
+If <cite>None</cite> is given, the <a class="reference internal" href="nlp.html#nlp.weighting.tf.TF" title="nlp.weighting.tf.TF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TF</span></code></a> term-weighting scheme is used.</p></li>
 <li><p><strong>threshold</strong> (<em>float</em>) – The similarity threshold to use for the <a class="reference internal" href="vsm.html#vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans" title="vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans"><code class="xref py py-class docutils literal notranslate"><span class="pre">TemporalNoKMeans</span></code></a> incremental clustering approach.
 Documents are added to an existing cluster if their similarity with the centroid is greater than or equal to this threshold.</p></li>
 <li><p><strong>freeze_period</strong> (<em>float</em>) – The freeze period, in seconds, of the incremental clustering approach.</p></li>
@@ -694,7 +694,7 @@ If it is negative, it is ignored.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A dictionary containing the TF-IDF scheme and the event’s participants from the pre-event discussion.
-The TF-IDF scheme is returned in the <cite>scheme</cite> key as a <a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a> instance.
+The TF-IDF scheme is returned in the <cite>scheme</cite> key as a <a class="reference internal" href="nlp.html#nlp.weighting.tfidf.TFIDF" title="nlp.weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a> instance.
 The participants are returned in the <cite>participants</cite> key a list of strings.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
@@ -717,7 +717,7 @@ If it is negative, it is ignored.</p>
 <dd class="field-even"><p>The constructed TF-IDF scheme.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="nlp.html#nlp.weighting.tfidf.TFIDF" title="nlp.weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1031,7 +1031,7 @@ The algorithm clusters all tweets received in the same period and uses the Catal
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="tdt.html#module-tdt.nutrition.store" title="tdt.nutrition.store"><strong>store</strong></a> (<a class="reference internal" href="tdt.html#tdt.nutrition.store.NutritionStore" title="tdt.nutrition.store.NutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code></a>) – The nutrition store used to store the volume changes of individual terms.</p></li>
-<li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme used to create documents.</p></li>
+<li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.weighting.scheme.TermWeightingScheme" title="nlp.weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme used to create documents.</p></li>
 <li><p><strong>sets</strong> (<em>int</em>) – The number of time windows that are considered when computing burst.
 The higher this number, the more precise the calculations.
 However, because of the decay in <a class="reference internal" href="tdt.html#tdt.algorithms.cataldi.Cataldi" title="tdt.algorithms.cataldi.Cataldi"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cataldi</span></code></a>, old time windows do not affect the result by a big margin.
@@ -1057,8 +1057,8 @@ It will be populated later when the ‘reconaissance’ period is finished.</p>
 <li><p><strong>queue</strong> (<a class="reference internal" href="#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that is consumed.</p></li>
 <li><p><strong>periodicity</strong> (<em>int</em>) – The time window in seconds of the buffered consumer, or how often it is invoked.
 This defaults to 5 seconds, the same span as half the smallest time window in Zhao et al.’s algorithm.</p></li>
-<li><p><strong>scheme</strong> (None or <a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme that is used to create dimensions.
-If <cite>None</cite> is given, the <a class="reference internal" href="nlp.html#nlp.term_weighting.tf.TF" title="nlp.term_weighting.tf.TF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TF</span></code></a> term-weighting scheme is used.</p></li>
+<li><p><strong>scheme</strong> (None or <a class="reference internal" href="nlp.html#nlp.weighting.scheme.TermWeightingScheme" title="nlp.weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme that is used to create dimensions.
+If <cite>None</cite> is given, the <a class="reference internal" href="nlp.html#nlp.weighting.tf.TF" title="nlp.weighting.tf.TF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TF</span></code></a> term-weighting scheme is used.</p></li>
 <li><p><strong>sets</strong> (<em>int</em>) – The number of time windows that are considered when computing burst.
 The higher this number, the more precise the calculations.
 However, because of the decay in <a class="reference internal" href="tdt.html#tdt.algorithms.cataldi.Cataldi" title="tdt.algorithms.cataldi.Cataldi"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cataldi</span></code></a>, old time windows do not affect the result by a big margin.
@@ -1271,7 +1271,7 @@ The algorithm examines changes in volume using a dynamic time window.</p>
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="tdt.html#module-tdt.nutrition.store" title="tdt.nutrition.store"><strong>store</strong></a> (<a class="reference internal" href="tdt.html#tdt.nutrition.store.NutritionStore" title="tdt.nutrition.store.NutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code></a>) – The nutrition store used to store the volume.</p></li>
-<li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme used to create documents.</p></li>
+<li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.weighting.scheme.TermWeightingScheme" title="nlp.weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme used to create documents.</p></li>
 <li><p><a class="reference internal" href="summarization.html#summarization.summary.Summary.documents" title="summarization.summary.Summary.documents"><strong>documents</strong></a> (<a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The documents that can still be used for summarization.
 Older documents are automatically cleared.</p></li>
 <li><p><a class="reference internal" href="tdt.html#module-tdt" title="tdt"><strong>tdt</strong></a> (<a class="reference internal" href="tdt.html#tdt.algorithms.zhao.Zhao" title="tdt.algorithms.zhao.Zhao"><code class="xref py py-class docutils literal notranslate"><span class="pre">Zhao</span></code></a>) – The TDT algorithm: Zhao et al.’s implementation.</p></li>
@@ -1292,8 +1292,8 @@ It will be populated later when the ‘reconaissance’ period is finished.</p>
 <li><p><strong>queue</strong> (<a class="reference internal" href="#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that is consumed.</p></li>
 <li><p><strong>periodicity</strong> (<em>int</em>) – The time window in seconds of the buffered consumer, or how often it is invoked.
 This defaults to 5 seconds, the same span as half the smallest time window in Zhao et al.’s algorithm.</p></li>
-<li><p><strong>scheme</strong> (None or <a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme that is used to create dimensions.
-If <cite>None</cite> is given, the <a class="reference internal" href="nlp.html#nlp.term_weighting.tf.TF" title="nlp.term_weighting.tf.TF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TF</span></code></a> term-weighting scheme is used.</p></li>
+<li><p><strong>scheme</strong> (None or <a class="reference internal" href="nlp.html#nlp.weighting.scheme.TermWeightingScheme" title="nlp.weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme that is used to create dimensions.
+If <cite>None</cite> is given, the <a class="reference internal" href="nlp.html#nlp.weighting.tf.TF" title="nlp.weighting.tf.TF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TF</span></code></a> term-weighting scheme is used.</p></li>
 </ul>
 </dd>
 </dl>

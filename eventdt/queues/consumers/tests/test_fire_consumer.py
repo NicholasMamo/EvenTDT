@@ -15,7 +15,7 @@ if path not in sys.path:
 from queues import Queue
 from queues.consumers import FIREConsumer
 from nlp.document import Document
-from nlp.term_weighting import TF
+from nlp.weighting import TF
 from vsm import vector_math
 from vsm.clustering import Cluster
 import twitter

@@ -34,7 +34,7 @@ path = os.path.join(os.path.dirname(__file__), '..', 'eventdt')
 if path not in sys.path:
     sys.path.append(path)
 
-from nlp.term_weighting.tfidf import TFIDF
+from nlp.weighting.tfidf import TFIDF
 from nlp.tokenizer import Tokenizer
 from objects.exportable import Exportable
 
@@ -104,7 +104,7 @@ def construct(file, remove_retweets, *args, **kwargs):
 	:type remove_retweets: bool
 
 	:return: The TF-IDF scheme constructed from the file.
-	:rtype: :class:`~nlp.term_weighting.tfidf.TFIDF`
+	:rtype: :class:`~nlp.weighting.tfidf.TFIDF`
 	"""
 
 	documents, idf = 0, { }
@@ -187,7 +187,7 @@ def save(tfidf, output):
 	Save the given TF-IDF scheme to file.
 
 	:param tfidf: The TF-IDF scheme.
-	:type tf-idf: :class:`~nlp.term_weighting.tfidf.TFIDF`
+	:type tf-idf: :class:`~nlp.weighting.tfidf.TFIDF`
 	:param output: The path to the file where to save the TF-IDF scheme.
 	:type output: str
 	"""

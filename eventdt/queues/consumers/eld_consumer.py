@@ -40,8 +40,8 @@ from logger import logger
 
 from nlp.cleaners import TweetCleaner
 from nlp.document import Document
-from nlp.term_weighting import TF, TFIDF
-from nlp.term_weighting.global_schemes.idf import IDF
+from nlp.weighting import TF, TFIDF
+from nlp.weighting.global_schemes.idf import IDF
 from nlp.tokenizer import Tokenizer
 
 from queues import Queue
@@ -71,7 +71,7 @@ class ELDConsumer(Consumer):
 	:ivar time_window: The time (in seconds) to spend consuming the queue.
 	:vartype time_window: int
 	:ivar ~.scheme: The term-weighting scheme used to create documents.
-	:vartype ~.scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
+	:vartype ~.scheme: :class:`~nlp.weighting.scheme.TermWeightingScheme`
 	:ivar min_size: The minimum size of a cluster to be considered valid.
 	:vartype min_size: int
 	:ivar cooldown: The minimum time (in seconds) between consecutive checks of a cluster.
@@ -120,8 +120,8 @@ class ELDConsumer(Consumer):
 		:param time_window: The size of the window after which checkpoints are created.
 		:type time_window: int
 		:param scheme: The term-weighting scheme that is used to create dimensions.
-					   If `None` is given, the :class:`~nlp.term_weighting.tf.TF` term-weighting scheme is used.
-		:type scheme: None or :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
+					   If `None` is given, the :class:`~nlp.weighting.tf.TF` term-weighting scheme is used.
+		:type scheme: None or :class:`~nlp.weighting.scheme.TermWeightingScheme`
 		:param threshold: The similarity threshold to use for the :class:`~vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans` incremental clustering approach.
 						  Documents are added to an existing cluster if their similarity with the centroid is greater than or equal to this threshold.
 		:type threshold: float
@@ -196,7 +196,7 @@ class ELDConsumer(Consumer):
 		:type max_inactivity: int
 
 		:return: A dictionary containing the TF-IDF scheme and the event's participants from the pre-event discussion.
-				 The TF-IDF scheme is returned in the `scheme` key as a :class:`~nlp.term_weighting.tfidf.TFIDF` instance.
+				 The TF-IDF scheme is returned in the `scheme` key as a :class:`~nlp.weighting.tfidf.TFIDF` instance.
 				 The participants are returned in the `participants` key a list of strings.
 		:rtype: dict
 		"""
@@ -218,7 +218,7 @@ class ELDConsumer(Consumer):
 		:type max_inactivity: int
 
 		:return: The constructed TF-IDF scheme.
-		:rtype: :class:`~nlp.term_weighting.tfidf.TFIDF`
+		:rtype: :class:`~nlp.weighting.tfidf.TFIDF`
 		"""
 
 		idf = { }

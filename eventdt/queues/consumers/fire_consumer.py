@@ -29,7 +29,7 @@ from vsm import vector_math
 from logger import logger
 
 from nlp.document import Document
-from nlp.term_weighting import TFIDF
+from nlp.weighting import TFIDF
 from nlp.tokenizer import Tokenizer
 
 from summarization.algorithms import MMR
@@ -49,7 +49,7 @@ class FIREConsumer(SimulatedBufferedConsumer):
 	:ivar store: The nutrition store used to store the volume changes of individual terms.
 	:vartype store: :class:`~tdt.nutrition.store.NutritionStore`
 	:ivar ~.scheme: The term-weighting scheme used to create documents.
-	:vartype ~.scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
+	:vartype ~.scheme: :class:`~nlp.weighting.scheme.TermWeightingScheme`
 	:ivar sets: The number of time windows that are considered when computing burst.
 				The higher this number, the more precise the calculations.
 				However, because of the decay in :class:`~tdt.algorithms.cataldi.Cataldi`, old time windows do not affect the result by a big margin.
@@ -80,8 +80,8 @@ class FIREConsumer(SimulatedBufferedConsumer):
 							This defaults to 5 seconds, the same span as half the smallest time window in Zhao et al.'s algorithm.
 		:type periodicity: int
 		:param scheme: The term-weighting scheme that is used to create dimensions.
-					   If `None` is given, the :class:`~nlp.term_weighting.tf.TF` term-weighting scheme is used.
-		:type scheme: None or :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
+					   If `None` is given, the :class:`~nlp.weighting.tf.TF` term-weighting scheme is used.
+		:type scheme: None or :class:`~nlp.weighting.scheme.TermWeightingScheme`
 		:param sets: The number of time windows that are considered when computing burst.
 					 The higher this number, the more precise the calculations.
 					 However, because of the decay in :class:`~tdt.algorithms.cataldi.Cataldi`, old time windows do not affect the result by a big margin.

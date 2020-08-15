@@ -159,7 +159,7 @@ class EFIDF(Extractor):
 	The algorithm can be made to work with the :class:`~ate.application.event.LogEF` class instead of the :class:`~ate.application.event.EF` class by providing a logarithmic base.
 
 	:ivar ~.scheme: The IDF table to use to score terms.
-	:vartype scheme: :class:`~nlp.term_weighting.global_schemes.tfidf.TFIDF`
+	:vartype scheme: :class:`~nlp.weighting.global_schemes.tfidf.TFIDF`
 	:ivar base: The logarithmic base.
 				If it is given, the :class:`~ate.application.event.LogEF` class is used.
 				Otherwise, the :class:`~ate.application.event.EF` class is used.
@@ -171,7 +171,7 @@ class EFIDF(Extractor):
 		Create the EF-IDF extractor with the scheme used to score terms and the logarithmic base.
 
 		:param idf: The IDF table to use to score terms.
-		:type idf: :class:`~nlp.term_weighting.global_schemes.tfidf.TFIDF`
+		:type idf: :class:`~nlp.weighting.global_schemes.tfidf.TFIDF`
 		:param base: The logarithmic base.
 					If it is given, the :class:`~ate.application.event.LogEF` class is used.
 					Otherwise, the :class:`~ate.application.event.EF` class is used.
@@ -257,7 +257,7 @@ class Variability(Extractor):
 		The method follows the leave-one-out principle: each event is compared against all other events.
 
 		:param idfs: A list of IDFs, one for each event, or paths to where they are stored.
-		:type idfs: str or list of :class:`~nlp.term_weighting.tfidf.TFIDF`
+		:type idfs: str or list of :class:`~nlp.weighting.tfidf.TFIDF`
 		:param candidates: A list of terms for which to calculate a score.
 						   If `None` is given, all words are considered to be candidates.
 		:type candidates: None or list of str
@@ -308,10 +308,10 @@ class Variability(Extractor):
 		Load the IDFs if paths to files are given.
 
 		:param idfs: A list of IDFs, one for each event, or paths to IDFs.
-		:type idfs: list of str or list of :class:`~nlp.term_weighting.tfidf.TFIDF`
+		:type idfs: list of str or list of :class:`~nlp.weighting.tfidf.TFIDF`
 
 		:return: A list of TF-IDF schemes, loaded from files where necessary.
-		:rtype: list of :class:`~nlp.term_weighting.tfidf.TFIDF`
+		:rtype: list of :class:`~nlp.weighting.tfidf.TFIDF`
 
 		:raises ValueError: When the given file does not contain a TF-IDF scheme.
 		"""
@@ -340,7 +340,7 @@ class Variability(Extractor):
 		Extract the vocabulary from the given IDFs.
 
 		:param idfs: A list of IDFs, one for each event.
-		:type idfs: list of :class:`~nlp.term_weighting.tfidf.TFIDF`
+		:type idfs: list of :class:`~nlp.weighting.tfidf.TFIDF`
 
 		:return: A list of terms in the given IDFs.
 		:rtype: list of str
@@ -359,9 +359,9 @@ class Variability(Extractor):
 		:param term: The term for which to create the contingency table.
 		:type term: str
 		:param current: The current event's IDF table.
-		:type current: :class:`~nlp.term_weighting.tfidf.TFIDF`
+		:type current: :class:`~nlp.weighting.tfidf.TFIDF`
 		:param comparison: A list of IDFs, one for each event.
-		:type comparison: list of :class:`~nlp.term_weighting.tfidf.TFIDF`
+		:type comparison: list of :class:`~nlp.weighting.tfidf.TFIDF`
 
 		:return: The contingency table for the term, contrasting the current event with all other events.
 				 The first row is the total number of documents in the current event.
@@ -472,7 +472,7 @@ class Entropy(Extractor):
 	def extract(self, idfs, candidates=None):
 		"""
 		:param idfs: A list of IDFs, one for each event.
-		:type idfs: list of :class:`~nlp.term_weighting.tfidf.TFIDF`
+		:type idfs: list of :class:`~nlp.weighting.tfidf.TFIDF`
 		:param candidates: A list of terms for which to calculate a score.
 						   If `None` is given, all words are considered to be candidates.
 		:type candidates: None or list of str
@@ -507,10 +507,10 @@ class Entropy(Extractor):
 		Load the IDFs if paths to files are given.
 
 		:param idfs: A list of IDFs, one for each event, or paths to IDFs.
-		:type idfs: list of str or list of :class:`~nlp.term_weighting.tfidf.TFIDF`
+		:type idfs: list of str or list of :class:`~nlp.weighting.tfidf.TFIDF`
 
 		:return: A list of TF-IDF schemes, loaded from files where necessary.
-		:rtype: list of :class:`~nlp.term_weighting.tfidf.TFIDF`
+		:rtype: list of :class:`~nlp.weighting.tfidf.TFIDF`
 
 		:raises ValueError: When the given file does not contain a TF-IDF scheme.
 		"""
@@ -539,7 +539,7 @@ class Entropy(Extractor):
 		Extract the vocabulary from the given IDFs.
 
 		:param idfs: A list of IDFs, one for each event.
-		:type idfs: list of :class:`~nlp.term_weighting.tfidf.TFIDF`
+		:type idfs: list of :class:`~nlp.weighting.tfidf.TFIDF`
 
 		:return: A list of terms in the given IDFs.
 		:rtype: list of str
@@ -556,7 +556,7 @@ class Entropy(Extractor):
 		Calculate the probability distribution of the term across all events.
 
 		:param idfs: A list of IDFs, one for each event.
-		:type idfs: list of :class:`~nlp.term_weighting.tfidf.TFIDF`
+		:type idfs: list of :class:`~nlp.weighting.tfidf.TFIDF`
 		:param term: The candidate term for which to calculate the total number off mentions.
 		:type term: str
 
@@ -578,7 +578,7 @@ class Entropy(Extractor):
 		Get the total number of mentions of the term across all events.
 
 		:param idfs: A list of IDFs, one for each event.
-		:type idfs: list of :class:`~nlp.term_weighting.tfidf.TFIDF`
+		:type idfs: list of :class:`~nlp.weighting.tfidf.TFIDF`
 		:param term: The candidate term for which to calculate the total number off mentions.
 		:type term: str
 

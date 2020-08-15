@@ -465,7 +465,7 @@ The class expects tokenized corpora.</p>
 <dd><p>Create the TF-IDF extractor with the given scheme.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a>) – The scheme used by the TF-IDF extractor to score tokens.</p>
+<dd class="field-odd"><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.weighting.tfidf.TFIDF" title="nlp.weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a>) – The scheme used by the TF-IDF extractor to score tokens.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1115,7 +1115,7 @@ To reflect this behavior in the score, the inverse of the variability is returne
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>idfs</strong> (str or list of <a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a>) – A list of IDFs, one for each event, or paths to where they are stored.</p></li>
+<li><p><strong>idfs</strong> (str or list of <a class="reference internal" href="nlp.html#nlp.weighting.tfidf.TFIDF" title="nlp.weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a>) – A list of IDFs, one for each event, or paths to where they are stored.</p></li>
 <li><p><strong>candidates</strong> (<em>None</em><em> or </em><em>list of str</em>) – A list of terms for which to calculate a score.
 If <cite>None</cite> is given, all words are considered to be candidates.</p></li>
 </ul>
@@ -1179,7 +1179,7 @@ This base is used to calculate the information entropy score.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>idfs</strong> (list of <a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a>) – A list of IDFs, one for each event.</p></li>
+<li><p><strong>idfs</strong> (list of <a class="reference internal" href="nlp.html#nlp.weighting.tfidf.TFIDF" title="nlp.weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a>) – A list of IDFs, one for each event.</p></li>
 <li><p><strong>candidates</strong> (<em>None</em><em> or </em><em>list of str</em>) – A list of terms for which to calculate a score.
 If <cite>None</cite> is given, all words are considered to be candidates.</p></li>
 </ul>

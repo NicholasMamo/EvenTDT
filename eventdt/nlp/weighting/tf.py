@@ -14,9 +14,9 @@ path = os.path.join(os.path.dirname(__file__), '..')
 if path not in sys.path:
     sys.path.append(path)
 
-from term_weighting import TermWeightingScheme
-from term_weighting.local_schemes import tf
-from term_weighting.global_schemes.filler import Filler
+from weighting import TermWeightingScheme
+from weighting.local_schemes import tf
+from weighting.global_schemes.filler import Filler
 
 class TF(TermWeightingScheme):
 	"""

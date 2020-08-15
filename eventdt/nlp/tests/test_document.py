@@ -13,7 +13,7 @@ if path not in sys.path:
 
 from document import Document
 from tokenizer import Tokenizer
-from term_weighting.tf import TF
+from weighting.tf import TF
 
 class TestDocument(unittest.TestCase):
 	"""

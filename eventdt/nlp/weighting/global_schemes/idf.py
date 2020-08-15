@@ -21,7 +21,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from objects.exportable import Exportable
-from nlp.term_weighting import SchemeScorer
+from nlp.weighting import SchemeScorer
 
 class IDF(Exportable, SchemeScorer):
 	"""
@@ -96,7 +96,7 @@ class IDF(Exportable, SchemeScorer):
 		:type array: dict
 
 		:return: A new instance of the IDF with the same attributes stored in the object.
-		:rtype: :class:`~nlp.term_weighting.global_schemes.idf.IDF`
+		:rtype: :class:`~nlp.weighting.global_schemes.idf.IDF`
 		"""
 
 		return IDF(documents=array.get('documents'), idf=array.get('idf'))

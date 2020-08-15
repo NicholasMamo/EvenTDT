@@ -14,7 +14,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from nlp.document import Document
-from nlp.term_weighting.tf import TF
+from nlp.weighting.tf import TF
 from summarization import Summary
 from summarization.algorithms import DGS
 from vsm import vector_math, Vector

@@ -74,7 +74,7 @@ class WikipediaExtrapolator(Extrapolator):
 	:vartype ~.tokenizer: :class:`~nlp.tokenizer.Tokenizer`
 	:ivar ~.scheme: The term-weighting scheme to use to create documents from Wikipedia pages.
 					These documents are used to compare the similarity with the domain of the candidates.
-	:vartype ~.scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
+	:vartype ~.scheme: :class:`~nlp.weighting.scheme.TermWeightingScheme`
 	:ivar threshold: The similarity threshold beyond which new participants are are added.
 	:vartype threshold: float
 	:ivar first_level_links: The number of first-level links to retain.
@@ -99,7 +99,7 @@ class WikipediaExtrapolator(Extrapolator):
 		:type tokenizer: :class:`~nlp.tokenizer.Tokenizer`
 		:param scheme: The term-weighting scheme to use to create documents from Wikipedia pages.
 					   These documents are used to compare the similarity with the domain of the candidates.
-		:type scheme: :class:`~nlp.term_weighting.scheme.TermWeightingScheme`
+		:type scheme: :class:`~nlp.weighting.scheme.TermWeightingScheme`
 		:param threshold: The similarity threshold beyond which new participants are are added.
 		:type threshold: float
 		:param first_level_links: The number of first-level links to retain.

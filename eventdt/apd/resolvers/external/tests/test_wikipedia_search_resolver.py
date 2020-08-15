@@ -23,7 +23,7 @@ from apd.resolvers.external.wikipedia_search_resolver import WikipediaSearchReso
 
 from nlp.document import Document
 from nlp.tokenizer import Tokenizer
-from nlp.term_weighting.tf import TF
+from nlp.weighting.tf import TF
 
 class TestWikipediaSearchResolver(unittest.TestCase):
 	"""

@@ -91,12 +91,12 @@ ml_tests() {
 
 nlp_tests() {
 	echo -e "${HIGHLIGHT}Term-weighting schemes${DEFAULT}"
-	python3 -m unittest eventdt.nlp.term_weighting.local_schemes.tests.test_boolean
-	python3 -m unittest eventdt.nlp.term_weighting.local_schemes.tests.test_tf
-	python3 -m unittest eventdt.nlp.term_weighting.global_schemes.tests.test_idf
-	python3 -m unittest eventdt.nlp.term_weighting.global_schemes.tests.test_filler
-	python3 -m unittest eventdt.nlp.term_weighting.tests.test_tfidf
-	python3 -m unittest eventdt.nlp.term_weighting.tests.test_tf
+	python3 -m unittest eventdt.nlp.weighting.local_schemes.tests.test_boolean
+	python3 -m unittest eventdt.nlp.weighting.local_schemes.tests.test_tf
+	python3 -m unittest eventdt.nlp.weighting.global_schemes.tests.test_idf
+	python3 -m unittest eventdt.nlp.weighting.global_schemes.tests.test_filler
+	python3 -m unittest eventdt.nlp.weighting.tests.test_tfidf
+	python3 -m unittest eventdt.nlp.weighting.tests.test_tf
 
 	echo -e "${HIGHLIGHT}Document${DEFAULT}"
 	python3 -m unittest eventdt.nlp.tests.test_document

@@ -22,7 +22,7 @@ from apd.resolvers.external.wikipedia_name_resolver import WikipediaNameResolver
 
 from nlp.document import Document
 from nlp.tokenizer import Tokenizer
-from nlp.term_weighting.tf import TF
+from nlp.weighting.tf import TF
 
 class TestWikipediaNameResolver(unittest.TestCase):
 	"""

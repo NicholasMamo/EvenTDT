@@ -11,7 +11,7 @@ path = os.path.join(path, '../')
 if path not in sys.path:
     sys.path.append(path)
 
-from libraries.vector.nlp import term_weighting
+from libraries.vector.nlp import weighting
 
 class TestTermWeightingSchemes(unittest.TestCase):
 	"""
@@ -25,7 +25,7 @@ class TestTermWeightingSchemes(unittest.TestCase):
 
 		tokens = ["a", "b", "c", "d", "b"]
 
-		tf = term_weighting.TF()
+		tf = weighting.TF()
 		d = tf.create(tokens)
 		dimensions = d.get_dimensions()
 		self.assertEqual(dimensions.get("a", 0), 1)
@@ -44,7 +44,7 @@ class TestTermWeightingSchemes(unittest.TestCase):
 		}
 		tokens = ["a", "b", "c", "d", "b"]
 
-		tfidf = term_weighting.TFIDF(idf)
+		tfidf = weighting.TFIDF(idf)
 		d = tfidf.create(tokens)
 		dimensions = d.get_dimensions()
 		self.assertEqual(round(dimensions.get("a", 0), 5), 0.47712)

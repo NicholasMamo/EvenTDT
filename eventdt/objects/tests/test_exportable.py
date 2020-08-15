@@ -13,7 +13,7 @@ if path not in sys.path:
 
 from objects.exportable import Exportable
 from vsm.vector import Vector
-from nlp.term_weighting.tfidf import TFIDF
+from nlp.weighting.tfidf import TFIDF
 
 class TestAttributable(unittest.TestCase):
 	"""

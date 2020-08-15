@@ -17,7 +17,7 @@ for path in paths:
 
 import event
 from objects.exportable import Exportable
-from nlp.term_weighting import TFIDF
+from nlp.weighting import TFIDF
 
 class TestEvent(unittest.TestCase):
 	"""

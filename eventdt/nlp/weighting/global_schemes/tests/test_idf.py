@@ -1,5 +1,5 @@
 """
-Run unit tests on the :class:`~nlp.term_weighting.global_schemes.idf.IDF` class.
+Run unit tests on the :class:`~nlp.weighting.global_schemes.idf.IDF` class.
 """
 
 import os
@@ -22,7 +22,7 @@ from tokenizer import Tokenizer
 
 class TestIDF(unittest.TestCase):
 	"""
-	Test the :class:`~nlp.term_weighting.global_schemes.idf.IDF` class.
+	Test the :class:`~nlp.weighting.global_schemes.idf.IDF` class.
 	"""
 
 	def test_high_value(self):

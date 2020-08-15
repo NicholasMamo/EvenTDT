@@ -1,1 +1,1 @@
-{"tfidf": {"class": "<class 'nlp.term_weighting.tfidf.TFIDF'>", "idf": {"class": "<class 'global_schemes.idf.IDF'>", "documents": 197166, "idf": {"fastest": 5205}}}}
+{"tfidf": {"class": "<class 'nlp.weighting.tfidf.TFIDF'>", "idf": {"class": "<class 'global_schemes.idf.IDF'>", "documents": 197166, "idf": {"fastest": 5205}}}}

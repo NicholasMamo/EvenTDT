@@ -12,7 +12,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from nlp.document import Document
-from nlp.term_weighting.tf import TF
+from nlp.weighting.tf import TF
 from vsm import Vector, VectorSpace
 from vsm import vector_math
 from vsm.clustering.cluster import Cluster

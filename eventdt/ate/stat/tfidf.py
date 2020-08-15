@@ -19,7 +19,7 @@ class TFIDFExtractor(Extractor):
 	The class expects tokenized corpora.
 
 	:ivar ~.scheme: The scheme used by the TF-IDF extractor to score tokens.
-	:vartype scheme: :class:`~nlp.term_weighting.tfidf.TFIDF`
+	:vartype scheme: :class:`~nlp.weighting.tfidf.TFIDF`
 	"""
 
 	def __init__(self, scheme):
@@ -27,7 +27,7 @@ class TFIDFExtractor(Extractor):
 		Create the TF-IDF extractor with the given scheme.
 
 		:param scheme: The scheme used by the TF-IDF extractor to score tokens.
-		:type scheme: :class:`~nlp.term_weighting.tfidf.TFIDF`
+		:type scheme: :class:`~nlp.weighting.tfidf.TFIDF`
 		"""
 
 		self.scheme = scheme

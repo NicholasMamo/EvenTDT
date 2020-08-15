@@ -17,7 +17,7 @@ path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
-from term_weighting import SchemeScorer
+from weighting import SchemeScorer
 
 class Boolean(SchemeScorer):
 	"""

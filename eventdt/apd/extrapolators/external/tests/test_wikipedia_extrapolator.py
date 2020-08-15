@@ -25,7 +25,7 @@ from apd.extrapolators.external.wikipedia_extrapolator import WikipediaExtrapola
 
 from nlp.document import Document
 from nlp.tokenizer import Tokenizer
-from nlp.term_weighting.tf import TF
+from nlp.weighting.tf import TF
 
 class TestWikipediaExtrapolator(unittest.TestCase):
 	"""

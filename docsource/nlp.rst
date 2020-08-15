@@ -32,44 +32,44 @@ Tokenization
 Term-Weighting
 ==============
 
-.. automodule:: nlp.term_weighting
+.. automodule:: nlp.weighting
    :members:
    :special-members:
 
-.. automodule:: nlp.term_weighting.scheme
+.. automodule:: nlp.weighting.scheme
    :members:
    :special-members:
 
 Common Term-Weighting Schemes
 -----------------------------
 
-.. automodule:: nlp.term_weighting.tf
+.. automodule:: nlp.weighting.tf
    :members:
    :special-members:
 
-.. automodule:: nlp.term_weighting.tfidf
+.. automodule:: nlp.weighting.tfidf
    :members:
    :special-members:
 
 Local Term-Weighting Schemes
 ----------------------------
 
-.. automodule:: nlp.term_weighting.local_schemes.boolean
+.. automodule:: nlp.weighting.local_schemes.boolean
    :members:
    :special-members:
 
-.. automodule:: nlp.term_weighting.local_schemes.tf
+.. automodule:: nlp.weighting.local_schemes.tf
    :members:
    :special-members:
 
 Global Term-Weighting Schemes
 -----------------------------
 
-.. automodule:: nlp.term_weighting.global_schemes.filler
+.. automodule:: nlp.weighting.global_schemes.filler
    :members:
    :special-members:
 
-.. automodule:: nlp.term_weighting.global_schemes.idf
+.. automodule:: nlp.weighting.global_schemes.idf
    :members:
    :special-members:
 

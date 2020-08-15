@@ -424,7 +424,7 @@ Any parameter that is not given uses the default configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme to use by the <a class="reference internal" href="#apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver" title="apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">WikipediaSearchResolver</span></code></a> and <a class="reference internal" href="#apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator" title="apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator"><code class="xref py py-class docutils literal notranslate"><span class="pre">WikipediaExtrapolator</span></code></a>.
+<li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.weighting.scheme.TermWeightingScheme" title="nlp.weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme to use by the <a class="reference internal" href="#apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver" title="apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">WikipediaSearchResolver</span></code></a> and <a class="reference internal" href="#apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator" title="apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator"><code class="xref py py-class docutils literal notranslate"><span class="pre">WikipediaExtrapolator</span></code></a>.
 These documents are used to compare the similarity with the domain of the candidates.</p></li>
 <li><p><strong>corpus</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The corpus of documents.
 These documents may be tokenized already, but this class re-tokenizes them with its own <a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>.</p></li>
@@ -895,13 +895,13 @@ Here, normalization means rescaling between 0 and 1.</p></li>
 </div>
 <div class="section" id="module-apd.scorers.local.tfidf_scorer">
 <span id="term-frequency-inverse-document-frequency-scorer"></span><h4>Term Frequency-Inverse Document Frequency Scorer<a class="headerlink" href="#module-apd.scorers.local.tfidf_scorer" title="Permalink to this headline">¶</a></h4>
-<p>The TF-IDF scorer assigns a score the candidate participants similarly to the <a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a> term-weighting scheme.
+<p>The TF-IDF scorer assigns a score the candidate participants similarly to the <a class="reference internal" href="nlp.html#nlp.weighting.tfidf.TFIDF" title="nlp.weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a> term-weighting scheme.
 The IDF table does not have to use the event corpus.
 Therefore this scorer can be used to promote candidate participants that appear frequently in the event corpus, but rarely outside of it.</p>
 <dl class="class">
 <dt id="apd.scorers.local.tfidf_scorer.TFIDFScorer">
 <em class="property">class </em><code class="sig-name descname">TFIDFScorer</code><span class="sig-paren">(</span><em class="sig-param">idf</em>, <em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.tfidf_scorer.TFIDFScorer" title="Permalink to this definition">¶</a></dt>
-<dd><p>The TF-IDF scorer assigns a score the candidate participants similarly to the <a class="reference internal" href="nlp.html#nlp.term_weighting.tfidf.TFIDF" title="nlp.term_weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a> term-weighting scheme.
+<dd><p>The TF-IDF scorer assigns a score the candidate participants similarly to the <a class="reference internal" href="nlp.html#nlp.weighting.tfidf.TFIDF" title="nlp.weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a> term-weighting scheme.
 Therefore the scorer depends on an IDF table, given as a dictionary, and the number of documents in it.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
@@ -1260,7 +1260,7 @@ Apart from the corpus, the resolver also requires:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme to use to create documents from Wikipedia pages.
+<li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.weighting.scheme.TermWeightingScheme" title="nlp.weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme to use to create documents from Wikipedia pages.
 These documents are used to compare the similarity with the domain of the candidates.</p></li>
 <li><p><strong>tokenizer</strong> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer to use to create documents.</p></li>
 <li><p><strong>threshold</strong> (<em>float.</em>) – The threshold below which candidates become unresolved.</p></li>
@@ -1275,7 +1275,7 @@ These documents are used to compare the similarity with the domain of the candid
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme to use to create documents from Wikipedia pages.
+<li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.weighting.scheme.TermWeightingScheme" title="nlp.weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme to use to create documents from Wikipedia pages.
 These documents are used to compare the similarity with the domain of the candidates.</p></li>
 <li><p><strong>threshold</strong> (<em>float</em>) – The threshold below which candidates become unresolved.</p></li>
 <li><p><strong>tokenizer</strong> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer to use to create documents.</p></li>
@@ -1342,7 +1342,7 @@ Apart from the corpus, the resolver also requires:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme to use to create documents from Wikipedia pages.
+<li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.weighting.scheme.TermWeightingScheme" title="nlp.weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme to use to create documents from Wikipedia pages.
 These documents are used to compare the similarity with the domain of the candidates.</p></li>
 <li><p><strong>threshold</strong> (<em>float</em>) – The threshold below which candidates become unresolved.</p></li>
 <li><p><strong>tokenizer</strong> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer to use to create documents.</p></li>
@@ -1358,7 +1358,7 @@ These documents are used to compare the similarity with the domain of the candid
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme to use to create documents from Wikipedia pages.
+<li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.weighting.scheme.TermWeightingScheme" title="nlp.weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme to use to create documents from Wikipedia pages.
 These documents are used to compare the similarity with the domain of the candidates.</p></li>
 <li><p><strong>threshold</strong> (<em>float</em>) – The threshold below which candidates become unresolved.</p></li>
 <li><p><strong>tokenizer</strong> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer to use to create documents.</p></li>
@@ -1488,7 +1488,7 @@ Apart from the corpus, the resolver also requires:</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="ate.html#module-ate.stat.corpus" title="ate.stat.corpus"><strong>corpus</strong></a> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The corpus of documents.</p></li>
 <li><p><strong>tokenizer</strong> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer to use to create documents.</p></li>
-<li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme to use to create documents from Wikipedia pages.
+<li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.weighting.scheme.TermWeightingScheme" title="nlp.weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme to use to create documents from Wikipedia pages.
 These documents are used to compare the similarity with the domain of the candidates.</p></li>
 <li><p><strong>threshold</strong> (<em>float</em>) – The similarity threshold beyond which new participants are are added.</p></li>
 <li><p><strong>first_level_links</strong> (<em>int</em>) – The number of first-level links to retain.</p></li>
@@ -1507,7 +1507,7 @@ These documents are used to compare the similarity with the domain of the candid
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>corpus</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The corpus of documents.</p></li>
 <li><p><strong>tokenizer</strong> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer to use to create documents.</p></li>
-<li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme to use to create documents from Wikipedia pages.
+<li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.weighting.scheme.TermWeightingScheme" title="nlp.weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme to use to create documents from Wikipedia pages.
 These documents are used to compare the similarity with the domain of the candidates.</p></li>
 <li><p><strong>threshold</strong> (<em>float</em>) – The similarity threshold beyond which new participants are are added.</p></li>
 <li><p><strong>first_level_links</strong> (<em>int</em>) – The number of first-level links to retain.</p></li>

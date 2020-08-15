@@ -13,7 +13,7 @@ for path in paths:
 	    sys.path.append(path)
 
 from extractor import Extractor
-from nlp.term_weighting import TF
+from nlp.weighting import TF
 
 class TFExtractor(Extractor):
 	"""
