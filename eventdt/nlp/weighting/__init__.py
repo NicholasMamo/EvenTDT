@@ -1,6 +1,33 @@
 """
-Term-weighting schemes give different weights to different terms in a document.
-Traditionally, term-weighting schemes have at least a local and global component.
+Term-weighting schemes are responsible for assigning importance to terms.
+Term-weighting schemes are made up of:
+
+1. A local component, which scores terms based on their appearance in a document.
+2. A global component, which scores terms based on their appearance in a corpus.
+3. Optionally, a normalization component to make all documents similar.
+
+This package represents term-weighting schemes in the same way.
+So, a :class:`~nlp.weighting.TermWeightingScheme` has two components:
+
+1. A local component (you can read more about them :ref:`here <nlp_local>`), and
+2. A global component (you can read more about them :ref:`here <nlp_local>`).
+
+The :class:`~nlp.weighting.TermWeightingScheme`'s :func:`~nlp.weighting.TermWeightingScheme.create` uses its local and global term-weighting schemes to create a :class:`~nlp.document.Document`.
+This function combines the score using a simple product.
+
+You can combine any local term-weighting scheme with any other global term-weighting scheme.
+All local and global term-weighting schemes inherit the :class:`~nlp.weighting.SchemeScorer`.
+That means all term-weighting schemes must implement the :class:`~nlp.weighting.Scheme`'s :func:`~nlp.weighting.Scheme.score` to assign a score to terms.
+
+.. note::
+
+	Normally, you don't have to create your own term-weighting schemes.
+	EvenTDT includes some of the most common term-weighting schemes to help you get started faster.
+	You can read more about these readily-available term-weighting schemes :ref:`here <nlp_common>`.
+
+.. note::
+
+	You can read more about term-weighting schemes in `Term-Weighting Approaches in Automatic Text Retrieval by Salton and Buckley (1998) <https://www.sciencedirect.com/science/article/abs/pii/0306457388900210>`_.
 """
 
 from abc import ABC, abstractmethod

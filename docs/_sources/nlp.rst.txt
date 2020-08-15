@@ -36,9 +36,7 @@ Term-Weighting
    :members:
    :special-members:
 
-.. automodule:: nlp.weighting.scheme
-   :members:
-   :special-members:
+.. _nlp_common:
 
 Common Term-Weighting Schemes
 -----------------------------
@@ -51,6 +49,9 @@ Common Term-Weighting Schemes
    :members:
    :special-members:
 
+
+.. _nlp_local:
+
 Local Term-Weighting Schemes
 ----------------------------
 
@@ -61,6 +62,8 @@ Local Term-Weighting Schemes
 .. automodule:: nlp.weighting.local_schemes.tf
    :members:
    :special-members:
+
+.. _nlp_global:
 
 Global Term-Weighting Schemes
 -----------------------------
