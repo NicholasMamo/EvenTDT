@@ -1,24 +1,28 @@
 """
-The tokenizer takes plain text and splits it into a list of tokens.
-Tokens are the equivalent of document features, or vector dimensions.
+The tokenizer is the first step to create a :class:`~nlp.document.Document`.
+The tokenizer takes in plain text and splits it into tokens, often words, that make up the :class:`~nlp.document.Document`'s dimensions.
+You would usually follow up tokenization with a :class:`~nlp.term_weighting.scheme.TermWeightingScheme` to assign a weight to the tokens.
 
-Tokenization is the first of two steps to create a :class:`~nlp.document.Document`.
-The second step is term-weighting using a :class:`~nlp.term_weighting.scheme.TermWeightingScheme`.
-A term-weighting scheme receives tokens and creates a weighted :class:`~nlp.document.Document` out of them.
-
-The tokenizer takes its settings in the constructor.
-All tokenization happens using the :func:`~nlp.tokenizer.Tokenizer.tokenize` function.
+The tokenizer has many capabilities, and these are all enabled or disabled in the constructor.
 In this way, all documents are tokenized in the same way.
-Creating and using a tokenizer is very simple:
+After creating a :class:`~nlp.tokenizer.Tokenizer`, use the :func:`~nlp.tokenizer.Tokenizer.tokenize` function to extract the tokens:
 
 .. code-block:: python
 
   t = Tokenizer(stem=True, split_hashtags=True)
-  tokens = t.tokenize()
+  tokens = t.tokenize('Hello world!')
 
 .. note::
 
 	Stemming is based on, and requires, NLTK.
+	You can install NLTK as follows:
+
+	.. code-block:: bash
+
+		pip install nltk
+
+	After that, you may need to use NLTK to download additional resources.
+	If you receive an error, pay attention and follow the on-screen suggestions to download and install any missing corpora.
 """
 
 from nltk import sent_tokenize, word_tokenize, pos_tag

@@ -323,22 +323,25 @@ The document is not normalized.</p>
 </div>
 <div class="section" id="module-nlp.tokenizer">
 <span id="tokenization"></span><h2>Tokenization<a class="headerlink" href="#module-nlp.tokenizer" title="Permalink to this headline">¶</a></h2>
-<p>The tokenizer takes plain text and splits it into a list of tokens.
-Tokens are the equivalent of document features, or vector dimensions.</p>
-<p>Tokenization is the first of two steps to create a <a class="reference internal" href="#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>.
-The second step is term-weighting using a <a class="reference internal" href="#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>.
-A term-weighting scheme receives tokens and creates a weighted <a class="reference internal" href="#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> out of them.</p>
-<p>The tokenizer takes its settings in the constructor.
-All tokenization happens using the <a class="reference internal" href="#nlp.tokenizer.Tokenizer.tokenize" title="nlp.tokenizer.Tokenizer.tokenize"><code class="xref py py-func docutils literal notranslate"><span class="pre">tokenize()</span></code></a> function.
+<p>The tokenizer is the first step to create a <a class="reference internal" href="#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>.
+The tokenizer takes in plain text and splits it into tokens, often words, that make up the <a class="reference internal" href="#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>’s dimensions.
+You would usually follow up tokenization with a <a class="reference internal" href="#nlp.term_weighting.scheme.TermWeightingScheme" title="nlp.term_weighting.scheme.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a> to assign a weight to the tokens.</p>
+<p>The tokenizer has many capabilities, and these are all enabled or disabled in the constructor.
 In this way, all documents are tokenized in the same way.
-Creating and using a tokenizer is very simple:</p>
+After creating a <a class="reference internal" href="#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>, use the <a class="reference internal" href="#nlp.tokenizer.Tokenizer.tokenize" title="nlp.tokenizer.Tokenizer.tokenize"><code class="xref py py-func docutils literal notranslate"><span class="pre">tokenize()</span></code></a> function to extract the tokens:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">Tokenizer</span><span class="p">(</span><span class="n">stem</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">split_hashtags</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="n">tokens</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">tokenize</span><span class="p">()</span>
+<span class="n">tokens</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="s1">&#39;Hello world!&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Stemming is based on, and requires, NLTK.</p>
+<p>Stemming is based on, and requires, NLTK.
+You can install NLTK as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install nltk
+</pre></div>
+</div>
+<p>After that, you may need to use NLTK to download additional resources.
+If you receive an error, pay attention and follow the on-screen suggestions to download and install any missing corpora.</p>
 </div>
 <dl class="class">
 <dt id="nlp.tokenizer.Tokenizer">
