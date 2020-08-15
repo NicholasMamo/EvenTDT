@@ -41,23 +41,34 @@ Term-Weighting
 Common Term-Weighting Schemes
 -----------------------------
 
+Term Frequency (TF)
+^^^^^^^^^^^^^^^^^^^
+
 .. automodule:: nlp.weighting.tf
    :members:
    :special-members:
 
+Term Frequency-Inverse Document Frequency (TF-IDF)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 .. automodule:: nlp.weighting.tfidf
    :members:
    :special-members:
-
 
 .. _nlp_local:
 
 Local Term-Weighting Schemes
 ----------------------------
 
+Boolean
+^^^^^^^
+
 .. automodule:: nlp.weighting.local_schemes.boolean
    :members:
    :special-members:
+
+Term Frequency (TF)
+^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: nlp.weighting.local_schemes.tf
    :members:
@@ -68,9 +79,15 @@ Local Term-Weighting Schemes
 Global Term-Weighting Schemes
 -----------------------------
 
+Filler
+^^^^^^
+
 .. automodule:: nlp.weighting.global_schemes.filler
    :members:
    :special-members:
+
+Inverse Document Frequency
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: nlp.weighting.global_schemes.idf
    :members:

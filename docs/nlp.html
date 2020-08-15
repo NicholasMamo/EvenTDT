@@ -93,9 +93,21 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-nlp.document">Documents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-nlp.tokenizer">Tokenization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-nlp.weighting">Term-Weighting</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module-nlp.weighting.tf">Common Term-Weighting Schemes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-nlp.weighting.local_schemes.boolean">Local Term-Weighting Schemes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-nlp.weighting.global_schemes.filler">Global Term-Weighting Schemes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#common-term-weighting-schemes">Common Term-Weighting Schemes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-nlp.weighting.tf">Term Frequency (TF)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-nlp.weighting.tfidf">Term Frequency-Inverse Document Frequency (TF-IDF)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#local-term-weighting-schemes">Local Term-Weighting Schemes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-nlp.weighting.local_schemes.boolean">Boolean</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Term Frequency (TF)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#global-term-weighting-schemes">Global Term-Weighting Schemes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-nlp.weighting.global_schemes.filler">Filler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-nlp.weighting.global_schemes.idf">Inverse Document Frequency</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#cleaners">Cleaners</a></li>
@@ -612,8 +624,10 @@ The latter is the component that actually scores tokens.</p>
 
 </dd></dl>
 
+<div class="section" id="common-term-weighting-schemes">
+<span id="nlp-common"></span><h3>Common Term-Weighting Schemes<a class="headerlink" href="#common-term-weighting-schemes" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="module-nlp.weighting.tf">
-<span id="common-term-weighting-schemes"></span><span id="nlp-common"></span><h3>Common Term-Weighting Schemes<a class="headerlink" href="#module-nlp.weighting.tf" title="Permalink to this headline">¶</a></h3>
+<span id="term-frequency-tf"></span><h4>Term Frequency (TF)<a class="headerlink" href="#module-nlp.weighting.tf" title="Permalink to this headline">¶</a></h4>
 <p>The term frequency term-weighting scheme is used when there is no need for a global scheme.
 The term frequency <span class="math notranslate nohighlight">\(tf_{t,d}\)</span> of a feature <span class="math notranslate nohighlight">\(t\)</span> is equivalent to its frequency <span class="math notranslate nohighlight">\(f_{t,d}\)</span> in document <span class="math notranslate nohighlight">\(d\)</span>:</p>
 <div class="math notranslate nohighlight">
@@ -630,7 +644,10 @@ The term frequency <span class="math notranslate nohighlight">\(tf_{t,d}\)</span
 
 </dd></dl>
 
-<span class="target" id="module-nlp.weighting.tfidf"></span><p>The Term Frequency-Inverse Document Frequency (TF-IDF) term-weighting scheme is one of the most popular schemes.
+</div>
+<div class="section" id="module-nlp.weighting.tfidf">
+<span id="term-frequency-inverse-document-frequency-tf-idf"></span><h4>Term Frequency-Inverse Document Frequency (TF-IDF)<a class="headerlink" href="#module-nlp.weighting.tfidf" title="Permalink to this headline">¶</a></h4>
+<p>The Term Frequency-Inverse Document Frequency (TF-IDF) term-weighting scheme is one of the most popular schemes.
 The scheme promotes features that appear commonly in a document, but rarely outside of it.
 The TFIDF is simply the multiplication of the <a class="reference internal" href="#nlp.weighting.local_schemes.tf.TF" title="nlp.weighting.local_schemes.tf.TF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TF</span></code></a> and <a class="reference internal" href="#nlp.weighting.global_schemes.idf.IDF" title="nlp.weighting.global_schemes.idf.IDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">IDF</span></code></a> term-weighting schemes:
 The weight <span class="math notranslate nohighlight">\(tfidf_{t,d}\)</span> of term <span class="math notranslate nohighlight">\(idf_{t}\)</span> in document <span class="math notranslate nohighlight">\(d\)</span> is computed as follows:</p>
@@ -690,8 +707,11 @@ The keys are the terms, and the corresponding values are the number of documents
 </dd></dl>
 
 </div>
+</div>
+<div class="section" id="local-term-weighting-schemes">
+<span id="nlp-local"></span><h3>Local Term-Weighting Schemes<a class="headerlink" href="#local-term-weighting-schemes" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="module-nlp.weighting.local_schemes.boolean">
-<span id="local-term-weighting-schemes"></span><span id="nlp-local"></span><h3>Local Term-Weighting Schemes<a class="headerlink" href="#module-nlp.weighting.local_schemes.boolean" title="Permalink to this headline">¶</a></h3>
+<span id="boolean"></span><h4>Boolean<a class="headerlink" href="#module-nlp.weighting.local_schemes.boolean" title="Permalink to this headline">¶</a></h4>
 <p>A simple local term-weighting scheme that sets the weight of a term to 1 if it appears in the document.
 The weight <span class="math notranslate nohighlight">\(bool_{t,d}\)</span> of a feature <span class="math notranslate nohighlight">\(t\)</span> is simply 1 if it appears in a document <span class="math notranslate nohighlight">\(d\)</span>, 0 otherwise.</p>
 <div class="math notranslate nohighlight">
@@ -724,6 +744,9 @@ The score is 1 if a feature appears in the document, 0 otherwise.</p>
 
 </dd></dl>
 
+</div>
+<div class="section" id="id1">
+<h4>Term Frequency (TF)<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h4>
 <span class="target" id="module-nlp.weighting.local_schemes.tf"></span><p>The Term Frequency (TF) local term-weighting scheme assigns a weight to each term according to the number of times that it appears.
 The term frequency <span class="math notranslate nohighlight">\(tf_{t,d}\)</span> of a feature <span class="math notranslate nohighlight">\(t\)</span> is equivalent to its frequency <span class="math notranslate nohighlight">\(f_{t,d}\)</span> in document <span class="math notranslate nohighlight">\(d\)</span>:</p>
 <div class="math notranslate nohighlight">
@@ -754,8 +777,11 @@ The score is equal to the frequency of the token in the list.</p>
 </dd></dl>
 
 </div>
+</div>
+<div class="section" id="global-term-weighting-schemes">
+<span id="nlp-global"></span><h3>Global Term-Weighting Schemes<a class="headerlink" href="#global-term-weighting-schemes" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="module-nlp.weighting.global_schemes.filler">
-<span id="global-term-weighting-schemes"></span><span id="nlp-global"></span><h3>Global Term-Weighting Schemes<a class="headerlink" href="#module-nlp.weighting.global_schemes.filler" title="Permalink to this headline">¶</a></h3>
+<span id="filler"></span><h4>Filler<a class="headerlink" href="#module-nlp.weighting.global_schemes.filler" title="Permalink to this headline">¶</a></h4>
 <p>The filler global term-weighting scheme is used when there is no need for a global term-weighting scheme.
 The scheme assigns the same score <span class="math notranslate nohighlight">\(fill_{t,d}\)</span> to all terms <span class="math notranslate nohighlight">\(t\)</span> if they appear in the document <span class="math notranslate nohighlight">\(d\)</span>, 0 otherwise:</p>
 <div class="math notranslate nohighlight">
@@ -787,7 +813,10 @@ The scheme assigns the same score to all terms: 1.</p>
 
 </dd></dl>
 
-<span class="target" id="module-nlp.weighting.global_schemes.idf"></span><p>The Inverse Document Frequency (IDF) global term-weighting scheme penalizes common terms.
+</div>
+<div class="section" id="module-nlp.weighting.global_schemes.idf">
+<span id="inverse-document-frequency"></span><h4>Inverse Document Frequency<a class="headerlink" href="#module-nlp.weighting.global_schemes.idf" title="Permalink to this headline">¶</a></h4>
+<p>The Inverse Document Frequency (IDF) global term-weighting scheme penalizes common terms.
 The reasoning is that common terms are not informative.
 Terms that appear often in one document but rarely outside characterize that document.</p>
 <p>The IDF <span class="math notranslate nohighlight">\(idf_{t}\)</span> for term <span class="math notranslate nohighlight">\(t\)</span> is computed as follows:</p>
@@ -893,6 +922,7 @@ The keys are the terms, and the corresponding values are the number of documents
 
 </dd></dl>
 
+</div>
 </div>
 </div>
 <div class="section" id="cleaners">
