@@ -1,8 +1,10 @@
 """
-A cleaner takes in strings and cleans them according to some rules.
-Any configuration is passed on to the constructor, :func:`~nlp.cleaners.cleaner.Cleaner.__init__`.
-Without any configuration, the cleaner should change nothing.
-Then, the cleaners' main functionality revolves around the :func:`~nlp.cleaners.cleaner.Cleaner.clean` function.
+The :class:`~nlp.cleaners.cleaner.Cleaner` is a base class for all cleaners.
+However, it also performs simple processing on text to remove common mistakes, such as missing punctuation or multiple contiguous white-spaces.
+
+All cleaners are configured in their constructor to ensure that cleaning is uniform across all documents.
+The main functionality resides in the :func:`~nlp.cleaners.cleaner.Cleaner.clean` function, which receives text and returns a cleaner version of it.
+Other cleaners that inherit the :class:`~nlp.cleaners.cleaner.Cleaner` class would likely need to change this function.
 """
 
 import re

@@ -972,10 +972,11 @@ Cleaning can be used in summarization, for example, when the output text may be 
 However, it can also be used as a pre-processing step to remove undesired fragments.</p>
 <div class="section" id="module-nlp.cleaners.cleaner">
 <span id="cleaner"></span><h3>Cleaner<a class="headerlink" href="#module-nlp.cleaners.cleaner" title="Permalink to this headline">¶</a></h3>
-<p>A cleaner takes in strings and cleans them according to some rules.
-Any configuration is passed on to the constructor, <a class="reference internal" href="#nlp.cleaners.cleaner.Cleaner.__init__" title="nlp.cleaners.cleaner.Cleaner.__init__"><code class="xref py py-func docutils literal notranslate"><span class="pre">__init__()</span></code></a>.
-Without any configuration, the cleaner should change nothing.
-Then, the cleaners’ main functionality revolves around the <a class="reference internal" href="#nlp.cleaners.cleaner.Cleaner.clean" title="nlp.cleaners.cleaner.Cleaner.clean"><code class="xref py py-func docutils literal notranslate"><span class="pre">clean()</span></code></a> function.</p>
+<p>The <a class="reference internal" href="#nlp.cleaners.cleaner.Cleaner" title="nlp.cleaners.cleaner.Cleaner"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cleaner</span></code></a> is a base class for all cleaners.
+However, it also performs simple processing on text to remove common mistakes, such as missing punctuation or multiple contiguous white-spaces.</p>
+<p>All cleaners are configured in their constructor to ensure that cleaning is uniform across all documents.
+The main functionality resides in the <a class="reference internal" href="#nlp.cleaners.cleaner.Cleaner.clean" title="nlp.cleaners.cleaner.Cleaner.clean"><code class="xref py py-func docutils literal notranslate"><span class="pre">clean()</span></code></a> function, which receives text and returns a cleaner version of it.
+Other cleaners that inherit the <a class="reference internal" href="#nlp.cleaners.cleaner.Cleaner" title="nlp.cleaners.cleaner.Cleaner"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cleaner</span></code></a> class would likely need to change this function.</p>
 <dl class="class">
 <dt id="nlp.cleaners.cleaner.Cleaner">
 <em class="property">class </em><code class="sig-name descname">Cleaner</code><span class="sig-paren">(</span><em class="sig-param">remove_alt_codes=False</em>, <em class="sig-param">complete_sentences=False</em>, <em class="sig-param">collapse_new_lines=False</em>, <em class="sig-param">collapse_whitespaces=False</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.cleaner.Cleaner" title="Permalink to this definition">¶</a></dt>
