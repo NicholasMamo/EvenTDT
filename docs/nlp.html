@@ -628,18 +628,23 @@ The latter is the component that actually scores tokens.</p>
 <span id="nlp-common"></span><h3>Common Term-Weighting Schemes<a class="headerlink" href="#common-term-weighting-schemes" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="module-nlp.weighting.tf">
 <span id="term-frequency-tf"></span><h4>Term Frequency (TF)<a class="headerlink" href="#module-nlp.weighting.tf" title="Permalink to this headline">¶</a></h4>
-<p>The term frequency term-weighting scheme is used when there is no need for a global scheme.
+<p>The term frequency weighting scheme is used when there is no need for a global scheme.
 The term frequency <span class="math notranslate nohighlight">\(tf_{t,d}\)</span> of a feature <span class="math notranslate nohighlight">\(t\)</span> is equivalent to its frequency <span class="math notranslate nohighlight">\(f_{t,d}\)</span> in document <span class="math notranslate nohighlight">\(d\)</span>:</p>
 <div class="math notranslate nohighlight">
 \[tf_{t,d} = f_{t,d}\]</div>
 <dl class="class">
 <dt id="nlp.weighting.tf.TF">
 <em class="property">class </em><code class="sig-name descname">TF</code><a class="headerlink" href="#nlp.weighting.tf.TF" title="Permalink to this definition">¶</a></dt>
-<dd><p>The TF scheme is used when there is no need for a global scheme.</p>
+<dd><p>The term frequency weighting scheme is used when there is no need for a global scheme.
+It is an instance of a <a class="reference internal" href="#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a> with:</p>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="#nlp.weighting.local_schemes.tf.TF" title="nlp.weighting.local_schemes.tf.TF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TF</span></code></a> as a local term-weighting scheme, and</p></li>
+<li><p><a class="reference internal" href="#nlp.weighting.global_schemes.filler.Filler" title="nlp.weighting.global_schemes.filler.Filler"><code class="xref py py-class docutils literal notranslate"><span class="pre">Filler</span></code></a> as a global term-weighting scheme (that does not change the score at all).</p></li>
+</ol>
 <dl class="method">
 <dt id="nlp.weighting.tf.TF.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.tf.TF.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize the TF-IDF term-weighting scheme by supplying the TF and filler schemes.</p>
+<dd><p>Initialize the term-weighting scheme by supplying the TF and filler schemes.</p>
 </dd></dl>
 
 </dd></dl>
