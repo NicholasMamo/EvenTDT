@@ -60,6 +60,8 @@ Term Frequency-Inverse Document Frequency (TF-IDF)
 Local Term-Weighting Schemes
 ----------------------------
 
+.. automodule:: nlp.weighting.local_schemes
+
 Boolean
 ^^^^^^^
 

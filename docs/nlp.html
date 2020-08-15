@@ -98,7 +98,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#module-nlp.weighting.tfidf">Term Frequency-Inverse Document Frequency (TF-IDF)</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#local-term-weighting-schemes">Local Term-Weighting Schemes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-nlp.weighting.local_schemes">Local Term-Weighting Schemes</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#module-nlp.weighting.local_schemes.boolean">Boolean</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#id1">Term Frequency (TF)</a></li>
 </ul>
@@ -721,8 +721,10 @@ The keys are the terms, and the corresponding values are the number of documents
 
 </div>
 </div>
-<div class="section" id="local-term-weighting-schemes">
-<span id="nlp-local"></span><h3>Local Term-Weighting Schemes<a class="headerlink" href="#local-term-weighting-schemes" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="module-nlp.weighting.local_schemes">
+<span id="local-term-weighting-schemes"></span><span id="nlp-local"></span><h3>Local Term-Weighting Schemes<a class="headerlink" href="#module-nlp.weighting.local_schemes" title="Permalink to this headline">¶</a></h3>
+<p>Local term-weighting schemes assign weight to tokens based on the contents of the document in which they appear.
+This type of term-weighting schemes is very simple, and is usually accompanied by <a class="reference internal" href="#nlp-global"><span class="std std-ref">a global term-weighting scheme</span></a>.</p>
 <div class="section" id="module-nlp.weighting.local_schemes.boolean">
 <span id="boolean"></span><h4>Boolean<a class="headerlink" href="#module-nlp.weighting.local_schemes.boolean" title="Permalink to this headline">¶</a></h4>
 <p>A simple local term-weighting scheme that sets the weight of a term to 1 if it appears in the document.
