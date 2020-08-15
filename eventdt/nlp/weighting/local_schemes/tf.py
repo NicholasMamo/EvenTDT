@@ -1,10 +1,12 @@
 """
-The Term Frequency (TF) local term-weighting scheme assigns a weight to each term according to the number of times that it appears.
-The term frequency :math:`tf_{t,d}` of a feature :math:`t` is equivalent to its frequency :math:`f_{t,d}` in document :math:`d`:
+The Term Frequency (TF) local term-weighting scheme assigns a weight according to the number of times that a token appears in the list.
+The term frequency :math:`tf_{t,d}` of a feature :math:`t` is calculated as:
 
 .. math::
 
 	tf_{t,d} = f_{t,d}
+
+where :math:`f_{t,d}` is the frequency of token :math:`t` in document :math:`d`.
 """
 
 import os
@@ -18,8 +20,7 @@ from weighting import SchemeScorer
 
 class TF(SchemeScorer):
 	"""
-	The Term Frequency (TF) term-weighting scheme is one of the simplest term weighting schemes that is used.
-	The weight of a dimension is simply the number of times that the feature appears.
+	The Term Frequency (TF) term-weighting scheme is a simple term weighting schemes that assigns a weight equal to the number of times that the feature appears in a document.
 	"""
 
 	def score(self, tokens, *args, **kwargs):
