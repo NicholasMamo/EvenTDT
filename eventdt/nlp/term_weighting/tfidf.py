@@ -17,7 +17,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from objects.exportable import Exportable
-from nlp.term_weighting.scheme import TermWeightingScheme
+from nlp.term_weighting import TermWeightingScheme
 
 class TFIDF(Exportable, TermWeightingScheme):
 	"""

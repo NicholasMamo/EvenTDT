@@ -55,7 +55,7 @@ sys.path.insert(-1, lib)
 import tools
 from logger import logger
 from objects.exportable import Exportable
-from nlp.term_weighting.scheme import TermWeightingScheme
+from nlp.term_weighting import TermWeightingScheme
 from queues import Queue
 from queues.consumers import *
 from twitter.file import SimulatedFileReader

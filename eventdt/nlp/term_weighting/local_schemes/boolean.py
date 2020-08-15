@@ -13,11 +13,11 @@ The weight :math:`bool_{t,d}` of a feature :math:`t` is simply 1 if it appears i
 import os
 import sys
 
-path = os.path.join(os.path.dirname(__file__), '..')
+path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
-from scheme import SchemeScorer
+from term_weighting import SchemeScorer
 
 class Boolean(SchemeScorer):
 	"""

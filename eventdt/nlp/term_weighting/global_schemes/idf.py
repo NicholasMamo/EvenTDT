@@ -21,7 +21,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from objects.exportable import Exportable
-from nlp.term_weighting.scheme import SchemeScorer
+from nlp.term_weighting import SchemeScorer
 
 class IDF(Exportable, SchemeScorer):
 	"""

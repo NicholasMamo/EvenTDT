@@ -6,11 +6,11 @@ import os
 import sys
 import unittest
 
-path = os.path.join(os.path.dirname(__file__), '..')
+path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
-from tf import TF
+from local_schemes.tf import TF
 
 class TestTF(unittest.TestCase):
 	"""
