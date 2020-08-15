@@ -103,7 +103,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#id1">Term Frequency (TF)</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#global-term-weighting-schemes">Global Term-Weighting Schemes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-nlp.weighting.global_schemes">Global Term-Weighting Schemes</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#module-nlp.weighting.global_schemes.filler">Filler</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-nlp.weighting.global_schemes.idf">Inverse Document Frequency</a></li>
 </ul>
@@ -723,7 +723,7 @@ The keys are the terms, and the corresponding values are the number of documents
 </div>
 <div class="section" id="module-nlp.weighting.local_schemes">
 <span id="local-term-weighting-schemes"></span><span id="nlp-local"></span><h3>Local Term-Weighting Schemes<a class="headerlink" href="#module-nlp.weighting.local_schemes" title="Permalink to this headline">¶</a></h3>
-<p>Local term-weighting schemes assign weight to tokens based on the contents of the document in which they appear.
+<p>Local term-weighting schemes assign weights to tokens based on the contents of the document in which they appear.
 This type of term-weighting schemes is very simple, and is usually accompanied by <a class="reference internal" href="#nlp-global"><span class="std std-ref">a global term-weighting scheme</span></a>.</p>
 <div class="section" id="module-nlp.weighting.local_schemes.boolean">
 <span id="boolean"></span><h4>Boolean<a class="headerlink" href="#module-nlp.weighting.local_schemes.boolean" title="Permalink to this headline">¶</a></h4>
@@ -794,8 +794,10 @@ The score is equal to the frequency of the token in the list.</p>
 
 </div>
 </div>
-<div class="section" id="global-term-weighting-schemes">
-<span id="nlp-global"></span><h3>Global Term-Weighting Schemes<a class="headerlink" href="#global-term-weighting-schemes" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="module-nlp.weighting.global_schemes">
+<span id="global-term-weighting-schemes"></span><span id="nlp-global"></span><h3>Global Term-Weighting Schemes<a class="headerlink" href="#module-nlp.weighting.global_schemes" title="Permalink to this headline">¶</a></h3>
+<p>Global term-weighting schemes assign weights to tokens based on the contents of a corpus, and not just the document they appear appear in.
+This kind of term-weighting schemes is usually accompanied by <a class="reference internal" href="#nlp-local"><span class="std std-ref">a local term-weighting scheme</span></a>.</p>
 <div class="section" id="module-nlp.weighting.global_schemes.filler">
 <span id="filler"></span><h4>Filler<a class="headerlink" href="#module-nlp.weighting.global_schemes.filler" title="Permalink to this headline">¶</a></h4>
 <p>The filler global term-weighting scheme is used when there is no need for a global term-weighting scheme.

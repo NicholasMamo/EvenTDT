@@ -81,6 +81,8 @@ Term Frequency (TF)
 Global Term-Weighting Schemes
 -----------------------------
 
+.. automodule:: nlp.weighting.global_schemes
+
 Filler
 ^^^^^^
 
