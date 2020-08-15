@@ -4,7 +4,7 @@ The tweet cleaner builds on the base cleaner, but adds Twitter-specific function
 
 import re
 
-from .cleaner import Cleaner
+from . import Cleaner
 
 class TweetCleaner(Cleaner):
 	"""
@@ -35,8 +35,8 @@ class TweetCleaner(Cleaner):
 		"""
 		Create the tweet cleaner.
 
-		The same configuration accepted by the :class:`~nlp.cleaners.cleaner.Cleaner` are accepted as arguments and keyword arguments.
-		They are then passed on to the parent constructor, :func:`~nlp.cleaners.cleaner.Cleaner.__init__`.
+		The same configuration accepted by the :class:`~nlp.cleaners.Cleaner` are accepted as arguments and keyword arguments.
+		They are then passed on to the parent constructor, :func:`~nlp.cleaners.Cleaner.__init__`.
 
 		:param remove_unicode_entities: A boolean indicating whether unicode entities should be removed.
 										Note that this also includes emojis.

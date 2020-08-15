@@ -111,7 +111,6 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-nlp.cleaners">Cleaners</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module-nlp.cleaners.cleaner">Cleaner</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-nlp.cleaners.tweet_cleaner">Tweet Cleaner</a></li>
 </ul>
 </li>
@@ -970,25 +969,26 @@ The number of documents can be extracted easily using the <code class="xref py p
 <p>Document cleaners are classes that improve the presentation of text.
 Cleaning can be used in summarization, for example, when the output text may be noisy or informal (such as when working with tweets).
 However, it can also be used as a pre-processing step to remove undesired fragments.</p>
-<div class="section" id="module-nlp.cleaners.cleaner">
-<span id="cleaner"></span><h3>Cleaner<a class="headerlink" href="#module-nlp.cleaners.cleaner" title="Permalink to this headline">¶</a></h3>
-<p>The <a class="reference internal" href="#nlp.cleaners.cleaner.Cleaner" title="nlp.cleaners.cleaner.Cleaner"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cleaner</span></code></a> is a base class for all cleaners.
+<p>The <a class="reference internal" href="#nlp.cleaners.Cleaner" title="nlp.cleaners.Cleaner"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cleaner</span></code></a> is a base class for all cleaners.
 However, it also performs simple processing on text to remove common mistakes, such as missing punctuation or multiple contiguous white-spaces.</p>
 <p>All cleaners are configured in their constructor to ensure that cleaning is uniform across all documents.
-The main functionality resides in the <a class="reference internal" href="#nlp.cleaners.cleaner.Cleaner.clean" title="nlp.cleaners.cleaner.Cleaner.clean"><code class="xref py py-func docutils literal notranslate"><span class="pre">clean()</span></code></a> function, which receives text and returns a cleaner version of it.
-Other cleaners that inherit the <a class="reference internal" href="#nlp.cleaners.cleaner.Cleaner" title="nlp.cleaners.cleaner.Cleaner"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cleaner</span></code></a> class would likely need to change this function.</p>
+The main functionality resides in the <a class="reference internal" href="#nlp.cleaners.Cleaner.clean" title="nlp.cleaners.Cleaner.clean"><code class="xref py py-func docutils literal notranslate"><span class="pre">clean()</span></code></a> function, which receives text and returns a cleaner version of it.
+Other cleaners that inherit the <a class="reference internal" href="#nlp.cleaners.Cleaner" title="nlp.cleaners.Cleaner"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cleaner</span></code></a> class would likely need to change this function.</p>
 <dl class="class">
-<dt id="nlp.cleaners.cleaner.Cleaner">
-<em class="property">class </em><code class="sig-name descname">Cleaner</code><span class="sig-paren">(</span><em class="sig-param">remove_alt_codes=False</em>, <em class="sig-param">complete_sentences=False</em>, <em class="sig-param">collapse_new_lines=False</em>, <em class="sig-param">collapse_whitespaces=False</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.cleaner.Cleaner" title="Permalink to this definition">¶</a></dt>
+<dt id="nlp.cleaners.Cleaner">
+<em class="property">class </em><code class="sig-name descname">Cleaner</code><span class="sig-paren">(</span><em class="sig-param">remove_alt_codes=False</em>, <em class="sig-param">complete_sentences=False</em>, <em class="sig-param">collapse_new_lines=False</em>, <em class="sig-param">collapse_whitespaces=False</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.Cleaner" title="Permalink to this definition">¶</a></dt>
 <dd><p>The base cleaner is meant to perform only basing pre-processing and cleaning.
 These functions are generally applicable to any type of text.</p>
+<p>You need to specify all cleaner settings in the constructor.
+This design is purposeful so that the cleaner processes all text in the same way.
+By default, the cleaner only removes whitespaces or tabs at the start and end of the text.</p>
+<p>After creating a cleaner, use the <a class="reference internal" href="#nlp.cleaners.Cleaner.clean" title="nlp.cleaners.Cleaner.clean"><code class="xref py py-func docutils literal notranslate"><span class="pre">clean()</span></code></a> function to clean the text.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>remove_alt_codes</strong> (<em>bool</em>) – A boolean indicating whether alt-codes should be removed.</p></li>
 <li><p><strong>complete_sentences</strong> (<em>bool</em>) – A boolean indicating whether the sentences should be completed.
-The cleaner has no knowledge of any incomplete sentences in the middle of the text.
-Therefore it only completes the last sentence.</p></li>
+The cleaner cannot identify any incomplete sentences in the middle of the text, so it only completes the last sentence.</p></li>
 <li><p><strong>collapse_new_lines</strong> (<em>bool</em>) – A boolean indicating whether new lines should be collapsed into whitespaces.</p></li>
 <li><p><strong>collapse_whitespaces</strong> (<em>bool</em>) – A boolean indicating whether consecutive whitespaces and tabs should be collapsed into a single whitespace.
 This also removes whitespaces just before periods.</p></li>
@@ -996,16 +996,15 @@ This also removes whitespaces just before periods.</p></li>
 </dd>
 </dl>
 <dl class="method">
-<dt id="nlp.cleaners.cleaner.Cleaner.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">remove_alt_codes=False</em>, <em class="sig-param">complete_sentences=False</em>, <em class="sig-param">collapse_new_lines=False</em>, <em class="sig-param">collapse_whitespaces=False</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.cleaner.Cleaner.__init__" title="Permalink to this definition">¶</a></dt>
+<dt id="nlp.cleaners.Cleaner.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">remove_alt_codes=False</em>, <em class="sig-param">complete_sentences=False</em>, <em class="sig-param">collapse_new_lines=False</em>, <em class="sig-param">collapse_whitespaces=False</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.Cleaner.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the cleaner with the basic configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>remove_alt_codes</strong> (<em>bool</em>) – A boolean indicating whether alt-codes should be removed.</p></li>
 <li><p><strong>complete_sentences</strong> (<em>bool</em>) – A boolean indicating whether the sentences should be completed.
-The cleaner has no knowledge of any incomplete sentences in the middle of the text.
-Therefore it only completes the last sentence.</p></li>
+The cleaner cannot identify any incomplete sentences in the middle of the text, so it only completes the last sentence.</p></li>
 <li><p><strong>collapse_new_lines</strong> (<em>bool</em>) – A boolean indicating whether new lines should be collapsed into whitespaces.</p></li>
 <li><p><strong>collapse_whitespaces</strong> (<em>bool</em>) – A boolean indicating whether consecutive whitespaces and tabs should be collapsed into a single whitespace.
 This also removes whitespaces just before periods.</p></li>
@@ -1015,9 +1014,9 @@ This also removes whitespaces just before periods.</p></li>
 </dd></dl>
 
 <dl class="method">
-<dt id="nlp.cleaners.cleaner.Cleaner.clean">
-<code class="sig-name descname">clean</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.cleaner.Cleaner.clean" title="Permalink to this definition">¶</a></dt>
-<dd><p>Clean the given text.
+<dt id="nlp.cleaners.Cleaner.clean">
+<code class="sig-name descname">clean</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.Cleaner.clean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clean the given text based on the parameters specified when creating the cleaner.
 The basic cleaner always strips empty whitespaces before and after all processing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1033,14 +1032,13 @@ The basic cleaner always strips empty whitespaces before and after all processin
 </dd></dl>
 
 <dl class="attribute">
-<dt id="nlp.cleaners.cleaner.Cleaner.__weakref__">
-<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#nlp.cleaners.cleaner.Cleaner.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dt id="nlp.cleaners.Cleaner.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#nlp.cleaners.Cleaner.__weakref__" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of weak references to the object (if defined)</p>
 </dd></dl>
 
 </dd></dl>
 
-</div>
 <div class="section" id="module-nlp.cleaners.tweet_cleaner">
 <span id="tweet-cleaner"></span><h3>Tweet Cleaner<a class="headerlink" href="#module-nlp.cleaners.tweet_cleaner" title="Permalink to this headline">¶</a></h3>
 <p>The tweet cleaner builds on the base cleaner, but adds Twitter-specific functionality.</p>
@@ -1066,8 +1064,8 @@ Note that this also includes emojis.</p></li>
 <dt id="nlp.cleaners.tweet_cleaner.TweetCleaner.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">remove_unicode_entities=False</em>, <em class="sig-param">remove_urls=False</em>, <em class="sig-param">remove_hashtags=False</em>, <em class="sig-param">split_hashtags=False</em>, <em class="sig-param">remove_retweet_prefix=False</em>, <em class="sig-param">replace_mentions=False</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.tweet_cleaner.TweetCleaner.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the tweet cleaner.</p>
-<p>The same configuration accepted by the <a class="reference internal" href="#nlp.cleaners.cleaner.Cleaner" title="nlp.cleaners.cleaner.Cleaner"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cleaner</span></code></a> are accepted as arguments and keyword arguments.
-They are then passed on to the parent constructor, <a class="reference internal" href="#nlp.cleaners.cleaner.Cleaner.__init__" title="nlp.cleaners.cleaner.Cleaner.__init__"><code class="xref py py-func docutils literal notranslate"><span class="pre">__init__()</span></code></a>.</p>
+<p>The same configuration accepted by the <a class="reference internal" href="#nlp.cleaners.Cleaner" title="nlp.cleaners.Cleaner"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cleaner</span></code></a> are accepted as arguments and keyword arguments.
+They are then passed on to the parent constructor, <a class="reference internal" href="#nlp.cleaners.Cleaner.__init__" title="nlp.cleaners.Cleaner.__init__"><code class="xref py py-func docutils literal notranslate"><span class="pre">__init__()</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">

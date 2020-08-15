@@ -102,11 +102,6 @@ Cleaners
 ========
 
 .. automodule:: nlp.cleaners
-
-Cleaner
--------
-
-.. automodule:: nlp.cleaners.cleaner
    :members:
    :special-members:
 
