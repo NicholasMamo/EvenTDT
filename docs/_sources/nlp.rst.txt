@@ -101,12 +101,17 @@ Inverse Document Frequency (IDF)
 Cleaners
 ========
 
-EvenTDT comes with classes to clean documents.
-These can be used, for example, to clean summaries.
+.. automodule:: nlp.cleaners
+
+Cleaner
+-------
 
 .. automodule:: nlp.cleaners.cleaner
    :members:
    :special-members:
+
+Tweet Cleaner
+-------------
 
 .. automodule:: nlp.cleaners.tweet_cleaner
    :members:

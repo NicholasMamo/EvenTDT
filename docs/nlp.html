@@ -110,7 +110,11 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#cleaners">Cleaners</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-nlp.cleaners">Cleaners</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-nlp.cleaners.cleaner">Cleaner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-nlp.cleaners.tweet_cleaner">Tweet Cleaner</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="wikinterface.html">4. Wikinterface</a></li>
@@ -961,11 +965,14 @@ The number of documents can be extracted easily using the <code class="xref py p
 </div>
 </div>
 </div>
-<div class="section" id="cleaners">
-<h2>Cleaners<a class="headerlink" href="#cleaners" title="Permalink to this headline">¶</a></h2>
-<p>EvenTDT comes with classes to clean documents.
-These can be used, for example, to clean summaries.</p>
-<span class="target" id="module-nlp.cleaners.cleaner"></span><p>A cleaner takes in strings and cleans them according to some rules.
+<div class="section" id="module-nlp.cleaners">
+<span id="cleaners"></span><h2>Cleaners<a class="headerlink" href="#module-nlp.cleaners" title="Permalink to this headline">¶</a></h2>
+<p>Document cleaners are classes that improve the presentation of text.
+Cleaning can be used in summarization, for example, when the output text may be noisy or informal (such as when working with tweets).
+However, it can also be used as a pre-processing step to remove undesired fragments.</p>
+<div class="section" id="module-nlp.cleaners.cleaner">
+<span id="cleaner"></span><h3>Cleaner<a class="headerlink" href="#module-nlp.cleaners.cleaner" title="Permalink to this headline">¶</a></h3>
+<p>A cleaner takes in strings and cleans them according to some rules.
 Any configuration is passed on to the constructor, <a class="reference internal" href="#nlp.cleaners.cleaner.Cleaner.__init__" title="nlp.cleaners.cleaner.Cleaner.__init__"><code class="xref py py-func docutils literal notranslate"><span class="pre">__init__()</span></code></a>.
 Without any configuration, the cleaner should change nothing.
 Then, the cleaners’ main functionality revolves around the <a class="reference internal" href="#nlp.cleaners.cleaner.Cleaner.clean" title="nlp.cleaners.cleaner.Cleaner.clean"><code class="xref py py-func docutils literal notranslate"><span class="pre">clean()</span></code></a> function.</p>
@@ -1032,7 +1039,10 @@ The basic cleaner always strips empty whitespaces before and after all processin
 
 </dd></dl>
 
-<span class="target" id="module-nlp.cleaners.tweet_cleaner"></span><p>The tweet cleaner builds on the base cleaner, but adds Twitter-specific functionality.</p>
+</div>
+<div class="section" id="module-nlp.cleaners.tweet_cleaner">
+<span id="tweet-cleaner"></span><h3>Tweet Cleaner<a class="headerlink" href="#module-nlp.cleaners.tweet_cleaner" title="Permalink to this headline">¶</a></h3>
+<p>The tweet cleaner builds on the base cleaner, but adds Twitter-specific functionality.</p>
 <dl class="class">
 <dt id="nlp.cleaners.tweet_cleaner.TweetCleaner">
 <em class="property">class </em><code class="sig-name descname">TweetCleaner</code><span class="sig-paren">(</span><em class="sig-param">remove_unicode_entities=False</em>, <em class="sig-param">remove_urls=False</em>, <em class="sig-param">remove_hashtags=False</em>, <em class="sig-param">split_hashtags=False</em>, <em class="sig-param">remove_retweet_prefix=False</em>, <em class="sig-param">replace_mentions=False</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.tweet_cleaner.TweetCleaner" title="Permalink to this definition">¶</a></dt>
@@ -1096,6 +1106,7 @@ This is only used when mentioned users’ names are replaced in the text.</p></l
 
 </dd></dl>
 
+</div>
 </div>
 </div>
 
