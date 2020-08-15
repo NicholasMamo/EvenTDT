@@ -1041,12 +1041,17 @@ The basic cleaner always strips empty whitespaces before and after all processin
 
 <div class="section" id="module-nlp.cleaners.tweet_cleaner">
 <span id="tweet-cleaner"></span><h3>Tweet Cleaner<a class="headerlink" href="#module-nlp.cleaners.tweet_cleaner" title="Permalink to this headline">¶</a></h3>
-<p>The tweet cleaner builds on the base cleaner, but adds Twitter-specific functionality.</p>
+<p>The tweet cleaner builds on the base cleaner, but adds functionality that is specific to Twitter and other informal text in general.
+The Twitter-specific functionality involves retweet prefixes (<cite>RT</cite> at the start of the tweet), hashtags (such as <cite>#EvenTDT</cite>) and mentions (like <cite>&#64;NicholasMamo</cite>).
+The tweet cleaner is also capable of removing unicode entities, like certain emojis, and URLs.</p>
 <dl class="class">
 <dt id="nlp.cleaners.tweet_cleaner.TweetCleaner">
 <em class="property">class </em><code class="sig-name descname">TweetCleaner</code><span class="sig-paren">(</span><em class="sig-param">remove_unicode_entities=False</em>, <em class="sig-param">remove_urls=False</em>, <em class="sig-param">remove_hashtags=False</em>, <em class="sig-param">split_hashtags=False</em>, <em class="sig-param">remove_retweet_prefix=False</em>, <em class="sig-param">replace_mentions=False</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.tweet_cleaner.TweetCleaner" title="Permalink to this definition">¶</a></dt>
 <dd><p>The tweet cleaner removes needless information from a text to make it presentable.
-This includes retweet syntax and URLs.</p>
+This includes Twitter-specific syntax and URLs.</p>
+<p>By default, the tweet cleaner only strips the text of whitespaces at the beginning or at the end of text.
+You can add other cleaning steps using the appropriate parameters when creating a <a class="reference internal" href="#nlp.cleaners.tweet_cleaner.TweetCleaner" title="nlp.cleaners.tweet_cleaner.TweetCleaner"><code class="xref py py-class docutils literal notranslate"><span class="pre">TweetCleaner</span></code></a>.
+In addition, you can also specify additional parameters from the base <a class="reference internal" href="#nlp.cleaners.Cleaner" title="nlp.cleaners.Cleaner"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cleaner</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
@@ -1063,7 +1068,8 @@ Note that this also includes emojis.</p></li>
 <dl class="method">
 <dt id="nlp.cleaners.tweet_cleaner.TweetCleaner.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">remove_unicode_entities=False</em>, <em class="sig-param">remove_urls=False</em>, <em class="sig-param">remove_hashtags=False</em>, <em class="sig-param">split_hashtags=False</em>, <em class="sig-param">remove_retweet_prefix=False</em>, <em class="sig-param">replace_mentions=False</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.tweet_cleaner.TweetCleaner.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create the tweet cleaner.</p>
+<dd><p>Create the tweet cleaner by specifying the type of cleaning operations it should perform.
+This design is purposeful so that the tweet cleaner processes all text in the same way.</p>
 <p>The same configuration accepted by the <a class="reference internal" href="#nlp.cleaners.Cleaner" title="nlp.cleaners.Cleaner"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cleaner</span></code></a> are accepted as arguments and keyword arguments.
 They are then passed on to the parent constructor, <a class="reference internal" href="#nlp.cleaners.Cleaner.__init__" title="nlp.cleaners.Cleaner.__init__"><code class="xref py py-func docutils literal notranslate"><span class="pre">__init__()</span></code></a>.</p>
 <dl class="field-list simple">
@@ -1086,6 +1092,8 @@ Note that this also includes emojis.</p></li>
 <code class="sig-name descname">clean</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">tweet=None</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.tweet_cleaner.TweetCleaner.clean" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clean the given text.
 The basic cleaner always strips empty whitespaces before any pre-processing.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">tweet</span></code> parameter is optional, and is only required when replacing tweet mentions by the respective user’s screen name (for example, replacing <cite>&#64;NicholasMamo</cite> to <cite>Nicholas Mamo</cite>).
+In this case, the function requires the original <code class="docutils literal notranslate"><span class="pre">tweet</span></code> object to look for the <code class="docutils literal notranslate"><span class="pre">user</span></code> object, which contains details for replacing the username.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">

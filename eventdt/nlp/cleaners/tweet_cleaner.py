@@ -1,5 +1,7 @@
 """
-The tweet cleaner builds on the base cleaner, but adds Twitter-specific functionality.
+The tweet cleaner builds on the base cleaner, but adds functionality that is specific to Twitter and other informal text in general.
+The Twitter-specific functionality involves retweet prefixes (`RT` at the start of the tweet), hashtags (such as `#EvenTDT`) and mentions (like `@NicholasMamo`).
+The tweet cleaner is also capable of removing unicode entities, like certain emojis, and URLs.
 """
 
 import re
@@ -9,7 +11,11 @@ from . import Cleaner
 class TweetCleaner(Cleaner):
 	"""
 	The tweet cleaner removes needless information from a text to make it presentable.
-	This includes retweet syntax and URLs.
+	This includes Twitter-specific syntax and URLs.
+
+	By default, the tweet cleaner only strips the text of whitespaces at the beginning or at the end of text.
+	You can add other cleaning steps using the appropriate parameters when creating a :class:`~nlp.cleaners.tweet_cleaner.TweetCleaner`.
+	In addition, you can also specify additional parameters from the base :class:`~nlp.cleaners.Cleaner`.
 
 	:ivar remove_unicode_entities: A boolean indicating whether unicode entities should be removed.
 								   Note that this also includes emojis.
@@ -33,7 +39,8 @@ class TweetCleaner(Cleaner):
 					   remove_retweet_prefix=False,
 					   replace_mentions=False, *args, **kwargs):
 		"""
-		Create the tweet cleaner.
+		Create the tweet cleaner by specifying the type of cleaning operations it should perform.
+		This design is purposeful so that the tweet cleaner processes all text in the same way.
 
 		The same configuration accepted by the :class:`~nlp.cleaners.Cleaner` are accepted as arguments and keyword arguments.
 		They are then passed on to the parent constructor, :func:`~nlp.cleaners.Cleaner.__init__`.
@@ -66,6 +73,9 @@ class TweetCleaner(Cleaner):
 		"""
 		Clean the given text.
 		The basic cleaner always strips empty whitespaces before any pre-processing.
+
+		The ``tweet`` parameter is optional, and is only required when replacing tweet mentions by the respective user's screen name (for example, replacing `@NicholasMamo` to `Nicholas Mamo`).
+		In this case, the function requires the original ``tweet`` object to look for the ``user`` object, which contains details for replacing the username.
 
 		:param text: The text to clean.
 		:type text: str
