@@ -46,8 +46,8 @@ class TFIDF(Exportable, TermWeightingScheme):
 		"""
 
 		# NOTE: The imports are located here because of circular dependencies
-		from local_schemes.tf import TF
-		from global_schemes.idf import IDF
+		from nlp.weighting.local_schemes.tf import TF
+		from nlp.weighting.global_schemes.idf import IDF
 
 		tf = TF()
 		idf = IDF(idf, documents)
