@@ -67,9 +67,15 @@ class Summary(Attributable, Exportable):
 		Get the string representation of the summary.
 		This is equivalent to concatenating the text of all documents.
 
+		If all documents have a ``timestamp`` attribute, this function automatically sorts them in chronological order.
+
 		:return: The string representation of the summary.
 		:rtype: str
 		"""
+
+		if all( 'timestamp' in document.attributes for document in self.documents ):
+			documents = sorted(self.documents, key=lambda document: float(document.attributes.get('timestamp')))
+			return ' '.join([ document.text for document in documents ])
 
 		return ' '.join([ document.text for document in self.documents ])
 

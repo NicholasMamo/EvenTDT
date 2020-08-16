@@ -96,6 +96,23 @@ class TestSummary(unittest.TestCase):
 		summary = Summary(documents)
 		self.assertEqual('this is not a pipe', str(summary))
 
+	def test_str_sorted(self):
+		"""
+		Test that when printing a a summary, if all documents have a timestamp, they are ordered chronologically.
+		"""
+
+		corpus = [ Document('this is not a cigar', { 'this': 1, 'cigar': 1 }),
+		 		   Document('this is a pipe', { 'this': 1, 'pipe': 1 }) ]
+		summary = Summary()
+		summary.documents = corpus
+		self.assertEqual(' '.join(document.text for document in corpus), str(summary))
+
+		corpus = [ Document('this is not a cigar', { 'this': 1, 'cigar': 1 }, attributes={ 'timestamp': 1 } ),
+		 		   Document('this is a pipe', { 'this': 1, 'pipe': 1 }, attributes={ 'timestamp': 0 } ) ]
+		summary = Summary()
+		summary.documents = corpus
+		self.assertEqual(' '.join(document.text for document in corpus[::-1]), str(summary))
+
 	def test_export(self):
 		"""
 		Test exporting and importing summaries.
