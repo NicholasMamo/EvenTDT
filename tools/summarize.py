@@ -88,8 +88,9 @@ def main():
 	"""
 	timeline = load_timeline(args.file)
 	summarizer = create_summarizer(args.method, l=vars(args)['lambda'])
+	summaries = summarize(summarizer, timeline)
 
-	tools.save(args.output, { 'meta': cmd })
+	tools.save(args.output, { 'summaries': summaries, 'meta': cmd })
 
 def method(method):
 	"""
@@ -151,6 +152,28 @@ def create_summarizer(method, l):
 		return method(l=l)
 
 	return method()
+
+def summarize(summarizer, timeline):
+	"""
+	Summarize the given timeline using the given algorithm.
+	This function iterates over all of the timeline's nodes and summarizes them individually.
+
+	:param summarizer: The summarization method to use.
+	:type summarizer: :class:`~summarization.algorithms.summarization.SummarizationAlgorithm`
+	:param timeline: The timeline to summarize.
+	:type timeline: :class:`~summarization.timeline.Timeline`
+
+	:return: A list of summaries, corresponding to each node.
+	:rtype: list of :class:`~summarization.summary.Summary`
+	"""
+
+	summaries = [ ]
+
+	for node in timeline.nodes:
+		summary = summarizer.summarize(node.get_all_documents(), 140)
+		summaries.append(summary)
+
+	return summaries
 
 if __name__ == "__main__":
 	main()
