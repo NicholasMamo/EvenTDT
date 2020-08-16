@@ -226,8 +226,11 @@ def summarize(summarizer, timeline, verbose=False, max_documents=None, length=14
 		if clean:
 			cleaner = TweetCleaner(remove_alt_codes=True, complete_sentences=True,
 								   collapse_new_lines=True, collapse_whitespaces=True,
+								   capitalize_first=True,
 								   remove_unicode_entities=True, remove_urls=True,
 								   remove_hashtags=True, remove_retweet_prefix=True)
+			for document in documents:
+				document.text = cleaner.clean(document.text)
 		documents = filter_documents(documents, max_documents)
 
 		"""
