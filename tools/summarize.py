@@ -131,8 +131,8 @@ def load_timeline(file):
 	"""
 
 	with open(file) as f:
-		data = json.loads(''.join(f.readlines()))['timeline']
-		return Exportable.decode(data)
+		data = json.loads(''.join(f.readlines()))
+		return Exportable.decode(data)['timeline']
 
 def create_summarizer(method, l):
 	"""
