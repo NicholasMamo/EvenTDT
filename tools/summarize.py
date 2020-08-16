@@ -17,8 +17,8 @@ To run the script, use:
 Accepted arguments:
 
 	- ``-f --file``			*<Required>* The path to the file containing the timeline to summarize.
-	- ``-o --output``		*<Required>* The path to the file where to store the generated summaries.
 	- ``-m --method``		*<Required>* The method to use to generate summaries; supported: `DGS`, `MMR`.
+	- ``-o --output``		*<Required>* The path to the file where to store the generated summaries.
 """
 
 import argparse
@@ -43,8 +43,8 @@ def setup_args():
 	Accepted arguments:
 
 		- ``-f --file``			*<Required>* The path to the file containing the timeline to summarize.
-		- ``-o --output``		*<Required>* The path to the file where to store the generated summaries.
 		- ``-m --method``		*<Required>* The method to use to generate summaries; supported: `DGS`, `MMR`.
+		- ``-o --output``		*<Required>* The path to the file where to store the generated summaries.
 
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
