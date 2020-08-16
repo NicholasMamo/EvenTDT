@@ -20,15 +20,6 @@ class TestAttributable(unittest.TestCase):
 	Test the :class:`~objects.exportable.Exportable` class.
 	"""
 
-	def test_encode_not_dict(self):
-		"""
-		Test that when encoding something that is not a dictionary, a TypeError is returned.
-		"""
-
-		self.assertRaises(TypeError, Exportable.encode, [ 1 ])
-		self.assertRaises(TypeError, Exportable.encode, 1)
-		self.assertRaises(TypeError, Exportable.encode, True)
-
 	def test_encode_empty_dict(self):
 		"""
 		Test that when encoding an empty dictionary, another empty dictionary is returned.
@@ -76,15 +67,6 @@ class TestAttributable(unittest.TestCase):
 		self.assertEqual("<class 'vsm.vector.Vector'>", encoding['vector']['class'])
 		self.assertEqual({ 'a': 1 }, encoding['vector']['dimensions'])
 		self.assertEqual({ 'b': 2 }, encoding['vector']['attributes'])
-
-	def test_decode_not_dict(self):
-		"""
-		Test that when decoding something that is not a dictionary, a TypeError is returned.
-		"""
-
-		self.assertRaises(TypeError, Exportable.decode, [ 1 ])
-		self.assertRaises(TypeError, Exportable.decode, 1)
-		self.assertRaises(TypeError, Exportable.decode, True)
 
 	def test_decode_empty_dict(self):
 		"""

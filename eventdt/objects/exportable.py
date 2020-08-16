@@ -54,12 +54,7 @@ class Exportable(ABC):
 
 		:return: The encoded data.
 		:rtype: dict
-
-		:raises TypeError: When the data is not a dictionary.
 		"""
-
-		if type(data) is not dict:
-			raise TypeError(f"dict expected, received { type(data) }")
 
 		data = copy.deepcopy(data)
 		"""
@@ -88,12 +83,7 @@ class Exportable(ABC):
 
 		:return: A dictionary, but this time decoded.
 		:rtype: dict
-
-		:raises TypeError: When the data is not a dictionary.
 		"""
-
-		if type(data) is not dict:
-			raise TypeError(f"dict expected, received { type(data) }")
 
 		data = copy.deepcopy(data)
 		for key in data:
