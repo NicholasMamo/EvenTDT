@@ -23,7 +23,7 @@ Accepted arguments:
 	- ``-m --method``		*<Required>* The method to use to generate summaries; supported: `DGS`, `MMR`.
 	- ``-o --output``		*<Required>* The path to the file where to store the generated summaries.
 	- ``-v --verbose``		*<Optional>* Print the summaries as they are generated.
-	- ``--documents``		*<Optional>* The maximum number of documents to use when summarizing, with a preference for long documents; defaults to all documents.
+	- ``--documents``		*<Optional>* The maximum number of documents to use when summarizing, with a preference for quality documents, scored by the :class:`~summarization.scorers.tweet_scorer.TweetScorer`; defaults to all documents.
 	- ``--length``			*<Optional>* The length of each generated summary (in terms of the number of characters); defaults to 140 characters.
 	- ``--lambda``			*<Optional>* The lambda parameter to balance between relevance and non-redundancy (used only with the :class:`~summarization.algorithms.mmr.MMR` algorithm; defaults to 0.5).
 	- ``--with-query``		*<Optional>* Use the centroid of each timeline node's topics as a query for summarization (used only with the :class:`~summarization.algorithms.dgs.DGS` algorithm).
@@ -43,6 +43,7 @@ sys.path.insert(-1, lib)
 from logger import logger
 from objects.exportable import Exportable
 from summarization.algorithms import DGS, MMR
+from summarization.scorers import TweetScorer
 from summarization.timeline.nodes import TopicalClusterNode
 from vsm.clustering import Cluster
 import tools
@@ -57,7 +58,7 @@ def setup_args():
 		- ``-m --method``		*<Required>* The method to use to generate summaries; supported: `DGS`, `MMR`.
 		- ``-o --output``		*<Required>* The path to the file where to store the generated summaries.
 		- ``-v --verbose``		*<Optional>* Print the summaries as they are generated.
-		- ``--documents``		*<Optional>* The maximum number of documents to use when summarizing, with a preference for long documents; defaults to all documents.
+		- ``--documents``		*<Optional>* The maximum number of documents to use when summarizing, with a preference for quality documents, scored by the :class:`~summarization.scorers.tweet_scorer.TweetScorer`; defaults to all documents.
 		- ``--length``			*<Optional>* The length of each generated summary (in terms of the number of characters); defaults to 140 characters.
 		- ``--lambda``			*<Optional>* The lambda parameter to balance between relevance and non-redundancy (used only with the :class:`~summarization.algorithms.mmr.MMR` algorithm; defaults to 0.5).
 		- ``--with-query``		*<Optional>* Use the centroid of each timeline node's topics as a query for summarization (used only with the :class:`~summarization.algorithms.dgs.DGS` algorithm).
@@ -82,7 +83,7 @@ def setup_args():
 						help='<Optional> Print the summaries as they are generated.')
 	parser.add_argument('--documents',
 						type=int, required=False, default=None,
-						help='<Optional> The maximum number of documents to use when summarizing, with a preference for long documents; defaults to all documents.')
+						help='<Optional> The maximum number of documents to use when summarizing, with a preference for quality documents, scored by the tweet scorer; defaults to all documents.')
 	parser.add_argument('--length',
 						type=int, required=False, default=140,
 						help='<Optional> The length of each generated summary (in terms of the number of characters); defaults to 140 characters.')
@@ -261,10 +262,19 @@ def filter_documents(documents, max_documents=None):
 						   if document in filtered.values() ]
 
 	"""
-	If the number of documents is given, sort them in ascending order of length and retain only the top ones.
+	If the number of documents is given, sort them in ascending order of score and retain only the top ones.
 	"""
+	scorer = TweetScorer()
 	if max_documents is not None:
-		documents = sorted(documents, key=lambda document: len(document.text), reverse=True)
+		for document in documents:
+			tokens = document.text.split()
+			document.attributes['tokens'] = tokens
+
+		documents = sorted(documents, key=lambda document: scorer.score(document), reverse=True)
+
+		for document in documents:
+			del document.attributes['tokens']
+
 		return documents[:max_documents]
 	else:
 		return documents
