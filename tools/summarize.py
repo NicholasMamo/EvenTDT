@@ -256,7 +256,7 @@ def filter_documents(documents, max_documents=None):
 	Remove duplicates.
 	Immediately after, load the documents again to ensure that they are in the same order.
 	"""
-	filtered = { document.text: document for document in documents }
+	filtered = { document.text.lower(): document for document in documents }
 	documents = [ document for document in documents
 						   if document in filtered.values() ]
 

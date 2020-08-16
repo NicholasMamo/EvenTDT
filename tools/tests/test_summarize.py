@@ -79,6 +79,14 @@ class TestSummarize(unittest.TestCase):
 		documents = [ Document('a'), Document('b'), Document('c'), Document('a') ]
 		self.assertEqual(documents[-3:], summarize.filter_documents(documents))
 
+	def test_filter_documents_with_duplicates_case_insensitive(self):
+		"""
+		Test that when filtering documents, duplicates are removed automatically even if they have different capitalization.
+		"""
+
+		documents = [ Document('a'), Document('b'), Document('c'), Document('A') ]
+		self.assertEqual(documents[-3:], summarize.filter_documents(documents))
+
 	def test_filter_documents_empty(self):
 		"""
 		Test that when filtering an empty list of documents, another empty list is returned.
