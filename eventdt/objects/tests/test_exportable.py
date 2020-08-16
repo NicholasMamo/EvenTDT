@@ -178,6 +178,59 @@ class TestAttributable(unittest.TestCase):
 		self.assertEqual(tfidf.local_scheme.__dict__, decoded['tfidf'].local_scheme.__dict__)
 		self.assertEqual(tfidf.global_scheme.__dict__, decoded['tfidf'].global_scheme.__dict__)
 
+	def test_decode_primitive_list(self):
+		"""
+		Test that when decoding a list of primitives, the list's items are unchanged.
+		"""
+
+		data = [ 1, 2 ]
+		self.assertEqual(data, Exportable.decode(Exportable.encode(data)))
+
+	def test_decode_vector_list(self):
+		"""
+		Test that when decoding a list of vectors, the list's items are decoded as well.
+		"""
+
+		vectors = [ Vector({ 'a': 1 }, { 'b': 2 }),
+					Vector({ 'c': 3 }, { 'd': 4 }) ]
+		encoded = Exportable.encode(vectors)
+		decoded = Exportable.decode(encoded)
+		self.assertTrue(all( vector.dimensions == v.dimensions for vector, v in zip(vectors, decoded) ))
+		self.assertTrue(all( vector.attributes == v.attributes for vector, v in zip(vectors, decoded) ))
+
+	def test_decode_primitive_list_in_dict(self):
+		"""
+		Test that when decoding a dictionary with a list of primitives in it, the list's items are decoded as well.
+		"""
+
+		data = { 'a': [ 1, 2 ], 'b': 3 }
+		self.assertEqual(data, Exportable.decode(Exportable.encode(data)))
+
+	def test_decode_vector_list_in_dict(self):
+		"""
+		Test that when decoding a dictionary with a list of vectors in it, the list's items are decoded as well.
+		"""
+
+		v = [ Vector({ 'a': 1 }, { 'b': 2 }),
+			  Vector({ 'c': 3 }, { 'd': 4 }) ]
+		data = { 'a': v, 'e': 5 }
+		encoded = Exportable.encode(data)
+		decoded = Exportable.decode(encoded)
+		self.assertTrue(all( vector.dimensions == v.dimensions for vector, v in zip(v, decoded['a']) ))
+		self.assertTrue(all( vector.attributes == v.attributes for vector, v in zip(v, decoded['a']) ))
+		self.assertEqual(5, decoded['e'])
+
+	def test_decode_vector(self):
+		"""
+		Test that when decoding a vector, its array representation is returned.
+		"""
+
+		v = Vector({ 'a': 1 }, { 'b': 2 })
+		encoded = Exportable.encode(v)
+		decoded = Exportable.decode(encoded)
+		self.assertEqual(v.dimensions, decoded.dimensions)
+		self.assertEqual(v.attributes, decoded.attributes)
+
 	def test_get_module_empty(self):
 		"""
 		Test that when getting the module name from an invalid string, a ValueError is raised.

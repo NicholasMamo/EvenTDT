@@ -59,6 +59,9 @@ class Exportable(ABC):
 		data = copy.deepcopy(data)
 
 		if type(data) is dict:
+			"""
+			The first case is when a dictionary is given and all keys need to be encoded because some may represent an object.
+			"""
 			for key in data:
 				try:
 					data[key] = json.loads(json.dumps(data.get(key)))
@@ -68,6 +71,9 @@ class Exportable(ABC):
 					else:
 						data[key] = data.get(key).to_array()
 		elif type(data) is list:
+			"""
+			The second case is when a list is given and all items need to be encoded because some may represent an object.
+			"""
 			for i, item in enumerate(data):
 				try:
 					data[i] = json.loads(json.dumps(item))
@@ -77,6 +83,9 @@ class Exportable(ABC):
 					else:
 						data[i] = item.to_array()
 		else:
+			"""
+			The third case is when an object is given and it can be encoded.
+			"""
 			data = data.to_array()
 
 		return data
@@ -89,22 +98,49 @@ class Exportable(ABC):
 		Only classes that inherit the :class:`~objects.exportable.Exportable` can be decoded.
 		This is done through the :func:`~objects.exportable.Exportable.from_array` function.
 
-		:param data: The data to decode.
-		:type data: dict
+		.. note::
 
-		:return: A dictionary, but this time decoded.
-		:rtype: dict
+			When decoding, the function expects either a dictionary or a list.
+			JSON objects cannot be anything else.
+
+		:param data: The data to decode.
+		:type data: dict or list
+
+		:return: A dictionary, list or object, but this time decoded.
+		:rtype: dict or list or object
 		"""
 
 		data = copy.deepcopy(data)
-		for key in data:
-			if type(data.get(key)) is dict:
-				if 'class' in data.get(key):
+
+		if type(data) is dict and 'class' in data:
+			"""
+			The first case is when the dictionary itself represents an object.
+			"""
+			module = importlib.import_module(Exportable.get_module(data.get('class')))
+			cls = getattr(module, Exportable.get_class(data.get('class')))
+			data = cls.from_array(data)
+		elif type(data) is dict:
+			"""
+			The second case is when a dictionary is given and all keys need to be decoded because some may represent an object.
+			"""
+			for key in data:
+				if type(data.get(key)) is dict and 'class' in data.get(key):
 					module = importlib.import_module(Exportable.get_module(data.get(key).get('class')))
 					cls = getattr(module, Exportable.get_class(data.get(key).get('class')))
 					data[key] = cls.from_array(data.get(key))
 				else:
 					data[key] = Exportable.decode(data.get(key))
+		elif type(data) is list:
+			"""
+			The second case is when a list is given and all items need to be decoded because some may represent an object.
+			"""
+			for i, item in enumerate(data):
+				if type(item) is dict and 'class' in item:
+					module = importlib.import_module(Exportable.get_module(item.get('class')))
+					cls = getattr(module, Exportable.get_class(item.get('class')))
+					data[i] = cls.from_array(item)
+				else:
+					data[i] = Exportable.decode(item)
 
 		return data
 
