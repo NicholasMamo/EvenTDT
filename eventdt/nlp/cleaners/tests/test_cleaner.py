@@ -367,3 +367,93 @@ class TestCleaner(unittest.TestCase):
 
 		text = ' Our prediction based on #FIFA Rankings . Country Risk Ratings &amp;'
 		self.assertEqual('Our prediction based on #FIFA Rankings. Country Risk Ratings.', cleaner.clean(text))
+
+	def test_capitalize_first_empty(self):
+		"""
+		Test that when capitalizing the first character of empty text, nothing changes.
+		"""
+
+		cleaner = Cleaner(capitalize_first=True)
+
+		text = ''
+		self.assertEqual(text, cleaner.clean(text))
+
+	def test_capitalize_first_single_quote_only(self):
+		"""
+		Test that when capitalizing the first character of a text that is just a single quote, nothing changes.
+		"""
+
+		cleaner = Cleaner(capitalize_first=True)
+
+		text = '\''
+		self.assertEqual(text, cleaner.clean(text))
+
+	def test_capitalize_first_quote_only(self):
+		"""
+		Test that when capitalizing the first character of a text that is just a quote, nothing changes.
+		"""
+
+		cleaner = Cleaner(capitalize_first=True)
+
+		text = '"'
+		self.assertEqual(text, cleaner.clean(text))
+
+	def test_capitalize_first_french_quote_only(self):
+		"""
+		Test that when capitalizing the first character of a text that is just a French-style quote, nothing changes.
+		"""
+
+		cleaner = Cleaner(capitalize_first=True)
+
+		text = '»'
+		self.assertEqual(text, cleaner.clean(text))
+
+	def test_capitalize_first_starts_with_single_quote(self):
+		"""
+		Test that when a sentence starts with a single quote, the first character after it is capitalized.
+		"""
+
+		cleaner = Cleaner(capitalize_first=True)
+
+		text = '\'sounds a lot like the last one.\''
+		self.assertEqual('\'Sounds a lot like the last one.\'', cleaner.clean(text))
+
+	def test_capitalize_first_starts_with_quote(self):
+		"""
+		Test that when a sentence starts with a quote, the first character after it is capitalized.
+		"""
+
+		cleaner = Cleaner(capitalize_first=True)
+
+		text = '"sounds a lot like the last one."'
+		self.assertEqual('"Sounds a lot like the last one."', cleaner.clean(text))
+
+	def test_capitalize_first_starts_with_french_quote(self):
+		"""
+		Test that when a sentence starts with a French-style quote, the first character after it is capitalized.
+		"""
+
+		cleaner = Cleaner(capitalize_first=True)
+
+		text = '«sounds a lot like the last one.»'
+		self.assertEqual('«Sounds a lot like the last one.»', cleaner.clean(text))
+
+	def test_capitalize_first_single_character(self):
+		"""
+		Test that when a sentence is one character, that character is capitalized.
+		"""
+
+		cleaner = Cleaner(capitalize_first=True)
+
+		text = 'a'
+		self.assertEqual('A', cleaner.clean(text))
+
+	def test_capitalize_symbol(self):
+		"""
+		Test that when the text starts with a symbol, cleaning does not crash.
+		"""
+
+		cleaner = Cleaner(capitalize_first=True)
+
+		text = '@NicholasMamo Allez l\'OL'
+		self.assertEqual('@NicholasMamo Allez l\'OL', cleaner.clean(text))

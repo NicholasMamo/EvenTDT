@@ -35,12 +35,15 @@ class Cleaner(object):
 	:ivar collapse_whitespaces: A boolean indicating whether consecutive whitespaces and tabs should be collapsed into a single whitespace.
 								This also removes whitespaces just before periods.
 	:vartype collapse_whitespaces: bool
+	:ivar capitalize_first: A boolean indicating whether to capitalize the first letter.
+	:vartype capitalize_first: bool
 	"""
 
 	def __init__(self, remove_alt_codes=False,
 					   complete_sentences=False,
 					   collapse_new_lines=False,
-					   collapse_whitespaces=False):
+					   collapse_whitespaces=False,
+					   capitalize_first=False):
 		"""
 		Create the cleaner with the basic configuration.
 
@@ -54,12 +57,15 @@ class Cleaner(object):
 		:param collapse_whitespaces: A boolean indicating whether consecutive whitespaces and tabs should be collapsed into a single whitespace.
 									 This also removes whitespaces just before periods.
 		:type collapse_whitespaces: bool
+		:param capitalize_first: A boolean indicating whether to capitalize the first letter.
+		:type capitalize_first: bool
 		"""
 
 		self.remove_alt_codes = remove_alt_codes
 		self.complete_sentences = complete_sentences
 		self.collapse_new_lines = collapse_new_lines
 		self.collapse_whitespaces = collapse_whitespaces
+		self.capitalize_first = capitalize_first
 
 	def clean(self, text):
 		"""
@@ -78,6 +84,7 @@ class Cleaner(object):
 		text = self._remove_alt_codes(text) if self.remove_alt_codes else text
 		text = self._complete_sentences(text) if self.complete_sentences else text
 		text = self._collapse_whitespaces(text) if self.collapse_whitespaces else text
+		text = self._capitalize_first(text) if self.capitalize_first else text
 		text = text.strip()
 
 		return text
@@ -169,6 +176,44 @@ class Cleaner(object):
 		whitespace_period_pattern =  re.compile('\\s\\.')
 		text = whitespace_period_pattern.sub('.', text)
 
+		return text
+
+	def _capitalize_first(self, text):
+		"""
+		Capitalize the first letter of the given text.
+
+		:param text: The text to clean.
+		:type text: str
+
+		:return: The text with the first letter capitalized.
+		:rtype: str
+		"""
+
+		quotes = ['\'', '"', '«']
+
+		"""
+		If the text is empty, return immediately.
+		"""
+		if not text:
+			return text
+
+		"""
+		If the text is just a quote, return immediately.
+		"""
+		if text in quotes:
+			return text
+
+		"""
+		If the text starts with a quote capitalize the next letter.
+		"""
+		if len(text) > 1 and text[0] in quotes:
+			text = f"{ text[0] }{ text[1].upper() }{ text[2:] }"
+			return text
+
+		"""
+		Otherwise, capitalize the first letter.
+		"""
+		text = f"{ text[0].upper() }{ text[1:] }"
 		return text
 
 from .tweet_cleaner import TweetCleaner
