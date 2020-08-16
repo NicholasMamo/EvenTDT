@@ -68,6 +68,26 @@ class TestAttributable(unittest.TestCase):
 		self.assertEqual({ 'a': 1 }, encoding['vector']['dimensions'])
 		self.assertEqual({ 'b': 2 }, encoding['vector']['attributes'])
 
+	def test_encode_primitive_list(self):
+		"""
+		Test that when encoding a list of primitives, the list's items are unchanged.
+		"""
+
+		data = [ 1, 2 ]
+		self.assertEqual(data, Exportable.encode(data))
+
+	def test_encode_vector_list(self):
+		"""
+		Test that when encoding a list of vectors, the list's items are encoded as well.
+		"""
+
+		v = [ Vector({ 'a': 1 }, { 'b': 2 }),
+			  Vector({ 'c': 3 }, { 'd': 4 }) ]
+		self.assertEqual([
+			{ 'class': "<class 'vsm.vector.Vector'>", 'attributes': { 'b': 2 }, 'dimensions': { 'a': 1 }},
+			{ 'class': "<class 'vsm.vector.Vector'>", 'attributes': { 'd': 4 }, 'dimensions': { 'c': 3 }}
+		], Exportable.encode(v))
+
 	def test_encode_primitive_list_in_dict(self):
 		"""
 		Test that when encoding a dictionary with a list of primitives in it, the list's items are encoded as well.
