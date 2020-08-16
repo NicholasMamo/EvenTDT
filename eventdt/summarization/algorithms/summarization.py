@@ -12,11 +12,11 @@ class SummarizationAlgorithm(ABC):
 	"""
 
 	@abstractmethod
-	def summarize(self, documents, *args, **kwargs):
+	def summarize(self, documents, length, *args, **kwargs):
 		"""
 		Summarize the given documents.
 
-		Summarization algorithms may accept more parameters, but they must accept, at least a list of documents.
+		Summarization algorithms may accept more parameters, but they must accept, at least a list of documents and the length of the summary.
 		They must also always return a summary object.
 
 		.. note::
