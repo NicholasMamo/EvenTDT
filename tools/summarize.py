@@ -19,6 +19,7 @@ Accepted arguments:
 	- ``-f --file``			*<Required>* The path to the file containing the timeline to summarize.
 	- ``-m --method``		*<Required>* The method to use to generate summaries; supported: `DGS`, `MMR`.
 	- ``-o --output``		*<Required>* The path to the file where to store the generated summaries.
+	- ``-v --verbose``		*<Optional>* Print the summaries as they are generated.
 	- ``--lambda``			*<Optional>* The lambda parameter to balance between relevance and non-redundancy (used only with the :class:`~summarization.algorithms.mmr.MMR` algorithm; defaults to 0.5).
 """
 
@@ -33,9 +34,10 @@ lib = os.path.join(root, 'eventdt')
 sys.path.insert(-1, root)
 sys.path.insert(-1, lib)
 
-import tools
+from logger import logger
 from objects.exportable import Exportable
 from summarization.algorithms import DGS, MMR
+import tools
 
 def setup_args():
 	"""
@@ -46,6 +48,7 @@ def setup_args():
 		- ``-f --file``			*<Required>* The path to the file containing the timeline to summarize.
 		- ``-m --method``		*<Required>* The method to use to generate summaries; supported: `DGS`, `MMR`.
 		- ``-o --output``		*<Required>* The path to the file where to store the generated summaries.
+		- ``-v --verbose``		*<Optional>* Print the summaries as they are generated.
 		- ``--lambda``			*<Optional>* The lambda parameter to balance between relevance and non-redundancy (used only with the :class:`~summarization.algorithms.mmr.MMR` algorithm; defaults to 0.5).
 
 	:return: The command-line arguments.
@@ -63,6 +66,9 @@ def setup_args():
 	parser.add_argument('-o', '--output',
 						type=str, required=True,
 						help='<Required> The path to the file where to store the generated summaries.')
+	parser.add_argument('-v', '--verbose',
+						action='store_true', required=False, default=False,
+						help='<Optional> Print the summaries as they are generated.')
 	parser.add_argument('--lambda',
 						type=float, metavar='[0-1]', required=False, default=0.5,
 						help='<Optional> The lambda parameter to balance between relevance and non-redundancy (used only with the `MMR` algorithm; defaults to 0.5).')
@@ -88,7 +94,7 @@ def main():
 	"""
 	timeline = load_timeline(args.file)
 	summarizer = create_summarizer(args.method, l=vars(args)['lambda'])
-	summaries = summarize(summarizer, timeline)
+	summaries = summarize(summarizer, timeline, args.verbose)
 
 	tools.save(args.output, { 'summaries': summaries, 'meta': cmd })
 
@@ -153,7 +159,7 @@ def create_summarizer(method, l):
 
 	return method()
 
-def summarize(summarizer, timeline):
+def summarize(summarizer, timeline, verbose):
 	"""
 	Summarize the given timeline using the given algorithm.
 	This function iterates over all of the timeline's nodes and summarizes them individually.
@@ -162,6 +168,8 @@ def summarize(summarizer, timeline):
 	:type summarizer: :class:`~summarization.algorithms.summarization.SummarizationAlgorithm`
 	:param timeline: The timeline to summarize.
 	:type timeline: :class:`~summarization.timeline.Timeline`
+	:param verbose: A boolean indicating whether to print the summaries as they are generated.
+	:type verbose: bool
 
 	:return: A list of summaries, corresponding to each node.
 	:rtype: list of :class:`~summarization.summary.Summary`
@@ -171,6 +179,8 @@ def summarize(summarizer, timeline):
 
 	for node in timeline.nodes:
 		summary = summarizer.summarize(node.get_all_documents(), 140)
+		if verbose:
+			logger.info(str(summary))
 		summaries.append(summary)
 
 	return summaries
