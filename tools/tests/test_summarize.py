@@ -21,3 +21,11 @@ class TestSummarize(unittest.TestCase):
 	"""
 	Test the functionality of the summarization tool.
 	"""
+
+	def test_create_mmr_custom_lambda(self):
+		"""
+		Test that when creating MMR with a custom lambda, it is saved
+		"""
+
+		summarizer = summarize.create_summarizer(MMR, l=0.7)
+		self.assertEqual(0.7, summarizer.l)

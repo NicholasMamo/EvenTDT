@@ -19,6 +19,7 @@ Accepted arguments:
 	- ``-f --file``			*<Required>* The path to the file containing the timeline to summarize.
 	- ``-m --method``		*<Required>* The method to use to generate summaries; supported: `DGS`, `MMR`.
 	- ``-o --output``		*<Required>* The path to the file where to store the generated summaries.
+	- ``--lambda``			*<Optional>* The lambda parameter to balance between relevance and non-redundancy (used only with the :class:`~summarization.algorithms.mmr.MMR` algorithm; defaults to 0.5).
 """
 
 import argparse
@@ -45,6 +46,7 @@ def setup_args():
 		- ``-f --file``			*<Required>* The path to the file containing the timeline to summarize.
 		- ``-m --method``		*<Required>* The method to use to generate summaries; supported: `DGS`, `MMR`.
 		- ``-o --output``		*<Required>* The path to the file where to store the generated summaries.
+		- ``--lambda``			*<Optional>* The lambda parameter to balance between relevance and non-redundancy (used only with the :class:`~summarization.algorithms.mmr.MMR` algorithm; defaults to 0.5).
 
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
@@ -61,6 +63,9 @@ def setup_args():
 	parser.add_argument('-o', '--output',
 						type=str, required=True,
 						help='<Required> The path to the file where to store the generated summaries.')
+	parser.add_argument('--lambda',
+						type=float, metavar='[0-1]', required=False, default=0.5,
+						help='<Optional> The lambda parameter to balance between relevance and non-redundancy (used only with the `MMR` algorithm; defaults to 0.5).')
 
 	args = parser.parse_args()
 	return args
@@ -82,7 +87,7 @@ def main():
 	Summarize the timeline.
 	"""
 	timeline = load_timeline(args.file)
-	summarizer = create_summarizer(args.method)
+	summarizer = create_summarizer(args.method, l=vars(args)['lambda'])
 
 	tools.save(args.output, { 'meta': cmd })
 
@@ -129,16 +134,21 @@ def load_timeline(file):
 		data = json.loads(''.join(f.readlines()))['timeline']
 		return Exportable.decode(data)
 
-def create_summarizer(method):
+def create_summarizer(method, l):
 	"""
 	Instantiate the summarization algorithm based on the arguments that it accepts.
 
 	:param method: The class type of the method to instantiate.
 	:type method: :class:`~summarization.algorithms.summarization.SummarizationAlgorithm`
+	:param l: The lambda parameter to balance between relevance and non-redundancy (used only with the :class:`~summarization.algorithms.mmr.MMR` algorithm).
+	:type l: float
 
 	:return: The created summarization algorithm.
 	:rtype: :class:`~summarization.algorithms.summarization.SummarizationAlgorithm`
 	"""
+
+	if method == MMR:
+		return method(l=l)
 
 	return method()
 
