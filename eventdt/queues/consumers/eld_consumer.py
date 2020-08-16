@@ -389,15 +389,13 @@ class ELDConsumer(Consumer):
 						if len(timeline.nodes) > nodes and len(timeline.nodes) > 1:
 							node = timeline.nodes[-2]
 							summary_documents = self._score_documents(node.get_all_documents())[:50]
-							for document in summary_documents:
-								document.text = self.cleaner.clean(document.text)
 
 							"""
 							Generate a query from the topical keywords and use it to come up with a summary.
 							"""
 							query = Cluster(vectors=node.topics).centroid
 							summary = self.summarization.summarize(summary_documents, 140, query=query)
-							logger.info(f"{datetime.fromtimestamp(node.created_at).ctime()}: { str(summary) }")
+							logger.info(f"{datetime.fromtimestamp(node.created_at).ctime()}: { str(self.cleaner.clean(summary)) }")
 
 		return timeline
 
