@@ -10,11 +10,13 @@ To run the script, use:
 .. code-block:: bash
 
     ./tools/summarize.py \\
-	--output data/summaries.json \\
-	--method MMR
+	--file data/timeline.json \\
+	--method MMR \\
+	--output data/summaries.json
 
 Accepted arguments:
 
+	- ``-f --file``			*<Required>* The path to the file containing the timeline to summarize.
 	- ``-o --output``		*<Required>* The path to the file where to store the generated summaries.
 	- ``-m --method``		*<Required>* The method to use to generate summaries; supported: `DGS`, `MMR`.
 """
@@ -39,6 +41,7 @@ def setup_args():
 
 	Accepted arguments:
 
+		- ``-f --file``			*<Required>* The path to the file containing the timeline to summarize.
 		- ``-o --output``		*<Required>* The path to the file where to store the generated summaries.
 		- ``-m --method``		*<Required>* The method to use to generate summaries; supported: `DGS`, `MMR`.
 
@@ -48,6 +51,9 @@ def setup_args():
 
 	parser = argparse.ArgumentParser(description="Summarize a timeline.")
 
+	parser.add_argument('-f', '--file',
+						type=str, required=True,
+						help='<Required> The path to the file containing the timeline to summarize.')
 	parser.add_argument('-m', '--method',
 						type=method, required=True,
 						help='<Required> The method to use to generate summaries; supported: `DGS`, `MMR`.')
