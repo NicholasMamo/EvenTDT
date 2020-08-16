@@ -20,6 +20,7 @@ Accepted arguments:
 	- ``-m --method``		*<Required>* The method to use to generate summaries; supported: `DGS`, `MMR`.
 	- ``-o --output``		*<Required>* The path to the file where to store the generated summaries.
 	- ``-v --verbose``		*<Optional>* Print the summaries as they are generated.
+	- ``--documents``		*<Optional>* The maximum number of documents to use when summarizing, with a preference for long documents; defaults to all documents.
 	- ``--length``			*<Optional>* The length of each generated summary (in terms of the number of characters); defaults to 140 characters.
 	- ``--lambda``			*<Optional>* The lambda parameter to balance between relevance and non-redundancy (used only with the :class:`~summarization.algorithms.mmr.MMR` algorithm; defaults to 0.5).
 """
@@ -50,6 +51,7 @@ def setup_args():
 		- ``-m --method``		*<Required>* The method to use to generate summaries; supported: `DGS`, `MMR`.
 		- ``-o --output``		*<Required>* The path to the file where to store the generated summaries.
 		- ``-v --verbose``		*<Optional>* Print the summaries as they are generated.
+		- ``--documents``		*<Optional>* The maximum number of documents to use when summarizing, with a preference for long documents; defaults to all documents.
 		- ``--length``			*<Optional>* The length of each generated summary (in terms of the number of characters); defaults to 140 characters.
 		- ``--lambda``			*<Optional>* The lambda parameter to balance between relevance and non-redundancy (used only with the :class:`~summarization.algorithms.mmr.MMR` algorithm; defaults to 0.5).
 
@@ -71,6 +73,9 @@ def setup_args():
 	parser.add_argument('-v', '--verbose',
 						action='store_true', required=False, default=False,
 						help='<Optional> Print the summaries as they are generated.')
+	parser.add_argument('--documents',
+						type=int, required=False, default=None,
+						help='<Optional> The maximum number of documents to use when summarizing, with a preference for long documents; defaults to all documents.')
 	parser.add_argument('--length',
 						type=int, required=False, default=140,
 						help='<Optional> The length of each generated summary (in terms of the number of characters); defaults to 140 characters.')
@@ -99,8 +104,8 @@ def main():
 	"""
 	timeline = load_timeline(args.file)
 	summarizer = create_summarizer(args.method, l=vars(args)['lambda'])
-	summaries = summarize(summarizer, timeline,
-						  length=args.length, verbose=args.verbose)
+	summaries = summarize(summarizer, timeline, verbose=args.verbose,
+						  max_documents=args.documents, length=args.length)
 
 	tools.save(args.output, { 'summaries': summaries, 'meta': cmd })
 
@@ -165,7 +170,7 @@ def create_summarizer(method, l):
 
 	return method()
 
-def summarize(summarizer, timeline, length, verbose):
+def summarize(summarizer, timeline, verbose, max_documents, length):
 	"""
 	Summarize the given timeline using the given algorithm.
 	This function iterates over all of the timeline's nodes and summarizes them individually.
@@ -174,10 +179,12 @@ def summarize(summarizer, timeline, length, verbose):
 	:type summarizer: :class:`~summarization.algorithms.summarization.SummarizationAlgorithm`
 	:param timeline: The timeline to summarize.
 	:type timeline: :class:`~summarization.timeline.Timeline`
-	:param length: The length of each generated summary (in terms of the number of characters); defaults to 140 characters.
-	:type length: int
 	:param verbose: A boolean indicating whether to print the summaries as they are generated.
 	:type verbose: bool
+	:param max_documents: The maximum number of documents to use when summarizing, with a preference for long documents.
+	:type max_documents: int or None
+	:param length: The length of each generated summary (in terms of the number of characters); defaults to 140 characters.
+	:type length: int
 
 	:return: A list of summaries, corresponding to each node.
 	:rtype: list of :class:`~summarization.summary.Summary`
@@ -187,7 +194,7 @@ def summarize(summarizer, timeline, length, verbose):
 
 	for node in timeline.nodes:
 		documents = node.get_all_documents()
-		documents = filter_documents(documents)
+		documents = filter_documents(documents, max_documents)
 		summary = summarizer.summarize(documents, length)
 		if verbose:
 			logger.info(str(summary))
@@ -195,13 +202,18 @@ def summarize(summarizer, timeline, length, verbose):
 
 	return summaries
 
-def filter_documents(documents):
+def filter_documents(documents, max_documents=None):
 	"""
 	Filter the given list of documents.
 	This function removes duplicates.
 
+	If the maximum number of documents is given, the longest documents are retained.
+
 	:param documents: The list of documents to filter.
 	:type documents: list of :class:`~nlp.document.Document`
+	:param max_documents: The maximum number of documents to use when summarizing, with a preference for long documents.
+						  If ``None`` is given, all documents are used.
+	:type max_documents: int or None
 
 	:return: The filtered list of documents without duplicates.
 	:rtype documents: list of :class:`~nlp.document.Document`
@@ -214,7 +226,16 @@ def filter_documents(documents):
 	filtered = { document.text: document for document in documents }
 	documents = [ document for document in documents
 						   if document in filtered.values() ]
-	return documents
+
+	"""
+	If the number of documents is given, sort them in ascending order of length and retain only the top ones.
+	"""
+	if max_documents is not None:
+		documents = sorted(documents, key=lambda document: len(document.text), reverse=True)
+		return documents[:max_documents]
+	else:
+		return documents
+
 
 if __name__ == "__main__":
 	main()
