@@ -15,6 +15,7 @@ To run the script, use:
 	--output data/summaries.json \\
 	--documents 50 \\
 	--length 280 \\
+	--clean \\
 	--with-query
 
 Accepted arguments:
@@ -25,6 +26,7 @@ Accepted arguments:
 	- ``-v --verbose``		*<Optional>* Print the summaries as they are generated.
 	- ``--documents``		*<Optional>* The maximum number of documents to use when summarizing, with a preference for quality documents, scored by the :class:`~summarization.scorers.tweet_scorer.TweetScorer`; defaults to all documents.
 	- ``--length``			*<Optional>* The length of each generated summary (in terms of the number of characters); defaults to 140 characters.
+	- ``--clean``			*<Optional>* Clean the documents before summarizing.
 	- ``--lambda``			*<Optional>* The lambda parameter to balance between relevance and non-redundancy (used only with the :class:`~summarization.algorithms.mmr.MMR` algorithm; defaults to 0.5).
 	- ``--with-query``		*<Optional>* Use the centroid of each timeline node's topics as a query for summarization (used only with the :class:`~summarization.algorithms.dgs.DGS` algorithm).
 """
@@ -41,6 +43,7 @@ sys.path.insert(-1, root)
 sys.path.insert(-1, lib)
 
 from logger import logger
+from nlp.cleaners import TweetCleaner
 from objects.exportable import Exportable
 from summarization.algorithms import DGS, MMR
 from summarization.scorers import TweetScorer
@@ -60,6 +63,7 @@ def setup_args():
 		- ``-v --verbose``		*<Optional>* Print the summaries as they are generated.
 		- ``--documents``		*<Optional>* The maximum number of documents to use when summarizing, with a preference for quality documents, scored by the :class:`~summarization.scorers.tweet_scorer.TweetScorer`; defaults to all documents.
 		- ``--length``			*<Optional>* The length of each generated summary (in terms of the number of characters); defaults to 140 characters.
+		- ``--clean``			*<Optional>* Clean the documents before summarizing.
 		- ``--lambda``			*<Optional>* The lambda parameter to balance between relevance and non-redundancy (used only with the :class:`~summarization.algorithms.mmr.MMR` algorithm; defaults to 0.5).
 		- ``--with-query``		*<Optional>* Use the centroid of each timeline node's topics as a query for summarization (used only with the :class:`~summarization.algorithms.dgs.DGS` algorithm).
 
@@ -87,6 +91,9 @@ def setup_args():
 	parser.add_argument('--length',
 						type=int, required=False, default=140,
 						help='<Optional> The length of each generated summary (in terms of the number of characters); defaults to 140 characters.')
+	parser.add_argument('--clean',
+						action='store_true', required=False,
+						help="<Optional> Clean the documents before summarizing.")
 	parser.add_argument('--lambda',
 						type=float, metavar='[0-1]', required=False, default=0.5,
 						help='<Optional> The lambda parameter to balance between relevance and non-redundancy (used only with the `MMR` algorithm; defaults to 0.5).')
@@ -117,7 +124,7 @@ def main():
 	summarizer = create_summarizer(args.method, l=vars(args)['lambda'])
 	summaries = summarize(summarizer, timeline, verbose=args.verbose,
 						  max_documents=args.documents, length=args.length,
-						  with_query=args.with_query)
+						  with_query=args.with_query, clean=args.clean)
 
 	tools.save(args.output, { 'summaries': summaries, 'meta': cmd })
 
@@ -182,7 +189,8 @@ def create_summarizer(method, l=0.5):
 
 	return method()
 
-def summarize(summarizer, timeline, verbose=False, max_documents=None, length=140, with_query=False):
+def summarize(summarizer, timeline, verbose=False, max_documents=None, length=140,
+			  with_query=False, clean=False):
 	"""
 	Summarize the given timeline using the given algorithm.
 	This function iterates over all of the timeline's nodes and summarizes them individually.
@@ -200,6 +208,8 @@ def summarize(summarizer, timeline, verbose=False, max_documents=None, length=14
 	:param with_query: A boolean indicating whether to use the centroid of each timeline node's topics as a query for summarization.
 	 				   This is used only with the :class:`~summarization.algorithms.dgs.DGS` algorithm.
 	:type with_query: bool
+	:param clean: A boolean indicating whether to clean documents before summarizing.
+	:type clean: bool
 
 	:return: A list of summaries, corresponding to each node.
 	:rtype: list of :class:`~summarization.summary.Summary`
@@ -210,8 +220,14 @@ def summarize(summarizer, timeline, verbose=False, max_documents=None, length=14
 	for node in timeline.nodes:
 		"""
 		Extract and filter the documents to consider for summarization.
+		Cleaning happens before selecting the documents so that the clean text is considered.
 		"""
 		documents = node.get_all_documents()
+		if clean:
+			cleaner = TweetCleaner(remove_alt_codes=True, complete_sentences=True,
+								   collapse_new_lines=True, collapse_whitespaces=True,
+								   remove_unicode_entities=True, remove_urls=True,
+								   remove_hashtags=True, remove_retweet_prefix=True)
 		documents = filter_documents(documents, max_documents)
 
 		"""
