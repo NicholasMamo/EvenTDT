@@ -82,6 +82,7 @@ def main():
 	Summarize the timeline.
 	"""
 	timeline = load_timeline(args.file)
+	summarizer = create_summarizer(args.method)
 
 	tools.save(args.output, { 'meta': cmd })
 
@@ -127,6 +128,19 @@ def load_timeline(file):
 	with open(file) as f:
 		data = json.loads(''.join(f.readlines()))['timeline']
 		return Exportable.decode(data)
+
+def create_summarizer(method):
+	"""
+	Instantiate the summarization algorithm based on the arguments that it accepts.
+
+	:param method: The class type of the method to instantiate.
+	:type method: :class:`~summarization.algorithms.summarization.SummarizationAlgorithm`
+
+	:return: The created summarization algorithm.
+	:rtype: :class:`~summarization.algorithms.summarization.SummarizationAlgorithm`
+	"""
+
+	return method()
 
 if __name__ == "__main__":
 	main()
