@@ -22,7 +22,7 @@ Accepted arguments:
 """
 
 import argparse
-
+import json
 import os
 import sys
 
@@ -33,6 +33,7 @@ sys.path.insert(-1, root)
 sys.path.insert(-1, lib)
 
 import tools
+from objects.exportable import Exportable
 from summarization.algorithms import DGS, MMR
 
 def setup_args():
@@ -77,6 +78,11 @@ def main():
 	cmd = tools.meta(args)
 	cmd['method'] = str(vars(args)['method'])
 
+	"""
+	Summarize the timeline.
+	"""
+	timeline = load_timeline(args.file)
+
 	tools.save(args.output, { 'meta': cmd })
 
 def method(method):
@@ -105,6 +111,22 @@ def method(method):
 		return methods[method.lower()]
 
 	raise argparse.ArgumentTypeError(f"Invalid method value: { method }")
+
+def load_timeline(file):
+	"""
+	Load the timeline from the given file.
+
+	:param file: The path to the file where the timeline is saved.
+				 This function assumes that the timeline was created using the ``consume`` tool.
+	:type file: str
+
+	:return: The loaded timeline.
+	:rtype: :class:`~summarization.timeline.Timeline`
+	"""
+
+	with open(file) as f:
+		data = json.loads(''.join(f.readlines()))['timeline']
+		return Exportable.decode(data)
 
 if __name__ == "__main__":
 	main()
