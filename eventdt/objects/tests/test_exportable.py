@@ -68,6 +68,30 @@ class TestAttributable(unittest.TestCase):
 		self.assertEqual({ 'a': 1 }, encoding['vector']['dimensions'])
 		self.assertEqual({ 'b': 2 }, encoding['vector']['attributes'])
 
+	def test_encode_primitive_list_in_dict(self):
+		"""
+		Test that when encoding a dictionary with a list of primitives in it, the list's items are encoded as well.
+		"""
+
+		data = { 'a': [ 1, 2 ], 'b': 3 }
+		self.assertEqual(data, Exportable.encode(data))
+
+	def test_encode_vector_list_in_dict(self):
+		"""
+		Test that when encoding a dictionary with a list of vectors in it, the list's items are encoded as well.
+		"""
+
+		v = [ Vector({ 'a': 1 }, { 'b': 2 }),
+			  Vector({ 'c': 3 }, { 'd': 4 }) ]
+		data = { 'a': v, 'e': 5 }
+		self.assertEqual({
+			'a': [
+				{ 'class': "<class 'vsm.vector.Vector'>", 'attributes': { 'b': 2 }, 'dimensions': { 'a': 1 }},
+				{ 'class': "<class 'vsm.vector.Vector'>", 'attributes': { 'd': 4 }, 'dimensions': { 'c': 3 }}
+			],
+			'e': 5,
+		}, Exportable.encode(data))
+
 	def test_decode_empty_dict(self):
 		"""
 		Test that when edecoding an empty dictionary, another empty dictionary is returned.
