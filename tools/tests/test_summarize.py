@@ -3,6 +3,7 @@ Test the functionality of the summarization tool.
 """
 
 import json
+import math
 import os
 import re
 import sys
@@ -16,7 +17,11 @@ for path in paths:
 
 from nlp import Document
 from summarization.algorithms import MMR, DGS
+from summarization.timeline import Timeline
+from summarization.timeline.nodes import TopicalClusterNode
 from tools import summarize
+from vsm import Vector
+from vsm.clustering import Cluster
 
 class TestSummarize(unittest.TestCase):
 	"""
@@ -30,6 +35,33 @@ class TestSummarize(unittest.TestCase):
 
 		summarizer = summarize.create_summarizer(MMR, l=0.7)
 		self.assertEqual(0.7, summarizer.l)
+
+	def test_summarizer_with_query(self):
+		"""
+		Test that when summarizing with a query, the summaries are more topical.
+		"""
+
+		summarizer = summarize.create_summarizer(DGS)
+		timeline = Timeline(TopicalClusterNode, 60, 0.5)
+		documents = [ Document('this is not a pipe', { 'this': 1/math.sqrt(2), 'pipe': 1/math.sqrt(2) }),
+		 			  Document('this is not a cigar', { 'this': 1/math.sqrt(2), 'cigar': 1/math.sqrt(2) }),
+					  Document('cigars are where it is at', { 'where': 1/math.sqrt(2), 'cigar': 1/math.sqrt(2) }) ]
+		cluster = Cluster(documents)
+		timeline.add(cluster=cluster, topic=Vector({ 'where': 1 }))
+
+		summaries = summarize.summarize(summarizer, timeline, length=30, with_query=False)
+		self.assertEqual(1, len(summaries[0].documents))
+		self.assertEqual(str(documents[2]), str(summaries[0]))
+
+		summaries = summarize.summarize(summarizer, timeline, length=30, with_query=True)
+		self.assertEqual(1, len(summaries[0].documents))
+		self.assertEqual(str(documents[2]), str(summaries[0]))
+
+		timeline = Timeline(TopicalClusterNode, 60, 0.5)
+		timeline.add(cluster=cluster, topic=Vector({ 'this': 1 }))
+		summaries = summarize.summarize(summarizer, timeline, length=30, with_query=True)
+		self.assertEqual(1, len(summaries[0].documents))
+		self.assertEqual(str(documents[1]), str(summaries[0]))
 
 	def test_filter_documents_order(self):
 		"""

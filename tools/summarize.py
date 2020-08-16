@@ -12,7 +12,10 @@ To run the script, use:
     ./tools/summarize.py \\
 	--file data/timeline.json \\
 	--method MMR \\
-	--output data/summaries.json
+	--output data/summaries.json \\
+	--documents 50 \\
+	--length 280 \\
+	--with-query
 
 Accepted arguments:
 
@@ -23,6 +26,7 @@ Accepted arguments:
 	- ``--documents``		*<Optional>* The maximum number of documents to use when summarizing, with a preference for long documents; defaults to all documents.
 	- ``--length``			*<Optional>* The length of each generated summary (in terms of the number of characters); defaults to 140 characters.
 	- ``--lambda``			*<Optional>* The lambda parameter to balance between relevance and non-redundancy (used only with the :class:`~summarization.algorithms.mmr.MMR` algorithm; defaults to 0.5).
+	- ``--with-query``		*<Optional>* Use the centroid of each timeline node's topics as a query for summarization (used only with the :class:`~summarization.algorithms.dgs.DGS` algorithm).
 """
 
 import argparse
@@ -39,6 +43,8 @@ sys.path.insert(-1, lib)
 from logger import logger
 from objects.exportable import Exportable
 from summarization.algorithms import DGS, MMR
+from summarization.timeline.nodes import TopicalClusterNode
+from vsm.clustering import Cluster
 import tools
 
 def setup_args():
@@ -54,6 +60,7 @@ def setup_args():
 		- ``--documents``		*<Optional>* The maximum number of documents to use when summarizing, with a preference for long documents; defaults to all documents.
 		- ``--length``			*<Optional>* The length of each generated summary (in terms of the number of characters); defaults to 140 characters.
 		- ``--lambda``			*<Optional>* The lambda parameter to balance between relevance and non-redundancy (used only with the :class:`~summarization.algorithms.mmr.MMR` algorithm; defaults to 0.5).
+		- ``--with-query``		*<Optional>* Use the centroid of each timeline node's topics as a query for summarization (used only with the :class:`~summarization.algorithms.dgs.DGS` algorithm).
 
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
@@ -82,6 +89,9 @@ def setup_args():
 	parser.add_argument('--lambda',
 						type=float, metavar='[0-1]', required=False, default=0.5,
 						help='<Optional> The lambda parameter to balance between relevance and non-redundancy (used only with the `MMR` algorithm; defaults to 0.5).')
+	parser.add_argument('--with-query',
+						action='store_true', required=False,
+						help="<Optional> Use the centroid of each timeline node's topics as a query for summarization (used only with the `DGS` algorithm).")
 
 	args = parser.parse_args()
 	return args
@@ -105,7 +115,8 @@ def main():
 	timeline = load_timeline(args.file)
 	summarizer = create_summarizer(args.method, l=vars(args)['lambda'])
 	summaries = summarize(summarizer, timeline, verbose=args.verbose,
-						  max_documents=args.documents, length=args.length)
+						  max_documents=args.documents, length=args.length,
+						  with_query=args.with_query)
 
 	tools.save(args.output, { 'summaries': summaries, 'meta': cmd })
 
@@ -152,7 +163,7 @@ def load_timeline(file):
 		data = json.loads(''.join(f.readlines()))
 		return Exportable.decode(data)['timeline']
 
-def create_summarizer(method, l):
+def create_summarizer(method, l=0.5):
 	"""
 	Instantiate the summarization algorithm based on the arguments that it accepts.
 
@@ -170,7 +181,7 @@ def create_summarizer(method, l):
 
 	return method()
 
-def summarize(summarizer, timeline, verbose, max_documents, length):
+def summarize(summarizer, timeline, verbose=False, max_documents=None, length=140, with_query=False):
 	"""
 	Summarize the given timeline using the given algorithm.
 	This function iterates over all of the timeline's nodes and summarizes them individually.
@@ -185,6 +196,9 @@ def summarize(summarizer, timeline, verbose, max_documents, length):
 	:type max_documents: int or None
 	:param length: The length of each generated summary (in terms of the number of characters); defaults to 140 characters.
 	:type length: int
+	:param with_query: A boolean indicating whether to use the centroid of each timeline node's topics as a query for summarization.
+	 				   This is used only with the :class:`~summarization.algorithms.dgs.DGS` algorithm.
+	:type with_query: bool
 
 	:return: A list of summaries, corresponding to each node.
 	:rtype: list of :class:`~summarization.summary.Summary`
@@ -193,9 +207,28 @@ def summarize(summarizer, timeline, verbose, max_documents, length):
 	summaries = [ ]
 
 	for node in timeline.nodes:
+		"""
+		Extract and filter the documents to consider for summarization.
+		"""
 		documents = node.get_all_documents()
 		documents = filter_documents(documents, max_documents)
-		summary = summarizer.summarize(documents, length)
+
+		"""
+		Construct the query if need be.
+		Queries can only be used if:
+
+		1. The appropriate flag is given,
+		2. The summarizer is :class:`~summarization.algorithms.dgs.DGS`, and
+		3. The node is topical (it stores a topic).
+		"""
+		query = None
+		if with_query and type(summarizer) is DGS and type(node) is TopicalClusterNode:
+			query = Cluster(vectors=node.topics).centroid
+
+		"""
+		Generate the sumamry.
+		"""
+		summary = summarizer.summarize(documents, length, query=query)
 		if verbose:
 			logger.info(str(summary))
 		summaries.append(summary)
