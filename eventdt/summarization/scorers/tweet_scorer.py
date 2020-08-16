@@ -18,7 +18,7 @@ class TweetScorer(Scorer):
 		Evaluate the score of the given tweet.
 
 		:param tweet: The tweet that will be scored.
-		:type tweet: :class:`~vector.nlp.document.Document`
+		:type tweet: :class:`~vsm.nlp.document.Document`
 		:param token_attribute: The attribute that contains the tokens.
 		:type token_attribute: str
 
@@ -26,8 +26,8 @@ class TweetScorer(Scorer):
 		:rtype: float
 		"""
 
-		brevity_score = self._brevity_score(tweet.get_attribute(token_attribute), *args, **kwargs)
-		emotion_score = self._emotion_score(tweet.get_text())
+		brevity_score = self._brevity_score(tweet.attributes[token_attribute], *args, **kwargs)
+		emotion_score = self._emotion_score(tweet.text)
 
 		return brevity_score * emotion_score
 
