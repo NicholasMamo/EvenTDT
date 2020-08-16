@@ -64,7 +64,8 @@ def info(message):
 	"""
 
 	if conf.LOG_LEVEL <= LogLevel.INFO:
-		print("%s: INFO: %s" % (log_time(), message.encode("ascii", "ignore").decode("utf-8")))
+		message = [ message ] if type(message) is str else message
+		print(f"{ log_time() }: INFO:", *message)
 
 def warning(message):
 	"""
@@ -75,7 +76,8 @@ def warning(message):
 	"""
 
 	if conf.LOG_LEVEL <= LogLevel.WARNING:
-		print("%s: WARNING: %s" % (log_time(), message.encode("ascii", "ignore").decode("utf-8")))
+		message = [ message ] if type(message) is str else message
+		print(f"{ log_time() }: WARNING:", *message)
 
 def error(message):
 	"""
@@ -86,4 +88,5 @@ def error(message):
 	"""
 
 	if conf.LOG_LEVEL <= LogLevel.ERROR:
-		print("%s: ERROR: %s" % (log_time(), message.encode("ascii", "ignore").decode("utf-8")))
+		message = [ message ] if type(message) is str else message
+		print(f"{ log_time() }: ERROR:", *message)
