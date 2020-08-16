@@ -125,7 +125,17 @@ class Exportable(ABC):
 		if not class_pattern.match(cls):
 			raise ValueError(f"Invalid class name {cls}")
 
-		path = class_pattern.findall(cls)[0].split('.')
+		path = class_pattern.findall(cls)[0]
+
+		"""
+		If the path is an alias, replace it with the proper package name.
+		"""
+		for alias in Exportable.ALIASES:
+			if path.startswith(alias):
+				path = path.replace(alias, Exportable.ALIASES[alias])
+
+		path = path.split('.')
+
 		return '.'.join(path[:-1])
 
 	@staticmethod

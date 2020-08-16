@@ -165,6 +165,13 @@ class TestAttributable(unittest.TestCase):
 
 		self.assertEqual('nlp.document', Exportable.get_module("<class 'nlp.document.Document'>"))
 
+	def test_get_module_alias(self):
+		"""
+		Test that when loading the module and it starts with an alias, it is replaced.
+		"""
+
+		self.assertEqual('nlp.weighting.tfidf', Exportable.get_module("<class 'nlp.term_weighting.tfidf.TFIDF'>"))
+
 	def test_get_class_empty(self):
 		"""
 		Test that when getting the class name from an invalid string, a ValueError is raised.
