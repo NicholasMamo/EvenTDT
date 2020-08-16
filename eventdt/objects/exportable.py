@@ -45,7 +45,7 @@ class Exportable(ABC):
 	def encode(data):
 		"""
 		Try to encode the given data.
-		This function expects a dictionary or a list and checks if values are JSON serializable.
+		This function expects a dictionary, a list or an object and checks if values are JSON serializable.
 		If this is not possible, instances of :class:`~objects.exportable.Exportable` are converted to arrays.
 		This is done through the :func:`~objects.exportable.Exportable.to_array` function.
 
@@ -53,7 +53,7 @@ class Exportable(ABC):
 		:type data: dict or list
 
 		:return: The encoded data.
-		:rtype: dict or list
+		:rtype: dict or list or object
 		"""
 
 		data = copy.deepcopy(data)
@@ -76,6 +76,8 @@ class Exportable(ABC):
 						data[i] = Exportable.encode(item)
 					else:
 						data[i] = item.to_array()
+		else:
+			data = data.to_array()
 
 		return data
 

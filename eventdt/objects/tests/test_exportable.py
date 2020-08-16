@@ -92,6 +92,14 @@ class TestAttributable(unittest.TestCase):
 			'e': 5,
 		}, Exportable.encode(data))
 
+	def test_encode_vector(self):
+		"""
+		Test that when encoding a vector, its array representation is returned.
+		"""
+
+		v = Vector({ 'a': 1 }, { 'b': 2 })
+		self.assertEqual(v.to_array(), Exportable.encode(v))
+
 	def test_decode_empty_dict(self):
 		"""
 		Test that when edecoding an empty dictionary, another empty dictionary is returned.
