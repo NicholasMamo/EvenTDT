@@ -112,6 +112,14 @@ class TestAttributable(unittest.TestCase):
 			'e': 5,
 		}, Exportable.encode(data))
 
+	def test_encode_dict_in_list(self):
+		"""
+		Test that when encoding a list with a dictionary in it, the dictionary is encoded as well.
+		"""
+
+		data = [ { 'a': [ 1, 2 ], 'b': 3 }, 5 ]
+		self.assertEqual(data, Exportable.encode(data))
+
 	def test_encode_vector(self):
 		"""
 		Test that when encoding a vector, its array representation is returned.
@@ -219,6 +227,14 @@ class TestAttributable(unittest.TestCase):
 		self.assertTrue(all( vector.dimensions == v.dimensions for vector, v in zip(v, decoded['a']) ))
 		self.assertTrue(all( vector.attributes == v.attributes for vector, v in zip(v, decoded['a']) ))
 		self.assertEqual(5, decoded['e'])
+
+	def test_decode_dict_in_list(self):
+		"""
+		Test that when decoding a list with a dictionary in it, the dictionary is decoded as well.
+		"""
+
+		data = [ { 'a': [ 1, 2 ], 'b': 3 }, 5 ]
+		self.assertEqual(data, Exportable.decode(Exportable.encode(data)))
 
 	def test_decode_vector(self):
 		"""
