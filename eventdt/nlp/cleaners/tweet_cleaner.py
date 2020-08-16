@@ -98,6 +98,7 @@ class TweetCleaner(Cleaner):
 		text = self._complete_sentences(text) if self.complete_sentences else text
 		text = self._collapse_whitespaces(text) if self.collapse_whitespaces else text
 		text = self._replace_mentions(text, tweet) if self.replace_mentions else text
+		text = self._capitalize_first(text) if self.capitalize_first else text
 		text = text.strip()
 
 		return text

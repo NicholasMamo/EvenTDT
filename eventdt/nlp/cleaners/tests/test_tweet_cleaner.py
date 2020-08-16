@@ -30,6 +30,7 @@ class TestTweetCleaner(unittest.TestCase):
 		self.assertFalse(cleaner.complete_sentences)
 		self.assertFalse(cleaner.collapse_new_lines)
 		self.assertFalse(cleaner.collapse_whitespaces)
+		self.assertFalse(cleaner.capitalize_first)
 
 	def test_configuration_saved(self):
 		"""
@@ -37,11 +38,35 @@ class TestTweetCleaner(unittest.TestCase):
 		"""
 
 		cleaner = TweetCleaner(remove_alt_codes=True, complete_sentences=True,
-							   collapse_new_lines=True, collapse_whitespaces=True)
+							   collapse_new_lines=True, collapse_whitespaces=True,
+							   capitalize_first=True)
 		self.assertTrue(cleaner.remove_alt_codes)
 		self.assertTrue(cleaner.complete_sentences)
 		self.assertTrue(cleaner.collapse_new_lines)
 		self.assertTrue(cleaner.collapse_whitespaces)
+		self.assertTrue(cleaner.capitalize_first)
+
+	def test_complete_sentences(self):
+		"""
+		Test that the tweet cleaner calls the function to complete sentences.
+		"""
+
+		cleaner = TweetCleaner(remove_alt_codes=True, complete_sentences=True,
+							   collapse_new_lines=True, collapse_whitespaces=True,
+							   capitalize_first=True)
+		text = "Allez l'OL"
+		self.assertEqual(f"{ text }.", cleaner.clean(text))
+
+	def test_capitalize_first(self):
+		"""
+		Test that the tweet cleaner calls the function to capitalize the first character.
+		"""
+
+		cleaner = TweetCleaner(remove_alt_codes=True, complete_sentences=True,
+							   collapse_new_lines=True, collapse_whitespaces=True,
+							   capitalize_first=True)
+		text = "allez l'OL."
+		self.assertEqual(f"Allez l'OL.", cleaner.clean(text))
 
 	def test_strip_after_processing(self):
 		"""
