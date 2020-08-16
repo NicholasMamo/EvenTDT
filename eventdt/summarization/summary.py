@@ -82,6 +82,7 @@ class Summary(Attributable, Exportable):
 		"""
 
 		return {
+			'class': str(Summary),
 			'attributes': self.attributes,
 			'documents': [ document.to_array() for document in self.documents ]
 		}
