@@ -10,11 +10,13 @@ To run the script, use:
 .. code-block:: bash
 
     ./tools/summarize.py \\
-	--output data/summaries.json
+	--output data/summaries.json \\
+	--method MMR
 
 Accepted arguments:
 
 	- ``-o --output``		*<Required>* The path to the file where to store the generated summaries.
+	- ``-m --method``		*<Required>* The method to use to generate summaries; supported: `DGS`, `MMR`.
 """
 
 import argparse
@@ -29,6 +31,7 @@ sys.path.insert(-1, root)
 sys.path.insert(-1, lib)
 
 import tools
+from summarization.algorithms import DGS, MMR
 
 def setup_args():
 	"""
@@ -37,6 +40,7 @@ def setup_args():
 	Accepted arguments:
 
 		- ``-o --output``		*<Required>* The path to the file where to store the generated summaries.
+		- ``-m --method``		*<Required>* The method to use to generate summaries; supported: `DGS`, `MMR`.
 
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
@@ -44,6 +48,9 @@ def setup_args():
 
 	parser = argparse.ArgumentParser(description="Summarize a timeline.")
 
+	parser.add_argument('-m', '--method',
+						type=method, required=True,
+						help='<Required> The method to use to generate summaries; supported: `DGS`, `MMR`.')
 	parser.add_argument('-o', '--output',
 						type=str, required=True,
 						help='<Required> The path to the file where to store the generated summaries.')
@@ -62,8 +69,36 @@ def main():
 	Get the meta arguments.
 	"""
 	cmd = tools.meta(args)
+	cmd['method'] = str(vars(args)['method'])
 
 	tools.save(args.output, { 'meta': cmd })
+
+def method(method):
+	"""
+	Convert the given string into a summarization class.
+	The accepted classes are:
+
+		#. :class:`~summarization.algorithms.mmr.MMR`
+		#. :class:`~summarization.algorithms.dgs.DGS`
+
+	:param method: The method string.
+	:type method: str
+
+	:return: The class type that corresponds to the given method.
+	:rtype: :class:`~summarization.algorithms.summarization.SummarizationAlgorithm`
+
+	:raises argparse.ArgumentTypeError: When the given method string is invalid.
+	"""
+
+	methods = {
+		'dgs': DGS,
+		'mmr': MMR,
+	}
+
+	if method.lower() in methods:
+		return methods[method.lower()]
+
+	raise argparse.ArgumentTypeError(f"Invalid method value: { method }")
 
 if __name__ == "__main__":
 	main()
