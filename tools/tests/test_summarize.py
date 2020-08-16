@@ -14,8 +14,9 @@ for path in paths:
 	if path not in sys.path:
 	    sys.path.append(path)
 
-from tools import summarize
+from nlp import Document
 from summarization.algorithms import MMR, DGS
+from tools import summarize
 
 class TestSummarize(unittest.TestCase):
 	"""
@@ -29,3 +30,19 @@ class TestSummarize(unittest.TestCase):
 
 		summarizer = summarize.create_summarizer(MMR, l=0.7)
 		self.assertEqual(0.7, summarizer.l)
+
+	def test_filter_documents_order(self):
+		"""
+		Test that when filtering documents, the documents are returned in the same order.
+		"""
+
+		documents = [ Document('a'), Document('b'), Document('c') ]
+		self.assertEqual(documents, summarize.filter_documents(documents))
+
+	def test_filter_documents_with_duplicates(self):
+		"""
+		Test that when filtering documents, duplicates are removed automatically.
+		"""
+
+		documents = [ Document('a'), Document('b'), Document('c'), Document('a') ]
+		self.assertEqual(documents[-3:], summarize.filter_documents(documents))

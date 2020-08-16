@@ -186,12 +186,35 @@ def summarize(summarizer, timeline, length, verbose):
 	summaries = [ ]
 
 	for node in timeline.nodes:
-		summary = summarizer.summarize(node.get_all_documents(), length)
+		documents = node.get_all_documents()
+		documents = filter_documents(documents)
+		summary = summarizer.summarize(documents, length)
 		if verbose:
 			logger.info(str(summary))
 		summaries.append(summary)
 
 	return summaries
+
+def filter_documents(documents):
+	"""
+	Filter the given list of documents.
+	This function removes duplicates.
+
+	:param documents: The list of documents to filter.
+	:type documents: list of :class:`~nlp.document.Document`
+
+	:return: The filtered list of documents without duplicates.
+	:rtype documents: list of :class:`~nlp.document.Document`
+	"""
+
+	"""
+	Remove duplicates.
+	Immediately after, load the documents again to ensure that they are in the same order.
+	"""
+	filtered = { document.text: document for document in documents }
+	documents = [ document for document in documents
+						   if document in filtered.values() ]
+	return documents
 
 if __name__ == "__main__":
 	main()
