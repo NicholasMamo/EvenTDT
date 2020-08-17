@@ -172,8 +172,11 @@
     <div class="section" id="wikinterface">
 <h1>4. Wikinterface<a class="headerlink" href="#wikinterface" title="Permalink to this headline">¶</a></h1>
 <p>Wikinterface is an easy-to-use interface for Wikipedia’s API.</p>
-<span class="target" id="module-wikinterface"></span><p>The basic Wikipedia API interface uses the <a class="reference external" href="https://www.mediawiki.org/wiki/API:Main_page">Wikimedia API</a>.
-This module makes it easier to access the API.</p>
+<span class="target" id="module-wikinterface"></span><p>Wikinterface is a simple side-project bundled with EvenTDT that makes it easier to access Wikipedia.
+The basic Wikipedia API interface uses the <a class="reference external" href="https://www.mediawiki.org/wiki/API:Main_page">Wikimedia API</a> to connect with Wikipedia.</p>
+<p>The package separates the functions across modules that fetch different information from Wikipedia.
+At the package-level are functions that are useful to several modules.</p>
+<p>In all cases, responses are sent on the <code class="docutils literal notranslate"><span class="pre">API_ENDPOINT</span></code> and returned as a JSON string.</p>
 <dl class="data">
 <dt id="wikinterface.API_ENDPOINT">
 <code class="sig-name descname">API_ENDPOINT</code><em class="property"> = 'https://en.wikipedia.org/w/api.php?'</em><a class="headerlink" href="#wikinterface.API_ENDPOINT" title="Permalink to this definition">¶</a></dt>
@@ -188,12 +191,14 @@ This module makes it easier to access the API.</p>
 <dt id="wikinterface.is_error_response">
 <code class="sig-name descname">is_error_response</code><span class="sig-paren">(</span><em class="sig-param">response</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.is_error_response" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validate whether the given Wikipedia response is an error.</p>
+<p>All error responses have an <code class="docutils literal notranslate"><span class="pre">error</span></code> key in them.
+This function simply checks whether this key is in the response.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>response</strong> (<em>dict</em>) – The response to validate.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A boolean indicating whether the response is valid.</p>
+<dd class="field-even"><p>A boolean indicating whether the response is an error.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>bool</p>
@@ -204,7 +209,10 @@ This module makes it easier to access the API.</p>
 <dl class="function">
 <dt id="wikinterface.construct_url">
 <code class="sig-name descname">construct_url</code><span class="sig-paren">(</span><em class="sig-param">parameters=None</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.construct_url" title="Permalink to this definition">¶</a></dt>
-<dd><p>Construct the URL using the given parameters.</p>
+<dd><p>Construct the URL using the given parameters.
+This function expects parameters to be a dictionary, with the parameter name as the key.</p>
+<p>This helper function automatically parses the parameter values.
+For example, if a parameter value is a boolean (and <code class="docutils literal notranslate"><span class="pre">True</span></code>), only the parameter is added to the URL string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>parameters</strong> (<em>dict</em><em> or </em><em>None</em>) – The list of GET parameters to send.
@@ -224,14 +232,17 @@ If a parameter is a boolean and <cite>False</cite>, it is excluded altogether</p
 <dl class="function">
 <dt id="wikinterface.revert_redirects">
 <code class="sig-name descname">revert_redirects</code><span class="sig-paren">(</span><em class="sig-param">results</em>, <em class="sig-param">redirects</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.revert_redirects" title="Permalink to this definition">¶</a></dt>
-<dd><p>Revert redirections.</p>
-<p>The function takes in search results with keys as the page titles.
-The redirections are those retorned by Wikipedia to redirect these keys.</p>
+<dd><p>Wikipedia contains automatic redirections.
+For example, <cite>Messi</cite> redirects to <cite>Lionel Messi</cite>.
+This function automatically reverses that redirection.</p>
+<p>This action is useful because sometimes, the result is not what is expected.
+If you retrieve the text of the article about <cite>Messi</cite>, by default you would not find that key, but <cite>Lionel Messi</cite>.
+By reverting redirects, the keys are what you would expect.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>results</strong> (<em>dict</em>) – Any results obtained from Wikipedia.
-It is assumed that the keys are the page titles.</p></li>
+The keys are the page titles, and the values are the returned information, such as the article text.</p></li>
 <li><p><strong>redirects</strong> (<em>dict</em>) – The redirects provided by Wikipedia.
 This dictionary has keys ‘from’ and ‘to’.</p></li>
 </ul>

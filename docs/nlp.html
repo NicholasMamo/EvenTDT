@@ -976,7 +976,7 @@ The main functionality resides in the <a class="reference internal" href="#nlp.c
 Other cleaners that inherit the <a class="reference internal" href="#nlp.cleaners.Cleaner" title="nlp.cleaners.Cleaner"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cleaner</span></code></a> class would likely need to change this function.</p>
 <dl class="class">
 <dt id="nlp.cleaners.Cleaner">
-<em class="property">class </em><code class="sig-name descname">Cleaner</code><span class="sig-paren">(</span><em class="sig-param">remove_alt_codes=False</em>, <em class="sig-param">complete_sentences=False</em>, <em class="sig-param">collapse_new_lines=False</em>, <em class="sig-param">collapse_whitespaces=False</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.Cleaner" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Cleaner</code><span class="sig-paren">(</span><em class="sig-param">remove_alt_codes=False</em>, <em class="sig-param">complete_sentences=False</em>, <em class="sig-param">collapse_new_lines=False</em>, <em class="sig-param">collapse_whitespaces=False</em>, <em class="sig-param">capitalize_first=False</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.Cleaner" title="Permalink to this definition">¶</a></dt>
 <dd><p>The base cleaner is meant to perform only basing pre-processing and cleaning.
 These functions are generally applicable to any type of text.</p>
 <p>You need to specify all cleaner settings in the constructor.
@@ -992,12 +992,13 @@ The cleaner cannot identify any incomplete sentences in the middle of the text, 
 <li><p><strong>collapse_new_lines</strong> (<em>bool</em>) – A boolean indicating whether new lines should be collapsed into whitespaces.</p></li>
 <li><p><strong>collapse_whitespaces</strong> (<em>bool</em>) – A boolean indicating whether consecutive whitespaces and tabs should be collapsed into a single whitespace.
 This also removes whitespaces just before periods.</p></li>
+<li><p><strong>capitalize_first</strong> (<em>bool</em>) – A boolean indicating whether to capitalize the first letter.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="method">
 <dt id="nlp.cleaners.Cleaner.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">remove_alt_codes=False</em>, <em class="sig-param">complete_sentences=False</em>, <em class="sig-param">collapse_new_lines=False</em>, <em class="sig-param">collapse_whitespaces=False</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.Cleaner.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">remove_alt_codes=False</em>, <em class="sig-param">complete_sentences=False</em>, <em class="sig-param">collapse_new_lines=False</em>, <em class="sig-param">collapse_whitespaces=False</em>, <em class="sig-param">capitalize_first=False</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.Cleaner.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the cleaner with the basic configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1008,6 +1009,7 @@ The cleaner cannot identify any incomplete sentences in the middle of the text, 
 <li><p><strong>collapse_new_lines</strong> (<em>bool</em>) – A boolean indicating whether new lines should be collapsed into whitespaces.</p></li>
 <li><p><strong>collapse_whitespaces</strong> (<em>bool</em>) – A boolean indicating whether consecutive whitespaces and tabs should be collapsed into a single whitespace.
 This also removes whitespaces just before periods.</p></li>
+<li><p><strong>capitalize_first</strong> (<em>bool</em>) – A boolean indicating whether to capitalize the first letter.</p></li>
 </ul>
 </dd>
 </dl>

@@ -221,6 +221,7 @@ However, summaries may also have other attributes.</p>
 <code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.summary.Summary.__str__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the string representation of the summary.
 This is equivalent to concatenating the text of all documents.</p>
+<p>If all documents have a <code class="docutils literal notranslate"><span class="pre">timestamp</span></code> attribute, this function automatically sorts them in chronological order.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>The string representation of the summary.</p>
@@ -275,9 +276,9 @@ Although the specifics vary from one algorithm to the other, the goal does not.<
 All algorithms must, however, implement the <a class="reference internal" href="#summarization.algorithms.summarization.SummarizationAlgorithm.summarize" title="summarization.algorithms.summarization.SummarizationAlgorithm.summarize"><code class="xref py py-func docutils literal notranslate"><span class="pre">summarize()</span></code></a> method.</p>
 <dl class="method">
 <dt id="summarization.algorithms.summarization.SummarizationAlgorithm.summarize">
-<em class="property">abstract </em><code class="sig-name descname">summarize</code><span class="sig-paren">(</span><em class="sig-param">documents</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.summarization.SummarizationAlgorithm.summarize" title="Permalink to this definition">¶</a></dt>
+<em class="property">abstract </em><code class="sig-name descname">summarize</code><span class="sig-paren">(</span><em class="sig-param">documents</em>, <em class="sig-param">length</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.summarization.SummarizationAlgorithm.summarize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Summarize the given documents.</p>
-<p>Summarization algorithms may accept more parameters, but they must accept, at least a list of documents.
+<p>Summarization algorithms may accept more parameters, but they must accept, at least a list of documents and the length of the summary.
 They must also always return a summary object.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>

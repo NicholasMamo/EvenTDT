@@ -1,6 +1,11 @@
 """
-The basic Wikipedia API interface uses the `Wikimedia API <https://www.mediawiki.org/wiki/API:Main_page>`_.
-This module makes it easier to access the API.
+Wikinterface is a simple side-project bundled with EvenTDT that makes it easier to access Wikipedia.
+The basic Wikipedia API interface uses the `Wikimedia API <https://www.mediawiki.org/wiki/API:Main_page>`_ to connect with Wikipedia.
+
+The package separates the functions across modules that fetch different information from Wikipedia.
+At the package-level are functions that are useful to several modules.
+
+In all cases, responses are sent on the ``API_ENDPOINT`` and returned as a JSON string.
 """
 
 API_ENDPOINT = "https://en.wikipedia.org/w/api.php?"
@@ -13,10 +18,13 @@ def is_error_response(response):
 	"""
 	Validate whether the given Wikipedia response is an error.
 
+	All error responses have an ``error`` key in them.
+	This function simply checks whether this key is in the response.
+
 	:param response: The response to validate.
 	:type response: dict
 
-	:return: A boolean indicating whether the response is valid.
+	:return: A boolean indicating whether the response is an error.
 	:rtype: bool
 	"""
 
@@ -25,6 +33,10 @@ def is_error_response(response):
 def construct_url(parameters=None):
 	"""
 	Construct the URL using the given parameters.
+	This function expects parameters to be a dictionary, with the parameter name as the key.
+
+	This helper function automatically parses the parameter values.
+	For example, if a parameter value is a boolean (and ``True``), only the parameter is added to the URL string.
 
 	:param parameters: The list of GET parameters to send.
 					   The parameter values can be either strings or booleans.
@@ -54,13 +66,16 @@ def construct_url(parameters=None):
 
 def revert_redirects(results, redirects):
 	"""
-	Revert redirections.
+	Wikipedia contains automatic redirections.
+	For example, `Messi` redirects to `Lionel Messi`.
+	This function automatically reverses that redirection.
 
-	The function takes in search results with keys as the page titles.
-	The redirections are those retorned by Wikipedia to redirect these keys.
+	This action is useful because sometimes, the result is not what is expected.
+	If you retrieve the text of the article about `Messi`, by default you would not find that key, but `Lionel Messi`.
+	By reverting redirects, the keys are what you would expect.
 
 	:param results: Any results obtained from Wikipedia.
-					It is assumed that the keys are the page titles.
+					The keys are the page titles, and the values are the returned information, such as the article text.
 	:type results: dict
 	:param redirects: The redirects provided by Wikipedia.
 					  This dictionary has keys 'from' and 'to'.

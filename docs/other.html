@@ -320,21 +320,18 @@ If <cite>None</cite> is given, an empty dictionary is created instead.</p>
 <dt id="objects.exportable.Exportable.encode">
 <em class="property">static </em><code class="sig-name descname">encode</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#objects.exportable.Exportable.encode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Try to encode the given data.
-This function expects a dictionary and checks if values are JSON serializable.
+This function expects a dictionary, a list or an object and checks if values are JSON serializable.
 If this is not possible, instances of <a class="reference internal" href="#objects.exportable.Exportable" title="objects.exportable.Exportable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exportable</span></code></a> are converted to arrays.
 This is done through the <a class="reference internal" href="#objects.exportable.Exportable.to_array" title="objects.exportable.Exportable.to_array"><code class="xref py py-func docutils literal notranslate"><span class="pre">to_array()</span></code></a> function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>data</strong> (<em>dict</em>) – The data to encode.</p>
+<dd class="field-odd"><p><strong>data</strong> (<em>dict</em><em> or </em><em>list</em>) – The data to encode.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The encoded data.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>TypeError</strong> – When the data is not a dictionary.</p>
+<dd class="field-odd"><p>dict or list or object</p>
 </dd>
 </dl>
 </dd></dl>
@@ -346,18 +343,20 @@ This is done through the <a class="reference internal" href="#objects.exportable
 By decoded, it means that objects are created where necessary or possible.
 Only classes that inherit the <a class="reference internal" href="#objects.exportable.Exportable" title="objects.exportable.Exportable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exportable</span></code></a> can be decoded.
 This is done through the <a class="reference internal" href="#objects.exportable.Exportable.from_array" title="objects.exportable.Exportable.from_array"><code class="xref py py-func docutils literal notranslate"><span class="pre">from_array()</span></code></a> function.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When decoding, the function expects either a dictionary or a list.
+JSON objects cannot be anything else.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>data</strong> (<em>dict</em>) – The data to decode.</p>
+<dd class="field-odd"><p><strong>data</strong> (<em>dict</em><em> or </em><em>list</em>) – The data to decode.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A dictionary, but this time decoded.</p>
+<dd class="field-even"><p>A dictionary, list or object, but this time decoded.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>TypeError</strong> – When the data is not a dictionary.</p>
+<dd class="field-odd"><p>dict or list or object</p>
 </dd>
 </dl>
 </dd></dl>
