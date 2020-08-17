@@ -12,6 +12,7 @@
 
 .. _summarization_basics:
 
+==================
 The Summary Object
 ==================
 
