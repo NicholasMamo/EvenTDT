@@ -14,9 +14,12 @@
 Nutrition Stores
 ================
 
-.. automodule:: tdt.nutrition.store
+.. automodule:: tdt.nutrition
    :members:
    :special-members:
+
+Memory Nutrition Store
+----------------------
 
 .. automodule:: tdt.nutrition.memory
    :members:

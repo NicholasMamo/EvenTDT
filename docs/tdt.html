@@ -93,7 +93,10 @@
 <li class="toctree-l1"><a class="reference internal" href="wikinterface.html">4. Wikinterface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="apd.html">5. Automatic Participant Detection (APD)</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">6. Topic Detection and Tracking (TDT)</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-tdt.nutrition.store">Nutrition Stores</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tdt.nutrition">Nutrition Stores</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-tdt.nutrition.memory">Memory Nutrition Store</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#module-tdt.algorithms">Algorithms</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module-tdt.algorithms.zhao">Zhao et al. (2011)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-tdt.algorithms.cataldi">Cataldi et al. (2014)</a></li>
@@ -181,9 +184,186 @@ It achieves this by providing:</p>
 <li><p>Tools to help you implement new algorithms, such as the <code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code>; and</p></li>
 <li><p>A uniform interface for TDT algorithms in <a class="reference internal" href="#tdt.algorithms.TDTAlgorithm" title="tdt.algorithms.TDTAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">TDTAlgorithm</span></code></a>.</p></li>
 </ol>
-<div class="section" id="module-tdt.nutrition.store">
-<span id="nutrition-stores"></span><h2>Nutrition Stores<a class="headerlink" href="#module-tdt.nutrition.store" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-tdt.nutrition.memory"></span><p>The memory nutrition store uses Python dictionaries as data structures to store nutrition data.
+<div class="section" id="module-tdt.nutrition">
+<span id="nutrition-stores"></span><h2>Nutrition Stores<a class="headerlink" href="#module-tdt.nutrition" title="Permalink to this headline">¶</a></h2>
+<p>The concept of nutrition was used predominantly by <a class="reference external" href="https://dl.acm.org/doi/abs/10.1145/2542182.2542189">Cataldi et al.</a>.
+Later, it was adopted by Mamo and others in <a class="reference external" href="https://link.springer.com/chapter/10.1007/978-3-319-74497-1_3">FIRE</a> and <a class="reference external" href="https://dl.acm.org/doi/abs/10.1145/3342220.3344921">ELD</a>.
+Nutrition is a measure of the popularity of a term.
+It is combined with another metric—burst—that measures the change in nutrition.</p>
+<p>The nutrition store is an interface for data structures to store the nutrition.
+The interface contains the methods that they all must implement.
+For example, implementations can store data in a database or in memory.</p>
+<p>The nutrition stores separate nutrition based on timestamps.
+The timestamps can store nutrition data for that timestamp alone.
+They can also store nutrition data for a period of time, represented by that timestamp.</p>
+<dl class="class">
+<dt id="tdt.nutrition.NutritionStore">
+<em class="property">class </em><code class="sig-name descname">NutritionStore</code><a class="headerlink" href="#tdt.nutrition.NutritionStore" title="Permalink to this definition">¶</a></dt>
+<dd><p>The nutrition store needs to handle both the storage of nutrition, as well as retrieval.
+All nutrition stores must implement all of the following methods.
+Nutrition stores separate data based on timestamps.</p>
+<dl class="method">
+<dt id="tdt.nutrition.NutritionStore.__init__">
+<em class="property">abstract </em><code class="sig-name descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tdt.nutrition.NutritionStore.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the nutrition store.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tdt.nutrition.NutritionStore.add">
+<em class="property">abstract </em><code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">timestamp</em>, <em class="sig-param">nutrition</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.nutrition.NutritionStore.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a nutrition data to the store at the given timestamp.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This function overwrites any data at the given timestamp.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timestamp</strong> (<em>float</em><em> or </em><em>int</em>) – The timestamp of the nutrition data.</p></li>
+<li><p><strong>nutrition</strong> (<em>any</em>) – The nutrition data to add.
+The nutrition data can be any value.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tdt.nutrition.NutritionStore.get">
+<em class="property">abstract </em><code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param">timestmap</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.nutrition.NutritionStore.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the nutrition data at the given timestamp.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>timestamp</strong> (<em>float</em><em> or </em><em>int</em>) – The timestamp whose nutrition is to be returned.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The nutrition at the given timestamp.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tdt.nutrition.NutritionStore.all">
+<em class="property">abstract </em><code class="sig-name descname">all</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tdt.nutrition.NutritionStore.all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all the nutrition data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>All the nutrition data in the nutrition store as a dictionary.
+The keys are the timestamps, and the values are the nutrition data at those timestamps.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tdt.nutrition.NutritionStore.between">
+<em class="property">abstract </em><code class="sig-name descname">between</code><span class="sig-paren">(</span><em class="sig-param">start</em>, <em class="sig-param">end</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.nutrition.NutritionStore.between" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the nutrition data between the given timestamps.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The start timestamp is inclusive, the end timestamp is exclusive.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start</strong> (<em>float</em><em> or </em><em>int</em>) – The first timestamp that should be included in the returned nutrition data.
+If no time window with the given timestamp exists, all returned time windows succeed it.</p></li>
+<li><p><strong>end</strong> (<em>float</em><em> or </em><em>int</em>) – All the nutrition data from the beginning until the given timestamp.
+Any nutrition data at the end timestamp is not returned.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>All the nutrition data between the given timestamps.
+The start timestamp is inclusive, the end timestamp is exclusive.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tdt.nutrition.NutritionStore.since">
+<code class="sig-name descname">since</code><span class="sig-paren">(</span><em class="sig-param">start</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.nutrition.NutritionStore.since" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the nutrition data since the given timestamp.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The start timestamp is inclusive.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>start</strong> (<em>float</em><em> or </em><em>int</em>) – The first timestamp that should be included in the returned nutrition data.
+If no time window with the given timestamp exists, all returned time windows succeed it.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>All the nutrition data from the given timestamp onward.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tdt.nutrition.NutritionStore.until">
+<code class="sig-name descname">until</code><span class="sig-paren">(</span><em class="sig-param">end</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.nutrition.NutritionStore.until" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of nutrition sets that came before the given timestamp.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The end timestamp is exclusive.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>end</strong> (<em>float</em><em> or </em><em>int</em>) – The timestamp before which nutrition data should be returned.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>All the nutrition data from the beginning until the given timestamp.
+Any nutrition data at the end timestamp is not returned.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tdt.nutrition.NutritionStore.remove">
+<em class="property">abstract </em><code class="sig-name descname">remove</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.nutrition.NutritionStore.remove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove nutrition data from the given list of timestamps.
+The timestamps should be given as arguments.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tdt.nutrition.NutritionStore.copy">
+<em class="property">abstract </em><code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tdt.nutrition.NutritionStore.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a copy of the nutrition store.
+The copy is a deep copy.
+This means that all changes to the copy do not affect the original.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A copy of the nutrition store.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tdt.nutrition.NutritionStore.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#tdt.nutrition.NutritionStore.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="module-tdt.nutrition.memory">
+<span id="memory-nutrition-store"></span><h3>Memory Nutrition Store<a class="headerlink" href="#module-tdt.nutrition.memory" title="Permalink to this headline">¶</a></h3>
+<p>The memory nutrition store uses Python dictionaries as data structures to store nutrition data.
 This store is a simple and efficient implementation because there is little overhead.
 However, the accumulation of nutrition data necessitates that old data is cleared routinely.</p>
 <dl class="class">
@@ -194,7 +374,7 @@ The keys are the timestamps, with each timestamp storing another dictionary.
 The inner dictionary has the terms as keys and their nutrition as values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#module-tdt.nutrition.store" title="tdt.nutrition.store"><strong>store</strong></a> (<em>dict</em>) – The nutrition store as a dictionary.
+<dd class="field-odd"><p><strong>store</strong> (<em>dict</em>) – The nutrition store as a dictionary.
 The keys are the timestamps, and the values are the nutrition data.
 The nutrition data can be any value.</p>
 </dd>
@@ -312,6 +492,7 @@ This means that all changes to the copy do not affect the original.</p>
 </dd></dl>
 
 </div>
+</div>
 <div class="section" id="module-tdt.algorithms">
 <span id="algorithms"></span><h2>Algorithms<a class="headerlink" href="#module-tdt.algorithms" title="Permalink to this headline">¶</a></h2>
 <p>TDT algorithms are split broadly into document-pivot and feature-pivot.
@@ -360,7 +541,7 @@ If the increase is not significant, the time window is progressively increased.<
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#module-tdt.nutrition.store" title="tdt.nutrition.store"><strong>store</strong></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code>) – The store contraining historical nutrition data.
+<li><p><strong>store</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code>) – The store contraining historical nutrition data.
 The algorithm expects the nutrition values to represent the stream volume.
 Therefore the values should be floats or integers.</p></li>
 <li><p><strong>post_rate</strong> (<em>float</em>) – The minimum ratio between two time windows to represent a burst.</p></li>
@@ -426,7 +607,7 @@ The algorithm uses nutrition to calculate burst.
 Burst is a measure of how much a term is bursting.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#module-tdt.nutrition.store" title="tdt.nutrition.store"><strong>store</strong></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code>) – The store contraining historical nutrition data.
+<dd class="field-odd"><p><strong>store</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code>) – The store contraining historical nutrition data.
 The algorithm expects the timestamps to represent time windows.
 Therefore the nutrition store should have dictionaries with timestamps as keys, and the nutrition of terms in a dictionary as values.
 In other words, the timestamps should represent an entire time window, not just a particular second.</p>
@@ -495,7 +676,7 @@ The algorithm returns not only terms, but also the degree to which they are brea
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#module-tdt.nutrition.store" title="tdt.nutrition.store"><strong>store</strong></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code>) – The store contraining historical nutrition data.
+<li><p><strong>store</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code>) – The store contraining historical nutrition data.
 The algorithm expects the timestamps to represent checkpoints, or time windows.
 Therefore the nutrition store should have dictionaries with timestamps as keys, and the nutrition of terms in a dictionary as values.
 In other words, the timestamps should represent an entire time window, not just a particular second.</p></li>
