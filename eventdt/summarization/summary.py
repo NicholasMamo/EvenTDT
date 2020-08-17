@@ -1,7 +1,11 @@
 """
-Summarization algorithms create summaries.
-The summary object encapsulates the output.
-It stores the documents that make it up as well as any other attributes that may be necessary.
+The :class:`~summarization.summary.Summary` object is a special class that represents summaries.
+Essentially, this class is a group of :class:`~nlp.document.Document`, which can represent sentences, tweets and other text.
+Moreover, it includes additional, summary-related functionality and it can accept additional attributes.
+
+The point of the :class:`~summarization.summary.Summary` object is that it retains the original :class:`~nlp.document.Document` instances.
+Therefore a :class:`~summarization.summary.Summary` instance is not a simple string.
+It can be represented or manipulated (such as by using a :class:`~nlp.cleaners.Cleaner`) as the application necessitates by having access to its original components.
 """
 
 import importlib
@@ -17,8 +21,14 @@ from objects.exportable import Exportable
 
 class Summary(Attributable, Exportable):
 	"""
-	A summary is essentially made up of a list of :class:`~nlp.document.Document`.
+	A summary is essentially a list of :class:`~nlp.document.Document`.
 	However, summaries may also have other attributes.
+
+	The point of the summary object is to encapsulate the list of :class:`~nlp.document.Document` instances that make it up, while retaining the original text.
+	The list of :class:`~nlp.document.Document` can be accessed using the ``documents`` property, which means that :class:`~nlp.document.Document` instances can be added or removed dynamically.
+
+	In addition, this class provides the :func:`~summarization.summary.Summary.__str__` special function, which concatenates its documents to form a textual summary.
+	If the documents contain a ``timestamp`` attribute, it automatically sorts the documents in chronological order.
 
 	:ivar documents: The documents that make up the summary.
 	:vartype documents: list of :class:`~nlp.document.Document`
