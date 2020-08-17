@@ -15,8 +15,8 @@ path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
-from .summarization import SummarizationAlgorithm
 from summarization import Summary
+from summarization.algorithms import SummarizationAlgorithm
 
 from vsm.clustering import Cluster
 from vsm import vector_math

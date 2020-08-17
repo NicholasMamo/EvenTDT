@@ -23,8 +23,8 @@ if path not in sys.path:
 
 from nlp.tokenizer import Tokenizer
 
-from .summarization import SummarizationAlgorithm
 from summarization import Summary
+from summarization.algorithms import SummarizationAlgorithm
 
 from vsm import vector_math
 from vsm.clustering import Cluster

@@ -26,7 +26,7 @@ The Summary Object
 Algorithms
 ==========
 
-.. automodule:: summarization.algorithms.summarization
+.. automodule:: summarization.algorithms
    :members:
    :special-members:
 
