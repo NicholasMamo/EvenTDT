@@ -1,5 +1,6 @@
 """
-The link collector collects links from Wikipedia articles.
+The link collector module collects links from Wikipedia articles.
+These functions are useful to collect the Wikipedia graph, connecting articles with each other through links.
 """
 
 import json
@@ -13,15 +14,15 @@ def collect(titles, separate=True, introduction_only=False):
 	"""
 	Get a list of outgoing links from the given list of articles.
 
-	:param titles: A list of article titles, or a single article title, from where to fetch links.
+	:param titles: A title, or a list of article titles from where to fetch links.
 	:type titles: list of str or str
-	:param separate: A boolean indicating whether the links should be separated according to articles.
+	:param separate: A boolean indicating whether the sets of links should be separated according to the articles where they were found.
 	:type separate: bool
 	:param introduction_only: A boolean indicating whether the links should be fetched only from the introduction.
 	:type introduction_only: bool
 
 	:return: A list of outgoing links from the article titles provided.
-			 If the `separate` boolean is `True`, a dictionary is returned.
+			 If the ``separate`` boolean is set to ``True``, a dictionary is returned.
 			 This dictionary's keys are the article titles, and the values are lists of outgoing links.
 			 Otherwise, a list of article titles is returned.
 	:rtype: list or dict
@@ -38,9 +39,9 @@ def collect(titles, separate=True, introduction_only=False):
 	Some parameters are required only when using the introduction to collect links.
 	Similarly, others are required only when all links are required.
 
-	By default, `plcontinue` is not included.
+	By default, ``plcontinue`` is not included.
 	It is added when a valid value is given.
-	When it changes to `None`, the algorithm stops collecting links.
+	When it changes to ``None``, the algorithm stops collecting links.
 	"""
 	parameters = {
 		'format': 'json',
@@ -136,17 +137,20 @@ def collect_recursive(titles, level, collected_links=None, separate=True, *args,
 
 	:param titles: The articles from where to start (or continue) looking.
 	:type titles: list of str or str
-	:param level: The current level.
-				 If the level is 1, the links are fetched once and the function returns.
+	:param level: The number of times to fetch links recursively.
+				  If the level is 1, the links are fetched once and the function returns.
+				  Internally, this parameter is decreased at each recursion level.
 	:type level: int
 	:param collected_links: Any links that have already been collected.
+							Normally, you do not need to provide it.
+							It is used internally to keep track of the colleccted links.
 	:type collected_links: list of str or None
 	:param separate: A boolean indicating whether the links should be separated according to articles.
 	:type separate: bool
 
-	:return: A list of links if they should not be separated.
-			 If they are, the links are returned separated by the page in which they appear.
-	:rtype: dict or list
+	:return: A list of links if the ``separate`` parameter is set to ``False``.
+			 Otherwise, the links are returned in a dictionary, where the keys are the page titles, and the values are the links in each page.
+	:rtype: list or dict
 
 	:raises ValueError: When the level is not positive.
 	:raises ValueError: When the level is not an integer.
