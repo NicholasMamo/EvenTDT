@@ -85,7 +85,7 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 		Find breaking develpoments based on changes in volume.
 
 		:return: The constructed timeline.
-		:rtype: :class:`~summarization.timeline.timeline.Timeline`
+		:rtype: :class:`~summarization.timeline.Timeline`
 		"""
 
 		timeline = Timeline(DocumentNode, 0, 1)

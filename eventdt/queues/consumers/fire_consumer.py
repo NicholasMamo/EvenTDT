@@ -113,7 +113,7 @@ class FIREConsumer(SimulatedBufferedConsumer):
 		Find breaking develpoments based on how people are talking.
 
 		:return: The constructed timeline.
-		:rtype: :class:`~summarization.timeline.timeline.Timeline`
+		:rtype: :class:`~summarization.timeline.Timeline`
 		"""
 
 		timeline = Timeline(ClusterNode, 0, 1)

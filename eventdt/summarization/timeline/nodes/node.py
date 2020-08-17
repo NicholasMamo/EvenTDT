@@ -30,7 +30,7 @@ class Node(Exportable):
 
 		The inputs for the :func:`~summrization.timeline.nodes.node.Node.add` and :func:`~summrization.timeline.nodes.node.Node.similarity` function should be the same.
 		This is necessary even if an input is used in :func:`~summrization.timeline.nodes.node.Node.add`, but not in :func:`~summrization.timeline.nodes.node.Node.similarity`.
-		This is because the :func:`~summarization.timeline.timeline.Timeline.add` function passes all arguments and keyword arguments in the same way.
+		This is because the :func:`~summarization.timeline.Timeline.add` function passes all arguments and keyword arguments in the same way.
 
 	:ivar created_at: The timestamp when the node was created.
 	:vartype created_at: float

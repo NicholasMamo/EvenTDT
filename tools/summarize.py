@@ -164,7 +164,7 @@ def load_timeline(file):
 	:type file: str
 
 	:return: The loaded timeline.
-	:rtype: :class:`~summarization.timeline.Timeline`
+	:rtype: :class:`~summarization.timeline.
 	"""
 
 	with open(file) as f:
@@ -198,7 +198,7 @@ def summarize(summarizer, timeline, verbose=False, max_documents=None, length=14
 	:param summarizer: The summarization method to use.
 	:type summarizer: :class:`~summarization.algorithms.SummarizationAlgorithm`
 	:param timeline: The timeline to summarize.
-	:type timeline: :class:`~summarization.timeline.Timeline`
+	:type timeline: :class:`~summarization.timeline.
 	:param verbose: A boolean indicating whether to print the summaries as they are generated.
 	:type verbose: bool
 	:param max_documents: The maximum number of documents to use when summarizing, with a preference for long documents.

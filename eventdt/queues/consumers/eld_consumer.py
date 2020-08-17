@@ -307,7 +307,7 @@ class ELDConsumer(Consumer):
 		:type max_inactivity: int
 
 		:return: The constructed timeline.
-		:rtype: :class:`~summarization.timeline.timeline.Timeline`
+		:rtype: :class:`~summarization.timeline.Timeline`
 		"""
 
 		timeline = Timeline(TopicalClusterNode, expiry=90, min_similarity=0.6)

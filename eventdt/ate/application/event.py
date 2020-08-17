@@ -34,8 +34,8 @@ class EF(Extractor):
 						  .. note::
 
 						      It is assumed that the event timelines were extracted using the collection tool.
-						      Therefore each file should be a JSON string representing a :class:`~summarization.timeline.timeline.Timeline`.
-		:type timelines: str or list of str or :class:`~summarization.timeline.timeline.Timeline` or list of :class:`~summarization.timeline.timeline.Timeline`
+						      Therefore each file should be a JSON string representing a :class:`~summarization.timeline.Timeline`.
+		:type timelines: str or list of str or :class:`~summarization.timeline.Timeline` or list of :class:`~summarization.timeline.Timeline`
 		:param candidates: A list of terms for which to calculate a score.
 						   If `None` is given, all words are considered to be candidates.
 		:type candidates: None or list of str
@@ -74,10 +74,10 @@ class EF(Extractor):
 		Load the timelines if paths to files are given.
 
 		:param timelines: A list of timelines, one for each event, or paths to timelines.
-		:type timelines: list of str or list of :class:`~summarization.timeline.timeline.Timeline`
+		:type timelines: list of str or list of :class:`~summarization.timeline.Timeline`
 
 		:return: A list of timelines, loaded from files where necessary.
-		:rtype: list of :class:`~summarization.timeline.timeline.Timeline`
+		:rtype: list of :class:`~summarization.timeline.Timeline`
 
 		:raises ValueError: When the given file does not contain a timeline.
 		"""
@@ -135,7 +135,7 @@ class LogEF(EF):
 						  .. note::
 
 						      It is assumed that the event timelines were extracted using the collection tool.
-						      Therefore each file should be a JSON string representing a :class:`~summarization.timeline.timeline.Timeline`.
+						      Therefore each file should be a JSON string representing a :class:`~summarization.timeline.Timeline`.
 		:type timelines: str or list of str
 		:param candidates: A list of terms for which to calculate a score.
 						   If `None` is given, all words are considered to be candidates.
@@ -196,7 +196,7 @@ class EFIDF(Extractor):
 						  .. note::
 
 						      It is assumed that the event timelines were extracted using the collection tool.
-						      Therefore each file should be a JSON string representing a :class:`~summarization.timeline.timeline.Timeline`.
+						      Therefore each file should be a JSON string representing a :class:`~summarization.timeline.Timeline`.
 		:type timelines: str or list of str
 		:param candidates: A list of terms for which to calculate a score.
 						   If `None` is given, all words are considered to be candidates.
