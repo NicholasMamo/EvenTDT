@@ -12,9 +12,15 @@ The algorithm is suitable to run in real-time.
 """
 
 import math
+import os
 import time
+import sys
 
-from .tdt import TDTAlgorithm
+path = os.path.join(os.path.dirname(__file__), '..')
+if path not in sys.path:
+    sys.path.append(path)
+
+from algorithms import TDTAlgorithm
 
 class Zhao(TDTAlgorithm):
 	"""

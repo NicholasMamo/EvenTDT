@@ -15,8 +15,14 @@ This implementation calculates the burst of terms based on the given nutrition.
 """
 
 import math
+import os
+import sys
 
-from .tdt import TDTAlgorithm
+path = os.path.join(os.path.dirname(__file__), '..')
+if path not in sys.path:
+    sys.path.append(path)
+
+from algorithms import TDTAlgorithm
 
 class Cataldi(TDTAlgorithm):
 	"""

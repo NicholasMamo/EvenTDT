@@ -19,8 +19,14 @@ This algorithm computes burst based on the past nutritions stored in the checkpo
 """
 
 import math
+import os
+import sys
 
-from .tdt import TDTAlgorithm
+path = os.path.join(os.path.dirname(__file__), '..')
+if path not in sys.path:
+    sys.path.append(path)
+
+from algorithms import TDTAlgorithm
 
 class ELD(TDTAlgorithm):
 	"""
