@@ -140,7 +140,7 @@ def method(method):
 	:type method: str
 
 	:return: The class type that corresponds to the given method.
-	:rtype: :class:`~summarization.algorithms.summarization.SummarizationAlgorithm`
+	:rtype: :class:`~summarization.algorithms.SummarizationAlgorithm`
 
 	:raises argparse.ArgumentTypeError: When the given method string is invalid.
 	"""
@@ -176,12 +176,12 @@ def create_summarizer(method, l=0.5):
 	Instantiate the summarization algorithm based on the arguments that it accepts.
 
 	:param method: The class type of the method to instantiate.
-	:type method: :class:`~summarization.algorithms.summarization.SummarizationAlgorithm`
+	:type method: :class:`~summarization.algorithms.SummarizationAlgorithm`
 	:param l: The lambda parameter to balance between relevance and non-redundancy (used only with the :class:`~summarization.algorithms.mmr.MMR` algorithm).
 	:type l: float
 
 	:return: The created summarization algorithm.
-	:rtype: :class:`~summarization.algorithms.summarization.SummarizationAlgorithm`
+	:rtype: :class:`~summarization.algorithms.SummarizationAlgorithm`
 	"""
 
 	if method == MMR:
@@ -196,7 +196,7 @@ def summarize(summarizer, timeline, verbose=False, max_documents=None, length=14
 	This function iterates over all of the timeline's nodes and summarizes them individually.
 
 	:param summarizer: The summarization method to use.
-	:type summarizer: :class:`~summarization.algorithms.summarization.SummarizationAlgorithm`
+	:type summarizer: :class:`~summarization.algorithms.SummarizationAlgorithm`
 	:param timeline: The timeline to summarize.
 	:type timeline: :class:`~summarization.timeline.Timeline`
 	:param verbose: A boolean indicating whether to print the summaries as they are generated.

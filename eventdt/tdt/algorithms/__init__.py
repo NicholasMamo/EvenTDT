@@ -14,11 +14,11 @@ This functionality is encapsulated in the :class:`~tdt.algorithms.TDTAlgorithm`,
 	EvenTDT separates the two into:
 
 	- :class:`~tdt.algorithms.TDTAlgorithm` and
-	- :class:`~summarization.algorithms.summarization.SummarizationAlgorithm`.
+	- :class:`~summarization.algorithms.SummarizationAlgorithm`.
 
 	The reason why EvenTDT enforces this separation is that the two approaches tackle vastly different problems.
 	Well-designed approaches delineate the separation between the two.
-	If the :class:`~tdt.algorithms.TDTAlgorithm` is meant to work closely together with the :class:`~summarization.algorithms.summarization.SummarizationAlgorithm`, then its output needs to be compatible with the summarization algorithm.
+	If the :class:`~tdt.algorithms.TDTAlgorithm` is meant to work closely together with the :class:`~summarization.algorithms.SummarizationAlgorithm`, then its output needs to be compatible with the summarization algorithm.
 """
 
 from abc import ABC, abstractmethod
