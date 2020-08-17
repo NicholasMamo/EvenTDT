@@ -176,9 +176,11 @@
             
     <div class="section" id="summarization">
 <h1>7. Summarization<a class="headerlink" href="#summarization" title="Permalink to this headline">¶</a></h1>
-<p>Topic Detection and Tracking (TDT) is useless if it cannot explain what it detects.
-Summarization takes the machine-understandable data and creates human-understandable information.</p>
-<span class="target" id="module-summarization"></span><span class="target" id="module-summarization.summary"></span><p>Summarization algorithms create summaries.
+<span class="target" id="module-summarization"></span><p>Topic Detection and Tracking (TDT) approaches are normally accompanied by a summarization module.
+Whereas the TDT technique tells us that something happened, summarization explains what happened.</p>
+<p>Summarization takes the machine-understandable data and creates human-understandable information.
+This package provides <a class="reference internal" href="#summarization-basics"><span class="std std-ref">basic summarization resources</span></a>, <a class="reference internal" href="#summarization-algorithms"><span class="std std-ref">algorithms to summarize documents</span></a> and <a class="reference internal" href="#summarization-timelines"><span class="std std-ref">functionality to build timelines</span></a>.</p>
+<span class="target" id="module-summarization.summary"><span id="summarization-basics"></span></span><p>Summarization algorithms create summaries.
 The summary object encapsulates the output.
 It stores the documents that make it up as well as any other attributes that may be necessary.</p>
 <dl class="class">
@@ -266,7 +268,7 @@ This is equivalent to concatenating the text of all documents.</p>
 </dd></dl>
 
 <div class="section" id="module-summarization.algorithms.summarization">
-<span id="algorithms"></span><h2>Algorithms<a class="headerlink" href="#module-summarization.algorithms.summarization" title="Permalink to this headline">¶</a></h2>
+<span id="algorithms"></span><span id="summarization-algorithms"></span><h2>Algorithms<a class="headerlink" href="#module-summarization.algorithms.summarization" title="Permalink to this headline">¶</a></h2>
 <p>Summarization algorithms take in documents and create a summary out of them.
 Although the specifics vary from one algorithm to the other, the goal does not.</p>
 <dl class="class">
@@ -442,7 +444,7 @@ If no query is given, the summary is built around the centroid of documents.</p>
 </div>
 </div>
 <div class="section" id="module-summarization.timeline.timeline">
-<span id="timelines"></span><h2>Timelines<a class="headerlink" href="#module-summarization.timeline.timeline" title="Permalink to this headline">¶</a></h2>
+<span id="timelines"></span><span id="summarization-timelines"></span><h2>Timelines<a class="headerlink" href="#module-summarization.timeline.timeline" title="Permalink to this headline">¶</a></h2>
 <p>A timeline is a succession of <a class="reference internal" href="#summarization.timeline.nodes.node.Node" title="summarization.timeline.nodes.node.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>.
 Each node stores information about what happened in that period of time.
 The timeline groups these nodes together.</p>
