@@ -12,6 +12,9 @@
 
 .. _summarization_basics:
 
+The Summary Object
+==================
+
 .. automodule:: summarization.summary
    :members:
    :special-members:

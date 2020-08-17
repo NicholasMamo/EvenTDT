@@ -94,13 +94,16 @@
 <li class="toctree-l1"><a class="reference internal" href="apd.html">5. Automatic Participant Detection (APD)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tdt.html">6. Topic Detection and Tracking (TDT)</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">7. Summarization</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-summarization.algorithms.summarization">Algorithms</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module-summarization.algorithms.mmr">Carbonell and Goldstein (1998)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-summarization.algorithms.dgs">Mamo et al. (2019)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-summarization.summary">The Summary Object</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-summarization.algorithms.summarization">Algorithms</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-summarization.algorithms.mmr">Carbonell and Goldstein (1998)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-summarization.algorithms.dgs">Mamo et al. (2019)</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#module-summarization.timeline.timeline">Timelines</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module-summarization.timeline.nodes.node">Nodes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-summarization.timeline.timeline">Timelines</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-summarization.timeline.nodes.node">Nodes</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -180,7 +183,9 @@
 Whereas the TDT technique tells us that something happened, summarization explains what happened.</p>
 <p>Summarization takes the machine-understandable data and creates human-understandable information.
 This package provides <a class="reference internal" href="#summarization-basics"><span class="std std-ref">basic summarization resources</span></a>, <a class="reference internal" href="#summarization-algorithms"><span class="std std-ref">algorithms to summarize documents</span></a> and <a class="reference internal" href="#summarization-timelines"><span class="std std-ref">functionality to build timelines</span></a>.</p>
-<span class="target" id="module-summarization.summary"><span id="summarization-basics"></span></span><p>Summarization algorithms create summaries.
+<div class="section" id="module-summarization.summary">
+<span id="the-summary-object"></span><span id="summarization-basics"></span><h2>The Summary Object<a class="headerlink" href="#module-summarization.summary" title="Permalink to this headline">¶</a></h2>
+<p>Summarization algorithms create summaries.
 The summary object encapsulates the output.
 It stores the documents that make it up as well as any other attributes that may be necessary.</p>
 <dl class="class">
@@ -268,7 +273,7 @@ This is equivalent to concatenating the text of all documents.</p>
 </dd></dl>
 
 <div class="section" id="module-summarization.algorithms.summarization">
-<span id="algorithms"></span><span id="summarization-algorithms"></span><h2>Algorithms<a class="headerlink" href="#module-summarization.algorithms.summarization" title="Permalink to this headline">¶</a></h2>
+<span id="algorithms"></span><span id="summarization-algorithms"></span><h3>Algorithms<a class="headerlink" href="#module-summarization.algorithms.summarization" title="Permalink to this headline">¶</a></h3>
 <p>Summarization algorithms take in documents and create a summary out of them.
 Although the specifics vary from one algorithm to the other, the goal does not.</p>
 <dl class="class">
@@ -312,7 +317,7 @@ Therefore the summary is a selection of the given documents.</p>
 </dd></dl>
 
 <div class="section" id="module-summarization.algorithms.mmr">
-<span id="carbonell-and-goldstein-1998"></span><h3>Carbonell and Goldstein (1998)<a class="headerlink" href="#module-summarization.algorithms.mmr" title="Permalink to this headline">¶</a></h3>
+<span id="carbonell-and-goldstein-1998"></span><h4>Carbonell and Goldstein (1998)<a class="headerlink" href="#module-summarization.algorithms.mmr" title="Permalink to this headline">¶</a></h4>
 <p>The Maximal Marginal Relevance (MMR) algorithm takes in documents and a query and builds a summary.
 This summary has the ideal property of being relevant to the query and non-redundant.
 The algorithm follows a greedy approach.</p>
@@ -384,7 +389,7 @@ If no query is given, the summary is built around the centroid of documents.</p>
 
 </div>
 <div class="section" id="module-summarization.algorithms.dgs">
-<span id="mamo-et-al-2019"></span><h3>Mamo et al. (2019)<a class="headerlink" href="#module-summarization.algorithms.dgs" title="Permalink to this headline">¶</a></h3>
+<span id="mamo-et-al-2019"></span><h4>Mamo et al. (2019)<a class="headerlink" href="#module-summarization.algorithms.dgs" title="Permalink to this headline">¶</a></h4>
 <p>The Document Graph Summarizer (DGS) algorithm takes in documents and builds a summary.
 The algorithm is not greedy and constructs a document graph, which it then splits into communities.
 Considering each community to be a different facet, the algorithm picks documents from the largest communities.
@@ -444,7 +449,7 @@ If no query is given, the summary is built around the centroid of documents.</p>
 </div>
 </div>
 <div class="section" id="module-summarization.timeline.timeline">
-<span id="timelines"></span><span id="summarization-timelines"></span><h2>Timelines<a class="headerlink" href="#module-summarization.timeline.timeline" title="Permalink to this headline">¶</a></h2>
+<span id="timelines"></span><span id="summarization-timelines"></span><h3>Timelines<a class="headerlink" href="#module-summarization.timeline.timeline" title="Permalink to this headline">¶</a></h3>
 <p>A timeline is a succession of <a class="reference internal" href="#summarization.timeline.nodes.node.Node" title="summarization.timeline.nodes.node.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>.
 Each node stores information about what happened in that period of time.
 The timeline groups these nodes together.</p>
@@ -552,7 +557,7 @@ If the timestamp is not given, the current time is used.</p>
 </dd></dl>
 
 <div class="section" id="module-summarization.timeline.nodes.node">
-<span id="nodes"></span><h3>Nodes<a class="headerlink" href="#module-summarization.timeline.nodes.node" title="Permalink to this headline">¶</a></h3>
+<span id="nodes"></span><h4>Nodes<a class="headerlink" href="#module-summarization.timeline.nodes.node" title="Permalink to this headline">¶</a></h4>
 <p>Timelines are made up of nodes.
 Each node stores documents that can be summarized.
 Moreover, nodes provide functionality to facilitate timeline tasks.</p>
@@ -946,6 +951,7 @@ The returned similarity is the maximum similarity between the given topic and an
 
 </dd></dl>
 
+</div>
 </div>
 </div>
 </div>
