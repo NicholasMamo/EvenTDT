@@ -57,7 +57,7 @@ Timelines
 Nodes
 -----
 
-.. automodule:: summarization.timeline.nodes.node
+.. automodule:: summarization.timeline.nodes
    :members:
    :special-members:
 

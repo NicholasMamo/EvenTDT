@@ -13,6 +13,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from objects.exportable import Exportable
+from summarization.timeline.nodes import Node
 from vsm import vector_math
 
 class TopicalClusterNode(ClusterNode):

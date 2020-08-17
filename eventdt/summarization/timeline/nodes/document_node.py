@@ -2,8 +2,6 @@
 A document node stores documents as a list.
 """
 
-from .node import Node
-
 import importlib
 import os
 import sys
@@ -13,6 +11,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from objects.exportable import Exportable
+from summarization.timeline.nodes import Node
 from vsm import vector_math
 from vsm.clustering import Cluster
 

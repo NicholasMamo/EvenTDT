@@ -101,7 +101,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-summarization.timeline">Timelines</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module-summarization.timeline.nodes.node">Nodes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-summarization.timeline.nodes">Nodes</a></li>
 </ul>
 </li>
 </ul>
@@ -510,7 +510,7 @@ If no query is given, the summary is built around the centroid of documents.</p>
 </div>
 <div class="section" id="module-summarization.timeline">
 <span id="timelines"></span><span id="summarization-timelines"></span><h2>Timelines<a class="headerlink" href="#module-summarization.timeline" title="Permalink to this headline">¶</a></h2>
-<p>A timeline is a succession of <a class="reference internal" href="#summarization.timeline.nodes.node.Node" title="summarization.timeline.nodes.node.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>.
+<p>A timeline is a succession of <code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code>.
 Each node stores information about what happened in that period of time.
 The timeline groups these nodes together.</p>
 <dl class="class">
@@ -525,8 +525,8 @@ If there are no active nodes, the incoming documents can either be absorbed by a
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>nodes</strong> (<a class="reference internal" href="#summarization.timeline.nodes.node.Node" title="summarization.timeline.nodes.node.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>) – The list of nodes in the timeline.</p></li>
-<li><p><strong>node_type</strong> (<a class="reference internal" href="#summarization.timeline.nodes.node.Node" title="summarization.timeline.nodes.node.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>) – The type of nodes to create in the timeline.</p></li>
+<li><p><a class="reference internal" href="#module-summarization.timeline.nodes" title="summarization.timeline.nodes"><strong>nodes</strong></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code>) – The list of nodes in the timeline.</p></li>
+<li><p><strong>node_type</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code>) – The type of nodes to create in the timeline.</p></li>
 <li><p><strong>expiry</strong> (<em>float</em>) – The time in seconds that it takes for a node to expire.
 Expired nodes do not automatically absorb documents.
 If the expiry is 0, new documents immediately join a new node unless they are absorbed.</p></li>
@@ -545,7 +545,7 @@ This value is inclusive.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>node_type</strong> (<a class="reference internal" href="#summarization.timeline.nodes.node.Node" title="summarization.timeline.nodes.node.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>) – The type of nodes to create in the timeline.</p></li>
+<li><p><strong>node_type</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code>) – The type of nodes to create in the timeline.</p></li>
 <li><p><strong>expiry</strong> (<em>float</em>) – The time in seconds that it takes for a node to expire.
 Expired nodes do not automatically absorb documents.
 If the expiry is 0, new documents immediately join a new node unless they are absorbed.</p></li>
@@ -554,7 +554,7 @@ This value is inclusive.</p></li>
 <li><p><strong>max_time</strong> (<em>float</em>) – The maximum time in seconds to look back when deciding whether a node should absorb a new topic.
 The comparison is made with the node’s <cite>created_at</cite> instance variable.
 This value is inclusive.</p></li>
-<li><p><strong>nodes</strong> (<a class="reference internal" href="#summarization.timeline.nodes.node.Node" title="summarization.timeline.nodes.node.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>) – The initial list of nodes in the timeline.</p></li>
+<li><p><strong>nodes</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code>) – The initial list of nodes in the timeline.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -574,7 +574,7 @@ This function first tries to identify if there is an active node.
 If there isn’t, it tries to find a node that can absorb the documents.
 This process is performed in reverse.
 If it doesn’t, a new node is created.</p>
-<p>All arguments and keyword arguments are passed on to the <a class="reference internal" href="#summarization.timeline.nodes.node.Node.add" title="summarization.timeline.nodes.node.Node.add"><code class="xref py py-func docutils literal notranslate"><span class="pre">add()</span></code></a> and <a class="reference internal" href="#summarization.timeline.nodes.node.Node.similarity" title="summarization.timeline.nodes.node.Node.similarity"><code class="xref py py-func docutils literal notranslate"><span class="pre">similarity()</span></code></a> methods.</p>
+<p>All arguments and keyword arguments are passed on to the <code class="xref py py-func docutils literal notranslate"><span class="pre">add()</span></code> and <code class="xref py py-func docutils literal notranslate"><span class="pre">similarity()</span></code> methods.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>timestamp</strong> (<em>float</em>) – The current timestamp.
@@ -616,14 +616,14 @@ If the timestamp is not given, the current time is used.</p>
 
 </dd></dl>
 
-<div class="section" id="module-summarization.timeline.nodes.node">
-<span id="nodes"></span><h3>Nodes<a class="headerlink" href="#module-summarization.timeline.nodes.node" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="module-summarization.timeline.nodes">
+<span id="nodes"></span><h3>Nodes<a class="headerlink" href="#module-summarization.timeline.nodes" title="Permalink to this headline">¶</a></h3>
 <p>Timelines are made up of nodes.
 Each node stores documents that can be summarized.
 Moreover, nodes provide functionality to facilitate timeline tasks.</p>
 <dl class="class">
-<dt id="summarization.timeline.nodes.node.Node">
-<em class="property">class </em><code class="sig-name descname">Node</code><span class="sig-paren">(</span><em class="sig-param">created_at</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.node.Node" title="Permalink to this definition">¶</a></dt>
+<dt id="summarization.timeline.nodes.Node">
+<em class="property">class </em><code class="sig-name descname">Node</code><span class="sig-paren">(</span><em class="sig-param">created_at</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.Node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Nodes are the basic component of a timeline.
 Timelines contain an ordered list of these nodes.</p>
 <p>Nodes can store documents in different ways.
@@ -642,8 +642,8 @@ This is because the <a class="reference internal" href="#summarization.timeline.
 </dd>
 </dl>
 <dl class="method">
-<dt id="summarization.timeline.nodes.node.Node.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">created_at</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.node.Node.__init__" title="Permalink to this definition">¶</a></dt>
+<dt id="summarization.timeline.nodes.Node.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">created_at</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.Node.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the node.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -653,14 +653,14 @@ This is because the <a class="reference internal" href="#summarization.timeline.
 </dd></dl>
 
 <dl class="method">
-<dt id="summarization.timeline.nodes.node.Node.add">
-<em class="property">abstract </em><code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.node.Node.add" title="Permalink to this definition">¶</a></dt>
+<dt id="summarization.timeline.nodes.Node.add">
+<em class="property">abstract </em><code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.Node.add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add documents to the node.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="summarization.timeline.nodes.node.Node.similarity">
-<em class="property">abstract </em><code class="sig-name descname">similarity</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.node.Node.similarity" title="Permalink to this definition">¶</a></dt>
+<dt id="summarization.timeline.nodes.Node.similarity">
+<em class="property">abstract </em><code class="sig-name descname">similarity</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.Node.similarity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the similarity between this node and a given object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -673,8 +673,8 @@ This is because the <a class="reference internal" href="#summarization.timeline.
 </dd></dl>
 
 <dl class="method">
-<dt id="summarization.timeline.nodes.node.Node.get_all_documents">
-<em class="property">abstract </em><code class="sig-name descname">get_all_documents</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.node.Node.get_all_documents" title="Permalink to this definition">¶</a></dt>
+<dt id="summarization.timeline.nodes.Node.get_all_documents">
+<em class="property">abstract </em><code class="sig-name descname">get_all_documents</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.Node.get_all_documents" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get all the documents in this node.</p>
 <p>The implementation differs according to what the node stores.
 However, they must all have functionality to return a list of documents.</p>
@@ -689,8 +689,8 @@ However, they must all have functionality to return a list of documents.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="summarization.timeline.nodes.node.Node.expired">
-<code class="sig-name descname">expired</code><span class="sig-paren">(</span><em class="sig-param">expiry</em>, <em class="sig-param">timestamp</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.node.Node.expired" title="Permalink to this definition">¶</a></dt>
+<dt id="summarization.timeline.nodes.Node.expired">
+<code class="sig-name descname">expired</code><span class="sig-paren">(</span><em class="sig-param">expiry</em>, <em class="sig-param">timestamp</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.Node.expired" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check whether the node has expired.
 A node has expired if a certain time has passed.
 A node can still absorb documents if it has expired.
