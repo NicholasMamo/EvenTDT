@@ -1,5 +1,5 @@
 """
-The search collector is used to look for articles containing a particular list of terms.
+The search collector module looks for articles containing a particular list of terms.
 """
 
 import json
@@ -13,14 +13,13 @@ def collect(terms, limit=10):
 	"""
 	Look for pages containing the given terms.
 
-	.. warning::
-
-		The search API is often overloaded and fails.
-
-	:param terms: The search terms.
+	:param terms: The search term or terms.
 	:type terms: list of str or str
 	:param limit: The number of search results to return.
-				  Wikipedia limits the results to 50, but the collector can fetch more.
+				  
+				  .. note::
+
+				    Although Wikipedia limits the results to 50, the collector can fetch more.
 	:type limit: int
 
 	:return: A list of search results in the form of page titles.
