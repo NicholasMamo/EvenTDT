@@ -50,7 +50,7 @@ Document Graph Summarizer (DGS) - Mamo et al. (2019)
 Timelines
 =========
 
-.. automodule:: summarization.timeline.timeline
+.. automodule:: summarization.timeline
    :members:
    :special-members:
 
