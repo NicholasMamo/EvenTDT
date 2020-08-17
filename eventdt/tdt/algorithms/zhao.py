@@ -1,14 +1,23 @@
 """
-Zhao et al.'s algorithm is a feature-pivot approach to TDT.
-The algorithm identifies spikes in volume in the stream by halving the most recent time window.
-If the second half has a marked increase in volume—a ratio taken to be 1.7—the algorithm identifies a topic.
-If the increase is not significant, the time window is progressively increased.
+Zhao et al.'s algorithm is the first algorithm to be deployed over specified events on Twitter.
+This approach looks for spikes in the overall tweeting volume in the most recent time window.
 
-The algorithm is suitable to run in real-time.
+To identify these spikes, the approach splits time windows of increasing length into two.
+If the second half has a marked increase in volume the algorithm identifies the second half as a topic.
+The decision of whether something happened is based on a ratio, taken to be 1.7 in the original paper.
+In practice, this means that if the second half of a time-window has 70% more tweets than the first half, then it represents a topic.
+
+The time window starts at 10 seconds and changes dynamically.
+If the increase is not significant, then the time window is progressively increased to 20 seconds, 30 seconds and, finally, 60 seconds.
+If none of these time windows report a large enough increase, then the algorithm detects no topic.
+
+The algorithm is very efficient and is suitable to run in real-time.
+However, since it works only using the overall tweeting volume, it can only detect whether something happened.
+It cannot explain what happened, or what the most important features are.
 
 .. note::
 
-	Implementation based on the algorithm presented in `Human as Real-Time Sensors of Social and Physical Events: A Case Study of Twitter and Sports Games by Zhao et al. (2011) <https://arxiv.org/abs/1106.4300>`_.
+	This implementation is based on the algorithm presented in `Human as Real-Time Sensors of Social and Physical Events: A Case Study of Twitter and Sports Games by Zhao et al. (2011) <https://arxiv.org/abs/1106.4300>`_.
 """
 
 import math
@@ -24,16 +33,20 @@ from tdt.algorithms import TDTAlgorithm
 
 class Zhao(TDTAlgorithm):
 	"""
-	Zhao et al.'s algorithm is a feature-pivot approach to TDT.
-	The algorithm identifies spikes in volume in the stream by halving the most recent time window.
-	If the second half has a marked increase in volume—a ratio taken to be 1.7—the algorithm identifies a topic.
-	If the increase is not significant, the time window is progressively increased.
+	In order to detect topics, Zhao et al.'s algorithm looks at the increase between two halves of a time window.
+	The original paper set this increase to 70%, but this implementation supports other values.
+
+	In addition to the ratio, since this approach is a feature-pivot technique also stores a :class:`~tdt.nutrition.NutritionStore`.
+	This implementation uses a sliding time window.
+	Therefore the keys of the :class:`~tdt.nutrition.NutritionStore` should be timestamps.
+	The values at each timestamp should be the number of documents observed at that timestamp.
+	The algorithm automatically separates the nutrition according to the varying sizes of the time window.
 
 	:ivar store: The store contraining historical nutrition data.
 				 The algorithm expects the nutrition values to represent the stream volume.
-				 Therefore the values should be floats or integers.
+				 Therefore the keys should be the timestamps, and the values should integers representing the number of documents observed at that timestamp.
 	:vartype store: :class:`~tdt.nutrition.store.NutritionStore`
-	:ivar post_rate: The minimum ratio between two time windows to represent a burst.
+	:ivar post_rate: The minimum increase between the two halves of the sliding time window to represent a burst.
 	:vartype post_rate: float
 	"""
 
@@ -41,9 +54,9 @@ class Zhao(TDTAlgorithm):
 		"""
 		:param store: The store contraining historical nutrition data.
 					  The algorithm expects the nutrition values to represent the stream volume.
-					  Therefore the values should be floats or integers.
+					  Therefore the keys should be the timestamps, and the values should integers representing the number of documents observed at that timestamp.
 		:type store: :class:`~tdt.nutrition.store.NutritionStore`
-		:param post_rate: The minimum ratio between two time windows to represent a burst.
+		:param post_rate: The minimum increase between the two halves of the sliding time window to represent a burst.
 		:type post_rate: float
 		"""
 
@@ -53,6 +66,7 @@ class Zhao(TDTAlgorithm):
 	def detect(self, timestamp=None):
 		"""
 		Detect topics using historical data from the nutrition store.
+		This function receives the timestamp and creates time windows of varying sizes that end at that timestamp.
 
 		:param timestamp: The timestamp at which to try to identify emerging topics.
 						  If it is not given, the current timestamp is used.

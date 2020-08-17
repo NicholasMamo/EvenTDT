@@ -556,29 +556,39 @@ The parameters accepted by this function as well as the return value change acco
 
 <div class="section" id="module-tdt.algorithms.zhao">
 <span id="zhao-et-al-2011"></span><h3>Zhao et al. (2011)<a class="headerlink" href="#module-tdt.algorithms.zhao" title="Permalink to this headline">¶</a></h3>
-<p>Zhao et al.’s algorithm is a feature-pivot approach to TDT.
-The algorithm identifies spikes in volume in the stream by halving the most recent time window.
-If the second half has a marked increase in volume—a ratio taken to be 1.7—the algorithm identifies a topic.
-If the increase is not significant, the time window is progressively increased.</p>
-<p>The algorithm is suitable to run in real-time.</p>
+<p>Zhao et al.’s algorithm is the first algorithm to be deployed over specified events on Twitter.
+This approach looks for spikes in the overall tweeting volume in the most recent time window.</p>
+<p>To identify these spikes, the approach splits time windows of increasing length into two.
+If the second half has a marked increase in volume the algorithm identifies the second half as a topic.
+The decision of whether something happened is based on a ratio, taken to be 1.7 in the original paper.
+In practice, this means that if the second half of a time-window has 70% more tweets than the first half, then it represents a topic.</p>
+<p>The time window starts at 10 seconds and changes dynamically.
+If the increase is not significant, then the time window is progressively increased to 20 seconds, 30 seconds and, finally, 60 seconds.
+If none of these time windows report a large enough increase, then the algorithm detects no topic.</p>
+<p>The algorithm is very efficient and is suitable to run in real-time.
+However, since it works only using the overall tweeting volume, it can only detect whether something happened.
+It cannot explain what happened, or what the most important features are.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Implementation based on the algorithm presented in <a class="reference external" href="https://arxiv.org/abs/1106.4300">Human as Real-Time Sensors of Social and Physical Events: A Case Study of Twitter and Sports Games by Zhao et al. (2011)</a>.</p>
+<p>This implementation is based on the algorithm presented in <a class="reference external" href="https://arxiv.org/abs/1106.4300">Human as Real-Time Sensors of Social and Physical Events: A Case Study of Twitter and Sports Games by Zhao et al. (2011)</a>.</p>
 </div>
 <dl class="class">
 <dt id="tdt.algorithms.zhao.Zhao">
 <em class="property">class </em><code class="sig-name descname">Zhao</code><span class="sig-paren">(</span><em class="sig-param">store</em>, <em class="sig-param">post_rate=1.7</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.algorithms.zhao.Zhao" title="Permalink to this definition">¶</a></dt>
-<dd><p>Zhao et al.’s algorithm is a feature-pivot approach to TDT.
-The algorithm identifies spikes in volume in the stream by halving the most recent time window.
-If the second half has a marked increase in volume—a ratio taken to be 1.7—the algorithm identifies a topic.
-If the increase is not significant, the time window is progressively increased.</p>
+<dd><p>In order to detect topics, Zhao et al.’s algorithm looks at the increase between two halves of a time window.
+The original paper set this increase to 70%, but this implementation supports other values.</p>
+<p>In addition to the ratio, since this approach is a feature-pivot technique also stores a <a class="reference internal" href="#tdt.nutrition.NutritionStore" title="tdt.nutrition.NutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code></a>.
+This implementation uses a sliding time window.
+Therefore the keys of the <a class="reference internal" href="#tdt.nutrition.NutritionStore" title="tdt.nutrition.NutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code></a> should be timestamps.
+The values at each timestamp should be the number of documents observed at that timestamp.
+The algorithm automatically separates the nutrition according to the varying sizes of the time window.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>store</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code>) – The store contraining historical nutrition data.
 The algorithm expects the nutrition values to represent the stream volume.
-Therefore the values should be floats or integers.</p></li>
-<li><p><strong>post_rate</strong> (<em>float</em>) – The minimum ratio between two time windows to represent a burst.</p></li>
+Therefore the keys should be the timestamps, and the values should integers representing the number of documents observed at that timestamp.</p></li>
+<li><p><strong>post_rate</strong> (<em>float</em>) – The minimum increase between the two halves of the sliding time window to represent a burst.</p></li>
 </ul>
 </dd>
 </dl>
@@ -590,8 +600,8 @@ Therefore the values should be floats or integers.</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>store</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code>) – The store contraining historical nutrition data.
 The algorithm expects the nutrition values to represent the stream volume.
-Therefore the values should be floats or integers.</p></li>
-<li><p><strong>post_rate</strong> (<em>float</em>) – The minimum ratio between two time windows to represent a burst.</p></li>
+Therefore the keys should be the timestamps, and the values should integers representing the number of documents observed at that timestamp.</p></li>
+<li><p><strong>post_rate</strong> (<em>float</em>) – The minimum increase between the two halves of the sliding time window to represent a burst.</p></li>
 </ul>
 </dd>
 </dl>
@@ -600,7 +610,8 @@ Therefore the values should be floats or integers.</p></li>
 <dl class="method">
 <dt id="tdt.algorithms.zhao.Zhao.detect">
 <code class="sig-name descname">detect</code><span class="sig-paren">(</span><em class="sig-param">timestamp=None</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.algorithms.zhao.Zhao.detect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Detect topics using historical data from the nutrition store.</p>
+<dd><p>Detect topics using historical data from the nutrition store.
+This function receives the timestamp and creates time windows of varying sizes that end at that timestamp.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>timestamp</strong> (<em>float</em><em> or </em><em>None</em>) – The timestamp at which to try to identify emerging topics.
