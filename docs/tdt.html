@@ -521,6 +521,18 @@ This means that all changes to the copy do not affect the original.</p>
 <p>Since TDT approaches are so broad by nature, it is difficult to find a general pattern.
 However, all algorithms must have a mechanism to detect topics from a specific type input.
 This functionality is encapsulated in the <a class="reference internal" href="#tdt.algorithms.TDTAlgorithm" title="tdt.algorithms.TDTAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">TDTAlgorithm</span></code></a>, which specifies only a <a class="reference internal" href="#tdt.algorithms.TDTAlgorithm.detect" title="tdt.algorithms.TDTAlgorithm.detect"><code class="xref py py-func docutils literal notranslate"><span class="pre">detect()</span></code></a> method.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Most TDT algorithms have a detection stage and a summarization stage.
+EvenTDT separates the two into:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#tdt.algorithms.TDTAlgorithm" title="tdt.algorithms.TDTAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">TDTAlgorithm</span></code></a> and</p></li>
+<li><p><a class="reference internal" href="summarization.html#summarization.algorithms.summarization.SummarizationAlgorithm" title="summarization.algorithms.summarization.SummarizationAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">SummarizationAlgorithm</span></code></a>.</p></li>
+</ul>
+<p>The reason why EvenTDT enforces this separation is that the two approaches tackle vastly different problems.
+Well-designed approaches delineate the separation between the two.
+If the <a class="reference internal" href="#tdt.algorithms.TDTAlgorithm" title="tdt.algorithms.TDTAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">TDTAlgorithm</span></code></a> is meant to work closely together with the <a class="reference internal" href="summarization.html#summarization.algorithms.summarization.SummarizationAlgorithm" title="summarization.algorithms.summarization.SummarizationAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">SummarizationAlgorithm</span></code></a>, then its output needs to be compatible with the summarization algorithm.</p>
+</div>
 <dl class="class">
 <dt id="tdt.algorithms.TDTAlgorithm">
 <em class="property">class </em><code class="sig-name descname">TDTAlgorithm</code><a class="headerlink" href="#tdt.algorithms.TDTAlgorithm" title="Permalink to this definition">¶</a></dt>
