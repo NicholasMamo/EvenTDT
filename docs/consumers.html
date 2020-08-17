@@ -617,7 +617,7 @@ However, because of the decay in <a class="reference internal" href="tdt.html#td
 Therefore old data can be removed safely.</p></li>
 <li><p><a class="reference internal" href="#queues.consumers.eld_consumer.ELDConsumer.min_burst" title="queues.consumers.eld_consumer.ELDConsumer.min_burst"><strong>min_burst</strong></a> (<em>float</em>) – The minimum burst of a term to be considered emerging and returned.
 This value is exclusive.</p></li>
-<li><p><a class="reference internal" href="tdt.html#module-tdt.nutrition.store" title="tdt.nutrition.store"><strong>store</strong></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code>) – The nutrition store used in conjunction with extractin breaking news.</p></li>
+<li><p><strong>store</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code>) – The nutrition store used in conjunction with extractin breaking news.</p></li>
 <li><p><a class="reference internal" href="#queues.consumers.eld_consumer.ELDConsumer.buffer" title="queues.consumers.eld_consumer.ELDConsumer.buffer"><strong>buffer</strong></a> (<a class="reference internal" href="#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – A buffer of tweets that have been processed, but which are not part of a checkpoint yet.</p></li>
 <li><p><strong>tokenizer</strong> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer used to create documents and create the IDF table, among others.</p></li>
 <li><p><strong>clustering</strong> (<a class="reference internal" href="vsm.html#vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans" title="vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans"><code class="xref py py-class docutils literal notranslate"><span class="pre">TemporalNoKMeans</span></code></a>) – The clustering algorithm to use.</p></li>
@@ -1030,7 +1030,7 @@ The algorithm clusters all tweets received in the same period and uses the Catal
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="tdt.html#module-tdt.nutrition.store" title="tdt.nutrition.store"><strong>store</strong></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code>) – The nutrition store used to store the volume changes of individual terms.</p></li>
+<li><p><strong>store</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code>) – The nutrition store used to store the volume changes of individual terms.</p></li>
 <li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme used to create documents.</p></li>
 <li><p><strong>sets</strong> (<em>int</em>) – The number of time windows that are considered when computing burst.
 The higher this number, the more precise the calculations.
@@ -1270,7 +1270,7 @@ The algorithm examines changes in volume using a dynamic time window.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="tdt.html#module-tdt.nutrition.store" title="tdt.nutrition.store"><strong>store</strong></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code>) – The nutrition store used to store the volume.</p></li>
+<li><p><strong>store</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code>) – The nutrition store used to store the volume.</p></li>
 <li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme used to create documents.</p></li>
 <li><p><a class="reference internal" href="summarization.html#summarization.summary.Summary.documents" title="summarization.summary.Summary.documents"><strong>documents</strong></a> (<a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The documents that can still be used for summarization.
 Older documents are automatically cleared.</p></li>

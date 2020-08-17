@@ -1,7 +1,8 @@
 """
-The memory nutrition store uses Python dictionaries as data structures to store nutrition data.
-This store is a simple and efficient implementation because there is little overhead.
-However, the accumulation of nutrition data necessitates that old data is cleared routinely.
+The :class:`~tdt.nutrition.memory.MemoryNutritionStore` stores data in a Python dictionary in memory.
+This store is simple and efficient because there is little overhead, unlike when connecting to a database, for example.
+However, since all of the nutrition data is stored in memory, you need to pay attention to the :class:`~tdt.nutrition.memory.MemoryNutritionStore`'s blueprint.
+Like all :class:`~tdt.nutrition.NutritionStore` instances, you can clear out old data to keep the memory requirements in check.
 """
 
 import copy
@@ -16,9 +17,16 @@ from tdt.nutrition import NutritionStore
 
 class MemoryNutritionStore(NutritionStore):
 	"""
-	A nutrition store that keeps the data in a dictionary.
-	The keys are the timestamps, with each timestamp storing another dictionary.
-	The inner dictionary has the terms as keys and their nutrition as values.
+	The :class:`~tdt.nutrition.memory.MemoryNutritionStore` stores data in a Python dictionary.
+	The keys are the timestamps, and the value is the nutrition data at that timestamp.
+
+	The nutrition data can be several things:
+
+	- If nutrition represents the overall volume, the nutrition data can be an integer representing the number of documents observed at that timestamp.
+	- If nutrition represents the number of times a term appears, the nutrition data can be a dictionary, with terms as keys and their frequency as the corresponding values.
+
+	In addition, the :class:`~tdt.nutrition.memory.MemoryNutritionStore` does not impose any restrictions on the nutrition data.
+	It can represent objects and different timestamps can have different data types.
 
 	:ivar store: The nutrition store as a dictionary.
 				 The keys are the timestamps, and the values are the nutrition data.
