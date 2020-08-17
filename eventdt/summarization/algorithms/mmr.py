@@ -21,9 +21,11 @@ The general approach can be summarized as follows:
    3.2. Adding any other document would make the summary too long.
 
 There are two factors that influence the choice of document: relevance to the query and redundancy.
-The :class:`~summarization.algorithms.mmr.MMR` algorithm accepts the :math:`\\lambda` parameter to balance between the two.
-When :math:`\\lambda` is 1, only relevance to the query is considered.
-When :math:`\\lambda` is 0, only non-redundancy is considered.
+The :class:`~summarization.algorithms.mmr.MMR` algorithm accepts the :math:`\\lambda` parameter to balance between the two:
+
+- When :math:`\\lambda` is 1, only relevance to the query is considered;
+- When :math:`\\lambda` is 0.5, which is the default, the function seeks a balance between relevance to the query and redundancy; and
+- When :math:`\\lambda` is 0, only non-redundancy is considered.
 
 Although the MMR algorithm is simple, its bottleneck is the creation of the pairwise similarity matrix between documents.
 The technique uses this matrix for redundancy checks.
@@ -49,8 +51,12 @@ from vsm import vector_math
 
 class MMR(SummarizationAlgorithm):
 	"""
-	The Maximal Marginal Relevance (MMR) algorithm accepts documents and a query and builds a summary.
+	The Maximal Marginal Relevance (MMR) algorithm accepts a list of :class:`~nlp.document.Document` and an optional query and builds a :class:`~summarization.summary.Summary`.
 	The algorithm looks to build a summary that is simultaneously similar to the query and non-redundant.
+
+	The MMR seeks a balance between relevance to the query and non-redundancy.
+	This is dictated by the :math:`\\lambda` parameter.
+	By default, the :math:`\\lambda` parameter is set to 0.5, but you can provide a different value.
 
 	:ivar l: The :math:`\\lambda` parameter, which must be between 0 and 1.
 			 When :math:`\\lambda` is 1, only relevance to the query is considered.
@@ -61,7 +67,7 @@ class MMR(SummarizationAlgorithm):
 
 	def __init__(self, l=0.5):
 		"""
-		Create the MMR summarization algorithm with the lambda value.
+		Create the MMR summarization algorithm with the lambda value as its state.
 
 		:param l: The :math:`\\lambda` parameter, which must be between 0 and 1.
 				  When :math:`\\lambda` is 1, only relevance to the query is considered.
@@ -80,6 +86,10 @@ class MMR(SummarizationAlgorithm):
 	def summarize(self, documents, length, query=None, *args, **kwargs):
 		"""
 		Summarize the given documents.
+
+		This function considers relevance to the query and redundancy when choosing :class:`~nlp.document.Document` instances that make up the :class:`~summarization.summary.Summary`.
+		The query, however, is not always necessary.
+		If there is no query, the function automatically creates the query itself as the centroid of the given list of :class:`~nlp.document.Document` instances.
 
 		:param documents: The list of documents to summarize.
 		:type documents: list of :class:`~nlp.document.Document`

@@ -355,9 +355,12 @@ Choose the document that is simultaneously:</p>
 </li>
 </ol>
 <p>There are two factors that influence the choice of document: relevance to the query and redundancy.
-The <a class="reference internal" href="#summarization.algorithms.mmr.MMR" title="summarization.algorithms.mmr.MMR"><code class="xref py py-class docutils literal notranslate"><span class="pre">MMR</span></code></a> algorithm accepts the <span class="math notranslate nohighlight">\(\lambda\)</span> parameter to balance between the two.
-When <span class="math notranslate nohighlight">\(\lambda\)</span> is 1, only relevance to the query is considered.
-When <span class="math notranslate nohighlight">\(\lambda\)</span> is 0, only non-redundancy is considered.</p>
+The <a class="reference internal" href="#summarization.algorithms.mmr.MMR" title="summarization.algorithms.mmr.MMR"><code class="xref py py-class docutils literal notranslate"><span class="pre">MMR</span></code></a> algorithm accepts the <span class="math notranslate nohighlight">\(\lambda\)</span> parameter to balance between the two:</p>
+<ul class="simple">
+<li><p>When <span class="math notranslate nohighlight">\(\lambda\)</span> is 1, only relevance to the query is considered;</p></li>
+<li><p>When <span class="math notranslate nohighlight">\(\lambda\)</span> is 0.5, which is the default, the function seeks a balance between relevance to the query and redundancy; and</p></li>
+<li><p>When <span class="math notranslate nohighlight">\(\lambda\)</span> is 0, only non-redundancy is considered.</p></li>
+</ul>
 <p>Although the MMR algorithm is simple, its bottleneck is the creation of the pairwise similarity matrix between documents.
 The technique uses this matrix for redundancy checks.
 Therefore it is recommended to choose a few, quality candidates to summarize, rather than summarize a large corpus.</p>
@@ -368,8 +371,11 @@ Therefore it is recommended to choose a few, quality candidates to summarize, ra
 <dl class="class">
 <dt id="summarization.algorithms.mmr.MMR">
 <em class="property">class </em><code class="sig-name descname">MMR</code><span class="sig-paren">(</span><em class="sig-param">l=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.mmr.MMR" title="Permalink to this definition">¶</a></dt>
-<dd><p>The Maximal Marginal Relevance (MMR) algorithm accepts documents and a query and builds a summary.
+<dd><p>The Maximal Marginal Relevance (MMR) algorithm accepts a list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> and an optional query and builds a <a class="reference internal" href="#summarization.summary.Summary" title="summarization.summary.Summary"><code class="xref py py-class docutils literal notranslate"><span class="pre">Summary</span></code></a>.
 The algorithm looks to build a summary that is simultaneously similar to the query and non-redundant.</p>
+<p>The MMR seeks a balance between relevance to the query and non-redundancy.
+This is dictated by the <span class="math notranslate nohighlight">\(\lambda\)</span> parameter.
+By default, the <span class="math notranslate nohighlight">\(\lambda\)</span> parameter is set to 0.5, but you can provide a different value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><p><strong>l</strong> (<em>float</em>) – The <span class="math notranslate nohighlight">\(\lambda\)</span> parameter, which must be between 0 and 1.
@@ -381,7 +387,7 @@ By default, the algorithm assigns equal weight to relevance and non-redundancy.<
 <dl class="method">
 <dt id="summarization.algorithms.mmr.MMR.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">l=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.mmr.MMR.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create the MMR summarization algorithm with the lambda value.</p>
+<dd><p>Create the MMR summarization algorithm with the lambda value as its state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>l</strong> (<em>float</em>) – The <span class="math notranslate nohighlight">\(\lambda\)</span> parameter, which must be between 0 and 1.
@@ -399,6 +405,9 @@ By default, the algorithm assigns equal weight to relevance and non-redundancy.<
 <dt id="summarization.algorithms.mmr.MMR.summarize">
 <code class="sig-name descname">summarize</code><span class="sig-paren">(</span><em class="sig-param">documents</em>, <em class="sig-param">length</em>, <em class="sig-param">query=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.mmr.MMR.summarize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Summarize the given documents.</p>
+<p>This function considers relevance to the query and redundancy when choosing <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances that make up the <a class="reference internal" href="#summarization.summary.Summary" title="summarization.summary.Summary"><code class="xref py py-class docutils literal notranslate"><span class="pre">Summary</span></code></a>.
+The query, however, is not always necessary.
+If there is no query, the function automatically creates the query itself as the centroid of the given list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
