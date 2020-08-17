@@ -434,13 +434,28 @@ If no query is given, the summary is built around the centroid of documents.</p>
 </div>
 <div class="section" id="module-summarization.algorithms.dgs">
 <span id="document-graph-summarizer-dgs-mamo-et-al-2019"></span><h3>Document Graph Summarizer (DGS) - Mamo et al. (2019)<a class="headerlink" href="#module-summarization.algorithms.dgs" title="Permalink to this headline">¶</a></h3>
-<p>The Document Graph Summarizer (DGS) algorithm takes in documents and builds a summary.
-The algorithm is not greedy and constructs a document graph, which it then splits into communities.
-Considering each community to be a different facet, the algorithm picks documents from the largest communities.
+<p>The Document Graph Summarizer (DGS) algorithm constructs a <a class="reference internal" href="#summarization.summary.Summary" title="summarization.summary.Summary"><code class="xref py py-class docutils literal notranslate"><span class="pre">Summary</span></code></a> using a graph-based approach.
+The algorithm constructs a graph between <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances and tries to find the different subjects that they discuss.
 In this way, the algorithm can maximize precision by minimizing redundancy.</p>
+<p>The general approach can be summarized as follows:</p>
+<ol class="arabic">
+<li><p>Construct a document graph.</p></li>
+<li><p>Split it into communities using the Girvan-Newman algorithm.</p></li>
+<li><p>Iterate over the communities, in descending order of size.
+Choose the document that maximizes the product of:</p>
+<p>3.1. Similarity to the query, and</p>
+<p>3.2. Centrality.</p>
+<p>If the document is not too long, add it to the summary.</p>
+</li>
+</ol>
+<p>In this way, the algorithm favors the most common facets of discussion.
+Apart from that, since it only picks one <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> from each community, the algorithm avoids including repeated ideas in the final <a class="reference internal" href="#summarization.summary.Summary" title="summarization.summary.Summary"><code class="xref py py-class docutils literal notranslate"><span class="pre">Summary</span></code></a>.</p>
+<p>The main bottleneck of the DGS algorithm is the document graph.
+Constructing it necessitates calculating the pairwise similarity between all <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances.
+Therefore it is recommended to choose a few, quality candidates to summarize, rather than summarize a large corpus.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Implementation based on the algorithm presented in <a class="reference external" href="https://dl.acm.org/doi/abs/10.1145/3342220.3344921">ELD: Event TimeLine Detection—A Participant-Based Approach to Tracking Events by Mamo et al. (2019)</a>.</p>
+<p>This implementation is based on the algorithm presented in <a class="reference external" href="https://dl.acm.org/doi/abs/10.1145/3342220.3344921">ELD: Event TimeLine Detection—A Participant-Based Approach to Tracking Events by Mamo et al. (2019)</a>.</p>
 </div>
 <dl class="class">
 <dt id="summarization.algorithms.dgs.DGS">

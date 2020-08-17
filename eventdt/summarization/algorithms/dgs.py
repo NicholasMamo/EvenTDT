@@ -1,12 +1,35 @@
 """
-The Document Graph Summarizer (DGS) algorithm takes in documents and builds a summary.
-The algorithm is not greedy and constructs a document graph, which it then splits into communities.
-Considering each community to be a different facet, the algorithm picks documents from the largest communities.
+The Document Graph Summarizer (DGS) algorithm constructs a :class:`~summarization.summary.Summary` using a graph-based approach.
+The algorithm constructs a graph between :class:`~nlp.document.Document` instances and tries to find the different subjects that they discuss.
 In this way, the algorithm can maximize precision by minimizing redundancy.
+
+The general approach can be summarized as follows:
+
+1. Construct a document graph.
+
+2. Split it into communities using the Girvan-Newman algorithm.
+
+3. Iterate over the communities, in descending order of size.
+   Choose the document that maximizes the product of:
+
+   3.1. Similarity to the query,
+
+   3.2. Centrality, and
+
+   3.3. A brevity score based on BLEU.
+
+   If the document is not too long, add it to the summary.
+
+In this way, the algorithm favors the most common facets of discussion.
+Apart from that, since it only picks one :class:`~nlp.document.Document` from each community, the algorithm avoids including repeated ideas in the final :class:`~summarization.summary.Summary`.
+
+The main bottleneck of the DGS algorithm is the document graph.
+Constructing it necessitates calculating the pairwise similarity between all :class:`~nlp.document.Document` instances.
+Therefore it is recommended to choose a few, quality candidates to summarize, rather than summarize a large corpus.
 
 .. note::
 
-	Implementation based on the algorithm presented in `ELD: Event TimeLine Detection—A Participant-Based Approach to Tracking Events by Mamo et al. (2019) <https://dl.acm.org/doi/abs/10.1145/3342220.3344921>`_.
+	This implementation is based on the algorithm presented in `ELD: Event TimeLine Detection—A Participant-Based Approach to Tracking Events by Mamo et al. (2019) <https://dl.acm.org/doi/abs/10.1145/3342220.3344921>`_.
 """
 
 import math
@@ -33,6 +56,7 @@ class DGS(SummarizationAlgorithm):
 	"""
 	The Document Graph Summarizer (DGS) is an algorithm that minimizes redundancy by splitting documents into communities.
 	The algorithm receives documents and builds a summary from the largest communities to capture all facets.
+
 
 	:ivar ~.tokenizer: The tokenizer used to calculate the brevity score.
 	:vartype ~.tokenizer: :class:`~nlp.tokenizer.Tokenizer`
