@@ -1,6 +1,10 @@
 """
-Summarization algorithms take in documents and create a summary out of them.
-Although the specifics vary from one algorithm to the other, the goal does not.
+Summarization algorithms receive documents and create a summary having the given length.
+The specifics of how they create summaries change from one algorithm to the other, but the goal does not.
+
+The :class:`~summarization.algorithms.SummarizationAlgorithm` represents this goal.
+It is a base class that dictates the minimum functionality of any summarization algorithm: what input they receive and what output they return.
+In all cases, the main functionality goes through the :func:`~summarization.algorithms.SummarizationAlgorithm.summarize` function.
 """
 
 from abc import ABC, abstractmethod

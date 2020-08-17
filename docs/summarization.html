@@ -280,8 +280,11 @@ This is equivalent to concatenating the text of all documents.</p>
 </div>
 <div class="section" id="module-summarization.algorithms">
 <span id="algorithms"></span><span id="summarization-algorithms"></span><h2>Algorithms<a class="headerlink" href="#module-summarization.algorithms" title="Permalink to this headline">¶</a></h2>
-<p>Summarization algorithms take in documents and create a summary out of them.
-Although the specifics vary from one algorithm to the other, the goal does not.</p>
+<p>Summarization algorithms receive documents and create a summary having the given length.
+The specifics of how they create summaries change from one algorithm to the other, but the goal does not.</p>
+<p>The <a class="reference internal" href="#summarization.algorithms.SummarizationAlgorithm" title="summarization.algorithms.SummarizationAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">SummarizationAlgorithm</span></code></a> represents this goal.
+It is a base class that dictates the minimum functionality of any summarization algorithm: what input they receive and what output they return.
+In all cases, the main functionality goes through the <a class="reference internal" href="#summarization.algorithms.SummarizationAlgorithm.summarize" title="summarization.algorithms.SummarizationAlgorithm.summarize"><code class="xref py py-func docutils literal notranslate"><span class="pre">summarize()</span></code></a> function.</p>
 <dl class="class">
 <dt id="summarization.algorithms.SummarizationAlgorithm">
 <em class="property">class </em><code class="sig-name descname">SummarizationAlgorithm</code><a class="headerlink" href="#summarization.algorithms.SummarizationAlgorithm" title="Permalink to this definition">¶</a></dt>
