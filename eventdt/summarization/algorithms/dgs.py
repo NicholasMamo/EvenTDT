@@ -57,6 +57,8 @@ class DGS(SummarizationAlgorithm):
 	The Document Graph Summarizer (DGS) is an algorithm that minimizes redundancy by splitting documents into communities.
 	The algorithm receives documents and builds a summary from the largest communities to capture all facets.
 
+	The DGS is parameter-less, and therefore maintains no state except for a :class:`~nlp.tokenizer.Tokenizer`.
+	This :class:`~nlp.tokenizer.Tokenizer` is used to calculate the brevity score when selecting which :class:`~nlp.document.Document` to add to the :class:`~summarization.summary.Summary`.
 
 	:ivar ~.tokenizer: The tokenizer used to calculate the brevity score.
 	:vartype ~.tokenizer: :class:`~nlp.tokenizer.Tokenizer`
@@ -73,10 +75,9 @@ class DGS(SummarizationAlgorithm):
 		"""
 		Summarize the given documents.
 
-		.. note::
-
-			The algorithm assumes that the documents are already unique sentences.
-			Therefore the summary is a selection of the given documents.
+		This function constructs the document graph using the given list of :class:`~nlp.document.Document`.
+		Then, the method splits the graph into communities, representing facets of discussion, using the Girvan-Newman (:func:`networkx.algorithms.community.centrality.girvan_newman`) algorithm.
+		From each community, this function chooses the one document that maximize similarity with the query, centrality and length.
 
 		:param documents: The list of documents to summarize.
 		:type documents: list of :class:`~nlp.document.Document`

@@ -443,8 +443,9 @@ In this way, the algorithm can maximize precision by minimizing redundancy.</p>
 <li><p>Split it into communities using the Girvan-Newman algorithm.</p></li>
 <li><p>Iterate over the communities, in descending order of size.
 Choose the document that maximizes the product of:</p>
-<p>3.1. Similarity to the query, and</p>
-<p>3.2. Centrality.</p>
+<p>3.1. Similarity to the query,</p>
+<p>3.2. Centrality, and</p>
+<p>3.3. A brevity score based on BLEU.</p>
 <p>If the document is not too long, add it to the summary.</p>
 </li>
 </ol>
@@ -462,6 +463,8 @@ Therefore it is recommended to choose a few, quality candidates to summarize, ra
 <em class="property">class </em><code class="sig-name descname">DGS</code><a class="headerlink" href="#summarization.algorithms.dgs.DGS" title="Permalink to this definition">¶</a></dt>
 <dd><p>The Document Graph Summarizer (DGS) is an algorithm that minimizes redundancy by splitting documents into communities.
 The algorithm receives documents and builds a summary from the largest communities to capture all facets.</p>
+<p>The DGS is parameter-less, and therefore maintains no state except for a <a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>.
+This <a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a> is used to calculate the brevity score when selecting which <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> to add to the <a class="reference internal" href="#summarization.summary.Summary" title="summarization.summary.Summary"><code class="xref py py-class docutils literal notranslate"><span class="pre">Summary</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><p><strong>tokenizer</strong> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer used to calculate the brevity score.</p>
@@ -477,11 +480,9 @@ The algorithm receives documents and builds a summary from the largest communiti
 <dt id="summarization.algorithms.dgs.DGS.summarize">
 <code class="sig-name descname">summarize</code><span class="sig-paren">(</span><em class="sig-param">documents</em>, <em class="sig-param">length</em>, <em class="sig-param">query=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.dgs.DGS.summarize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Summarize the given documents.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The algorithm assumes that the documents are already unique sentences.
-Therefore the summary is a selection of the given documents.</p>
-</div>
+<p>This function constructs the document graph using the given list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>.
+Then, the method splits the graph into communities, representing facets of discussion, using the Girvan-Newman (<code class="xref py py-func docutils literal notranslate"><span class="pre">networkx.algorithms.community.centrality.girvan_newman()</span></code>) algorithm.
+From each community, this function chooses the one document that maximize similarity with the query, centrality and length.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
