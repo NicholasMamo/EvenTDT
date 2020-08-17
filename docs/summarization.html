@@ -96,8 +96,8 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">7. Summarization</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-summarization.summary">The Summary Object</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-summarization.algorithms">Algorithms</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module-summarization.algorithms.mmr">Carbonell and Goldstein (1998)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-summarization.algorithms.dgs">Mamo et al. (2019)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-summarization.algorithms.mmr">Maximal Marginal Relevance (MMR) - Carbonell and Goldstein (1998)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-summarization.algorithms.dgs">Document Graph Summarizer (DGS) - Mamo et al. (2019)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-summarization.timeline.timeline">Timelines</a><ul>
@@ -337,7 +337,7 @@ All it considers is the text of the original <a class="reference internal" href=
 </dd></dl>
 
 <div class="section" id="module-summarization.algorithms.mmr">
-<span id="carbonell-and-goldstein-1998"></span><h3>Carbonell and Goldstein (1998)<a class="headerlink" href="#module-summarization.algorithms.mmr" title="Permalink to this headline">¶</a></h3>
+<span id="maximal-marginal-relevance-mmr-carbonell-and-goldstein-1998"></span><h3>Maximal Marginal Relevance (MMR) - Carbonell and Goldstein (1998)<a class="headerlink" href="#module-summarization.algorithms.mmr" title="Permalink to this headline">¶</a></h3>
 <p>The Maximal Marginal Relevance (MMR) algorithm takes in documents and a query and builds a summary.
 This summary has the ideal property of being relevant to the query and non-redundant.
 The algorithm follows a greedy approach.</p>
@@ -409,7 +409,7 @@ If no query is given, the summary is built around the centroid of documents.</p>
 
 </div>
 <div class="section" id="module-summarization.algorithms.dgs">
-<span id="mamo-et-al-2019"></span><h3>Mamo et al. (2019)<a class="headerlink" href="#module-summarization.algorithms.dgs" title="Permalink to this headline">¶</a></h3>
+<span id="document-graph-summarizer-dgs-mamo-et-al-2019"></span><h3>Document Graph Summarizer (DGS) - Mamo et al. (2019)<a class="headerlink" href="#module-summarization.algorithms.dgs" title="Permalink to this headline">¶</a></h3>
 <p>The Document Graph Summarizer (DGS) algorithm takes in documents and builds a summary.
 The algorithm is not greedy and constructs a document graph, which it then splits into communities.
 Considering each community to be a different facet, the algorithm picks documents from the largest communities.

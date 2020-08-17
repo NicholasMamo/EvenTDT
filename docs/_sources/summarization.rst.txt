@@ -30,15 +30,15 @@ Algorithms
    :members:
    :special-members:
 
-Carbonell and Goldstein (1998)
-------------------------------
+Maximal Marginal Relevance (MMR) - Carbonell and Goldstein (1998)
+-----------------------------------------------------------------
 
 .. automodule:: summarization.algorithms.mmr
    :members:
    :special-members:
 
-Mamo et al. (2019)
-------------------
+Document Graph Summarizer (DGS) - Mamo et al. (2019)
+----------------------------------------------------
 
 .. automodule:: summarization.algorithms.dgs
    :members:
