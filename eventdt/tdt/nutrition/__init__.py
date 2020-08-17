@@ -1,16 +1,23 @@
 """
 The concept of nutrition was used predominantly by `Cataldi et al. <https://dl.acm.org/doi/abs/10.1145/2542182.2542189>`_.
-Later, it was adopted by Mamo and others in `FIRE <https://link.springer.com/chapter/10.1007/978-3-319-74497-1_3>`_ and `ELD <https://dl.acm.org/doi/abs/10.1145/3342220.3344921>`_.
-Nutrition is a measure of the popularity of a term.
-It is combined with another metric—burst—that measures the change in nutrition.
+Later, it was adopted by in several papers, such as in `FIRE <https://link.springer.com/chapter/10.1007/978-3-319-74497-1_3>`_ and `ELD <https://dl.acm.org/doi/abs/10.1145/3342220.3344921>`_.
 
-The nutrition store is an interface for data structures to store the nutrition.
-The interface contains the methods that they all must implement.
+Nutrition is most common in feature-pivot techniques as it is a general way of measuring the importance of features.
+For example, `Cataldi et al. <https://dl.acm.org/doi/abs/10.1145/2542182.2542189>`_ used it to measure the popularity of a term.
+Even when the term `nutrition` is not used, the importance of terms can be thought of as nutrition.
+
+Nutrition is important because it often fuels another TDT metrid: burst.
+Burst, introduced by `Kleinberg <https://link.springer.com/article/10.1023/A:1024940629314>`_, measures the change in nutrition to find spikes in the use of terms, for example.
+More generally, burst tries to identify a change in behavior, which may also be a sharp increase in tweeting volume.
+
+The :class:`~tdt.nutrition.NutritionStore` is meant to be an interface for any data structure that stores nutrition.
+The interface contains the methods that all stores must implement.
 For example, implementations can store data in a database or in memory.
 
-The nutrition stores separate nutrition based on timestamps.
-The timestamps can store nutrition data for that timestamp alone.
-They can also store nutrition data for a period of time, represented by that timestamp.
+All nutrition stores separate nutrition based on timestamps, which can represent, among others:
+
+- The nutrition data at that particular timestamp, or
+- The nutrition data during a period of time represented by that timestamp.
 """
 
 from abc import ABC, abstractmethod
