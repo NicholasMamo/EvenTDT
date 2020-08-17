@@ -1,17 +1,26 @@
 """
-Cataldi et al.'s algorithm was among the first to introduce the notion of nutrition and burst.
-The feature-pivot TDT algorithm first calculates the worth of terms as nutrition.
-Then, periodically, it calculates the burst of these terms.
-Burst is a measure of how much a term is bursting.
+Cataldi et al.'s algorithm was among the first to introduce the notion of nutrition to calculate burst.
+This feature-pivot technique calculates the importance of all terms, not just volume, and calls it nutrition.
+Then, it periodically calculates the burst of these terms in three steps:
 
-The calculations for burst are based on time windows.
-Therefore calls to :func:`~tdt.algorithms.cataldi.Cataldi.detect` should give the timestamp of the time window with respect to which the burst is to be calculated.
+1. Calculate the burst of all terms by comparing how their importance changed over the past time windows.
+2. Sort the terms in descending order of burst and calculate the drops between consecutive terms.
+3. Find the maximal drop, called the critical drop index.
+   Any terms before the critical drop are said to be breaking.
 
-This implementation calculates the burst of terms based on the given nutrition.
+The burst calculation is based on time windows:
+
+.. math::
+
+	burst_k^t = \\sum_{x=t-s}^{t-1}(((nutr_k^t)^2 - (nutr_k^x)^2) \\cdot \\frac{1}{log(t - x + 1)})
+
+where :math:`t` is the current time window and :math:`s` is the number of time windows to consider.
+Note that because of the logarithm, old time windows have little effect.
+The more time windows it considers, the more reliable the results, but removing very old time windows makes the algorithm more efficient.
 
 .. note::
 
-	Implementation based on the algorithm presented in `Personalized Emerging Topic Detection Based on a Term Aging Model by Cataldi et al. (2014) <https://dl.acm.org/doi/abs/10.1145/2542182.2542189>`_.
+	This implementation is based on the algorithm presented in `Personalized Emerging Topic Detection Based on a Term Aging Model by Cataldi et al. (2014) <https://dl.acm.org/doi/abs/10.1145/2542182.2542189>`_.
 """
 
 import math
@@ -26,23 +35,26 @@ from tdt.algorithms import TDTAlgorithm
 
 class Cataldi(TDTAlgorithm):
 	"""
-	Cataldi et al.'s algorithm is a feature-pivot TDT approach to detect topics.
-	The algorithm uses nutrition to calculate burst.
-	Burst is a measure of how much a term is bursting.
+	Cataldi et al.'s algorithm is relatively parameter-free.
+	Therefore the only state it maintains is the :class:`~tdt.nutrition.NutritionStore`.
 
-	:ivar store: The store contraining historical nutrition data.
+	The keys of the :class:`~tdt.nutrition.NutritionStore` should be timestamps that represent entire time windows.
+	The time window size depends on the application and how fast we expect the stream to change.
+	Each timestamp should have a dictionary with the nutritions of terms in it; the keys are the terms and the values are the corresponding nutrition values.
+
+	:ivar store: The store containing historical nutrition data.
 				 The algorithm expects the timestamps to represent time windows.
 				 Therefore the nutrition store should have dictionaries with timestamps as keys, and the nutrition of terms in a dictionary as values.
-				 In other words, the timestamps should represent an entire time window, not just a particular second.
+				 In other words, the timestamps should represent an entire time window, not just a particular timestamp.
 	:vartype store: :class:`~tdt.nutrition.store.NutritionStore`
 	"""
 
 	def __init__(self, store):
 		"""
-		:param store: The store contraining historical nutrition data.
+		:param store: The store containing historical nutrition data.
 					  The algorithm expects the timestamps to represent time windows.
 					  Therefore the nutrition store should have dictionaries with timestamps as keys, and the nutrition of terms in a dictionary as values.
-					  In other words, the timestamps should represent an entire time window, not just a particular second.
+					  In other words, the timestamps should represent an entire time window, not just a particular timestamp.
 		:type store: :class:`~tdt.nutrition.store.NutritionStore`
 		"""
 
@@ -51,6 +63,10 @@ class Cataldi(TDTAlgorithm):
 	def detect(self, timestamp, since=None):
 		"""
 		Detect topics using historical data from the given nutrition store.
+
+		By default, like the original algorithm, this function considers all time windows in the :class:`~tdt.nutrition.NutritionStore`.
+		However, since old time windows have little effect on the burst, fewer time windows may be considered without losing a lot of accuracy.
+		To consider fewer time windows, provide the ``since`` parameter—the timestamp from which point to start considering time windows.
 
 		:param timestamp: The timestamp at which to try to identify emerging topics.
 						  This value is exclusive.
