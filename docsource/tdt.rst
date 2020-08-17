@@ -47,8 +47,8 @@ Cataldi et al. (2014)
    :members:
    :special-members:
 
-Mamo et al. (2019)
-------------------
+ELD - Mamo et al. (2019)
+------------------------
 
 .. automodule:: tdt.algorithms.eld
    :members:

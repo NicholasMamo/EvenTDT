@@ -1,21 +1,57 @@
 """
 Event TimeLine Detection (ELD) is a feature-pivot TDT approach designed to create interpretable results.
-The algorithm computes burst for each individual term.
-The interpretation is in the form of a burst value that lies between -1 and 1.
--1 indicates that a term is losing popularity, and 1 that it is gaining popularity.
-When the burst is 0, the term's popularity is unchanged.
-
-The broader system routinely creates checkpoints that represent the importance of terms in a particular time window.
-The implemented TDT algorithm compares the documents received in the last time window with the previous checkpoints.
-
-ELD borrows the terminology from Cataldi et al.'s previous work and algorithm: :class:`~tdt.algorithms.cataldi.Cataldi`.
-This algorithm computes burst based on the past nutritions stored in the checkpoints.
 
 .. note::
 
-	Implementation based on the algorithm outlined in `ELD: Event TimeLine Detection -- A Participant-Based Approach to Tracking Events by Mamo et al. (2019) <https://dl.acm.org/doi/abs/10.1145/3342220.3344921>`_.
-	ELD is a combined document-pivot and feature-pivot TDT approach.
-	The algorithm in this module is the feature-pivot technique.
+	The original implementation of ELD is a combined document-pivot and feature-pivot TDT approach.
+	First, it clusters documents and then it applies the feature-pivot technique on large clusters.
+	However, the algorithm in this module is the feature-pivot technique.
+	The full implementation of ELD is in the :class:`~queues.consumers.eld_consumer.ELDConsumer`.
+
+ELD computes burst for each individual term.
+The interpretation is in the form of a burst value that lies between -1 and 1:
+
+- -1 indicates that a term has lost all popularity since the past checkpoints,
+- 0 indicates that a term's popularity has not changed over the past checkpoints, and
+- 1 that the term has gone from completely unpopular to maximum popularity in the most recent checkpoint.
+
+Negative burst can be used to check when a topic is over.
+This is because after the peak, when the topic slows down, the burst becomes negative or close to zero.
+
+The checkpoints work like checkpoints.
+The complete system routinely creates checkpoints that represent the importance of terms in a particular checkpoint.
+For example, at timestamp 100, the checkpoint can represent the importance of terms between timestamps 90 and 100.
+
+To calculate the burst, this algorithm compares the local context with the global context.
+The local context refers to the importance of a term in a cluster.
+The global context refers to the importance of a term in previous checkpoints, which consider all documents, not just those in a cluster.
+Burst is calculated as:
+
+.. math::
+
+	burst_k^t = \\frac{\\sum_{c=t-s}^{t-1}((nutr_{k,l} - nutr_{k,c}) \\cdot \\frac{1}{\\sqrt{e^{t - c}}})}{\\sum_{c=1}^s\\frac{1}{\\sqrt{e^c}}}
+
+where :math:`k` is the term for which burst is to be calculated.
+:math:`t` is the current checkpoint and :math:`s` is the number of checkpoints to consider.
+:math:`nutr_{k,l}` is the nutrition of the term in the local context.
+:math:`nutr_{k,c}` is the nutrition of the term in the checkpoint :math:`c`.
+
+The square root in the burst calculation is the decay rate and is one of the parameters of this algorithm.
+The higher the decay rate, the less importance old checkpoints receive.
+
+.. note::
+
+	ELD borrows the terminology from Cataldi et al.'s previous work and algorithm: :class:`~tdt.algorithms.cataldi.Cataldi`.
+	The importance of terms is called nutrition.
+
+.. note::
+	In reality, the bounds are not really between -1 and 1, but between :math:`-x` and :math:`x`, where :math:`x` is the maximum nutrition of a term.
+	To get the burst bounds between -1 and 1, term nutritions need to be bound between 0 and 1 (that is, :math:`x = 1`).
+	This is the original implementation in the :class:`~queues.consumers.eld_consumer.ELDConsumer`.
+
+.. note::
+
+	This implementation is based on the algorithm outlined in `ELD: Event TimeLine Detection -- A Participant-Based Approach to Tracking Events by Mamo et al. (2019) <https://dl.acm.org/doi/abs/10.1145/3342220.3344921>`_.
 """
 
 import math
@@ -33,10 +69,17 @@ class ELD(TDTAlgorithm):
 	Mamo et al.'s ELD is a feature-pivot TDT algorithm to detect breaking terms.
 	The algorithm returns not only terms, but also the degree to which they are breaking.
 
-	:ivar store: The store contraining historical nutrition data.
-				 The algorithm expects the timestamps to represent checkpoints, or time windows.
+	The algorithm receives one parameter apart from the :class:`~tdt.nutrition.NutritionStore`: the decay rate.
+	The decay rate is used to penalize old checkpoints and give recent checkpoints more importance in the burst calculation.
+
+	The keys of the :class:`~tdt.nutrition.NutritionStore` should be timestamps that represent checkpoints, or time windows.
+	The checkpoint size depends on the application and how fast you expect the stream to change.
+	Each timestamp should have a dictionary with the nutritions of terms in it; the keys are the terms and the values are the corresponding nutrition values.
+
+	:ivar store: The store containing historical nutrition data.
+				 The algorithm expects the timestamps to represent checkpoints.
 				 Therefore the nutrition store should have dictionaries with timestamps as keys, and the nutrition of terms in a dictionary as values.
-				 In other words, the timestamps should represent an entire time window, not just a particular second.
+				 In other words, the timestamps should represent an entire checkpoint, not just a particular timestamp.
 	:vartype store: :class:`~tdt.nutrition.store.NutritionStore`
 	:ivar decay_rate: The decay rate used by the algorithm.
 					  The larger the decay rate, the less importance far-off windows have in the burst calculation.
@@ -45,12 +88,12 @@ class ELD(TDTAlgorithm):
 
 	def __init__(self, store, decay_rate=(1./2.)):
 		"""
-		Create the TDT algorithm.
+		Instantiate the TDT algorithm with the :class:`~tdt.nutrition.NutritionStore` that will be used to detect topics and the decay rate.
 
-		:param store: The store contraining historical nutrition data.
-					  The algorithm expects the timestamps to represent checkpoints, or time windows.
+		:param store: The store containing historical nutrition data.
+					  The algorithm expects the timestamps to represent checkpoints.
 					  Therefore the nutrition store should have dictionaries with timestamps as keys, and the nutrition of terms in a dictionary as values.
-					  In other words, the timestamps should represent an entire time window, not just a particular second.
+					  In other words, the timestamps should represent an entire checkpoint, not just a particular timestamp.
 		:type store: :class:`~tdt.nutrition.store.NutritionStore`
 		:param decay_rate: The decay rate used by the algorithm.
 						   The larger the decay rate, the less importance far-off windows have in the burst calculation.
@@ -64,28 +107,37 @@ class ELD(TDTAlgorithm):
 		"""
 		Detect topics using historical data from the given nutrition store.
 
+		This function compares the nutrition of terms in the local context (the ``nutrition`` parameter) with the global context (the checkpoints in the class' :class:`~tdt.nutrition.NutritionStore`).
+		By default, this function uses all checkpoints until the given time window.
+		If no end timestamp (the ``until`` parameter) is given, the current timestamp is taken.
+
+		Fewer checkpoints can be used by providing the ``since`` and ``until`` parameters.
+		Old checkpoints have a smaller effect on the result than recent checkpoints so they can be removed with little effect.
+
 		.. note::
 
-			The function assumes that nutrition is always zero or positive.
-			With this assumption, when the minimum burst is not negative, the burst can be calculated only for terms that have a present nutrition greater or equal to the minimum burst.
+			This function assumes that nutrition is always zero or positive.
+			As a result, the burst can be calculated only for terms that have a nutrition equal to or greater than the minimum burst.
+			The function makes an exception if the minimum burst is negative.
+			In this case, all terms have to be considered in the calculation.
 
 		.. note::
 
 			The minimum burst is exclusive.
-			This is so that items with a burst of 0 (no change from previous checkpoints) are excluded.
+			This is so that terms with a burst of 0 (no change from previous checkpoints) are excluded.
 
-		:param nutrition: The nutrition values from the current (sliding) time window.
+		:param nutrition: The nutrition values of the local context.
 						  The keys should be the terms, and the values the respective nutrition.
 		:type nutrition: dict
 		:param since: The timestamp since when nutrition should be considered.
-					  If it is not given, all of the nutrition that is available until the `until` is used.
+					  If it is not given, all of the nutrition that is available until the ``until`` is used.
 		:type since: float or None
 		:param until: The timestamp until when nutrition should be considered.
-					  If it is not given, all of the nutrition that is available since the `since` parameter is used.
+					  If it is not given, all of the nutrition that is available since the ``since`` parameter is used.
 					  If the algorithm is being used retrospectively, this parameter can represent the current timestamp to get only past nutrition.
 		:type until: float or None
 		:param min_burst: The minimum burst of a term to be considered emerging and returned.
-						  This value is exclusive.
+						  This value is exclusive so that terms with an unchanging nutrition (a burst of 0) are not returned.
 						  By default, only terms thet have a non-zero positive burst are returned.
 						  These terms have seen their popularity increase.
 		:type min_burst: float

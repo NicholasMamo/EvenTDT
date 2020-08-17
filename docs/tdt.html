@@ -100,7 +100,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-tdt.algorithms">Algorithms</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module-tdt.algorithms.zhao">Zhao et al. (2011)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-tdt.algorithms.cataldi">Cataldi et al. (2014)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-tdt.algorithms.eld">Mamo et al. (2019)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-tdt.algorithms.eld">ELD - Mamo et al. (2019)</a></li>
 </ul>
 </li>
 </ul>
@@ -658,7 +658,7 @@ The more time windows it considers, the more reliable the results, but removing 
 <dd><p>Cataldi et al.’s algorithm is relatively parameter-free.
 Therefore the only state it maintains is the <a class="reference internal" href="#tdt.nutrition.NutritionStore" title="tdt.nutrition.NutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code></a>.</p>
 <p>The keys of the <a class="reference internal" href="#tdt.nutrition.NutritionStore" title="tdt.nutrition.NutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code></a> should be timestamps that represent entire time windows.
-The time window size depends on the application and how fast we expect the stream to change.
+The time window size depends on the application and how fast you expect the stream to change.
 Each timestamp should have a dictionary with the nutritions of terms in it; the keys are the terms and the values are the corresponding nutrition values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
@@ -671,7 +671,8 @@ In other words, the timestamps should represent an entire time window, not just 
 <dl class="method">
 <dt id="tdt.algorithms.cataldi.Cataldi.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">store</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.algorithms.cataldi.Cataldi.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Instantiate the TDT algorithm with the <a class="reference internal" href="#tdt.nutrition.NutritionStore" title="tdt.nutrition.NutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code></a> that will be used to detect topics.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>store</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code>) – The store containing historical nutrition data.
 The algorithm expects the timestamps to represent time windows.
@@ -710,34 +711,71 @@ If it is not given, all of the nutrition that is available is used.</p></li>
 
 </div>
 <div class="section" id="module-tdt.algorithms.eld">
-<span id="mamo-et-al-2019"></span><h3>Mamo et al. (2019)<a class="headerlink" href="#module-tdt.algorithms.eld" title="Permalink to this headline">¶</a></h3>
-<p>Event TimeLine Detection (ELD) is a feature-pivot TDT approach designed to create interpretable results.
-The algorithm computes burst for each individual term.
-The interpretation is in the form of a burst value that lies between -1 and 1.
--1 indicates that a term is losing popularity, and 1 that it is gaining popularity.
-When the burst is 0, the term’s popularity is unchanged.</p>
-<p>The broader system routinely creates checkpoints that represent the importance of terms in a particular time window.
-The implemented TDT algorithm compares the documents received in the last time window with the previous checkpoints.</p>
-<p>ELD borrows the terminology from Cataldi et al.’s previous work and algorithm: <a class="reference internal" href="#tdt.algorithms.cataldi.Cataldi" title="tdt.algorithms.cataldi.Cataldi"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cataldi</span></code></a>.
-This algorithm computes burst based on the past nutritions stored in the checkpoints.</p>
+<span id="eld-mamo-et-al-2019"></span><h3>ELD - Mamo et al. (2019)<a class="headerlink" href="#module-tdt.algorithms.eld" title="Permalink to this headline">¶</a></h3>
+<p>Event TimeLine Detection (ELD) is a feature-pivot TDT approach designed to create interpretable results.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Implementation based on the algorithm outlined in <a class="reference external" href="https://dl.acm.org/doi/abs/10.1145/3342220.3344921">ELD: Event TimeLine Detection – A Participant-Based Approach to Tracking Events by Mamo et al. (2019)</a>.
-ELD is a combined document-pivot and feature-pivot TDT approach.
-The algorithm in this module is the feature-pivot technique.</p>
+<p>The original implementation of ELD is a combined document-pivot and feature-pivot TDT approach.
+First, it clusters documents and then it applies the feature-pivot technique on large clusters.
+However, the algorithm in this module is the feature-pivot technique.
+The full implementation of ELD is in the <a class="reference internal" href="consumers.html#queues.consumers.eld_consumer.ELDConsumer" title="queues.consumers.eld_consumer.ELDConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ELDConsumer</span></code></a>.</p>
+</div>
+<p>ELD computes burst for each individual term.
+The interpretation is in the form of a burst value that lies between -1 and 1:</p>
+<ul class="simple">
+<li><p>-1 indicates that a term has lost all popularity since the past checkpoints,</p></li>
+<li><p>0 indicates that a term’s popularity has not changed over the past checkpoints, and</p></li>
+<li><p>1 that the term has gone from completely unpopular to maximum popularity in the most recent checkpoint.</p></li>
+</ul>
+<p>Negative burst can be used to check when a topic is over.
+This is because after the peak, when the topic slows down, the burst becomes negative or close to zero.</p>
+<p>The checkpoints work like checkpoints.
+The complete system routinely creates checkpoints that represent the importance of terms in a particular checkpoint.
+For example, at timestamp 100, the checkpoint can represent the importance of terms between timestamps 90 and 100.</p>
+<p>To calculate the burst, this algorithm compares the local context with the global context.
+The local context refers to the importance of a term in a cluster.
+The global context refers to the importance of a term in previous checkpoints, which consider all documents, not just those in a cluster.
+Burst is calculated as:</p>
+<div class="math notranslate nohighlight">
+\[burst_k^t = \frac{\sum_{c=t-s}^{t-1}((nutr_{k,l} - nutr_{k,c}) \cdot \frac{1}{\sqrt{e^{t - c}}})}{\sum_{c=1}^s\frac{1}{\sqrt{e^c}}}\]</div>
+<p>where <span class="math notranslate nohighlight">\(k\)</span> is the term for which burst is to be calculated.
+<span class="math notranslate nohighlight">\(t\)</span> is the current checkpoint and <span class="math notranslate nohighlight">\(s\)</span> is the number of checkpoints to consider.
+<span class="math notranslate nohighlight">\(nutr_{k,l}\)</span> is the nutrition of the term in the local context.
+<span class="math notranslate nohighlight">\(nutr_{k,c}\)</span> is the nutrition of the term in the checkpoint <span class="math notranslate nohighlight">\(c\)</span>.</p>
+<p>The square root in the burst calculation is the decay rate and is one of the parameters of this algorithm.
+The higher the decay rate, the less importance old checkpoints receive.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>ELD borrows the terminology from Cataldi et al.’s previous work and algorithm: <a class="reference internal" href="#tdt.algorithms.cataldi.Cataldi" title="tdt.algorithms.cataldi.Cataldi"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cataldi</span></code></a>.
+The importance of terms is called nutrition.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In reality, the bounds are not really between -1 and 1, but between <span class="math notranslate nohighlight">\(-x\)</span> and <span class="math notranslate nohighlight">\(x\)</span>, where <span class="math notranslate nohighlight">\(x\)</span> is the maximum nutrition of a term.
+To get the burst bounds between -1 and 1, term nutritions need to be bound between 0 and 1 (that is, <span class="math notranslate nohighlight">\(x = 1\)</span>).
+This is the original implementation in the <a class="reference internal" href="consumers.html#queues.consumers.eld_consumer.ELDConsumer" title="queues.consumers.eld_consumer.ELDConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ELDConsumer</span></code></a>.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This implementation is based on the algorithm outlined in <a class="reference external" href="https://dl.acm.org/doi/abs/10.1145/3342220.3344921">ELD: Event TimeLine Detection – A Participant-Based Approach to Tracking Events by Mamo et al. (2019)</a>.</p>
 </div>
 <dl class="class">
 <dt id="tdt.algorithms.eld.ELD">
 <em class="property">class </em><code class="sig-name descname">ELD</code><span class="sig-paren">(</span><em class="sig-param">store</em>, <em class="sig-param">decay_rate=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.algorithms.eld.ELD" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mamo et al.’s ELD is a feature-pivot TDT algorithm to detect breaking terms.
 The algorithm returns not only terms, but also the degree to which they are breaking.</p>
+<p>The algorithm receives one parameter apart from the <a class="reference internal" href="#tdt.nutrition.NutritionStore" title="tdt.nutrition.NutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code></a>: the decay rate.
+The decay rate is used to penalize old checkpoints and give recent checkpoints more importance in the burst calculation.</p>
+<p>The keys of the <a class="reference internal" href="#tdt.nutrition.NutritionStore" title="tdt.nutrition.NutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code></a> should be timestamps that represent checkpoints, or time windows.
+The checkpoint size depends on the application and how fast you expect the stream to change.
+Each timestamp should have a dictionary with the nutritions of terms in it; the keys are the terms and the values are the corresponding nutrition values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>store</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code>) – The store contraining historical nutrition data.
-The algorithm expects the timestamps to represent checkpoints, or time windows.
+<li><p><strong>store</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code>) – The store containing historical nutrition data.
+The algorithm expects the timestamps to represent checkpoints.
 Therefore the nutrition store should have dictionaries with timestamps as keys, and the nutrition of terms in a dictionary as values.
-In other words, the timestamps should represent an entire time window, not just a particular second.</p></li>
+In other words, the timestamps should represent an entire checkpoint, not just a particular timestamp.</p></li>
 <li><p><strong>decay_rate</strong> (<em>float</em>) – The decay rate used by the algorithm.
 The larger the decay rate, the less importance far-off windows have in the burst calculation.</p></li>
 </ul>
@@ -746,14 +784,14 @@ The larger the decay rate, the less importance far-off windows have in the burst
 <dl class="method">
 <dt id="tdt.algorithms.eld.ELD.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">store</em>, <em class="sig-param">decay_rate=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.algorithms.eld.ELD.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create the TDT algorithm.</p>
+<dd><p>Instantiate the TDT algorithm with the <a class="reference internal" href="#tdt.nutrition.NutritionStore" title="tdt.nutrition.NutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code></a> that will be used to detect topics and the decay rate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>store</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code>) – The store contraining historical nutrition data.
-The algorithm expects the timestamps to represent checkpoints, or time windows.
+<li><p><strong>store</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code>) – The store containing historical nutrition data.
+The algorithm expects the timestamps to represent checkpoints.
 Therefore the nutrition store should have dictionaries with timestamps as keys, and the nutrition of terms in a dictionary as values.
-In other words, the timestamps should represent an entire time window, not just a particular second.</p></li>
+In other words, the timestamps should represent an entire checkpoint, not just a particular timestamp.</p></li>
 <li><p><strong>decay_rate</strong> (<em>float</em>) – The decay rate used by the algorithm.
 The larger the decay rate, the less importance far-off windows have in the burst calculation.</p></li>
 </ul>
@@ -765,28 +803,35 @@ The larger the decay rate, the less importance far-off windows have in the burst
 <dt id="tdt.algorithms.eld.ELD.detect">
 <code class="sig-name descname">detect</code><span class="sig-paren">(</span><em class="sig-param">nutrition</em>, <em class="sig-param">since=None</em>, <em class="sig-param">until=None</em>, <em class="sig-param">min_burst=0</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.algorithms.eld.ELD.detect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Detect topics using historical data from the given nutrition store.</p>
+<p>This function compares the nutrition of terms in the local context (the <code class="docutils literal notranslate"><span class="pre">nutrition</span></code> parameter) with the global context (the checkpoints in the class’ <a class="reference internal" href="#tdt.nutrition.NutritionStore" title="tdt.nutrition.NutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code></a>).
+By default, this function uses all checkpoints until the given time window.
+If no end timestamp (the <code class="docutils literal notranslate"><span class="pre">until</span></code> parameter) is given, the current timestamp is taken.</p>
+<p>Fewer checkpoints can be used by providing the <code class="docutils literal notranslate"><span class="pre">since</span></code> and <code class="docutils literal notranslate"><span class="pre">until</span></code> parameters.
+Old checkpoints have a smaller effect on the result than recent checkpoints so they can be removed with little effect.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The function assumes that nutrition is always zero or positive.
-With this assumption, when the minimum burst is not negative, the burst can be calculated only for terms that have a present nutrition greater or equal to the minimum burst.</p>
+<p>This function assumes that nutrition is always zero or positive.
+As a result, the burst can be calculated only for terms that have a nutrition equal to or greater than the minimum burst.
+The function makes an exception if the minimum burst is negative.
+In this case, all terms have to be considered in the calculation.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The minimum burst is exclusive.
-This is so that items with a burst of 0 (no change from previous checkpoints) are excluded.</p>
+This is so that terms with a burst of 0 (no change from previous checkpoints) are excluded.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>nutrition</strong> (<em>dict</em>) – The nutrition values from the current (sliding) time window.
+<li><p><strong>nutrition</strong> (<em>dict</em>) – The nutrition values of the local context.
 The keys should be the terms, and the values the respective nutrition.</p></li>
 <li><p><strong>since</strong> (<em>float</em><em> or </em><em>None</em>) – The timestamp since when nutrition should be considered.
-If it is not given, all of the nutrition that is available until the <cite>until</cite> is used.</p></li>
+If it is not given, all of the nutrition that is available until the <code class="docutils literal notranslate"><span class="pre">until</span></code> is used.</p></li>
 <li><p><strong>until</strong> (<em>float</em><em> or </em><em>None</em>) – The timestamp until when nutrition should be considered.
-If it is not given, all of the nutrition that is available since the <cite>since</cite> parameter is used.
+If it is not given, all of the nutrition that is available since the <code class="docutils literal notranslate"><span class="pre">since</span></code> parameter is used.
 If the algorithm is being used retrospectively, this parameter can represent the current timestamp to get only past nutrition.</p></li>
 <li><p><strong>min_burst</strong> (<em>float</em>) – The minimum burst of a term to be considered emerging and returned.
-This value is exclusive.
+This value is exclusive so that terms with an unchanging nutrition (a burst of 0) are not returned.
 By default, only terms thet have a non-zero positive burst are returned.
 These terms have seen their popularity increase.</p></li>
 </ul>

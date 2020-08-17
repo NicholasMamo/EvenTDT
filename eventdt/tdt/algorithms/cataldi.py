@@ -39,7 +39,7 @@ class Cataldi(TDTAlgorithm):
 	Therefore the only state it maintains is the :class:`~tdt.nutrition.NutritionStore`.
 
 	The keys of the :class:`~tdt.nutrition.NutritionStore` should be timestamps that represent entire time windows.
-	The time window size depends on the application and how fast we expect the stream to change.
+	The time window size depends on the application and how fast you expect the stream to change.
 	Each timestamp should have a dictionary with the nutritions of terms in it; the keys are the terms and the values are the corresponding nutrition values.
 
 	:ivar store: The store containing historical nutrition data.
@@ -51,6 +51,8 @@ class Cataldi(TDTAlgorithm):
 
 	def __init__(self, store):
 		"""
+		Instantiate the TDT algorithm with the :class:`~tdt.nutrition.NutritionStore` that will be used to detect topics.
+
 		:param store: The store containing historical nutrition data.
 					  The algorithm expects the timestamps to represent time windows.
 					  Therefore the nutrition store should have dictionaries with timestamps as keys, and the nutrition of terms in a dictionary as values.
