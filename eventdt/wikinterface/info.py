@@ -1,5 +1,6 @@
 """
-The info collector fetches information about Wikipedia pages.
+The info collector module fetches information about Wikipedia pages.
+This information is not always readily-available, such as the article type.
 """
 
 from enum import Enum
@@ -13,15 +14,21 @@ from . import text
 
 class ArticleType(Enum):
 	"""
-	The type of article.
+	This module supports several article types and records them as an enum.
 
 	:cvar NORMAL: A normal article on Wikipedia.
+				  The title of a normal page refers to one, and only one article.
 	:vartype NORMAL: int
-	:cvar DISAMBIGUATION: An article that could not be resolved,
-						  These articles contain links to other articles.
+	:cvar DISAMBIGUATION: A disambiguation page is returned when a title could not be resolved to a particular Wikipedia article.
+						  This happens when the title is too general, such as the surname `Gomez`, which can refer to many people.
+						  Disambiguation articles articles contain links to other articles that are related to the queried title.
 	:vartype NORMAL: int
-	:cvar MISSING: No article exists with the given name.
+	:cvar MISSING: When the title of a page could not be found, the page is said to be missing.
 	:vartype MISSING: int
+	:cvar LIST: List pages are different from disambiguation articles because they list a number of related concepts.
+				The page of `Gomez` is a disambiguation page because many people have that surname.
+				Conversely, the `List of foreign Premier League players` links to pages that represent foreign Premier League players.
+	:vartype LIST: int
 	"""
 
 	NORMAL = 0
@@ -32,8 +39,9 @@ class ArticleType(Enum):
 def types(titles):
 	"""
 	Get the type of page each page title returns.
+	The page type is one of the values in the :class:`~wikinterface.info.ArticleType` enum.
 
-	:param titles: The titles of the pages whose types are desired.
+	:param titles: A title, or a list of titles of the pages whose types will be retrieved.
 	:type titles: list of str or str
 
 	:return: A dictionary with page titles as keys and the types as :class:`~wikinterface.info.ArticleType` values.
@@ -123,7 +131,9 @@ def is_person(titles):
 	Go through each page title and check whether it represents a person.
 	The function assumes that an article is about a person if it mentions a birth date.
 
-	:param titles: The titles of the pages that need to be checked.
+	Since date of births are not standardized across Wikipedia, this function checks the text using regular expression patterns.
+
+	:param titles: A title, or a list of titles of the pages that will be checked.
 	:type titles: list of str or str
 
 	:return: A dictionary with page titles as keys and booleans as values indicating whether the article represents a person.
