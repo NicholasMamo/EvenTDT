@@ -24,15 +24,21 @@ from abc import ABC, abstractmethod
 
 class NutritionStore(ABC):
 	"""
-	The nutrition store needs to handle both the storage of nutrition, as well as retrieval.
-	All nutrition stores must implement all of the following methods.
-	Nutrition stores separate data based on timestamps.
+	The :class:`~tdt.nutrition.NutritionStore` base class does not make any assumptions about where the nutrition data is stored.
+	However, it defines a set of functions that need to be implemented.
+	In that way, all derived classes share a similar interface.
+
+	The nutrition store provides functions that cover not just storage, but also retrieval.
+	A common theme across all nutrition store instances is that they separate nutrition data into timestamps.
+	Timestamps can represent either a particular instance of time, or a period of time.
+	This depends on the application, and is not a feature of the nutrition store.
 	"""
 
 	@abstractmethod
 	def __init__(self):
 		"""
 		Create the nutrition store.
+		All nutrition stores use this function to initialize the storage or their connections to it.
 		"""
 
 		pass
