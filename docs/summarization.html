@@ -282,30 +282,41 @@ This is equivalent to concatenating the text of all documents.</p>
 <span id="algorithms"></span><span id="summarization-algorithms"></span><h2>Algorithms<a class="headerlink" href="#module-summarization.algorithms" title="Permalink to this headline">¶</a></h2>
 <p>Summarization algorithms receive documents and create a summary having the given length.
 The specifics of how they create summaries change from one algorithm to the other, but the goal does not.</p>
-<p>The <a class="reference internal" href="#summarization.algorithms.lgorithm" title="summarization.algorithms.lgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">SummarizationAlgorithm</span></code></a> represents this goal.
+<p>The <a class="reference internal" href="#summarization.algorithms.SummarizationAlgorithm" title="summarization.algorithms.SummarizationAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">SummarizationAlgorithm</span></code></a> represents this goal.
 It is a base class that dictates the minimum functionality of any summarization algorithm: what input they receive and what output they return.
-In all cases, the main functionality goes through the <a class="reference internal" href="#summarization.algorithms.lgorithm.summarize" title="summarization.algorithms.lgorithm.summarize"><code class="xref py py-func docutils literal notranslate"><span class="pre">summarize()</span></code></a> function.</p>
+In all cases, the main functionality goes through the <code class="xref py py-func docutils literal notranslate"><span class="pre">summarize()</span></code> function.</p>
 <dl class="class">
-<dt id="summarization.algorithms.lgorithm">
-<em class="property">class </em><code class="sig-name descname">SummarizationAlgorithm</code><a class="headerlink" href="#summarization.algorithms.lgorithm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Summarization algorithms vary greatly and thus there is no general functionality or state.
-All algorithms must, however, implement the <code class="xref py py-func docutils literal notranslate"><span class="pre">summarize()</span></code> method.</p>
+<dt id="summarization.algorithms.SummarizationAlgorithm">
+<em class="property">class </em><code class="sig-name descname">SummarizationAlgorithm</code><a class="headerlink" href="#summarization.algorithms.SummarizationAlgorithm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Summarization algorithms vary greatly and thus there is no general state.
+However, they must all implement the <a class="reference internal" href="#summarization.algorithms.SummarizationAlgorithm.summarize" title="summarization.algorithms.SummarizationAlgorithm.summarize"><code class="xref py py-func docutils literal notranslate"><span class="pre">summarize()</span></code></a> method.
+This method is the central part of any <a class="reference internal" href="#summarization.algorithms.SummarizationAlgorithm" title="summarization.algorithms.SummarizationAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">SummarizationAlgorithm</span></code></a>.
+It receives a list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances and a target length and creates a <a class="reference internal" href="#summarization.summary.Summary" title="summarization.summary.Summary"><code class="xref py py-class docutils literal notranslate"><span class="pre">Summary</span></code></a>.</p>
 <dl class="method">
-<dt id="summarization.algorithms.lgorithm.summarize">
-<em class="property">abstract </em><code class="sig-name descname">summarize</code><span class="sig-paren">(</span><em class="sig-param">documents</em>, <em class="sig-param">length</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.lgorithm.summarize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Summarize the given documents.</p>
-<p>Summarization algorithms may accept more parameters, but they must accept, at least a list of documents and the length of the summary.
-They must also always return a summary object.</p>
+<dt id="summarization.algorithms.SummarizationAlgorithm.summarize">
+<em class="property">abstract </em><code class="sig-name descname">summarize</code><span class="sig-paren">(</span><em class="sig-param">documents</em>, <em class="sig-param">length</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.SummarizationAlgorithm.summarize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Summarize the given list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances.</p>
+<p>Summarization algorithms may accept more parameters, but they must accept, at least:</p>
+<ol class="arabic simple">
+<li><p>A list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances, and</p></li>
+<li><p>The maximum length of the produced <a class="reference internal" href="#summarization.summary.Summary" title="summarization.summary.Summary"><code class="xref py py-class docutils literal notranslate"><span class="pre">Summary</span></code></a>.</p></li>
+</ol>
+<p>They must also always return a <a class="reference internal" href="#summarization.summary.Summary" title="summarization.summary.Summary"><code class="xref py py-class docutils literal notranslate"><span class="pre">Summary</span></code></a> instance.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The algorithm assumes that the documents are already unique sentences.
-Therefore the summary is a selection of the given documents.</p>
+<p>The algorithm assumes that all <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances are already unique sentences.
+Therefore it does not split them into sentences or manipulate them in any way.
+The returned <a class="reference internal" href="#summarization.summary.Summary" title="summarization.summary.Summary"><code class="xref py py-class docutils literal notranslate"><span class="pre">Summary</span></code></a> is a selection of the given <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>documents</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The list of documents to summarize.</p></li>
-<li><p><strong>length</strong> (<em>float</em>) – The maximum length of the summary in characters.</p></li>
+<li><p><strong>length</strong> (<em>float</em>) – The maximum length of the summary in characters.
+Summarization algorithms that inherit the <a class="reference internal" href="#summarization.algorithms.SummarizationAlgorithm" title="summarization.algorithms.SummarizationAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">SummarizationAlgorithm</span></code></a> must ensure that the length of the <a class="reference internal" href="#summarization.summary.Summary" title="summarization.summary.Summary"><code class="xref py py-class docutils literal notranslate"><span class="pre">Summary</span></code></a> does not exceed this length.
+Summaries may be shorter, however.
+When considering the length of the <a class="reference internal" href="#summarization.summary.Summary" title="summarization.summary.Summary"><code class="xref py py-class docutils literal notranslate"><span class="pre">Summary</span></code></a>, the function does not apply any pre-processing.
+All it considers is the text of the original <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances making up the <a class="reference internal" href="#summarization.summary.Summary" title="summarization.summary.Summary"><code class="xref py py-class docutils literal notranslate"><span class="pre">Summary</span></code></a>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -318,8 +329,8 @@ Therefore the summary is a selection of the given documents.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="summarization.algorithms.lgorithm.__weakref__">
-<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#summarization.algorithms.lgorithm.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dt id="summarization.algorithms.SummarizationAlgorithm.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#summarization.algorithms.SummarizationAlgorithm.__weakref__" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of weak references to the object (if defined)</p>
 </dd></dl>
 
