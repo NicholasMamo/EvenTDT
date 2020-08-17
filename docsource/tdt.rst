@@ -6,12 +6,8 @@
    :description: The Topic Detection and Tracking (TDT) implementation
    :keywords: Python, TDT
 
-At the heart of EvenTDT is Topic Detection and Tracking (TDT).
-TDT is the component that is responsible for detecting that a development happened.
-
 .. automodule:: tdt
    :members:
-   :private-members:
    :special-members:
 
 ================
@@ -20,12 +16,10 @@ Nutrition Stores
 
 .. automodule:: tdt.nutrition.store
    :members:
-   :private-members:
    :special-members:
 
 .. automodule:: tdt.nutrition.memory
    :members:
-   :private-members:
    :special-members:
 
 ==========
@@ -34,7 +28,6 @@ Algorithms
 
 .. automodule:: tdt.algorithms.tdt
    :members:
-   :private-members:
    :special-members:
 
 Zhao et al. (2011)
@@ -42,7 +35,6 @@ Zhao et al. (2011)
 
 .. automodule:: tdt.algorithms.zhao
    :members:
-   :private-members:
    :special-members:
 
 Cataldi et al. (2014)
@@ -50,7 +42,6 @@ Cataldi et al. (2014)
 
 .. automodule:: tdt.algorithms.cataldi
    :members:
-   :private-members:
    :special-members:
 
 Mamo et al. (2019)
@@ -58,5 +49,4 @@ Mamo et al. (2019)
 
 .. automodule:: tdt.algorithms.eld
    :members:
-   :private-members:
    :special-members:
