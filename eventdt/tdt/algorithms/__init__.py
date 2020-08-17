@@ -13,8 +13,9 @@ from abc import ABC, abstractmethod
 
 class TDTAlgorithm(ABC):
 	"""
-	Since TDT algorithms vary greatly, there is no general functionality or state.
-	All algorithms must, however, implement the :func:`~tdt.algorithms.tdt.TDTAlgorithm.detect` method.
+	Since TDT algorithms vary greatly, there is no general state.
+	The :class:`~tdt.algorithms.TDTAlgorithm`'s purpose is to create a standard interface to TDT algorithms.
+	Although the state and the parameters change from one algorithm to the other, all of them must implement the :func:`~tdt.algorithms.TDTAlgorithm.detect` method.
 	"""
 
 	@abstractmethod

@@ -524,8 +524,9 @@ This functionality is encapsulated in the <a class="reference internal" href="#t
 <dl class="class">
 <dt id="tdt.algorithms.TDTAlgorithm">
 <em class="property">class </em><code class="sig-name descname">TDTAlgorithm</code><a class="headerlink" href="#tdt.algorithms.TDTAlgorithm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Since TDT algorithms vary greatly, there is no general functionality or state.
-All algorithms must, however, implement the <code class="xref py py-func docutils literal notranslate"><span class="pre">detect()</span></code> method.</p>
+<dd><p>Since TDT algorithms vary greatly, there is no general state.
+The <a class="reference internal" href="#tdt.algorithms.TDTAlgorithm" title="tdt.algorithms.TDTAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">TDTAlgorithm</span></code></a>’s purpose is to create a standard interface to TDT algorithms.
+Although the state and the parameters change from one algorithm to the other, all of them must implement the <a class="reference internal" href="#tdt.algorithms.TDTAlgorithm.detect" title="tdt.algorithms.TDTAlgorithm.detect"><code class="xref py py-func docutils literal notranslate"><span class="pre">detect()</span></code></a> method.</p>
 <dl class="method">
 <dt id="tdt.algorithms.TDTAlgorithm.detect">
 <em class="property">abstract </em><code class="sig-name descname">detect</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.algorithms.TDTAlgorithm.detect" title="Permalink to this definition">¶</a></dt>
