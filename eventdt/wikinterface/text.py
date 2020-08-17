@@ -1,6 +1,5 @@
 """
-Wikipedia articles are predominantly made up of text.
-This module contains functions to help extract that text from articles.
+The text module contains functions to help extract text from articles.
 """
 
 import json
@@ -11,9 +10,9 @@ from . import *
 
 def collect(titles, introduction_only=False):
 	"""
-	Get the plain text content of the pages having the given titles.
+	Get the plain text content of the pages with the given titles.
 
-	:param titles: The titles of the pages from where to get the plain text.
+	:param titles: The title, or titles of the pages from where to get the plain text.
 	:type titles: list of str or str
 	:param introduction_only: A boolean indicating whether to get only the introduction's text.
 	:type introduction_only: bool
