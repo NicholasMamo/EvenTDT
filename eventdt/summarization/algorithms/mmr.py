@@ -1,11 +1,37 @@
 """
-The Maximal Marginal Relevance (MMR) algorithm takes in documents and a query and builds a summary.
-This summary has the ideal property of being relevant to the query and non-redundant.
-The algorithm follows a greedy approach.
+The Maximal Marginal Relevance (MMR) is a seminal algorithm proposed by Carbonell and Golstein in 1998.
+The MMR tries to create a summary that is relevant to the query while not redundant.
+To build the summary, the MMR algorithm takes a greedy approach.
+
+The general approach can be summarized as follows:
+
+1. Choose the document that is most similar to the query.
+
+2. Go over the rest of the documents.
+   Choose the document that is simultaneously:
+
+   2.1. Most similar to the query, and
+
+   2.2. Least similar to already-picked documents.
+
+3. Stop if any of the following conditions are met, otherwise return to step 2:
+
+   3.1. There are no documents left to add to the summary.
+
+   3.2. Adding any other document would make the summary too long.
+
+There are two factors that influence the choice of document: relevance to the query and redundancy.
+The :class:`~summarization.algorithms.mmr.MMR` algorithm accepts the :math:`\\lambda` parameter to balance between the two.
+When :math:`\\lambda` is 1, only relevance to the query is considered.
+When :math:`\\lambda` is 0, only non-redundancy is considered.
+
+Although the MMR algorithm is simple, its bottleneck is the creation of the pairwise similarity matrix between documents.
+The technique uses this matrix for redundancy checks.
+Therefore it is recommended to choose a few, quality candidates to summarize, rather than summarize a large corpus.
 
 .. note::
 
-	Implementation based on the algorithm presented in `The Use of MMR, Diversity-Based Reranking for Reordering Documents and Producing Summaries by Carbonell and Goldstein (1998) <https://dl.acm.org/doi/abs/10.1145/290941.291025>`_.
+	This implementation is based on the algorithm presented in `The Use of MMR, Diversity-Based Reranking for Reordering Documents and Producing Summaries by Carbonell and Goldstein (1998) <https://dl.acm.org/doi/abs/10.1145/290941.291025>`_.
 """
 
 import os
@@ -54,11 +80,6 @@ class MMR(SummarizationAlgorithm):
 	def summarize(self, documents, length, query=None, *args, **kwargs):
 		"""
 		Summarize the given documents.
-
-		.. note::
-
-			The algorithm assumes that the documents are already unique sentences.
-			Therefore the summary is a selection of the given documents.
 
 		:param documents: The list of documents to summarize.
 		:type documents: list of :class:`~nlp.document.Document`

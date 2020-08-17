@@ -338,12 +338,32 @@ All it considers is the text of the original <a class="reference internal" href=
 
 <div class="section" id="module-summarization.algorithms.mmr">
 <span id="maximal-marginal-relevance-mmr-carbonell-and-goldstein-1998"></span><h3>Maximal Marginal Relevance (MMR) - Carbonell and Goldstein (1998)<a class="headerlink" href="#module-summarization.algorithms.mmr" title="Permalink to this headline">¶</a></h3>
-<p>The Maximal Marginal Relevance (MMR) algorithm takes in documents and a query and builds a summary.
-This summary has the ideal property of being relevant to the query and non-redundant.
-The algorithm follows a greedy approach.</p>
+<p>The Maximal Marginal Relevance (MMR) is a seminal algorithm proposed by Carbonell and Golstein in 1998.
+The MMR tries to create a summary that is relevant to the query while not redundant.
+To build the summary, the MMR algorithm takes a greedy approach.</p>
+<p>The general approach can be summarized as follows:</p>
+<ol class="arabic">
+<li><p>Choose the document that is most similar to the query.</p></li>
+<li><p>Go over the rest of the documents.
+Choose the document that is simultaneously:</p>
+<p>2.1. Most similar to the query, and</p>
+<p>2.2. Least similar to already-picked documents.</p>
+</li>
+<li><p>Stop if any of the following conditions are met, otherwise return to step 2:</p>
+<p>3.1. There are no documents left to add to the summary.</p>
+<p>3.2. Adding any other document would make the summary too long.</p>
+</li>
+</ol>
+<p>There are two factors that influence the choice of document: relevance to the query and redundancy.
+The <a class="reference internal" href="#summarization.algorithms.mmr.MMR" title="summarization.algorithms.mmr.MMR"><code class="xref py py-class docutils literal notranslate"><span class="pre">MMR</span></code></a> algorithm accepts the <span class="math notranslate nohighlight">\(\lambda\)</span> parameter to balance between the two.
+When <span class="math notranslate nohighlight">\(\lambda\)</span> is 1, only relevance to the query is considered.
+When <span class="math notranslate nohighlight">\(\lambda\)</span> is 0, only non-redundancy is considered.</p>
+<p>Although the MMR algorithm is simple, its bottleneck is the creation of the pairwise similarity matrix between documents.
+The technique uses this matrix for redundancy checks.
+Therefore it is recommended to choose a few, quality candidates to summarize, rather than summarize a large corpus.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Implementation based on the algorithm presented in <a class="reference external" href="https://dl.acm.org/doi/abs/10.1145/290941.291025">The Use of MMR, Diversity-Based Reranking for Reordering Documents and Producing Summaries by Carbonell and Goldstein (1998)</a>.</p>
+<p>This implementation is based on the algorithm presented in <a class="reference external" href="https://dl.acm.org/doi/abs/10.1145/290941.291025">The Use of MMR, Diversity-Based Reranking for Reordering Documents and Producing Summaries by Carbonell and Goldstein (1998)</a>.</p>
 </div>
 <dl class="class">
 <dt id="summarization.algorithms.mmr.MMR">
@@ -379,11 +399,6 @@ By default, the algorithm assigns equal weight to relevance and non-redundancy.<
 <dt id="summarization.algorithms.mmr.MMR.summarize">
 <code class="sig-name descname">summarize</code><span class="sig-paren">(</span><em class="sig-param">documents</em>, <em class="sig-param">length</em>, <em class="sig-param">query=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.mmr.MMR.summarize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Summarize the given documents.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The algorithm assumes that the documents are already unique sentences.
-Therefore the summary is a selection of the given documents.</p>
-</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
