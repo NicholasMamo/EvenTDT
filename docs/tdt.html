@@ -174,7 +174,14 @@
             
     <div class="section" id="topic-detection-and-tracking-tdt">
 <h1>6. Topic Detection and Tracking (TDT)<a class="headerlink" href="#topic-detection-and-tracking-tdt" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-tdt"></span><div class="section" id="module-tdt.nutrition.store">
+<span class="target" id="module-tdt"></span><p>The Topic Detection and Tracking (TDT) package is one of the most important parts of EvenTDT.
+This package makes it easier to implement new TDT algorithms or to use existing ones.
+It achieves this by providing:</p>
+<ol class="arabic simple">
+<li><p>Tools to help you implement new algorithms, such as the <a class="reference internal" href="#tdt.nutrition.store.NutritionStore" title="tdt.nutrition.store.NutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code></a>; and</p></li>
+<li><p>A uniform interface for TDT algorithms in <a class="reference internal" href="#tdt.algorithms.TDTAlgorithm" title="tdt.algorithms.TDTAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">TDTAlgorithm</span></code></a>.</p></li>
+</ol>
+<div class="section" id="module-tdt.nutrition.store">
 <span id="nutrition-stores"></span><h2>Nutrition Stores<a class="headerlink" href="#module-tdt.nutrition.store" title="Permalink to this headline">¶</a></h2>
 <p>The concept of nutrition was used predominantly by <a class="reference external" href="https://dl.acm.org/doi/abs/10.1145/2542182.2542189">Cataldi et al.</a>.
 Later, it was adopted by Mamo and others in <a class="reference external" href="https://link.springer.com/chapter/10.1007/978-3-319-74497-1_3">FIRE</a> and <a class="reference external" href="https://dl.acm.org/doi/abs/10.1145/3342220.3344921">ELD</a>.
