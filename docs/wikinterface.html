@@ -177,6 +177,10 @@ The basic Wikipedia API interface uses the <a class="reference external" href="h
 <p>The package separates the functions across modules that fetch different information from Wikipedia.
 At the package-level are functions that are useful to several modules.</p>
 <p>In all cases, responses are sent on the <code class="docutils literal notranslate"><span class="pre">API_ENDPOINT</span></code> and returned as a JSON string.</p>
+<p>Under the hood, this package helps you make more efficient use of Wikipedia.
+This includes functions like <a class="reference internal" href="#wikinterface.links.collect_recursive" title="wikinterface.links.collect_recursive"><code class="xref py py-func docutils literal notranslate"><span class="pre">collect_recursive()</span></code></a> that provide complex functionality.
+In addition, the Wikinterface package makes it easier to navigate the API’s limits.
+For example, functions like <a class="reference internal" href="#wikinterface.search.collect" title="wikinterface.search.collect"><code class="xref py py-func docutils literal notranslate"><span class="pre">collect()</span></code></a> lets you perform searches and retrieve more than 50 results.</p>
 <dl class="data">
 <dt id="wikinterface.API_ENDPOINT">
 <code class="sig-name descname">API_ENDPOINT</code><em class="property"> = 'https://en.wikipedia.org/w/api.php?'</em><a class="headerlink" href="#wikinterface.API_ENDPOINT" title="Permalink to this definition">¶</a></dt>

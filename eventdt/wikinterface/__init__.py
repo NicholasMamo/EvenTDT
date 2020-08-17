@@ -6,6 +6,11 @@ The package separates the functions across modules that fetch different informat
 At the package-level are functions that are useful to several modules.
 
 In all cases, responses are sent on the ``API_ENDPOINT`` and returned as a JSON string.
+
+Under the hood, this package helps you make more efficient use of Wikipedia.
+This includes functions like :func:`~wikinterface.links.collect_recursive` that provide complex functionality.
+In addition, the Wikinterface package makes it easier to navigate the API's limits.
+For example, functions like :func:`~wikinterface.search.collect` lets you perform searches and retrieve more than 50 results.
 """
 
 API_ENDPOINT = "https://en.wikipedia.org/w/api.php?"
