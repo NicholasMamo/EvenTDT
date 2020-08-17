@@ -26,7 +26,7 @@ Nutrition Stores
 Algorithms
 ==========
 
-.. automodule:: tdt.algorithms.tdt
+.. automodule:: tdt.algorithms
    :members:
    :special-members:
 
