@@ -1,5 +1,5 @@
 """
-The print consumer outputs the queue's elements as they arrive.
+The :class:`~queues.consumers.print_consumer.PrintConsumer` is a real-time consumer that performs no processing, expect to print the tweets as they arrive in the :class:`~queues.Queue`.
 """
 
 import asyncio
@@ -17,7 +17,8 @@ from queues.consumers import Consumer
 
 class PrintConsumer(Consumer):
 	"""
-	The print consumer prints queue messages and discards them.
+	The :class:`~queues.consumers.print_consumer.PrintConsumer` maintains no special state.
+	It works in real-time, reading and printing tweets from the :class:`~queues.Queue`, and discarding them immediately.
 	"""
 
 	async def _consume(self, max_inactivity=5):
