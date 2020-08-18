@@ -14,10 +14,12 @@ In EvenTDT, this implementation is based on lists and queue-specific functionali
 class Queue(object):
 	"""
 	The :class:`~queues.Queue` data structure encapsulates a list with additional functions that mimick the workings of a queue.
-	The :class:`~queues.Queue` can take in any kind of data, including other :class:`~queues.Queue` instances.
-	New elements are added to the queue at the end.
+	The :class:`~queues.Queue` is data-agnostic, so it can take in any kind of data, including other :class:`~queues.Queue` instances.
 
-	:ivar queue: The queue data structure.
+	As a FIFO structure, queue elements are added to the :class:`~queues.Queue` at the end and removed from the beginning.
+	That means that the earlier an item has been in the :class:`~queues.Queue`, the earlier it will be processed.
+
+	:ivar queue: The underlying list that is used by the :class:`~queues.Queue` to mimick a queue's workings.
 	:vartype queue: list
 	"""
 
@@ -32,15 +34,33 @@ class Queue(object):
 	def enqueue(self, *args):
 		"""
 		Add the given data to the queue.
-		All arguments can be provided as arguments.
+		All arguments can be provided as separate arguments.
+		So, to add one item, you can use:
+
+		.. code-block:: python
+
+			queue.enqueue(1)
+
+		To add multiple items, you can use:
+
+		.. code-block:: python
+
+			queue.enqueue(1, 2, 3)
+
+		You can also add a list, tuple or any other object to a :class:`~queues.Queue`.
+		The following :class:`~queues.Queue` would have a list and a tuple as the last two elements after calling the :func:`~queues.Queue.enqueue` function.
+
+		.. code-block:: python
+
+			queue.enqueue([ 1, 2, 3 ], ( 'a', 'b', 'c' ))
 		"""
 
 		self.queue.extend(args)
 
 	def dequeue(self):
 		"""
-		Get the first element in the queue.
-		If the queue is empty, `None` is returned instead
+		Get and remove the first element in the queue.
+		If the queue is empty, ``None`` is returned instead
 
 		:return: The first element in the queue.
 		:rtype: object or None
@@ -82,7 +102,10 @@ class Queue(object):
 	def head(self):
 		"""
 		Get the first element entered into the queue without removing it.
-		If the queue is empty, `None` is returned instead
+		So, if a :class:`~queues.Queue` has `1, 2, 3` as its data, calling :func:`~queues.Queue.head` would return `1`.
+		After this function call, the :class:`~queues.Queue` still has `1, 2, 3` as its data.
+
+		If the queue is empty, ``None`` is returned instead
 
 		:return: The oldest element in the queue.
 		:rtype: object or None
@@ -93,7 +116,10 @@ class Queue(object):
 	def tail(self):
 		"""
 		Get the last element entered into the queue without removing it.
-		If the queue is empty, `None` is returned instead
+		So, if a :class:`~queues.Queue` has `1, 2, 3` as its data, calling :func:`~queues.Queue.tail` would return `3`.
+		After this function call, the :class:`~queues.Queue` still has `1, 2, 3` as its data.
+
+		If the queue is empty, ``None`` is returned instead
 
 		:return: The newest element in the queue.
 		:rtype: object or None

@@ -184,12 +184,13 @@ In EvenTDT, this implementation is based on lists and queue-specific functionali
 <dl class="class">
 <dt id="queues.Queue">
 <em class="property">class </em><code class="sig-name descname">Queue</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.Queue" title="Permalink to this definition">¶</a></dt>
-<dd><p>The queue data structure is based on a list.
-The queue can take in any kind of data, including other queues.
-New elements are added to the queue at the end.</p>
+<dd><p>The <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> data structure encapsulates a list with additional functions that mimick the workings of a queue.
+The <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> is data-agnostic, so it can take in any kind of data, including other <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> instances.</p>
+<p>As a FIFO structure, queue elements are added to the <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> at the end and removed from the beginning.
+That means that the earlier an item has been in the <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>, the earlier it will be processed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
-<dd class="field-odd"><p><strong>queue</strong> (<em>list</em>) – The queue data structure.</p>
+<dd class="field-odd"><p><strong>queue</strong> (<em>list</em>) – The underlying list that is used by the <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> to mimick a queue’s workings.</p>
 </dd>
 </dl>
 <dl class="method">
@@ -203,14 +204,27 @@ The queue’s data can be given as normal arguments.</p>
 <dt id="queues.Queue.enqueue">
 <code class="sig-name descname">enqueue</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.Queue.enqueue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add the given data to the queue.
-All arguments can be provided as arguments.</p>
+All arguments can be provided as separate arguments.
+So, to add one item, you can use:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">queue</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To add multiple items, you can use:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">queue</span><span class="o">.</span><span class="n">enqueue</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can also add a list, tuple or any other object to a <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>.
+The following <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> would have a list and a tuple as the last two elements after calling the <a class="reference internal" href="#queues.Queue.enqueue" title="queues.Queue.enqueue"><code class="xref py py-func docutils literal notranslate"><span class="pre">enqueue()</span></code></a> function.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">queue</span><span class="o">.</span><span class="n">enqueue</span><span class="p">([</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span> <span class="p">],</span> <span class="p">(</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span> <span class="p">))</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="queues.Queue.dequeue">
 <code class="sig-name descname">dequeue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queues.Queue.dequeue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the first element in the queue.
-If the queue is empty, <cite>None</cite> is returned instead</p>
+<dd><p>Get and remove the first element in the queue.
+If the queue is empty, <code class="docutils literal notranslate"><span class="pre">None</span></code> is returned instead</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>The first element in the queue.</p>
@@ -261,7 +275,9 @@ Unlike the <a class="reference internal" href="#queues.Queue.dequeue_all" title=
 <dt id="queues.Queue.head">
 <code class="sig-name descname">head</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queues.Queue.head" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the first element entered into the queue without removing it.
-If the queue is empty, <cite>None</cite> is returned instead</p>
+So, if a <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> has <cite>1, 2, 3</cite> as its data, calling <a class="reference internal" href="#queues.Queue.head" title="queues.Queue.head"><code class="xref py py-func docutils literal notranslate"><span class="pre">head()</span></code></a> would return <cite>1</cite>.
+After this function call, the <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> still has <cite>1, 2, 3</cite> as its data.</p>
+<p>If the queue is empty, <code class="docutils literal notranslate"><span class="pre">None</span></code> is returned instead</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>The oldest element in the queue.</p>
@@ -276,7 +292,9 @@ If the queue is empty, <cite>None</cite> is returned instead</p>
 <dt id="queues.Queue.tail">
 <code class="sig-name descname">tail</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queues.Queue.tail" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the last element entered into the queue without removing it.
-If the queue is empty, <cite>None</cite> is returned instead</p>
+So, if a <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> has <cite>1, 2, 3</cite> as its data, calling <a class="reference internal" href="#queues.Queue.tail" title="queues.Queue.tail"><code class="xref py py-func docutils literal notranslate"><span class="pre">tail()</span></code></a> would return <cite>3</cite>.
+After this function call, the <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> still has <cite>1, 2, 3</cite> as its data.</p>
+<p>If the queue is empty, <code class="docutils literal notranslate"><span class="pre">None</span></code> is returned instead</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>The newest element in the queue.</p>
