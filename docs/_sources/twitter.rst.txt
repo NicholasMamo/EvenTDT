@@ -13,13 +13,21 @@
 Listeners
 =========
 
-Tweet listeners download tweets in real-time.
-
-.. automodule:: twitter.listener
+.. automodule:: twitter.listeners
    :members:
    :special-members:
 
-.. automodule:: twitter.queued_listener
+Tweet Listener
+--------------
+
+.. automodule:: twitter.listeners.tweet_listener
+   :members:
+   :special-members:
+
+Queued Tweet Listener
+---------------------
+
+.. automodule:: twitter.listeners.queued_tweet_listener
    :members:
    :special-members:
 
