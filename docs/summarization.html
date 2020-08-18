@@ -520,24 +520,37 @@ Later, the nodes can be summarized with any <a class="reference internal" href="
 <dl class="class">
 <dt id="summarization.timeline.Timeline">
 <em class="property">class </em><code class="sig-name descname">Timeline</code><span class="sig-paren">(</span><em class="sig-param">node_type</em>, <em class="sig-param">expiry</em>, <em class="sig-param">min_similarity</em>, <em class="sig-param">max_time=600</em>, <em class="sig-param">nodes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.Timeline" title="Permalink to this definition">¶</a></dt>
-<dd><p>The timeline stores a list of nodes and provides functionality to convert them into summaries.
-More importantly, the timeline provides functionality to construct the timeline.
-This includes redundancy management.</p>
-<p>Incoming documents are added automatically to the latest node if it has not expired.
-At any time, the timeline only ever has one non-expired, or active, node.
-If there are no active nodes, the incoming documents can either be absorbed by an expired node, or go into a new node.</p>
+<dd><p>The <a class="reference internal" href="#summarization.timeline.Timeline" title="summarization.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a> is a rather simple class that stores a list of <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> instances.
+In spite of its simplicity, the <a class="reference internal" href="#summarization.timeline.Timeline" title="summarization.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a> class hides a lot of functionality.</p>
+<p>Generally, only the constructor (<a class="reference internal" href="#summarization.timeline.Timeline.__init__" title="summarization.timeline.Timeline.__init__"><code class="xref py py-func docutils literal notranslate"><span class="pre">__init__()</span></code></a>) and the <a class="reference internal" href="#summarization.timeline.Timeline.add" title="summarization.timeline.Timeline.add"><code class="xref py py-func docutils literal notranslate"><span class="pre">add()</span></code></a> function are used.
+The latter is responsible for identifying whether there is a need to add a new <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> or whether the latest information should go into the latest <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>.
+The decision is based on parameters set when instantiating the <a class="reference internal" href="#summarization.timeline.Timeline" title="summarization.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a>:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">expiry</span></code> parameter controls the time that must elapse before a <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> is no longer active.
+Inactive nodes do not automatically absorb new information.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">min_similarity</span></code> parameter is the minimum similarity between the new information and an old <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> for the <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> to absorb that information.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">max_time</span></code> parameter is the time that must elapse before an old <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> is definitively retired.
+Retired <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> instances cannot change.</p></li>
+</ul>
+<p>At any time, the timeline only ever has one active <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>.
+If there is not an active <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> instances, the incoming information can either be absorbed by an expired <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>, or go into a new <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>.</p>
+<p>Note that what information means is vague.
+The <a class="reference internal" href="#summarization.timeline.Timeline" title="summarization.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a> always has one type of <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>, and each <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> accepts different kind of information.
+For example, the <a class="reference internal" href="#summarization.timeline.nodes.document_node.DocumentNode" title="summarization.timeline.nodes.document_node.DocumentNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentNode</span></code></a> is made up of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances.
+The type of <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> is set using the <code class="docutils literal notranslate"><span class="pre">node_type</span></code> parameter when instantiating the <a class="reference internal" href="#summarization.timeline.Timeline" title="summarization.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a>.
+This class automatically creates the appropriate <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> for you.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#module-summarization.timeline.nodes" title="summarization.timeline.nodes"><strong>nodes</strong></a> (<a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>) – The list of nodes in the timeline.</p></li>
-<li><p><strong>node_type</strong> (<a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>) – The type of nodes to create in the timeline.</p></li>
-<li><p><strong>expiry</strong> (<em>float</em>) – The time in seconds that it takes for a node to expire.
-Expired nodes do not automatically absorb documents.
-If the expiry is 0, new documents immediately join a new node unless they are absorbed.</p></li>
-<li><p><strong>min_similarity</strong> – The minimum similarity between incoming documents and a node to be absorbed by it.
+<li><p><a class="reference internal" href="#module-summarization.timeline.nodes" title="summarization.timeline.nodes"><strong>nodes</strong></a> (<a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>) – The list of <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> instances in the timeline.</p></li>
+<li><p><strong>node_type</strong> (<a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>) – The type of <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> to create in the timeline.</p></li>
+<li><p><strong>expiry</strong> (<em>float</em>) – The time in seconds that it takes for a <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> to expire.
+Expired <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> instances do not automatically absorb documents.
+If the expiry is 0, new documents immediately join a new <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> unless they are absorbed.</p></li>
+<li><p><strong>min_similarity</strong> (<em>float</em>) – The minimum similarity between incoming documents and a <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> to be absorbed by it.
 This value is inclusive.</p></li>
-<li><p><strong>max_time</strong> (<em>float</em>) – The maximum time in seconds to look back when deciding whether a node should absorb a new topic.
-The comparison is made with the node’s <cite>created_at</cite> instance variable.
+<li><p><strong>max_time</strong> (<em>float</em>) – The maximum time in seconds to look back when deciding whether a <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> should absorb a new topic.
+The comparison is made with the <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>’s <cite>created_at</cite> instance variable.
 This value is inclusive.</p></li>
 </ul>
 </dd>
@@ -549,16 +562,16 @@ This value is inclusive.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>node_type</strong> (<a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>) – The type of nodes to create in the timeline.</p></li>
-<li><p><strong>expiry</strong> (<em>float</em>) – The time in seconds that it takes for a node to expire.
-Expired nodes do not automatically absorb documents.
-If the expiry is 0, new documents immediately join a new node unless they are absorbed.</p></li>
-<li><p><strong>min_similarity</strong> – The minimum similarity between incoming documents and a node to be absorbed by it.
+<li><p><strong>node_type</strong> (<a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>) – The type of <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> to create in the timeline.</p></li>
+<li><p><strong>expiry</strong> (<em>float</em>) – The time in seconds that it takes for a <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> to expire.
+Expired <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> instances do not automatically absorb documents.
+If the expiry is 0, new documents immediately join a new <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> unless they are absorbed.</p></li>
+<li><p><strong>min_similarity</strong> (<em>float</em>) – The minimum similarity between incoming documents and a <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> to be absorbed by it.
 This value is inclusive.</p></li>
-<li><p><strong>max_time</strong> (<em>float</em>) – The maximum time in seconds to look back when deciding whether a node should absorb a new topic.
-The comparison is made with the node’s <cite>created_at</cite> instance variable.
+<li><p><strong>max_time</strong> (<em>float</em>) – The maximum time in seconds to look back when deciding whether a <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> should absorb a new topic.
+The comparison is made with the <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>’s <cite>created_at</cite> instance variable.
 This value is inclusive.</p></li>
-<li><p><strong>nodes</strong> (<a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>) – The initial list of nodes in the timeline.</p></li>
+<li><p><strong>nodes</strong> (list of <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>) – The initial list of <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> instances in the timeline.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -573,12 +586,21 @@ This value is inclusive.</p></li>
 <dl class="method">
 <dt id="summarization.timeline.Timeline.add">
 <code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">timestamp=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.Timeline.add" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add documents to a node.
-This function first tries to identify if there is an active node.
-If there isn’t, it tries to find a node that can absorb the documents.
-This process is performed in reverse.
-If it doesn’t, a new node is created.</p>
-<p>All arguments and keyword arguments are passed on to the <a class="reference internal" href="#summarization.timeline.nodes.Node.add" title="summarization.timeline.nodes.Node.add"><code class="xref py py-func docutils literal notranslate"><span class="pre">add()</span></code></a> and <a class="reference internal" href="#summarization.timeline.nodes.Node.similarity" title="summarization.timeline.nodes.Node.similarity"><code class="xref py py-func docutils literal notranslate"><span class="pre">similarity()</span></code></a> methods.</p>
+<dd><p>Add information to a <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> on the timeline.
+This function does not necessarily add a new <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>.
+Instead, there are three cases:</p>
+<ol class="arabic simple">
+<li><p>First, the timeline tries to find a <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> that the timeline created very recently.
+If there is an active <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>, add the information to it.</p></li>
+<li><p>If there isn’t, it goes over the <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> instances backwards to find one that is very similar to the information.
+This function only goes as far back as the <code class="docutils literal notranslate"><span class="pre">max_time</span></code> allows.
+If there is one, add the information to it.</p></li>
+<li><p>If all else fails, create a new <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> with the given information.</p></li>
+</ol>
+<p>All arguments and keyword arguments are passed on to the <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>’s <a class="reference internal" href="#summarization.timeline.nodes.Node.add" title="summarization.timeline.nodes.Node.add"><code class="xref py py-func docutils literal notranslate"><span class="pre">add()</span></code></a> and <a class="reference internal" href="#summarization.timeline.nodes.Node.similarity" title="summarization.timeline.nodes.Node.similarity"><code class="xref py py-func docutils literal notranslate"><span class="pre">similarity()</span></code></a> methods.
+That means the input to this function depends on the type of <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> that the timeline accepts.
+Only the <code class="docutils literal notranslate"><span class="pre">timestamp</span></code> parameter belongs to this function.
+If no <code class="docutils literal notranslate"><span class="pre">timestamp</span></code> is given, the current time is used instead.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>timestamp</strong> (<em>float</em>) – The current timestamp.
@@ -590,10 +612,10 @@ If the timestamp is not given, the current time is used.</p>
 <dl class="method">
 <dt id="summarization.timeline.Timeline.to_array">
 <code class="sig-name descname">to_array</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.Timeline.to_array" title="Permalink to this definition">¶</a></dt>
-<dd><p>Export the timeline as an associative array.</p>
+<dd><p>Export the <a class="reference internal" href="#summarization.timeline.Timeline" title="summarization.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a> as an associative array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The timeline as an associative array.</p>
+<dd class="field-odd"><p>The <a class="reference internal" href="#summarization.timeline.Timeline" title="summarization.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a> as an associative array.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>dict</p>
@@ -604,10 +626,10 @@ If the timestamp is not given, the current time is used.</p>
 <dl class="method">
 <dt id="summarization.timeline.Timeline.from_array">
 <em class="property">static </em><code class="sig-name descname">from_array</code><span class="sig-paren">(</span><em class="sig-param">array</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.Timeline.from_array" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create an instance of the timeline from the given associative array.</p>
+<dd><p>Create a <a class="reference internal" href="#summarization.timeline.Timeline" title="summarization.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a> instance from the given associative array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>array</strong> (<em>dict</em>) – The associative array with the attributes to create the timeline.</p>
+<dd class="field-odd"><p><strong>array</strong> (<em>dict</em>) – The associative array with the attributes to create the <a class="reference internal" href="#summarization.timeline.Timeline" title="summarization.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a>.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A new instance of the timeline with the same attributes stored in the object.</p>

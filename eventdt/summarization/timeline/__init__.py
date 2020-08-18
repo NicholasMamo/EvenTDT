@@ -22,27 +22,41 @@ from objects.exportable import Exportable
 
 class Timeline(Exportable):
 	"""
-	The timeline stores a list of nodes and provides functionality to convert them into summaries.
-	More importantly, the timeline provides functionality to construct the timeline.
-	This includes redundancy management.
+	The :class:`~summarization.timeline.Timeline` is a rather simple class that stores a list of :class:`~summarization.timeline.nodes.Node` instances.
+	In spite of its simplicity, the :class:`~summarization.timeline.Timeline` class hides a lot of functionality.
 
-	Incoming documents are added automatically to the latest node if it has not expired.
-	At any time, the timeline only ever has one non-expired, or active, node.
-	If there are no active nodes, the incoming documents can either be absorbed by an expired node, or go into a new node.
+	Generally, only the constructor (:func:`~summarization.timeline.Timeline.__init__`) and the :func:`~summarization.timeline.Timeline.add` function are used.
+	The latter is responsible for identifying whether there is a need to add a new :class:`~summarization.timeline.nodes.Node` or whether the latest information should go into the latest :class:`~summarization.timeline.nodes.Node`.
+	The decision is based on parameters set when instantiating the :class:`~summarization.timeline.Timeline`:
 
-	:ivar nodes: The list of nodes in the timeline.
+	- The ``expiry`` parameter controls the time that must elapse before a :class:`~summarization.timeline.nodes.Node` is no longer active.
+	  Inactive nodes do not automatically absorb new information.
+	- The ``min_similarity`` parameter is the minimum similarity between the new information and an old :class:`~summarization.timeline.nodes.Node` for the :class:`~summarization.timeline.nodes.Node` to absorb that information.
+	- The ``max_time`` parameter is the time that must elapse before an old :class:`~summarization.timeline.nodes.Node` is definitively retired.
+	  Retired :class:`~summarization.timeline.nodes.Node` instances cannot change.
+
+	At any time, the timeline only ever has one active :class:`~summarization.timeline.nodes.Node`.
+	If there is not an active :class:`~summarization.timeline.nodes.Node` instances, the incoming information can either be absorbed by an expired :class:`~summarization.timeline.nodes.Node`, or go into a new :class:`~summarization.timeline.nodes.Node`.
+
+	Note that what information means is vague.
+	The :class:`~summarization.timeline.Timeline` always has one type of :class:`~summarization.timeline.nodes.Node`, and each :class:`~summarization.timeline.nodes.Node` accepts different kind of information.
+	For example, the :class:`~summarization.timeline.nodes.document_node.DocumentNode` is made up of :class:`~nlp.document.Document` instances.
+	The type of :class:`~summarization.timeline.nodes.Node` is set using the ``node_type`` parameter when instantiating the :class:`~summarization.timeline.Timeline`.
+	This class automatically creates the appropriate :class:`~summarization.timeline.nodes.Node` for you.
+
+	:ivar nodes: The list of :class:`~summarization.timeline.nodes.Node` instances in the timeline.
 	:vartype nodes: :class:`~summarization.timeline.nodes.Node`
-	:ivar node_type: The type of nodes to create in the timeline.
+	:ivar node_type: The type of :class:`~summarization.timeline.nodes.Node` to create in the timeline.
 	:vartype node_type: :class:`~summarization.timeline.nodes.Node`
-	:ivar expiry: The time in seconds that it takes for a node to expire.
-				  Expired nodes do not automatically absorb documents.
-				  If the expiry is 0, new documents immediately join a new node unless they are absorbed.
+	:ivar expiry: The time in seconds that it takes for a :class:`~summarization.timeline.nodes.Node` to expire.
+				  Expired :class:`~summarization.timeline.nodes.Node` instances do not automatically absorb documents.
+				  If the expiry is 0, new documents immediately join a new :class:`~summarization.timeline.nodes.Node` unless they are absorbed.
 	:vartype expiry: float
-	:ivar min_similarity: The minimum similarity between incoming documents and a node to be absorbed by it.
+	:ivar min_similarity: The minimum similarity between incoming documents and a :class:`~summarization.timeline.nodes.Node` to be absorbed by it.
 						  This value is inclusive.
-	:vartype similarity: float
-	:ivar max_time: The maximum time in seconds to look back when deciding whether a node should absorb a new topic.
-					The comparison is made with the node's `created_at` instance variable.
+	:vartype min_similarity: float
+	:ivar max_time: The maximum time in seconds to look back when deciding whether a :class:`~summarization.timeline.nodes.Node` should absorb a new topic.
+					The comparison is made with the :class:`~summarization.timeline.nodes.Node`'s `created_at` instance variable.
 					This value is inclusive.
 	:vartype max_time: float
 	"""
@@ -51,21 +65,21 @@ class Timeline(Exportable):
 		"""
 		Create the timeline with an empty set of nodes.
 
-		:param node_type: The type of nodes to create in the timeline.
+		:param node_type: The type of :class:`~summarization.timeline.nodes.Node` to create in the timeline.
 		:type node_type: :class:`~summarization.timeline.nodes.Node`
-		:param expiry: The time in seconds that it takes for a node to expire.
-					   Expired nodes do not automatically absorb documents.
-					   If the expiry is 0, new documents immediately join a new node unless they are absorbed.
+		:param expiry: The time in seconds that it takes for a :class:`~summarization.timeline.nodes.Node` to expire.
+					   Expired :class:`~summarization.timeline.nodes.Node` instances do not automatically absorb documents.
+					   If the expiry is 0, new documents immediately join a new :class:`~summarization.timeline.nodes.Node` unless they are absorbed.
 		:type expiry: float
-		:param min_similarity: The minimum similarity between incoming documents and a node to be absorbed by it.
-							   This value is inclusive.
-		:type similarity: float
-		:param max_time: The maximum time in seconds to look back when deciding whether a node should absorb a new topic.
-						 The comparison is made with the node's `created_at` instance variable.
+		:param min_similarity: The minimum similarity between incoming documents and a :class:`~summarization.timeline.nodes.Node` to be absorbed by it.
+							  This value is inclusive.
+		:type min_similarity: float
+		:param max_time: The maximum time in seconds to look back when deciding whether a :class:`~summarization.timeline.nodes.Node` should absorb a new topic.
+						 The comparison is made with the :class:`~summarization.timeline.nodes.Node`'s `created_at` instance variable.
 						 This value is inclusive.
 		:type max_time: float
-		:param nodes: The initial list of nodes in the timeline.
-		:type nodes: :class:`~summarization.timeline.nodes.Node`
+		:param nodes: The initial list of :class:`~summarization.timeline.nodes.Node` instances in the timeline.
+		:type nodes: list of :class:`~summarization.timeline.nodes.Node`
 
 		:raises ValueError: When the expiry is negative.
 		:raises ValueError: When the minimum similarity is not between 0 and 1.
@@ -89,13 +103,21 @@ class Timeline(Exportable):
 
 	def add(self, timestamp=None, *args, **kwargs):
 		"""
-		Add documents to a node.
-		This function first tries to identify if there is an active node.
-		If there isn't, it tries to find a node that can absorb the documents.
-		This process is performed in reverse.
-		If it doesn't, a new node is created.
+		Add information to a :class:`~summarization.timeline.nodes.Node` on the timeline.
+		This function does not necessarily add a new :class:`~summarization.timeline.nodes.Node`.
+		Instead, there are three cases:
 
-		All arguments and keyword arguments are passed on to the :func:`~summarization.timeline.nodes.Node.add` and :func:`~summarization.timeline.nodes.Node.similarity` methods.
+		1. First, the timeline tries to find a :class:`~summarization.timeline.nodes.Node` that the timeline created very recently.
+		   If there is an active :class:`~summarization.timeline.nodes.Node`, add the information to it.
+		2. If there isn't, it goes over the :class:`~summarization.timeline.nodes.Node` instances backwards to find one that is very similar to the information.
+		   This function only goes as far back as the ``max_time`` allows.
+		   If there is one, add the information to it.
+		3. If all else fails, create a new :class:`~summarization.timeline.nodes.Node` with the given information.
+
+		All arguments and keyword arguments are passed on to the :class:`~summarization.timeline.nodes.Node`'s :func:`~summarization.timeline.nodes.Node.add` and :func:`~summarization.timeline.nodes.Node.similarity` methods.
+		That means the input to this function depends on the type of :class:`~summarization.timeline.nodes.Node` that the timeline accepts.
+		Only the ``timestamp`` parameter belongs to this function.
+		If no ``timestamp`` is given, the current time is used instead.
 
 		:param timestamp: The current timestamp.
 						  If the timestamp is not given, the current time is used.
@@ -128,7 +150,7 @@ class Timeline(Exportable):
 
 	def _create(self, created_at, *args, **kwargs):
 		"""
-		Create a new node on the timeline.
+		Create a new :class:`~summarization.timeline.nodes.Node` on the timeline.
 		Any arguments and keyword arguments are passed on to the :func:`~summarization.timeline.nodes.Node.__init__` method.
 
 		:param created_at: The timestamp when the node was created.
@@ -142,9 +164,9 @@ class Timeline(Exportable):
 
 	def to_array(self):
 		"""
-		Export the timeline as an associative array.
+		Export the :class:`~summarization.timeline.Timeline` as an associative array.
 
-		:return: The timeline as an associative array.
+		:return: The :class:`~summarization.timeline.Timeline` as an associative array.
 		:rtype: dict
 		"""
 
@@ -159,9 +181,9 @@ class Timeline(Exportable):
 	@staticmethod
 	def from_array(array):
 		"""
-		Create an instance of the timeline from the given associative array.
+		Create a :class:`~summarization.timeline.Timeline` instance from the given associative array.
 
-		:param array: The associative array with the attributes to create the timeline.
+		:param array: The associative array with the attributes to create the :class:`~summarization.timeline.Timeline`.
 		:type array: dict
 
 		:return: A new instance of the timeline with the same attributes stored in the object.
