@@ -4,14 +4,6 @@ Each consumer dequeues the accumulated data and performs some processing on it.
 
 There is one class that is the base of all consumers: the basic :class:`~queues.consumers.Consumer`
 From it stem all other consumers, including the :class:`~queues.consumers.buffered_consumer.BufferedConsumer`.
-
-All consumers follow a simple workflow.
-After being initialized with a :class:`~queues.Queue` that supplies data, the consumer run using the :func:`~queues.consumers.Consumer.run` function.
-
-Consumers have two other state variables apart from the :class:`~queues.Queue`: the ``active`` and ``stopped`` variables.
-The ``active`` variable indicates whether the consumer is still accepting objects.
-The ``stopped`` variable indicates whether the consumer has finished consuming all objects.
-Generally, consumers keep accepting objects until the ``active`` variable is disabled, at which point they process the last objects and set the ``stopped`` flag to ``True``.
 """
 
 from abc import ABC, abstractmethod
@@ -28,10 +20,16 @@ from queue import Queue
 
 class Consumer(ABC):
 	"""
-	The abstract Consumer class outlines the necessary functions of a consumer.
-	It also defines the state of the consumer.
+	The abstract :class:`~queues.consumers.Consumer` class outlines the necessary functions of any consumer.
+	All consumers follow a simple workflow.
+	After being initialized with a :class:`~queues.Queue` that supplies data, the consumer run using the :func:`~queues.consumers.Consumer.run` function.
 
-	:ivar queue: The queue that is to be consumed.
+	Consumers have two other state variables apart from the :class:`~queues.Queue`: the ``active`` and ``stopped`` variables.
+	The ``active`` variable indicates whether the consumer is still accepting objects.
+	The ``stopped`` variable indicates whether the consumer has finished consuming all objects.
+	Generally, consumers keep accepting objects until the ``active`` variable is disabled, at which point they process the last objects and set the ``stopped`` flag to ``True``.
+
+	:ivar queue: The :class:`~queues.Queue` that is to be consumed.
 	:vartype queue: :class:`~queues.Queue`
 	:ivar active: A boolean indicating whether the consumer is still accepting data.
 	:vartype active: bool
@@ -41,7 +39,7 @@ class Consumer(ABC):
 
 	def __init__(self, queue):
 		"""
-		Initialize the Consumer with its queue.
+		Initialize the consumer with its :class:`~queues.Queue`.
 
 		:param queue: The queue that will be consumed.
 		:vartype queue: :class:`~queues.Queue`
@@ -53,19 +51,25 @@ class Consumer(ABC):
 
 	async def run(self, wait=0, max_inactivity=-1, *args, **kwargs):
 		"""
-		Invoke the consume method.
-		Since some listeners have a small delay, the consumer may wait a bit before starting to consume input.
+		Update the flags to indicate that the consumer is running and start consuming the :class:`~queues.Queue`.
 
-		Any additional arguments and keyword arguments are passed on to the :func:`~queues.consumers.consumer.Consumer._consume` function.
+		If the :class:`~queues.Queue` is being populated by a :class:`~twitter.file.FileReader`, there might be an initial delay until the :class:`~queues.Queue` receives any data.
+		This is because the :class:`~twitter.file.FileReader` supports skipping tweets, which introduces some latency.
+		When skipping a lot of time or lines, this latency can get very large.
+		You can use the ``wait`` parameter to delay running the consumer by a few seconds to wait for the :class:`~twitter.file.FileReader` to finish skipping part of the corpus.
 
-		:param wait: The time in seconds to wait until starting to consume the event.
-					 This is used when the file listener spends a lot of time skipping tweets.
+		In addition, corpora may be sparse with periods of time during which little data is fed to the consumer.
+		This can also happen when the :class:`~twitter.listeners.TweetListener` fails to collect tweets because of errors in the Twitter API.
+		The ``max_inactivity`` parameter is the allowance, in seconds, for how long the consumer should wait without receiving input before it decides no more data will arrive and stop.
+
+		:param wait: The time, in seconds, to wait until starting to consume the :class:`~queues.Queue`.
+					 This is used when the :class:`~twitter.file.FileReader` spends a lot of time skipping tweets.
 		:type wait: int
-		:param max_inactivity: The maximum time in seconds to wait idly without input before stopping.
-							   If it is negative, the consumer keeps waiting for input until the maximum time expires.
+		:param max_inactivity: The maximum time, in seconds, to wait idly without input before stopping the consumer.
+							   If it is negative, the consumer keeps waiting for input indefinitely.
 		:type max_inactivity: int
 
-		:return: The output of the consume method.
+		:return: The output of the consumer, if any, as a tuple.
 		:rtype: any
 		"""
 
@@ -79,11 +83,12 @@ class Consumer(ABC):
 
 	def stop(self):
 		"""
-		Set a flag to stop accepting new objects.
+		Set a flag to stop accepting new tweets.
 
 		.. note::
-			Contrary to the name of the function, the function sets the `active` flag, not the `stopped` flag.
-			This function merely asks that the consumer stops accepting new objects for processing.
+			Contrary to the name of the function, the function sets the ``active`` flag to ``False``, not the ``stopped`` flag to ``True``.
+			This function merely asks the consumer to stop accepting new tweets for processing.
+			When the consumer actually stops, after it finishes processing whatever tweets it has, it sets the ``stopped`` flag to ``True`` itself.
 		"""
 
 		self.active = False

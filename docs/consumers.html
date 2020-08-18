@@ -320,21 +320,20 @@ After this function call, the <a class="reference internal" href="#queues.Queue"
 Each consumer dequeues the accumulated data and performs some processing on it.</p>
 <p>There is one class that is the base of all consumers: the basic <a class="reference internal" href="#queues.consumers.Consumer" title="queues.consumers.Consumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code></a>
 From it stem all other consumers, including the <a class="reference internal" href="#queues.consumers.buffered_consumer.BufferedConsumer" title="queues.consumers.buffered_consumer.BufferedConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">BufferedConsumer</span></code></a>.</p>
-<p>All consumers follow a simple workflow.
+<dl class="class">
+<dt id="queues.consumers.Consumer">
+<em class="property">class </em><code class="sig-name descname">Consumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.Consumer" title="Permalink to this definition">¶</a></dt>
+<dd><p>The abstract <a class="reference internal" href="#queues.consumers.Consumer" title="queues.consumers.Consumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code></a> class outlines the necessary functions of any consumer.
+All consumers follow a simple workflow.
 After being initialized with a <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> that supplies data, the consumer run using the <a class="reference internal" href="#queues.consumers.Consumer.run" title="queues.consumers.Consumer.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a> function.</p>
 <p>Consumers have two other state variables apart from the <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>: the <code class="docutils literal notranslate"><span class="pre">active</span></code> and <code class="docutils literal notranslate"><span class="pre">stopped</span></code> variables.
 The <code class="docutils literal notranslate"><span class="pre">active</span></code> variable indicates whether the consumer is still accepting objects.
 The <code class="docutils literal notranslate"><span class="pre">stopped</span></code> variable indicates whether the consumer has finished consuming all objects.
 Generally, consumers keep accepting objects until the <code class="docutils literal notranslate"><span class="pre">active</span></code> variable is disabled, at which point they process the last objects and set the <code class="docutils literal notranslate"><span class="pre">stopped</span></code> flag to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
-<dl class="class">
-<dt id="queues.consumers.Consumer">
-<em class="property">class </em><code class="sig-name descname">Consumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.Consumer" title="Permalink to this definition">¶</a></dt>
-<dd><p>The abstract Consumer class outlines the necessary functions of a consumer.
-It also defines the state of the consumer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>queue</strong> (<a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that is to be consumed.</p></li>
+<li><p><strong>queue</strong> (<a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> that is to be consumed.</p></li>
 <li><p><strong>active</strong> (<em>bool</em>) – A boolean indicating whether the consumer is still accepting data.</p></li>
 <li><p><strong>stopped</strong> (<em>bool</em>) – A boolean indicating whether the consumer has finished processing.</p></li>
 </ul>
@@ -343,7 +342,7 @@ It also defines the state of the consumer.</p>
 <dl class="method">
 <dt id="queues.consumers.Consumer.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.Consumer.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize the Consumer with its queue.</p>
+<dd><p>Initialize the consumer with its <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>queue</strong> – The queue that will be consumed.</p>
@@ -354,20 +353,25 @@ It also defines the state of the consumer.</p>
 <dl class="method">
 <dt id="queues.consumers.Consumer.run">
 <em class="property">async </em><code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">wait=0</em>, <em class="sig-param">max_inactivity=-1</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.Consumer.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>Invoke the consume method.
-Since some listeners have a small delay, the consumer may wait a bit before starting to consume input.</p>
-<p>Any additional arguments and keyword arguments are passed on to the <code class="xref py py-func docutils literal notranslate"><span class="pre">_consume()</span></code> function.</p>
+<dd><p>Update the flags to indicate that the consumer is running and start consuming the <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>.</p>
+<p>If the <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> is being populated by a <a class="reference internal" href="twitter.html#twitter.file.FileReader" title="twitter.file.FileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileReader</span></code></a>, there might be an initial delay until the <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> receives any data.
+This is because the <a class="reference internal" href="twitter.html#twitter.file.FileReader" title="twitter.file.FileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileReader</span></code></a> supports skipping tweets, which introduces some latency.
+When skipping a lot of time or lines, this latency can get very large.
+You can use the <code class="docutils literal notranslate"><span class="pre">wait</span></code> parameter to delay running the consumer by a few seconds to wait for the <a class="reference internal" href="twitter.html#twitter.file.FileReader" title="twitter.file.FileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileReader</span></code></a> to finish skipping part of the corpus.</p>
+<p>In addition, corpora may be sparse with periods of time during which little data is fed to the consumer.
+This can also happen when the <code class="xref py py-class docutils literal notranslate"><span class="pre">TweetListener</span></code> fails to collect tweets because of errors in the Twitter API.
+The <code class="docutils literal notranslate"><span class="pre">max_inactivity</span></code> parameter is the allowance, in seconds, for how long the consumer should wait without receiving input before it decides no more data will arrive and stop.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>wait</strong> (<em>int</em>) – The time in seconds to wait until starting to consume the event.
-This is used when the file listener spends a lot of time skipping tweets.</p></li>
-<li><p><strong>max_inactivity</strong> (<em>int</em>) – The maximum time in seconds to wait idly without input before stopping.
-If it is negative, the consumer keeps waiting for input until the maximum time expires.</p></li>
+<li><p><strong>wait</strong> (<em>int</em>) – The time, in seconds, to wait until starting to consume the <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>.
+This is used when the <a class="reference internal" href="twitter.html#twitter.file.FileReader" title="twitter.file.FileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileReader</span></code></a> spends a lot of time skipping tweets.</p></li>
+<li><p><strong>max_inactivity</strong> (<em>int</em>) – The maximum time, in seconds, to wait idly without input before stopping the consumer.
+If it is negative, the consumer keeps waiting for input indefinitely.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The output of the consume method.</p>
+<dd class="field-even"><p>The output of the consumer, if any, as a tuple.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>any</p>
@@ -378,11 +382,12 @@ If it is negative, the consumer keeps waiting for input until the maximum time e
 <dl class="method">
 <dt id="queues.consumers.Consumer.stop">
 <code class="sig-name descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.Consumer.stop" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set a flag to stop accepting new objects.</p>
+<dd><p>Set a flag to stop accepting new tweets.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Contrary to the name of the function, the function sets the <cite>active</cite> flag, not the <cite>stopped</cite> flag.
-This function merely asks that the consumer stops accepting new objects for processing.</p>
+<p>Contrary to the name of the function, the function sets the <code class="docutils literal notranslate"><span class="pre">active</span></code> flag to <code class="docutils literal notranslate"><span class="pre">False</span></code>, not the <code class="docutils literal notranslate"><span class="pre">stopped</span></code> flag to <code class="docutils literal notranslate"><span class="pre">True</span></code>.
+This function merely asks the consumer to stop accepting new tweets for processing.
+When the consumer actually stops, after it finishes processing whatever tweets it has, it sets the <code class="docutils literal notranslate"><span class="pre">stopped</span></code> flag to <code class="docutils literal notranslate"><span class="pre">True</span></code> itself.</p>
 </div>
 </dd></dl>
 
