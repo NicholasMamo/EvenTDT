@@ -1,7 +1,13 @@
 """
-The tweet lisener is based on Tweepy.
-It is used to listen to tweets, processing them as need be when they arrive, until the event ends.
-The behavior of this class collects tweets in bulk, then writes them to an always-open file.
+The :class:`~twitter.listeners.tweet_listener.TweetListener` is based on Tweepy's :class:`tweepy.stream.StreamListener`.
+This listener receives tweets and saves them to file.
+It is not responsible for filtering tweets; that is, the stream settings are set beforehand, and the :class:`~twitter.listeners.tweet_listener.TweetListener` only receives the output from this stream.
+
+The :class:`~twitter.listeners.tweet_listener.TweetListener` accumulates tweets and periodically writes them to a file.
+When the stream closes, it writes the last tweets to the file.
+
+Tweet objects include a lot of attributes, which may not always be required and result in large corpora.
+Therefore this listener also supports attribute filtering, which removes needless data from tweets before saving them to file.
 """
 
 from tweepy.streaming import StreamListener

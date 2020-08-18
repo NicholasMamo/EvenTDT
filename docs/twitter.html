@@ -206,9 +206,13 @@ This function looks for the timestamp in one of two fields:</p>
 These classes automatically connect to the APIs to fetch tweets based on a number of parameters.</p>
 <div class="section" id="module-twitter.listeners.tweet_listener">
 <span id="tweet-listener"></span><h3>Tweet Listener<a class="headerlink" href="#module-twitter.listeners.tweet_listener" title="Permalink to this headline">¶</a></h3>
-<p>The tweet lisener is based on Tweepy.
-It is used to listen to tweets, processing them as need be when they arrive, until the event ends.
-The behavior of this class collects tweets in bulk, then writes them to an always-open file.</p>
+<p>The <a class="reference internal" href="#twitter.listeners.tweet_listener.TweetListener" title="twitter.listeners.tweet_listener.TweetListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">TweetListener</span></code></a> is based on Tweepy’s <code class="xref py py-class docutils literal notranslate"><span class="pre">tweepy.stream.StreamListener</span></code>.
+This listener receives tweets and saves them to file.
+It is not responsible for filtering tweets; that is, the stream settings are set beforehand, and the <a class="reference internal" href="#twitter.listeners.tweet_listener.TweetListener" title="twitter.listeners.tweet_listener.TweetListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">TweetListener</span></code></a> only receives the output from this stream.</p>
+<p>The <a class="reference internal" href="#twitter.listeners.tweet_listener.TweetListener" title="twitter.listeners.tweet_listener.TweetListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">TweetListener</span></code></a> accumulates tweets and periodically writes them to a file.
+When the stream closes, it writes the last tweets to the file.</p>
+<p>Tweet objects include a lot of attributes, which may not always be required and result in large corpora.
+Therefore this listener also supports attribute filtering, which removes needless data from tweets before saving them to file.</p>
 <dl class="class">
 <dt id="twitter.listeners.tweet_listener.TweetListener">
 <em class="property">class </em><code class="sig-name descname">TweetListener</code><span class="sig-paren">(</span><em class="sig-param">f</em>, <em class="sig-param">max_time=3600</em>, <em class="sig-param">attributes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.listeners.tweet_listener.TweetListener" title="Permalink to this definition">¶</a></dt>
