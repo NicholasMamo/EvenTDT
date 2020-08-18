@@ -34,9 +34,7 @@ Queued Tweet Listener
 Readers
 =======
 
-The Twitter package allows you to read in files collected previously.
-
-.. automodule:: twitter.file.reader
+.. automodule:: twitter.file
    :members:
    :special-members:
 

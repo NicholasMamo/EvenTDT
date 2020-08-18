@@ -16,7 +16,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from twitter import *
-from .reader import FileReader
+from twitter.file import FileReader
 
 class SimulatedFileReader(FileReader):
 	"""

@@ -13,8 +13,8 @@ path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
-from .reader import FileReader
 from twitter import *
+from twitter.file import FileReader
 
 class StaggeredFileReader(FileReader):
 	"""
