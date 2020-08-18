@@ -205,7 +205,7 @@ This function looks for the timestamp in one of two fields:</p>
 </dd></dl>
 
 <div class="section" id="module-twitter.listeners">
-<span id="listeners"></span><h2>Listeners<a class="headerlink" href="#module-twitter.listeners" title="Permalink to this headline">¶</a></h2>
+<span id="listeners"></span><span id="twitter-listeners"></span><h2>Listeners<a class="headerlink" href="#module-twitter.listeners" title="Permalink to this headline">¶</a></h2>
 <p>Listeners are used to download corpora in real-time.
 These classes automatically connect to the APIs to fetch tweets based on a number of parameters.</p>
 <div class="section" id="module-twitter.listeners.tweet_listener">
@@ -445,9 +445,11 @@ The keys are the attribute names and the values are the data.</p>
 </div>
 <div class="section" id="module-twitter.file">
 <span id="file-readers"></span><h2>File Readers<a class="headerlink" href="#module-twitter.file" title="Permalink to this headline">¶</a></h2>
-<p>A reader does not collect tweets from Twitter, but reads them from a file.
-The queue and file are given in the constructor.
-Reading can be started asynchronously using the <code class="xref py py-func docutils literal notranslate"><span class="pre">read()</span></code> function.</p>
+<p>File readers emulate the Twitter stream by reading corpora and feeding them into a <a class="reference internal" href="consumers.html#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> so that they can be processed by <a class="reference internal" href="consumers.html#id1"><span class="std std-ref">consumers</span></a>.
+These readers expect that the corpora were collected using a <a class="reference internal" href="#twitter-listeners"><span class="std std-ref">listener</span></a>.
+The input files have one object on each line.</p>
+<p>File readers are useful in evaluation or experimental settings.
+By simulating the Twitter stream, the different file readers can be used to replicate the original, real-time setting of a stream.</p>
 <dl class="class">
 <dt id="twitter.file.FileReader">
 <em class="property">class </em><code class="sig-name descname">FileReader</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">f</em>, <em class="sig-param">max_lines=-1</em>, <em class="sig-param">max_time=-1</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.FileReader" title="Permalink to this definition">¶</a></dt>

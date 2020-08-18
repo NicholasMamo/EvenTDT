@@ -1,7 +1,10 @@
 """
-A reader does not collect tweets from Twitter, but reads them from a file.
-The queue and file are given in the constructor.
-Reading can be started asynchronously using the :func:`~twitter.file.reader.FileReader.read` function.
+File readers emulate the Twitter stream by reading corpora and feeding them into a :class:`~queues.queue.Queue` so that they can be processed by :ref:`consumers <consumers>`.
+These readers expect that the corpora were collected using a :ref:`listener <twitter_listeners>`.
+The input files have one object on each line.
+
+File readers are useful in evaluation or experimental settings.
+By simulating the Twitter stream, the different file readers can be used to replicate the original, real-time setting of a stream.
 """
 
 from abc import ABC, abstractmethod
