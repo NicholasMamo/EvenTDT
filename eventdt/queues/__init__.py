@@ -1,13 +1,20 @@
 """
-Queues are first in, first out (FIFO) data structures.
-This implementation is based on lists.
-Queue-specific functionality is introduced as functions.
+EvenTDT collects tweets and processes them.
+In-between collecting and processing, the tweets go into a queue data structure.
+Later on, a :ref:`consumer <consumers>` picks this data and processes it in the same order as it was received.
+This functionality is implemented in a special class: the :class:`~queues.Queue`.
+
+The Queue Class
+===============
+
+The :class:`~queues.Queue` is a first in, first out (FIFO) data structure.
+In EvenTDT, this implementation is based on lists and queue-specific functionality is introduced as functions.
 """
 
 class Queue(object):
 	"""
-	The queue data structure is based on a list.
-	The queue can take in any kind of data, including other queues.
+	The :class:`~queues.Queue` data structure encapsulates a list with additional functions that mimick the workings of a queue.
+	The :class:`~queues.Queue` can take in any kind of data, including other :class:`~queues.Queue` instances.
 	New elements are added to the queue at the end.
 
 	:ivar queue: The queue data structure.

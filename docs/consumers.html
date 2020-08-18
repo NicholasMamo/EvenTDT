@@ -96,7 +96,7 @@
 <li class="toctree-l1"><a class="reference internal" href="summarization.html">7. Summarization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="twitter.html">8. Twitter</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">9. Consumers</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#queues">Queues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-queue-class">The Queue Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#id1">Consumers</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module-queues.consumers.print_consumer">Simple Consumers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-queues.consumers.eld_consumer">Algorithms</a></li>
@@ -173,15 +173,14 @@
             
     <div class="section" id="consumers">
 <h1>9. Consumers<a class="headerlink" href="#consumers" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="queues">
-<h2>Queues<a class="headerlink" href="#queues" title="Permalink to this headline">¶</a></h2>
-<p>EvenTDT collects tweets and processes them.
+<span class="target" id="module-queues"></span><p>EvenTDT collects tweets and processes them.
 In-between collecting and processing, the tweets go into a queue data structure.
-In this way, the consumers can process the data in the same order as it was received.
-The queue functionality is a special class.</p>
-<span class="target" id="module-queues.queue"></span><p>Queues are first in, first out (FIFO) data structures.
-This implementation is based on lists.
-Queue-specific functionality is introduced as functions.</p>
+Later on, a <a class="reference internal" href="#id1"><span class="std std-ref">consumer</span></a> picks this data and processes it in the same order as it was received.
+This functionality is implemented in a special class: the <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>.</p>
+<div class="section" id="the-queue-class">
+<h2>The Queue Class<a class="headerlink" href="#the-queue-class" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> is a first in, first out (FIFO) data structure.
+In EvenTDT, this implementation is based on lists and queue-specific functionality is introduced as functions.</p>
 <dl class="class">
 <dt id="queues.Queue">
 <em class="property">class </em><code class="sig-name descname">Queue</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.Queue" title="Permalink to this definition">¶</a></dt>
@@ -190,7 +189,7 @@ The queue can take in any kind of data, including other queues.
 New elements are added to the queue at the end.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#module-queues.queue" title="queues.queue"><strong>queue</strong></a> (<em>list</em>) – The queue data structure.</p>
+<dd class="field-odd"><p><strong>queue</strong> (<em>list</em>) – The queue data structure.</p>
 </dd>
 </dl>
 <dl class="method">
@@ -318,7 +317,7 @@ It also defines the state of the consumer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#module-queues.queue" title="queues.queue"><strong>queue</strong></a> (<a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that is to be consumed.</p></li>
+<li><p><strong>queue</strong> (<a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that is to be consumed.</p></li>
 <li><p><strong>active</strong> (<em>bool</em>) – A boolean indicating whether the consumer is still accepting data.</p></li>
 <li><p><strong>stopped</strong> (<em>bool</em>) – A boolean indicating whether the consumer has finished processing.</p></li>
 </ul>
