@@ -67,7 +67,7 @@ class TweetListener(StreamListener):
 	def __init__(self, f, max_time=3600, attributes=None):
 		"""
 		Create the listener.
-		Simultaneously set the file, the list of tweets and the number of processed tweets.
+		Simultaneously set the file and the list of tweets.
 		By default, the stream continues processing for an hour.
 
 		:param f: The opened file pointer where to write the tweets.
@@ -93,7 +93,7 @@ class TweetListener(StreamListener):
 
 		.. note::
 
-			At this point, tweets are already JSON dictionaries and have a newline symbol at the end.
+			At this point, tweets are already JSON dictionaries and have a newline character at the end.
 			Since each tweet is a string representing a line, this function only concatenates these lines together.
 		"""
 
@@ -105,8 +105,14 @@ class TweetListener(StreamListener):
 		When the listener receives tweets, add them to a list.
 		If there are many tweets, save them to file and reset the list of tweets.
 
+		When the function adds tweets to the list, they are strings, ready to be saved by the :func:`~twitter.listeners.tweet_listener.TweetListener.flush` function.
+		That means they are JSON-encoded strings with a newline character at the end.
+
+		This function also checks if the listener has been listening for tweets for a long time.
+		If it exceeds the ``max_time``, the function returns ``False`` so that the stream ends.
+
 		:param data: The received data.
-		:type data: listener
+		:type data: str
 
 		:return: A boolean indicating if the listener has finished reading tweets.
 				 It is set to ``True`` normally.

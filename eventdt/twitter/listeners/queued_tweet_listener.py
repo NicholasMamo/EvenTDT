@@ -21,26 +21,34 @@ from logger import logger
 
 class QueuedTweetListener(StreamListener):
 	"""
-	The queued listener diverges enough from the :class:`~twitter.listener.TweetListener` that it is built from the ground up.
-	Incoming tweets are not added to a queue.
+	The :class:`~twitter.listeners.queued_tweet_listener.QueuedTweetListener` handles the tweets that the stream sends.
+	It does not configure the stream, but only processes the tweets it sends.
+
+	The :class:`~twitter.listeners.queued_tweet_listener.QueuedTweetListener` differs from the :class:`~twitter.listeners.tweet_listener.TweetListener` because it adds these tweets to a :class:`~queues.queue.Queue` instead of saving them to a file
+	Therefore the class maintains the :class:`~queues.queue.Queue` as part of its state.
+
+	Although listeners do not control the stream's specifications, they can stop it.
+	The :class:`~twitter.listeners.queued_tweet_listener.QueuedTweetListener` receives the ``max_time`` parameter which specifies, in seconds, the time to spend receiving tweets.
+	The :func:`~twitter.listeners.queued_tweet_listener.QueuedTweetListener.on_data` function stops the stream when it receives a tweet after this time expires.
+
+	Like the :class:`~twitter.listeners.tweet_listener.TweetListener`, the :class:`~twitter.listeners.queued_tweet_listener.QueuedTweetListener` can also filter tweets by removing certain attributes.
+	The attributes that should be retained are specified using the ``attributes`` parameter and are saved as part of the class' state.
 
 	:ivar queue: The queue to which to add incoming tweets.
 	:vartype queue: :class:`~queues.queue.Queue`
-	:ivar tweets: The list of read tweets that have not been written to file yet.
-	:vartype tweets: list
 	:ivar max_time: The maximum time in seconds to spend reading the file.
 	:vartype max_time: int
 	:ivar start: The timestamp when the listener started waiting for tweets.
 	:vartype start: int
 	:ivar attributes: The attributes to save from each tweet.
-					  If `None` is given, the entire tweet objects are saved.
+					  If ``None`` is given, the entire tweet objects are saved.
 	:vartype attributes: list of str or None
 	"""
 
 	def __init__(self, queue, max_time=3600, attributes=None):
 		"""
 		Create the listener.
-		Simultaneously set the queue, the list of tweets and the number of processed tweets.
+		Simultaneously set the queue.
 		By default, the stream continues processing for an hour.
 
 		:param queue: The queue to which to add incoming tweets.
@@ -48,7 +56,7 @@ class QueuedTweetListener(StreamListener):
 		:param max_time: The maximum time in seconds to spend reading the file.
 		:type max_time: int
 		:param attributes: The attributes to save from each tweet.
-						   If `None` is given, the entire tweet objects are saved.
+						   If ``None`` is given, the entire tweet objects are saved.
 		:type attributes: list of str or None
 		"""
 
@@ -59,16 +67,19 @@ class QueuedTweetListener(StreamListener):
 
 	def on_data(self, data):
 		"""
-		When tweets are received, add them to a list.
-		If there are many tweets, save them to file and reset the list of tweets.
-		The override flag indicates whether the function should skip checking if the tweet is valid.
+		When the listener receives tweets, add them to the queue immediately after filtering out any attributes that are not required.
+		When the function adds tweets to the list, they are dictionaries, ready to be processed by the consumer.
 
-		Data is added as a dictionary to the queue.
+		This function also checks if the listener has been listening for tweets for a long time.
+		If it exceeds the ``max_time``, the function returns ``False`` so that the stream ends.
 
 		:param data: The received data.
 		:type data: str
 
 		:return: A boolean indicating if the listener has finished reading tweets.
+				 It is set to ``True`` normally.
+				 When the elapsed time exceeds the ``max_time`` parameter, the :class:`~twitter.listeners.tweet_listener.TweetListener` returns ``False``.
+				 This instructs the stream to stop receiving tweets.
 		:rtype: bool
 		"""
 
