@@ -2,8 +2,6 @@
 The print consumer outputs the queue's elements as they arrive.
 """
 
-from .consumer import Consumer
-
 import asyncio
 import json
 import os
@@ -15,6 +13,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from logger import logger
+from queues.consumers import Consumer
 
 class PrintConsumer(Consumer):
 	"""

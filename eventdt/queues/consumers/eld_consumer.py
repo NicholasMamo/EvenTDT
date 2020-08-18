@@ -26,7 +26,7 @@ path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
-from .consumer import Consumer
+from queues.consumers import Consumer
 
 from apd.participant_detector import ParticipantDetector
 from apd.extractors.local.entity_extractor import EntityExtractor

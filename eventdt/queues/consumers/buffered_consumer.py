@@ -14,7 +14,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from queues import Queue
-from .consumer import Consumer
+from queues.consumers import Consumer
 
 import twitter
 

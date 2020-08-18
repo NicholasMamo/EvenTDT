@@ -475,7 +475,7 @@ The arguments and keyword arguments should be the command-line arguments.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>understanding</strong> (<em>str</em>) – The path to the file containing the event’s understanding.</p></li>
-<li><p><strong>consumer</strong> (<a class="reference internal" href="consumers.html#queues.consumers.consumer.Consumer" title="queues.consumers.consumer.Consumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code></a>) – The type of consumer to use.</p></li>
+<li><p><strong>consumer</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code>) – The type of consumer to use.</p></li>
 <li><p><strong>max_inactivity</strong> (<em>int</em>) – The maximum time, in seconds, to wait for new tweets to arrive before stopping.</p></li>
 <li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The scheme to use when consuming the file.</p></li>
 </ul>
@@ -506,7 +506,7 @@ The arguments and keyword arguments should be the command-line arguments.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>file</strong> (<em>str</em>) – The path to the file containing the event’s tweets.</p></li>
-<li><p><strong>consumer</strong> (<a class="reference internal" href="consumers.html#queues.consumers.consumer.Consumer" title="queues.consumers.consumer.Consumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code></a>) – The type of consumer to use.</p></li>
+<li><p><strong>consumer</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code>) – The type of consumer to use.</p></li>
 <li><p><strong>speed</strong> (<em>float</em>) – The speed with which to read the file.</p></li>
 <li><p><strong>max_inactivity</strong> (<em>int</em>) – The maximum time, in seconds, to wait for new tweets to arrive before stopping.</p></li>
 <li><p><strong>max_time</strong> (<em>int</em>) – The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.</p></li>
@@ -553,7 +553,7 @@ The arguments and keyword arguments should be the command-line arguments.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>comm</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">multiprocessing.managers.DictProxy</span></code>) – The dictionary used by the understanding process to communicate data back to the main loop.</p></li>
 <li><p><strong>loop</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.unix_events._UnixSelectorEventLoop</span></code>) – The main event loop.</p></li>
-<li><p><strong>consumer</strong> (<a class="reference internal" href="consumers.html#queues.consumers.consumer.Consumer" title="queues.consumers.consumer.Consumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code></a>) – The consumer to use to process tweets.</p></li>
+<li><p><strong>consumer</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code>) – The consumer to use to process tweets.</p></li>
 <li><p><strong>max_inactivity</strong> (<em>int</em>) – The maximum time, in seconds, to wait for new tweets to arrive before stopping.</p></li>
 </ul>
 </dd>
@@ -569,7 +569,7 @@ The arguments and keyword arguments should be the command-line arguments.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>comm</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">multiprocessing.managers.DictProxy</span></code>) – The dictionary used by the consumption process to communicate data back to the main loop.</p></li>
 <li><p><strong>loop</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.unix_events._UnixSelectorEventLoop</span></code>) – The main event loop.</p></li>
-<li><p><strong>consumer</strong> (<a class="reference internal" href="consumers.html#queues.consumers.consumer.Consumer" title="queues.consumers.consumer.Consumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code></a>) – The consumer to use to process tweets.</p></li>
+<li><p><strong>consumer</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code>) – The consumer to use to process tweets.</p></li>
 <li><p><strong>max_inactivity</strong> (<em>int</em>) – The maximum time, in seconds, to wait for new tweets to arrive before stopping.</p></li>
 </ul>
 </dd>
