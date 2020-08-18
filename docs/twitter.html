@@ -709,16 +709,49 @@ After finishing reading, set the <code class="docutils literal notranslate"><spa
 These functions are not meant to be complete solutions to any problem, but they can be used to quickly make sense of corpora or otherwise modify them using simple operations.</p>
 <div class="section" id="module-twitter.corpus.aggregate">
 <span id="aggregation"></span><h3>Aggregation<a class="headerlink" href="#module-twitter.corpus.aggregate" title="Permalink to this headline">¶</a></h3>
-<p>Functions to aggregate Twitter corpora.
-This can be used to create volume time-series, for example.
-Other aggregation functions can be provided.</p>
+<p>Aggregation functions are quick solutions to group tweets.
+These can be used to create tweet volume time-series quickly, for example.</p>
 <dl class="function">
 <dt id="twitter.corpus.aggregate.aggregate">
 <code class="sig-name descname">aggregate</code><span class="sig-paren">(</span><em class="sig-param">corpus</em>, <em class="sig-param">agg</em>, <em class="sig-param">bin_size=60</em>, <em class="sig-param">track=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.corpus.aggregate.aggregate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Aggregate the given corpus.
+<dd><p>Aggregate the given corpus, binning the tweets according to the when they were published.
 The tracking keywords as well as any other arguments or keyword arguments are passed on to the aggregation function.</p>
 <p>The function is data-agnostic in terms of whether it receives tweets or not.
 However in order to bin tweets, the function expects that there is a <code class="docutils literal notranslate"><span class="pre">timestamp_ms</span></code> or <code class="docutils literal notranslate"><span class="pre">created_at</span></code> attribute in each object.</p>
+<p>In addition, the aggregation function needs to be specified using the <code class="docutils literal notranslate"><span class="pre">agg</span></code> parameter.
+Aggregation functions receive as input:</p>
+<ul class="simple">
+<li><p>A list of tweets as dictionaries, and</p></li>
+<li><p>The keyword which is being aggregated.</p></li>
+</ul>
+<p>They return a value, or a score for the keyword’s bin at a particular timestamp.
+For example, a simple volume-based aggregation function could look like the following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">volume</span><span class="p">(</span><span class="n">tweets</span><span class="p">,</span> <span class="n">keyword</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Count the number of tweets that mention the given keyword.</span>
+<span class="sd">  If no keyword is given, all tweets are counted.</span>
+
+<span class="sd">  :param tweets: The list of tweets in the bin.</span>
+<span class="sd">  :type tweets: list of dict</span>
+<span class="sd">  :param keyword: The keyword to consider.</span>
+<span class="sd">                                  The function looks for the keyword in the text.</span>
+<span class="sd">                                  If no keyword is given, the number of tweets is returned.</span>
+<span class="sd">  :type keyword: str or None</span>
+
+<span class="sd">  :return: The number of tweets that mention the given keyword.</span>
+<span class="sd">           If no keyword is given, the number of tweets is returned.</span>
+<span class="sd">  :rtype: int</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">if</span> <span class="n">keyword</span><span class="p">:</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">([</span> <span class="n">tweet</span> <span class="k">for</span> <span class="n">tweet</span> <span class="ow">in</span> <span class="n">tweets</span>
+                       <span class="k">if</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">tweet</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">]</span> <span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">tweets</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The aggregation function vary depending on the application.
+However, the return value must always be a float or an integer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
