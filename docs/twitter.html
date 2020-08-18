@@ -169,21 +169,20 @@
             
     <div class="section" id="twitter">
 <h1>8. Twitter<a class="headerlink" href="#twitter" title="Permalink to this headline">¶</a></h1>
-<p>The Twitter package is used to facilitate collecting or reading tweets.
-The package itself has functions to help with processing.</p>
-<span class="target" id="module-twitter"></span><p>Functions to process tweets.</p>
+<span class="target" id="module-twitter"></span><p>The Twitter package is used to facilitate collecting, reading and processing tweet corpora.
+At the package-level there are functions to help with general processing tasks.</p>
 <dl class="function">
 <dt id="twitter.extract_timestamp">
 <code class="sig-name descname">extract_timestamp</code><span class="sig-paren">(</span><em class="sig-param">tweet</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.extract_timestamp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the timestamp from the given tweet.
 This function looks for the timestamp in one of two fields:</p>
 <ol class="arabic simple">
-<li><p><cite>timestamp_ms</cite> - present in top-level fields, and</p></li>
-<li><p><cite>created_at</cite> - present in <cite>retweeted_status</cite>, for example.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">timestamp_ms</span></code>: always present in the top-level tweets, and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">created_at</span></code>: present in <cite>retweeted_status</cite>, for example.</p></li>
 </ol>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>tweet</strong> (<em>dict</em>) – The tweet being considered.</p>
+<dd class="field-odd"><p><strong>tweet</strong> (<em>dict</em>) – The tweet from which to extract the timestamp.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The timestamp of the tweet.</p>

@@ -1,5 +1,6 @@
 """
-Functions to process tweets.
+The Twitter package is used to facilitate collecting, reading and processing tweet corpora.
+At the package-level there are functions to help with general processing tasks.
 """
 
 from dateutil.parser import parse
@@ -9,10 +10,10 @@ def extract_timestamp(tweet):
 	Get the timestamp from the given tweet.
 	This function looks for the timestamp in one of two fields:
 
-	1. `timestamp_ms` - present in top-level fields, and
-	2. `created_at` - present in `retweeted_status`, for example.
+	1. ``timestamp_ms``: always present in the top-level tweets, and
+	2. ``created_at``: present in `retweeted_status`, for example.
 
-	:param tweet: The tweet being considered.
+	:param tweet: The tweet from which to extract the timestamp.
 	:type tweet: dict
 
 	:return: The timestamp of the tweet.
@@ -28,4 +29,4 @@ def extract_timestamp(tweet):
 	elif 'created_at' in tweet:
 		return parse(tweet['created_at']).timestamp()
 
-	raise KeyError("Neither 'timestamp_ms' nor 'created_at' could be found in the tweet.")
+	raise KeyError("Neither the 'timestamp_ms' attribute, nor the 'created_at' attribute could be found in the tweet.")

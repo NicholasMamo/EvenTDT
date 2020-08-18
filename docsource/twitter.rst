@@ -6,9 +6,6 @@
    :description: The tweet collection or reading functionality of EvenTDT
    :keywords: Python, TDT, Twitter
 
-The Twitter package is used to facilitate collecting or reading tweets.
-The package itself has functions to help with processing.
-
 .. automodule:: twitter
    :members:
    :special-members:
