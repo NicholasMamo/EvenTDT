@@ -22,22 +22,22 @@ def aggregate(corpus, agg, bin_size=60, track=None, *args, **kwargs):
 	The tracking keywords as well as any other arguments or keyword arguments are passed on to the aggregation function.
 
 	The function is data-agnostic in terms of whether it receives tweets or not.
-	However in order to bin tweets, the function expects that there is a `timestamp_ms` or `created_at` attribute in each object.
+	However in order to bin tweets, the function expects that there is a ``timestamp_ms`` or ``created_at`` attribute in each object.
 
 	:param corpus: The file handle containing the data.
-    :type corpus: :class:`_io.TextIOWrapper`
+	:type corpus: :class:`_io.TextIOWrapper`
 	:param agg: The aggregation function to use.
 	:type agg: function
 	:param bin_size: The length in seconds of each time window.
 	:type bin_size: int
-    :param track: The keywords to aggregate.
+	:param track: The keywords to aggregate.
                   If it is not None, only documents containing the keyword are considered in the aggregation.
-    :type track: None, str or list of str
+	:type track: None, str or list of str
 
 	:return: The tweets in the corpus aggregated into time windows.
 			 The time windows have keys that correspond to the tracking keywords.
 			 Moreover, they have an extra key that corresponds to the aggregation of all tweets, named `*`.
-    :rtype: dict
+	:rtype: dict
 	"""
 
 	bins = { }

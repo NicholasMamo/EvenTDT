@@ -53,3 +53,17 @@ Staggered Reader
 .. automodule:: twitter.file.staggered_reader
    :members:
    :special-members:
+
+Corpus Processing
+=================
+
+.. automodule:: twitter.corpus
+   :members:
+   :special-members:
+
+Aggregation
+-----------
+
+.. automodule:: twitter.corpus.aggregate
+   :members:
+   :special-members:
