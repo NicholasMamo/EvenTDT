@@ -1,5 +1,15 @@
 """
-A buffered consumer processes content in batches.
+The :class:`~queues.consumers.Consumer` is designed to operate in real-time.
+The :class:`~queues.consumers.buffered_consumer.BufferedConsumer` builds on it, but it buffers input before processing.
+Essentially, this buffering step transforms the :class:`~queues.consumers.Consumer` into a windowed approach.
+
+The two :class:`~queues.Queue` instances in the :class:`~queues.consumers.buffered_consumer.BufferedConsumer` have these roles:
+
+- Queue: The normal queue receives input from the :class:`~twitter.file.FileReader` or :class:`~twitter.listener.TweetListener`.
+
+- Buffer: The :class:`~queues.consumers.buffered_consumer.BufferedConsumer` constantly empties the normal queue into the buffer.
+  After every window, the algorithm processes the tweets collected so far in it.
+  While processing, the buffer continuesreceiving new tweets, which will be processed in the next time window.
 """
 
 from abc import ABC, abstractmethod
@@ -20,12 +30,17 @@ import twitter
 
 class BufferedConsumer(Consumer):
 	"""
-	The buffered consumer adds the processing stage apart from the consumption.
-	The :func:`~queues.consumers.buffered_consumer.BufferedConsumer._consume` function function waits until objects become available in the queue.
-	The :func:`~queues.consumers.buffered_consumer.BufferedConsumer._process` function empties this buffer and processes it.
-	The two functions communicate with each other using a common queue, called a buffer.
+	When calling the :func:`~queues.consumers.buffered_consumer.BufferedConsumer.run` function, the :class:`~queues.consumers.buffered_consumer.BufferedConsumer` splits into two processes:
 
-	:ivar periodicity: The time window in seconds of the buffered consumer, or how often it is invoked.
+	1. The consumption simply moves tweets from the :class:`~queues.Queue` into the the buffer, another :class:`~queues.Queue`.
+
+	2. The processing wakes up every time window to process the tweets collectd in the buffer so far.
+	   While processing, the buffer receives new tweets, but these are only processed in the next time window.
+
+	Apart from maintaining the buffer as a :class:`~queues.Queue`, the state also includes the periodicity, or the length of the time window, in seconds.
+	This affects how often the buffer is processed.
+
+	:ivar periodicity: The time window, in seconds, of the buffered consumer, or how often the consumer processes the buffer's contents.
 	:vartype periodicity: int
 	:ivar buffer: The buffer of objects that have to be processed.
 	:vartype buffer: :class:`~queues.Queue`
@@ -37,7 +52,7 @@ class BufferedConsumer(Consumer):
 
 		:param queue: The queue that is consumed.
 		:type queue: :class:`~queues.Queue`
-		:param periodicity: The time window in seconds of the buffered consumer, or how often it is invoked.
+		:param periodicity: The time window, in seconds, of the buffered consumer, or how often the consumer processes the buffer's contents.
 		:type periodicity: int
 		"""
 
@@ -47,9 +62,14 @@ class BufferedConsumer(Consumer):
 
 	async def run(self, wait=0, max_inactivity=-1, *args, **kwargs):
 		"""
-		Invokes the consume and process method.
+		Update the flags to indicate that the consumer is running and start the buffered consumer's two roles:
 
-		Any additional arguments and keyword arguments are passed on to the :class:`~queues.consumers.buffered_consumer.BufferedConsumer._consume` and :class:`~queues.consumers.buffered_consumer.BufferedConsumer._process` functions.
+		1. The consumption simply moves tweets from the :class:`~queues.Queue` into the the buffer, another :class:`~queues.Queue`.
+
+		2. The processing wakes up every time window to process the tweets collectd in the buffer so far.
+		   While processing, the buffer receives new tweets, but these are only processed in the next time window.
+
+		Similarly to the :class:`~queues.consumers.Consumer`, the buffered consumer also accepts the ``wait`` and ``max_inactivity`` parameters.
 
 		:param wait: The time in seconds to wait until starting to understand the event.
 					 This is used when the file listener spends a lot of time skipping documents.
@@ -74,7 +94,6 @@ class BufferedConsumer(Consumer):
 	async def _consume(self, max_inactivity):
 		"""
 		Consume the queue.
-		This function calls for processing in turn.
 
 		:param max_inactivity: The maximum time in seconds to wait idly without input before stopping.
 							   If it is negative, the consumer keeps waiting for input until the maximum time expires.
@@ -110,7 +129,6 @@ class BufferedConsumer(Consumer):
 	async def _sleep(self):
 		"""
 		Sleep until the window is over.
-		At this point, the queue is emptied into a buffer for processing.
 		The function periodically checks if the consumer has been asked to stop.
 		"""
 

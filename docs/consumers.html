@@ -399,18 +399,31 @@ When the consumer actually stops, after it finishes processing whatever tweets i
 
 </dd></dl>
 
-<span class="target" id="module-queues.consumers.buffered_consumer"></span><p>A buffered consumer processes content in batches.</p>
+<span class="target" id="module-queues.consumers.buffered_consumer"></span><p>The <a class="reference internal" href="#queues.consumers.Consumer" title="queues.consumers.Consumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code></a> is designed to operate in real-time.
+The <a class="reference internal" href="#queues.consumers.buffered_consumer.BufferedConsumer" title="queues.consumers.buffered_consumer.BufferedConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">BufferedConsumer</span></code></a> builds on it, but it buffers input before processing.
+Essentially, this buffering step transforms the <a class="reference internal" href="#queues.consumers.Consumer" title="queues.consumers.Consumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code></a> into a windowed approach.</p>
+<p>The two <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> instances in the <a class="reference internal" href="#queues.consumers.buffered_consumer.BufferedConsumer" title="queues.consumers.buffered_consumer.BufferedConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">BufferedConsumer</span></code></a> have these roles:</p>
+<ul class="simple">
+<li><p>Queue: The normal queue receives input from the <a class="reference internal" href="twitter.html#twitter.file.FileReader" title="twitter.file.FileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileReader</span></code></a> or <code class="xref py py-class docutils literal notranslate"><span class="pre">TweetListener</span></code>.</p></li>
+<li><p>Buffer: The <a class="reference internal" href="#queues.consumers.buffered_consumer.BufferedConsumer" title="queues.consumers.buffered_consumer.BufferedConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">BufferedConsumer</span></code></a> constantly empties the normal queue into the buffer.
+After every window, the algorithm processes the tweets collected so far in it.
+While processing, the buffer continuesreceiving new tweets, which will be processed in the next time window.</p></li>
+</ul>
 <dl class="class">
 <dt id="queues.consumers.buffered_consumer.BufferedConsumer">
 <em class="property">class </em><code class="sig-name descname">BufferedConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity=60</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.buffered_consumer.BufferedConsumer" title="Permalink to this definition">¶</a></dt>
-<dd><p>The buffered consumer adds the processing stage apart from the consumption.
-The <code class="xref py py-func docutils literal notranslate"><span class="pre">_consume()</span></code> function function waits until objects become available in the queue.
-The <code class="xref py py-func docutils literal notranslate"><span class="pre">_process()</span></code> function empties this buffer and processes it.
-The two functions communicate with each other using a common queue, called a buffer.</p>
+<dd><p>When calling the <a class="reference internal" href="#queues.consumers.buffered_consumer.BufferedConsumer.run" title="queues.consumers.buffered_consumer.BufferedConsumer.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a> function, the <a class="reference internal" href="#queues.consumers.buffered_consumer.BufferedConsumer" title="queues.consumers.buffered_consumer.BufferedConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">BufferedConsumer</span></code></a> splits into two processes:</p>
+<ol class="arabic simple">
+<li><p>The consumption simply moves tweets from the <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> into the the buffer, another <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>.</p></li>
+<li><p>The processing wakes up every time window to process the tweets collectd in the buffer so far.
+While processing, the buffer receives new tweets, but these are only processed in the next time window.</p></li>
+</ol>
+<p>Apart from maintaining the buffer as a <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>, the state also includes the periodicity, or the length of the time window, in seconds.
+This affects how often the buffer is processed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>periodicity</strong> (<em>int</em>) – The time window in seconds of the buffered consumer, or how often it is invoked.</p></li>
+<li><p><strong>periodicity</strong> (<em>int</em>) – The time window, in seconds, of the buffered consumer, or how often the consumer processes the buffer’s contents.</p></li>
 <li><p><a class="reference internal" href="#queues.consumers.eld_consumer.ELDConsumer.buffer" title="queues.consumers.eld_consumer.ELDConsumer.buffer"><strong>buffer</strong></a> (<a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The buffer of objects that have to be processed.</p></li>
 </ul>
 </dd>
@@ -423,7 +436,7 @@ The two functions communicate with each other using a common queue, called a buf
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>queue</strong> (<a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that is consumed.</p></li>
-<li><p><strong>periodicity</strong> (<em>int</em>) – The time window in seconds of the buffered consumer, or how often it is invoked.</p></li>
+<li><p><strong>periodicity</strong> (<em>int</em>) – The time window, in seconds, of the buffered consumer, or how often the consumer processes the buffer’s contents.</p></li>
 </ul>
 </dd>
 </dl>
@@ -432,8 +445,13 @@ The two functions communicate with each other using a common queue, called a buf
 <dl class="method">
 <dt id="queues.consumers.buffered_consumer.BufferedConsumer.run">
 <em class="property">async </em><code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">wait=0</em>, <em class="sig-param">max_inactivity=-1</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.buffered_consumer.BufferedConsumer.run" title="Permalink to this definition">¶</a></dt>
-<dd><p>Invokes the consume and process method.</p>
-<p>Any additional arguments and keyword arguments are passed on to the <code class="xref py py-class docutils literal notranslate"><span class="pre">_consume</span></code> and <code class="xref py py-class docutils literal notranslate"><span class="pre">_process</span></code> functions.</p>
+<dd><p>Update the flags to indicate that the consumer is running and start the buffered consumer’s two roles:</p>
+<ol class="arabic simple">
+<li><p>The consumption simply moves tweets from the <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> into the the buffer, another <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>.</p></li>
+<li><p>The processing wakes up every time window to process the tweets collectd in the buffer so far.
+While processing, the buffer receives new tweets, but these are only processed in the next time window.</p></li>
+</ol>
+<p>Similarly to the <a class="reference internal" href="#queues.consumers.Consumer" title="queues.consumers.Consumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code></a>, the buffered consumer also accepts the <code class="docutils literal notranslate"><span class="pre">wait</span></code> and <code class="docutils literal notranslate"><span class="pre">max_inactivity</span></code> parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
