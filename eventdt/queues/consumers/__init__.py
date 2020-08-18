@@ -4,6 +4,19 @@ Each consumer dequeues the accumulated data and performs some processing on it.
 
 There is one class that is the base of all consumers: the basic :class:`~queues.consumers.Consumer`
 From it stem all other consumers, including the :class:`~queues.consumers.buffered_consumer.BufferedConsumer`.
+
+These consumers are meant to be usable with minimal changes.
+Although that makes them less flexible than building your own consumer, it also makes it easier to get started with EvenTDT.
+
+Normally, you would either set up a stream using the :class:`~twitter.listeners.TweetListener` or by reading from a file using the :class:`~twitter.file.FileReader`.
+These streams store tweets in a :class:`~queue.Queue`—the same one that is given to any :class:`~queues.consumers.Consumer` class.
+You can then run the :func:`~queues.consumers.Consumer.run` function.
+More commonly, if you are not interested in the implementation details, you can run consumers using the :mod:`~tools.consume` command-line tool.
+
+The consumers package is the most central one in EvenTDT because it ties together all other packages.
+Apart from some simple consumers, the package includes consumers based on algorithms presented in papers.
+These complete solutions can be used as baselines to generate a :class:`~summarization.timeline.Timeline` and later for summarization.
+These consumers revolve around a :class:`~tdt.algorithms.TDTAlgorithm` and are meant to be as faithful as possible to the original approaches.
 """
 
 from abc import ABC, abstractmethod
