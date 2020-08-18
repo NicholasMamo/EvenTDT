@@ -20,7 +20,15 @@ from twitter.file import FileReader
 
 class StaggeredFileReader(FileReader):
 	"""
-	The staggered file reader reads lines a few at a time, then stops and waits.
+	The :class:`~twitter.file.staggered_reader.StaggeredFileReader` is based on the :class:`~twitter.file.FileReader`, so it reads tweets from a file and adds it to a queue.
+	However, unlike the :class:`~twitter.file.simulated_reader.SimulatedFileReader`, it reads tweets at a constant pace.
+	It reads a few tweets at a time, stops and waits.
+
+	The pace of the :class:`~twitter.file.staggered_reader.StaggeredFileReader` is governed by the ``rate`` and the ``skip_rate``.
+	The ``rate`` is the number of tweets to read per second from the file.
+	The :class:`~twitter.file.staggered_reader.StaggeredFileReader` does not read a bunch of tweets and sleeps for the rest of the second, but spaces them out over a second.
+	On the other hand, the ``skip_rate`` is the number is the number of tweets to skip every second.
+	Therefore the approach works skips a number of tweets per second, and then reads a number of tweets.
 
 	:ivar rate: The number of lines to read per second.
 	:vartype rate: float
@@ -30,18 +38,8 @@ class StaggeredFileReader(FileReader):
 
 	def __init__(self, queue, f, max_lines=-1, max_time=-1, skip_lines=0, skip_time=0, rate=1, skip_rate=0):
 		"""
-		Create the reader and skip any required lines or time from the file.
-		By default, the file reader skips no lines or time.
-		The skip rate can be set to sample the file.
-
-		.. note::
-
-			The number of lines and seconds that are skipped depend on the largest number.
-
-		.. note::
-
-			The maximum number of lines and seconds is exclusive.
-			That means that if either are 0, no tweets are read.
+		Create the :class:`~twitter.file.staggered_reader.StaggeredFileReader` with the file from where to read tweets and the :class:`~queues.queue.Queue` where to store them.
+		The ``rate`` and ``skip_rate`` are extra parameters in addition to the :class:`~twitter.file.FileReader`'s parameters.
 
 		:param queue: The queue to which to add the tweets.
 		:type queue: :class:`~queues.queue.Queue`
@@ -51,7 +49,7 @@ class StaggeredFileReader(FileReader):
 						  If the number is negative, it is ignored.
 		:type max_lines: int
 		:param max_time: The maximum time in seconds to spend reading from the file.
-						 The time is taken from tweets' `created_at` attribute.
+						 The time is taken from tweets' timestamps.
 						 If the number is negative, it is ignored.
 		:type max_time: int
 		:param skip_lines: The number of lines to skip from the beginning of the file.
@@ -105,8 +103,7 @@ class StaggeredFileReader(FileReader):
 	@FileReader.reading
 	async def read(self):
 		"""
-		Read the file.
-		Tweets are added as a dictionary to the queue.
+		Read the file and add each line as a dictionary to the queue.
 		"""
 
 		file = self.file
