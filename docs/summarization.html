@@ -101,7 +101,12 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-summarization.timeline">Timelines</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module-summarization.timeline.nodes">Nodes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-summarization.timeline.nodes">Nodes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-summarization.timeline.nodes.document_node">Document Node</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-summarization.timeline.nodes.cluster_node">Cluster Node</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-summarization.timeline.nodes.topical_cluster_node">Topical Cluster Node</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -742,7 +747,112 @@ It is measured in seconds.</p></li>
 
 </dd></dl>
 
-<span class="target" id="module-summarization.timeline.nodes.cluster_node"></span><p>A cluster node stores clusters instead of documents.</p>
+<div class="section" id="module-summarization.timeline.nodes.document_node">
+<span id="document-node"></span><h4>Document Node<a class="headerlink" href="#module-summarization.timeline.nodes.document_node" title="Permalink to this headline">¶</a></h4>
+<p>A document node stores documents as a list.</p>
+<dl class="class">
+<dt id="summarization.timeline.nodes.document_node.DocumentNode">
+<em class="property">class </em><code class="sig-name descname">DocumentNode</code><span class="sig-paren">(</span><em class="sig-param">created_at</em>, <em class="sig-param">documents=None</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>A document node stores documents as a list.
+Comparisons are made with the centroid of these documents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#summarization.summary.Summary.documents" title="summarization.summary.Summary.documents"><strong>documents</strong></a> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The list of documents in this node.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="summarization.timeline.nodes.document_node.DocumentNode.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">created_at</em>, <em class="sig-param">documents=None</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>created_at</strong> (<em>float</em>) – The timestamp when the node was created.</p></li>
+<li><p><strong>documents</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The initial list of documents in this node.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="summarization.timeline.nodes.document_node.DocumentNode.add">
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">documents</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add documents to the node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>documents</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – A list of documents to add to the node.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="summarization.timeline.nodes.document_node.DocumentNode.get_all_documents">
+<code class="sig-name descname">get_all_documents</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode.get_all_documents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all the documents in this node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A list of documents in the node.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="summarization.timeline.nodes.document_node.DocumentNode.similarity">
+<code class="sig-name descname">similarity</code><span class="sig-paren">(</span><em class="sig-param">documents</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode.similarity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the similarity between this node’s documents and the centroid of the given documents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>documents</strong> (list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Docunet</span></code>) – The documents with which to compute similarity.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The similarity between this node’s documents and the given documents.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="summarization.timeline.nodes.document_node.DocumentNode.to_array">
+<code class="sig-name descname">to_array</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode.to_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Export the document node as an associative array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The document as an associative array.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="summarization.timeline.nodes.document_node.DocumentNode.from_array">
+<em class="property">static </em><code class="sig-name descname">from_array</code><span class="sig-paren">(</span><em class="sig-param">array</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode.from_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an instance of the document node from the given associative array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>array</strong> (<em>dict</em>) – The associative array with the attributes to create the document node.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A new instance of the document node with the same attributes stored in the object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#summarization.timeline.nodes.document_node.DocumentNode" title="summarization.timeline.nodes.document_node.DocumentNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentNode</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-summarization.timeline.nodes.cluster_node">
+<span id="cluster-node"></span><h4>Cluster Node<a class="headerlink" href="#module-summarization.timeline.nodes.cluster_node" title="Permalink to this headline">¶</a></h4>
+<p>A cluster node stores clusters instead of documents.</p>
 <dl class="class">
 <dt id="summarization.timeline.nodes.cluster_node.ClusterNode">
 <em class="property">class </em><code class="sig-name descname">ClusterNode</code><span class="sig-paren">(</span><em class="sig-param">created_at</em>, <em class="sig-param">clusters=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.cluster_node.ClusterNode" title="Permalink to this definition">¶</a></dt>
@@ -843,107 +953,10 @@ The returned similarity is the maximum similarity between the given cluster and 
 
 </dd></dl>
 
-<span class="target" id="module-summarization.timeline.nodes.document_node"></span><p>A document node stores documents as a list.</p>
-<dl class="class">
-<dt id="summarization.timeline.nodes.document_node.DocumentNode">
-<em class="property">class </em><code class="sig-name descname">DocumentNode</code><span class="sig-paren">(</span><em class="sig-param">created_at</em>, <em class="sig-param">documents=None</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode" title="Permalink to this definition">¶</a></dt>
-<dd><p>A document node stores documents as a list.
-Comparisons are made with the centroid of these documents.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Variables</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#summarization.summary.Summary.documents" title="summarization.summary.Summary.documents"><strong>documents</strong></a> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The list of documents in this node.</p>
-</dd>
-</dl>
-<dl class="method">
-<dt id="summarization.timeline.nodes.document_node.DocumentNode.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">created_at</em>, <em class="sig-param">documents=None</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create the node.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>created_at</strong> (<em>float</em>) – The timestamp when the node was created.</p></li>
-<li><p><strong>documents</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The initial list of documents in this node.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="summarization.timeline.nodes.document_node.DocumentNode.add">
-<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">documents</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode.add" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add documents to the node.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>documents</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – A list of documents to add to the node.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="summarization.timeline.nodes.document_node.DocumentNode.get_all_documents">
-<code class="sig-name descname">get_all_documents</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode.get_all_documents" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get all the documents in this node.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>A list of documents in the node.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="summarization.timeline.nodes.document_node.DocumentNode.similarity">
-<code class="sig-name descname">similarity</code><span class="sig-paren">(</span><em class="sig-param">documents</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode.similarity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the similarity between this node’s documents and the centroid of the given documents.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>documents</strong> (list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Docunet</span></code>) – The documents with which to compute similarity.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The similarity between this node’s documents and the given documents.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="summarization.timeline.nodes.document_node.DocumentNode.to_array">
-<code class="sig-name descname">to_array</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode.to_array" title="Permalink to this definition">¶</a></dt>
-<dd><p>Export the document node as an associative array.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The document as an associative array.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="summarization.timeline.nodes.document_node.DocumentNode.from_array">
-<em class="property">static </em><code class="sig-name descname">from_array</code><span class="sig-paren">(</span><em class="sig-param">array</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode.from_array" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create an instance of the document node from the given associative array.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>array</strong> (<em>dict</em>) – The associative array with the attributes to create the document node.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A new instance of the document node with the same attributes stored in the object.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#summarization.timeline.nodes.document_node.DocumentNode" title="summarization.timeline.nodes.document_node.DocumentNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentNode</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<span class="target" id="module-summarization.timeline.nodes.topical_cluster_node"></span><p>A topical cluster node stores clusters and vectorial representations of topics.</p>
+</div>
+<div class="section" id="module-summarization.timeline.nodes.topical_cluster_node">
+<span id="topical-cluster-node"></span><h4>Topical Cluster Node<a class="headerlink" href="#module-summarization.timeline.nodes.topical_cluster_node" title="Permalink to this headline">¶</a></h4>
+<p>A topical cluster node stores clusters and vectorial representations of topics.</p>
 <dl class="class">
 <dt id="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode">
 <em class="property">class </em><code class="sig-name descname">TopicalClusterNode</code><span class="sig-paren">(</span><em class="sig-param">created_at</em>, <em class="sig-param">clusters=None</em>, <em class="sig-param">topics=None</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode" title="Permalink to this definition">¶</a></dt>
@@ -1042,6 +1055,7 @@ The returned similarity is the maximum similarity between the given topic and an
 
 </dd></dl>
 
+</div>
 </div>
 </div>
 </div>

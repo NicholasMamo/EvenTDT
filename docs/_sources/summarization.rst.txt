@@ -61,13 +61,22 @@ Nodes
    :members:
    :special-members:
 
-.. automodule:: summarization.timeline.nodes.cluster_node
-   :members:
-   :special-members:
+Document Node
+^^^^^^^^^^^^^
 
 .. automodule:: summarization.timeline.nodes.document_node
    :members:
    :special-members:
+
+Cluster Node
+^^^^^^^^^^^^
+
+.. automodule:: summarization.timeline.nodes.cluster_node
+   :members:
+   :special-members:
+
+Topical Cluster Node
+^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: summarization.timeline.nodes.topical_cluster_node
    :members:
