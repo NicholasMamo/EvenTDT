@@ -15,9 +15,15 @@
 Consumers
 =========
 
+Real-Time Consumer
+------------------
+
 .. automodule:: queues.consumers
    :members:
    :special-members:
+
+Buffered (Windowed) Consumers
+-----------------------------
 
 .. automodule:: queues.consumers.buffered_consumer
    :members:
@@ -26,9 +32,15 @@ Consumers
 Simple Consumers
 ----------------
 
+Print Consumer
+^^^^^^^^^^^^^^
+
 .. automodule:: queues.consumers.print_consumer
    :members:
    :special-members:
+
+Statistical Consumer
+^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: queues.consumers.stat_consumer
    :members:
@@ -36,17 +48,26 @@ Simple Consumers
 
 .. _consumers_algorithms:
 
-Algorithms
-----------
+Algorithmic Consumers
+---------------------
 
-.. automodule:: queues.consumers.eld_consumer
+Zhao Consumer
+^^^^^^^^^^^^^
+
+.. automodule:: queues.consumers.zhao_consumer
    :members:
    :special-members:
+
+FIRE Consumer
+^^^^^^^^^^^^^
 
 .. automodule:: queues.consumers.fire_consumer
    :members:
    :special-members:
 
-.. automodule:: queues.consumers.zhao_consumer
+ELD Consumer
+^^^^^^^^^^^^
+
+.. automodule:: queues.consumers.eld_consumer
    :members:
    :special-members:
