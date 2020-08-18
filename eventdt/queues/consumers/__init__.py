@@ -1,17 +1,17 @@
 """
-Queue data is consumed by consumers.
-Each consumer dequeues the accumulated data and processes it or outputs it.
-There are various base classes for consumers, covering both real-time and buffered consumption.
+After adding tweets to a :class:`~queues.Queue`, consumers process that data.
+Each consumer dequeues the accumulated data and performs some processing on it.
+
+There is one class that is the base of all consumers: the basic :class:`~queues.consumers.Consumer`
+From it stem all other consumers, including the :class:`~queues.consumers.buffered_consumer.BufferedConsumer`.
 
 All consumers follow a simple workflow.
-After initialization with a queue, the consumer can be run using the :func:`~queues.consumers.consumer.Consumer.run` function.
-That function prepares to start consuming the queue and calls the :func:`~queues.consumers.consumer.Consumer._consume` function.
+After being initialized with a :class:`~queues.Queue` that supplies data, the consumer run using the :func:`~queues.consumers.Consumer.run` function.
 
-Consumers have two other state variables apart from the queue: the `active` and `stopped` variables.
-The `active` variable indicates whether the consumer is still accepting objects.
-The `stopped` variable indicates whether the consumer has finished consuming all objects.
-Generally, consumers keep accepting objects until the `active` variable is disabled.
-At that point, they process the last objects and set the `stopped` flag to `True`.
+Consumers have two other state variables apart from the :class:`~queues.Queue`: the ``active`` and ``stopped`` variables.
+The ``active`` variable indicates whether the consumer is still accepting objects.
+The ``stopped`` variable indicates whether the consumer has finished consuming all objects.
+Generally, consumers keep accepting objects until the ``active`` variable is disabled, at which point they process the last objects and set the ``stopped`` flag to ``True``.
 """
 
 from abc import ABC, abstractmethod

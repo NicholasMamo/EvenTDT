@@ -15,6 +15,10 @@
 Consumers
 =========
 
+.. automodule:: queues.consumers
+   :members:
+   :special-members:
+
 .. automodule:: queues.consumers.buffered_consumer
    :members:
    :special-members:
