@@ -86,6 +86,31 @@ class FileReader(ABC):
 
 		self.skip(skip_lines, skip_time)
 
+	@staticmethod
+	def reading(f):
+		"""
+		This decorator sets the appropriate flags when the file reader starts reading, and when it stops reading.
+
+		:param f: The function to wrap, should be the :class:`~file.FileReader.read` function.
+		:type f: function
+		"""
+
+		async def wrapper(self, *args, **kwargs):
+			"""
+			Set the ``active`` flag to ``True`` and the ``stopped`` flag to ``False`` before starting to read.
+			After finishing reading, set the ``active`` flag to ``False`` and the ``stopped`` flag to ``True``.
+			"""
+
+			self.active = True
+			self.stopped = False
+
+			await f(self, *args, **kwargs)
+
+			self.active = False
+			self.stopped = True
+
+		return wrapper
+
 	def skip(self, lines, time):
 		"""
 		Skip a number of lines from the file.
@@ -142,12 +167,7 @@ class FileReader(ABC):
 	async def read(self):
 		"""
 		Read the file and add each line as a dictionary to the queue.
-
-		This function should set the ``active`` flag to ``True`` and the ``stopped`` flag to ``False`` before starting to read tweets.
-		After it finishes reading the tweets, it should set the ``active`` flag to ``False`` and the ``stopped`` flag to ``True``.
 		"""
-
-		# TODO: Set the `active` and `stopped` flags using a decorator.
 
 		pass
 

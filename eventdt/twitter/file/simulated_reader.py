@@ -91,14 +91,12 @@ class SimulatedFileReader(FileReader):
 
 		self.speed = speed
 
+	@FileReader.reading
 	async def read(self):
 		"""
 		Read the file.
 		Tweets are added as a dictionary to the queue.
 		"""
-
-		self.active = True
-		self.stopped = False
 
 		file = self.file
 
@@ -144,6 +142,3 @@ class SimulatedFileReader(FileReader):
 				break
 
 			self.queue.enqueue(tweet)
-
-		self.active = False
-		self.stopped = True

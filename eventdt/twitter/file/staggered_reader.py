@@ -100,14 +100,12 @@ class StaggeredFileReader(FileReader):
 		self.rate = rate
 		self.skip_rate = skip_rate
 
+	@FileReader.reading
 	async def read(self):
 		"""
 		Read the file.
 		Tweets are added as a dictionary to the queue.
 		"""
-
-		self.active = True
-		self.stopped = False
 
 		file = self.file
 
@@ -161,6 +159,3 @@ class StaggeredFileReader(FileReader):
 				sleep = 1/self.rate - elapsed
 				if sleep > 0:
 					time.sleep(sleep)
-
-		self.active = False
-		self.stopped = True
