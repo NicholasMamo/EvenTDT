@@ -630,8 +630,10 @@ After finishing reading, set the <code class="docutils literal notranslate"><spa
 </div>
 <div class="section" id="module-twitter.file.staggered_reader">
 <span id="staggered-reader"></span><h3>Staggered Reader<a class="headerlink" href="#module-twitter.file.staggered_reader" title="Permalink to this headline">¶</a></h3>
-<p>The staggered file reader reads lines a few at a time.
-This reader allows a steady stream of tweets to be read and processed.</p>
+<p>The <a class="reference internal" href="#twitter.file.staggered_reader.StaggeredFileReader" title="twitter.file.staggered_reader.StaggeredFileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">StaggeredFileReader</span></code></a> is a file reader that reads a corpus at a constant pace.
+This results in a steady and predictable stream of tweets.
+Therefore the <a class="reference internal" href="#twitter.file.staggered_reader.StaggeredFileReader" title="twitter.file.staggered_reader.StaggeredFileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">StaggeredFileReader</span></code></a> allows the application to receive as many tweets as it can handle, and handle them as well as it can.
+For this reason, it is most opportune when the <a class="reference internal" href="consumers.html#id1"><span class="std std-ref">consumer’s</span></a> performance under strain is not important, but its results are.</p>
 <dl class="class">
 <dt id="twitter.file.staggered_reader.StaggeredFileReader">
 <em class="property">class </em><code class="sig-name descname">StaggeredFileReader</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">f</em>, <em class="sig-param">max_lines=-1</em>, <em class="sig-param">max_time=-1</em>, <em class="sig-param">skip_lines=0</em>, <em class="sig-param">skip_time=0</em>, <em class="sig-param">rate=1</em>, <em class="sig-param">skip_rate=0</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.staggered_reader.StaggeredFileReader" title="Permalink to this definition">¶</a></dt>

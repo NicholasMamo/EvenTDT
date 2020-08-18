@@ -1,6 +1,8 @@
 """
-The staggered file reader reads lines a few at a time.
-This reader allows a steady stream of tweets to be read and processed.
+The :class:`~twitter.file.staggered_reader.StaggeredFileReader` is a file reader that reads a corpus at a constant pace.
+This results in a steady and predictable stream of tweets.
+Therefore the :class:`~twitter.file.staggered_reader.StaggeredFileReader` allows the application to receive as many tweets as it can handle, and handle them as well as it can.
+For this reason, it is most opportune when the :ref:`consumer's <consumers>` performance under strain is not important, but its results are.
 """
 
 import json
