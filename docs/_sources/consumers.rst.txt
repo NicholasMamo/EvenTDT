@@ -16,7 +16,6 @@ The queue functionality is a special class.
 
 .. automodule:: queues.queue
    :members:
-   :private-members:
    :special-members:
 
 .. _consumers:
@@ -30,12 +29,10 @@ There are various base classes for consumers, covering both real-time and buffer
 
 .. automodule:: queues.consumers.consumer
    :members:
-   :private-members:
    :special-members:
 
 .. automodule:: queues.consumers.buffered_consumer
    :members:
-   :private-members:
    :special-members:
 
 Simple Consumers
@@ -43,12 +40,10 @@ Simple Consumers
 
 .. automodule:: queues.consumers.print_consumer
    :members:
-   :private-members:
    :special-members:
 
 .. automodule:: queues.consumers.stat_consumer
    :members:
-   :private-members:
    :special-members:
 
 .. _consumers_algorithms:
@@ -58,15 +53,12 @@ Algorithms
 
 .. automodule:: queues.consumers.eld_consumer
    :members:
-   :private-members:
    :special-members:
 
 .. automodule:: queues.consumers.fire_consumer
    :members:
-   :private-members:
    :special-members:
 
 .. automodule:: queues.consumers.zhao_consumer
    :members:
-   :private-members:
    :special-members:

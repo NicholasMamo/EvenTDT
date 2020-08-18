@@ -304,7 +304,7 @@ Each consumer dequeues the accumulated data and processes it or outputs it.
 There are various base classes for consumers, covering both real-time and buffered consumption.</p>
 <span class="target" id="module-queues.consumers.consumer"></span><p>All consumers follow a simple workflow.
 After initialization with a queue, the consumer can be run using the <a class="reference internal" href="#queues.consumers.consumer.Consumer.run" title="queues.consumers.consumer.Consumer.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a> function.
-That function prepares to start consuming the queue and calls the <a class="reference internal" href="#queues.consumers.consumer.Consumer._consume" title="queues.consumers.consumer.Consumer._consume"><code class="xref py py-func docutils literal notranslate"><span class="pre">_consume()</span></code></a> function.</p>
+That function prepares to start consuming the queue and calls the <code class="xref py py-func docutils literal notranslate"><span class="pre">_consume()</span></code> function.</p>
 <p>Consumers have two other state variables apart from the queue: the <cite>active</cite> and <cite>stopped</cite> variables.
 The <cite>active</cite> variable indicates whether the consumer is still accepting objects.
 The <cite>stopped</cite> variable indicates whether the consumer has finished consuming all objects.
@@ -340,7 +340,7 @@ It also defines the state of the consumer.</p>
 <em class="property">async </em><code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">wait=0</em>, <em class="sig-param">max_inactivity=-1</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.consumer.Consumer.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invoke the consume method.
 Since some listeners have a small delay, the consumer may wait a bit before starting to consume input.</p>
-<p>Any additional arguments and keyword arguments are passed on to the <a class="reference internal" href="#queues.consumers.consumer.Consumer._consume" title="queues.consumers.consumer.Consumer._consume"><code class="xref py py-func docutils literal notranslate"><span class="pre">_consume()</span></code></a> function.</p>
+<p>Any additional arguments and keyword arguments are passed on to the <code class="xref py py-func docutils literal notranslate"><span class="pre">_consume()</span></code> function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -370,55 +370,6 @@ This function merely asks that the consumer stops accepting new objects for proc
 </div>
 </dd></dl>
 
-<dl class="method">
-<dt id="queues.consumers.consumer.Consumer._consume">
-<em class="property">abstract async </em><code class="sig-name descname">_consume</code><span class="sig-paren">(</span><em class="sig-param">max_inactivity</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.consumer.Consumer._consume" title="Permalink to this definition">¶</a></dt>
-<dd><p>Consume the queue.
-This is the function where most processing occurs.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>max_inactivity</strong> (<em>int</em>) – The maximum time in seconds to wait idly without input before stopping.
-If it is negative, the consumer keeps waiting for input until the maximum time expires.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.consumer.Consumer._wait_for_input">
-<em class="property">async </em><code class="sig-name descname">_wait_for_input</code><span class="sig-paren">(</span><em class="sig-param">max_inactivity</em>, <em class="sig-param">sleep=0.25</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.consumer.Consumer._wait_for_input" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wait for input from the queue.
-When input is received, the function returns True.
-If no input is found for the given number of seconds, the function returns False.
-If the maximum inactivity is negative, it is disregarded.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>max_inactivity</strong> (<em>int</em>) – The maximum time in seconds to wait idly without input before stopping.
-If it is negative, it is ignored.</p></li>
-<li><p><strong>sleep</strong> (<em>float</em>) – The number of seconds to sleep while waiting for input.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A boolean indicating whether the consumer should continue, or whether it has been idle for far too long.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.consumer.Consumer._started">
-<code class="sig-name descname">_started</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.consumer.Consumer._started" title="Permalink to this definition">¶</a></dt>
-<dd><p>A function that sets the active and stopped flags to indicate that the consumer has started operating.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.consumer.Consumer._stopped">
-<code class="sig-name descname">_stopped</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.consumer.Consumer._stopped" title="Permalink to this definition">¶</a></dt>
-<dd><p>A function that sets the active and stopped flags to indicate that the consumer has stopped operating.</p>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="queues.consumers.consumer.Consumer.__weakref__">
 <code class="sig-name descname">__weakref__</code><a class="headerlink" href="#queues.consumers.consumer.Consumer.__weakref__" title="Permalink to this definition">¶</a></dt>
@@ -432,8 +383,8 @@ If it is negative, it is ignored.</p></li>
 <dt id="queues.consumers.buffered_consumer.BufferedConsumer">
 <em class="property">class </em><code class="sig-name descname">BufferedConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity=60</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.buffered_consumer.BufferedConsumer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The buffered consumer adds the processing stage apart from the consumption.
-The <a class="reference internal" href="#queues.consumers.buffered_consumer.BufferedConsumer._consume" title="queues.consumers.buffered_consumer.BufferedConsumer._consume"><code class="xref py py-func docutils literal notranslate"><span class="pre">_consume()</span></code></a> function function waits until objects become available in the queue.
-The <a class="reference internal" href="#queues.consumers.buffered_consumer.BufferedConsumer._process" title="queues.consumers.buffered_consumer.BufferedConsumer._process"><code class="xref py py-func docutils literal notranslate"><span class="pre">_process()</span></code></a> function empties this buffer and processes it.
+The <code class="xref py py-func docutils literal notranslate"><span class="pre">_consume()</span></code> function function waits until objects become available in the queue.
+The <code class="xref py py-func docutils literal notranslate"><span class="pre">_process()</span></code> function empties this buffer and processes it.
 The two functions communicate with each other using a common queue, called a buffer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
@@ -461,7 +412,7 @@ The two functions communicate with each other using a common queue, called a buf
 <dt id="queues.consumers.buffered_consumer.BufferedConsumer.run">
 <em class="property">async </em><code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">wait=0</em>, <em class="sig-param">max_inactivity=-1</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.buffered_consumer.BufferedConsumer.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invokes the consume and process method.</p>
-<p>Any additional arguments and keyword arguments are passed on to the <a class="reference internal" href="#queues.consumers.buffered_consumer.BufferedConsumer._consume" title="queues.consumers.buffered_consumer.BufferedConsumer._consume"><code class="xref py py-class docutils literal notranslate"><span class="pre">_consume</span></code></a> and <a class="reference internal" href="#queues.consumers.buffered_consumer.BufferedConsumer._process" title="queues.consumers.buffered_consumer.BufferedConsumer._process"><code class="xref py py-class docutils literal notranslate"><span class="pre">_process</span></code></a> functions.</p>
+<p>Any additional arguments and keyword arguments are passed on to the <code class="xref py py-class docutils literal notranslate"><span class="pre">_consume</span></code> and <code class="xref py py-class docutils literal notranslate"><span class="pre">_process</span></code> functions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -478,33 +429,6 @@ If it is negative, the consumer keeps waiting for input until the maximum time e
 <dd class="field-odd"><p>any</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.buffered_consumer.BufferedConsumer._consume">
-<em class="property">async </em><code class="sig-name descname">_consume</code><span class="sig-paren">(</span><em class="sig-param">max_inactivity</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.buffered_consumer.BufferedConsumer._consume" title="Permalink to this definition">¶</a></dt>
-<dd><p>Consume the queue.
-This function calls for processing in turn.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>max_inactivity</strong> (<em>int</em>) – The maximum time in seconds to wait idly without input before stopping.
-If it is negative, the consumer keeps waiting for input until the maximum time expires.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.buffered_consumer.BufferedConsumer._process">
-<em class="property">abstract async </em><code class="sig-name descname">_process</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.buffered_consumer.BufferedConsumer._process" title="Permalink to this definition">¶</a></dt>
-<dd><p>Process the buffered items.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.buffered_consumer.BufferedConsumer._sleep">
-<em class="property">async </em><code class="sig-name descname">_sleep</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.buffered_consumer.BufferedConsumer._sleep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sleep until the window is over.
-At this point, the queue is emptied into a buffer for processing.
-The function periodically checks if the consumer has been asked to stop.</p>
 </dd></dl>
 
 </dd></dl>
@@ -531,14 +455,6 @@ The timestamp parameter is the field that the sleep function checks to know when
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="queues.consumers.buffered_consumer.SimulatedBufferedConsumer._sleep">
-<em class="property">async </em><code class="sig-name descname">_sleep</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.buffered_consumer.SimulatedBufferedConsumer._sleep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sleep until the window is over.
-At this point, the queue is emptied into a buffer for processing.
-The function periodically checks if the consumer has been asked to stop.</p>
-</dd></dl>
-
 </dd></dl>
 
 <div class="section" id="module-queues.consumers.print_consumer">
@@ -548,18 +464,6 @@ The function periodically checks if the consumer has been asked to stop.</p>
 <dt id="queues.consumers.print_consumer.PrintConsumer">
 <em class="property">class </em><code class="sig-name descname">PrintConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.print_consumer.PrintConsumer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The print consumer prints queue messages and discards them.</p>
-<dl class="method">
-<dt id="queues.consumers.print_consumer.PrintConsumer._consume">
-<em class="property">async </em><code class="sig-name descname">_consume</code><span class="sig-paren">(</span><em class="sig-param">max_inactivity=5</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.print_consumer.PrintConsumer._consume" title="Permalink to this definition">¶</a></dt>
-<dd><p>Consume the next elements from the queue.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>max_inactivity</strong> (<em>int</em>) – The maximum time in seconds to wait idly without input before stopping.
-If it is negative, the consumer keeps waiting for input until the maximum time expires.</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 <span class="target" id="module-queues.consumers.stat_consumer"></span><p>The statistic consumer is a simple consumer that reports statistics about tweets periodically.</p>
@@ -568,12 +472,6 @@ If it is negative, the consumer keeps waiting for input until the maximum time e
 <em class="property">class </em><code class="sig-name descname">StatConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity=60</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.stat_consumer.StatConsumer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The statistic consumer is a simple consumer that reports statistics about tweets periodically.
 The reporting is done based on the periodicity.</p>
-<dl class="method">
-<dt id="queues.consumers.stat_consumer.StatConsumer._process">
-<em class="property">async </em><code class="sig-name descname">_process</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.stat_consumer.StatConsumer._process" title="Permalink to this definition">¶</a></dt>
-<dd><p>Count and report the number of tweets received in the last period.</p>
-</dd></dl>
-
 </dd></dl>
 
 </div>
@@ -686,7 +584,7 @@ The buffer stores tweets that have been processed, but not yet added to a checkp
 </div></blockquote>
 <p>The function returns both as a dictionary.
 The two keys are <cite>scheme</cite> and <cite>participants</cite>.</p>
-<p>Any additional arguments and keyword arguments are passed on to the <a class="reference internal" href="#queues.consumers.eld_consumer.ELDConsumer._construct_idf" title="queues.consumers.eld_consumer.ELDConsumer._construct_idf"><code class="xref py py-func docutils literal notranslate"><span class="pre">_construct_idf()</span></code></a> and <a class="reference internal" href="#queues.consumers.eld_consumer.ELDConsumer._detect_participants" title="queues.consumers.eld_consumer.ELDConsumer._detect_participants"><code class="xref py py-func docutils literal notranslate"><span class="pre">_detect_participants()</span></code></a> functions.</p>
+<p>Any additional arguments and keyword arguments are passed on to the <code class="xref py py-func docutils literal notranslate"><span class="pre">_construct_idf()</span></code> and <code class="xref py py-func docutils literal notranslate"><span class="pre">_detect_participants()</span></code> functions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>max_inactivity</strong> (<em>int</em>) – The maximum time in seconds to wait idly without input before stopping.
@@ -699,316 +597,6 @@ The participants are returned in the <cite>participants</cite> key a list of str
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.eld_consumer.ELDConsumer._construct_idf">
-<em class="property">async </em><code class="sig-name descname">_construct_idf</code><span class="sig-paren">(</span><em class="sig-param">max_inactivity</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer._construct_idf" title="Permalink to this definition">¶</a></dt>
-<dd><p>Construct the TF-IDF table from the pre-event discussion.
-All of the tweets processed by these documents are added to a buffer so they can be used by the APD task.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>max_inactivity</strong> (<em>int</em>) – The maximum time in seconds to wait idly without input before stopping.
-If it is negative, it is ignored.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The constructed TF-IDF scheme.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="nlp.html#nlp.weighting.tfidf.TFIDF" title="nlp.weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.eld_consumer.ELDConsumer._detect_participants">
-<em class="property">async </em><code class="sig-name descname">_detect_participants</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer._detect_participants" title="Permalink to this definition">¶</a></dt>
-<dd><p>Detect participants from the received documents.</p>
-<p>ELD assumes that all participants are named entities.
-Therefore the APD process is based on the <a class="reference internal" href="apd.html#apd.extractors.local.entity_extractor.EntityExtractor" title="apd.extractors.local.entity_extractor.EntityExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">EntityExtractor</span></code></a>.</p>
-<p>This function assumes that it follows the <a class="reference internal" href="#queues.consumers.eld_consumer.ELDConsumer._construct_idf" title="queues.consumers.eld_consumer.ELDConsumer._construct_idf"><code class="xref py py-func docutils literal notranslate"><span class="pre">_construct_idf()</span></code></a> function.
-Therefore the documents it uses are those added to the buffer.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>A list of participants.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>list of str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.eld_consumer.ELDConsumer._consume">
-<em class="property">async </em><code class="sig-name descname">_consume</code><span class="sig-paren">(</span><em class="sig-param">max_inactivity</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer._consume" title="Permalink to this definition">¶</a></dt>
-<dd><p>Consume and process the documents in the queue.
-Processed documents are added to the buffer.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>max_inactivity</strong> (<em>int</em>) – The maximum time in seconds to wait idly without input before stopping.
-If it is negative, the consumer keeps waiting for input until the maximum time expires.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The constructed timeline.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="summarization.html#summarization.timeline.Timeline" title="summarization.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.eld_consumer.ELDConsumer._filter_tweets">
-<code class="sig-name descname">_filter_tweets</code><span class="sig-paren">(</span><em class="sig-param">tweets</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer._filter_tweets" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filter the given tweets based on <a class="reference internal" href="#queues.consumers.fire_consumer.FIREConsumer" title="queues.consumers.fire_consumer.FIREConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">FIREConsumer</span></code></a>’s filtering rules and new rules.
-FIRE’s rules are:</p>
-<blockquote>
-<div><ol class="arabic simple">
-<li><p>The tweet has to be in English,</p></li>
-<li><p>The tweet must contain no more than 2 hashtags,</p></li>
-<li><p>The tweet’s author must have favorited at least one tweet, and</p></li>
-<li><p>The tweet’s author must have at least one follower for every thousand tweets they’ve published.</p></li>
-</ol>
-</div></blockquote>
-<p>The new rules are:</p>
-<blockquote>
-<div><ol class="arabic simple">
-<li><p>The tweet cannot have more than one URL because too many URLs are indicative of pre-planned content, and</p></li>
-<li><p>The biography of the tweet’s author cannot be empty because that is indicative of bots.</p></li>
-</ol>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>tweets</strong> (<em>list of dict</em>) – A list of tweets to filter.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list of filtered tweets.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.eld_consumer.ELDConsumer._to_documents">
-<code class="sig-name descname">_to_documents</code><span class="sig-paren">(</span><em class="sig-param">tweets</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer._to_documents" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert the given tweets into documents.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>tweets</strong> (<em>list of dict</em>) – A list of tweets.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list of documents created from the tweets in the same order as the given tweets.
-Documents are normalized and store the original tweet in the <cite>tweet</cite> attribute.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.eld_consumer.ELDConsumer._latest_timestamp">
-<code class="sig-name descname">_latest_timestamp</code><span class="sig-paren">(</span><em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer._latest_timestamp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the latest timestamp from the given documents.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>documents</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The list of documents from where to get the latest timestamp.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The latest timestamp in the given document set.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>ValueError</strong> – When there are no documents to consider.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.eld_consumer.ELDConsumer._create_checkpoint">
-<code class="sig-name descname">_create_checkpoint</code><span class="sig-paren">(</span><em class="sig-param">timestamp</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer._create_checkpoint" title="Permalink to this definition">¶</a></dt>
-<dd><p>After every time window has elapsed, use all the buffered documents to create a new checkpoint.
-The checkpoint creates a new nutrition set stored in the nutrition store.
-This nutrition set represents a snapshot of the time window.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The ELD consumer follows a real-time process.
-Since there could be a backlog, the function ensures that documents published after the given timestamp are not added to the checkpoint.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>timestamp</strong> (<em>int</em>) – The timestamp of the new checkpoint.
-The nutrition data is from documents published in the time window that ends at this timestamp.
-Newer documents are left in the buffer.
-This timestamp is inclusive.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.eld_consumer.ELDConsumer._remove_old_checkpoints">
-<code class="sig-name descname">_remove_old_checkpoints</code><span class="sig-paren">(</span><em class="sig-param">timestamp</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer._remove_old_checkpoints" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove old checkpoints.
-The checkpoints that are removed depend on:</p>
-<blockquote>
-<div><ol class="arabic simple">
-<li><p>The number of sets that should be retained, and</p></li>
-<li><p>The length of the time window of the consumer.</p></li>
-</ol>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>timestamp</strong> (<em>int</em>) – The timestamp of the new checkpoint.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.eld_consumer.ELDConsumer._cluster">
-<code class="sig-name descname">_cluster</code><span class="sig-paren">(</span><em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer._cluster" title="Permalink to this definition">¶</a></dt>
-<dd><p>Cluster the given documents.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>documents</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The documents to cluster.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The list of clusters that are still active and that have changed.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list of <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.eld_consumer.ELDConsumer._filter_clusters">
-<code class="sig-name descname">_filter_clusters</code><span class="sig-paren">(</span><em class="sig-param">clusters</em>, <em class="sig-param">timestamp</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer._filter_clusters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a list of clusters that should be checked for emerging topics.
-The filtering rules are:</p>
-<blockquote>
-<div><ol class="arabic simple">
-<li><p>A cluster must have a minimum number of tweets, indicating popularity.</p></li>
-<li><p>A cluster must not have been checked very recently.                     This keeps from checking clusters for breaking topics too often.                        Instead, clusters are checked only after some time has passed to save some time.</p></li>
-<li><p>A cluster’s documents must not be quasi-identical to each other.                        This might indicate a slew of retweets.                         When something happens, people do not wait until someone writes something.                      Instead, they themselves create conversation;</p></li>
-<li><p>A cluster may not have been deemed to be bursty already.                        Clusters that are bursty may keep collecting tweets for the summary.                            However, they may not be added twice to the same timeline node.</p></li>
-<li><p>A cluster must not have more than one URL per tweet on average.                         URLs include both links and media.                      They indicate premeditation, usually spam, when all tweets contain them.</p></li>
-<li><p>No more than half of a cluster’s tweets may be replies.</p></li>
-</ol>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>clusters</strong> (list of <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>) – The active clusters, which represent candidate topics.</p></li>
-<li><p><strong>timestamp</strong> (<em>int</em>) – The current timestamp, used to check how long ago the cluster was last checked.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list of clusters that should be checked for emerging terms.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list of <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.eld_consumer.ELDConsumer._detect_topics">
-<code class="sig-name descname">_detect_topics</code><span class="sig-paren">(</span><em class="sig-param">cluster</em>, <em class="sig-param">timestamp</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer._detect_topics" title="Permalink to this definition">¶</a></dt>
-<dd><p>Detect topics using historical data from the given nutrition store.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>cluster</strong> (<a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>) – The cluster for which to identify breaking topics.</p></li>
-<li><p><strong>timestamp</strong> (<em>int</em>) – The current timestamp.
-Sets older than this timestamp are used to calculate the burst.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The breaking terms and their burst as a dictionary.
-The keys are the terms and the values are the respective burst values.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.eld_consumer.ELDConsumer._score_documents">
-<code class="sig-name descname">_score_documents</code><span class="sig-paren">(</span><em class="sig-param">documents</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer._score_documents" title="Permalink to this definition">¶</a></dt>
-<dd><p>Score the given documents.
-The score is the product of two scores:</p>
-<blockquote>
-<div><ol class="arabic simple">
-<li><p>A brevity score, based on <cite>BLEU: a Method for Automatic Evaluation of Machine Translation by Papineni et al. (2002) &lt;https://dl.acm.org/doi/10.3115/1073083.1073135&gt;</cite>; and</p></li>
-<li><p>An emotion score, which is the complement of the fraction of tokens that are capitalized.</p></li>
-</ol>
-</div></blockquote>
-<p>Any additional arguments and keyword arguments are passed on to the functions that calculate the scores.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>documents</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The list of documents to score.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list of documents ranked in descending order of their score.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.eld_consumer.ELDConsumer._brevity_score">
-<code class="sig-name descname">_brevity_score</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">r=10</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer._brevity_score" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate the brevity score, bounded between 0 and 1.
-This score is based on <cite>BLEU: a Method for Automatic Evaluation of Machine Translation by Papineni et al. (2002) &lt;https://dl.acm.org/doi/10.3115/1073083.1073135&gt;</cite>:</p>
-<div class="math notranslate nohighlight">
-\[score = max(1, e^{1 - \frac{r}{c}})\]</div>
-<p>where <span class="math notranslate nohighlight">\(c\)</span> is the number of tokens in the text, and <span class="math notranslate nohighlight">\(r\)</span> is the ideal number of tokens.</p>
-<p>The score is 1 even when the tweet is longer than the desired length.
-In this way, the brevity score is more akin to a brevity penalty.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>text</strong> (<em>str</em>) – The text to score.
-The text is tokanized by the function.</p></li>
-<li><p><strong>r</strong> (<em>str</em>) – The ideal number of tokens in the text.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The brevity score, bounded between 0 and 1.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.eld_consumer.ELDConsumer._emotion_score">
-<code class="sig-name descname">_emotion_score</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer._emotion_score" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate the emotion in the text.
-This is based on the number of capitalized characters.
-The higher the score, the less emotional the tweet.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>It is not always desirable for the score to be 1.
-That would mean that there is absolutely no capitalization at all.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – The text to score.
-The text is tokanized by the function.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The emotion score, bounded between 0 and 1.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1073,186 +661,6 @@ This value is inclusive.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="queues.consumers.fire_consumer.FIREConsumer._process">
-<em class="property">async </em><code class="sig-name descname">_process</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.fire_consumer.FIREConsumer._process" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find breaking develpoments based on how people are talking.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The constructed timeline.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="summarization.html#summarization.timeline.Timeline" title="summarization.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.fire_consumer.FIREConsumer._filter_tweets">
-<code class="sig-name descname">_filter_tweets</code><span class="sig-paren">(</span><em class="sig-param">tweets</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.fire_consumer.FIREConsumer._filter_tweets" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filter the given tweets based on FIRE’s filtering rules.
-The rules are:</p>
-<blockquote>
-<div><ol class="arabic simple">
-<li><p>The tweet has to be in English,</p></li>
-<li><p>The tweet must contain no more than 2 hashtags,</p></li>
-<li><p>The tweet’s author must have favorited at least one tweet, and</p></li>
-<li><p>The tweet’s author must have at least one follower for every thousand tweets they’ve published.</p></li>
-</ol>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>tweets</strong> (<em>list of dict</em>) – A list of tweets to filter.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list of filtered tweets.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.fire_consumer.FIREConsumer._to_documents">
-<code class="sig-name descname">_to_documents</code><span class="sig-paren">(</span><em class="sig-param">tweets</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.fire_consumer.FIREConsumer._to_documents" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert the given tweets into documents.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>tweets</strong> (<em>list of dict</em>) – A list of tweets.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list of documents created from the tweets in the same order as the given tweets.
-Documents are normalized and store the original tweet in the <cite>tweet</cite> attribute.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.fire_consumer.FIREConsumer._latest_timestamp">
-<code class="sig-name descname">_latest_timestamp</code><span class="sig-paren">(</span><em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.fire_consumer.FIREConsumer._latest_timestamp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the latest timestamp from the given documents.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>documents</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The list of documents from where to get the latest timestamp.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The latest timestamp in the given document set.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>ValueError</strong> – When there are no documents to consider.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.fire_consumer.FIREConsumer._filter_documents">
-<code class="sig-name descname">_filter_documents</code><span class="sig-paren">(</span><em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.fire_consumer.FIREConsumer._filter_documents" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filter the given documents based on FIRE’s scoring.
-The score is based on the fraction of unique tokens:</p>
-<div class="math notranslate nohighlight">
-\[s_d = \ln(|d|) * \frac{|d_u|}{|d|}\]</div>
-<p>where <span class="math notranslate nohighlight">\(s_d\)</span> is the computed score.
-<span class="math notranslate nohighlight">\(|d|\)</span> and <span class="math notranslate nohighlight">\(|d_u|\)</span> are the number of tokens, and the number of unique tokens in the document respectively.
-Documents that have no tokens are immediately discarded.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>documets</strong> – A list of documents.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list of filtered documents.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.fire_consumer.FIREConsumer._create_checkpoint">
-<code class="sig-name descname">_create_checkpoint</code><span class="sig-paren">(</span><em class="sig-param">timestamp</em>, <em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.fire_consumer.FIREConsumer._create_checkpoint" title="Permalink to this definition">¶</a></dt>
-<dd><p>After every time window has elapsed, create a checkpoint from the documents.
-These checkpoints store a snapshot of how much each different term was used at the time.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>timestamp</strong> (<em>int</em>) – The timestamp of the new checkpoint.</p></li>
-<li><p><strong>documents</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The list of documents that form the checkpoint.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.fire_consumer.FIREConsumer._remove_old_checkpoints">
-<code class="sig-name descname">_remove_old_checkpoints</code><span class="sig-paren">(</span><em class="sig-param">timestamp</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.fire_consumer.FIREConsumer._remove_old_checkpoints" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove old checkpoints.
-The checkpoints that are removed depend on the number of sets that should be retained and the periodicity of the consumer.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>timestamp</strong> (<em>int</em>) – The timestamp of the new checkpoint.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.fire_consumer.FIREConsumer._cluster">
-<code class="sig-name descname">_cluster</code><span class="sig-paren">(</span><em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.fire_consumer.FIREConsumer._cluster" title="Permalink to this definition">¶</a></dt>
-<dd><p>Cluster the given documents.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>documets</strong> – The documents to cluster.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The list of clusters that have changed.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.fire_consumer.FIREConsumer._filter_clusters">
-<code class="sig-name descname">_filter_clusters</code><span class="sig-paren">(</span><em class="sig-param">clusters</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.fire_consumer.FIREConsumer._filter_clusters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filter clusters that are too small.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>clusters</strong> (list of <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>) – A list of clusters to filter.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list of filtered clusters.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list of <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.fire_consumer.FIREConsumer._detect_topics">
-<code class="sig-name descname">_detect_topics</code><span class="sig-paren">(</span><em class="sig-param">cluster</em>, <em class="sig-param">timestamp</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.fire_consumer.FIREConsumer._detect_topics" title="Permalink to this definition">¶</a></dt>
-<dd><p>Detect topics from the given cluster.
-This method makes a copy of the nutrition store.
-It replaces the data at the given timestamp with a pseudo-checkpoint.
-This checkpoint is constructed using only data from the cluster.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>cluster</strong> (<a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>) – The cluster for which to identify breaking topics.</p></li>
-<li><p><strong>timestamp</strong> (<em>int</em>) – The current timestamp.
-Sets older than this timestamp are used to calculate the burst.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list of emerging terms from the cluster.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 <span class="target" id="module-queues.consumers.zhao_consumer"></span><p>The Zhao et al. consumer is based on the implementation by the same authors.
@@ -1295,135 +703,6 @@ This defaults to 5 seconds, the same span as half the smallest time window in Zh
 <li><p><strong>scheme</strong> (None or <a class="reference internal" href="nlp.html#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme that is used to create dimensions.
 If <cite>None</cite> is given, the <a class="reference internal" href="nlp.html#nlp.weighting.tf.TF" title="nlp.weighting.tf.TF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TF</span></code></a> term-weighting scheme is used.</p></li>
 </ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.zhao_consumer.ZhaoConsumer._process">
-<em class="property">async </em><code class="sig-name descname">_process</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.zhao_consumer.ZhaoConsumer._process" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find breaking develpoments based on changes in volume.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The constructed timeline.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="summarization.html#summarization.timeline.Timeline" title="summarization.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.zhao_consumer.ZhaoConsumer._to_documents">
-<code class="sig-name descname">_to_documents</code><span class="sig-paren">(</span><em class="sig-param">tweets</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.zhao_consumer.ZhaoConsumer._to_documents" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert the given tweets into documents.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>tweets</strong> (<em>list of dict</em>) – A list of tweets.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list of documents created from the tweets in the same order as the given tweets.
-Documents are normalized and store the original tweet in the <cite>tweet</cite> attribute.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.zhao_consumer.ZhaoConsumer._latest_timestamp">
-<code class="sig-name descname">_latest_timestamp</code><span class="sig-paren">(</span><em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.zhao_consumer.ZhaoConsumer._latest_timestamp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the latest timestamp from the given documents.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>documents</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The list of documents from where to get the latest timestamp.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The latest timestamp in the given document set.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>ValueError</strong> – When there are no documents to consider.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.zhao_consumer.ZhaoConsumer._add_documents">
-<code class="sig-name descname">_add_documents</code><span class="sig-paren">(</span><em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.zhao_consumer.ZhaoConsumer._add_documents" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add the given documents to the list of stored documents.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>documents</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The list of documents to store in this consumer.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.zhao_consumer.ZhaoConsumer._documents_since">
-<code class="sig-name descname">_documents_since</code><span class="sig-paren">(</span><em class="sig-param">since</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.zhao_consumer.ZhaoConsumer._documents_since" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get all the documents since the given timestamp.
-The documents are ordered chronologically.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>since</strong> (<em>float</em>) – The timestamp since when all documents should be returned.
-This value is inclusive.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The list of documents added since the given timestamp.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.zhao_consumer.ZhaoConsumer._remove_documents_before">
-<code class="sig-name descname">_remove_documents_before</code><span class="sig-paren">(</span><em class="sig-param">until</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.zhao_consumer.ZhaoConsumer._remove_documents_before" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove all the documents published before the given timestamp.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>until</strong> (<em>float</em>) – The timestamp until when all documents should be removed.
-This value is exclusive.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.zhao_consumer.ZhaoConsumer._create_checkpoint">
-<code class="sig-name descname">_create_checkpoint</code><span class="sig-paren">(</span><em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.zhao_consumer.ZhaoConsumer._create_checkpoint" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create checkpoints from the documents in the
-After every time window has elapsed, create a checkpoint from the documents.
-These documents are used to create a nutrition set for the nutrition store.
-This nutrition set represents a snapshot of the time window.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>documents</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The list of documents that form the checkpoint.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="queues.consumers.zhao_consumer.ZhaoConsumer._detect_topics">
-<code class="sig-name descname">_detect_topics</code><span class="sig-paren">(</span><em class="sig-param">timestamp</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.zhao_consumer.ZhaoConsumer._detect_topics" title="Permalink to this definition">¶</a></dt>
-<dd><p>Detect breaking topics using the Zhao et al. algorithm.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>timestamp</strong> (<em>float</em>) – The timestamp at which point topics are detected.
-This value is exclusive.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A tuple with the start and end timestamp of the time window when there was a burst.
-Note that this is a half-window, not the entire window.
-If there was an increase in the second half of the last 60 seconds, the last 30 seconds are returned.
-If there was no burst, <cite>False</cite> is returned.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>tuple or bool</p>
 </dd>
 </dl>
 </dd></dl>
