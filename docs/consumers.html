@@ -475,15 +475,13 @@ If it is negative, the consumer keeps waiting for input until the maximum time e
 <dl class="class">
 <dt id="queues.consumers.buffered_consumer.SimulatedBufferedConsumer">
 <em class="property">class </em><code class="sig-name descname">SimulatedBufferedConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.buffered_consumer.SimulatedBufferedConsumer" title="Permalink to this definition">¶</a></dt>
-<dd><p>The simulated buffered consumer is exactly like the buffered consumer, but its periodicity is not real-time.
-Instead, it gets the time from the incoming message.
-This class can be used in a simulated environment, such as when data has been collected.
-In this case, it allows the data to be consumed at the rate that it is read.</p>
+<dd><p>The <a class="reference internal" href="#queues.consumers.buffered_consumer.SimulatedBufferedConsumer" title="queues.consumers.buffered_consumer.SimulatedBufferedConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimulatedBufferedConsumer</span></code></a> is exactly like the <a class="reference internal" href="#queues.consumers.buffered_consumer.BufferedConsumer" title="queues.consumers.buffered_consumer.BufferedConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">BufferedConsumer</span></code></a>, but its periodicity is not real-time.
+Whereas the <a class="reference internal" href="#queues.consumers.buffered_consumer.BufferedConsumer" title="queues.consumers.buffered_consumer.BufferedConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">BufferedConsumer</span></code></a>’s time window is based on the machine’s time, the <a class="reference internal" href="#queues.consumers.buffered_consumer.SimulatedBufferedConsumer" title="queues.consumers.buffered_consumer.SimulatedBufferedConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimulatedBufferedConsumer</span></code></a> looks at the tweet’s timestamps.
+This makes the <a class="reference internal" href="#queues.consumers.buffered_consumer.SimulatedBufferedConsumer" title="queues.consumers.buffered_consumer.SimulatedBufferedConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimulatedBufferedConsumer</span></code></a> ideal in situations where it is necessary to simulate the live environment, for example when using a <a class="reference internal" href="twitter.html#twitter.file.FileReader" title="twitter.file.FileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileReader</span></code></a>.</p>
 <dl class="method">
 <dt id="queues.consumers.buffered_consumer.SimulatedBufferedConsumer.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.buffered_consumer.SimulatedBufferedConsumer.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize the simulated buffered consumer with its queue, periodicity and buffer.
-The timestamp parameter is the field that the sleep function checks to know when it should awake.</p>
+<dd><p>Initialize the buffered consumer with its queue and periodicity.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">

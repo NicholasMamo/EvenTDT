@@ -145,16 +145,14 @@ class BufferedConsumer(Consumer):
 
 class SimulatedBufferedConsumer(BufferedConsumer):
 	"""
-	The simulated buffered consumer is exactly like the buffered consumer, but its periodicity is not real-time.
-	Instead, it gets the time from the incoming message.
-	This class can be used in a simulated environment, such as when data has been collected.
-	In this case, it allows the data to be consumed at the rate that it is read.
+	The :class:`~queues.consumers.buffered_consumer.SimulatedBufferedConsumer` is exactly like the :class:`~queues.consumers.buffered_consumer.BufferedConsumer`, but its periodicity is not real-time.
+	Whereas the :class:`~queues.consumers.buffered_consumer.BufferedConsumer`'s time window is based on the machine's time, the :class:`~queues.consumers.buffered_consumer.SimulatedBufferedConsumer` looks at the tweet's timestamps.
+	This makes the :class:`~queues.consumers.buffered_consumer.SimulatedBufferedConsumer` ideal in situations where it is necessary to simulate the live environment, for example when using a :class:`~twitter.file.FileReader`.
 	"""
 
 	def __init__(self, queue, periodicity):
 		"""
-		Initialize the simulated buffered consumer with its queue, periodicity and buffer.
-		The timestamp parameter is the field that the sleep function checks to know when it should awake.
+		Initialize the buffered consumer with its queue and periodicity.
 
 		:param queue: The queue that is consumed.
 		:type queue: :class:`~queues.Queue`
