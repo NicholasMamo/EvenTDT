@@ -533,12 +533,13 @@ It works in real-time, reading and printing tweets from the <a class="reference 
 </div>
 <div class="section" id="module-queues.consumers.stat_consumer">
 <span id="statistical-consumer"></span><h4>Statistical Consumer<a class="headerlink" href="#module-queues.consumers.stat_consumer" title="Permalink to this headline">¶</a></h4>
-<p>The statistic consumer is a simple consumer that reports statistics about tweets periodically.</p>
+<p>The <a class="reference internal" href="#queues.consumers.stat_consumer.StatConsumer" title="queues.consumers.stat_consumer.StatConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">StatConsumer</span></code></a> is a simple, windowed consumer that reports statistics about tweets periodically.
+These statistics are very basic: the number of tweets received every minute.</p>
 <dl class="class">
 <dt id="queues.consumers.stat_consumer.StatConsumer">
 <em class="property">class </em><code class="sig-name descname">StatConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity=60</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.stat_consumer.StatConsumer" title="Permalink to this definition">¶</a></dt>
-<dd><p>The statistic consumer is a simple consumer that reports statistics about tweets periodically.
-The reporting is done based on the periodicity.</p>
+<dd><p>The <a class="reference internal" href="#queues.consumers.stat_consumer.StatConsumer" title="queues.consumers.stat_consumer.StatConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">StatConsumer</span></code></a> maintains no special state.
+After every time window, it empties the buffer and prints the number of tweets in it.</p>
 </dd></dl>
 
 </div>

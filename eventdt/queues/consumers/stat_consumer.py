@@ -1,5 +1,6 @@
 """
-The statistic consumer is a simple consumer that reports statistics about tweets periodically.
+The :class:`~queues.consumers.stat_consumer.StatConsumer` is a simple, windowed consumer that reports statistics about tweets periodically.
+These statistics are very basic: the number of tweets received every minute.
 """
 
 from .buffered_consumer import BufferedConsumer
@@ -17,8 +18,8 @@ from logger import logger
 
 class StatConsumer(BufferedConsumer):
 	"""
-	The statistic consumer is a simple consumer that reports statistics about tweets periodically.
-	The reporting is done based on the periodicity.
+	The :class:`~queues.consumers.stat_consumer.StatConsumer` maintains no special state.
+	After every time window, it empties the buffer and prints the number of tweets in it.
 	"""
 
 	async def _process(self):
