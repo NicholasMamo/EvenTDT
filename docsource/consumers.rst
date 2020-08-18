@@ -49,6 +49,8 @@ Simple Consumers
    :private-members:
    :special-members:
 
+.. _consumers_algorithms:
+
 Algorithms
 ----------
 

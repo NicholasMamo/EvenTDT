@@ -6,6 +6,8 @@
    :description: The Topic Detection and Tracking (TDT) implementation
    :keywords: Python, TDT
 
+.. _tdt:
+
 .. automodule:: tdt
    :members:
    :special-members:
@@ -24,6 +26,8 @@ Memory Nutrition Store
 .. automodule:: tdt.nutrition.memory
    :members:
    :special-members:
+
+.. _tdt_algorithms:
 
 ==========
 Algorithms

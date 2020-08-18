@@ -510,9 +510,13 @@ If no query is given, the summary is built around the centroid of documents.</p>
 </div>
 <div class="section" id="module-summarization.timeline">
 <span id="timelines"></span><span id="summarization-timelines"></span><h2>Timelines<a class="headerlink" href="#module-summarization.timeline" title="Permalink to this headline">¶</a></h2>
-<p>A timeline is a succession of <code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code>.
-Each node stores information about what happened in that period of time.
-The timeline groups these nodes together.</p>
+<p>Timelines are not summaries, but they are closely associated.
+The <a class="reference internal" href="#summarization.timeline.Timeline" title="summarization.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a> is the bridge between <a class="reference internal" href="tdt.html#tdt-algorithms"><span class="std std-ref">TDT algorithms</span></a> and <a class="reference internal" href="#summarization-algorithms"><span class="std std-ref">summarization algorithms</span></a>.
+In fact, <a class="reference internal" href="consumers.html#consumers-algorithms"><span class="std std-ref">most consumers</span></a> use a <a class="reference internal" href="tdt.html#tdt-algorithms"><span class="std std-ref">TDT algorithm</span></a> to produce a <a class="reference internal" href="#summarization.timeline.Timeline" title="summarization.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a> that can then be summarized by a <a class="reference internal" href="#summarization-algorithms"><span class="std std-ref">summarization algorithm</span></a>.</p>
+<p>A timeline is structured as a list of <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>.
+Each <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> stores information about what happened in that period of time.
+The <a class="reference internal" href="#summarization.timeline.Timeline" title="summarization.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a> is usually managed by <a class="reference internal" href="consumers.html#consumers-algorithms"><span class="std std-ref">a consumer</span></a>, which also adds <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> instances to it.
+Later, the nodes can be summarized with any <a class="reference internal" href="#summarization-algorithms"><span class="std std-ref">summarization algorithm</span></a>.</p>
 <dl class="class">
 <dt id="summarization.timeline.Timeline">
 <em class="property">class </em><code class="sig-name descname">Timeline</code><span class="sig-paren">(</span><em class="sig-param">node_type</em>, <em class="sig-param">expiry</em>, <em class="sig-param">min_similarity</em>, <em class="sig-param">max_time=600</em>, <em class="sig-param">nodes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.Timeline" title="Permalink to this definition">¶</a></dt>
@@ -525,8 +529,8 @@ If there are no active nodes, the incoming documents can either be absorbed by a
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#module-summarization.timeline.nodes" title="summarization.timeline.nodes"><strong>nodes</strong></a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code>) – The list of nodes in the timeline.</p></li>
-<li><p><strong>node_type</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code>) – The type of nodes to create in the timeline.</p></li>
+<li><p><a class="reference internal" href="#module-summarization.timeline.nodes" title="summarization.timeline.nodes"><strong>nodes</strong></a> (<a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>) – The list of nodes in the timeline.</p></li>
+<li><p><strong>node_type</strong> (<a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>) – The type of nodes to create in the timeline.</p></li>
 <li><p><strong>expiry</strong> (<em>float</em>) – The time in seconds that it takes for a node to expire.
 Expired nodes do not automatically absorb documents.
 If the expiry is 0, new documents immediately join a new node unless they are absorbed.</p></li>
@@ -545,7 +549,7 @@ This value is inclusive.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>node_type</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code>) – The type of nodes to create in the timeline.</p></li>
+<li><p><strong>node_type</strong> (<a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>) – The type of nodes to create in the timeline.</p></li>
 <li><p><strong>expiry</strong> (<em>float</em>) – The time in seconds that it takes for a node to expire.
 Expired nodes do not automatically absorb documents.
 If the expiry is 0, new documents immediately join a new node unless they are absorbed.</p></li>
@@ -554,7 +558,7 @@ This value is inclusive.</p></li>
 <li><p><strong>max_time</strong> (<em>float</em>) – The maximum time in seconds to look back when deciding whether a node should absorb a new topic.
 The comparison is made with the node’s <cite>created_at</cite> instance variable.
 This value is inclusive.</p></li>
-<li><p><strong>nodes</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code>) – The initial list of nodes in the timeline.</p></li>
+<li><p><strong>nodes</strong> (<a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>) – The initial list of nodes in the timeline.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -574,7 +578,7 @@ This function first tries to identify if there is an active node.
 If there isn’t, it tries to find a node that can absorb the documents.
 This process is performed in reverse.
 If it doesn’t, a new node is created.</p>
-<p>All arguments and keyword arguments are passed on to the <code class="xref py py-func docutils literal notranslate"><span class="pre">add()</span></code> and <code class="xref py py-func docutils literal notranslate"><span class="pre">similarity()</span></code> methods.</p>
+<p>All arguments and keyword arguments are passed on to the <a class="reference internal" href="#summarization.timeline.nodes.Node.add" title="summarization.timeline.nodes.Node.add"><code class="xref py py-func docutils literal notranslate"><span class="pre">add()</span></code></a> and <a class="reference internal" href="#summarization.timeline.nodes.Node.similarity" title="summarization.timeline.nodes.Node.similarity"><code class="xref py py-func docutils literal notranslate"><span class="pre">similarity()</span></code></a> methods.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>timestamp</strong> (<em>float</em>) – The current timestamp.

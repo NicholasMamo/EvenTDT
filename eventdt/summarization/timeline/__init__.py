@@ -1,7 +1,12 @@
 """
-A timeline is a succession of :class:`~summarization.timeline.nodes.node.Node`.
-Each node stores information about what happened in that period of time.
-The timeline groups these nodes together.
+Timelines are not summaries, but they are closely associated.
+The :class:`~summarization.timeline.Timeline` is the bridge between :ref:`TDT algorithms <tdt_algorithms>` and :ref:`summarization algorithms <summarization_algorithms>`.
+In fact, :ref:`most consumers <consumers_algorithms>` use a :ref:`TDT algorithm <tdt_algorithms>` to produce a :class:`~summarization.timeline.Timeline` that can then be summarized by a :ref:`summarization algorithm <summarization_algorithms>`.
+
+A timeline is structured as a list of :class:`~summarization.timeline.nodes.Node`.
+Each :class:`~summarization.timeline.nodes.Node` stores information about what happened in that period of time.
+The :class:`~summarization.timeline.Timeline` is usually managed by :ref:`a consumer <consumers_algorithms>`, which also adds :class:`~summarization.timeline.nodes.Node` instances to it.
+Later, the nodes can be summarized with any :ref:`summarization algorithm <summarization_algorithms>`.
 """
 
 import importlib
@@ -26,9 +31,9 @@ class Timeline(Exportable):
 	If there are no active nodes, the incoming documents can either be absorbed by an expired node, or go into a new node.
 
 	:ivar nodes: The list of nodes in the timeline.
-	:vartype nodes: :class:`~summarization.timeline.nodes.node.Node`
+	:vartype nodes: :class:`~summarization.timeline.nodes.Node`
 	:ivar node_type: The type of nodes to create in the timeline.
-	:vartype node_type: :class:`~summarization.timeline.nodes.node.Node`
+	:vartype node_type: :class:`~summarization.timeline.nodes.Node`
 	:ivar expiry: The time in seconds that it takes for a node to expire.
 				  Expired nodes do not automatically absorb documents.
 				  If the expiry is 0, new documents immediately join a new node unless they are absorbed.
@@ -47,7 +52,7 @@ class Timeline(Exportable):
 		Create the timeline with an empty set of nodes.
 
 		:param node_type: The type of nodes to create in the timeline.
-		:type node_type: :class:`~summarization.timeline.nodes.node.Node`
+		:type node_type: :class:`~summarization.timeline.nodes.Node`
 		:param expiry: The time in seconds that it takes for a node to expire.
 					   Expired nodes do not automatically absorb documents.
 					   If the expiry is 0, new documents immediately join a new node unless they are absorbed.
@@ -60,7 +65,7 @@ class Timeline(Exportable):
 						 This value is inclusive.
 		:type max_time: float
 		:param nodes: The initial list of nodes in the timeline.
-		:type nodes: :class:`~summarization.timeline.nodes.node.Node`
+		:type nodes: :class:`~summarization.timeline.nodes.Node`
 
 		:raises ValueError: When the expiry is negative.
 		:raises ValueError: When the minimum similarity is not between 0 and 1.
@@ -90,7 +95,7 @@ class Timeline(Exportable):
 		This process is performed in reverse.
 		If it doesn't, a new node is created.
 
-		All arguments and keyword arguments are passed on to the :func:`~summarization.timeline.nodes.node.Node.add` and :func:`~summarization.timeline.nodes.node.Node.similarity` methods.
+		All arguments and keyword arguments are passed on to the :func:`~summarization.timeline.nodes.Node.add` and :func:`~summarization.timeline.nodes.Node.similarity` methods.
 
 		:param timestamp: The current timestamp.
 						  If the timestamp is not given, the current time is used.
@@ -124,13 +129,13 @@ class Timeline(Exportable):
 	def _create(self, created_at, *args, **kwargs):
 		"""
 		Create a new node on the timeline.
-		Any arguments and keyword arguments are passed on to the :func:`~summarization.timeline.nodes.node.Node.__init__` method.
+		Any arguments and keyword arguments are passed on to the :func:`~summarization.timeline.nodes.Node.__init__` method.
 
 		:param created_at: The timestamp when the node was created.
 		:type created_at: float
 
 		:return: The created node.
-		:rtype: :class:`~summarization.timeline.nodes.node.Node`
+		:rtype: :class:`~summarization.timeline.nodes.Node`
 		"""
 
 		return self.node_type(created_at=created_at, *args, **kwargs)
@@ -160,7 +165,7 @@ class Timeline(Exportable):
 		:type array: dict
 
 		:return: A new instance of the timeline with the same attributes stored in the object.
-		:rtype: :class:`~summarization.timeline.nodes.node_node.ClusterNode`
+		:rtype: :class:`~summarization.timeline.nodes_node.ClusterNode`
 		"""
 
 		nodes = [ ]
