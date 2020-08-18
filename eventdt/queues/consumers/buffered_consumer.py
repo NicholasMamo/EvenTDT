@@ -10,6 +10,14 @@ The two :class:`~queues.Queue` instances in the :class:`~queues.consumers.buffer
 - Buffer: The :class:`~queues.consumers.buffered_consumer.BufferedConsumer` constantly empties the normal queue into the buffer.
   After every window, the algorithm processes the tweets collected so far in it.
   While processing, the buffer continuesreceiving new tweets, which will be processed in the next time window.
+
+This package provides two types of buffered consumers:
+
+- The :class:`~queues.consumers.buffered_consumer.BufferedConsumer` bases its periodicity on the machine's time.
+  Therefore it is opportune when running in a live environment.
+
+- The :class:`~queues.consumers.buffered_consumer.SimulatedBufferedConsumer` bases its periodicity on the tweets it is receiving.
+  It can be used both in a live environment, but especially when loading tweets from the :class:`~twitter.file.FileReader`.
 """
 
 from abc import ABC, abstractmethod

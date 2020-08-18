@@ -409,6 +409,13 @@ Essentially, this buffering step transforms the <a class="reference internal" hr
 After every window, the algorithm processes the tweets collected so far in it.
 While processing, the buffer continuesreceiving new tweets, which will be processed in the next time window.</p></li>
 </ul>
+<p>This package provides two types of buffered consumers:</p>
+<ul class="simple">
+<li><p>The <a class="reference internal" href="#queues.consumers.buffered_consumer.BufferedConsumer" title="queues.consumers.buffered_consumer.BufferedConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">BufferedConsumer</span></code></a> bases its periodicity on the machine’s time.
+Therefore it is opportune when running in a live environment.</p></li>
+<li><p>The <a class="reference internal" href="#queues.consumers.buffered_consumer.SimulatedBufferedConsumer" title="queues.consumers.buffered_consumer.SimulatedBufferedConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimulatedBufferedConsumer</span></code></a> bases its periodicity on the tweets it is receiving.
+It can be used both in a live environment, but especially when loading tweets from the <a class="reference internal" href="twitter.html#twitter.file.FileReader" title="twitter.file.FileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileReader</span></code></a>.</p></li>
+</ul>
 <dl class="class">
 <dt id="queues.consumers.buffered_consumer.BufferedConsumer">
 <em class="property">class </em><code class="sig-name descname">BufferedConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity=60</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.buffered_consumer.BufferedConsumer" title="Permalink to this definition">¶</a></dt>
