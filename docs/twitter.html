@@ -452,9 +452,8 @@ The input files have one object on each line.</p>
 By simulating the Twitter stream, the different file readers can be used to replicate the original, real-time setting of a stream.</p>
 <dl class="class">
 <dt id="twitter.file.FileReader">
-<em class="property">class </em><code class="sig-name descname">FileReader</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">f</em>, <em class="sig-param">max_lines=-1</em>, <em class="sig-param">max_time=-1</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.FileReader" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>The <a class="reference internal" href="#twitter.file.FileReader" title="twitter.file.FileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileReader</span></code></a> is a class that describes the general state of file readers.</p>
+<em class="property">class </em><code class="sig-name descname">FileReader</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">f</em>, <em class="sig-param">max_lines=-1</em>, <em class="sig-param">max_time=-1</em>, <em class="sig-param">skip_lines=0</em>, <em class="sig-param">skip_time=0</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.FileReader" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <a class="reference internal" href="#twitter.file.FileReader" title="twitter.file.FileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileReader</span></code></a> is a class that describes the general state of file readers.</p>
 <p>Generally speaking, any file reader should implement the <a class="reference internal" href="#twitter.file.FileReader.read" title="twitter.file.FileReader.read"><code class="xref py py-func docutils literal notranslate"><span class="pre">read()</span></code></a> function, which reads tweets and adds them to the <a class="reference internal" href="consumers.html#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>.
 This <a class="reference internal" href="consumers.html#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> is one of the variables that make up the <a class="reference internal" href="#twitter.file.FileReader" title="twitter.file.FileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileReader</span></code></a>’s state.
 Accompanying it is the <code class="docutils literal notranslate"><span class="pre">file</span></code>, which is the pointer to an opened file.</p>
@@ -466,61 +465,29 @@ It does not refer to the processing time it should spend reading the corpus.</p>
 <ul class="simple">
 <li><p>The <code class="docutils literal notranslate"><span class="pre">active</span></code> flag indicates whether the reader is still reading data.
 It is possible that the reader is in the process of reading data while the <code class="docutils literal notranslate"><span class="pre">active</span></code> flag is set to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">stopped</span></code> flag indicates whether the reader has finished processing and is idle.</p></li>
 </ul>
-</div></blockquote>
-<ul>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">stopped</span></code> flag indicates whether the reader has finished processing and is idle.</p>
-<blockquote>
-<div><p>To stop reading data, call the <a class="reference internal" href="#twitter.file.FileReader.stop" title="twitter.file.FileReader.stop"><code class="xref py py-func docutils literal notranslate"><span class="pre">stop()</span></code></a> function.
+<p>To stop reading data, call the <a class="reference internal" href="#twitter.file.FileReader.stop" title="twitter.file.FileReader.stop"><code class="xref py py-func docutils literal notranslate"><span class="pre">stop()</span></code></a> function.
 This function sets the <code class="docutils literal notranslate"><span class="pre">active</span></code> flag to <code class="docutils literal notranslate"><span class="pre">False</span></code>.
 When the <a class="reference internal" href="#twitter.file.FileReader.read" title="twitter.file.FileReader.read"><code class="xref py py-func docutils literal notranslate"><span class="pre">read()</span></code></a> function actually finishes reading, it sets the <code class="docutils literal notranslate"><span class="pre">stopped</span></code> variable to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">ivar queue</dt>
-<dd class="field-odd"><p>The queue to which to add tweets.</p>
-</dd>
-<dt class="field-even">vartype queue</dt>
-<dd class="field-even"><p><a class="reference internal" href="consumers.html#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a></p>
-</dd>
-<dt class="field-odd">ivar file</dt>
-<dd class="field-odd"><p>The opened file pointer from where to read the tweets.</p>
-</dd>
-<dt class="field-even">vartype file</dt>
-<dd class="field-even"><p>file</p>
-</dd>
-<dt class="field-odd">ivar max_lines</dt>
-<dd class="field-odd"><p>The maximum number of lines to read.
-If the number is negative, it is ignored.</p>
-</dd>
-<dt class="field-even">vartype max_lines</dt>
-<dd class="field-even"><p>int</p>
-</dd>
-<dt class="field-odd">ivar max_time</dt>
-<dd class="field-odd"><p>The maximum time in seconds to spend reading from the file.
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="consumers.html#module-queues.queue" title="queues.queue"><strong>queue</strong></a> (<a class="reference internal" href="consumers.html#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue to which to add tweets.</p></li>
+<li><p><a class="reference internal" href="#module-twitter.file" title="twitter.file"><strong>file</strong></a> (<em>file</em>) – The opened file pointer from where to read the tweets.</p></li>
+<li><p><strong>max_lines</strong> (<em>int</em>) – The maximum number of lines to read.
+If the number is negative, it is ignored.</p></li>
+<li><p><strong>max_time</strong> (<em>int</em>) – The maximum time in seconds to spend reading from the file.
 The time is taken from tweets’ timestamps.
-If the number is negative, it is ignored.</p>
-</dd>
-<dt class="field-even">vartype max_time</dt>
-<dd class="field-even"><p>int</p>
-</dd>
-<dt class="field-odd">ivar active</dt>
-<dd class="field-odd"><p>A boolean indicating whether the reader is still reading data.</p>
-</dd>
-<dt class="field-even">vartype active</dt>
-<dd class="field-even"><p>bool</p>
-</dd>
-<dt class="field-odd">ivar stopped</dt>
-<dd class="field-odd"><p>A boolean indicating whether the consumer has finished processing.</p>
-</dd>
-<dt class="field-even">vartype stopped</dt>
-<dd class="field-even"><p>bool</p>
+If the number is negative, it is ignored.</p></li>
+<li><p><strong>active</strong> (<em>bool</em>) – A boolean indicating whether the reader is still reading data.</p></li>
+<li><p><strong>stopped</strong> (<em>bool</em>) – A boolean indicating whether the consumer has finished processing.</p></li>
+</ul>
 </dd>
 </dl>
-</div></blockquote>
-</li>
-</ul>
 <dl class="method">
 <dt id="twitter.file.FileReader.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">f</em>, <em class="sig-param">max_lines=-1</em>, <em class="sig-param">max_time=-1</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.FileReader.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">f</em>, <em class="sig-param">max_lines=-1</em>, <em class="sig-param">max_time=-1</em>, <em class="sig-param">skip_lines=0</em>, <em class="sig-param">skip_time=0</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.FileReader.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the file reader with the <a class="reference internal" href="consumers.html#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> where to add tweets and the file from where to read them.
 The <code class="docutils literal notranslate"><span class="pre">max_lines</span></code> and <code class="docutils literal notranslate"><span class="pre">max_time</span></code> parameters can be used to read only a part of the corpus.</p>
 <dl class="field-list simple">
@@ -533,6 +500,39 @@ If the number is negative, it is ignored.</p></li>
 <li><p><strong>max_time</strong> (<em>int</em>) – The maximum time in seconds to spend reading from the file.
 The time is taken from tweets’ timestamps.
 If the number is negative, it is ignored.</p></li>
+<li><p><strong>skip_lines</strong> (<em>int</em>) – The number of lines to skip from the beginning of the file.</p></li>
+<li><p><strong>skip_time</strong> (<em>int</em>) – The number of seconds to skip from the beginning of the file.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="twitter.file.FileReader.reading">
+<em class="property">static </em><code class="sig-name descname">reading</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.FileReader.reading" title="Permalink to this definition">¶</a></dt>
+<dd><p>This decorator sets the appropriate flags when the file reader starts reading, and when it stops reading.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>function</em>) – The function to wrap, should be the <code class="xref py py-class docutils literal notranslate"><span class="pre">read</span></code> function.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="twitter.file.FileReader.skip">
+<code class="sig-name descname">skip</code><span class="sig-paren">(</span><em class="sig-param">lines</em>, <em class="sig-param">time</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.FileReader.skip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Skip a number of lines from the file.
+This virtually just reads lines without storing them, but moving the file pointer.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The number of lines and seconds that are skipped depend on the largest number.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lines</strong> (<em>int</em>) – The number of lines to skip.</p></li>
+<li><p><strong>time</strong> (<em>int</em>) – The number of seconds to skip from the beginning of the file.
+The time is taken from tweets’ timestamps.</p></li>
 </ul>
 </dd>
 </dl>
@@ -542,8 +542,6 @@ If the number is negative, it is ignored.</p></li>
 <dt id="twitter.file.FileReader.read">
 <em class="property">abstract async </em><code class="sig-name descname">read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.FileReader.read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read the file and add each line as a dictionary to the queue.</p>
-<p>This function should set the <code class="docutils literal notranslate"><span class="pre">active</span></code> flag to <code class="docutils literal notranslate"><span class="pre">True</span></code> and the <code class="docutils literal notranslate"><span class="pre">stopped</span></code> flag to <code class="docutils literal notranslate"><span class="pre">False</span></code> before starting to read tweets.
-After it finishes reading the tweets, it should set the <code class="docutils literal notranslate"><span class="pre">active</span></code> flag to <code class="docutils literal notranslate"><span class="pre">False</span></code> and the <code class="docutils literal notranslate"><span class="pre">stopped</span></code> flag to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -573,7 +571,7 @@ Therefore high-volume periods enqueue a lot of tweets to the queue.
 Low-volume periods enqueue fewer tweets to the queue.</p>
 <dl class="class">
 <dt id="twitter.file.simulated_reader.SimulatedFileReader">
-<em class="property">class </em><code class="sig-name descname">SimulatedFileReader</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">f</em>, <em class="sig-param">max_lines=-1</em>, <em class="sig-param">max_time=-1</em>, <em class="sig-param">speed=1</em>, <em class="sig-param">skip_lines=0</em>, <em class="sig-param">skip_time=0</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.simulated_reader.SimulatedFileReader" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">SimulatedFileReader</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">f</em>, <em class="sig-param">max_lines=-1</em>, <em class="sig-param">max_time=-1</em>, <em class="sig-param">skip_lines=0</em>, <em class="sig-param">skip_time=0</em>, <em class="sig-param">speed=1</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.simulated_reader.SimulatedFileReader" title="Permalink to this definition">¶</a></dt>
 <dd><p>The simulated file listener reads data from a file and adds it to a queue.
 This works like a simulation, as if the event was happening at the same time.</p>
 <dl class="field-list simple">
@@ -585,7 +583,7 @@ If it is set to 2, the event progresses at double the speed.</p>
 </dl>
 <dl class="method">
 <dt id="twitter.file.simulated_reader.SimulatedFileReader.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">f</em>, <em class="sig-param">max_lines=-1</em>, <em class="sig-param">max_time=-1</em>, <em class="sig-param">speed=1</em>, <em class="sig-param">skip_lines=0</em>, <em class="sig-param">skip_time=0</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.simulated_reader.SimulatedFileReader.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">f</em>, <em class="sig-param">max_lines=-1</em>, <em class="sig-param">max_time=-1</em>, <em class="sig-param">skip_lines=0</em>, <em class="sig-param">skip_time=0</em>, <em class="sig-param">speed=1</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.simulated_reader.SimulatedFileReader.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the reader and skip any required lines or time from the file.
 By default, the file reader skips no lines or time.
 The skip rate can be set to sample the file.</p>
@@ -609,11 +607,11 @@ If the number is negative, it is ignored.</p></li>
 The maximum time is understood to be i nterms of the corpus’ time.
 The time is taken from tweets’ <cite>created_at</cite> attribute.
 If the number is negative, it is ignored.</p></li>
+<li><p><strong>skip_lines</strong> (<em>int</em>) – The number of lines to skip from the beginning of the file.</p></li>
+<li><p><strong>skip_time</strong> (<em>int</em>) – The number of seconds to skip from the beginning of the file.</p></li>
 <li><p><strong>speed</strong> (<em>int</em>) – The reading speed, considered to be a function of time.
 If it is set to 0.5, for example, the event progresses at half the speed.
 If it is set to 2, the event progresses at double the speed.</p></li>
-<li><p><strong>skip_lines</strong> (<em>int</em>) – The number of lines to skip from the beginning of the file.</p></li>
-<li><p><strong>skip_time</strong> (<em>int</em>) – The number of seconds to skip from the beginning of the file.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -628,30 +626,10 @@ If it is set to 2, the event progresses at double the speed.</p></li>
 </dd></dl>
 
 <dl class="method">
-<dt id="twitter.file.simulated_reader.SimulatedFileReader.skip">
-<code class="sig-name descname">skip</code><span class="sig-paren">(</span><em class="sig-param">lines</em>, <em class="sig-param">time</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.simulated_reader.SimulatedFileReader.skip" title="Permalink to this definition">¶</a></dt>
-<dd><p>Skip a number of lines from the file.
-This virtually just reads lines without storing them.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The number of lines and seconds that are skipped depend on the largest number.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>lines</strong> (<em>int</em>) – The number of lines to skip.</p></li>
-<li><p><strong>time</strong> (<em>int</em>) – The number of seconds to skip from the beginning of the file.
-The time is taken from tweets’ <cite>created_at</cite> attribute.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
 <dt id="twitter.file.simulated_reader.SimulatedFileReader.read">
-<em class="property">async </em><code class="sig-name descname">read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.simulated_reader.SimulatedFileReader.read" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the file.
-Tweets are added as a dictionary to the queue.</p>
+<em class="property">async </em><code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.simulated_reader.SimulatedFileReader.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the <code class="docutils literal notranslate"><span class="pre">active</span></code> flag to <code class="docutils literal notranslate"><span class="pre">True</span></code> and the <code class="docutils literal notranslate"><span class="pre">stopped</span></code> flag to <code class="docutils literal notranslate"><span class="pre">False</span></code> before starting to read.
+After finishing reading, set the <code class="docutils literal notranslate"><span class="pre">active</span></code> flag to <code class="docutils literal notranslate"><span class="pre">False</span></code> and the <code class="docutils literal notranslate"><span class="pre">stopped</span></code> flag to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
 </dd></dl>
 
 </dd></dl>
@@ -663,7 +641,7 @@ Tweets are added as a dictionary to the queue.</p>
 This reader allows a steady stream of tweets to be read and processed.</p>
 <dl class="class">
 <dt id="twitter.file.staggered_reader.StaggeredFileReader">
-<em class="property">class </em><code class="sig-name descname">StaggeredFileReader</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">f</em>, <em class="sig-param">max_lines=-1</em>, <em class="sig-param">max_time=-1</em>, <em class="sig-param">rate=1</em>, <em class="sig-param">skip_rate=0</em>, <em class="sig-param">skip_lines=0</em>, <em class="sig-param">skip_time=0</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.staggered_reader.StaggeredFileReader" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">StaggeredFileReader</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">f</em>, <em class="sig-param">max_lines=-1</em>, <em class="sig-param">max_time=-1</em>, <em class="sig-param">skip_lines=0</em>, <em class="sig-param">skip_time=0</em>, <em class="sig-param">rate=1</em>, <em class="sig-param">skip_rate=0</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.staggered_reader.StaggeredFileReader" title="Permalink to this definition">¶</a></dt>
 <dd><p>The staggered file reader reads lines a few at a time, then stops and waits.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
@@ -675,7 +653,7 @@ This reader allows a steady stream of tweets to be read and processed.</p>
 </dl>
 <dl class="method">
 <dt id="twitter.file.staggered_reader.StaggeredFileReader.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">f</em>, <em class="sig-param">max_lines=-1</em>, <em class="sig-param">max_time=-1</em>, <em class="sig-param">rate=1</em>, <em class="sig-param">skip_rate=0</em>, <em class="sig-param">skip_lines=0</em>, <em class="sig-param">skip_time=0</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.staggered_reader.StaggeredFileReader.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">f</em>, <em class="sig-param">max_lines=-1</em>, <em class="sig-param">max_time=-1</em>, <em class="sig-param">skip_lines=0</em>, <em class="sig-param">skip_time=0</em>, <em class="sig-param">rate=1</em>, <em class="sig-param">skip_rate=0</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.staggered_reader.StaggeredFileReader.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the reader and skip any required lines or time from the file.
 By default, the file reader skips no lines or time.
 The skip rate can be set to sample the file.</p>
@@ -698,10 +676,10 @@ If the number is negative, it is ignored.</p></li>
 <li><p><strong>max_time</strong> (<em>int</em>) – The maximum time in seconds to spend reading from the file.
 The time is taken from tweets’ <cite>created_at</cite> attribute.
 If the number is negative, it is ignored.</p></li>
-<li><p><strong>rate</strong> (<em>float</em>) – The number of lines to read per second.</p></li>
-<li><p><strong>skip_rate</strong> (<em>int</em>) – The number of lines to skip for each line read.</p></li>
 <li><p><strong>skip_lines</strong> (<em>int</em>) – The number of lines to skip from the beginning of the file.</p></li>
 <li><p><strong>skip_time</strong> (<em>int</em>) – The number of seconds to skip from the beginning of the file.</p></li>
+<li><p><strong>rate</strong> (<em>float</em>) – The number of lines to read per second.</p></li>
+<li><p><strong>skip_rate</strong> (<em>int</em>) – The number of lines to skip for each line read.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -719,30 +697,10 @@ If the number is negative, it is ignored.</p></li>
 </dd></dl>
 
 <dl class="method">
-<dt id="twitter.file.staggered_reader.StaggeredFileReader.skip">
-<code class="sig-name descname">skip</code><span class="sig-paren">(</span><em class="sig-param">lines</em>, <em class="sig-param">time</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.staggered_reader.StaggeredFileReader.skip" title="Permalink to this definition">¶</a></dt>
-<dd><p>Skip a number of lines from the file.
-This virtually just reads lines without storing them.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The number of lines and seconds that are skipped depend on the largest number.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>lines</strong> (<em>int</em>) – The number of lines to skip.</p></li>
-<li><p><strong>time</strong> (<em>int</em>) – The number of seconds to skip from the beginning of the file.
-The time is taken from tweets’ <cite>created_at</cite> attribute.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
 <dt id="twitter.file.staggered_reader.StaggeredFileReader.read">
-<em class="property">async </em><code class="sig-name descname">read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.staggered_reader.StaggeredFileReader.read" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the file.
-Tweets are added as a dictionary to the queue.</p>
+<em class="property">async </em><code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.staggered_reader.StaggeredFileReader.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the <code class="docutils literal notranslate"><span class="pre">active</span></code> flag to <code class="docutils literal notranslate"><span class="pre">True</span></code> and the <code class="docutils literal notranslate"><span class="pre">stopped</span></code> flag to <code class="docutils literal notranslate"><span class="pre">False</span></code> before starting to read.
+After finishing reading, set the <code class="docutils literal notranslate"><span class="pre">active</span></code> flag to <code class="docutils literal notranslate"><span class="pre">False</span></code> and the <code class="docutils literal notranslate"><span class="pre">stopped</span></code> flag to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
 </dd></dl>
 
 </dd></dl>

@@ -32,7 +32,7 @@ class FileReader(ABC):
 	- The ``active`` flag indicates whether the reader is still reading data.
 	  It is possible that the reader is in the process of reading data while the ``active`` flag is set to ``False``.
 
-    - The ``stopped`` flag indicates whether the reader has finished processing and is idle.
+	- The ``stopped`` flag indicates whether the reader has finished processing and is idle.
 
 	To stop reading data, call the :func:`~twitter.file.FileReader.stop` function.
 	This function sets the ``active`` flag to ``False``.
