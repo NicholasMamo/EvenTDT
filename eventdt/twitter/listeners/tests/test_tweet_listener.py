@@ -1,5 +1,5 @@
 """
-Test the functionality of the tweet listener.
+Test the functionality of the TweetrListener.
 """
 
 import json
@@ -18,11 +18,11 @@ for path in paths:
 	    sys.path.append(path)
 
 from config import conf
-from twitter.listener import TweetListener
+from listeners import TweetListener
 
-class TestListener(unittest.TestCase):
+class TestTweetListener(unittest.TestCase):
 	"""
-	Test the functionality of the tweet listener.
+	Test the functionality of the TweetrListener.
 	"""
 
 	def clean(f):
@@ -51,7 +51,7 @@ class TestListener(unittest.TestCase):
 		auth = OAuthHandler(conf.ACCOUNTS[0]['CONSUMER_KEY'], conf.ACCOUNTS[0]['CONSUMER_SECRET'])
 		auth.set_access_token(conf.ACCOUNTS[0]['ACCESS_TOKEN'], conf.ACCOUNTS[0]['ACCESS_TOKEN_SECRET'])
 		return auth
-		
+
 	@clean
 	def test_collect(self):
 		"""

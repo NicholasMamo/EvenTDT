@@ -164,8 +164,8 @@ twitter_tests() {
 	python3 -m unittest eventdt.twitter.tests.test_package
 
 	echo -e "${HIGHLIGHT}Listeners${DEFAULT}"
-	python3 -m unittest eventdt.twitter.tests.test_listener
-	python3 -m unittest eventdt.twitter.tests.test_queued_listener
+	python3 -m unittest eventdt.twitter.listeners.tests.test_tweet_listener
+	python3 -m unittest eventdt.twitter.listeners.tests.test_queued_tweet_listener
 
 	echo -e "${HIGHLIGHT}File Readers${DEFAULT}"
 	python3 -m unittest eventdt.twitter.file.tests.test_simulated_reader

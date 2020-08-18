@@ -1,5 +1,5 @@
 """
-Test the functionality of the queued listener.
+Test the functionality of the QueuedTweetListener.
 """
 
 import json
@@ -19,11 +19,11 @@ for path in paths:
 
 from config import conf
 from queues import Queue
-from twitter.queued_listener import QueuedListener
+from listeners import QueuedTweetListener
 
-class TestQueuedListener(unittest.TestCase):
+class TestQueuedTweetListener(unittest.TestCase):
 	"""
-	Test the functionality of the queued listener.
+	Test the functionality of the QueuedTweetListener.
 	"""
 
 	def authenticate(self):
@@ -44,7 +44,7 @@ class TestQueuedListener(unittest.TestCase):
 		"""
 
 		queue = Queue()
-		listener = QueuedListener(queue, max_time=2)
+		listener = QueuedTweetListener(queue, max_time=2)
 		stream = Stream(self.authenticate(), listener)
 		stream.filter(track=[ 'is' ])
 
@@ -59,7 +59,7 @@ class TestQueuedListener(unittest.TestCase):
 		"""
 
 		queue = Queue()
-		listener = QueuedListener(queue, max_time=2, attributes=[ 'id', 'text' ])
+		listener = QueuedTweetListener(queue, max_time=2, attributes=[ 'id', 'text' ])
 		stream = Stream(self.authenticate(), listener)
 		stream.filter(track=[ 'is' ])
 
@@ -74,7 +74,7 @@ class TestQueuedListener(unittest.TestCase):
 		"""
 
 		queue = Queue()
-		listener = QueuedListener(queue, max_time=2, attributes=[ ])
+		listener = QueuedTweetListener(queue, max_time=2, attributes=[ ])
 		stream = Stream(self.authenticate(), listener)
 		stream.filter(track=[ 'is' ])
 
@@ -89,7 +89,7 @@ class TestQueuedListener(unittest.TestCase):
 		"""
 
 		queue = Queue()
-		listener = QueuedListener(queue, max_time=2, attributes=None)
+		listener = QueuedTweetListener(queue, max_time=2, attributes=None)
 		stream = Stream(self.authenticate(), listener)
 		stream.filter(track=[ 'is' ])
 
@@ -104,7 +104,7 @@ class TestQueuedListener(unittest.TestCase):
 		"""
 
 		start = time.time()
-		listener = QueuedListener(Queue(), max_time=3, attributes=[ ])
+		listener = QueuedTweetListener(Queue(), max_time=3, attributes=[ ])
 		stream = Stream(self.authenticate(), listener)
 		stream.filter(track=[ 'is' ])
 		self.assertEqual(3, round(time.time() - start))

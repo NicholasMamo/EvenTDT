@@ -16,10 +16,9 @@ path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
-from .listener import TweetListener
 from logger import logger
 
-class QueuedListener(StreamListener):
+class QueuedTweetListener(StreamListener):
 	"""
 	The queued listener diverges enough from the :class:`~twitter.listener.TweetListener` that it is built from the ground up.
 	Incoming tweets are not added to a queue.

@@ -55,7 +55,7 @@ sys.path.insert(-1, root)
 sys.path.insert(-1, lib)
 
 from logger import logger
-from twitter.listener import TweetListener
+from twitter.listeners import TweetListener
 
 from tweepy import OAuthHandler
 from tweepy import Stream
