@@ -1,5 +1,11 @@
 """
-A cluster node stores clusters instead of documents.
+The :class:`~summarization.timeline.nodes.cluster_node.ClusterNode` stores :class:`~vsm.clustering.cluster.Cluster` instances made up of :class:`~nlp.document.Document` instances instead of :class:`~nlp.document.Document` instances.
+This affords the node more flexibility when computing :func:`~summarization.timeline.nodes.cluster_node.ClusterNode.similarity`.
+
+Each :class:`~vsm.clustering.cluster.Cluster` conceptually represents a topic.
+When a new :class:`~vsm.clustering.cluster.Cluster` arrives, the :class:`~summarization.timeline.nodes.cluster_node.ClusterNode` matches it separately with these previous 'topics'.
+This is different from the :class:`~summarization.timeline.nodes.document_node.DocumentNode`, which compares new :class:`~nlp.document.Document` instances with all of the information in the node.
+Therefore the :class:`~summarization.timeline.nodes.cluster_node.ClusterNode` can overcome fragmentation.
 """
 
 import importlib
@@ -17,8 +23,8 @@ from vsm.clustering.cluster import Cluster
 
 class ClusterNode(Node):
 	"""
-	A cluster node stores clusters instead of documents.
-	Comparisons are made with each cluster's centroid.
+	The :class:`~summarization.timeline.nodes.cluster_node.ClusterNode` stores :class:`~nlp.document.Document` instances in :class:`~vsm.clustering.cluster.Cluster` instances.
+	When comparing a new :class:`~vsm.clustering.cluster.Cluster`, the :func:`~summarization.timeline.nodes.cluster_node.ClusterNode.similarity` function compares it separately with each :class:`~vsm.clustering.cluster.Cluster` in the node.
 
 	:ivar clusters: The list of clusters in this node.
 	:vartype clusters: list of :class:`~vsm.clustering.cluster.Cluster`
@@ -30,7 +36,7 @@ class ClusterNode(Node):
 
 		:param created_at: The timestamp when the node was created.
 		:type created_at: float
-		:param clusters: The initial list of clusters in this node.
+		:param clusters: The initial list of :class:`~vsm.clustering.cluster.Cluster` instances in this node.
 		:type clusters: list of :class:`~vsm.clustering.cluster.Cluster`
 		"""
 
@@ -39,9 +45,9 @@ class ClusterNode(Node):
 
 	def add(self, cluster, *args, **kwargs):
 		"""
-		Add documents to the node.
+		Add a new :class:`~vsm.clustering.cluster.Cluster` to the node.
 
-		:param cluster: The cluster to add to the node.
+		:param cluster: The :class:`~vsm.clustering.cluster.Cluster` to add to the node.
 		:type cluster: :class:`~vsm.clustering.cluster.Cluster`
 		"""
 
@@ -49,9 +55,10 @@ class ClusterNode(Node):
 
 	def get_all_documents(self, *args, **kwargs):
 		"""
-		Get all the documents in this node.
+		Get all the :class:`~nlp.document.Document` instances in this node.
+		This function aggregates all of the :class:`~nlp.document.Document` instances in its :class:`~vsm.clustering.cluster.Cluster` instances.
 
-		:return: A list of documents in the node.
+		:return: A list of :class:`~nlp.document.Document` instances in the node.
 		:rtype: list of :class:`~nlp.document.Document`
 		"""
 
@@ -59,13 +66,16 @@ class ClusterNode(Node):
 
 	def similarity(self, cluster, *args, **kwargs):
 		"""
-		Compute the similarity between this node and a given cluster.
-		The returned similarity is the maximum similarity between the given cluster and any cluster in the node.
+		Compute the similarity between this node and the given :class:`~vsm.clustering.cluster.Cluster`.
+		Since topics represent topics, this function tries to match the new :class:`~vsm.clustering.cluster.Cluster` with any :class:`~vsm.clustering.cluster.Cluster` already in the node.
+
+		The similarity measure is :func:`~vsm.vector_math.cosine` and always compares the :class:`~vsm.clustering.cluster.Cluster` instances' centroids with each other.
+		The returned similarity is the highest pairwise similarity.
 
 		:param cluster: The cluster with which to compute similarity.
 		:type cluster: :class:`~vsm.clustering.cluster.Cluster`
 
-		:return: The similarity between this node and the given cluster.
+		:return: The similarity between this node and the given :class:`~vsm.clustering.cluster.Cluster`.
 		:rtype: float
 		"""
 
@@ -91,7 +101,7 @@ class ClusterNode(Node):
 	@staticmethod
 	def from_array(array):
 		"""
-		Create an instance of the cluster node from the given associative array.
+		Create an instance of the :class:`~summarization.timeline.nodes.cluster_node.ClusterNode` from the given associative array.
 
 		:param array: The associative array with the attributes to create the cluster node.
 		:type array: dict

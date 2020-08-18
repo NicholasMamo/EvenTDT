@@ -852,12 +852,17 @@ When it needs to compare incoming <a class="reference internal" href="nlp.html#n
 </div>
 <div class="section" id="module-summarization.timeline.nodes.cluster_node">
 <span id="cluster-node"></span><h4>Cluster Node<a class="headerlink" href="#module-summarization.timeline.nodes.cluster_node" title="Permalink to this headline">¶</a></h4>
-<p>A cluster node stores clusters instead of documents.</p>
+<p>The <a class="reference internal" href="#summarization.timeline.nodes.cluster_node.ClusterNode" title="summarization.timeline.nodes.cluster_node.ClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClusterNode</span></code></a> stores <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instances made up of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances instead of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances.
+This affords the node more flexibility when computing <a class="reference internal" href="#summarization.timeline.nodes.cluster_node.ClusterNode.similarity" title="summarization.timeline.nodes.cluster_node.ClusterNode.similarity"><code class="xref py py-func docutils literal notranslate"><span class="pre">similarity()</span></code></a>.</p>
+<p>Each <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> conceptually represents a topic.
+When a new <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> arrives, the <a class="reference internal" href="#summarization.timeline.nodes.cluster_node.ClusterNode" title="summarization.timeline.nodes.cluster_node.ClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClusterNode</span></code></a> matches it separately with these previous ‘topics’.
+This is different from the <a class="reference internal" href="#summarization.timeline.nodes.document_node.DocumentNode" title="summarization.timeline.nodes.document_node.DocumentNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentNode</span></code></a>, which compares new <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances with all of the information in the node.
+Therefore the <a class="reference internal" href="#summarization.timeline.nodes.cluster_node.ClusterNode" title="summarization.timeline.nodes.cluster_node.ClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClusterNode</span></code></a> can overcome fragmentation.</p>
 <dl class="class">
 <dt id="summarization.timeline.nodes.cluster_node.ClusterNode">
 <em class="property">class </em><code class="sig-name descname">ClusterNode</code><span class="sig-paren">(</span><em class="sig-param">created_at</em>, <em class="sig-param">clusters=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.cluster_node.ClusterNode" title="Permalink to this definition">¶</a></dt>
-<dd><p>A cluster node stores clusters instead of documents.
-Comparisons are made with each cluster’s centroid.</p>
+<dd><p>The <a class="reference internal" href="#summarization.timeline.nodes.cluster_node.ClusterNode" title="summarization.timeline.nodes.cluster_node.ClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClusterNode</span></code></a> stores <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances in <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instances.
+When comparing a new <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>, the <a class="reference internal" href="#summarization.timeline.nodes.cluster_node.ClusterNode.similarity" title="summarization.timeline.nodes.cluster_node.ClusterNode.similarity"><code class="xref py py-func docutils literal notranslate"><span class="pre">similarity()</span></code></a> function compares it separately with each <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> in the node.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><p><strong>clusters</strong> (list of <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>) – The list of clusters in this node.</p>
@@ -871,7 +876,7 @@ Comparisons are made with each cluster’s centroid.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>created_at</strong> (<em>float</em>) – The timestamp when the node was created.</p></li>
-<li><p><strong>clusters</strong> (list of <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>) – The initial list of clusters in this node.</p></li>
+<li><p><strong>clusters</strong> (list of <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>) – The initial list of <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instances in this node.</p></li>
 </ul>
 </dd>
 </dl>
@@ -880,10 +885,10 @@ Comparisons are made with each cluster’s centroid.</p>
 <dl class="method">
 <dt id="summarization.timeline.nodes.cluster_node.ClusterNode.add">
 <code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">cluster</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.cluster_node.ClusterNode.add" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add documents to the node.</p>
+<dd><p>Add a new <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> to the node.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>cluster</strong> (<a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>) – The cluster to add to the node.</p>
+<dd class="field-odd"><p><strong>cluster</strong> (<a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>) – The <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> to add to the node.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -891,10 +896,11 @@ Comparisons are made with each cluster’s centroid.</p>
 <dl class="method">
 <dt id="summarization.timeline.nodes.cluster_node.ClusterNode.get_all_documents">
 <code class="sig-name descname">get_all_documents</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.cluster_node.ClusterNode.get_all_documents" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get all the documents in this node.</p>
+<dd><p>Get all the <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances in this node.
+This function aggregates all of the <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances in its <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instances.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>A list of documents in the node.</p>
+<dd class="field-odd"><p>A list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances in the node.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a></p>
@@ -905,14 +911,16 @@ Comparisons are made with each cluster’s centroid.</p>
 <dl class="method">
 <dt id="summarization.timeline.nodes.cluster_node.ClusterNode.similarity">
 <code class="sig-name descname">similarity</code><span class="sig-paren">(</span><em class="sig-param">cluster</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.cluster_node.ClusterNode.similarity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the similarity between this node and a given cluster.
-The returned similarity is the maximum similarity between the given cluster and any cluster in the node.</p>
+<dd><p>Compute the similarity between this node and the given <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>.
+Since topics represent topics, this function tries to match the new <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> with any <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> already in the node.</p>
+<p>The similarity measure is <a class="reference internal" href="vsm.html#vsm.vector_math.cosine" title="vsm.vector_math.cosine"><code class="xref py py-func docutils literal notranslate"><span class="pre">cosine()</span></code></a> and always compares the <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instances’ centroids with each other.
+The returned similarity is the highest pairwise similarity.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>cluster</strong> (<a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>) – The cluster with which to compute similarity.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The similarity between this node and the given cluster.</p>
+<dd class="field-even"><p>The similarity between this node and the given <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>float</p>
@@ -937,7 +945,7 @@ The returned similarity is the maximum similarity between the given cluster and 
 <dl class="method">
 <dt id="summarization.timeline.nodes.cluster_node.ClusterNode.from_array">
 <em class="property">static </em><code class="sig-name descname">from_array</code><span class="sig-paren">(</span><em class="sig-param">array</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.cluster_node.ClusterNode.from_array" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create an instance of the cluster node from the given associative array.</p>
+<dd><p>Create an instance of the <a class="reference internal" href="#summarization.timeline.nodes.cluster_node.ClusterNode" title="summarization.timeline.nodes.cluster_node.ClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClusterNode</span></code></a> from the given associative array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>array</strong> (<em>dict</em>) – The associative array with the attributes to create the cluster node.</p>
