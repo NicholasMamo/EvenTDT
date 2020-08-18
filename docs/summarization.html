@@ -749,12 +749,12 @@ It is measured in seconds.</p></li>
 
 <div class="section" id="module-summarization.timeline.nodes.document_node">
 <span id="document-node"></span><h4>Document Node<a class="headerlink" href="#module-summarization.timeline.nodes.document_node" title="Permalink to this headline">¶</a></h4>
-<p>A document node stores documents as a list.</p>
+<p>The <a class="reference internal" href="#summarization.timeline.nodes.document_node.DocumentNode" title="summarization.timeline.nodes.document_node.DocumentNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentNode</span></code></a> is a simple <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> that only stores <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances.</p>
 <dl class="class">
 <dt id="summarization.timeline.nodes.document_node.DocumentNode">
 <em class="property">class </em><code class="sig-name descname">DocumentNode</code><span class="sig-paren">(</span><em class="sig-param">created_at</em>, <em class="sig-param">documents=None</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode" title="Permalink to this definition">¶</a></dt>
-<dd><p>A document node stores documents as a list.
-Comparisons are made with the centroid of these documents.</p>
+<dd><p>The <a class="reference internal" href="#summarization.timeline.nodes.document_node.DocumentNode" title="summarization.timeline.nodes.document_node.DocumentNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentNode</span></code></a> class only stores <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances.
+When it needs to compare incoming <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.document.Document</span></code></a> instances, it compares them against the centroid of its own information.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#summarization.summary.Summary.documents" title="summarization.summary.Summary.documents"><strong>documents</strong></a> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The list of documents in this node.</p>
@@ -822,7 +822,7 @@ Comparisons are made with the centroid of these documents.</p>
 <dd><p>Export the document node as an associative array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The document as an associative array.</p>
+<dd class="field-odd"><p>The document node as an associative array.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>dict</p>
@@ -833,7 +833,7 @@ Comparisons are made with the centroid of these documents.</p>
 <dl class="method">
 <dt id="summarization.timeline.nodes.document_node.DocumentNode.from_array">
 <em class="property">static </em><code class="sig-name descname">from_array</code><span class="sig-paren">(</span><em class="sig-param">array</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode.from_array" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create an instance of the document node from the given associative array.</p>
+<dd><p>Create a <a class="reference internal" href="#summarization.timeline.nodes.document_node.DocumentNode" title="summarization.timeline.nodes.document_node.DocumentNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentNode</span></code></a> instance from the given associative array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>array</strong> (<em>dict</em>) – The associative array with the attributes to create the document node.</p>

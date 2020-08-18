@@ -1,5 +1,5 @@
 """
-A document node stores documents as a list.
+The :class:`~summarization.timeline.nodes.document_node.DocumentNode` is a simple :class:`~summarization.timeline.nodes.Node` that only stores :class:`~nlp.document.Document` instances.
 """
 
 import importlib
@@ -17,8 +17,8 @@ from vsm.clustering import Cluster
 
 class DocumentNode(Node):
 	"""
-	A document node stores documents as a list.
-	Comparisons are made with the centroid of these documents.
+	The :class:`~summarization.timeline.nodes.document_node.DocumentNode` class only stores :class:`~nlp.document.Document` instances.
+	When it needs to compare incoming :class:`nlp.document.Document` instances, it compares them against the centroid of its own information.
 
 	:ivar documents: The list of documents in this node.
 	:vartype documents: list of :class:`~nlp.document.Document`
@@ -80,7 +80,7 @@ class DocumentNode(Node):
 		"""
 		Export the document node as an associative array.
 
-		:return: The document as an associative array.
+		:return: The document node as an associative array.
 		:rtype: dict
 		"""
 
@@ -93,7 +93,7 @@ class DocumentNode(Node):
 	@staticmethod
 	def from_array(array):
 		"""
-		Create an instance of the document node from the given associative array.
+		Create a :class:`~summarization.timeline.nodes.document_node.DocumentNode` instance from the given associative array.
 
 		:param array: The associative array with the attributes to create the document node.
 		:type array: dict
