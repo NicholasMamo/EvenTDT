@@ -106,6 +106,9 @@ class StaggeredFileReader(FileReader):
 		Tweets are added as a dictionary to the queue.
 		"""
 
+		self.active = True
+		self.stopped = False
+
 		file = self.file
 
 		"""
