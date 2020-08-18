@@ -67,7 +67,7 @@ class ClusterNode(Node):
 	def similarity(self, cluster, *args, **kwargs):
 		"""
 		Compute the similarity between this node and the given :class:`~vsm.clustering.cluster.Cluster`.
-		Since topics represent topics, this function tries to match the new :class:`~vsm.clustering.cluster.Cluster` with any :class:`~vsm.clustering.cluster.Cluster` already in the node.
+		Since :class:`~vsm.clustering.cluster.Cluster` instances represent topics, this function tries to match the new :class:`~vsm.clustering.cluster.Cluster` with any :class:`~vsm.clustering.cluster.Cluster` already in the node.
 
 		The similarity measure is :func:`~vsm.vector_math.cosine` and always compares the :class:`~vsm.clustering.cluster.Cluster` instances' centroids with each other.
 		The returned similarity is the highest pairwise similarity.
@@ -103,10 +103,10 @@ class ClusterNode(Node):
 		"""
 		Create an instance of the :class:`~summarization.timeline.nodes.cluster_node.ClusterNode` from the given associative array.
 
-		:param array: The associative array with the attributes to create the cluster node.
+		:param array: The associative array with the attributes to create the :class:`~summarization.timeline.nodes.cluster_node.ClusterNode`.
 		:type array: dict
 
-		:return: A new instance of the cluster node with the same attributes stored in the object.
+		:return: A new instance of the :class:`~summarization.timeline.nodes.cluster_node.ClusterNode` with the same attributes stored in the object.
 		:rtype: :class:`~summarization.timeline.nodes.cluster_node.ClusterNode`
 		"""
 

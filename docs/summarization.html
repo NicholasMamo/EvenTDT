@@ -836,10 +836,10 @@ When it needs to compare incoming <a class="reference internal" href="nlp.html#n
 <dd><p>Create a <a class="reference internal" href="#summarization.timeline.nodes.document_node.DocumentNode" title="summarization.timeline.nodes.document_node.DocumentNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentNode</span></code></a> instance from the given associative array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>array</strong> (<em>dict</em>) – The associative array with the attributes to create the document node.</p>
+<dd class="field-odd"><p><strong>array</strong> (<em>dict</em>) – The associative array with the attributes to create the <a class="reference internal" href="#summarization.timeline.nodes.document_node.DocumentNode" title="summarization.timeline.nodes.document_node.DocumentNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentNode</span></code></a>.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A new instance of the document node with the same attributes stored in the object.</p>
+<dd class="field-even"><p>A new instance of the <a class="reference internal" href="#summarization.timeline.nodes.document_node.DocumentNode" title="summarization.timeline.nodes.document_node.DocumentNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentNode</span></code></a> with the same attributes stored in the object.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#summarization.timeline.nodes.document_node.DocumentNode" title="summarization.timeline.nodes.document_node.DocumentNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentNode</span></code></a></p>
@@ -912,7 +912,7 @@ This function aggregates all of the <a class="reference internal" href="nlp.html
 <dt id="summarization.timeline.nodes.cluster_node.ClusterNode.similarity">
 <code class="sig-name descname">similarity</code><span class="sig-paren">(</span><em class="sig-param">cluster</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.cluster_node.ClusterNode.similarity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the similarity between this node and the given <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>.
-Since topics represent topics, this function tries to match the new <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> with any <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> already in the node.</p>
+Since <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instances represent topics, this function tries to match the new <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> with any <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> already in the node.</p>
 <p>The similarity measure is <a class="reference internal" href="vsm.html#vsm.vector_math.cosine" title="vsm.vector_math.cosine"><code class="xref py py-func docutils literal notranslate"><span class="pre">cosine()</span></code></a> and always compares the <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instances’ centroids with each other.
 The returned similarity is the highest pairwise similarity.</p>
 <dl class="field-list simple">
@@ -948,10 +948,10 @@ The returned similarity is the highest pairwise similarity.</p>
 <dd><p>Create an instance of the <a class="reference internal" href="#summarization.timeline.nodes.cluster_node.ClusterNode" title="summarization.timeline.nodes.cluster_node.ClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClusterNode</span></code></a> from the given associative array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>array</strong> (<em>dict</em>) – The associative array with the attributes to create the cluster node.</p>
+<dd class="field-odd"><p><strong>array</strong> (<em>dict</em>) – The associative array with the attributes to create the <a class="reference internal" href="#summarization.timeline.nodes.cluster_node.ClusterNode" title="summarization.timeline.nodes.cluster_node.ClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClusterNode</span></code></a>.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A new instance of the cluster node with the same attributes stored in the object.</p>
+<dd class="field-even"><p>A new instance of the <a class="reference internal" href="#summarization.timeline.nodes.cluster_node.ClusterNode" title="summarization.timeline.nodes.cluster_node.ClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClusterNode</span></code></a> with the same attributes stored in the object.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#summarization.timeline.nodes.cluster_node.ClusterNode" title="summarization.timeline.nodes.cluster_node.ClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClusterNode</span></code></a></p>
@@ -964,13 +964,20 @@ The returned similarity is the highest pairwise similarity.</p>
 </div>
 <div class="section" id="module-summarization.timeline.nodes.topical_cluster_node">
 <span id="topical-cluster-node"></span><h4>Topical Cluster Node<a class="headerlink" href="#module-summarization.timeline.nodes.topical_cluster_node" title="Permalink to this headline">¶</a></h4>
-<p>A topical cluster node stores clusters and vectorial representations of topics.</p>
+<p>The <a class="reference internal" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode" title="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">TopicalClusterNode</span></code></a> is based on the <a class="reference internal" href="#summarization.timeline.nodes.cluster_node.ClusterNode" title="summarization.timeline.nodes.cluster_node.ClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClusterNode</span></code></a>.
+Like the <a class="reference internal" href="#summarization.timeline.nodes.cluster_node.ClusterNode" title="summarization.timeline.nodes.cluster_node.ClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClusterNode</span></code></a>, it revolves around <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instances.
+However, it also associates with each <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> a topic, represented as a <a class="reference internal" href="vsm.html#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>.</p>
+<p>The idea behind the <a class="reference internal" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode" title="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">TopicalClusterNode</span></code></a> is that the topics, which are generated by a <a class="reference internal" href="tdt.html#tdt-algorithms"><span class="std std-ref">TDT algorithm</span></a>, represent more accurately what the <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> is about.
+Thereefore the <a class="reference internal" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.similarity" title="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.similarity"><code class="xref py py-func docutils literal notranslate"><span class="pre">similarity()</span></code></a> function ignores the <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> completely and focuses instead on the topics.</p>
 <dl class="class">
 <dt id="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode">
 <em class="property">class </em><code class="sig-name descname">TopicalClusterNode</code><span class="sig-paren">(</span><em class="sig-param">created_at</em>, <em class="sig-param">clusters=None</em>, <em class="sig-param">topics=None</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode" title="Permalink to this definition">¶</a></dt>
-<dd><p>A cluster node stores clusters instead of documents.
-Comparisons are made with topics, not the clusters.
-The clusters are only used to store documents.</p>
+<dd><p>The <a class="reference internal" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode" title="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">TopicalClusterNode</span></code></a> class maintains in its state two lists:</p>
+<ol class="arabic simple">
+<li><p>A list of <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instances, and</p></li>
+<li><p>An associated list of <a class="reference internal" href="vsm.html#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> instances that represent topics.</p></li>
+</ol>
+<p>The <a class="reference internal" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.similarity" title="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.similarity"><code class="xref py py-func docutils literal notranslate"><span class="pre">similarity()</span></code></a> function ignores the <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instances and focuses only on the topics.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><p><strong>topics</strong> – The list of topics in this node.
@@ -980,7 +987,7 @@ Each topic is a vector and corresponds to a cluster.</p>
 <dl class="method">
 <dt id="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">created_at</em>, <em class="sig-param">clusters=None</em>, <em class="sig-param">topics=None</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create the node.</p>
+<dd><p>Create the node with, optionally, an initial list of <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instances and topics.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -990,7 +997,7 @@ Each topic is a vector and corresponds to a cluster.</p>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>ValueError</strong> – When an unequal number of clusters are provided.</p>
+<dd class="field-even"><p><strong>ValueError</strong> – When an unequal number of <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instances and topics are provided.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -998,7 +1005,7 @@ Each topic is a vector and corresponds to a cluster.</p>
 <dl class="method">
 <dt id="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.add">
 <code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">cluster</em>, <em class="sig-param">topic</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.add" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add documents to the node.</p>
+<dd><p>Add a new <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> and its associated topic to the node.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -1012,8 +1019,9 @@ Each topic is a vector and corresponds to a cluster.</p>
 <dl class="method">
 <dt id="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.similarity">
 <code class="sig-name descname">similarity</code><span class="sig-paren">(</span><em class="sig-param">cluster</em>, <em class="sig-param">topic</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.similarity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the similarity between this node and a given topic.
-The returned similarity is the maximum similarity between the given topic and any topic in the node.</p>
+<dd><p>Compute the similarity between this node and the given topic.
+This function tries to match the new topic with any topic already in the node.
+The returned similarity is the highest pairwise similarity.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -1047,13 +1055,13 @@ The returned similarity is the maximum similarity between the given topic and an
 <dl class="method">
 <dt id="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.from_array">
 <em class="property">static </em><code class="sig-name descname">from_array</code><span class="sig-paren">(</span><em class="sig-param">array</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.from_array" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create an instance of the cluster node from the given associative array.</p>
+<dd><p>Create <a class="reference internal" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode" title="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">TopicalClusterNode</span></code></a> from the given associative array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>array</strong> (<em>dict</em>) – The associative array with the attributes to create the topical cluster node.</p>
+<dd class="field-odd"><p><strong>array</strong> (<em>dict</em>) – The associative array with the attributes to create the <a class="reference internal" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode" title="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">TopicalClusterNode</span></code></a>.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A new instance of the topical cluster node with the same attributes stored in the object.</p>
+<dd class="field-even"><p>A new instance of the <a class="reference internal" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode" title="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">TopicalClusterNode</span></code></a> with the same attributes stored in the object.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode" title="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">TopicalClusterNode</span></code></a></p>

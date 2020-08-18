@@ -95,10 +95,10 @@ class DocumentNode(Node):
 		"""
 		Create a :class:`~summarization.timeline.nodes.document_node.DocumentNode` instance from the given associative array.
 
-		:param array: The associative array with the attributes to create the document node.
+		:param array: The associative array with the attributes to create the :class:`~summarization.timeline.nodes.document_node.DocumentNode`.
 		:type array: dict
 
-		:return: A new instance of the document node with the same attributes stored in the object.
+		:return: A new instance of the :class:`~summarization.timeline.nodes.document_node.DocumentNode` with the same attributes stored in the object.
 		:rtype: :class:`~summarization.timeline.nodes.document_node.DocumentNode`
 		"""
 
