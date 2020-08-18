@@ -216,17 +216,33 @@ Therefore this listener also supports attribute filtering, which removes needles
 <dl class="class">
 <dt id="twitter.listeners.tweet_listener.TweetListener">
 <em class="property">class </em><code class="sig-name descname">TweetListener</code><span class="sig-paren">(</span><em class="sig-param">f</em>, <em class="sig-param">max_time=3600</em>, <em class="sig-param">attributes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.listeners.tweet_listener.TweetListener" title="Permalink to this definition">¶</a></dt>
-<dd><p>The listener that handles the collected tweets.</p>
+<dd><p>The <a class="reference internal" href="#twitter.listeners.tweet_listener.TweetListener" title="twitter.listeners.tweet_listener.TweetListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">TweetListener</span></code></a> handles the tweets that the stream sends.
+It does not configure the stream, but only processes the tweets it sends.</p>
+<p>The <a class="reference internal" href="#twitter.listeners.tweet_listener.TweetListener" title="twitter.listeners.tweet_listener.TweetListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">TweetListener</span></code></a>’s state stores the file pointer where to save files.
+By default, it accumulates tweets until the <code class="docutils literal notranslate"><span class="pre">THRESHOLD</span></code> constant is reached.
+At that point, the accumulated tweets are saved to file.
+In the meantime, it stores the tweets in the list of <code class="docutils literal notranslate"><span class="pre">tweets</span></code>.</p>
+<p>Although listeners do not control the stream’s specifications, they can stop it.
+The <a class="reference internal" href="#twitter.listeners.tweet_listener.TweetListener" title="twitter.listeners.tweet_listener.TweetListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">TweetListener</span></code></a> receives the <code class="docutils literal notranslate"><span class="pre">max_time</span></code> parameter which specifies, in seconds, the time to spend receiving tweets.
+The <a class="reference internal" href="#twitter.listeners.tweet_listener.TweetListener.on_data" title="twitter.listeners.tweet_listener.TweetListener.on_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">on_data()</span></code></a> function stops the stream when it receives a tweet after this time expires.
+When it stops the stream, it saves any pending tweets to file.</p>
+<p>Tweet objects contain many attributes, some of which may not be needed, but which create large corpora.
+For example, feature-pivot algorithms that rely only on volume do not need anything except the tweet ID and the timestamp.
+Therefore the <a class="reference internal" href="#twitter.listeners.tweet_listener.TweetListener" title="twitter.listeners.tweet_listener.TweetListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">TweetListener</span></code></a> also stores the <code class="docutils literal notranslate"><span class="pre">attributes</span></code> variable.
+This represents a list of tweet attributes to save to file.
+If it is not given, the tweets are stored without any filtering.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>THRESHOLD</strong> (<em>int</em>) – The number of tweets to accumulate before writing them to file.</p></li>
-<li><p><strong>file</strong> (<em>file</em>) – The opened file pointer to which to write the tweets.</p></li>
+<li><p><strong>file</strong> (<em>file</em>) – The opened file pointer where to write the tweets.</p></li>
 <li><p><strong>tweets</strong> (<em>list</em>) – The list of read tweets that have not been written to file yet.</p></li>
-<li><p><strong>max_time</strong> (<em>int</em>) – The maximum time in seconds to spend reading the file.</p></li>
-<li><p><strong>start</strong> (<em>int</em>) – The timestamp when the listener started waiting for tweets.</p></li>
+<li><p><strong>max_time</strong> (<em>int</em>) – The maximum time in seconds to spend receiving tweets.
+When this time expires, the listener instructs the stream to stop accepting tweets.</p></li>
+<li><p><strong>start</strong> (<em>int</em>) – The timestamp when the listener started waiting for tweets.
+This variable is used to calculate the time the listener has spent receiving tweets.</p></li>
 <li><p><strong>attributes</strong> (<em>list of str</em><em> or </em><em>None</em>) – The attributes to save from each tweet.
-If <cite>None</cite> is given, the entire tweet objects are saved.</p></li>
+If <code class="docutils literal notranslate"><span class="pre">None</span></code> is given, the entire tweet objects are saved.</p></li>
 </ul>
 </dd>
 </dl>
@@ -239,10 +255,11 @@ By default, the stream continues processing for an hour.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>f</strong> (<em>file</em>) – The opened file pointer to which to write the tweets.</p></li>
-<li><p><strong>max_time</strong> (<em>int</em>) – The maximum time in seconds to spend reading the file.</p></li>
+<li><p><strong>f</strong> (<em>file</em>) – The opened file pointer where to write the tweets.</p></li>
+<li><p><strong>max_time</strong> (<em>int</em>) – The maximum time in seconds to spend receiving tweets.
+When this time expires, the listener instructs the stream to stop accepting tweets.</p></li>
 <li><p><strong>attributes</strong> (<em>list of str</em><em> or </em><em>None</em>) – The attributes to save from each tweet.
-If <cite>None</cite> is given, the entire tweet objects are saved.</p></li>
+If <code class="docutils literal notranslate"><span class="pre">None</span></code> is given, the entire tweet objects are saved.</p></li>
 </ul>
 </dd>
 </dl>
@@ -251,23 +268,29 @@ If <cite>None</cite> is given, the entire tweet objects are saved.</p></li>
 <dl class="method">
 <dt id="twitter.listeners.tweet_listener.TweetListener.flush">
 <code class="sig-name descname">flush</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#twitter.listeners.tweet_listener.TweetListener.flush" title="Permalink to this definition">¶</a></dt>
-<dd><p>Flush the tweets to file.</p>
-<p>Data is saved as a string to file.</p>
+<dd><p>Flush the tweets to file.
+Data is saved as a string to file.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>At this point, tweets are already JSON dictionaries and have a newline symbol at the end.
+Since each tweet is a string representing a line, this function only concatenates these lines together.</p>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="twitter.listeners.tweet_listener.TweetListener.on_data">
 <code class="sig-name descname">on_data</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.listeners.tweet_listener.TweetListener.on_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>When tweets are received, add them to a list.
-If there are many tweets, save them to file and reset the list of tweets.
-The override flag indicates whether the function should skip checking if the tweet is valid.</p>
-<p>Data is saved as a string to file.</p>
+<dd><p>When the listener receives tweets, add them to a list.
+If there are many tweets, save them to file and reset the list of tweets.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>data</strong> (<em>listener</em>) – The received data.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A boolean indicating if the listener has finished reading tweets.</p>
+<dd class="field-even"><p>A boolean indicating if the listener has finished reading tweets.
+It is set to <code class="docutils literal notranslate"><span class="pre">True</span></code> normally.
+When the elapsed time exceeds the <code class="docutils literal notranslate"><span class="pre">max_time</span></code> parameter, the <a class="reference internal" href="#twitter.listeners.tweet_listener.TweetListener" title="twitter.listeners.tweet_listener.TweetListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">TweetListener</span></code></a> returns <code class="docutils literal notranslate"><span class="pre">False</span></code>.
+This instructs the stream to stop receiving tweets.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>bool</p>
@@ -278,8 +301,8 @@ The override flag indicates whether the function should skip checking if the twe
 <dl class="method">
 <dt id="twitter.listeners.tweet_listener.TweetListener.filter">
 <code class="sig-name descname">filter</code><span class="sig-paren">(</span><em class="sig-param">tweet</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.listeners.tweet_listener.TweetListener.filter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filter the given tweet using the attributes.
-If no attributes are given, the tweet’s attributes are all retained.</p>
+<dd><p>Filter the given tweet using the attributes specified when creating the <a class="reference internal" href="#twitter.listeners.tweet_listener.TweetListener" title="twitter.listeners.tweet_listener.TweetListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">TweetListener</span></code></a>.
+If no attributes were given, the tweet’s attributes are all retained.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>tweet</strong> (<em>dict</em>) – The tweet attributes as a dictionary.
