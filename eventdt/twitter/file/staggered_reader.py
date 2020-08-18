@@ -38,11 +38,11 @@ class StaggeredFileReader(FileReader):
 
 	def __init__(self, queue, f, max_lines=-1, max_time=-1, skip_lines=0, skip_time=0, rate=1, skip_rate=0):
 		"""
-		Create the :class:`~twitter.file.staggered_reader.StaggeredFileReader` with the file from where to read tweets and the :class:`~queues.queue.Queue` where to store them.
+		Create the :class:`~twitter.file.staggered_reader.StaggeredFileReader` with the file from where to read tweets and the :class:`~queues.Queue` where to store them.
 		The ``rate`` and ``skip_rate`` are extra parameters in addition to the :class:`~twitter.file.FileReader`'s parameters.
 
 		:param queue: The queue to which to add the tweets.
-		:type queue: :class:`~queues.queue.Queue`
+		:type queue: :class:`~queues.Queue`
 		:param f: The opened file from where to read the tweets.
 		:type f: file
 		:param max_lines: The maximum number of lines to read.

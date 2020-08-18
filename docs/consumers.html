@@ -183,8 +183,8 @@ The queue functionality is a special class.</p>
 This implementation is based on lists.
 Queue-specific functionality is introduced as functions.</p>
 <dl class="class">
-<dt id="queues.queue.Queue">
-<em class="property">class </em><code class="sig-name descname">Queue</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.queue.Queue" title="Permalink to this definition">¶</a></dt>
+<dt id="queues.Queue">
+<em class="property">class </em><code class="sig-name descname">Queue</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.Queue" title="Permalink to this definition">¶</a></dt>
 <dd><p>The queue data structure is based on a list.
 The queue can take in any kind of data, including other queues.
 New elements are added to the queue at the end.</p>
@@ -194,22 +194,22 @@ New elements are added to the queue at the end.</p>
 </dd>
 </dl>
 <dl class="method">
-<dt id="queues.queue.Queue.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.queue.Queue.__init__" title="Permalink to this definition">¶</a></dt>
+<dt id="queues.Queue.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.Queue.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the queue.
 The queue’s data can be given as normal arguments.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="queues.queue.Queue.enqueue">
-<code class="sig-name descname">enqueue</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.queue.Queue.enqueue" title="Permalink to this definition">¶</a></dt>
+<dt id="queues.Queue.enqueue">
+<code class="sig-name descname">enqueue</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.Queue.enqueue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add the given data to the queue.
 All arguments can be provided as arguments.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="queues.queue.Queue.dequeue">
-<code class="sig-name descname">dequeue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queues.queue.Queue.dequeue" title="Permalink to this definition">¶</a></dt>
+<dt id="queues.Queue.dequeue">
+<code class="sig-name descname">dequeue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queues.Queue.dequeue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the first element in the queue.
 If the queue is empty, <cite>None</cite> is returned instead</p>
 <dl class="field-list simple">
@@ -223,10 +223,10 @@ If the queue is empty, <cite>None</cite> is returned instead</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="queues.queue.Queue.dequeue_all">
-<code class="sig-name descname">dequeue_all</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queues.queue.Queue.dequeue_all" title="Permalink to this definition">¶</a></dt>
+<dt id="queues.Queue.dequeue_all">
+<code class="sig-name descname">dequeue_all</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queues.Queue.dequeue_all" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dequeue all elements in the queue.
-Unlike the <a class="reference internal" href="#queues.queue.Queue.empty" title="queues.queue.Queue.empty"><code class="xref py py-func docutils literal notranslate"><span class="pre">empty()</span></code></a> function, this function returns all of the queue’s elements.</p>
+Unlike the <a class="reference internal" href="#queues.Queue.empty" title="queues.Queue.empty"><code class="xref py py-func docutils literal notranslate"><span class="pre">empty()</span></code></a> function, this function returns all of the queue’s elements.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>All the elements in the queue.</p>
@@ -238,15 +238,15 @@ Unlike the <a class="reference internal" href="#queues.queue.Queue.empty" title=
 </dd></dl>
 
 <dl class="method">
-<dt id="queues.queue.Queue.empty">
-<code class="sig-name descname">empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queues.queue.Queue.empty" title="Permalink to this definition">¶</a></dt>
+<dt id="queues.Queue.empty">
+<code class="sig-name descname">empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queues.Queue.empty" title="Permalink to this definition">¶</a></dt>
 <dd><p>Empty the queue.
-Unlike the <a class="reference internal" href="#queues.queue.Queue.dequeue_all" title="queues.queue.Queue.dequeue_all"><code class="xref py py-func docutils literal notranslate"><span class="pre">dequeue_all()</span></code></a> function, this function returns nothing.</p>
+Unlike the <a class="reference internal" href="#queues.Queue.dequeue_all" title="queues.Queue.dequeue_all"><code class="xref py py-func docutils literal notranslate"><span class="pre">dequeue_all()</span></code></a> function, this function returns nothing.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="queues.queue.Queue.length">
-<code class="sig-name descname">length</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queues.queue.Queue.length" title="Permalink to this definition">¶</a></dt>
+<dt id="queues.Queue.length">
+<code class="sig-name descname">length</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queues.Queue.length" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the length of the queue.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -259,8 +259,8 @@ Unlike the <a class="reference internal" href="#queues.queue.Queue.dequeue_all" 
 </dd></dl>
 
 <dl class="method">
-<dt id="queues.queue.Queue.head">
-<code class="sig-name descname">head</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queues.queue.Queue.head" title="Permalink to this definition">¶</a></dt>
+<dt id="queues.Queue.head">
+<code class="sig-name descname">head</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queues.Queue.head" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the first element entered into the queue without removing it.
 If the queue is empty, <cite>None</cite> is returned instead</p>
 <dl class="field-list simple">
@@ -274,8 +274,8 @@ If the queue is empty, <cite>None</cite> is returned instead</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="queues.queue.Queue.tail">
-<code class="sig-name descname">tail</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queues.queue.Queue.tail" title="Permalink to this definition">¶</a></dt>
+<dt id="queues.Queue.tail">
+<code class="sig-name descname">tail</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queues.Queue.tail" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the last element entered into the queue without removing it.
 If the queue is empty, <cite>None</cite> is returned instead</p>
 <dl class="field-list simple">
@@ -289,8 +289,8 @@ If the queue is empty, <cite>None</cite> is returned instead</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="queues.queue.Queue.__weakref__">
-<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#queues.queue.Queue.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dt id="queues.Queue.__weakref__">
+<code class="sig-name descname">__weakref__</code><a class="headerlink" href="#queues.Queue.__weakref__" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of weak references to the object (if defined)</p>
 </dd></dl>
 
@@ -318,7 +318,7 @@ It also defines the state of the consumer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="#module-queues.queue" title="queues.queue"><strong>queue</strong></a> (<a class="reference internal" href="#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that is to be consumed.</p></li>
+<li><p><a class="reference internal" href="#module-queues.queue" title="queues.queue"><strong>queue</strong></a> (<a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that is to be consumed.</p></li>
 <li><p><strong>active</strong> (<em>bool</em>) – A boolean indicating whether the consumer is still accepting data.</p></li>
 <li><p><strong>stopped</strong> (<em>bool</em>) – A boolean indicating whether the consumer has finished processing.</p></li>
 </ul>
@@ -390,7 +390,7 @@ The two functions communicate with each other using a common queue, called a buf
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>periodicity</strong> (<em>int</em>) – The time window in seconds of the buffered consumer, or how often it is invoked.</p></li>
-<li><p><a class="reference internal" href="#queues.consumers.eld_consumer.ELDConsumer.buffer" title="queues.consumers.eld_consumer.ELDConsumer.buffer"><strong>buffer</strong></a> (<a class="reference internal" href="#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The buffer of objects that have to be processed.</p></li>
+<li><p><a class="reference internal" href="#queues.consumers.eld_consumer.ELDConsumer.buffer" title="queues.consumers.eld_consumer.ELDConsumer.buffer"><strong>buffer</strong></a> (<a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The buffer of objects that have to be processed.</p></li>
 </ul>
 </dd>
 </dl>
@@ -401,7 +401,7 @@ The two functions communicate with each other using a common queue, called a buf
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>queue</strong> (<a class="reference internal" href="#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that is consumed.</p></li>
+<li><p><strong>queue</strong> (<a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that is consumed.</p></li>
 <li><p><strong>periodicity</strong> (<em>int</em>) – The time window in seconds of the buffered consumer, or how often it is invoked.</p></li>
 </ul>
 </dd>
@@ -448,7 +448,7 @@ The timestamp parameter is the field that the sleep function checks to know when
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>queue</strong> (<a class="reference internal" href="#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that is consumed.</p></li>
+<li><p><strong>queue</strong> (<a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that is consumed.</p></li>
 <li><p><strong>periodicity</strong> (<em>int</em>) – The time window in seconds of the buffered consumer, or how often it is invoked.</p></li>
 </ul>
 </dd>
@@ -516,7 +516,7 @@ Therefore old data can be removed safely.</p></li>
 <li><p><a class="reference internal" href="#queues.consumers.eld_consumer.ELDConsumer.min_burst" title="queues.consumers.eld_consumer.ELDConsumer.min_burst"><strong>min_burst</strong></a> (<em>float</em>) – The minimum burst of a term to be considered emerging and returned.
 This value is exclusive.</p></li>
 <li><p><strong>store</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code>) – The nutrition store used in conjunction with extractin breaking news.</p></li>
-<li><p><a class="reference internal" href="#queues.consumers.eld_consumer.ELDConsumer.buffer" title="queues.consumers.eld_consumer.ELDConsumer.buffer"><strong>buffer</strong></a> (<a class="reference internal" href="#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – A buffer of tweets that have been processed, but which are not part of a checkpoint yet.</p></li>
+<li><p><a class="reference internal" href="#queues.consumers.eld_consumer.ELDConsumer.buffer" title="queues.consumers.eld_consumer.ELDConsumer.buffer"><strong>buffer</strong></a> (<a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – A buffer of tweets that have been processed, but which are not part of a checkpoint yet.</p></li>
 <li><p><strong>tokenizer</strong> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer used to create documents and create the IDF table, among others.</p></li>
 <li><p><strong>clustering</strong> (<a class="reference internal" href="vsm.html#vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans" title="vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans"><code class="xref py py-class docutils literal notranslate"><span class="pre">TemporalNoKMeans</span></code></a>) – The clustering algorithm to use.</p></li>
 <li><p><a class="reference internal" href="tdt.html#module-tdt" title="tdt"><strong>tdt</strong></a> (<a class="reference internal" href="tdt.html#tdt.algorithms.eld.ELD" title="tdt.algorithms.eld.ELD"><code class="xref py py-class docutils literal notranslate"><span class="pre">ELD</span></code></a>) – The TDT algorithm used to detect breaking developments.</p></li>
@@ -537,7 +537,7 @@ This buffer is used to store tweets until they are made into a checkpoint.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>queue</strong> (<a class="reference internal" href="#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that is consumed.</p></li>
+<li><p><strong>queue</strong> (<a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that is consumed.</p></li>
 <li><p><strong>time_window</strong> (<em>int</em>) – The size of the window after which checkpoints are created.</p></li>
 <li><p><strong>scheme</strong> (None or <a class="reference internal" href="nlp.html#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme that is used to create dimensions.
 If <cite>None</cite> is given, the <a class="reference internal" href="nlp.html#nlp.weighting.tf.TF" title="nlp.weighting.tf.TF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TF</span></code></a> term-weighting scheme is used.</p></li>
@@ -642,7 +642,7 @@ It will be populated later when the ‘reconaissance’ period is finished.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>queue</strong> (<a class="reference internal" href="#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that is consumed.</p></li>
+<li><p><strong>queue</strong> (<a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that is consumed.</p></li>
 <li><p><strong>periodicity</strong> (<em>int</em>) – The time window in seconds of the buffered consumer, or how often it is invoked.
 This defaults to 5 seconds, the same span as half the smallest time window in Zhao et al.’s algorithm.</p></li>
 <li><p><strong>scheme</strong> (None or <a class="reference internal" href="nlp.html#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme that is used to create dimensions.
@@ -697,7 +697,7 @@ It will be populated later when the ‘reconaissance’ period is finished.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>queue</strong> (<a class="reference internal" href="#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that is consumed.</p></li>
+<li><p><strong>queue</strong> (<a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that is consumed.</p></li>
 <li><p><strong>periodicity</strong> (<em>int</em>) – The time window in seconds of the buffered consumer, or how often it is invoked.
 This defaults to 5 seconds, the same span as half the smallest time window in Zhao et al.’s algorithm.</p></li>
 <li><p><strong>scheme</strong> (None or <a class="reference internal" href="nlp.html#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme that is used to create dimensions.

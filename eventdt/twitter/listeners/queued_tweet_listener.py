@@ -1,6 +1,6 @@
 """
 Like the :class:`~twitter.listeners.tweet_listener.TweetListener`, the :class:`~twitter.listeners.queued_tweet_listener.QueuedTweetListener` is based on Tweepy and its :class:`tweepy.stream.StreamListener`.
-However, it differs from the :class:`~twitter.listeners.tweet_listener.TweetListener` because it does not save tweets to a file, but it adds them to a :class:`~queues.queue.Queue`.
+However, it differs from the :class:`~twitter.listeners.tweet_listener.TweetListener` because it does not save tweets to a file, but it adds them to a :class:`~queues.Queue`.
 This listener is preferrable when there is no need to save tweets as they are processed as soon as they arrive.
 Therefore the :class:`~twitter.listeners.queued_tweet_listener.QueuedTweetListener` is designed to work out of the box with :ref:`consumers <consumers>`.
 """
@@ -24,8 +24,8 @@ class QueuedTweetListener(StreamListener):
 	The :class:`~twitter.listeners.queued_tweet_listener.QueuedTweetListener` handles the tweets that the stream sends.
 	It does not configure the stream, but only processes the tweets it sends.
 
-	The :class:`~twitter.listeners.queued_tweet_listener.QueuedTweetListener` differs from the :class:`~twitter.listeners.tweet_listener.TweetListener` because it adds these tweets to a :class:`~queues.queue.Queue` instead of saving them to a file
-	Therefore the class maintains the :class:`~queues.queue.Queue` as part of its state.
+	The :class:`~twitter.listeners.queued_tweet_listener.QueuedTweetListener` differs from the :class:`~twitter.listeners.tweet_listener.TweetListener` because it adds these tweets to a :class:`~queues.Queue` instead of saving them to a file
+	Therefore the class maintains the :class:`~queues.Queue` as part of its state.
 
 	Although listeners do not control the stream's specifications, they can stop it.
 	The :class:`~twitter.listeners.queued_tweet_listener.QueuedTweetListener` receives the ``max_time`` parameter which specifies, in seconds, the time to spend receiving tweets.
@@ -35,7 +35,7 @@ class QueuedTweetListener(StreamListener):
 	The attributes that should be retained are specified using the ``attributes`` parameter and are saved as part of the class' state.
 
 	:ivar queue: The queue to which to add incoming tweets.
-	:vartype queue: :class:`~queues.queue.Queue`
+	:vartype queue: :class:`~queues.Queue`
 	:ivar max_time: The maximum time in seconds to spend reading the file.
 	:vartype max_time: int
 	:ivar start: The timestamp when the listener started waiting for tweets.
@@ -52,7 +52,7 @@ class QueuedTweetListener(StreamListener):
 		By default, the stream continues processing for an hour.
 
 		:param queue: The queue to which to add incoming tweets.
-		:vartype queue: :class:`~queues.queue.Queue`
+		:vartype queue: :class:`~queues.Queue`
 		:param max_time: The maximum time in seconds to spend reading the file.
 		:type max_time: int
 		:param attributes: The attributes to save from each tweet.

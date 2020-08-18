@@ -64,7 +64,7 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 		It will be populated later when the 'reconaissance' period is finished.
 
 		:param queue: The queue that is consumed.
-		:type queue: :class:`~queues.queue.Queue`
+		:type queue: :class:`~queues.Queue`
 		:param periodicity: The time window in seconds of the buffered consumer, or how often it is invoked.
 							This defaults to 5 seconds, the same span as half the smallest time window in Zhao et al.'s algorithm.
 		:type periodicity: int

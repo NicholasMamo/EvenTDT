@@ -1,7 +1,7 @@
 """
 The :class:`~twitter.file.simulated_reader.SimulatedFileReader` simulates the real-time stream by adding tweets to the queue as if the tweets were being received in real-time.
 It pretends that the event is ongoing, and adds data to the queue according to when they happened.
-This means that in high-volume periods, the :class:`~twitter.file.simulated_reader.SimulatedFileReader` adds many tweets to the :class:`~queues.queue.Queue`.
+This means that in high-volume periods, the :class:`~twitter.file.simulated_reader.SimulatedFileReader` adds many tweets to the :class:`~queues.Queue`.
 In low-volume periods, it enqueues fewer tweets.
 
 Since the :class:`~twitter.file.simulated_reader.SimulatedFileReader` has high fidelity, it is most appropriate in experimental or evaluation settings.
@@ -37,11 +37,11 @@ class SimulatedFileReader(FileReader):
 
 	def __init__(self, queue, f, max_lines=-1, max_time=-1, skip_lines=0, skip_time=0, speed=1):
 		"""
-		Create the :class:`~twitter.file.simulated_reader.SimulatedFileReader` with the file from where to read tweets and the :class:`~queues.queue.Queue` where to store them.
+		Create the :class:`~twitter.file.simulated_reader.SimulatedFileReader` with the file from where to read tweets and the :class:`~queues.Queue` where to store them.
 		The ``speed`` is an extra parameter in addition to the :class:`~twitter.file.FileReader`'s parameters.
 
 		:param queue: The queue to which to add the tweets.
-		:type queue: :class:`~queues.queue.Queue`
+		:type queue: :class:`~queues.Queue`
 		:param f: The opened file from where to read the tweets.
 		:type f: file
 		:param max_lines: The maximum number of lines to read.

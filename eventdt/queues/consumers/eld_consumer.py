@@ -90,7 +90,7 @@ class ELDConsumer(Consumer):
 	:ivar store: The nutrition store used in conjunction with extractin breaking news.
 	:vartype store: :class:`~tdt.nutrition.store.NutritionStore`
 	:ivar buffer: A buffer of tweets that have been processed, but which are not part of a checkpoint yet.
-	:vartype buffer: :class:`~queues.queue.Queue`
+	:vartype buffer: :class:`~queues.Queue`
 	:ivar ~.tokenizer: The tokenizer used to create documents and create the IDF table, among others.
 	:vartype ~.tokenizer: :class:`~nlp.tokenizer.Tokenizer`
 	:ivar clustering: The clustering algorithm to use.
@@ -116,7 +116,7 @@ class ELDConsumer(Consumer):
 		This buffer is used to store tweets until they are made into a checkpoint.
 
 		:param queue: The queue that is consumed.
-		:type queue: :class:`~queues.queue.Queue`
+		:type queue: :class:`~queues.Queue`
 		:param time_window: The size of the window after which checkpoints are created.
 		:type time_window: int
 		:param scheme: The term-weighting scheme that is used to create dimensions.

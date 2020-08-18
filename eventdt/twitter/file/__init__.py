@@ -1,5 +1,5 @@
 """
-File readers emulate the Twitter stream by reading corpora and feeding them into a :class:`~queues.queue.Queue` so that they can be processed by :ref:`consumers <consumers>`.
+File readers emulate the Twitter stream by reading corpora and feeding them into a :class:`~queues.Queue` so that they can be processed by :ref:`consumers <consumers>`.
 These readers expect that the corpora were collected using a :ref:`listener <twitter_listeners>`.
 The input files have one object on each line.
 
@@ -18,8 +18,8 @@ class FileReader(ABC):
 	"""
 	The :class:`~twitter.file.FileReader` is a class that describes the general state of file readers.
 
-	Generally speaking, any file reader should implement the :func:`~twitter.file.FileReader.read` function, which reads tweets and adds them to the :class:`~queues.queue.Queue`.
-	This :class:`~queues.queue.Queue` is one of the variables that make up the :class:`~twitter.file.FileReader`'s state.
+	Generally speaking, any file reader should implement the :func:`~twitter.file.FileReader.read` function, which reads tweets and adds them to the :class:`~queues.Queue`.
+	This :class:`~queues.Queue` is one of the variables that make up the :class:`~twitter.file.FileReader`'s state.
 	Accompanying it is the ``file``, which is the pointer to an opened file.
 
 	The :class:`~twitter.file.FileReader` also stores the maximum number of lines, ``max_lines``, and the maximum time, in seconds, ``max_time`` it should spend reading tweets from the corpora.
@@ -39,7 +39,7 @@ class FileReader(ABC):
 	When the :func:`~twitter.file.FileReader.read` function actually finishes reading, it sets the ``stopped`` variable to ``True``.
 
 	:ivar queue: The queue to which to add tweets.
-	:vartype queue: :class:`~queues.queue.Queue`
+	:vartype queue: :class:`~queues.Queue`
 	:ivar file: The opened file pointer from where to read the tweets.
 	:vartype file: file
 	:ivar max_lines: The maximum number of lines to read.
@@ -57,11 +57,11 @@ class FileReader(ABC):
 
 	def __init__(self, queue, f, max_lines=-1, max_time=-1, skip_lines=0, skip_time=0):
 		"""
-		Create the file reader with the :class:`~queues.queue.Queue` where to add tweets and the file from where to read them.
+		Create the file reader with the :class:`~queues.Queue` where to add tweets and the file from where to read them.
 		The ``max_lines`` and ``max_time`` parameters can be used to read only a part of the corpus.
 
 		:param queue: The queue to which to add the tweets.
-		:type queue: :class:`~queues.queue.Queue`
+		:type queue: :class:`~queues.Queue`
 		:param f: The opened file from where to read the tweets.
 		:type f: file
 		:param max_lines: The maximum number of lines to read.
