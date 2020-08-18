@@ -19,6 +19,8 @@ The queue functionality is a special class.
    :private-members:
    :special-members:
 
+.. _consumers:
+
 Consumers
 =========
 

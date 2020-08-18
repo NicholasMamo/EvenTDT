@@ -1,7 +1,8 @@
 """
-The queued listener is based on Tweepy.
-All a queued listener does with the data is add it to a queue.
-It is up to other consumers to process it.
+Like the :class:`~twitter.listeners.tweet_listener.TweetListener`, the :class:`~twitter.listeners.queued_tweet_listener.QueuedTweetListener` is based on Tweepy and its :class:`tweepy.stream.StreamListener`.
+However, it differs from the :class:`~twitter.listeners.tweet_listener.TweetListener` because it does not save tweets to a file, but it adds them to a :class:`~queues.queue.Queue`.
+This listener is preferrable when there is no need to save tweets as they are processed as soon as they arrive.
+Therefore the :class:`~twitter.listeners.queued_tweet_listener.QueuedTweetListener` is designed to work out of the box with :ref:`consumers <consumers>`.
 """
 
 from datetime import datetime
