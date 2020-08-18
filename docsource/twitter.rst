@@ -31,16 +31,22 @@ Queued Tweet Listener
    :members:
    :special-members:
 
-Readers
-=======
+File Readers
+============
 
 .. automodule:: twitter.file
    :members:
    :special-members:
 
+Simulated Reader
+----------------
+
 .. automodule:: twitter.file.simulated_reader
    :members:
    :special-members:
+
+Staggered Reader
+----------------
 
 .. automodule:: twitter.file.staggered_reader
    :members:

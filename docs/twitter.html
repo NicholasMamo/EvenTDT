@@ -100,7 +100,11 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-twitter.listeners.queued_tweet_listener">Queued Tweet Listener</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#module-twitter.file">Readers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-twitter.file">File Readers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-twitter.file.simulated_reader">Simulated Reader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-twitter.file.staggered_reader">Staggered Reader</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="consumers.html">9. Consumers</a></li>
@@ -440,7 +444,7 @@ The keys are the attribute names and the values are the data.</p>
 </div>
 </div>
 <div class="section" id="module-twitter.file">
-<span id="readers"></span><h2>Readers<a class="headerlink" href="#module-twitter.file" title="Permalink to this headline">¶</a></h2>
+<span id="file-readers"></span><h2>File Readers<a class="headerlink" href="#module-twitter.file" title="Permalink to this headline">¶</a></h2>
 <p>A reader does not collect tweets from Twitter, but reads them from a file.
 The queue and file are given in the constructor.
 Reading can be started asynchronously using the <code class="xref py py-func docutils literal notranslate"><span class="pre">read()</span></code> function.</p>
@@ -508,7 +512,9 @@ This function merely asks that the consumer stops accepting new objects for proc
 
 </dd></dl>
 
-<span class="target" id="module-twitter.file.simulated_reader"></span><p>A simulated file listener reads data from a file and adds it to a queue.
+<div class="section" id="module-twitter.file.simulated_reader">
+<span id="simulated-reader"></span><h3>Simulated Reader<a class="headerlink" href="#module-twitter.file.simulated_reader" title="Permalink to this headline">¶</a></h3>
+<p>A simulated file listener reads data from a file and adds it to a queue.
 It pretends that the event is ongoing, and adds data to the queue according to when they happened.
 Therefore high-volume periods enqueue a lot of tweets to the queue.
 Low-volume periods enqueue fewer tweets to the queue.</p>
@@ -597,7 +603,10 @@ Tweets are added as a dictionary to the queue.</p>
 
 </dd></dl>
 
-<span class="target" id="module-twitter.file.staggered_reader"></span><p>The staggered file reader reads lines a few at a time.
+</div>
+<div class="section" id="module-twitter.file.staggered_reader">
+<span id="staggered-reader"></span><h3>Staggered Reader<a class="headerlink" href="#module-twitter.file.staggered_reader" title="Permalink to this headline">¶</a></h3>
+<p>The staggered file reader reads lines a few at a time.
 This reader allows a steady stream of tweets to be read and processed.</p>
 <dl class="class">
 <dt id="twitter.file.staggered_reader.StaggeredFileReader">
@@ -685,6 +694,7 @@ Tweets are added as a dictionary to the queue.</p>
 
 </dd></dl>
 
+</div>
 </div>
 </div>
 
