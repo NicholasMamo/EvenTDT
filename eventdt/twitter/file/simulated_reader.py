@@ -1,8 +1,11 @@
 """
-A simulated file listener reads data from a file and adds it to a queue.
+The :class:`~twitter.file.simulated_reader.SimulatedFileReader` simulates the real-time stream by adding tweets to the queue as if the tweets were being received in real-time.
 It pretends that the event is ongoing, and adds data to the queue according to when they happened.
-Therefore high-volume periods enqueue a lot of tweets to the queue.
-Low-volume periods enqueue fewer tweets to the queue.
+This means that in high-volume periods, the :class:`~twitter.file.simulated_reader.SimulatedFileReader` adds many tweets to the :class:`~queues.queue.Queue`.
+In low-volume periods, it enqueues fewer tweets.
+
+Since the :class:`~twitter.file.simulated_reader.SimulatedFileReader` has high fidelity, it is most appropriate in experimental or evaluation settings.
+Since the volume is likely to change, it also tests the :ref:`consumers' <consumers>` performance in volatile or high-volume situations.
 """
 
 import asyncio
@@ -20,8 +23,11 @@ from twitter.file import FileReader
 
 class SimulatedFileReader(FileReader):
 	"""
-	The simulated file listener reads data from a file and adds it to a queue.
+	The :class:`~twitter.file.simulated_reader.SimulatedFileReader` is based on the :class:`~twitter.file.FileReader`, so it reads tweets from a file and adds it to a queue.
 	This works like a simulation, as if the event was happening at the same time.
+
+	In addition to the parameters accepted by the :class:`~twitter.file.FileReader`, it also accepts the ``speed``.
+	Since the :class:`~twitter.file.simulated_reader.SimulatedFileReader` simulates the stream as if it is happening in real-time, the ``speed`` is a function of time as well.
 
 	:ivar speed: The reading speed as a function of time.
 				 If it is set to 0.5, for example, the event progresses at half the speed.
@@ -31,29 +37,18 @@ class SimulatedFileReader(FileReader):
 
 	def __init__(self, queue, f, max_lines=-1, max_time=-1, skip_lines=0, skip_time=0, speed=1):
 		"""
-		Create the reader and skip any required lines or time from the file.
-		By default, the file reader skips no lines or time.
-		The skip rate can be set to sample the file.
+		Create the :class:`~twitter.file.simulated_reader.SimulatedFileReader` with the file from where to read tweets and the :class:`~queues.queue.Queue` where to store them.
+		The ``speed`` is an extra parameter in addition to the :class:`~twitter.file.FileReader`'s parameters.
 
-		.. note::
-
-			The number of lines and seconds that are skipped depend on the largest number.
-
-		.. note::
-
-			The maximum number of lines and seconds is exclusive.
-			That means that if either are 0, no tweets are read.
-
-		:param queue: The queue to which to add incoming tweets.
-		:vartype queue: :class:`~queues.queue.Queue`
+		:param queue: The queue to which to add the tweets.
+		:type queue: :class:`~queues.queue.Queue`
 		:param f: The opened file from where to read the tweets.
 		:type f: file
 		:param max_lines: The maximum number of lines to read.
 						  If the number is negative, it is ignored.
 		:type max_lines: int
 		:param max_time: The maximum time in seconds to spend reading from the file.
-						 The maximum time is understood to be i nterms of the corpus' time.
-						 The time is taken from tweets' `created_at` attribute.
+						 The time is taken from tweets' timestamps.
 						 If the number is negative, it is ignored.
 		:type max_time: int
 		:param skip_lines: The number of lines to skip from the beginning of the file.
@@ -94,8 +89,7 @@ class SimulatedFileReader(FileReader):
 	@FileReader.reading
 	async def read(self):
 		"""
-		Read the file.
-		Tweets are added as a dictionary to the queue.
+		Read the file and add each line as a dictionary to the queue.
 		"""
 
 		file = self.file
