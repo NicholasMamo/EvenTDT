@@ -644,15 +644,15 @@ If the timestamp is not given, the current time is used.</p>
 
 <div class="section" id="module-summarization.timeline.nodes">
 <span id="nodes"></span><h3>Nodes<a class="headerlink" href="#module-summarization.timeline.nodes" title="Permalink to this headline">¶</a></h3>
-<p>Timelines are made up of nodes.
-Each node stores documents that can be summarized.
-Moreover, nodes provide functionality to facilitate timeline tasks.</p>
+<p>Nodes are the basic component of a <a class="reference internal" href="#summarization.timeline.Timeline" title="summarization.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a>.
+Each <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> stores information that can be summarized later on.</p>
+<p>The most crucial components of the <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> class are the <a class="reference internal" href="#summarization.timeline.nodes.Node.add" title="summarization.timeline.nodes.Node.add"><code class="xref py py-func docutils literal notranslate"><span class="pre">add()</span></code></a> and <a class="reference internal" href="#summarization.timeline.nodes.Node.similarity" title="summarization.timeline.nodes.Node.similarity"><code class="xref py py-func docutils literal notranslate"><span class="pre">similarity()</span></code></a> functions.
+These two functions are facility functions for the <a class="reference internal" href="#summarization.timeline.Timeline" title="summarization.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a> to decide where to add information.
+Both functions accept the same input, regardless if they do not use all of it.</p>
 <dl class="class">
 <dt id="summarization.timeline.nodes.Node">
 <em class="property">class </em><code class="sig-name descname">Node</code><span class="sig-paren">(</span><em class="sig-param">created_at</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.Node" title="Permalink to this definition">¶</a></dt>
-<dd><p>Nodes are the basic component of a timeline.
-Timelines contain an ordered list of these nodes.</p>
-<p>Nodes can store documents in different ways.
+<dd><p>Nodes can store documents in different ways.
 For example, they can be stored as simple documents.
 Alternatively, they can be stored as clusters.</p>
 <p>Nodes must offer certain functionality to facilitate the timeline construction.</p>

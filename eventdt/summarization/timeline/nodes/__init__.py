@@ -1,7 +1,10 @@
 """
-Timelines are made up of nodes.
-Each node stores documents that can be summarized.
-Moreover, nodes provide functionality to facilitate timeline tasks.
+Nodes are the basic component of a :class:`~summarization.timeline.Timeline`.
+Each :class:`~summarization.timeline.nodes.Node` stores information that can be summarized later on.
+
+The most crucial components of the :class:`~summarization.timeline.nodes.Node` class are the :func:`~summarization.timeline.nodes.Node.add` and :func:`~summarization.timeline.nodes.Node.similarity` functions.
+These two functions are facility functions for the :class:`~summarization.timeline.Timeline` to decide where to add information.
+Both functions accept the same input, regardless if they do not use all of it.
 """
 
 from abc import ABC, abstractmethod
@@ -17,9 +20,6 @@ from objects.exportable import Exportable
 
 class Node(Exportable):
 	"""
-	Nodes are the basic component of a timeline.
-	Timelines contain an ordered list of these nodes.
-
 	Nodes can store documents in different ways.
 	For example, they can be stored as simple documents.
 	Alternatively, they can be stored as clusters.
