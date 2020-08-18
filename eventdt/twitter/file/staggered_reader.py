@@ -26,7 +26,7 @@ class StaggeredFileReader(FileReader):
 	:vartype skip_rate: int
 	"""
 
-	def __init__(self, queue, f, max_lines=-1, max_time=-1, rate=1, skip_rate=0, skip_lines=0, skip_time=0):
+	def __init__(self, queue, f, max_lines=-1, max_time=-1, skip_lines=0, skip_time=0, rate=1, skip_rate=0):
 		"""
 		Create the reader and skip any required lines or time from the file.
 		By default, the file reader skips no lines or time.
@@ -52,14 +52,14 @@ class StaggeredFileReader(FileReader):
 						 The time is taken from tweets' `created_at` attribute.
 						 If the number is negative, it is ignored.
 		:type max_time: int
-		:param rate: The number of lines to read per second.
-		:type rate: float
-		:param skip_rate: The number of lines to skip for each line read.
-		:type skip_rate: int
 		:param skip_lines: The number of lines to skip from the beginning of the file.
 		:type skip_lines: int
 		:param skip_time: The number of seconds to skip from the beginning of the file.
 		:type skip_time: int
+		:param rate: The number of lines to read per second.
+		:type rate: float
+		:param skip_rate: The number of lines to skip for each line read.
+		:type skip_rate: int
 
 		:raises ValueError: When the rate is not an integer.
 		:raises ValueError: When the rate is zero or negative.
@@ -70,7 +70,8 @@ class StaggeredFileReader(FileReader):
 		:raises ValueError: When the number of lines to skip after each read is negative.
 		"""
 
-		super(StaggeredFileReader, self).__init__(queue, f, max_lines=max_lines, max_time=max_time)
+		super(StaggeredFileReader, self).__init__(queue, f, max_lines=max_lines, max_time=max_time,
+														    skip_lines=skip_lines, skip_time=skip_time)
 
 		"""
 		Validate the inputs.
@@ -98,60 +99,6 @@ class StaggeredFileReader(FileReader):
 
 		self.rate = rate
 		self.skip_rate = skip_rate
-
-		self.skip(skip_lines, skip_time)
-
-	def skip(self, lines, time):
-		"""
-		Skip a number of lines from the file.
-		This virtually just reads lines without storing them.
-
-		.. note::
-
-			The number of lines and seconds that are skipped depend on the largest number.
-
-		:param lines: The number of lines to skip.
-		:type lines: int
-		:param time: The number of seconds to skip from the beginning of the file.
-					 The time is taken from tweets' `created_at` attribute.
-		:type time: int
-		"""
-
-		file = self.file
-
-		"""
-		Extract the timestamp from the first tweet, then reset the file pointer.
-		"""
-		line = file.readline()
-		if not line:
-			return
-		start = extract_timestamp(json.loads(line))
-		file.seek(0)
-
-		"""
-		Skip a number of lines first.
-		"""
-		if lines >= 0:
-			for i in range(int(lines)):
-				file.readline()
-
-		"""
-		Skip a number of seconds from the file.
-		Once a line that should not be skipped is skipped, the read is rolled back.
-		"""
-		pos = file.tell()
-		line = file.readline()
-		if not line:
-			return
-		next = json.loads(line)
-		while extract_timestamp(next) - start < time:
-			pos = file.tell()
-			line = file.readline()
-			if not line:
-				break
-			next = json.loads(line)
-
-		file.seek(pos)
 
 	async def read(self):
 		"""

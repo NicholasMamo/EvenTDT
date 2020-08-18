@@ -12,6 +12,7 @@ from abc import ABC, abstractmethod
 from .. import *
 
 import asyncio
+import json
 
 class FileReader(ABC):
 	"""
@@ -54,7 +55,7 @@ class FileReader(ABC):
 	:vartype stopped: bool
 	"""
 
-	def __init__(self, queue, f, max_lines=-1, max_time=-1):
+	def __init__(self, queue, f, max_lines=-1, max_time=-1, skip_lines=0, skip_time=0):
 		"""
 		Create the file reader with the :class:`~queues.queue.Queue` where to add tweets and the file from where to read them.
 		The ``max_lines`` and ``max_time`` parameters can be used to read only a part of the corpus.
@@ -70,6 +71,10 @@ class FileReader(ABC):
 						 The time is taken from tweets' timestamps.
 						 If the number is negative, it is ignored.
 		:type max_time: int
+		:param skip_lines: The number of lines to skip from the beginning of the file.
+		:type skip_lines: int
+		:param skip_time: The number of seconds to skip from the beginning of the file.
+		:type skip_time: int
 		"""
 
 		self.queue = queue
@@ -78,6 +83,60 @@ class FileReader(ABC):
 		self.max_time = max_time
 		self.active = False
 		self.stopped = True
+
+		self.skip(skip_lines, skip_time)
+
+	def skip(self, lines, time):
+		"""
+		Skip a number of lines from the file.
+		This virtually just reads lines without storing them, but moving the file pointer.
+
+		.. note::
+
+			The number of lines and seconds that are skipped depend on the largest number.
+
+		:param lines: The number of lines to skip.
+		:type lines: int
+		:param time: The number of seconds to skip from the beginning of the file.
+					 The time is taken from tweets' timestamps.
+		:type time: int
+		"""
+
+		file = self.file
+
+		"""
+		Extract the timestamp from the first tweet, then reset the file pointer.
+		"""
+		line = file.readline()
+		if not line:
+			return
+		start = extract_timestamp(json.loads(line))
+		file.seek(0)
+
+		"""
+		Skip a number of lines first.
+		"""
+		if lines >= 0:
+			for i in range(int(lines)):
+				file.readline()
+
+		"""
+		Skip a number of seconds from the file.
+		Once a line that should not be skipped is skipped, the read is rolled back.
+		"""
+		pos = file.tell()
+		line = file.readline()
+		if not line:
+			return
+		next = json.loads(line)
+		while extract_timestamp(next) - start < time:
+			pos = file.tell()
+			line = file.readline()
+			if not line:
+				break
+			next = json.loads(line)
+
+		file.seek(pos)
 
 	@abstractmethod
 	async def read(self):
