@@ -453,27 +453,76 @@ By simulating the Twitter stream, the different file readers can be used to repl
 <dl class="class">
 <dt id="twitter.file.FileReader">
 <em class="property">class </em><code class="sig-name descname">FileReader</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">f</em>, <em class="sig-param">max_lines=-1</em>, <em class="sig-param">max_time=-1</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.FileReader" title="Permalink to this definition">¶</a></dt>
-<dd><p>The file reader reads tweets from a file and outputs its contents to a queue.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Variables</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="consumers.html#module-queues.queue" title="queues.queue"><strong>queue</strong></a> (<a class="reference internal" href="consumers.html#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue to which to add tweets.</p></li>
-<li><p><a class="reference internal" href="#module-twitter.file" title="twitter.file"><strong>file</strong></a> (<em>file</em>) – The opened file pointer which contains the tweets.</p></li>
-<li><p><strong>max_lines</strong> (<em>int</em>) – The maximum number of lines to read.
-If the number is negative, it is ignored.</p></li>
-<li><p><strong>max_time</strong> (<em>int</em>) – The maximum time in seconds to spend reading from the file.
-The time is taken from tweets’ <cite>created_at</cite> attribute.
-If the number is negative, it is ignored.</p></li>
-<li><p><strong>active</strong> (<em>bool</em>) – A boolean indicating whether the reader is still reading data.</p></li>
-<li><p><strong>stopped</strong> (<em>bool</em>) – A boolean indicating whether the consumer has finished processing.</p></li>
+<dd><blockquote>
+<div><p>The <a class="reference internal" href="#twitter.file.FileReader" title="twitter.file.FileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileReader</span></code></a> is a class that describes the general state of file readers.</p>
+<p>Generally speaking, any file reader should implement the <a class="reference internal" href="#twitter.file.FileReader.read" title="twitter.file.FileReader.read"><code class="xref py py-func docutils literal notranslate"><span class="pre">read()</span></code></a> function, which reads tweets and adds them to the <a class="reference internal" href="consumers.html#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>.
+This <a class="reference internal" href="consumers.html#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> is one of the variables that make up the <a class="reference internal" href="#twitter.file.FileReader" title="twitter.file.FileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileReader</span></code></a>’s state.
+Accompanying it is the <code class="docutils literal notranslate"><span class="pre">file</span></code>, which is the pointer to an opened file.</p>
+<p>The <a class="reference internal" href="#twitter.file.FileReader" title="twitter.file.FileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileReader</span></code></a> also stores the maximum number of lines, <code class="docutils literal notranslate"><span class="pre">max_lines</span></code>, and the maximum time, in seconds, <code class="docutils literal notranslate"><span class="pre">max_time</span></code> it should spend reading tweets from the corpora.
+These variables refer to the number of lines to read from the file, and the maximum time as represented in the corpus.
+For example, if the <code class="docutils literal notranslate"><span class="pre">max_time</span></code> is 60 seconds, the reader reads all the tweets from the corpus published within the first minute.
+It does not refer to the processing time it should spend reading the corpus.</p>
+<p>The other two variables in the <a class="reference internal" href="#twitter.file.FileReader" title="twitter.file.FileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileReader</span></code></a>’s state are the <code class="docutils literal notranslate"><span class="pre">active</span></code> and <code class="docutils literal notranslate"><span class="pre">stopped</span></code> flags:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">active</span></code> flag indicates whether the reader is still reading data.
+It is possible that the reader is in the process of reading data while the <code class="docutils literal notranslate"><span class="pre">active</span></code> flag is set to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
 </ul>
+</div></blockquote>
+<ul>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">stopped</span></code> flag indicates whether the reader has finished processing and is idle.</p>
+<blockquote>
+<div><p>To stop reading data, call the <a class="reference internal" href="#twitter.file.FileReader.stop" title="twitter.file.FileReader.stop"><code class="xref py py-func docutils literal notranslate"><span class="pre">stop()</span></code></a> function.
+This function sets the <code class="docutils literal notranslate"><span class="pre">active</span></code> flag to <code class="docutils literal notranslate"><span class="pre">False</span></code>.
+When the <a class="reference internal" href="#twitter.file.FileReader.read" title="twitter.file.FileReader.read"><code class="xref py py-func docutils literal notranslate"><span class="pre">read()</span></code></a> function actually finishes reading, it sets the <code class="docutils literal notranslate"><span class="pre">stopped</span></code> variable to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">ivar queue</dt>
+<dd class="field-odd"><p>The queue to which to add tweets.</p>
+</dd>
+<dt class="field-even">vartype queue</dt>
+<dd class="field-even"><p><a class="reference internal" href="consumers.html#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a></p>
+</dd>
+<dt class="field-odd">ivar file</dt>
+<dd class="field-odd"><p>The opened file pointer from where to read the tweets.</p>
+</dd>
+<dt class="field-even">vartype file</dt>
+<dd class="field-even"><p>file</p>
+</dd>
+<dt class="field-odd">ivar max_lines</dt>
+<dd class="field-odd"><p>The maximum number of lines to read.
+If the number is negative, it is ignored.</p>
+</dd>
+<dt class="field-even">vartype max_lines</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+<dt class="field-odd">ivar max_time</dt>
+<dd class="field-odd"><p>The maximum time in seconds to spend reading from the file.
+The time is taken from tweets’ timestamps.
+If the number is negative, it is ignored.</p>
+</dd>
+<dt class="field-even">vartype max_time</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+<dt class="field-odd">ivar active</dt>
+<dd class="field-odd"><p>A boolean indicating whether the reader is still reading data.</p>
+</dd>
+<dt class="field-even">vartype active</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+<dt class="field-odd">ivar stopped</dt>
+<dd class="field-odd"><p>A boolean indicating whether the consumer has finished processing.</p>
+</dd>
+<dt class="field-even">vartype stopped</dt>
+<dd class="field-even"><p>bool</p>
 </dd>
 </dl>
+</div></blockquote>
+</li>
+</ul>
 <dl class="method">
 <dt id="twitter.file.FileReader.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">f</em>, <em class="sig-param">max_lines=-1</em>, <em class="sig-param">max_time=-1</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.FileReader.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create the listener.
-Simultaneously set the queue, the list of tweets and the number of processed tweets.</p>
+<dd><p>Create the file reader with the <a class="reference internal" href="consumers.html#queues.queue.Queue" title="queues.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> where to add tweets and the file from where to read them.
+The <code class="docutils literal notranslate"><span class="pre">max_lines</span></code> and <code class="docutils literal notranslate"><span class="pre">max_time</span></code> parameters can be used to read only a part of the corpus.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -482,7 +531,7 @@ Simultaneously set the queue, the list of tweets and the number of processed twe
 <li><p><strong>max_lines</strong> (<em>int</em>) – The maximum number of lines to read.
 If the number is negative, it is ignored.</p></li>
 <li><p><strong>max_time</strong> (<em>int</em>) – The maximum time in seconds to spend reading from the file.
-The time is taken from tweets’ <cite>created_at</cite> attribute.
+The time is taken from tweets’ timestamps.
 If the number is negative, it is ignored.</p></li>
 </ul>
 </dd>
@@ -493,6 +542,8 @@ If the number is negative, it is ignored.</p></li>
 <dt id="twitter.file.FileReader.read">
 <em class="property">abstract async </em><code class="sig-name descname">read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.FileReader.read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read the file and add each line as a dictionary to the queue.</p>
+<p>This function should set the <code class="docutils literal notranslate"><span class="pre">active</span></code> flag to <code class="docutils literal notranslate"><span class="pre">True</span></code> and the <code class="docutils literal notranslate"><span class="pre">stopped</span></code> flag to <code class="docutils literal notranslate"><span class="pre">False</span></code> before starting to read tweets.
+After it finishes reading the tweets, it should set the <code class="docutils literal notranslate"><span class="pre">active</span></code> flag to <code class="docutils literal notranslate"><span class="pre">False</span></code> and the <code class="docutils literal notranslate"><span class="pre">stopped</span></code> flag to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -501,7 +552,7 @@ If the number is negative, it is ignored.</p></li>
 <dd><p>Set a flag to stop accepting new objects.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Contrary to the name of the function, the function sets the <cite>active</cite> flag, not the <cite>stopped</cite> flag.
+<p>Contrary to the name of the function, the function sets the <code class="docutils literal notranslate"><span class="pre">active</span></code> flag to <code class="docutils literal notranslate"><span class="pre">False</span></code>, not the <code class="docutils literal notranslate"><span class="pre">stopped</span></code> flag.
 This function merely asks that the consumer stops accepting new objects for processing.</p>
 </div>
 </dd></dl>

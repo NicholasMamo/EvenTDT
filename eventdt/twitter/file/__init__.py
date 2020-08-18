@@ -15,17 +15,37 @@ import asyncio
 
 class FileReader(ABC):
 	"""
-	The file reader reads tweets from a file and outputs its contents to a queue.
+	The :class:`~twitter.file.FileReader` is a class that describes the general state of file readers.
+
+	Generally speaking, any file reader should implement the :func:`~twitter.file.FileReader.read` function, which reads tweets and adds them to the :class:`~queues.queue.Queue`.
+	This :class:`~queues.queue.Queue` is one of the variables that make up the :class:`~twitter.file.FileReader`'s state.
+	Accompanying it is the ``file``, which is the pointer to an opened file.
+
+	The :class:`~twitter.file.FileReader` also stores the maximum number of lines, ``max_lines``, and the maximum time, in seconds, ``max_time`` it should spend reading tweets from the corpora.
+	These variables refer to the number of lines to read from the file, and the maximum time as represented in the corpus.
+	For example, if the ``max_time`` is 60 seconds, the reader reads all the tweets from the corpus published within the first minute.
+	It does not refer to the processing time it should spend reading the corpus.
+
+	The other two variables in the :class:`~twitter.file.FileReader`'s state are the ``active`` and ``stopped`` flags:
+
+	- The ``active`` flag indicates whether the reader is still reading data.
+	  It is possible that the reader is in the process of reading data while the ``active`` flag is set to ``False``.
+
+    - The ``stopped`` flag indicates whether the reader has finished processing and is idle.
+
+	To stop reading data, call the :func:`~twitter.file.FileReader.stop` function.
+	This function sets the ``active`` flag to ``False``.
+	When the :func:`~twitter.file.FileReader.read` function actually finishes reading, it sets the ``stopped`` variable to ``True``.
 
 	:ivar queue: The queue to which to add tweets.
 	:vartype queue: :class:`~queues.queue.Queue`
-	:ivar file: The opened file pointer which contains the tweets.
+	:ivar file: The opened file pointer from where to read the tweets.
 	:vartype file: file
 	:ivar max_lines: The maximum number of lines to read.
 					 If the number is negative, it is ignored.
 	:vartype max_lines: int
 	:ivar max_time: The maximum time in seconds to spend reading from the file.
-					The time is taken from tweets' `created_at` attribute.
+					The time is taken from tweets' timestamps.
 					If the number is negative, it is ignored.
 	:vartype max_time: int
 	:ivar active: A boolean indicating whether the reader is still reading data.
@@ -36,8 +56,8 @@ class FileReader(ABC):
 
 	def __init__(self, queue, f, max_lines=-1, max_time=-1):
 		"""
-		Create the listener.
-		Simultaneously set the queue, the list of tweets and the number of processed tweets.
+		Create the file reader with the :class:`~queues.queue.Queue` where to add tweets and the file from where to read them.
+		The ``max_lines`` and ``max_time`` parameters can be used to read only a part of the corpus.
 
 		:param queue: The queue to which to add the tweets.
 		:type queue: :class:`~queues.queue.Queue`
@@ -47,7 +67,7 @@ class FileReader(ABC):
 						  If the number is negative, it is ignored.
 		:type max_lines: int
 		:param max_time: The maximum time in seconds to spend reading from the file.
-						 The time is taken from tweets' `created_at` attribute.
+						 The time is taken from tweets' timestamps.
 						 If the number is negative, it is ignored.
 		:type max_time: int
 		"""
@@ -63,7 +83,12 @@ class FileReader(ABC):
 	async def read(self):
 		"""
 		Read the file and add each line as a dictionary to the queue.
+
+		This function should set the ``active`` flag to ``True`` and the ``stopped`` flag to ``False`` before starting to read tweets.
+		After it finishes reading the tweets, it should set the ``active`` flag to ``False`` and the ``stopped`` flag to ``True``.
 		"""
+
+		# TODO: Set the `active` and `stopped` flags using a decorator.
 
 		pass
 
@@ -72,7 +97,7 @@ class FileReader(ABC):
 		Set a flag to stop accepting new objects.
 
 		.. note::
-			Contrary to the name of the function, the function sets the `active` flag, not the `stopped` flag.
+			Contrary to the name of the function, the function sets the ``active`` flag to ``False``, not the ``stopped`` flag.
 			This function merely asks that the consumer stops accepting new objects for processing.
 		"""
 
