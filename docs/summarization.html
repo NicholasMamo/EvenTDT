@@ -652,15 +652,20 @@ Both functions accept the same input, regardless if they do not use all of it.</
 <dl class="class">
 <dt id="summarization.timeline.nodes.Node">
 <em class="property">class </em><code class="sig-name descname">Node</code><span class="sig-paren">(</span><em class="sig-param">created_at</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.Node" title="Permalink to this definition">¶</a></dt>
-<dd><p>Nodes can store documents in different ways.
-For example, they can be stored as simple documents.
-Alternatively, they can be stored as clusters.</p>
-<p>Nodes must offer certain functionality to facilitate the timeline construction.</p>
+<dd><p>The <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> base class is a general representation of the nodes that make up timelines.
+Any <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> maintains, at least, the timestamp when it was created as its state.
+However, all classes that inherit the <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> need to maintain their own information, whatever it may be.</p>
+<p>All inherited classes must also implement the following functionality:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#summarization.timeline.nodes.Node.add" title="summarization.timeline.nodes.Node.add"><code class="xref py py-func docutils literal notranslate"><span class="pre">add()</span></code></a>: used by the <a class="reference internal" href="#summarization.timeline.Timeline" title="summarization.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a> to add information to a node.</p></li>
+<li><p><a class="reference internal" href="#summarization.timeline.nodes.Node.similarity" title="summarization.timeline.nodes.Node.similarity"><code class="xref py py-func docutils literal notranslate"><span class="pre">similarity()</span></code></a>: used by the <a class="reference internal" href="#summarization.timeline.Timeline" title="summarization.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a> to assess whether the new information is relevant to a node.</p></li>
+<li><p><a class="reference internal" href="#summarization.timeline.nodes.Node.get_all_documents" title="summarization.timeline.nodes.Node.get_all_documents"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_all_documents()</span></code></a>: used when summarizing to get all the <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances stored in the node.</p></li>
+</ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The inputs for the <code class="xref py py-func docutils literal notranslate"><span class="pre">add()</span></code> and <code class="xref py py-func docutils literal notranslate"><span class="pre">similarity()</span></code> function should be the same.
-This is necessary even if an input is used in <code class="xref py py-func docutils literal notranslate"><span class="pre">add()</span></code>, but not in <code class="xref py py-func docutils literal notranslate"><span class="pre">similarity()</span></code>.
-This is because the <a class="reference internal" href="#summarization.timeline.Timeline.add" title="summarization.timeline.Timeline.add"><code class="xref py py-func docutils literal notranslate"><span class="pre">add()</span></code></a> function passes all arguments and keyword arguments in the same way.</p>
+This is necessary even if an input is used in <code class="xref py py-func docutils literal notranslate"><span class="pre">add()</span></code>, but not in <code class="xref py py-func docutils literal notranslate"><span class="pre">similarity()</span></code>, for example.
+This is because the <a class="reference internal" href="#summarization.timeline.Timeline.add" title="summarization.timeline.Timeline.add"><code class="xref py py-func docutils literal notranslate"><span class="pre">add()</span></code></a> function passes all arguments and keyword arguments to both functions in the same way.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
@@ -670,7 +675,7 @@ This is because the <a class="reference internal" href="#summarization.timeline.
 <dl class="method">
 <dt id="summarization.timeline.nodes.Node.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">created_at</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.Node.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create the node.</p>
+<dd><p>Create the node with the given timestamp.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>created_at</strong> (<em>float</em>) – The timestamp when the node was created.</p>
@@ -681,16 +686,18 @@ This is because the <a class="reference internal" href="#summarization.timeline.
 <dl class="method">
 <dt id="summarization.timeline.nodes.Node.add">
 <em class="property">abstract </em><code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.Node.add" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add documents to the node.</p>
+<dd><p>Add information to the node.
+The information is passed on as arguments and keyword arguments.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="summarization.timeline.nodes.Node.similarity">
 <em class="property">abstract </em><code class="sig-name descname">similarity</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.Node.similarity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the similarity between this node and a given object.</p>
+<dd><p>Compute the similarity between this node and the given information.
+The information is passed on as arguments and keyword arguments.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The similarity between this node and the given object.</p>
+<dd class="field-odd"><p>The similarity between this node and the given information.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>float</p>
@@ -701,9 +708,9 @@ This is because the <a class="reference internal" href="#summarization.timeline.
 <dl class="method">
 <dt id="summarization.timeline.nodes.Node.get_all_documents">
 <em class="property">abstract </em><code class="sig-name descname">get_all_documents</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.Node.get_all_documents" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get all the documents in this node.</p>
-<p>The implementation differs according to what the node stores.
-However, they must all have functionality to return a list of documents.</p>
+<dd><p>Get all the <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances in this node.</p>
+<p>The implementation differs according to how the node stores information.
+However, they must all have functionality to return a list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>A list of documents in the node.</p>
@@ -718,9 +725,7 @@ However, they must all have functionality to return a list of documents.</p>
 <dt id="summarization.timeline.nodes.Node.expired">
 <code class="sig-name descname">expired</code><span class="sig-paren">(</span><em class="sig-param">expiry</em>, <em class="sig-param">timestamp</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.Node.expired" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check whether the node has expired.
-A node has expired if a certain time has passed.
-A node can still absorb documents if it has expired.
-If a node has not expired, another one cannot be created.</p>
+In reality, this function checks whether a number of seconds, equivalent to <code class="docutils literal notranslate"><span class="pre">expiry</span></code>, have passed since the node was created.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">

@@ -20,17 +20,21 @@ from objects.exportable import Exportable
 
 class Node(Exportable):
 	"""
-	Nodes can store documents in different ways.
-	For example, they can be stored as simple documents.
-	Alternatively, they can be stored as clusters.
+	The :class:`~summarization.timeline.nodes.Node` base class is a general representation of the nodes that make up timelines.
+	Any :class:`~summarization.timeline.nodes.Node` maintains, at least, the timestamp when it was created as its state.
+	However, all classes that inherit the :class:`~summarization.timeline.nodes.Node` need to maintain their own information, whatever it may be.
 
-	Nodes must offer certain functionality to facilitate the timeline construction.
+	All inherited classes must also implement the following functionality:
+
+	- :func:`~summarization.timeline.nodes.Node.add`: used by the :class:`~summarization.timeline.Timeline` to add information to a node.
+	- :func:`~summarization.timeline.nodes.Node.similarity`: used by the :class:`~summarization.timeline.Timeline` to assess whether the new information is relevant to a node.
+	- :func:`~summarization.timeline.nodes.Node.get_all_documents`: used when summarizing to get all the :class:`~nlp.document.Document` instances stored in the node.
 
 	.. note::
 
 		The inputs for the :func:`~summrization.timeline.nodes.node.Node.add` and :func:`~summrization.timeline.nodes.node.Node.similarity` function should be the same.
-		This is necessary even if an input is used in :func:`~summrization.timeline.nodes.node.Node.add`, but not in :func:`~summrization.timeline.nodes.node.Node.similarity`.
-		This is because the :func:`~summarization.timeline.Timeline.add` function passes all arguments and keyword arguments in the same way.
+		This is necessary even if an input is used in :func:`~summrization.timeline.nodes.node.Node.add`, but not in :func:`~summrization.timeline.nodes.node.Node.similarity`, for example.
+		This is because the :func:`~summarization.timeline.Timeline.add` function passes all arguments and keyword arguments to both functions in the same way.
 
 	:ivar created_at: The timestamp when the node was created.
 	:vartype created_at: float
@@ -38,7 +42,7 @@ class Node(Exportable):
 
 	def __init__(self, created_at):
 		"""
-		Create the node.
+		Create the node with the given timestamp.
 
 		:param created_at: The timestamp when the node was created.
 		:type created_at: float
@@ -49,7 +53,8 @@ class Node(Exportable):
 	@abstractmethod
 	def add(self, *args, **kwargs):
 		"""
-		Add documents to the node.
+		Add information to the node.
+		The information is passed on as arguments and keyword arguments.
 		"""
 
 		pass
@@ -57,9 +62,10 @@ class Node(Exportable):
 	@abstractmethod
 	def similarity(self, *args, **kwargs):
 		"""
-		Compute the similarity between this node and a given object.
+		Compute the similarity between this node and the given information.
+		The information is passed on as arguments and keyword arguments.
 
-		:return: The similarity between this node and the given object.
+		:return: The similarity between this node and the given information.
 		:rtype: float
 		"""
 
@@ -68,10 +74,10 @@ class Node(Exportable):
 	@abstractmethod
 	def get_all_documents(self, *args, **kwargs):
 		"""
-		Get all the documents in this node.
+		Get all the :class:`~nlp.document.Document` instances in this node.
 
-		The implementation differs according to what the node stores.
-		However, they must all have functionality to return a list of documents.
+		The implementation differs according to how the node stores information.
+		However, they must all have functionality to return a list of :class:`~nlp.document.Document` instances.
 
 		:return: A list of documents in the node.
 		:rtype: list of :class:`~nlp.document.Document`
@@ -82,9 +88,7 @@ class Node(Exportable):
 	def expired(self, expiry, timestamp):
 		"""
 		Check whether the node has expired.
-		A node has expired if a certain time has passed.
-		A node can still absorb documents if it has expired.
-		If a node has not expired, another one cannot be created.
+		In reality, this function checks whether a number of seconds, equivalent to ``expiry``, have passed since the node was created.
 
 		:param expiry: The lifetime of a node before it is said to expire.
 					   It is measured in seconds.
