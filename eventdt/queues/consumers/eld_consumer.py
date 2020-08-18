@@ -395,7 +395,7 @@ class ELDConsumer(Consumer):
 							"""
 							query = Cluster(vectors=node.topics).centroid
 							summary = self.summarization.summarize(summary_documents, 140, query=query)
-							logger.info(f"{datetime.fromtimestamp(node.created_at).ctime()}: { str(self.cleaner.clean(summary)) }")
+							logger.info(f"{datetime.fromtimestamp(node.created_at).ctime()}: { str(self.cleaner.clean(str(summary))) }")
 
 		return timeline
 
