@@ -156,16 +156,9 @@ class ELDConsumer(Consumer):
 		self.max_intra_similarity = max_intra_similarity
 		self.min_burst = min_burst
 
-		"""
-		Create the nutrition store and the buffer.
-		The buffer stores tweets that have been processed, but not yet added to a checkpoint.
-		"""
 		self.store = MemoryNutritionStore()
 		self.buffer = Queue()
 
-		"""
-		Create the different components of the system.
-		"""
 		self.tokenizer = Tokenizer(stopwords=stopwords.words('english'),
 								   normalize_words=True, character_normalization_count=3,
 								   remove_unicode_entities=True)
