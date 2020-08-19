@@ -32,14 +32,9 @@ Accepted arguments:
 
 	- ``-o --output``			*<Required>* The data directory where the corpus should be written.
 	- ``-t --track``			*<Optional>* A list of tracking keywords. If none are given, the sample stream is used.
-	- ``-u --understanding``	*<Optional>* The length of the understanding period in minutes. Defaults to an hour and must be a natural number.
-	- ``-e --event``			*<Optional>* The length of the event period in minutes. Defaults to an hour and must be a natural number.
+	- ``-u --understanding``	*<Optional>* The length of the understanding period in minutes. If it is not given, the understanding period is skipped.
+	- ``-e --event``			*<Optional>* The length of the event period in minutes. If it is not given, the event period is skipped.
 	- ``-a --account``			*<Optional>* The account to use to collect the corpus with, as an index of the configuration's accounts. Defaults to the first account.
-
-The implemented modes of operation are:
-
-	- ``-U``					*<Optional>* Collect the understanding corpus.
-	- ``-E``					*<Optional>* Collect the event corpus.
 """
 
 import argparse
@@ -70,10 +65,8 @@ def setup_args():
 
 		- ``-o --output``			*<Required>* The data directory where the corpus should be written.
 		- ``-t --track``			*<Optional>* A list of tracking keywords. If none are given, the sample stream is used.
-		- ``-U``					*<Optional>* Collect the understanding corpus.
-		- ``-u --understanding``	*<Optional>* The length of the understanding period in minutes. Defaults to an hour and must be a natural number.
-		- ``-E``					*<Optional>* Collect the event corpus.
-		- ``-e --event``			*<Optional>* The length of the event period in minutes. Defaults to an hour and must be a natural number.
+		- ``-u --understanding``	*<Optional>* The length of the understanding period in minutes. If it is not given, the understanding period is skipped.
+		- ``-e --event``			*<Optional>* The length of the event period in minutes. If it is not given, the event period is skipped.
 		- ``-a --account``			*<Optional>* The account to use to collect the corpus with, as an index of the configuration's accounts. Defaults to the first account.
 
 	:return: The command-line arguments.
@@ -90,23 +83,14 @@ def setup_args():
 						help='<Required> The data directory where the corpus should be written.')
 	parser.add_argument('-t', '--track', nargs='+', required=False, help='<Optional> The initial tracking keywords. If none are given, the sample stream is used.')
 	parser.add_argument('-u', '--understanding', nargs='?', type=int,
-						default=60, required=False,
-						help='<Optional> The length of the understanding period in minutes. Defaults to an hour.')
+						default=None, required=False,
+						help='<Optional> The length of the understanding period in minutes. If it is not given, the understanding period is skipped.')
 	parser.add_argument('-e', '--event', nargs='?', type=int,
-						default=60, required=False,
-						help='<Optional> The length of the event period in minutes. Defaults to an hour.')
+						default=None, required=False,
+						help='<Optional> The length of the event period in minutes. If it is not given, the event period is skipped.')
 	parser.add_argument('-a', '--account', nargs='?', type=int,
 						default=0, required=False,
 						help='<Optional> The account to use to collect the corpus with, as an index of the configuration\'s accounts. Defaults to the first account.')
-
-	"""
-	The modes of operation.
-	"""
-
-	parser.add_argument('-U', action='store_true',
-						help='<Optional> Collect the understanding corpus.')
-	parser.add_argument('-E', action='store_true',
-						help='<Optional> Collect the event corpus.')
 
 	args = parser.parse_args()
 	return args
@@ -132,44 +116,45 @@ def main():
 	auth.set_access_token(account['ACCESS_TOKEN'], account['ACCESS_TOKEN_SECRET'])
 
 	"""
-	Start collecting tweets.
+	Collect the tweets for the understanding period.
 	"""
 	meta = { }
-	if args.U:
-		if args.understanding <= 0:
-			raise ValueError("The understanding period must be longer than 0 minutes")
+	if args.understanding is not None and args.understanding <= 0:
+		raise ValueError("The understanding period must be longer than 0 minutes")
 
-		filename = os.path.join(args.output, 'understanding.json')
+	filename = os.path.join(args.output, 'understanding.json')
 
-		start = time.time()
-		logger.info('Starting to collect understanding corpus')
-		collect(auth, args.track, filename, args.understanding * 60)
-		logger.info('Understanding corpus collected')
-		end = time.time()
-		meta['understanding'] = {
-			'keywords': args.track,
-			'output': filename,
-			'start': start,
-			'end': end
-		}
+	start = time.time()
+	logger.info('Starting to collect understanding corpus')
+	collect(auth, args.track, filename, args.understanding * 60)
+	logger.info('Understanding corpus collected')
+	end = time.time()
+	meta['understanding'] = {
+		'keywords': args.track,
+		'output': filename,
+		'start': start,
+		'end': end
+	}
 
-	if args.E:
-		if args.event <= 0:
-			raise ValueError("The event period must be longer than 0 minutes")
+	"""
+	Collect the tweets for the event period period.
+	"""
+	if args.event is not None and args.event <= 0:
+		raise ValueError("The event period must be longer than 0 minutes")
 
-		filename = os.path.join(args.output, ('event.json' if args.track else 'sample.json'))
+	filename = os.path.join(args.output, ('event.json' if args.track else 'sample.json'))
 
-		start = time.time()
-		logger.info('Starting to collect event corpus')
-		collect(auth, args.track, filename, args.event * 60)
-		logger.info('Event corpus collected')
-		end = time.time()
-		meta['event'] = {
-			'keywords': args.track,
-			'output': filename,
-			'start': start,
-			'end': end
-		}
+	start = time.time()
+	logger.info('Starting to collect event corpus')
+	collect(auth, args.track, filename, args.event * 60)
+	logger.info('Event corpus collected')
+	end = time.time()
+	meta['event'] = {
+		'keywords': args.track,
+		'output': filename,
+		'start': start,
+		'end': end
+	}
 
 	if meta:
 		save_meta(os.path.join(args.output, 'meta.json'), meta)
