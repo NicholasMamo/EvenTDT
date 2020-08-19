@@ -1,11 +1,17 @@
 """
-Finding Important News REports (FIRE) is a periodic TDT consumer.
-It takes in tweets every time window, clusters them and finds the most important terms in each cluster.
-In this implementation, the tracking happens through the timeline.
+Finding Important News REports (FIRE) is a time-windowed TDT consumer based on the algorithm by Mamo et al. (2017).
+
+Whereas most TDT approaches are either document-pivot or feature-pivot techniques, FIRE combines the two.
+
+- Document-pivot: At each time window, FIRE incrementally clusters the tweets and filters them to retain only the largest ones.
+
+- Feature-pivot: For each large cluster, FIRE applies the :class:`~tdt.algorithms.cataldi.Cataldi` feature-pivot method to identify if there are any breaking terms.
+
+In this implementation, the :class:`~summarization.timeline.Timeline` performs the tracking task of TDT.
 
 .. note::
 
-	Implementation based on the algorithm presented in `FIRE: Finding Important News REports by Mamo and Azzopardi (2017) <https://link.springer.com/chapter/10.1007/978-3-319-74497-1_3>`_.
+	This implementation is based on the algorithm presented in `FIRE: Finding Important News REports by Mamo and Azzopardi (2017) <https://link.springer.com/chapter/10.1007/978-3-319-74497-1_3>`_.
 """
 
 from datetime import datetime
@@ -43,8 +49,19 @@ import twitter
 
 class FIREConsumer(SimulatedBufferedConsumer):
 	"""
-	The FIRE consumer is based on the implementation of the same name.
-	The algorithm clusters all tweets received in the same period and uses the Cataldi et al. algorithm to identify which ones are breaking.
+	The :class:`~queues.consumers.fire_consumer.FIREConsumer` is based on the paper by Mamo et al. (2017).
+
+	The algorithm is split into time-windows.
+	After each time-window, the consumer performs two tasks:
+
+	1. Firstly, it incrementally clusters the tweets using the :class:`~vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans`.
+
+	2. Secondly, it filters out small clusters using the ``min_size`` parameter.
+	   FIRE uses the :class:`~tdt.algorithms.cataldi.Cataldi` on each cluster to identify if it has any breaking terms.
+	   The comparison compares the nutrition of terms in the cluster (the local context) with the nutrition of terms in previous time-windows (the global context).
+	   The global context is stored in a :class:`~tdt.nutrition.NutritionStore`.
+
+	To convert tweets into :class:`~nlp.document.Document` instances, the :class:`~queues.consumers.fire_consumer.FIREConsumer` also stores a :class:`~nlp.tokenizer.Tokenizer` and a :class:`~nlp.weighting.TermWeightingScheme`.
 
 	:ivar store: The nutrition store used to store the volume changes of individual terms.
 	:vartype store: :class:`~tdt.nutrition.store.NutritionStore`
