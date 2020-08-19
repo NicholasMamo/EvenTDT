@@ -1,3 +1,8 @@
+"""
+EvenTDT comes with tools to help you collect corpora from Twitter and create timelines from them.
+Keep reading to learn more about the different tools available in EvenTDT.
+"""
+
 import copy
 import json
 import os

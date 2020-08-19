@@ -6,47 +6,61 @@
    :description: Tools to collect corpora and create timelines out of events.
    :keywords: Python, TDT, events, Twitter
 
-EvenTDT comes with tools to help you collect corpora from Twitter and create timelines from them.
-Keep reading to learn more about the different tools available in EvenTDT.
-
 .. automodule:: tools
-   :members:
-   :private-members:
-   :special-members:
 
-==============================
-Data Collection and Processing
-==============================
+===============
+Data Collection
+===============
 
 .. automodule:: tools.collect
-   :members:
-   :private-members:
-   :special-members:
-
-.. automodule:: tools.consume
-   :members:
-   :private-members:
-   :special-members:
 
 ==============
 Pre-processing
 ==============
 
+Tokenizer
+---------
+
 .. automodule:: tools.tokenizer
-   :members:
-   :private-members:
-   :special-members:
+
+IDF construction
+----------------
 
 .. automodule:: tools.idf
-   :members:
-   :private-members:
-   :special-members:
 
-==========
-Algorithms
-==========
+=========================
+Automatic Term Extraction
+=========================
+
+Term extraction
+---------------
+
+.. automodule:: tools.terms
+
+Bootstrapping
+-------------
 
 .. automodule:: tools.bootstrap
-   :members:
-   :private-members:
-   :special-members:
+
+Correlation
+-----------
+
+.. automodule:: tools.bootstrap
+
+===============================
+Automatic Participant Detection
+===============================
+
+.. automodule:: tools.participants
+
+============================
+Topic Detection and Tracking
+============================
+
+.. automodule:: tools.consume
+
+=============
+Summarization
+=============
+
+.. automodule:: tools.summarize

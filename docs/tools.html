@@ -88,9 +88,21 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="config.html">0. Configuration</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">1. Tools</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-tools.collect">Data Collection and Processing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-tools.tokenizer">Pre-processing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-tools.bootstrap">Algorithms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tools.collect">Data Collection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pre-processing">Pre-processing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-tools.tokenizer">Tokenizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-tools.idf">IDF construction</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#automatic-term-extraction">Automatic Term Extraction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-tools.terms">Term extraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-tools.bootstrap">Bootstrapping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-tools.bootstrap">Correlation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tools.participants">Automatic Participant Detection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tools.consume">Topic Detection and Tracking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tools.summarize">Summarization</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="vsm.html">2. Vector Space Model (VSM)</a></li>
@@ -170,120 +182,10 @@
             
     <div class="section" id="tools">
 <h1>1. Tools<a class="headerlink" href="#tools" title="Permalink to this headline">¶</a></h1>
-<p>EvenTDT comes with tools to help you collect corpora from Twitter and create timelines from them.
+<span class="target" id="module-tools"></span><p>EvenTDT comes with tools to help you collect corpora from Twitter and create timelines from them.
 Keep reading to learn more about the different tools available in EvenTDT.</p>
-<span class="target" id="module-tools"></span><dl class="function">
-<dt id="tools.meta">
-<code class="sig-name descname">meta</code><span class="sig-paren">(</span><em class="sig-param">args</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.meta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the meta arguments.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>args</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">argparse.Namespace</span></code>) – The command-line arguments.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The meta arguments as a dictionary.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.save">
-<code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param">file</em>, <em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.save" title="Permalink to this definition">¶</a></dt>
-<dd><p>Save the data to the given file.
-The function saves the data as a JSON file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>file</strong> (<em>str</em>) – The path to the file where to save the data.</p></li>
-<li><p><strong>data</strong> (<em>dict</em>) – The data to save.
-The function expects a dictionary that can be JSON serializable.
-The function tries to convert the values that cannot be serialized to arrays.
-Only classes that inherit the <a class="reference internal" href="other.html#objects.exportable.Exportable" title="objects.exportable.Exportable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exportable</span></code></a> can be converted to arrays.
-This is done through the <a class="reference internal" href="other.html#objects.exportable.Exportable.to_array" title="objects.exportable.Exportable.to_array"><code class="xref py py-func docutils literal notranslate"><span class="pre">to_array()</span></code></a> function.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.load">
-<code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">file</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.load" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load the data from the given file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>file</strong> (<em>str</em>) – The path to the file from where to load the data.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A new dictionary with the loaded data.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.cache_exists">
-<code class="sig-name descname">cache_exists</code><span class="sig-paren">(</span><em class="sig-param">file</em>, <em class="sig-param">cache_dir='.cache'</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.cache_exists" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check whether cache exists for the given file.
-The cache exists in a cache directory and has the same name as the given file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>file</strong> (<em>str</em>) – The path to the file whose cache will be sought.</p></li>
-<li><p><strong>cache_dir</strong> – The directory where cache is stored.
-This is relative to the file’s directory.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A boolean indicating whether cache exists for the given file.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.is_json">
-<code class="sig-name descname">is_json</code><span class="sig-paren">(</span><em class="sig-param">file</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.is_json" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check whether the given file is JSON-encoded.
-The function checks only if the filename ends with the <code class="docutils literal notranslate"><span class="pre">json</span></code> suffix.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>file</strong> (<em>str</em>) – The path to the file to check if it is JSON-encoded.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A boolean indicating whether the file is JSON-encoded.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.is_file">
-<code class="sig-name descname">is_file</code><span class="sig-paren">(</span><em class="sig-param">string</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.is_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check whether the given string is a file path.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>string</strong> (<em>str</em>) – The string to check if it is a file path.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A boolean indicating whether the given string is a file path.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
 <div class="section" id="module-tools.collect">
-<span id="data-collection-and-processing"></span><h2>Data Collection and Processing<a class="headerlink" href="#module-tools.collect" title="Permalink to this headline">¶</a></h2>
+<span id="data-collection"></span><h2>Data Collection<a class="headerlink" href="#module-tools.collect" title="Permalink to this headline">¶</a></h2>
 <p>A tool to collect tweets.</p>
 <p>The tool collects a corpus of tweets.
 A corpus can be split into an understanding and an event corpus.
@@ -310,322 +212,16 @@ Each corpus is a JSON file, where each line is one tweet.</p>
 <div><ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">-o</span> <span class="pre">--output</span></code>                       <em>&lt;Required&gt;</em> The data directory where the corpus should be written.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-t</span> <span class="pre">--track</span></code>                        <em>&lt;Optional&gt;</em> A list of tracking keywords. If none are given, the sample stream is used.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-u</span> <span class="pre">--understanding</span></code>        <em>&lt;Optional&gt;</em> The length of the understanding period in minutes. Defaults to an hour and must be a natural number.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-e</span> <span class="pre">--event</span></code>                        <em>&lt;Optional&gt;</em> The length of the event period in minutes. Defaults to an hour and must be a natural number.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-u</span> <span class="pre">--understanding</span></code>        <em>&lt;Optional&gt;</em> The length of the understanding period in minutes. If it is not given, the understanding period is skipped.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-e</span> <span class="pre">--event</span></code>                        <em>&lt;Optional&gt;</em> The length of the event period in minutes. If it is not given, the event period is skipped.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-a</span> <span class="pre">--account</span></code>                      <em>&lt;Optional&gt;</em> The account to use to collect the corpus with, as an index of the configuration’s accounts. Defaults to the first account.</p></li>
 </ul>
 </div></blockquote>
-<p>The implemented modes of operation are:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">-U</span></code>                                        <em>&lt;Optional&gt;</em> Collect the understanding corpus.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-E</span></code>                                        <em>&lt;Optional&gt;</em> Collect the event corpus.</p></li>
-</ul>
-</div></blockquote>
-<dl class="function">
-<dt id="tools.collect.setup_args">
-<code class="sig-name descname">setup_args</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.collect.setup_args" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set up and get the list of command-line arguments.</p>
-<p>Accepted arguments:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">-o</span> <span class="pre">--output</span></code>                       <em>&lt;Required&gt;</em> The data directory where the corpus should be written.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-t</span> <span class="pre">--track</span></code>                        <em>&lt;Optional&gt;</em> A list of tracking keywords. If none are given, the sample stream is used.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-U</span></code>                                        <em>&lt;Optional&gt;</em> Collect the understanding corpus.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-u</span> <span class="pre">--understanding</span></code>        <em>&lt;Optional&gt;</em> The length of the understanding period in minutes. Defaults to an hour and must be a natural number.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-E</span></code>                                        <em>&lt;Optional&gt;</em> Collect the event corpus.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-e</span> <span class="pre">--event</span></code>                        <em>&lt;Optional&gt;</em> The length of the event period in minutes. Defaults to an hour and must be a natural number.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-a</span> <span class="pre">--account</span></code>                      <em>&lt;Optional&gt;</em> The account to use to collect the corpus with, as an index of the configuration’s accounts. Defaults to the first account.</p></li>
-</ul>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The command-line arguments.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">argparse.Namespace</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.collect.main">
-<code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.collect.main" title="Permalink to this definition">¶</a></dt>
-<dd><p>Main program loop.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.collect.collect">
-<code class="sig-name descname">collect</code><span class="sig-paren">(</span><em class="sig-param">auth</em>, <em class="sig-param">track</em>, <em class="sig-param">filename</em>, <em class="sig-param">max_time</em>, <em class="sig-param">lang=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.collect.collect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Collect tweets and save them to the given file.
-The tweets are collected synchronously.
-Any additional arguments or keyword arguments are passed on to the <code class="xref py py-class docutils literal notranslate"><span class="pre">twitter.twevent.listener.TweetListener</span></code> constructor.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>auth</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tweepy.OAuthHandler</span></code>) – The OAuth handler to connect with Twitter’s API.</p></li>
-<li><p><strong>track</strong> (<em>list of str</em>) – The tracking keywords:</p></li>
-<li><p><strong>filename</strong> (<em>str</em>) – The filename where to save the collected tweets.</p></li>
-<li><p><strong>max_time</strong> (<em>int</em>) – The number of seconds to spend collecting tweets.</p></li>
-<li><p><strong>lang</strong> (<em>list of str</em>) – The tweet collection language, defaults to English.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.collect.save_meta">
-<code class="sig-name descname">save_meta</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">meta</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.collect.save_meta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Save the metadata of the collected datasets.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> (<em>str</em>) – The filename where to write the metadata.</p></li>
-<li><p><strong>meta</strong> (<em>list of dict</em>) – The metadata to save.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<span class="target" id="module-tools.consume"></span><p>The consumer receives an input file and consumes it with one of the given consumers.
-This consumer is split into two asynchronous tasks.
-The first task reads the file, and the second consumes it.</p>
-<p>If an understanding file is provided, it is used for the understanding task.
-The process is similar to before, with two asynchronous tasks.
-The first task reads the file, and the second consumes it, this time to understand the event.</p>
-<p>All dataset files are expected to contain one tweet on every line, encoded as JSON strings.</p>
-<p>To run the script, use:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./tools/consume.py <span class="se">\</span>
-    -f data/event/event.json <span class="se">\</span>
-    -c PrintConsumer
-</pre></div>
 </div>
-<p>Accepted arguments:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--file</span></code>                                 <em>&lt;Required&gt;</em> The file to consume.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">--class</span></code>                                <em>&lt;Required&gt;</em> The consumer to use; supported: <cite>ELDConsumer</cite>, <cite>FIREConsumer</cite>, <cite>PrintConsumer</cite>, <cite>StatConsumer</cite>, <cite>ZhaoConsumer</cite>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-u</span> <span class="pre">--understanding</span></code>                <em>&lt;Optional&gt;</em> The understanding file used to understand the event.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-s</span> <span class="pre">--speed</span></code>                                <em>&lt;Optional&gt;</em> The speed at which the file is consumed, defaults to 1.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--skip</span></code>                                    <em>&lt;Optional&gt;</em> The amount of time to skip from the beginning of the file in minutes, defaults to 0.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--max-inactivity</span></code>                  <em>&lt;Optional&gt;</em> The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--max-time</span></code>                                <em>&lt;Optional&gt;</em> The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--no-cache</span></code>                                <em>&lt;Optional&gt;</em> If specified, the cached understanding is not used. The new understanding is cached instead.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--scheme</span></code>                                  <em>&lt;Optional&gt;</em> If specified, the path to the <a class="reference internal" href="nlp.html#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a> to use. If it is not specified, the <a class="reference internal" href="nlp.html#nlp.weighting.tf.TF" title="nlp.weighting.tf.TF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TF</span></code></a> scheme is used.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--min-size</span></code>                                <em>&lt;Optional&gt;</em> The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--threshold</span></code>                               <em>&lt;Optional&gt;</em> The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--max-intra-similarity</span></code>    <em>&lt;Optional&gt;</em> The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.</p></li>
-</ul>
-</div></blockquote>
-<dl class="function">
-<dt id="tools.consume.setup_args">
-<code class="sig-name descname">setup_args</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.consume.setup_args" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set up and get the list of command-line arguments.</p>
-<p>Accepted arguments:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--file</span></code>                                 <em>&lt;Required&gt;</em> The file to consume.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">--class</span></code>                                <em>&lt;Required&gt;</em> The consumer to use; supported: <cite>ELDConsumer</cite>, <cite>FIREConsumer</cite>, <cite>PrintConsumer</cite>, <cite>StatConsumer</cite>, <cite>ZhaoConsumer</cite>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-u</span> <span class="pre">--understanding</span></code>                <em>&lt;Optional&gt;</em> The understanding file used to understand the event.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-s</span> <span class="pre">--speed</span></code>                                <em>&lt;Optional&gt;</em> The speed at which the file is consumed, defaults to 1.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--skip</span></code>                                    <em>&lt;Optional&gt;</em> The amount of time to skip from the beginning of the file in minutes, defaults to 0.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--max-inactivity</span></code>                  <em>&lt;Optional&gt;</em> The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--max-time</span></code>                                <em>&lt;Optional&gt;</em> The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--no-cache</span></code>                                <em>&lt;Optional&gt;</em> If specified, the cached understanding is not used. The new understanding is cached instead.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--scheme</span></code>                                  <em>&lt;Optional&gt;</em> If specified, the path to the <a class="reference internal" href="nlp.html#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a> to use. If it is not specified, the <a class="reference internal" href="nlp.html#nlp.weighting.tf.TF" title="nlp.weighting.tf.TF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TF</span></code></a> scheme is used. This can be overwritten if there is event understanding.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--min-size</span></code>                                <em>&lt;Optional&gt;</em> The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--threshold</span></code>                               <em>&lt;Optional&gt;</em> The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--max-intra-similarity</span></code>    <em>&lt;Optional&gt;</em> The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.</p></li>
-</ul>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The command-line arguments.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">argparse.Namespace</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.consume.main">
-<code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.consume.main" title="Permalink to this definition">¶</a></dt>
-<dd><p>Main program loop.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.consume.understand">
-<code class="sig-name descname">understand</code><span class="sig-paren">(</span><em class="sig-param">understanding</em>, <em class="sig-param">consumer</em>, <em class="sig-param">max_inactivity</em>, <em class="sig-param">scheme=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.consume.understand" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run the understanding process.
-The arguments and keyword arguments should be the command-line arguments.</p>
-<p>Understanding uses two processes:</p>
-<blockquote>
-<div><ol class="arabic simple">
-<li><p>Stream the file, and</p></li>
-<li><p>Understand the file.</p></li>
-</ol>
-</div></blockquote>
-<p>Both processes share the same event loop and queue.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Understanding is sped up, on the assumption that processing is done retrospectively.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>understanding</strong> (<em>str</em>) – The path to the file containing the event’s understanding.</p></li>
-<li><p><strong>consumer</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code>) – The type of consumer to use.</p></li>
-<li><p><strong>max_inactivity</strong> (<em>int</em>) – The maximum time, in seconds, to wait for new tweets to arrive before stopping.</p></li>
-<li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The scheme to use when consuming the file.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A dictionary containing the understanding.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.consume.consume">
-<code class="sig-name descname">consume</code><span class="sig-paren">(</span><em class="sig-param">file</em>, <em class="sig-param">consumer</em>, <em class="sig-param">speed</em>, <em class="sig-param">max_inactivity</em>, <em class="sig-param">max_time=-1</em>, <em class="sig-param">skip=0</em>, <em class="sig-param">scheme=None</em>, <em class="sig-param">min_size=3</em>, <em class="sig-param">threshold=0.5</em>, <em class="sig-param">max_intra_similarity=0.8</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.consume.consume" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run the consumption process.
-The arguments and keyword arguments should be the command-line arguments.</p>
-<p>Consumption uses two processes:</p>
-<blockquote>
-<div><ol class="arabic simple">
-<li><p>Stream the file, and</p></li>
-<li><p>Consume the file.</p></li>
-</ol>
-</div></blockquote>
-<p>Both processes share the same event loop and queue.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>file</strong> (<em>str</em>) – The path to the file containing the event’s tweets.</p></li>
-<li><p><strong>consumer</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code>) – The type of consumer to use.</p></li>
-<li><p><strong>speed</strong> (<em>float</em>) – The speed with which to read the file.</p></li>
-<li><p><strong>max_inactivity</strong> (<em>int</em>) – The maximum time, in seconds, to wait for new tweets to arrive before stopping.</p></li>
-<li><p><strong>max_time</strong> (<em>int</em>) – The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.</p></li>
-<li><p><strong>skip</strong> (<em>int</em>) – The amount of time to skip from the beginning of the file in minutes, defaults to 0.</p></li>
-<li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The scheme to use when consuming the file.</p></li>
-<li><p><strong>min_size</strong> (<em>int</em>) – The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.</p></li>
-<li><p><strong>threshold</strong> (<em>float</em>) – The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.</p></li>
-<li><p><strong>max_intra_similarity</strong> (<em>float</em>) – The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A dictionary containing the timeline.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.consume.stream_process">
-<code class="sig-name descname">stream_process</code><span class="sig-paren">(</span><em class="sig-param">loop</em>, <em class="sig-param">queue</em>, <em class="sig-param">file</em>, <em class="sig-param">skip_time=0</em>, <em class="sig-param">speed=1</em>, <em class="sig-param">max_time=-1</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.consume.stream_process" title="Permalink to this definition">¶</a></dt>
-<dd><p>Stream the file and add its tweets to the queue.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>loop</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.unix_events._UnixSelectorEventLoop</span></code>) – The main event loop.</p></li>
-<li><p><strong>queue</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">multiprocessing.managers.AutoProxy[Queue]</span></code>) – The queue where to add tweets.</p></li>
-<li><p><strong>file</strong> (<em>str</em>) – The path to the file to read.</p></li>
-<li><p><strong>skip_time</strong> (<em>int</em>) – The amount of time to skip from the beginning of the file in minutes, defaults to 0.</p></li>
-<li><p><strong>speed</strong> (<em>float</em>) – The speed at which the file is consumed, defaults to 1.</p></li>
-<li><p><strong>max_time</strong> (<em>int</em>) – The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.consume.understand_process">
-<code class="sig-name descname">understand_process</code><span class="sig-paren">(</span><em class="sig-param">comm</em>, <em class="sig-param">loop</em>, <em class="sig-param">consumer</em>, <em class="sig-param">max_inactivity</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.consume.understand_process" title="Permalink to this definition">¶</a></dt>
-<dd><p>Consume the incoming tweets to understand the event.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>comm</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">multiprocessing.managers.DictProxy</span></code>) – The dictionary used by the understanding process to communicate data back to the main loop.</p></li>
-<li><p><strong>loop</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.unix_events._UnixSelectorEventLoop</span></code>) – The main event loop.</p></li>
-<li><p><strong>consumer</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code>) – The consumer to use to process tweets.</p></li>
-<li><p><strong>max_inactivity</strong> (<em>int</em>) – The maximum time, in seconds, to wait for new tweets to arrive before stopping.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.consume.consume_process">
-<code class="sig-name descname">consume_process</code><span class="sig-paren">(</span><em class="sig-param">comm</em>, <em class="sig-param">loop</em>, <em class="sig-param">consumer</em>, <em class="sig-param">max_inactivity</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.consume.consume_process" title="Permalink to this definition">¶</a></dt>
-<dd><p>Consume the incoming tweets.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>comm</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">multiprocessing.managers.DictProxy</span></code>) – The dictionary used by the consumption process to communicate data back to the main loop.</p></li>
-<li><p><strong>loop</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.unix_events._UnixSelectorEventLoop</span></code>) – The main event loop.</p></li>
-<li><p><strong>consumer</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code>) – The consumer to use to process tweets.</p></li>
-<li><p><strong>max_inactivity</strong> (<em>int</em>) – The maximum time, in seconds, to wait for new tweets to arrive before stopping.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.consume.consumer">
-<code class="sig-name descname">consumer</code><span class="sig-paren">(</span><em class="sig-param">consumer</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.consume.consumer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert the given string into a consumer class.
-The accepted consumers are:</p>
-<blockquote>
-<div><ol class="arabic simple">
-<li><p><a class="reference internal" href="consumers.html#queues.consumers.eld_consumer.ELDConsumer" title="queues.consumers.eld_consumer.ELDConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ELDConsumer</span></code></a>,</p></li>
-<li><p><a class="reference internal" href="consumers.html#queues.consumers.fire_consumer.FIREConsumer" title="queues.consumers.fire_consumer.FIREConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">FIREConsumer</span></code></a>,</p></li>
-<li><p><a class="reference internal" href="consumers.html#queues.consumers.print_consumer.PrintConsumer" title="queues.consumers.print_consumer.PrintConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">PrintConsumer</span></code></a>,</p></li>
-<li><p><a class="reference internal" href="consumers.html#queues.consumers.stat_consumer.StatConsumer" title="queues.consumers.stat_consumer.StatConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">StatConsumer</span></code></a>, and</p></li>
-<li><p><a class="reference internal" href="consumers.html#queues.consumers.zhao_consumer.ZhaoConsumer" title="queues.consumers.zhao_consumer.ZhaoConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ZhaoConsumer</span></code></a></p></li>
-</ol>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>consumer</strong> (<em>str</em>) – The consumer string.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The class that corresponds to the given consumer.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>class</p>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>argparse.ArgumentTypeError</strong> – When the given consumer string is invalid.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.consume.scheme">
-<code class="sig-name descname">scheme</code><span class="sig-paren">(</span><em class="sig-param">file</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.consume.scheme" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load the term-weighting scheme from the given file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>file</strong> (<em>str</em>) – The path to the term-weighting scheme.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The term-weighting scheme in the given file.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="nlp.html#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-</div>
+<div class="section" id="pre-processing">
+<h2>Pre-processing<a class="headerlink" href="#pre-processing" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="module-tools.tokenizer">
-<span id="pre-processing"></span><h2>Pre-processing<a class="headerlink" href="#module-tools.tokenizer" title="Permalink to this headline">¶</a></h2>
+<span id="tokenizer"></span><h3>Tokenizer<a class="headerlink" href="#module-tools.tokenizer" title="Permalink to this headline">¶</a></h3>
 <p>A tool to tokenize a corpus of tweets.
 The tokenizer can be used to pre-process a corpus.</p>
 <p>Each line in the tokenizer corresponds to a tweet.
@@ -659,118 +255,10 @@ If none are given, all tokens are collected, including other parts-of-speech, li
 <li><p><code class="docutils literal notranslate"><span class="pre">--adjectives</span></code>                                              <em>&lt;Optional&gt;</em> Extract adjectives from the corpus.</p></li>
 </ul>
 </div></blockquote>
-<dl class="function">
-<dt id="tools.tokenizer.setup_args">
-<code class="sig-name descname">setup_args</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.tokenizer.setup_args" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set up and get the list of command-line arguments.</p>
-<p>Accepted arguments:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--file</span></code>                                                 <em>&lt;Required&gt;</em> The file to use to construct the tokenized corpus.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-o</span> <span class="pre">--output</span></code>                                               <em>&lt;Required&gt;</em> The file where to save the tokenized corpus.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-k</span> <span class="pre">--keep</span></code>                                                 <em>&lt;Optional&gt;</em> The tweet attributes to store.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--remove-retweets</span></code>                                 <em>&lt;Optional&gt;</em> Exclude retweets from the corpus.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--remove-unicode-entities</span></code>                 <em>&lt;Optional&gt;</em> Remove unicode entities from the tweets.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--normalize-words</span></code>                                 <em>&lt;Optional&gt;</em> Normalize words with repeating characters in them.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--character-normalization-count</span></code>   <em>&lt;Optional&gt;</em> The number of times a character must repeat for it to be normalized. Used only with the <code class="docutils literal notranslate"><span class="pre">--normalize-words</span></code> flag.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--remove-stopwords</span></code>                                <em>&lt;Optional&gt;</em> Remove stopwords from the tokens.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-stem</span></code>                                                             <em>&lt;Optional&gt;</em> Stem the tokens when constructing the tokenized corpus.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--nouns</span></code>                                                   <em>&lt;Optional&gt;</em> Extract nouns from the corpus.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--proper-nouns</span></code>                                    <em>&lt;Optional&gt;</em> Extract proper nouns from the corpus.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--verbs</span></code>                                                   <em>&lt;Optional&gt;</em> Extract verbs from the corpus.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--adjectives</span></code>                                              <em>&lt;Optional&gt;</em> Extract adjectives from the corpus.</p></li>
-</ul>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The command-line arguments.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">argparse.Namespace</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.tokenizer.main">
-<code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.tokenizer.main" title="Permalink to this definition">¶</a></dt>
-<dd><p>Main program loop.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.tokenizer.prepare_output">
-<code class="sig-name descname">prepare_output</code><span class="sig-paren">(</span><em class="sig-param">output</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.tokenizer.prepare_output" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create the data directory if it does not exist.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>output</strong> (<em>str</em>) – The output path.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.tokenizer.get_tags">
-<code class="sig-name descname">get_tags</code><span class="sig-paren">(</span><em class="sig-param">nouns</em>, <em class="sig-param">proper_nouns</em>, <em class="sig-param">verbs</em>, <em class="sig-param">adjectives</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.tokenizer.get_tags" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the parts-of-speech tags based on the command-line arguments.
-If neither of the tags are given, <cite>None</cite> is returned.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>nouns</strong> (<em>bool</em>) – A boolean indicating whether to extract nouns.</p></li>
-<li><p><strong>proper_nouns</strong> (<em>bool</em>) – A boolean indicating whether to extract proper nouns.</p></li>
-<li><p><strong>verbs</strong> (<em>bool</em>) – A boolean indicating whether to extract verbs.</p></li>
-<li><p><strong>adjectives</strong> (<em>bool</em>) – A boolean indicating whether to extract adjectives.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list of parts-of-speech tags corresponding to the given flags, or <cite>None</cite> if all tags should be collected.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>None or list of str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.tokenizer.tokenize_corpus">
-<code class="sig-name descname">tokenize_corpus</code><span class="sig-paren">(</span><em class="sig-param">file</em>, <em class="sig-param">output</em>, <em class="sig-param">tokenizer</em>, <em class="sig-param">keep=None</em>, <em class="sig-param">remove_retweets=False</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.tokenizer.tokenize_corpus" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tokenize the corpus represented by the given file.
-The function iterates over each tweet, tokenizes it and saves it to the file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>file</strong> (<em>str</em>) – The path to the corpus file.</p></li>
-<li><p><strong>output</strong> (<em>str</em>) – The output path.
-This function assumes that the directory path exists.</p></li>
-<li><p><strong>tokenizer</strong> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer to use to create the tokenized corpus.</p></li>
-<li><p><strong>keep</strong> (<em>list</em><em> or </em><em>None</em>) – The list of tweet attributes to store for each tweet.
-By default, the tweet ID is always kept.</p></li>
-<li><p><strong>remove_retweets</strong> (<em>bool</em>) – A boolean indicating whether to xclude retweets from the corpus.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.tokenizer.get_text">
-<code class="sig-name descname">get_text</code><span class="sig-paren">(</span><em class="sig-param">tweet</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.tokenizer.get_text" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract the text from the given tweet.
-The text used depends on the type of tweet.
-The full text is always sought.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>tweet</strong> (<em>dict</em>) – The tweet to tokenize.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The text to tokenize from the tweet.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<span class="target" id="module-tools.idf"></span><p>A tool to create a TF-IDF scheme from a corpus of tweets.</p>
+</div>
+<div class="section" id="module-tools.idf">
+<span id="idf-construction"></span><h3>IDF construction<a class="headerlink" href="#module-tools.idf" title="Permalink to this headline">¶</a></h3>
+<p>A tool to create a TF-IDF scheme from a corpus of tweets.</p>
 <p>To run the script, use:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./tools/idf.py <span class="se">\</span>
     -f data/sample.json <span class="se">\</span>
@@ -791,124 +279,51 @@ The full text is always sought.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">-stem</span></code>                                                             <em>&lt;Optional&gt;</em> Stem the tokens when constructing the TF-IDF scheme.</p></li>
 </ul>
 </div></blockquote>
-<dl class="function">
-<dt id="tools.idf.setup_args">
-<code class="sig-name descname">setup_args</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.idf.setup_args" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set up and get the list of command-line arguments.</p>
+</div>
+</div>
+<div class="section" id="automatic-term-extraction">
+<h2>Automatic Term Extraction<a class="headerlink" href="#automatic-term-extraction" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-tools.terms">
+<span id="term-extraction"></span><h3>Term extraction<a class="headerlink" href="#module-tools.terms" title="Permalink to this headline">¶</a></h3>
+<p>A tool to automatically extract terms from the given corpora.</p>
+<p>To run the script, use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./tools/terms.py <span class="se">\</span>
+    -f data/tokenized_corpus.json <span class="se">\</span>
+    -m tfidf <span class="se">\</span>
+    --tfidf data/idf.json <span class="se">\</span>
+    -o data/bootstrapped.json
+</pre></div>
+</div>
+<p>Apart from providing the main method to extract terms, it is possible to pass on a re-ranker method.
+The re-ranker extracts terms separately.
+This tool multiplies the ATE method’s scores with the re-ranker term’s scores.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./tools/terms.py <span class="se">\</span>
+    -f data/tokenized_corpus.json <span class="se">\</span>
+    -m tfidf <span class="se">\</span>
+    --tfidf data/idf.json <span class="se">\</span>
+    -o data/bootstrapped.json
+    --reranker entropy <span class="se">\</span>
+    --reranker-files data/idf.json
+</pre></div>
+</div>
 <p>Accepted arguments:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--file</span></code>                                                 <em>&lt;Required&gt;</em> The file to use to construct the TF-IDF scheme.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-o</span> <span class="pre">--output</span></code>                                               <em>&lt;Required&gt;</em> The file where to save the TF-IDF scheme.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--remove-retweets</span></code>                                 <em>&lt;Optional&gt;</em> Exclude retweets from the corpus.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--remove-unicode-entities</span></code>                 <em>&lt;Optional&gt;</em> Remove unicode entities from the TF-IDF scheme.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--normalize-words</span></code>                                 <em>&lt;Optional&gt;</em> Normalize words with repeating characters in them.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--character-normalization-count</span></code>   <em>&lt;Optional&gt;</em> The number of times a character must repeat for it to be normalized. Used only with the <code class="docutils literal notranslate"><span class="pre">--normalize-words</span></code> flag.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--stem</span></code>                                                    <em>&lt;Optional&gt;</em> Stem the tokens when constructing the TF-IDF scheme.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--files</span></code>                <em>&lt;Required&gt;</em> The input corpora from where to extract domain-specific terms.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">--method</span></code>               <em>&lt;Required&gt;</em> The method to use to look for similar keywords; supported: <cite>TF</cite>, <cite>TFIDF</cite>, <cite>Rank</cite>, <cite>Specificity</cite>, <cite>TFDCF</cite>, <cite>EFIDF</cite>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-o</span> <span class="pre">--output</span></code>               <em>&lt;Required&gt;</em> The path to the file where to store the extracted terms.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-r</span> <span class="pre">--reranker</span></code>             <em>&lt;Optional&gt;</em> The method to use to re-rank terms; supported: <cite>Entropy</cite>, <cite>Variability</cite>; defaults to no re-ranking.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--tfidf</span></code>                   <em>&lt;Optional&gt;</em> The TF-IDF scheme to use to extract terms (used only with the <cite>TF-IDF</cite> method).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--general</span></code>                 <em>&lt;Optional&gt;</em> A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the <cite>Rank</cite>, <cite>Specificity</cite> and <cite>TF-DCF</cite> methods).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--cutoff</span></code>                  <em>&lt;Optional&gt;</em> The minimum term frequency to consider when ranking terms (used only with the <cite>Specificity</cite> method).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--base</span></code>                    <em>&lt;Optional&gt;</em> The logarithmic base (used only with the <cite>EF-IDF</cite> method).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--reranker-base</span></code>   <em>&lt;Optional&gt;</em> The logarithmic base (used only with the <cite>Variability</cite> and <cite>Entropy</cite> re-rankers); defaults to 10.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--reranker-files</span></code>  <em>&lt;Optional&gt;</em> The input corpora to use for the re-ranker.</p></li>
 </ul>
 </div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The command-line arguments.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">argparse.Namespace</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.idf.main">
-<code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.idf.main" title="Permalink to this definition">¶</a></dt>
-<dd><p>Main program loop.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.idf.construct">
-<code class="sig-name descname">construct</code><span class="sig-paren">(</span><em class="sig-param">file</em>, <em class="sig-param">remove_retweets</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.idf.construct" title="Permalink to this definition">¶</a></dt>
-<dd><p>Construct the TF-IDF scheme from the file.
-The scheme is constructed one line at a time.</p>
-<p>Any additional arguments and keyword arguments are passed on to the <a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer.__init__" title="nlp.tokenizer.Tokenizer.__init__"><code class="xref py py-func docutils literal notranslate"><span class="pre">__init__()</span></code></a> constructor.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>file</strong> (<em>str</em>) – The path to the file to use to construct the TF-IDF scheme.</p></li>
-<li><p><strong>remove_retweets</strong> (<em>bool</em>) – A boolean indicating whether to xclude retweets from the corpus.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The TF-IDF scheme constructed from the file.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="nlp.html#nlp.weighting.tfidf.TFIDF" title="nlp.weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.idf.tokenize">
-<code class="sig-name descname">tokenize</code><span class="sig-paren">(</span><em class="sig-param">tweet</em>, <em class="sig-param">tokenizer</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.idf.tokenize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert the given tweet into a document.
-The text used depends on the type of tweet.
-The full text is always sought.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>tweet</strong> (<em>dict</em>) – The tweet to tokenize.</p></li>
-<li><p><strong>tokenizer</strong> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer to use to tokenize the tweet.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list of tokens from the tweet.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list of str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.idf.update">
-<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param">idf</em>, <em class="sig-param">tokens</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.idf.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the given IDF table with the given tokens.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>idf</strong> (<em>dict</em>) – The IDF table as a dictionary.
-The keys are the tokens and the values are the document frequencies.</p></li>
-<li><p><strong>tokens</strong> – The tokens to add to the IDF.
-The function automatically gets the set of tokens to remove duplicates.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Type</dt>
-<dd class="field-even"><p>list of str</p>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The updated IDF table.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.idf.save">
-<code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param">tfidf</em>, <em class="sig-param">output</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.idf.save" title="Permalink to this definition">¶</a></dt>
-<dd><p>Save the given TF-IDF scheme to file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>tfidf</strong> – The TF-IDF scheme.</p></li>
-<li><p><strong>output</strong> (<em>str</em>) – The path to the file where to save the TF-IDF scheme.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
 </div>
 <div class="section" id="module-tools.bootstrap">
-<span id="algorithms"></span><h2>Algorithms<a class="headerlink" href="#module-tools.bootstrap" title="Permalink to this headline">¶</a></h2>
+<span id="bootstrapping"></span><h3>Bootstrapping<a class="headerlink" href="#module-tools.bootstrap" title="Permalink to this headline">¶</a></h3>
 <p>A tool that receives a seed set of terms and looks for similar terms in the given corpora.</p>
 <p>To run the script, use:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./tools/bootstrap.py <span class="se">\</span>
@@ -935,10 +350,20 @@ If a text file is given, this tool expects one word on each line.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">--max-candidates</span></code>  <em>&lt;Optional&gt;</em> The number of candidate words to use from the given files; defaults to all words.</p></li>
 </ul>
 </div></blockquote>
-<dl class="function">
-<dt id="tools.bootstrap.setup_args">
-<code class="sig-name descname">setup_args</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.bootstrap.setup_args" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set up and get the list of command-line arguments.</p>
+</div>
+<div class="section" id="module-tools.bootstrap">
+<span id="correlation"></span><h3>Correlation<a class="headerlink" href="#module-tools.bootstrap" title="Permalink to this headline">¶</a></h3>
+<p>A tool that receives a seed set of terms and looks for similar terms in the given corpora.</p>
+<p>To run the script, use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./tools/bootstrap.py <span class="se">\</span>
+    -s data/seed.txt <span class="se">\</span>
+    -c data/candidates.txt <span class="se">\</span>
+    -o data/bootstrapped.json <span class="se">\</span>
+    -f data/tokenized_corpus.json
+</pre></div>
+</div>
+<p>The seed and candidates files can be either text files or the output from the <code class="docutils literal notranslate"><span class="pre">terms</span></code> tool.
+If a text file is given, this tool expects one word on each line.</p>
 <p>Accepted arguments:</p>
 <blockquote>
 <div><ul class="simple">
@@ -954,191 +379,121 @@ If a text file is given, this tool expects one word on each line.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">--max-candidates</span></code>  <em>&lt;Optional&gt;</em> The number of candidate words to use from the given files; defaults to all words.</p></li>
 </ul>
 </div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The command-line arguments.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">argparse.Namespace</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.bootstrap.main">
-<code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tools.bootstrap.main" title="Permalink to this definition">¶</a></dt>
-<dd><p>Main program loop.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.bootstrap.bootstrap">
-<code class="sig-name descname">bootstrap</code><span class="sig-paren">(</span><em class="sig-param">files</em>, <em class="sig-param">seed</em>, <em class="sig-param">method</em>, <em class="sig-param">iterations</em>, <em class="sig-param">keep</em>, <em class="sig-param">candidates</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.bootstrap.bootstrap" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bootstrap the given seed set from the given files.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>files</strong> (<em>list of str</em>) – The input corpora where to look for similar keywords.</p></li>
-<li><p><strong>seed</strong> (<em>list of str</em>) – The seed set of keywords.</p></li>
-<li><p><strong>method</strong> (<em>function</em>) – The method to use to look for similar keywords.</p></li>
-<li><p><strong>iterations</strong> (<em>int</em>) – The number of iterations to spend bootstrapping.</p></li>
-<li><p><strong>keep</strong> (<em>int</em>) – The number of keywords to keep after each iteration.</p></li>
-<li><p><strong>candidates</strong> (<em>list of str</em><em> or </em><em>None</em>) – The list of candidate keywords. If <cite>None</cite> is given, all vocabulary keywords are considered candidates.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list of bootstrapped keywords.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list of str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.bootstrap.load_seed">
-<code class="sig-name descname">load_seed</code><span class="sig-paren">(</span><em class="sig-param">seed_file</em>, <em class="sig-param">max_seed=None</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.bootstrap.load_seed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load the seed words from the given seed file.
-The function expects a file with one seed word on each line.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>seed_file</strong> (<em>str</em>) – The path to the seed file.</p></li>
-<li><p><strong>max_seed</strong> (<em>None</em><em> or </em><em>int</em>) – The number of seed words to retain.
-If <code class="docutils literal notranslate"><span class="pre">None</span></code> is given, the function retains all seed words.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list of seed words.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list of str</p>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>ValueError</strong> – When zero or fewer seed words should be retained.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.bootstrap.load_candidates">
-<code class="sig-name descname">load_candidates</code><span class="sig-paren">(</span><em class="sig-param">candidate_file</em>, <em class="sig-param">max_candidates=None</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.bootstrap.load_candidates" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load the candidate words from the given candidate file.
-The function expects a file with one candidate word on each line.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>candidate_file</strong> (<em>str</em>) – The path to the candidate file.</p></li>
-<li><p><strong>max_candidates</strong> (<em>None</em><em> or </em><em>int</em>) – The number of candidates words to retain.
-If <code class="docutils literal notranslate"><span class="pre">None</span></code> is given, the function retains all candidates words.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list of candidate words.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list of str</p>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>ValueError</strong> – When zero or fewer candidate words should be retained.</p></li>
-<li><p><strong>ValueError</strong> – When no candidate words are found.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.bootstrap.generate_candidates">
-<code class="sig-name descname">generate_candidates</code><span class="sig-paren">(</span><em class="sig-param">files</em>, <em class="sig-param">generate</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.bootstrap.generate_candidates" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate candidates by looking for the most common keywords in the given files.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>files</strong> (<em>list of str</em><em> or </em><em>str</em>) – The input corpora where to look for candidate keywords.</p></li>
-<li><p><strong>generate</strong> (<em>int</em>) – The maximum number of candidate keywords to generate.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list of candidate keywords.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list of str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.bootstrap.filter_candidates">
-<code class="sig-name descname">filter_candidates</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">seed</em>, <em class="sig-param">bootstrapped</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.bootstrap.filter_candidates" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filter out candidates that were in the original seed set or which were bootstrapped.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>candidates</strong> (<em>dict</em>) – A dictionary with candidates as keys and their scores as values.</p></li>
-<li><p><strong>seed</strong> (<em>list of str</em>) – The original seed set.</p></li>
-<li><p><strong>bootstrapped</strong> (<em>list of str</em>) – Candidates that have already been bootstrapped.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The list of candidates as a dictionary without words that have already been used for bootstrapping.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.bootstrap.update_scores">
-<code class="sig-name descname">update_scores</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">scores</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.bootstrap.update_scores" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the scores of the candidates.
-The maximum score is always retained.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>candidates</strong> (<em>dict</em>) – A dictionary with candidates as keys and their scores as values.</p></li>
-<li><p><strong>scores</strong> (<em>dict</em>) – The new scores as a dictionary.
-The keys are tuples: the keyword that extracted the candidate, and the candidate itself.
-Only the candidate is considered.
-The values are the corresponding values.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>An updated dictionary of candidates with their new scores.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="tools.bootstrap.method">
-<code class="sig-name descname">method</code><span class="sig-paren">(</span><em class="sig-param">method</em><span class="sig-paren">)</span><a class="headerlink" href="#tools.bootstrap.method" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert the given string into a bootstrapping function.
-The accepted methods are:</p>
+</div>
+</div>
+<div class="section" id="module-tools.participants">
+<span id="automatic-participant-detection"></span><h2>Automatic Participant Detection<a class="headerlink" href="#module-tools.participants" title="Permalink to this headline">¶</a></h2>
+<p>A tool to automatically extract participants from the given corpora.
+This tool is meant to run on the understanding corpora to extract the event’s participants.</p>
+<p>To use a ready-made model, use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./tools/participants.py <span class="se">\</span>
+    -f data/understanding.json <span class="se">\</span>
+    --clean <span class="se">\</span>
+    --model ELDParticipantDetector <span class="se">\</span>
+    --tfidf data/idf.json <span class="se">\</span>
+    -o data/participants.json
+</pre></div>
+</div>
+<p>Alternatively, you can create your own model:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./tools/participants.py <span class="se">\</span>
+    -f data/understanding.json <span class="se">\</span>
+    --clean <span class="se">\</span>
+    --extractor EntityExtractor <span class="se">\</span>
+    --scorer TFScorer <span class="se">\</span>
+    --filter RankFilter -k <span class="m">10</span> <span class="se">\</span>
+    -o data/participants.json
+</pre></div>
+</div>
+<p>You can modify an existing model by providing the components yourself.
+For example, this snippet uses the <a class="reference internal" href="apd.html#apd.extractors.local.entity_extractor.EntityExtractor" title="apd.extractors.local.entity_extractor.EntityExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">EntityExtractor</span></code></a> instead of the default <a class="reference internal" href="apd.html#apd.extractors.local.twitterner_entity_extractor.TwitterNEREntityExtractor" title="apd.extractors.local.twitterner_entity_extractor.TwitterNEREntityExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">TwitterNEREntityExtractor</span></code></a>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./tools/participants.py <span class="se">\</span>
+    -f data/understanding.json <span class="se">\</span>
+    --clean <span class="se">\</span>
+    --model ELDParticipantDetector <span class="se">\</span>
+    --tfidf data/idf.json <span class="se">\</span>
+    --extractor EntityExtractor <span class="se">\</span>
+    -o data/participants.json
+</pre></div>
+</div>
+<p>Accepted arguments:</p>
 <blockquote>
-<div><ol class="arabic simple">
-<li><p><a class="reference internal" href="ate.html#ate.bootstrapping.probability.pmi.PMIBootstrapper" title="ate.bootstrapping.probability.pmi.PMIBootstrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">PMIBootstrapper()</span></code></a>,</p></li>
-<li><p><a class="reference internal" href="ate.html#ate.bootstrapping.probability.chi.ChiBootstrapper" title="ate.bootstrapping.probability.chi.ChiBootstrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">ChiBootstrapper()</span></code></a></p></li>
-</ol>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--file</span></code>                 <em>&lt;Required&gt;</em> The input corpus from where to extract participants.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-o</span> <span class="pre">--output</span></code>               <em>&lt;Required&gt;</em> The path to the file where to store the extracted participants.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--clean</span></code>                   <em>&lt;Optional&gt;</em> Clean the tweets before extracting participants. This replaces tweet mentions with the display name using the <a class="reference internal" href="nlp.html#nlp.cleaners.tweet_cleaner.TweetCleaner" title="nlp.cleaners.tweet_cleaner.TweetCleaner"><code class="xref py py-class docutils literal notranslate"><span class="pre">TweetCleaner</span></code></a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">--model</span></code>                <em>&lt;Optional&gt;</em> The type of model to use; supported: <cite>ELDParticipantDetector</cite>; defaults to a normal participant detector.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--extractor</span></code>               <em>&lt;Optional&gt;</em> The extractor to use to extract candidate participants; supported: <cite>EntityExtractor</cite> (default), <cite>TokenExtractor</cite>, <cite>TwitterNEREntityExtractor</cite>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--scorer</span></code>                  <em>&lt;Optional&gt;</em> The scorer to use to score candidate participants; supported: <cite>TFScorer</cite> (default), <cite>DFScorer</cite>, <cite>LogDFScorer</cite>, <cite>LogTFScorer</cite>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--filter</span></code>                  <em>&lt;Optional&gt;</em> The filter to use to filter candidate participants; supported: <cite>RankFilter</cite>, <cite>ThresholdFilter</cite>; defaults to no filter.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-k</span></code>                                <em>&lt;Optional&gt;</em> The number of candidates to retain when filtering candidates (used only with the <cite>RankFilter</cite>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--threshold</span></code>               <em>&lt;Optional&gt;</em> The score threshold to use when filtering candidates (used only with the <cite>ThresholdFilter</cite>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--tfidf</span></code>                   <em>&lt;Optional&gt;</em> The TF-IDF scheme to use when creating documents (used only with the <cite>ELDParticipantDetector</cite> model).</p></li>
+</ul>
 </div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>method</strong> (<em>str</em>) – The method string.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The function that corresponds to the given method.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>function</p>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>argparse.ArgumentTypeError</strong> – When the given method string is invalid.</p>
-</dd>
-</dl>
-</dd></dl>
-
+</div>
+<div class="section" id="module-tools.consume">
+<span id="topic-detection-and-tracking"></span><h2>Topic Detection and Tracking<a class="headerlink" href="#module-tools.consume" title="Permalink to this headline">¶</a></h2>
+<p>The consumer receives an input file and consumes it with one of the given consumers.
+This consumer is split into two asynchronous tasks.
+The first task reads the file, and the second consumes it.</p>
+<p>If an understanding file is provided, it is used for the understanding task.
+The process is similar to before, with two asynchronous tasks.
+The first task reads the file, and the second consumes it, this time to understand the event.</p>
+<p>All dataset files are expected to contain one tweet on every line, encoded as JSON strings.</p>
+<p>To run the script, use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./tools/consume.py <span class="se">\</span>
+    -f data/event/event.json <span class="se">\</span>
+    -c PrintConsumer
+</pre></div>
+</div>
+<p>Accepted arguments:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--file</span></code>                                 <em>&lt;Required&gt;</em> The file to consume.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">--class</span></code>                                <em>&lt;Required&gt;</em> The consumer to use; supported: <cite>ELDConsumer</cite>, <cite>FIREConsumer</cite>, <cite>PrintConsumer</cite>, <cite>StatConsumer</cite>, <cite>ZhaoConsumer</cite>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-u</span> <span class="pre">--understanding</span></code>                <em>&lt;Optional&gt;</em> The understanding file used to understand the event.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-s</span> <span class="pre">--speed</span></code>                                <em>&lt;Optional&gt;</em> The speed at which the file is consumed, defaults to 1.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--skip</span></code>                                    <em>&lt;Optional&gt;</em> The amount of time to skip from the beginning of the file in minutes, defaults to 0.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--max-inactivity</span></code>                  <em>&lt;Optional&gt;</em> The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--max-time</span></code>                                <em>&lt;Optional&gt;</em> The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--no-cache</span></code>                                <em>&lt;Optional&gt;</em> If specified, the cached understanding is not used. The new understanding is cached instead.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--scheme</span></code>                                  <em>&lt;Optional&gt;</em> If specified, the path to the <a class="reference internal" href="nlp.html#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a> to use. If it is not specified, the <a class="reference internal" href="nlp.html#nlp.weighting.tf.TF" title="nlp.weighting.tf.TF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TF</span></code></a> scheme is used.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--min-size</span></code>                                <em>&lt;Optional&gt;</em> The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--threshold</span></code>                               <em>&lt;Optional&gt;</em> The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--max-intra-similarity</span></code>    <em>&lt;Optional&gt;</em> The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.</p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="module-tools.summarize">
+<span id="summarization"></span><h2>Summarization<a class="headerlink" href="#module-tools.summarize" title="Permalink to this headline">¶</a></h2>
+<p>The summarization tool receives a timeline and creates a summary for each node.
+This tool is meant to summarize the <code class="docutils literal notranslate"><span class="pre">consume</span></code> tool’s output retrospectively, after all tweets have been assigned to the correct cluster.
+Moreover, the summarization tool makes it easier to experiment with different parameters on the fly.</p>
+<p>To run the script, use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./tools/summarize.py <span class="se">\</span>
+    --file data/timeline.json <span class="se">\</span>
+    --method MMR <span class="se">\</span>
+    --output data/summaries.json <span class="se">\</span>
+    --documents <span class="m">50</span> <span class="se">\</span>
+    --length <span class="m">280</span> <span class="se">\</span>
+    --clean <span class="se">\</span>
+    --with-query
+</pre></div>
+</div>
+<p>Accepted arguments:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--file</span></code>                 <em>&lt;Required&gt;</em> The path to the file containing the timeline to summarize.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">--method</span></code>               <em>&lt;Required&gt;</em> The method to use to generate summaries; supported: <cite>DGS</cite>, <cite>MMR</cite>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-o</span> <span class="pre">--output</span></code>               <em>&lt;Required&gt;</em> The path to the file where to store the generated summaries.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-v</span> <span class="pre">--verbose</span></code>              <em>&lt;Optional&gt;</em> Print the summaries as they are generated.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--documents</span></code>               <em>&lt;Optional&gt;</em> The maximum number of documents to use when summarizing, with a preference for quality documents, scored by the <code class="xref py py-class docutils literal notranslate"><span class="pre">TweetScorer</span></code>; defaults to all documents.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--length</span></code>                  <em>&lt;Optional&gt;</em> The length of each generated summary (in terms of the number of characters); defaults to 140 characters.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--clean</span></code>                   <em>&lt;Optional&gt;</em> Clean the documents before summarizing.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--lambda</span></code>                  <em>&lt;Optional&gt;</em> The lambda parameter to balance between relevance and non-redundancy (used only with the <a class="reference internal" href="summarization.html#summarization.algorithms.mmr.MMR" title="summarization.algorithms.mmr.MMR"><code class="xref py py-class docutils literal notranslate"><span class="pre">MMR</span></code></a> algorithm; defaults to 0.5).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--with-query</span></code>              <em>&lt;Optional&gt;</em> Use the centroid of each timeline node’s topics as a query for summarization (used only with the <a class="reference internal" href="summarization.html#summarization.algorithms.dgs.DGS" title="summarization.algorithms.dgs.DGS"><code class="xref py py-class docutils literal notranslate"><span class="pre">DGS</span></code></a> algorithm).</p></li>
+</ul>
+</div></blockquote>
 </div>
 </div>
 
