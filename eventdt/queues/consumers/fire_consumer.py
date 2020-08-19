@@ -86,10 +86,9 @@ class FIREConsumer(SimulatedBufferedConsumer):
 	def __init__(self, queue, periodicity=60, scheme=None, sets=10,
 				 threshold=0.7, freeze_period=20, min_size=4):
 		"""
-		Create the consumer with a queue.
-		Simultaneously create a nutrition store and the topic detection algorithm container.
-		Initially, the IDF table should be empty.
-		It will be populated later when the 'reconaissance' period is finished.
+		Create the consumer with a :class:`~queues.Queue`.
+		Simultaneously create a :class:`~tdt.nutrition.NutritionStore` and the :class:`~tdt.algorithms.cataldi.Cataldi` TDT algorithm.
+		In addition, create the :class:`~summarization.algorithms.mmr.MMR` algorithm for summarization.
 
 		:param queue: The queue that is consumed.
 		:type queue: :class:`~queues.Queue`

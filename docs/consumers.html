@@ -661,10 +661,9 @@ This value is inclusive.</p></li>
 <dl class="method">
 <dt id="queues.consumers.fire_consumer.FIREConsumer.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity=60</em>, <em class="sig-param">scheme=None</em>, <em class="sig-param">sets=10</em>, <em class="sig-param">threshold=0.7</em>, <em class="sig-param">freeze_period=20</em>, <em class="sig-param">min_size=4</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.fire_consumer.FIREConsumer.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create the consumer with a queue.
-Simultaneously create a nutrition store and the topic detection algorithm container.
-Initially, the IDF table should be empty.
-It will be populated later when the ‘reconaissance’ period is finished.</p>
+<dd><p>Create the consumer with a <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>.
+Simultaneously create a <a class="reference internal" href="tdt.html#tdt.nutrition.NutritionStore" title="tdt.nutrition.NutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code></a> and the <a class="reference internal" href="tdt.html#tdt.algorithms.cataldi.Cataldi" title="tdt.algorithms.cataldi.Cataldi"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cataldi</span></code></a> TDT algorithm.
+In addition, create the <a class="reference internal" href="summarization.html#summarization.algorithms.mmr.MMR" title="summarization.algorithms.mmr.MMR"><code class="xref py py-class docutils literal notranslate"><span class="pre">MMR</span></code></a> algorithm for summarization.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
