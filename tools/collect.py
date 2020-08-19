@@ -16,8 +16,8 @@ To run the script, use:
     ./tools/collect.py \\
 	-o data/#ARSWAT \\
 	-t '#ARSWAT' Arsenal Watford \\
-	-U -u 60 \\
-	-E -e 60
+	--understanding 60 \\
+	--event 60
 
 If no tracking keywords are specified, a sample of all tweets is collected.
 
@@ -25,8 +25,8 @@ If no tracking keywords are specified, a sample of all tweets is collected.
 
     ./tools/collect.py \\
 	-o data/sample \\
-	-U -u 60 \\
-	-E -e 60
+	--understanding 60 \\
+	--event 60
 
 Accepted arguments:
 

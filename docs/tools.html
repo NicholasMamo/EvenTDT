@@ -97,7 +97,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#automatic-term-extraction">Automatic Term Extraction</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module-tools.terms">Term extraction</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-tools.bootstrap">Bootstrapping</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-tools.bootstrap">Correlation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-tools.correlation">Correlation</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-tools.participants">Automatic Participant Detection</a></li>
@@ -196,15 +196,15 @@ Each corpus is a JSON file, where each line is one tweet.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./tools/collect.py <span class="se">\</span>
     -o data/#ARSWAT <span class="se">\</span>
     -t <span class="s1">&#39;#ARSWAT&#39;</span> Arsenal Watford <span class="se">\</span>
-    -U -u <span class="m">60</span> <span class="se">\</span>
-    -E -e <span class="m">60</span>
+    --understanding <span class="m">60</span> <span class="se">\</span>
+    --event <span class="m">60</span>
 </pre></div>
 </div>
 <p>If no tracking keywords are specified, a sample of all tweets is collected.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./tools/collect.py <span class="se">\</span>
     -o data/sample <span class="se">\</span>
-    -U -u <span class="m">60</span> <span class="se">\</span>
-    -E -e <span class="m">60</span>
+    --understanding <span class="m">60</span> <span class="se">\</span>
+    --event <span class="m">60</span>
 </pre></div>
 </div>
 <p>Accepted arguments:</p>
@@ -351,32 +351,29 @@ If a text file is given, this tool expects one word on each line.</p>
 </ul>
 </div></blockquote>
 </div>
-<div class="section" id="module-tools.bootstrap">
-<span id="correlation"></span><h3>Correlation<a class="headerlink" href="#module-tools.bootstrap" title="Permalink to this headline">¶</a></h3>
-<p>A tool that receives a seed set of terms and looks for similar terms in the given corpora.</p>
+<div class="section" id="module-tools.correlation">
+<span id="correlation"></span><h3>Correlation<a class="headerlink" href="#module-tools.correlation" title="Permalink to this headline">¶</a></h3>
+<p>The correlation tool receives a list of words and a list of files and computes their correlation.</p>
 <p>To run the script, use:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./tools/bootstrap.py <span class="se">\</span>
-    -s data/seed.txt <span class="se">\</span>
-    -c data/candidates.txt <span class="se">\</span>
-    -o data/bootstrapped.json <span class="se">\</span>
-    -f data/tokenized_corpus.json
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./tools/correlation.py <span class="se">\</span>
+    --terms first half
+    --files data/tokenized_corpus.json <span class="se">\</span>
+    --method CHI <span class="se">\</span>
+    --output data/correlation.json
 </pre></div>
 </div>
-<p>The seed and candidates files can be either text files or the output from the <code class="docutils literal notranslate"><span class="pre">terms</span></code> tool.
-If a text file is given, this tool expects one word on each line.</p>
+<p>If the terms are stored in a file produced by the <code class="docutils literal notranslate"><span class="pre">terms</span></code> or <code class="docutils literal notranslate"><span class="pre">bootstrap</span></code> scripts, you can load them as follows:</p>
+<blockquote>
+<div><p>./tools/correlation.py –terms data/terms.json –files data/tokenized_corpus.json –method CHI –output data/correlation.json</p>
+</div></blockquote>
 <p>Accepted arguments:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">-s</span> <span class="pre">--seed</span></code>                 <em>&lt;Required&gt;</em> The path to the file containing seed keywords, expected to contain one keyword on each line. Alternatively, the output from the <code class="docutils literal notranslate"><span class="pre">terms</span></code> tool can be provided.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--files</span></code>                <em>&lt;Required&gt;</em> The input corpora where to look for similar keywords, expected to be already tokenized by the <cite>tokenize</cite> tool.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">--method</span></code>               <em>&lt;Required&gt;</em> The method to use to look for similar keywords; supported: <cite>CHI</cite>, <cite>Log</cite>, <cite>PMI</cite>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-o</span> <span class="pre">--output</span></code>               <em>&lt;Required&gt;</em> The path to the file where to store the bootstrapped keywords.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">--candidates</span></code>   <em>&lt;Optional&gt;</em> The path to the file containing candidate keywords, expected to contain one keyword on each line. Alternatively, the output from the <code class="docutils literal notranslate"><span class="pre">terms</span></code> tool can be provided. If no candidates are given, all vocabulary keywords are considered candidates.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-i</span> <span class="pre">--iterations</span></code>   <em>&lt;Optional&gt;</em> The number of iterations to spend bootstrapping; defaults to 1.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-k</span> <span class="pre">--keep</span></code>                 <em>&lt;Optional&gt;</em> The number of keywords to keep after each iteration; defaults to 5.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--generate</span></code>                <em>&lt;Optional&gt;</em> The number of candidate keywords to generate if no candidates are provided; defaults to 100.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--max-seed</span></code>                <em>&lt;Optional&gt;</em> The number of seed words to use from the given files; defaults to all words.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--max-candidates</span></code>  <em>&lt;Optional&gt;</em> The number of candidate words to use from the given files; defaults to all words.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-t</span> <span class="pre">--terms</span></code>                <em>&lt;Required&gt;</em> A list of terms, or the path to the file containing a list of terms for which to calculate the correlation. It can be the output from the <code class="docutils literal notranslate"><span class="pre">terms</span></code> and <code class="docutils literal notranslate"><span class="pre">bootstrap</span></code> tool.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--files</span></code>                <em>&lt;Required&gt;</em> The input corpora from which to calculate the correlation betwee terms, expected to be already tokenized by the <cite>tokenize</cite> tool.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">--method</span></code>               <em>&lt;Required&gt;</em> The method to use to compute the correlation values; supported: <cite>PMI</cite>, <cite>CHI</cite>, <cite>Log</cite>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-o</span> <span class="pre">--output</span></code>               <em>&lt;Required&gt;</em> The path to the file where to store the correlation values.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--max-terms</span></code>               <em>&lt;Optional&gt;</em> The maximum number of terms to use, useful when loading terms from files; defaults to all terms.</p></li>
 </ul>
 </div></blockquote>
 </div>

@@ -45,7 +45,7 @@ Bootstrapping
 Correlation
 -----------
 
-.. automodule:: tools.bootstrap
+.. automodule:: tools.correlation
 
 ===============================
 Automatic Participant Detection
