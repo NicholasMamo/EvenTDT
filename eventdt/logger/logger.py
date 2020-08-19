@@ -55,38 +55,26 @@ def set_logging_level(level):
 
 	conf.LOG_LEVEL = level
 
-def info(message):
+def info(*args):
 	"""
 	Log an information message.
-
-	:param message: The message to show.
-	:type message: str
 	"""
 
 	if conf.LOG_LEVEL <= LogLevel.INFO:
-		message = [ message ] if type(message) not in [ list, tuple ] else message
-		print(f"{ log_time() }: INFO:", *message)
+		print(f"{ log_time() }: INFO:", *args)
 
-def warning(message):
+def warning(*args):
 	"""
 	Log a warning.
-
-	:param message: The message to show.
-	:type message: str
 	"""
 
 	if conf.LOG_LEVEL <= LogLevel.WARNING:
-		message = [ message ] if type(message) not in [ list, tuple ] else message
-		print(f"{ log_time() }: WARNING:", *message)
+		print(f"{ log_time() }: WARNING:", *args)
 
-def error(message):
+def error(*args):
 	"""
 	Log an error.
-
-	:param message: The message to show.
-	:type message: str
 	"""
 
 	if conf.LOG_LEVEL <= LogLevel.ERROR:
-		message = [ message ] if type(message) not in [ list, tuple ] else message
-		print(f"{ log_time() }: ERROR:", *message)
+		print(f"{ log_time() }: ERROR:", *args)
