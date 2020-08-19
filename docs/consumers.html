@@ -558,18 +558,29 @@ After every time window, it empties the buffer and prints the number of tweets i
 <span id="consumers-algorithms"></span><h3>Algorithmic Consumers<a class="headerlink" href="#algorithmic-consumers" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="module-queues.consumers.zhao_consumer">
 <span id="zhao-et-al-consumer-2011"></span><h4>Zhao et al. Consumer (2011)<a class="headerlink" href="#module-queues.consumers.zhao_consumer" title="Permalink to this headline">¶</a></h4>
-<p>The Zhao et al. consumer is based on the implementation by the same authors.
-The algorithm revolves around the <a class="reference internal" href="tdt.html#tdt.algorithms.zhao.Zhao" title="tdt.algorithms.zhao.Zhao"><code class="xref py py-class docutils literal notranslate"><span class="pre">Zhao</span></code></a> algorithm.</p>
+<p>The Zhao et al. consumer mimicks the implementation by the same authors.
+It revolves around the <a class="reference internal" href="tdt.html#tdt.algorithms.zhao.Zhao" title="tdt.algorithms.zhao.Zhao"><code class="xref py py-class docutils literal notranslate"><span class="pre">Zhao</span></code></a> TDT algorithm.</p>
+<p>This consumer is concernedd only with the TDT approach.
+The summarization in the <a class="reference internal" href="#queues.consumers.zhao_consumer.ZhaoConsumer" title="queues.consumers.zhao_consumer.ZhaoConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ZhaoConsumer</span></code></a> uses the <a class="reference internal" href="summarization.html#summarization.algorithms.mmr.MMR" title="summarization.algorithms.mmr.MMR"><code class="xref py py-class docutils literal notranslate"><span class="pre">MMR</span></code></a> approach.</p>
+<p>The <a class="reference internal" href="#queues.consumers.zhao_consumer.ZhaoConsumer" title="queues.consumers.zhao_consumer.ZhaoConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ZhaoConsumer</span></code></a> uses a dynamic, sliding time-window to detect topics.
+It splits each time-window into two halves, and checks whether the second half has experienced a surge in tweets.
+If it has, then that half-time-window represents a topic.
+Otherwise, a larger time-window is used.
+You can read more about this approach in the <a class="reference internal" href="tdt.html#tdt.algorithms.zhao.Zhao" title="tdt.algorithms.zhao.Zhao"><code class="xref py py-class docutils literal notranslate"><span class="pre">Zhao</span></code></a> class.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Implementation based on the algorithm presented in <a class="reference external" href="https://arxiv.org/abs/1106.4300">Human as Real-Time Sensors of Social and Physical Events: A Case Study of Twitter and Sports Games by Zhao et al. (2011)</a>.</p>
+<p>This implementation is based on the algorithm presented in <a class="reference external" href="https://arxiv.org/abs/1106.4300">Human as Real-Time Sensors of Social and Physical Events: A Case Study of Twitter and Sports Games by Zhao et al. (2011)</a>.</p>
 </div>
 <dl class="class">
 <dt id="queues.consumers.zhao_consumer.ZhaoConsumer">
 <em class="property">class </em><code class="sig-name descname">ZhaoConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity=5</em>, <em class="sig-param">scheme=None</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.zhao_consumer.ZhaoConsumer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The Zhao et al. consumer is based on the implementation by the same authors.
 The algorithm revolves around the <a class="reference internal" href="tdt.html#tdt.algorithms.zhao.Zhao" title="tdt.algorithms.zhao.Zhao"><code class="xref py py-class docutils literal notranslate"><span class="pre">Zhao</span></code></a> algorithm.
-The algorithm examines changes in volume using a dynamic time window.</p>
+The algorithm examines changes in volume using a dynamic, sliding time-window.</p>
+<p>The consumer naturally stores its periodicity, which defines the smallest dynamic sliding time-window.
+Apart from that, it stores a <a class="reference internal" href="tdt.html#tdt.nutrition.NutritionStore" title="tdt.nutrition.NutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code></a>, which records the tweeting volume at each second, and a <a class="reference internal" href="nlp.html#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a> to create documents.</p>
+<p>Finally, the consumer also maintains a list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances that cover the largest sliding time-window.
+These documents can be used later for summarization by the <a class="reference internal" href="summarization.html#summarization.algorithms.mmr.MMR" title="summarization.algorithms.mmr.MMR"><code class="xref py py-class docutils literal notranslate"><span class="pre">MMR</span></code></a> algorithm.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
@@ -593,8 +604,8 @@ It will be populated later when the ‘reconaissance’ period is finished.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>queue</strong> (<a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that is consumed.</p></li>
-<li><p><strong>periodicity</strong> (<em>int</em>) – The time window in seconds of the buffered consumer, or how often it is invoked.
-This defaults to 5 seconds, the same span as half the smallest time window in Zhao et al.’s algorithm.</p></li>
+<li><p><strong>periodicity</strong> (<em>int</em>) – The time-window in seconds of the buffered consumer, or how often it is invoked.
+This defaults to 5 seconds, the same span as half the smallest time-window in Zhao et al.’s algorithm.</p></li>
 <li><p><strong>scheme</strong> (None or <a class="reference internal" href="nlp.html#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme that is used to create dimensions.
 If <cite>None</cite> is given, the <a class="reference internal" href="nlp.html#nlp.weighting.tf.TF" title="nlp.weighting.tf.TF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TF</span></code></a> term-weighting scheme is used.</p></li>
 </ul>

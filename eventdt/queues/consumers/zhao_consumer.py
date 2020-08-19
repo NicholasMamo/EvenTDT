@@ -1,10 +1,19 @@
 """
-The Zhao et al. consumer is based on the implementation by the same authors.
-The algorithm revolves around the :class:`~tdt.algorithms.zhao.Zhao` algorithm.
+The Zhao et al. consumer mimicks the implementation by the same authors.
+It revolves around the :class:`~tdt.algorithms.zhao.Zhao` TDT algorithm.
+
+This consumer is concernedd only with the TDT approach.
+The summarization in the :class:`~queues.consumers.zhao_consumer.ZhaoConsumer` uses the :class:`~summarization.algorithms.mmr.MMR` approach.
+
+The :class:`~queues.consumers.zhao_consumer.ZhaoConsumer` uses a dynamic, sliding time-window to detect topics.
+It splits each time-window into two halves, and checks whether the second half has experienced a surge in tweets.
+If it has, then that half-time-window represents a topic.
+Otherwise, a larger time-window is used.
+You can read more about this approach in the :class:`~tdt.algorithms.zhao.Zhao` class.
 
 .. note::
 
-	Implementation based on the algorithm presented in `Human as Real-Time Sensors of Social and Physical Events: A Case Study of Twitter and Sports Games by Zhao et al. (2011) <https://arxiv.org/abs/1106.4300>`_.
+	This implementation is based on the algorithm presented in `Human as Real-Time Sensors of Social and Physical Events: A Case Study of Twitter and Sports Games by Zhao et al. (2011) <https://arxiv.org/abs/1106.4300>`_.
 """
 
 from datetime import datetime
@@ -41,7 +50,13 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 	"""
 	The Zhao et al. consumer is based on the implementation by the same authors.
 	The algorithm revolves around the :class:`~tdt.algorithms.zhao.Zhao` algorithm.
-	The algorithm examines changes in volume using a dynamic time window.
+	The algorithm examines changes in volume using a dynamic, sliding time-window.
+
+	The consumer naturally stores its periodicity, which defines the smallest dynamic sliding time-window.
+	Apart from that, it stores a :class:`~tdt.nutrition.NutritionStore`, which records the tweeting volume at each second, and a :class:`~nlp.weighting.TermWeightingScheme` to create documents.
+
+	Finally, the consumer also maintains a list of :class:`~nlp.document.Document` instances that cover the largest sliding time-window.
+	These documents can be used later for summarization by the :class:`~summarization.algorithms.mmr.MMR` algorithm.
 
 	:ivar store: The nutrition store used to store the volume.
 	:vartype store: :class:`~tdt.nutrition.store.NutritionStore`
@@ -65,8 +80,8 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 
 		:param queue: The queue that is consumed.
 		:type queue: :class:`~queues.Queue`
-		:param periodicity: The time window in seconds of the buffered consumer, or how often it is invoked.
-							This defaults to 5 seconds, the same span as half the smallest time window in Zhao et al.'s algorithm.
+		:param periodicity: The time-window in seconds of the buffered consumer, or how often it is invoked.
+							This defaults to 5 seconds, the same span as half the smallest time-window in Zhao et al.'s algorithm.
 		:type periodicity: int
 		:param scheme: The term-weighting scheme that is used to create dimensions.
 					   If `None` is given, the :class:`~nlp.weighting.tf.TF` term-weighting scheme is used.
@@ -235,9 +250,9 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 	def _create_checkpoint(self, documents):
 		"""
 		Create checkpoints from the documents in the
-		After every time window has elapsed, create a checkpoint from the documents.
+		After every time-window has elapsed, create a checkpoint from the documents.
 		These documents are used to create a nutrition set for the nutrition store.
-		This nutrition set represents a snapshot of the time window.
+		This nutrition set represents a snapshot of the time-window.
 
 		:param documents: The list of documents that form the checkpoint.
 		:type documents: list of :class:`~nlp.document.Document`
@@ -272,7 +287,7 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 						  This value is exclusive.
 		:type timestamp: float
 
-		:return: A tuple with the start and end timestamp of the time window when there was a burst.
+		:return: A tuple with the start and end timestamp of the time-window when there was a burst.
 				 Note that this is a half-window, not the entire window.
 				 If there was an increase in the second half of the last 60 seconds, the last 30 seconds are returned.
 				 If there was no burst, `False` is returned.
