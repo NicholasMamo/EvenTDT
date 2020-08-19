@@ -13,7 +13,8 @@ class Exportable(ABC):
 	An abstract class of an object that can be exported as a JSON string and imported back.
 	"""
 
-	ALIASES = { 'nlp.term_weighting': 'nlp.weighting' }
+	ALIASES = { 'nlp.term_weighting': 'nlp.weighting',
+				'summarization.timeline.timeline': 'summarization.timeline' }
 
 	@abstractmethod
 	def to_array(self):
