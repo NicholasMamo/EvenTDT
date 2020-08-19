@@ -106,9 +106,9 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#algorithmic-consumers">Algorithmic Consumers</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#module-queues.consumers.zhao_consumer">Zhao Consumer</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-queues.consumers.fire_consumer">FIRE Consumer</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-queues.consumers.eld_consumer">ELD Consumer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-queues.consumers.zhao_consumer">Zhao et al. Consumer (2011)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-queues.consumers.fire_consumer">FIRE Consumer - Mamo et al. (2017)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-queues.consumers.eld_consumer">ELD Consumer - Mamo et al. (2019)</a></li>
 </ul>
 </li>
 </ul>
@@ -557,7 +557,7 @@ After every time window, it empties the buffer and prints the number of tweets i
 <div class="section" id="algorithmic-consumers">
 <span id="consumers-algorithms"></span><h3>Algorithmic Consumers<a class="headerlink" href="#algorithmic-consumers" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="module-queues.consumers.zhao_consumer">
-<span id="zhao-consumer"></span><h4>Zhao Consumer<a class="headerlink" href="#module-queues.consumers.zhao_consumer" title="Permalink to this headline">¶</a></h4>
+<span id="zhao-et-al-consumer-2011"></span><h4>Zhao et al. Consumer (2011)<a class="headerlink" href="#module-queues.consumers.zhao_consumer" title="Permalink to this headline">¶</a></h4>
 <p>The Zhao et al. consumer is based on the implementation by the same authors.
 The algorithm revolves around the <a class="reference internal" href="tdt.html#tdt.algorithms.zhao.Zhao" title="tdt.algorithms.zhao.Zhao"><code class="xref py py-class docutils literal notranslate"><span class="pre">Zhao</span></code></a> algorithm.</p>
 <div class="admonition note">
@@ -606,7 +606,7 @@ If <cite>None</cite> is given, the <a class="reference internal" href="nlp.html#
 
 </div>
 <div class="section" id="module-queues.consumers.fire_consumer">
-<span id="fire-consumer"></span><h4>FIRE Consumer<a class="headerlink" href="#module-queues.consumers.fire_consumer" title="Permalink to this headline">¶</a></h4>
+<span id="fire-consumer-mamo-et-al-2017"></span><h4>FIRE Consumer - Mamo et al. (2017)<a class="headerlink" href="#module-queues.consumers.fire_consumer" title="Permalink to this headline">¶</a></h4>
 <p>Finding Important News REports (FIRE) is a periodic TDT consumer.
 It takes in tweets every time window, clusters them and finds the most important terms in each cluster.
 In this implementation, the tracking happens through the timeline.</p>
@@ -669,7 +669,7 @@ This value is inclusive.</p></li>
 
 </div>
 <div class="section" id="module-queues.consumers.eld_consumer">
-<span id="eld-consumer"></span><h4>ELD Consumer<a class="headerlink" href="#module-queues.consumers.eld_consumer" title="Permalink to this headline">¶</a></h4>
+<span id="eld-consumer-mamo-et-al-2019"></span><h4>ELD Consumer - Mamo et al. (2019)<a class="headerlink" href="#module-queues.consumers.eld_consumer" title="Permalink to this headline">¶</a></h4>
 <p>Event TimeLine Detection (ELD) is a consumer based on a publication of the same name.
 The approach splits processing into two steps:</p>
 <blockquote>

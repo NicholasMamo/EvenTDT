@@ -51,22 +51,22 @@ Statistical Consumer
 Algorithmic Consumers
 ---------------------
 
-Zhao Consumer
-^^^^^^^^^^^^^
+Zhao et al. Consumer (2011)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: queues.consumers.zhao_consumer
    :members:
    :special-members:
 
-FIRE Consumer
-^^^^^^^^^^^^^
+FIRE Consumer - Mamo et al. (2017)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: queues.consumers.fire_consumer
    :members:
    :special-members:
 
-ELD Consumer
-^^^^^^^^^^^^
+ELD Consumer - Mamo et al. (2019)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: queues.consumers.eld_consumer
    :members:
