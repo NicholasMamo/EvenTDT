@@ -1,14 +1,21 @@
 """
-Event TimeLine Detection (ELD) is a consumer based on a publication of the same name.
-The approach splits processing into two steps:
+Event TimeLine Detection (ELD) is a real-time consumer based on the publication having the same name by Mamo et al. (2019).
 
- 	#. Understand the event, and
+ELD's processing, unlike other :ref:`consumers <consumers>`, splits processing into two steps:
 
-	#. Build a timeline for it.
+1. Understand the event in terms of its participants and, superficially, its domain.
+   ELD does not really use the participants—it's only a proof-of-concept.
+   The domain is a :class:`~nlp.weighting.TermWeightingScheme` with an :class:`~nlp.weighting.global_schemes.idf.IDF` table based on the pre-event discussion.
+
+2. Build a timeline for the event.
+   This approach is based on the :class:`~queues.consumers.fire_consumer.FIREConsumer`, in that it is a combination of document-pivot and feature-approaches.
+   First, it incrementally clusters incoming tweets, and then validates clusters, checking whether they contain breaking terms.
+   The check, again, uses the local-global comparison between clusters and previous time-windows, which ELD calls checkpoints.
+   Unlike the :class:`~queues.consumers.fire_consumer.FIREConsumer`, ELD uses a custom TDT feature-pivot approach: :class:`~tdt.algorithms.eld.ELD`.
 
 .. note::
 
-	Implementation based on the algorithm presented in `ELD: Event TimeLine Detection -- A Participant-Based Approach to Tracking Events by Mamo et al. (2019) <https://dl.acm.org/doi/10.1145/3342220.3344921>`_.
+	This implementation is based on the algorithm presented in `ELD: Event TimeLine Detection -- A Participant-Based Approach to Tracking Events by Mamo et al. (2019) <https://dl.acm.org/doi/10.1145/3342220.3344921>`_.
 """
 
 from datetime import datetime
@@ -61,20 +68,40 @@ from vsm.clustering.cluster import Cluster
 
 class ELDConsumer(Consumer):
 	"""
-	The ELD consumer is a real-time consumer with a custom algorithm to detect topics.
-	It is siplit into two steps:
+	The :class:`~queues.consumers.eld_consumer.ELDConsumer` is a real-time consumer with a custom algorithm to detect topics.
+	Unlike other :ref:`consumers <consumers>`, the consumer has both a :func:`~queues.consumers.Consumer.ELDConsumer.run` and a :func:`~queues.consumers.eld_consumer.ELDConsumer.understand` functions.
+	The former is the normal processing step, whereas the :func:`~queues.consumers.eld_consumer.ELDConsumer.understand` precedes the event.
 
-		#. Understand the event, and
+	During understanding, the :class:`~queues.consumers.eld_consumer.ELDConsumer` performs two tasks:
 
-		#. Build a timeline for it.
+	1. It detects the event's participants using the pre-event chatter.
+	   The :class:`~queues.consumers.eld_consumer.ELDConsumer` does not use these participants; it's only a proof-of-concept.
 
-	:ivar time_window: The time (in seconds) to spend consuming the queue.
+	2. It creates a :class:`~nlp.weighting.TermWeightingScheme` with an :class:`~nlp.weighting.global_schemes.idf.IDF` table based on the pre-event discussion.
+
+	During processing, the :class:`~queues.consumers.eld_consumer.ELDConsumer` creates checkpoints at every 'time-window'.
+	These checkpoints represent the global context, or how the terms' nutrition changed over time.
+	The :class:`~queues.consumers.eld_consumer.ELDConsumer` uses a :class:`~queues.Queue` as a temporary buffer for tweets until they make up a checkpoint.
+	The consumer stores them in a :class:`~tdt.nutrition.memory.MemoryNutritionStore`.
+
+	The actual processing uses the :class:`~vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans` to create clusters.
+	The :class:`~queues.consumers.eld_consumer.ELDConsumer` goes over :class:`~vsm.clustering.cluster.Cluster` instances having a ``min_size`` and checks whether they have breaking terms.
+	The check uses the :class:`~tdt.algorithms.eld.ELD` algorithm.
+	The :class:`~queues.consumers.eld_consumer.ELDConsumer` uses a ``cooldown`` parameter to avoid checking the same :class:`~vsm.clustering.cluster.Cluster` repeatedly in a short amount of time.
+	Since the :class:`~tdt.algorithms.eld.ELD` algorithm uses a decay factor, a few ``sets`` (or checkpoints) can be used.
+	Furthermore, the :class:`~tdt.algorithms.eld.ELD` algorithm's output is interpretable, so the minimum burst—``min_burst``—can be set.
+
+	To convert tweets into :class:`~nlp.document.Document` instances, the :class:`~queues.consumers.eld_consumer.ELDConsumer` also stores a :class:`~nlp.tokenizer.Tokenizer` and a :class:`~nlp.weighting.TermWeightingScheme`.
+
+	Summarization uses the :class:`~summarization.algorithms.dgs.DGS` algorithm, which was developed as part of ELD.
+
+	:ivar time_window: The size of the window after which checkpoints are created.
 	:vartype time_window: int
 	:ivar ~.scheme: The term-weighting scheme used to create documents.
 	:vartype ~.scheme: :class:`~nlp.weighting.TermWeightingScheme`
 	:ivar min_size: The minimum size of a cluster to be considered valid.
 	:vartype min_size: int
-	:ivar cooldown: The minimum time (in seconds) between consecutive checks of a cluster.
+	:ivar cooldown: The minimum time, in seconds, between consecutive checks of a cluster.
 	:vartype cooldown: float
 	:ivar max_intra_similarity: The maximum average similarity, between 0 and 1, of the cluster's documents with the centroid.
 								Used to filter out clusters that include only retweets of the same, or almost identical documents.
@@ -129,7 +156,7 @@ class ELDConsumer(Consumer):
 		:type freeze_period: float
 		:param min_size: The minimum size of a cluster to be considered valid.
 		:type min_size: int
-		:param cooldown: The minimum time (in seconds) between consecutive checks of a cluster.
+		:param cooldown: The minimum time, in seconds, between consecutive checks of a cluster.
 		:type cooldown: float
 		:param max_intra_similarity: The maximum average similarity, between 0 and 1, of the cluster's documents with the centroid.
 									 Used to filter out clusters that include only retweets of the same, or almost identical documents.
@@ -173,16 +200,18 @@ class ELDConsumer(Consumer):
 
 	async def understand(self, max_inactivity=-1, *args, **kwargs):
 		"""
-		Understanding is split into two tasks:
+		Understanding precedes the event and is tasked with generating knowledge automatically.
 
-			#. Construct the TF-IDF scheme used from the pre-event discussion, and
+		During understanding, the :class:`~queues.consumers.eld_consumer.ELDConsumer` performs two tasks:
 
-			#. Identify the event's participants.
+		1. It detects the event's participants using the pre-event chatter.
+		   The :class:`~queues.consumers.eld_consumer.ELDConsumer` does not use these participants; it's only a proof-of-concept.
+
+		2. It creates a :class:`~nlp.weighting.TermWeightingScheme` with an :class:`~nlp.weighting.global_schemes.idf.IDF` table based on the pre-event discussion.
+		   The consumer uses the :class:`~nlp.weighting.TermWeightingScheme` while processing tweets in real-time.
 
 		The function returns both as a dictionary.
-		The two keys are `scheme` and `participants`.
-
-		Any additional arguments and keyword arguments are passed on to the :func:`~queues.consumers.eld_consumer.ELDConsumer._construct_idf` and :func:`~queues.consumers.eld_consumer.ELDConsumer._detect_participants` functions.
+		The two keys are ``scheme`` and `d`participants`.
 
 		:param max_inactivity: The maximum time in seconds to wait idly without input before stopping.
 							   If it is negative, it is ignored.

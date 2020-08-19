@@ -691,36 +691,53 @@ This value is inclusive.</p></li>
 </div>
 <div class="section" id="module-queues.consumers.eld_consumer">
 <span id="eld-consumer-mamo-et-al-2019"></span><h4>ELD Consumer - Mamo et al. (2019)<a class="headerlink" href="#module-queues.consumers.eld_consumer" title="Permalink to this headline">¶</a></h4>
-<p>Event TimeLine Detection (ELD) is a consumer based on a publication of the same name.
-The approach splits processing into two steps:</p>
-<blockquote>
-<div><ol class="arabic simple">
-<li><p>Understand the event, and</p></li>
-<li><p>Build a timeline for it.</p></li>
+<p>Event TimeLine Detection (ELD) is a real-time consumer based on the publication having the same name by Mamo et al. (2019).</p>
+<p>ELD’s processing, unlike other <a class="reference internal" href="#id1"><span class="std std-ref">consumers</span></a>, splits processing into two steps:</p>
+<ol class="arabic simple">
+<li><p>Understand the event in terms of its participants and, superficially, its domain.
+ELD does not really use the participants—it’s only a proof-of-concept.
+The domain is a <a class="reference internal" href="nlp.html#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a> with an <a class="reference internal" href="nlp.html#nlp.weighting.global_schemes.idf.IDF" title="nlp.weighting.global_schemes.idf.IDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">IDF</span></code></a> table based on the pre-event discussion.</p></li>
+<li><p>Build a timeline for the event.
+This approach is based on the <a class="reference internal" href="#queues.consumers.fire_consumer.FIREConsumer" title="queues.consumers.fire_consumer.FIREConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">FIREConsumer</span></code></a>, in that it is a combination of document-pivot and feature-approaches.
+First, it incrementally clusters incoming tweets, and then validates clusters, checking whether they contain breaking terms.
+The check, again, uses the local-global comparison between clusters and previous time-windows, which ELD calls checkpoints.
+Unlike the <a class="reference internal" href="#queues.consumers.fire_consumer.FIREConsumer" title="queues.consumers.fire_consumer.FIREConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">FIREConsumer</span></code></a>, ELD uses a custom TDT feature-pivot approach: <a class="reference internal" href="tdt.html#tdt.algorithms.eld.ELD" title="tdt.algorithms.eld.ELD"><code class="xref py py-class docutils literal notranslate"><span class="pre">ELD</span></code></a>.</p></li>
 </ol>
-</div></blockquote>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Implementation based on the algorithm presented in <a class="reference external" href="https://dl.acm.org/doi/10.1145/3342220.3344921">ELD: Event TimeLine Detection – A Participant-Based Approach to Tracking Events by Mamo et al. (2019)</a>.</p>
+<p>This implementation is based on the algorithm presented in <a class="reference external" href="https://dl.acm.org/doi/10.1145/3342220.3344921">ELD: Event TimeLine Detection – A Participant-Based Approach to Tracking Events by Mamo et al. (2019)</a>.</p>
 </div>
 <dl class="class">
 <dt id="queues.consumers.eld_consumer.ELDConsumer">
 <em class="property">class </em><code class="sig-name descname">ELDConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">time_window=30</em>, <em class="sig-param">scheme=None</em>, <em class="sig-param">threshold=0.5</em>, <em class="sig-param">freeze_period=20</em>, <em class="sig-param">min_size=3</em>, <em class="sig-param">cooldown=1</em>, <em class="sig-param">max_intra_similarity=0.8</em>, <em class="sig-param">sets=10</em>, <em class="sig-param">min_burst=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer" title="Permalink to this definition">¶</a></dt>
-<dd><p>The ELD consumer is a real-time consumer with a custom algorithm to detect topics.
-It is siplit into two steps:</p>
-<blockquote>
-<div><ol class="arabic simple">
-<li><p>Understand the event, and</p></li>
-<li><p>Build a timeline for it.</p></li>
+<dd><p>The <a class="reference internal" href="#queues.consumers.eld_consumer.ELDConsumer" title="queues.consumers.eld_consumer.ELDConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ELDConsumer</span></code></a> is a real-time consumer with a custom algorithm to detect topics.
+Unlike other <a class="reference internal" href="#id1"><span class="std std-ref">consumers</span></a>, the consumer has both a <code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code> and a <a class="reference internal" href="#queues.consumers.eld_consumer.ELDConsumer.understand" title="queues.consumers.eld_consumer.ELDConsumer.understand"><code class="xref py py-func docutils literal notranslate"><span class="pre">understand()</span></code></a> functions.
+The former is the normal processing step, whereas the <a class="reference internal" href="#queues.consumers.eld_consumer.ELDConsumer.understand" title="queues.consumers.eld_consumer.ELDConsumer.understand"><code class="xref py py-func docutils literal notranslate"><span class="pre">understand()</span></code></a> precedes the event.</p>
+<p>During understanding, the <a class="reference internal" href="#queues.consumers.eld_consumer.ELDConsumer" title="queues.consumers.eld_consumer.ELDConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ELDConsumer</span></code></a> performs two tasks:</p>
+<ol class="arabic simple">
+<li><p>It detects the event’s participants using the pre-event chatter.
+The <a class="reference internal" href="#queues.consumers.eld_consumer.ELDConsumer" title="queues.consumers.eld_consumer.ELDConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ELDConsumer</span></code></a> does not use these participants; it’s only a proof-of-concept.</p></li>
+<li><p>It creates a <a class="reference internal" href="nlp.html#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a> with an <a class="reference internal" href="nlp.html#nlp.weighting.global_schemes.idf.IDF" title="nlp.weighting.global_schemes.idf.IDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">IDF</span></code></a> table based on the pre-event discussion.</p></li>
 </ol>
-</div></blockquote>
+<p>During processing, the <a class="reference internal" href="#queues.consumers.eld_consumer.ELDConsumer" title="queues.consumers.eld_consumer.ELDConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ELDConsumer</span></code></a> creates checkpoints at every ‘time-window’.
+These checkpoints represent the global context, or how the terms’ nutrition changed over time.
+The <a class="reference internal" href="#queues.consumers.eld_consumer.ELDConsumer" title="queues.consumers.eld_consumer.ELDConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ELDConsumer</span></code></a> uses a <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> as a temporary buffer for tweets until they make up a checkpoint.
+The consumer stores them in a <a class="reference internal" href="tdt.html#tdt.nutrition.memory.MemoryNutritionStore" title="tdt.nutrition.memory.MemoryNutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">MemoryNutritionStore</span></code></a>.</p>
+<p>The actual processing uses the <a class="reference internal" href="vsm.html#vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans" title="vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans"><code class="xref py py-class docutils literal notranslate"><span class="pre">TemporalNoKMeans</span></code></a> to create clusters.
+The <a class="reference internal" href="#queues.consumers.eld_consumer.ELDConsumer" title="queues.consumers.eld_consumer.ELDConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ELDConsumer</span></code></a> goes over <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instances having a <code class="docutils literal notranslate"><span class="pre">min_size</span></code> and checks whether they have breaking terms.
+The check uses the <a class="reference internal" href="tdt.html#tdt.algorithms.eld.ELD" title="tdt.algorithms.eld.ELD"><code class="xref py py-class docutils literal notranslate"><span class="pre">ELD</span></code></a> algorithm.
+The <a class="reference internal" href="#queues.consumers.eld_consumer.ELDConsumer" title="queues.consumers.eld_consumer.ELDConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ELDConsumer</span></code></a> uses a <code class="docutils literal notranslate"><span class="pre">cooldown</span></code> parameter to avoid checking the same <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> repeatedly in a short amount of time.
+Since the <a class="reference internal" href="tdt.html#tdt.algorithms.eld.ELD" title="tdt.algorithms.eld.ELD"><code class="xref py py-class docutils literal notranslate"><span class="pre">ELD</span></code></a> algorithm uses a decay factor, a few <code class="docutils literal notranslate"><span class="pre">sets</span></code> (or checkpoints) can be used.
+Furthermore, the <a class="reference internal" href="tdt.html#tdt.algorithms.eld.ELD" title="tdt.algorithms.eld.ELD"><code class="xref py py-class docutils literal notranslate"><span class="pre">ELD</span></code></a> algorithm’s output is interpretable, so the minimum burst—<code class="docutils literal notranslate"><span class="pre">min_burst</span></code>—can be set.</p>
+<p>To convert tweets into <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances, the <a class="reference internal" href="#queues.consumers.eld_consumer.ELDConsumer" title="queues.consumers.eld_consumer.ELDConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ELDConsumer</span></code></a> also stores a <a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a> and a <a class="reference internal" href="nlp.html#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>.</p>
+<p>Summarization uses the <a class="reference internal" href="summarization.html#summarization.algorithms.dgs.DGS" title="summarization.algorithms.dgs.DGS"><code class="xref py py-class docutils literal notranslate"><span class="pre">DGS</span></code></a> algorithm, which was developed as part of ELD.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>time_window</strong> (<em>int</em>) – The time (in seconds) to spend consuming the queue.</p></li>
+<li><p><strong>time_window</strong> (<em>int</em>) – The size of the window after which checkpoints are created.</p></li>
 <li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme used to create documents.</p></li>
 <li><p><strong>min_size</strong> (<em>int</em>) – The minimum size of a cluster to be considered valid.</p></li>
-<li><p><strong>cooldown</strong> (<em>float</em>) – The minimum time (in seconds) between consecutive checks of a cluster.</p></li>
+<li><p><strong>cooldown</strong> (<em>float</em>) – The minimum time, in seconds, between consecutive checks of a cluster.</p></li>
 <li><p><strong>max_intra_similarity</strong> (<em>float</em>) – The maximum average similarity, between 0 and 1, of the cluster’s documents with the centroid.
 Used to filter out clusters that include only retweets of the same, or almost identical documents.</p></li>
 <li><p><strong>sets</strong> (<em>int</em>) – The number of time windows that are considered when computing burst.
@@ -759,7 +776,7 @@ If <cite>None</cite> is given, the <a class="reference internal" href="nlp.html#
 Documents are added to an existing cluster if their similarity with the centroid is greater than or equal to this threshold.</p></li>
 <li><p><strong>freeze_period</strong> (<em>float</em>) – The freeze period, in seconds, of the incremental clustering approach.</p></li>
 <li><p><strong>min_size</strong> (<em>int</em>) – The minimum size of a cluster to be considered valid.</p></li>
-<li><p><strong>cooldown</strong> (<em>float</em>) – The minimum time (in seconds) between consecutive checks of a cluster.</p></li>
+<li><p><strong>cooldown</strong> (<em>float</em>) – The minimum time, in seconds, between consecutive checks of a cluster.</p></li>
 <li><p><strong>max_intra_similarity</strong> (<em>float</em>) – The maximum average similarity, between 0 and 1, of the cluster’s documents with the centroid.
 Used to filter out clusters that include only retweets of the same, or almost identical documents.</p></li>
 <li><p><strong>sets</strong> (<em>int</em>) – The number of time windows that are considered when computing burst.
@@ -776,16 +793,16 @@ This value is exclusive.</p></li>
 <dl class="method">
 <dt id="queues.consumers.eld_consumer.ELDConsumer.understand">
 <em class="property">async </em><code class="sig-name descname">understand</code><span class="sig-paren">(</span><em class="sig-param">max_inactivity=-1</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.eld_consumer.ELDConsumer.understand" title="Permalink to this definition">¶</a></dt>
-<dd><p>Understanding is split into two tasks:</p>
-<blockquote>
-<div><ol class="arabic simple">
-<li><p>Construct the TF-IDF scheme used from the pre-event discussion, and</p></li>
-<li><p>Identify the event’s participants.</p></li>
+<dd><p>Understanding precedes the event and is tasked with generating knowledge automatically.</p>
+<p>During understanding, the <a class="reference internal" href="#queues.consumers.eld_consumer.ELDConsumer" title="queues.consumers.eld_consumer.ELDConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ELDConsumer</span></code></a> performs two tasks:</p>
+<ol class="arabic simple">
+<li><p>It detects the event’s participants using the pre-event chatter.
+The <a class="reference internal" href="#queues.consumers.eld_consumer.ELDConsumer" title="queues.consumers.eld_consumer.ELDConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ELDConsumer</span></code></a> does not use these participants; it’s only a proof-of-concept.</p></li>
+<li><p>It creates a <a class="reference internal" href="nlp.html#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a> with an <a class="reference internal" href="nlp.html#nlp.weighting.global_schemes.idf.IDF" title="nlp.weighting.global_schemes.idf.IDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">IDF</span></code></a> table based on the pre-event discussion.
+The consumer uses the <a class="reference internal" href="nlp.html#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a> while processing tweets in real-time.</p></li>
 </ol>
-</div></blockquote>
 <p>The function returns both as a dictionary.
-The two keys are <cite>scheme</cite> and <cite>participants</cite>.</p>
-<p>Any additional arguments and keyword arguments are passed on to the <code class="xref py py-func docutils literal notranslate"><span class="pre">_construct_idf()</span></code> and <code class="xref py py-func docutils literal notranslate"><span class="pre">_detect_participants()</span></code> functions.</p>
+The two keys are <code class="docutils literal notranslate"><span class="pre">scheme</span></code> and <cite>d`participants</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>max_inactivity</strong> (<em>int</em>) – The maximum time in seconds to wait idly without input before stopping.
