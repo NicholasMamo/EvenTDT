@@ -64,7 +64,7 @@ def info(message):
 	"""
 
 	if conf.LOG_LEVEL <= LogLevel.INFO:
-		message = [ message ] if type(message) is str else message
+		message = [ message ] if type(message) not in [ list, tuple ] else message
 		print(f"{ log_time() }: INFO:", *message)
 
 def warning(message):
@@ -76,7 +76,7 @@ def warning(message):
 	"""
 
 	if conf.LOG_LEVEL <= LogLevel.WARNING:
-		message = [ message ] if type(message) is str else message
+		message = [ message ] if type(message) not in [ list, tuple ] else message
 		print(f"{ log_time() }: WARNING:", *message)
 
 def error(message):
@@ -88,5 +88,5 @@ def error(message):
 	"""
 
 	if conf.LOG_LEVEL <= LogLevel.ERROR:
-		message = [ message ] if type(message) is str else message
+		message = [ message ] if type(message) not in [ list, tuple ] else message
 		print(f"{ log_time() }: ERROR:", *message)
