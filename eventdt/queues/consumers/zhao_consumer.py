@@ -73,18 +73,16 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 
 	def __init__(self, queue, periodicity=5, scheme=None):
 		"""
-		Create the consumer with a queue.
-		Simultaneously create a nutrition store and the topic detection algorithm container.
-		Initially, the IDF table should be empty.
-		It will be populated later when the 'reconaissance' period is finished.
+		Create the consumer with a :class:`~queues.Queue`.
+		Simultaneously create a :class:`~tdt.nutrition.NutritionStore` and the :class:`~tdt.algorithms.zhao.Zhao` TDT algorithm.
 
-		:param queue: The queue that is consumed.
+		:param queue: The queue that the consumer will consume later.
 		:type queue: :class:`~queues.Queue`
 		:param periodicity: The time-window in seconds of the buffered consumer, or how often it is invoked.
 							This defaults to 5 seconds, the same span as half the smallest time-window in Zhao et al.'s algorithm.
 		:type periodicity: int
 		:param scheme: The term-weighting scheme that is used to create dimensions.
-					   If `None` is given, the :class:`~nlp.weighting.tf.TF` term-weighting scheme is used.
+					   If ``None`` is given, the :class:`~nlp.weighting.tf.TF` term-weighting scheme is used.
 		:type scheme: None or :class:`~nlp.weighting.TermWeightingScheme`
 		"""
 

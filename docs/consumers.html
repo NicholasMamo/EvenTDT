@@ -596,18 +596,16 @@ Older documents are automatically cleared.</p></li>
 <dl class="method">
 <dt id="queues.consumers.zhao_consumer.ZhaoConsumer.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity=5</em>, <em class="sig-param">scheme=None</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.zhao_consumer.ZhaoConsumer.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create the consumer with a queue.
-Simultaneously create a nutrition store and the topic detection algorithm container.
-Initially, the IDF table should be empty.
-It will be populated later when the ‘reconaissance’ period is finished.</p>
+<dd><p>Create the consumer with a <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>.
+Simultaneously create a <a class="reference internal" href="tdt.html#tdt.nutrition.NutritionStore" title="tdt.nutrition.NutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code></a> and the <a class="reference internal" href="tdt.html#tdt.algorithms.zhao.Zhao" title="tdt.algorithms.zhao.Zhao"><code class="xref py py-class docutils literal notranslate"><span class="pre">Zhao</span></code></a> TDT algorithm.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>queue</strong> (<a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that is consumed.</p></li>
+<li><p><strong>queue</strong> (<a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that the consumer will consume later.</p></li>
 <li><p><strong>periodicity</strong> (<em>int</em>) – The time-window in seconds of the buffered consumer, or how often it is invoked.
 This defaults to 5 seconds, the same span as half the smallest time-window in Zhao et al.’s algorithm.</p></li>
 <li><p><strong>scheme</strong> (None or <a class="reference internal" href="nlp.html#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme that is used to create dimensions.
-If <cite>None</cite> is given, the <a class="reference internal" href="nlp.html#nlp.weighting.tf.TF" title="nlp.weighting.tf.TF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TF</span></code></a> term-weighting scheme is used.</p></li>
+If <code class="docutils literal notranslate"><span class="pre">None</span></code> is given, the <a class="reference internal" href="nlp.html#nlp.weighting.tf.TF" title="nlp.weighting.tf.TF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TF</span></code></a> term-weighting scheme is used.</p></li>
 </ul>
 </dd>
 </dl>
