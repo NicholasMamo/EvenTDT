@@ -119,42 +119,44 @@ def main():
 	Collect the tweets for the understanding period.
 	"""
 	meta = { }
-	if args.understanding is not None and args.understanding <= 0:
-		raise ValueError("The understanding period must be longer than 0 minutes")
+	if args.understanding is not None:
+		if args.understanding <= 0:
+			raise ValueError("The understanding period must be longer than 0 minutes")
 
-	filename = os.path.join(args.output, 'understanding.json')
+		filename = os.path.join(args.output, 'understanding.json')
 
-	start = time.time()
-	logger.info('Starting to collect understanding corpus')
-	collect(auth, args.track, filename, args.understanding * 60)
-	logger.info('Understanding corpus collected')
-	end = time.time()
-	meta['understanding'] = {
-		'keywords': args.track,
-		'output': filename,
-		'start': start,
-		'end': end
-	}
+		start = time.time()
+		logger.info('Starting to collect understanding corpus')
+		collect(auth, args.track, filename, args.understanding * 60)
+		logger.info('Understanding corpus collected')
+		end = time.time()
+		meta['understanding'] = {
+			'keywords': args.track,
+			'output': filename,
+			'start': start,
+			'end': end
+		}
 
 	"""
-	Collect the tweets for the event period period.
+	Collect the tweets for the event period.
 	"""
-	if args.event is not None and args.event <= 0:
-		raise ValueError("The event period must be longer than 0 minutes")
+	if args.event is not None:
+		if args.event <= 0:
+			raise ValueError("The event period must be longer than 0 minutes")
 
-	filename = os.path.join(args.output, ('event.json' if args.track else 'sample.json'))
+		filename = os.path.join(args.output, ('event.json' if args.track else 'sample.json'))
 
-	start = time.time()
-	logger.info('Starting to collect event corpus')
-	collect(auth, args.track, filename, args.event * 60)
-	logger.info('Event corpus collected')
-	end = time.time()
-	meta['event'] = {
-		'keywords': args.track,
-		'output': filename,
-		'start': start,
-		'end': end
-	}
+		start = time.time()
+		logger.info('Starting to collect event corpus')
+		collect(auth, args.track, filename, args.event * 60)
+		logger.info('Event corpus collected')
+		end = time.time()
+		meta['event'] = {
+			'keywords': args.track,
+			'output': filename,
+			'start': start,
+			'end': end
+		}
 
 	if meta:
 		save_meta(os.path.join(args.output, 'meta.json'), meta)
