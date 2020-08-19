@@ -56,8 +56,8 @@ import tools
 from logger import logger
 from objects.exportable import Exportable
 from nlp.weighting import TermWeightingScheme
-from queues import Queue
-from queues.consumers import *
+from eventdt.queues import Queue
+from eventdt.queues.consumers import *
 from twitter.file import SimulatedFileReader
 
 def setup_args():

@@ -29,7 +29,7 @@ path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
-from queue import Queue
+from eventdt.queues import Queue
 
 class Consumer(ABC):
 	"""
