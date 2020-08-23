@@ -51,6 +51,8 @@ Statistical Consumer
 Algorithmic Consumers
 ---------------------
 
+.. automodule:: queues.consumers.algorithms
+
 Zhao et al. Consumer (2011)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

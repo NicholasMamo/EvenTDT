@@ -105,7 +105,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#module-queues.consumers.stat_consumer">Statistical Consumer</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#algorithmic-consumers">Algorithmic Consumers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-queues.consumers.algorithms">Algorithmic Consumers</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#module-queues.consumers.algorithms.zhao_consumer">Zhao et al. Consumer (2011)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-queues.consumers.algorithms.fire_consumer">FIRE Consumer - Mamo et al. (2017)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-queues.consumers.algorithms.eld_consumer">ELD Consumer - Mamo et al. (2019)</a></li>
@@ -554,8 +554,16 @@ After every time window, it empties the buffer and prints the number of tweets i
 
 </div>
 </div>
-<div class="section" id="algorithmic-consumers">
-<span id="consumers-algorithms"></span><h3>Algorithmic Consumers<a class="headerlink" href="#algorithmic-consumers" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="module-queues.consumers.algorithms">
+<span id="algorithmic-consumers"></span><span id="consumers-algorithms"></span><h3>Algorithmic Consumers<a class="headerlink" href="#module-queues.consumers.algorithms" title="Permalink to this headline">¶</a></h3>
+<p>In addition to the base and simple consumers, EvenTDT includes consumers that replicate methods proposed in literature.
+These approaches are as faithful to the original techniques as possible, although they depend a lot on the details available in the respective papers.</p>
+<p>You can use these consumers as baselines or to have a working base from where to start implementing your own consumers.
+To run these consumers, check out the <a class="reference internal" href="tools.html#module-tools.consume" title="tools.consume"><code class="xref py py-mod docutils literal notranslate"><span class="pre">consume</span></code></a> tool.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>In many cases, these consumers replicate most faithfully the TDT approach, not the summarization approach.</p>
+</div>
 <div class="section" id="module-queues.consumers.algorithms.zhao_consumer">
 <span id="zhao-et-al-consumer-2011"></span><h4>Zhao et al. Consumer (2011)<a class="headerlink" href="#module-queues.consumers.algorithms.zhao_consumer" title="Permalink to this headline">¶</a></h4>
 <p>The Zhao et al. consumer mimicks the implementation by the same authors.
