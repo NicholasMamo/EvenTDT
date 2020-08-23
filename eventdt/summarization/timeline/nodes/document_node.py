@@ -109,3 +109,26 @@ class DocumentNode(Node):
 			documents.append(cls.from_array(document))
 
 		return DocumentNode(created_at=array.get('created_at'), documents=documents)
+
+	@staticmethod
+	def merge(created_at, *args):
+		"""
+		Create a new :class:`~summarization.timeline.nodes.document_node.DocumentNode` by combining the documents in all of the given nodes.
+		The new :class:`~summarization.timeline.nodes.document_node.DocumentNode` will have the given timestamp, but it will inherit all of the documents in the nodes.
+
+		All the nodes are provided as additional arguments (using ``*args``).
+		If none are given, this function creates an empty :class:`~summarization.timeline.nodes.document_node.DocumentNode`.
+
+		:param created_at: The timestamp when the node was created.
+		:type created_at: float
+
+		:return: A new node with all of the data stored in the given nodes.
+		:rtype: :class:`~summarization.timeline.nodes.document_node.DocumentNode`
+		"""
+
+		node = DocumentNode(created_at)
+
+		for _node in args:
+			node.add(_node.documents)
+
+		return node

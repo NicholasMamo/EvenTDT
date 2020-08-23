@@ -336,3 +336,57 @@ class TestDocumentNode(unittest.TestCase):
 		self.assertEqual(documents[0].attributes, i.documents[0].attributes)
 		self.assertEqual(documents[1].dimensions, i.documents[1].dimensions)
 		self.assertEqual(documents[1].attributes, i.documents[1].attributes)
+
+	def test_merge_none(self):
+		"""
+		Test that when merging no document nodes, the merge function returns a new, empty node.
+		"""
+
+		node = DocumentNode.merge(10)
+		self.assertEqual(10, node.created_at)
+		self.assertFalse(node.documents)
+
+	def test_merge_created_at_from_parameter(self):
+		"""
+		Test that when merging document nodes, the timestamp is taken from the parameters.
+		"""
+
+		documents = [ Document('', { 'a': 1 }), Document('', { 'b': 2 }) ]
+		_node = DocumentNode(created_at=0, documents=documents)
+		node = DocumentNode.merge(10)
+		self.assertEqual(10, node.created_at)
+
+	def test_merge_one(self):
+		"""
+		Test that when merging one document node, a new node with the same documents is returned.
+		"""
+
+		documents = [ Document('', { 'a': 1 }), Document('', { 'b': 2 }) ]
+		_node = DocumentNode(created_at=0, documents=documents)
+		node = DocumentNode.merge(10, _node)
+		self.assertEqual(_node.documents, node.documents)
+
+	def test_merge_all(self):
+		"""
+		Test that when merging document nodes, all of the documents are present in the new node.
+		"""
+
+		documents = [ Document('', { 'a': 1 }), Document('', { 'b': 2 }),
+		 			  Document('', { 'c': 3 }), Document('', { 'd': 4 }) ]
+		nodes = [ DocumentNode(created_at=0, documents=documents[:2]),
+		 		   DocumentNode(created_at=0, documents=documents[2:]) ]
+		node = DocumentNode.merge(10, nodes[0], nodes[1])
+		self.assertTrue(all( document in node.documents for node in nodes
+		 												for document in node.documents ))
+
+	def test_merge_order(self):
+		"""
+		Test that when merging document nodes, the order of the documents is the same as the order of the nodes.
+		"""
+
+		documents = [ Document('', { 'a': 1 }), Document('', { 'b': 2 }),
+		 			  Document('', { 'c': 3 }), Document('', { 'd': 4 }) ]
+		nodes = [ DocumentNode(created_at=0, documents=documents[:2]),
+		 		   DocumentNode(created_at=0, documents=documents[2:]) ]
+		node = DocumentNode.merge(10, nodes[0], nodes[1])
+		self.assertEqual(documents, node.documents)
