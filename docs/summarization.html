@@ -801,7 +801,7 @@ When it needs to compare incoming <a class="reference internal" href="nlp.html#n
 <dd><p>Add documents to the node.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>documents</strong> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – A list of documents to add to the node.</p>
+<dd class="field-odd"><p><strong>documents</strong> (<a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> or list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – A document, or a list of documents to add to the node.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1123,6 +1123,26 @@ The returned similarity is the highest pairwise similarity.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A new instance of the <a class="reference internal" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode" title="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">TopicalClusterNode</span></code></a> with the same attributes stored in the object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode" title="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">TopicalClusterNode</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.merge">
+<em class="property">static </em><code class="sig-name descname">merge</code><span class="sig-paren">(</span><em class="sig-param">created_at</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new <a class="reference internal" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode" title="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">TopicalClusterNode</span></code></a> by combining the documents in all of the given nodes.
+The new <a class="reference internal" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode" title="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">TopicalClusterNode</span></code></a> will have the given timestamp, but it will inherit all of the documents in the nodes.</p>
+<p>All the nodes are provided as additional arguments (using <code class="docutils literal notranslate"><span class="pre">*args</span></code>).
+If none are given, this function creates an empty <a class="reference internal" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode" title="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">TopicalClusterNode</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>created_at</strong> (<em>float</em>) – The timestamp when the node was created.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A new node with all of the data stored in the given nodes.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode" title="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">TopicalClusterNode</span></code></a></p>

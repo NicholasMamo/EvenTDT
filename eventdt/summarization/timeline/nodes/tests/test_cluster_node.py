@@ -388,8 +388,8 @@ class TestClusterNode(unittest.TestCase):
 		 			  Document('', { 'c': 3 }), Document('', { 'd': 4 }) ]
 		clusters = [ Cluster(vectors=documents[:2]),
 		 			 Cluster(vectors=documents[2:]) ]
-		nodes = [ ClusterNode(created_at=0, clusters=clusters[:2]),
-		 		   ClusterNode(created_at=0, clusters=clusters[2:]) ]
+		nodes = [ ClusterNode(created_at=0, clusters=clusters[:1]),
+		 		   ClusterNode(created_at=0, clusters=clusters[1:]) ]
 		node = ClusterNode.merge(10, nodes[0], nodes[1])
 		self.assertTrue(all( cluster in node.clusters for node in nodes
 		 											  for cluster in node.clusters ))
@@ -406,9 +406,10 @@ class TestClusterNode(unittest.TestCase):
 		 			  Document('', { 'c': 3 }), Document('', { 'd': 4 }) ]
 		clusters = [ Cluster(vectors=documents[:2]),
 		 			 Cluster(vectors=documents[2:]) ]
-		nodes = [ ClusterNode(created_at=0, clusters=clusters[:2]),
-		 		   ClusterNode(created_at=0, clusters=clusters[2:]) ]
+		nodes = [ ClusterNode(created_at=0, clusters=clusters[:1]),
+		 		   ClusterNode(created_at=0, clusters=clusters[1:]) ]
 		node = ClusterNode.merge(10, nodes[0], nodes[1])
+		self.assertEqual(clusters, node.clusters)
 		_documents = [ document for node in nodes
 								for cluster in node.clusters
 								for document in cluster.vectors ]

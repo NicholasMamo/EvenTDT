@@ -344,3 +344,77 @@ class TestClusterNode(unittest.TestCase):
 		self.assertEqual(topics[1].dimensions, i.topics[1].dimensions)
 		self.assertEqual(topics[1].attributes, i.topics[1].attributes)
 		self.assertEqual(Document, type(topics[1]))
+
+	def test_merge_none(self):
+		"""
+		Test that when merging no topical cluster nodes, the merge function returns a new, empty node.
+		"""
+
+		node = TopicalClusterNode.merge(10)
+		self.assertEqual(10, node.created_at)
+		self.assertFalse(node.clusters)
+		self.assertFalse(node.topics)
+		self.assertEqual(TopicalClusterNode, type(node))
+
+	def test_merge_created_at_from_parameter(self):
+		"""
+		Test that when merging topical cluster nodes, the timestamp is taken from the parameters.
+		"""
+
+		clusters = [ Cluster(vectors=[ Document('', { 'a': 1 }), Document('', { 'b': 2 }) ]) ]
+		topics = [ Vector({ 'a': 1 }) ]
+		_node = TopicalClusterNode(created_at=0, clusters=clusters, topics=topics)
+		node = TopicalClusterNode.merge(10)
+		self.assertEqual(10, node.created_at)
+
+	def test_merge_one(self):
+		"""
+		Test that when merging one topical cluster node, a new node with the same clusters and topics is returned.
+		"""
+
+		clusters = [ Cluster(vectors=[ Document('', { 'a': 1 }), Document('', { 'b': 2 }) ]) ]
+		topics = [ Vector({ 'a': 1 }) ]
+		_node = TopicalClusterNode(created_at=0, clusters=clusters, topics=topics)
+		node = TopicalClusterNode.merge(10, _node)
+		self.assertEqual(_node.clusters, node.clusters)
+
+	def no_test_merge_all(self):
+		"""
+		Test that when merging topical cluster nodes, all of the clusters and their documents are present in the new node.
+		"""
+
+		documents = [ Document('', { 'a': 1 }), Document('', { 'b': 2 }),
+		 			  Document('', { 'c': 3 }), Document('', { 'd': 4 }) ]
+		clusters = [ Cluster(vectors=documents[:2]),
+		 			 Cluster(vectors=documents[2:]) ]
+		topics = [ Vector({ 'a': 1 }), Vector({ 'b': 1 }) ]
+		nodes = [ TopicalClusterNode(created_at=0, clusters=clusters[:1], topics=topics[:1]),
+		 		  TopicalClusterNode(created_at=0, clusters=clusters[1:], topics=topics[1:]) ]
+		node = TopicalClusterNode.merge(10, nodes[0], nodes[1])
+		self.assertTrue(all( cluster in node.clusters for node in nodes
+		 											  for cluster in node.clusters ))
+		self.assertTrue(all( topic in node.topics for node in nodes
+		 										  for topic in node.topics ))
+		self.assertTrue(all( document in documents for node in nodes
+		 										   for cluster in node.clusters
+												   for document in cluster.vectors ))
+
+	def test_merge_order(self):
+		"""
+		Test that when merging topical cluster nodes, the order of the clusters and their documents is the same as the order of the nodes.
+		"""
+
+		documents = [ Document('', { 'a': 1 }), Document('', { 'b': 2 }),
+		 			  Document('', { 'c': 3 }), Document('', { 'd': 4 }) ]
+		clusters = [ Cluster(vectors=documents[:2]),
+		 			 Cluster(vectors=documents[2:]) ]
+		topics = [ Vector({ 'a': 1 }), Vector({ 'b': 1 }) ]
+		nodes = [ TopicalClusterNode(created_at=0, clusters=clusters[:1], topics=topics[:1]),
+		 		  TopicalClusterNode(created_at=0, clusters=clusters[1:], topics=topics[1:]) ]
+		node = TopicalClusterNode.merge(10, nodes[0], nodes[1])
+		self.assertEqual(clusters, node.clusters)
+		self.assertEqual(topics, node.topics)
+		_documents = [ document for node in nodes
+								for cluster in node.clusters
+								for document in cluster.vectors ]
+		self.assertEqual(documents, _documents)
