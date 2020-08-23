@@ -29,6 +29,7 @@ class Node(Exportable):
 	- :func:`~summarization.timeline.nodes.Node.add`: used by the :class:`~summarization.timeline.Timeline` to add information to a node.
 	- :func:`~summarization.timeline.nodes.Node.similarity`: used by the :class:`~summarization.timeline.Timeline` to assess whether the new information is relevant to a node.
 	- :func:`~summarization.timeline.nodes.Node.get_all_documents`: used when summarizing to get all the :class:`~nlp.document.Document` instances stored in the node.
+	- :func:`~summarization.timeline.nodes.Node.merge`: used to combine several nodes (of the same type) into one node.
 
 	.. note::
 
@@ -103,6 +104,25 @@ class Node(Exportable):
 			raise ValueError(f"The expiry cannot be negative: received {expiry}")
 
 		return timestamp - self.created_at >= expiry
+
+	@abstractmethod
+	@staticmethod
+	def merge(self, created_at, *args):
+		"""
+		Create a new :class:`~summarization.timeline.nodes.Node` by combining the data in all of the given nodes.
+		The new :class:`~summarization.timeline.nodes.Node` will have the given timestamp, but it will inherit all of the data in the nodes.
+
+		All the nodes are provided as additional arguments (using ``*args``).
+		If none are given, this function creates an empty :class:`~summarization.timeline.nodes.Node`.
+
+		:param created_at: The timestamp when the node was created.
+		:type created_at: float
+
+		:return: A new node with all of the data stored in the given nodes.
+		:rtype: :class:`~summarization.timeline.nodes.Node`
+		"""
+
+		pass
 
 from .cluster_node import ClusterNode
 from .document_node import DocumentNode
