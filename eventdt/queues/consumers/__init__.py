@@ -55,7 +55,7 @@ class Consumer(ABC):
 		Initialize the consumer with its :class:`~queues.Queue`.
 
 		:param queue: The queue that will be consumed.
-		:vartype queue: :class:`~queues.Queue`
+		:type queue: :class:`~queues.Queue`
 		"""
 
 		self.queue = queue
