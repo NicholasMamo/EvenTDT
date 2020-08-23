@@ -28,6 +28,24 @@ from queues.consumers import Consumer
 
 class SplitConsumer(Consumer):
 	"""
+	The :class:`~queues.consumers.split_consumer.SplitConsumer` class acts as a supervisor.
+	It reads all of the incoming tweets and dispatches them to one of its consumers.
+
+	In its state, the consumer maintains a list of these conditions.
+
+	:ivar splits: A list of splits, or conditions that determine into which queue a tweet goes.
+	:vartype splits: list
 	"""
 
-	pass
+	def __init__(self, queue, splits):
+		"""
+		Initialize the consumer with its :class:`~queues.Queue`.
+
+		:param queue: The queue that receives the entire stream.
+		:type queue: :class:`~queues.Queue`
+		:param splits: A list of splits, or conditions that determine into which queue a tweet goes.
+		:type splits: list
+		"""
+
+		super(SplitConsumer, self).__init__(queue)
+		self.splits = splits

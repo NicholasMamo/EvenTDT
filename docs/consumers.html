@@ -546,8 +546,30 @@ The individual consumers that process the split streams can be based on the <a c
 </div>
 <dl class="class">
 <dt id="queues.consumers.split_consumer.SplitConsumer">
-<em class="property">class </em><code class="sig-name descname">SplitConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.split_consumer.SplitConsumer" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property">class </em><code class="sig-name descname">SplitConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">splits</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.split_consumer.SplitConsumer" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <a class="reference internal" href="#queues.consumers.split_consumer.SplitConsumer" title="queues.consumers.split_consumer.SplitConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SplitConsumer</span></code></a> class acts as a supervisor.
+It reads all of the incoming tweets and dispatches them to one of its consumers.</p>
+<p>In its state, the consumer maintains a list of these conditions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><p><strong>splits</strong> (<em>list</em>) – A list of splits, or conditions that determine into which queue a tweet goes.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="queues.consumers.split_consumer.SplitConsumer.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">splits</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.split_consumer.SplitConsumer.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the consumer with its <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>queue</strong> (<a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that receives the entire stream.</p></li>
+<li><p><strong>splits</strong> (<em>list</em>) – A list of splits, or conditions that determine into which queue a tweet goes.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
 
 </div>
 <div class="section" id="simple-consumers">
