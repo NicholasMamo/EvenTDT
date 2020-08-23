@@ -546,29 +546,75 @@ The individual consumers that process the split streams can be based on the <a c
 </div>
 <dl class="class">
 <dt id="queues.consumers.split_consumer.SplitConsumer">
-<em class="property">class </em><code class="sig-name descname">SplitConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">splits</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.split_consumer.SplitConsumer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">SplitConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">splits</em>, <em class="sig-param">consumer</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.split_consumer.SplitConsumer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference internal" href="#queues.consumers.split_consumer.SplitConsumer" title="queues.consumers.split_consumer.SplitConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SplitConsumer</span></code></a> class acts as a supervisor.
 It reads all of the incoming tweets and dispatches them to one of its consumers.</p>
-<p>In its state, the consumer maintains a list of these conditions.</p>
+<p>In its state, the consumer maintains a list of these conditions.
+Associated with each condition is one class:<cite>~queues.consumers.Consumer</cite> that receives the tweets from that split..</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
-<dd class="field-odd"><p><strong>splits</strong> (<em>list</em>) – A list of splits, or conditions that determine into which queue a tweet goes.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>splits</strong> (<em>list</em>) – A list of splits, or conditions that determine into which queue a tweet goes.</p></li>
+<li><p><a class="reference internal" href="#module-queues.consumers" title="queues.consumers"><strong>consumers</strong></a> (list of <a class="reference internal" href="#queues.consumers.Consumer" title="queues.consumers.Consumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code></a>) – The consumers that will receive the tweets from the different splits.
+Each consumer corresponds to one split.</p></li>
+</ul>
 </dd>
 </dl>
 <dl class="method">
 <dt id="queues.consumers.split_consumer.SplitConsumer.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">splits</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.split_consumer.SplitConsumer.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">splits</em>, <em class="sig-param">consumer</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.split_consumer.SplitConsumer.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the consumer with its <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>.</p>
+<p>For each given split, this function creates one <a class="reference internal" href="#queues.consumers.Consumer" title="queues.consumers.Consumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code></a> of the given type.
+This consumer has its own queue, which receive tweets that satisfy the associated condition.</p>
+<p>Any additional arguments or keyword arguments are passed on to the consumer’s constructor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>queue</strong> (<a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that receives the entire stream.</p></li>
-<li><p><strong>splits</strong> (<em>list</em>) – A list of splits, or conditions that determine into which queue a tweet goes.</p></li>
+<li><p><strong>splits</strong> (<em>list</em><em> or </em><em>tuple</em>) – A list of splits, or conditions that determine into which queue a tweet goes.</p></li>
+<li><p><strong>consumer</strong> (<em>type</em>) – The type of <a class="reference internal" href="#queues.consumers.Consumer" title="queues.consumers.Consumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code></a> to create for each split.</p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
 
+<dl class="method">
+<dt id="queues.consumers.split_consumer.SplitConsumer.run">
+<em class="property">async </em><code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">wait=0</em>, <em class="sig-param">max_inactivity=-1</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.split_consumer.SplitConsumer.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the flags to indicate that the consumer is running and start consuming the <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>.
+At the same time, the <a class="reference internal" href="#queues.consumers.split_consumer.SplitConsumer" title="queues.consumers.split_consumer.SplitConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SplitConsumer</span></code></a> starts running its own consumers.</p>
+<p>If the <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> is being populated by a <a class="reference internal" href="twitter.html#twitter.file.FileReader" title="twitter.file.FileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileReader</span></code></a>, there might be an initial delay until the <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> receives any data.
+This is because the <a class="reference internal" href="twitter.html#twitter.file.FileReader" title="twitter.file.FileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileReader</span></code></a> supports skipping tweets, which introduces some latency.
+When skipping a lot of time or lines, this latency can get very large.
+You can use the <code class="docutils literal notranslate"><span class="pre">wait</span></code> parameter to delay running the consumer by a few seconds to wait for the <a class="reference internal" href="twitter.html#twitter.file.FileReader" title="twitter.file.FileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileReader</span></code></a> to finish skipping part of the corpus.</p>
+<p>In addition, corpora may be sparse with periods of time during which little data is fed to the consumer.
+This can also happen when the <code class="xref py py-class docutils literal notranslate"><span class="pre">TweetListener</span></code> fails to collect tweets because of errors in the Twitter API.
+The <code class="docutils literal notranslate"><span class="pre">max_inactivity</span></code> parameter is the allowance, in seconds, for how long the consumer should wait without receiving input before it decides no more data will arrive and stop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>wait</strong> (<em>int</em>) – The time, in seconds, to wait until starting to consume the <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>.
+This is used when the <a class="reference internal" href="twitter.html#twitter.file.FileReader" title="twitter.file.FileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileReader</span></code></a> spends a lot of time skipping tweets.</p></li>
+<li><p><strong>max_inactivity</strong> (<em>int</em>) – The maximum time, in seconds, to wait idly without input before stopping the consumer.
+If it is negative, the consumer keeps waiting for input indefinitely.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The output of the consumer, if any, as a tuple.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>any</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="queues.consumers.split_consumer.DummySplitConsumer">
+<em class="property">class </em><code class="sig-name descname">DummySplitConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">splits</em>, <em class="sig-param">consumer</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.split_consumer.DummySplitConsumer" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dummy <a class="reference internal" href="#queues.consumers.split_consumer.SplitConsumer" title="queues.consumers.split_consumer.SplitConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SplitConsumer</span></code></a> that does nothing.
+It is used only for testing purposes.</p>
 </dd></dl>
 
 </div>
