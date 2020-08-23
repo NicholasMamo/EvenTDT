@@ -105,8 +105,8 @@ class Node(Exportable):
 
 		return timestamp - self.created_at >= expiry
 
-	@abstractmethod
 	@staticmethod
+	@abstractmethod
 	def merge(self, created_at, *args):
 		"""
 		Create a new :class:`~summarization.timeline.nodes.Node` by combining the data in all of the given nodes.
