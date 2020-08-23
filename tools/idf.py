@@ -37,6 +37,7 @@ if path not in sys.path:
 from nlp.weighting.tfidf import TFIDF
 from nlp.tokenizer import Tokenizer
 from objects.exportable import Exportable
+import twitter
 
 def setup_args():
 	"""
@@ -145,21 +146,7 @@ def tokenize(tweet, tokenizer):
 	:rtype: list of str
 	"""
 
-	"""
-	The text used for the document depend on what kind of tweet it is.
-	If the tweet is too long to fit in the tweet, the full text is used;
-
-	Retain the comment of a quoted status.
-	However, if the tweet is a plain retweet, get the full text.
-	"""
-	while "retweeted_status" in tweet:
-		tweet = tweet["retweeted_status"]
-
-	if "extended_tweet" in tweet:
-		text = tweet["extended_tweet"].get("full_text", tweet.get("text", ""))
-	else:
-		text = tweet.get("text", "")
-
+	text = twitter.full_text(tweet)
 	return tokenizer.tokenize(text)
 
 def update(idf, tokens):

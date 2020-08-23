@@ -110,23 +110,6 @@ class TestTokenizer(unittest.TestCase):
 		self.assertEqual([ 'NN', 'NNS', 'NNP', 'NNPS', 'VB', 'VBG', 'VBD', 'VBN', 'VBP', 'VBZ', 'JJ', 'JJR', 'JJS' ],
 						 tool.get_tags(nouns=True, proper_nouns=True, verbs=True, adjectives=True))
 
-	def test_get_text_full(self):
-		"""
-		Test that when getting the text from tweets, the full text is returned.
-		"""
-
-		with open(os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'CRYCHE-100.json'), 'r') as f:
-			for line in f:
-				tweet = json.loads(line)
-				if '…' in tweet['text']:
-					text = tool.get_text(tweet)
-
-					"""
-					Make an exception for a special case.
-					"""
-					if not ('retweeted_status' in tweet and tweet['retweeted_status']['id_str'] == '1238513167573147648'):
-						self.assertFalse(text.endswith('…'))
-
 	def test_tokenize_corpus_same_lines(self):
 		"""
 		Test that when tokenizing a corpus, the same number of lines are outputted.

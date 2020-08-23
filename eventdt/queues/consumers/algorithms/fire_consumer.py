@@ -208,7 +208,7 @@ class FIREConsumer(SimulatedBufferedConsumer):
 		:rtype: list of :class:`~nlp.document.Document`
 		"""
 
-		documents = []
+		documents = [ ]
 
 		"""
 		The text used for the document depend on what kind of tweet it is.
@@ -218,22 +218,15 @@ class FIREConsumer(SimulatedBufferedConsumer):
 		However, if the tweet is a plain retweet, get the full text.
 		"""
 		for tweet in tweets:
-			original = tweet
-			while "retweeted_status" in tweet:
-				tweet = tweet["retweeted_status"]
-
-			if "extended_tweet" in tweet:
-				text = tweet["extended_tweet"].get("full_text", tweet.get("text", ""))
-			else:
-				text = tweet.get("text", "")
+			text = twitter.full_text(tweet)
 
 			"""
 			Create the document and save the tweet in it.
 			"""
 			tokens = self.tokenizer.tokenize(text)
 			document = Document(text, tokens, scheme=self.scheme)
-			document.attributes['tweet'] = original
-			document.attributes['timestamp'] = twitter.extract_timestamp(original)
+			document.attributes['tweet'] = tweet
+			document.attributes['timestamp'] = twitter.extract_timestamp(tweet)
 			document.normalize()
 			documents.append(document)
 

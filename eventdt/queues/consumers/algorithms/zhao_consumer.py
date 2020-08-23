@@ -163,22 +163,15 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 		"""
 		tokenizer = Tokenizer(stopwords=stopwords.words("english"), remove_unicode_entities=True)
 		for tweet in tweets:
-			original = tweet
-			while "retweeted_status" in tweet:
-				tweet = tweet["retweeted_status"]
-
-			if "extended_tweet" in tweet:
-				text = tweet["extended_tweet"].get("full_text", tweet.get("text", ""))
-			else:
-				text = tweet.get("text", "")
+			text = twitter.full_text(tweet)
 
 			"""
 			Create the document and save the tweet in it.
 			"""
 			tokens = tokenizer.tokenize(text)
 			document = Document(text, tokens, scheme=self.scheme)
-			document.attributes["tweet"] = original
-			document.attributes['timestamp'] = twitter.extract_timestamp(original)
+			document.attributes["tweet"] = tweet
+			document.attributes['timestamp'] = twitter.extract_timestamp(tweet)
 			document.normalize()
 			documents.append(document)
 

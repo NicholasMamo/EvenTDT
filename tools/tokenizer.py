@@ -51,6 +51,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from nlp.tokenizer import Tokenizer
+import twitter
 
 def setup_args():
 	"""
@@ -221,7 +222,7 @@ def tokenize_corpus(file, output, tokenizer, keep=None, remove_retweets=False):
 			if remove_retweets and 'retweeted_status' in tweet:
 				continue
 
-			text = get_text(tweet)
+			text = twitter.full_text(tweet)
 			tokens = tokenizer.tokenize(text)
 
 			"""
@@ -241,34 +242,6 @@ def tokenize_corpus(file, output, tokenizer, keep=None, remove_retweets=False):
 				object[attribute] = tweet.get(attribute)
 
 			outfile.write(f"{ json.dumps(object) }\n")
-
-def get_text(tweet):
-	"""
-	Extract the text from the given tweet.
-	The text used depends on the type of tweet.
-	The full text is always sought.
-
-	:param tweet: The tweet to tokenize.
-	:type tweet: dict
-
-	:return: The text to tokenize from the tweet.
-	:rtype: str
-	"""
-
-	"""
-	The text used for the document depend on what kind of tweet it is.
-	If the tweet is too long to fit in the tweet, the full text is used;
-
-	Retain the comment of a quoted status.
-	However, if the tweet is a plain retweet, get the full text.
-	"""
-	while "retweeted_status" in tweet:
-		tweet = tweet["retweeted_status"]
-
-	if "extended_tweet" in tweet:
-		return tweet["extended_tweet"].get("full_text", tweet.get("text", ""))
-	else:
-		return tweet.get("text", "")
 
 if __name__ == "__main__":
 	main()
