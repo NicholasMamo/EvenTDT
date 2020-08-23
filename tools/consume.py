@@ -58,6 +58,7 @@ from objects.exportable import Exportable
 from nlp.weighting import TermWeightingScheme
 from eventdt.queues import Queue
 from eventdt.queues.consumers import *
+from eventdt.queues.consumers.algorithms import *
 from twitter.file import SimulatedFileReader
 
 def setup_args():
@@ -451,11 +452,11 @@ def consumer(consumer):
 	Convert the given string into a consumer class.
 	The accepted consumers are:
 
-		#. :class:`~queues.consumers.eld_consumer.ELDConsumer`,
-		#. :class:`~queues.consumers.fire_consumer.FIREConsumer`,
+		#. :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`,
+		#. :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`,
 		#. :class:`~queues.consumers.print_consumer.PrintConsumer`,
 		#. :class:`~queues.consumers.stat_consumer.StatConsumer`, and
-		#. :class:`~queues.consumers.zhao_consumer.ZhaoConsumer`
+		#. :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`
 
 	:param consumer: The consumer string.
 	:type consumer: str

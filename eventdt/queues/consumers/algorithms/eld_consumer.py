@@ -29,7 +29,7 @@ import re
 import sys
 import time
 
-path = os.path.join(os.path.dirname(__file__), '..', '..')
+path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 

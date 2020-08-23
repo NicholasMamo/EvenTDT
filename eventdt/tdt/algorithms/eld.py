@@ -6,7 +6,7 @@ Event TimeLine Detection (ELD) is a feature-pivot TDT approach designed to creat
 	The original implementation of ELD is a combined document-pivot and feature-pivot TDT approach.
 	First, it clusters documents and then it applies the feature-pivot technique on large clusters.
 	However, the algorithm in this module is the feature-pivot technique.
-	The full implementation of ELD is in the :class:`~queues.consumers.eld_consumer.ELDConsumer`.
+	The full implementation of ELD is in the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`.
 
 ELD computes burst for each individual term.
 The interpretation is in the form of a burst value that lies between -1 and 1:
@@ -47,7 +47,7 @@ The higher the decay rate, the less importance old checkpoints receive.
 .. note::
 	In reality, the bounds are not really between -1 and 1, but between :math:`-x` and :math:`x`, where :math:`x` is the maximum nutrition of a term.
 	To get the burst bounds between -1 and 1, term nutritions need to be bound between 0 and 1 (that is, :math:`x = 1`).
-	This is the original implementation in the :class:`~queues.consumers.eld_consumer.ELDConsumer`.
+	This is the original implementation in the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`.
 
 .. note::
 

@@ -54,20 +54,20 @@ Algorithmic Consumers
 Zhao et al. Consumer (2011)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. automodule:: queues.consumers.zhao_consumer
+.. automodule:: queues.consumers.algorithms.zhao_consumer
    :members:
    :special-members:
 
 FIRE Consumer - Mamo et al. (2017)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. automodule:: queues.consumers.fire_consumer
+.. automodule:: queues.consumers.algorithms.fire_consumer
    :members:
    :special-members:
 
 ELD Consumer - Mamo et al. (2019)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. automodule:: queues.consumers.eld_consumer
+.. automodule:: queues.consumers.algorithms.eld_consumer
    :members:
    :special-members:

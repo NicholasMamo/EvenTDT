@@ -23,11 +23,11 @@ import sys
 
 from nltk.corpus import stopwords
 
-path = os.path.join(os.path.dirname(__file__), '..', '..')
+path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
-from .buffered_consumer import SimulatedBufferedConsumer
+from queues.consumers.buffered_consumer import SimulatedBufferedConsumer
 
 from vsm.clustering.algorithms import TemporalNoKMeans
 from vsm import vector_math

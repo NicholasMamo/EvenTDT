@@ -8,12 +8,12 @@ import os
 import sys
 import unittest
 
-path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
+path = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..')
 if path not in sys.path:
 	sys.path.append(path)
 
 from queues import Queue
-from queues.consumers import ELDConsumer
+from queues.consumers.algorithms import ELDConsumer
 from nlp.document import Document
 from nlp.weighting import TF
 from vsm import vector_math

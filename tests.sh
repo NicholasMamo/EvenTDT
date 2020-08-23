@@ -116,9 +116,9 @@ queue_tests() {
 	python3 -m unittest eventdt.queues.tests.test_queue
 
 	echo -e "${HIGHLIGHT}Consumers${DEFAULT}"
-	python3 -m unittest eventdt.queues.consumers.tests.test_eld_consumer
-	python3 -m unittest eventdt.queues.consumers.tests.test_fire_consumer
-	python3 -m unittest eventdt.queues.consumers.tests.test_zhao_consumer
+	python3 -m unittest eventdt.queues.consumers.algorithms.tests.test_eld_consumer
+	python3 -m unittest eventdt.queues.consumers.algorithms.tests.test_fire_consumer
+	python3 -m unittest eventdt.queues.consumers.algorithms.tests.test_zhao_consumer
 }
 
 summarization_tests() {
