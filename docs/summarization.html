@@ -665,6 +665,7 @@ However, all classes that inherit the <a class="reference internal" href="#summa
 <li><p><a class="reference internal" href="#summarization.timeline.nodes.Node.add" title="summarization.timeline.nodes.Node.add"><code class="xref py py-func docutils literal notranslate"><span class="pre">add()</span></code></a>: used by the <a class="reference internal" href="#summarization.timeline.Timeline" title="summarization.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a> to add information to a node.</p></li>
 <li><p><a class="reference internal" href="#summarization.timeline.nodes.Node.similarity" title="summarization.timeline.nodes.Node.similarity"><code class="xref py py-func docutils literal notranslate"><span class="pre">similarity()</span></code></a>: used by the <a class="reference internal" href="#summarization.timeline.Timeline" title="summarization.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a> to assess whether the new information is relevant to a node.</p></li>
 <li><p><a class="reference internal" href="#summarization.timeline.nodes.Node.get_all_documents" title="summarization.timeline.nodes.Node.get_all_documents"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_all_documents()</span></code></a>: used when summarizing to get all the <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances stored in the node.</p></li>
+<li><p><a class="reference internal" href="#summarization.timeline.nodes.Node.merge" title="summarization.timeline.nodes.Node.merge"><code class="xref py py-func docutils literal notranslate"><span class="pre">merge()</span></code></a>: used to combine several nodes (of the same type) into one node.</p></li>
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -741,6 +742,26 @@ It is measured in seconds.</p></li>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><p><strong>ValueError</strong> – When the expiry is negative.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="summarization.timeline.nodes.Node.merge">
+<em class="property">abstract static </em><code class="sig-name descname">merge</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">created_at</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.Node.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> by combining the data in all of the given nodes.
+The new <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> will have the given timestamp, but it will inherit all of the data in the nodes.</p>
+<p>All the nodes are provided as additional arguments (using <code class="docutils literal notranslate"><span class="pre">*args</span></code>).
+If none are given, this function creates an empty <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>created_at</strong> (<em>float</em>) – The timestamp when the node was created.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A new node with all of the data stored in the given nodes.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -840,6 +861,26 @@ When it needs to compare incoming <a class="reference internal" href="nlp.html#n
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A new instance of the <a class="reference internal" href="#summarization.timeline.nodes.document_node.DocumentNode" title="summarization.timeline.nodes.document_node.DocumentNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentNode</span></code></a> with the same attributes stored in the object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#summarization.timeline.nodes.document_node.DocumentNode" title="summarization.timeline.nodes.document_node.DocumentNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentNode</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="summarization.timeline.nodes.document_node.DocumentNode.merge">
+<em class="property">static </em><code class="sig-name descname">merge</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">created_at</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new <a class="reference internal" href="#summarization.timeline.nodes.document_node.DocumentNode" title="summarization.timeline.nodes.document_node.DocumentNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentNode</span></code></a> by combining the data in all of the given nodes.
+The new <a class="reference internal" href="#summarization.timeline.nodes.document_node.DocumentNode" title="summarization.timeline.nodes.document_node.DocumentNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentNode</span></code></a> will have the given timestamp, but it will inherit all of the data in the nodes.</p>
+<p>All the nodes are provided as additional arguments (using <code class="docutils literal notranslate"><span class="pre">*args</span></code>).
+If none are given, this function creates an empty <a class="reference internal" href="#summarization.timeline.nodes.document_node.DocumentNode" title="summarization.timeline.nodes.document_node.DocumentNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentNode</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>created_at</strong> (<em>float</em>) – The timestamp when the node was created.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A new node with all of the data stored in the given nodes.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#summarization.timeline.nodes.document_node.DocumentNode" title="summarization.timeline.nodes.document_node.DocumentNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentNode</span></code></a></p>
