@@ -29,6 +29,13 @@ Buffered (Windowed) Consumers
    :members:
    :special-members:
 
+Split Consumers
+---------------
+
+.. automodule:: queues.consumers.split_consumer
+   :members:
+   :special-members:
+
 Simple Consumers
 ----------------
 

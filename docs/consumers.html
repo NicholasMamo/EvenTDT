@@ -100,6 +100,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#id1">Consumers</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module-queues.consumers">Real-Time Consumer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-queues.consumers.buffered_consumer">Buffered (Windowed) Consumers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-queues.consumers.split_consumer">Split Consumers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#simple-consumers">Simple Consumers</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#module-queues.consumers.print_consumer">Print Consumer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-queues.consumers.stat_consumer">Statistical Consumer</a></li>
@@ -526,6 +527,28 @@ This makes the <a class="reference internal" href="#queues.consumers.buffered_co
 </dd></dl>
 
 </dd></dl>
+
+</div>
+<div class="section" id="module-queues.consumers.split_consumer">
+<span id="split-consumers"></span><h3>Split Consumers<a class="headerlink" href="#module-queues.consumers.split_consumer" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="#queues.consumers.split_consumer.SplitConsumer" title="queues.consumers.split_consumer.SplitConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SplitConsumer</span></code></a> builds on the base <a class="reference internal" href="#queues.consumers.Consumer" title="queues.consumers.Consumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code></a> class, but splits the incoming stream of tweets into several streams.
+These streams are simply a list of <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> instances.</p>
+<p>The <a class="reference internal" href="#queues.consumers.split_consumer.SplitConsumer" title="queues.consumers.split_consumer.SplitConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SplitConsumer</span></code></a> creates as many <a class="reference internal" href="#queues.consumers.Consumer" title="queues.consumers.Consumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code></a> instances as there <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> instances—one <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> for each <a class="reference internal" href="#queues.consumers.Consumer" title="queues.consumers.Consumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code></a>.
+All consumers process the tweets in their own <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> as usual.</p>
+<p>The way the consumer splits the stream depends entirely on the the implementation.
+The consumer can assign each tweet to just one stream, or to multiple streams.
+It can also discard tweets.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <a class="reference internal" href="#queues.consumers.split_consumer.SplitConsumer" title="queues.consumers.split_consumer.SplitConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SplitConsumer</span></code></a> is based on the <a class="reference internal" href="#queues.consumers.Consumer" title="queues.consumers.Consumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code></a> class, so it operates in real-time.
+All this means is that it sends tweets to the appropriate consumer without delay.
+The processing, however, does not have to be in real-time.
+The individual consumers that process the split streams can be based on the <a class="reference internal" href="#queues.consumers.buffered_consumer.BufferedConsumer" title="queues.consumers.buffered_consumer.BufferedConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">BufferedConsumer</span></code></a> and process tweets in batches.</p>
+</div>
+<dl class="class">
+<dt id="queues.consumers.split_consumer.SplitConsumer">
+<em class="property">class </em><code class="sig-name descname">SplitConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.split_consumer.SplitConsumer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 <div class="section" id="simple-consumers">
