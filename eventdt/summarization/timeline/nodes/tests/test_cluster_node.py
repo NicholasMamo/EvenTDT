@@ -357,6 +357,7 @@ class TestClusterNode(unittest.TestCase):
 		node = ClusterNode.merge(10)
 		self.assertEqual(10, node.created_at)
 		self.assertFalse(node.clusters)
+		self.assertEqual(ClusterNode, type(node))
 
 	def test_merge_created_at_from_parameter(self):
 		"""

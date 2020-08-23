@@ -345,6 +345,7 @@ class TestDocumentNode(unittest.TestCase):
 		node = DocumentNode.merge(10)
 		self.assertEqual(10, node.created_at)
 		self.assertFalse(node.documents)
+		self.assertEqual(DocumentNode, type(node))
 
 	def test_merge_created_at_from_parameter(self):
 		"""
