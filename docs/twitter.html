@@ -190,7 +190,7 @@ At the package-level there are functions to help with general processing tasks.<
 This function looks for the timestamp in one of two fields:</p>
 <ol class="arabic simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">timestamp_ms</span></code>: always present in the top-level tweets, and</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">created_at</span></code>: present in <cite>retweeted_status</cite>, for example.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">created_at</span></code>: present in <code class="docutils literal notranslate"><span class="pre">retweeted_status</span></code>, for example.</p></li>
 </ol>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -204,6 +204,28 @@ This function looks for the timestamp in one of two fields:</p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><p><strong>KeyError</strong> – When no timestamp field can be found.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="twitter.full_text">
+<code class="sig-name descname">full_text</code><span class="sig-paren">(</span><em class="sig-param">tweet</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.full_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the full text from the tweet.</p>
+<p>Normally, long tweets are truncated (they end with a <cite>…</cite>).
+This function looks for the original full text.
+If it’s a retweet, the text is somewhere in the <code class="docutils literal notranslate"><span class="pre">retweeted_status</span></code>.
+If the tweet has an <code class="docutils literal notranslate"><span class="pre">extended_tweet</span></code> attribute, then the <code class="docutils literal notranslate"><span class="pre">full_text</span></code> may be set there.
+Otherwise, the function defaults to using the <code class="docutils literal notranslate"><span class="pre">text</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tweet</strong> (<em>dict</em>) – The tweet from which to extract the timestamp.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The full text of the tweet.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
