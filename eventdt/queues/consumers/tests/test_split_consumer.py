@@ -21,6 +21,32 @@ class TestSplitConsumer(unittest.TestCase):
 	Test the implementation of the split consumer.
 	"""
 
+	def test_init_list_splits(self):
+		"""
+		Test that the split consumer accepts a list of splits.
+		"""
+
+		splits = [ (0, 50), (50, 100) ]
+		consumer = DummySplitConsumer(Queue(), splits, PrintConsumer)
+		self.assertEqual(2, len(consumer.consumers))
+
+	def test_init_tuple_splits(self):
+		"""
+		Test that the split consumer accepts a tuple of splits.
+		"""
+
+		splits = ( (0, 50), (50, 100) )
+		consumer = DummySplitConsumer(Queue(), splits, PrintConsumer)
+		self.assertEqual(2, len(consumer.consumers))
+
+	def test_init_primitive_splits_raises_ValueError(self):
+		"""
+		Test that the split consumer raises a ValueError when it receives a primitive as a split.
+		"""
+
+		splits = 50
+		self.assertRaises(ValueError, DummySplitConsumer, Queue(), splits, PrintConsumer)
+
 	def test_init_consumers_for_splits(self):
 		"""
 		Test that when creating the split consumer, it creates as many consumers as splits.

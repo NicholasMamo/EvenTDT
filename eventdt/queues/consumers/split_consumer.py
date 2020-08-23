@@ -51,12 +51,15 @@ class SplitConsumer(Consumer):
 		:param queue: The queue that receives the entire stream.
 		:type queue: :class:`~queues.Queue`
 		:param splits: A list of splits, or conditions that determine into which queue a tweet goes.
-		:type splits: list
+		:type splits: list or tuple
 		:param consumer: The type of :class:`~queues.consumers.Consumer` to create for each split.
 		:type consumer: type
 		"""
 
 		super(SplitConsumer, self).__init__(queue)
+
+		if type(splits) not in [ list, tuple ]:
+			raise ValueError(f"Expected a list or tuple of splits; received { type(splits) }")
 
 		self.splits = splits
 		self.consumers = self._consumers(consumer, len(splits))
