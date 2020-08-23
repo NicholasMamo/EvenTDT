@@ -107,7 +107,7 @@ class Node(Exportable):
 
 	@staticmethod
 	@abstractmethod
-	def merge(self, created_at, *args):
+	def merge(created_at, *args):
 		"""
 		Create a new :class:`~summarization.timeline.nodes.Node` by combining the data in all of the given nodes.
 		The new :class:`~summarization.timeline.nodes.Node` will have the given timestamp, but it will inherit all of the data in the nodes.
