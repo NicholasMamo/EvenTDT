@@ -14,6 +14,7 @@ if path not in sys.path:
 
 from queues import Queue
 from queues.consumers import PrintConsumer
+from queues.consumers.algorithms import ZhaoConsumer
 from queues.consumers.split_consumer import DummySplitConsumer
 
 class TestSplitConsumer(unittest.TestCase):
@@ -65,3 +66,15 @@ class TestSplitConsumer(unittest.TestCase):
 		consumer = DummySplitConsumer(Queue(), splits, PrintConsumer)
 		queues = [ _consumer.queue for _consumer in consumer.consumers ]
 		self.assertEqual(2, len(set(queues)))
+
+	def test_init_consumers_arguments(self):
+		"""
+		Test that when passing on extra arguments to the split consumer, they are passed on to the consumer.
+		"""
+
+		splits = [ (0, 50), (50, 100) ]
+		consumer = DummySplitConsumer(Queue(), splits, ZhaoConsumer)
+		self.assertTrue(all( 5 == _consumer.periodicity for _consumer in consumer.consumers ))
+
+		consumer = DummySplitConsumer(Queue(), splits, ZhaoConsumer, periodicity=10)
+		self.assertTrue(all( 10 == _consumer.periodicity for _consumer in consumer.consumers ))

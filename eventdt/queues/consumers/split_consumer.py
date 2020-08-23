@@ -41,12 +41,14 @@ class SplitConsumer(Consumer):
 	:vartype consumers: list of :class:`~queues.consumers.Consumer`
 	"""
 
-	def __init__(self, queue, splits, consumer):
+	def __init__(self, queue, splits, consumer, *args, **kwargs):
 		"""
 		Initialize the consumer with its :class:`~queues.Queue`.
 
 		For each given split, this function creates one :class:`~queues.consumers.Consumer` of the given type.
 		This consumer has its own queue, which receive tweets that satisfy the associated condition.
+
+		Any additional arguments or keyword arguments are passed on to the consumer's constructor.
 
 		:param queue: The queue that receives the entire stream.
 		:type queue: :class:`~queues.Queue`
@@ -62,11 +64,13 @@ class SplitConsumer(Consumer):
 			raise ValueError(f"Expected a list or tuple of splits; received { type(splits) }")
 
 		self.splits = splits
-		self.consumers = self._consumers(consumer, len(splits))
+		self.consumers = self._consumers(consumer, len(splits), *args, **kwargs)
 
-	def _consumers(self, consumer, n):
+	def _consumers(self, consumer, n, *args, **kwargs):
 		"""
 		Create the consumers which will receive the tweets from each stream.
+
+		Any additional arguments or keyword arguments are passed on to the consumer's constructor.
 
 		:param consumer: The type of :class:`~queues.consumers.Consumer` to create.
 		:type consumer: type
@@ -79,7 +83,7 @@ class SplitConsumer(Consumer):
 		:rtype: list of :class:`~queues.consumers.Consumer`
 		"""
 
-		return [ consumer(Queue()) for _ in range(n) ]
+		return [ consumer(Queue(), *args, **kwargs) for _ in range(n) ]
 
 class DummySplitConsumer(SplitConsumer):
 	"""
