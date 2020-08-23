@@ -6,8 +6,7 @@ The :class:`~queues.consumers.split_consumer.SplitConsumer` creates as many :cla
 All consumers process the tweets in their own :class:`~queues.Queue` as usual.
 
 The way the consumer splits the stream depends entirely on the the implementation.
-The consumer can assign each tweet to just one stream, or to multiple streams.
-It can also discard tweets.
+The consumer can assign each tweet to just one stream, to multiple streams, or even discard tweets.
 
 .. note::
 
