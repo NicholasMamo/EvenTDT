@@ -348,3 +348,67 @@ class TestClusterNode(unittest.TestCase):
 		self.assertEqual(clusters[1].attributes, i.clusters[1].attributes)
 		self.assertEqual(Document, type(i.clusters[0].vectors[0]))
 		self.assertEqual(Vector, type(i.clusters[1].vectors[0]))
+
+	def test_merge_none(self):
+		"""
+		Test that when merging no cluster nodes, the merge function returns a new, empty node.
+		"""
+
+		node = ClusterNode.merge(10)
+		self.assertEqual(10, node.created_at)
+		self.assertFalse(node.clusters)
+
+	def test_merge_created_at_from_parameter(self):
+		"""
+		Test that when merging cluster nodes, the timestamp is taken from the parameters.
+		"""
+
+		clusters = [ Cluster(vectors=[ Document('', { 'a': 1 }), Document('', { 'b': 2 }) ]) ]
+		_node = ClusterNode(created_at=0, clusters=clusters)
+		node = ClusterNode.merge(10)
+		self.assertEqual(10, node.created_at)
+
+	def test_merge_one(self):
+		"""
+		Test that when merging one cluster node, a new node with the same clusters is returned.
+		"""
+
+		clusters = [ Cluster(vectors=[ Document('', { 'a': 1 }), Document('', { 'b': 2 }) ]) ]
+		_node = ClusterNode(created_at=0, clusters=clusters)
+		node = ClusterNode.merge(10, _node)
+		self.assertEqual(_node.clusters, node.clusters)
+
+	def test_merge_all(self):
+		"""
+		Test that when merging cluster nodes, all of the clusters and their documents are present in the new node.
+		"""
+
+		documents = [ Document('', { 'a': 1 }), Document('', { 'b': 2 }),
+		 			  Document('', { 'c': 3 }), Document('', { 'd': 4 }) ]
+		clusters = [ Cluster(vectors=documents[:2]),
+		 			 Cluster(vectors=documents[2:]) ]
+		nodes = [ ClusterNode(created_at=0, clusters=clusters[:2]),
+		 		   ClusterNode(created_at=0, clusters=clusters[2:]) ]
+		node = ClusterNode.merge(10, nodes[0], nodes[1])
+		self.assertTrue(all( cluster in node.clusters for node in nodes
+		 											  for cluster in node.clusters ))
+		self.assertTrue(all( document in documents for node in nodes
+		 										   for cluster in node.clusters
+												   for document in cluster.vectors ))
+
+	def test_merge_order(self):
+		"""
+		Test that when merging cluster nodes, the order of the clusters and their documents is the same as the order of the nodes.
+		"""
+
+		documents = [ Document('', { 'a': 1 }), Document('', { 'b': 2 }),
+		 			  Document('', { 'c': 3 }), Document('', { 'd': 4 }) ]
+		clusters = [ Cluster(vectors=documents[:2]),
+		 			 Cluster(vectors=documents[2:]) ]
+		nodes = [ ClusterNode(created_at=0, clusters=clusters[:2]),
+		 		   ClusterNode(created_at=0, clusters=clusters[2:]) ]
+		node = ClusterNode.merge(10, nodes[0], nodes[1])
+		_documents = [ document for node in nodes
+								for cluster in node.clusters
+								for document in cluster.vectors ]
+		self.assertEqual(documents, _documents)

@@ -117,3 +117,27 @@ class ClusterNode(Node):
 			clusters.append(cls.from_array(cluster))
 
 		return ClusterNode(created_at=array.get('created_at'), clusters=clusters)
+
+	@staticmethod
+	def merge(created_at, *args):
+		"""
+		Create a new :class:`~summarization.timeline.nodes.cluster_node.ClusterNode` by combining the documents in all of the given nodes.
+		The new :class:`~summarization.timeline.nodes.cluster_node.ClusterNode` will have the given timestamp, but it will inherit all of the documents in the nodes.
+
+		All the nodes are provided as additional arguments (using ``*args``).
+		If none are given, this function creates an empty :class:`~summarization.timeline.nodes.cluster_node.ClusterNode`.
+
+		:param created_at: The timestamp when the node was created.
+		:type created_at: float
+
+		:return: A new node with all of the data stored in the given nodes.
+		:rtype: :class:`~summarization.timeline.nodes.cluster_node.ClusterNode`
+		"""
+
+		node = ClusterNode(created_at)
+
+		for _node in args:
+			for cluster in _node.clusters:
+				node.add(cluster)
+
+		return node
