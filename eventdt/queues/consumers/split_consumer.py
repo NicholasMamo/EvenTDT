@@ -49,3 +49,19 @@ class SplitConsumer(Consumer):
 
 		super(SplitConsumer, self).__init__(queue)
 		self.splits = splits
+class DummySplitConsumer(SplitConsumer):
+	"""
+	A dummy :class:`~queues.consumers.split_consumer.SplitConsumer` that does nothing.
+	It is used only for testing purposes.
+	"""
+
+	async def _consume(self, max_inactivity, *args, **kwargs):
+		"""
+		Consume the queue, doing nothing.
+
+		:param max_inactivity: The maximum time in seconds to wait idly without input before stopping.
+							   If it is negative, the consumer keeps waiting for input until the maximum time expires.
+		:type max_inactivity: int
+		"""
+
+		pass
