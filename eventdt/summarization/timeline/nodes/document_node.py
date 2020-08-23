@@ -26,12 +26,12 @@ class DocumentNode(Node):
 
 	def __init__(self, created_at, documents=None):
 		"""
-		Create the node.
+		Create the node with an optional initial list of :class:`~nlp.document.Document` instances.
 
 		:param created_at: The timestamp when the node was created.
 		:type created_at: float
 		:param documents: The initial list of documents in this node.
-		:type documents: list of :class:`~nlp.document.Document`
+		:type documents: None or list of :class:`~nlp.document.Document`
 		"""
 
 		super(DocumentNode, self).__init__(created_at)
