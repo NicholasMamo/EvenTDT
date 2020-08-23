@@ -75,6 +75,17 @@ class TestDocumentNode(unittest.TestCase):
 		node.add([ document ])
 		self.assertEqual([ document ], node.documents)
 
+	def test_add_one(self):
+		"""
+		Test adding one document to the node.
+		"""
+
+		node = DocumentNode(0)
+		self.assertEqual([ ], node.documents)
+		document = Document('')
+		node.add(document)
+		self.assertEqual([ document ], node.documents)
+
 	def test_add_multiple(self):
 		"""
 		Test adding multiple documents to the node.

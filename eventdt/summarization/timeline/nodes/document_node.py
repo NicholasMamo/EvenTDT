@@ -41,11 +41,14 @@ class DocumentNode(Node):
 		"""
 		Add documents to the node.
 
-		:param documents: A list of documents to add to the node.
-		:type documents: list of :class:`~nlp.document.Document`
+		:param documents: A document, or a list of documents to add to the node.
+		:type documents: :class:`~nlp.document.Document` or list of :class:`~nlp.document.Document`
 		"""
 
-		self.documents.extend(documents)
+		if type(documents) is list:
+			self.documents.extend(documents)
+		else:
+			self.documents.append(documents)
 
 	def get_all_documents(self, *args, **kwargs):
 		"""
