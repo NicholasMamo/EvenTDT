@@ -127,6 +127,37 @@ class SplitConsumer(Consumer):
 		self._stopped()
 		return results[1:]
 
+	async def _consume(self, max_inactivity, *args, **kwargs):
+		"""
+		Consume the queue, sending the tweets in it to other consumers.
+
+		:param max_inactivity: The maximum time in seconds to wait idly without input before stopping.
+							   If it is negative, the consumer keeps waiting for input until the maximum time expires.
+		:type max_inactivity: int
+		"""
+
+		"""
+		The consumer should keep working until it is stopped.
+		"""
+		while self.active:
+			"""
+			If the queue is idle, wait for input.
+			"""
+			inactive = await self._wait_for_input(max_inactivity=max_inactivity)
+			if not inactive:
+				break
+
+			"""
+			Consumption empties the queue and goes over all of its items.
+			Then, it checks which items satisfy conditions to be added to the consumers.
+			"""
+			items = self.queue.dequeue_all()
+			items = [ self._preprocess(item) for item in items ]
+			for item in items:
+				for split, consumer in zip(self.splits, self.consumers):
+					if self._satisfies(item, split):
+						consumer.queue.enqueue(item)
+
 	@abstractmethod
 	def _satisfies(self, item, condition):
 		"""
