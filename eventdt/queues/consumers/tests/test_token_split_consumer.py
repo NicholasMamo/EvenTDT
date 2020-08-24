@@ -13,6 +13,7 @@ if path not in sys.path:
 	sys.path.append(path)
 
 from nlp import Tokenizer
+from nlp.weighting import TF
 from queues import Queue
 from queues.consumers.algorithms import ELDConsumer
 from queues.consumers.token_split_consumer import TokenSplitConsumer
@@ -79,3 +80,12 @@ class TestTokenSplitConsumer(unittest.TestCase):
 		consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer)
 		self.assertEqual(2, len(consumer.splits))
 		self.assertEqual(2, len(consumer.consumers))
+
+	def test_init_default_scheme(self):
+		"""
+		Test that the default term-weighting scheme is TF.
+		"""
+
+		splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+		consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer)
+		self.assertEqual(TF, type(consumer.scheme))

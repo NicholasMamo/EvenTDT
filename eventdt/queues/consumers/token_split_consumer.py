@@ -65,7 +65,7 @@ class TokenSplitConsumer(SplitConsumer):
 		super(TokenSplitConsumer, self).__init__(queue, splits, consumer)
 		self.tokenizer = tokenizer or Tokenizer(normalize_words=True, character_normalization_count=3,
 												remove_unicode_entities=True, stem=True)
-		self.scheme = scheme
+		self.scheme = scheme or TF()
 
 	def _satisfies(self, item, condition):
 		"""
