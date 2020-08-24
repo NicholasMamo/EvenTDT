@@ -19,6 +19,7 @@ from objects.exportable import Exportable
 from queues import Queue
 from queues.consumers.algorithms import ELDConsumer
 from queues.consumers.token_split_consumer import TokenSplitConsumer
+from vsm import vector_math
 
 logger.set_logging_level(logger.LogLevel.WARNING)
 
@@ -134,3 +135,25 @@ class TestTokenSplitConsumer(unittest.TestCase):
 
 		if trivial:
 			logger.warning("Trivial test")
+
+	def test_preprocess_normalizes_documents(self):
+		"""
+		Test that when pre-processing tweets, the returned documents are normalized.
+		"""
+
+		"""
+		Create the consumer with a TF-IDF scheme.
+		"""
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
+			idf = Exportable.decode(json.loads(f.readline()))['tfidf']
+
+		"""
+		Tokenize all of the tweets.
+		Words like 'hazard' should have a greater weight than more common words, like 'goal'.
+		"""
+		splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+		consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer, scheme=idf)
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
+			for line in f:
+				document = consumer._preprocess(json.loads(line))
+				self.assertEqual(1, round(vector_math.magnitude(document), 10))
