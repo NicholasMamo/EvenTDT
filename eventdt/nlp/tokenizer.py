@@ -211,7 +211,7 @@ class Tokenizer(object):
 		self.remove_unicode_entities = remove_unicode_entities
 		self.min_length = min_length
 		self.stopwords = stopwords
-		self.stem_tokens = stem
+		self.stem = stem
 		self.normalize_special_characters = normalize_special_characters
 		self.pos = pos
 
@@ -270,7 +270,7 @@ class Tokenizer(object):
 		tokens = [ token.lower() for token in tokens ] if self.case_fold else tokens
 		tokens = [ token for token in tokens if token not in self.stopword_dict ]
 		tokens = [ token for token in tokens if len(token) >= self.min_length ]
-		tokens = self._stem(tokens) if self.stem_tokens else tokens
+		tokens = self._stem(tokens) if self.stem else tokens
 
 		return tokens
 
