@@ -147,5 +147,6 @@ class TestSplitConsumer(unittest.TestCase):
 		"""
 		Wait for the consumer to finish.
 		"""
-		results = await asyncio.gather(running)
-		self.assertTrue(all( type(result[0]) is Timeline for result in results[0][1:] ))
+		results = (await asyncio.gather(running))[0]
+		self.assertEqual(2, len(results))
+		self.assertTrue(all( type(result) is Timeline for result in results ))

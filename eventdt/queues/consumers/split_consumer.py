@@ -99,7 +99,7 @@ class SplitConsumer(Consumer):
 			*[ consumer.run(wait=wait, max_inactivity=max_inactivity) for consumer in self.consumers ]
 		)
 		self._stopped()
-		return results
+		return results[1:]
 
 	def _consumers(self, consumer, n, *args, **kwargs):
 		"""
