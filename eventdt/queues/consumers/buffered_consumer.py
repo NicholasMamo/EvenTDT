@@ -31,6 +31,7 @@ path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
+from nlp import Document
 from queues import Queue
 from queues.consumers import Consumer
 
@@ -184,7 +185,9 @@ class SimulatedBufferedConsumer(BufferedConsumer):
 			await asyncio.sleep(0.1)
 
 		if self.active:
-			start = twitter.extract_timestamp(self.buffer.head())
+			head = self.buffer.head()
+			head = head.attributes['tweet'] if type(self.buffer.head()) is Document else head
+			start = twitter.extract_timestamp(head)
 
 		"""
 		Check if the consumer should stop.
@@ -195,7 +198,9 @@ class SimulatedBufferedConsumer(BufferedConsumer):
 			#. The buffer's periodicity has been reached.
 		"""
 		while True:
-			if not self.active or twitter.extract_timestamp(self.buffer.tail()) - start >= self.periodicity:
+			tail = self.buffer.tail()
+			tail = tail.attributes['tweet'] if type(self.buffer.tail()) is Document else tail
+			if not self.active or twitter.extract_timestamp(tail) - start >= self.periodicity:
 				break
 
 			await asyncio.sleep(0.1)
