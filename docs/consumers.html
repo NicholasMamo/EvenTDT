@@ -651,8 +651,45 @@ This means that all splits have a simple, thematic focus.</p>
 However, it discards tweets that do not satisfy any split.</p>
 <dl class="class">
 <dt id="queues.consumers.token_split_consumer.TokenSplitConsumer">
-<em class="property">class </em><code class="sig-name descname">TokenSplitConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">splits</em>, <em class="sig-param">consumer</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.token_split_consumer.TokenSplitConsumer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">TokenSplitConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">splits</em>, <em class="sig-param">consumer</em>, <em class="sig-param">tokenizer=None</em>, <em class="sig-param">scheme=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.token_split_consumer.TokenSplitConsumer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference internal" href="#queues.consumers.token_split_consumer.TokenSplitConsumer" title="queues.consumers.token_split_consumer.TokenSplitConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">TokenSplitConsumer</span></code></a> splits tweets into different streams based on what tokens they include.</p>
+<p>This split consumer uses a <a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a> to split the tweets’ text into tokens and check if they validate the conditions.
+The class maintains the <a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a> in its state.</p>
+<p>This consumer also assumes that its downstream consumers will use <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances instead of tweets.
+Therefore it converts all tweets into <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances using the given <a class="reference internal" href="nlp.html#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>, maintained in its state.
+This is done to improve efficiency.
+Since the split consumer can send one tweet into multiple streams, these streams do not have to tokenize and weight the same tweets again.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="tools.html#module-tools.tokenizer" title="tools.tokenizer"><strong>tokenizer</strong></a> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer to use to tokenize tweets and check if a token is present in the tweets.</p></li>
+<li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme that is used to create documents from tweets.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="queues.consumers.token_split_consumer.TokenSplitConsumer.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">splits</em>, <em class="sig-param">consumer</em>, <em class="sig-param">tokenizer=None</em>, <em class="sig-param">scheme=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.token_split_consumer.TokenSplitConsumer.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the consumer with its <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>.</p>
+<p>For each given split, this function creates one <a class="reference internal" href="#queues.consumers.Consumer" title="queues.consumers.Consumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code></a> of the given type.
+This consumer has its own queue, which receive tweets that satisfy the associated condition.</p>
+<p>Any additional arguments or keyword arguments are passed on to the consumer’s constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>queue</strong> (<a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that receives the entire stream.</p></li>
+<li><p><strong>splits</strong> (<em>list of str</em><em> or </em><em>list of list of str</em><em> or </em><em>list of tuple of str</em>) – A list of splits, or conditions that determine into which queue a tweet goes.
+The type of the splits depends on what the <code class="xref py py-func docutils literal notranslate"><span class="pre">_satisfies()</span></code> function looks for.</p></li>
+<li><p><strong>consumer</strong> (<em>type</em>) – The type of <a class="reference internal" href="#queues.consumers.Consumer" title="queues.consumers.Consumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code></a> to create for each split.</p></li>
+<li><p><strong>tokenizer</strong> (None or <a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer to use to tokenize tweets and check if a token is present in the tweets.
+If one isn’t given, the class creates a custom tokenizer.</p></li>
+<li><p><strong>scheme</strong> (None or <a class="reference internal" href="nlp.html#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme that is used to create documents from tweets.
+If <code class="docutils literal notranslate"><span class="pre">None</span></code> is given, the <a class="reference internal" href="nlp.html#nlp.weighting.tf.TF" title="nlp.weighting.tf.TF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TF</span></code></a> term-weighting scheme is used.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>

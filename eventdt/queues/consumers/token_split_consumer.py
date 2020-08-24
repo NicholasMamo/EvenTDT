@@ -15,6 +15,7 @@ if path not in sys.path:
 
 from .split_consumer import SplitConsumer
 from nlp import Tokenizer
+from nlp.weighting import TF
 
 class TokenSplitConsumer(SplitConsumer):
 	"""
@@ -23,11 +24,18 @@ class TokenSplitConsumer(SplitConsumer):
 	This split consumer uses a :class:`~nlp.tokenizer.Tokenizer` to split the tweets' text into tokens and check if they validate the conditions.
 	The class maintains the :class:`~nlp.tokenizer.Tokenizer` in its state.
 
+	This consumer also assumes that its downstream consumers will use :class:`~nlp.document.Document` instances instead of tweets.
+	Therefore it converts all tweets into :class:`~nlp.document.Document` instances using the given :class:`~nlp.weighting.TermWeightingScheme`, maintained in its state.
+	This is done to improve efficiency.
+	Since the split consumer can send one tweet into multiple streams, these streams do not have to tokenize and weight the same tweets again.
+
 	:ivar tokenizer: The tokenizer to use to tokenize tweets and check if a token is present in the tweets.
 	:vartype tokenizer: :class:`~nlp.tokenizer.Tokenizer`
+	:ivar scheme: The term-weighting scheme that is used to create documents from tweets.
+	:vartype scheme: :class:`~nlp.weighting.TermWeightingScheme`
 	"""
 
-	def __init__(self, queue, splits, consumer, tokenizer=None, *args, **kwargs):
+	def __init__(self, queue, splits, consumer, tokenizer=None, scheme=None, *args, **kwargs):
 		"""
 		Initialize the consumer with its :class:`~queues.Queue`.
 
@@ -46,6 +54,9 @@ class TokenSplitConsumer(SplitConsumer):
 		:param tokenizer: The tokenizer to use to tokenize tweets and check if a token is present in the tweets.
 						  If one isn't given, the class creates a custom tokenizer.
 		:type tokenizer: None or :class:`~nlp.tokenizer.Tokenizer`
+		:param scheme: The term-weighting scheme that is used to create documents from tweets.
+					   If ``None`` is given, the :class:`~nlp.weighting.tf.TF` term-weighting scheme is used.
+		:type scheme: None or :class:`~nlp.weighting.TermWeightingScheme`
 		"""
 
 		splits = [ [ split ] if type(split) is str else list(split)
@@ -54,6 +65,7 @@ class TokenSplitConsumer(SplitConsumer):
 		super(TokenSplitConsumer, self).__init__(queue, splits, consumer)
 		self.tokenizer = tokenizer or Tokenizer(normalize_words=True, character_normalization_count=3,
 												remove_unicode_entities=True, stem=True)
+		self.scheme = scheme
 
 	def _satisfies(self, item, condition):
 		"""
