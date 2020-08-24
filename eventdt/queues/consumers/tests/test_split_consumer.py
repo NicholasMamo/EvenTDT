@@ -150,3 +150,15 @@ class TestSplitConsumer(unittest.TestCase):
 		results = (await asyncio.gather(running))[0]
 		self.assertEqual(2, len(results))
 		self.assertTrue(all( type(result) is Timeline for result in results ))
+
+	def test_preprocess_identical(self):
+		"""
+		Test that the default pre-processing step does not change the tweet at all.
+		"""
+
+		splits = [ (0, 50), (50, 100) ]
+		consumer = DummySplitConsumer(Queue(), splits, ELDConsumer)
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
+			for line in f:
+				tweet = json.loads(line)
+				self.assertEqual(tweet, consumer._preprocess(tweet))

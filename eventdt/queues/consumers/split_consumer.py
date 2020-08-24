@@ -33,7 +33,15 @@ class SplitConsumer(Consumer):
 	It reads all of the incoming tweets and dispatches them to one of its consumers.
 
 	In its state, the consumer maintains a list of these conditions.
-	Associated with each condition is one class:`~queues.consumers.Consumer` that receives the tweets from that split..
+	Associated with each condition is one class:`~queues.consumers.Consumer` that receives the tweets from that split.
+
+	This class mainly re-works the basic consumption method to decide where to send off tweets.
+	To change how the consumer works, you might need to override the following functions:
+
+	- :func:`~queues.consumers.split_consumer.SplitConsumer._preprocess`: Pre-process all incoming tweets.
+	  This function is used whenever the child consumers all perform the same pre-processing tasks.
+	  When tweets can be added to multiple streams, this function can improve efficiency.
+	  By default, it does not change tweets.
 
 	:ivar splits: A list of splits, or conditions that determine into which queue a tweet goes.
 	:vartype splits: list
@@ -119,6 +127,25 @@ class SplitConsumer(Consumer):
 		"""
 
 		return [ consumer(Queue(), *args, **kwargs) for _ in range(n) ]
+
+	def _preprocess(self, tweet):
+		"""
+		Pre-process the given tweet.
+
+		This function is used when all of the :class:`~queues.consumers.split_consumer.SplitConsumer`'s own consumers perform the same pre-processing on the tweet.
+		In this case, pre-processing can be used to make the child consumers more efficient by pre-processing the tweets only once.
+
+		By default, this function does not change the tweet.
+
+		:param tweet: The tweet to pre-process.
+		:type tweet: dict
+
+		:return: The pre-processed tweet.
+				 This function does not change the tweet at all, but it can be overriden.
+		:rtype: dict
+		"""
+
+		return tweet
 
 class DummySplitConsumer(SplitConsumer):
 	"""

@@ -395,7 +395,7 @@ If it is negative, the consumer keeps waiting for input indefinitely.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The output of the consumer, if any, as a tuple.</p>
+<dd class="field-even"><p>The output of the consumption process.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>any</p>
@@ -496,7 +496,7 @@ If it is negative, the consumer keeps waiting for input until the maximum time e
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The output of the consume method.</p>
+<dd class="field-even"><p>The output of the consumption process.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>any</p>
@@ -550,7 +550,15 @@ The individual consumers that process the split streams can be based on the <a c
 <dd><p>The <a class="reference internal" href="#queues.consumers.split_consumer.SplitConsumer" title="queues.consumers.split_consumer.SplitConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SplitConsumer</span></code></a> class acts as a supervisor.
 It reads all of the incoming tweets and dispatches them to one of its consumers.</p>
 <p>In its state, the consumer maintains a list of these conditions.
-Associated with each condition is one class:<cite>~queues.consumers.Consumer</cite> that receives the tweets from that split..</p>
+Associated with each condition is one class:<cite>~queues.consumers.Consumer</cite> that receives the tweets from that split.</p>
+<p>This class mainly re-works the basic consumption method to decide where to send off tweets.
+To change how the consumer works, you might need to override the following functions:</p>
+<ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_preprocess()</span></code>: Pre-process all incoming tweets.
+This function is used whenever the child consumers all perform the same pre-processing tasks.
+When tweets can be added to multiple streams, this function can improve efficiency.
+By default, it does not change tweets.</p></li>
+</ul>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
