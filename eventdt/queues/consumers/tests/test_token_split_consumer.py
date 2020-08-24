@@ -12,11 +12,15 @@ path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
 if path not in sys.path:
 	sys.path.append(path)
 
-from nlp import Tokenizer
+from logger import logger
+from nlp import Document, Tokenizer
 from nlp.weighting import TF
+from objects.exportable import Exportable
 from queues import Queue
 from queues.consumers.algorithms import ELDConsumer
 from queues.consumers.token_split_consumer import TokenSplitConsumer
+
+logger.set_logging_level(logger.LogLevel.WARNING)
 
 class TestTokenSplitConsumer(unittest.TestCase):
 	"""
@@ -89,3 +93,44 @@ class TestTokenSplitConsumer(unittest.TestCase):
 		splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
 		consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer)
 		self.assertEqual(TF, type(consumer.scheme))
+
+	def test_preprocess_creates_documents(self):
+		"""
+		Test that when pre-processing tweets, the function creates documents.
+		"""
+
+		splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+		consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer)
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
+			for line in f:
+				tweet = json.loads(line)
+				self.assertEqual(Document, type(consumer._preprocess(tweet)))
+
+	def test_preprocess_uses_scheme(self):
+		"""
+		Test that when pre-processing tweets, the function uses the term-weighting scheme.
+		"""
+
+		trivial = True
+
+		"""
+		Create the consumer with a TF-IDF scheme.
+		"""
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
+			idf = Exportable.decode(json.loads(f.readline()))['tfidf']
+
+		"""
+		Tokenize all of the tweets.
+		Words like 'hazard' should have a greater weight than more common words, like 'goal'.
+		"""
+		splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+		consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer, scheme=idf)
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
+			for line in f:
+				document = consumer._preprocess(json.loads(line))
+				if 'hazard' in document.dimensions and 'goal' in document.dimensions:
+					trivial = False
+					self.assertGreater(document.dimensions['hazard'], document.dimensions['goal'])
+
+		if trivial:
+			logger.warning("Trivial test")

@@ -16,6 +16,7 @@ if path not in sys.path:
 from .split_consumer import SplitConsumer
 from nlp import Tokenizer
 from nlp.weighting import TF
+import twitter
 
 class TokenSplitConsumer(SplitConsumer):
 	"""
@@ -66,6 +67,24 @@ class TokenSplitConsumer(SplitConsumer):
 		self.tokenizer = tokenizer or Tokenizer(normalize_words=True, character_normalization_count=3,
 												remove_unicode_entities=True, stem=True)
 		self.scheme = scheme or TF()
+
+	def _preprocess(self, tweet):
+		"""
+		Pre-process the given tweet.
+
+		This function assumes that all of the downstream consumers will work with :class:`~nlp.document.Document` instances.
+		Therefore it tokenizes the tweets and uses the scheme to convert them into documents.
+
+		:param tweet: The tweet to pre-process.
+		:type tweet: dict
+
+		:return: The tweet as a document.
+		:rtype: :class:`~nlp.document.Document`
+		"""
+
+		text = twitter.full_text(tweet)
+		tokens = self.tokenizer.tokenize(text)
+		return self.scheme.create(tokens)
 
 	def _satisfies(self, item, condition):
 		"""
