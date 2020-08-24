@@ -36,6 +36,13 @@ Split Consumers
    :members:
    :special-members:
 
+Token Split Consumer
+^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: queues.consumers.token_split_consumer
+   :members:
+   :special-members:
+
 Simple Consumers
 ----------------
 

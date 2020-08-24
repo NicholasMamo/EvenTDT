@@ -100,7 +100,10 @@
 <li class="toctree-l2"><a class="reference internal" href="#id1">Consumers</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#module-queues.consumers">Real-Time Consumer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-queues.consumers.buffered_consumer">Buffered (Windowed) Consumers</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-queues.consumers.split_consumer">Split Consumers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-queues.consumers.split_consumer">Split Consumers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-queues.consumers.token_split_consumer">Token Split Consumer</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#simple-consumers">Simple Consumers</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#module-queues.consumers.print_consumer">Print Consumer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-queues.consumers.stat_consumer">Statistical Consumer</a></li>
@@ -640,6 +643,19 @@ If it is negative, the consumer keeps waiting for input indefinitely.</p></li>
 It is used only for testing purposes.</p>
 </dd></dl>
 
+<div class="section" id="module-queues.consumers.token_split_consumer">
+<span id="token-split-consumer"></span><h4>Token Split Consumer<a class="headerlink" href="#module-queues.consumers.token_split_consumer" title="Permalink to this headline">¶</a></h4>
+<p>The <a class="reference internal" href="#queues.consumers.token_split_consumer.TokenSplitConsumer" title="queues.consumers.token_split_consumer.TokenSplitConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">TokenSplitConsumer</span></code></a> splits tweets into different streams based on what tokens they include.
+This means that all splits have a simple, thematic focus.</p>
+<p>This split consumer allows the splits to overlap, which means that tweets can be assigned to multiple streams.
+However, it discards tweets that do not satisfy any split.</p>
+<dl class="class">
+<dt id="queues.consumers.token_split_consumer.TokenSplitConsumer">
+<em class="property">class </em><code class="sig-name descname">TokenSplitConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">splits</em>, <em class="sig-param">consumer</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.token_split_consumer.TokenSplitConsumer" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <a class="reference internal" href="#queues.consumers.token_split_consumer.TokenSplitConsumer" title="queues.consumers.token_split_consumer.TokenSplitConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">TokenSplitConsumer</span></code></a> splits tweets into different streams based on what tokens they include.</p>
+</dd></dl>
+
+</div>
 </div>
 <div class="section" id="simple-consumers">
 <h3>Simple Consumers<a class="headerlink" href="#simple-consumers" title="Permalink to this headline">¶</a></h3>
