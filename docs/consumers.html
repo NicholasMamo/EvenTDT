@@ -658,11 +658,19 @@ The class maintains the <a class="reference internal" href="nlp.html#nlp.tokeniz
 <p>This consumer also assumes that its downstream consumers will use <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances instead of tweets.
 Therefore it converts all tweets into <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances using the given <a class="reference internal" href="nlp.html#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>, maintained in its state.
 This is done to improve efficiency.
-Since the split consumer can send one tweet into multiple streams, these streams do not have to tokenize and weight the same tweets again.</p>
+Since the split consumer can send one tweet into multiple streams, these streams do not have to tokenize and weight the same tweets again.
+This class tokenizes tweets based on the <a class="reference internal" href="twitter.html#twitter.full_text" title="twitter.full_text"><code class="xref py py-func docutils literal notranslate"><span class="pre">full</span> <span class="pre">text</span></code></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The class has to tokenize tweets on behalf of its consumers to decide in which queue to send tweets.
+However, the downstream consumers can tokenize the tweets again themselves.
+All documents have their full text stored in the document’s text.
+In addition, the original tweets are stored in the documents’ <code class="docutils literal notranslate"><span class="pre">tweet</span></code> attribute.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference internal" href="tools.html#module-tools.tokenizer" title="tools.tokenizer"><strong>tokenizer</strong></a> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer to use to tokenize tweets and check if a token is present in the tweets.</p></li>
+<li><p><strong>tokenizer</strong> – The tokenizer to use to tokenize tweets and check if a token is present in the tweets.</p></li>
 <li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme that is used to create documents from tweets.</p></li>
 </ul>
 </dd>

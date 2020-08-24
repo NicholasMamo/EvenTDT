@@ -29,8 +29,16 @@ class TokenSplitConsumer(SplitConsumer):
 	Therefore it converts all tweets into :class:`~nlp.document.Document` instances using the given :class:`~nlp.weighting.TermWeightingScheme`, maintained in its state.
 	This is done to improve efficiency.
 	Since the split consumer can send one tweet into multiple streams, these streams do not have to tokenize and weight the same tweets again.
+	This class tokenizes tweets based on the :func:`full text <twitter.full_text>`.
 
-	:ivar tokenizer: The tokenizer to use to tokenize tweets and check if a token is present in the tweets.
+	.. note::
+
+		The class has to tokenize tweets on behalf of its consumers to decide in which queue to send tweets.
+		However, the downstream consumers can tokenize the tweets again themselves.
+		All documents have their full text stored in the document's text.
+		In addition, the original tweets are stored in the documents' ``tweet`` attribute.
+
+	:ivar ~.tokenizer: The tokenizer to use to tokenize tweets and check if a token is present in the tweets.
 	:vartype tokenizer: :class:`~nlp.tokenizer.Tokenizer`
 	:ivar scheme: The term-weighting scheme that is used to create documents from tweets.
 	:vartype scheme: :class:`~nlp.weighting.TermWeightingScheme`
