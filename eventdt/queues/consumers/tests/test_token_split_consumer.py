@@ -201,3 +201,26 @@ class TestTokenSplitConsumer(unittest.TestCase):
 			for line in f:
 				document = consumer._preprocess(json.loads(line))
 				self.assertFalse(document.text.endswith('…'))
+
+	def test_preprocess_with_tweet(self):
+		"""
+		Test that when pre-processing tweets, the returned documents include the original tweet.
+		"""
+
+		"""
+		Create the consumer with a TF-IDF scheme.
+		"""
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
+			idf = Exportable.decode(json.loads(f.readline()))['tfidf']
+
+		"""
+		Tokenize all of the tweets.
+		Words like 'hazard' should have a greater weight than more common words, like 'goal'.
+		"""
+		splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+		consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer, scheme=idf)
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
+			for line in f:
+				tweet = json.loads(line)
+				document = consumer._preprocess(tweet)
+				self.assertEqual(tweet, document.attributes['tweet'])
