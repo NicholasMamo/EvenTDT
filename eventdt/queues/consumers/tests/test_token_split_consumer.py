@@ -12,16 +12,24 @@ path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
 if path not in sys.path:
 	sys.path.append(path)
 
-from logger import logger
+from nlp import Tokenizer
 from queues import Queue
-from queues.consumers import PrintConsumer
-from queues.consumers.algorithms import ELDConsumer, ZhaoConsumer
+from queues.consumers.algorithms import ELDConsumer
 from queues.consumers.token_split_consumer import TokenSplitConsumer
-from summarization.timeline import Timeline
-
-logger.set_logging_level(logger.LogLevel.WARNING)
 
 class TestTokenSplitConsumer(unittest.TestCase):
 	"""
 	Test the implementation of the token split consumer.
 	"""
+
+	def test_init_custom_tokenizer(self):
+		"""
+		Test that when creating the token split consumer with a custom tokenizer, it is used instead of the default one.
+		"""
+
+		splits = [ ('tackl'), ('goal') ]
+		consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer)
+		self.assertTrue(consumer.tokenizer.stem)
+		tokenizer = Tokenizer(stem=False)
+		consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer, tokenizer=tokenizer)
+		self.assertFalse(consumer.tokenizer.stem)
