@@ -174,6 +174,8 @@ class SplitConsumer(Consumer):
 		:rtype: bool
 		"""
 
+		pass
+
 	def _consumers(self, consumer, n, *args, **kwargs):
 		"""
 		Create the consumers which will receive the tweets from each stream.
