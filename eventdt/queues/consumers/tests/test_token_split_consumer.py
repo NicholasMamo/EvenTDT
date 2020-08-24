@@ -17,7 +17,7 @@ from nlp import Document, Tokenizer
 from nlp.weighting import TF
 from objects.exportable import Exportable
 from queues import Queue
-from queues.consumers.algorithms import ELDConsumer
+from queues.consumers.algorithms import ELDConsumer, ZhaoConsumer
 from queues.consumers.token_split_consumer import TokenSplitConsumer
 from vsm import vector_math
 
@@ -258,10 +258,6 @@ class TestTokenSplitConsumer(unittest.TestCase):
 		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
 			idf = Exportable.decode(json.loads(f.readline()))['tfidf']
 
-		"""
-		Tokenize all of the tweets.
-		Words like 'hazard' should have a greater weight than more common words, like 'goal'.
-		"""
 		splits = [ [ 'chelsea', 'cfc' ] ]
 		consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer, matches=any, scheme=idf)
 		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
@@ -293,10 +289,6 @@ class TestTokenSplitConsumer(unittest.TestCase):
 		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
 			idf = Exportable.decode(json.loads(f.readline()))['tfidf']
 
-		"""
-		Tokenize all of the tweets.
-		Words like 'hazard' should have a greater weight than more common words, like 'goal'.
-		"""
 		splits = [ [ 'chelsea', 'cfc' ] ]
 		consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer, matches=all, scheme=idf)
 		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
@@ -314,3 +306,110 @@ class TestTokenSplitConsumer(unittest.TestCase):
 
 		if trivial:
 			logger.warning("Trivial test")
+
+	@async_test
+	async def test_run_correct_streams(self):
+		"""
+		Test that when running, the consumers receive the right tweets.
+		"""
+
+		"""
+		Create the consumer with a TF-IDF scheme.
+		"""
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
+			idf = Exportable.decode(json.loads(f.readline()))['tfidf']
+
+
+		"""
+		Create an empty queue.
+		Use it to create a split consumer and set it running.
+		Wait a second so that the buffered consumer (ZhaoConsumer) finds nothing and goes to sleep.
+		"""
+		queue = Queue()
+		splits = [ [ 'chelsea', 'cfc' ], [ 'crystal' , 'palace' ] ]
+		consumer = TokenSplitConsumer(queue, splits, ZhaoConsumer, matches=any, scheme=idf, periodicity=300) # 5 minutes periodicity so that the queue is never emptied
+		running = asyncio.ensure_future(consumer.run(max_inactivity=3))
+		await asyncio.sleep(0.1)
+
+		"""
+		Load all tweets into the queue.
+		"""
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
+			for line in f:
+				queue.enqueue(json.loads(line))
+
+		"""
+		Wait some time for the consumer passes on its tweets to the downstream consumers, and then for those consumers to move the tweets from the queue to the buffer.
+		Then, stop the consumers before they process any tweets.
+		"""
+		await asyncio.sleep(0.5)
+		consumer.stop()
+
+		"""
+		Wait for the consumer to finish.
+		"""
+		results = (await asyncio.gather(running))[0]
+		self.assertEqual(2, len(consumer.consumers))
+		self.assertTrue(sum( consumer.buffer.length() for consumer in consumer.consumers )) # documents go from the queue into the buffer since it's a buffered consumer
+
+		"""
+		Ensure that the documents were partitioned properly.
+		"""
+		for split, consumer in zip(splits, consumer.consumers):
+			documents = consumer.buffer.dequeue_all()
+			for document in documents:
+				self.assertTrue(any( token in document.dimensions for token in split ))
+
+	@async_test
+	async def test_run_multiple_streams(self):
+		"""
+		Test that when running, the consumer may send a tweet to multiple consumers.
+		"""
+
+		"""
+		Create the consumer with a TF-IDF scheme.
+		"""
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
+			idf = Exportable.decode(json.loads(f.readline()))['tfidf']
+
+
+		"""
+		Create an empty queue.
+		Use it to create a split consumer and set it running.
+		Wait a second so that the buffered consumer (ZhaoConsumer) finds nothing and goes to sleep.
+		"""
+		queue = Queue()
+		splits = [ [ 'chelsea', 'cfc' ], [ 'crystal' , 'palace' ] ]
+		consumer = TokenSplitConsumer(queue, splits, ZhaoConsumer, matches=any, scheme=idf, periodicity=300) # 5 minutes periodicity so that the queue is never emptied
+		running = asyncio.ensure_future(consumer.run(max_inactivity=3))
+		await asyncio.sleep(0.1)
+
+		"""
+		Load all tweets into the queue.
+		"""
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
+			for line in f:
+				queue.enqueue(json.loads(line))
+
+		"""
+		Wait some time for the consumer passes on its tweets to the downstream consumers, and then for those consumers to move the tweets from the queue to the buffer.
+		Then, stop the consumers before they process any tweets.
+		"""
+		await asyncio.sleep(0.5)
+		consumer.stop()
+
+		"""
+		Wait for the consumer to finish.
+		"""
+		results = (await asyncio.gather(running))[0]
+		self.assertEqual(2, len(consumer.consumers))
+		self.assertTrue(sum( consumer.buffer.length() for consumer in consumer.consumers )) # documents go from the queue into the buffer since it's a buffered consumer
+
+		"""
+		Ensure that the documents were partitioned properly.
+		"""
+		documents = [ ]
+		for split, consumer in zip(splits, consumer.consumers):
+			documents.extend(consumer.buffer.dequeue_all())
+
+		self.assertGreater(len(documents), len(set(documents)))
