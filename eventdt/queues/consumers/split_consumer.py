@@ -127,6 +127,21 @@ class SplitConsumer(Consumer):
 		self._stopped()
 		return results[1:]
 
+	def stop(self):
+		"""
+		Set a flag to stop accepting new tweets.
+		This function also stops all child consumers.
+
+		.. note::
+			Contrary to the name of the function, the function sets the ``active`` flag to ``False``, not the ``stopped`` flag to ``True``.
+			This function merely asks the consumer to stop accepting new tweets for processing.
+			When the consumer actually stops, after it finishes processing whatever tweets it has, it sets the ``stopped`` flag to ``True`` itself.
+		"""
+
+		self.active = False
+		for consumer in self.consumers:
+			consumer.stop()
+
 	async def _consume(self, max_inactivity, *args, **kwargs):
 		"""
 		Consume the queue, sending the tweets in it to other consumers.

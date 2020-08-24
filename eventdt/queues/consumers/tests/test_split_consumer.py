@@ -151,6 +151,38 @@ class TestSplitConsumer(unittest.TestCase):
 		self.assertEqual(2, len(results))
 		self.assertTrue(all( type(result) is Timeline for result in results ))
 
+	@async_test
+	async def test_stop_stops_consumers(self):
+		"""
+		Test that when stopping the split consumer, it also stops its child consumers.
+		"""
+
+		splits = [ (0, 50), (50, 100) ]
+		consumer = DummySplitConsumer(Queue(), splits, ZhaoConsumer, periodicity=10)
+		self.assertFalse(consumer.active)
+		self.assertTrue(consumer.stopped)
+		self.assertTrue(all( not _consumer.active for _consumer in consumer.consumers ))
+		self.assertTrue(all( _consumer.stopped for _consumer in consumer.consumers ))
+
+		"""
+		Run the consumer.
+		"""
+		running = asyncio.ensure_future(consumer.run(max_inactivity=60)) # set a high maximum inactivity so the consumer doesn't end on its own
+		await asyncio.sleep(1)
+		self.assertTrue(consumer.active)
+		self.assertFalse(consumer.stopped)
+		self.assertTrue(all( _consumer.active for _consumer in consumer.consumers ))
+		self.assertTrue(all( not _consumer.stopped for _consumer in consumer.consumers ))
+
+		"""
+		Stop the consumer
+		"""
+		consumer.stop()
+		await asyncio.sleep(0.5)
+		self.assertTrue(all( not _consumer.active for _consumer in consumer.consumers ))
+		self.assertTrue(all( _consumer.stopped for _consumer in consumer.consumers ))
+		result = await asyncio.gather(running)
+
 	def test_preprocess_identical(self):
 		"""
 		Test that the default pre-processing step does not change the tweet at all.
