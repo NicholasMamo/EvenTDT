@@ -39,23 +39,23 @@ class TokenSplitConsumer(SplitConsumer):
 		In addition, the original tweets are stored in the documents' ``tweet`` attribute.
 
 
-	:ivar includes: The function that is used to check whether a tweet includes the tokens defined in the splits.
+	:ivar matches: The function that is used to check whether a tweet includes the tokens defined in the splits.
 
-					- If ``any`` is provided, the consumer assigns a tweet to a stream if it includes any of the tokens defined in the corresponding split.
-					- If ``all`` is provided, the consumer assigns a tweet to a stream if it includes all of the tokens defined in the corresponding split.
+				   - If ``any`` is provided, the consumer assigns a tweet to a stream if it includes any of the tokens defined in the corresponding split.
+				   - If ``all`` is provided, the consumer assigns a tweet to a stream if it includes all of the tokens defined in the corresponding split.
 
-					A custom function can be provided.
-					For example, a custom function can define that a tweet satisfies the split if it includes at least two tokens in it.
-					If one is given, it must receive as input a number of boolean values.
-					Its output must be a boolean indicating whether the tweet satisfies the conditions of the split.
-	:vartype includes: func
+				   A custom function can be provided.
+				   For example, a custom function can define that a tweet satisfies the split if it includes at least two tokens in it.
+				   If one is given, it must receive as input a number of boolean values.
+				   Its output must be a boolean indicating whether the tweet satisfies the conditions of the split.
+	:vartype matches: func
 	:ivar ~.tokenizer: The tokenizer to use to tokenize tweets and check if a token is present in the tweets.
 	:vartype tokenizer: :class:`~nlp.tokenizer.Tokenizer`
 	:ivar scheme: The term-weighting scheme that is used to create documents from tweets.
 	:vartype scheme: :class:`~nlp.weighting.TermWeightingScheme`
 	"""
 
-	def __init__(self, queue, splits, consumer, includes=any, tokenizer=None, scheme=None, *args, **kwargs):
+	def __init__(self, queue, splits, consumer, matches=any, tokenizer=None, scheme=None, *args, **kwargs):
 		"""
 		Initialize the consumer with its :class:`~queues.Queue`.
 
@@ -71,16 +71,16 @@ class TokenSplitConsumer(SplitConsumer):
 		:type splits: list of str or list of list of str or list of tuple of str
 		:param consumer: The type of :class:`~queues.consumers.Consumer` to create for each split.
 		:type consumer: type
-		:param includes: The function that is used to check whether a tweet includes the tokens defined in the splits.
+		:param matches: The function that is used to check whether a tweet includes the tokens defined in the splits.
 
-						 - If ``any`` is provided, the consumer assigns a tweet to a stream if it includes any of the tokens defined in the corresponding split.
-						 - If ``all`` is provided, the consumer assigns a tweet to a stream if it includes all of the tokens defined in the corresponding split.
+						- If ``any`` is provided, the consumer assigns a tweet to a stream if it includes any of the tokens defined in the corresponding split.
+						- If ``all`` is provided, the consumer assigns a tweet to a stream if it includes all of the tokens defined in the corresponding split.
 
-						 A custom function can be provided.
-						 For example, a custom function can define that a tweet satisfies the split if it includes at least two tokens in it.
-						 If one is given, it must receive as input a number of boolean values.
-						 Its output must be a boolean indicating whether the tweet satisfies the conditions of the split.
-		:type includes: func
+						A custom function can be provided.
+						For example, a custom function can define that a tweet satisfies the split if it includes at least two tokens in it.
+						If one is given, it must receive as input a number of boolean values.
+						Its output must be a boolean indicating whether the tweet satisfies the conditions of the split.
+		:type matches: func
 		:param tokenizer: The tokenizer to use to tokenize tweets and check if a token is present in the tweets.
 						  If one isn't given, the class creates a custom tokenizer.
 		:type tokenizer: None or :class:`~nlp.tokenizer.Tokenizer`
@@ -96,7 +96,7 @@ class TokenSplitConsumer(SplitConsumer):
 		self.tokenizer = tokenizer or Tokenizer(normalize_words=True, character_normalization_count=3,
 												remove_unicode_entities=True, stem=True)
 		self.scheme = scheme or TF()
-		self.includes = includes
+		self.matches = matches
 
 	def _preprocess(self, tweet):
 		"""
@@ -132,4 +132,4 @@ class TokenSplitConsumer(SplitConsumer):
 		:rtype: bool
 		"""
 
-		return any( token in document.dimensions for token in tokens )
+		return self.matches( token in document.dimensions for token in tokens )

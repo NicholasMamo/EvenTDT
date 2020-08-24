@@ -651,7 +651,7 @@ This means that all splits have a simple, thematic focus.</p>
 However, it discards tweets that do not satisfy any split.</p>
 <dl class="class">
 <dt id="queues.consumers.token_split_consumer.TokenSplitConsumer">
-<em class="property">class </em><code class="sig-name descname">TokenSplitConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">splits</em>, <em class="sig-param">consumer</em>, <em class="sig-param">includes=&lt;built-in function any&gt;</em>, <em class="sig-param">tokenizer=None</em>, <em class="sig-param">scheme=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.token_split_consumer.TokenSplitConsumer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">TokenSplitConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">splits</em>, <em class="sig-param">consumer</em>, <em class="sig-param">matches=&lt;built-in function any&gt;</em>, <em class="sig-param">tokenizer=None</em>, <em class="sig-param">scheme=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.token_split_consumer.TokenSplitConsumer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference internal" href="#queues.consumers.token_split_consumer.TokenSplitConsumer" title="queues.consumers.token_split_consumer.TokenSplitConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">TokenSplitConsumer</span></code></a> splits tweets into different streams based on what tokens they include.</p>
 <p>This split consumer uses a <a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a> to split the tweets’ text into tokens and check if they validate the conditions.
 The class maintains the <a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a> in its state.</p>
@@ -670,7 +670,7 @@ In addition, the original tweets are stored in the documents’ <code class="doc
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>includes</strong> (<em>func</em>) – <p>The function that is used to check whether a tweet includes the tokens defined in the splits.</p>
+<li><p><strong>matches</strong> (<em>func</em>) – <p>The function that is used to check whether a tweet includes the tokens defined in the splits.</p>
 <ul>
 <li><p>If <code class="docutils literal notranslate"><span class="pre">any</span></code> is provided, the consumer assigns a tweet to a stream if it includes any of the tokens defined in the corresponding split.</p></li>
 <li><p>If <code class="docutils literal notranslate"><span class="pre">all</span></code> is provided, the consumer assigns a tweet to a stream if it includes all of the tokens defined in the corresponding split.</p></li>
@@ -687,7 +687,7 @@ Its output must be a boolean indicating whether the tweet satisfies the conditio
 </dl>
 <dl class="method">
 <dt id="queues.consumers.token_split_consumer.TokenSplitConsumer.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">splits</em>, <em class="sig-param">consumer</em>, <em class="sig-param">includes=&lt;built-in function any&gt;</em>, <em class="sig-param">tokenizer=None</em>, <em class="sig-param">scheme=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.token_split_consumer.TokenSplitConsumer.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">splits</em>, <em class="sig-param">consumer</em>, <em class="sig-param">matches=&lt;built-in function any&gt;</em>, <em class="sig-param">tokenizer=None</em>, <em class="sig-param">scheme=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.token_split_consumer.TokenSplitConsumer.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the consumer with its <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>.</p>
 <p>For each given split, this function creates one <a class="reference internal" href="#queues.consumers.Consumer" title="queues.consumers.Consumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code></a> of the given type.
 This consumer has its own queue, which receive tweets that satisfy the associated condition.</p>
@@ -699,7 +699,7 @@ This consumer has its own queue, which receive tweets that satisfy the associate
 <li><p><strong>splits</strong> (<em>list of str</em><em> or </em><em>list of list of str</em><em> or </em><em>list of tuple of str</em>) – A list of splits, or conditions that determine into which queue a tweet goes.
 The type of the splits depends on what the <code class="xref py py-func docutils literal notranslate"><span class="pre">_satisfies()</span></code> function looks for.</p></li>
 <li><p><strong>consumer</strong> (<em>type</em>) – The type of <a class="reference internal" href="#queues.consumers.Consumer" title="queues.consumers.Consumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code></a> to create for each split.</p></li>
-<li><p><strong>includes</strong> (<em>func</em>) – <p>The function that is used to check whether a tweet includes the tokens defined in the splits.</p>
+<li><p><strong>matches</strong> (<em>func</em>) – <p>The function that is used to check whether a tweet includes the tokens defined in the splits.</p>
 <ul>
 <li><p>If <code class="docutils literal notranslate"><span class="pre">any</span></code> is provided, the consumer assigns a tweet to a stream if it includes any of the tokens defined in the corresponding split.</p></li>
 <li><p>If <code class="docutils literal notranslate"><span class="pre">all</span></code> is provided, the consumer assigns a tweet to a stream if it includes all of the tokens defined in the corresponding split.</p></li>
