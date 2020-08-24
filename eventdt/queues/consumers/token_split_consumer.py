@@ -96,8 +96,18 @@ class TokenSplitConsumer(SplitConsumer):
 		document.normalize()
 		return document
 
-	def _satisfies(self, item, condition):
+	def _satisfies(self, document, tokens):
 		"""
+		Check whether the given document includes the given tokens.
+		The function checks if any of the given tokens are present in the document's dimensions.
+
+		:param document: The document to validate whether it contains the given tokens.
+		:type document: :class:`~nlp.document.Document`
+		:param tokens: The list of tokens that need to be present in the given document.
+		:type tokens: list of str
+
+		:return: A boolean indicating whether the given document contains the tokens.
+		:rtype: bool
 		"""
 
-		pass
+		return any( token in document.dimensions for token in tokens )

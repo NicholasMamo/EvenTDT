@@ -224,3 +224,37 @@ class TestTokenSplitConsumer(unittest.TestCase):
 				tweet = json.loads(line)
 				document = consumer._preprocess(tweet)
 				self.assertEqual(tweet, document.attributes['tweet'])
+
+	def test_satisfies_any(self):
+		"""
+		Test that when validating tweets using the ``any`` function, only one token needs to be in the document for it to be valid.
+		"""
+
+		trivial = [ True ] * 2 # contains both, contains one
+
+		"""
+		Create the consumer with a TF-IDF scheme.
+		"""
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
+			idf = Exportable.decode(json.loads(f.readline()))['tfidf']
+
+		"""
+		Tokenize all of the tweets.
+		Words like 'hazard' should have a greater weight than more common words, like 'goal'.
+		"""
+		splits = [ [ 'chelsea', 'cfc' ] ]
+		consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer, scheme=idf)
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
+			for line in f:
+				document = consumer._preprocess(json.loads(line))
+				if consumer._satisfies(document, splits[0]):
+					if splits[0][0] in document.dimensions and splits[0][1] in document.dimensions:
+						trivial[0] = False
+					elif splits[0][0] in document.dimensions or splits[0][1] in document.dimensions:
+						trivial[1] = False
+				else:
+					if splits[0][0] in document.dimensions or splits[0][1] in document.dimensions:
+						self.fail()
+
+		if any(trivial):
+			logger.warning("Trivial test")
