@@ -103,6 +103,18 @@ class TestTokenSplitConsumer(unittest.TestCase):
 		consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer)
 		self.assertEqual(TF, type(consumer.scheme))
 
+	def test_init_consumers_arguments(self):
+		"""
+		Test that when passing on extra arguments to the token split consumer, they are passed on to the consumer.
+		"""
+
+		splits = [ (0, 50), (50, 100) ]
+		consumer = TokenSplitConsumer(Queue(), splits, ZhaoConsumer)
+		self.assertTrue(all( 5 == _consumer.periodicity for _consumer in consumer.consumers ))
+
+		consumer = TokenSplitConsumer(Queue(), splits, ZhaoConsumer, periodicity=10)
+		self.assertTrue(all( 10 == _consumer.periodicity for _consumer in consumer.consumers ))
+
 	def test_preprocess_creates_documents(self):
 		"""
 		Test that when pre-processing tweets, the function creates documents.

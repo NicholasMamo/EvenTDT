@@ -92,7 +92,7 @@ class TokenSplitConsumer(SplitConsumer):
 		splits = [ [ split ] if type(split) is str else list(split)
 		 					 for split in splits ]
 
-		super(TokenSplitConsumer, self).__init__(queue, splits, consumer)
+		super(TokenSplitConsumer, self).__init__(queue, splits, consumer, *args, **kwargs)
 		self.tokenizer = tokenizer or Tokenizer(normalize_words=True, character_normalization_count=3,
 												remove_unicode_entities=True, stem=True)
 		self.scheme = scheme or TF()
