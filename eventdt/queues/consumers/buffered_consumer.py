@@ -113,7 +113,7 @@ class BufferedConsumer(Consumer):
 		"""
 		while self.active:
 			"""
-			If the queue is idle, stop waiting for input.
+			If the queue is idle, wait for input.
 			"""
 			inactive = await self._wait_for_input(max_inactivity=max_inactivity)
 			if not inactive:
@@ -123,8 +123,8 @@ class BufferedConsumer(Consumer):
 			The consuming phase empties the queue and stores the elements in the buffer.
 			The buffer is processed separately in the :func:`~queues.consumers.buffered_consumer.BufferedConsumer.process` function.
 			"""
-			elements = self.queue.dequeue_all()
-			self.buffer.enqueue(*elements)
+			items = self.queue.dequeue_all()
+			self.buffer.enqueue(*items)
 
 	@abstractmethod
 	async def _process():
