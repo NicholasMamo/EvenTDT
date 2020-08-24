@@ -565,7 +565,7 @@ It decides how to route tweets to the different tweets.</p></li>
 <p>The <code class="docutils literal notranslate"><span class="pre">splits</span></code> and the <code class="xref py py-func docutils literal notranslate"><span class="pre">_satisfies()</span></code> are tightly-linked.
 Each split becomes the input to the latter function.
 For example, the following implementation of the <code class="xref py py-func docutils literal notranslate"><span class="pre">_satisfies()</span></code> function splits tweets according to their length.
-Therefore it receives a range of tweet lengths, such as <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">140),</span> <span class="pre">(140,</span> <span class="pre">280)</span></code>.</p>
+Therefore the splits should be ranges of tweet lengths, such as <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">140),</span> <span class="pre">(140,</span> <span class="pre">280)</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_satisfies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">condition</span><span class="p">):</span>
 
         <span class="n">min_length</span><span class="p">,</span> <span class="n">max_length</span> <span class="o">=</span> <span class="n">condition</span>
@@ -623,10 +623,10 @@ If it is negative, the consumer keeps waiting for input indefinitely.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The output of the consumer, if any, as a tuple.</p>
+<dd class="field-even"><p>The outputs of the split consumer’s individual consumers as a list.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>any</p>
+<dd class="field-odd"><p>list</p>
 </dd>
 </dl>
 </dd></dl>

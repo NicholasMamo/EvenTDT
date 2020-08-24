@@ -114,8 +114,8 @@ class SplitConsumer(Consumer):
 							   If it is negative, the consumer keeps waiting for input indefinitely.
 		:type max_inactivity: int
 
-		:return: The output of the consumer, if any, as a tuple.
-		:rtype: any
+		:return: The outputs of the split consumer's individual consumers as a list.
+		:rtype: list
 		"""
 
 		await asyncio.sleep(wait)
