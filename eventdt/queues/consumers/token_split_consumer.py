@@ -84,7 +84,7 @@ class TokenSplitConsumer(SplitConsumer):
 
 		text = twitter.full_text(tweet)
 		tokens = self.tokenizer.tokenize(text)
-		document = self.scheme.create(tokens)
+		document = self.scheme.create(tokens, text=text)
 		document.normalize()
 		return document
 
