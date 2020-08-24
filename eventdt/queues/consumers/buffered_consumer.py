@@ -86,7 +86,7 @@ class BufferedConsumer(Consumer):
 							   If it is negative, the consumer keeps waiting for input until the maximum time expires.
 		:type max_inactivity: int
 
-		:return: The output of the consume method.
+		:return: The output of the consumption process.
 		:rtype: any
 		"""
 
@@ -97,7 +97,7 @@ class BufferedConsumer(Consumer):
 			self._process(*args, **kwargs),
 		)
 		self._stopped()
-		return results
+		return results[1]
 
 	async def _consume(self, max_inactivity):
 		"""

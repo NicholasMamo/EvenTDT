@@ -82,7 +82,7 @@ class Consumer(ABC):
 							   If it is negative, the consumer keeps waiting for input indefinitely.
 		:type max_inactivity: int
 
-		:return: The output of the consumer, if any, as a tuple.
+		:return: The output of the consumption process.
 		:rtype: any
 		"""
 
@@ -92,7 +92,7 @@ class Consumer(ABC):
 			self._consume(*args, max_inactivity=max_inactivity, **kwargs),
 		)
 		self._stopped()
-		return results
+		return results[0]
 
 	def stop(self):
 		"""
