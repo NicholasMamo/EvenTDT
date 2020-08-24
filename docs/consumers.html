@@ -554,15 +554,29 @@ Associated with each condition is one class:<cite>~queues.consumers.Consumer</ci
 <p>This class mainly re-works the basic consumption method to decide where to send off tweets.
 To change how the consumer works, you might need to override the following functions:</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_preprocess()</span></code>: Pre-process all incoming tweets.
+<li><p>&lt;Optional&gt; <code class="xref py py-func docutils literal notranslate"><span class="pre">_preprocess()</span></code>: Pre-process all incoming tweets.
 This function is used whenever the child consumers all perform the same pre-processing tasks.
 When tweets can be added to multiple streams, this function can improve efficiency.
 By default, it does not change tweets.</p></li>
+<li><p>&lt;Required&gt; <code class="xref py py-func docutils literal notranslate"><span class="pre">_satisfies()</span></code>: Check whether a tweet satisfies a condition.
+This is the central function that all split consumers need to implement.
+It decides how to route tweets to the different tweets.</p></li>
 </ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">splits</span></code> and the <code class="xref py py-func docutils literal notranslate"><span class="pre">_satisfies()</span></code> are tightly-linked.
+Each split becomes the input to the latter function.
+For example, the following implementation of the <code class="xref py py-func docutils literal notranslate"><span class="pre">_satisfies()</span></code> function splits tweets according to their length.
+Therefore it receives a range of tweet lengths, such as <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">140),</span> <span class="pre">(140,</span> <span class="pre">280)</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_satisfies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">condition</span><span class="p">):</span>
+
+        <span class="n">min_length</span><span class="p">,</span> <span class="n">max_length</span> <span class="o">=</span> <span class="n">condition</span>
+        <span class="k">return</span> <span class="n">min_length</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">max_length</span>
+</pre></div>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>splits</strong> (<em>list</em>) – A list of splits, or conditions that determine into which queue a tweet goes.</p></li>
+<li><p><strong>splits</strong> (<em>list</em>) – A list of splits, or conditions that determine into which queue a tweet goes.
+The type of the splits depends on what the <code class="xref py py-func docutils literal notranslate"><span class="pre">_satisfies()</span></code> function looks for.</p></li>
 <li><p><a class="reference internal" href="#module-queues.consumers" title="queues.consumers"><strong>consumers</strong></a> (list of <a class="reference internal" href="#queues.consumers.Consumer" title="queues.consumers.Consumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code></a>) – The consumers that will receive the tweets from the different splits.
 Each consumer corresponds to one split.</p></li>
 </ul>
@@ -579,7 +593,8 @@ This consumer has its own queue, which receive tweets that satisfy the associate
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>queue</strong> (<a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that receives the entire stream.</p></li>
-<li><p><strong>splits</strong> (<em>list</em><em> or </em><em>tuple</em>) – A list of splits, or conditions that determine into which queue a tweet goes.</p></li>
+<li><p><strong>splits</strong> (<em>list</em><em> or </em><em>tuple</em>) – A list of splits, or conditions that determine into which queue a tweet goes.
+The type of the splits depends on what the <code class="xref py py-func docutils literal notranslate"><span class="pre">_satisfies()</span></code> function looks for.</p></li>
 <li><p><strong>consumer</strong> (<em>type</em>) – The type of <a class="reference internal" href="#queues.consumers.Consumer" title="queues.consumers.Consumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code></a> to create for each split.</p></li>
 </ul>
 </dd>
@@ -621,7 +636,7 @@ If it is negative, the consumer keeps waiting for input indefinitely.</p></li>
 <dl class="class">
 <dt id="queues.consumers.split_consumer.DummySplitConsumer">
 <em class="property">class </em><code class="sig-name descname">DummySplitConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">splits</em>, <em class="sig-param">consumer</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.split_consumer.DummySplitConsumer" title="Permalink to this definition">¶</a></dt>
-<dd><p>A dummy <a class="reference internal" href="#queues.consumers.split_consumer.SplitConsumer" title="queues.consumers.split_consumer.SplitConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SplitConsumer</span></code></a> that does nothing.
+<dd><p>A dummy <a class="reference internal" href="#queues.consumers.split_consumer.SplitConsumer" title="queues.consumers.split_consumer.SplitConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SplitConsumer</span></code></a> that adds all tweets to all streams.
 It is used only for testing purposes.</p>
 </dd></dl>
 

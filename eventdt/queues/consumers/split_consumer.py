@@ -16,6 +16,7 @@ The consumer can assign each tweet to just one stream, to multiple streams, or e
 	The individual consumers that process the split streams can be based on the :class:`~queues.consumers.buffered_consumer.BufferedConsumer` and process tweets in batches.
 """
 
+from abc import abstractmethod
 import asyncio
 import os
 import sys
@@ -38,12 +39,28 @@ class SplitConsumer(Consumer):
 	This class mainly re-works the basic consumption method to decide where to send off tweets.
 	To change how the consumer works, you might need to override the following functions:
 
-	- :func:`~queues.consumers.split_consumer.SplitConsumer._preprocess`: Pre-process all incoming tweets.
+	- <Optional> :func:`~queues.consumers.split_consumer.SplitConsumer._preprocess`: Pre-process all incoming tweets.
 	  This function is used whenever the child consumers all perform the same pre-processing tasks.
 	  When tweets can be added to multiple streams, this function can improve efficiency.
 	  By default, it does not change tweets.
+	- <Required> :func:`~queues.consumers.split_consumer.SplitConsumer._satisfies`: Check whether a tweet satisfies a condition.
+	  This is the central function that all split consumers need to implement.
+	  It decides how to route tweets to the different tweets.
+
+	The ``splits`` and the :func:`~queues.consumers.split_consumer.SplitConsumer._satisfies` are tightly-linked.
+	Each split becomes the input to the latter function.
+	For example, the following implementation of the :func:`~queues.consumers.split_consumer.SplitConsumer._satisfies` function splits tweets according to their length.
+	Therefore the splits should be ranges of tweet lengths, such as ``(0, 140), (140, 280)``.
+
+	.. code-block:: python
+
+		def _satisfies(self, item, condition):
+
+			min_length, max_length = condition
+			return min_length <= len(item['text']) < max_length
 
 	:ivar splits: A list of splits, or conditions that determine into which queue a tweet goes.
+				  The type of the splits depends on what the :func:`~queues.consumers.split_consumer.SplitConsumer._satisfies` function looks for.
 	:vartype splits: list
 	:ivar consumers: The consumers that will receive the tweets from the different splits.
 					 Each consumer corresponds to one split.
@@ -62,6 +79,7 @@ class SplitConsumer(Consumer):
 		:param queue: The queue that receives the entire stream.
 		:type queue: :class:`~queues.Queue`
 		:param splits: A list of splits, or conditions that determine into which queue a tweet goes.
+					   The type of the splits depends on what the :func:`~queues.consumers.split_consumer.SplitConsumer._satisfies` function looks for.
 		:type splits: list or tuple
 		:param consumer: The type of :class:`~queues.consumers.Consumer` to create for each split.
 		:type consumer: type
@@ -109,6 +127,22 @@ class SplitConsumer(Consumer):
 		self._stopped()
 		return results[1:]
 
+	@abstractmethod
+	def _satisfies(self, item, condition):
+		"""
+		Check whether the given item satisfies the condition.
+
+		:param item: The tweet, or a pre-processed version of it.
+		:type item: any
+		:param condition: The condition to check for.
+						  The type of the condition depends on what the function looks for.
+		:type condition: any
+
+		:return: A boolean indicating whether the given item satisfies the condition.
+				 If it satisfies the condition, the split consumer adds the item to the corresponding stream.
+		:rtype: bool
+		"""
+
 	def _consumers(self, consumer, n, *args, **kwargs):
 		"""
 		Create the consumers which will receive the tweets from each stream.
@@ -149,17 +183,21 @@ class SplitConsumer(Consumer):
 
 class DummySplitConsumer(SplitConsumer):
 	"""
-	A dummy :class:`~queues.consumers.split_consumer.SplitConsumer` that does nothing.
+	A dummy :class:`~queues.consumers.split_consumer.SplitConsumer` that adds all tweets to all streams.
 	It is used only for testing purposes.
 	"""
 
-	async def _consume(self, max_inactivity, *args, **kwargs):
+	def _satisfies(self, item, condition):
 		"""
-		Consume the queue, doing nothing.
+		This function always returns true, adding the tweets to all streams.
 
-		:param max_inactivity: The maximum time in seconds to wait idly without input before stopping.
-							   If it is negative, the consumer keeps waiting for input until the maximum time expires.
-		:type max_inactivity: int
+		:param item: The tweet, or a pre-processed version of it.
+		:type item: any
+		:param condition: The condition to check for.
+		:type condition: any
+
+		:return: A boolean value of ``True``, adding the tweet to all streams.
+		:rtype: bool
 		"""
 
-		return None
+		return True
