@@ -33,3 +33,49 @@ class TestTokenSplitConsumer(unittest.TestCase):
 		tokenizer = Tokenizer(stem=False)
 		consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer, tokenizer=tokenizer)
 		self.assertFalse(consumer.tokenizer.stem)
+
+	def test_init_list_of_list_splits(self):
+		"""
+		Test that when providing a list of list for splits, they are unchanged.
+		"""
+
+		splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+		consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer)
+		self.assertEqual(splits, consumer.splits)
+
+	def test_init_list_of_tuple_splits(self):
+		"""
+		Test that when providing a list of tuples for splits, they are converted into lists.
+		"""
+
+		splits = [ ( 'yellow', 'card' ), ( 'foul', 'tackl' ) ]
+		consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer)
+		self.assertEqual([ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ], consumer.splits)
+
+	def test_init_list_of_str_splits(self):
+		"""
+		Test that when providing a list of strings for splits, they are converted into lists.
+		"""
+
+		splits = [ 'yellow', 'card' ]
+		consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer)
+		self.assertEqual([ [ 'yellow' ], [ 'card' ] ], consumer.splits)
+
+	def test_init_mixed_splits(self):
+		"""
+		Test that when providing a mix of splits, they are converted into lists.
+		"""
+
+		splits = [ 'book', [ 'yellow', 'card' ], ( 'foul', 'tackl' ) ]
+		consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer)
+		self.assertEqual([ [ 'book' ], [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ], consumer.splits)
+
+	def test_init_consumer_splits(self):
+		"""
+		Test that the token split consumer creates as many consumers as the number of splits.
+		"""
+
+		splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+		consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer)
+		self.assertEqual(2, len(consumer.splits))
+		self.assertEqual(2, len(consumer.consumers))

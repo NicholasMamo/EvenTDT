@@ -40,13 +40,16 @@ class TokenSplitConsumer(SplitConsumer):
 		:type queue: :class:`~queues.Queue`
 		:param splits: A list of splits, or conditions that determine into which queue a tweet goes.
 					   The type of the splits depends on what the :func:`~queues.consumers.split_consumer.SplitConsumer._satisfies` function looks for.
-		:type splits: list or tuple
+		:type splits: list of str or list of list of str or list of tuple of str
 		:param consumer: The type of :class:`~queues.consumers.Consumer` to create for each split.
 		:type consumer: type
 		:param tokenizer: The tokenizer to use to tokenize tweets and check if a token is present in the tweets.
 						  If one isn't given, the class creates a custom tokenizer.
 		:type tokenizer: None or :class:`~nlp.tokenizer.Tokenizer`
 		"""
+
+		splits = [ [ split ] if type(split) is str else list(split)
+		 					 for split in splits ]
 
 		super(TokenSplitConsumer, self).__init__(queue, splits, consumer)
 		self.tokenizer = tokenizer or Tokenizer(normalize_words=True, character_normalization_count=3,
