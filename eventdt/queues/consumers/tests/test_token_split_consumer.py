@@ -127,6 +127,38 @@ class TestTokenSplitConsumer(unittest.TestCase):
 				tweet = json.loads(line)
 				self.assertEqual(Document, type(consumer._preprocess(tweet)))
 
+	def test_preprocess_removes_stopwords(self):
+		"""
+		Test that when pre-processing tweets, the returned documents do not have stopwords in them.
+		"""
+
+		trivial = True
+
+		"""
+		Create the consumer with a TF-IDF scheme.
+		"""
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
+			idf = Exportable.decode(json.loads(f.readline()))['tfidf']
+
+		"""
+		Tokenize all of the tweets.
+		Words like 'hazard' should have a greater weight than more common words, like 'goal'.
+		"""
+		splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+		consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer, scheme=idf)
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
+			for line in f:
+				document = consumer._preprocess(json.loads(line))
+				if 'and' in document.text.lower() or 'while' in document.text.lower():
+					trivial = False
+
+				self.assertFalse('and' in document.dimensions)
+				self.assertFalse('while' in document.dimensions)
+				self.assertFalse('whil' in document.dimensions)
+
+		if trivial:
+			logger.warning("Trivial test")
+
 	def test_preprocess_uses_scheme(self):
 		"""
 		Test that when pre-processing tweets, the function uses the term-weighting scheme.
@@ -176,7 +208,7 @@ class TestTokenSplitConsumer(unittest.TestCase):
 		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
 			for line in f:
 				document = consumer._preprocess(json.loads(line))
-				self.assertEqual(1, round(vector_math.magnitude(document), 10))
+				self.assertTrue(round(vector_math.magnitude(document), 10) in [ 0, 1 ])
 
 	def test_preprocess_with_text(self):
 		"""

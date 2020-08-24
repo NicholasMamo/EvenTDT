@@ -15,6 +15,7 @@ if path not in sys.path:
 
 from .split_consumer import SplitConsumer
 from nlp import Tokenizer
+from nltk.corpus import stopwords
 from nlp.weighting import TF
 import twitter
 
@@ -93,7 +94,8 @@ class TokenSplitConsumer(SplitConsumer):
 		 					 for split in splits ]
 
 		super(TokenSplitConsumer, self).__init__(queue, splits, consumer, *args, **kwargs)
-		self.tokenizer = tokenizer or Tokenizer(normalize_words=True, character_normalization_count=3,
+		self.tokenizer = tokenizer or Tokenizer(stopwords=stopwords.words('english'),
+												normalize_words=True, character_normalization_count=3,
 												remove_unicode_entities=True, stem=True)
 		self.scheme = scheme or TF()
 		self.matches = matches
