@@ -233,7 +233,7 @@ class FIREConsumer(SimulatedBufferedConsumer):
 		Convert the given tweets into documents.
 
 		:param tweets: A list of tweets.
-		:type tweets: list of dict
+		:type tweets: list of dict or list of :class:`~nlp.document.Document`
 
 		:return: A list of documents created from the tweets in the same order as the given tweets.
 				 Documents are normalized and store the original tweet in the `tweet` attribute.
@@ -250,6 +250,10 @@ class FIREConsumer(SimulatedBufferedConsumer):
 		However, if the tweet is a plain retweet, get the full text.
 		"""
 		for tweet in tweets:
+			if type(tweet) is Document:
+				documents.append(tweet)
+				continue
+
 			text = twitter.full_text(tweet)
 
 			"""
