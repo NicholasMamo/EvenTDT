@@ -402,23 +402,24 @@ class ELDConsumer(Consumer):
 						cluster.attributes['bursty'] = True
 						topic = Vector(terms)
 						topic.normalize()
-
-						"""
-						After adding a cluster to the timeline, check if it is a new node.
-						If it is, summarize the node before that, if there is one.
-						"""
-						nodes = len(timeline.nodes)
 						timeline.add(timestamp=latest_timestamp, cluster=cluster, topic=topic)
-						if len(timeline.nodes) > nodes and len(timeline.nodes) > 1:
-							node = timeline.nodes[-2]
-							summary_documents = self._score_documents(node.get_all_documents())[:50]
 
-							"""
-							Generate a query from the topical keywords and use it to come up with a summary.
-							"""
-							query = Cluster(vectors=node.topics).centroid
-							summary = self.summarization.summarize(summary_documents, 140, query=query)
-							logger.info(f"{datetime.fromtimestamp(node.created_at).ctime()}: { str(self.cleaner.clean(str(summary))) }", process=str(self))
+				"""
+				Check whether the last node in the timeline has expired.
+				If it has expired, but it has not been printed, summarize it.
+				"""
+				if timeline.nodes:
+					node = timeline.nodes[-1]
+					if node.expired(timeline.expiry, latest_timestamp) and not node.attributes.get('printed'):
+						summary_documents = self._score_documents(node.get_all_documents())[:50]
+
+						"""
+						Generate a query from the topical keywords and use it to come up with a summary.
+						"""
+						query = Cluster(vectors=node.topics).centroid
+						summary = self.summarization.summarize(summary_documents, 140, query=query)
+						logger.info(f"{datetime.fromtimestamp(node.created_at).ctime()}: { str(self.cleaner.clean(str(summary))) }", process=str(self))
+						node.attributes['printed'] = True
 
 		return timeline
 
