@@ -227,7 +227,7 @@ class ELDConsumer(Consumer):
 
 		self._started()
 		tfidf = await self._construct_idf(max_inactivity=max_inactivity)
-		logger.info(f"TF-IDF constructed with { tfidf.global_scheme.documents } documents")
+		logger.info(f"TF-IDF constructed with { tfidf.global_scheme.documents } documents", process=str(self))
 		participants = await self._detect_participants() if self.active else [ ]
 		self._stopped()
 		return { 'scheme': tfidf, 'participants': participants }
@@ -347,7 +347,7 @@ class ELDConsumer(Consumer):
 			"""
 			active = await self._wait_for_input(max_inactivity=max_inactivity)
 			if not active:
-				logger.info(f"No input for { max_inactivity }s")
+				logger.info(f"No input for { max_inactivity }s", process=str(self))
 				break
 
 			if self.queue.length():
@@ -419,7 +419,7 @@ class ELDConsumer(Consumer):
 							"""
 							query = Cluster(vectors=node.topics).centroid
 							summary = self.summarization.summarize(summary_documents, 140, query=query)
-							logger.info(f"{datetime.fromtimestamp(node.created_at).ctime()}: { str(self.cleaner.clean(str(summary))) }")
+							logger.info(f"{datetime.fromtimestamp(node.created_at).ctime()}: { str(self.cleaner.clean(str(summary))) }", process=str(self))
 
 		return timeline
 
