@@ -50,6 +50,7 @@ class Node(Exportable, Attributable):
 		:type created_at: float
 		"""
 
+		super(Node, self).__init__()
 		self.created_at = created_at
 
 	@abstractmethod

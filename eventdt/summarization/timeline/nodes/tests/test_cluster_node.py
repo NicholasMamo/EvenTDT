@@ -29,6 +29,13 @@ class TestClusterNode(unittest.TestCase):
 
 		self.assertEqual([ ], ClusterNode(0).clusters)
 
+	def test_create_empty_attributes(self):
+		"""
+		Test that the cluster node is created with no attributes.
+		"""
+
+		self.assertEqual({ }, ClusterNode(0).attributes)
+
 	def test_create_with_timestamp_zero(self):
 		"""
 		Test that the cluster node saves the timestamp correctly even if it is zero.

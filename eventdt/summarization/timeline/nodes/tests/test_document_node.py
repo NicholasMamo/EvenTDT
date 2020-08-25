@@ -29,6 +29,13 @@ class TestDocumentNode(unittest.TestCase):
 
 		self.assertEqual([ ], DocumentNode(0).documents)
 
+	def test_create_empty_attributes(self):
+		"""
+		Test that the document node is created with no attributes.
+		"""
+
+		self.assertEqual({ }, DocumentNode(0).attributes)
+
 	def test_create_with_timestamp_zero(self):
 		"""
 		Test that the document node saves the timestamp correctly even if it is zero.
