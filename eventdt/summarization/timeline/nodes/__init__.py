@@ -16,9 +16,10 @@ path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
+from objects.attributable import Attributable
 from objects.exportable import Exportable
 
-class Node(Exportable):
+class Node(Exportable, Attributable):
 	"""
 	The :class:`~summarization.timeline.nodes.Node` base class is a general representation of the nodes that make up timelines.
 	Any :class:`~summarization.timeline.nodes.Node` maintains, at least, the timestamp when it was created as its state.
