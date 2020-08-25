@@ -132,7 +132,7 @@ class ELDConsumer(Consumer):
 
 	def __init__(self, queue, time_window=30, scheme=None,
 				 threshold=0.5, freeze_period=20, min_size=3, cooldown=1, max_intra_similarity=0.8,
-				 sets=10, min_burst=0.5):
+				 sets=10, min_burst=0.5, *args, **kwargs):
 		"""
 		Create the consumer with a queue.
 		Simultaneously create a nutrition store and the topic detection algorithm container.
@@ -141,6 +141,8 @@ class ELDConsumer(Consumer):
 
 		The constructor also creates a buffer.
 		This buffer is used to store tweets until they are made into a checkpoint.
+
+		Additional arguments and keyword arguments are passed on to the base class.
 
 		:param queue: The queue that is consumed.
 		:type queue: :class:`~queues.Queue`
@@ -173,7 +175,7 @@ class ELDConsumer(Consumer):
 
 		# NOTE: 1 second cooldown is very low. Maybe this parameter isn't needed.
 
-		super(ELDConsumer, self).__init__(queue)
+		super(ELDConsumer, self).__init__(queue, *args, **kwargs)
 
 		self.time_window = time_window
 		self.scheme = scheme

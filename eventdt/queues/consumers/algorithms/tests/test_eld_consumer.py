@@ -33,6 +33,15 @@ class TestELDConsumer(unittest.TestCase):
 			loop.run_until_complete(future)
 		return wrapper
 
+	def test_init_name(self):
+		"""
+		Test that the ELD consumer passes on the name to the base class.
+		"""
+
+		name = 'Test Consumer'
+		consumer = ELDConsumer(Queue(), 10, name=name)
+		self.assertEqual(name, str(consumer))
+
 	def test_create_consumer(self):
 		"""
 		Test that when creating a consumer, all the parameters are saved correctly.
