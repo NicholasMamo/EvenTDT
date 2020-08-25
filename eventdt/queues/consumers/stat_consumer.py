@@ -32,6 +32,6 @@ class StatConsumer(BufferedConsumer):
 		"""
 		await self._sleep()
 		while self.active:
-			logger.info(f"{ self.buffer.length() } tweets in {self.periodicity} seconds")
+			logger.info(f"{ self.buffer.length() } tweets in {self.periodicity} seconds", process=str(self))
 			self.buffer.empty()
 			await self._sleep()
