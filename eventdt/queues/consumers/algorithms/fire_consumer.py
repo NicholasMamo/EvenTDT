@@ -166,7 +166,7 @@ class FIREConsumer(SimulatedBufferedConsumer):
 					if terms:
 						timeline.add(latest_timestamp, cluster)
 						summary = self.summarization.summarize(timeline.nodes[-1].get_all_documents(), 140)
-						logger.info(f"{datetime.fromtimestamp(latest_timestamp).ctime()}: { str(summary) }")
+						logger.info(f"{datetime.fromtimestamp(latest_timestamp).ctime()}: { str(summary) }", process=str(self))
 
 			await self._sleep()
 
