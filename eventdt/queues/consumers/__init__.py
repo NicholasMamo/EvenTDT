@@ -186,5 +186,16 @@ class Consumer(ABC):
 		self.active = False
 		self.stopped = True
 
+	def __str__(self):
+		"""
+		Get the string representation of the consumer.
+		This function returns the consumer's name if it is set, ``None`` otherwise.
+
+		:return: The consumer's name, or ``None`` if it is not set.
+		:rtype: None or str
+		"""
+
+		return self.name
+
 from .print_consumer import PrintConsumer
 from .stat_consumer import StatConsumer
