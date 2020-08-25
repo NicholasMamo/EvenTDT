@@ -25,6 +25,15 @@ class TestFIREConsumer(unittest.TestCase):
 	Test the implementation of the FIRE consumer.
 	"""
 
+	def test_init_name(self):
+		"""
+		Test that the Zhao consumer passes on the name to the base class.
+		"""
+
+		name = 'Test Consumer'
+		consumer = FIREConsumer(Queue(), periodicity=10, name=name)
+		self.assertEqual(name, str(consumer))
+
 	def test_create_consumer(self):
 		"""
 		Test that when creating a consumer, all the parameters are saved correctly.

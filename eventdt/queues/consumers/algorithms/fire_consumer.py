@@ -84,11 +84,13 @@ class FIREConsumer(SimulatedBufferedConsumer):
 	"""
 
 	def __init__(self, queue, periodicity=60, scheme=None, sets=10,
-				 threshold=0.7, freeze_period=20, min_size=4):
+				 threshold=0.7, freeze_period=20, min_size=4, *args, **kwargs):
 		"""
 		Create the consumer with a :class:`~queues.Queue`.
 		Simultaneously create a :class:`~tdt.nutrition.NutritionStore` and the :class:`~tdt.algorithms.cataldi.Cataldi` TDT algorithm.
 		In addition, create the :class:`~summarization.algorithms.mmr.MMR` algorithm for summarization.
+
+		Additional arguments and keyword arguments are passed on to the base class.
 
 		:param queue: The queue that is consumed.
 		:type queue: :class:`~queues.Queue`
@@ -113,7 +115,7 @@ class FIREConsumer(SimulatedBufferedConsumer):
 		:type min_size: int
 		"""
 
-		super(FIREConsumer, self).__init__(queue, periodicity)
+		super(FIREConsumer, self).__init__(queue, periodicity, *args, **kwargs)
 		self.store = MemoryNutritionStore()
 		self.scheme = scheme
 		self.sets = sets
