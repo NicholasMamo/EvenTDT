@@ -511,10 +511,8 @@ class ELDConsumer(Consumer):
 		Retain the comment of a quoted status.
 		However, if the tweet is a plain retweet, get the full text.
 		"""
-		for tweet in tweets:
-			if type(tweet) is Document:
-				documents.append(tweet)
-				continue
+		for item in tweets:
+			tweet = item.attributes['tweet'] if type(item) is Document else item
 
 			text = twitter.full_text(tweet)
 
@@ -522,10 +520,11 @@ class ELDConsumer(Consumer):
 			Create the document and save the tweet in it.
 			"""
 			tokens = self.tokenizer.tokenize(text)
-			document = Document(text, tokens, scheme=self.scheme)
+			document = item if type(item) is Document else Document(text, tokens, scheme=self.scheme)
 			document.attributes['id'] = tweet.get('id')
 			document.attributes['urls'] = len(tweet['entities']['urls'])
 			document.attributes['timestamp'] = twitter.extract_timestamp(tweet)
+			document.attributes['tweet'] = tweet
 			document.normalize()
 			documents.append(document)
 

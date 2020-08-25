@@ -398,7 +398,7 @@ class TestELDConsumer(unittest.TestCase):
 
 	def test_to_documents_documents(self):
 		"""
-		Test that when converting a list of documents to documents, they are retained unchanged.
+		Test that when converting a list of documents to documents, they are retained.
 		"""
 
 		consumer = ELDConsumer(Queue(), 60, TF())
@@ -407,6 +407,19 @@ class TestELDConsumer(unittest.TestCase):
 			tweets = [ json.loads(line) for line in lines ]
 			documents = consumer._to_documents(tweets)
 			self.assertEqual(documents, consumer._to_documents(documents))
+
+	def test_to_documents_documents_with_attributes(self):
+		"""
+		Test that when converting a list of documents to documents, their attributes are updated.
+		"""
+
+		consumer = ELDConsumer(Queue(), 60, TF())
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = [ Document('', attributes={ 'tweet': tweet}) for tweet in tweets ]
+			documents = consumer._to_documents(tweets)
+			self.assertTrue(all( 'urls' in document.attributes for document in documents ))
 
 	def test_latest_timestamp_empty(self):
 		"""
