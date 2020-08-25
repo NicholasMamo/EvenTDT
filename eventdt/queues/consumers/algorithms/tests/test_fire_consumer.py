@@ -67,22 +67,6 @@ class TestFIREConsumer(unittest.TestCase):
 			self.assertTrue(all(tweet['lang'] == 'en' for tweet in tweets))
 			self.assertGreater(count, len(tweets))
 
-	def test_filter_tweets_document(self):
-		"""
-		Test that when filtering a list of documents, the function looks for the tweet in the attributes.
-		"""
-
-		consumer = FIREConsumer(Queue(), 60, scheme=TF())
-		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
-			lines = f.readlines()
-			tweets = [ json.loads(line) for line in lines ]
-			documents = [ Document('', attributes={ 'tweet': tweet }) for tweet in tweets ]
-
-			tweets = consumer._filter_tweets(tweets)
-			documents = consumer._filter_tweets(documents)
-			self.assertEqual(len(tweets), len(documents))
-			self.assertTrue(all( document.attributes['tweet'] in tweets for document in documents ))
-
 	def test_filter_tweets_hashtags(self):
 		"""
 		Test that when filtering tweets, all returned tweets have no more than 2 hashtags.
@@ -160,6 +144,22 @@ class TestFIREConsumer(unittest.TestCase):
 			tweets = [ json.loads(line) for line in lines ]
 			filtered = consumer._filter_tweets(tweets)
 			self.assertTrue(all(tweet in tweets for tweet in filtered))
+
+	def test_filter_tweets_document(self):
+		"""
+		Test that when filtering a list of documents, the function looks for the tweet in the attributes.
+		"""
+
+		consumer = FIREConsumer(Queue(), 60, scheme=TF())
+		with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = [ Document('', attributes={ 'tweet': tweet }) for tweet in tweets ]
+
+			tweets = consumer._filter_tweets(tweets)
+			documents = consumer._filter_tweets(documents)
+			self.assertEqual(len(tweets), len(documents))
+			self.assertTrue(all( document.attributes['tweet'] in tweets for document in documents ))
 
 	def test_to_documents_tweet(self):
 		"""

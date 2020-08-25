@@ -425,7 +425,29 @@ class ELDConsumer(Consumer):
 
 	def _filter_tweets(self, tweets):
 		"""
-		Filter the given tweets based on :class:`~.queues.consumers.fire_consumer.FIREConsumer`'s filtering rules and new rules.
+		Filter the given tweets based on FIRE's filtering rules.
+
+		:param tweets: A list of tweets to filter.
+					   The tweets can either be tweet dictionaries or documents.
+					   If they are documents, this function looks for the tweet in the ``tweet`` attribute.
+		:type tweets: list of dict or list of :class:`~nlp.document.Document`
+
+		:return: A list of filtered tweets.
+		:type tweets: list of dict or list of :class:`~nlp.document.Document`
+		"""
+
+		filtered = [ ]
+
+		for item in tweets:
+			tweet = item.attributes['tweet'] if type(item) is Document else item
+			if self._validate_tweet(tweet):
+				filtered.append(item)
+
+		return filtered
+
+	def _validate_tweet(self, tweet):
+		"""
+		Filter the given tweet based on :class:`~.queues.consumers.fire_consumer.FIREConsumer`'s filtering rules and new rules.
 		FIRE's rules are:
 
 			#. The tweet has to be in English,
@@ -442,29 +464,32 @@ class ELDConsumer(Consumer):
 
 			#. The biography of the tweet's author cannot be empty because that is indicative of bots.
 
-		:param tweets: A list of tweets to filter.
-		:type tweets: list of dict
+		:param tweet: The tweet to validate.
+		:type tweet: dict
 
-		:return: A list of filtered tweets.
-		:type tweets: list of dict
+		:return: A boolean indicating whether the tweet passed the filtering test.
+		:rtype: str
 		"""
 
-		"""
-		Apply FIRE's filtering rules.
-		"""
-		tweets = filter(lambda tweet: tweet['lang'] == 'en', tweets)
-		tweets = filter(lambda tweet: len(tweet['entities']['hashtags']) <= 2, tweets)
-		tweets = filter(lambda tweet: tweet['user']['favourites_count'] > 0, tweets)
-		tweets = filter(lambda tweet: tweet['user']['followers_count'] / tweet['user']['statuses_count'] >= 1e-3, tweets)
+		if not tweet['lang'] == 'en':
+			return False
 
-		"""
-		Apply ELD's filtering rules.
-		"""
+		if len(tweet['entities']['hashtags']) > 2:
+			return False
 
-		tweets = filter(lambda tweet: len(tweet['entities']['urls']) <= 1, tweets)
-		tweets = filter(lambda tweet: tweet['user']['description'], tweets)
+		if tweet['user']['favourites_count'] == 0:
+			return False
 
-		return list(tweets)
+		if tweet['user']['followers_count'] / tweet['user']['statuses_count'] < 1e-3:
+			return False
+
+		if len(tweet['entities']['urls']) > 1:
+			return False
+
+		if not tweet['user']['description']:
+			return False
+
+		return True
 
 	def _to_documents(self, tweets):
 		"""
