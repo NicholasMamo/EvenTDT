@@ -16,6 +16,9 @@ for path in paths:
 	    sys.path.append(path)
 
 import consume
+from queues import Queue
+from queues.consumers import StatConsumer
+from queues.consumers.algorithms import ELDConsumer, FIREConsumer
 
 class TestConsume(unittest.TestCase):
 	"""
@@ -78,3 +81,20 @@ class TestConsume(unittest.TestCase):
 		Assert that the splits list is returned as a list.
 		"""
 		self.assertTrue(all( ',' not in token for split in splits for token in split ))
+
+	def test_create_consumer_correct_routing(self):
+		"""
+		Test that when creating a consumer, the parameters are sent only when necessary.
+		"""
+
+		consumer = consume.create_consumer(StatConsumer, Queue())
+		self.assertTrue(consumer)
+
+		consumer = consume.create_consumer(FIREConsumer, Queue(), min_size=5,
+										   max_intra_similarity=0.9)
+		self.assertEqual(5, consumer.min_size)
+
+		consumer = consume.create_consumer(ELDConsumer, Queue(), min_size=5,
+										   max_intra_similarity=0.9)
+		self.assertEqual(5, consumer.min_size)
+		self.assertEqual(0.9, consumer.max_intra_similarity)
