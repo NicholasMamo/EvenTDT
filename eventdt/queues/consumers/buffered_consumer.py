@@ -187,8 +187,7 @@ class SimulatedBufferedConsumer(BufferedConsumer):
 
 		if self.active:
 			head = self.buffer.head()
-			head = head.attributes['tweet'] if type(self.buffer.head()) is Document else head
-			start = twitter.extract_timestamp(head)
+			start = self._get_timestamp(head)
 
 		"""
 		Check if the consumer should stop.
@@ -200,8 +199,7 @@ class SimulatedBufferedConsumer(BufferedConsumer):
 		"""
 		while True:
 			tail = self.buffer.tail()
-			tail = tail.attributes['tweet'] if type(self.buffer.tail()) is Document else tail
-			if not self.active or twitter.extract_timestamp(tail) - start >= self.periodicity:
+			if not self.active or self._get_timestamp(tail) - start >= self.periodicity:
 				break
 
 			await asyncio.sleep(0.1)
