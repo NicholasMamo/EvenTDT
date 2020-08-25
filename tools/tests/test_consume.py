@@ -90,14 +90,15 @@ class TestConsume(unittest.TestCase):
 		consumer = consume.create_consumer(StatConsumer, Queue(), periodicity=20)
 		self.assertEqual(20, consumer.periodicity)
 
-		consumer = consume.create_consumer(FIREConsumer, Queue(), min_size=5,
+		consumer = consume.create_consumer(FIREConsumer, Queue(), min_size=5, min_burst=0.1,
 										   max_intra_similarity=0.9, periodicity=20)
 		self.assertEqual(5, consumer.min_size)
 		self.assertEqual(20, consumer.periodicity)
 
-		consumer = consume.create_consumer(ELDConsumer, Queue(), min_size=5,
+		consumer = consume.create_consumer(ELDConsumer, Queue(), min_size=5, min_burst=0.1,
 										   max_intra_similarity=0.9, periodicity=20)
 		self.assertEqual(5, consumer.min_size)
+		self.assertEqual(0.1, consumer.min_burst)
 		self.assertEqual(0.9, consumer.max_intra_similarity)
 
 	def test_create_consumer_with_splits(self):
@@ -137,12 +138,13 @@ class TestConsume(unittest.TestCase):
 		self.assertTrue(all( 20 == consumer.periodicity for consumer in consumer.consumers ))
 
 		consumer = consume.create_consumer(FIREConsumer, Queue(), splits=splits, min_size=5,
-										   max_intra_similarity=0.9, periodicity=20)
+										   max_intra_similarity=0.9, min_burst=0.1, periodicity=20)
 		self.assertTrue(all( FIREConsumer == type(consumer) for consumer in consumer.consumers ))
 		self.assertTrue(all( 5 == consumer.min_size for consumer in consumer.consumers ))
 		self.assertTrue(all( 20 == consumer.periodicity for consumer in consumer.consumers ))
 
 		consumer = consume.create_consumer(ELDConsumer, Queue(), splits=splits,
-										   min_size=5, max_intra_similarity=0.9)
+										   min_size=5, min_burst=0.1, max_intra_similarity=0.9)
 		self.assertTrue(all( 5 == consumer.min_size for consumer in consumer.consumers ))
+		self.assertTrue(all( 0.1 == consumer.min_burst for consumer in consumer.consumers ))
 		self.assertTrue(all( 0.9 == consumer.max_intra_similarity for consumer in consumer.consumers ))

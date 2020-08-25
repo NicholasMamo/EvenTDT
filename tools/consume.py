@@ -32,6 +32,7 @@ Accepted arguments:
 	- ``--no-cache``				*<Optional>* If specified, the cached understanding is not used. The new understanding is cached instead.
 	- ``--scheme``					*<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used.
 	- ``--min-size``				*<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
+	- ``--min-burst``				*<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5.
 	- ``--threshold``				*<Optional>* The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
 	- ``--max-intra-similarity``	*<Optional>* The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
 	- ``--splits``					*<Optional>* The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split.
@@ -80,6 +81,7 @@ def setup_args():
 		- ``--no-cache``				*<Optional>* If specified, the cached understanding is not used. The new understanding is cached instead.
 		- ``--scheme``					*<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used. This can be overwritten if there is event understanding.
 		- ``--min-size``				*<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
+		- ``--min-burst``				*<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5.
 		- ``--threshold``				*<Optional>* The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
 		- ``--max-intra-similarity``	*<Optional>* The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
 		- ``--splits``					*<Optional>* The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split.
@@ -118,6 +120,8 @@ def setup_args():
 								This can be overwritten if there is event understanding.""")
 	parser.add_argument('--min-size', type=int, required=False, default=3,
 						help='<Optional> The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.')
+	parser.add_argument('--min-burst', type=float, required=False, default=0.5,
+						help='<Optional> The minimum burst to accept a term to be breaking, defaults to 0.5.')
 	parser.add_argument('--threshold', type=float, required=False, default=0.5,
 						help='<Optional> The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.')
 	parser.add_argument('--max-intra-similarity', type=float, required=False, default=0.8,
@@ -445,7 +449,7 @@ def consume_process(comm, loop, consumer, max_inactivity):
 	comm['timeline'] = loop.run_until_complete(consume(consumer, max_inactivity))
 	logger.info("Consumption ended")
 
-def create_consumer(consumer, queue, splits=None, scheme=None, min_size=3, threshold=0.5, max_intra_similarity=0.8, periodicity=60, *args, **kwargs):
+def create_consumer(consumer, queue, splits=None, scheme=None, min_size=3, min_burst=0.5, threshold=0.5, max_intra_similarity=0.8, periodicity=60, *args, **kwargs):
 	"""
 	Create a consumer.
 	If splits are given, the function creates a :class:`~queues.consumers.token_split_consumer.TokenSplitConsumer`.
@@ -461,6 +465,8 @@ def create_consumer(consumer, queue, splits=None, scheme=None, min_size=3, thres
 	:type scheme: None or :class:`~nlp.weighting.TermWeightingScheme`
 	:param min_size: The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
 	:type min_size: int
+	:param min_burst: The minimum burst to accept a term to be breaking, defaults to 0.5.
+	:type min_burst: float
 	:param threshold: The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
 	:type threshold: float
 	:param max_intra_similarity: The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
@@ -475,7 +481,7 @@ def create_consumer(consumer, queue, splits=None, scheme=None, min_size=3, thres
 	if splits:
 		if consumer is ELDConsumer:
 			return TokenSplitConsumer(queue, splits, consumer, scheme=scheme, min_size=min_size,
-									  threshold=threshold, max_intra_similarity=max_intra_similarity)
+									  min_burst=min_burst, threshold=threshold, max_intra_similarity=max_intra_similarity)
 		elif consumer is FIREConsumer:
 			return TokenSplitConsumer(queue, splits, consumer, scheme=scheme, min_size=min_size,
 									  threshold=threshold, periodicity=periodicity)
@@ -485,11 +491,12 @@ def create_consumer(consumer, queue, splits=None, scheme=None, min_size=3, thres
 		return TokenSplitConsumer(queue, splits, consumer)
 
 	if consumer is ELDConsumer:
-		return consumer(queue, scheme=scheme, min_size=min_size, threshold=threshold,
+		return consumer(queue, scheme=scheme, min_size=min_size,
+						min_burst=min_burst, threshold=threshold,
 						max_intra_similarity=max_intra_similarity)
 	elif consumer is FIREConsumer:
-		return consumer(queue, scheme=scheme, min_size=min_size, threshold=threshold,
-						periodicity=periodicity)
+		return consumer(queue, scheme=scheme, min_size=min_size,
+						threshold=threshold, periodicity=periodicity)
 	elif consumer is StatConsumer:
 		return consumer(queue, periodicity=periodicity)
 
