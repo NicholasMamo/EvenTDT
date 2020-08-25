@@ -116,7 +116,9 @@ class TokenSplitConsumer(SplitConsumer):
 
 		text = twitter.full_text(tweet)
 		tokens = self.tokenizer.tokenize(text)
-		document = self.scheme.create(tokens, text=text, attributes={ 'tweet': tweet })
+		document = self.scheme.create(tokens, text=text,
+									  attributes={ 'tweet': tweet,
+									  			   'timestamp': twitter.extract_timestamp(tweet) })
 		document.normalize()
 		return document
 

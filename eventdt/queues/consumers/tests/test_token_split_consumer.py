@@ -19,6 +19,7 @@ from objects.exportable import Exportable
 from queues import Queue
 from queues.consumers.algorithms import ELDConsumer, ZhaoConsumer
 from queues.consumers.token_split_consumer import TokenSplitConsumer
+import twitter
 from vsm import vector_math
 
 logger.set_logging_level(logger.LogLevel.WARNING)
@@ -267,7 +268,6 @@ class TestTokenSplitConsumer(unittest.TestCase):
 
 		"""
 		Tokenize all of the tweets.
-		Words like 'hazard' should have a greater weight than more common words, like 'goal'.
 		"""
 		splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
 		consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer, scheme=idf)
@@ -276,6 +276,28 @@ class TestTokenSplitConsumer(unittest.TestCase):
 				tweet = json.loads(line)
 				document = consumer._preprocess(tweet)
 				self.assertEqual(tweet, document.attributes['tweet'])
+
+	def test_preprocess_with_timestamp(self):
+		"""
+		Test that when pre-processing tweets, the returned documents include the timestamp as an attribute.
+		"""
+
+		"""
+		Create the consumer with a TF-IDF scheme.
+		"""
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
+			idf = Exportable.decode(json.loads(f.readline()))['tfidf']
+
+		"""
+		Tokenize all of the tweets.
+		"""
+		splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+		consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer, scheme=idf)
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
+			for line in f:
+				tweet = json.loads(line)
+				document = consumer._preprocess(tweet)
+				self.assertEqual(twitter.extract_timestamp(tweet), document.attributes['timestamp'])
 
 	def test_satisfies_any(self):
 		"""
