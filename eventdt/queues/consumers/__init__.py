@@ -50,7 +50,7 @@ class Consumer(ABC):
 	:vartype stopped: bool
 	:ivar name: The consumer's name.
 				This is optional and has no function except to differentiate between consumers.
-	:vartype name: None or str
+	:vartype name: str
 	"""
 
 	def __init__(self, queue, name=None):
@@ -67,7 +67,7 @@ class Consumer(ABC):
 		self.queue = queue
 		self.active = False
 		self.stopped = True
-		self.name = name
+		self.name = name or ''
 
 	async def run(self, wait=0, max_inactivity=-1, *args, **kwargs):
 		"""
@@ -191,8 +191,8 @@ class Consumer(ABC):
 		Get the string representation of the consumer.
 		This function returns the consumer's name if it is set, ``None`` otherwise.
 
-		:return: The consumer's name, or ``None`` if it is not set.
-		:rtype: None or str
+		:return: The consumer's name, or an empty string if it is not set.
+		:rtype: str
 		"""
 
 		return self.name
