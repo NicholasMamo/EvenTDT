@@ -87,15 +87,16 @@ class TestConsume(unittest.TestCase):
 		Test that when creating a consumer, the parameters are sent only when necessary.
 		"""
 
-		consumer = consume.create_consumer(StatConsumer, Queue())
-		self.assertTrue(consumer)
+		consumer = consume.create_consumer(StatConsumer, Queue(), periodicity=20)
+		self.assertEqual(20, consumer.periodicity)
 
 		consumer = consume.create_consumer(FIREConsumer, Queue(), min_size=5,
-										   max_intra_similarity=0.9)
+										   max_intra_similarity=0.9, periodicity=20)
 		self.assertEqual(5, consumer.min_size)
+		self.assertEqual(20, consumer.periodicity)
 
 		consumer = consume.create_consumer(ELDConsumer, Queue(), min_size=5,
-										   max_intra_similarity=0.9)
+										   max_intra_similarity=0.9, periodicity=20)
 		self.assertEqual(5, consumer.min_size)
 		self.assertEqual(0.9, consumer.max_intra_similarity)
 
@@ -132,13 +133,14 @@ class TestConsume(unittest.TestCase):
 		file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'consume', 'splits.csv')
 		splits = consume.splits(file)
 
-		consumer = consume.create_consumer(StatConsumer, Queue(), splits=splits)
-		self.assertTrue(all( consumer for consumer in consumer.consumers ))
+		consumer = consume.create_consumer(StatConsumer, Queue(), splits=splits, periodicity=20)
+		self.assertTrue(all( 20 == consumer.periodicity for consumer in consumer.consumers ))
 
-		consumer = consume.create_consumer(FIREConsumer, Queue(), splits=splits,
-										   min_size=5, max_intra_similarity=0.9)
+		consumer = consume.create_consumer(FIREConsumer, Queue(), splits=splits, min_size=5,
+										   max_intra_similarity=0.9, periodicity=20)
 		self.assertTrue(all( FIREConsumer == type(consumer) for consumer in consumer.consumers ))
 		self.assertTrue(all( 5 == consumer.min_size for consumer in consumer.consumers ))
+		self.assertTrue(all( 20 == consumer.periodicity for consumer in consumer.consumers ))
 
 		consumer = consume.create_consumer(ELDConsumer, Queue(), splits=splits,
 										   min_size=5, max_intra_similarity=0.9)

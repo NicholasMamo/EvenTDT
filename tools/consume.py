@@ -28,6 +28,7 @@ Accepted arguments:
 	- ``--skip``					*<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
 	- ``--max-inactivity``			*<Optional>* The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.
 	- ``--max-time``				*<Optional>* The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.
+	- ``--periodicity``				*<Optional>* The periodicity in seconds of the consumer (used by the `FIREConsumer`, `StatConsumer` and `ZhaoConsumer`); defaults to 60 seconds.
 	- ``--no-cache``				*<Optional>* If specified, the cached understanding is not used. The new understanding is cached instead.
 	- ``--scheme``					*<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used.
 	- ``--min-size``				*<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
@@ -75,6 +76,7 @@ def setup_args():
 		- ``--skip``					*<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
 		- ``--max-inactivity``			*<Optional>* The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.
 		- ``--max-time``				*<Optional>* The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.
+		- ``--periodicity``				*<Optional>* The periodicity in seconds of the consumer (used by the `FIREConsumer`, `StatConsumer` and `ZhaoConsumer`); defaults to 60 seconds.
 		- ``--no-cache``				*<Optional>* If specified, the cached understanding is not used. The new understanding is cached instead.
 		- ``--scheme``					*<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used. This can be overwritten if there is event understanding.
 		- ``--min-size``				*<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
@@ -106,6 +108,8 @@ def setup_args():
 						help='<Optional> The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.')
 	parser.add_argument('--max-time', type=int, required=False, default=-1,
 						help='<Optional> The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.')
+	parser.add_argument('--periodicity', type=int, required=False, default=60,
+						help='<Optional> The periodicity in seconds of the consumer (used by the `FIREConsumer`, `StatConsumer` and `ZhaoConsumer`); defaults to 60 seconds.')
 	parser.add_argument('--no-cache', action="store_true",
 						help='<Optional> If specified, the cached understanding is not used. The new understanding is cached instead.')
 	parser.add_argument('--scheme', type=scheme, required=False, default=None,
@@ -441,7 +445,7 @@ def consume_process(comm, loop, consumer, max_inactivity):
 	comm['timeline'] = loop.run_until_complete(consume(consumer, max_inactivity))
 	logger.info("Consumption ended")
 
-def create_consumer(consumer, queue, splits=None, scheme=None, min_size=3, threshold=0.5, max_intra_similarity=0.8, *args, **kwargs):
+def create_consumer(consumer, queue, splits=None, scheme=None, min_size=3, threshold=0.5, max_intra_similarity=0.8, periodicity=60, *args, **kwargs):
 	"""
 	Create a consumer.
 	If splits are given, the function creates a :class:`~queues.consumers.token_split_consumer.TokenSplitConsumer`.
@@ -461,6 +465,8 @@ def create_consumer(consumer, queue, splits=None, scheme=None, min_size=3, thres
 	:type threshold: float
 	:param max_intra_similarity: The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
 	:type max_intra_similarity: float
+	:param periodicity: The periodicity in seconds of the consumer.
+	:type periodicity: int
 
 	:return: A consumer with the given parameters.
 	:rtype: :class:`~queues.consumers.Consumer`
@@ -468,10 +474,13 @@ def create_consumer(consumer, queue, splits=None, scheme=None, min_size=3, thres
 
 	if splits:
 		if consumer is ELDConsumer:
-			return TokenSplitConsumer(queue, splits, consumer, scheme=scheme, min_size=min_size, threshold=threshold,
-							max_intra_similarity=max_intra_similarity)
+			return TokenSplitConsumer(queue, splits, consumer, scheme=scheme, min_size=min_size,
+									  threshold=threshold, max_intra_similarity=max_intra_similarity)
 		elif consumer is FIREConsumer:
-			return TokenSplitConsumer(queue, splits, consumer, scheme=scheme, min_size=min_size, threshold=threshold)
+			return TokenSplitConsumer(queue, splits, consumer, scheme=scheme, min_size=min_size,
+									  threshold=threshold, periodicity=periodicity)
+		elif consumer is StatConsumer:
+			return TokenSplitConsumer(queue, splits, consumer, periodicity=periodicity)
 
 		return TokenSplitConsumer(queue, splits, consumer)
 
@@ -479,7 +488,10 @@ def create_consumer(consumer, queue, splits=None, scheme=None, min_size=3, thres
 		return consumer(queue, scheme=scheme, min_size=min_size, threshold=threshold,
 						max_intra_similarity=max_intra_similarity)
 	elif consumer is FIREConsumer:
-		return consumer(queue, scheme=scheme, min_size=min_size, threshold=threshold)
+		return consumer(queue, scheme=scheme, min_size=min_size, threshold=threshold,
+						periodicity=periodicity)
+	elif consumer is StatConsumer:
+		return consumer(queue, periodicity=periodicity)
 
 	return consumer(queue)
 
