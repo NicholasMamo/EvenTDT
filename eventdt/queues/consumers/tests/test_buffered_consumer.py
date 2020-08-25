@@ -33,6 +33,15 @@ class TestSimulatedBufferedConsumer(unittest.TestCase):
 			loop.run_until_complete(future)
 		return wrapper
 
+	def test_init_name(self):
+		"""
+		Test that the buffered consumer passes on the name to the base class.
+		"""
+
+		name = 'Test Consumer'
+		consumer = DummySimulatedBufferedConsumer(Queue(), periodicity=10, name=name)
+		self.assertEqual(name, str(consumer))
+
 	@async_test
 	async def test_binning(self):
 		"""

@@ -56,9 +56,11 @@ class BufferedConsumer(Consumer):
 	:vartype buffer: :class:`~queues.Queue`
 	"""
 
-	def __init__(self, queue, periodicity=60):
+	def __init__(self, queue, periodicity=60, *args, **kwargs):
 		"""
 		Initialize the buffered consumer with its queue and periodicity.
+
+		Additional arguments and keyword arguments are passed on to the base class.
 
 		:param queue: The queue that is consumed.
 		:type queue: :class:`~queues.Queue`
@@ -66,7 +68,7 @@ class BufferedConsumer(Consumer):
 		:type periodicity: int
 		"""
 
-		super(BufferedConsumer, self).__init__(queue)
+		super(BufferedConsumer, self).__init__(queue, *args, **kwargs)
 		self.periodicity = periodicity
 		self.buffer = Queue()
 
@@ -160,9 +162,11 @@ class SimulatedBufferedConsumer(BufferedConsumer):
 	This makes the :class:`~queues.consumers.buffered_consumer.SimulatedBufferedConsumer` ideal in situations where it is necessary to simulate the live environment, for example when using a :class:`~twitter.file.FileReader`.
 	"""
 
-	def __init__(self, queue, periodicity):
+	def __init__(self, queue, periodicity, *args, **kwargs):
 		"""
 		Initialize the buffered consumer with its queue and periodicity.
+
+		Additional arguments and keyword arguments are passed on to the base class.
 
 		:param queue: The queue that is consumed.
 		:type queue: :class:`~queues.Queue`
@@ -170,7 +174,7 @@ class SimulatedBufferedConsumer(BufferedConsumer):
 		:type periodicity: int
 		"""
 
-		super(SimulatedBufferedConsumer, self).__init__(queue, periodicity)
+		super(SimulatedBufferedConsumer, self).__init__(queue, periodicity, *args, **kwargs)
 
 	async def _sleep(self):
 		"""
