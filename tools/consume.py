@@ -250,8 +250,7 @@ def understand(understanding, consumer, max_inactivity, scheme=None, *args, **kw
 
 	return understanding
 
-def consume(file, consumer, speed, max_inactivity, max_time=-1, skip=0, splits=None,
-			scheme=None, min_size=3, threshold=0.5, max_intra_similarity=0.8, *args, **kwargs):
+def consume(file, consumer, speed, max_inactivity, max_time=-1, skip=0, *args, **kwargs):
 	"""
 	Run the consumption process.
 	The arguments and keyword arguments should be the command-line arguments.
@@ -275,17 +274,6 @@ def consume(file, consumer, speed, max_inactivity, max_time=-1, skip=0, splits=N
 	:type max_time: int
 	:param skip: The amount of time to skip from the beginning of the file in minutes, defaults to 0.
 	:type skip: int
-	:param splits: A list of splits for the consumer.
-				   If they are given, the function uses a :class:`~queues.consumers.token_split_consumer.TokenSplitConsumer`.
-	:type splits: list of list of str
-	:param scheme: The scheme to use when consuming the file.
-	:type scheme: :class:`~nlp.weighting.TermWeightingScheme`
-	:param min_size: The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
-	:type min_size: int
-	:param threshold: The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
-	:type threshold: float
-	:param max_intra_similarity: The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
-	:type max_intra_similarity: float
 
 	:return: A dictionary containing the timeline.
 	:rtype: dict
@@ -299,9 +287,7 @@ def consume(file, consumer, speed, max_inactivity, max_time=-1, skip=0, splits=N
 	queue_manager = BaseManager()
 	queue_manager.start()
 	queue = queue_manager.Queue()
-	consumer = create_consumer(consumer, queue, scheme=scheme,
-							   min_size=min_size, threshold=threshold,
-							   max_intra_similarity=max_intra_similarity)
+	consumer = create_consumer(consumer, queue, *args, **kwargs)
 
 	"""
 	Create a shared dictionary that processes can use to communicate with this function.
@@ -455,7 +441,7 @@ def consume_process(comm, loop, consumer, max_inactivity):
 	comm['timeline'] = loop.run_until_complete(consume(consumer, max_inactivity))
 	logger.info("Consumption ended")
 
-def create_consumer(consumer, queue, splits=None, scheme=None, min_size=3, threshold=0.5, max_intra_similarity=0.8):
+def create_consumer(consumer, queue, splits=None, scheme=None, min_size=3, threshold=0.5, max_intra_similarity=0.8, *args, **kwargs):
 	"""
 	Create a consumer.
 	If splits are given, the function creates a :class:`~queues.consumers.token_split_consumer.TokenSplitConsumer`.
@@ -479,6 +465,15 @@ def create_consumer(consumer, queue, splits=None, scheme=None, min_size=3, thres
 	:return: A consumer with the given parameters.
 	:rtype: :class:`~queues.consumers.Consumer`
 	"""
+
+	if splits:
+		if consumer is ELDConsumer:
+			return TokenSplitConsumer(queue, splits, consumer, scheme=scheme, min_size=min_size, threshold=threshold,
+							max_intra_similarity=max_intra_similarity)
+		elif consumer is FIREConsumer:
+			return TokenSplitConsumer(queue, splits, consumer, scheme=scheme, min_size=min_size, threshold=threshold)
+
+		return TokenSplitConsumer(queue, splits, consumer)
 
 	if consumer is ELDConsumer:
 		return consumer(queue, scheme=scheme, min_size=min_size, threshold=threshold,
