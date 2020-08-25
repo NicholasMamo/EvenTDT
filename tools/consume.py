@@ -62,6 +62,8 @@ from eventdt.queues.consumers import *
 from eventdt.queues.consumers.algorithms import *
 from twitter.file import SimulatedFileReader
 
+queue_manager = BaseManager()
+
 def setup_args():
 	"""
 	Set up and get the list of command-line arguments.
@@ -176,13 +178,17 @@ def main():
 	"""
 	Consume the event with the main file.
 	"""
+	consumer = create_consumer(**args)
 	logger.info("Starting event period")
-	timeline = consume(**args)
+	timeline = consume(args['file'], consumer,
+					   speed=args['speed'], max_inactivity=args['max_inactivity'],
+					   max_time=args['max_time'], skip=args['skip'])
 	timeline['meta'] = cmd
 	tools.save(os.path.join(dir, '.out', filename), timeline)
 	logger.info("Event period ended")
 
 	asyncio.get_event_loop().close()
+	queue_manager.shutdown()
 
 def understand(understanding, consumer, max_inactivity, scheme=None, *args, **kwargs):
 	"""
@@ -250,8 +256,7 @@ def understand(understanding, consumer, max_inactivity, scheme=None, *args, **kw
 
 	return understanding
 
-def consume(file, consumer, speed, max_inactivity, max_time=-1, skip=0,
-			scheme=None, min_size=3, threshold=0.5, max_intra_similarity=0.8, *args, **kwargs):
+def consume(file, consumer, speed, max_inactivity, max_time=-1, skip=0, *args, **kwargs):
 	"""
 	Run the consumption process.
 	The arguments and keyword arguments should be the command-line arguments.
@@ -265,8 +270,8 @@ def consume(file, consumer, speed, max_inactivity, max_time=-1, skip=0,
 
 	:param file: The path to the file containing the event's tweets.
 	:type file: str
-	:param consumer: The type of consumer to use.
-	:type consumer: :class:`~queues.consumers.consumer.Consumer`
+	:param consumer: The consumer to use to consume the event.
+	:type consumer: :class:`~queues.consumers.Consumer`
 	:param speed: The speed with which to read the file.
 	:type speed: float
 	:param max_inactivity: The maximum time, in seconds, to wait for new tweets to arrive before stopping.
@@ -275,29 +280,12 @@ def consume(file, consumer, speed, max_inactivity, max_time=-1, skip=0,
 	:type max_time: int
 	:param skip: The amount of time to skip from the beginning of the file in minutes, defaults to 0.
 	:type skip: int
-	:param scheme: The scheme to use when consuming the file.
-	:type scheme: :class:`~nlp.weighting.TermWeightingScheme`
-	:param min_size: The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
-	:type min_size: int
-	:param threshold: The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
-	:type threshold: float
-	:param max_intra_similarity: The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
-	:type max_intra_similarity: float
 
 	:return: A dictionary containing the timeline.
 	:rtype: dict
 	"""
 
 	loop = asyncio.get_event_loop()
-
-	"""
-	Create a queue that will be shared between the streaming and understanding processes.
-	"""
-	queue_manager = BaseManager()
-	queue_manager.start()
-	queue = queue_manager.Queue()
-	consumer = consumer(queue, scheme=scheme,
-						min_size=min_size, threshold=threshold, max_intra_similarity=max_intra_similarity)
 
 	"""
 	Create a shared dictionary that processes can use to communicate with this function.
@@ -309,7 +297,7 @@ def consume(file, consumer, speed, max_inactivity, max_time=-1, skip=0,
 	Create and start the streaming and consumption processes.
 	"""
 	stream = Process(target=stream_process,
-					 args=(loop, queue, file, ),
+					 args=(loop, consumer.queue, file, ),
 					 kwargs={ 'speed': speed, 'skip_time': skip * 60,
 					 		  'max_time': (max_time * 60 if max_time >= 0 else max_time) })
 	consume = Process(target=consume_process, args=(comm, loop, consumer, max_inactivity, ))
@@ -328,7 +316,6 @@ def consume(file, consumer, speed, max_inactivity, max_time=-1, skip=0,
 	"""
 	timeline = dict(comm)
 	manager.shutdown()
-	queue_manager.shutdown()
 
 	return timeline
 
@@ -450,6 +437,31 @@ def consume_process(comm, loop, consumer, max_inactivity):
 
 	comm['timeline'] = loop.run_until_complete(consume(consumer, max_inactivity))
 	logger.info("Consumption ended")
+
+def create_consumer(consumer, scheme=None, min_size=3, threshold=0.5, max_intra_similarity=0.8, *args, **kwargs):
+	"""
+	Create the consumer to use while consuming the event.
+
+	:param consumer: The type of consumer to use.
+	:type consumer: type
+	:param scheme: The scheme to use when consuming the file.
+	:type scheme: :class:`~nlp.weighting.TermWeightingScheme`
+	:param min_size: The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
+	:type min_size: int
+	:param threshold: The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
+	:type threshold: float
+	:param max_intra_similarity: The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
+	:type max_intra_similarity: float
+
+	:return: The consumer to use when consuming the event.
+	:rtype: :class:`~queues.consumers.Consumer`
+	"""
+
+	queue_manager.start()
+	queue = queue_manager.Queue()
+	consumer = consumer(queue, scheme=scheme, min_size=min_size,
+						threshold=threshold, max_intra_similarity=max_intra_similarity)
+	return consumer
 
 def consumer(consumer):
 	"""
