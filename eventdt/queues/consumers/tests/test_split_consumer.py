@@ -34,6 +34,16 @@ class TestSplitConsumer(unittest.TestCase):
 			loop.run_until_complete(future)
 		return wrapper
 
+	def test_init_name(self):
+		"""
+		Test that the split consumer passes on the name to the base class.
+		"""
+
+		name = 'Test Consumer'
+		splits = [ (0, 50), (50, 100) ]
+		consumer = DummySplitConsumer(Queue(), splits, PrintConsumer, name=name)
+		self.assertEqual(name, str(consumer))
+
 	def test_init_list_splits(self):
 		"""
 		Test that the split consumer accepts a list of splits.

@@ -67,7 +67,7 @@ class SplitConsumer(Consumer):
 	:vartype consumers: list of :class:`~queues.consumers.Consumer`
 	"""
 
-	def __init__(self, queue, splits, consumer, *args, **kwargs):
+	def __init__(self, queue, splits, consumer, name=None, *args, **kwargs):
 		"""
 		Initialize the consumer with its :class:`~queues.Queue`.
 
@@ -83,9 +83,11 @@ class SplitConsumer(Consumer):
 		:type splits: list or tuple
 		:param consumer: The type of :class:`~queues.consumers.Consumer` to create for each split.
 		:type consumer: type
+		:param name: The consumer's name.
+		:type name: None or str
 		"""
 
-		super(SplitConsumer, self).__init__(queue)
+		super(SplitConsumer, self).__init__(queue, name=name)
 
 		if type(splits) not in [ list, tuple ]:
 			raise ValueError(f"Expected a list or tuple of splits; received { type(splits) }")
