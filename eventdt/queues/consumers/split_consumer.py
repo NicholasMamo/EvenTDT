@@ -93,7 +93,7 @@ class SplitConsumer(Consumer):
 			raise ValueError(f"Expected a list or tuple of splits; received { type(splits) }")
 
 		self.splits = splits
-		self.consumers = self._consumers(consumer, len(splits), *args, **kwargs)
+		self.consumers = self._consumers(consumer, splits, *args, **kwargs)
 
 	async def run(self, wait=0, max_inactivity=-1, *args, **kwargs):
 		"""
@@ -193,7 +193,7 @@ class SplitConsumer(Consumer):
 
 		pass
 
-	def _consumers(self, consumer, n, *args, **kwargs):
+	def _consumers(self, consumer, splits, *args, **kwargs):
 		"""
 		Create the consumers which will receive the tweets from each stream.
 
@@ -201,16 +201,16 @@ class SplitConsumer(Consumer):
 
 		:param consumer: The type of :class:`~queues.consumers.Consumer` to create.
 		:type consumer: type
-		:param n: The number of cnsumers to create.
-				  This number is equivalent to the number of splits.
-		:type n: int
+		:param splits: The splits corresponding to the created consumers.
+					   This is used to generate a name for each child consumer.
+		:type splits: list or tuple
 
 		:return: A number of consumers, equivalent to the given number.
 				 All consumers are identical to each other, but have their own :class:`~queues.Queue`.
 		:rtype: list of :class:`~queues.consumers.Consumer`
 		"""
 
-		return [ consumer(Queue(), *args, **kwargs) for _ in range(n) ]
+		return [ consumer(Queue(), name=str(split), *args, **kwargs) for split in splits ]
 
 	def _preprocess(self, tweet):
 		"""

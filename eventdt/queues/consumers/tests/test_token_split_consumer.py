@@ -37,6 +37,16 @@ class TestTokenSplitConsumer(unittest.TestCase):
 			loop.run_until_complete(future)
 		return wrapper
 
+	def test_init_name(self):
+		"""
+		Test that the split consumer passes on the name to the base class.
+		"""
+
+		name = 'Test Consumer'
+		splits = [ ('tackl'), ('goal') ]
+		consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer, name=name)
+		self.assertEqual(name, str(consumer))
+
 	def test_init_custom_tokenizer(self):
 		"""
 		Test that when creating the token split consumer with a custom tokenizer, it is used instead of the default one.
@@ -94,6 +104,16 @@ class TestTokenSplitConsumer(unittest.TestCase):
 		consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer)
 		self.assertEqual(2, len(consumer.splits))
 		self.assertEqual(2, len(consumer.consumers))
+
+	def test_init_consumer_names(self):
+		"""
+		Test that the token split consumer gives consumers a name when creating them.
+		"""
+
+		splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+		consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer)
+		self.assertEqual("['yellow', 'card']", str(consumer.consumers[0]))
+		self.assertEqual("['foul', 'tackl']", str(consumer.consumers[1]))
 
 	def test_init_default_scheme(self):
 		"""
