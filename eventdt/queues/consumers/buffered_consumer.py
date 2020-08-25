@@ -32,6 +32,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from nlp import Document
+from objects.attributable import Attributable
 from queues import Queue
 from queues.consumers import Consumer
 
@@ -204,6 +205,28 @@ class SimulatedBufferedConsumer(BufferedConsumer):
 				break
 
 			await asyncio.sleep(0.1)
+
+	def _get_timestamp(self, item):
+		"""
+		Extract the timestamp from the item.
+
+		:param item: The item from which to extract the timestamp.
+					 If the item is a tweet dictionary, the function looks for the ``timestamp`` key.
+					 Otherwise, if the item is an :class:`~objects.attributable.Attributable`, the function looks for the ``timestamp`` attribute.
+		:type item: dict or :class:`~objects.attributable.Attributable`
+
+		:return: The item's timestamp.
+		:rtype: int
+
+		:raises ValueError: When the timestamp cannot be extracted from the item.
+		"""
+
+		if type(item) is dict:
+			return twitter.extract_timestamp(item)
+		elif isinstance(item, Attributable):
+			return item.attributes['timestamp']
+		else:
+			raise ValueError(f"Expected tweet dictionary or Attributable; received { type(item) }")
 
 class DummySimulatedBufferedConsumer(SimulatedBufferedConsumer):
 	"""

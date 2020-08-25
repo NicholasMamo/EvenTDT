@@ -13,6 +13,7 @@ if path not in sys.path:
 	sys.path.append(path)
 
 from logger import logger
+from nlp import Document, Tokenizer
 from queues import Queue
 from queues.consumers.buffered_consumer import DummySimulatedBufferedConsumer
 import twitter
@@ -74,3 +75,38 @@ class TestSimulatedBufferedConsumer(unittest.TestCase):
 
 				read += 1
 				self.assertEqual(read, consumer.buffer.length())
+
+	def test_get_timestamp_tweet(self):
+		"""
+		Test getting the timestamp from a tweet dictionary.
+		"""
+
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
+			consumer = DummySimulatedBufferedConsumer(Queue(), periodicity=10)
+			for line in f:
+				tweet = json.loads(line)
+				self.assertEqual(twitter.extract_timestamp(tweet), consumer._get_timestamp(tweet))
+
+	def test_get_timestamp_document(self):
+		"""
+		Test getting the timestamp from a document.
+		"""
+
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
+			consumer = DummySimulatedBufferedConsumer(Queue(), periodicity=10)
+			tokenizer = Tokenizer()
+			for line in f:
+				tweet = json.loads(line)
+				text = twitter.full_text(tweet)
+				tokens = tokenizer.tokenize(text)
+				document = Document(text=text, dimensions=tokens, attributes={ 'timestamp': twitter.extract_timestamp(tweet) })
+				self.assertEqual(twitter.extract_timestamp(tweet), consumer._get_timestamp(document))
+
+	def test_get_timestamp_object_raises_ValueError(self):
+		"""
+		Test getting the timestamp from an arbitrary object raises a ValueError.
+		"""
+
+		consumer = DummySimulatedBufferedConsumer(Queue(), periodicity=10)
+		tokenizer = Tokenizer()
+		self.assertRaises(ValueError, consumer._get_timestamp, tokenizer)
