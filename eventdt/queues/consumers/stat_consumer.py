@@ -35,7 +35,3 @@ class StatConsumer(BufferedConsumer):
 			logger.info(f"{ self.buffer.length() } tweets in {self.periodicity} seconds")
 			self.buffer.empty()
 			await self._sleep()
-
-		if self.buffer.length():
-			logger.info(f"{ self.buffer.length() } tweets flushed")
-			self.buffer.empty()
