@@ -48,19 +48,26 @@ class Consumer(ABC):
 	:vartype active: bool
 	:ivar stopped: A boolean indicating whether the consumer has finished processing.
 	:vartype stopped: bool
+	:ivar name: The consumer's name.
+				This is optional and has no function except to differentiate between consumers.
+	:vartype name: None or str
 	"""
 
-	def __init__(self, queue):
+	def __init__(self, queue, name=None):
 		"""
 		Initialize the consumer with its :class:`~queues.Queue`.
 
 		:param queue: The queue that will be consumed.
 		:type queue: :class:`~queues.Queue`
+		:param name: The consumer's name.
+					 This is optional and has no function except to differentiate between consumers.
+		:type name: None or str
 		"""
 
 		self.queue = queue
 		self.active = False
 		self.stopped = True
+		self.name = name
 
 	async def run(self, wait=0, max_inactivity=-1, *args, **kwargs):
 		"""
