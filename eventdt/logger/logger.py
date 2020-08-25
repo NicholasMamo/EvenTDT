@@ -45,6 +45,24 @@ def log_time():
 
 	return datetime.now().strftime("%H:%M:%S")
 
+def process_name(process):
+	"""
+	Get the string with the name of the process.
+
+	:param process: The name of the process, if available.
+	:type process: str
+
+	:return: A string with the formatted name of the process.
+			 If no process name is given, this function returns an empty string.
+	:rtype: str
+	"""
+
+	if not process:
+		return ''
+	else:
+		name = f"{ process[:20] }…" if len(process) > 20 else process
+		return f"({ name })"
+
 def set_logging_level(level):
 	"""
 	Set the logging level.
@@ -55,26 +73,44 @@ def set_logging_level(level):
 
 	conf.LOG_LEVEL = level
 
-def info(*args):
+def info(*args, process=None):
 	"""
 	Log an information message.
+	All arguments are passed on to the ``print`` function.
+
+	:param process: The name of the process calling the log.
+					If it is given, the logger prints part of its name while logging.
+	:type process: None or str
 	"""
 
 	if conf.LOG_LEVEL <= LogLevel.INFO:
-		print(f"{ log_time() }: INFO:", *args)
+		prefix = f"{ process_name(process) } { log_time() }: INFO:"
+		print(prefix.strip(), *args)
 
-def warning(*args):
+def warning(*args, process=None):
 	"""
 	Log a warning.
+	All arguments are passed on to the ``print`` function.
+
+	:param process: The name of the process calling the log.
+					If it is given, the logger prints part of its name while logging.
+	:type process: None or str
 	"""
 
 	if conf.LOG_LEVEL <= LogLevel.WARNING:
-		print(f"{ log_time() }: WARNING:", *args)
+		prefix = f"{ process_name(process) } { log_time() }: WARNING:"
+		print(prefix.strip(), *args)
 
-def error(*args):
+def error(*args, process=None):
 	"""
 	Log an error.
+	All arguments are passed on to the ``print`` function.
+
+	:param process: The name of the process calling the log.
+					If it is given, the logger prints part of its name while logging.
+	:type process: None or str
 	"""
 
 	if conf.LOG_LEVEL <= LogLevel.ERROR:
-		print(f"{ log_time() }: ERROR:", *args)
+		prefix = f"{ process_name(process) } { log_time() }: ERROR:"
+		print(prefix.strip(), *args)
