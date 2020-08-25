@@ -33,6 +33,7 @@ Accepted arguments:
 	- ``--min-size``				*<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
 	- ``--threshold``				*<Optional>* The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
 	- ``--max-intra-similarity``	*<Optional>* The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
+	- ``--splits``					*<Optional>* The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split.
 
 """
 
@@ -79,6 +80,7 @@ def setup_args():
 		- ``--min-size``				*<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
 		- ``--threshold``				*<Optional>* The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
 		- ``--max-intra-similarity``	*<Optional>* The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
+		- ``--splits``					*<Optional>* The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split.
 
 	:return: The command-line arguments.
 	:rtype: :class:`argparse.Namespace`
@@ -116,6 +118,8 @@ def setup_args():
 						help='<Optional> The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.')
 	parser.add_argument('--max-intra-similarity', type=float, required=False, default=0.8,
 						help='<Optional> The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.')
+	parser.add_argument('--splits', type=splits, required=False, default=None,
+						help='<Optional> The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split.')
 
 	args = parser.parse_args()
 	return args
@@ -504,6 +508,28 @@ def scheme(file):
 		for key in scheme:
 			if isinstance(scheme.get(key), TermWeightingScheme):
 				return scheme.get(key)
+
+def splits(file):
+	"""
+	Load the splits from the given file.
+
+	:param file: The path to the splits file.
+				 This function expects a CSV file.
+	:type file: str
+
+	:return: A list of splits.
+	:rtype: list of str
+	"""
+
+	splits = [ ]
+
+	with open(file) as f:
+		for line in f:
+			tokens = line.split(',')
+			tokens = [ token.strip() for token in tokens ]
+			splits.append(tokens)
+
+	return splits
 
 if __name__ == "__main__":
 	main()
