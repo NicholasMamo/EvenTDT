@@ -204,3 +204,19 @@ class SimulatedBufferedConsumer(BufferedConsumer):
 				break
 
 			await asyncio.sleep(0.1)
+
+class DummySimulatedBufferedConsumer(SimulatedBufferedConsumer):
+	"""
+	The :class:`~queues.consumers.buffered_consumer.DummySimulatedBufferedConsumer` is a trivial implementation of the :class:`~queues.consumers.buffered_consumer.SimulatedBufferedConsumer`, meant only for unit testing.
+	In its processing, it does nothing with the tweets, and discards them immediately.
+	"""
+
+	async def _process(self):
+		"""
+		Discard all tweets from the buffer.
+		"""
+
+		while self.active:
+			if self.buffer.length() > 0:
+				self.buffer.dequeue_all()
+			await self._sleep()
