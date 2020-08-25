@@ -175,6 +175,28 @@ class FIREConsumer(SimulatedBufferedConsumer):
 	def _filter_tweets(self, tweets):
 		"""
 		Filter the given tweets based on FIRE's filtering rules.
+
+		:param tweets: A list of tweets to filter.
+					   The tweets can either be tweet dictionaries or documents.
+					   If they are documents, this function looks for the tweet in the ``tweet`` attribute.
+		:type tweets: list of dict or list of :class:`~nlp.document.Document`
+
+		:return: A list of filtered tweets.
+		:type tweets: list of dict or list of :class:`~nlp.document.Document`
+		"""
+
+		filtered = [ ]
+
+		for item in tweets:
+			tweet = item.attributes['tweet'] if type(item) is Document else item
+			if self._validate_tweet(tweet):
+				filtered.append(item)
+
+		return filtered
+
+	def _validate_tweet(self, tweet):
+		"""
+		Validate the given tweet based on FIRE's filtering rules.
 		The rules are:
 
 			#. The tweet has to be in English,
@@ -185,18 +207,26 @@ class FIREConsumer(SimulatedBufferedConsumer):
 
 			#. The tweet's author must have at least one follower for every thousand tweets they've published.
 
-		:param tweets: A list of tweets to filter.
-		:type tweets: list of dict
+		:param tweet: The tweet to validate.
+		:type tweet: dict
 
-		:return: A list of filtered tweets.
-		:type tweets: list of dict
+		:return: A boolean indicating whether the tweet passed the filtering test.
+		:rtype: str
 		"""
 
-		tweets = filter(lambda tweet: tweet['lang'] == 'en', tweets)
-		tweets = filter(lambda tweet: len(tweet['entities']['hashtags']) <= 2, tweets)
-		tweets = filter(lambda tweet: tweet['user']['favourites_count'] > 0, tweets)
-		tweets = filter(lambda tweet: tweet['user']['followers_count'] / tweet['user']['statuses_count'] >= 1e-3, tweets)
-		return list(tweets)
+		if not tweet['lang'] == 'en':
+			return False
+
+		if len(tweet['entities']['hashtags']) > 2:
+			return False
+
+		if tweet['user']['favourites_count'] == 0:
+			return False
+
+		if tweet['user']['followers_count'] / tweet['user']['statuses_count'] < 1e-3:
+			return False
+
+		return True
 
 	def _to_documents(self, tweets):
 		"""
