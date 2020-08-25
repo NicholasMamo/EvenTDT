@@ -71,10 +71,12 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 	:vartype summarization: :class:`~summarization.algorithms.mmr.MMR`
 	"""
 
-	def __init__(self, queue, periodicity=5, scheme=None):
+	def __init__(self, queue, periodicity=5, scheme=None, *args, **kwargs):
 		"""
 		Create the consumer with a :class:`~queues.Queue`.
 		Simultaneously create a :class:`~tdt.nutrition.NutritionStore` and the :class:`~tdt.algorithms.zhao.Zhao` TDT algorithm.
+
+		Additional arguments and keyword arguments are passed on to the base class.
 
 		:param queue: The queue that the consumer will consume later.
 		:type queue: :class:`~queues.Queue`
@@ -86,7 +88,7 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 		:type scheme: None or :class:`~nlp.weighting.TermWeightingScheme`
 		"""
 
-		super(ZhaoConsumer, self).__init__(queue, periodicity)
+		super(ZhaoConsumer, self).__init__(queue, periodicity, *args, **kwargs)
 		self.scheme = scheme
 		self.store = MemoryNutritionStore()
 		self.documents = { }
