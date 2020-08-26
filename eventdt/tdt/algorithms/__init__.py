@@ -40,5 +40,5 @@ class TDTAlgorithm(ABC):
 		pass
 
 from .cataldi import Cataldi
-from .eld import ELD
+from .eld import ELD, SlidingELD
 from .zhao import Zhao
