@@ -202,6 +202,24 @@ It is based on a <code class="xref py py-class docutils literal notranslate"><sp
 </dd></dl>
 
 <dl class="function">
+<dt id="logger.logger.process_name">
+<code class="sig-name descname">process_name</code><span class="sig-paren">(</span><em class="sig-param">process</em><span class="sig-paren">)</span><a class="headerlink" href="#logger.logger.process_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the string with the name of the process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>process</strong> (<em>str</em>) – The name of the process, if available.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A string with the formatted name of the process.
+If no process name is given, this function returns an empty string.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="logger.logger.set_logging_level">
 <code class="sig-name descname">set_logging_level</code><span class="sig-paren">(</span><em class="sig-param">level</em><span class="sig-paren">)</span><a class="headerlink" href="#logger.logger.set_logging_level" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the logging level.</p>
@@ -214,20 +232,41 @@ It is based on a <code class="xref py py-class docutils literal notranslate"><sp
 
 <dl class="function">
 <dt id="logger.logger.info">
-<code class="sig-name descname">info</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#logger.logger.info" title="Permalink to this definition">¶</a></dt>
-<dd><p>Log an information message.</p>
+<code class="sig-name descname">info</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">process=None</em><span class="sig-paren">)</span><a class="headerlink" href="#logger.logger.info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log an information message.
+All arguments are passed on to the <code class="docutils literal notranslate"><span class="pre">print</span></code> function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>process</strong> (<em>None</em><em> or </em><em>str</em>) – The name of the process calling the log.
+If it is given, the logger prints part of its name while logging.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="logger.logger.warning">
-<code class="sig-name descname">warning</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#logger.logger.warning" title="Permalink to this definition">¶</a></dt>
-<dd><p>Log a warning.</p>
+<code class="sig-name descname">warning</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">process=None</em><span class="sig-paren">)</span><a class="headerlink" href="#logger.logger.warning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log a warning.
+All arguments are passed on to the <code class="docutils literal notranslate"><span class="pre">print</span></code> function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>process</strong> (<em>None</em><em> or </em><em>str</em>) – The name of the process calling the log.
+If it is given, the logger prints part of its name while logging.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="logger.logger.error">
-<code class="sig-name descname">error</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#logger.logger.error" title="Permalink to this definition">¶</a></dt>
-<dd><p>Log an error.</p>
+<code class="sig-name descname">error</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">process=None</em><span class="sig-paren">)</span><a class="headerlink" href="#logger.logger.error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log an error.
+All arguments are passed on to the <code class="docutils literal notranslate"><span class="pre">print</span></code> function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>process</strong> (<em>None</em><em> or </em><em>str</em>) – The name of the process calling the log.
+If it is given, the logger prints part of its name while logging.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>

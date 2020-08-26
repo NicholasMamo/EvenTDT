@@ -51,7 +51,7 @@ The higher the decay rate, the less importance old checkpoints receive.
 
 .. note::
 
-	This implementation is based on the algorithm outlined in `ELD: Event TimeLine Detection -- A Participant-Based Approach to Tracking Events by Mamo et al. (2019) <https://dl.acm.org/doi/abs/10.1145/3342220.3344921>`_.
+	The implementation of :class:`~tdt.algorithms.ELD` is based on the algorithm outlined in `ELD: Event TimeLine Detection -- A Participant-Based Approach to Tracking Events by Mamo et al. (2019) <https://dl.acm.org/doi/abs/10.1145/3342220.3344921>`_.
 """
 
 import math

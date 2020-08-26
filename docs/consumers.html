@@ -349,7 +349,7 @@ These complete solutions can be used as baselines to generate a <a class="refere
 These consumers revolve around a <a class="reference internal" href="tdt.html#tdt.algorithms.TDTAlgorithm" title="tdt.algorithms.TDTAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">TDTAlgorithm</span></code></a> and are meant to be as faithful as possible to the original approaches.</p>
 <dl class="class">
 <dt id="queues.consumers.Consumer">
-<em class="property">class </em><code class="sig-name descname">Consumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.Consumer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Consumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.Consumer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The abstract <a class="reference internal" href="#queues.consumers.Consumer" title="queues.consumers.Consumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code></a> class outlines the necessary functions of any consumer.
 All consumers follow a simple workflow.
 After being initialized with a <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> that supplies data, the consumer run using the <a class="reference internal" href="#queues.consumers.Consumer.run" title="queues.consumers.Consumer.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a> function.</p>
@@ -363,16 +363,22 @@ Generally, consumers keep accepting objects until the <code class="docutils lite
 <li><p><strong>queue</strong> (<a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> that is to be consumed.</p></li>
 <li><p><strong>active</strong> (<em>bool</em>) – A boolean indicating whether the consumer is still accepting data.</p></li>
 <li><p><strong>stopped</strong> (<em>bool</em>) – A boolean indicating whether the consumer has finished processing.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – The consumer’s name.
+This is optional and has no function except to differentiate between consumers.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="method">
 <dt id="queues.consumers.Consumer.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.Consumer.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.Consumer.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the consumer with its <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>queue</strong> (<a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that will be consumed.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>queue</strong> (<a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>) – The queue that will be consumed.</p></li>
+<li><p><strong>name</strong> (<em>None</em><em> or </em><em>str</em>) – The consumer’s name.
+This is optional and has no function except to differentiate between consumers.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -418,6 +424,21 @@ When the consumer actually stops, after it finishes processing whatever tweets i
 </div>
 </dd></dl>
 
+<dl class="method">
+<dt id="queues.consumers.Consumer.__str__">
+<code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.Consumer.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the string representation of the consumer.
+This function returns the consumer’s name if it is set, <code class="docutils literal notranslate"><span class="pre">None</span></code> otherwise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The consumer’s name, or an empty string if it is not set.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="queues.consumers.Consumer.__weakref__">
 <code class="sig-name descname">__weakref__</code><a class="headerlink" href="#queues.consumers.Consumer.__weakref__" title="Permalink to this definition">¶</a></dt>
@@ -448,7 +469,7 @@ It can be used both in a live environment, but especially when loading tweets fr
 </ul>
 <dl class="class">
 <dt id="queues.consumers.buffered_consumer.BufferedConsumer">
-<em class="property">class </em><code class="sig-name descname">BufferedConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity=60</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.buffered_consumer.BufferedConsumer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">BufferedConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity=60</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.buffered_consumer.BufferedConsumer" title="Permalink to this definition">¶</a></dt>
 <dd><p>When calling the <a class="reference internal" href="#queues.consumers.buffered_consumer.BufferedConsumer.run" title="queues.consumers.buffered_consumer.BufferedConsumer.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a> function, the <a class="reference internal" href="#queues.consumers.buffered_consumer.BufferedConsumer" title="queues.consumers.buffered_consumer.BufferedConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">BufferedConsumer</span></code></a> splits into two processes:</p>
 <ol class="arabic simple">
 <li><p>The consumption simply moves tweets from the <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> into the the buffer, another <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>.</p></li>
@@ -467,8 +488,9 @@ This affects how often the buffer is processed.</p>
 </dl>
 <dl class="method">
 <dt id="queues.consumers.buffered_consumer.BufferedConsumer.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity=60</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.buffered_consumer.BufferedConsumer.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity=60</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.buffered_consumer.BufferedConsumer.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the buffered consumer with its queue and periodicity.</p>
+<p>Additional arguments and keyword arguments are passed on to the base class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -511,14 +533,15 @@ If it is negative, the consumer keeps waiting for input until the maximum time e
 
 <dl class="class">
 <dt id="queues.consumers.buffered_consumer.SimulatedBufferedConsumer">
-<em class="property">class </em><code class="sig-name descname">SimulatedBufferedConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.buffered_consumer.SimulatedBufferedConsumer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">SimulatedBufferedConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.buffered_consumer.SimulatedBufferedConsumer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference internal" href="#queues.consumers.buffered_consumer.SimulatedBufferedConsumer" title="queues.consumers.buffered_consumer.SimulatedBufferedConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimulatedBufferedConsumer</span></code></a> is exactly like the <a class="reference internal" href="#queues.consumers.buffered_consumer.BufferedConsumer" title="queues.consumers.buffered_consumer.BufferedConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">BufferedConsumer</span></code></a>, but its periodicity is not real-time.
 Whereas the <a class="reference internal" href="#queues.consumers.buffered_consumer.BufferedConsumer" title="queues.consumers.buffered_consumer.BufferedConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">BufferedConsumer</span></code></a>’s time window is based on the machine’s time, the <a class="reference internal" href="#queues.consumers.buffered_consumer.SimulatedBufferedConsumer" title="queues.consumers.buffered_consumer.SimulatedBufferedConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimulatedBufferedConsumer</span></code></a> looks at the tweet’s timestamps.
 This makes the <a class="reference internal" href="#queues.consumers.buffered_consumer.SimulatedBufferedConsumer" title="queues.consumers.buffered_consumer.SimulatedBufferedConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimulatedBufferedConsumer</span></code></a> ideal in situations where it is necessary to simulate the live environment, for example when using a <a class="reference internal" href="twitter.html#twitter.file.FileReader" title="twitter.file.FileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileReader</span></code></a>.</p>
 <dl class="method">
 <dt id="queues.consumers.buffered_consumer.SimulatedBufferedConsumer.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.buffered_consumer.SimulatedBufferedConsumer.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.buffered_consumer.SimulatedBufferedConsumer.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the buffered consumer with its queue and periodicity.</p>
+<p>Additional arguments and keyword arguments are passed on to the base class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -529,6 +552,13 @@ This makes the <a class="reference internal" href="#queues.consumers.buffered_co
 </dl>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="class">
+<dt id="queues.consumers.buffered_consumer.DummySimulatedBufferedConsumer">
+<em class="property">class </em><code class="sig-name descname">DummySimulatedBufferedConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.buffered_consumer.DummySimulatedBufferedConsumer" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <a class="reference internal" href="#queues.consumers.buffered_consumer.DummySimulatedBufferedConsumer" title="queues.consumers.buffered_consumer.DummySimulatedBufferedConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DummySimulatedBufferedConsumer</span></code></a> is a trivial implementation of the <a class="reference internal" href="#queues.consumers.buffered_consumer.SimulatedBufferedConsumer" title="queues.consumers.buffered_consumer.SimulatedBufferedConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimulatedBufferedConsumer</span></code></a>, meant only for unit testing.
+In its processing, it does nothing with the tweets, and discards them immediately.</p>
 </dd></dl>
 
 </div>
@@ -549,7 +579,7 @@ The individual consumers that process the split streams can be based on the <a c
 </div>
 <dl class="class">
 <dt id="queues.consumers.split_consumer.SplitConsumer">
-<em class="property">class </em><code class="sig-name descname">SplitConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">splits</em>, <em class="sig-param">consumer</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.split_consumer.SplitConsumer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">SplitConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">splits</em>, <em class="sig-param">consumer</em>, <em class="sig-param">name=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.split_consumer.SplitConsumer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference internal" href="#queues.consumers.split_consumer.SplitConsumer" title="queues.consumers.split_consumer.SplitConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SplitConsumer</span></code></a> class acts as a supervisor.
 It reads all of the incoming tweets and dispatches them to one of its consumers.</p>
 <p>In its state, the consumer maintains a list of these conditions.
@@ -587,7 +617,7 @@ Each consumer corresponds to one split.</p></li>
 </dl>
 <dl class="method">
 <dt id="queues.consumers.split_consumer.SplitConsumer.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">splits</em>, <em class="sig-param">consumer</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.split_consumer.SplitConsumer.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">splits</em>, <em class="sig-param">consumer</em>, <em class="sig-param">name=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.split_consumer.SplitConsumer.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the consumer with its <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>.</p>
 <p>For each given split, this function creates one <a class="reference internal" href="#queues.consumers.Consumer" title="queues.consumers.Consumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code></a> of the given type.
 This consumer has its own queue, which receive tweets that satisfy the associated condition.</p>
@@ -599,6 +629,7 @@ This consumer has its own queue, which receive tweets that satisfy the associate
 <li><p><strong>splits</strong> (<em>list</em><em> or </em><em>tuple</em>) – A list of splits, or conditions that determine into which queue a tweet goes.
 The type of the splits depends on what the <code class="xref py py-func docutils literal notranslate"><span class="pre">_satisfies()</span></code> function looks for.</p></li>
 <li><p><strong>consumer</strong> (<em>type</em>) – The type of <a class="reference internal" href="#queues.consumers.Consumer" title="queues.consumers.Consumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Consumer</span></code></a> to create for each split.</p></li>
+<li><p><strong>name</strong> (<em>None</em><em> or </em><em>str</em>) – The consumer’s name.</p></li>
 </ul>
 </dd>
 </dl>
@@ -634,11 +665,24 @@ If it is negative, the consumer keeps waiting for input indefinitely.</p></li>
 </dl>
 </dd></dl>
 
+<dl class="method">
+<dt id="queues.consumers.split_consumer.SplitConsumer.stop">
+<code class="sig-name descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.split_consumer.SplitConsumer.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a flag to stop accepting new tweets.
+This function also stops all child consumers.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Contrary to the name of the function, the function sets the <code class="docutils literal notranslate"><span class="pre">active</span></code> flag to <code class="docutils literal notranslate"><span class="pre">False</span></code>, not the <code class="docutils literal notranslate"><span class="pre">stopped</span></code> flag to <code class="docutils literal notranslate"><span class="pre">True</span></code>.
+This function merely asks the consumer to stop accepting new tweets for processing.
+When the consumer actually stops, after it finishes processing whatever tweets it has, it sets the <code class="docutils literal notranslate"><span class="pre">stopped</span></code> flag to <code class="docutils literal notranslate"><span class="pre">True</span></code> itself.</p>
+</div>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="queues.consumers.split_consumer.DummySplitConsumer">
-<em class="property">class </em><code class="sig-name descname">DummySplitConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">splits</em>, <em class="sig-param">consumer</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.split_consumer.DummySplitConsumer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">DummySplitConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">splits</em>, <em class="sig-param">consumer</em>, <em class="sig-param">name=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.split_consumer.DummySplitConsumer" title="Permalink to this definition">¶</a></dt>
 <dd><p>A dummy <a class="reference internal" href="#queues.consumers.split_consumer.SplitConsumer" title="queues.consumers.split_consumer.SplitConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SplitConsumer</span></code></a> that adds all tweets to all streams.
 It is used only for testing purposes.</p>
 </dd></dl>
@@ -729,7 +773,7 @@ If <code class="docutils literal notranslate"><span class="pre">None</span></cod
 <p>The <a class="reference internal" href="#queues.consumers.print_consumer.PrintConsumer" title="queues.consumers.print_consumer.PrintConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">PrintConsumer</span></code></a> is a real-time consumer that performs no processing, expect to print the tweets as they arrive in the <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>.</p>
 <dl class="class">
 <dt id="queues.consumers.print_consumer.PrintConsumer">
-<em class="property">class </em><code class="sig-name descname">PrintConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.print_consumer.PrintConsumer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">PrintConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.print_consumer.PrintConsumer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference internal" href="#queues.consumers.print_consumer.PrintConsumer" title="queues.consumers.print_consumer.PrintConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">PrintConsumer</span></code></a> maintains no special state.
 It works in real-time, reading and printing tweets from the <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>, and discarding them immediately.</p>
 </dd></dl>
@@ -741,7 +785,7 @@ It works in real-time, reading and printing tweets from the <a class="reference 
 These statistics are very basic: the number of tweets received every minute.</p>
 <dl class="class">
 <dt id="queues.consumers.stat_consumer.StatConsumer">
-<em class="property">class </em><code class="sig-name descname">StatConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity=60</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.stat_consumer.StatConsumer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">StatConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity=60</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.stat_consumer.StatConsumer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference internal" href="#queues.consumers.stat_consumer.StatConsumer" title="queues.consumers.stat_consumer.StatConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">StatConsumer</span></code></a> maintains no special state.
 After every time window, it empties the buffer and prints the number of tweets in it.</p>
 </dd></dl>
@@ -775,7 +819,7 @@ You can read more about this approach in the <a class="reference internal" href=
 </div>
 <dl class="class">
 <dt id="queues.consumers.algorithms.zhao_consumer.ZhaoConsumer">
-<em class="property">class </em><code class="sig-name descname">ZhaoConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity=5</em>, <em class="sig-param">scheme=None</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.algorithms.zhao_consumer.ZhaoConsumer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">ZhaoConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity=5</em>, <em class="sig-param">scheme=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.algorithms.zhao_consumer.ZhaoConsumer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The Zhao et al. consumer is based on the implementation by the same authors.
 The algorithm revolves around the <a class="reference internal" href="tdt.html#tdt.algorithms.zhao.Zhao" title="tdt.algorithms.zhao.Zhao"><code class="xref py py-class docutils literal notranslate"><span class="pre">Zhao</span></code></a> algorithm.
 The algorithm examines changes in volume using a dynamic, sliding time-window.</p>
@@ -797,9 +841,10 @@ Older documents are automatically cleared.</p></li>
 </dl>
 <dl class="method">
 <dt id="queues.consumers.algorithms.zhao_consumer.ZhaoConsumer.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity=5</em>, <em class="sig-param">scheme=None</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.algorithms.zhao_consumer.ZhaoConsumer.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity=5</em>, <em class="sig-param">scheme=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.algorithms.zhao_consumer.ZhaoConsumer.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the consumer with a <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>.
 Simultaneously create a <a class="reference internal" href="tdt.html#tdt.nutrition.NutritionStore" title="tdt.nutrition.NutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code></a> and the <a class="reference internal" href="tdt.html#tdt.algorithms.zhao.Zhao" title="tdt.algorithms.zhao.Zhao"><code class="xref py py-class docutils literal notranslate"><span class="pre">Zhao</span></code></a> TDT algorithm.</p>
+<p>Additional arguments and keyword arguments are passed on to the base class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -831,7 +876,7 @@ If <code class="docutils literal notranslate"><span class="pre">None</span></cod
 </div>
 <dl class="class">
 <dt id="queues.consumers.algorithms.fire_consumer.FIREConsumer">
-<em class="property">class </em><code class="sig-name descname">FIREConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity=60</em>, <em class="sig-param">scheme=None</em>, <em class="sig-param">sets=10</em>, <em class="sig-param">threshold=0.7</em>, <em class="sig-param">freeze_period=20</em>, <em class="sig-param">min_size=4</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.algorithms.fire_consumer.FIREConsumer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">FIREConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity=60</em>, <em class="sig-param">scheme=None</em>, <em class="sig-param">sets=10</em>, <em class="sig-param">threshold=0.7</em>, <em class="sig-param">freeze_period=20</em>, <em class="sig-param">min_size=4</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.algorithms.fire_consumer.FIREConsumer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">FIREConsumer</span></code> is based on the paper by Mamo et al. (2017).</p>
 <p>The algorithm is split into time-windows.
 After each time-window, the consumer performs two tasks:</p>
@@ -862,10 +907,11 @@ This value is inclusive.</p></li>
 </dl>
 <dl class="method">
 <dt id="queues.consumers.algorithms.fire_consumer.FIREConsumer.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity=60</em>, <em class="sig-param">scheme=None</em>, <em class="sig-param">sets=10</em>, <em class="sig-param">threshold=0.7</em>, <em class="sig-param">freeze_period=20</em>, <em class="sig-param">min_size=4</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.algorithms.fire_consumer.FIREConsumer.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">periodicity=60</em>, <em class="sig-param">scheme=None</em>, <em class="sig-param">sets=10</em>, <em class="sig-param">threshold=0.7</em>, <em class="sig-param">freeze_period=20</em>, <em class="sig-param">min_size=4</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.algorithms.fire_consumer.FIREConsumer.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the consumer with a <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>.
 Simultaneously create a <a class="reference internal" href="tdt.html#tdt.nutrition.NutritionStore" title="tdt.nutrition.NutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code></a> and the <a class="reference internal" href="tdt.html#tdt.algorithms.cataldi.Cataldi" title="tdt.algorithms.cataldi.Cataldi"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cataldi</span></code></a> TDT algorithm.
 In addition, create the <a class="reference internal" href="summarization.html#summarization.algorithms.mmr.MMR" title="summarization.algorithms.mmr.MMR"><code class="xref py py-class docutils literal notranslate"><span class="pre">MMR</span></code></a> algorithm for summarization.</p>
+<p>Additional arguments and keyword arguments are passed on to the base class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -911,7 +957,7 @@ Unlike the <code class="xref py py-class docutils literal notranslate"><span cla
 </div>
 <dl class="class">
 <dt id="queues.consumers.algorithms.eld_consumer.ELDConsumer">
-<em class="property">class </em><code class="sig-name descname">ELDConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">time_window=30</em>, <em class="sig-param">scheme=None</em>, <em class="sig-param">threshold=0.5</em>, <em class="sig-param">freeze_period=20</em>, <em class="sig-param">min_size=3</em>, <em class="sig-param">cooldown=1</em>, <em class="sig-param">max_intra_similarity=0.8</em>, <em class="sig-param">sets=10</em>, <em class="sig-param">min_burst=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.algorithms.eld_consumer.ELDConsumer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">ELDConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">time_window=30</em>, <em class="sig-param">scheme=None</em>, <em class="sig-param">threshold=0.5</em>, <em class="sig-param">freeze_period=20</em>, <em class="sig-param">min_size=3</em>, <em class="sig-param">cooldown=1</em>, <em class="sig-param">max_intra_similarity=0.8</em>, <em class="sig-param">sets=10</em>, <em class="sig-param">min_burst=0.5</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.algorithms.eld_consumer.ELDConsumer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">ELDConsumer</span></code> is a real-time consumer with a custom algorithm to detect topics.
 Unlike other <a class="reference internal" href="#id1"><span class="std std-ref">consumers</span></a>, the consumer has both a <code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code> and a <code class="xref py py-func docutils literal notranslate"><span class="pre">understand()</span></code> functions.
 The former is the normal processing step, whereas the <code class="xref py py-func docutils literal notranslate"><span class="pre">understand()</span></code> precedes the event.</p>
@@ -960,13 +1006,14 @@ This value is exclusive.</p></li>
 </dl>
 <dl class="method">
 <dt id="queues.consumers.algorithms.eld_consumer.ELDConsumer.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">time_window=30</em>, <em class="sig-param">scheme=None</em>, <em class="sig-param">threshold=0.5</em>, <em class="sig-param">freeze_period=20</em>, <em class="sig-param">min_size=3</em>, <em class="sig-param">cooldown=1</em>, <em class="sig-param">max_intra_similarity=0.8</em>, <em class="sig-param">sets=10</em>, <em class="sig-param">min_burst=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.algorithms.eld_consumer.ELDConsumer.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">time_window=30</em>, <em class="sig-param">scheme=None</em>, <em class="sig-param">threshold=0.5</em>, <em class="sig-param">freeze_period=20</em>, <em class="sig-param">min_size=3</em>, <em class="sig-param">cooldown=1</em>, <em class="sig-param">max_intra_similarity=0.8</em>, <em class="sig-param">sets=10</em>, <em class="sig-param">min_burst=0.5</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.algorithms.eld_consumer.ELDConsumer.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the consumer with a queue.
 Simultaneously create a nutrition store and the topic detection algorithm container.
 Initially, the IDF table should be empty.
 It will be populated later when the ‘reconaissance’ period is finished.</p>
 <p>The constructor also creates a buffer.
 This buffer is used to store tweets until they are made into a checkpoint.</p>
+<p>Additional arguments and keyword arguments are passed on to the base class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">

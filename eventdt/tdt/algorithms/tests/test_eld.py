@@ -16,6 +16,7 @@ if path not in sys.path:
 
 from algorithms import ELD
 from nutrition.memory import MemoryNutritionStore
+
 class TestELD(unittest.TestCase):
 	"""
 	Test Mamo et al. (2019)'s ELD algorithm.
