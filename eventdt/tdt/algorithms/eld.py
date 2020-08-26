@@ -515,4 +515,11 @@ class SlidingELD(ELD):
 		:rtype: dict
 		"""
 
-		return window
+		"""
+		Return immediately if the window is empty.
+		"""
+		if not window:
+			return { }
+
+		max_nutrition = max(window.values())
+		return { term: nutrition/max_nutrition for term, nutrition in window.items() }

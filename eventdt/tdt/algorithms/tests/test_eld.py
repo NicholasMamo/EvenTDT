@@ -609,3 +609,67 @@ class TestSlidingELD(unittest.TestCase):
 		store.add(3, { 'b': 0.5 })
 		algo = SlidingELD(store)
 		self.assertEqual({ 'a': 3, 'b': 2.5 }, algo._merge(*store.all().values()))
+
+	def test_normalize_empty(self):
+		"""
+		Test that when normalizing an empty dictionary, the function returns an empty dictionary.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = SlidingELD(store)
+		self.assertEqual({ }, algo._normalize(store.get(10)))
+
+	def test_normalize_lower_bound(self):
+		"""
+		Test that when normalizing nutrition, all new values have a value greater than zero.
+		"""
+
+		store = MemoryNutritionStore()
+		store.add(10, { 'a': 1, 'b': 2, 'c': 3 })
+		algo = SlidingELD(store)
+		self.assertTrue(all( 0 < nutrition for nutrition in algo._normalize(store.get(10)).values() ))
+
+	def test_normalize_upper_bound(self):
+		"""
+		Test that when normalizing nutrition, all new values have a value less than or equal to one.
+		"""
+
+		store = MemoryNutritionStore()
+		store.add(10, { 'a': 1, 'b': 2, 'c': 3 })
+		algo = SlidingELD(store)
+		self.assertTrue(all( 1 >= nutrition for nutrition in algo._normalize(store.get(10)).values() ))
+
+	def test_normalize_maximum_exists(self):
+		"""
+		Test that when normalizing nutrition, there is at least one value with a value of one.
+		"""
+
+		store = MemoryNutritionStore()
+		store.add(10, { 'a': 1, 'b': 2, 'c': 3 })
+		algo = SlidingELD(store)
+		self.assertTrue(1 in algo._normalize(store.get(10)).values())
+
+	def test_normalize_intermediate_values(self):
+		"""
+		Test that when normalizing nutrition, all values are normalized properly.
+		"""
+
+		store = MemoryNutritionStore()
+		store.add(10, { 'a': 1, 'b': 2, 'c': 3 })
+		algo = SlidingELD(store)
+		normalized = algo._normalize(store.get(10))
+		self.assertEqual(1/3, normalized['a'])
+		self.assertEqual(2/3, normalized['b'])
+		self.assertEqual(3/3, normalized['c'])
+
+	def test_normalize_all_terms(self):
+		"""
+		Test that when normalizing nutrition, all terms are returned.
+		"""
+
+		store = MemoryNutritionStore()
+		store.add(10, { 'a': 1, 'b': 2, 'c': 3 })
+		algo = SlidingELD(store)
+		original = store.get(10)
+		normalized = algo._normalize(original)
+		self.assertEqual(set(original.keys()), set(normalized.keys()))
