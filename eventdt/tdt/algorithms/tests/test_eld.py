@@ -482,10 +482,233 @@ class TestSlidingELD(unittest.TestCase):
 		algo = SlidingELD(store, normalized=False)
 		self.assertEqual(False, algo.normalized)
 
+	def test_detect(self):
+		"""
+		Test detecting bursty terms.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = SlidingELD(store, windows=6, window_size=10)
+		store.add(60, { 'a': 30, 'b': 15 })
+		store.add(55, { 'a': 20, 'b': 20 })
+		store.add(50, { 'a': 5, 'b': 30 })
+		store.add(45, { 'a': 10, 'b': 30 })
+		store.add(40, { 'a': 20, 'b': 5 })
+		store.add(35, { 'a': 5, 'b': 5 })
+		store.add(30, { 'a': 5, 'b': 5 })
+		store.add(25, { 'a': 5, 'b': 5 })
+		store.add(20, { 'a': 5, 'b': 5 })
+		store.add(15, { 'a': 5, 'b': 5 })
+		store.add(10, { 'a': 5, 'b': 5 })
+		store.add(5, { 'a': 5, 'b': 5 })
+		store.add(0, { 'a': 5, 'b': 5 })
+		self.assertEqual({ 'a' }, set(algo.detect(timestamp=60)))
+		self.assertEqual({ 'b' }, set(algo.detect(timestamp=50)))
+
+	def test_detect_timestamp_inclusive(self):
+		"""
+		Test that the given timestamp is inclusive.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = SlidingELD(store, windows=6, window_size=10)
+		store.add(60, { 'a': 30, 'b': 15 })
+		store.add(55, { 'a': 20, 'b': 20 })
+		store.add(50, { 'a': 20, 'b': 30 })
+		store.add(45, { 'a': 30, 'b': 30 })
+		store.add(40, { 'a': 20, 'b': 5 })
+		store.add(35, { 'a': 5, 'b': 5 })
+		store.add(30, { 'a': 5, 'b': 5 })
+		store.add(25, { 'a': 5, 'b': 5 })
+		store.add(20, { 'a': 5, 'b': 5 })
+		store.add(15, { 'a': 5, 'b': 5 })
+		store.add(10, { 'a': 5, 'b': 5 })
+		store.add(5, { 'a': 5, 'b': 5 })
+		store.add(0, { 'a': 5, 'b': 5 })
+
+		"""
+		There is a burst at 60, but not one second earlier.
+		"""
+		bursty = algo.detect(timestamp=60)
+		self.assertTrue('a' in bursty)
+		bursty = algo.detect(timestamp=59)
+		self.assertFalse('a' in bursty)
+
+	def test_detect_recency(self):
+		"""
+		Test that when detecting bursty terms, recent time windows have more weight.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = SlidingELD(store, windows=6, window_size=10)
+		store.add(60, { 'a': 30, 'b': 30 })
+		store.add(55, { 'a': 30, 'b': 30 })
+		store.add(50, { 'a': 20, 'b': 10 })
+		store.add(45, { 'a': 20, 'b': 10 })
+		store.add(40, { 'a': 10, 'b': 20 })
+		store.add(35, { 'a': 10, 'b': 20 })
+		bursty = algo.detect(timestamp=60)
+		self.assertGreater(bursty.get('b'), bursty.get('a'))
+
+	def test_detect_nutrition_store_unchanged(self):
+		"""
+		Test that when detecting bursty terms, the store itself is unchanged.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = SlidingELD(store, windows=6, window_size=10)
+		store.add(60, { 'a': 30, 'b': 30 })
+		store.add(55, { 'a': 30, 'b': 30 })
+		store.add(50, { 'a': 20, 'b': 10 })
+		store.add(45, { 'a': 20, 'b': 10 })
+		store.add(40, { 'a': 10, 'b': 20 })
+		store.add(35, { 'a': 10, 'b': 20 })
+		store_copy = dict(store.all())
+		algo.detect(timestamp=60)
+		self.assertEqual(store_copy, store.all())
+
+	def test_detect_empty_nutrition(self):
+		"""
+		Test that when detecting bursty terms with no empty nutrition, no terms are returned.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = SlidingELD(store, windows=6, window_size=10)
+		store.add(60, { 'a': 30, 'b': 30 })
+		store.add(55, { 'a': 30, 'b': 30 })
+		store.add(50, { 'a': 20, 'b': 10 })
+		store.add(45, { 'a': 20, 'b': 10 })
+		store.add(40, { 'a': 10, 'b': 20 })
+		store.add(35, { 'a': 10, 'b': 20 })
+		nutrition, historic = algo._partition(timestamp=70)
+		self.assertEqual({ }, nutrition)
+		self.assertFalse(algo.detect(timestamp=70))
+
+	def test_detect_empty_historic(self):
+		"""
+		Test that when detecting bursty terms with empty historic data, no terms are returned.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = SlidingELD(store, windows=6, window_size=15)
+		store.add(60, { 'a': 30, 'b': 30 })
+		store.add(55, { 'a': 30, 'b': 30 })
+		store.add(50, { 'a': 20, 'b': 10 })
+		nutrition, historic = algo._partition(timestamp=60)
+		self.assertTrue(all( { } == values for values in historic.values() ))
+		self.assertFalse(algo.detect(timestamp=60))
+
+		algo = SlidingELD(store, windows=6, window_size=10)
+		nutrition, historic = algo._partition(timestamp=60)
+		self.assertTrue(any( not { } == values for values in historic.values() ))
+		self.assertEqual({ 'a', 'b' }, set(algo.detect(timestamp=60)))
+
+	def test_detect_all_terms(self):
+		"""
+		Test that when detecting bursty terms, the data is taken from both the historic data and the nutrition.
+		For this test, the minimum burst is set such that it includes all burst values.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = SlidingELD(store, windows=3, window_size=5)
+		store.add(60, { 'a': 50, 'b': 0, 'c': 50 })
+		store.add(55, { 'a': 50, 'b': 50, 'c': 50 })
+		store.add(50, { 'a': 25, 'b': 50, 'c': 50 })
+
+		self.assertEqual({ 'a' }, set(algo.detect(timestamp=60)))
+		burst = algo.detect(timestamp=60, min_burst=-1.1)
+		self.assertEqual({ 'a', 'b', 'c' }, set(burst))
+		self.assertTrue(burst['a'] > 0)
+		self.assertTrue(burst['b'] < 0)
+		self.assertTrue(burst['c'] == 0)
+
+	def test_detect_lower_bound(self):
+		"""
+		Test that when detecting bursty terms, the lower bound is -1.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = SlidingELD(store, windows=3, window_size=5)
+		store.add(60, { 'a': 50, 'b': 0, 'c': 50 })
+		store.add(55, { 'a': 0, 'b': 50, 'c': 50 })
+		store.add(50, { 'a': 0, 'b': 50, 'c': 50 })
+
+		terms = algo.detect(timestamp=60, min_burst=-1.1)
+		self.assertTrue(all( burst >= -1 for burst in terms.values() ))
+
+	def test_detect_upper_bound(self):
+		"""
+		Test that when detecting bursty terms, the upper bound is 1.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = SlidingELD(store, windows=3, window_size=5)
+		store.add(60, { 'a': 50, 'b': 0, 'c': 50 })
+		store.add(55, { 'a': 0, 'b': 50, 'c': 50 })
+		store.add(50, { 'a': 0, 'b': 50, 'c': 50 })
+
+		terms = algo.detect(timestamp=60, min_burst=-1.1)
+		self.assertTrue(all( burst <= 1 for burst in terms.values() ))
+
+	def test_detect_bounds_not_normalized(self):
+		"""
+		Test that when detecting bursty terms without normalization, the bounds change.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = SlidingELD(store, windows=3, window_size=5, normalized=False)
+		store.add(60, { 'a': 50, 'b': 0, 'c': 50 })
+		store.add(55, { 'a': 0, 'b': 50, 'c': 50 })
+		store.add(50, { 'a': 0, 'b': 50, 'c': 50 })
+
+		terms = algo.detect(timestamp=60, min_burst=-51)
+		self.assertEqual(50, terms['a'])
+		self.assertEqual(-50, terms['b'])
+		self.assertEqual(0, terms['c'])
+		self.assertTrue(all( burst <= 50 for burst in terms.values() ))
+		self.assertTrue(all( burst >= -50 for burst in terms.values() ))
+
 	def test_partition(self):
 		"""
 		Test partitioning with an example.
 		"""
+
+		store = MemoryNutritionStore()
+		algo = SlidingELD(store, windows=4, window_size=5)
+		store.add(60, { 'a': 50, 'b': 0 })
+		store.add(55, { 'a': 50, 'b': 50 })
+		store.add(50, { 'a': 25, 'b': 0 })
+
+		"""
+		Use the latest data.
+		"""
+		nutrition, historic = algo._partition(timestamp=60)
+		self.assertEqual({ 'a': 50, 'b': 0 }, nutrition)
+		self.assertEqual({ 55, 50, 45 }, set(historic.keys()))
+		self.assertEqual({ 'a': 50, 'b': 50 }, historic[55])
+		self.assertEqual({ 'a': 25, 'b': 0 }, historic[50])
+		self.assertEqual({ }, historic[45])
+
+		"""
+		Move one time window back.
+		"""
+		nutrition, historic = algo._partition(timestamp=55)
+		self.assertEqual({ 'a': 50, 'b': 50 }, nutrition)
+		self.assertEqual({ 50, 45, 40 }, set(historic.keys()))
+		self.assertEqual({ 'a': 25, 'b': 0 }, historic[50])
+		self.assertEqual({ }, historic[45])
+		self.assertEqual({ }, historic[40])
+
+		"""
+		Use a larger time window.
+		"""
+		algo = SlidingELD(store, windows=4, window_size=10)
+		nutrition, historic = algo._partition(timestamp=60)
+		self.assertEqual({ 'a': 100, 'b': 50 }, nutrition)
+		self.assertEqual({ 50, 40, 30 }, set(historic.keys()))
+		self.assertEqual({ 'a': 25, 'b': 0 }, historic[50])
+		self.assertEqual({ }, historic[40])
+		self.assertEqual({ }, historic[30])
 
 	def test_partition_empty(self):
 		"""

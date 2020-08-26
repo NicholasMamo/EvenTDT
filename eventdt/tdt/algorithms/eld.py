@@ -393,6 +393,11 @@ class SlidingELD(ELD):
 			The minimum burst is exclusive.
 			This is so that terms with a burst of 0 (no change from previous checkpoints) are excluded.
 
+		.. warning::
+
+			If there is no historic data yet, the function returns an empty set of terms.
+			Otherwise, the function would be trivial and all terms would be considered to be bursty.
+
 		:param timestamp: The timestamp at which to calculate the burst of terms.
 						  If it is not given, the latest timestamp in the nutrition store is used.
 		:type timestamp: float
@@ -420,9 +425,16 @@ class SlidingELD(ELD):
 		nutrition, historic = self._partition(timestamp)
 
 		"""
+		If there is no historic data, return immediately.
+		Otherwise, all terms will be breaking.
+		"""
+		if all(not( data ) for data in historic.values()):
+			return { }
+
+		"""
 		Normalize the time windows if need be.
 		"""
-		if self._normalized:
+		if self.normalized:
 			nutrition = self._normalize(nutrition)
 			historic = { window: self._normalize(nutrition) for window, nutrition in historic.items() }
 
