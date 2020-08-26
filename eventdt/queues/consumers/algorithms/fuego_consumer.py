@@ -82,7 +82,7 @@ class FUEGOConsumer(Consumer):
 
 		if damping < 0:
 			raise ValueError(f"The damping factor cannot be negative; received { damping }")
-		
+
 		self.damping = damping
 
 		# TDT
@@ -422,7 +422,7 @@ class FUEGOConsumer(Consumer):
 		"""
 		retweet = tweet['retweeted_status']
 		diff = twitter.extract_timestamp(tweet) - twitter.extract_timestamp(retweet)
-		return math.exp(- 0.5 * diff / 60)
+		return math.exp(- self.damping * diff / 60)
 
 	def _track_topics(self, topics, timestamp):
 		"""
