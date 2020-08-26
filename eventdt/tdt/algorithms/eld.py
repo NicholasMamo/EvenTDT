@@ -463,9 +463,25 @@ class SlidingELD(ELD):
 		:rtype: tuple of dict
 		"""
 
-		# TODO: Make sure that the end timestamp is included
+
 
 		return ({ }, { })
+
+	def _merge(self, *args):
+		"""
+		Merge the given nutrition values.
+
+		:return: One dictionary with the nutrition values added per term.
+		:rtype: dict
+		"""
+
+		nutrition = { }
+
+		for data in args:
+			for term, value in data.items():
+				nutrition[term] = nutrition.get(term, 0) + value
+
+		return nutrition
 
 	def _normalize(self, window):
 		"""

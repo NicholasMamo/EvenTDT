@@ -481,3 +481,25 @@ class TestSlidingELD(unittest.TestCase):
 		store = MemoryNutritionStore()
 		algo = SlidingELD(store, normalized=False)
 		self.assertEqual(False, algo.normalized)
+
+
+	def test_merge_empty(self):
+		"""
+		Test that when merging an empty list of nutrition data, the function returns an empty set.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = SlidingELD(store)
+		self.assertEqual({ }, algo._merge())
+
+	def test_merge_empty(self):
+		"""
+		Test that when merging an empty list of nutrition data, the function returns an empty set.
+		"""
+
+		store = MemoryNutritionStore()
+		store.add(1, { 'a': 1, 'b': 2 })
+		store.add(2, { 'a': 2 })
+		store.add(3, { 'b': 0.5 })
+		algo = SlidingELD(store)
+		self.assertEqual({ 'a': 3, 'b': 2.5 }, algo._merge(*store.all().values()))
