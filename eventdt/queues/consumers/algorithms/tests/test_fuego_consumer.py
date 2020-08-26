@@ -93,6 +93,15 @@ class TestFUEGOConsumer(unittest.TestCase):
 		self.assertTrue(consumer.volume)
 		self.assertEqual({ }, consumer.volume.all())
 
+	def test_init_nutrition_store(self):
+		"""
+		Test that when creating a consumer, the class creates an empty nutrition store.
+		"""
+
+		consumer = FUEGOConsumer(Queue())
+		self.assertTrue(consumer.nutrition)
+		self.assertEqual({ }, consumer.nutrition.all())
+
 	@async_test
 	async def test_construct_idf_documents(self):
 		"""

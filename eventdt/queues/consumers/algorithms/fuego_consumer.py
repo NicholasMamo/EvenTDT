@@ -42,6 +42,7 @@ class FUEGOConsumer(Consumer):
 	As part of the TDT approach, the consumer maintaints in its state:
 
 	- ``volume``: records the number of tweets (after filtering) received per second.
+	- ``nutrition``: records the nutrition of terms at each second.
 
 	:ivar ~.tokenizer: The tokenizer used to tokenize tweets.
 	:vartype tokenizer: :class:`~nlp.tokenizer.Tokenizer`
@@ -49,6 +50,9 @@ class FUEGOConsumer(Consumer):
 	:vartype scheme: :class:`~nlp.weighting.TermWeightingScheme`
 	:ivar volume: A nutrition store that contains the number of tweets (after filtering) received per second.
 	:vartype volume: :class:`~tdt.nutrition.memory.MemoryNutritionStore`
+	:ivar nutrition: A nutrition store that contains the nutrition of terms from tweets.
+					 The nutrition is stored for each second.
+	:vartype nutrition: :class:`~tdt.nutrition.memory.MemoryNutritionStore`
 	"""
 
 	def __init__(self, queue, scheme=None, *args, **kwargs):
@@ -71,6 +75,7 @@ class FUEGOConsumer(Consumer):
 
 		# TDT
 		self.volume = MemoryNutritionStore()
+		self.nutrition = MemoryNutritionStore()
 
 	async def understand(self, max_inactivity=-1, *args, **kwargs):
 		"""
