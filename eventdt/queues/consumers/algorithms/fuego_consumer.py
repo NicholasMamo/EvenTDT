@@ -36,7 +36,7 @@ class FUEGOConsumer(Consumer):
 	- ``tokenizer``: used to tokenize the text in tweets.
 	- ``scheme``: used to weight the tokens and create :class:`~nlp.document.Document` instances.
 
-	:ivar tokenizer: The tokenizer used to tokenize tweets.
+	:ivar ~.tokenizer: The tokenizer used to tokenize tweets.
 	:vartype tokenizer: :class:`~nlp.tokenizer.Tokenizer`
 	:ivar scheme: The term-weighting scheme used to create documents from tweets.
 	:vartype scheme: :class:`~nlp.weighting.TermWeightingScheme`
