@@ -26,12 +26,23 @@ class FUEGOConsumer(Consumer):
 	The former is the normal processing step, whereas the :func:`~queues.consumers.fuego_consumer.FUEGOConsumer.understand` function precedes the event and builds a TF-IDF scheme for the event.
 	"""
 
+	def __init__(self, queue, *args, **kwargs):
+		"""
+		Create the consumer with a queue.
+
+		:param queue: The queue that will be receiving tweets.
+					  The consumer reads tweets from this queue and processes them.
+		:type queue: :class:`~queues.Queue`
+		"""
+
+		super(FUEGOConsumer, self).__init__(queue, *args, **kwargs)
+
 	async def understand(self, max_inactivity=-1, *args, **kwargs):
 		"""
 		Understanding precedes the event and is tasked with generating knowledge automatically.
 
 		During understanding, the :class:`~queues.consumers.fuego_consumer.FUEGOConsumer` creates a :class:`~nlp.weighting.TermWeightingScheme` with an :class:`~nlp.weighting.global_schemes.idf.IDF` table based on the pre-event discussion.
-	   The consumer uses the :class:`~nlp.weighting.TermWeightingScheme` while processing tweets in real-time.
+		The consumer uses the :class:`~nlp.weighting.TermWeightingScheme` while processing tweets in real-time.
 
 		:param max_inactivity: The maximum time in seconds to wait idly without input before stopping.
 							   If it is negative, it is ignored.
