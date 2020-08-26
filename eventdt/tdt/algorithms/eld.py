@@ -368,3 +368,111 @@ class SlidingELD(ELD):
 		self.window_size = window_size
 		self.windows = windows
 		self.normalized = normalized
+
+	def detect(self, timestamp=None, min_burst=0):
+		"""
+		Detect topics using historical data from the nutrition store.
+
+		This function partitions the nutrition in the store into time windows.
+		The most recent time window ends at the given ``timestamp``.
+		The previous time windows are used as historic windows.
+
+		.. note::
+
+			This function assumes that nutrition is always zero or positive.
+			As a result, the burst can be calculated only for terms that have a nutrition equal to or greater than the minimum burst.
+			The function makes an exception if the minimum burst is negative.
+			In this case, all terms have to be considered in the calculation.
+
+		.. note::
+
+			The minimum burst is exclusive.
+			This is so that terms with a burst of 0 (no change from previous checkpoints) are excluded.
+
+		:param timestamp: The timestamp at which to calculate the burst of terms.
+						  If it is not given, the latest timestamp in the nutrition store is used.
+		:type timestamp: float
+		:param min_burst: The minimum burst of a term to be considered emerging and returned.
+						  This value is exclusive so that terms with an unchanging nutrition (a burst of 0) are not returned.
+						  By default, only terms thet have a non-zero positive burst are returned.
+						  These terms have seen their popularity increase.
+		:type min_burst: float
+
+		:return: The breaking terms and their burst as a dictionary.
+				 The keys are the terms and the values are the respective burst values.
+		:rtype: dict
+		"""
+
+		"""
+		If there is nutrition data in the nutrition store, return immediately.
+		"""
+		if not self.store.all():
+			return { }
+
+		"""
+		Partition the nutrition data into time windows.
+		"""
+		timestamp = timestamp or max(self.store.all().keys())
+		nutrition, historic = self._partition(timestamp)
+
+		"""
+		Normalize the time windows if need be.
+		"""
+		if self._normalized:
+			nutrition = self._normalize(nutrition)
+			historic = { window: self._normalize(nutrition) for window, nutrition in historic.items() }
+
+		"""
+		Get the terms for which to calculate the minimum burst.
+		"""
+		terms = self._get_terms(min_burst, nutrition, historic)
+
+		"""
+		Compute the burst of all the terms.
+		Filter those with a low burst.
+		"""
+		burst = { term: self._compute_burst(term, nutrition, historic) for term in terms }
+		burst = { term: burst for term, burst in burst.items() if burst > min_burst }
+		return burst
+
+	def _partition(self, timestamp):
+		"""
+		Partition the nutrition in the store into time windows.
+		This function returns a tuple:
+
+		1. The nutrition at the latest time window.
+		2. The nutrition at the time windows preceding the latest one.
+
+		The number of time windows, including the latest one, is at most equivalent to the number of time windows defined during instantiation.
+
+		The historic nutrition is a dictionary, with the timestamps as keys and the nutrition data as the values.
+		The timestamps indicate the end of the time window, not the start.
+		Moreover, the end value is inclusive.
+
+		:param timestamp: The timestamp at which to create the time windows.
+		:type timestamp: float
+
+		:return: A tuple, containing:
+
+		 		 - The nutrition at the latest time window, and
+				 - The nutrition at the previous time windows.
+		:rtype: tuple of dict
+		"""
+
+		# TODO: Make sure that the end timestamp is included
+
+		return ({ }, { })
+
+	def _normalize(self, window):
+		"""
+		Normalize the given time window.
+		This operation rescales the nutrition values of the time window to be between 0 and 1.
+
+		:param window: A dictionary with the terms as keys and their nutrition value as values.
+		:type window: dict
+
+		:return: The normalized time window, with the maximum value set to 1.
+		:rtype: dict
+		"""
+
+		return window
