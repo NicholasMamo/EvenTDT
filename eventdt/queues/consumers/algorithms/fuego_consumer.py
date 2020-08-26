@@ -19,9 +19,9 @@ path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
-from nlp import Tokenizer
-from nlp.weighting import TF
 from nlp import Document, Tokenizer
+from nlp.weighting import TF, TFIDF
+from nlp.weighting.global_schemes import IDF
 from queues.consumers import Consumer
 import twitter
 
@@ -93,7 +93,36 @@ class FUEGOConsumer(Consumer):
 		:rtype: :class:`~nlp.weighting.tfidf.TFIDF`
 		"""
 
-		return { }
+		idf = { }
+		size = 0
+
+		"""
+		Understanding keeps working until it is stopped.
+		"""
+		while self.active:
+			active = await self._wait_for_input(max_inactivity)
+			if not active:
+				break
+
+			"""
+			After it is stopped, construct the IDF.
+			Get all the tweets in the queue and convert them to documents.
+			"""
+			tweets = self.queue.dequeue_all()
+			documents = self._to_documents(tweets)
+			size += len(documents)
+
+			"""
+			If there are documents, update the IDF with the consumed documents.
+			These documents are also added to the buffer so they can be used by the APD process.
+			"""
+			if documents:
+				subset = IDF.from_documents(documents)
+				idf = { term: idf.get(term, 0) + subset.get(term, 0)
+						for term in subset.keys() | idf.keys() }
+
+		return TFIDF(idf, size)
+
 	async def _consume(self, max_inactivity, *args, **kwargs):
 		"""
 		Consume and process the documents in the queue.

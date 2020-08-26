@@ -12,14 +12,15 @@ path = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..')
 if path not in sys.path:
 	sys.path.append(path)
 
+from logger import logger
+from nlp.document import Document
+from nlp.weighting import TF
 from objects.exportable import Exportable
 from queues import Queue
 from queues.consumers.algorithms import FUEGOConsumer
-from nlp.document import Document
-from nlp.weighting import TF
 from vsm import vector_math
-from vsm.clustering import Cluster
-import twitter
+
+logger.set_logging_level(logger.LogLevel.WARNING)
 
 class TestFUEGOConsumer(unittest.TestCase):
 	"""
@@ -82,6 +83,66 @@ class TestFUEGOConsumer(unittest.TestCase):
 		consumer = FUEGOConsumer(Queue())
 		self.assertTrue(consumer.scheme)
 		self.assertEqual(TF, type(consumer.scheme))
+
+	@async_test
+	async def test_construct_idf_documents(self):
+		"""
+		Test that when constructing the IDF, it uses all documents.
+		"""
+
+		queue = Queue()
+		consumer = FUEGOConsumer(queue)
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			queue.enqueue(*tweets)
+			consumer._started()
+			scheme = await consumer._construct_idf(1)
+			self.assertEqual(len(lines), scheme.global_scheme.documents)
+
+	@async_test
+	async def test_construct_idf_terms(self):
+		"""
+		Test that when constructing the IDF, the correct terms are registered.
+		"""
+
+		queue = Queue()
+		consumer = FUEGOConsumer(queue)
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			queue.enqueue(*tweets)
+			consumer._started()
+			scheme = await consumer._construct_idf(1)
+
+			documents = consumer._to_documents(tweets)
+			terms = set([ term for document in documents
+							   for term in document.dimensions ])
+
+			self.assertEqual(terms, set(scheme.global_scheme.idf))
+
+	@async_test
+	async def test_construct_idf_counts(self):
+		"""
+		Test that when constructing the IDF, the correct term counts are registered.
+		"""
+
+		queue = Queue()
+		consumer = FUEGOConsumer(queue)
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			queue.enqueue(*tweets)
+			consumer._started()
+			scheme = await consumer._construct_idf(1)
+
+			documents = consumer._to_documents(tweets)
+			terms = set([ term for document in documents
+							   for term in document.dimensions ])
+
+			for term in terms:
+				count = len([ document for document in documents if term in document.dimensions ])
+				self.assertEqual(count, scheme.global_scheme.idf[term])
 
 	def test_to_documents_tweet(self):
 		"""
