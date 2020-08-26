@@ -317,14 +317,22 @@ class SlidingELD(ELD):
 	- The number of windows to use when detecting bursty terms.
 	  Since :class:`~tdt.algorithms.eld.SlidingELD` uses a decay mechanism, old time windows have little effect on the burst.
 	  Therefore the number of windows can be restrained.
+	- A boolean indicating whether to normalize nutrition.
+	  Unlike :class:`~tdt.algorithms.eld.ELD`, since the algorithm uses a sliding time window, the nutrition cannot be normalized in advance.
+	  If nutrition is not normalized, or rescaled between 0 and 1, for each time window, burst cannot be interpreted because it is no longer bound between -1 and 1.
+	  If this flag is set to ``True``, the algorithm normalizes each time window so that burst is interpretable.
 
 	:ivar window_size: The length in seconds of time windows.
 	:vartype window_size: int
 	:ivar windows: The number of windows to use when detecting bursty terms.
 	:vartype windows: int
+	:ivar normalized: A boolean indicating whether to normalize the nutrition in each time window when calculating the burst.
+					   When nutrition is normalized, it is bound between 0 and 1.
+					   This means that burst is then normalized between -1 and 1.
+	:vartype normalized: bool
 	"""
 
-	def __init__(self, store, window_size=60, windows=10, decay_rate=(1./2.)):
+	def __init__(self, store, decay_rate=(1./2.), window_size=60, windows=10, normalized=True):
 		"""
 		Instantiate the TDT algorithm with the :class:`~tdt.nutrition.NutritionStore` that will be used to detect topics and the decay rate.
 
@@ -340,6 +348,10 @@ class SlidingELD(ELD):
 		:type window_size: int
 		:param windows: The number of windows to use when detecting bursty terms.
 		:type windows: int
+		:param normalized: A boolean indicating whether to normalize the nutrition in each time window when calculating the burst.
+						   When nutrition is normalized, it is bound between 0 and 1.
+						   This means that burst is then normalized between -1 and 1.
+		:type normalized: bool
 
 		:raises ValueError: When the number of windows is not an integer.
 		:raises ValueError: When the number of windows is not a positive number.
@@ -355,3 +367,4 @@ class SlidingELD(ELD):
 
 		self.window_size = window_size
 		self.windows = windows
+		self.normalized = normalized

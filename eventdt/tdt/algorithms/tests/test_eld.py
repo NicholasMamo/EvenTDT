@@ -447,3 +447,12 @@ class TestSlidingELD(unittest.TestCase):
 
 		store = MemoryNutritionStore()
 		self.assertTrue(SlidingELD(store, windows=1))
+
+	def test_init_normalized(self):
+		"""
+		Test that when initializing the class, the normalization boolean is saved properly.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = SlidingELD(store, normalized=False)
+		self.assertEqual(False, algo.normalized)
