@@ -56,7 +56,7 @@ class FUEGOConsumer(Consumer):
 	:vartype nutrition: :class:`~tdt.nutrition.memory.MemoryNutritionStore`
 	"""
 
-	def __init__(self, queue, scheme=None, *args, **kwargs):
+	def __init__(self, queue, scheme=None, damping=0.5, *args, **kwargs):
 		"""
 		Create the consumer with a queue.
 
@@ -65,6 +65,12 @@ class FUEGOConsumer(Consumer):
 		:type queue: :class:`~queues.Queue`
 		:param scheme: The term-weighting scheme used to create documents from tweets.
 		:type scheme: :class:`~nlp.weighting.TermWeightingScheme`
+		:param damping: The damping factor to apply to reduce the importance of old retweets.
+						If the value is 0, the consumer never applies any damping.
+						The value should not be lower than 0.
+		:type damping: float
+
+		:raises ValueError: When the damping factor is negative.
 		"""
 
 		super(FUEGOConsumer, self).__init__(queue, *args, **kwargs)
@@ -73,6 +79,11 @@ class FUEGOConsumer(Consumer):
 								   normalize_words=True, character_normalization_count=3,
 								   remove_unicode_entities=True)
 		self.scheme = scheme or TF()
+
+		if damping < 0:
+			raise ValueError(f"The damping factor cannot be negative; received { damping }")
+		
+		self.damping = damping
 
 		# TDT
 		self.volume = MemoryNutritionStore()

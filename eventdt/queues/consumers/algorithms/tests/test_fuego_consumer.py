@@ -85,6 +85,28 @@ class TestFUEGOConsumer(unittest.TestCase):
 		self.assertTrue(consumer.scheme)
 		self.assertEqual(TF, type(consumer.scheme))
 
+	def test_init_damping_negative(self):
+		"""
+		Test that when the damping is negative, the class raises a ValueError.
+		"""
+
+		self.assertRaises(ValueError, FUEGOConsumer, Queue(), damping=-0.1)
+
+	def test_init_damping(self):
+		"""
+		Test that when the damping is 0, the class accepts it.
+		"""
+
+		self.assertTrue(FUEGOConsumer(Queue(), damping=0))
+
+	def test_init_damping(self):
+		"""
+		Test that when creating a consumer, the class saves the damping.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), damping=2)
+		self.assertEqual(2, consumer.damping)
+
 	def test_init_volume_store(self):
 		"""
 		Test that when creating a consumer, the class creates an empty volume nutrition store.
