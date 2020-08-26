@@ -113,7 +113,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#module-queues.consumers.algorithms.zhao_consumer">Zhao et al. Consumer (2011)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-queues.consumers.algorithms.fire_consumer">FIRE Consumer - Mamo et al. (2017)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-queues.consumers.algorithms.eld_consumer">ELD Consumer - Mamo et al. (2019)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#fuego-consumer-mamo-et-al-not-published">FUEGO Consumer - Mamo et al. (not published)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-queues.consumers.algorithms.fuego_consumer">FUEGO Consumer - Mamo et al. (not published)</a></li>
 </ul>
 </li>
 </ul>
@@ -1072,9 +1072,9 @@ The participants are returned in the <cite>participants</cite> key a list of str
 </dd></dl>
 
 </div>
-<div class="section" id="fuego-consumer-mamo-et-al-not-published">
-<h4>FUEGO Consumer - Mamo et al. (not published)<a class="headerlink" href="#fuego-consumer-mamo-et-al-not-published" title="Permalink to this headline">¶</a></h4>
-<span class="target" id="module-queues.consumers.algorithms.fuego_consumer"></span><p>FUEGO (codename that means absolutely nothing) is a feature-pivot consumer built on the <a class="reference internal" href="#queues.consumers.algorithms.eld_consumer.ELDConsumer" title="queues.consumers.algorithms.eld_consumer.ELDConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ELDConsumer</span></code></a>’s own feature-pivot method.
+<div class="section" id="module-queues.consumers.algorithms.fuego_consumer">
+<span id="fuego-consumer-mamo-et-al-not-published"></span><h4>FUEGO Consumer - Mamo et al. (not published)<a class="headerlink" href="#module-queues.consumers.algorithms.fuego_consumer" title="Permalink to this headline">¶</a></h4>
+<p>FUEGO (codename that means absolutely nothing) is a feature-pivot consumer built on the <a class="reference internal" href="#queues.consumers.algorithms.eld_consumer.ELDConsumer" title="queues.consumers.algorithms.eld_consumer.ELDConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ELDConsumer</span></code></a>’s own feature-pivot method.
 Differently from the <a class="reference internal" href="#queues.consumers.algorithms.eld_consumer.ELDConsumer" title="queues.consumers.algorithms.eld_consumer.ELDConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ELDConsumer</span></code></a>, FUEGO uses a sliding time-window instead of checkpoints.
 This allows for more accurate results in real-time.</p>
 <div class="admonition note">
@@ -1083,6 +1083,14 @@ This allows for more accurate results in real-time.</p>
 Therefore this consumer can only extract granular developments when combined with a <a class="reference internal" href="#queues.consumers.token_split_consumer.TokenSplitConsumer" title="queues.consumers.token_split_consumer.TokenSplitConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">TokenSplitConsumer</span></code></a>.
 For a combination of document-pivot and feature-pivot approaches, see the <a class="reference internal" href="#queues.consumers.algorithms.eld_consumer.ELDConsumer" title="queues.consumers.algorithms.eld_consumer.ELDConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ELDConsumer</span></code></a>.</p>
 </div>
+<dl class="class">
+<dt id="queues.consumers.algorithms.fuego_consumer.FUEGOConsumer">
+<em class="property">class </em><code class="sig-name descname">FUEGOConsumer</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#queues.consumers.algorithms.fuego_consumer.FUEGOConsumer" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">FUEGOConsumer</span></code> is a real-time consumer with a custom algorithm to detect topics.
+Unlike other <a class="reference internal" href="#id1"><span class="std std-ref">consumers</span></a>, the consumer has both a <code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code> and a <code class="xref py py-func docutils literal notranslate"><span class="pre">understand()</span></code> functions.
+The former is the normal processing step, whereas the <code class="xref py py-func docutils literal notranslate"><span class="pre">understand()</span></code> function precedes the event and builds a TF-IDF scheme for the event.</p>
+</dd></dl>
+
 </div>
 </div>
 </div>
