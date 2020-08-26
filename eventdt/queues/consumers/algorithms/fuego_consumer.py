@@ -25,6 +25,7 @@ from nlp.weighting.global_schemes import IDF
 from queues.consumers import Consumer
 from summarization.timeline import Timeline
 from summarization.timeline.nodes import DocumentNode
+from tdt.nutrition import MemoryNutritionStore
 import twitter
 
 class FUEGOConsumer(Consumer):
@@ -33,15 +34,21 @@ class FUEGOConsumer(Consumer):
 	Unlike other :ref:`consumers <consumers>`, the consumer has both a :func:`~queues.consumers.Consumer.ELDConsumer.run` and a :func:`~queues.consumers.fuego_consumer.FUEGOConsumer.understand` functions.
 	The former is the normal processing step, whereas the :func:`~queues.consumers.fuego_consumer.FUEGOConsumer.understand` function precedes the event and builds a TF-IDF scheme for the event.
 
-	In additional to the :class:`~queues.Queue`, the consumer maintains in its state one object to transform tweets into :class:`~nlp.document.Document` instances:
+	In additional to the :class:`~queues.Queue`, the consumer maintains in its state two objects to transform tweets into :class:`~nlp.document.Document` instances:
 
 	- ``tokenizer``: used to tokenize the text in tweets.
 	- ``scheme``: used to weight the tokens and create :class:`~nlp.document.Document` instances.
+
+	As part of the TDT approach, the consumer maintaints in its state:
+
+	- ``volume``: records the number of tweets (after filtering) received per second.
 
 	:ivar ~.tokenizer: The tokenizer used to tokenize tweets.
 	:vartype tokenizer: :class:`~nlp.tokenizer.Tokenizer`
 	:ivar scheme: The term-weighting scheme used to create documents from tweets.
 	:vartype scheme: :class:`~nlp.weighting.TermWeightingScheme`
+	:ivar volume: A nutrition store that contains the number of tweets (after filtering) received per second.
+	:vartype volume: :class:`~tdt.nutrition.memory.MemoryNutritionStore`
 	"""
 
 	def __init__(self, queue, scheme=None, *args, **kwargs):
@@ -61,6 +68,9 @@ class FUEGOConsumer(Consumer):
 								   normalize_words=True, character_normalization_count=3,
 								   remove_unicode_entities=True)
 		self.scheme = scheme or TF()
+
+		# TDT
+		self.volume = MemoryNutritionStore()
 
 	async def understand(self, max_inactivity=-1, *args, **kwargs):
 		"""
