@@ -314,12 +314,17 @@ class SlidingELD(ELD):
 	In addition to the :class:`~tdt.nutrition.NutritionStore`, :class:`~tdt.algorithms.eld.SlidingELD` maintains in its state:
 
 	- The window size in seconds, used to partition the historic nutrition into time windows.
+	- The number of windows to use when detecting bursty terms.
+	  Since :class:`~tdt.algorithms.eld.SlidingELD` uses a decay mechanism, old time windows have little effect on the burst.
+	  Therefore the number of windows can be restrained.
 
-	:param window_size: The length in seconds of time windows.
-	:type window_size: int
+	:ivar window_size: The length in seconds of time windows.
+	:vartype window_size: int
+	:ivar windows: The number of windows to use when detecting bursty terms.
+	:vartype windows: int
 	"""
 
-	def __init__(self, store, window_size=60, decay_rate=(1./2.)):
+	def __init__(self, store, window_size=60, windows=10, decay_rate=(1./2.)):
 		"""
 		Instantiate the TDT algorithm with the :class:`~tdt.nutrition.NutritionStore` that will be used to detect topics and the decay rate.
 
@@ -333,7 +338,20 @@ class SlidingELD(ELD):
 		:type decay_rate: float
 		:param window_size: The length in seconds of time windows.
 		:type window_size: int
+		:param windows: The number of windows to use when detecting bursty terms.
+		:type windows: int
+
+		:raises ValueError: When the number of windows is not an integer.
+		:raises ValueError: When the number of windows is not a positive number.
 		"""
 
 		super(SlidingELD, self).__init__(store, decay_rate)
+
+		if type(windows) is not int:
+			raise ValueError(f"The number of windows should be an integer; received { type(windows) }")
+
+		if windows < 1:
+			raise ValueError(f"The number of windows should be a positive integer; received { windows }")
+
 		self.window_size = window_size
+		self.windows = windows

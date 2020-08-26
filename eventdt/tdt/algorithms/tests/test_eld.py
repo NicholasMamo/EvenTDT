@@ -398,3 +398,52 @@ class TestSlidingELD(unittest.TestCase):
 		store = MemoryNutritionStore()
 		algo = SlidingELD(store, window_size=120)
 		self.assertEqual(120, algo.window_size)
+
+	def test_init_windows(self):
+		"""
+		Test that when initializing the class, the number of windows is saved properly.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = SlidingELD(store, windows=5)
+		self.assertEqual(5, algo.windows)
+
+	def test_init_windows_float(self):
+		"""
+		Test that when initializing the class with a float as the number of windows, the class raises a ValueError.
+		"""
+
+		store = MemoryNutritionStore()
+		self.assertRaises(ValueError, SlidingELD, store, windows=1.2)
+
+	def test_init_windows_str(self):
+		"""
+		Test that when initializing the class with a string as the number of windows, the class raises a ValueError.
+		"""
+
+		store = MemoryNutritionStore()
+		self.assertRaises(ValueError, SlidingELD, store, windows='5')
+
+	def test_init_windows_negative(self):
+		"""
+		Test that when initializing the class with a negative number as the number of windows, the class raises a ValueError.
+		"""
+
+		store = MemoryNutritionStore()
+		self.assertRaises(ValueError, SlidingELD, store, windows=-1)
+
+	def test_init_windows_zero(self):
+		"""
+		Test that when initializing the class with zero as the number of windows, the class raises a ValueError.
+		"""
+
+		store = MemoryNutritionStore()
+		self.assertRaises(ValueError, SlidingELD, store, windows=0)
+
+	def test_init_windows_one(self):
+		"""
+		Test that when initializing the class with 1 as the number of windows, the class accepts it.
+		"""
+
+		store = MemoryNutritionStore()
+		self.assertTrue(SlidingELD(store, windows=1))
