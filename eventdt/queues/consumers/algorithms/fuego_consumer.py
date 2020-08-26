@@ -23,6 +23,8 @@ from nlp import Document, Tokenizer
 from nlp.weighting import TF, TFIDF
 from nlp.weighting.global_schemes import IDF
 from queues.consumers import Consumer
+from summarization.timeline import Timeline
+from summarization.timeline.nodes import DocumentNode
 import twitter
 
 class FUEGOConsumer(Consumer):
@@ -135,7 +137,9 @@ class FUEGOConsumer(Consumer):
 		:rtype: :class:`~summarization.timeline.Timeline`
 		"""
 
-		pass
+		timeline = Timeline(DocumentNode, expiry=90, min_similarity=0.6)
+
+		return timeline
 
 	def _to_documents(self, tweets):
 		"""
