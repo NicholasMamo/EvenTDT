@@ -482,6 +482,112 @@ class TestSlidingELD(unittest.TestCase):
 		algo = SlidingELD(store, normalized=False)
 		self.assertEqual(False, algo.normalized)
 
+	def test_partition(self):
+		"""
+		Test partitioning with an example.
+		"""
+
+	def test_partition_empty(self):
+		"""
+		Test that when partitioning an empty nutrition store, the correct keys are set, but all nutrition values are empty.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = SlidingELD(store, windows=10, window_size=60)
+		nutrition, historic = algo._partition(600)
+		self.assertEqual({ }, nutrition)
+		self.assertEqual(set(range(60, 600, 60)), set(historic.keys()))
+		self.assertTrue(all( { } == window for window in historic.values() ))
+
+	def test_partition_nutrition_include_timestamp(self):
+		"""
+		Test that when partitioning, the end timestamp of the nutrition is included.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = SlidingELD(store, window_size=2)
+		store.add(10, { 'a': 4 })
+		store.add(9, { 'a': 2 })
+		nutrition, _ = algo._partition(10)
+		self.assertEqual({ 'a': 6 }, nutrition)
+
+	def test_partition_nutrition_exclude_timestamp(self):
+		"""
+		Test that when partitioning, the start of the time window of the nutrition for the given timestamp is excluded.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = SlidingELD(store, window_size=2)
+		store.add(10, { 'a': 4 })
+		store.add(9, { 'a': 2 })
+		store.add(8, { 'a': 1 })
+		nutrition, _ = algo._partition(10)
+		self.assertEqual({ 'a': 6 }, nutrition)
+
+	def test_partition_historic_until_inclusive(self):
+		"""
+		Test that when partitioning, the ``until`` timestamp is inclusive in the nutrition and historic data.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = SlidingELD(store, window_size=2, windows=3)
+		store.add(10, { 'a': 4 })
+		store.add(9, { 'a': 2 })
+		store.add(8, { 'a': 1 })
+		store.add(7, { 'b': 1 })
+		store.add(6, { 'b': 3 })
+		store.add(5, { 'b': 5 })
+		nutrition, historic = algo._partition(10)
+		self.assertEqual({ 'a': 6 }, nutrition)
+		self.assertEqual({ 8, 6 }, set(historic.keys()))
+		self.assertEqual({ 'a': 1, 'b': 1 }, historic[8])
+		self.assertEqual({ 'b': 8 }, historic[6])
+
+	def test_partition_exclude_old(self):
+		"""
+		Test that when partitioning, old time windows are excluded.
+		"""
+
+		def test_partition_historic_until_inclusive(self):
+			"""
+			Test that when partitioning, the ``until`` timestamp is inclusive in the nutrition and historic data.
+			"""
+
+			store = MemoryNutritionStore()
+			algo = SlidingELD(store, window_size=2, windows=3)
+			store.add(10, { 'a': 4 })
+			store.add(9, { 'a': 2 })
+			store.add(8, { 'a': 1 })
+			store.add(7, { 'b': 1 })
+			store.add(6, { 'b': 3 })
+			store.add(5, { 'b': 5 })
+			store.add(4, { 'b': 7 })
+			store.add(3, { 'a': 2, 'b': 3 })
+			nutrition, historic = algo._partition(10)
+			self.assertEqual({ 'a': 6 }, nutrition)
+			self.assertEqual({ 8, 6 }, set(historic.keys()))
+			self.assertEqual({ 'a': 1, 'b': 1 }, historic[8])
+			self.assertEqual({ 'b': 8 }, historic[6])
+
+	def test_partition_time_windows(self):
+		"""
+		Test that when partitioning, the correct number of time windows is used.
+		"""
+
+		windows = 3
+
+		store = MemoryNutritionStore()
+		algo = SlidingELD(store, window_size=2, windows=windows)
+		store.add(10, { 'a': 4 })
+		store.add(9, { 'a': 2 })
+		store.add(8, { 'a': 1 })
+		store.add(7, { 'b': 1 })
+		store.add(6, { 'b': 3 })
+		store.add(5, { 'b': 5 })
+		store.add(4, { 'b': 7 })
+		store.add(3, { 'a': 2, 'b': 3 })
+		nutrition, historic = algo._partition(10)
+		self.assertEqual(2, len(historic))
 
 	def test_merge_empty(self):
 		"""

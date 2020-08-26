@@ -463,9 +463,29 @@ class SlidingELD(ELD):
 		:rtype: tuple of dict
 		"""
 
+		# NOTE: In this function, the ``since`` is exclusive, and the ``until`` is inclusive.
 
+		"""
+		Calculate the nutrition.
+		"""
+		nutrition = self.store.between(timestamp - self.window_size + 1, timestamp + 1)
+		nutrition = { t: values for t, values in nutrition.items()
+		 						if t <= timestamp }
+		nutrition = self._merge(*nutrition.values())
 
-		return ({ }, { })
+		"""
+		Calculate the historic nutrition.
+		"""
+		historic = { }
+		for window in range(1, self.windows):
+			since = timestamp - self.window_size * (window + 1) + 1
+			until = timestamp - self.window_size * window
+			data = self.store.between(since, until + 1)
+			data = { t: values for t, values in data.items()
+			 				   if t <= until }
+			historic[until] = self._merge(*data.values())
+
+		return (nutrition, historic)
 
 	def _merge(self, *args):
 		"""
