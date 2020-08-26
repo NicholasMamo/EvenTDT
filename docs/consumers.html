@@ -113,6 +113,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#module-queues.consumers.algorithms.zhao_consumer">Zhao et al. Consumer (2011)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-queues.consumers.algorithms.fire_consumer">FIRE Consumer - Mamo et al. (2017)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-queues.consumers.algorithms.eld_consumer">ELD Consumer - Mamo et al. (2019)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fuego-consumer-mamo-et-al-not-published">FUEGO Consumer - Mamo et al. (not published)</a></li>
 </ul>
 </li>
 </ul>
@@ -1070,6 +1071,18 @@ The participants are returned in the <cite>participants</cite> key a list of str
 
 </dd></dl>
 
+</div>
+<div class="section" id="fuego-consumer-mamo-et-al-not-published">
+<h4>FUEGO Consumer - Mamo et al. (not published)<a class="headerlink" href="#fuego-consumer-mamo-et-al-not-published" title="Permalink to this headline">¶</a></h4>
+<span class="target" id="module-queues.consumers.algorithms.fuego_consumer"></span><p>FUEGO (codename that means absolutely nothing) is a feature-pivot consumer built on the <a class="reference internal" href="#queues.consumers.algorithms.eld_consumer.ELDConsumer" title="queues.consumers.algorithms.eld_consumer.ELDConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ELDConsumer</span></code></a>’s own feature-pivot method.
+Differently from the <a class="reference internal" href="#queues.consumers.algorithms.eld_consumer.ELDConsumer" title="queues.consumers.algorithms.eld_consumer.ELDConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ELDConsumer</span></code></a>, FUEGO uses a sliding time-window instead of checkpoints.
+This allows for more accurate results in real-time.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Since FUEGO uses only a feature-pivot method, it is not very granular on its own.
+Therefore this consumer can only extract granular developments when combined with a <a class="reference internal" href="#queues.consumers.token_split_consumer.TokenSplitConsumer" title="queues.consumers.token_split_consumer.TokenSplitConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">TokenSplitConsumer</span></code></a>.
+For a combination of document-pivot and feature-pivot approaches, see the <a class="reference internal" href="#queues.consumers.algorithms.eld_consumer.ELDConsumer" title="queues.consumers.algorithms.eld_consumer.ELDConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ELDConsumer</span></code></a>.</p>
+</div>
 </div>
 </div>
 </div>

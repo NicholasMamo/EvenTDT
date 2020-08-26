@@ -87,3 +87,10 @@ ELD Consumer - Mamo et al. (2019)
 .. automodule:: queues.consumers.algorithms.eld_consumer
    :members:
    :special-members:
+
+FUEGO Consumer - Mamo et al. (not published)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: queues.consumers.algorithms.fuego_consumer
+   :members:
+   :special-members:
