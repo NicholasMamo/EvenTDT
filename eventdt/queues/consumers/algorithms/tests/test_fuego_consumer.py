@@ -12,6 +12,7 @@ path = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..')
 if path not in sys.path:
 	sys.path.append(path)
 
+from objects.exportable import Exportable
 from queues import Queue
 from queues.consumers.algorithms import FUEGOConsumer
 from nlp.document import Document
@@ -61,4 +62,24 @@ class TestFUEGOConsumer(unittest.TestCase):
 		self.assertTrue(consumer.tokenizer)
 		self.assertTrue(consumer.tokenizer.stopwords)
 		self.assertTrue(consumer.tokenizer.stem)
+
+	def test_init_scheme(self):
+		"""
+		Test that when creating a consumer, the class saves the scheme.
+		"""
+
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'idf.json'), 'r') as f:
+			data = json.loads(f.readline())
+			scheme = Exportable.decode(data)['tfidf']
+			consumer = FUEGOConsumer(Queue(), scheme=scheme)
+			self.assertEqual(scheme, consumer.scheme)
+
+	def test_init_default_scheme(self):
+		"""
+		Test that when creating a consumer without a scheme, the classes uses TF.
+		"""
+
+		consumer = FUEGOConsumer(Queue())
+		self.assertTrue(consumer.scheme)
+		self.assertEqual(TF, type(consumer.scheme))
 

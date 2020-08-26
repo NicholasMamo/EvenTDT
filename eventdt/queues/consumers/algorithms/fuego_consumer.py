@@ -20,6 +20,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from nlp import Tokenizer
+from nlp.weighting import TF
 from queues.consumers import Consumer
 
 class FUEGOConsumer(Consumer):
@@ -31,15 +32,23 @@ class FUEGOConsumer(Consumer):
 	In additional to the :class:`~queues.Queue`, the consumer maintains in its state one object to transform tweets into :class:`~nlp.document.Document` instances:
 
 	- ``tokenizer``: used to tokenize the text in tweets.
+	- ``scheme``: used to weight the tokens and create :class:`~nlp.document.Document` instances.
+
+	:ivar tokenizer: The tokenizer used to tokenize tweets.
+	:vartype tokenizer: :class:`~nlp.tokenizer.Tokenizer`
+	:ivar scheme: The term-weighting scheme used to create documents from tweets.
+	:vartype scheme: :class:`~nlp.weighting.TermWeightingScheme`
 	"""
 
-	def __init__(self, queue, *args, **kwargs):
+	def __init__(self, queue, scheme=None, *args, **kwargs):
 		"""
 		Create the consumer with a queue.
 
 		:param queue: The queue that will be receiving tweets.
 					  The consumer reads tweets from this queue and processes them.
 		:type queue: :class:`~queues.Queue`
+		:param scheme: The term-weighting scheme used to create documents from tweets.
+		:type scheme: :class:`~nlp.weighting.TermWeightingScheme`
 		"""
 
 		super(FUEGOConsumer, self).__init__(queue, *args, **kwargs)
@@ -47,6 +56,7 @@ class FUEGOConsumer(Consumer):
 		self.tokenizer = Tokenizer(stopwords=stopwords.words('english'),
 								   normalize_words=True, character_normalization_count=3,
 								   remove_unicode_entities=True)
+		self.scheme = scheme or TF()
 
 	async def understand(self, max_inactivity=-1, *args, **kwargs):
 		"""
