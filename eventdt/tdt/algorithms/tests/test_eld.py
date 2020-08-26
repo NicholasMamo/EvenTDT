@@ -399,6 +399,31 @@ class TestSlidingELD(unittest.TestCase):
 		algo = SlidingELD(store, window_size=120)
 		self.assertEqual(120, algo.window_size)
 
+	def test_init_window_size_negative(self):
+		"""
+		Test that when initializing the class with a negative window size, the class raises a ValueError.
+		"""
+
+		store = MemoryNutritionStore()
+		self.assertRaises(ValueError, SlidingELD, store, window_size=-1)
+
+	def test_init_window_size_zero(self):
+		"""
+		Test that when initializing the class with a window size of zero, the class raises a ValueError.
+		"""
+
+		store = MemoryNutritionStore()
+		self.assertRaises(ValueError, SlidingELD, store, window_size=0)
+
+	def test_init_window_size_positive(self):
+		"""
+		Test that when initializing the class with a positive window size, the class accepts it.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = SlidingELD(store, window_size=1)
+		self.assertTrue(algo)
+
 	def test_init_windows(self):
 		"""
 		Test that when initializing the class, the number of windows is saved properly.

@@ -353,11 +353,15 @@ class SlidingELD(ELD):
 						   This means that burst is then normalized between -1 and 1.
 		:type normalized: bool
 
+		:raises ValueError: When the window size is not a positive number.
 		:raises ValueError: When the number of windows is not an integer.
 		:raises ValueError: When the number of windows is not a positive number.
 		"""
 
 		super(SlidingELD, self).__init__(store, decay_rate)
+
+		if window_size < 1:
+			raise ValueError(f"The window size should be positive; received { window_size }")
 
 		if type(windows) is not int:
 			raise ValueError(f"The number of windows should be an integer; received { type(windows) }")
