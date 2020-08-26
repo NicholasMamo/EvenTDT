@@ -478,12 +478,13 @@ class SlidingELD(ELD):
 		"""
 		historic = { }
 		for window in range(1, self.windows):
-			since = timestamp - self.window_size * (window + 1) + 1
+			since = max(timestamp - self.window_size * (window + 1) + 1, 0)
 			until = timestamp - self.window_size * window
-			data = self.store.between(since, until + 1)
-			data = { t: values for t, values in data.items()
-			 				   if t <= until }
-			historic[until] = self._merge(*data.values())
+			if until > 0:
+				data = self.store.between(since, until + 1)
+				data = { t: values for t, values in data.items()
+				 				   if t <= until }
+				historic[until] = self._merge(*data.values())
 
 		return (nutrition, historic)
 
