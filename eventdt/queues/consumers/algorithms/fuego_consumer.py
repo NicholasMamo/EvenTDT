@@ -25,3 +25,38 @@ class FUEGOConsumer(Consumer):
 	Unlike other :ref:`consumers <consumers>`, the consumer has both a :func:`~queues.consumers.Consumer.ELDConsumer.run` and a :func:`~queues.consumers.fuego_consumer.FUEGOConsumer.understand` functions.
 	The former is the normal processing step, whereas the :func:`~queues.consumers.fuego_consumer.FUEGOConsumer.understand` function precedes the event and builds a TF-IDF scheme for the event.
 	"""
+
+	async def understand(self, max_inactivity=-1, *args, **kwargs):
+		"""
+		Understanding precedes the event and is tasked with generating knowledge automatically.
+
+		During understanding, the :class:`~queues.consumers.fuego_consumer.FUEGOConsumer` creates a :class:`~nlp.weighting.TermWeightingScheme` with an :class:`~nlp.weighting.global_schemes.idf.IDF` table based on the pre-event discussion.
+	   The consumer uses the :class:`~nlp.weighting.TermWeightingScheme` while processing tweets in real-time.
+
+		:param max_inactivity: The maximum time in seconds to wait idly without input before stopping.
+							   If it is negative, it is ignored.
+		:type max_inactivity: int
+
+		:return: The :class:`~nlp.weighting.tfidf.TFIDF` scheme built from the documents from the pre-event tweets.
+		:rtype: :class:`~nlp.weighting.tfidf.TFIDF`
+		"""
+
+		self._started()
+		tfidf = await self._construct_idf(max_inactivity=max_inactivity)
+		logger.info(f"TF-IDF constructed with { tfidf.global_scheme.documents } documents", process=str(self))
+		self._stopped()
+		return tfidf
+
+	async def _construct_idf(self, max_inactivity):
+		"""
+		Construct the TF-IDF table from the pre-event discussion.
+
+		:param max_inactivity: The maximum time in seconds to wait idly without input before stopping.
+							   If it is negative, it is ignored.
+		:type max_inactivity: int
+
+		:return: The constructed TF-IDF scheme.
+		:rtype: :class:`~nlp.weighting.tfidf.TFIDF`
+		"""
+
+		return { }
