@@ -18,6 +18,7 @@ from nlp.weighting import TF
 from objects.exportable import Exportable
 from queues import Queue
 from queues.consumers.algorithms import FUEGOConsumer
+import twitter
 from vsm import vector_math
 
 logger.set_logging_level(logger.LogLevel.WARNING)
@@ -520,3 +521,153 @@ class TestFUEGOConsumer(unittest.TestCase):
 			documents = consumer._to_documents(tweets)
 			timestamp = documents[-1].attributes['timestamp']
 			self.assertEqual(timestamp, consumer._time(documents[::-1]))
+
+	def test_damp_lower_bound(self):
+		"""
+		Test that damping has a lower bound of 0.
+		"""
+
+		consumer = FUEGOConsumer(Queue())
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+
+			for document in documents:
+				self.assertGreaterEqual(1, consumer._damp(document))
+
+	def test_damp_upper_bound(self):
+		"""
+		Test that damping has an upper bound of 0.
+		"""
+
+		consumer = FUEGOConsumer(Queue())
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+
+			for document in documents:
+				self.assertLessEqual(0, consumer._damp(document))
+
+	def test_damp_normal_tweet(self):
+		"""
+		Test that the damping factor of a tweet that is not a retweet is 1.
+		"""
+
+		trivial = True
+
+		consumer = FUEGOConsumer(Queue())
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+
+			for document in documents:
+				if not 'retweeted_status' in document.attributes['tweet']:
+					self.assertEqual(1, consumer._damp(document))
+					trivial = False
+
+		if trivial:
+			logger.warning("Trivial test")
+
+	def test_damp_quoted_tweet(self):
+		"""
+		Test that the damping factor of a quoted tweet is 1.
+		"""
+
+		trivial = True
+
+		consumer = FUEGOConsumer(Queue())
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+
+			for document in documents:
+				if 'quoted_status' in document.attributes['tweet'] and not 'retweeted_status' in document.attributes['tweet']:
+					self.assertEqual(1, consumer._damp(document))
+					trivial = False
+
+		if trivial:
+			logger.warning("Trivial test")
+
+	def test_damp_immediate_retweet(self):
+		"""
+		Test that the damping factor of a retweet at the same time as the original tweet is 1.
+		"""
+
+		trivial = True
+
+		consumer = FUEGOConsumer(Queue())
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+
+			for document in documents:
+				if 'retweeted_status' in document.attributes['tweet']:
+					# copy the timestamp of the retweet to the timestamp of the original tweet (doesn't work the other way round because timestamp_ms gets priority)
+					document.attributes['tweet']['retweeted_status']['timestamp_ms'] = document.attributes['tweet']['timestamp_ms']
+					self.assertEqual(1, consumer._damp(document))
+					trivial = False
+					break
+
+		if trivial:
+			logger.warning("Trivial test")
+
+	def test_damp_recency(self):
+		"""
+		Test that the damping factor of a recent retweet is higher than that of an older retweet.
+		"""
+
+		consumer = FUEGOConsumer(Queue())
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+
+			tweets = { } # retweets where the keys are the delay in retweeting
+			for document in documents:
+				if 'retweeted_status' in document.attributes['tweet']:
+					diff = twitter.extract_timestamp(document.attributes['tweet']) - twitter.extract_timestamp(document.attributes['tweet']['retweeted_status'])
+					tweets[diff] = document
+
+			trivial = True
+			# sort the tweets in ascending order of difference
+			tweets = sorted(tweets.items(), key=lambda tweet: tweet[0])
+			tweets = [ tweet[1] for tweet in tweets ]
+			self.assertTrue(len(tweets) > 2)
+			for i in range(0, len(tweets) - 1):
+				recent, older = consumer._damp(tweets[i]), consumer._damp(tweets[i + 1])
+				self.assertGreaterEqual(recent, older)
+				if recent > older:
+					trivial = False
+
+			if trivial:
+				logger.warning("Trivial test")
+
+	def test_damp_example(self):
+		"""
+		Test that the damping factor of a retweet with a custom delay.
+		"""
+
+		trivial = True
+
+		consumer = FUEGOConsumer(Queue())
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+
+			for document in documents:
+				if 'retweeted_status' in document.attributes['tweet']:
+					# copy the timestamp of the retweet to the timestamp of the original tweet (doesn't work the other way round because timestamp_ms gets priority)
+					# set the delay to one minute
+					document.attributes['tweet']['retweeted_status']['timestamp_ms'] = float(document.attributes['tweet']['timestamp_ms']) - 60
+					self.assertEqual(round(0.6065307), round(consumer._damp(document), 7))
+					trivial = False
+					break
+
+		if trivial:
+			logger.warning("Trivial test")

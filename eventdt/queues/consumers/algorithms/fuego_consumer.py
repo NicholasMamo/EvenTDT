@@ -10,6 +10,7 @@ This allows for more accurate results in real-time.
 	For a combination of document-pivot and feature-pivot approaches, see the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`.
 """
 
+import math
 import os
 import sys
 
@@ -372,6 +373,45 @@ class FUEGOConsumer(Consumer):
 		"""
 
 		pass
+
+	def _damp(self, document):
+		"""
+		Get the damping factor from the document.
+
+		The damping factor is a constant, 1, if the tweet is original or quoted.
+		If it is a retweet, the damping factor is calculated as:
+
+		.. math::
+
+			f = e^{-\\lambda \\frac{t_r - t_o}{60}}
+
+		where :math:`t_r` is the time when the original tweet was retweeted, and :math:`t_o` is the time when the original tweet was published.
+		:math:`\\lambda` is a parameter; the smaller it is, the less damping is applied, and the larger it is, the more damping is applied.
+
+		When the damping factor is 1, it means that no damping should be applied to the tweet's value (whatever value means in the context).
+		When the damping factor is less than 1, it means that the value should be reduced.
+
+		:param document: The document for which to calculate the damping factor.
+						 This function expects the document to have an attribute ``tweet`` with the tweet it represents.
+		:type document: :class:`~nlp.document.Document`
+
+		:return: The damping factor, bound between 0 and 1.
+		:rtype: float
+		"""
+
+		"""
+		If the tweet is not a retweet, apply no damping.
+		"""
+		tweet = document.attributes['tweet']
+		if 'retweeted_status' not in tweet:
+			return 1
+
+		"""
+		If the tweet is a retweet, apply damping proportional to the difference between the time it took to retweet it.
+		"""
+		retweet = tweet['retweeted_status']
+		diff = twitter.extract_timestamp(tweet) - twitter.extract_timestamp(retweet)
+		return math.exp(- 0.5 * diff / 60)
 
 	def _track_topics(self, topics, timestamp):
 		"""
