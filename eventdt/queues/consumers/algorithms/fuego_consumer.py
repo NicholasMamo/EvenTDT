@@ -141,6 +141,76 @@ class FUEGOConsumer(Consumer):
 
 		return timeline
 
+	def _filter_tweets(self, tweets):
+		"""
+		Filter the given tweets.
+		The rules are based on :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`'s and :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`'s filtering rules.
+
+		:param tweets: A list of tweets to filter.
+					   The tweets can either be tweet dictionaries or documents.
+					   If they are documents, this function looks for the tweet in the ``tweet`` attribute.
+		:type tweets: list of dict or list of :class:`~nlp.document.Document`
+
+		:return: A list of filtered tweets.
+		:type tweets: list of dict or list of :class:`~nlp.document.Document`
+		"""
+
+		filtered = [ ]
+
+		for item in tweets:
+			tweet = item.attributes['tweet'] if type(item) is Document else item
+			if self._validate_tweet(tweet):
+				filtered.append(item)
+
+		return filtered
+
+	def _validate_tweet(self, tweet):
+		"""
+		Filter the given tweet based on :class:`~.queues.consumers.fire_consumer.FIREConsumer`'s and :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`'s filtering rules.
+
+		FIRE's rules are:
+
+			#. The tweet has to be in English,
+
+			#. The tweet must contain no more than 2 hashtags,
+
+			#. The tweet's author must have favorited at least one tweet, and
+
+			#. The tweet's author must have at least one follower for every thousand tweets they've published.
+
+		ELD's rules are:
+
+			#. The tweet cannot have more than one URL because too many URLs are indicative of pre-planned content, and
+
+			#. The biography of the tweet's author cannot be empty because that is indicative of bots.
+
+		:param tweet: The tweet to validate.
+		:type tweet: dict
+
+		:return: A boolean indicating whether the tweet passed the filtering test.
+		:rtype: str
+		"""
+
+		if not tweet['lang'] == 'en':
+			return False
+
+		if len(tweet['entities']['hashtags']) > 2:
+			return False
+
+		if tweet['user']['favourites_count'] == 0:
+			return False
+
+		if tweet['user']['followers_count'] / tweet['user']['statuses_count'] < 1e-3:
+			return False
+
+		if len(tweet['entities']['urls']) > 1:
+			return False
+
+		if not tweet['user']['description']:
+			return False
+
+		return True
+
 	def _to_documents(self, tweets):
 		"""
 		Convert the given tweets into documents.
