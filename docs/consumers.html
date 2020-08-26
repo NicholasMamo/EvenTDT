@@ -1089,16 +1089,24 @@ For a combination of document-pivot and feature-pivot approaches, see the <a cla
 <dd><p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">FUEGOConsumer</span></code> is a real-time consumer with a custom algorithm to detect topics.
 Unlike other <a class="reference internal" href="#id1"><span class="std std-ref">consumers</span></a>, the consumer has both a <code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code> and a <code class="xref py py-func docutils literal notranslate"><span class="pre">understand()</span></code> functions.
 The former is the normal processing step, whereas the <code class="xref py py-func docutils literal notranslate"><span class="pre">understand()</span></code> function precedes the event and builds a TF-IDF scheme for the event.</p>
-<p>In additional to the <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>, the consumer maintains in its state one object to transform tweets into <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances:</p>
+<p>In additional to the <a class="reference internal" href="#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>, the consumer maintains in its state two objects to transform tweets into <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">tokenizer</span></code>: used to tokenize the text in tweets.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">scheme</span></code>: used to weight the tokens and create <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances.</p></li>
+</ul>
+<p>As part of the TDT approach, the consumer maintaints in its state:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">volume</span></code>: records the number of tweets (after filtering) received per second.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nutrition</span></code>: records the nutrition of terms at each second.</p></li>
 </ul>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>tokenizer</strong> – The tokenizer used to tokenize tweets.</p></li>
 <li><p><strong>scheme</strong> (<a class="reference internal" href="nlp.html#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>) – The term-weighting scheme used to create documents from tweets.</p></li>
+<li><p><strong>volume</strong> (<a class="reference internal" href="tdt.html#tdt.nutrition.memory.MemoryNutritionStore" title="tdt.nutrition.memory.MemoryNutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">MemoryNutritionStore</span></code></a>) – A nutrition store that contains the number of tweets (after filtering) received per second.</p></li>
+<li><p><a class="reference internal" href="tdt.html#module-tdt.nutrition" title="tdt.nutrition"><strong>nutrition</strong></a> (<a class="reference internal" href="tdt.html#tdt.nutrition.memory.MemoryNutritionStore" title="tdt.nutrition.memory.MemoryNutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">MemoryNutritionStore</span></code></a>) – A nutrition store that contains the nutrition of terms from tweets.
+The nutrition is stored for each second.</p></li>
 </ul>
 </dd>
 </dl>
