@@ -14,7 +14,7 @@ path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
-from algorithms import ELD
+from algorithms import ELD, SlidingELD
 from nutrition.memory import MemoryNutritionStore
 
 class TestELD(unittest.TestCase):
@@ -366,8 +366,26 @@ class TestELD(unittest.TestCase):
 		algo = ELD(store)
 		self.assertEqual(round(1.1975402610325056, 10),
 						 round(algo._compute_coefficient(3), 10))
+
 class TestSlidingELD(unittest.TestCase):
 	"""
 	Test the sliding window variant of Mamo et al. (2019)'s ELD algorithm.
 	"""
 
+	def test_init_store(self):
+		"""
+		Test that when initializing the class, the nutrition store is saved properly.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = SlidingELD(store)
+		self.assertEqual(store, algo.store)
+
+	def test_init_decay_rate(self):
+		"""
+		Test that when initializing the class, the decay rate is saved properly.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = SlidingELD(store, decay_rate=0.2)
+		self.assertEqual(0.2, algo.decay_rate)

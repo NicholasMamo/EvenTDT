@@ -312,3 +312,18 @@ class SlidingELD(ELD):
 	This class creates the checkpoints every time the :class:`~tdt.algorithms.eld.SlidingELD` is called.
 	"""
 
+	def __init__(self, store, decay_rate=(1./2.)):
+		"""
+		Instantiate the TDT algorithm with the :class:`~tdt.nutrition.NutritionStore` that will be used to detect topics and the decay rate.
+
+		:param store: The store containing historical nutrition data.
+					  The algorithm expects the timestamps to represent checkpoints.
+					  Therefore the nutrition store should have dictionaries with timestamps as keys, and the nutrition of terms in a dictionary as values.
+					  In other words, the timestamps should represent an entire checkpoint, not just a particular timestamp.
+		:type store: :class:`~tdt.nutrition.store.NutritionStore`
+		:param decay_rate: The decay rate used by the algorithm.
+						   The larger the decay rate, the less importance far-off windows have in the burst calculation.
+		:type decay_rate: float
+		"""
+
+		super(SlidingELD, self).__init__(store, decay_rate)
