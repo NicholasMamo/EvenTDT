@@ -757,7 +757,7 @@ This is the original implementation in the <a class="reference internal" href="c
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The implementation of <code class="xref py py-class docutils literal notranslate"><span class="pre">ELD</span></code> is based on the algorithm outlined in <a class="reference external" href="https://dl.acm.org/doi/abs/10.1145/3342220.3344921">ELD: Event TimeLine Detection – A Participant-Based Approach to Tracking Events by Mamo et al. (2019)</a>.</p>
+<p>The implementation of <a class="reference internal" href="#tdt.algorithms.eld.ELD" title="tdt.algorithms.eld.ELD"><code class="xref py py-class docutils literal notranslate"><span class="pre">ELD</span></code></a> is based on the algorithm outlined in <a class="reference external" href="https://dl.acm.org/doi/abs/10.1145/3342220.3344921">ELD: Event TimeLine Detection – A Participant-Based Approach to Tracking Events by Mamo et al. (2019)</a>.</p>
 </div>
 <dl class="class">
 <dt id="tdt.algorithms.eld.ELD">
@@ -830,6 +830,110 @@ If it is not given, all of the nutrition that is available until the <code class
 <li><p><strong>until</strong> (<em>float</em><em> or </em><em>None</em>) – The timestamp until when nutrition should be considered.
 If it is not given, all of the nutrition that is available since the <code class="docutils literal notranslate"><span class="pre">since</span></code> parameter is used.
 If the algorithm is being used retrospectively, this parameter can represent the current timestamp to get only past nutrition.</p></li>
+<li><p><strong>min_burst</strong> (<em>float</em>) – The minimum burst of a term to be considered emerging and returned.
+This value is exclusive so that terms with an unchanging nutrition (a burst of 0) are not returned.
+By default, only terms thet have a non-zero positive burst are returned.
+These terms have seen their popularity increase.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The breaking terms and their burst as a dictionary.
+The keys are the terms and the values are the respective burst values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tdt.algorithms.eld.SlidingELD">
+<em class="property">class </em><code class="sig-name descname">SlidingELD</code><span class="sig-paren">(</span><em class="sig-param">store</em>, <em class="sig-param">decay_rate=0.5</em>, <em class="sig-param">window_size=60</em>, <em class="sig-param">windows=10</em>, <em class="sig-param">normalized=True</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.algorithms.eld.SlidingELD" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#tdt.algorithms.eld.SlidingELD" title="tdt.algorithms.eld.SlidingELD"><code class="xref py py-class docutils literal notranslate"><span class="pre">SlidingELD</span></code></a> is a variation of <a class="reference internal" href="#tdt.algorithms.eld.ELD" title="tdt.algorithms.eld.ELD"><code class="xref py py-class docutils literal notranslate"><span class="pre">ELD</span></code></a> that uses a sliding window instead of checkpoints.
+This class creates the checkpoints every time the <a class="reference internal" href="#tdt.algorithms.eld.SlidingELD" title="tdt.algorithms.eld.SlidingELD"><code class="xref py py-class docutils literal notranslate"><span class="pre">SlidingELD</span></code></a> is called.</p>
+<p>In addition to the <a class="reference internal" href="#tdt.nutrition.NutritionStore" title="tdt.nutrition.NutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code></a>, <a class="reference internal" href="#tdt.algorithms.eld.SlidingELD" title="tdt.algorithms.eld.SlidingELD"><code class="xref py py-class docutils literal notranslate"><span class="pre">SlidingELD</span></code></a> maintains in its state:</p>
+<ul class="simple">
+<li><p>The window size in seconds, used to partition the historic nutrition into time windows.</p></li>
+<li><p>The number of windows to use when detecting bursty terms.
+Since <a class="reference internal" href="#tdt.algorithms.eld.SlidingELD" title="tdt.algorithms.eld.SlidingELD"><code class="xref py py-class docutils literal notranslate"><span class="pre">SlidingELD</span></code></a> uses a decay mechanism, old time windows have little effect on the burst.
+Therefore the number of windows can be restrained.</p></li>
+<li><p>A boolean indicating whether to normalize nutrition.
+Unlike <a class="reference internal" href="#tdt.algorithms.eld.ELD" title="tdt.algorithms.eld.ELD"><code class="xref py py-class docutils literal notranslate"><span class="pre">ELD</span></code></a>, since the algorithm uses a sliding time window, the nutrition cannot be normalized in advance.
+If nutrition is not normalized, or rescaled between 0 and 1, for each time window, burst cannot be interpreted because it is no longer bound between -1 and 1.
+If this flag is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, the algorithm normalizes each time window so that burst is interpretable.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>window_size</strong> (<em>int</em>) – The length in seconds of time windows.</p></li>
+<li><p><strong>windows</strong> (<em>int</em>) – The number of windows to use when detecting bursty terms.</p></li>
+<li><p><strong>normalized</strong> (<em>bool</em>) – A boolean indicating whether to normalize the nutrition in each time window when calculating the burst.
+When nutrition is normalized, it is bound between 0 and 1.
+This means that burst is then normalized between -1 and 1.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="tdt.algorithms.eld.SlidingELD.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">store</em>, <em class="sig-param">decay_rate=0.5</em>, <em class="sig-param">window_size=60</em>, <em class="sig-param">windows=10</em>, <em class="sig-param">normalized=True</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.algorithms.eld.SlidingELD.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instantiate the TDT algorithm with the <a class="reference internal" href="#tdt.nutrition.NutritionStore" title="tdt.nutrition.NutritionStore"><code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code></a> that will be used to detect topics and the decay rate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>store</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">NutritionStore</span></code>) – The store containing historical nutrition data.
+The algorithm expects the timestamps to represent checkpoints.
+Therefore the nutrition store should have dictionaries with timestamps as keys, and the nutrition of terms in a dictionary as values.
+In other words, the timestamps should represent an entire checkpoint, not just a particular timestamp.</p></li>
+<li><p><strong>decay_rate</strong> (<em>float</em>) – The decay rate used by the algorithm.
+The larger the decay rate, the less importance far-off windows have in the burst calculation.</p></li>
+<li><p><strong>window_size</strong> (<em>int</em>) – The length in seconds of time windows.</p></li>
+<li><p><strong>windows</strong> (<em>int</em>) – The number of windows to use when detecting bursty terms.</p></li>
+<li><p><strong>normalized</strong> (<em>bool</em>) – A boolean indicating whether to normalize the nutrition in each time window when calculating the burst.
+When nutrition is normalized, it is bound between 0 and 1.
+This means that burst is then normalized between -1 and 1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – When the window size is not a positive number.</p></li>
+<li><p><strong>ValueError</strong> – When the number of windows is not an integer.</p></li>
+<li><p><strong>ValueError</strong> – When the number of windows is not a positive number.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tdt.algorithms.eld.SlidingELD.detect">
+<code class="sig-name descname">detect</code><span class="sig-paren">(</span><em class="sig-param">timestamp=None</em>, <em class="sig-param">min_burst=0</em><span class="sig-paren">)</span><a class="headerlink" href="#tdt.algorithms.eld.SlidingELD.detect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detect topics using historical data from the nutrition store.</p>
+<p>This function partitions the nutrition in the store into time windows.
+The most recent time window ends at the given <code class="docutils literal notranslate"><span class="pre">timestamp</span></code>.
+The previous time windows are used as historic windows.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function assumes that nutrition is always zero or positive.
+As a result, the burst can be calculated only for terms that have a nutrition equal to or greater than the minimum burst.
+The function makes an exception if the minimum burst is negative.
+In this case, all terms have to be considered in the calculation.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The minimum burst is exclusive.
+This is so that terms with a burst of 0 (no change from previous checkpoints) are excluded.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If there is no historic data yet, the function returns an empty set of terms.
+Otherwise, the function would be trivial and all terms would be considered to be bursty.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timestamp</strong> (<em>float</em>) – The timestamp at which to calculate the burst of terms.
+If it is not given, the latest timestamp in the nutrition store is used.</p></li>
 <li><p><strong>min_burst</strong> (<em>float</em>) – The minimum burst of a term to be considered emerging and returned.
 This value is exclusive so that terms with an unchanging nutrition (a burst of 0) are not returned.
 By default, only terms thet have a non-zero positive burst are returned.
