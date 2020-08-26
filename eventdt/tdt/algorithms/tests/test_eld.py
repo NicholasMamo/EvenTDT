@@ -366,3 +366,8 @@ class TestELD(unittest.TestCase):
 		algo = ELD(store)
 		self.assertEqual(round(1.1975402610325056, 10),
 						 round(algo._compute_coefficient(3), 10))
+class TestSlidingELD(unittest.TestCase):
+	"""
+	Test the sliding window variant of Mamo et al. (2019)'s ELD algorithm.
+	"""
+

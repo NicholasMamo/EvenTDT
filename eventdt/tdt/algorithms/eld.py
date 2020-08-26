@@ -51,7 +51,7 @@ The higher the decay rate, the less importance old checkpoints receive.
 
 .. note::
 
-	The implementation of :class:`~tdt.algorithms.ELD` is based on the algorithm outlined in `ELD: Event TimeLine Detection -- A Participant-Based Approach to Tracking Events by Mamo et al. (2019) <https://dl.acm.org/doi/abs/10.1145/3342220.3344921>`_.
+	The implementation of :class:`~tdt.algorithms.eld.ELD` is based on the algorithm outlined in `ELD: Event TimeLine Detection -- A Participant-Based Approach to Tracking Events by Mamo et al. (2019) <https://dl.acm.org/doi/abs/10.1145/3342220.3344921>`_.
 """
 
 import math
@@ -305,3 +305,10 @@ class ELD(TDTAlgorithm):
 			return 1
 		else:
 			return sum([ self._compute_decay(s + 1) for s in range(s) ])
+
+class SlidingELD(ELD):
+	"""
+	:class:`~tdt.algorithms.eld.SlidingELD` is a variation of :class:`~tdt.algorithms.eld.ELD` that uses a sliding window instead of checkpoints.
+	This class creates the checkpoints every time the :class:`~tdt.algorithms.eld.SlidingELD` is called.
+	"""
+
