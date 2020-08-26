@@ -137,7 +137,65 @@ class FUEGOConsumer(Consumer):
 		:rtype: :class:`~summarization.timeline.Timeline`
 		"""
 
-		timeline = Timeline(DocumentNode, expiry=90, min_similarity=0.6)
+		timeline = Timeline(DocumentNode, expiry=90, min_similarity=0.6, max_time=300)
+
+		"""
+		The consumer keeps track of the keywords that are breaking at any given moment.
+		"""
+		ongoing = [ ]
+
+		"""
+		The consumer keeps working until it is stopped or it receives no more tweets for a long period of time.
+		"""
+		while self.active:
+			"""
+			If the queue is idle, stop and wait for input.
+			"""
+			active = await self._wait_for_input(max_inactivity=max_inactivity)
+			if not active:
+				break
+
+			if self.queue.length():
+				"""
+				Get all the tweets in the queue and convert them to documents.
+				"""
+				tweets = self.queue.dequeue_all()
+				tweets = self._filter_tweets(tweets)
+				documents = self._to_documents(tweets)
+				if not documents:
+					continue
+				time = self._time(documents)
+
+				"""
+				The TDT process is as follows:
+
+				1. Update the volume nutrition.
+				2. Update the term nutrition values.
+				3. Identify whether the currently-breaking terms are still bursty (tracking).
+				4. If the stream is not dormant (receiving very few tweets), identify any new bursty terms.
+				"""
+				self._update_volume(documents)
+				self._update_nutrition(documents)
+				ongoing = self._track_topics(ongoing, time)
+				if not self._dormant(time):
+					bursty = self._detect_topics(time)
+					ongoing = list(set(ongoing + bursty))
+
+				"""
+				The summarization process is as follows:
+
+				1. Collect the tweets mentioning any of the currently bursty terms.
+				2. Add them to the timeline.
+				3. If the timeline creates a new node, summarize the last finished node.
+				"""
+				for term in ongoing:
+					timeline.add(time, self._collect(term, documents))
+
+				node = timeline.nodes[-1]
+				if node.expired(timeline.expiry, time) and not node.attributes.get('printed'):
+					summary = self._summarize(node)
+					logger.info(f"{datetime.fromtimestamp(node.created_at).ctime()}: { str(str(summary)) }", process=str(self))
+					node.attributes['printed'] = True
 
 		return timeline
 
@@ -249,3 +307,115 @@ class FUEGOConsumer(Consumer):
 			documents.append(document)
 
 		return documents
+
+	def _time(self, documents):
+		"""
+		Get the current time.
+		The time is taken from the most recent :class:`~nlp.document.Document`.
+
+		:param documents: The list of documents from where to get the timestamp.
+		:type documents: list of :class:`~nlp.document.Document`
+
+		:return: The current time, or the timestamp of the most recently-published :class:`~nlp.document.Document`..
+		:rtype: float
+		"""
+
+		return 0
+
+	def _update_volume(self, documents):
+		"""
+		Update the volume based on the given documents.
+
+		The function simply counts the number of documents published at each second and adds them to the nutrition store.
+
+		:param documents: The list of documents from where to get the timestamp.
+		:type documents: list of :class:`~nlp.document.Document`
+		"""
+
+		pass
+
+	def _update_nutrition(self, documents):
+		"""
+		Update the nutrition based on the given documents.
+
+		The function adds the term weights of the documents to the class' nutrition store.
+		It separates the nutrition based on timestamp.
+		For each second, it keeps track of the nutrition of each distinct term.
+
+		:param documents: The list of documents from where to get the timestamp.
+		:type documents: list of :class:`~nlp.document.Document`
+		"""
+
+		pass
+
+	def _track_topics(self, topics, timestamp):
+		"""
+		Check whether the given topics are still ongoing at the given time.
+		Ongoing topics are those terms whose burst has not yet dipped below a specific value.
+
+		:param topics: The list of topics to check whether they are still ongoing.
+		:type topics: list of str
+		:param timestamp: The timestamp at which to detect bursty terms.
+		:type timestamp: float
+
+		:return: The list of keywords that are still ongoing at the given timestamp.
+		:rtype: list of str
+		"""
+
+		return topics
+
+	def _dormant(self, timestamp):
+		"""
+		Check whether the stream is dormant.
+		A dormant stream is one that has received very few tweets in the last time window.
+
+		:param timestamp: The timestamp at which to detect bursty terms.
+		:type timestamp: float
+
+		:return: A boolean indicating whether the stream is dormant.
+		:rtype: bool
+		"""
+
+		return False
+
+	def _detect_topics(self, timestamp):
+		"""
+		Detect bursty terms at the given time.
+
+		:param timestamp: The timestamp at which to detect bursty terms.
+		:type timestamp: float
+
+		:return: A list of keywords that are bursty at the given timestamp.
+		:rtype: list of str
+		"""
+
+		return [ ]
+
+	def _collect(self, term, documents):
+		"""
+		Collect all documents that contain the given term.
+		The function looks for the term in the document's dimensions.
+
+		:param term: The term to look for.
+		:type term: str
+		:param documents: The list of documents where to look for the term.
+		:type documents: list of :class:`~nlp.document.Document`
+
+		:return: A list of documents that contain the given term.
+		:rtype: list of :class:`~nlp.document.Document`
+		"""
+
+		return documents
+
+	def _summarize(self, node):
+		"""
+		Summarize the given node.
+
+		:param node: The node to summarize.
+		:type node: :class:`~summarization.timeline.nodes.Node`
+
+		:return: A summary of the given node.
+		:rtype: :class:`~summarization.summary.Summary`
+		"""
+
+		pass
