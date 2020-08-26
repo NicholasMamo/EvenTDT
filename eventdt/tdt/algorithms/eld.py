@@ -310,9 +310,16 @@ class SlidingELD(ELD):
 	"""
 	:class:`~tdt.algorithms.eld.SlidingELD` is a variation of :class:`~tdt.algorithms.eld.ELD` that uses a sliding window instead of checkpoints.
 	This class creates the checkpoints every time the :class:`~tdt.algorithms.eld.SlidingELD` is called.
+
+	In addition to the :class:`~tdt.nutrition.NutritionStore`, :class:`~tdt.algorithms.eld.SlidingELD` maintains in its state:
+
+	- The window size in seconds, used to partition the historic nutrition into time windows.
+
+	:param window_size: The length in seconds of time windows.
+	:type window_size: int
 	"""
 
-	def __init__(self, store, decay_rate=(1./2.)):
+	def __init__(self, store, window_size=60, decay_rate=(1./2.)):
 		"""
 		Instantiate the TDT algorithm with the :class:`~tdt.nutrition.NutritionStore` that will be used to detect topics and the decay rate.
 
@@ -324,6 +331,9 @@ class SlidingELD(ELD):
 		:param decay_rate: The decay rate used by the algorithm.
 						   The larger the decay rate, the less importance far-off windows have in the burst calculation.
 		:type decay_rate: float
+		:param window_size: The length in seconds of time windows.
+		:type window_size: int
 		"""
 
 		super(SlidingELD, self).__init__(store, decay_rate)
+		self.window_size = window_size

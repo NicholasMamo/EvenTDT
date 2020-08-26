@@ -389,3 +389,12 @@ class TestSlidingELD(unittest.TestCase):
 		store = MemoryNutritionStore()
 		algo = SlidingELD(store, decay_rate=0.2)
 		self.assertEqual(0.2, algo.decay_rate)
+
+	def test_init_window_size(self):
+		"""
+		Test that when initializing the class, the window size is saved properly.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = SlidingELD(store, window_size=120)
+		self.assertEqual(120, algo.window_size)
