@@ -32,3 +32,22 @@ class TestFUEGOConsumer(unittest.TestCase):
 			loop = asyncio.get_event_loop()
 			loop.run_until_complete(future)
 		return wrapper
+
+	def test_init_name(self):
+		"""
+		Test that the ELD consumer passes on the name to the base class.
+		"""
+
+		name = 'Test Consumer'
+		consumer = FUEGOConsumer(Queue(), name=name)
+		self.assertEqual(name, str(consumer))
+
+	def test_init_queue(self):
+		"""
+		Test that when creating a consumer, the class saves the queue.
+		"""
+
+		queue = Queue()
+		consumer = FUEGOConsumer(queue)
+		self.assertEqual(queue, consumer.queue)
+		self.assertEqual(0, consumer.queue.length())

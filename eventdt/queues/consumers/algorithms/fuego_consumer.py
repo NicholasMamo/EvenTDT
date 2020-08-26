@@ -60,3 +60,16 @@ class FUEGOConsumer(Consumer):
 		"""
 
 		return { }
+	async def _consume(self, max_inactivity, *args, **kwargs):
+		"""
+		Consume and process the documents in the queue.
+
+		:param max_inactivity: The maximum time in seconds to wait idly without input before stopping.
+							   If it is negative, the consumer keeps waiting for input until the maximum time expires.
+		:type max_inactivity: int
+
+		:return: The constructed timeline.
+		:rtype: :class:`~summarization.timeline.Timeline`
+		"""
+
+		pass
