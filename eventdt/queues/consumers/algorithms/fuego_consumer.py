@@ -13,10 +13,13 @@ This allows for more accurate results in real-time.
 import os
 import sys
 
+from nltk.corpus import stopwords
+
 path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
+from nlp import Tokenizer
 from queues.consumers import Consumer
 
 class FUEGOConsumer(Consumer):
@@ -24,6 +27,10 @@ class FUEGOConsumer(Consumer):
 	The :class:`~queues.consumers.fuego_consumer.FUEGOConsumer` is a real-time consumer with a custom algorithm to detect topics.
 	Unlike other :ref:`consumers <consumers>`, the consumer has both a :func:`~queues.consumers.Consumer.ELDConsumer.run` and a :func:`~queues.consumers.fuego_consumer.FUEGOConsumer.understand` functions.
 	The former is the normal processing step, whereas the :func:`~queues.consumers.fuego_consumer.FUEGOConsumer.understand` function precedes the event and builds a TF-IDF scheme for the event.
+
+	In additional to the :class:`~queues.Queue`, the consumer maintains in its state one object to transform tweets into :class:`~nlp.document.Document` instances:
+
+	- ``tokenizer``: used to tokenize the text in tweets.
 	"""
 
 	def __init__(self, queue, *args, **kwargs):
@@ -36,6 +43,10 @@ class FUEGOConsumer(Consumer):
 		"""
 
 		super(FUEGOConsumer, self).__init__(queue, *args, **kwargs)
+
+		self.tokenizer = Tokenizer(stopwords=stopwords.words('english'),
+								   normalize_words=True, character_normalization_count=3,
+								   remove_unicode_entities=True)
 
 	async def understand(self, max_inactivity=-1, *args, **kwargs):
 		"""

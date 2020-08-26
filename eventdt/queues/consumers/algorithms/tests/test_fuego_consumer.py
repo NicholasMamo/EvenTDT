@@ -51,3 +51,14 @@ class TestFUEGOConsumer(unittest.TestCase):
 		consumer = FUEGOConsumer(queue)
 		self.assertEqual(queue, consumer.queue)
 		self.assertEqual(0, consumer.queue.length())
+
+	def test_init_with_tokenizer(self):
+		"""
+		Test that when creating a consumer, the class creates a tokenizer.
+		"""
+
+		consumer = FUEGOConsumer(Queue())
+		self.assertTrue(consumer.tokenizer)
+		self.assertTrue(consumer.tokenizer.stopwords)
+		self.assertTrue(consumer.tokenizer.stem)
+
