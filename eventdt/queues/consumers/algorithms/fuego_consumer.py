@@ -318,9 +318,19 @@ class FUEGOConsumer(Consumer):
 
 		:return: The current time, or the timestamp of the most recently-published :class:`~nlp.document.Document`..
 		:rtype: float
+
+		:raises ValueError: If the list of documents is empty.
+		:raises ValueError: If the given documents are not presented as a list.
 		"""
 
-		return 0
+		if not documents:
+			raise ValueError(f"The given list of documents is empty")
+
+		if type(documents) is not list:
+			raise ValueError(f"Expected a list of documents; received { type(documents) }")
+
+		timestamps = [ document.attributes['timestamp'] for document in documents ]
+		return max(timestamps)
 
 	def _update_volume(self, documents):
 		"""

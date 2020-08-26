@@ -445,3 +445,60 @@ class TestFUEGOConsumer(unittest.TestCase):
 
 		if trivial:
 			logger.warning("Trivial test")
+
+	def test_time_empty(self):
+		"""
+		Test that when trying to get the time from an empty list of documents, the function raises a ValueError.
+		"""
+
+		consumer = FUEGOConsumer(Queue())
+		self.assertRaises(ValueError, consumer._time, [ ])
+
+	def test_time_document(self):
+		"""
+		Test that when trying to get the time from one document, the function raises a ValueError.
+		"""
+
+		consumer = FUEGOConsumer(Queue())
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-100.json'), 'r') as f:
+			lines = [ f.readline() ]
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			self.assertRaises(ValueError, consumer._time, documents[0])
+
+	def test_time_list_of_document(self):
+		"""
+		Test that when trying to get the time from a list of one document, the function returns its timestamp.
+		"""
+
+		consumer = FUEGOConsumer(Queue())
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-100.json'), 'r') as f:
+			lines = [ f.readline() ]
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			self.assertEqual(documents[0].attributes['timestamp'], consumer._time(documents))
+
+	def test_time_list_of_documents(self):
+		"""
+		Test that when trying to get the time from a list of document, the function returns the most recent timestamp.
+		"""
+
+		consumer = FUEGOConsumer(Queue())
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			self.assertEqual(documents[-1].attributes['timestamp'], consumer._time(documents))
+
+	def test_time_mix_documents(self):
+		"""
+		Test that when trying to get the time from a mixed (unordered) list of document, the function returns the most recent timestamp.
+		"""
+
+		consumer = FUEGOConsumer(Queue())
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			timestamp = documents[-1].attributes['timestamp']
+			self.assertEqual(timestamp, consumer._time(documents[::-1]))
