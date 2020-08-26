@@ -21,7 +21,9 @@ if path not in sys.path:
 
 from nlp import Tokenizer
 from nlp.weighting import TF
+from nlp import Document, Tokenizer
 from queues.consumers import Consumer
+import twitter
 
 class FUEGOConsumer(Consumer):
 	"""
@@ -105,3 +107,42 @@ class FUEGOConsumer(Consumer):
 		"""
 
 		pass
+
+	def _to_documents(self, tweets):
+		"""
+		Convert the given tweets into documents.
+		If the input is made up of documents, these are not changed, but the function adds additional attributes to them.
+
+		:param tweets: A list of tweets.
+		:type tweets: list of dict or list of :class:`~nlp.document.Document`
+
+		:return: A list of documents created from the tweets in the same order as the given tweets.
+				 Documents are normalized and contain the original tweet in the ``tweet`` attribute.
+		:rtype: list of :class:`~nlp.document.Document`
+		"""
+
+		documents = [ ]
+
+		"""
+		The text used for the document depend on what kind of tweet it is.
+		If the tweet is too long to fit in the tweet, the full text is used;
+
+		Retain the comment of a quoted status.
+		However, if the tweet is a plain retweet, get the full text.
+		"""
+		for item in tweets:
+			tweet = item.attributes['tweet'] if type(item) is Document else item
+			text = twitter.full_text(tweet)
+
+			"""
+			Create the document and save the tweet in it.
+			"""
+			tokens = self.tokenizer.tokenize(text)
+			document = item if type(item) is Document else self.scheme.create(tokens, text=text)
+			document.attributes['id'] = tweet.get('id')
+			document.attributes['timestamp'] = twitter.extract_timestamp(tweet)
+			document.attributes['tweet'] = tweet
+			document.normalize()
+			documents.append(document)
+
+		return documents
