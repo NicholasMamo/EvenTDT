@@ -31,6 +31,7 @@ Accepted arguments:
 	- ``--periodicity``				*<Optional>* The periodicity in seconds of the consumer (used by the `FIREConsumer`, `StatConsumer` and `ZhaoConsumer`); defaults to 60 seconds.
 	- ``--no-cache``				*<Optional>* If specified, the cached understanding is not used. The new understanding is cached instead.
 	- ``--scheme``					*<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used.
+	- ``--min-volume``				*<Optional>* The minimum volume to consider the stream to be active and look for breaking terms (used by the `FUEGOConsumer`); defaults to 10.
 	- ``--min-size``				*<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
 	- ``--min-burst``				*<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5.
 	- ``--threshold``				*<Optional>* The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
@@ -80,6 +81,7 @@ def setup_args():
 		- ``--periodicity``				*<Optional>* The periodicity in seconds of the consumer (used by the `FIREConsumer`, `StatConsumer` and `ZhaoConsumer`); defaults to 60 seconds.
 		- ``--no-cache``				*<Optional>* If specified, the cached understanding is not used. The new understanding is cached instead.
 		- ``--scheme``					*<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used. This can be overwritten if there is event understanding.
+		- ``--min-volume``				*<Optional>* The minimum volume to consider the stream to be active and look for breaking terms (used by the `FUEGOConsumer`); defaults to 10.
 		- ``--min-size``				*<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
 		- ``--min-burst``				*<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5.
 		- ``--threshold``				*<Optional>* The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
@@ -118,6 +120,8 @@ def setup_args():
 						help="""<Optional> If specified, the path to the term-weighting scheme file.
 								If it is not specified, the term frequency scheme is used instead.
 								This can be overwritten if there is event understanding.""")
+	parser.add_argument('--min-volume', type=float, required=False, default=10,
+						help='<Optional> The minimum volume to consider the stream to be active and look for breaking terms (used by the `FUEGOConsumer`); defaults to 10.')
 	parser.add_argument('--min-size', type=int, required=False, default=3,
 						help='<Optional> The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.')
 	parser.add_argument('--min-burst', type=float, required=False, default=0.5,
@@ -449,7 +453,7 @@ def consume_process(comm, loop, consumer, max_inactivity):
 	comm['timeline'] = loop.run_until_complete(consume(consumer, max_inactivity))
 	logger.info("Consumption ended")
 
-def create_consumer(consumer, queue, splits=None, scheme=None, min_size=3, min_burst=0.5, threshold=0.5, max_intra_similarity=0.8, periodicity=60, *args, **kwargs):
+def create_consumer(consumer, queue, splits=None, scheme=None, min_size=3, min_burst=0.5, threshold=0.5, max_intra_similarity=0.8, periodicity=60, min_volume=10, *args, **kwargs):
 	"""
 	Create a consumer.
 	If splits are given, the function creates a :class:`~queues.consumers.token_split_consumer.TokenSplitConsumer`.
@@ -463,6 +467,8 @@ def create_consumer(consumer, queue, splits=None, scheme=None, min_size=3, min_b
 	:type queue: :class:`~queues.Queue`
 	:param scheme: The scheme to use when consuming the file.
 	:type scheme: None or :class:`~nlp.weighting.TermWeightingScheme`
+	:param min_volume: The minimum volume to consider the stream to be active and look for breaking terms (used by the `FUEGOConsumer`); defaults to 10.
+	:type min_volume: float
 	:param min_size: The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
 	:type min_size: int
 	:param min_burst: The minimum burst to accept a term to be breaking, defaults to 0.5.
@@ -486,7 +492,7 @@ def create_consumer(consumer, queue, splits=None, scheme=None, min_size=3, min_b
 			return TokenSplitConsumer(queue, splits, consumer, scheme=scheme, min_size=min_size,
 									  threshold=threshold, periodicity=periodicity)
 		elif consumer is FUEGOConsumer:
-			return TokenSplitConsumer(queue, splits, consumer, scheme=scheme)
+			return TokenSplitConsumer(queue, splits, consumer, scheme=scheme, min_volume=min_volume)
 		elif consumer is StatConsumer:
 			return TokenSplitConsumer(queue, splits, consumer, periodicity=periodicity)
 
@@ -500,7 +506,7 @@ def create_consumer(consumer, queue, splits=None, scheme=None, min_size=3, min_b
 		return consumer(queue, scheme=scheme, min_size=min_size,
 						threshold=threshold, periodicity=periodicity)
 	elif consumer is FUEGOConsumer:
-		return consumer(queue, scheme=scheme)
+		return consumer(queue, scheme=scheme, min_volume=min_volume)
 	elif consumer is StatConsumer:
 		return consumer(queue, periodicity=periodicity)
 
