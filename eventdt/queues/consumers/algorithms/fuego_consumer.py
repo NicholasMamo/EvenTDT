@@ -375,7 +375,11 @@ class FUEGOConsumer(Consumer):
 		:type documents: list of :class:`~nlp.document.Document`
 		"""
 
-		pass
+		for document in documents:
+			damping = self._damp(document)
+			timestamp = document.attributes['timestamp']
+			volume = self.volume.get(timestamp) or 0
+			self.volume.add(timestamp, volume + damping)
 
 	def _update_nutrition(self, documents):
 		"""

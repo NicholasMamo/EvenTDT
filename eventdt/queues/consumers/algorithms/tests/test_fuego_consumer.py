@@ -544,6 +544,176 @@ class TestFUEGOConsumer(unittest.TestCase):
 			timestamp = documents[-1].attributes['timestamp']
 			self.assertEqual(timestamp, consumer._time(documents[::-1]))
 
+	def test_volume_all_documents(self):
+		"""
+		Test that the volume function counts all the documents properly.
+		This is tested by setting the damping to 0.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), damping=0)
+		self.assertEqual({ }, consumer.volume.all())
+
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			consumer._update_volume(documents)
+			self.assertEqual(len(lines), sum(consumer.volume.all().values()))
+
+	def test_volume_all_documents_gradual(self):
+		"""
+		Test that the volume function counts all the documents properly even when adding them gradually.
+		This is tested by setting the damping to 0.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), damping=0)
+		self.assertEqual({ }, consumer.volume.all())
+
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			for document in documents:
+				consumer._update_volume([ document ])
+			self.assertEqual(len(lines), sum(consumer.volume.all().values()))
+
+	def test_volume_all_timestamps(self):
+		"""
+		Test that the volume function includes all recorded timestamps.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), damping=0)
+		self.assertEqual({ }, consumer.volume.all())
+
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			timestamps = set( document.attributes['timestamp'] for document in documents )
+			consumer._update_volume(documents)
+			self.assertEqual(timestamps, set(consumer.volume.all()))
+
+	def test_volume_update(self):
+		"""
+		Test that when there is a volume value set for a timestamp, adding a new document at that timestamp increments the value.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), damping=0)
+		self.assertEqual({ }, consumer.volume.all())
+
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			document = documents[0]
+			timestamp = document.attributes['timestamp']
+			consumer.volume.add(timestamp, 1)
+			self.assertEqual(1, consumer.volume.get(timestamp))
+			consumer._update_volume([ document ])
+			self.assertEqual(2, consumer.volume.get(timestamp))
+
+	def test_volume_update_timestamp_only(self):
+		"""
+		Test that when updating the volume at a certain timestamp, the other timestamps are not changed.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), damping=0)
+		self.assertEqual({ }, consumer.volume.all())
+
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			document = documents[0]
+			timestamp = document.attributes['timestamp']
+			consumer.volume.add(timestamp + 1, 1)
+			self.assertEqual(1, consumer.volume.get(timestamp + 1))
+			consumer._update_volume([ document ])
+			self.assertEqual(1, consumer.volume.get(timestamp + 1))
+			self.assertEqual(1, consumer.volume.get(timestamp))
+
+	def test_volume_with_damping(self):
+		"""
+		Test that when adding the volume, it is damped.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), damping=0.5)
+		self.assertEqual({ }, consumer.volume.all())
+
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			consumer._update_volume(documents)
+			self.assertGreater(len(lines), sum(consumer.volume.all().values()))
+
+	def test_volume_damping_sum(self):
+		"""
+		Test that when adding the volume, the volume sum is equivalent to the damping sum.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), damping=0.5)
+		self.assertEqual({ }, consumer.volume.all())
+
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			damping = sum( consumer._damp(document) for document in documents )
+			consumer._update_volume(documents)
+			self.assertEqual(round(damping, 10), round(sum(consumer.volume.all().values()), 10)) # floating point error
+
+	def test_volume_binning(self):
+		"""
+		Test that when adding the volume, it is binned correctly.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), damping=0.5)
+		self.assertEqual({ }, consumer.volume.all())
+
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+
+			"""
+			Calculate the damping for each bin.
+			"""
+			damping = { }
+			for document in documents:
+				timestamp = document.attributes['timestamp']
+				damping[timestamp] = damping.get(timestamp, 0) + consumer._damp(document)
+
+			"""
+			Create the volume bins.
+			"""
+			for document in documents: # to have an extra test with gradual adding
+				consumer._update_volume([ document ])
+
+			"""
+			Check that the bins are correct.
+			"""
+			self.assertEqual(damping.keys(), consumer.volume.all().keys())
+			for timestamp in damping:
+				self.assertEqual(damping[timestamp], consumer.volume.get(timestamp))
+
+	def test_volume_does_not_change_nutrition(self):
+		"""
+		Test that when updating the volume, it does not change the nutrition.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), damping=0)
+		self.assertEqual({ }, consumer.volume.all())
+		self.assertEqual({ }, consumer.nutrition.all())
+
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			consumer._update_volume(documents)
+			self.assertEqual(len(lines), sum(consumer.volume.all().values()))
+			self.assertEqual({ }, consumer.nutrition.all())
+
 	def test_damp_lower_bound(self):
 		"""
 		Test that damping has a lower bound of 0.
