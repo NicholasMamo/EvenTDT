@@ -81,7 +81,7 @@ class FUEGOConsumer(Consumer):
 	"""
 
 	def __init__(self, queue, scheme=None, damping=0.5,
-				 window_size=60, windows=5, burst_start=0.5, burst_end=0.2, min_volume=25,
+				 window_size=60, windows=5, burst_start=0.5, burst_end=0.2, min_volume=15,
 				 *args, **kwargs):
 		"""
 		Create the consumer with a queue.
