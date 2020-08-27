@@ -532,6 +532,50 @@ class FUEGOConsumer(Consumer):
 
 		volume = sum(self.volume.between(timestamp - self.tdt.window_size + 1, timestamp + 1).values())
 		return volume < self.min_volume
+	def _partition(self, timestamp):
+		"""
+		Partition the volume in the store into time windows.
+		This function returns a tuple:
+
+		1. The volume at the latest time window.
+		2. The volume at the time windows preceding the latest one.
+
+		The number of time windows, including the latest one, is at most equivalent to the number of time windows defined during instantiation.
+		The historic volume is a dictionary, with the timestamps as keys and the volume data as the values.
+		The timestamps indicate the end of the time window, not the start.
+		Moreover, the end value is inclusive.
+
+		:param timestamp: The timestamp at which to create the time windows.
+		:type timestamp: float
+
+		:return: A tuple, containing:
+
+		 		 - The volume at the latest time window, and
+				 - The volume at the previous time windows.
+		:rtype: tuple of dict
+		"""
+
+		# NOTE: In this function, the ``since`` is exclusive, and the ``until`` is inclusive.
+
+		"""
+		Calculate the volume in the current time window.
+		"""
+		volume = self.volume.between(timestamp - self.tdt.window_size + 1, timestamp + 1).values()
+		current = sum(volume) if volume else 0
+
+		"""
+		Calculate the historic volume.
+		"""
+		historic = { }
+		windows = math.ceil(timestamp - min(self.volume.all().keys())) if self.volume.all() else 0
+		for window in range(1, windows):
+			since = max(timestamp - self.tdt.window_size * (window + 1) + 1, 0)
+			until = timestamp - self.tdt.window_size * window
+			if until > 0:
+				data = self.volume.between(since, until + 1)
+				historic[until] = sum(data.values())
+
+		return (current, historic)
 
 	def _detect(self, timestamp):
 		"""

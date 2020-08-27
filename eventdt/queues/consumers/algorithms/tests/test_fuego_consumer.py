@@ -1611,6 +1611,122 @@ class TestFUEGOConsumer(unittest.TestCase):
 		consumer.volume.add(5, 1)
 		self.assertFalse(consumer._dormant(10))
 
+	def test_partition(self):
+		"""
+		Test partitioning with an example.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), window_size=5)
+		consumer.volume.add(60, 50)
+		consumer.volume.add(55, 30)
+		consumer.volume.add(50, 25)
+
+		"""
+		Use the latest data.
+		"""
+		current, historic = consumer._partition(timestamp=60)
+		self.assertEqual(50, current)
+		self.assertEqual(30, historic[55])
+		self.assertEqual(25, historic[50])
+
+		"""
+		Move one time window back.
+		"""
+		current, historic = consumer._partition(timestamp=55)
+		self.assertEqual(30, current)
+		self.assertEqual(25, historic[50])
+
+		"""
+		Use a larger time window.
+		"""
+		consumer = FUEGOConsumer(Queue(), window_size=10)
+		consumer.volume.add(60, 50)
+		consumer.volume.add(55, 30)
+		consumer.volume.add(50, 25)
+		current, historic = consumer._partition(timestamp=60)
+		self.assertEqual(80, current)
+		self.assertEqual(25, historic[50])
+
+	def test_partition_empty(self):
+		"""
+		Test that when partitioning an empty volume store, the current value is 0 and the historic data is empty.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), window_size=10)
+		current, historic = consumer._partition(600)
+		self.assertEqual(0, current)
+		self.assertEqual({ }, historic)
+
+	def test_partition_nutrition_include_timestamp(self):
+		"""
+		Test that when partitioning, the end timestamp of the volume is included.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), window_size=10)
+		consumer.volume.add(60, 50)
+		consumer.volume.add(50, 40)
+		current, _ = consumer._partition(60)
+		self.assertEqual(50, current)
+
+	def test_partition_nutrition_exclude_timestamp(self):
+		"""
+		Test that when partitioning, the start of the time window of the volume for the given timestamp is excluded.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), window_size=10)
+		consumer.volume.add(60, 50)
+		consumer.volume.add(51, 10)
+		consumer.volume.add(50, 5)
+		current, _ = consumer._partition(60)
+		self.assertEqual(60, current)
+
+	def test_partition_historic_until_inclusive(self):
+		"""
+		Test that when partitioning, the ``until`` timestamp is inclusive in the volume and historic data.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), window_size=2)
+		consumer.volume.add(10, 100)
+		consumer.volume.add(9, 90)
+		consumer.volume.add(8, 80)
+		consumer.volume.add(7, 70)
+		consumer.volume.add(6, 60)
+		consumer.volume.add(5, 50)
+		consumer.volume.add(4, 40)
+		current, historic = consumer._partition(10)
+		self.assertEqual(190, current)
+		self.assertEqual(150, historic[8])
+		self.assertEqual(110, historic[6])
+		self.assertEqual(40, historic[4])
+
+	def test_partition_time_windows(self):
+		"""
+		Test that when partitioning, the function creates time windows that span the timespan of all documents.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), windows=1, window_size=2)
+		consumer.volume.add(10, 100)
+		consumer.volume.add(1, 10)
+		current, historic = consumer._partition(10)
+		self.assertEqual(4, len(historic))
+		self.assertEqual([ 2, 4, 6, 8 ], sorted(historic.keys()))
+
+	def test_partition_all_documents(self):
+		"""
+		Test that when partitioning, the function creates time windows that include all documents.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), window_size=10, damping=0)
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			consumer._update_volume(documents)
+			timestamps = [ document.attributes['timestamp'] for document in documents ]
+
+			current, historic = consumer._partition(max(timestamps))
+			self.assertEqual(len(lines), current + sum(historic.values()))
+
 	def test_detect_list_of_str(self):
 		"""
 		Test that when detecting bursty terms, the function returns a list of strings.
