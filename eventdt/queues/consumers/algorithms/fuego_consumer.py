@@ -286,8 +286,6 @@ class FUEGOConsumer(Consumer):
 					topic_documents = self._collect(term, documents)
 					if topic_documents:
 						timeline.add(time, topic_documents)
-					else:
-						print("No documents found for", term)
 
 				if timeline.nodes:
 					node = timeline.nodes[-1]
@@ -336,11 +334,12 @@ class FUEGOConsumer(Consumer):
 
 			#. The tweet's author must have at least one follower for every thousand tweets they've published.
 
-		ELD's rules are:
-
-			#. The tweet cannot have more than one URL because too many URLs are indicative of pre-planned content, and
+		ELD's rule is:
 
 			#. The biography of the tweet's author cannot be empty because that is indicative of bots.
+
+		ELD also contained a rule that removed tweets with more than one URL.
+		FUEGO's filtering is harsher and excludes all tweets with URLs.
 
 		:param tweet: The tweet to validate.
 		:type tweet: dict
@@ -361,7 +360,7 @@ class FUEGOConsumer(Consumer):
 		if tweet['user']['followers_count'] / tweet['user']['statuses_count'] < 1e-3:
 			return False
 
-		if len(tweet['entities']['urls']) > 1:
+		if len(tweet['entities']['urls']):
 			return False
 
 		if not tweet['user']['description']:

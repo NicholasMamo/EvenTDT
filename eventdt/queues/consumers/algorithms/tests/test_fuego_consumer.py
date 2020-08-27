@@ -366,7 +366,7 @@ class TestFUEGOConsumer(unittest.TestCase):
 
 	def test_filter_tweets_urls(self):
 		"""
-		Test that when filtering tweets, they can have no more than one URL.
+		Test that when filtering tweets, none of the retained ones have URLs in them.
 		"""
 
 		consumer = FUEGOConsumer(Queue())
@@ -375,7 +375,22 @@ class TestFUEGOConsumer(unittest.TestCase):
 			tweets = [ json.loads(line) for line in lines ]
 			count = len(tweets)
 			tweets = consumer._filter_tweets(tweets)
-			self.assertTrue(all(len(tweet['entities']['urls']) <= 1 for tweet in tweets))
+			self.assertTrue(all(len(tweet['entities']['urls']) == 0 for tweet in tweets))
+			self.assertGreater(count, len(tweets))
+
+	def test_filter_tweets_urls_not_media(self):
+		"""
+		Test that when filtering tweets, tweets with media are retained.
+		"""
+
+		consumer = FUEGOConsumer(Queue())
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			count = len(tweets)
+			tweets = consumer._filter_tweets(tweets)
+			self.assertTrue(all(len(tweet['entities']['urls']) == 0 for tweet in tweets))
+			self.assertTrue(any('media' in tweet['entities'] and len(tweet['entities']['media']) for tweet in tweets))
 			self.assertGreater(count, len(tweets))
 
 	def test_filter_tweets_bio(self):
