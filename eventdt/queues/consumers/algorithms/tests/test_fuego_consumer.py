@@ -715,6 +715,47 @@ class TestFUEGOConsumer(unittest.TestCase):
 			self.assertEqual(len(lines), sum(consumer.volume.all().values()))
 			self.assertEqual({ }, consumer.nutrition.all())
 
+	def test_update_volume_damping_same_timestamps(self):
+		"""
+		Test that when updating the volume, damping only affects the values, not the keys (timestamps).
+		"""
+
+		c0, c1 = FUEGOConsumer(Queue(), damping=0), FUEGOConsumer(Queue(), damping=0.5)
+		self.assertEqual({ }, c1.volume.all())
+
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = c1._to_documents(tweets)
+			c0._update_volume(documents)
+			c1._update_volume(documents)
+			self.assertEqual(c0.volume.all().keys(), c1.volume.all().keys())
+
+	def test_update_volume_damping_lowers_values(self):
+		"""
+		Test that when updating volume, damping can bring down the value.
+		"""
+
+		trivial = True
+
+		c0, c1 = FUEGOConsumer(Queue(), damping=0), FUEGOConsumer(Queue(), damping=0.5)
+		self.assertEqual({ }, c1.volume.all())
+
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = c1._to_documents(tweets)
+			c0._update_volume(documents)
+			c1._update_volume(documents)
+			self.assertEqual(c0.volume.all().keys(), c1.volume.all().keys())
+			for timestamp in c0.volume.all():
+				self.assertLessEqual(c1.volume.get(timestamp), c0.volume.get(timestamp))
+				if c1.volume.get(timestamp) < c0.volume.get(timestamp):
+					trivial = False
+
+		if trivial:
+			logger.info("Trivial test")
+
 	def test_update_nutrition_all_timestamps(self):
 		"""
 		Test that the nutrition function includes all recorded timestamps.
@@ -909,7 +950,7 @@ class TestFUEGOConsumer(unittest.TestCase):
 
 	def test_update_nutrition_damping_lowers_values(self):
 		"""
-		Test that when updating nutrition, damping brings down the value.
+		Test that when updating nutrition, damping can bring down the value.
 		"""
 
 		trivial = True
