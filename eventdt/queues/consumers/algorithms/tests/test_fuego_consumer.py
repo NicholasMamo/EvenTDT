@@ -1497,3 +1497,52 @@ class TestFUEGOConsumer(unittest.TestCase):
 		self.assertEqual(set(), set(tracked))
 		tracked = consumer._track([ 'a', 'b', 'c' ], 10)
 		self.assertEqual(set([ 'a', 'c' ]), set(tracked))
+
+	def test_dormant_empty(self):
+		"""
+		Test that when checking whether the stream is dormant and the volume is empty, the function always returns ``True``.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), min_volume=1)
+		self.assertEqual({ }, consumer.volume.all())
+		self.assertTrue(consumer._dormant(9))
+		self.assertTrue(consumer._dormant(10))
+
+	def test_dormant_inclusive(self):
+		"""
+		Test that when checking the volume in the last time window, the check is inclusive.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), min_volume=1)
+		consumer.volume.add(10, 1.1)
+		self.assertFalse(consumer._dormant(10))
+		consumer.volume.add(10, 1)
+		self.assertFalse(consumer._dormant(10))
+		consumer.volume.add(10, 0.9)
+		self.assertTrue(consumer._dormant(10))
+
+	def test_dormant_end_timestamp_inclusive(self):
+		"""
+		Test that when checking the volume in the last time window, the given timestamp is inclusive.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), min_volume=1)
+		consumer.volume.add(10, 1)
+		self.assertTrue(consumer._dormant(9))
+		self.assertFalse(consumer._dormant(10))
+
+	def test_dormant_start_timestamp_exclusive(self):
+		"""
+		Test that when checking whether the stream is dormant, the function uses the correct time window.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), min_volume=1, window_size=5)
+		consumer.volume.add(5, 1)
+		self.assertTrue(consumer._dormant(10))
+
+		"""
+		Increase the window size so it covers timestamp 5 at timestamp 10.
+		"""
+		consumer = FUEGOConsumer(Queue(), min_volume=1, window_size=6)
+		consumer.volume.add(5, 1)
+		self.assertFalse(consumer._dormant(10))

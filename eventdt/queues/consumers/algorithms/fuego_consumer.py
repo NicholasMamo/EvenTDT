@@ -505,7 +505,8 @@ class FUEGOConsumer(Consumer):
 		:rtype: bool
 		"""
 
-		return False
+		volume = sum(self.volume.between(timestamp - self.tdt.window_size + 1, timestamp + 1).values())
+		return volume < self.min_volume
 
 	def _detect_topics(self, timestamp):
 		"""
