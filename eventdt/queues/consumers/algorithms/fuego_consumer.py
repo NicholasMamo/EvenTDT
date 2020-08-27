@@ -282,11 +282,12 @@ class FUEGOConsumer(Consumer):
 				for term in ongoing:
 					timeline.add(time, self._collect(term, documents))
 
-				node = timeline.nodes[-1]
-				if node.expired(timeline.expiry, time) and not node.attributes.get('printed'):
-					summary = self._summarize(node)
-					logger.info(f"{datetime.fromtimestamp(node.created_at).ctime()}: { str(str(summary)) }", process=str(self))
-					node.attributes['printed'] = True
+				if timeline.nodes:
+					node = timeline.nodes[-1]
+					if node.expired(timeline.expiry, time) and not node.attributes.get('printed'):
+						summary = self._summarize(node)
+						logger.info(f"{datetime.fromtimestamp(node.created_at).ctime()}: { str(str(summary)) }", process=str(self))
+						node.attributes['printed'] = True
 
 		return timeline
 
