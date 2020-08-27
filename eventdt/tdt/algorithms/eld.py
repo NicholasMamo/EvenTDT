@@ -531,7 +531,7 @@ class SlidingELD(ELD):
 		"""
 		Return immediately if the window is empty.
 		"""
-		if not window:
+		if not window or not max(window.values()):
 			return { }
 
 		max_nutrition = max(window.values())

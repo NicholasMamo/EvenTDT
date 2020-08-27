@@ -858,6 +858,16 @@ class TestSlidingELD(unittest.TestCase):
 		algo = SlidingELD(store)
 		self.assertEqual({ }, algo._normalize(store.get(10)))
 
+	def test_normalize_max_zero(self):
+		"""
+		Test that when normalizing a dictionary that is not empty, but where all terms have a nutrition of 0, the function returns an empty dictionary.
+		"""
+
+		store = MemoryNutritionStore()
+		algo = SlidingELD(store)
+		store.add(10, { 'a': 0, 'b': 0 })
+		self.assertEqual({ }, algo._normalize(store.get(10)))
+
 	def test_normalize_lower_bound(self):
 		"""
 		Test that when normalizing nutrition, all new values have a value greater than zero.
