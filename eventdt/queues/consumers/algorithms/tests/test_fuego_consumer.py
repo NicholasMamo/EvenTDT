@@ -19,6 +19,7 @@ from nlp.weighting import TF
 from objects.exportable import Exportable
 from queues import Queue
 from queues.consumers.algorithms import FUEGOConsumer
+from summarization.algorithms import DGS
 from tdt.algorithms import SlidingELD
 import twitter
 from vsm import vector_math
@@ -127,7 +128,7 @@ class TestFUEGOConsumer(unittest.TestCase):
 		self.assertTrue(consumer.nutrition)
 		self.assertEqual({ }, consumer.nutrition.all())
 
-	def test_init_tdt(self):
+	def test_init_with_tdt(self):
 		"""
 		Test that when creating a consumer, the class creates the TDT algorithm.
 		"""
@@ -227,6 +228,15 @@ class TestFUEGOConsumer(unittest.TestCase):
 
 		consumer = FUEGOConsumer(Queue(), min_volume=0)
 		self.assertEqual(0, consumer.min_volume)
+
+	def test_init_with_summarization(self):
+		"""
+		Test that when creating a consumer, the class creates the summarization algorithm.
+		"""
+
+		consumer = FUEGOConsumer(Queue())
+		self.assertTrue(consumer.summarization)
+		self.assertEqual(DGS, type(consumer.summarization))
 
 	@async_test
 	async def test_construct_idf_documents(self):

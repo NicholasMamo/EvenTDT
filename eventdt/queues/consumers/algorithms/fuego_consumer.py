@@ -24,6 +24,7 @@ from nlp import Document, Tokenizer
 from nlp.weighting import TF, TFIDF
 from nlp.weighting.global_schemes import IDF
 from queues.consumers import Consumer
+from summarization.algorithms import DGS
 from summarization.timeline import Timeline
 from summarization.timeline.nodes import DocumentNode
 from tdt.algorithms import SlidingELD
@@ -72,6 +73,8 @@ class FUEGOConsumer(Consumer):
 					  This is not the raw number of tweets, but considers the damping factor of tweets.
 					  If the volume drops below this value, the consumer does not look for bursty terms.
 	:vartype min_volume: float
+	:ivar summarization: The summarization algorithm to use.
+	:vartype summarization: :class:`~summarization.algorithms.dgs.DGS`
 	"""
 
 	def __init__(self, queue, scheme=None, damping=0.5,
@@ -138,6 +141,9 @@ class FUEGOConsumer(Consumer):
 		self.burst_start = burst_start
 		self.burst_end = burst_end
 		self.min_volume = min_volume
+
+		# summarization
+		self.summarization = DGS()
 
 	async def understand(self, max_inactivity=-1, *args, **kwargs):
 		"""
