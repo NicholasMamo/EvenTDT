@@ -760,25 +760,6 @@ class TestSlidingELD(unittest.TestCase):
 		store.add(7, { 'b': 1 })
 		store.add(6, { 'b': 3 })
 		store.add(5, { 'b': 5 })
-		nutrition, historic = algo._partition(10)
-		self.assertEqual({ 'a': 6 }, nutrition)
-		self.assertEqual({ 8, 6 }, set(historic.keys()))
-		self.assertEqual({ 'a': 1, 'b': 1 }, historic[8])
-		self.assertEqual({ 'b': 8 }, historic[6])
-
-	def test_partition_historic_until_inclusive(self):
-		"""
-		Test that when partitioning, the ``until`` timestamp is inclusive in the nutrition and historic data.
-		"""
-
-		store = MemoryNutritionStore()
-		algo = SlidingELD(store, window_size=2, windows=3)
-		store.add(10, { 'a': 4 })
-		store.add(9, { 'a': 2 })
-		store.add(8, { 'a': 1 })
-		store.add(7, { 'b': 1 })
-		store.add(6, { 'b': 3 })
-		store.add(5, { 'b': 5 })
 		store.add(4, { 'b': 7 })
 		store.add(3, { 'a': 2, 'b': 3 })
 		nutrition, historic = algo._partition(10)
