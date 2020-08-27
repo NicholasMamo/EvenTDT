@@ -485,6 +485,8 @@ def create_consumer(consumer, queue, splits=None, scheme=None, min_size=3, min_b
 		elif consumer is FIREConsumer:
 			return TokenSplitConsumer(queue, splits, consumer, scheme=scheme, min_size=min_size,
 									  threshold=threshold, periodicity=periodicity)
+		elif consumer is FUEGOConsumer:
+			return TokenSplitConsumer(queue, splits, consumer, scheme=scheme)
 		elif consumer is StatConsumer:
 			return TokenSplitConsumer(queue, splits, consumer, periodicity=periodicity)
 
@@ -497,6 +499,8 @@ def create_consumer(consumer, queue, splits=None, scheme=None, min_size=3, min_b
 	elif consumer is FIREConsumer:
 		return consumer(queue, scheme=scheme, min_size=min_size,
 						threshold=threshold, periodicity=periodicity)
+	elif consumer is FUEGOConsumer:
+		return consumer(queue, scheme=scheme)
 	elif consumer is StatConsumer:
 		return consumer(queue, periodicity=periodicity)
 
