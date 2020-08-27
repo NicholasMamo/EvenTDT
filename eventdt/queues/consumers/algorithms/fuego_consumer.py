@@ -629,8 +629,8 @@ class FUEGOConsumer(Consumer):
 		"""
 		summary_documents = { document.text: document for document in documents }
 		summary_documents = { text: document for text, document in summary_documents.items()
-		 									 if len(text) <= 140 }
+		 									 if len(text) <= 280 }
 		summary_documents = sorted(summary_documents.items(), key=lambda document: len(document[0]), reverse=True)
 		summary_documents = [ document for _, document in summary_documents[:50] ]
 
-		return self.summarization.summarize(summary_documents, 140)
+		return self.summarization.summarize(summary_documents, 280)
