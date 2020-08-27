@@ -530,8 +530,9 @@ class FUEGOConsumer(Consumer):
 		:rtype: bool
 		"""
 
-		volume = sum(self.volume.between(timestamp - self.tdt.window_size + 1, timestamp + 1).values())
-		return volume < self.min_volume
+		current, historic = self._partition(timestamp)
+		return current < self.min_volume
+
 	def _partition(self, timestamp):
 		"""
 		Partition the volume in the store into time windows.
