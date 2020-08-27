@@ -97,22 +97,23 @@ class TestConsume(unittest.TestCase):
 		self.assertEqual(20, consumer.periodicity)
 
 		consumer = consume.create_consumer(FIREConsumer, Queue(), scheme=scheme, min_size=5, min_burst=0.1,
-										   max_intra_similarity=0.9, periodicity=20, min_volume=50)
+										   max_intra_similarity=0.9, periodicity=20, min_volume=50, burst_start=0.7)
 		self.assertEqual(5, consumer.min_size)
 		self.assertEqual(20, consumer.periodicity)
 		self.assertEqual(scheme, consumer.scheme)
 
 		consumer = consume.create_consumer(ELDConsumer, Queue(), scheme=scheme, min_size=5, min_burst=0.1,
-										   max_intra_similarity=0.9, periodicity=20, min_volume=50)
+										   max_intra_similarity=0.9, periodicity=20, min_volume=50, burst_start=0.7)
 		self.assertEqual(5, consumer.min_size)
 		self.assertEqual(0.1, consumer.min_burst)
 		self.assertEqual(0.9, consumer.max_intra_similarity)
 		self.assertEqual(scheme, consumer.scheme)
 
 		consumer = consume.create_consumer(FUEGOConsumer, Queue(), scheme=scheme, min_size=5, min_burst=0.1,
-										   max_intra_similarity=0.9, periodicity=20, min_volume=50)
+										   max_intra_similarity=0.9, periodicity=20, min_volume=50, burst_start=0.7)
 		self.assertEqual(scheme, consumer.scheme)
 		self.assertEqual(50, consumer.min_volume)
+		self.assertEqual(0.7, consumer.burst_start)
 
 	def test_create_consumer_with_splits(self):
 		"""
@@ -162,7 +163,7 @@ class TestConsume(unittest.TestCase):
 
 		consumer = consume.create_consumer(FIREConsumer, Queue(), scheme=scheme, splits=splits, min_size=5,
 										   max_intra_similarity=0.9, min_burst=0.1, periodicity=20,
-										   min_volume=50)
+										   min_volume=50, burst_start=0.7)
 		self.assertTrue(all( FIREConsumer == type(consumer) for consumer in consumer.consumers ))
 		self.assertTrue(all( 5 == consumer.min_size for consumer in consumer.consumers ))
 		self.assertTrue(all( 20 == consumer.periodicity for consumer in consumer.consumers ))
@@ -170,7 +171,7 @@ class TestConsume(unittest.TestCase):
 
 		consumer = consume.create_consumer(ELDConsumer, Queue(), scheme=scheme, splits=splits,
 										   min_size=5, min_burst=0.1, max_intra_similarity=0.9,
-										   periodicity=20, min_volume=50)
+										   periodicity=20, min_volume=50, burst_start=0.7)
 		self.assertTrue(all( 5 == consumer.min_size for consumer in consumer.consumers ))
 		self.assertTrue(all( 0.1 == consumer.min_burst for consumer in consumer.consumers ))
 		self.assertTrue(all( 0.9 == consumer.max_intra_similarity for consumer in consumer.consumers ))
@@ -178,6 +179,7 @@ class TestConsume(unittest.TestCase):
 
 		consumer = consume.create_consumer(FUEGOConsumer, Queue(), scheme=scheme, splits=splits,
 										   min_size=5, min_burst=0.1, max_intra_similarity=0.9,
-										   periodicity=20, min_volume=50)
+										   periodicity=20, min_volume=50, burst_start=0.7)
 		self.assertTrue(all( scheme == consumer.scheme for consumer in consumer.consumers ))
 		self.assertTrue(all( 50 == consumer.min_volume for consumer in consumer.consumers ))
+		self.assertTrue(all( 0.7 == consumer.burst_start for consumer in consumer.consumers ))
