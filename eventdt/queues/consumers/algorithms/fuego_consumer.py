@@ -583,6 +583,8 @@ class FUEGOConsumer(Consumer):
 		Sort them in descending order of length and retain only the top ones.
 		"""
 		summary_documents = { document.text: document for document in documents }
+		summary_documents = { text: document for text, document in summary_documents.items()
+		 									 if len(text) <= 140) }
 		summary_documents = sorted(summary_documents.items(), key=lambda document: len(document[0]), reverse=True)
 		summary_documents = [ document for _, document in summary_documents[:50] ]
 
