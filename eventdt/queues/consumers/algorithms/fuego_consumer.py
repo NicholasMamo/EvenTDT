@@ -61,6 +61,7 @@ class FUEGOConsumer(Consumer):
 	:ivar burst_end: The maximum burst value to consider a bursty term to still be bursty.
 					 This value is applied to terms that are known to be bursty while tracking.
 					 If the burst of a term goes below this value, the consumer stops considering it to be bursty.
+					 This value is exclusive.
 	:vartype burst_end: float
 	"""
 
@@ -85,6 +86,7 @@ class FUEGOConsumer(Consumer):
 		:param burst_end: The maximum burst value to consider a bursty term to still be bursty.
 						  This value is applied to terms that are known to be bursty while tracking.
 						  If the burst of a term goes below this value, the consumer stops considering it to be bursty.
+						  This value is exclusive.
 		:type burst_end: float
 
 		:raises ValueError: When the damping factor is negative.
@@ -232,7 +234,7 @@ class FUEGOConsumer(Consumer):
 				"""
 				self._update_volume(documents)
 				self._update_nutrition(documents)
-				ongoing = self._track_topics(ongoing, time)
+				ongoing = self._track(ongoing, time)
 				if not self._dormant(time):
 					bursty = self._detect_topics(time)
 					ongoing = list(set(ongoing + bursty))
@@ -463,7 +465,7 @@ class FUEGOConsumer(Consumer):
 		diff = twitter.extract_timestamp(tweet) - twitter.extract_timestamp(retweet)
 		return math.exp(- self.damping * diff / 60)
 
-	def _track_topics(self, topics, timestamp):
+	def _track(self, topics, timestamp):
 		"""
 		Check whether the given topics are still ongoing at the given time.
 		Ongoing topics are those terms whose burst has not yet dipped below a specific value.
@@ -477,7 +479,9 @@ class FUEGOConsumer(Consumer):
 		:rtype: list of str
 		"""
 
-		return topics
+		bursty = self.tdt.detect(timestamp, min_burst=self.burst_end)
+		ongoing = list(set(topics).intersection(set(bursty.keys())))
+		return ongoing
 
 	def _dormant(self, timestamp):
 		"""

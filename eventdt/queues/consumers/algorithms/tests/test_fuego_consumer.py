@@ -1350,3 +1350,142 @@ class TestFUEGOConsumer(unittest.TestCase):
 
 		if trivial:
 			logger.warning("Trivial test")
+
+	def test_track_list_of_str(self):
+		"""
+		Test that when tracking, the function returns a list of strings.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), burst_end=0, window_size=5, windows=3)
+		consumer.nutrition.add(10, { 'a': 10, 'b': 2, 'c': 3 })
+		consumer.nutrition.add(5, { 'a': 0, 'b': 10, 'c': 0 })
+		tracked = consumer._track([ 'a', 'b', 'c' ], 10)
+		self.assertEqual(list, type(tracked))
+		self.assertTrue(tracked)
+		self.assertEqual(set([ 'a', 'c' ]), set(tracked))
+		self.assertTrue(all( str == type(term) for term in tracked ))
+
+	def test_track_burst_end(self):
+		"""
+		Test that when tracking, the function returns terms that have a burst higher than the burst end.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), burst_end=0, window_size=5, windows=3)
+		consumer.nutrition.add(10, { 'a': 1, 'b': 0, 'c': 0.5 })
+		consumer.nutrition.add(5, { 'a': 0, 'b': 1, 'c': 0 })
+		tracked = consumer._track([ 'a', 'b', 'c' ], 10)
+		self.assertEqual(set([ 'a', 'c' ]), set(tracked))
+
+		"""
+		Increase the burst end value.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), burst_end=0.5, window_size=5, windows=3)
+		consumer.nutrition.add(10, { 'a': 1, 'b': 0, 'c': 0.5 })
+		consumer.nutrition.add(5, { 'a': 0, 'b': 1, 'c': 0 })
+		tracked = consumer._track([ 'a', 'b', 'c' ], 10)
+		self.assertEqual(set([ 'a' ]), set(tracked))
+
+	def test_track_burst_end_negative(self):
+		"""
+		Test that when tracking, the function returns terms that have a burst higher than the burst end even when it is negative.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), burst_end=-0.5, window_size=5, windows=3)
+		consumer.nutrition.add(10, { 'a': 1, 'b': 0, 'c': 0.5 })
+		consumer.nutrition.add(5, { 'a': 0, 'b': 1, 'c': 0 })
+		tracked = consumer._track([ 'a', 'b', 'c' ], 10)
+		self.assertEqual(set([ 'a', 'c' ]), set(tracked))
+
+		"""
+		Decrease the burst end value.
+		"""
+		consumer = FUEGOConsumer(Queue(), burst_end=-0.7, window_size=5, windows=3)
+		consumer.nutrition.add(10, { 'a': 1, 'b': 0, 'c': 0.5, 'd': 0 })
+		consumer.nutrition.add(5, { 'a': 0, 'b': 0.6, 'c': 0, 'd': 1 })
+		tracked = consumer._track([ 'a', 'b', 'c' ], 10)
+		self.assertEqual(set([ 'a', 'b', 'c' ]), set(tracked))
+
+	def test_track_burst_end_exclusive(self):
+		"""
+		Test that when tracking, the function returns terms that have a burst higher than the burst and this value is exclusive.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), burst_end=-0.5, window_size=5, windows=3)
+		consumer.nutrition.add(10, { 'a': 1, 'b': 0, 'c': 0.5 })
+		consumer.nutrition.add(5, { 'a': 0, 'b': 1, 'c': 0 })
+		tracked = consumer._track([ 'a', 'b', 'c' ], 10)
+		self.assertEqual(set([ 'a', 'c' ]), set(tracked))
+
+		"""
+		Decrease the burst end value.
+		"""
+		consumer = FUEGOConsumer(Queue(), burst_end=-0.6, window_size=5, windows=3)
+		consumer.nutrition.add(10, { 'a': 1, 'b': 0, 'c': 0.5, 'd': 0 })
+		consumer.nutrition.add(5, { 'a': 0, 'b': 0.6, 'c': 0, 'd': 1 })
+		tracked = consumer._track([ 'a', 'b', 'c' ], 10)
+		self.assertEqual(set([ 'a', 'c' ]), set(tracked))
+
+		"""
+		Decrease the burst end value further.
+		"""
+		consumer = FUEGOConsumer(Queue(), burst_end=-0.61, window_size=5, windows=3)
+		consumer.nutrition.add(10, { 'a': 1, 'b': 0, 'c': 0.5, 'd': 0 })
+		consumer.nutrition.add(5, { 'a': 0, 'b': 0.6, 'c': 0, 'd': 1 })
+		tracked = consumer._track([ 'a', 'b', 'c' ], 10)
+		self.assertEqual(set([ 'a', 'b', 'c' ]), set(tracked))
+
+	def test_track_only_tracked_terms(self):
+		"""
+		Test that when tracking, the function returns only bursty terms that are being tracked.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), burst_end=0, window_size=5, windows=3)
+		consumer.nutrition.add(10, { 'a': 1, 'b': 0, 'c': 0.5 })
+		consumer.nutrition.add(5, { 'a': 0, 'b': 1, 'c': 0 })
+		tracked = consumer._track([ 'a', 'b', 'c' ], 10)
+		self.assertEqual(set([ 'a', 'c' ]), set(tracked))
+
+		"""
+		Remove 'c' from the tracked terms.
+		"""
+		tracked = consumer._track([ 'a', 'b' ], 10)
+		self.assertEqual(set([ 'a' ]), set(tracked))
+
+	def test_track_no_duplicates(self):
+		"""
+		Test that when tracking, the function does not return duplicate terms.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), burst_end=0, window_size=5, windows=3)
+		consumer.nutrition.add(10, { 'a': 1, 'b': 0, 'c': 0.5 })
+		consumer.nutrition.add(5, { 'a': 0, 'b': 1, 'c': 0 })
+		tracked = consumer._track([ 'a', 'b', 'c' ], 10)
+		self.assertEqual(sorted(list(set(tracked))), sorted(tracked))
+
+	def test_track_correct_windows(self):
+		"""
+		Test that when tracking, the function uses the correct time windows.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), burst_end=0.3, window_size=5, windows=2)
+		consumer.nutrition.add(15, { 'a': 1, 'b': 1, 'c': 0.5 })
+		consumer.nutrition.add(10, { 'a': 1, 'b': 0, 'c': 0.5 })
+		consumer.nutrition.add(5, { 'a': 0, 'b': 1, 'c': 0 })
+		tracked = consumer._track([ 'a', 'b', 'c' ], 10)
+		self.assertEqual(set([ 'a', 'c' ]), set(tracked))
+		tracked = consumer._track([ 'a', 'b', 'c' ], 15)
+		self.assertEqual(set([ 'b' ]), set(tracked))
+
+	def test_track_timestamp_inclusive(self):
+		"""
+		Test that when tracking, the function includes the nutrition values at the given timestamp.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), burst_end=0.3, window_size=5, windows=2)
+		consumer.nutrition.add(10, { 'a': 1, 'b': 0, 'c': 0.5 })
+		consumer.nutrition.add(5, { 'a': 0, 'b': 1, 'c': 0 })
+		tracked = consumer._track([ 'a', 'b', 'c' ], 9)
+		self.assertEqual(set(), set(tracked))
+		tracked = consumer._track([ 'a', 'b', 'c' ], 10)
+		self.assertEqual(set([ 'a', 'c' ]), set(tracked))
