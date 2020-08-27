@@ -361,7 +361,9 @@ class TestFUEGOConsumer(unittest.TestCase):
 			tweets = [ json.loads(line) for line in lines ]
 			count = len(tweets)
 			tweets = consumer._filter_tweets(tweets)
-			self.assertTrue(all(tweet['user']['followers_count'] / tweet['user']['statuses_count'] >= 1./1000. for tweet in tweets))
+			for tweet in tweets:
+				self.assertTrue((tweet['user']['followers_count'] / tweet['user']['statuses_count'] >= 1./1000.) or
+								tweet['retweeted_status']['user']['followers_count'] / tweet['retweeted_status']['user']['statuses_count'] >= 1./1000.)
 			self.assertGreater(count, len(tweets))
 
 	def test_filter_tweets_urls(self):
@@ -404,7 +406,8 @@ class TestFUEGOConsumer(unittest.TestCase):
 			tweets = [ json.loads(line) for line in lines ]
 			count = len(tweets)
 			tweets = consumer._filter_tweets(tweets)
-			self.assertTrue(all(tweet['user']['description'] for tweet in tweets))
+			for tweet in tweets:
+				self.assertTrue(tweet['user']['description'] or tweet['retweeted_status']['user']['description'])
 			self.assertGreater(count, len(tweets))
 
 	def test_filter_tweets_repeat(self):
@@ -458,6 +461,27 @@ class TestFUEGOConsumer(unittest.TestCase):
 			documents = consumer._filter_tweets(documents)
 			self.assertEqual(len(tweets), len(documents))
 			self.assertTrue(all( document.attributes['tweet'] in tweets for document in documents ))
+
+	def test_filter_retweets(self):
+		"""
+		Test that if the tweet is a retweet, the original tweet is filtered, not the retweet.
+		In other words, the validation of the retweet is the same as the validation of the original tweet.
+		"""
+
+		trivial = True
+
+		consumer = FUEGOConsumer(Queue())
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			count = len(tweets)
+			for tweet in tweets:
+				if 'retweeted_status' in tweet:
+					self.assertEqual(consumer._validate_tweet(tweet['retweeted_status']), consumer._validate_tweet(tweet))
+					trivial = False
+
+		if trivial:
+			logger.warning("Trivial test")
 
 	def test_to_documents_tweet(self):
 		"""

@@ -348,6 +348,9 @@ class FUEGOConsumer(Consumer):
 		:rtype: str
 		"""
 
+		while 'retweeted_status' in tweet:
+			tweet = tweet['retweeted_status'] if 'retweeted_status' in tweet else tweet
+
 		if not tweet['lang'] == 'en':
 			return False
 
