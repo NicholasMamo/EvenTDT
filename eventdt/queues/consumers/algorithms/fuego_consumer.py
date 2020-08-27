@@ -20,6 +20,7 @@ path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
+from logger import logger
 from nlp import Document, Tokenizer
 from nlp.weighting import TF, TFIDF
 from nlp.weighting.global_schemes import IDF
