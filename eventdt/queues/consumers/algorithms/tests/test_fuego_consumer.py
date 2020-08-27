@@ -179,6 +179,14 @@ class TestFUEGOConsumer(unittest.TestCase):
 
 		self.assertRaises(ValueError, FUEGOConsumer, Queue(), burst_end=1.1)
 
+	def test_init_min_volume(self):
+		"""
+		Test that when creating a consumer, it saves the minimum volume.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), min_volume=0)
+		self.assertEqual(0, consumer.min_volume)
+
 	@async_test
 	async def test_construct_idf_documents(self):
 		"""

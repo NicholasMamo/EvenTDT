@@ -63,10 +63,15 @@ class FUEGOConsumer(Consumer):
 					 If the burst of a term goes below this value, the consumer stops considering it to be bursty.
 					 This value is exclusive.
 	:vartype burst_end: float
+	:ivar min_volume: The minimum volume in the last window required to look for bursty terms.
+					  This is not the raw number of tweets, but considers the damping factor of tweets.
+					  If the volume drops below this value, the consumer does not look for bursty terms.
+	:vartype min_volume: float
 	"""
 
 	def __init__(self, queue, scheme=None, damping=0.5,
-				 window_size=60, windows=10, burst_end=0.2, *args, **kwargs):
+				 window_size=60, windows=10, burst_end=0.2, min_volume=5,
+				 *args, **kwargs):
 		"""
 		Create the consumer with a queue.
 
@@ -88,6 +93,10 @@ class FUEGOConsumer(Consumer):
 						  If the burst of a term goes below this value, the consumer stops considering it to be bursty.
 						  This value is exclusive.
 		:type burst_end: float
+		:param min_volume: The minimum volume in the last window required to look for bursty terms.
+						   This is not the raw number of tweets, but considers the damping factor of tweets.
+						   If the volume drops below this value, the consumer does not look for bursty terms.
+		:type min_volume: float
 
 		:raises ValueError: When the damping factor is negative.
 		:raises ValueError: When the burst end parameter is not between -1 and 1.
@@ -113,6 +122,7 @@ class FUEGOConsumer(Consumer):
 		self.nutrition = MemoryNutritionStore()
 		self.tdt = SlidingELD(self.nutrition, window_size=window_size, windows=windows)
 		self.burst_end = burst_end
+		self.min_volume = min_volume
 
 	async def understand(self, max_inactivity=-1, *args, **kwargs):
 		"""
