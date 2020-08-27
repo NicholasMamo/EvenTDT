@@ -269,7 +269,7 @@ class FUEGOConsumer(Consumer):
 				self._update_nutrition(documents)
 				ongoing = self._track(ongoing, time)
 				if not self._dormant(time):
-					bursty = self._detect_topics(time)
+					bursty = self._detect(time)
 					ongoing = list(set(ongoing + bursty))
 
 				"""
