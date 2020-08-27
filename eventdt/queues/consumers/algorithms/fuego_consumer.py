@@ -96,19 +96,25 @@ class FUEGOConsumer(Consumer):
 		During understanding, the :class:`~queues.consumers.fuego_consumer.FUEGOConsumer` creates a :class:`~nlp.weighting.TermWeightingScheme` with an :class:`~nlp.weighting.global_schemes.idf.IDF` table based on the pre-event discussion.
 		The consumer uses the :class:`~nlp.weighting.TermWeightingScheme` while processing tweets in real-time.
 
+		.. note::
+
+			This function returns a dictionary so that it can be used as additional parameters in the :mod:`~tools.consume` tool.
+			In fact, the parameter name of the :class:`~nlp.weighting.tfidf.TFIDF` scheme is ``scheme``, the same as the scheme's parameter name in the class' constructor.
+
 		:param max_inactivity: The maximum time in seconds to wait idly without input before stopping.
 							   If it is negative, it is ignored.
 		:type max_inactivity: int
 
 		:return: The :class:`~nlp.weighting.tfidf.TFIDF` scheme built from the documents from the pre-event tweets.
-		:rtype: :class:`~nlp.weighting.tfidf.TFIDF`
+				 This is returned in a dictionary in the ``scheme`` key.
+		:rtype: dict
 		"""
 
 		self._started()
 		tfidf = await self._construct_idf(max_inactivity=max_inactivity)
 		logger.info(f"TF-IDF constructed with { tfidf.global_scheme.documents } documents", process=str(self))
 		self._stopped()
-		return tfidf
+		return { 'scheme': tfidf }
 
 	async def _construct_idf(self, max_inactivity):
 		"""
