@@ -26,6 +26,7 @@ from nlp.weighting.global_schemes import IDF
 from queues.consumers import Consumer
 from summarization.timeline import Timeline
 from summarization.timeline.nodes import DocumentNode
+from tdt.algorithms import SlidingELD
 from tdt.nutrition import MemoryNutritionStore
 import twitter
 
@@ -44,6 +45,7 @@ class FUEGOConsumer(Consumer):
 
 	- ``volume``: records the number of tweets (after filtering) received per second.
 	- ``nutrition``: records the nutrition of terms at each second.
+	- ``tdt``: the TDT algorithm used by the consumer to detect and track bursty terms.
 
 	:ivar ~.tokenizer: The tokenizer used to tokenize tweets.
 	:vartype tokenizer: :class:`~nlp.tokenizer.Tokenizer`
@@ -54,9 +56,11 @@ class FUEGOConsumer(Consumer):
 	:ivar nutrition: A nutrition store that contains the nutrition of terms from tweets.
 					 The nutrition is stored for each second.
 	:vartype nutrition: :class:`~tdt.nutrition.memory.MemoryNutritionStore`
+	:ivar tdt: The TDT algorithm used by the consumer to detect and track bursty terms.
+	:vartype tdt: :class:`~tdt.algorithms.eld.SlidingELD`
 	"""
 
-	def __init__(self, queue, scheme=None, damping=0.5, *args, **kwargs):
+	def __init__(self, queue, scheme=None, damping=0.5, window_size=60, windows=10, *args, **kwargs):
 		"""
 		Create the consumer with a queue.
 
@@ -69,6 +73,10 @@ class FUEGOConsumer(Consumer):
 						If the value is 0, the consumer never applies any damping.
 						The value should not be lower than 0.
 		:type damping: float
+		:param window_size: The length in seconds of the sliding time windows.
+		:type window_size: int
+		:param windows: The number of sliding time windows to use when detecting or tracking bursty terms.
+		:type windows: int
 
 		:raises ValueError: When the damping factor is negative.
 		"""
@@ -88,6 +96,7 @@ class FUEGOConsumer(Consumer):
 		# TDT
 		self.volume = MemoryNutritionStore()
 		self.nutrition = MemoryNutritionStore()
+		self.tdt = SlidingELD(self.nutrition, window_size=window_size, windows=windows)
 
 	async def understand(self, max_inactivity=-1, *args, **kwargs):
 		"""
