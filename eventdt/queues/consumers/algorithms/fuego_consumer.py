@@ -550,7 +550,8 @@ class FUEGOConsumer(Consumer):
 		:rtype: list of :class:`~nlp.document.Document`
 		"""
 
-		return documents
+		return [ document for document in documents
+		 				  if document.dimensions[term] > 0 ]
 
 	def _summarize(self, node):
 		"""

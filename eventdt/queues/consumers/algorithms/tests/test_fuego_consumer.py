@@ -1731,3 +1731,73 @@ class TestFUEGOConsumer(unittest.TestCase):
 		consumer.nutrition.add(5, { 'a': 0, 'b': 1, 'c': 0 })
 		bursty = consumer._detect(10)
 		self.assertEqual(set([ 'a' ]), set(bursty))
+
+	def test_collect_empty(self):
+		"""
+		Test that when collecting from an empty list of documents, another empty list is returned.
+		"""
+
+		consumer = FUEGOConsumer(Queue())
+		self.assertEqual([ ], consumer._collect('chelsea', [ ]))
+
+	def test_collect_all_include_term(self):
+		"""
+		Test that when collecting documents that include a term, they all really contain that term.
+		"""
+
+		consumer = FUEGOConsumer(Queue())
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			for line in f:
+				lines = f.readlines()
+				tweets = [ json.loads(line) for line in lines ]
+				documents = consumer._to_documents(tweets)
+				collected = consumer._collect('chelsea', documents)
+				self.assertTrue(collected)
+				self.assertTrue(all( 'chelsea' in document.dimensions for document in collected ))
+
+	def tests_collect_includes_all_with_term(self):
+		"""
+		Test that when collecting documents, all documents with the term are included.
+		"""
+
+		consumer = FUEGOConsumer(Queue())
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			for line in f:
+				lines = f.readlines()
+				tweets = [ json.loads(line) for line in lines ]
+				documents = consumer._to_documents(tweets)
+				collected = consumer._collect('chelsea', documents)
+				self.assertTrue(collected)
+				for document in documents:
+					if 'chelsea' in document.dimensions:
+						self.assertTrue(document in collected)
+
+	def test_collect_no_duplicates(self):
+		"""
+		Test that when collecting documents, the function does not return duplicates.
+		"""
+
+		consumer = FUEGOConsumer(Queue())
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			for line in f:
+				lines = f.readlines()
+				tweets = [ json.loads(line) for line in lines ]
+				documents = consumer._to_documents(tweets)
+				collected = consumer._collect('chelsea', documents)
+				self.assertTrue(collected)
+				self.assertEqual(len(set(collected)), len(collected))
+
+	def test_collect_does_not_change_documents(self):
+		"""
+		Test that when collecting documents, the same documents are returned.
+		"""
+
+		consumer = FUEGOConsumer(Queue())
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			for line in f:
+				lines = f.readlines()
+				tweets = [ json.loads(line) for line in lines ]
+				documents = consumer._to_documents(tweets)
+				collected = consumer._collect('chelsea', documents)
+				self.assertTrue(collected)
+				self.assertTrue(all( document in documents for document in collected ))
