@@ -523,7 +523,7 @@ class FUEGOConsumer(Consumer):
 		volume = sum(self.volume.between(timestamp - self.tdt.window_size + 1, timestamp + 1).values())
 		return volume < self.min_volume
 
-	def _detect_topics(self, timestamp):
+	def _detect(self, timestamp):
 		"""
 		Detect bursty terms at the given time.
 
@@ -534,7 +534,7 @@ class FUEGOConsumer(Consumer):
 		:rtype: list of str
 		"""
 
-		return [ ]
+		return list(self.tdt.detect(timestamp, min_burst=self.burst_start).keys())
 
 	def _collect(self, term, documents):
 		"""

@@ -1457,7 +1457,7 @@ class TestFUEGOConsumer(unittest.TestCase):
 
 	def test_track_burst_end_exclusive(self):
 		"""
-		Test that when tracking, the function returns terms that have a burst higher than the burst and this value is exclusive.
+		Test that when tracking, the function returns terms that have a burst higher than the burst end and this value is exclusive.
 		"""
 
 		consumer = FUEGOConsumer(Queue(), burst_end=-0.5, window_size=5, windows=3)
@@ -1539,6 +1539,17 @@ class TestFUEGOConsumer(unittest.TestCase):
 		tracked = consumer._track([ 'a', 'b', 'c' ], 10)
 		self.assertEqual(set([ 'a', 'c' ]), set(tracked))
 
+	def test_track_uses_burst_start(self):
+		"""
+		Test that when tracking bursty terms, the function uses burst end, not burst start.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), burst_start=0.3, burst_end=0.5, window_size=5, windows=2)
+		consumer.nutrition.add(10, { 'a': 1, 'b': 0, 'c': 0.5 })
+		consumer.nutrition.add(5, { 'a': 0, 'b': 1, 'c': 0 })
+		tracked = consumer._track([ 'a', 'b', 'c' ], 10)
+		self.assertEqual(set([ 'a' ]), set(tracked))
+
 	def test_dormant_empty(self):
 		"""
 		Test that when checking whether the stream is dormant and the volume is empty, the function always returns ``True``.
@@ -1587,3 +1598,136 @@ class TestFUEGOConsumer(unittest.TestCase):
 		consumer = FUEGOConsumer(Queue(), min_volume=1, window_size=6)
 		consumer.volume.add(5, 1)
 		self.assertFalse(consumer._dormant(10))
+
+	def test_detect_list_of_str(self):
+		"""
+		Test that when detecting bursty terms, the function returns a list of strings.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), burst_start=0, window_size=5, windows=3)
+		consumer.nutrition.add(10, { 'a': 10, 'b': 2, 'c': 3 })
+		consumer.nutrition.add(5, { 'a': 0, 'b': 10, 'c': 0 })
+		bursty = consumer._detect(10)
+		self.assertEqual(list, type(bursty))
+		self.assertTrue(bursty)
+		self.assertEqual(set([ 'a', 'c' ]), set(bursty))
+		self.assertTrue(all( str == type(term) for term in bursty ))
+
+	def test_detect_burst_start(self):
+		"""
+		Test that when detecting bursty terms, the function returns terms that have a burst higher than the burst start.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), burst_start=0, window_size=5, windows=3)
+		consumer.nutrition.add(10, { 'a': 1, 'b': 0, 'c': 0.5 })
+		consumer.nutrition.add(5, { 'a': 0, 'b': 1, 'c': 0 })
+		bursty = consumer._detect(10)
+		self.assertEqual(set([ 'a', 'c' ]), set(bursty))
+
+		"""
+		Increase the burst start value.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), burst_start=0.5, window_size=5, windows=3)
+		consumer.nutrition.add(10, { 'a': 1, 'b': 0, 'c': 0.5 })
+		consumer.nutrition.add(5, { 'a': 0, 'b': 1, 'c': 0 })
+		bursty = consumer._detect(10)
+		self.assertEqual(set([ 'a' ]), set(bursty))
+
+	def test_detect_burst_start_negative(self):
+		"""
+		Test that when detecting bursty terms, the function returns terms that have a burst higher than the burst start even when it is negative.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), burst_start=-0.5, window_size=5, windows=3)
+		consumer.nutrition.add(10, { 'a': 1, 'b': 0, 'c': 0.5 })
+		consumer.nutrition.add(5, { 'a': 0, 'b': 1, 'c': 0 })
+		bursty = consumer._detect(10)
+		self.assertEqual(set([ 'a', 'c' ]), set(bursty))
+
+		"""
+		Decrease the burst start value.
+		"""
+		consumer = FUEGOConsumer(Queue(), burst_start=-0.7, window_size=5, windows=3)
+		consumer.nutrition.add(10, { 'a': 1, 'b': 0, 'c': 0.5, 'd': 0 })
+		consumer.nutrition.add(5, { 'a': 0, 'b': 0.6, 'c': 0, 'd': 1 })
+		bursty = consumer._detect(10)
+		self.assertEqual(set([ 'a', 'b', 'c' ]), set(bursty))
+
+	def test_detect_burst_start_exclusive(self):
+		"""
+		Test that when detecting bursty terms, the function returns terms that have a burst higher than the burst start and this value is exclusive.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), burst_start=-0.5, window_size=5, windows=3)
+		consumer.nutrition.add(10, { 'a': 1, 'b': 0, 'c': 0.5 })
+		consumer.nutrition.add(5, { 'a': 0, 'b': 1, 'c': 0 })
+		bursty = consumer._detect(10)
+		self.assertEqual(set([ 'a', 'c' ]), set(bursty))
+
+		"""
+		Decrease the burst start value.
+		"""
+		consumer = FUEGOConsumer(Queue(), burst_start=-0.6, window_size=5, windows=3)
+		consumer.nutrition.add(10, { 'a': 1, 'b': 0, 'c': 0.5, 'd': 0 })
+		consumer.nutrition.add(5, { 'a': 0, 'b': 0.6, 'c': 0, 'd': 1 })
+		bursty = consumer._detect(10)
+		self.assertEqual(set([ 'a', 'c' ]), set(bursty))
+
+		"""
+		Decrease the burst start value further.
+		"""
+		consumer = FUEGOConsumer(Queue(), burst_start=-0.61, window_size=5, windows=3)
+		consumer.nutrition.add(10, { 'a': 1, 'b': 0, 'c': 0.5, 'd': 0 })
+		consumer.nutrition.add(5, { 'a': 0, 'b': 0.6, 'c': 0, 'd': 1 })
+		bursty = consumer._detect(10)
+		self.assertEqual(set([ 'a', 'b', 'c' ]), set(bursty))
+
+	def test_detect_no_duplicates(self):
+		"""
+		Test that when detecting bursty terms, the function does not return duplicate terms.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), burst_start=0, window_size=5, windows=3)
+		consumer.nutrition.add(10, { 'a': 1, 'b': 0, 'c': 0.5 })
+		consumer.nutrition.add(5, { 'a': 0, 'b': 1, 'c': 0 })
+		bursty = consumer._detect(10)
+		self.assertEqual(sorted(list(set(bursty))), sorted(bursty))
+
+	def test_detect_correct_windows(self):
+		"""
+		Test that when detecting bursty terms, the function uses the correct time windows.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), burst_start=0.3, window_size=5, windows=2)
+		consumer.nutrition.add(15, { 'a': 1, 'b': 1, 'c': 0.5 })
+		consumer.nutrition.add(10, { 'a': 1, 'b': 0, 'c': 0.5 })
+		consumer.nutrition.add(5, { 'a': 0, 'b': 1, 'c': 0 })
+		tracked = consumer._detect(10)
+		self.assertEqual(set([ 'a', 'c' ]), set(tracked))
+		bursty = consumer._track([ 'a', 'b', 'c' ], 15)
+		self.assertEqual(set([ 'b' ]), set(bursty))
+
+	def test_detect_timestamp_inclusive(self):
+		"""
+		Test that when detecting bursty terms, the function includes the nutrition values at the given timestamp.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), burst_start=0.3, window_size=5, windows=2)
+		consumer.nutrition.add(10, { 'a': 1, 'b': 0, 'c': 0.5 })
+		consumer.nutrition.add(5, { 'a': 0, 'b': 1, 'c': 0 })
+		bursty = consumer._track([ 'a', 'b', 'c' ], 9)
+		self.assertEqual(set(), set(bursty))
+		bursty = consumer._detect(10)
+		self.assertEqual(set([ 'a', 'c' ]), set(bursty))
+
+	def test_detect_uses_burst_start(self):
+		"""
+		Test that when detecting bursty terms, the function uses burst start, not burst end.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), burst_start=0.5, burst_end=0.3, window_size=5, windows=2)
+		consumer.nutrition.add(10, { 'a': 1, 'b': 0, 'c': 0.5 })
+		consumer.nutrition.add(5, { 'a': 0, 'b': 1, 'c': 0 })
+		bursty = consumer._detect(10)
+		self.assertEqual(set([ 'a' ]), set(bursty))
