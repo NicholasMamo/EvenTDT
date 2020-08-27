@@ -283,7 +283,11 @@ class FUEGOConsumer(Consumer):
 				3. If the timeline creates a new node, summarize the last finished node.
 				"""
 				for term in ongoing:
-					timeline.add(time, self._collect(term, documents))
+					topic_documents = self._collect(term, documents)
+					if topic_documents:
+						timeline.add(time, topic_documents)
+					else:
+						print("No documents found for", term)
 
 				if timeline.nodes:
 					node = timeline.nodes[-1]
