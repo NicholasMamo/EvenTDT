@@ -393,7 +393,13 @@ class FUEGOConsumer(Consumer):
 		:type documents: list of :class:`~nlp.document.Document`
 		"""
 
-		pass
+		for document in documents:
+			damping = self._damp(document)
+			timestamp = document.attributes['timestamp']
+			nutrition = self.nutrition.get(timestamp) or { }
+			for dimension, magnitude in document.dimensions.items():
+				nutrition[dimension] = nutrition.get(dimension, 0) + magnitude * damping
+			self.nutrition.add(timestamp, nutrition)
 
 	def _damp(self, document):
 		"""

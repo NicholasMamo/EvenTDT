@@ -3,6 +3,7 @@ Test the functionality of the FUEGO consumer.
 """
 
 import asyncio
+import copy
 import json
 import os
 import sys
@@ -713,6 +714,271 @@ class TestFUEGOConsumer(unittest.TestCase):
 			consumer._update_volume(documents)
 			self.assertEqual(len(lines), sum(consumer.volume.all().values()))
 			self.assertEqual({ }, consumer.nutrition.all())
+
+	def test_nutrition_all_timestamps(self):
+		"""
+		Test that the nutrition function includes all recorded timestamps.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), damping=0)
+		self.assertEqual({ }, consumer.nutrition.all())
+
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			timestamps = set( document.attributes['timestamp'] for document in documents )
+			consumer._update_nutrition(documents)
+			self.assertEqual(timestamps, set(consumer.nutrition.all()))
+
+	def test_nutrition_does_not_change_volume(self):
+		"""
+		Test that when updating the nutrition, it does not change the volume.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), damping=0)
+		self.assertEqual({ }, consumer.volume.all())
+		self.assertEqual({ }, consumer.nutrition.all())
+
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			consumer._update_nutrition(documents)
+			self.assertEqual({ }, consumer.volume.all())
+
+	def test_nutrition_all_terms(self):
+		"""
+		Test that when updating the nutrition, it includes all terms in the correct timestamps.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), damping=0)
+		self.assertEqual({ }, consumer.nutrition.all())
+
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+
+			"""
+			Get the set of terms and separate them for each timestamp.
+			"""
+			terms = { }
+			for document in documents:
+				timestamp = document.attributes['timestamp']
+				terms[timestamp] = terms.get(timestamp, set()).union(set(document.dimensions))
+
+			"""
+			Create the nutrition bins.
+			"""
+			for document in documents: # to have an extra test with gradual adding
+				consumer._update_nutrition([ document ])
+
+			"""
+			Check that the bins are correct.
+			"""
+			self.assertEqual(terms.keys(), consumer.nutrition.all().keys())
+			for timestamp in terms:
+				self.assertEqual(terms[timestamp], set(consumer.nutrition.get(timestamp).keys()))
+
+	def test_nutrition_sum(self):
+		"""
+		Test that when updating the nutrition, the correct term nutritions are recorded.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), damping=0)
+		self.assertEqual({ }, consumer.nutrition.all())
+
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+
+			"""
+			Get the set of terms and separate them for each timestamp.
+			"""
+			terms = { }
+			for document in documents:
+				timestamp = document.attributes['timestamp']
+				terms[timestamp] = terms.get(timestamp, { })
+				for dimension, magnitude in document.dimensions.items():
+					terms[timestamp][dimension] = terms[timestamp].get(dimension, 0) + magnitude
+
+			"""
+			Create the nutrition bins.
+			"""
+			consumer._update_nutrition(documents)
+
+			"""
+			Check that the bins are correct.
+			"""
+			self.assertEqual(terms.keys(), consumer.nutrition.all().keys())
+			for timestamp in terms:
+				self.assertEqual(terms[timestamp], consumer.nutrition.get(timestamp))
+
+	def test_nutrition_sum_gradual(self):
+		"""
+		Test that when updating the nutrition gradually, the correct term nutritions are recorded.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), damping=0)
+		self.assertEqual({ }, consumer.nutrition.all())
+
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+
+			"""
+			Get the set of terms and separate them for each timestamp.
+			"""
+			terms = { }
+			for document in documents:
+				timestamp = document.attributes['timestamp']
+				terms[timestamp] = terms.get(timestamp, { })
+				for dimension, magnitude in document.dimensions.items():
+					terms[timestamp][dimension] = terms[timestamp].get(dimension, 0) + magnitude
+
+			"""
+			Create the nutrition bins.
+			"""
+			for document in documents:
+				consumer._update_nutrition([ document ])
+
+			"""
+			Check that the bins are correct.
+			"""
+			self.assertEqual(terms.keys(), consumer.nutrition.all().keys())
+			for timestamp in terms:
+				self.assertEqual(terms[timestamp], consumer.nutrition.get(timestamp))
+
+	def test_nutrition_sum_damping(self):
+		"""
+		Test that when updating the nutrition, the term weights are dampened.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), damping=0.5)
+		self.assertEqual({ }, consumer.nutrition.all())
+
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+
+			"""
+			Get the set of terms and separate them for each timestamp.
+			"""
+			terms = { }
+			for document in documents:
+				timestamp = document.attributes['timestamp']
+				terms[timestamp] = terms.get(timestamp, { })
+				damping = consumer._damp(document)
+				for dimension, magnitude in document.dimensions.items():
+					terms[timestamp][dimension] = terms[timestamp].get(dimension, 0) + magnitude * damping
+
+			"""
+			Create the nutrition bins.
+			"""
+			for document in documents:
+				consumer._update_nutrition([ document ])
+
+			"""
+			Check that the bins are correct.
+			"""
+			self.assertEqual(terms.keys(), consumer.nutrition.all().keys())
+			for timestamp in terms:
+				self.assertEqual(terms[timestamp], consumer.nutrition.get(timestamp))
+
+	def test_nutrition_damping_same_terms(self):
+		"""
+		Test that when updating the nutrition, damping only affects the values, not the keys (terms).
+		"""
+
+		c0, c1 = FUEGOConsumer(Queue(), damping=0), FUEGOConsumer(Queue(), damping=0.5)
+		self.assertEqual({ }, c1.nutrition.all())
+
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = c1._to_documents(tweets)
+			c0._update_nutrition(documents)
+			c1._update_nutrition(documents)
+			self.assertEqual(c0.nutrition.all().keys(), c1.nutrition.all().keys())
+			for timestamp in c0.nutrition.all():
+				self.assertEqual(c0.nutrition.get(timestamp).keys(), c1.nutrition.get(timestamp).keys())
+
+	def test_nutrition_damping_lowers_values(self):
+		"""
+		Test that when updating nutrition, damping brings down the value.
+		"""
+
+		trivial = True
+
+		c0, c1 = FUEGOConsumer(Queue(), damping=0), FUEGOConsumer(Queue(), damping=0.5)
+		self.assertEqual({ }, c1.nutrition.all())
+
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = c1._to_documents(tweets)
+			c0._update_nutrition(documents)
+			c1._update_nutrition(documents)
+			self.assertEqual(c0.nutrition.all().keys(), c1.nutrition.all().keys())
+			for timestamp in c0.nutrition.all():
+				self.assertEqual(c0.nutrition.get(timestamp).keys(), c1.nutrition.get(timestamp).keys())
+				for term in c0.nutrition.get(timestamp):
+					self.assertLessEqual(c1.nutrition.get(timestamp)[term], c0.nutrition.get(timestamp)[term])
+					if c1.nutrition.get(timestamp)[term] < c0.nutrition.get(timestamp)[term]:
+						trivial = False
+
+		if trivial:
+			logger.info("Trivial test")
+
+	def test_nutrition_update(self):
+		"""
+		Test that when there is a nutrition value set for a timestamp, adding a new document at that timestamp increments the values of the terms.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), damping=0)
+		self.assertEqual({ }, consumer.nutrition.all())
+
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			document = documents[0]
+			timestamp = document.attributes['timestamp']
+
+			"""
+			Apply nutrition updating twice.
+			"""
+			consumer._update_nutrition(documents)
+			nutrition = copy.deepcopy(consumer.nutrition.all())
+			consumer._update_nutrition(documents)
+			for timestamp in nutrition:
+				for term in nutrition[timestamp]:
+					self.assertEqual(round(nutrition[timestamp][term] * 2, 10),
+									 round(consumer.nutrition.get(timestamp)[term], 10)) # floating point error
+
+	def test_nutrition_update_timestamp_only(self):
+		"""
+		Test that when updating the nutrition at a certain timestamp, the other timestamps are not changed.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), damping=0)
+		self.assertEqual({ }, consumer.nutrition.all())
+
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			document = documents[0]
+			timestamp = document.attributes['timestamp']
+			consumer.nutrition.add(timestamp + 1, { 'a': 1 })
+			self.assertEqual({ 'a': 1 }, consumer.nutrition.get(timestamp + 1))
+			consumer._update_nutrition([ document ])
+			self.assertEqual({ 'a': 1 }, consumer.nutrition.get(timestamp + 1))
+			self.assertEqual(document.dimensions, consumer.nutrition.get(timestamp))
 
 	def test_damp_lower_bound(self):
 		"""
