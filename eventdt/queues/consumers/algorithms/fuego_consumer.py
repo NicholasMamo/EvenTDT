@@ -58,9 +58,14 @@ class FUEGOConsumer(Consumer):
 	:vartype nutrition: :class:`~tdt.nutrition.memory.MemoryNutritionStore`
 	:ivar tdt: The TDT algorithm used by the consumer to detect and track bursty terms.
 	:vartype tdt: :class:`~tdt.algorithms.eld.SlidingELD`
+	:ivar burst_end: The maximum burst value to consider a bursty term to still be bursty.
+					 This value is applied to terms that are known to be bursty while tracking.
+					 If the burst of a term goes below this value, the consumer stops considering it to be bursty.
+	:vartype burst_end: float
 	"""
 
-	def __init__(self, queue, scheme=None, damping=0.5, window_size=60, windows=10, *args, **kwargs):
+	def __init__(self, queue, scheme=None, damping=0.5,
+				 window_size=60, windows=10, burst_end=0.2, *args, **kwargs):
 		"""
 		Create the consumer with a queue.
 
@@ -77,8 +82,13 @@ class FUEGOConsumer(Consumer):
 		:type window_size: int
 		:param windows: The number of sliding time windows to use when detecting or tracking bursty terms.
 		:type windows: int
+		:param burst_end: The maximum burst value to consider a bursty term to still be bursty.
+						  This value is applied to terms that are known to be bursty while tracking.
+						  If the burst of a term goes below this value, the consumer stops considering it to be bursty.
+		:type burst_end: float
 
 		:raises ValueError: When the damping factor is negative.
+		:raises ValueError: When the burst end parameter is not between -1 and 1.
 		"""
 
 		super(FUEGOConsumer, self).__init__(queue, *args, **kwargs)
@@ -91,12 +101,16 @@ class FUEGOConsumer(Consumer):
 		if damping < 0:
 			raise ValueError(f"The damping factor cannot be negative; received { damping }")
 
+		if not -1 <= burst_end <= 1:
+			raise ValueError(f"The burst end value must be between -1 and 1; received { burst_end }")
+
 		self.damping = damping
 
 		# TDT
 		self.volume = MemoryNutritionStore()
 		self.nutrition = MemoryNutritionStore()
 		self.tdt = SlidingELD(self.nutrition, window_size=window_size, windows=windows)
+		self.burst_end = burst_end
 
 	async def understand(self, max_inactivity=-1, *args, **kwargs):
 		"""

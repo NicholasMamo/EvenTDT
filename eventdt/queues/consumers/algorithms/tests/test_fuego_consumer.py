@@ -138,6 +138,47 @@ class TestFUEGOConsumer(unittest.TestCase):
 		self.assertEqual(120, consumer.tdt.window_size)
 		self.assertEqual(5, consumer.tdt.windows)
 
+	def test_init_burst_end_less_than_minus_one(self):
+		"""
+		Test that when creating a consumer with a burst that is less than -1, the consumer raises a ValueError.
+		"""
+
+		self.assertRaises(ValueError, FUEGOConsumer, Queue(), burst_end=-1.1)
+
+	def test_init_burst_end_minus_one(self):
+		"""
+		Test that when creating a consumer with a burst of -1, the consumer accepts it.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), burst_end=-1)
+		self.assertTrue(consumer)
+		self.assertEqual(-1, consumer.burst_end)
+
+	def test_init_burst_end_intermediate(self):
+		"""
+		Test that when creating a consumer with a normal burst value, the consumer accepts it.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), burst_end=0)
+		self.assertTrue(consumer)
+		self.assertEqual(0, consumer.burst_end)
+
+	def test_init_burst_end_one(self):
+		"""
+		Test that when creating a consumer with a burst of 1, the consumer accepts it.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), burst_end=1)
+		self.assertTrue(consumer)
+		self.assertEqual(1, consumer.burst_end)
+
+	def test_init_burst_end_greater_than_one(self):
+		"""
+		Test that when creating a consumer with a burst that is greater than 1, the consumer raises a ValueError.
+		"""
+
+		self.assertRaises(ValueError, FUEGOConsumer, Queue(), burst_end=1.1)
+
 	@async_test
 	async def test_construct_idf_documents(self):
 		"""
