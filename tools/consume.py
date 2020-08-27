@@ -22,7 +22,7 @@ To run the script, use:
 Accepted arguments:
 
 	- ``-f --file``					*<Required>* The file to consume.
-	- ``-c --class``				*<Required>* The consumer to use; supported: `ELDConsumer`, `FIREConsumer`, `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.
+	- ``-c --class``				*<Required>* The consumer to use; supported: `ELDConsumer`, `FIREConsumer`, `FUEGOConsumer`, `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.
 	- ``-u --understanding``		*<Optional>* The understanding file used to understand the event.
 	- ``-s --speed``				*<Optional>* The speed at which the file is consumed, defaults to 1.
 	- ``--skip``					*<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
@@ -71,7 +71,7 @@ def setup_args():
 	Accepted arguments:
 
 		- ``-f --file``					*<Required>* The file to consume.
-		- ``-c --class``				*<Required>* The consumer to use; supported: `ELDConsumer`, `FIREConsumer`, `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.
+		- ``-c --class``				*<Required>* The consumer to use; supported: `ELDConsumer`, `FIREConsumer`, `FUEGOConsumer`, `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.
 		- ``-u --understanding``		*<Optional>* The understanding file used to understand the event.
 		- ``-s --speed``				*<Optional>* The speed at which the file is consumed, defaults to 1.
 		- ``--skip``					*<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
@@ -99,7 +99,7 @@ def setup_args():
 	parser.add_argument('-f', '--file', type=str, required=True,
 						help='<Required> The file to consume.')
 	parser.add_argument('-c', '--consumer', type=consumer, required=True,
-						help='<Required> The consumer to use.')
+						help='<Required> The consumer to use; supported: `ELDConsumer`, `FIREConsumer`, `FUEGOConsumer`, `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.')
 	parser.add_argument('-u', '--understanding', type=str, required=False,
 						help='<Optional> The understanding file used to understand the event.')
 	parser.add_argument('-s', '--speed', type=float, required=False, default=1,
@@ -525,6 +525,7 @@ def consumer(consumer):
 	consumers = {
 		'eldconsumer': ELDConsumer,
 		'fireconsumer': FIREConsumer,
+		'fuegoconsumer': FUEGOConsumer,
 		'printconsumer': PrintConsumer,
 		'statconsumer': StatConsumer,
 		'zhaoconsumer': ZhaoConsumer,
