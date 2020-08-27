@@ -633,6 +633,6 @@ class FUEGOConsumer(Consumer):
 		summary_documents = { text: document for text, document in summary_documents.items()
 		 									 if len(text) <= 300 }
 		summary_documents = sorted(summary_documents.items(), key=lambda document: len(document[0]), reverse=True)
-		summary_documents = [ document for _, document in summary_documents[:50] ]
+		summary_documents = [ document for _, document in summary_documents[:20] ]
 
 		return self.summarization.summarize(summary_documents, 300)
