@@ -545,7 +545,7 @@ class TestFUEGOConsumer(unittest.TestCase):
 			timestamp = documents[-1].attributes['timestamp']
 			self.assertEqual(timestamp, consumer._time(documents[::-1]))
 
-	def test_volume_all_documents(self):
+	def test_update_volume_all_documents(self):
 		"""
 		Test that the volume function counts all the documents properly.
 		This is tested by setting the damping to 0.
@@ -561,7 +561,7 @@ class TestFUEGOConsumer(unittest.TestCase):
 			consumer._update_volume(documents)
 			self.assertEqual(len(lines), sum(consumer.volume.all().values()))
 
-	def test_volume_all_documents_gradual(self):
+	def test_update_volume_all_documents_gradual(self):
 		"""
 		Test that the volume function counts all the documents properly even when adding them gradually.
 		This is tested by setting the damping to 0.
@@ -578,7 +578,7 @@ class TestFUEGOConsumer(unittest.TestCase):
 				consumer._update_volume([ document ])
 			self.assertEqual(len(lines), sum(consumer.volume.all().values()))
 
-	def test_volume_all_timestamps(self):
+	def test_update_volume_all_timestamps(self):
 		"""
 		Test that the volume function includes all recorded timestamps.
 		"""
@@ -594,7 +594,7 @@ class TestFUEGOConsumer(unittest.TestCase):
 			consumer._update_volume(documents)
 			self.assertEqual(timestamps, set(consumer.volume.all()))
 
-	def test_volume_update(self):
+	def test_update_volume_update(self):
 		"""
 		Test that when there is a volume value set for a timestamp, adding a new document at that timestamp increments the value.
 		"""
@@ -613,7 +613,7 @@ class TestFUEGOConsumer(unittest.TestCase):
 			consumer._update_volume([ document ])
 			self.assertEqual(2, consumer.volume.get(timestamp))
 
-	def test_volume_update_timestamp_only(self):
+	def test_update_volume_update_timestamp_only(self):
 		"""
 		Test that when updating the volume at a certain timestamp, the other timestamps are not changed.
 		"""
@@ -633,7 +633,7 @@ class TestFUEGOConsumer(unittest.TestCase):
 			self.assertEqual(1, consumer.volume.get(timestamp + 1))
 			self.assertEqual(1, consumer.volume.get(timestamp))
 
-	def test_volume_with_damping(self):
+	def test_update_volume_with_damping(self):
 		"""
 		Test that when adding the volume, it is damped.
 		"""
@@ -648,7 +648,7 @@ class TestFUEGOConsumer(unittest.TestCase):
 			consumer._update_volume(documents)
 			self.assertGreater(len(lines), sum(consumer.volume.all().values()))
 
-	def test_volume_damping_sum(self):
+	def test_update_volume_damping_sum(self):
 		"""
 		Test that when adding the volume, the volume sum is equivalent to the damping sum.
 		"""
@@ -664,7 +664,7 @@ class TestFUEGOConsumer(unittest.TestCase):
 			consumer._update_volume(documents)
 			self.assertEqual(round(damping, 10), round(sum(consumer.volume.all().values()), 10)) # floating point error
 
-	def test_volume_binning(self):
+	def test_update_volume_binning(self):
 		"""
 		Test that when adding the volume, it is binned correctly.
 		"""
@@ -698,7 +698,7 @@ class TestFUEGOConsumer(unittest.TestCase):
 			for timestamp in damping:
 				self.assertEqual(damping[timestamp], consumer.volume.get(timestamp))
 
-	def test_volume_does_not_change_nutrition(self):
+	def test_update_volume_does_not_change_nutrition(self):
 		"""
 		Test that when updating the volume, it does not change the nutrition.
 		"""
@@ -715,7 +715,7 @@ class TestFUEGOConsumer(unittest.TestCase):
 			self.assertEqual(len(lines), sum(consumer.volume.all().values()))
 			self.assertEqual({ }, consumer.nutrition.all())
 
-	def test_nutrition_all_timestamps(self):
+	def test_update_nutrition_all_timestamps(self):
 		"""
 		Test that the nutrition function includes all recorded timestamps.
 		"""
@@ -731,7 +731,7 @@ class TestFUEGOConsumer(unittest.TestCase):
 			consumer._update_nutrition(documents)
 			self.assertEqual(timestamps, set(consumer.nutrition.all()))
 
-	def test_nutrition_does_not_change_volume(self):
+	def test_update_nutrition_does_not_change_volume(self):
 		"""
 		Test that when updating the nutrition, it does not change the volume.
 		"""
@@ -747,7 +747,7 @@ class TestFUEGOConsumer(unittest.TestCase):
 			consumer._update_nutrition(documents)
 			self.assertEqual({ }, consumer.volume.all())
 
-	def test_nutrition_all_terms(self):
+	def test_update_nutrition_all_terms(self):
 		"""
 		Test that when updating the nutrition, it includes all terms in the correct timestamps.
 		"""
@@ -781,7 +781,7 @@ class TestFUEGOConsumer(unittest.TestCase):
 			for timestamp in terms:
 				self.assertEqual(terms[timestamp], set(consumer.nutrition.get(timestamp).keys()))
 
-	def test_nutrition_sum(self):
+	def test_update_nutrition_sum(self):
 		"""
 		Test that when updating the nutrition, the correct term nutritions are recorded.
 		"""
@@ -816,7 +816,7 @@ class TestFUEGOConsumer(unittest.TestCase):
 			for timestamp in terms:
 				self.assertEqual(terms[timestamp], consumer.nutrition.get(timestamp))
 
-	def test_nutrition_sum_gradual(self):
+	def test_update_nutrition_sum_gradual(self):
 		"""
 		Test that when updating the nutrition gradually, the correct term nutritions are recorded.
 		"""
@@ -852,7 +852,7 @@ class TestFUEGOConsumer(unittest.TestCase):
 			for timestamp in terms:
 				self.assertEqual(terms[timestamp], consumer.nutrition.get(timestamp))
 
-	def test_nutrition_sum_damping(self):
+	def test_update_nutrition_sum_damping(self):
 		"""
 		Test that when updating the nutrition, the term weights are dampened.
 		"""
@@ -889,7 +889,7 @@ class TestFUEGOConsumer(unittest.TestCase):
 			for timestamp in terms:
 				self.assertEqual(terms[timestamp], consumer.nutrition.get(timestamp))
 
-	def test_nutrition_damping_same_terms(self):
+	def test_update_nutrition_damping_same_terms(self):
 		"""
 		Test that when updating the nutrition, damping only affects the values, not the keys (terms).
 		"""
@@ -907,7 +907,7 @@ class TestFUEGOConsumer(unittest.TestCase):
 			for timestamp in c0.nutrition.all():
 				self.assertEqual(c0.nutrition.get(timestamp).keys(), c1.nutrition.get(timestamp).keys())
 
-	def test_nutrition_damping_lowers_values(self):
+	def test_update_nutrition_damping_lowers_values(self):
 		"""
 		Test that when updating nutrition, damping brings down the value.
 		"""
@@ -934,7 +934,7 @@ class TestFUEGOConsumer(unittest.TestCase):
 		if trivial:
 			logger.info("Trivial test")
 
-	def test_nutrition_update(self):
+	def test_update_nutrition_update(self):
 		"""
 		Test that when there is a nutrition value set for a timestamp, adding a new document at that timestamp increments the values of the terms.
 		"""
@@ -960,7 +960,7 @@ class TestFUEGOConsumer(unittest.TestCase):
 					self.assertEqual(round(nutrition[timestamp][term] * 2, 10),
 									 round(consumer.nutrition.get(timestamp)[term], 10)) # floating point error
 
-	def test_nutrition_update_timestamp_only(self):
+	def test_update_nutrition_update_timestamp_only(self):
 		"""
 		Test that when updating the nutrition at a certain timestamp, the other timestamps are not changed.
 		"""
