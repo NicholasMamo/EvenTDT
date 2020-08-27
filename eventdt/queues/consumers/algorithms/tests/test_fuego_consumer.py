@@ -1611,6 +1611,44 @@ class TestFUEGOConsumer(unittest.TestCase):
 		consumer.volume.add(5, 1)
 		self.assertFalse(consumer._dormant(10))
 
+	def test_dormant_median(self):
+		"""
+		Test that even if the tweet volume is above the minimum volume, if it is below the median, the stream is considered dormant.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), min_volume=1, window_size=10)
+		consumer.volume.add(60, 20)
+		consumer.volume.add(50, 29)
+		consumer.volume.add(40, 30)
+		consumer.volume.add(30, 30)
+		consumer.volume.add(20, 30)
+		consumer.volume.add(10, 20)
+		self.assertFalse(consumer._dormant(10))
+		self.assertFalse(consumer._dormant(20))
+		self.assertFalse(consumer._dormant(30))
+		self.assertFalse(consumer._dormant(40))
+		self.assertTrue(consumer._dormant(50))
+		self.assertTrue(consumer._dormant(60))
+
+	def test_dormant_median_less_volume(self):
+		"""
+		Test that if the median is below the minimum volume, it is ignored.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), min_volume=31, window_size=10)
+		consumer.volume.add(60, 20)
+		consumer.volume.add(50, 29)
+		consumer.volume.add(40, 30)
+		consumer.volume.add(30, 30)
+		consumer.volume.add(20, 30)
+		consumer.volume.add(10, 20)
+		self.assertTrue(consumer._dormant(10))
+		self.assertTrue(consumer._dormant(20))
+		self.assertTrue(consumer._dormant(30))
+		self.assertTrue(consumer._dormant(40))
+		self.assertTrue(consumer._dormant(50))
+		self.assertTrue(consumer._dormant(60))
+
 	def test_partition(self):
 		"""
 		Test partitioning with an example.

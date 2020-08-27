@@ -12,6 +12,7 @@ This allows for more accurate results in real-time.
 
 import math
 import os
+import statistics
 import sys
 
 from nltk.corpus import stopwords
@@ -531,7 +532,8 @@ class FUEGOConsumer(Consumer):
 		"""
 
 		current, historic = self._partition(timestamp)
-		return current < self.min_volume
+		median = statistics.median(historic.values()) if historic else 0
+		return current < max(self.min_volume, median)
 
 	def _partition(self, timestamp):
 		"""
@@ -629,8 +631,8 @@ class FUEGOConsumer(Consumer):
 		"""
 		summary_documents = { document.text: document for document in documents }
 		summary_documents = { text: document for text, document in summary_documents.items()
-		 									 if len(text) <= 280 }
+		 									 if len(text) <= 300 }
 		summary_documents = sorted(summary_documents.items(), key=lambda document: len(document[0]), reverse=True)
 		summary_documents = [ document for _, document in summary_documents[:50] ]
 
-		return self.summarization.summarize(summary_documents, 280)
+		return self.summarization.summarize(summary_documents, 300)
