@@ -58,6 +58,11 @@ class FUEGOConsumer(Consumer):
 	:vartype nutrition: :class:`~tdt.nutrition.memory.MemoryNutritionStore`
 	:ivar tdt: The TDT algorithm used by the consumer to detect and track bursty terms.
 	:vartype tdt: :class:`~tdt.algorithms.eld.SlidingELD`
+	:ivar burst_start: The minimum burst value to consider a term to be bursty.
+					   This value is applied to terms that are known to find new bursty terms during detection.
+					   If the burst of a term is above this value, the consumer considers it to be bursty.
+					   This value is exclusive.
+	:vartype burst_start: float
 	:ivar burst_end: The maximum burst value to consider a bursty term to still be bursty.
 					 This value is applied to terms that are known to be bursty while tracking.
 					 If the burst of a term goes below this value, the consumer stops considering it to be bursty.
@@ -70,7 +75,7 @@ class FUEGOConsumer(Consumer):
 	"""
 
 	def __init__(self, queue, scheme=None, damping=0.5,
-				 window_size=60, windows=10, burst_end=0.2, min_volume=5,
+				 window_size=60, windows=10, burst_start=0.5, burst_end=0.2, min_volume=5,
 				 *args, **kwargs):
 		"""
 		Create the consumer with a queue.
@@ -88,6 +93,11 @@ class FUEGOConsumer(Consumer):
 		:type window_size: int
 		:param windows: The number of sliding time windows to use when detecting or tracking bursty terms.
 		:type windows: int
+		:param burst_start: The minimum burst value to consider a term to be bursty.
+							This value is applied to terms that are known to find new bursty terms during detection.
+							If the burst of a term is above this value, the consumer considers it to be bursty.
+							This value is exclusive.
+		:type burst_start: float
 		:param burst_end: The maximum burst value to consider a bursty term to still be bursty.
 						  This value is applied to terms that are known to be bursty while tracking.
 						  If the burst of a term goes below this value, the consumer stops considering it to be bursty.
@@ -99,6 +109,7 @@ class FUEGOConsumer(Consumer):
 		:type min_volume: float
 
 		:raises ValueError: When the damping factor is negative.
+		:raises ValueError: When the burst start parameter is not between -1 and 1.
 		:raises ValueError: When the burst end parameter is not between -1 and 1.
 		"""
 
@@ -112,6 +123,9 @@ class FUEGOConsumer(Consumer):
 		if damping < 0:
 			raise ValueError(f"The damping factor cannot be negative; received { damping }")
 
+		if not -1 <= burst_start <= 1:
+			raise ValueError(f"The burst start value must be between -1 and 1; received { burst_start }")
+
 		if not -1 <= burst_end <= 1:
 			raise ValueError(f"The burst end value must be between -1 and 1; received { burst_end }")
 
@@ -121,6 +135,7 @@ class FUEGOConsumer(Consumer):
 		self.volume = MemoryNutritionStore()
 		self.nutrition = MemoryNutritionStore()
 		self.tdt = SlidingELD(self.nutrition, window_size=window_size, windows=windows)
+		self.burst_start = burst_start
 		self.burst_end = burst_end
 		self.min_volume = min_volume
 

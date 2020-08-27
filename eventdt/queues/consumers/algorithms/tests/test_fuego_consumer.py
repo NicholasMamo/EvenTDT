@@ -179,6 +179,47 @@ class TestFUEGOConsumer(unittest.TestCase):
 
 		self.assertRaises(ValueError, FUEGOConsumer, Queue(), burst_end=1.1)
 
+	def test_init_burst_start_less_than_minus_one(self):
+		"""
+		Test that when creating a consumer with a burst that is less than -1, the consumer raises a ValueError.
+		"""
+
+		self.assertRaises(ValueError, FUEGOConsumer, Queue(), burst_start=-1.1)
+
+	def test_init_burst_start_minus_one(self):
+		"""
+		Test that when creating a consumer with a burst of -1, the consumer accepts it.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), burst_start=-1)
+		self.assertTrue(consumer)
+		self.assertEqual(-1, consumer.burst_start)
+
+	def test_init_burst_start_intermediate(self):
+		"""
+		Test that when creating a consumer with a normal burst value, the consumer accepts it.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), burst_start=0)
+		self.assertTrue(consumer)
+		self.assertEqual(0, consumer.burst_start)
+
+	def test_init_burst_start_one(self):
+		"""
+		Test that when creating a consumer with a burst of 1, the consumer accepts it.
+		"""
+
+		consumer = FUEGOConsumer(Queue(), burst_start=1)
+		self.assertTrue(consumer)
+		self.assertEqual(1, consumer.burst_start)
+
+	def test_init_burst_start_greater_than_one(self):
+		"""
+		Test that when creating a consumer with a burst that is greater than 1, the consumer raises a ValueError.
+		"""
+
+		self.assertRaises(ValueError, FUEGOConsumer, Queue(), burst_start=1.1)
+
 	def test_init_min_volume(self):
 		"""
 		Test that when creating a consumer, it saves the minimum volume.
