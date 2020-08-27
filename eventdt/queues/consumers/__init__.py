@@ -53,7 +53,7 @@ class Consumer(ABC):
 	:vartype name: str
 	"""
 
-	def __init__(self, queue, name=None):
+	def __init__(self, queue, name=None, *args, **kwargs):
 		"""
 		Initialize the consumer with its :class:`~queues.Queue`.
 
