@@ -360,7 +360,7 @@ class FUEGOConsumer(Consumer):
 		if tweet['user']['favourites_count'] == 0:
 			return False
 
-		if tweet['user']['followers_count'] / tweet['user']['statuses_count'] < 1e-3:
+		if not tweet['user']['statuses_count'] or tweet['user']['followers_count'] / tweet['user']['statuses_count'] < 1e-3:
 			return False
 
 		if len(tweet['entities']['urls']):

@@ -366,6 +366,24 @@ class TestFUEGOConsumer(unittest.TestCase):
 								tweet['retweeted_status']['user']['followers_count'] / tweet['retweeted_status']['user']['statuses_count'] >= 1./1000.)
 			self.assertGreater(count, len(tweets))
 
+	def test_filter_tweets_follower_ratio_no_statuses(self):
+		"""
+		Test that when filtering tweets, all users have at least one status.
+		It's possible that a user has no statuses, which is weird.
+		Not sure how that happens, possibly a short delay in updating the user profile.
+		"""
+
+		consumer = FUEGOConsumer(Queue())
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			count = len(tweets)
+			tweets = consumer._filter_tweets(tweets)
+			self.assertTrue(all( tweet['user']['statuses_count'] or
+								 ('retweeted_status' in tweet and tweet['retweeted_status']['user']['statuses_count'])
+								 for tweet in tweets ))
+			self.assertGreater(count, len(tweets))
+
 	def test_filter_tweets_urls(self):
 		"""
 		Test that when filtering tweets, none of the retained ones have URLs in them.
