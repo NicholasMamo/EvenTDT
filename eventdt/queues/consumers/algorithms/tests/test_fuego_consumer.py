@@ -19,7 +19,9 @@ from nlp.weighting import TF
 from objects.exportable import Exportable
 from queues import Queue
 from queues.consumers.algorithms import FUEGOConsumer
+from summarization import Summary
 from summarization.algorithms import DGS
+from summarization.timeline.nodes import DocumentNode
 from tdt.algorithms import SlidingELD
 import twitter
 from vsm import vector_math
@@ -1757,13 +1759,12 @@ class TestFUEGOConsumer(unittest.TestCase):
 
 		consumer = FUEGOConsumer(Queue())
 		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
-			for line in f:
-				lines = f.readlines()
-				tweets = [ json.loads(line) for line in lines ]
-				documents = consumer._to_documents(tweets)
-				collected = consumer._collect('chelsea', documents)
-				self.assertTrue(collected)
-				self.assertTrue(all( 'chelsea' in document.dimensions for document in collected ))
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			collected = consumer._collect('chelsea', documents)
+			self.assertTrue(collected)
+			self.assertTrue(all( 'chelsea' in document.dimensions for document in collected ))
 
 	def tests_collect_includes_all_with_term(self):
 		"""
@@ -1772,15 +1773,14 @@ class TestFUEGOConsumer(unittest.TestCase):
 
 		consumer = FUEGOConsumer(Queue())
 		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
-			for line in f:
-				lines = f.readlines()
-				tweets = [ json.loads(line) for line in lines ]
-				documents = consumer._to_documents(tweets)
-				collected = consumer._collect('chelsea', documents)
-				self.assertTrue(collected)
-				for document in documents:
-					if 'chelsea' in document.dimensions:
-						self.assertTrue(document in collected)
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			collected = consumer._collect('chelsea', documents)
+			self.assertTrue(collected)
+			for document in documents:
+				if 'chelsea' in document.dimensions:
+					self.assertTrue(document in collected)
 
 	def test_collect_no_duplicates(self):
 		"""
@@ -1789,13 +1789,12 @@ class TestFUEGOConsumer(unittest.TestCase):
 
 		consumer = FUEGOConsumer(Queue())
 		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
-			for line in f:
-				lines = f.readlines()
-				tweets = [ json.loads(line) for line in lines ]
-				documents = consumer._to_documents(tweets)
-				collected = consumer._collect('chelsea', documents)
-				self.assertTrue(collected)
-				self.assertEqual(len(set(collected)), len(collected))
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			collected = consumer._collect('chelsea', documents)
+			self.assertTrue(collected)
+			self.assertEqual(len(set(collected)), len(collected))
 
 	def test_collect_does_not_change_documents(self):
 		"""
@@ -1804,10 +1803,38 @@ class TestFUEGOConsumer(unittest.TestCase):
 
 		consumer = FUEGOConsumer(Queue())
 		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
-			for line in f:
-				lines = f.readlines()
-				tweets = [ json.loads(line) for line in lines ]
-				documents = consumer._to_documents(tweets)
-				collected = consumer._collect('chelsea', documents)
-				self.assertTrue(collected)
-				self.assertTrue(all( document in documents for document in collected ))
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+			collected = consumer._collect('chelsea', documents)
+			self.assertTrue(collected)
+			self.assertTrue(all( document in documents for document in collected ))
+
+	def test_summarize_empty_node(self):
+		"""
+		Test that when summarizing an empty node, the function returns an empty summary.
+		"""
+
+		consumer = FUEGOConsumer(Queue())
+		node = DocumentNode(created_at=10)
+		summary = consumer._summarize(node)
+		self.assertEqual(Summary, type(summary))
+		self.assertEqual([ ], summary.documents)
+
+	def test_summarize(self):
+		"""
+		Test that when summarizing a node, the function returns a summary.
+		"""
+
+		consumer = FUEGOConsumer(Queue())
+		with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+			lines = f.readlines()
+			tweets = [ json.loads(line) for line in lines ]
+			documents = consumer._to_documents(tweets)
+
+			node = DocumentNode(created_at=10)
+			node.add([ document for document in documents
+			 					if len(str(document)) < 140 ])
+			summary = consumer._summarize(node)
+			self.assertEqual(Summary, type(summary))
+			self.assertTrue(summary.documents)

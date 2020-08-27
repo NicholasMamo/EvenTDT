@@ -24,6 +24,7 @@ from nlp import Document, Tokenizer
 from nlp.weighting import TF, TFIDF
 from nlp.weighting.global_schemes import IDF
 from queues.consumers import Consumer
+from summarization import Summary
 from summarization.algorithms import DGS
 from summarization.timeline import Timeline
 from summarization.timeline.nodes import DocumentNode
@@ -570,4 +571,16 @@ class FUEGOConsumer(Consumer):
 		:rtype: :class:`~summarization.summary.Summary`
 		"""
 
-		pass
+		documents = node.get_all_documents()
+		if not documents:
+			return Summary()
+
+		"""
+		Get the unique documents (in terms of text).
+		Sort them in descending order of length and retain only the top ones.
+		"""
+		summary_documents = { document.text: document for document in documents }
+		summary_documents = sorted(summary_documents.items(), key=lambda document: len(document[0]), reverse=True)
+		summary_documents = [ document for _, document in summary_documents[:50] ]
+
+		return self.summarization.summarize(summary_documents, 140)
