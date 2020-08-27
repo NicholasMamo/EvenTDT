@@ -24,6 +24,7 @@ if path not in sys.path:
 from datetime import datetime
 from logger import logger
 from nlp import Document, Tokenizer
+from nlp.cleaners import TweetCleaner
 from nlp.weighting import TF, TFIDF
 from nlp.weighting.global_schemes import IDF
 from queues.consumers import Consumer
@@ -288,7 +289,8 @@ class FUEGOConsumer(Consumer):
 					node = timeline.nodes[-1]
 					if node.expired(timeline.expiry, time) and not node.attributes.get('printed'):
 						summary = self._summarize(node)
-						logger.info(f"{datetime.fromtimestamp(node.created_at).ctime()}: { str(str(summary)) }", process=str(self))
+						cleaner = TweetCleaner(collapse_new_lines=True, collapse_whitespaces=True, remove_unicode_entities=True)
+						logger.info(f"{datetime.fromtimestamp(node.created_at).ctime()}: { cleaner.clean(str(summary)) }", process=str(self))
 						node.attributes['printed'] = True
 
 		return timeline
