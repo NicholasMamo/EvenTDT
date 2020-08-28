@@ -578,7 +578,7 @@ class FUEGOConsumer(Consumer):
 		Calculate the historic volume.
 		"""
 		historic = { }
-		windows = math.ceil(timestamp - min(self.volume.all().keys())) if self.volume.all() else 0
+		windows = math.ceil((timestamp + 1 - min(self.volume.all().keys()))/self.tdt.window_size) if self.volume.all() else 0
 		for window in range(1, windows):
 			since = max(timestamp - self.tdt.window_size * (window + 1) + 1, 0)
 			until = timestamp - self.tdt.window_size * window
