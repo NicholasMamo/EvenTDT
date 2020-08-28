@@ -231,7 +231,7 @@ class FUEGOConsumer(Consumer):
 		:rtype: :class:`~summarization.timeline.Timeline`
 		"""
 
-		timeline = Timeline(DocumentNode, expiry=90, min_similarity=0.6, max_time=300)
+		timeline = Timeline(DocumentNode, expiry=60*5, min_similarity=0.6, max_time=600)
 
 		"""
 		The consumer keeps track of the keywords that are breaking at any given moment.
