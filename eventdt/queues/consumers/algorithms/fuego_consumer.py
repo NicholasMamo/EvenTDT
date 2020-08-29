@@ -637,10 +637,16 @@ class FUEGOConsumer(Consumer):
 		Get the unique documents (in terms of text).
 		Sort them in descending order of length and retain only the top ones.
 		"""
-		summary_documents = { document.text: document for document in documents }
+		summary_documents = { }
+		for document in documents:
+			if document.text in summary_documents:
+				existing = summary_documents[document.text]
+				summary_documents[document.text] = document if self._damp(document) > self._damp(existing) else existing
+			else:
+				summary_documents[document.text] = document
 		summary_documents = { text: document for text, document in summary_documents.items()
 		 									 if len(text) <= 300 }
-		summary_documents = sorted(summary_documents.items(), key=lambda document: len(document[0]), reverse=True)
+		summary_documents = sorted(summary_documents.items(), key=lambda document: len(document[0]) * self._damp(document[1]), reverse=True)
 		summary_documents = [ document for _, document in summary_documents[:20] ]
 
 		return self.summarization.summarize(summary_documents, 300)
