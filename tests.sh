@@ -156,11 +156,35 @@ topic_detection_tests() {
 }
 
 tools_tests() {
-	echo -e "${HIGHLIGHT}Tokenizer${DEFAULT}"
-	python3 -m unittest tools.tests.test_tokenizer
+	echo -e "${HIGHLIGHT}Tools${DEFAULT}"
+	python3 -m unittest tools.tests.test_package
 
 	echo -e "${HIGHLIGHT}Bootstrap${DEFAULT}"
 	python3 -m unittest tools.tests.test_bootstrap
+
+	echo -e "${HIGHLIGHT}Consumer${DEFAULT}"
+	python3 -m unittest tools.tests.test_consume
+
+	echo -e "${HIGHLIGHT}Correlation${DEFAULT}"
+	python3 -m unittest tools.tests.test_correlation
+
+	echo -e "${HIGHLIGHT}IDF${DEFAULT}"
+	python3 -m unittest tools.tests.test_idf
+
+	echo -e "${HIGHLIGHT}Participants${DEFAULT}"
+	python3 -m unittest tools.tests.test_participants
+
+	echo -e "${HIGHLIGHT}Summarization${DEFAULT}"
+	python3 -m unittest tools.tests.test_summarize
+
+	echo -e "${HIGHLIGHT}ATE${DEFAULT}"
+	python3 -m unittest tools.tests.test_terms
+
+	echo -e "${HIGHLIGHT}Tokenizer${DEFAULT}"
+	python3 -m unittest tools.tests.test_tokenizer
+
+	echo -e "${HIGHLIGHT}Evaluation${DEFAULT}"
+	python3 -m unittest tools.evaluation.tests.test_package
 }
 
 twitter_tests() {
