@@ -64,3 +64,9 @@ Summarization
 =============
 
 .. automodule:: tools.summarize
+
+==========
+Evaluation
+==========
+
+.. automodule:: tools.evaluation
