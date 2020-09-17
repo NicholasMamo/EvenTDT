@@ -29,3 +29,30 @@ def precision(items, gold):
     items, gold = set(items), set(gold)
     correct = { item for item in items if item in gold }
     return len(correct) / len(items)
+
+def recall(items, gold):
+    """
+    Calculate the recall of the given items by evaluating how many of the items in the gold standard they contain.
+    Recall is calculated as:
+
+    .. math::
+
+        \\text{recall} = \\frac{|{ \\text{{gold}} } \\cap \\text{{items}}|}{|{ \\text{{gold}} }|}
+
+    This function automatically removes duplicates.
+
+    :param items: A list of items to evaluate.
+    :type items: list or set
+    :param gold: The gold standard items.
+    :type gold: list or set
+
+    :return: The recall value, bound between 0 and 1.
+    :rtype: float
+    """
+
+    if not gold:
+        return 0
+
+    items, gold = set(items), set(gold)
+    correct = { item for item in gold if item in items }
+    return len(correct) / len(gold)

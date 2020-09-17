@@ -14,7 +14,7 @@ for path in paths:
     if path not in sys.path:
         sys.path.append(path)
 
-from evaluation import precision
+from evaluation import precision, recall
 
 class TestPackage(unittest.TestCase):
     """
@@ -95,3 +95,78 @@ class TestPackage(unittest.TestCase):
         """
 
         self.assertEqual(0.6, precision(range(0, 5), list(range(0, 3)) + list(range(0, 3))))
+
+    def test_recall_empty(self):
+        """
+        Test that the recall is 0 when the items and the gold set are empty.
+        """
+
+        self.assertEqual(0, recall([ ], [ ]))
+
+    def test_recall_empty_items(self):
+        """
+        Test that the recall of an empty item set is 0.
+        """
+
+        self.assertEqual(0, recall([ ], [ 1 ]))
+
+    def test_recall_empty_gold(self):
+        """
+        Test that the recall is 0 when the gold set is empty.
+        """
+
+        self.assertEqual(0, recall([ 1 ], [ ]))
+
+    def test_recall_identical_set(self):
+        """
+        Test that the recall is 1 when the item set and the gold set are identical.
+        """
+
+        self.assertEqual(1, recall(set(range(10)), set(range(10))))
+
+    def test_recall_identical_list(self):
+        """
+        Test that the recall is 1 when the item list and the gold list are identical.
+        """
+
+        self.assertEqual(1, recall(list(range(10)), list(range(10))))
+
+    def test_recall_order_irrelevant(self):
+        """
+        Test that the order of the item and gold set items is irrelevant.
+        """
+
+        self.assertEqual(1, recall(list(range(10)), list(range(10))[::-1]))
+
+    def test_recall_type(self):
+        """
+        Test that the variable type matters when calculating recall.
+        """
+
+        self.assertEqual(0, recall([ '1' ], [ 1 ]))
+        self.assertEqual(0, recall([ 1 ], [ '1' ]))
+        self.assertEqual(1, recall([ 1 ], [ 1 ]))
+        self.assertEqual(0, recall([ '' ], [ None ]))
+        self.assertEqual(0, recall([ '' ], [ 0 ]))
+        self.assertEqual(1, recall([ None ], [ None ]))
+
+    def test_recall_example(self):
+        """
+        Test calculating recall with an example.
+        """
+
+        self.assertEqual(0.6, recall(range(0, 3), range(0, 5)))
+
+    def test_recall_duplicate_item(self):
+        """
+        Test that when calculating recall, duplicate elements are removed.
+        """
+
+        self.assertEqual(0.6, recall(list(range(0, 3)) + list(range(0, 3)), range(0, 5)))
+
+    def test_recall_duplicate_gold_item(self):
+        """
+        Test that when calculating recall, duplicate elements are removed from the gold set.
+        """
+
+        self.assertEqual(0.6, recall(range(0, 3), list(range(0, 5)) + list(range(0, 5))))
