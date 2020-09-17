@@ -1,5 +1,7 @@
 __pycache__
 data
+docs/*
+!docs/.gitignore
 config/conf.py
 notebooks
 venv
