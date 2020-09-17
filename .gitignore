@@ -2,3 +2,4 @@ __pycache__
 data
 config/conf.py
 notebooks
+venv
