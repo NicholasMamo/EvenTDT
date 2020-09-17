@@ -70,3 +70,4 @@ Evaluation
 ==========
 
 .. automodule:: tools.evaluation
+   :members:
