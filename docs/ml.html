@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   <meta content="The machine learning library" name="description" />
@@ -14,29 +13,31 @@
   
 
   
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/eventdt.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/css/eventdt.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="11. Automatic Term Extraction (ATE)" href="ate.html" />
@@ -54,7 +55,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> EvenTDT
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> EvenTDT
           
 
           
@@ -77,6 +78,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -113,6 +115,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -151,7 +154,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>10. Machine Learning</li>
     
@@ -206,9 +209,9 @@ Otherwise, if the antecedent doesn’t contribute more to the consequent with it
 Lift can also be defined in terms of the confidence:</p>
 <div class="math notranslate nohighlight">
 \[l_{\{X, Y\} \implies \{Z\}} = \frac{c_{\{X, Y\} \implies \{Z\}}}{s_{\{Z\}}}\]</div>
-<dl class="function">
+<dl class="py function">
 <dt id="ml.association.support">
-<code class="sig-name descname">support</code><span class="sig-paren">(</span><em class="sig-param">transactions</em>, <em class="sig-param">itemset</em><span class="sig-paren">)</span><a class="headerlink" href="#ml.association.support" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">support</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">transactions</span></em>, <em class="sig-param"><span class="n">itemset</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ml.association.support" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the support of the itemset in the given transactions.</p>
 <p>The support of an item or a set of items is the number of transactions in which it appears:</p>
 <div class="math notranslate nohighlight">
@@ -230,9 +233,9 @@ Lift can also be defined in terms of the confidence:</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="ml.association.confidence">
-<code class="sig-name descname">confidence</code><span class="sig-paren">(</span><em class="sig-param">transactions</em>, <em class="sig-param">antecedent</em>, <em class="sig-param">consequent</em><span class="sig-paren">)</span><a class="headerlink" href="#ml.association.confidence" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">confidence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">transactions</span></em>, <em class="sig-param"><span class="n">antecedent</span></em>, <em class="sig-param"><span class="n">consequent</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ml.association.confidence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the confidence for the given antecedent and consequent in the given transactions.</p>
 <p>It is the posterior probability of the consequent given the antecedent:</p>
 <div class="math notranslate nohighlight">
@@ -256,9 +259,9 @@ It is presented as a set of items.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="ml.association.lift">
-<code class="sig-name descname">lift</code><span class="sig-paren">(</span><em class="sig-param">transactions</em>, <em class="sig-param">antecedent</em>, <em class="sig-param">consequent</em><span class="sig-paren">)</span><a class="headerlink" href="#ml.association.lift" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">lift</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">transactions</span></em>, <em class="sig-param"><span class="n">antecedent</span></em>, <em class="sig-param"><span class="n">consequent</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ml.association.lift" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the lift for the given antecedent and consequent in the given transactions.</p>
 <p>Lift avoids overweighting items by computing the ratio of the rule’s confidence as a function of the consequent’s support.
 If the antecedent really contributes to the consequent, the ratio will be greater than 1.
@@ -300,9 +303,9 @@ To restrain the depth of association rules, the Apriori algorithm accepts two pa
 <li><p><cite>minconf</cite>: The minimum confidence of an association rule to be accepted.</p></li>
 </ol>
 </div></blockquote>
-<dl class="function">
+<dl class="py function">
 <dt id="ml.association.algo.apriori.apriori">
-<code class="sig-name descname">apriori</code><span class="sig-paren">(</span><em class="sig-param">transactions</em>, <em class="sig-param">minsup=0</em>, <em class="sig-param">minconf=0</em><span class="sig-paren">)</span><a class="headerlink" href="#ml.association.algo.apriori.apriori" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">apriori</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">transactions</span></em>, <em class="sig-param"><span class="n">minsup</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">minconf</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ml.association.algo.apriori.apriori" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform the Apriori algorithm over the given transactions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -330,9 +333,9 @@ Each rule is a four-tuple made up of the antecedent, consequent, confidence and 
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="ml.association.algo.apriori.get_items">
-<code class="sig-name descname">get_items</code><span class="sig-paren">(</span><em class="sig-param">transactions</em><span class="sig-paren">)</span><a class="headerlink" href="#ml.association.algo.apriori.get_items" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_items</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">transactions</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ml.association.algo.apriori.get_items" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract all items from the transactions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -348,9 +351,9 @@ Each item is returned as an itemset on its own.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="ml.association.algo.apriori.get_itemsets">
-<code class="sig-name descname">get_itemsets</code><span class="sig-paren">(</span><em class="sig-param">itemsets</em>, <em class="sig-param">length</em><span class="sig-paren">)</span><a class="headerlink" href="#ml.association.algo.apriori.get_itemsets" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_itemsets</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">itemsets</span></em>, <em class="sig-param"><span class="n">length</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ml.association.algo.apriori.get_itemsets" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct new itemsets from the given ones.
 All new itemsets have the given length.</p>
 <dl class="field-list simple">
@@ -377,9 +380,9 @@ All itemsets have the same length, as given in the parameters.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="ml.association.algo.apriori.filter_itemsets">
-<code class="sig-name descname">filter_itemsets</code><span class="sig-paren">(</span><em class="sig-param">transactions</em>, <em class="sig-param">itemsets</em>, <em class="sig-param">minsup</em><span class="sig-paren">)</span><a class="headerlink" href="#ml.association.algo.apriori.filter_itemsets" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">filter_itemsets</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">transactions</span></em>, <em class="sig-param"><span class="n">itemsets</span></em>, <em class="sig-param"><span class="n">minsup</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ml.association.algo.apriori.filter_itemsets" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filter the itemsets to retain only those having a minimum support.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -403,9 +406,9 @@ All itemsets have at least a support equivalent to the given minimum.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="ml.association.algo.apriori.next_rules">
-<code class="sig-name descname">next_rules</code><span class="sig-paren">(</span><em class="sig-param">transactions</em>, <em class="sig-param">antecedent</em>, <em class="sig-param">consequent=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ml.association.algo.apriori.next_rules" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">next_rules</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">transactions</span></em>, <em class="sig-param"><span class="n">antecedent</span></em>, <em class="sig-param"><span class="n">consequent</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ml.association.algo.apriori.next_rules" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate the next rules from the given antecedent and consequent.
 The function generates rules by taking one item from the antecedent and adding it to the consequent.</p>
 <dl class="field-list simple">
@@ -427,9 +430,9 @@ Each rule is a two-tuple made up of the antecedent and consequent respectively.<
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="ml.association.algo.apriori.filter_rules">
-<code class="sig-name descname">filter_rules</code><span class="sig-paren">(</span><em class="sig-param">rules</em>, <em class="sig-param">minconf</em><span class="sig-paren">)</span><a class="headerlink" href="#ml.association.algo.apriori.filter_rules" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">filter_rules</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rules</span></em>, <em class="sig-param"><span class="n">minconf</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ml.association.algo.apriori.filter_rules" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filter the rules to retain only those having a minimum confidence.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -477,11 +480,19 @@ All rules have at least a confidence equivalent to the given minimum.</p>
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2020, Nicholas Mamo
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -492,7 +503,6 @@ All rules have at least a confidence equivalent to the given minimum.</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

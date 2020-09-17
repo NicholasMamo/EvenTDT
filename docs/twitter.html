@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   <meta content="The tweet collection or reading functionality of EvenTDT" name="description" />
@@ -14,29 +13,31 @@
   
 
   
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/eventdt.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/css/eventdt.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="9. Consumers" href="consumers.html" />
@@ -54,7 +55,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> EvenTDT
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> EvenTDT
           
 
           
@@ -77,6 +78,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -120,6 +122,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -158,7 +161,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>8. Twitter</li>
     
@@ -183,9 +186,9 @@
 <h1>8. Twitter<a class="headerlink" href="#twitter" title="Permalink to this headline">¶</a></h1>
 <span class="target" id="module-twitter"></span><p>The Twitter package is used to facilitate collecting, reading and processing tweet corpora.
 At the package-level there are functions to help with general processing tasks.</p>
-<dl class="function">
+<dl class="py function">
 <dt id="twitter.extract_timestamp">
-<code class="sig-name descname">extract_timestamp</code><span class="sig-paren">(</span><em class="sig-param">tweet</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.extract_timestamp" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">extract_timestamp</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tweet</span></em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.extract_timestamp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the timestamp from the given tweet.
 This function looks for the timestamp in one of two fields:</p>
 <ol class="arabic simple">
@@ -208,9 +211,9 @@ This function looks for the timestamp in one of two fields:</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="twitter.full_text">
-<code class="sig-name descname">full_text</code><span class="sig-paren">(</span><em class="sig-param">tweet</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.full_text" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">full_text</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tweet</span></em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.full_text" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract the full text from the tweet.</p>
 <p>Normally, long tweets are truncated (they end with a <cite>…</cite>).
 This function looks for the original full text.
@@ -243,9 +246,9 @@ It is not responsible for filtering tweets; that is, the stream settings are set
 When the stream closes, it writes the last tweets to the file.</p>
 <p>Tweet objects include a lot of attributes, which may not always be required and result in large corpora.
 Therefore this listener also supports attribute filtering, which removes needless data from tweets before saving them to file.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="twitter.listeners.tweet_listener.TweetListener">
-<em class="property">class </em><code class="sig-name descname">TweetListener</code><span class="sig-paren">(</span><em class="sig-param">f</em>, <em class="sig-param">max_time=3600</em>, <em class="sig-param">attributes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.listeners.tweet_listener.TweetListener" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">TweetListener</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">f</span></em>, <em class="sig-param"><span class="n">max_time</span><span class="o">=</span><span class="default_value">3600</span></em>, <em class="sig-param"><span class="n">attributes</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.listeners.tweet_listener.TweetListener" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference internal" href="#twitter.listeners.tweet_listener.TweetListener" title="twitter.listeners.tweet_listener.TweetListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">TweetListener</span></code></a> handles the tweets that the stream sends.
 It does not configure the stream, but only processes the tweets it sends.</p>
 <p>The <a class="reference internal" href="#twitter.listeners.tweet_listener.TweetListener" title="twitter.listeners.tweet_listener.TweetListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">TweetListener</span></code></a>’s state stores the file pointer where to save files.
@@ -276,9 +279,9 @@ If <code class="docutils literal notranslate"><span class="pre">None</span></cod
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="twitter.listeners.tweet_listener.TweetListener.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">f</em>, <em class="sig-param">max_time=3600</em>, <em class="sig-param">attributes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.listeners.tweet_listener.TweetListener.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">f</span></em>, <em class="sig-param"><span class="n">max_time</span><span class="o">=</span><span class="default_value">3600</span></em>, <em class="sig-param"><span class="n">attributes</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.listeners.tweet_listener.TweetListener.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the listener.
 Simultaneously set the file and the list of tweets.
 By default, the stream continues processing for an hour.</p>
@@ -295,7 +298,7 @@ If <code class="docutils literal notranslate"><span class="pre">None</span></cod
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="twitter.listeners.tweet_listener.TweetListener.flush">
 <code class="sig-name descname">flush</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#twitter.listeners.tweet_listener.TweetListener.flush" title="Permalink to this definition">¶</a></dt>
 <dd><p>Flush the tweets to file.
@@ -307,9 +310,9 @@ Since each tweet is a string representing a line, this function only concatenate
 </div>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="twitter.listeners.tweet_listener.TweetListener.on_data">
-<code class="sig-name descname">on_data</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.listeners.tweet_listener.TweetListener.on_data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">on_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.listeners.tweet_listener.TweetListener.on_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>When the listener receives tweets, add them to a list.
 If there are many tweets, save them to file and reset the list of tweets.</p>
 <p>When the function adds tweets to the list, they are strings, ready to be saved by the <a class="reference internal" href="#twitter.listeners.tweet_listener.TweetListener.flush" title="twitter.listeners.tweet_listener.TweetListener.flush"><code class="xref py py-func docutils literal notranslate"><span class="pre">flush()</span></code></a> function.
@@ -332,9 +335,9 @@ This instructs the stream to stop receiving tweets.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="twitter.listeners.tweet_listener.TweetListener.filter">
-<code class="sig-name descname">filter</code><span class="sig-paren">(</span><em class="sig-param">tweet</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.listeners.tweet_listener.TweetListener.filter" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">filter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tweet</span></em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.listeners.tweet_listener.TweetListener.filter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filter the given tweet using the attributes specified when creating the <a class="reference internal" href="#twitter.listeners.tweet_listener.TweetListener" title="twitter.listeners.tweet_listener.TweetListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">TweetListener</span></code></a>.
 If no attributes were given, the tweet’s attributes are all retained.</p>
 <dl class="field-list simple">
@@ -351,9 +354,9 @@ The keys are the attribute names and the values are the data.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="twitter.listeners.tweet_listener.TweetListener.on_error">
-<code class="sig-name descname">on_error</code><span class="sig-paren">(</span><em class="sig-param">status</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.listeners.tweet_listener.TweetListener.on_error" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">on_error</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">status</span></em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.listeners.tweet_listener.TweetListener.on_error" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print any errors.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -371,9 +374,9 @@ The keys are the attribute names and the values are the data.</p>
 However, it differs from the <a class="reference internal" href="#twitter.listeners.tweet_listener.TweetListener" title="twitter.listeners.tweet_listener.TweetListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">TweetListener</span></code></a> because it does not save tweets to a file, but it adds them to a <a class="reference internal" href="consumers.html#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>.
 This listener is preferrable when there is no need to save tweets as they are processed as soon as they arrive.
 Therefore the <a class="reference internal" href="#twitter.listeners.queued_tweet_listener.QueuedTweetListener" title="twitter.listeners.queued_tweet_listener.QueuedTweetListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">QueuedTweetListener</span></code></a> is designed to work out of the box with <a class="reference internal" href="consumers.html#id1"><span class="std std-ref">consumers</span></a>.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="twitter.listeners.queued_tweet_listener.QueuedTweetListener">
-<em class="property">class </em><code class="sig-name descname">QueuedTweetListener</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">max_time=3600</em>, <em class="sig-param">attributes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.listeners.queued_tweet_listener.QueuedTweetListener" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">QueuedTweetListener</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">queue</span></em>, <em class="sig-param"><span class="n">max_time</span><span class="o">=</span><span class="default_value">3600</span></em>, <em class="sig-param"><span class="n">attributes</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.listeners.queued_tweet_listener.QueuedTweetListener" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference internal" href="#twitter.listeners.queued_tweet_listener.QueuedTweetListener" title="twitter.listeners.queued_tweet_listener.QueuedTweetListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">QueuedTweetListener</span></code></a> handles the tweets that the stream sends.
 It does not configure the stream, but only processes the tweets it sends.</p>
 <p>The <a class="reference internal" href="#twitter.listeners.queued_tweet_listener.QueuedTweetListener" title="twitter.listeners.queued_tweet_listener.QueuedTweetListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">QueuedTweetListener</span></code></a> differs from the <a class="reference internal" href="#twitter.listeners.tweet_listener.TweetListener" title="twitter.listeners.tweet_listener.TweetListener"><code class="xref py py-class docutils literal notranslate"><span class="pre">TweetListener</span></code></a> because it adds these tweets to a <a class="reference internal" href="consumers.html#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> instead of saving them to a file
@@ -394,9 +397,9 @@ If <code class="docutils literal notranslate"><span class="pre">None</span></cod
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="twitter.listeners.queued_tweet_listener.QueuedTweetListener.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">max_time=3600</em>, <em class="sig-param">attributes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.listeners.queued_tweet_listener.QueuedTweetListener.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">queue</span></em>, <em class="sig-param"><span class="n">max_time</span><span class="o">=</span><span class="default_value">3600</span></em>, <em class="sig-param"><span class="n">attributes</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.listeners.queued_tweet_listener.QueuedTweetListener.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the listener.
 Simultaneously set the queue.
 By default, the stream continues processing for an hour.</p>
@@ -412,9 +415,9 @@ If <code class="docutils literal notranslate"><span class="pre">None</span></cod
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="twitter.listeners.queued_tweet_listener.QueuedTweetListener.on_data">
-<code class="sig-name descname">on_data</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.listeners.queued_tweet_listener.QueuedTweetListener.on_data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">on_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.listeners.queued_tweet_listener.QueuedTweetListener.on_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>When the listener receives tweets, add them to the queue immediately after filtering out any attributes that are not required.
 When the function adds tweets to the list, they are dictionaries, ready to be processed by the consumer.</p>
 <p>This function also checks if the listener has been listening for tweets for a long time.
@@ -435,9 +438,9 @@ This instructs the stream to stop receiving tweets.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="twitter.listeners.queued_tweet_listener.QueuedTweetListener.filter">
-<code class="sig-name descname">filter</code><span class="sig-paren">(</span><em class="sig-param">tweet</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.listeners.queued_tweet_listener.QueuedTweetListener.filter" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">filter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tweet</span></em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.listeners.queued_tweet_listener.QueuedTweetListener.filter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filter the given tweet using the attributes.
 If no attributes are given, the tweet’s attributes are all retained.</p>
 <dl class="field-list simple">
@@ -454,9 +457,9 @@ The keys are the attribute names and the values are the data.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="twitter.listeners.queued_tweet_listener.QueuedTweetListener.on_error">
-<code class="sig-name descname">on_error</code><span class="sig-paren">(</span><em class="sig-param">status</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.listeners.queued_tweet_listener.QueuedTweetListener.on_error" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">on_error</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">status</span></em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.listeners.queued_tweet_listener.QueuedTweetListener.on_error" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print any errors.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -476,9 +479,9 @@ These readers expect that the corpora were collected using a <a class="reference
 The input files have one object on each line.</p>
 <p>File readers are useful in evaluation or experimental settings.
 By simulating the Twitter stream, the different file readers can be used to replicate the original, real-time setting of a stream.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="twitter.file.FileReader">
-<em class="property">class </em><code class="sig-name descname">FileReader</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">f</em>, <em class="sig-param">max_lines=-1</em>, <em class="sig-param">max_time=-1</em>, <em class="sig-param">skip_lines=0</em>, <em class="sig-param">skip_time=0</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.FileReader" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">FileReader</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">queue</span></em>, <em class="sig-param"><span class="n">f</span></em>, <em class="sig-param"><span class="n">max_lines</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">max_time</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">skip_lines</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">skip_time</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.FileReader" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference internal" href="#twitter.file.FileReader" title="twitter.file.FileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileReader</span></code></a> is a class that describes the general state of file readers.</p>
 <p>Generally speaking, any file reader should implement the <a class="reference internal" href="#twitter.file.FileReader.read" title="twitter.file.FileReader.read"><code class="xref py py-func docutils literal notranslate"><span class="pre">read()</span></code></a> function, which reads tweets and adds them to the <a class="reference internal" href="consumers.html#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>.
 This <a class="reference internal" href="consumers.html#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> is one of the variables that make up the <a class="reference internal" href="#twitter.file.FileReader" title="twitter.file.FileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileReader</span></code></a>’s state.
@@ -511,9 +514,9 @@ If the number is negative, it is ignored.</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="twitter.file.FileReader.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">f</em>, <em class="sig-param">max_lines=-1</em>, <em class="sig-param">max_time=-1</em>, <em class="sig-param">skip_lines=0</em>, <em class="sig-param">skip_time=0</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.FileReader.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">queue</span></em>, <em class="sig-param"><span class="n">f</span></em>, <em class="sig-param"><span class="n">max_lines</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">max_time</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">skip_lines</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">skip_time</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.FileReader.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the file reader with the <a class="reference internal" href="consumers.html#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> where to add tweets and the file from where to read them.
 The <code class="docutils literal notranslate"><span class="pre">max_lines</span></code> and <code class="docutils literal notranslate"><span class="pre">max_time</span></code> parameters can be used to read only a part of the corpus.</p>
 <dl class="field-list simple">
@@ -533,9 +536,9 @@ If the number is negative, it is ignored.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="twitter.file.FileReader.reading">
-<em class="property">static </em><code class="sig-name descname">reading</code><span class="sig-paren">(</span><em class="sig-param">f</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.FileReader.reading" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">reading</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">f</span></em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.FileReader.reading" title="Permalink to this definition">¶</a></dt>
 <dd><p>This decorator sets the appropriate flags when the file reader starts reading, and when it stops reading.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -544,9 +547,9 @@ If the number is negative, it is ignored.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="twitter.file.FileReader.skip">
-<code class="sig-name descname">skip</code><span class="sig-paren">(</span><em class="sig-param">lines</em>, <em class="sig-param">time</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.FileReader.skip" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">skip</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lines</span></em>, <em class="sig-param"><span class="n">time</span></em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.FileReader.skip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Skip a number of lines from the file.
 This virtually just reads lines without storing them, but moving the file pointer.</p>
 <div class="admonition note">
@@ -564,13 +567,13 @@ The time is taken from tweets’ timestamps.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="twitter.file.FileReader.read">
 <em class="property">abstract async </em><code class="sig-name descname">read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.FileReader.read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read the file and add each line as a dictionary to the queue.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="twitter.file.FileReader.stop">
 <code class="sig-name descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.FileReader.stop" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set a flag to stop accepting new objects.</p>
@@ -581,7 +584,7 @@ This function merely asks that the consumer stops accepting new objects for proc
 </div>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="twitter.file.FileReader.__weakref__">
 <code class="sig-name descname">__weakref__</code><a class="headerlink" href="#twitter.file.FileReader.__weakref__" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of weak references to the object (if defined)</p>
@@ -597,9 +600,9 @@ This means that in high-volume periods, the <a class="reference internal" href="
 In low-volume periods, it enqueues fewer tweets.</p>
 <p>Since the <a class="reference internal" href="#twitter.file.simulated_reader.SimulatedFileReader" title="twitter.file.simulated_reader.SimulatedFileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimulatedFileReader</span></code></a> has high fidelity, it is most appropriate in experimental or evaluation settings.
 Since the volume is likely to change, it also tests the <a class="reference internal" href="consumers.html#id1"><span class="std std-ref">consumers’</span></a> performance in volatile or high-volume situations.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="twitter.file.simulated_reader.SimulatedFileReader">
-<em class="property">class </em><code class="sig-name descname">SimulatedFileReader</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">f</em>, <em class="sig-param">max_lines=-1</em>, <em class="sig-param">max_time=-1</em>, <em class="sig-param">skip_lines=0</em>, <em class="sig-param">skip_time=0</em>, <em class="sig-param">speed=1</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.simulated_reader.SimulatedFileReader" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">SimulatedFileReader</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">queue</span></em>, <em class="sig-param"><span class="n">f</span></em>, <em class="sig-param"><span class="n">max_lines</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">max_time</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">skip_lines</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">skip_time</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">speed</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.simulated_reader.SimulatedFileReader" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference internal" href="#twitter.file.simulated_reader.SimulatedFileReader" title="twitter.file.simulated_reader.SimulatedFileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimulatedFileReader</span></code></a> is based on the <a class="reference internal" href="#twitter.file.FileReader" title="twitter.file.FileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileReader</span></code></a>, so it reads tweets from a file and adds it to a queue.
 This works like a simulation, as if the event was happening at the same time.</p>
 <p>In addition to the parameters accepted by the <a class="reference internal" href="#twitter.file.FileReader" title="twitter.file.FileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileReader</span></code></a>, it also accepts the <code class="docutils literal notranslate"><span class="pre">speed</span></code>.
@@ -611,9 +614,9 @@ If it is set to 0.5, for example, the event progresses at half the speed.
 If it is set to 2, the event progresses at double the speed.</p>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="twitter.file.simulated_reader.SimulatedFileReader.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">f</em>, <em class="sig-param">max_lines=-1</em>, <em class="sig-param">max_time=-1</em>, <em class="sig-param">skip_lines=0</em>, <em class="sig-param">skip_time=0</em>, <em class="sig-param">speed=1</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.simulated_reader.SimulatedFileReader.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">queue</span></em>, <em class="sig-param"><span class="n">f</span></em>, <em class="sig-param"><span class="n">max_lines</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">max_time</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">skip_lines</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">skip_time</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">speed</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.simulated_reader.SimulatedFileReader.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the <a class="reference internal" href="#twitter.file.simulated_reader.SimulatedFileReader" title="twitter.file.simulated_reader.SimulatedFileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimulatedFileReader</span></code></a> with the file from where to read tweets and the <a class="reference internal" href="consumers.html#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> where to store them.
 The <code class="docutils literal notranslate"><span class="pre">speed</span></code> is an extra parameter in addition to the <a class="reference internal" href="#twitter.file.FileReader" title="twitter.file.FileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileReader</span></code></a>’s parameters.</p>
 <dl class="field-list simple">
@@ -644,9 +647,9 @@ If it is set to 2, the event progresses at double the speed.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="twitter.file.simulated_reader.SimulatedFileReader.read">
-<em class="property">async </em><code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.simulated_reader.SimulatedFileReader.read" title="Permalink to this definition">¶</a></dt>
+<em class="property">async </em><code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.simulated_reader.SimulatedFileReader.read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the <code class="docutils literal notranslate"><span class="pre">active</span></code> flag to <code class="docutils literal notranslate"><span class="pre">True</span></code> and the <code class="docutils literal notranslate"><span class="pre">stopped</span></code> flag to <code class="docutils literal notranslate"><span class="pre">False</span></code> before starting to read.
 After finishing reading, set the <code class="docutils literal notranslate"><span class="pre">active</span></code> flag to <code class="docutils literal notranslate"><span class="pre">False</span></code> and the <code class="docutils literal notranslate"><span class="pre">stopped</span></code> flag to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
 </dd></dl>
@@ -660,9 +663,9 @@ After finishing reading, set the <code class="docutils literal notranslate"><spa
 This results in a steady and predictable stream of tweets.
 Therefore the <a class="reference internal" href="#twitter.file.staggered_reader.StaggeredFileReader" title="twitter.file.staggered_reader.StaggeredFileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">StaggeredFileReader</span></code></a> allows the application to receive as many tweets as it can handle, and handle them as well as it can.
 For this reason, it is most opportune when the <a class="reference internal" href="consumers.html#id1"><span class="std std-ref">consumer’s</span></a> performance under strain is not important, but its results are.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="twitter.file.staggered_reader.StaggeredFileReader">
-<em class="property">class </em><code class="sig-name descname">StaggeredFileReader</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">f</em>, <em class="sig-param">max_lines=-1</em>, <em class="sig-param">max_time=-1</em>, <em class="sig-param">skip_lines=0</em>, <em class="sig-param">skip_time=0</em>, <em class="sig-param">rate=1</em>, <em class="sig-param">skip_rate=0</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.staggered_reader.StaggeredFileReader" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">StaggeredFileReader</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">queue</span></em>, <em class="sig-param"><span class="n">f</span></em>, <em class="sig-param"><span class="n">max_lines</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">max_time</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">skip_lines</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">skip_time</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">rate</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">skip_rate</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.staggered_reader.StaggeredFileReader" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference internal" href="#twitter.file.staggered_reader.StaggeredFileReader" title="twitter.file.staggered_reader.StaggeredFileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">StaggeredFileReader</span></code></a> is based on the <a class="reference internal" href="#twitter.file.FileReader" title="twitter.file.FileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileReader</span></code></a>, so it reads tweets from a file and adds it to a queue.
 However, unlike the <a class="reference internal" href="#twitter.file.simulated_reader.SimulatedFileReader" title="twitter.file.simulated_reader.SimulatedFileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimulatedFileReader</span></code></a>, it reads tweets at a constant pace.
 It reads a few tweets at a time, stops and waits.</p>
@@ -679,9 +682,9 @@ Therefore the approach works skips a number of tweets per second, and then reads
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="twitter.file.staggered_reader.StaggeredFileReader.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">queue</em>, <em class="sig-param">f</em>, <em class="sig-param">max_lines=-1</em>, <em class="sig-param">max_time=-1</em>, <em class="sig-param">skip_lines=0</em>, <em class="sig-param">skip_time=0</em>, <em class="sig-param">rate=1</em>, <em class="sig-param">skip_rate=0</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.staggered_reader.StaggeredFileReader.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">queue</span></em>, <em class="sig-param"><span class="n">f</span></em>, <em class="sig-param"><span class="n">max_lines</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">max_time</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">skip_lines</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">skip_time</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">rate</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">skip_rate</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.staggered_reader.StaggeredFileReader.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the <a class="reference internal" href="#twitter.file.staggered_reader.StaggeredFileReader" title="twitter.file.staggered_reader.StaggeredFileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">StaggeredFileReader</span></code></a> with the file from where to read tweets and the <a class="reference internal" href="consumers.html#queues.Queue" title="queues.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a> where to store them.
 The <code class="docutils literal notranslate"><span class="pre">rate</span></code> and <code class="docutils literal notranslate"><span class="pre">skip_rate</span></code> are extra parameters in addition to the <a class="reference internal" href="#twitter.file.FileReader" title="twitter.file.FileReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileReader</span></code></a>’s parameters.</p>
 <dl class="field-list simple">
@@ -714,9 +717,9 @@ If the number is negative, it is ignored.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="twitter.file.staggered_reader.StaggeredFileReader.read">
-<em class="property">async </em><code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.staggered_reader.StaggeredFileReader.read" title="Permalink to this definition">¶</a></dt>
+<em class="property">async </em><code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.file.staggered_reader.StaggeredFileReader.read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the <code class="docutils literal notranslate"><span class="pre">active</span></code> flag to <code class="docutils literal notranslate"><span class="pre">True</span></code> and the <code class="docutils literal notranslate"><span class="pre">stopped</span></code> flag to <code class="docutils literal notranslate"><span class="pre">False</span></code> before starting to read.
 After finishing reading, set the <code class="docutils literal notranslate"><span class="pre">active</span></code> flag to <code class="docutils literal notranslate"><span class="pre">False</span></code> and the <code class="docutils literal notranslate"><span class="pre">stopped</span></code> flag to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
 </dd></dl>
@@ -733,9 +736,9 @@ These functions are not meant to be complete solutions to any problem, but they 
 <span id="aggregation"></span><h3>Aggregation<a class="headerlink" href="#module-twitter.corpus.aggregate" title="Permalink to this headline">¶</a></h3>
 <p>Aggregation functions are quick solutions to group tweets.
 These can be used to create tweet volume time-series quickly, for example.</p>
-<dl class="function">
+<dl class="py function">
 <dt id="twitter.corpus.aggregate.aggregate">
-<code class="sig-name descname">aggregate</code><span class="sig-paren">(</span><em class="sig-param">corpus</em>, <em class="sig-param">agg</em>, <em class="sig-param">bin_size=60</em>, <em class="sig-param">track=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.corpus.aggregate.aggregate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">aggregate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">corpus</span></em>, <em class="sig-param"><span class="n">agg</span></em>, <em class="sig-param"><span class="n">bin_size</span><span class="o">=</span><span class="default_value">60</span></em>, <em class="sig-param"><span class="n">track</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#twitter.corpus.aggregate.aggregate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Aggregate the given corpus, binning the tweets according to the when they were published.
 The tracking keywords as well as any other arguments or keyword arguments are passed on to the aggregation function.</p>
 <p>The function is data-agnostic in terms of whether it receives tweets or not.
@@ -748,7 +751,7 @@ Aggregation functions receive as input:</p>
 </ul>
 <p>They return a value, or a score for the keyword’s bin at a particular timestamp.
 For example, a simple volume-based aggregation function could look like the following:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">volume</span><span class="p">(</span><span class="n">tweets</span><span class="p">,</span> <span class="n">keyword</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">volume</span><span class="p">(</span><span class="n">tweets</span><span class="p">,</span> <span class="n">keyword</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">  Count the number of tweets that mention the given keyword.</span>
 <span class="sd">  If no keyword is given, all tweets are counted.</span>
@@ -819,11 +822,19 @@ Moreover, they have an extra key that corresponds to the aggregation of all twee
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2020, Nicholas Mamo
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -834,7 +845,6 @@ Moreover, they have an extra key that corresponds to the aggregation of all twee
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

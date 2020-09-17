@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   <meta content="Tools to collect corpora and create timelines out of events." name="description" />
@@ -14,29 +13,31 @@
   
 
   
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/eventdt.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/css/eventdt.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="2. Vector Space Model (VSM)" href="vsm.html" />
@@ -54,7 +55,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> EvenTDT
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> EvenTDT
           
 
           
@@ -77,6 +78,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -103,6 +105,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-tools.participants">Automatic Participant Detection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-tools.consume">Topic Detection and Tracking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-tools.summarize">Summarization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tools.evaluation">Evaluation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="vsm.html">2. Vector Space Model (VSM)</a></li>
@@ -121,6 +124,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -159,7 +163,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>1. Tools</li>
     
@@ -402,7 +406,7 @@ This tool is meant to run on the understanding corpora to extract the event’s 
 </pre></div>
 </div>
 <p>You can modify an existing model by providing the components yourself.
-For example, this snippet uses the <a class="reference internal" href="apd.html#apd.extractors.local.entity_extractor.EntityExtractor" title="apd.extractors.local.entity_extractor.EntityExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">EntityExtractor</span></code></a> instead of the default <a class="reference internal" href="apd.html#apd.extractors.local.twitterner_entity_extractor.TwitterNEREntityExtractor" title="apd.extractors.local.twitterner_entity_extractor.TwitterNEREntityExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">TwitterNEREntityExtractor</span></code></a>:</p>
+For example, this snippet uses the <a class="reference internal" href="apd.html#apd.extractors.local.entity_extractor.EntityExtractor" title="apd.extractors.local.entity_extractor.EntityExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">EntityExtractor</span></code></a> instead of the default <code class="xref py py-class docutils literal notranslate"><span class="pre">TwitterNEREntityExtractor</span></code>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./tools/participants.py <span class="se">\</span>
     -f data/understanding.json <span class="se">\</span>
     --clean <span class="se">\</span>
@@ -447,20 +451,22 @@ The first task reads the file, and the second consumes it, this time to understa
 <blockquote>
 <div><ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">--file</span></code>                                 <em>&lt;Required&gt;</em> The file to consume.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">--class</span></code>                                <em>&lt;Required&gt;</em> The consumer to use; supported: <cite>ELDConsumer</cite>, <cite>FIREConsumer</cite>, <cite>PrintConsumer</cite>, <cite>StatConsumer</cite>, <cite>ZhaoConsumer</cite>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-c</span> <span class="pre">--class</span></code>                                <em>&lt;Required&gt;</em> The consumer to use; supported: <cite>ELDConsumer</cite>, <cite>FIREConsumer</cite>, <cite>FUEGOConsumer</cite>, <cite>PrintConsumer</cite>, <cite>StatConsumer</cite>, <cite>ZhaoConsumer</cite>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-u</span> <span class="pre">--understanding</span></code>                <em>&lt;Optional&gt;</em> The understanding file used to understand the event.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">-s</span> <span class="pre">--speed</span></code>                                <em>&lt;Optional&gt;</em> The speed at which the file is consumed, defaults to 1.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--skip</span></code>                                    <em>&lt;Optional&gt;</em> The amount of time to skip from the beginning of the file in minutes, defaults to 0.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--max-inactivity</span></code>                  <em>&lt;Optional&gt;</em> The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--max-time</span></code>                                <em>&lt;Optional&gt;</em> The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--splits</span></code>                                  <em>&lt;Optional&gt;</em> The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--periodicity</span></code>                             <em>&lt;Optional&gt;</em> The periodicity in seconds of the consumer (used by the <cite>FIREConsumer</cite>, <cite>StatConsumer</cite> and <cite>ZhaoConsumer</cite>); defaults to 60 seconds.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--no-cache</span></code>                                <em>&lt;Optional&gt;</em> If specified, the cached understanding is not used. The new understanding is cached instead.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--scheme</span></code>                                  <em>&lt;Optional&gt;</em> If specified, the path to the <a class="reference internal" href="nlp.html#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a> to use. If it is not specified, the <a class="reference internal" href="nlp.html#nlp.weighting.tf.TF" title="nlp.weighting.tf.TF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TF</span></code></a> scheme is used.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--min-volume</span></code>                              <em>&lt;Optional&gt;</em> The minimum volume to consider the stream to be active and look for breaking terms (used by the <cite>FUEGOConsumer</cite>); defaults to 10.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--min-size</span></code>                                <em>&lt;Optional&gt;</em> The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--min-burst</span></code>                               <em>&lt;Optional&gt;</em> The minimum burst to accept a term to be breaking, defaults to 0.5.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--min-burst</span></code>                               <em>&lt;Optional&gt;</em> The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the <cite>FIREConsumer</cite> and the <cite>ELDConsumer</cite>).</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--threshold</span></code>                               <em>&lt;Optional&gt;</em> The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--max-intra-similarity</span></code>    <em>&lt;Optional&gt;</em> The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--splits</span></code>                                  <em>&lt;Optional&gt;</em> The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--burst-start</span></code>                             <em>&lt;Optional&gt;</em> The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the <cite>FUEGOConsumer</cite>).</p></li>
 </ul>
 </div></blockquote>
 </div>
@@ -495,6 +501,11 @@ Moreover, the summarization tool makes it easier to experiment with different pa
 </ul>
 </div></blockquote>
 </div>
+<div class="section" id="module-tools.evaluation">
+<span id="evaluation"></span><h2>Evaluation<a class="headerlink" href="#module-tools.evaluation" title="Permalink to this headline">¶</a></h2>
+<p>The evaluation package includes tools to evaluate different applications.
+At the package-level are implementations of common metrics, with a focus on information retrieval.</p>
+</div>
 </div>
 
 
@@ -517,11 +528,19 @@ Moreover, the summarization tool makes it easier to experiment with different pa
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2020, Nicholas Mamo
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -532,7 +551,6 @@ Moreover, the summarization tool makes it easier to experiment with different pa
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

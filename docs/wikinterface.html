@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   <meta content="Wikinterface is an easy-to-use interface for Wikipedia's API." name="description" />
@@ -14,29 +13,31 @@
   
 
   
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/eventdt.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/css/eventdt.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="5. Automatic Participant Detection (APD)" href="apd.html" />
@@ -54,7 +55,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> EvenTDT
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> EvenTDT
           
 
           
@@ -77,6 +78,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -110,6 +112,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -148,7 +151,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>4. Wikinterface</li>
     
@@ -180,7 +183,7 @@ At the package-level are functions that are useful to several modules.</p>
 This includes functions like <a class="reference internal" href="#wikinterface.links.collect_recursive" title="wikinterface.links.collect_recursive"><code class="xref py py-func docutils literal notranslate"><span class="pre">collect_recursive()</span></code></a> that provide complex functionality.
 In addition, the Wikinterface package makes it easier to navigate the API’s limits.
 For example, functions like <a class="reference internal" href="#wikinterface.search.collect" title="wikinterface.search.collect"><code class="xref py py-func docutils literal notranslate"><span class="pre">collect()</span></code></a> lets you perform searches and retrieve more than 50 results.</p>
-<dl class="data">
+<dl class="py data">
 <dt id="wikinterface.API_ENDPOINT">
 <code class="sig-name descname">API_ENDPOINT</code><em class="property"> = 'https://en.wikipedia.org/w/api.php?'</em><a class="headerlink" href="#wikinterface.API_ENDPOINT" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
@@ -190,9 +193,9 @@ For example, functions like <a class="reference internal" href="#wikinterface.se
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="wikinterface.is_error_response">
-<code class="sig-name descname">is_error_response</code><span class="sig-paren">(</span><em class="sig-param">response</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.is_error_response" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">is_error_response</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.is_error_response" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validate whether the given Wikipedia response is an error.</p>
 <p>All error responses have an <code class="docutils literal notranslate"><span class="pre">error</span></code> key in them.
 This function simply checks whether this key is in the response.</p>
@@ -209,9 +212,9 @@ This function simply checks whether this key is in the response.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="wikinterface.construct_url">
-<code class="sig-name descname">construct_url</code><span class="sig-paren">(</span><em class="sig-param">parameters=None</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.construct_url" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">construct_url</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parameters</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.construct_url" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct the URL using the given parameters.
 This function expects parameters to be a dictionary, with the parameter name as the key.</p>
 <p>This helper function automatically parses the parameter values.
@@ -232,9 +235,9 @@ If a parameter is a boolean and <cite>False</cite>, it is excluded altogether</p
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="wikinterface.revert_redirects">
-<code class="sig-name descname">revert_redirects</code><span class="sig-paren">(</span><em class="sig-param">results</em>, <em class="sig-param">redirects</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.revert_redirects" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">revert_redirects</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">results</span></em>, <em class="sig-param"><span class="n">redirects</span></em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.revert_redirects" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wikipedia contains automatic redirections.
 For example, <cite>Messi</cite> redirects to <cite>Lionel Messi</cite>.
 This function automatically reverses that redirection.</p>
@@ -263,9 +266,9 @@ This dictionary has keys ‘from’ and ‘to’.</p></li>
 <span id="info"></span><h2>Info<a class="headerlink" href="#module-wikinterface.info" title="Permalink to this headline">¶</a></h2>
 <p>The info collector module fetches information about Wikipedia pages.
 This information is not always readily-available, such as the article type.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="wikinterface.info.ArticleType">
-<em class="property">class </em><code class="sig-name descname">ArticleType</code><a class="headerlink" href="#wikinterface.info.ArticleType" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">ArticleType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.info.ArticleType" title="Permalink to this definition">¶</a></dt>
 <dd><p>This module supports several article types and records them as an enum.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
@@ -284,9 +287,9 @@ Conversely, the <cite>List of foreign Premier League players</cite> links to pag
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="wikinterface.info.types">
-<code class="sig-name descname">types</code><span class="sig-paren">(</span><em class="sig-param">titles</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.info.types" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">types</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">titles</span></em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.info.types" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the type of page each page title returns.
 The page type is one of the values in the <a class="reference internal" href="#wikinterface.info.ArticleType" title="wikinterface.info.ArticleType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArticleType</span></code></a> enum.</p>
 <dl class="field-list simple">
@@ -302,9 +305,9 @@ The page type is one of the values in the <a class="reference internal" href="#w
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="wikinterface.info.is_person">
-<code class="sig-name descname">is_person</code><span class="sig-paren">(</span><em class="sig-param">titles</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.info.is_person" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">is_person</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">titles</span></em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.info.is_person" title="Permalink to this definition">¶</a></dt>
 <dd><p>Go through each page title and check whether it represents a person.
 The function assumes that an article is about a person if it mentions a birth date.</p>
 <p>Since date of births are not standardized across Wikipedia, this function checks the text using regular expression patterns.</p>
@@ -326,9 +329,9 @@ The function assumes that an article is about a person if it mentions a birth da
 <span id="links"></span><h2>Links<a class="headerlink" href="#module-wikinterface.links" title="Permalink to this headline">¶</a></h2>
 <p>The link collector module collects links from Wikipedia articles.
 These functions are useful to collect the Wikipedia graph, connecting articles with each other through links.</p>
-<dl class="function">
+<dl class="py function">
 <dt id="wikinterface.links.collect">
-<code class="sig-name descname">collect</code><span class="sig-paren">(</span><em class="sig-param">titles</em>, <em class="sig-param">separate=True</em>, <em class="sig-param">introduction_only=False</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.links.collect" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">collect</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">titles</span></em>, <em class="sig-param"><span class="n">separate</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">introduction_only</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.links.collect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a list of outgoing links from the given list of articles.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -353,9 +356,9 @@ Otherwise, a list of article titles is returned.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="wikinterface.links.collect_recursive">
-<code class="sig-name descname">collect_recursive</code><span class="sig-paren">(</span><em class="sig-param">titles</em>, <em class="sig-param">level</em>, <em class="sig-param">collected_links=None</em>, <em class="sig-param">separate=True</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.links.collect_recursive" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">collect_recursive</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">titles</span></em>, <em class="sig-param"><span class="n">level</span></em>, <em class="sig-param"><span class="n">collected_links</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">separate</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.links.collect_recursive" title="Permalink to this definition">¶</a></dt>
 <dd><p>Recursively fetch links, starting from a seed set.
 The function uses the <a class="reference internal" href="#wikinterface.links.collect" title="wikinterface.links.collect"><code class="xref py py-func docutils literal notranslate"><span class="pre">collect()</span></code></a> function.
 Any additional arguments and keyword arguments are passed on to it.</p>
@@ -396,9 +399,9 @@ Otherwise, the links are returned in a dictionary, where the keys are the page t
 <div class="section" id="module-wikinterface.search">
 <span id="search"></span><h2>Search<a class="headerlink" href="#module-wikinterface.search" title="Permalink to this headline">¶</a></h2>
 <p>The search collector module looks for articles containing a particular list of terms.</p>
-<dl class="function">
+<dl class="py function">
 <dt id="wikinterface.search.collect">
-<code class="sig-name descname">collect</code><span class="sig-paren">(</span><em class="sig-param">terms</em>, <em class="sig-param">limit=10</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.search.collect" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">collect</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">terms</span></em>, <em class="sig-param"><span class="n">limit</span><span class="o">=</span><span class="default_value">10</span></em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.search.collect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Look for pages containing the given terms.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -432,9 +435,9 @@ Their content can be fetched using these titles.</p>
 <div class="section" id="module-wikinterface.text">
 <span id="text"></span><h2>Text<a class="headerlink" href="#module-wikinterface.text" title="Permalink to this headline">¶</a></h2>
 <p>The text module contains functions to help extract text from articles.</p>
-<dl class="function">
+<dl class="py function">
 <dt id="wikinterface.text.collect">
-<code class="sig-name descname">collect</code><span class="sig-paren">(</span><em class="sig-param">titles</em>, <em class="sig-param">introduction_only=False</em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.text.collect" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">collect</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">titles</span></em>, <em class="sig-param"><span class="n">introduction_only</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#wikinterface.text.collect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the plain text content of the pages with the given titles.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -478,11 +481,19 @@ Their content can be fetched using these titles.</p>
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2020, Nicholas Mamo
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -493,7 +504,6 @@ Their content can be fetched using these titles.</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

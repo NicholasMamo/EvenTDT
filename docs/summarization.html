@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   <meta content="The summarization implementation" name="description" />
@@ -14,29 +13,31 @@
   
 
   
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/eventdt.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/css/eventdt.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="8. Twitter" href="twitter.html" />
@@ -54,7 +55,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> EvenTDT
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> EvenTDT
           
 
           
@@ -77,6 +78,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -121,6 +123,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -159,7 +162,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>7. Summarization</li>
     
@@ -194,9 +197,9 @@ Moreover, it includes additional, summary-related functionality and it can accep
 <p>The point of the <a class="reference internal" href="#summarization.summary.Summary" title="summarization.summary.Summary"><code class="xref py py-class docutils literal notranslate"><span class="pre">Summary</span></code></a> object is that it retains the original <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances.
 Therefore a <a class="reference internal" href="#summarization.summary.Summary" title="summarization.summary.Summary"><code class="xref py py-class docutils literal notranslate"><span class="pre">Summary</span></code></a> instance is not a simple string.
 It can be represented or manipulated (such as by using a <a class="reference internal" href="nlp.html#nlp.cleaners.Cleaner" title="nlp.cleaners.Cleaner"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cleaner</span></code></a>) as the application necessitates by having access to its original components.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="summarization.summary.Summary">
-<em class="property">class </em><code class="sig-name descname">Summary</code><span class="sig-paren">(</span><em class="sig-param">documents=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.summary.Summary" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Summary</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">documents</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.summary.Summary" title="Permalink to this definition">¶</a></dt>
 <dd><p>A summary is essentially a list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>.
 However, summaries may also have other attributes.</p>
 <p>The point of the summary object is to encapsulate the list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances that make it up, while retaining the original text.
@@ -208,9 +211,9 @@ If the documents contain a <code class="docutils literal notranslate"><span clas
 <dd class="field-odd"><p><a class="reference internal" href="#summarization.summary.Summary.documents" title="summarization.summary.Summary.documents"><strong>documents</strong></a> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The documents that make up the summary.</p>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.summary.Summary.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">documents=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.summary.Summary.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">documents</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.summary.Summary.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the summary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -219,7 +222,7 @@ If the documents contain a <code class="docutils literal notranslate"><span clas
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.summary.Summary.documents">
 <em class="property">property </em><code class="sig-name descname">documents</code><a class="headerlink" href="#summarization.summary.Summary.documents" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the list of documents in the summary.</p>
@@ -233,7 +236,7 @@ If the documents contain a <code class="docutils literal notranslate"><span clas
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.summary.Summary.__str__">
 <code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.summary.Summary.__str__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the string representation of the summary.
@@ -249,7 +252,7 @@ This is equivalent to concatenating the text of all documents.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.summary.Summary.to_array">
 <code class="sig-name descname">to_array</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.summary.Summary.to_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export the summary as a dictionary.</p>
@@ -263,9 +266,9 @@ This is equivalent to concatenating the text of all documents.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.summary.Summary.from_array">
-<em class="property">static </em><code class="sig-name descname">from_array</code><span class="sig-paren">(</span><em class="sig-param">array</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.summary.Summary.from_array" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">from_array</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.summary.Summary.from_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a summary instance from the given dictionary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -290,16 +293,16 @@ The specifics of how they create summaries change from one algorithm to the othe
 <p>The <a class="reference internal" href="#summarization.algorithms.SummarizationAlgorithm" title="summarization.algorithms.SummarizationAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">SummarizationAlgorithm</span></code></a> represents this goal.
 It is a base class that dictates the minimum functionality of any summarization algorithm: what input they receive and what output they return.
 In all cases, the main functionality goes through the <code class="xref py py-func docutils literal notranslate"><span class="pre">summarize()</span></code> function.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="summarization.algorithms.SummarizationAlgorithm">
 <em class="property">class </em><code class="sig-name descname">SummarizationAlgorithm</code><a class="headerlink" href="#summarization.algorithms.SummarizationAlgorithm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Summarization algorithms vary greatly and thus there is no general state.
 However, they must all implement the <a class="reference internal" href="#summarization.algorithms.SummarizationAlgorithm.summarize" title="summarization.algorithms.SummarizationAlgorithm.summarize"><code class="xref py py-func docutils literal notranslate"><span class="pre">summarize()</span></code></a> method.
 This method is the central part of any <a class="reference internal" href="#summarization.algorithms.SummarizationAlgorithm" title="summarization.algorithms.SummarizationAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">SummarizationAlgorithm</span></code></a>.
 It receives a list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances and a target length and creates a <a class="reference internal" href="#summarization.summary.Summary" title="summarization.summary.Summary"><code class="xref py py-class docutils literal notranslate"><span class="pre">Summary</span></code></a>.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.algorithms.SummarizationAlgorithm.summarize">
-<em class="property">abstract </em><code class="sig-name descname">summarize</code><span class="sig-paren">(</span><em class="sig-param">documents</em>, <em class="sig-param">length</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.SummarizationAlgorithm.summarize" title="Permalink to this definition">¶</a></dt>
+<em class="property">abstract </em><code class="sig-name descname">summarize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">documents</span></em>, <em class="sig-param"><span class="n">length</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.SummarizationAlgorithm.summarize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Summarize the given list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances.</p>
 <p>Summarization algorithms may accept more parameters, but they must accept, at least:</p>
 <ol class="arabic simple">
@@ -333,7 +336,7 @@ All it considers is the text of the original <a class="reference internal" href=
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="summarization.algorithms.SummarizationAlgorithm.__weakref__">
 <code class="sig-name descname">__weakref__</code><a class="headerlink" href="#summarization.algorithms.SummarizationAlgorithm.__weakref__" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of weak references to the object (if defined)</p>
@@ -373,9 +376,9 @@ Therefore it is recommended to choose a few, quality candidates to summarize, ra
 <p class="admonition-title">Note</p>
 <p>This implementation is based on the algorithm presented in <a class="reference external" href="https://dl.acm.org/doi/abs/10.1145/290941.291025">The Use of MMR, Diversity-Based Reranking for Reordering Documents and Producing Summaries by Carbonell and Goldstein (1998)</a>.</p>
 </div>
-<dl class="class">
+<dl class="py class">
 <dt id="summarization.algorithms.mmr.MMR">
-<em class="property">class </em><code class="sig-name descname">MMR</code><span class="sig-paren">(</span><em class="sig-param">l=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.mmr.MMR" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">MMR</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">l</span><span class="o">=</span><span class="default_value">0.5</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.mmr.MMR" title="Permalink to this definition">¶</a></dt>
 <dd><p>The Maximal Marginal Relevance (MMR) algorithm accepts a list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> and an optional query and builds a <a class="reference internal" href="#summarization.summary.Summary" title="summarization.summary.Summary"><code class="xref py py-class docutils literal notranslate"><span class="pre">Summary</span></code></a>.
 The algorithm looks to build a summary that is simultaneously similar to the query and non-redundant.</p>
 <p>The MMR seeks a balance between relevance to the query and non-redundancy.
@@ -389,9 +392,9 @@ When <span class="math notranslate nohighlight">\(\lambda\)</span> is 0, only no
 By default, the algorithm assigns equal weight to relevance and non-redundancy.</p>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.algorithms.mmr.MMR.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">l=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.mmr.MMR.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">l</span><span class="o">=</span><span class="default_value">0.5</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.mmr.MMR.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the MMR summarization algorithm with the lambda value as its state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -406,9 +409,9 @@ By default, the algorithm assigns equal weight to relevance and non-redundancy.<
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.algorithms.mmr.MMR.summarize">
-<code class="sig-name descname">summarize</code><span class="sig-paren">(</span><em class="sig-param">documents</em>, <em class="sig-param">length</em>, <em class="sig-param">query=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.mmr.MMR.summarize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">summarize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">documents</span></em>, <em class="sig-param"><span class="n">length</span></em>, <em class="sig-param"><span class="n">query</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.mmr.MMR.summarize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Summarize the given documents.</p>
 <p>This function considers relevance to the query and redundancy when choosing <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances that make up the <a class="reference internal" href="#summarization.summary.Summary" title="summarization.summary.Summary"><code class="xref py py-class docutils literal notranslate"><span class="pre">Summary</span></code></a>.
 The query, however, is not always necessary.
@@ -463,7 +466,7 @@ Therefore it is recommended to choose a few, quality candidates to summarize, ra
 <p class="admonition-title">Note</p>
 <p>This implementation is based on the algorithm presented in <a class="reference external" href="https://dl.acm.org/doi/abs/10.1145/3342220.3344921">ELD: Event TimeLine Detection—A Participant-Based Approach to Tracking Events by Mamo et al. (2019)</a>.</p>
 </div>
-<dl class="class">
+<dl class="py class">
 <dt id="summarization.algorithms.dgs.DGS">
 <em class="property">class </em><code class="sig-name descname">DGS</code><a class="headerlink" href="#summarization.algorithms.dgs.DGS" title="Permalink to this definition">¶</a></dt>
 <dd><p>The Document Graph Summarizer (DGS) is an algorithm that minimizes redundancy by splitting documents into communities.
@@ -475,15 +478,15 @@ This <a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title
 <dd class="field-odd"><p><strong>tokenizer</strong> (<a class="reference internal" href="nlp.html#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>) – The tokenizer used to calculate the brevity score.</p>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.algorithms.dgs.DGS.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.dgs.DGS.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the DGS summarization algorithm with a tokenizer.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.algorithms.dgs.DGS.summarize">
-<code class="sig-name descname">summarize</code><span class="sig-paren">(</span><em class="sig-param">documents</em>, <em class="sig-param">length</em>, <em class="sig-param">query=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.dgs.DGS.summarize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">summarize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">documents</span></em>, <em class="sig-param"><span class="n">length</span></em>, <em class="sig-param"><span class="n">query</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.algorithms.dgs.DGS.summarize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Summarize the given documents.</p>
 <p>This function constructs the document graph using the given list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>.
 Then, the method splits the graph into communities, representing facets of discussion, using the Girvan-Newman (<code class="xref py py-func docutils literal notranslate"><span class="pre">networkx.algorithms.community.centrality.girvan_newman()</span></code>) algorithm.
@@ -522,9 +525,9 @@ In fact, <a class="reference internal" href="consumers.html#consumers-algorithms
 Each <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> stores information about what happened in that period of time.
 The <a class="reference internal" href="#summarization.timeline.Timeline" title="summarization.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a> is usually managed by <a class="reference internal" href="consumers.html#consumers-algorithms"><span class="std std-ref">a consumer</span></a>, which also adds <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> instances to it.
 Later, the nodes can be summarized with any <a class="reference internal" href="#summarization-algorithms"><span class="std std-ref">summarization algorithm</span></a>.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="summarization.timeline.Timeline">
-<em class="property">class </em><code class="sig-name descname">Timeline</code><span class="sig-paren">(</span><em class="sig-param">node_type</em>, <em class="sig-param">expiry</em>, <em class="sig-param">min_similarity</em>, <em class="sig-param">max_time=600</em>, <em class="sig-param">nodes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.Timeline" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Timeline</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_type</span></em>, <em class="sig-param"><span class="n">expiry</span></em>, <em class="sig-param"><span class="n">min_similarity</span></em>, <em class="sig-param"><span class="n">max_time</span><span class="o">=</span><span class="default_value">600</span></em>, <em class="sig-param"><span class="n">nodes</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.Timeline" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference internal" href="#summarization.timeline.Timeline" title="summarization.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a> is a rather simple class that stores a list of <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> instances.
 In spite of its simplicity, the <a class="reference internal" href="#summarization.timeline.Timeline" title="summarization.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a> class hides a lot of functionality.</p>
 <p>Generally, only the constructor (<a class="reference internal" href="#summarization.timeline.Timeline.__init__" title="summarization.timeline.Timeline.__init__"><code class="xref py py-func docutils literal notranslate"><span class="pre">__init__()</span></code></a>) and the <a class="reference internal" href="#summarization.timeline.Timeline.add" title="summarization.timeline.Timeline.add"><code class="xref py py-func docutils literal notranslate"><span class="pre">add()</span></code></a> function are used.
@@ -560,9 +563,9 @@ This value is inclusive.</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.timeline.Timeline.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">node_type</em>, <em class="sig-param">expiry</em>, <em class="sig-param">min_similarity</em>, <em class="sig-param">max_time=600</em>, <em class="sig-param">nodes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.Timeline.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_type</span></em>, <em class="sig-param"><span class="n">expiry</span></em>, <em class="sig-param"><span class="n">min_similarity</span></em>, <em class="sig-param"><span class="n">max_time</span><span class="o">=</span><span class="default_value">600</span></em>, <em class="sig-param"><span class="n">nodes</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.Timeline.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the timeline with an empty set of nodes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -588,9 +591,9 @@ This value is inclusive.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.timeline.Timeline.add">
-<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">timestamp=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.Timeline.add" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timestamp</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.Timeline.add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add information to a <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> on the timeline.
 This function does not necessarily add a new <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>.
 Instead, there are three cases:</p>
@@ -614,7 +617,7 @@ If the timestamp is not given, the current time is used.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.timeline.Timeline.to_array">
 <code class="sig-name descname">to_array</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.Timeline.to_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export the <a class="reference internal" href="#summarization.timeline.Timeline" title="summarization.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a> as an associative array.</p>
@@ -628,9 +631,9 @@ If the timestamp is not given, the current time is used.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.timeline.Timeline.from_array">
-<em class="property">static </em><code class="sig-name descname">from_array</code><span class="sig-paren">(</span><em class="sig-param">array</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.Timeline.from_array" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">from_array</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.Timeline.from_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a <a class="reference internal" href="#summarization.timeline.Timeline" title="summarization.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a> instance from the given associative array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -654,9 +657,9 @@ Each <a class="reference internal" href="#summarization.timeline.nodes.Node" tit
 <p>The most crucial components of the <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> class are the <a class="reference internal" href="#summarization.timeline.nodes.Node.add" title="summarization.timeline.nodes.Node.add"><code class="xref py py-func docutils literal notranslate"><span class="pre">add()</span></code></a> and <a class="reference internal" href="#summarization.timeline.nodes.Node.similarity" title="summarization.timeline.nodes.Node.similarity"><code class="xref py py-func docutils literal notranslate"><span class="pre">similarity()</span></code></a> functions.
 These two functions are facility functions for the <a class="reference internal" href="#summarization.timeline.Timeline" title="summarization.timeline.Timeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Timeline</span></code></a> to decide where to add information.
 Both functions accept the same input, regardless if they do not use all of it.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="summarization.timeline.nodes.Node">
-<em class="property">class </em><code class="sig-name descname">Node</code><span class="sig-paren">(</span><em class="sig-param">created_at</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.Node" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Node</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">created_at</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.Node" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> base class is a general representation of the nodes that make up timelines.
 Any <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> maintains, at least, the timestamp when it was created as its state.
 However, all classes that inherit the <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> need to maintain their own information, whatever it may be.</p>
@@ -678,9 +681,9 @@ This is because the <a class="reference internal" href="#summarization.timeline.
 <dd class="field-odd"><p><strong>created_at</strong> (<em>float</em>) – The timestamp when the node was created.</p>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.timeline.nodes.Node.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">created_at</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.Node.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">created_at</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.Node.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the node with the given timestamp.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -689,16 +692,16 @@ This is because the <a class="reference internal" href="#summarization.timeline.
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.timeline.nodes.Node.add">
-<em class="property">abstract </em><code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.Node.add" title="Permalink to this definition">¶</a></dt>
+<em class="property">abstract </em><code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.Node.add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add information to the node.
 The information is passed on as arguments and keyword arguments.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.timeline.nodes.Node.similarity">
-<em class="property">abstract </em><code class="sig-name descname">similarity</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.Node.similarity" title="Permalink to this definition">¶</a></dt>
+<em class="property">abstract </em><code class="sig-name descname">similarity</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.Node.similarity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the similarity between this node and the given information.
 The information is passed on as arguments and keyword arguments.</p>
 <dl class="field-list simple">
@@ -711,9 +714,9 @@ The information is passed on as arguments and keyword arguments.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.timeline.nodes.Node.get_all_documents">
-<em class="property">abstract </em><code class="sig-name descname">get_all_documents</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.Node.get_all_documents" title="Permalink to this definition">¶</a></dt>
+<em class="property">abstract </em><code class="sig-name descname">get_all_documents</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.Node.get_all_documents" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get all the <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances in this node.</p>
 <p>The implementation differs according to how the node stores information.
 However, they must all have functionality to return a list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances.</p>
@@ -727,9 +730,9 @@ However, they must all have functionality to return a list of <a class="referenc
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.timeline.nodes.Node.expired">
-<code class="sig-name descname">expired</code><span class="sig-paren">(</span><em class="sig-param">expiry</em>, <em class="sig-param">timestamp</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.Node.expired" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">expired</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">expiry</span></em>, <em class="sig-param"><span class="n">timestamp</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.Node.expired" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check whether the node has expired.
 In reality, this function checks whether a number of seconds, equivalent to <code class="docutils literal notranslate"><span class="pre">expiry</span></code>, have passed since the node was created.</p>
 <dl class="field-list simple">
@@ -746,9 +749,9 @@ It is measured in seconds.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.timeline.nodes.Node.merge">
-<em class="property">abstract static </em><code class="sig-name descname">merge</code><span class="sig-paren">(</span><em class="sig-param">created_at</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.Node.merge" title="Permalink to this definition">¶</a></dt>
+<em class="property">abstract static </em><code class="sig-name descname">merge</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">created_at</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.Node.merge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> by combining the data in all of the given nodes.
 The new <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> will have the given timestamp, but it will inherit all of the data in the nodes.</p>
 <p>All the nodes are provided as additional arguments (using <code class="docutils literal notranslate"><span class="pre">*args</span></code>).
@@ -771,9 +774,9 @@ If none are given, this function creates an empty <a class="reference internal" 
 <div class="section" id="module-summarization.timeline.nodes.document_node">
 <span id="document-node"></span><h4>Document Node<a class="headerlink" href="#module-summarization.timeline.nodes.document_node" title="Permalink to this headline">¶</a></h4>
 <p>The <a class="reference internal" href="#summarization.timeline.nodes.document_node.DocumentNode" title="summarization.timeline.nodes.document_node.DocumentNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentNode</span></code></a> is a simple <a class="reference internal" href="#summarization.timeline.nodes.Node" title="summarization.timeline.nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> that only stores <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="summarization.timeline.nodes.document_node.DocumentNode">
-<em class="property">class </em><code class="sig-name descname">DocumentNode</code><span class="sig-paren">(</span><em class="sig-param">created_at</em>, <em class="sig-param">documents=None</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">DocumentNode</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">created_at</span></em>, <em class="sig-param"><span class="n">documents</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference internal" href="#summarization.timeline.nodes.document_node.DocumentNode" title="summarization.timeline.nodes.document_node.DocumentNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentNode</span></code></a> class only stores <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances.
 When it needs to compare incoming <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">nlp.document.Document</span></code></a> instances, it compares them against the centroid of its own information.</p>
 <dl class="field-list simple">
@@ -781,9 +784,9 @@ When it needs to compare incoming <a class="reference internal" href="nlp.html#n
 <dd class="field-odd"><p><a class="reference internal" href="#summarization.summary.Summary.documents" title="summarization.summary.Summary.documents"><strong>documents</strong></a> (list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>) – The list of documents in this node.</p>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.timeline.nodes.document_node.DocumentNode.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">created_at</em>, <em class="sig-param">documents=None</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">created_at</span></em>, <em class="sig-param"><span class="n">documents</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the node with an optional initial list of <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -795,9 +798,9 @@ When it needs to compare incoming <a class="reference internal" href="nlp.html#n
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.timeline.nodes.document_node.DocumentNode.add">
-<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">documents</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode.add" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">documents</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode.add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add documents to the node.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -806,9 +809,9 @@ When it needs to compare incoming <a class="reference internal" href="nlp.html#n
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.timeline.nodes.document_node.DocumentNode.get_all_documents">
-<code class="sig-name descname">get_all_documents</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode.get_all_documents" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_all_documents</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode.get_all_documents" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get all the documents in this node.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -820,9 +823,9 @@ When it needs to compare incoming <a class="reference internal" href="nlp.html#n
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.timeline.nodes.document_node.DocumentNode.similarity">
-<code class="sig-name descname">similarity</code><span class="sig-paren">(</span><em class="sig-param">documents</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode.similarity" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">similarity</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">documents</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode.similarity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the similarity between this node’s documents and the centroid of the given documents.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -837,7 +840,7 @@ When it needs to compare incoming <a class="reference internal" href="nlp.html#n
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.timeline.nodes.document_node.DocumentNode.to_array">
 <code class="sig-name descname">to_array</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode.to_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export the document node as an associative array.</p>
@@ -851,9 +854,9 @@ When it needs to compare incoming <a class="reference internal" href="nlp.html#n
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.timeline.nodes.document_node.DocumentNode.from_array">
-<em class="property">static </em><code class="sig-name descname">from_array</code><span class="sig-paren">(</span><em class="sig-param">array</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode.from_array" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">from_array</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode.from_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a <a class="reference internal" href="#summarization.timeline.nodes.document_node.DocumentNode" title="summarization.timeline.nodes.document_node.DocumentNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentNode</span></code></a> instance from the given associative array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -868,9 +871,9 @@ When it needs to compare incoming <a class="reference internal" href="nlp.html#n
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.timeline.nodes.document_node.DocumentNode.merge">
-<em class="property">static </em><code class="sig-name descname">merge</code><span class="sig-paren">(</span><em class="sig-param">created_at</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode.merge" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">merge</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">created_at</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.document_node.DocumentNode.merge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new <a class="reference internal" href="#summarization.timeline.nodes.document_node.DocumentNode" title="summarization.timeline.nodes.document_node.DocumentNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentNode</span></code></a> by combining the documents in all of the given nodes.
 The new <a class="reference internal" href="#summarization.timeline.nodes.document_node.DocumentNode" title="summarization.timeline.nodes.document_node.DocumentNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentNode</span></code></a> will have the given timestamp, but it will inherit all of the documents in the nodes.</p>
 <p>All the nodes are provided as additional arguments (using <code class="docutils literal notranslate"><span class="pre">*args</span></code>).
@@ -899,9 +902,9 @@ This affords the node more flexibility when computing <a class="reference intern
 When a new <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> arrives, the <a class="reference internal" href="#summarization.timeline.nodes.cluster_node.ClusterNode" title="summarization.timeline.nodes.cluster_node.ClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClusterNode</span></code></a> matches it separately with these previous ‘topics’.
 This is different from the <a class="reference internal" href="#summarization.timeline.nodes.document_node.DocumentNode" title="summarization.timeline.nodes.document_node.DocumentNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">DocumentNode</span></code></a>, which compares new <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances with all of the information in the node.
 Therefore the <a class="reference internal" href="#summarization.timeline.nodes.cluster_node.ClusterNode" title="summarization.timeline.nodes.cluster_node.ClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClusterNode</span></code></a> can overcome fragmentation.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="summarization.timeline.nodes.cluster_node.ClusterNode">
-<em class="property">class </em><code class="sig-name descname">ClusterNode</code><span class="sig-paren">(</span><em class="sig-param">created_at</em>, <em class="sig-param">clusters=None</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.cluster_node.ClusterNode" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">ClusterNode</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">created_at</span></em>, <em class="sig-param"><span class="n">clusters</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.cluster_node.ClusterNode" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference internal" href="#summarization.timeline.nodes.cluster_node.ClusterNode" title="summarization.timeline.nodes.cluster_node.ClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClusterNode</span></code></a> stores <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances in <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instances.
 When comparing a new <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>, the <a class="reference internal" href="#summarization.timeline.nodes.cluster_node.ClusterNode.similarity" title="summarization.timeline.nodes.cluster_node.ClusterNode.similarity"><code class="xref py py-func docutils literal notranslate"><span class="pre">similarity()</span></code></a> function compares it separately with each <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> in the node.</p>
 <dl class="field-list simple">
@@ -909,9 +912,9 @@ When comparing a new <a class="reference internal" href="vsm.html#vsm.clustering
 <dd class="field-odd"><p><strong>clusters</strong> (list of <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>) – The list of clusters in this node.</p>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.timeline.nodes.cluster_node.ClusterNode.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">created_at</em>, <em class="sig-param">clusters=None</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.cluster_node.ClusterNode.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">created_at</span></em>, <em class="sig-param"><span class="n">clusters</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.cluster_node.ClusterNode.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the node with an optional initial list of <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instances.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -923,9 +926,9 @@ When comparing a new <a class="reference internal" href="vsm.html#vsm.clustering
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.timeline.nodes.cluster_node.ClusterNode.add">
-<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">cluster</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.cluster_node.ClusterNode.add" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cluster</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.cluster_node.ClusterNode.add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a new <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> to the node.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -934,9 +937,9 @@ When comparing a new <a class="reference internal" href="vsm.html#vsm.clustering
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.timeline.nodes.cluster_node.ClusterNode.get_all_documents">
-<code class="sig-name descname">get_all_documents</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.cluster_node.ClusterNode.get_all_documents" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_all_documents</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.cluster_node.ClusterNode.get_all_documents" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get all the <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances in this node.
 This function aggregates all of the <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> instances in its <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instances.</p>
 <dl class="field-list simple">
@@ -949,9 +952,9 @@ This function aggregates all of the <a class="reference internal" href="nlp.html
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.timeline.nodes.cluster_node.ClusterNode.similarity">
-<code class="sig-name descname">similarity</code><span class="sig-paren">(</span><em class="sig-param">cluster</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.cluster_node.ClusterNode.similarity" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">similarity</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cluster</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.cluster_node.ClusterNode.similarity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the similarity between this node and the given <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>.
 Since <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instances represent topics, this function tries to match the new <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> with any <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> already in the node.</p>
 <p>The similarity measure is <a class="reference internal" href="vsm.html#vsm.vector_math.cosine" title="vsm.vector_math.cosine"><code class="xref py py-func docutils literal notranslate"><span class="pre">cosine()</span></code></a> and always compares the <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instances’ centroids with each other.
@@ -969,7 +972,7 @@ The returned similarity is the highest pairwise similarity.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.timeline.nodes.cluster_node.ClusterNode.to_array">
 <code class="sig-name descname">to_array</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.cluster_node.ClusterNode.to_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export the cluster node as an associative array.</p>
@@ -983,9 +986,9 @@ The returned similarity is the highest pairwise similarity.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.timeline.nodes.cluster_node.ClusterNode.from_array">
-<em class="property">static </em><code class="sig-name descname">from_array</code><span class="sig-paren">(</span><em class="sig-param">array</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.cluster_node.ClusterNode.from_array" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">from_array</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.cluster_node.ClusterNode.from_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create an instance of the <a class="reference internal" href="#summarization.timeline.nodes.cluster_node.ClusterNode" title="summarization.timeline.nodes.cluster_node.ClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClusterNode</span></code></a> from the given associative array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1000,9 +1003,9 @@ The returned similarity is the highest pairwise similarity.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.timeline.nodes.cluster_node.ClusterNode.merge">
-<em class="property">static </em><code class="sig-name descname">merge</code><span class="sig-paren">(</span><em class="sig-param">created_at</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.cluster_node.ClusterNode.merge" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">merge</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">created_at</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.cluster_node.ClusterNode.merge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new <a class="reference internal" href="#summarization.timeline.nodes.cluster_node.ClusterNode" title="summarization.timeline.nodes.cluster_node.ClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClusterNode</span></code></a> by combining the documents in all of the given nodes.
 The new <a class="reference internal" href="#summarization.timeline.nodes.cluster_node.ClusterNode" title="summarization.timeline.nodes.cluster_node.ClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClusterNode</span></code></a> will have the given timestamp, but it will inherit all of the documents in the nodes.</p>
 <p>All the nodes are provided as additional arguments (using <code class="docutils literal notranslate"><span class="pre">*args</span></code>).
@@ -1030,9 +1033,9 @@ Like the <a class="reference internal" href="#summarization.timeline.nodes.clust
 However, it also associates with each <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> a topic, represented as a <a class="reference internal" href="vsm.html#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>.</p>
 <p>The idea behind the <a class="reference internal" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode" title="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">TopicalClusterNode</span></code></a> is that the topics, which are generated by a <a class="reference internal" href="tdt.html#tdt-algorithms"><span class="std std-ref">TDT algorithm</span></a>, represent more accurately what the <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> is about.
 Thereefore the <a class="reference internal" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.similarity" title="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.similarity"><code class="xref py py-func docutils literal notranslate"><span class="pre">similarity()</span></code></a> function ignores the <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> completely and focuses instead on the topics.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode">
-<em class="property">class </em><code class="sig-name descname">TopicalClusterNode</code><span class="sig-paren">(</span><em class="sig-param">created_at</em>, <em class="sig-param">clusters=None</em>, <em class="sig-param">topics=None</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">TopicalClusterNode</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">created_at</span></em>, <em class="sig-param"><span class="n">clusters</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">topics</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference internal" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode" title="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">TopicalClusterNode</span></code></a> class maintains in its state two lists:</p>
 <ol class="arabic simple">
 <li><p>A list of <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instances, and</p></li>
@@ -1045,9 +1048,9 @@ Thereefore the <a class="reference internal" href="#summarization.timeline.nodes
 Each topic is a vector and corresponds to a cluster.</p>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">created_at</em>, <em class="sig-param">clusters=None</em>, <em class="sig-param">topics=None</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">created_at</span></em>, <em class="sig-param"><span class="n">clusters</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">topics</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the node with, optionally, an initial list of <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instances and topics.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1063,9 +1066,9 @@ Each topic is a vector and corresponds to a cluster.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.add">
-<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">cluster</em>, <em class="sig-param">topic</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.add" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cluster</span></em>, <em class="sig-param"><span class="n">topic</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a new <a class="reference internal" href="vsm.html#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> and its associated topic to the node.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1077,9 +1080,9 @@ Each topic is a vector and corresponds to a cluster.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.similarity">
-<code class="sig-name descname">similarity</code><span class="sig-paren">(</span><em class="sig-param">cluster</em>, <em class="sig-param">topic</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.similarity" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">similarity</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cluster</span></em>, <em class="sig-param"><span class="n">topic</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.similarity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the similarity between this node and the given topic.
 This function tries to match the new topic with any topic already in the node.
 The returned similarity is the highest pairwise similarity.</p>
@@ -1099,7 +1102,7 @@ The returned similarity is the highest pairwise similarity.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.to_array">
 <code class="sig-name descname">to_array</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.to_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export the topical cluster node as an associative array.</p>
@@ -1113,9 +1116,9 @@ The returned similarity is the highest pairwise similarity.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.from_array">
-<em class="property">static </em><code class="sig-name descname">from_array</code><span class="sig-paren">(</span><em class="sig-param">array</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.from_array" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">from_array</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.from_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create <a class="reference internal" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode" title="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">TopicalClusterNode</span></code></a> from the given associative array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1130,9 +1133,9 @@ The returned similarity is the highest pairwise similarity.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.merge">
-<em class="property">static </em><code class="sig-name descname">merge</code><span class="sig-paren">(</span><em class="sig-param">created_at</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.merge" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">merge</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">created_at</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode.merge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new <a class="reference internal" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode" title="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">TopicalClusterNode</span></code></a> by combining the documents in all of the given nodes.
 The new <a class="reference internal" href="#summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode" title="summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">TopicalClusterNode</span></code></a> will have the given timestamp, but it will inherit all of the documents in the nodes.</p>
 <p>All the nodes are provided as additional arguments (using <code class="docutils literal notranslate"><span class="pre">*args</span></code>).
@@ -1177,11 +1180,19 @@ If none are given, this function creates an empty <a class="reference internal" 
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2020, Nicholas Mamo
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -1192,7 +1203,6 @@ If none are given, this function creates an empty <a class="reference internal" 
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

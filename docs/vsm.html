@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   <meta content="The Vector Space Model (VSM) implementation" name="description" />
@@ -14,29 +13,31 @@
   
 
   
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/eventdt.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/css/eventdt.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="3. Natural Language Processing (NLP)" href="nlp.html" />
@@ -54,7 +55,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> EvenTDT
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> EvenTDT
           
 
           
@@ -77,6 +78,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -118,6 +120,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -156,7 +159,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>2. Vector Space Model (VSM)</li>
     
@@ -194,7 +197,7 @@ You can read more about documents in the <a class="reference internal" href="nlp
 <p>The basis for vectors is the <a class="reference internal" href="#vsm.vector.VectorSpace" title="vsm.vector.VectorSpace"><code class="xref py py-class docutils literal notranslate"><span class="pre">VectorSpace</span></code></a>, or the space of all vector dimensions.
 A <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> is made up of dimensions in the <a class="reference internal" href="#vsm.vector.VectorSpace" title="vsm.vector.VectorSpace"><code class="xref py py-class docutils literal notranslate"><span class="pre">VectorSpace</span></code></a> which make up its direction.
 Therefore the <a class="reference internal" href="#vsm.vector.VectorSpace" title="vsm.vector.VectorSpace"><code class="xref py py-class docutils literal notranslate"><span class="pre">VectorSpace</span></code></a> is one of the most important classes in EvenTDT because it is the basis for a lot of the vector-related functionality.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="vsm.vector.VectorSpace">
 <em class="property">class </em><code class="sig-name descname">VectorSpace</code><a class="headerlink" href="#vsm.vector.VectorSpace" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference internal" href="#vsm.vector.VectorSpace" title="vsm.vector.VectorSpace"><code class="xref py py-class docutils literal notranslate"><span class="pre">VectorSpace</span></code></a> represents the space of all <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> dimensions.
@@ -208,9 +211,9 @@ This class is based on a normal Python <code class="docutils literal notranslate
 <p>The only change from the normal dictionary is that the value of an unspecified dimension is not undefined or <code class="docutils literal notranslate"><span class="pre">None</span></code>.
 Instead, the <a class="reference internal" href="#vsm.vector.VectorSpace" title="vsm.vector.VectorSpace"><code class="xref py py-class docutils literal notranslate"><span class="pre">VectorSpace</span></code></a> returns 0: a <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> is made up of all dimensions, but some (or many) of them have a magnitude of 0.
 This functionality is implemented in the <a class="reference internal" href="#vsm.vector.VectorSpace.__getitem__" title="vsm.vector.VectorSpace.__getitem__"><code class="xref py py-func docutils literal notranslate"><span class="pre">__getitem__()</span></code></a> function.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="vsm.vector.VectorSpace.__getitem__">
-<code class="sig-name descname">__getitem__</code><span class="sig-paren">(</span><em class="sig-param">key</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector.VectorSpace.__getitem__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__getitem__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">key</span></em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector.VectorSpace.__getitem__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the value, or magnitude, of the dimension having the given key as name.
 If the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> has no dimension with that name, the function returns a magnitude of 0.</p>
 <dl class="field-list simple">
@@ -226,7 +229,7 @@ If the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="vsm.vector.VectorSpace.__weakref__">
 <code class="sig-name descname">__weakref__</code><a class="headerlink" href="#vsm.vector.VectorSpace.__weakref__" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of weak references to the object (if defined)</p>
@@ -234,9 +237,9 @@ If the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="vsm.vector.Vector">
-<em class="property">class </em><code class="sig-name descname">Vector</code><span class="sig-paren">(</span><em class="sig-param">dimensions=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector.Vector" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Vector</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dimensions</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector.Vector" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> class is a manifestation of a vector in the <a class="reference internal" href="#vsm.vector.VectorSpace" title="vsm.vector.VectorSpace"><code class="xref py py-class docutils literal notranslate"><span class="pre">VectorSpace</span></code></a>.
 In this library, it is the basic building block for many other classes, such as the <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> and the <a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>.</p>
 <p>The <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> is based on two other classes that add some functionality to the basics:</p>
@@ -255,9 +258,9 @@ The keys are the dimension names.
 The corresponding values are the magnitude of the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> in that direction.</p>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="vsm.vector.Vector.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">dimensions=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector.Vector.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dimensions</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector.Vector.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>.
 By default, it has no dimensions, but you can provide initial values as a <code class="docutils literal notranslate"><span class="pre">dict</span></code>.</p>
 <dl class="field-list simple">
@@ -268,7 +271,7 @@ If <code class="docutils literal notranslate"><span class="pre">None</span></cod
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="vsm.vector.Vector.dimensions">
 <em class="property">property </em><code class="sig-name descname">dimensions</code><a class="headerlink" href="#vsm.vector.Vector.dimensions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the dimensions of the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>.
@@ -283,7 +286,7 @@ The dimensions are returned as a <a class="reference internal" href="#vsm.vector
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="vsm.vector.Vector.normalize">
 <code class="sig-name descname">normalize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector.Vector.normalize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Normalize the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> so that its magnitude is 1.</p>
@@ -293,7 +296,7 @@ The dimensions are returned as a <a class="reference internal" href="#vsm.vector
 </div>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="vsm.vector.Vector.copy">
 <code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector.Vector.copy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a copy of the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>.
@@ -308,7 +311,7 @@ The copy has the same <a class="reference internal" href="#vsm.vector.VectorSpac
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="vsm.vector.Vector.to_array">
 <code class="sig-name descname">to_array</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector.Vector.to_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> as <code class="docutils literal notranslate"><span class="pre">dict</span></code>.
@@ -330,9 +333,9 @@ This <code class="docutils literal notranslate"><span class="pre">dict</span></c
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="vsm.vector.Vector.from_array">
-<em class="property">static </em><code class="sig-name descname">from_array</code><span class="sig-paren">(</span><em class="sig-param">array</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector.Vector.from_array" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">from_array</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span></em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector.Vector.from_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create an instance of the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> from the given <code class="docutils literal notranslate"><span class="pre">dict</span></code>.
 This function expects the array to have been generated by the <a class="reference internal" href="#vsm.vector.Vector.to_array" title="vsm.vector.Vector.to_array"><code class="xref py py-func docutils literal notranslate"><span class="pre">to_array()</span></code></a>, and must have these keys:</p>
 <blockquote>
@@ -361,9 +364,9 @@ This function expects the array to have been generated by the <a class="referenc
 <span id="vector-math"></span><h3>Vector Math<a class="headerlink" href="#module-vsm.vector_math" title="Permalink to this headline">¶</a></h3>
 <p>The advantage of <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> is that as mathematical constructs, we can also manipulate and compare them with mathematics.
 This script contains a list of mathematical functions that can be used to change and compare <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> instances.</p>
-<dl class="function">
+<dl class="py function">
 <dt id="vsm.vector_math.magnitude">
-<code class="sig-name descname">magnitude</code><span class="sig-paren">(</span><em class="sig-param">v</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector_math.magnitude" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">magnitude</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">v</span></em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector_math.magnitude" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the magnitude of the given <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>.
 The magnitude is computed as:</p>
 <div class="math notranslate nohighlight">
@@ -382,9 +385,9 @@ The magnitude is computed as:</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="vsm.vector_math.normalize">
-<code class="sig-name descname">normalize</code><span class="sig-paren">(</span><em class="sig-param">v</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector_math.normalize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">normalize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">v</span></em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector_math.normalize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Normalize the given <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>.
 Normalization is computed as:</p>
 <div class="math notranslate nohighlight">
@@ -409,9 +412,9 @@ The new <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vecto
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="vsm.vector_math.augmented_normalize">
-<code class="sig-name descname">augmented_normalize</code><span class="sig-paren">(</span><em class="sig-param">v</em>, <em class="sig-param">a=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector_math.augmented_normalize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">augmented_normalize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">v</span></em>, <em class="sig-param"><span class="n">a</span><span class="o">=</span><span class="default_value">0.5</span></em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector_math.augmented_normalize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Normalize the given <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> using the formula:</p>
 <div class="math notranslate nohighlight">
 \[f = a + (1 - a) \frac{f}{x}\]</div>
@@ -445,9 +448,9 @@ You can read more about this type of normalization <a class="reference external"
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="vsm.vector_math.concatenate">
-<code class="sig-name descname">concatenate</code><span class="sig-paren">(</span><em class="sig-param">vectors</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector_math.concatenate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">concatenate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vectors</span></em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector_math.concatenate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Concatenate a list of vectors and return a new vector.
 This simply means adding the dimensions together:</p>
 <div class="math notranslate nohighlight">
@@ -467,9 +470,9 @@ This simply means adding the dimensions together:</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="vsm.vector_math.euclidean">
-<code class="sig-name descname">euclidean</code><span class="sig-paren">(</span><em class="sig-param">v1</em>, <em class="sig-param">v2</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector_math.euclidean" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">euclidean</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">v1</span></em>, <em class="sig-param"><span class="n">v2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector_math.euclidean" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the Euclidean distance between the two <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> instances.
 The Euclidean distance <span class="math notranslate nohighlight">\(e_{p, q}\)</span> is computed as:</p>
 <div class="math notranslate nohighlight">
@@ -493,9 +496,9 @@ This distance has a lower-bound of 0.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="vsm.vector_math.manhattan">
-<code class="sig-name descname">manhattan</code><span class="sig-paren">(</span><em class="sig-param">v1</em>, <em class="sig-param">v2</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector_math.manhattan" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">manhattan</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">v1</span></em>, <em class="sig-param"><span class="n">v2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector_math.manhattan" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the Manhattan distance between the two <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> instances.
 The Manhattan distance <span class="math notranslate nohighlight">\(m_{p, q}\)</span> is computed as:</p>
 <div class="math notranslate nohighlight">
@@ -519,9 +522,9 @@ This distance has a lower-bound of 0.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="vsm.vector_math.cosine">
-<code class="sig-name descname">cosine</code><span class="sig-paren">(</span><em class="sig-param">v1</em>, <em class="sig-param">v2</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector_math.cosine" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">cosine</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">v1</span></em>, <em class="sig-param"><span class="n">v2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector_math.cosine" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the cosine similarity between the two <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> instances.
 The cosine similarity <span class="math notranslate nohighlight">\(cos_{p, q}\)</span> is computed as:</p>
 <div class="math notranslate nohighlight">
@@ -545,9 +548,9 @@ This similarity is bound between 0 and 1.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="vsm.vector_math.cosine_distance">
-<code class="sig-name descname">cosine_distance</code><span class="sig-paren">(</span><em class="sig-param">v1</em>, <em class="sig-param">v2</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector_math.cosine_distance" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">cosine_distance</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">v1</span></em>, <em class="sig-param"><span class="n">v2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.vector_math.cosine_distance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the cosine distance between the two <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> instances.
 The cosine distance <span class="math notranslate nohighlight">\(cosd_{p, q}\)</span> is computed as:</p>
 <div class="math notranslate nohighlight">
@@ -586,9 +589,9 @@ To achieve this goal, good clusters:</p>
 <li><p>Have a small distance between their own <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> instances.</p></li>
 </ol>
 <p>Although you can create a <a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instance yourself, it is more common to generate clusters automatically using a <code class="xref py py-class docutils literal notranslate"><span class="pre">ClusteringAlgorithm</span></code>.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="vsm.clustering.cluster.Cluster">
-<em class="property">class </em><code class="sig-name descname">Cluster</code><span class="sig-paren">(</span><em class="sig-param">vectors=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.cluster.Cluster" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Cluster</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vectors</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.cluster.Cluster" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> class is a collection of <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> instances, or inherited classes, like <a class="reference internal" href="nlp.html#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>.
 You can add <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> instances to the <a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> using the <code class="docutils literal notranslate"><span class="pre">vectors</span></code> property.
 This property wraps a <code class="docutils literal notranslate"><span class="pre">list</span></code>, which means that you can also use it to retrieve the <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> instances.</p>
@@ -604,9 +607,9 @@ It is calculated as an average over all the dimensions of the <a class="referenc
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="vsm.clustering.cluster.Cluster.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">vectors=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.cluster.Cluster.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vectors</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.cluster.Cluster.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the cluster with an empty centroid and a list of vectors.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -616,7 +619,7 @@ If <code class="docutils literal notranslate"><span class="pre">None</span></cod
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="vsm.clustering.cluster.Cluster.similarity">
 <code class="sig-name descname">similarity</code><span class="sig-paren">(</span><em class="sig-param">vector</em>, <em class="sig-param">similarity_measure=&lt;function cosine&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.cluster.Cluster.similarity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the similarity between the given vector and this cluster’s centroid.
@@ -638,7 +641,7 @@ The similarity measure defaults to <a class="reference internal" href="#vsm.vect
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="vsm.clustering.cluster.Cluster.recalculate_centroid">
 <code class="sig-name descname">recalculate_centroid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.cluster.Cluster.recalculate_centroid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Recalculate the centroid.
@@ -656,7 +659,7 @@ This function is invoked automatically when you fetch the centroid.</p>
 </div>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="vsm.clustering.cluster.Cluster.centroid">
 <em class="property">property </em><code class="sig-name descname">centroid</code><a class="headerlink" href="#vsm.clustering.cluster.Cluster.centroid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the cluster’s centroid.
@@ -671,7 +674,7 @@ Before returning the centroid, this function automatically re-calculates it.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="vsm.clustering.cluster.Cluster.vectors">
 <em class="property">property </em><code class="sig-name descname">vectors</code><a class="headerlink" href="#vsm.clustering.cluster.Cluster.vectors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the list of vectors in the cluster.</p>
@@ -685,7 +688,7 @@ Before returning the centroid, this function automatically re-calculates it.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="vsm.clustering.cluster.Cluster.get_representative_vectors">
 <code class="sig-name descname">get_representative_vectors</code><span class="sig-paren">(</span><em class="sig-param">vectors=1</em>, <em class="sig-param">similarity_measure=&lt;function cosine&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.cluster.Cluster.get_representative_vectors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the vectors that are closest to the centroid.
@@ -709,7 +712,7 @@ Otherwise, a list of vectors is returned.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="vsm.clustering.cluster.Cluster.get_intra_similarity">
 <code class="sig-name descname">get_intra_similarity</code><span class="sig-paren">(</span><em class="sig-param">similarity_measure=&lt;function cosine&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.cluster.Cluster.get_intra_similarity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the average similarity between vectors and the cluster.
@@ -730,7 +733,7 @@ However, a different similarity measure can be provided.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="vsm.clustering.cluster.Cluster.size">
 <code class="sig-name descname">size</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.cluster.Cluster.size" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the number of vectors in the cluster.</p>
@@ -744,7 +747,7 @@ However, a different similarity measure can be provided.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="vsm.clustering.cluster.Cluster.to_array">
 <code class="sig-name descname">to_array</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.cluster.Cluster.to_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export the cluster as an associative array.
@@ -759,9 +762,9 @@ The centroid is not included as it is calculated every time it is requested.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="vsm.clustering.cluster.Cluster.from_array">
-<em class="property">static </em><code class="sig-name descname">from_array</code><span class="sig-paren">(</span><em class="sig-param">array</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.cluster.Cluster.from_array" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">from_array</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span></em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.cluster.Cluster.from_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a <a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a> instance from the given associative array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -784,7 +787,7 @@ The centroid is not included as it is calculated every time it is requested.</p>
 Clustering algorithms take in <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> instances, or other instances derived from them, and cluster them automatically.</p>
 <p>The <a class="reference internal" href="#vsm.clustering.algorithms.ClusteringAlgorithm" title="vsm.clustering.algorithms.ClusteringAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClusteringAlgorithm</span></code></a> exists so that all algorithms have a uniform interface.
 For example, you can cluster <a class="reference internal" href="#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> instances using the <a class="reference internal" href="#vsm.clustering.algorithms.ClusteringAlgorithm.cluster" title="vsm.clustering.algorithms.ClusteringAlgorithm.cluster"><code class="xref py py-func docutils literal notranslate"><span class="pre">cluster()</span></code></a> method.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="vsm.clustering.algorithms.ClusteringAlgorithm">
 <em class="property">class </em><code class="sig-name descname">ClusteringAlgorithm</code><a class="headerlink" href="#vsm.clustering.algorithms.ClusteringAlgorithm" title="Permalink to this definition">¶</a></dt>
 <dd><p>In EvenTDT, clustering algorithms maintain a state.
@@ -798,15 +801,15 @@ This function receives a list of <a class="reference internal" href="#vsm.vector
 <dd class="field-odd"><p><strong>clusters</strong> (list of <a class="reference internal" href="#vsm.clustering.cluster.Cluster" title="vsm.clustering.cluster.Cluster"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cluster</span></code></a>) – A list of clusters.</p>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="vsm.clustering.algorithms.ClusteringAlgorithm.__init__">
 <em class="property">abstract </em><code class="sig-name descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.ClusteringAlgorithm.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the state of the clustering algorithm with an empty list of clusters.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="vsm.clustering.algorithms.ClusteringAlgorithm.cluster">
-<em class="property">abstract </em><code class="sig-name descname">cluster</code><span class="sig-paren">(</span><em class="sig-param">vectors</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.ClusteringAlgorithm.cluster" title="Permalink to this definition">¶</a></dt>
+<em class="property">abstract </em><code class="sig-name descname">cluster</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vectors</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.ClusteringAlgorithm.cluster" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cluster the given vectors.
 The function returns the list of clusters produced so far, or a selection of it.</p>
 <dl class="field-list simple">
@@ -822,7 +825,7 @@ The function returns the list of clusters produced so far, or a selection of it.
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="vsm.clustering.algorithms.ClusteringAlgorithm.__weakref__">
 <code class="sig-name descname">__weakref__</code><a class="headerlink" href="#vsm.clustering.algorithms.ClusteringAlgorithm.__weakref__" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of weak references to the object (if defined)</p>
@@ -851,9 +854,9 @@ Frozen clusters cannot receive new vectors, and thus the algorithm can skip many
 <p>This implementation is based on the algorithm outlined in <a class="reference external" href="https://www.researchgate.net/profile/Colin_Layfield/publication/303893387_Extended_No-K-Means_for_Search_Results_Clustering/links/575acd4208ae9a9c95518dfd.pdf">this paper by Azzopardi et al. in 2016</a>.
 The concept of one-pass incremental algorithms is very general, however, so you will find approaches like this one elsewhere.</p>
 </div>
-<dl class="class">
+<dl class="py class">
 <dt id="vsm.clustering.algorithms.no_k_means.NoKMeans">
-<em class="property">class </em><code class="sig-name descname">NoKMeans</code><span class="sig-paren">(</span><em class="sig-param">threshold</em>, <em class="sig-param">freeze_period</em>, <em class="sig-param">store_frozen=False</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.no_k_means.NoKMeans" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">NoKMeans</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">threshold</span></em>, <em class="sig-param"><span class="n">freeze_period</span></em>, <em class="sig-param"><span class="n">store_frozen</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.no_k_means.NoKMeans" title="Permalink to this definition">¶</a></dt>
 <dd><p>The No-K-Means algorithm class maintains two variables in its state:</p>
 <ol class="arabic simple">
 <li><p>The clusters that are active, or which have not been frozen yet; and</p></li>
@@ -863,7 +866,7 @@ The concept of one-pass incremental algorithms is very general, however, so you 
 <p class="admonition-title">Warning</p>
 <p>By default, the algorithm does not store frozen clusters because they hog memory over time.
 You can specify that the algorithm should store frozen clusters by initializing the algorithm with the <code class="docutils literal notranslate"><span class="pre">store_frozen</span></code> parameter set to <code class="docutils literal notranslate"><span class="pre">True</span></code>.
-Normally, algorithms (such as the <a class="reference internal" href="consumers.html#queues.consumers.eld_consumer.ELDConsumer" title="queues.consumers.eld_consumer.ELDConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ELDConsumer</span></code></a>) can retain the clusters that they need themselves, and the algorithm removes the unused, frozen clusters.</p>
+Normally, algorithms (such as the <code class="xref py py-class docutils literal notranslate"><span class="pre">ELDConsumer</span></code>) can retain the clusters that they need themselves, and the algorithm removes the unused, frozen clusters.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
@@ -876,9 +879,9 @@ If any cluster exceeds this threshold, the vector is added to that cluster.</p><
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="vsm.clustering.algorithms.no_k_means.NoKMeans.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">threshold</em>, <em class="sig-param">freeze_period</em>, <em class="sig-param">store_frozen=False</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.no_k_means.NoKMeans.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">threshold</span></em>, <em class="sig-param"><span class="n">freeze_period</span></em>, <em class="sig-param"><span class="n">store_frozen</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.no_k_means.NoKMeans.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the algorithm with an empty set of active and frozen clusters.
 The No-K-Means takes in two algorithm-related parameters:</p>
 <ol class="arabic simple">
@@ -898,9 +901,9 @@ If any cluster exceeds this threshold, the vector is added to that cluster.</p><
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="vsm.clustering.algorithms.no_k_means.NoKMeans.cluster">
-<code class="sig-name descname">cluster</code><span class="sig-paren">(</span><em class="sig-param">vectors</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.no_k_means.NoKMeans.cluster" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">cluster</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vectors</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.no_k_means.NoKMeans.cluster" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cluster the given vectors.
 This function uses the <code class="docutils literal notranslate"><span class="pre">clusters</span></code> property as a list of active clusters.
 It automatically freezes inactive clusters as it iterates through the vectors.</p>
@@ -932,9 +935,9 @@ To get a list of _all_ active clusters, use the <code class="docutils literal no
 The main change in the <a class="reference internal" href="#vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans" title="vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans"><code class="xref py py-class docutils literal notranslate"><span class="pre">TemporalNoKMeans</span></code></a> is that the freeze period is not based on the number of observed vectors since one was added to a cluster.
 Instead, it is based on the time that has elapsed since a cluster last received a vector.
 In other words, it’s possible that the algorithm freezes a cluster because a lot of time has passed since it was active, even if it has received no new vectors!</p>
-<dl class="class">
+<dl class="py class">
 <dt id="vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans">
-<em class="property">class </em><code class="sig-name descname">TemporalNoKMeans</code><span class="sig-paren">(</span><em class="sig-param">threshold</em>, <em class="sig-param">freeze_period</em>, <em class="sig-param">store_frozen=False</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">TemporalNoKMeans</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">threshold</span></em>, <em class="sig-param"><span class="n">freeze_period</span></em>, <em class="sig-param"><span class="n">store_frozen</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans" title="Permalink to this definition">¶</a></dt>
 <dd><p>The temporal No-K-Means maintains the same state as the <a class="reference internal" href="#vsm.clustering.algorithms.no_k_means.NoKMeans" title="vsm.clustering.algorithms.no_k_means.NoKMeans"><code class="xref py py-class docutils literal notranslate"><span class="pre">NoKMeans</span></code></a>.
 Differently from it, however, the temporal No-K-Means’ freeze period is in terms of seconds, not in terms of vectors.</p>
 <dl class="field-list simple">
@@ -947,9 +950,9 @@ If any cluster exceeds this threshold, the vector is added to that cluster.</p><
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">threshold</em>, <em class="sig-param">freeze_period</em>, <em class="sig-param">store_frozen=False</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">threshold</span></em>, <em class="sig-param"><span class="n">freeze_period</span></em>, <em class="sig-param"><span class="n">store_frozen</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the algorithm with the clusters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -963,9 +966,9 @@ If any cluster exceeds this threshold, the vector is added to that cluster.</p><
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans.cluster">
-<code class="sig-name descname">cluster</code><span class="sig-paren">(</span><em class="sig-param">vectors</em>, <em class="sig-param">time='timestamp'</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans.cluster" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">cluster</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vectors</span></em>, <em class="sig-param"><span class="n">time</span><span class="o">=</span><span class="default_value">'timestamp'</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans.cluster" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cluster the given vectors.
 To freeze clusters, this method needs to know the timestamp of vectors.
 By default, it looks for a <code class="docutils literal notranslate"><span class="pre">timestamp</span></code> attribute, but you can specify a different attribute.</p>
@@ -1014,11 +1017,19 @@ The time value is expected to be a float or integer.</p></li>
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2020, Nicholas Mamo
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -1029,7 +1040,6 @@ The time value is expected to be a float or integer.</p></li>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

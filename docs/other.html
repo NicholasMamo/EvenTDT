@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   <meta content="Other EvenTDT functionality." name="description" />
@@ -14,29 +13,31 @@
   
 
   
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/eventdt.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/css/eventdt.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="prev" title="11. Automatic Term Extraction (ATE)" href="ate.html" /> 
@@ -53,7 +54,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> EvenTDT
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> EvenTDT
           
 
           
@@ -76,6 +77,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -107,6 +109,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -145,7 +148,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>12. Other</li>
     
@@ -172,9 +175,9 @@
 <div class="section" id="module-logger">
 <span id="logger"></span><h2>Logger<a class="headerlink" href="#module-logger" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-logger.logger"></span><p>A logging interface.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="logger.logger.LogLevel">
-<em class="property">class </em><code class="sig-name descname">LogLevel</code><a class="headerlink" href="#logger.logger.LogLevel" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">LogLevel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#logger.logger.LogLevel" title="Permalink to this definition">¶</a></dt>
 <dd><p>The logger’s logging level.
 It is based on a <code class="xref py py-class docutils literal notranslate"><span class="pre">OrderedEnum</span></code>.</p>
 <p>Valid logging levels:</p>
@@ -187,7 +190,7 @@ It is based on a <code class="xref py py-class docutils literal notranslate"><sp
 </div></blockquote>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="logger.logger.log_time">
 <code class="sig-name descname">log_time</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#logger.logger.log_time" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the time string.</p>
@@ -201,9 +204,9 @@ It is based on a <code class="xref py py-class docutils literal notranslate"><sp
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="logger.logger.process_name">
-<code class="sig-name descname">process_name</code><span class="sig-paren">(</span><em class="sig-param">process</em><span class="sig-paren">)</span><a class="headerlink" href="#logger.logger.process_name" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">process_name</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">process</span></em><span class="sig-paren">)</span><a class="headerlink" href="#logger.logger.process_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the string with the name of the process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -219,9 +222,9 @@ If no process name is given, this function returns an empty string.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="logger.logger.set_logging_level">
-<code class="sig-name descname">set_logging_level</code><span class="sig-paren">(</span><em class="sig-param">level</em><span class="sig-paren">)</span><a class="headerlink" href="#logger.logger.set_logging_level" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_logging_level</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">level</span></em><span class="sig-paren">)</span><a class="headerlink" href="#logger.logger.set_logging_level" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the logging level.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -230,9 +233,9 @@ If no process name is given, this function returns an empty string.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="logger.logger.info">
-<code class="sig-name descname">info</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">process=None</em><span class="sig-paren">)</span><a class="headerlink" href="#logger.logger.info" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">info</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="n">process</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#logger.logger.info" title="Permalink to this definition">¶</a></dt>
 <dd><p>Log an information message.
 All arguments are passed on to the <code class="docutils literal notranslate"><span class="pre">print</span></code> function.</p>
 <dl class="field-list simple">
@@ -243,9 +246,9 @@ If it is given, the logger prints part of its name while logging.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="logger.logger.warning">
-<code class="sig-name descname">warning</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">process=None</em><span class="sig-paren">)</span><a class="headerlink" href="#logger.logger.warning" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">warning</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="n">process</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#logger.logger.warning" title="Permalink to this definition">¶</a></dt>
 <dd><p>Log a warning.
 All arguments are passed on to the <code class="docutils literal notranslate"><span class="pre">print</span></code> function.</p>
 <dl class="field-list simple">
@@ -256,9 +259,9 @@ If it is given, the logger prints part of its name while logging.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="logger.logger.error">
-<code class="sig-name descname">error</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">process=None</em><span class="sig-paren">)</span><a class="headerlink" href="#logger.logger.error" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">error</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="n">process</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#logger.logger.error" title="Permalink to this definition">¶</a></dt>
 <dd><p>Log an error.
 All arguments are passed on to the <code class="docutils literal notranslate"><span class="pre">print</span></code> function.</p>
 <dl class="field-list simple">
@@ -274,9 +277,9 @@ If it is given, the logger prints part of its name while logging.</p>
 <h2>Base Classes<a class="headerlink" href="#base-classes" title="Permalink to this headline">¶</a></h2>
 <p>EvenTDT includes some base classes that add to the functionality of some classes or which require implementations.</p>
 <span class="target" id="module-objects"></span><span class="target" id="module-objects.attributable"></span><p>Attributable objects are normal objects that can have attributes.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="objects.attributable.Attributable">
-<em class="property">class </em><code class="sig-name descname">Attributable</code><span class="sig-paren">(</span><em class="sig-param">attributes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#objects.attributable.Attributable" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Attributable</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">attributes</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#objects.attributable.Attributable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attributable objects have a dictionary that stores attributes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
@@ -284,9 +287,9 @@ If it is given, the logger prints part of its name while logging.</p>
 The keys are the attribute names and the values are the respective values.</p>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="objects.attributable.Attributable.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">attributes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#objects.attributable.Attributable.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">attributes</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#objects.attributable.Attributable.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the object with the attributes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -296,7 +299,7 @@ If <cite>None</cite> is given, an empty dictionary is created instead.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="objects.attributable.Attributable.__weakref__">
 <code class="sig-name descname">__weakref__</code><a class="headerlink" href="#objects.attributable.Attributable.__weakref__" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of weak references to the object (if defined)</p>
@@ -305,11 +308,11 @@ If <cite>None</cite> is given, an empty dictionary is created instead.</p>
 </dd></dl>
 
 <span class="target" id="module-objects.exportable"></span><p>Exportable objects are normal objects that can be exported as a JSON string and loaded back.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="objects.exportable.Exportable">
 <em class="property">class </em><code class="sig-name descname">Exportable</code><a class="headerlink" href="#objects.exportable.Exportable" title="Permalink to this definition">¶</a></dt>
 <dd><p>An abstract class of an object that can be exported as a JSON string and imported back.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="objects.exportable.Exportable.to_array">
 <em class="property">abstract </em><code class="sig-name descname">to_array</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#objects.exportable.Exportable.to_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export the object as a dictionary.</p>
@@ -323,9 +326,9 @@ If <cite>None</cite> is given, an empty dictionary is created instead.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="objects.exportable.Exportable.from_array">
-<em class="property">abstract static </em><code class="sig-name descname">from_array</code><span class="sig-paren">(</span><em class="sig-param">array</em><span class="sig-paren">)</span><a class="headerlink" href="#objects.exportable.Exportable.from_array" title="Permalink to this definition">¶</a></dt>
+<em class="property">abstract static </em><code class="sig-name descname">from_array</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span></em><span class="sig-paren">)</span><a class="headerlink" href="#objects.exportable.Exportable.from_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create an instance of the object from the given dictionary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -340,9 +343,9 @@ If <cite>None</cite> is given, an empty dictionary is created instead.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="objects.exportable.Exportable.encode">
-<em class="property">static </em><code class="sig-name descname">encode</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#objects.exportable.Exportable.encode" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">encode</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="headerlink" href="#objects.exportable.Exportable.encode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Try to encode the given data.
 This function expects a dictionary, a list or an object and checks if values are JSON serializable.
 If this is not possible, instances of <a class="reference internal" href="#objects.exportable.Exportable" title="objects.exportable.Exportable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exportable</span></code></a> are converted to arrays.
@@ -360,9 +363,9 @@ This is done through the <a class="reference internal" href="#objects.exportable
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="objects.exportable.Exportable.decode">
-<em class="property">static </em><code class="sig-name descname">decode</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#objects.exportable.Exportable.decode" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">decode</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="headerlink" href="#objects.exportable.Exportable.decode" title="Permalink to this definition">¶</a></dt>
 <dd><p>A function that recursively decodes cached data.
 By decoded, it means that objects are created where necessary or possible.
 Only classes that inherit the <a class="reference internal" href="#objects.exportable.Exportable" title="objects.exportable.Exportable"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exportable</span></code></a> can be decoded.
@@ -385,9 +388,9 @@ JSON objects cannot be anything else.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="objects.exportable.Exportable.get_module">
-<em class="property">static </em><code class="sig-name descname">get_module</code><span class="sig-paren">(</span><em class="sig-param">cls</em><span class="sig-paren">)</span><a class="headerlink" href="#objects.exportable.Exportable.get_module" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">get_module</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cls</span></em><span class="sig-paren">)</span><a class="headerlink" href="#objects.exportable.Exportable.get_module" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the module name from the given path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -405,9 +408,9 @@ JSON objects cannot be anything else.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="objects.exportable.Exportable.get_class">
-<em class="property">static </em><code class="sig-name descname">get_class</code><span class="sig-paren">(</span><em class="sig-param">cls</em><span class="sig-paren">)</span><a class="headerlink" href="#objects.exportable.Exportable.get_class" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">get_class</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cls</span></em><span class="sig-paren">)</span><a class="headerlink" href="#objects.exportable.Exportable.get_class" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the class name from the given path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -425,7 +428,7 @@ JSON objects cannot be anything else.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="objects.exportable.Exportable.__weakref__">
 <code class="sig-name descname">__weakref__</code><a class="headerlink" href="#objects.exportable.Exportable.__weakref__" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of weak references to the object (if defined)</p>
@@ -454,11 +457,19 @@ JSON objects cannot be anything else.</p>
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2020, Nicholas Mamo
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -469,7 +480,6 @@ JSON objects cannot be anything else.</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   <meta content="The Natural Language Processing (NLP) library" name="description" />
@@ -14,29 +13,31 @@
   
 
   
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/eventdt.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/css/eventdt.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="4. Wikinterface" href="wikinterface.html" />
@@ -54,7 +55,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> EvenTDT
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> EvenTDT
           
 
           
@@ -77,6 +78,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -130,6 +132,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -168,7 +171,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>3. Natural Language Processing (NLP)</li>
     
@@ -211,9 +214,9 @@ However, more generally you would follow these two steps:</p>
 <li><p>Weight the tokens using a <a class="reference internal" href="#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>.
 This automatically transforms tokens into <a class="reference internal" href="vsm.html#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> dimensions and create a <a class="reference internal" href="#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> for you.</p></li>
 </ol>
-<dl class="class">
+<dl class="py class">
 <dt id="nlp.document.Document">
-<em class="property">class </em><code class="sig-name descname">Document</code><span class="sig-paren">(</span><em class="sig-param">text=''</em>, <em class="sig-param">dimensions=None</em>, <em class="sig-param">scheme=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.document.Document" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Document</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">dimensions</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">scheme</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.document.Document" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference internal" href="#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> class is based on the <a class="reference internal" href="vsm.html#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a> class.
 The only big change is the <code class="docutils literal notranslate"><span class="pre">text</span></code> instance variable.
 Since a <a class="reference internal" href="#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> is represented as a <a class="reference internal" href="vsm.html#vsm.vector.Vector" title="vsm.vector.Vector"><code class="xref py py-class docutils literal notranslate"><span class="pre">Vector</span></code></a>, the <code class="docutils literal notranslate"><span class="pre">text</span></code> records the original text that generated the <a class="reference internal" href="#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a>.</p>
@@ -222,9 +225,9 @@ Since a <a class="reference internal" href="#nlp.document.Document" title="nlp.d
 <dd class="field-odd"><p><a class="reference internal" href="wikinterface.html#module-wikinterface.text" title="wikinterface.text"><strong>text</strong></a> (<em>str</em>) – The document’s original text.</p>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="nlp.document.Document.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">text=''</em>, <em class="sig-param">dimensions=None</em>, <em class="sig-param">scheme=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.document.Document.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">dimensions</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">scheme</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.document.Document.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the document with the text and, optionally, the underlying vector’s dimensions.</p>
 <p>If you only have tokens generated by a <a class="reference internal" href="#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>, you can pass them on as dimensions.
 In this case, the <a class="reference internal" href="#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> creates dimensions using the <a class="reference internal" href="#nlp.weighting.tf.TF" title="nlp.weighting.tf.TF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TF</span></code></a> term-weighting scheme.
@@ -245,7 +248,7 @@ If <code class="docutils literal notranslate"><span class="pre">None</span></cod
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="nlp.document.Document.__str__">
 <code class="sig-name descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nlp.document.Document.__str__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the string representation of the document.
@@ -260,7 +263,7 @@ This function returns the document’s text.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="nlp.document.Document.copy">
 <code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nlp.document.Document.copy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a copy of the document.</p>
@@ -274,7 +277,7 @@ This function returns the document’s text.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="nlp.document.Document.to_array">
 <code class="sig-name descname">to_array</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nlp.document.Document.to_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export the document as an associative array.</p>
@@ -288,9 +291,9 @@ This function returns the document’s text.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="nlp.document.Document.from_array">
-<em class="property">static </em><code class="sig-name descname">from_array</code><span class="sig-paren">(</span><em class="sig-param">array</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.document.Document.from_array" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">from_array</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span></em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.document.Document.from_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create an instance of the document from the given associative array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -305,9 +308,9 @@ This function returns the document’s text.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="nlp.document.Document.concatenate">
-<em class="property">static </em><code class="sig-name descname">concatenate</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">tokenizer</em>, <em class="sig-param">scheme=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.document.Document.concatenate" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">concatenate</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="n">tokenizer</span></em>, <em class="sig-param"><span class="n">scheme</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.document.Document.concatenate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Concatenate all of the documents that are provided as arguments.
 To concatenate the documents, the function:</p>
 <ol class="arabic simple">
@@ -344,7 +347,7 @@ You would usually follow up tokenization with a <a class="reference internal" hr
 <p>The tokenizer has many capabilities, and these are all enabled or disabled in the constructor.
 In this way, all documents are tokenized in the same way.
 After creating a <a class="reference internal" href="#nlp.tokenizer.Tokenizer" title="nlp.tokenizer.Tokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tokenizer</span></code></a>, use the <a class="reference internal" href="#nlp.tokenizer.Tokenizer.tokenize" title="nlp.tokenizer.Tokenizer.tokenize"><code class="xref py py-func docutils literal notranslate"><span class="pre">tokenize()</span></code></a> function to extract the tokens:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">Tokenizer</span><span class="p">(</span><span class="n">stem</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">split_hashtags</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">Tokenizer</span><span class="p">(</span><span class="n">stem</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">split_hashtags</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">tokens</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="s1">&#39;Hello world!&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -358,9 +361,9 @@ You can install NLTK as follows:</p>
 <p>After that, you may need to use NLTK to download additional resources.
 If you receive an error, pay attention and follow the on-screen suggestions to download and install any missing corpora.</p>
 </div>
-<dl class="class">
+<dl class="py class">
 <dt id="nlp.tokenizer.Tokenizer">
-<em class="property">class </em><code class="sig-name descname">Tokenizer</code><span class="sig-paren">(</span><em class="sig-param">remove_mentions=True</em>, <em class="sig-param">remove_hashtags=False</em>, <em class="sig-param">split_hashtags=True</em>, <em class="sig-param">remove_numbers=True</em>, <em class="sig-param">remove_urls=True</em>, <em class="sig-param">remove_alt_codes=True</em>, <em class="sig-param">normalize_words=False</em>, <em class="sig-param">character_normalization_count=3</em>, <em class="sig-param">case_fold=True</em>, <em class="sig-param">remove_punctuation=True</em>, <em class="sig-param">remove_unicode_entities=False</em>, <em class="sig-param">min_length=3</em>, <em class="sig-param">stopwords=None</em>, <em class="sig-param">stem=True</em>, <em class="sig-param">normalize_special_characters=True</em>, <em class="sig-param">pos=None</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.tokenizer.Tokenizer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Tokenizer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">remove_mentions</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">remove_hashtags</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">split_hashtags</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">remove_numbers</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">remove_urls</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">remove_alt_codes</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">normalize_words</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">character_normalization_count</span><span class="o">=</span><span class="default_value">3</span></em>, <em class="sig-param"><span class="n">case_fold</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">remove_punctuation</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">remove_unicode_entities</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">min_length</span><span class="o">=</span><span class="default_value">3</span></em>, <em class="sig-param"><span class="n">stopwords</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">stem</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">normalize_special_characters</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">pos</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.tokenizer.Tokenizer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The tokenizer takes in plain text and converts it into tokens.
 The way it extracts tokens depends on how you create the tokenizer.
 All of the settings are passed on to the constructor so that the tokenizer always extracts tokens in the same way.</p>
@@ -422,9 +425,9 @@ For a list of possible tags and their meanings, run:</p>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="nlp.tokenizer.Tokenizer.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">remove_mentions=True</em>, <em class="sig-param">remove_hashtags=False</em>, <em class="sig-param">split_hashtags=True</em>, <em class="sig-param">remove_numbers=True</em>, <em class="sig-param">remove_urls=True</em>, <em class="sig-param">remove_alt_codes=True</em>, <em class="sig-param">normalize_words=False</em>, <em class="sig-param">character_normalization_count=3</em>, <em class="sig-param">case_fold=True</em>, <em class="sig-param">remove_punctuation=True</em>, <em class="sig-param">remove_unicode_entities=False</em>, <em class="sig-param">min_length=3</em>, <em class="sig-param">stopwords=None</em>, <em class="sig-param">stem=True</em>, <em class="sig-param">normalize_special_characters=True</em>, <em class="sig-param">pos=None</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.tokenizer.Tokenizer.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">remove_mentions</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">remove_hashtags</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">split_hashtags</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">remove_numbers</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">remove_urls</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">remove_alt_codes</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">normalize_words</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">character_normalization_count</span><span class="o">=</span><span class="default_value">3</span></em>, <em class="sig-param"><span class="n">case_fold</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">remove_punctuation</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">remove_unicode_entities</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">min_length</span><span class="o">=</span><span class="default_value">3</span></em>, <em class="sig-param"><span class="n">stopwords</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">stem</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">normalize_special_characters</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">pos</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.tokenizer.Tokenizer.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the tokenizer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -466,15 +469,15 @@ For a list of possible tags and their meanings, run:</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="nlp.tokenizer.Tokenizer.pos">
-<code class="sig-name descname">pos</code><em class="property"> = None</em><a class="headerlink" href="#nlp.tokenizer.Tokenizer.pos" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">pos</code><a class="headerlink" href="#nlp.tokenizer.Tokenizer.pos" title="Permalink to this definition">¶</a></dt>
 <dd><p>The list of regular expressions to be used.</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="nlp.tokenizer.Tokenizer.tokenize">
-<code class="sig-name descname">tokenize</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.tokenizer.Tokenizer.tokenize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">tokenize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span></em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.tokenizer.Tokenizer.tokenize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tokenize the given text based on the parameters specified in the constructor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -489,7 +492,7 @@ For a list of possible tags and their meanings, run:</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="nlp.tokenizer.Tokenizer.__weakref__">
 <code class="sig-name descname">__weakref__</code><a class="headerlink" href="#nlp.tokenizer.Tokenizer.__weakref__" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of weak references to the object (if defined)</p>
@@ -528,9 +531,9 @@ You can read more about these readily-available term-weighting schemes <a class=
 <p class="admonition-title">Note</p>
 <p>You can read more about term-weighting schemes in <a class="reference external" href="https://www.sciencedirect.com/science/article/abs/pii/0306457388900210">Term-Weighting Approaches in Automatic Text Retrieval by Salton and Buckley (1998)</a>.</p>
 </div>
-<dl class="class">
+<dl class="py class">
 <dt id="nlp.weighting.TermWeightingScheme">
-<em class="property">class </em><code class="sig-name descname">TermWeightingScheme</code><span class="sig-paren">(</span><em class="sig-param">local_scheme</em>, <em class="sig-param">global_scheme</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.TermWeightingScheme" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">TermWeightingScheme</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">local_scheme</span></em>, <em class="sig-param"><span class="n">global_scheme</span></em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.TermWeightingScheme" title="Permalink to this definition">¶</a></dt>
 <dd><p>A term-weighting scheme is made up of a local term-weighting scheme and a global term-weighting scheme.
 Each one gives a score to a token, and the term-weighting scheme combines the scores into one weight.</p>
 <p>This class stores the local and global term-weighting schemes.
@@ -544,9 +547,9 @@ After creating a term-weighting scheme, use the <a class="reference internal" hr
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="nlp.weighting.TermWeightingScheme.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">local_scheme</em>, <em class="sig-param">global_scheme</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.TermWeightingScheme.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">local_scheme</span></em>, <em class="sig-param"><span class="n">global_scheme</span></em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.TermWeightingScheme.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>A term-weighting scheme is made up of a local component and a global component.
 Each term-weighting scheme contributes a score, which when multiplied give the final token weight.</p>
 <dl class="field-list simple">
@@ -559,9 +562,9 @@ Each term-weighting scheme contributes a score, which when multiplied give the f
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="nlp.weighting.TermWeightingScheme.create">
-<code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param">tokens</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.TermWeightingScheme.create" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tokens</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.TermWeightingScheme.create" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a <a class="reference internal" href="#nlp.document.Document" title="nlp.document.Document"><code class="xref py py-class docutils literal notranslate"><span class="pre">Document</span></code></a> from the given tokens.
 This function calls the <a class="reference internal" href="#nlp.weighting.SchemeScorer.score" title="nlp.weighting.SchemeScorer.score"><code class="xref py py-func docutils literal notranslate"><span class="pre">score()</span></code></a> function on the local and global term-weighting schemes.
 Then, it multiplies them together to get the final token weight.</p>
@@ -581,7 +584,7 @@ The dimensions’ weights depend on the local and global term-weighting scheme.<
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="nlp.weighting.TermWeightingScheme.__weakref__">
 <code class="sig-name descname">__weakref__</code><a class="headerlink" href="#nlp.weighting.TermWeightingScheme.__weakref__" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of weak references to the object (if defined)</p>
@@ -589,7 +592,7 @@ The dimensions’ weights depend on the local and global term-weighting scheme.<
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="nlp.weighting.SchemeScorer">
 <em class="property">class </em><code class="sig-name descname">SchemeScorer</code><a class="headerlink" href="#nlp.weighting.SchemeScorer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference internal" href="#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a> combines two <a class="reference internal" href="#nlp.weighting.SchemeScorer" title="nlp.weighting.SchemeScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SchemeScorer</span></code></a> scores to weight tokens.
@@ -602,9 +605,9 @@ This function receives a list of tokens and assigns them a score.</p>
 The former is a complete term-weighting scheme that takes local and global scheme scorers and combines their token scores.
 The latter is the component that actually scores tokens.</p>
 </div>
-<dl class="method">
+<dl class="py method">
 <dt id="nlp.weighting.SchemeScorer.score">
-<em class="property">abstract </em><code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param">tokens</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.SchemeScorer.score" title="Permalink to this definition">¶</a></dt>
+<em class="property">abstract </em><code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tokens</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.SchemeScorer.score" title="Permalink to this definition">¶</a></dt>
 <dd><p>Score the given list of tokens.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -619,7 +622,7 @@ The latter is the component that actually scores tokens.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="nlp.weighting.SchemeScorer.__weakref__">
 <code class="sig-name descname">__weakref__</code><a class="headerlink" href="#nlp.weighting.SchemeScorer.__weakref__" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of weak references to the object (if defined)</p>
@@ -635,7 +638,7 @@ The latter is the component that actually scores tokens.</p>
 The term frequency <span class="math notranslate nohighlight">\(tf_{t,d}\)</span> of a feature <span class="math notranslate nohighlight">\(t\)</span> is equivalent to its frequency <span class="math notranslate nohighlight">\(f_{t,d}\)</span> in document <span class="math notranslate nohighlight">\(d\)</span>:</p>
 <div class="math notranslate nohighlight">
 \[tf_{t,d} = f_{t,d}\]</div>
-<dl class="class">
+<dl class="py class">
 <dt id="nlp.weighting.tf.TF">
 <em class="property">class </em><code class="sig-name descname">TF</code><a class="headerlink" href="#nlp.weighting.tf.TF" title="Permalink to this definition">¶</a></dt>
 <dd><p>The term frequency weighting scheme is used when there is no need for a global scheme.
@@ -644,7 +647,7 @@ It is an instance of a <a class="reference internal" href="#nlp.weighting.TermWe
 <li><p><a class="reference internal" href="#nlp.weighting.local_schemes.tf.TF" title="nlp.weighting.local_schemes.tf.TF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TF</span></code></a> as a local term-weighting scheme, and</p></li>
 <li><p><a class="reference internal" href="#nlp.weighting.global_schemes.filler.Filler" title="nlp.weighting.global_schemes.filler.Filler"><code class="xref py py-class docutils literal notranslate"><span class="pre">Filler</span></code></a> as a global term-weighting scheme (that does not change the score at all).</p></li>
 </ol>
-<dl class="method">
+<dl class="py method">
 <dt id="nlp.weighting.tf.TF.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.tf.TF.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the term-weighting scheme by supplying the TF and filler schemes.</p>
@@ -662,9 +665,9 @@ The weight <span class="math notranslate nohighlight">\(tfidf_{t,d}\)</span> of 
 <div class="math notranslate nohighlight">
 \[tfidf_{t,d} = tf_{t,d} \cdot idf_{t}\]</div>
 <p>where <span class="math notranslate nohighlight">\(tf_{t,d}\)</span> is the score assignedd by the <a class="reference internal" href="#nlp.weighting.local_schemes.tf.TF" title="nlp.weighting.local_schemes.tf.TF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TF</span></code></a> scheme, and <span class="math notranslate nohighlight">\(idf_{t}\)</span> is the score assigned by the <a class="reference internal" href="#nlp.weighting.global_schemes.idf.IDF" title="nlp.weighting.global_schemes.idf.IDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">IDF</span></code></a> scheme.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="nlp.weighting.tfidf.TFIDF">
-<em class="property">class </em><code class="sig-name descname">TFIDF</code><span class="sig-paren">(</span><em class="sig-param">idf</em>, <em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.tfidf.TFIDF" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">TFIDF</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">idf</span></em>, <em class="sig-param"><span class="n">documents</span></em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.tfidf.TFIDF" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class is a quick way of instantiating a <a class="reference internal" href="#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a> that represents the Term Frequency-Inverse Document Frequency (TF-IDF) scheme.
 It automatically constructs the scheme from the specifications required to create the <a class="reference internal" href="#nlp.weighting.global_schemes.idf.IDF" title="nlp.weighting.global_schemes.idf.IDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">IDF</span></code></a> scheme.
 The result is a <a class="reference internal" href="#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a> with the following components:</p>
@@ -673,9 +676,9 @@ The result is a <a class="reference internal" href="#nlp.weighting.TermWeighting
 <li><p><a class="reference internal" href="#nlp.weighting.global_schemes.idf.IDF" title="nlp.weighting.global_schemes.idf.IDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">IDF</span></code></a> as a global term-weighting scheme (from the given specifications).</p></li>
 </ol>
 <p>Since this term-weighting scheme is so common, this class provides functionality to export it (using the <a class="reference internal" href="#nlp.weighting.tfidf.TFIDF.to_array" title="nlp.weighting.tfidf.TFIDF.to_array"><code class="xref py py-func docutils literal notranslate"><span class="pre">to_array()</span></code></a> function) and import it (using the <a class="reference internal" href="#nlp.weighting.tfidf.TFIDF.from_array" title="nlp.weighting.tfidf.TFIDF.from_array"><code class="xref py py-func docutils literal notranslate"><span class="pre">from_array()</span></code></a> function) back again.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="nlp.weighting.tfidf.TFIDF.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">idf</em>, <em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.tfidf.TFIDF.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">idf</span></em>, <em class="sig-param"><span class="n">documents</span></em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.tfidf.TFIDF.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the TF-IDF term-weighting scheme by supplying details about the <a class="reference internal" href="#nlp.weighting.global_schemes.idf.IDF" title="nlp.weighting.global_schemes.idf.IDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">IDF</span></code></a> scheme.
 These include the IDF table and the number of documents in it.</p>
 <dl class="field-list simple">
@@ -689,7 +692,7 @@ The keys are the terms, and the corresponding values are the number of documents
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="nlp.weighting.tfidf.TFIDF.to_array">
 <code class="sig-name descname">to_array</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.tfidf.TFIDF.to_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export the TF-IDF as an associative array.</p>
@@ -703,9 +706,9 @@ The keys are the terms, and the corresponding values are the number of documents
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="nlp.weighting.tfidf.TFIDF.from_array">
-<em class="property">static </em><code class="sig-name descname">from_array</code><span class="sig-paren">(</span><em class="sig-param">array</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.tfidf.TFIDF.from_array" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">from_array</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span></em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.tfidf.TFIDF.from_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create an instance of the TF-IDF from the given associative array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -736,16 +739,16 @@ This type of term-weighting schemes is very simple, and is usually accompanied b
                              1 &amp; \text{if } t \in d \\
                                  0 &amp; \text{otherwise}
                          \end{cases}\end{split}\]</div>
-<dl class="class">
+<dl class="py class">
 <dt id="nlp.weighting.local_schemes.boolean.Boolean">
 <em class="property">class </em><code class="sig-name descname">Boolean</code><a class="headerlink" href="#nlp.weighting.local_schemes.boolean.Boolean" title="Permalink to this definition">¶</a></dt>
 <dd><p>The boolean term-weighting scheme is a simple scheme that gives a score of 1 if the term appears in the list of tokens, and 0 otherwise.
 In reality, this term-weighting scheme is not aware of all possible tokens.
 Therefore it only gives a score of 1 if the term appears in the list of tokens.
 The <a class="reference internal" href="#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a> automatically assumes the score of a token is 0 if it is not set.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="nlp.weighting.local_schemes.boolean.Boolean.score">
-<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param">tokens</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.local_schemes.boolean.Boolean.score" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tokens</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.local_schemes.boolean.Boolean.score" title="Permalink to this definition">¶</a></dt>
 <dd><p>Score the given tokens.
 The score is 1 if a feature appears in the document, 0 otherwise.</p>
 <dl class="field-list simple">
@@ -771,13 +774,13 @@ The term frequency <span class="math notranslate nohighlight">\(tf_{t,d}\)</span
 <div class="math notranslate nohighlight">
 \[tf_{t,d} = f_{t,d}\]</div>
 <p>where <span class="math notranslate nohighlight">\(f_{t,d}\)</span> is the frequency of token <span class="math notranslate nohighlight">\(t\)</span> in document <span class="math notranslate nohighlight">\(d\)</span>.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="nlp.weighting.local_schemes.tf.TF">
 <em class="property">class </em><code class="sig-name descname">TF</code><a class="headerlink" href="#nlp.weighting.local_schemes.tf.TF" title="Permalink to this definition">¶</a></dt>
 <dd><p>The Term Frequency (TF) term-weighting scheme is a simple term weighting schemes that assigns a weight equal to the number of times that the feature appears in a document.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="nlp.weighting.local_schemes.tf.TF.score">
-<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param">tokens</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.local_schemes.tf.TF.score" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tokens</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.local_schemes.tf.TF.score" title="Permalink to this definition">¶</a></dt>
 <dd><p>Score the given tokens.
 The score is equal to the frequency of the token in the list.</p>
 <dl class="field-list simple">
@@ -805,13 +808,13 @@ This kind of term-weighting schemes is usually accompanied by <a class="referenc
 <span id="filler"></span><h4>Filler<a class="headerlink" href="#module-nlp.weighting.global_schemes.filler" title="Permalink to this headline">¶</a></h4>
 <p>The filler global term-weighting scheme is used when there is no need for a global term-weighting scheme.
 The scheme assigns a score of 1 to all tokens such that it does not influence their overall score assigned by the <a class="reference internal" href="#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a>.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="nlp.weighting.global_schemes.filler.Filler">
 <em class="property">class </em><code class="sig-name descname">Filler</code><a class="headerlink" href="#nlp.weighting.global_schemes.filler.Filler" title="Permalink to this definition">¶</a></dt>
 <dd><p>The filler global term-weighting scheme is used when there is no need for a global term-weighting scheme because it does not change the overall weight of tokens.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="nlp.weighting.global_schemes.filler.Filler.score">
-<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param">tokens</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.global_schemes.filler.Filler.score" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tokens</span></em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.global_schemes.filler.Filler.score" title="Permalink to this definition">¶</a></dt>
 <dd><p>Give a constant score the given tokens.
 The chosen constant is 1 so that the <a class="reference internal" href="#nlp.weighting.TermWeightingScheme" title="nlp.weighting.TermWeightingScheme"><code class="xref py py-class docutils literal notranslate"><span class="pre">TermWeightingScheme</span></code></a> is not influenced at al..</p>
 <dl class="field-list simple">
@@ -839,9 +842,9 @@ On the other hand, terms that appear often in one document but rarely outside ch
 <div class="math notranslate nohighlight">
 \[idf_{t} = \log{\frac{N}{n_t}}\]</div>
 <p>where <span class="math notranslate nohighlight">\(N\)</span> is the total number of documents in the corpus, and <span class="math notranslate nohighlight">\(n_t\)</span> is the total number of documents that contain term <span class="math notranslate nohighlight">\(t\)</span>.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="nlp.weighting.global_schemes.idf.IDF">
-<em class="property">class </em><code class="sig-name descname">IDF</code><span class="sig-paren">(</span><em class="sig-param">idf</em>, <em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.global_schemes.idf.IDF" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">IDF</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">idf</span></em>, <em class="sig-param"><span class="n">documents</span></em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.global_schemes.idf.IDF" title="Permalink to this definition">¶</a></dt>
 <dd><p>The Inverse Document Frequency (IDF) is one of the most common term-weighting schemes.
 This scheme promotes tokens that are common in one document, and uncommon in the rest of the corpus.
 As part of the calculation, the IDF scheme needs two pieces of information:</p>
@@ -864,9 +867,9 @@ The number of documents in the corpus, which is required by this class, can be e
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="nlp.weighting.global_schemes.idf.IDF.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">idf</em>, <em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.global_schemes.idf.IDF.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">idf</span></em>, <em class="sig-param"><span class="n">documents</span></em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.global_schemes.idf.IDF.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the term-weighting scheme with the IDF table and the number of documents in that scheme.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -886,9 +889,9 @@ The keys are the terms, and the corresponding values are the number of documents
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="nlp.weighting.global_schemes.idf.IDF.score">
-<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param">tokens</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.global_schemes.idf.IDF.score" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tokens</span></em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.global_schemes.idf.IDF.score" title="Permalink to this definition">¶</a></dt>
 <dd><p>Score the given tokens based on the number of documents they appear.
 Tokens that appear in many documents receive a low score, whereas those that do not receive a high score.</p>
 <p>Since the denominator is 0 if the token does not appear in the corpus, this function uses Laplace smoothing.</p>
@@ -905,7 +908,7 @@ Tokens that appear in many documents receive a low score, whereas those that do 
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="nlp.weighting.global_schemes.idf.IDF.to_array">
 <code class="sig-name descname">to_array</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.global_schemes.idf.IDF.to_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Export the IDF as an associative array.</p>
@@ -919,9 +922,9 @@ Tokens that appear in many documents receive a low score, whereas those that do 
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="nlp.weighting.global_schemes.idf.IDF.from_array">
-<em class="property">static </em><code class="sig-name descname">from_array</code><span class="sig-paren">(</span><em class="sig-param">array</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.global_schemes.idf.IDF.from_array" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">from_array</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span></em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.global_schemes.idf.IDF.from_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create an instance of the IDF from the given associative array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -936,9 +939,9 @@ Tokens that appear in many documents receive a low score, whereas those that do 
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="nlp.weighting.global_schemes.idf.IDF.from_documents">
-<em class="property">static </em><code class="sig-name descname">from_documents</code><span class="sig-paren">(</span><em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.global_schemes.idf.IDF.from_documents" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">from_documents</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">documents</span></em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.weighting.global_schemes.idf.IDF.from_documents" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the IDF table from the given set of documents.
 This function extracts all unique terms from the documents’ dimensions and counts the number of documents in which they appear at least once.</p>
 <div class="admonition note">
@@ -974,9 +977,9 @@ However, it also performs simple processing on text to remove common mistakes, s
 <p>All cleaners are configured in their constructor to ensure that cleaning is uniform across all documents.
 The main functionality resides in the <a class="reference internal" href="#nlp.cleaners.Cleaner.clean" title="nlp.cleaners.Cleaner.clean"><code class="xref py py-func docutils literal notranslate"><span class="pre">clean()</span></code></a> function, which receives text and returns a cleaner version of it.
 Other cleaners that inherit the <a class="reference internal" href="#nlp.cleaners.Cleaner" title="nlp.cleaners.Cleaner"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cleaner</span></code></a> class would likely need to change this function.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="nlp.cleaners.Cleaner">
-<em class="property">class </em><code class="sig-name descname">Cleaner</code><span class="sig-paren">(</span><em class="sig-param">remove_alt_codes=False</em>, <em class="sig-param">complete_sentences=False</em>, <em class="sig-param">collapse_new_lines=False</em>, <em class="sig-param">collapse_whitespaces=False</em>, <em class="sig-param">capitalize_first=False</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.Cleaner" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">Cleaner</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">remove_alt_codes</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">complete_sentences</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">collapse_new_lines</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">collapse_whitespaces</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">capitalize_first</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.Cleaner" title="Permalink to this definition">¶</a></dt>
 <dd><p>The base cleaner is meant to perform only basing pre-processing and cleaning.
 These functions are generally applicable to any type of text.</p>
 <p>You need to specify all cleaner settings in the constructor.
@@ -996,9 +999,9 @@ This also removes whitespaces just before periods.</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="nlp.cleaners.Cleaner.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">remove_alt_codes=False</em>, <em class="sig-param">complete_sentences=False</em>, <em class="sig-param">collapse_new_lines=False</em>, <em class="sig-param">collapse_whitespaces=False</em>, <em class="sig-param">capitalize_first=False</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.Cleaner.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">remove_alt_codes</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">complete_sentences</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">collapse_new_lines</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">collapse_whitespaces</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">capitalize_first</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.Cleaner.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the cleaner with the basic configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1015,9 +1018,9 @@ This also removes whitespaces just before periods.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="nlp.cleaners.Cleaner.clean">
-<code class="sig-name descname">clean</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.Cleaner.clean" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">clean</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span></em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.Cleaner.clean" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clean the given text based on the parameters specified when creating the cleaner.
 The basic cleaner always strips empty whitespaces before and after all processing.</p>
 <dl class="field-list simple">
@@ -1033,7 +1036,7 @@ The basic cleaner always strips empty whitespaces before and after all processin
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="nlp.cleaners.Cleaner.__weakref__">
 <code class="sig-name descname">__weakref__</code><a class="headerlink" href="#nlp.cleaners.Cleaner.__weakref__" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of weak references to the object (if defined)</p>
@@ -1046,9 +1049,9 @@ The basic cleaner always strips empty whitespaces before and after all processin
 <p>The tweet cleaner builds on the base cleaner, but adds functionality that is specific to Twitter and other informal text in general.
 The Twitter-specific functionality involves retweet prefixes (<cite>RT</cite> at the start of the tweet), hashtags (such as <cite>#EvenTDT</cite>) and mentions (like <cite>&#64;NicholasMamo</cite>).
 The tweet cleaner is also capable of removing unicode entities, like certain emojis, and URLs.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="nlp.cleaners.tweet_cleaner.TweetCleaner">
-<em class="property">class </em><code class="sig-name descname">TweetCleaner</code><span class="sig-paren">(</span><em class="sig-param">remove_unicode_entities=False</em>, <em class="sig-param">remove_urls=False</em>, <em class="sig-param">remove_hashtags=False</em>, <em class="sig-param">split_hashtags=False</em>, <em class="sig-param">remove_retweet_prefix=False</em>, <em class="sig-param">replace_mentions=False</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.tweet_cleaner.TweetCleaner" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">TweetCleaner</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">remove_unicode_entities</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">remove_urls</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">remove_hashtags</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">split_hashtags</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">remove_retweet_prefix</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">replace_mentions</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.tweet_cleaner.TweetCleaner" title="Permalink to this definition">¶</a></dt>
 <dd><p>The tweet cleaner removes needless information from a text to make it presentable.
 This includes Twitter-specific syntax and URLs.</p>
 <p>By default, the tweet cleaner only strips the text of whitespaces at the beginning or at the end of text.
@@ -1067,9 +1070,9 @@ Note that this also includes emojis.</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="nlp.cleaners.tweet_cleaner.TweetCleaner.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">remove_unicode_entities=False</em>, <em class="sig-param">remove_urls=False</em>, <em class="sig-param">remove_hashtags=False</em>, <em class="sig-param">split_hashtags=False</em>, <em class="sig-param">remove_retweet_prefix=False</em>, <em class="sig-param">replace_mentions=False</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.tweet_cleaner.TweetCleaner.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">remove_unicode_entities</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">remove_urls</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">remove_hashtags</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">split_hashtags</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">remove_retweet_prefix</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">replace_mentions</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.tweet_cleaner.TweetCleaner.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the tweet cleaner by specifying the type of cleaning operations it should perform.
 This design is purposeful so that the tweet cleaner processes all text in the same way.</p>
 <p>The same configuration accepted by the <a class="reference internal" href="#nlp.cleaners.Cleaner" title="nlp.cleaners.Cleaner"><code class="xref py py-class docutils literal notranslate"><span class="pre">Cleaner</span></code></a> are accepted as arguments and keyword arguments.
@@ -1089,9 +1092,9 @@ Note that this also includes emojis.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="nlp.cleaners.tweet_cleaner.TweetCleaner.clean">
-<code class="sig-name descname">clean</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">tweet=None</em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.tweet_cleaner.TweetCleaner.clean" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">clean</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span></em>, <em class="sig-param"><span class="n">tweet</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#nlp.cleaners.tweet_cleaner.TweetCleaner.clean" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clean the given text.
 The basic cleaner always strips empty whitespaces before any pre-processing.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">tweet</span></code> parameter is optional, and is only required when replacing tweet mentions by the respective user’s screen name (for example, replacing <cite>&#64;NicholasMamo</cite> to <cite>Nicholas Mamo</cite>).
@@ -1139,11 +1142,19 @@ This is only used when mentioned users’ names are replaced in the text.</p></l
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2020, Nicholas Mamo
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -1154,7 +1165,6 @@ This is only used when mentioned users’ names are replaced in the text.</p></l
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

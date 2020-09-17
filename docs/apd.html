@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   <meta content="The Automatic Participant Detection (APD) library" name="description" />
@@ -14,29 +13,31 @@
   
 
   
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/eventdt.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/css/eventdt.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="6. Topic Detection and Tracking (TDT)" href="tdt.html" />
@@ -54,7 +55,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> EvenTDT
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> EvenTDT
           
 
           
@@ -77,6 +78,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -165,6 +167,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -203,7 +206,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>5. Automatic Participant Detection (APD)</li>
     
@@ -281,9 +284,9 @@ For example, the <a class="reference internal" href="#apd.ner_participant_detect
 <li><p>If the postprocessor is not given, the participants are returned as found by the previous steps.</p></li>
 </ol>
 </div></blockquote>
-<dl class="class">
+<dl class="py class">
 <dt id="apd.participant_detector.ParticipantDetector">
-<em class="property">class </em><code class="sig-name descname">ParticipantDetector</code><span class="sig-paren">(</span><em class="sig-param">extractor</em>, <em class="sig-param">scorer=None</em>, <em class="sig-param">filter=None</em>, <em class="sig-param">resolver=None</em>, <em class="sig-param">extrapolator=None</em>, <em class="sig-param">postprocessor=None</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.participant_detector.ParticipantDetector" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">ParticipantDetector</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">extractor</span></em>, <em class="sig-param"><span class="n">scorer</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">filter</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">resolver</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">extrapolator</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">postprocessor</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.participant_detector.ParticipantDetector" title="Permalink to this definition">¶</a></dt>
 <dd><p>The basic participant detector accepts all steps as individual instances.
 The participant detector chains them together to identify the event’s participants.</p>
 <dl class="field-list simple">
@@ -302,9 +305,9 @@ If it is not given, the participants are returned as found.</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="apd.participant_detector.ParticipantDetector.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">extractor</em>, <em class="sig-param">scorer=None</em>, <em class="sig-param">filter=None</em>, <em class="sig-param">resolver=None</em>, <em class="sig-param">extrapolator=None</em>, <em class="sig-param">postprocessor=None</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.participant_detector.ParticipantDetector.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">extractor</span></em>, <em class="sig-param"><span class="n">scorer</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">filter</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">resolver</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">extrapolator</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">postprocessor</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.participant_detector.ParticipantDetector.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the participant detector, which is made up of a number of components.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -326,9 +329,9 @@ This component modifies the found participants.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="apd.participant_detector.ParticipantDetector.detect">
-<code class="sig-name descname">detect</code><span class="sig-paren">(</span><em class="sig-param">corpus</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.participant_detector.ParticipantDetector.detect" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">detect</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">corpus</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.participant_detector.ParticipantDetector.detect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Identify participants in the corpus.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -343,7 +346,7 @@ This component modifies the found participants.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="apd.participant_detector.ParticipantDetector.__weakref__">
 <code class="sig-name descname">__weakref__</code><a class="headerlink" href="#apd.participant_detector.ParticipantDetector.__weakref__" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of weak references to the object (if defined)</p>
@@ -361,7 +364,7 @@ Nor does it extrapolate named entities: it simply extracts named entities and ra
 <p>Due to its simplicity, the NER participant detector is a good baseline for APD.
 The first paper that proposed APD used named entities as a baseline: <a class="reference external" href="https://dl.acm.org/doi/abs/10.1145/3342220.3344921">ELD: Event TimeLine Detection – A Participant-Based Approach to Tracking Events by Mamo et al. (2019)</a>.</p>
 </div>
-<dl class="class">
+<dl class="py class">
 <dt id="apd.ner_participant_detector.NERParticipantDetector">
 <em class="property">class </em><code class="sig-name descname">NERParticipantDetector</code><a class="headerlink" href="#apd.ner_participant_detector.NERParticipantDetector" title="Permalink to this definition">¶</a></dt>
 <dd><p>The NER participant detector is based on a normal participant detector.
@@ -373,7 +376,7 @@ To extract named entities, the participant detector automatically creates an ext
 </ul>
 </div></blockquote>
 <p>The NER participant detector performs no filtering, resolution, extrapolation or post-processing.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="apd.ner_participant_detector.NERParticipantDetector.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#apd.ner_participant_detector.NERParticipantDetector.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the NER participant detector.</p>
@@ -401,9 +404,9 @@ By default, this participant detector uses the following configuration:</p>
 <p>Implementation based on the algorithm outlined in <a class="reference external" href="https://dl.acm.org/doi/abs/10.1145/3342220.3344921">ELD: Event TimeLine Detection – A Participant-Based Approach to Tracking Events by Mamo et al. (2019)</a>.
 This version contains some changes, such as by using a <a class="reference internal" href="#apd.filters.local.rank_filter.RankFilter" title="apd.filters.local.rank_filter.RankFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">RankFilter</span></code></a> instead of a <a class="reference internal" href="#apd.filters.local.threshold_filter.ThresholdFilter" title="apd.filters.local.threshold_filter.ThresholdFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">ThresholdFilter</span></code></a>.</p>
 </div>
-<dl class="class">
+<dl class="py class">
 <dt id="apd.eld_participant_detector.ELDParticipantDetector">
-<em class="property">class </em><code class="sig-name descname">ELDParticipantDetector</code><span class="sig-paren">(</span><em class="sig-param">scheme=None</em>, <em class="sig-param">corpus=None</em>, <em class="sig-param">extractor=None</em>, <em class="sig-param">scorer=None</em>, <em class="sig-param">filter=None</em>, <em class="sig-param">resolver=None</em>, <em class="sig-param">extrapolator=None</em>, <em class="sig-param">postprocessor=None</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.eld_participant_detector.ELDParticipantDetector" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">ELDParticipantDetector</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">scheme</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">corpus</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">extractor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">scorer</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">filter</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">resolver</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">extrapolator</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">postprocessor</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.eld_participant_detector.ELDParticipantDetector" title="Permalink to this definition">¶</a></dt>
 <dd><p>By defaulthe ELD participant detector uses the following configuration:</p>
 <blockquote>
 <div><ol class="arabic simple">
@@ -416,9 +419,9 @@ This version contains some changes, such as by using a <a class="reference inter
 </ol>
 </div></blockquote>
 <p>However, they can be overriden in the constructor.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="apd.eld_participant_detector.ELDParticipantDetector.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">scheme=None</em>, <em class="sig-param">corpus=None</em>, <em class="sig-param">extractor=None</em>, <em class="sig-param">scorer=None</em>, <em class="sig-param">filter=None</em>, <em class="sig-param">resolver=None</em>, <em class="sig-param">extrapolator=None</em>, <em class="sig-param">postprocessor=None</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.eld_participant_detector.ELDParticipantDetector.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">scheme</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">corpus</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">extractor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">scorer</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">filter</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">resolver</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">extrapolator</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">postprocessor</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.eld_participant_detector.ELDParticipantDetector.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the ELD participant detector.
 Any parameter that is not given uses the default configuration.</p>
 <dl class="field-list simple">
@@ -461,16 +464,16 @@ If it is not given, it defaults to the <a class="reference internal" href="#apd.
 The extractor’s job is to identify candidate participants.
 All extractors must start from a corpus, but they may also look for candidates elsewhere.
 The functionality revolves around the <a class="reference internal" href="#apd.extractors.extractor.Extractor" title="apd.extractors.extractor.Extractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Extractor</span></code></a>’s <a class="reference internal" href="#apd.extractors.extractor.Extractor.extract" title="apd.extractors.extractor.Extractor.extract"><code class="xref py py-func docutils literal notranslate"><span class="pre">extract()</span></code></a> method.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="apd.extractors.extractor.Extractor">
 <em class="property">class </em><code class="sig-name descname">Extractor</code><a class="headerlink" href="#apd.extractors.extractor.Extractor" title="Permalink to this definition">¶</a></dt>
 <dd><p>The base extractor defines what all ATE extractors should be able to do.
 All extractors should accept a corpus and be able to return a list of candidate participants related to it.</p>
 <p>The functionality revolves around one method: the <a class="reference internal" href="#apd.extractors.extractor.Extractor.extract" title="apd.extractors.extractor.Extractor.extract"><code class="xref py py-func docutils literal notranslate"><span class="pre">extract()</span></code></a> method.
 This function returns the candidates, separated based on the documents in which they appear.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="apd.extractors.extractor.Extractor.extract">
-<em class="property">abstract </em><code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">corpus</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.extractor.Extractor.extract" title="Permalink to this definition">¶</a></dt>
+<em class="property">abstract </em><code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">corpus</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.extractor.Extractor.extract" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract all the potential participants from the given corpus.
 The output is a list of lists.
 Each outer list represents a document.
@@ -488,7 +491,7 @@ Each inner list is the candidates in that document.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="apd.extractors.extractor.Extractor.__weakref__">
 <code class="sig-name descname">__weakref__</code><a class="headerlink" href="#apd.extractors.extractor.Extractor.__weakref__" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of weak references to the object (if defined)</p>
@@ -503,9 +506,9 @@ Each inner list is the candidates in that document.</p>
 <span id="token-extractor"></span><h4>Token Extractor<a class="headerlink" href="#module-apd.extractors.local.token_extractor" title="Permalink to this headline">¶</a></h4>
 <p>The token extractor considers all the tokens in the corpus to be candidate participants.
 Therefore it does not perform any filtering whatsoever on the corpus.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="apd.extractors.local.token_extractor.TokenExtractor">
-<em class="property">class </em><code class="sig-name descname">TokenExtractor</code><span class="sig-paren">(</span><em class="sig-param">tokenizer=None</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.local.token_extractor.TokenExtractor" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">TokenExtractor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tokenizer</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.local.token_extractor.TokenExtractor" title="Permalink to this definition">¶</a></dt>
 <dd><p>The token extractor returns all tokens as potential candidates.
 To extract tokens, the token extractor needs a tokenizer, but it is optional.
 If no tokenizer is given, the token extractor uses documents’ dimensions as tokens.</p>
@@ -521,9 +524,9 @@ If it is given, the tokens are extracted anew.
 Otherwise, the document dimensions are used instead.</p>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="apd.extractors.local.token_extractor.TokenExtractor.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">tokenizer=None</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.local.token_extractor.TokenExtractor.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tokenizer</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.local.token_extractor.TokenExtractor.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the extractor with a tokenizer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -534,9 +537,9 @@ Otherwise, the document dimensions are used instead.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="apd.extractors.local.token_extractor.TokenExtractor.extract">
-<code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">corpus</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.local.token_extractor.TokenExtractor.extract" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">corpus</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.local.token_extractor.TokenExtractor.extract" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract all the potential participants from the corpus.
 The output is a list of lists.
 Each outer list represents a document.
@@ -565,9 +568,9 @@ Each inner list is the candidates in that document.</p>
 <p>The entity extractor uses <a class="reference external" href="http://nltk.org/">NLTK</a> to extract candidate participants.
 If NLTK is not installed, this extractor will fail.</p>
 </div>
-<dl class="class">
+<dl class="py class">
 <dt id="apd.extractors.local.entity_extractor.EntityExtractor">
-<em class="property">class </em><code class="sig-name descname">EntityExtractor</code><span class="sig-paren">(</span><em class="sig-param">binary=True</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.local.entity_extractor.EntityExtractor" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">EntityExtractor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">binary</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.local.entity_extractor.EntityExtractor" title="Permalink to this definition">¶</a></dt>
 <dd><p>The entity extractor uses NLTK to extract named entities from a corpus of documents.
 Apart from extracting named entities, the entity extractor combines adjacent named entities into one string.</p>
 <p>Named entities may be persons, organizations or locations.
@@ -581,9 +584,9 @@ If true, all named entities have the same type.
 This is enabled by default to minimize false negatives.</p>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="apd.extractors.local.entity_extractor.EntityExtractor.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">binary=True</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.local.entity_extractor.EntityExtractor.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">binary</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.local.entity_extractor.EntityExtractor.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the extractor with the binary flag.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -594,9 +597,9 @@ This is enabled by default to minimize false negatives.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="apd.extractors.local.entity_extractor.EntityExtractor.extract">
-<code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">corpus</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.local.entity_extractor.EntityExtractor.extract" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">corpus</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.local.entity_extractor.EntityExtractor.extract" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract all the named entities from the corpus.
 The output is a list of lists.
 Each outer list represents a document.
@@ -634,7 +637,7 @@ This can be used by all instances of the <a class="reference internal" href="#ap
 However, the data has to be downloaded.
 The data, and more instructions on how to get GloVe pre-trained on Twitter are available in <a class="reference external" href="https://github.com/napsternxg/TwitterNER">TwitterNER’s GitHub repository</a>.</p>
 </div>
-<dl class="class">
+<dl class="py class">
 <dt id="apd.extractors.local.twitterner_entity_extractor.TwitterNEREntityExtractor">
 <em class="property">class </em><code class="sig-name descname">TwitterNEREntityExtractor</code><a class="headerlink" href="#apd.extractors.local.twitterner_entity_extractor.TwitterNEREntityExtractor" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference internal" href="#apd.extractors.local.twitterner_entity_extractor.TwitterNEREntityExtractor" title="apd.extractors.local.twitterner_entity_extractor.TwitterNEREntityExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">TwitterNEREntityExtractor</span></code></a> uses TwitterNER to extract entities from documents.
@@ -644,9 +647,9 @@ This class is built specifically for tweets.</p>
 <dd class="field-odd"><p><strong>ner</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">TwitterNER.run_ner.TwitterNER</span></code>) – The NER extractor used by this class.</p>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="apd.extractors.local.twitterner_entity_extractor.TwitterNEREntityExtractor.extract">
-<code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param">corpus</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.local.twitterner_entity_extractor.TwitterNEREntityExtractor.extract" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">extract</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">corpus</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extractors.local.twitterner_entity_extractor.TwitterNEREntityExtractor.extract" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract all the named entities from the corpus.
 The output is a list of lists.
 Each outer list represents a document.
@@ -674,7 +677,7 @@ Each inner list is the candidates in that document.</p>
 <p>Scoring is the second step of the APD process.
 This step assigns a score to each candidate that is provided.
 The functionality revolves around the <a class="reference internal" href="#apd.scorers.scorer.Scorer" title="apd.scorers.scorer.Scorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scorer</span></code></a>’s <a class="reference internal" href="#apd.scorers.scorer.Scorer.score" title="apd.scorers.scorer.Scorer.score"><code class="xref py py-func docutils literal notranslate"><span class="pre">score()</span></code></a> method.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="apd.scorers.scorer.Scorer">
 <em class="property">class </em><code class="sig-name descname">Scorer</code><a class="headerlink" href="#apd.scorers.scorer.Scorer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The scorer returns a score for each candidate participant found in the corpus.</p>
@@ -684,9 +687,9 @@ Each such list is made up of a list of candidates.</p>
 <p>The <a class="reference internal" href="#apd.scorers.scorer.Scorer.score" title="apd.scorers.scorer.Scorer.score"><code class="xref py py-func docutils literal notranslate"><span class="pre">score()</span></code></a> function returns a dictionary of candidate participants and their scores.
 The scores may be normalized to make them comparable.
 This can be a simple rescaling function.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="apd.scorers.scorer.Scorer.score">
-<em class="property">abstract </em><code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">normalize_scores=True</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.scorer.Scorer.score" title="Permalink to this definition">¶</a></dt>
+<em class="property">abstract </em><code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">candidates</span></em>, <em class="sig-param"><span class="n">normalize_scores</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.scorer.Scorer.score" title="Permalink to this definition">¶</a></dt>
 <dd><p>Score the candidate participants that were found in the corpus.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -706,7 +709,7 @@ Here, normalization means rescaling between 0 and 1.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="apd.scorers.scorer.Scorer.__weakref__">
 <code class="sig-name descname">__weakref__</code><a class="headerlink" href="#apd.scorers.scorer.Scorer.__weakref__" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of weak references to the object (if defined)</p>
@@ -721,14 +724,14 @@ Here, normalization means rescaling between 0 and 1.</p></li>
 <span id="document-frequency-scorer"></span><h4>Document Frequency Scorer<a class="headerlink" href="#module-apd.scorers.local.df_scorer" title="Permalink to this headline">¶</a></h4>
 <p>The document frequency (DF) scorer assigns a score to candidate participants based on the number of documents in which they appear.
 This approach does not favor candidates if they appear multiple times in the same document.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="apd.scorers.local.df_scorer.DFScorer">
 <em class="property">class </em><code class="sig-name descname">DFScorer</code><a class="headerlink" href="#apd.scorers.local.df_scorer.DFScorer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The document frequency scorer counts the number of documents in which each candidate participant appears.
 This becomes the candidate participant’s score.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="apd.scorers.local.df_scorer.DFScorer.score">
-<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">normalize_scores=True</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.df_scorer.DFScorer.score" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">candidates</span></em>, <em class="sig-param"><span class="n">normalize_scores</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.df_scorer.DFScorer.score" title="Permalink to this definition">¶</a></dt>
 <dd><p>Score the given candidates based on their relevance within the corpus.
 The score is normalized using the maximum score.</p>
 <dl class="field-list simple">
@@ -757,9 +760,9 @@ Here, normalization means rescaling between 0 and 1.</p></li>
 Like the document frequency scorer, it does not favor candidate participants that appear several times in the same document.</p>
 <p>The difference is that the logarithmic version decreases the difference between candidates that appear very often and those which do not.
 The intuition is that if a candidate participants appears in 1000 documents and another appears in 1200 documents, the difference is not significant.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="apd.scorers.local.log_df_scorer.LogDFScorer">
-<em class="property">class </em><code class="sig-name descname">LogDFScorer</code><span class="sig-paren">(</span><em class="sig-param">base=10</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.log_df_scorer.LogDFScorer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">LogDFScorer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">base</span><span class="o">=</span><span class="default_value">10</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.log_df_scorer.LogDFScorer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The logarithmic document frequency scorer is based on the normal document frequency summation.
 The difference is that before normalization, the scorer takes the the logarithm of the scores.
 In this way, the scores are not overly-biased towards candidate participants that appear disproportionately.
@@ -769,9 +772,9 @@ To calculate the logarithm, the scorer accepts the logarithmic base in the const
 <dd class="field-odd"><p><strong>base</strong> (<em>int</em>) – The base of the logarithm.</p>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="apd.scorers.local.log_df_scorer.LogDFScorer.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">base=10</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.log_df_scorer.LogDFScorer.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">base</span><span class="o">=</span><span class="default_value">10</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.log_df_scorer.LogDFScorer.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the scorer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -780,9 +783,9 @@ To calculate the logarithm, the scorer accepts the logarithmic base in the const
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="apd.scorers.local.log_df_scorer.LogDFScorer.score">
-<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">normalize_scores=True</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.log_df_scorer.LogDFScorer.score" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">candidates</span></em>, <em class="sig-param"><span class="n">normalize_scores</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.log_df_scorer.LogDFScorer.score" title="Permalink to this definition">¶</a></dt>
 <dd><p>Score the given candidates based on their relevance within the corpus.
 The score is normalized using the maximum score.</p>
 <dl class="field-list simple">
@@ -809,14 +812,14 @@ Here, normalization means rescaling between 0 and 1.</p></li>
 <span id="term-frequency-scorer"></span><h4>Term Frequency Scorer<a class="headerlink" href="#module-apd.scorers.local.tf_scorer" title="Permalink to this headline">¶</a></h4>
 <p>The term frequency (TF) scorer assigns a score to candidate participants based on the number of times in which they appear.
 Unlike the <a class="reference internal" href="#apd.scorers.local.df_scorer.DFScorer" title="apd.scorers.local.df_scorer.DFScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DFScorer</span></code></a>, candidates that appear several times in the same document are boosted.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="apd.scorers.local.tf_scorer.TFScorer">
 <em class="property">class </em><code class="sig-name descname">TFScorer</code><a class="headerlink" href="#apd.scorers.local.tf_scorer.TFScorer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The term frequency scorer counts the number of times a candidate participant appears in the event corpus.
 This becomes the candidate participant’s score.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="apd.scorers.local.tf_scorer.TFScorer.score">
-<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">normalize_scores=True</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.tf_scorer.TFScorer.score" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">candidates</span></em>, <em class="sig-param"><span class="n">normalize_scores</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.tf_scorer.TFScorer.score" title="Permalink to this definition">¶</a></dt>
 <dd><p>Score the given candidates based on their relevan across all documentsce within the corpus.
 The score is normalized using the maximum score</p>
 <dl class="field-list simple">
@@ -845,9 +848,9 @@ Here, normalization means rescaling between 0 and 1.</p></li>
 Like the term scorer, it favors candidate participants that appear several times in the same document.</p>
 <p>The difference is that the logarithmic version decreases the difference between candidates that appear very often and those which do not.
 The intuition is that if a candidate participants appears 1000 times and another appears 1200 times, the difference is not significant.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="apd.scorers.local.log_tf_scorer.LogTFScorer">
-<em class="property">class </em><code class="sig-name descname">LogTFScorer</code><span class="sig-paren">(</span><em class="sig-param">base=10</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.log_tf_scorer.LogTFScorer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">LogTFScorer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">base</span><span class="o">=</span><span class="default_value">10</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.log_tf_scorer.LogTFScorer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The logarithmic term frequency scorer is based on the normal term frequency summation.
 The difference is that before normalization, the scorer takes the the logarithm of the scores.
 In this way, the scores are not overly-biased towards candidate participants that appear disproportionately.
@@ -857,9 +860,9 @@ To calculate the logarithm, the scorer accepts the logarithmic base in the const
 <dd class="field-odd"><p><strong>base</strong> (<em>int</em>) – The base of the logarithm.</p>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="apd.scorers.local.log_tf_scorer.LogTFScorer.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">base=10</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.log_tf_scorer.LogTFScorer.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">base</span><span class="o">=</span><span class="default_value">10</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.log_tf_scorer.LogTFScorer.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the scorer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -868,9 +871,9 @@ To calculate the logarithm, the scorer accepts the logarithmic base in the const
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="apd.scorers.local.log_tf_scorer.LogTFScorer.score">
-<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">normalize_scores=True</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.log_tf_scorer.LogTFScorer.score" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">candidates</span></em>, <em class="sig-param"><span class="n">normalize_scores</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.log_tf_scorer.LogTFScorer.score" title="Permalink to this definition">¶</a></dt>
 <dd><p>Score the given candidates based on their relevance within the corpus.
 The score is normalized using the maximum score.</p>
 <dl class="field-list simple">
@@ -898,9 +901,9 @@ Here, normalization means rescaling between 0 and 1.</p></li>
 <p>The TF-IDF scorer assigns a score the candidate participants similarly to the <a class="reference internal" href="nlp.html#nlp.weighting.tfidf.TFIDF" title="nlp.weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a> term-weighting scheme.
 The IDF table does not have to use the event corpus.
 Therefore this scorer can be used to promote candidate participants that appear frequently in the event corpus, but rarely outside of it.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="apd.scorers.local.tfidf_scorer.TFIDFScorer">
-<em class="property">class </em><code class="sig-name descname">TFIDFScorer</code><span class="sig-paren">(</span><em class="sig-param">idf</em>, <em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.tfidf_scorer.TFIDFScorer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">TFIDFScorer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">idf</span></em>, <em class="sig-param"><span class="n">documents</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.tfidf_scorer.TFIDFScorer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The TF-IDF scorer assigns a score the candidate participants similarly to the <a class="reference internal" href="nlp.html#nlp.weighting.tfidf.TFIDF" title="nlp.weighting.tfidf.TFIDF"><code class="xref py py-class docutils literal notranslate"><span class="pre">TFIDF</span></code></a> term-weighting scheme.
 Therefore the scorer depends on an IDF table, given as a dictionary, and the number of documents in it.</p>
 <dl class="field-list simple">
@@ -912,9 +915,9 @@ The keys are the terms, and the corresponding values are the number of documents
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="apd.scorers.local.tfidf_scorer.TFIDFScorer.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">idf</em>, <em class="sig-param">documents</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.tfidf_scorer.TFIDFScorer.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">idf</span></em>, <em class="sig-param"><span class="n">documents</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.tfidf_scorer.TFIDFScorer.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the term-weighting scheme with the IDF table and the number of documents in that scheme.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -934,9 +937,9 @@ The keys are the terms, and the corresponding values are the number of documents
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="apd.scorers.local.tfidf_scorer.TFIDFScorer.score">
-<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">normalize_scores=True</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.tfidf_scorer.TFIDFScorer.score" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">candidates</span></em>, <em class="sig-param"><span class="n">normalize_scores</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.scorers.local.tfidf_scorer.TFIDFScorer.score" title="Permalink to this definition">¶</a></dt>
 <dd><p>Score the given candidates based on their relevance within the corpus.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -966,7 +969,7 @@ Here, normalization means rescaling between 0 and 1.</p></li>
 This step removes candidate participants that are unlikely to be participants.
 Possibly, they are removed on the basis of a low score.
 The functionality revolves around the <a class="reference internal" href="#apd.filters.filter.Filter" title="apd.filters.filter.Filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Filter</span></code></a>’s <a class="reference internal" href="#apd.filters.filter.Filter.filter" title="apd.filters.filter.Filter.filter"><code class="xref py py-func docutils literal notranslate"><span class="pre">filter()</span></code></a> method.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="apd.filters.filter.Filter">
 <em class="property">class </em><code class="sig-name descname">Filter</code><a class="headerlink" href="#apd.filters.filter.Filter" title="Permalink to this definition">¶</a></dt>
 <dd><p>The filter goes through candidate participants and removes those that are unlikely to be valid participants.</p>
@@ -974,9 +977,9 @@ The functionality revolves around the <a class="reference internal" href="#apd.f
 The input candidates should be the product of a <a class="reference internal" href="#apd.scorers.scorer.Scorer" title="apd.scorers.scorer.Scorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scorer</span></code></a> process.
 In other words, they should be a dictionary, with the keys being the candidates and the values being the score.
 The function returns a subset of the input candidates (and their scores) that passed the filtering test.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="apd.filters.filter.Filter.filter">
-<code class="sig-name descname">filter</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.filters.filter.Filter.filter" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">filter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">candidates</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.filters.filter.Filter.filter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filter candidate participants that are not credible.
 The basic filter returns all participants.</p>
 <dl class="field-list simple">
@@ -994,7 +997,7 @@ The input candidates should be the product of a <a class="reference internal" hr
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="apd.filters.filter.Filter.__weakref__">
 <code class="sig-name descname">__weakref__</code><a class="headerlink" href="#apd.filters.filter.Filter.__weakref__" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of weak references to the object (if defined)</p>
@@ -1010,16 +1013,16 @@ Therefore these kind of filters are usually very limited in what they can do.</p
 <span id="threshold-filter"></span><h4>Threshold Filter<a class="headerlink" href="#module-apd.filters.local.threshold_filter" title="Permalink to this headline">¶</a></h4>
 <p>The threshold filter follows a simple rule: only candidate participants with a score that is above a certain threshold are credible.
 Anything else is filtered out.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="apd.filters.local.threshold_filter.ThresholdFilter">
-<em class="property">class </em><code class="sig-name descname">ThresholdFilter</code><span class="sig-paren">(</span><em class="sig-param">threshold</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.filters.local.threshold_filter.ThresholdFilter" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">ThresholdFilter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">threshold</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.filters.local.threshold_filter.ThresholdFilter" title="Permalink to this definition">¶</a></dt>
 <dd><p>The threshold filter excludes candidate participants with a score that is lower than a specified threshold.
 This threshold is stored as an instance variable and re-used by the <a class="reference internal" href="#apd.filters.local.threshold_filter.ThresholdFilter.filter" title="apd.filters.local.threshold_filter.ThresholdFilter.filter"><code class="xref py py-func docutils literal notranslate"><span class="pre">filter()</span></code></a> method.</p>
 <dl class="field-list simple">
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="apd.filters.local.threshold_filter.ThresholdFilter.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">threshold</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.filters.local.threshold_filter.ThresholdFilter.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">threshold</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.filters.local.threshold_filter.ThresholdFilter.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the filter with the threshold that will decide whether candidate participants will be retained.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1029,9 +1032,9 @@ The threshold is applied over the candidate participant scores.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="apd.filters.local.threshold_filter.ThresholdFilter.filter">
-<code class="sig-name descname">filter</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.filters.local.threshold_filter.ThresholdFilter.filter" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">filter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">candidates</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.filters.local.threshold_filter.ThresholdFilter.filter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filter candidate participants that are not credible.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1055,17 +1058,17 @@ The input candidates should be the product of a <a class="reference internal" hr
 <span id="rank-filter"></span><h4>Rank Filter<a class="headerlink" href="#module-apd.filters.local.rank_filter" title="Permalink to this headline">¶</a></h4>
 <p>The rank filter extracts the top _k_ candidates.
 Anything else is filtered out.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="apd.filters.local.rank_filter.RankFilter">
-<em class="property">class </em><code class="sig-name descname">RankFilter</code><span class="sig-paren">(</span><em class="sig-param">k</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.filters.local.rank_filter.RankFilter" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">RankFilter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">k</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.filters.local.rank_filter.RankFilter" title="Permalink to this definition">¶</a></dt>
 <dd><p>The rank filter is used to extract the top _k_ candidates.
 The _k_ parameter is passed on to the constructor and stored as an instance variable.
 It is then re-used by the <a class="reference internal" href="#apd.filters.local.rank_filter.RankFilter.filter" title="apd.filters.local.rank_filter.RankFilter.filter"><code class="xref py py-func docutils literal notranslate"><span class="pre">filter()</span></code></a> method.</p>
 <dl class="field-list simple">
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="apd.filters.local.rank_filter.RankFilter.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">k</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.filters.local.rank_filter.RankFilter.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">k</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.filters.local.rank_filter.RankFilter.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the filter with the k that will decide whether candidate participants will be retained.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1080,9 +1083,9 @@ It is then re-used by the <a class="reference internal" href="#apd.filters.local
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="apd.filters.local.rank_filter.RankFilter.filter">
-<code class="sig-name descname">filter</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.filters.local.rank_filter.RankFilter.filter" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">filter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">candidates</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.filters.local.rank_filter.RankFilter.filter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filter candidate participants that are not credible.
 The function sorts the candidates by score and then retains only the top _k_ candidates.</p>
 <dl class="field-list simple">
@@ -1116,7 +1119,7 @@ If a candidate participant cannot be resolved, then it is usually rejected.
 Those that can be resolved are accepted as valid participants.
 Both resolved and unresolved candidates are returned as a tuple.</p>
 <p>The functionality revolves around the <a class="reference internal" href="#apd.resolvers.resolver.Resolver" title="apd.resolvers.resolver.Resolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">Resolver</span></code></a>’s <a class="reference internal" href="#apd.resolvers.resolver.Resolver.resolve" title="apd.resolvers.resolver.Resolver.resolve"><code class="xref py py-func docutils literal notranslate"><span class="pre">resolve()</span></code></a> method.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="apd.resolvers.resolver.Resolver">
 <em class="property">class </em><code class="sig-name descname">Resolver</code><a class="headerlink" href="#apd.resolvers.resolver.Resolver" title="Permalink to this definition">¶</a></dt>
 <dd><p>The simplest resolver returns all candidates as resolved participants.
@@ -1126,9 +1129,9 @@ This functionality is namely the ability to resolve candidates.</p>
 <p>The functionality revolves around one the <a class="reference internal" href="#apd.resolvers.resolver.Resolver.resolve" title="apd.resolvers.resolver.Resolver.resolve"><code class="xref py py-func docutils literal notranslate"><span class="pre">resolve()</span></code></a> method
 The input candidates should be the product of a <a class="reference internal" href="#apd.scorers.scorer.Scorer" title="apd.scorers.scorer.Scorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scorer</span></code></a> process.
 In other words, they should be a dictionary, with the keys being the candidates and the values being the score.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="apd.resolvers.resolver.Resolver.resolve">
-<code class="sig-name descname">resolve</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.resolver.Resolver.resolve" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">resolve</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">candidates</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.resolver.Resolver.resolve" title="Permalink to this definition">¶</a></dt>
 <dd><p>The resolution function returns the same candidates as they were given, but as a list.
 They are sorted according to their score.</p>
 <dl class="field-list simple">
@@ -1148,7 +1151,7 @@ Therefore unresolved candidates are empty.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="apd.resolvers.resolver.Resolver.__weakref__">
 <code class="sig-name descname">__weakref__</code><a class="headerlink" href="#apd.resolvers.resolver.Resolver.__weakref__" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of weak references to the object (if defined)</p>
@@ -1166,9 +1169,9 @@ For example, the <a class="reference internal" href="#apd.resolvers.local.token_
 It takes candidate participants and tries to map them to the terms that generated them in the event corpus.
 This resolver is mainly aimed at resolving candidate participants generated by the <a class="reference internal" href="#apd.extractors.local.token_extractor.TokenExtractor" title="apd.extractors.local.token_extractor.TokenExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">TokenExtractor</span></code></a>.
 For example, if the extracted candidate participants are stemmed tokens, this resolver maps them to the word that is most likely to have generated them.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="apd.resolvers.local.token_resolver.TokenResolver">
-<em class="property">class </em><code class="sig-name descname">TokenResolver</code><span class="sig-paren">(</span><em class="sig-param">tokenizer</em>, <em class="sig-param">corpus</em>, <em class="sig-param">case_fold=True</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.local.token_resolver.TokenResolver" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">TokenResolver</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tokenizer</span></em>, <em class="sig-param"><span class="n">corpus</span></em>, <em class="sig-param"><span class="n">case_fold</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.local.token_resolver.TokenResolver" title="Permalink to this definition">¶</a></dt>
 <dd><p>The token resolver tries to map tokens to actual terms.
 To resolve tokens, it requires the same tokenizer that generated the candidate participants.
 This algorithm uses the tokenizer to construct a reverse index: what terms could have generated a token?
@@ -1184,9 +1187,9 @@ This corpus is used to look for the terms that map to the tokens given as candid
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="apd.resolvers.local.token_resolver.TokenResolver.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">tokenizer</em>, <em class="sig-param">corpus</em>, <em class="sig-param">case_fold=True</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.local.token_resolver.TokenResolver.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tokenizer</span></em>, <em class="sig-param"><span class="n">corpus</span></em>, <em class="sig-param"><span class="n">case_fold</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.local.token_resolver.TokenResolver.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the resolver.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1200,9 +1203,9 @@ This corpus is used to look for the terms that map to the tokens given as candid
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="apd.resolvers.local.token_resolver.TokenResolver.resolve">
-<code class="sig-name descname">resolve</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.local.token_resolver.TokenResolver.resolve" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">resolve</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">candidates</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.local.token_resolver.TokenResolver.resolve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resolve the given candidates by looking for the original words.
 They are sorted according to their score.</p>
 <dl class="field-list simple">
@@ -1241,9 +1244,9 @@ In this case, the resolver disambiguates using cosine similarity.</p></li>
 </div></blockquote>
 <p>For candidate participants that could be resolved, the resolver returns the page name.
 This acts as a link to the concept.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver">
-<em class="property">class </em><code class="sig-name descname">WikipediaNameResolver</code><span class="sig-paren">(</span><em class="sig-param">scheme</em>, <em class="sig-param">tokenizer</em>, <em class="sig-param">threshold</em>, <em class="sig-param">corpus</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">WikipediaNameResolver</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">scheme</span></em>, <em class="sig-param"><span class="n">tokenizer</span></em>, <em class="sig-param"><span class="n">threshold</span></em>, <em class="sig-param"><span class="n">corpus</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver" title="Permalink to this definition">¶</a></dt>
 <dd><p>The Wikipedia name resolver looks for pages that match the candidate’s name.
 It then maps the candidate to that page by returning the page name instead of the candidate.</p>
 <p>To resolve ambiguous participants, this resolver needs to calculate cosine similarity.
@@ -1268,9 +1271,9 @@ These documents are used to compare the similarity with the domain of the candid
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">scheme</em>, <em class="sig-param">tokenizer</em>, <em class="sig-param">threshold</em>, <em class="sig-param">corpus</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">scheme</span></em>, <em class="sig-param"><span class="n">tokenizer</span></em>, <em class="sig-param"><span class="n">threshold</span></em>, <em class="sig-param"><span class="n">corpus</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the resolver.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1286,9 +1289,9 @@ These documents are used to compare the similarity with the domain of the candid
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver.resolve">
-<code class="sig-name descname">resolve</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver.resolve" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">resolve</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">candidates</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver.resolve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resolve the given candidates.
 The resolved candidates are sorted in descending order of their score.
 However, resolved ambiguous candidates are at the end.</p>
@@ -1320,9 +1323,9 @@ In many cases, colloquial names of candidates are not the same as their formal n
 For example, <cite>FC Barcelona</cite> is commonly referred to simply as <cite>Barcelona</cite>.</p>
 <p>For candidate participants that could be resolved, the resolver returns the page name.
 This acts as a link to the concept.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver">
-<em class="property">class </em><code class="sig-name descname">WikipediaSearchResolver</code><span class="sig-paren">(</span><em class="sig-param">scheme</em>, <em class="sig-param">tokenizer</em>, <em class="sig-param">threshold</em>, <em class="sig-param">corpus</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">WikipediaSearchResolver</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">scheme</span></em>, <em class="sig-param"><span class="n">tokenizer</span></em>, <em class="sig-param"><span class="n">threshold</span></em>, <em class="sig-param"><span class="n">corpus</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver" title="Permalink to this definition">¶</a></dt>
 <dd><p>The Wikipedia search resolver looks for pages that include candidate names.
 The matches can be both in the title, but also in the content itself.</p>
 <p>The Wikipedia API automatically ranks articles by relevance.
@@ -1351,9 +1354,9 @@ These documents are used to compare the similarity with the domain of the candid
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">scheme</em>, <em class="sig-param">tokenizer</em>, <em class="sig-param">threshold</em>, <em class="sig-param">corpus</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">scheme</span></em>, <em class="sig-param"><span class="n">tokenizer</span></em>, <em class="sig-param"><span class="n">threshold</span></em>, <em class="sig-param"><span class="n">corpus</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the resolver.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1369,9 +1372,9 @@ These documents are used to compare the similarity with the domain of the candid
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver.resolve">
-<code class="sig-name descname">resolve</code><span class="sig-paren">(</span><em class="sig-param">candidates</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver.resolve" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">resolve</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">candidates</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver.resolve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resolve the given candidates.
 They are sorted according to their score.</p>
 <dl class="field-list simple">
@@ -1399,7 +1402,7 @@ This step is analogous to entity set expansion: it looks for similar participant
 <p>The functionality revolves around the <a class="reference internal" href="#apd.extrapolators.extrapolator.Extrapolator" title="apd.extrapolators.extrapolator.Extrapolator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Extrapolator</span></code></a>’s <a class="reference internal" href="#apd.extrapolators.extrapolator.Extrapolator.extrapolate" title="apd.extrapolators.extrapolator.Extrapolator.extrapolate"><code class="xref py py-func docutils literal notranslate"><span class="pre">extrapolate()</span></code></a> method.
 The main function returns the participants in descending order of their relevance to the event’s corpus.
 The participants should be ranked in descending order of their relevance.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="apd.extrapolators.extrapolator.Extrapolator">
 <em class="property">class </em><code class="sig-name descname">Extrapolator</code><a class="headerlink" href="#apd.extrapolators.extrapolator.Extrapolator" title="Permalink to this definition">¶</a></dt>
 <dd><p>The simplest extrapolator returns no new participants.
@@ -1407,9 +1410,9 @@ However, it defines the functionality that is common to all other extrapolators.
 <p>The functionality revolves around the <a class="reference internal" href="#apd.extrapolators.extrapolator.Extrapolator.extrapolate" title="apd.extrapolators.extrapolator.Extrapolator.extrapolate"><code class="xref py py-func docutils literal notranslate"><span class="pre">extrapolate()</span></code></a> method.
 The input participants should be the product of a <a class="reference internal" href="#apd.resolvers.resolver.Resolver" title="apd.resolvers.resolver.Resolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">Resolver</span></code></a> process: a list of strings representing participants.
 The output, then, is a list of new participants that the extrapolator considers valid for the event.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="apd.extrapolators.extrapolator.Extrapolator.extrapolate">
-<code class="sig-name descname">extrapolate</code><span class="sig-paren">(</span><em class="sig-param">participants</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extrapolators.extrapolator.Extrapolator.extrapolate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">extrapolate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">participants</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extrapolators.extrapolator.Extrapolator.extrapolate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extrapolate from the given participants.
 This extrapolator returns no new participants.</p>
 <dl class="field-list simple">
@@ -1425,7 +1428,7 @@ This extrapolator returns no new participants.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="apd.extrapolators.extrapolator.Extrapolator.__weakref__">
 <code class="sig-name descname">__weakref__</code><a class="headerlink" href="#apd.extrapolators.extrapolator.Extrapolator.__weakref__" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of weak references to the object (if defined)</p>
@@ -1466,9 +1469,9 @@ The most relevant articles in these communities are scored for relevance by the 
 Therefore the process is very slow and can take minutes to conclude.
 For this reason, you should be careful with the paramaters that you provide.</p>
 </div>
-<dl class="class">
+<dl class="py class">
 <dt id="apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator">
-<em class="property">class </em><code class="sig-name descname">WikipediaExtrapolator</code><span class="sig-paren">(</span><em class="sig-param">corpus</em>, <em class="sig-param">tokenizer</em>, <em class="sig-param">scheme</em>, <em class="sig-param">threshold=0</em>, <em class="sig-param">first_level_links=100</em>, <em class="sig-param">second_level_links=1000</em>, <em class="sig-param">first_level_similarity=0</em>, <em class="sig-param">second_level_similarity=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">WikipediaExtrapolator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">corpus</span></em>, <em class="sig-param"><span class="n">tokenizer</span></em>, <em class="sig-param"><span class="n">scheme</span></em>, <em class="sig-param"><span class="n">threshold</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">first_level_links</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">second_level_links</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">first_level_similarity</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">second_level_similarity</span><span class="o">=</span><span class="default_value">0.5</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator" title="Permalink to this definition">¶</a></dt>
 <dd><p>The Wikipedia extrapolator looks for new participants that are tightly-linked with resolved participants.
 This definition is based on a graph, and communities are extracted using the Girvan-Newman algorithm.</p>
 <p>To resolve ambiguous participants, this resolver needs to calculate cosine similarity.
@@ -1498,9 +1501,9 @@ These documents are used to compare the similarity with the domain of the candid
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">corpus</em>, <em class="sig-param">tokenizer</em>, <em class="sig-param">scheme</em>, <em class="sig-param">threshold=0</em>, <em class="sig-param">first_level_links=100</em>, <em class="sig-param">second_level_links=1000</em>, <em class="sig-param">first_level_similarity=0</em>, <em class="sig-param">second_level_similarity=0.5</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">corpus</span></em>, <em class="sig-param"><span class="n">tokenizer</span></em>, <em class="sig-param"><span class="n">scheme</span></em>, <em class="sig-param"><span class="n">threshold</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">first_level_links</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">second_level_links</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">first_level_similarity</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">second_level_similarity</span><span class="o">=</span><span class="default_value">0.5</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the extrapolator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1519,9 +1522,9 @@ These documents are used to compare the similarity with the domain of the candid
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator.extrapolate">
-<code class="sig-name descname">extrapolate</code><span class="sig-paren">(</span><em class="sig-param">participants</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator.extrapolate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">extrapolate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">participants</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator.extrapolate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extrapolate the given participants.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1549,15 +1552,15 @@ This means that all participants share their name with a Wikipedia page.</p>
 This step modifies the final participants to make them more useful to how they will be used.</p>
 <p>The functionality revolves around one method: the <a class="reference internal" href="#apd.postprocessors.postprocessor.Postprocessor.postprocess" title="apd.postprocessors.postprocessor.Postprocessor.postprocess"><code class="xref py py-func docutils literal notranslate"><span class="pre">postprocess()</span></code></a> method.
 This function returns all participants, but with some changes made to them.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="apd.postprocessors.postprocessor.Postprocessor">
 <em class="property">class </em><code class="sig-name descname">Postprocessor</code><a class="headerlink" href="#apd.postprocessors.postprocessor.Postprocessor" title="Permalink to this definition">¶</a></dt>
 <dd><p>The simplest post-processor returns the participants without any changes.
 All other post-processors may add functionality to change participants.
 However, all post-processors must return all participants and in the same order.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="apd.postprocessors.postprocessor.Postprocessor.postprocess">
-<code class="sig-name descname">postprocess</code><span class="sig-paren">(</span><em class="sig-param">participants</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.postprocessors.postprocessor.Postprocessor.postprocess" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">postprocess</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">participants</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.postprocessors.postprocessor.Postprocessor.postprocess" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the same participants as those received.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1572,7 +1575,7 @@ However, all post-processors must return all participants and in the same order.
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="apd.postprocessors.postprocessor.Postprocessor.__weakref__">
 <code class="sig-name descname">__weakref__</code><a class="headerlink" href="#apd.postprocessors.postprocessor.Postprocessor.__weakref__" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of weak references to the object (if defined)</p>
@@ -1598,9 +1601,9 @@ Therefore Wikipedia-based resolvers and extrapolators make for good candidates b
 The <a class="reference internal" href="#apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver" title="apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">WikipediaNameResolver</span></code></a> and the <a class="reference internal" href="#apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver" title="apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver"><code class="xref py py-class docutils literal notranslate"><span class="pre">WikipediaSearchResolver</span></code></a>,
 as well as the <a class="reference internal" href="#apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator" title="apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator"><code class="xref py py-class docutils literal notranslate"><span class="pre">WikipediaExtrapolator</span></code></a> return participants as Wikipedia concepts.</p>
 </div>
-<dl class="class">
+<dl class="py class">
 <dt id="apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor">
-<em class="property">class </em><code class="sig-name descname">WikipediaPostprocessor</code><span class="sig-paren">(</span><em class="sig-param">remove_accents=True</em>, <em class="sig-param">remove_brackets=True</em>, <em class="sig-param">surname_only=True</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">WikipediaPostprocessor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">remove_accents</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">remove_brackets</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">surname_only</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor" title="Permalink to this definition">¶</a></dt>
 <dd><p>The Wikipedia post-processor assumes that the given participants map to Wikipedia pages.
 It uses this knowledge to get additional information about participants and post-process them.</p>
 <p>The post-processor can be set up to:</p>
@@ -1631,9 +1634,9 @@ Note that when only surnames are retained, brackets are removed.</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">remove_accents=True</em>, <em class="sig-param">remove_brackets=True</em>, <em class="sig-param">surname_only=True</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">remove_accents</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">remove_brackets</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">surname_only</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the postprocessor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1650,9 +1653,9 @@ Note that when only surnames are retained, brackets are removed.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor.postprocess">
-<code class="sig-name descname">postprocess</code><span class="sig-paren">(</span><em class="sig-param">participants</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor.postprocess" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">postprocess</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">participants</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor.postprocess" title="Permalink to this definition">¶</a></dt>
 <dd><p>Postprocess the given participants.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1695,11 +1698,19 @@ It is assumed that all map to a Wikipedia page.</p>
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2020, Nicholas Mamo
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -1710,7 +1721,6 @@ It is assumed that all map to a Wikipedia page.</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {
