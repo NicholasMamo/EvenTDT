@@ -56,6 +56,24 @@ class TestPackage(unittest.TestCase):
 
         self.assertEqual(1, precision(list(range(10)), list(range(10))))
 
+    def test_precision_gold_subset(self):
+        """
+        Test that when the gold set is a subset of the items, the precision is less than 1.
+        """
+
+        items = list(range(0, 5))
+        gold = items[:3]
+        self.assertLess(precision(items, gold), 1)
+
+    def test_precision_items_subset(self):
+        """
+        Test that when the item set is a subset of the gold set, the precision is equal to 1.
+        """
+
+        gold = list(range(0, 5))
+        items = gold[:3]
+        self.assertEqual(1, precision(items, gold))
+
     def test_precision_order_irrelevant(self):
         """
         Test that the order of the item and gold set items is irrelevant.
@@ -130,6 +148,24 @@ class TestPackage(unittest.TestCase):
         """
 
         self.assertEqual(1, recall(list(range(10)), list(range(10))))
+
+    def test_recall_gold_subset(self):
+        """
+        Test that when the gold set is a subset of the items, the recall is 1.
+        """
+
+        items = list(range(0, 5))
+        gold = items[:3]
+        self.assertEqual(1, recall(items, gold))
+
+    def test_recall_items_subset(self):
+        """
+        Test that when the item set is a subset of the gold set, the recall is less than 1.
+        """
+
+        gold = list(range(0, 5))
+        items = gold[:3]
+        self.assertLess(recall(items, gold), 1)
 
     def test_recall_order_irrelevant(self):
         """
