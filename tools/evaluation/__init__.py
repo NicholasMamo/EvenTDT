@@ -56,3 +56,34 @@ def recall(items, gold):
     items, gold = set(items), set(gold)
     correct = { item for item in gold if item in items }
     return len(correct) / len(gold)
+
+def f1(precision, recall):
+    """
+    Calculate the harmonic mean of the precision and recall, bounded between 0 and 1:
+
+    .. math::
+
+        \\text{F1} = 2 \\cdot \\frac{\\text{precision} \\cdot \\text{recall}}{\\text{precision} + \\text{recall}}
+
+    :param precision: The precision of the item set, see :func:`~tools.evaluation.precision`.
+    :type precision: float
+    :param recall: The recall of the item set, see :func:`~tools.evaluation.recall`.
+    :type recall: float
+
+    :return: The harmonic mean of the precision and recall, bounded between 0 and 1.
+    :rtype: float
+
+    :raises ValueError: When the precision is not between 0 and 1.
+    :raises ValueError: When the recall is not between 0 and 1.
+    """
+
+    if not 0 <= precision <= 1:
+        raise ValueError(f"Precision should be between 0 and 1; received { precision }")
+
+    if not 0 <= recall <= 1:
+        raise ValueError(f"Recall should be between 0 and 1; received { recall }")
+
+    if precision == recall == 0:
+        return 0
+
+    return 2 * (precision * recall) / (precision + recall)

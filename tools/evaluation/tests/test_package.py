@@ -14,7 +14,7 @@ for path in paths:
     if path not in sys.path:
         sys.path.append(path)
 
-from evaluation import precision, recall
+from evaluation import precision, recall, f1
 
 class TestPackage(unittest.TestCase):
     """
@@ -206,3 +206,95 @@ class TestPackage(unittest.TestCase):
         """
 
         self.assertEqual(0.6, recall(range(0, 3), list(range(0, 5)) + list(range(0, 5))))
+
+    def test_f1_precision_negative(self):
+        """
+        Test that when the precision is negative, the F1 raises a ValueError.
+        """
+
+        self.assertRaises(ValueError, f1, -1, 0.5)
+
+    def test_f1_precision_zero(self):
+        """
+        Test that when the precision is zero, the F1 does not raise a ValueError.
+        """
+
+        self.assertEqual(0, f1(0, 0.5))
+
+    def test_f1_precision_one(self):
+        """
+        Test that when the precision is one, the F1 does not raise a ValueError.
+        """
+
+        self.assertTrue(f1(1, 0.5))
+
+    def test_f1_precision_large(self):
+        """
+        Test that when the precision is greater than 1, the F1 raises a ValueError.
+        """
+
+        self.assertRaises(ValueError, f1, 2, 0.5)
+
+    def test_f1_recall_negative(self):
+        """
+        Test that when the recall is negative, the F1 raises a ValueError.
+        """
+
+        self.assertRaises(ValueError, f1, 0.5, -1)
+
+    def test_f1_recall_zero(self):
+        """
+        Test that when the recall is zero, the F1 does not raise a ValueError.
+        """
+
+        self.assertEqual(0, f1(0.5, 0))
+
+    def test_f1_recall_one(self):
+        """
+        Test that when the recall is one, the F1 does not raise a ValueError.
+        """
+
+        self.assertTrue(f1(0.5, 1))
+
+    def test_f1_recall_large(self):
+        """
+        Test that when the recall is greater than 1, the F1 raises a ValueError.
+        """
+
+        self.assertRaises(ValueError, f1, 0.5, 2)
+
+    def test_f1_precision_recall_zero(self):
+        """
+        Test that when precision and recall are both 0, the F1 is also 0.
+        """
+
+        self.assertEqual(0, f1(0, 0))
+
+    def test_f1_precision_only_zero(self):
+        """
+        Test that when precision is zero, F1 is also zero.
+        """
+
+        self.assertEqual(0, f1(0, 1))
+
+    def test_f1_recall_only_zero(self):
+        """
+        Test that when recall is zero, F1 is also zero.
+        """
+
+        self.assertEqual(0, f1(1, 0))
+
+    def test_f1_precision_recall_one(self):
+        """
+        Test that when precision and recall are both one, F1 is also one.
+        """
+
+        self.assertEqual(1, f1(1, 1))
+
+    def test_f1_example(self):
+        """
+        Test the F1 function with worked examples.
+        """
+
+        self.assertEqual(0.5, f1(0.5, 0.5))
+        self.assertEqual(0.421, round(f1(0.308, 0.667), 3))
