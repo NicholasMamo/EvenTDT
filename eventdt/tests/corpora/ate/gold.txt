@@ -1,0 +1,10 @@
+offsid
+keeper
+gol
+yellow
+book
+red
+card
+foul
+var
+ref
