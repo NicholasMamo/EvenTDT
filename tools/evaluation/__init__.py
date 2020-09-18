@@ -3,6 +3,22 @@ The evaluation package includes tools to evaluate different applications.
 At the package-level are implementations of common metrics, with a focus on information retrieval.
 """
 
+def precise(items, gold):
+    """
+    Get a set of items that are in the gold set.
+    This function automatically removes duplicates.
+
+    :param items: A list of retrieved items.
+    :type items: list or set
+    :param gold: The gold standard items.
+    :type gold: list or set
+
+    :return: A set of items that are in the gold standard.
+    :rtype: set
+    """
+
+    return { item for item in items if item in gold }
+
 def precision(items, gold):
     """
     Calculate the precision of the given items by evaluating how many of them are in the gold standard.
