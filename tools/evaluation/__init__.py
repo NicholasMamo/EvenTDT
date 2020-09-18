@@ -44,7 +44,7 @@ def precision(items, gold):
 
     items, gold = set(items), set(gold)
     correct = { item for item in items if item in gold }
-    return len(correct) / len(items)
+    return len(precise(items, gold)) / len(items)
 
 def recall(items, gold):
     """
