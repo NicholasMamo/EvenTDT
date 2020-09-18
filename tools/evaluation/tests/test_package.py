@@ -14,7 +14,7 @@ for path in paths:
     if path not in sys.path:
         sys.path.append(path)
 
-from evaluation import precise, precision, recall, f1
+from evaluation import precise, recalled, precision, recall, f1
 
 class TestPackage(unittest.TestCase):
     """
@@ -79,6 +79,65 @@ class TestPackage(unittest.TestCase):
         """
 
         self.assertEqual(set(range(0, 3)), precise(range(0, 5), list(range(0, 3)) + list(range(0, 3))))
+
+    def test_recalled_empty(self):
+        """
+        Test that when the item set is empty, the recalled items is also an empty set.
+        """
+
+        self.assertEqual(set(), recalled([ ], range(0, 5)))
+
+    def test_recalled_empty_gold(self):
+        """
+        Test that when the gold set is empty, the recalled items is also an empty set.
+        """
+
+        self.assertEqual(set(), recalled(range(0, 5), [ ]))
+
+    def test_recalled_identical_sets(self):
+        """
+        Test that when the item set is the same as the gold set, the same items are returned.
+        """
+
+        self.assertEqual(set(range(0, 5)), recalled(range(0, 5), range(0, 5)))
+
+    def test_recalled_items_subset(self):
+        """
+        Test that when the item set is a subset of the gold set, only the items that are also in the gold set are returned.
+        """
+
+        self.assertEqual(set(range(0, 3)), recalled(range(0, 3), range(0, 5)))
+
+    def test_recalled_gold_subset(self):
+        """
+        Test that when the gold set is a subset of the items set, the items in the gold set are returned.
+        """
+
+        self.assertEqual(set(range(0, 3)), recalled(range(0, 5), range(0, 3)))
+
+    def test_recalled_list_set(self):
+        """
+        Test that the recalled function accepts lists and sets.
+        """
+
+        self.assertEqual(set(range(0, 3)), recalled(list(range(0, 5)), list(range(0, 3))))
+        self.assertEqual(set(range(0, 3)), recalled(set(range(0, 5)), list(range(0, 3))))
+        self.assertEqual(set(range(0, 3)), recalled(list(range(0, 5)), set(range(0, 3))))
+        self.assertEqual(set(range(0, 3)), recalled(set(range(0, 5)), set(range(0, 3))))
+
+    def test_recalled_duplicate_items(self):
+        """
+        Test that the recalled function ignores duplicates in the item set.
+        """
+
+        self.assertEqual(set(range(0, 3)), recalled(list(range(0, 5)) + list(range(0, 5)), range(0, 3)))
+
+    def test_recalled_duplicate_gold(self):
+        """
+        Test that the recalled function ignores duplicates in the gold set.
+        """
+
+        self.assertEqual(set(range(0, 3)), recalled(range(0, 5), list(range(0, 3)) + list(range(0, 3))))
 
     def test_precision_empty(self):
         """

@@ -19,6 +19,22 @@ def precise(items, gold):
 
     return { item for item in items if item in gold }
 
+def recalled(items, gold):
+    """
+    Get a set of items that were recalled from the gold set.
+    This function automatically removes duplicates.
+
+    :param items: A list of retrieved items.
+    :type items: list or set
+    :param gold: The gold standard items.
+    :type gold: list or set
+
+    :return: A set of items recalled from the gold standard.
+    :rtype: set
+    """
+
+    return { item for item in gold if item in items }
+
 def precision(items, gold):
     """
     Calculate the precision of the given items by evaluating how many of them are in the gold standard.
