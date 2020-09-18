@@ -9,7 +9,7 @@ To run the tool, use:
 
     ./tools/evaluation/ate.py \\
     --file evaluation/ate/results/terms.json \\
-    --gold evaluation/ate/results/gold.json \\
+    --gold evaluation/ate/results/gold.txt \\
     --output evaluation/ate/results/results.json
 
 Accepted arguments:
@@ -25,7 +25,7 @@ The output is a JSON file with the following structure:
     {
         "meta": {
             "file": "evaluation/ate/results/terms.json",
-            "gold": "evaluation/ate/results/gold.json",
+            "gold": { "offsid": "offsid", "keeper": "keeper" },
             "output": "evaluation/ate/results/results.json",
             "terms": [ "offsid", "ff", "keeper", "equalis", "baller" ]
         }
@@ -81,8 +81,8 @@ def main():
     """
     args = setup_args()
     cmd = tools.meta(args)
-    terms = load_terms(args.file)
-    cmd['terms'] = terms
+    terms, gold = load_terms(args.file), load_gold(args.gold)
+    cmd['terms'], cmd['gold'] = terms, gold
 
     """
     Save the results to the output file.
@@ -118,6 +118,26 @@ def load_terms(file):
                 _terms.extend(data['bootstrapped'])
             elif 'terms' in data:
                 _terms.extend([ term['term'] for term in data['terms'] ])
+
+    return _terms
+
+def load_gold(file):
+    """
+    Load the gold standard from the given file.
+    The function expects one gold term on each line.
+
+    :param file: The path to the file containing the gold standard.
+    :type file: str
+
+    :return: A dictionary of the gold standard terms.
+             The key is the extracted term, and the value is the processed term.
+    :rtype: dict
+    """
+
+    _terms = { }
+
+    with open(file) as f:
+        _terms = { term.strip(): term.strip() for term in f.readlines() }
 
     return _terms
 

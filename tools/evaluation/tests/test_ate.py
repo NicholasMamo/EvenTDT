@@ -70,3 +70,72 @@ class TestATE(unittest.TestCase):
             data = json.loads(''.join(f.readlines()))
             original = data['meta']['seed'] + data['bootstrapped']
         self.assertEqual(original, terms)
+
+    def test_load_gold_all_words(self):
+        """
+        Test that when loading the gold standard words, all words are returned.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'eventdt', 'tests', 'corpora', 'ate', 'gold.txt')
+        gold = ate.load_gold(file)
+
+        """
+        Assert that the correct number of gold words are loaded.
+        """
+        self.assertEqual(10, len(gold))
+
+        """
+        Load each gold set separately and ensure it has been loaded.
+        """
+        with open(file, 'r') as f:
+            for word in f:
+                self.assertTrue(word.strip() in gold.keys())
+                self.assertTrue(word.strip() in gold.values())
+
+    def test_load_gold_dict(self):
+        """
+        Test that when loading the gold words, they are returned as a dictionary.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'eventdt', 'tests', 'corpora', 'ate', 'gold.txt')
+        gold = ate.load_gold(file)
+
+        """
+        Assert that the gold list is returned as a dictionary.
+        """
+        self.assertEqual(dict, type(gold))
+
+    def test_load_gold_no_newlines(self):
+        """
+        Test that when loading the gold words, the newline symbol is removed.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'eventdt', 'tests', 'corpora', 'ate', 'gold.txt')
+        gold = ate.load_gold(file)
+
+        """
+        Assert that the gold list is returned as a list.
+        """
+        self.assertTrue(all( '\n' not in word for word in gold.keys() ))
+        self.assertTrue(all( '\n' not in word for word in gold.values() ))
+
+    def test_load_gold_default_same(self):
+        """
+        Test that when loading the gold words, by default the loaded and processed terms are the same.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'eventdt', 'tests', 'corpora', 'ate', 'gold.txt')
+        gold = ate.load_gold(file)
+
+        """
+        Assert that the gold list is returned as a list.
+        """
+        self.assertTrue(all( key == value for key, value in gold.items() ))
+
+    def test_load_gold_empty(self):
+        """
+        Test that when the gold file is empty, the function returns an empty gold standard.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'eventdt', 'tests', 'corpora', 'ate', 'empty.txt')
+        self.assertEqual({ }, ate.load_gold(file))
