@@ -71,3 +71,8 @@ Evaluation
 
 .. automodule:: tools.evaluation
    :members:
+
+ATE
+---
+
+.. automodule:: tools.evaluation.ate
