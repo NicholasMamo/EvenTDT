@@ -8,16 +8,38 @@ To run the tool, use:
 .. code-block:: bash
 
     ./tools/evaluation/ate.py \\
-    -- file evaluation/ate/results/terms.json \\
-    -- file evaluation/ate/results/results.json
+    --file evaluation/ate/results/terms.json \\
+    --output evaluation/ate/results/results.json
 
 Accepted arguments:
 
     - ``-f --file``                  *<Required>* The terms output to evaluate, which may be the output of the :mod:`~tools.terms` or :mod:`~tools.bootstrap` tools.
     - ``-o --output``                *<Required>* The file where to save the results.
+
+The output is a JSON file with the following structure:
+
+.. code-block:: json
+
+    {
+        "meta": {
+            "file": "evaluation/ate/results/terms.json",
+            "output": "evaluation/ate/results/results.json"
+        }
+    }
 """
 
 import argparse
+import os
+import sys
+
+file_path = os.path.dirname(os.path.abspath(__file__))
+root = os.path.join(file_path, '../..')
+lib = os.path.join(root, 'eventdt')
+sys.path.insert(-1, root)
+sys.path.insert(-1, lib)
+
+import tools
+from tools import evaluation
 
 def setup_args():
     """
@@ -47,7 +69,8 @@ def main():
     """
 
     args = setup_args()
-    print(args)
+    cmd = tools.meta(args)
+    tools.save(args.output, { 'meta': cmd })
 
 if __name__ == "__main__":
     main()
