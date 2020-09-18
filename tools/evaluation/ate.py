@@ -9,11 +9,13 @@ To run the tool, use:
 
     ./tools/evaluation/ate.py \\
     --file evaluation/ate/results/terms.json \\
+    --gold evaluation/ate/results/gold.json \\
     --output evaluation/ate/results/results.json
 
 Accepted arguments:
 
-    - ``-f --file``                  *<Required>* The terms output to evaluate, which may be the output of the :mod:`~tools.terms` or :mod:`~tools.bootstrap` tools.
+    - ``-f --file``                  *<Required>* The file containing the terms to evaluate, which may be the output of the :mod:`~tools.terms` or :mod:`~tools.bootstrap` tools.
+    - ``-g --gold``                  *<Required>* The file containing the gold standard, with each word on a separate line.
     - ``-o --output``                *<Required>* The file where to save the results.
 
 The output is a JSON file with the following structure:
@@ -23,6 +25,7 @@ The output is a JSON file with the following structure:
     {
         "meta": {
             "file": "evaluation/ate/results/terms.json",
+            "gold": "evaluation/ate/results/gold.json",
             "output": "evaluation/ate/results/results.json",
             "terms": [ "offsid", "ff", "keeper", "equalis", "baller" ]
         }
@@ -49,7 +52,8 @@ def setup_args():
 
     Accepted arguments:
 
-        - ``-f --file``              *<Required>* The terms output to evaluate, which may be the output of the :mod:`~tools.terms` or :mod:`~tools.bootstrap` tools.
+        - ``-f --file``              *<Required>* The file containing the terms to evaluate, which may be the output of the :mod:`~tools.terms` or :mod:`~tools.bootstrap` tools.
+        - ``-g --gold``              *<Required>* The file containing the gold standard, with each word on a separate line.
         - ``-o --output``            *<Required>* The file where to save the results.
 
     :return: The command-line arguments.
@@ -58,7 +62,9 @@ def setup_args():
 
     parser = argparse.ArgumentParser(description="Evaluate the quality of an ATE algorithm's ranking.")
     parser.add_argument('-f', '--file', type=str, required=True,
-                        help='<Required> The terms output to evaluate, which may be the output of the terms or bootstrap tools.')
+                        help='<Required> The file containing the terms to evaluate, which may be the output of the terms or bootstrap tools.')
+    parser.add_argument('-g', '--gold', type=str, required=True,
+                        help='<Required> The file containing the gold standard, with each word on a separate line.')
     parser.add_argument('-o', '--output', type=str, required=True,
                         help='<Required> The file where to save the results.')
 
