@@ -59,7 +59,6 @@ def precision(items, gold):
         return 0
 
     items, gold = set(items), set(gold)
-    correct = { item for item in items if item in gold }
     return len(precise(items, gold)) / len(items)
 
 def recall(items, gold):
@@ -86,8 +85,7 @@ def recall(items, gold):
         return 0
 
     items, gold = set(items), set(gold)
-    correct = { item for item in gold if item in items }
-    return len(correct) / len(gold)
+    return len(recalled(items, gold)) / len(gold)
 
 def f1(precision, recall):
     """
