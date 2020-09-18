@@ -23,12 +23,14 @@ The output is a JSON file with the following structure:
     {
         "meta": {
             "file": "evaluation/ate/results/terms.json",
-            "output": "evaluation/ate/results/results.json"
+            "output": "evaluation/ate/results/results.json",
+            "terms": [ "offsid", "ff", "keeper", "equalis", "baller" ]
         }
     }
 """
 
 import argparse
+import json
 import os
 import sys
 
@@ -68,9 +70,50 @@ def main():
     Main program loop.
     """
 
+    """
+    Set up the arguments and the data to use.
+    """
     args = setup_args()
     cmd = tools.meta(args)
+    terms = load_terms(args.file)
+    cmd['terms'] = terms
+
+    """
+    Save the results to the output file.
+    """
     tools.save(args.output, { 'meta': cmd })
+
+def load_terms(file):
+    """
+    Load the terms from the given file.
+
+    - If the file is the output of the :mod:`~tools.terms` tool, all terms are loaded from it.
+    - If the file is the output of the :mod:`~tools.bootstrap` tool, the seed words and the bootstrapped words are loaded from it.
+
+    :param file: The path to the file containing a list of terms.
+    :type file: str
+
+    :return: A list of terms.
+    :rtype: list of str
+    """
+
+    _terms = [ ]
+
+    with open(file) as f:
+        data = json.loads(''.join(f.readlines()))
+
+        """
+        Check if this is the output of a tool.
+        """
+        if 'meta' in data:
+            meta = data['meta']
+            if 'seed' in meta:
+                _terms.extend(meta['seed'])
+                _terms.extend(data['bootstrapped'])
+            elif 'terms' in data:
+                _terms.extend([ term['term'] for term in data['terms'] ])
+
+    return _terms
 
 if __name__ == "__main__":
     main()
