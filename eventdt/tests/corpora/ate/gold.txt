@@ -1,8 +1,9 @@
-offsid
+offside
 keeper
 gol
-yellow
-book
+yellow card
+centre circle
+free-kick
 red
 card
 foul
