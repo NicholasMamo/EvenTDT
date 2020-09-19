@@ -10,13 +10,15 @@ To run the tool, use:
     ./tools/evaluation/ate.py \\
     --file evaluation/ate/results/terms.json \\
     --gold evaluation/ate/results/gold.txt \\
-    --output evaluation/ate/results/results.json
+    --output evaluation/ate/results/results.json \\
+    --stem
 
 Accepted arguments:
 
     - ``-f --file``                  *<Required>* The file containing the terms to evaluate, which may be the output of the :mod:`~tools.terms` or :mod:`~tools.bootstrap` tools.
     - ``-g --gold``                  *<Required>* The file containing the gold standard, with each word on a separate line.
     - ``-o --output``                *<Required>* The file where to save the results.
+    - ``--stem``                     *<Optional>* Stem the gold standard terms.
 
 The output is a JSON file with the following structure:
 
@@ -27,7 +29,8 @@ The output is a JSON file with the following structure:
             "file": "evaluation/ate/results/terms.json",
             "gold": { "offsid": "offsid", "keeper": "keeper" },
             "output": "evaluation/ate/results/results.json",
-            "terms": [ "offsid", "ff", "keeper", "equalis", "baller" ]
+            "terms": [ "offsid", "ff", "keeper", "equalis", "baller" ],
+            "stem": True
         }
     }
 """
@@ -55,6 +58,7 @@ def setup_args():
         - ``-f --file``              *<Required>* The file containing the terms to evaluate, which may be the output of the :mod:`~tools.terms` or :mod:`~tools.bootstrap` tools.
         - ``-g --gold``              *<Required>* The file containing the gold standard, with each word on a separate line.
         - ``-o --output``            *<Required>* The file where to save the results.
+        - ``--stem``                 *<Optional>* Stem the gold standard terms.
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
@@ -67,6 +71,9 @@ def setup_args():
                         help='<Required> The file containing the gold standard, with each word on a separate line.')
     parser.add_argument('-o', '--output', type=str, required=True,
                         help='<Required> The file where to save the results.')
+
+    parser.add_argument('--stem', action="store_true",
+                        help='<Optional> Stem the gold standard terms.')
 
     args = parser.parse_args()
     return args
