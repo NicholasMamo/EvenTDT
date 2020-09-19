@@ -82,7 +82,7 @@ class TestATE(unittest.TestCase):
         """
         Assert that the correct number of gold words are loaded.
         """
-        self.assertEqual(10, len(gold))
+        self.assertEqual(11, len(gold))
 
         """
         Load each gold set separately and ensure it has been loaded.
@@ -131,6 +131,22 @@ class TestATE(unittest.TestCase):
         Assert that the gold list is returned as a list.
         """
         self.assertTrue(all( key == value for key, value in gold.items() ))
+
+    def test_load_gold_multi_term_default(self):
+        """
+        Test that multi-word terms are retained as found by default.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'eventdt', 'tests', 'corpora', 'ate', 'gold.txt')
+        gold = ate.load_gold(file)
+
+        """
+        Assert that the gold list is returned as a list.
+        """
+        self.assertTrue(all( key == value for key, value in gold.items() ))
+        self.assertTrue('free-kick' in gold)
+        self.assertTrue('yellow card' in gold)
+        self.assertTrue('centre circle' in gold)
 
     def test_load_gold_empty(self):
         """

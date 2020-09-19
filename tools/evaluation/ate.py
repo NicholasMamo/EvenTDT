@@ -49,6 +49,8 @@ sys.path.insert(-1, lib)
 import tools
 from tools import evaluation
 
+from nlp import Tokenizer
+
 def setup_args():
     """
     Set up and get the list of command-line arguments.
@@ -131,20 +133,25 @@ def load_terms(file):
 def load_gold(file):
     """
     Load the gold standard from the given file.
-    The function expects one gold term on each line.
+    The function expects one gold term on each line and returns an inverted index.
+    The key is the processed term for easy look-up, and the value is the extracted term.
 
     :param file: The path to the file containing the gold standard.
     :type file: str
 
     :return: A dictionary of the gold standard terms.
-             The key is the extracted term, and the value is the processed term.
+             The key is the processed term, and the value is the actual, extracted term.
     :rtype: dict
     """
 
     _terms = { }
+    tokenizer = Tokenizer(stem=False, remove_punctuation=False)
 
     with open(file) as f:
-        _terms = { term.strip(): term.strip() for term in f.readlines() }
+        _extracted = [ term.strip() for term in f.readlines() ]
+        for term in _extracted:
+            processed  = ' '.join(tokenizer.tokenize(term))
+            _terms[processed] = term
 
     return _terms
 
