@@ -90,7 +90,7 @@ def main():
     """
     args = setup_args()
     cmd = tools.meta(args)
-    terms, gold = load_terms(args.file), load_gold(args.gold)
+    terms, gold = load_terms(args.file), load_gold(args.gold, stem=args.stem)
     cmd['terms'], cmd['gold'] = terms, gold
 
     """
@@ -130,7 +130,7 @@ def load_terms(file):
 
     return _terms
 
-def load_gold(file):
+def load_gold(file, stem=False):
     """
     Load the gold standard from the given file.
     The function expects one gold term on each line and returns an inverted index.
@@ -138,6 +138,8 @@ def load_gold(file):
 
     :param file: The path to the file containing the gold standard.
     :type file: str
+    :param stem: A boolean indicating whether to stem the gold standard terms.
+    :type stem: bool
 
     :return: A dictionary of the gold standard terms.
              The key is the processed term, and the value is the actual, extracted term.
@@ -145,7 +147,7 @@ def load_gold(file):
     """
 
     _terms = { }
-    tokenizer = Tokenizer(stem=False, remove_punctuation=False)
+    tokenizer = Tokenizer(stem=stem, remove_punctuation=False)
 
     with open(file) as f:
         _extracted = [ term.strip() for term in f.readlines() ]

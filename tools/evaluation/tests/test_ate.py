@@ -15,6 +15,7 @@ for path in paths:
         sys.path.append(path)
 
 from evaluation import ate
+from nlp import Tokenizer
 
 class TestATE(unittest.TestCase):
     """
@@ -155,3 +156,42 @@ class TestATE(unittest.TestCase):
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'eventdt', 'tests', 'corpora', 'ate', 'empty.txt')
         self.assertEqual({ }, ate.load_gold(file))
+
+    def test_load_gold_inverted_index(self):
+        """
+        Test that the gold standard is an inverted index.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'eventdt', 'tests', 'corpora', 'ate', 'gold.txt')
+        gold = ate.load_gold(file, stem=True)
+
+        """
+        Load each gold item separately and ensure its processed form is the key.
+        """
+        tokenizer = Tokenizer(remove_punctuation=False, stem=True)
+        with open(file, 'r') as f:
+            for word in f:
+                word = word.strip()
+                processed = ' '.join(tokenizer.tokenize(word))
+                self.assertTrue(processed in gold)
+                self.assertEqual(word, gold[processed])
+
+    def test_load_gold_stem(self):
+        """
+        Test that when stemming the gold standard terms, they are all stemmed.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'eventdt', 'tests', 'corpora', 'ate', 'gold.txt')
+        gold = ate.load_gold(file, stem=True)
+        self.assertTrue('offsid' in gold)
+        self.assertFalse('offside' in gold)
+
+    def test_load_gold_stem_multi_word(self):
+        """
+        Test that when loading and stemming the gold standard, multi-word terms are also stemmed.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'eventdt', 'tests', 'corpora', 'ate', 'gold.txt')
+        gold = ate.load_gold(file, stem=True)
+        self.assertTrue('centr circl' in gold)
+        self.assertEqual('centre circle', gold['centr circl'])
