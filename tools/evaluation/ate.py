@@ -29,7 +29,7 @@ The output is a JSON file with the following structure:
     {
         "meta": {
             "file": "evaluation/ate/results/terms.json",
-            "gold": { "offsid": "offsid", "keeper": "keeper" },
+            "gold": { "offsid": "offside", "keeper": "keeper" },
             "output": "evaluation/ate/results/results.json",
             "terms": [ "offsid", "ff", "keeper", "equalis", "baller" ],
             "stem": true,
@@ -41,7 +41,8 @@ The output is a JSON file with the following structure:
                 "precision": 0.5,
                 "recall": 0.5,
                 "f1": 0.5
-            }
+            },
+            "precise": [ "offsid", "keeper" ]
         }
     }
 """
@@ -120,7 +121,8 @@ def main():
             'precision': precision,
             'recall': recall,
             'f1': f1
-        }
+        },
+        'precise': list(evaluation.precise(terms, gold))
     }
 
     if args.verbose:
