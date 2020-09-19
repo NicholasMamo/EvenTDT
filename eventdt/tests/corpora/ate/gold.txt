@@ -5,7 +5,7 @@ yellow card
 centre circle
 free-kick
 red
-card
+shot
 foul
 var
 ref

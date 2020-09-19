@@ -186,6 +186,17 @@ class TestATE(unittest.TestCase):
         self.assertTrue('offsid' in gold)
         self.assertFalse('offside' in gold)
 
+    def test_load_gold_stem_origin_not_stemmed(self):
+        """
+        Test that when stemming the gold standard terms, the original term is not stemmed.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'eventdt', 'tests', 'corpora', 'ate', 'gold.txt')
+        gold = ate.load_gold(file, stem=True, split=True)
+        self.assertFalse('offside' in gold)
+        self.assertTrue('offsid' in gold)
+        self.assertEqual('offside', gold['offsid'])
+
     def test_load_gold_stem_multi_word(self):
         """
         Test that when loading and stemming the gold standard, multi-word terms are also stemmed.
@@ -195,3 +206,85 @@ class TestATE(unittest.TestCase):
         gold = ate.load_gold(file, stem=True)
         self.assertTrue('centr circl' in gold)
         self.assertEqual('centre circle', gold['centr circl'])
+
+    def test_load_gold_split_unigrams(self):
+        """
+        Test that when loading the gold standard and splitting terms, unigrams are loaded normally.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'eventdt', 'tests', 'corpora', 'ate', 'gold.txt')
+        gold = ate.load_gold(file, stem=False, split=True)
+        self.assertTrue('gol' in gold)
+        self.assertTrue('keeper' in gold)
+
+    def test_load_gold_split_multigrams(self):
+        """
+        Test that when loading the gold standard and splitting terms, multigrams are split.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'eventdt', 'tests', 'corpora', 'ate', 'gold.txt')
+        gold = ate.load_gold(file, stem=False, split=True)
+
+        self.assertTrue('yellow' in gold)
+        self.assertTrue('card' in gold)
+        self.assertFalse('yellow card' in gold)
+
+        self.assertTrue('centre' in gold)
+        self.assertTrue('circle' in gold)
+        self.assertFalse('centre circle' in gold)
+
+    def test_load_gold_split_multigrams_same_origin(self):
+        """
+        Test that when loading the gold standard and splitting terms, multigrams' values are the original words.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'eventdt', 'tests', 'corpora', 'ate', 'gold.txt')
+        gold = ate.load_gold(file, stem=False, split=True)
+
+        self.assertTrue('yellow' in gold)
+        self.assertTrue('card' in gold)
+        self.assertEqual('yellow card', gold['yellow'])
+        self.assertEqual('yellow card', gold['card'])
+
+        self.assertTrue('centre' in gold)
+        self.assertTrue('circle' in gold)
+        self.assertEqual('centre circle', gold['centre'])
+        self.assertEqual('centre circle', gold['circle'])
+
+    def test_load_gold_split_space(self):
+        """
+        Test that when loading the gold standard and splitting terms, the splits are based on spaces, not punctuation.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'eventdt', 'tests', 'corpora', 'ate', 'gold.txt')
+        gold = ate.load_gold(file, stem=False, split=True)
+
+        self.assertTrue('free-kick' in gold)
+        self.assertFalse('free' in gold)
+        self.assertFalse('kick' in gold)
+
+    def test_load_gold_split_stem_unigrams(self):
+        """
+        Test that when loading the gold standard with splitting and stemming, all unigrams are stemmed.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'eventdt', 'tests', 'corpora', 'ate', 'gold.txt')
+        gold = ate.load_gold(file, stem=True, split=True)
+        self.assertFalse('offside' in gold)
+        self.assertTrue('offsid' in gold)
+
+    def test_load_gold_split_stem_multigrams(self):
+        """
+        Test that when loading the gold standard with splitting and stemming, the components of the multi-grams are stemmed.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'eventdt', 'tests', 'corpora', 'ate', 'gold.txt')
+        gold = ate.load_gold(file, stem=True, split=True)
+
+        self.assertTrue('centr' in gold)
+        self.assertFalse('centre' in gold)
+        self.assertTrue('circl' in gold)
+        self.assertFalse('circle' in gold)
+
+        self.assertTrue('yellow' in gold)
+        self.assertTrue('card' in gold)
