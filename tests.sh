@@ -185,6 +185,9 @@ tools_tests() {
 
 	echo -e "${HIGHLIGHT}Evaluation${DEFAULT}"
 	python3 -m unittest tools.evaluation.tests.test_package
+
+	echo -e "${HIGHLIGHT}ATE${DEFAULT}"
+	python3 -m unittest tools.evaluation.tests.test_ate
 }
 
 twitter_tests() {
