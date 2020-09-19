@@ -123,6 +123,9 @@ def main():
         }
     }
 
+    if args.verbose:
+        pprint(results)
+
     """
     Save the results to the output file.
     """
@@ -192,6 +195,20 @@ def load_gold(file, stem=False, split=False):
                 _terms[processed] = term
 
     return _terms
+
+def pprint(results):
+    """
+    Pretty-print the given results to the shell.
+
+    :param results: The results to print to the shell.
+    :type results: dict
+    """
+
+    precision, recall, f1 = results['summary']['precision'], results['summary']['recall'], results['summary']['f1']
+
+    print('Precision        Recall        F1')
+    print('---------        ------        --')
+    print(f"{ str(round(precision, 4)).ljust(6, '0') }           { str(round(recall, 4)).ljust(6, '0') }        { str(round(f1, 4)).ljust(6, '0') }")
 
 if __name__ == "__main__":
     main()
