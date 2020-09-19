@@ -14,7 +14,7 @@ for path in paths:
     if path not in sys.path:
         sys.path.append(path)
 
-from evaluation import precise, recalled, precision, recall, f1
+from evaluation import precise, recalled, precision, pk, recall, f1
 
 class TestPackage(unittest.TestCase):
     """
@@ -231,6 +231,68 @@ class TestPackage(unittest.TestCase):
         """
 
         self.assertEqual(0.6, precision(range(0, 5), list(range(0, 3)) + list(range(0, 3))))
+
+    def test_pk_k_negative(self):
+        """
+        Test that the P@k function raises a ValueError when k is negative.
+        """
+
+        self.assertRaises(ValueError, pk, range(0, 5), range(0, 5), -1)
+
+    def test_pk_k_zero(self):
+        """
+        Test that the P@k function raises a ValueError when k is zero.
+        """
+
+        self.assertRaises(ValueError, pk, range(0, 5), range(0, 5), 0)
+
+    def test_pk_k_one(self):
+        """
+        Test that the P@k function accepts a value of one for k.
+        """
+
+        self.assertTrue(pk(range(0, 5), range(0, 5), 1))
+
+    def test_pk_empty(self):
+        """
+        Test that when the item list is empty, the precision is zero.
+        """
+
+        self.assertEqual(0, pk([ ], range(0, 5), 1))
+
+    def test_pk_inclusive(self):
+        """
+        Test that the P@k function includes _k_ items in the calculation.
+        """
+
+        self.assertEqual(0.6, pk(range(0, 5), range(0, 3), 5))
+
+    def test_pk_order(self):
+        """
+        Test that the P@k function bases the calculation on the first items.
+        """
+
+        self.assertEqual(1, pk(range(4, 9), range(0, 5), 1))
+        self.assertEqual(0.5, pk(range(4, 9), range(0, 5), 2))
+
+    def test_pk_large_k(self):
+        """
+        Test that when k is large, the P@k function ignores the extra items.
+        """
+
+        self.assertEqual(pk(range(4, 9), range(0, 7), 5), pk(range(4, 9), range(0, 7), 25))
+
+    def test_pk_example(self):
+        """
+        Test the P@k function with an example.
+        """
+
+        self.assertEqual(1, pk(range(4, 9), range(0, 7), 1))
+        self.assertEqual(1, pk(range(4, 9), range(0, 7), 2))
+        self.assertEqual(1, pk(range(4, 9), range(0, 7), 3))
+        self.assertEqual(0.75, pk(range(4, 9), range(0, 7), 4))
+        self.assertEqual(0.6, pk(range(4, 9), range(0, 7), 5))
+        self.assertEqual(0.6, pk(range(4, 9), range(0, 7), 6))
 
     def test_recall_empty(self):
         """

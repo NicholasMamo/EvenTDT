@@ -61,6 +61,38 @@ def precision(items, gold):
     items, gold = set(items), set(gold)
     return len(precise(items, gold)) / len(items)
 
+def pk(items, gold, k):
+    """
+    Calculate the Precision at k (P@k) at the given value, calculated as:
+
+    .. math::
+
+        \\text{P@k} = \\frac{1}{k} \\sum_{i=1}^k{p_i}
+
+    where :math:`k` is a parameter.
+    :math:`p_i` is 1 if item :math:`i` is precise and 0 otherwise.
+
+    This function assumes that the items are sorted in ascending order of rank.
+    So, the first item should be the highest-scoring one.
+
+    :param items: A list of items to evaluate.
+    :type items: list or set
+    :param gold: The gold standard items.
+    :type gold: list or set
+    :param k: The rank at which to calculate precision.
+    :type k: int
+
+    :return: The precision value of the top :math:`k` items.
+    :rtype: float
+
+    :raises ValueError: When k is below 1.
+    """
+
+    if k < 1:
+        raise ValueError(f"k must be at least 1; received { k }")
+
+    return precision(items[:k], gold)
+
 def recall(items, gold):
     """
     Calculate the recall of the given items by evaluating how many of the items in the gold standard they contain.
