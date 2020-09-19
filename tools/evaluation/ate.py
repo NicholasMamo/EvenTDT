@@ -35,6 +35,13 @@ The output is a JSON file with the following structure:
             "stem": true,
             "split": true,
             "verbose": true
+        },
+        "results": {
+            "summary": {
+                "precision": 0.5,
+                "recall": 0.5,
+                "f1": 0.5
+            }
         }
     }
 """
@@ -104,9 +111,22 @@ def main():
     cmd['terms'], cmd['gold'] = terms, gold
 
     """
+    Get the results.
+    """
+    precision, recall = evaluation.precision(terms, gold), evaluation.recall(terms, gold)
+    f1 = evaluation.f1(precision, recall)
+    results = {
+        'summary': {
+            'precision': precision,
+            'recall': recall,
+            'f1': f1
+        }
+    }
+
+    """
     Save the results to the output file.
     """
-    tools.save(args.output, { 'meta': cmd })
+    tools.save(args.output, { 'meta': cmd, 'results': results })
 
 def load_terms(file):
     """
