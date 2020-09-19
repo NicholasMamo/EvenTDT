@@ -11,7 +11,7 @@ To run the tool, use:
     --file evaluation/ate/results/terms.json \\
     --gold evaluation/ate/results/gold.txt \\
     --output evaluation/ate/results/results.json \\
-    --stem
+    --stem --split
 
 Accepted arguments:
 
@@ -19,6 +19,7 @@ Accepted arguments:
     - ``-g --gold``                  *<Required>* The file containing the gold standard, with each word on a separate line.
     - ``-o --output``                *<Required>* The file where to save the results.
     - ``--stem``                     *<Optional>* Stem the gold standard terms.
+    - ``--split``                    *<Optional>* Split multi-word gold standard terms into unigrams.
 
 The output is a JSON file with the following structure:
 
@@ -30,7 +31,8 @@ The output is a JSON file with the following structure:
             "gold": { "offsid": "offsid", "keeper": "keeper" },
             "output": "evaluation/ate/results/results.json",
             "terms": [ "offsid", "ff", "keeper", "equalis", "baller" ],
-            "stem": True
+            "stem": true,
+            "split": true
         }
     }
 """
@@ -61,6 +63,7 @@ def setup_args():
         - ``-g --gold``              *<Required>* The file containing the gold standard, with each word on a separate line.
         - ``-o --output``            *<Required>* The file where to save the results.
         - ``--stem``                 *<Optional>* Stem the gold standard terms.
+        - ``--split``                *<Optional>* Split multi-word gold standard terms into unigrams.
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
@@ -76,6 +79,8 @@ def setup_args():
 
     parser.add_argument('--stem', action="store_true",
                         help='<Optional> Stem the gold standard terms.')
+    parser.add_argument('--split', action="store_true",
+                        help='<Optional> Split multi-word gold standard terms into unigrams.')
 
     args = parser.parse_args()
     return args
