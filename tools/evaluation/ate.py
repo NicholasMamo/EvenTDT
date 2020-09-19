@@ -221,6 +221,13 @@ def pprint(results):
     print('Precision        Recall        F1')
     print('---------        ------        --')
     print(f"{ str(round(precision, 4)).ljust(6, '0') }           { str(round(recall, 4)).ljust(6, '0') }        { str(round(f1, 4)).ljust(6, '0') }")
+    print()
+
+    print('Precision at k (P@k)')
+    print('---------------------------------------------------------------------')
+    for k in range(10, min(max(results['p@k']), 200) + 1, 10):
+        pk = results['p@k'][k]
+        print(f"P@{ str(k).ljust(3, ' ') }    { str(round(pk, 4)).ljust(6, '0') }    { (''.join([ '▅' ] * round(pk * 50))).ljust(50, '░') }")
 
 if __name__ == "__main__":
     main()
