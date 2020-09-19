@@ -42,6 +42,13 @@ The output is a JSON file with the following structure:
                 "recall": 0.5,
                 "f1": 0.5
             },
+            "p@k": {
+                "1": 1,
+                "2": 0.5,
+                "3": 0.33,
+                "4": 0.5
+                "5": 0.6
+            }
             "precise": [ "offsid", "keeper" ],
             "recalled": [ "offside", "keeper" ]
         }
@@ -123,8 +130,9 @@ def main():
             'recall': recall,
             'f1': f1
         },
+        'p@k': { k: evaluation.pk(terms, gold, k) for k in range(1, len(terms) + 1) },
         'precise': list(evaluation.precise(terms, gold)),
-        'recalled': [ gold[term] for term in evaluation.recalled(terms, gold) ]
+        'recalled': [ gold[term] for term in evaluation.recalled(terms, gold) ],
     }
 
     if args.verbose:
