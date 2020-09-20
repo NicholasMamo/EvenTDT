@@ -1,6 +1,0 @@
----------------------------------------------------------------------
-If you get dbm-related problems, delete all files in this directory
-*EXCEPT* enidf.txt and cnidf.txt and then run:
-% cat enidf.txt  | ../bin/write-idf.pl enidf
----------------------------------------------------------------------
-
