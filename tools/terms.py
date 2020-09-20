@@ -35,7 +35,7 @@ Accepted arguments:
 	- ``-r --reranker``		*<Optional>* The method to use to re-rank terms; supported: `Entropy`, `Variability`; defaults to no re-ranking.
 	- ``--tfidf``			*<Optional>* The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).
 	- ``--general``			*<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `Rank`, `Specificity` and `TF-DCF` methods).
-	- ``--cutoff``			*<Optional>* The minimum term frequency to consider when ranking terms (used only with the `Specificity` method).
+	- ``--cutoff``			*<Optional>* The minimum term frequency to consider when ranking terms (used only with the `Rank` method).
 	- ``--base``			*<Optional>* The logarithmic base (used only with the `EF-IDF` method).
 	- ``--reranker-base``	*<Optional>* The logarithmic base (used only with the `Variability` and `Entropy` re-rankers); defaults to 10.
 	- ``--reranker-files``	*<Optional>* The input corpora to use for the re-ranker.
@@ -71,7 +71,7 @@ def setup_args():
 		- ``-r --reranker``		*<Optional>* The method to use to re-rank terms; supported: `Entropy`, `Variability`; defaults to no re-ranking.
 		- ``--tfidf``			*<Optional>* The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).
 		- ``--general``			*<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `Rank`, `Specificity` and `TF-DCF` methods).
-		- ``--cutoff``			*<Optional>* The minimum term frequency to consider when ranking terms (used only with the `Specificity` method).
+		- ``--cutoff``			*<Optional>* The minimum term frequency to consider when ranking terms (used only with the `Rank` method).
 		- ``--base``			*<Optional>* The logarithmic base (used only with the `EF-IDF` method).
 		- ``--reranker-base``	*<Optional>* The logarithmic base (used only with the `Variability` and `Entropy` re-rankers); defaults to 10.
 		- ``--reranker-files``	*<Optional>* The input corpora to use for the re-ranker.
@@ -99,7 +99,7 @@ def setup_args():
 						help='<Optional> A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `Rank`, `Specificity` and `TF-DCF` methods).')
 	parser.add_argument('--cutoff',
 						type=int, default=1, required=False,
-						help='<Optional> The minimum term frequency to consider when ranking terms (used only with the `Specificity` method).')
+						help='<Optional> The minimum term frequency to consider when ranking terms (used only with the `Rank` method).')
 	parser.add_argument('--base',
 						type=int, default=None, required=False,
 						help='<Optional> The logarithmic base (used only with the `EF-IDF` method).')
