@@ -92,7 +92,7 @@ def precision(items, gold):
     items, gold = set(items), set(gold)
     return len(precise(items, gold)) / len(items)
 
-def pk(items, gold, k):
+def pk(items, gold, k=None):
     """
     Calculate the Precision at k (P@k) at the given value, calculated as:
 
@@ -106,23 +106,42 @@ def pk(items, gold, k):
     This function assumes that the items are sorted in ascending order of rank.
     So, the first item should be the highest-scoring one.
 
+    .. info::
+
+        If you do not provide :math:`k`, the function calculates the precision at each :math:`k`.
+        Use this if you need to calculate the precision at each item.
+        This is much more efficient than calling the function for each item.
+
     :param items: A list of items to evaluate.
     :type items: list or set
     :param gold: The gold standard items.
     :type gold: list or set
     :param k: The rank at which to calculate precision.
-    :type k: int
+              If no rank is given, the function calculates the precision at each :math:`k`.
+    :type k: int or None
 
     :return: The precision value of the top :math:`k` items.
-    :rtype: float
+             If no :math:`k` is given, the function returns a dictionary with :math:`k` as the key and the precision at that item as the value.
+    :rtype: float or dict
 
     :raises ValueError: When k is below 1.
     """
 
-    if k < 1:
+    if k is not None and k < 1:
         raise ValueError(f"k must be at least 1; received { k }")
 
-    return precision(items[:k], gold)
+    if k is None:
+        if not items:
+            return { }
+
+        items = unique(items)
+        p = { 1: is_precise(items[0], gold) * 1 }
+        for k, item in enumerate(items[1:]):
+            p[k + 2] = (p[(k + 1)] * (k + 1) + is_precise(item, gold)) / (k + 2)
+
+        return p
+    else:
+        return precision(items[:k], gold)
 
 def recall(items, gold):
     """
