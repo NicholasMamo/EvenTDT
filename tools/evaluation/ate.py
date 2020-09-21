@@ -15,13 +15,14 @@ To run the tool, use:
 
 Accepted arguments:
 
-    - ``-f --file``                  *<Required>* The file containing the terms to evaluate, which may be the output of the :mod:`~tools.terms` or :mod:`~tools.bootstrap` tools.
-    - ``-g --gold``                  *<Required>* The file containing the gold standard, with each word on a separate line.
-    - ``-o --output``                *<Required>* The file where to save the results.
-    - ``--stem``                     *<Optional>* Stem the gold standard terms.
-    - ``--split``                    *<Optional>* Split multi-word gold standard terms into unigrams.
-    - ``--unigrams``                 *<Optional>* Consider only unigrams from the gold standard.
-    - ``--verbose``                  *<Optional>* Print the results to the shell.
+    - ``-f --file``              *<Required>* The file containing the terms to evaluate, which may be the output of the :mod:`~tools.terms` or :mod:`~tools.bootstrap` tools.
+    - ``-g --gold``              *<Required>* The file containing the gold standard, with each word on a separate line.
+    - ``-o --output``            *<Required>* The file where to save the results.
+    - ``-k --keep``              *<Optional>* The number of words in the ranking to keep (defaults to all terms).
+    - ``--stem``                 *<Optional>* Stem the gold standard terms.
+    - ``--split``                *<Optional>* Split multi-word gold standard terms into unigrams.
+    - ``--unigrams``             *<Optional>* Consider only unigrams from the gold standard.
+    - ``--verbose``              *<Optional>* Print the results to the shell.
 
 The output is a JSON file with the following structure:
 
@@ -32,6 +33,7 @@ The output is a JSON file with the following structure:
             "file": "evaluation/ate/results/terms.json",
             "gold": { "offsid": "offside", "keeper": "keeper" },
             "output": "evaluation/ate/results/results.json",
+            "keep": 5,
             "terms": [ "offsid", "ff", "keeper", "equalis", "baller" ],
             "stem": true,
             "split": false,
@@ -82,6 +84,7 @@ def setup_args():
         - ``-f --file``              *<Required>* The file containing the terms to evaluate, which may be the output of the :mod:`~tools.terms` or :mod:`~tools.bootstrap` tools.
         - ``-g --gold``              *<Required>* The file containing the gold standard, with each word on a separate line.
         - ``-o --output``            *<Required>* The file where to save the results.
+        - ``-k --keep``              *<Optional>* The number of words in the ranking to keep (defaults to all terms).
         - ``--stem``                 *<Optional>* Stem the gold standard terms.
         - ``--split``                *<Optional>* Split multi-word gold standard terms into unigrams.
         - ``--unigrams``             *<Optional>* Consider only unigrams from the gold standard.
@@ -99,6 +102,8 @@ def setup_args():
     parser.add_argument('-o', '--output', type=str, required=True,
                         help='<Required> The file where to save the results.')
 
+    parser.add_argument('-k', '--keep', type=int,
+                        help='<Optional> The number of words in the ranking to keep (defaults to all terms).')
     parser.add_argument('--stem', action="store_true",
                         help='<Optional> Stem the gold standard terms.')
     parser.add_argument('--split', action="store_true",
@@ -122,6 +127,7 @@ def main():
     args = setup_args()
     cmd = tools.meta(args)
     terms, gold = load_terms(args.file), load_gold(args.gold, stem=args.stem, split=args.split, unigrams=args.unigrams)
+    cmd['keep'] = cmd['keep'] or len(terms) # the number of items defaults to all
     cmd['terms'], cmd['gold'] = terms, gold
 
     """
