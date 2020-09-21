@@ -34,6 +34,7 @@ The output is a JSON file with the following structure:
             "output": "evaluation/ate/results/results.json",
             "terms": [ "offsid", "ff", "keeper", "equalis", "baller" ],
             "stem": true,
+            "split": false,
             "unigrams": true,
             "verbose": true
         },
@@ -120,7 +121,7 @@ def main():
     """
     args = setup_args()
     cmd = tools.meta(args)
-    terms, gold = load_terms(args.file), load_gold(args.gold, stem=args.stem, split=args.split)
+    terms, gold = load_terms(args.file), load_gold(args.gold, stem=args.stem, split=args.split, unigrams=args.unigrams)
     cmd['terms'], cmd['gold'] = terms, gold
 
     """
@@ -179,7 +180,7 @@ def load_terms(file):
 
     return _terms
 
-def load_gold(file, stem=False, split=False):
+def load_gold(file, stem=False, split=False, unigrams=False):
     """
     Load the gold standard from the given file.
     The function expects one gold term on each line and returns an inverted index.
@@ -191,6 +192,8 @@ def load_gold(file, stem=False, split=False):
     :type stem: bool
     :param split: A boolean indicating whether to split multi-word gold standard terms.
     :type split: bool
+    :param unigrams: A boolean indicating whether to retain only unigrams.
+    :type unigrams: bool
 
     :return: A dictionary of the gold standard terms.
              The key is the processed term, and the value is the actual, extracted term.
@@ -206,6 +209,10 @@ def load_gold(file, stem=False, split=False):
             tokens = tokenizer.tokenize(term)
             if split:
                 _terms.update({ processed: term for processed in tokens })
+            elif unigrams:
+                if len(tokens) == 1:
+                    processed = tokens[0]
+                    _terms[processed] = term
             else:
                 processed  = ' '.join(tokens)
                 _terms[processed] = term

@@ -288,3 +288,39 @@ class TestATE(unittest.TestCase):
 
         self.assertTrue('yellow' in gold)
         self.assertTrue('card' in gold)
+
+    def test_load_gold_unigrams(self):
+        """
+        Test that when loading only unigrams from the gold standard, none of the terms have any spaces in them.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'eventdt', 'tests', 'corpora', 'ate', 'gold.txt')
+        gold = ate.load_gold(file, unigrams=True)
+
+        self.assertEqual(8, len(gold))
+        self.assertTrue(all( ' ' not in term for term in gold.values() ))
+
+    def test_load_gold_stemmed_unigrams(self):
+        """
+        Test that when stemming unigrams from the gold standard, they are all stemmed.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'eventdt', 'tests', 'corpora', 'ate', 'gold.txt')
+        gold = ate.load_gold(file, stem=True, unigrams=True)
+
+        self.assertTrue('offsid' in gold)
+        self.assertFalse('offside' in gold)
+
+        tokenizer = Tokenizer(remove_punctuation=False, stem=True, min_length=1)
+        for processed, actual in gold.items():
+            self.assertEqual(tokenizer.tokenize(actual)[0], processed)
+
+    def test_load_gold_unigrams_punctuation(self):
+        """
+        Test that when loading only unigrams from the gold standard, one-word terms with punctuation are accepted.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'eventdt', 'tests', 'corpora', 'ate', 'gold.txt')
+        gold = ate.load_gold(file, unigrams=True)
+
+        self.assertTrue('free-kick' in gold)
