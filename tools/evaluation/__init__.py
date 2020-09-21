@@ -33,7 +33,7 @@ def precise(items, gold):
     :rtype: set
     """
 
-    return { item for item in items if item in gold }
+    return { item for item in items if is_precise(item, gold) }
 
 def recalled(items, gold):
     """
