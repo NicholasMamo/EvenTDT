@@ -3,6 +3,21 @@ The evaluation package includes tools to evaluate different applications.
 At the package-level are implementations of common metrics, with a focus on information retrieval.
 """
 
+def unique(items):
+    """
+    Get a list of unique items in the given list.
+    This function returns the items in the same order, but without duplicates.
+
+    :param items: A list of items.
+    :type items: list
+
+    :return: A list of items in the same order, but without duplicates.
+    :rtype: list
+    """
+
+    seen = set()
+    return [ item for item in items if not (item in seen or seen.add(item)) ]
+
 def is_precise(item, gold):
     """
     Check whether the given item is precise.

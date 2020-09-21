@@ -14,12 +14,43 @@ for path in paths:
     if path not in sys.path:
         sys.path.append(path)
 
-from evaluation import is_precise, precise, recalled, precision, pk, recall, f1
+from evaluation import unique, is_precise, precise, recalled, precision, pk, recall, f1
 
 class TestPackage(unittest.TestCase):
     """
     Test the functionality of the evaluation package-level functions.
     """
+
+    def test_unique_empty(self):
+        """
+        Test that the unique list of an empty list is another empty list.
+        """
+
+        self.assertEqual([ ], unique([ ]))
+
+    def test_unique_all_unique(self):
+        """
+        Test that the unique list of a list of unique items is identical.
+        """
+
+        items = list(range(5))
+        self.assertEqual(items, unique(items))
+
+    def test_unique_repetition(self):
+        """
+        Test that the unique list of a list does not contain duplicates.
+        """
+
+        items = list(range(5)) + [ 4 ]
+        self.assertEqual(list(range(5)), unique(items))
+
+    def test_unique_same_order(self):
+        """
+        Test that the unique list of a list keeps the original order.
+        """
+
+        items = [ 1, 4, 2, 1, 3, 4, 5 ]
+        self.assertEqual([ 1, 4, 2, 3, 5 ], unique(items))
 
     def test_is_precise_in_gold(self):
         """
