@@ -166,7 +166,7 @@ def recall(items, gold):
     if not gold:
         return 0
 
-    items, gold = set(items), set(gold)
+    items, gold = unique(items), unique(gold)
     return len(recalled(items, gold)) / len(gold)
 
 def f1(precision, recall):
