@@ -3,6 +3,22 @@ The evaluation package includes tools to evaluate different applications.
 At the package-level are implementations of common metrics, with a focus on information retrieval.
 """
 
+def is_precise(item, gold):
+    """
+    Check whether the given item is precise.
+    The item is precise if it is in the gold set.
+
+    :param item: The retrieved item.
+    :type item: any
+    :param gold: The gold standard items.
+    :type gold: list or set
+
+    :return: A boolean indicating whether the retrieved item is correct.
+    :rtype: bool
+    """
+
+    return item in gold
+
 def precise(items, gold):
     """
     Get a set of items that are in the gold set.

@@ -14,12 +14,34 @@ for path in paths:
     if path not in sys.path:
         sys.path.append(path)
 
-from evaluation import precise, recalled, precision, pk, recall, f1
+from evaluation import is_precise, precise, recalled, precision, pk, recall, f1
 
 class TestPackage(unittest.TestCase):
     """
     Test the functionality of the evaluation package-level functions.
     """
+
+    def test_is_precise_in_gold(self):
+        """
+        Test that all items in the gold set are precise.
+        """
+
+        gold = range(0, 10)
+        self.assertTrue(all( is_precise(item, gold) for item in gold ))
+
+    def test_is_precise_not_in_gold(self):
+        """
+        Test that an item that is not in the gold set is not precise.
+        """
+
+        self.assertFalse(is_precise(10, range(0, 10)))
+
+    def test_is_precise_empty_gold(self):
+        """
+        Test that when the gold set is empty, all items are False.
+        """
+
+        self.assertFalse(is_precise(10, [ ]))
 
     def test_precise_empty(self):
         """
