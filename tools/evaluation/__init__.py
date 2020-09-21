@@ -89,7 +89,7 @@ def precision(items, gold):
     if not items:
         return 0
 
-    items, gold = set(items), set(gold)
+    items, gold = unique(items), unique(gold)
     return len(precise(items, gold)) / len(items)
 
 def pk(items, gold, k=None):
