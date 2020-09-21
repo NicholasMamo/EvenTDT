@@ -130,7 +130,7 @@ def main():
             'recall': recall,
             'f1': f1
         },
-        'p@k': { k: evaluation.pk(terms, gold, k) for k in range(1, len(terms) + 1) },
+        'p@k': evaluation.pk(terms, gold),
         'precise': list(evaluation.precise(terms, gold)),
         'recalled': [ gold[term] for term in evaluation.recalled(terms, gold) ],
     }
