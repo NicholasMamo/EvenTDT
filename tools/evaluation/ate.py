@@ -11,7 +11,7 @@ To run the tool, use:
     --file evaluation/ate/results/terms.json \\
     --gold evaluation/ate/results/gold.txt \\
     --output evaluation/ate/results/results.json \\
-    --stem --split --verbose
+    --stem --unigrams --verbose
 
 Accepted arguments:
 
@@ -20,6 +20,7 @@ Accepted arguments:
     - ``-o --output``                *<Required>* The file where to save the results.
     - ``--stem``                     *<Optional>* Stem the gold standard terms.
     - ``--split``                    *<Optional>* Split multi-word gold standard terms into unigrams.
+    - ``--unigrams``                 *<Optional>* Consider only unigrams from the gold standard.
     - ``--verbose``                  *<Optional>* Print the results to the shell.
 
 The output is a JSON file with the following structure:
@@ -33,7 +34,7 @@ The output is a JSON file with the following structure:
             "output": "evaluation/ate/results/results.json",
             "terms": [ "offsid", "ff", "keeper", "equalis", "baller" ],
             "stem": true,
-            "split": true,
+            "unigrams": true,
             "verbose": true
         },
         "results": {
@@ -82,6 +83,7 @@ def setup_args():
         - ``-o --output``            *<Required>* The file where to save the results.
         - ``--stem``                 *<Optional>* Stem the gold standard terms.
         - ``--split``                *<Optional>* Split multi-word gold standard terms into unigrams.
+        - ``--unigrams``             *<Optional>* Consider only unigrams from the gold standard.
         - ``--verbose``              *<Optional>* Print the results to the shell.
 
     :return: The command-line arguments.
@@ -100,6 +102,8 @@ def setup_args():
                         help='<Optional> Stem the gold standard terms.')
     parser.add_argument('--split', action="store_true",
                         help='<Optional> Split multi-word gold standard terms into unigrams.')
+    parser.add_argument('--unigrams', action="store_true",
+                        help='<Optional> Consider only unigrams from the gold standard.')
     parser.add_argument('--verbose', action="store_true",
                         help='<Optional> Print the results to the shell.')
 
