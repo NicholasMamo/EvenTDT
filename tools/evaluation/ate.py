@@ -117,7 +117,6 @@ def main():
     args = setup_args()
     cmd = tools.meta(args)
     terms, gold = load_terms(args.file), load_gold(args.gold, stem=args.stem, split=args.split)
-    terms = terms[:200]
     cmd['terms'], cmd['gold'] = terms, gold
 
     """
