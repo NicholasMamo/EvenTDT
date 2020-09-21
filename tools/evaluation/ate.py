@@ -126,7 +126,8 @@ def main():
     """
     args = setup_args()
     cmd = tools.meta(args)
-    terms, gold = load_terms(args.file), load_gold(args.gold, stem=args.stem, split=args.split, unigrams=args.unigrams)
+    terms = load_terms(args.file, args.keep)
+    gold = load_gold(args.gold, stem=args.stem, split=args.split, unigrams=args.unigrams)
     cmd['keep'] = cmd['keep'] or len(terms) # the number of items defaults to all
     cmd['terms'], cmd['gold'] = terms, gold
 
@@ -154,7 +155,7 @@ def main():
     """
     tools.save(args.output, { 'meta': cmd, 'results': results })
 
-def load_terms(file):
+def load_terms(file, keep=None):
     """
     Load the terms from the given file.
 
@@ -163,6 +164,10 @@ def load_terms(file):
 
     :param file: The path to the file containing a list of terms.
     :type file: str
+    :param keep: The number of items to keep.
+                 This function retains the top items in the ranking.
+                 If ``None`` is given, it keeps all items.
+    :type keep: int or None
 
     :return: A list of terms.
     :rtype: list of str
@@ -184,7 +189,7 @@ def load_terms(file):
             elif 'terms' in data:
                 _terms.extend([ term['term'] for term in data['terms'] ])
 
-    return _terms
+    return _terms[:(keep or len(_terms))]
 
 def load_gold(file, stem=False, split=False, unigrams=False):
     """

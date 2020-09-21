@@ -72,6 +72,116 @@ class TestATE(unittest.TestCase):
             original = data['meta']['seed'] + data['bootstrapped']
         self.assertEqual(original, terms)
 
+    def test_load_terms_default_keep(self):
+        """
+        Test that when loading terms without specifying the number of terms to keep, all of the terms are kept.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.json')
+        terms = ate.load_terms(file)
+        with open(file) as f:
+            original = json.loads(''.join(f.readlines()))['terms']
+            self.assertEqual(len(original), len(terms))
+
+    def test_load_terms_keep_inclusive(self):
+        """
+        Test that when loading terms and specifying the number of terms to keep, the number is inclusive.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.json')
+        terms = ate.load_terms(file, keep=10)
+        self.assertEqual(10, len(terms))
+
+    def test_load_terms_keep_order(self):
+        """
+        Test that when loading terms and specifying the number of terms to keep, the order of the terms is the same as in the original list.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.json')
+        terms = ate.load_terms(file, keep=10)
+        with open(file) as f:
+            original = json.loads(''.join(f.readlines()))['terms']
+            original = [ term['term'] for term in original ]
+            self.assertEqual(original[:10], terms)
+
+    def test_load_terms_keep_all(self):
+        """
+        Test loading all terms from the file.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.json')
+        with open(file) as f:
+            original = json.loads(''.join(f.readlines()))['terms']
+            original = [ term['term'] for term in original ]
+            all = len(original)
+
+        terms = ate.load_terms(file, keep=all)
+        self.assertEqual(len(original), len(terms))
+
+    def test_load_terms_keep_extra(self):
+        """
+        Test that when trying to load extra terms, all terms are loaded.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.json')
+        with open(file) as f:
+            original = json.loads(''.join(f.readlines()))['terms']
+            original = [ term['term'] for term in original ]
+            all = len(original)
+
+        terms = ate.load_terms(file, keep=(all * 2))
+        self.assertEqual(original, terms)
+
+    def test_load_terms_keep_top(self):
+        """
+        Test that when loading a small number of terms, the ones towards the top of the ranking are retained.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.json')
+
+        terms = ate.load_terms(file, keep=10)
+        with open(file) as f:
+            original = json.loads(''.join(f.readlines()))['terms']
+            original = { term['term']: term['rank'] for term in original}
+            for i, term in enumerate(terms):
+                self.assertEqual(i + 1, original[term])
+
+    def test_load_terms_keep_bootstrap(self):
+        """
+        Test that when loading terms from a bootstrap file and specifying the number of terms to keep, the correct number of terms is loaded.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'bootstrapped.json')
+        terms = ate.load_terms(file, keep=50)
+        self.assertEqual(50, len(terms))
+
+    def test_load_terms_keep_bootstrap_seed(self):
+        """
+        Test that when loading terms from a bootstrap file, the first terms are from the seed set.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'bootstrapped.json')
+        with open(file) as f:
+            data = json.loads(''.join(f.readlines()))
+            seed, bootstrapped = data['meta']['seed'], data['bootstrapped']
+
+        terms = ate.load_terms(file, keep=20)
+        self.assertTrue(all( term in seed for term in terms))
+        self.assertEqual(seed[:20], terms)
+
+    def test_load_terms_keep_bootstrap_bootstrapped(self):
+        """
+        Test that when loading terms from a bootstrap file, when the function runs out of seed terms it loads bootstrapped terms.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'bootstrapped.json')
+        with open(file) as f:
+            data = json.loads(''.join(f.readlines()))
+            seed, bootstrapped = data['meta']['seed'], data['bootstrapped']
+
+        terms = ate.load_terms(file, keep=(len(seed)) + 10)
+        self.assertEqual(terms[-10:], bootstrapped[:10])
+
     def test_load_gold_all_words(self):
         """
         Test that when loading the gold standard words, all words are returned.
