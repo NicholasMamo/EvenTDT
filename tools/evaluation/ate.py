@@ -194,7 +194,7 @@ def load_gold(file, stem=False, split=False):
     """
 
     _terms = { }
-    tokenizer = Tokenizer(stem=stem, remove_punctuation=False)
+    tokenizer = Tokenizer(stem=stem, remove_punctuation=False, min_length=1)
 
     with open(file) as f:
         _extracted = [ term.strip() for term in f.readlines() ]

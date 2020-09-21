@@ -168,7 +168,7 @@ class TestATE(unittest.TestCase):
         """
         Load each gold item separately and ensure its processed form is the key.
         """
-        tokenizer = Tokenizer(remove_punctuation=False, stem=True)
+        tokenizer = Tokenizer(remove_punctuation=False, stem=True, min_length=1)
         with open(file, 'r') as f:
             for word in f:
                 word = word.strip()
