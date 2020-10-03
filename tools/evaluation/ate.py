@@ -53,13 +53,20 @@ The output is a JSON file with the following structure:
                 "4": 0.5
                 "5": 0.6
             }
-            "precise": [ "offsid", "keeper" ],
+            "precise": {
+                "offsid": true,
+                "ff": false,
+                "keeper": true,
+                "equalis": false,
+                "baller": false
+            },
             "recalled": [ "offside", "keeper" ]
         }
     }
 """
 
 import argparse
+from collections import OrderedDict
 import json
 import os
 import sys
@@ -143,7 +150,7 @@ def main():
             'f1': f1
         },
         'p@k': evaluation.pk(terms, gold),
-        'precise': list(evaluation.precise(terms, gold)),
+        'precise': OrderedDict([ (term, evaluation.is_precise(term, gold)) for term in terms ]),
         'recalled': [ gold[term] for term in evaluation.recalled(terms, gold) ],
     }
 
