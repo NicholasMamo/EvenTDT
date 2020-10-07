@@ -8,24 +8,14 @@ from pprint import pprint
 from requests.auth import AuthBase
 from requests.auth import HTTPBasicAuth
 
-consumer_key = "Qg4UBCaYSTQyco38M6DACls8y"	# Add your API key here
-consumer_secret = "eCIhph66A48sqOPQZNDFLLWjeJnCegKU7JvDGzImnQNnT7ze9g"	# Add your API secret key here
+consumer_key = "njxYoQ8ETbZe58QQfYqGZ9zR5"	# Add your API key here
+consumer_secret = "MnVFwQILBxuF3e5zxvv5Za1A2c3unvmN9TZYFkecN9MHS1wXLl"	# Add your API secret key here
 
-stream_url = "https://api.twitter.com/labs/1/tweets/stream/filter?format=detailed&expansions=referenced_tweets.id,entities.mentions.username&user.format=detailed"
-rules_url = "https://api.twitter.com/labs/1/tweets/stream/filter/rules"
+stream_url = "https://api.twitter.com/2/tweets/search/stream?expansions=author_id,referenced_tweets.id,entities.mentions.username"
+rules_url = "https://api.twitter.com/2/tweets/search/stream/rules"
 
 sample_rules = [
-	{ 'value': '("bayern munich" OR "benfica") lang:en', 'tag': 'single' },
-	# { 'value': 'madrid', 'tag': 'single' },
-	# { 'value': 'tottenham', 'tag': 'single' },
-	# { 'value': 'atletico', 'tag': 'single' },
-	# { 'value': 'juventus', 'tag': 'single' },
-	# { 'value': 'champions', 'tag': 'single' },
-	# { 'value': 'brugges', 'tag': 'single' },
-	# { 'value': 'lyon', 'tag': 'single' },
-	# { 'value': 'lille', 'tag': 'single' },
-	# { 'value': 'barcelona', 'tag': 'single' },
-	# { 'value': 'dog has:images', 'tag': 'dog pictures' },
+	{ 'value': '(lyon OR milan) lang:en', 'tag': 'football cities' },
 	# { 'value': 'cat has:images -grumpy', 'tag': 'cat pictures' },
 ]
 
@@ -44,7 +34,7 @@ class BearerTokenAuth(AuthBase):
 			data={'grant_type': 'client_credentials'},
 			headers={'User-Agent': 'TwitterDevFilteredStreamQuickStartPython'})
 
-		if response.status_code is not 200:
+		if response.status_code != 200:
 			raise Exception(f"Cannot get a Bearer token (HTTP %d): %s" % (response.status_code, response.text))
 
 		body = response.json()
@@ -59,7 +49,7 @@ class BearerTokenAuth(AuthBase):
 def get_all_rules(auth):
 	response = requests.get(rules_url, auth=auth)
 
-	if response.status_code is not 200:
+	if response.status_code != 200:
 		raise Exception(f"Cannot get rules (HTTP %d): %s" % (response.status_code, response.text))
 
 	return response.json()
@@ -79,7 +69,7 @@ def delete_all_rules(rules, auth):
 
 	response = requests.post(rules_url, auth=auth, json=payload)
 
-	if response.status_code is not 200:
+	if response.status_code != 200:
 		raise Exception(f"Cannot delete rules (HTTP %d): %s" % (response.status_code, response.text))
 
 def set_rules(rules, auth):
@@ -92,7 +82,7 @@ def set_rules(rules, auth):
 
 	response = requests.post(rules_url, auth=auth, json=payload)
 
-	if response.status_code is not 201:
+	if response.status_code != 201:
 		raise Exception(f"Cannot create rules (HTTP %d): %s" % (response.status_code, response.text))
 
 def stream_connect(auth):
@@ -119,13 +109,17 @@ def stream_connect(auth):
 bearer_token = BearerTokenAuth(consumer_key, consumer_secret)
 
 def setup_rules(auth):
-	current_rules = get_all_rules(auth)
-	if 'data' in current_rules and len(current_rules['data']):
-		print('deleting rules')
-		pprint(current_rules)
-		delete_all_rules(current_rules, auth)
+	try:
+		current_rules = get_all_rules(auth)
+		if 'data' in current_rules and len(current_rules['data']):
+			print('deleting rules')
+			pprint(current_rules)
+			delete_all_rules(current_rules, auth)
+	except Exception as e:
+		pass
 	set_rules(sample_rules, auth)
-
+	current_rules = get_all_rules(auth)
+	pprint(current_rules)
 
 # Comment this line if you already setup rules and want to keep them
 setup_rules(bearer_token)
