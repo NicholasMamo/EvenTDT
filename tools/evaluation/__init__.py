@@ -106,7 +106,7 @@ def pk(items, gold, k=None):
     This function assumes that the items are sorted in ascending order of rank.
     So, the first item should be the highest-scoring one.
 
-    .. info::
+    .. note::
 
         If you do not provide :math:`k`, the function calculates the precision at each :math:`k`.
         Use this if you need to calculate the precision at each item.
