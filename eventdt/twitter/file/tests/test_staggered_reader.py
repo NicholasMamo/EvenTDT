@@ -499,3 +499,46 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
             reader = StaggeredFileReader(queue, f, rate=600, max_time=end - start + 2)
             await reader.read()
             self.assertEqual(600, queue.length())
+
+    async def test_skip_retweets(self):
+        """
+        Test that when skipping retweets, none of the tweets read from the corpus are retweets.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+            queue = Queue()
+            reader = StaggeredFileReader(queue, f, rate=600, skip_retweets=True)
+            await reader.read()
+            self.assertTrue(queue.length())
+            self.assertTrue(all( not is_retweet(tweet) for tweet in queue.queue ))
+
+        """
+        Test that all the correct tweets are in the queue.
+        """
+        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if is_retweet(tweet):
+                    self.assertFalse(tweet in queue.queue)
+                else:
+                    self.assertTrue(tweet in queue.queue)
+
+    async def test_no_skip_retweets(self):
+        """
+        Test that when not skipping retweets, all of the tweets in the corpus are retained.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+            queue = Queue()
+            reader = StaggeredFileReader(queue, f, rate=600, skip_retweets=False)
+            await reader.read()
+            self.assertTrue(queue.length())
+            self.assertTrue(any( is_retweet(tweet) for tweet in queue.queue ))
+
+        """
+        Test that all the tweets are in the queue.
+        """
+        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                self.assertTrue(tweet in queue.queue)

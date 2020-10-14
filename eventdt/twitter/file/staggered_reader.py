@@ -128,7 +128,11 @@ class StaggeredFileReader(FileReader):
             if not self.active:
                 break
 
-            self.queue.enqueue(tweet)
+            """
+            Only add a tweet if it is valid.
+            """
+            if self.valid(tweet):
+                self.queue.enqueue(tweet)
 
             """
             Skip some lines if need be.
