@@ -16,7 +16,7 @@ To run the tool, use:
 Accepted arguments:
 
     - ``-f --file``              *<Required>* The file containing the terms to evaluate, which may be the output of the :mod:`~tools.terms` or :mod:`~tools.bootstrap` tools.
-    - ``-g --gold``              *<Required>* The file containing the gold standard, with each word on a separate line.
+    - ``-g --gold``              *<Required>* The files containing the gold standard, with each word on a separate line.
     - ``-o --output``            *<Required>* The file where to save the results.
     - ``-k --keep``              *<Optional>* The number of words in the ranking to keep (defaults to all terms).
     - ``--stem``                 *<Optional>* Stem the gold standard terms.
@@ -29,7 +29,17 @@ The output is a JSON file with the following structure:
 .. code-block:: json
 
     {
-        "meta": {
+        "cmd": {
+            "file": "evaluation/ate/results/terms.json",
+            "gold": [ "evaluation/ate/results/gold.txt" ],
+            "output": "evaluation/ate/results/results.json",
+            "keep": 5,
+            "stem": true,
+            "split": false,
+            "unigrams": true,
+            "verbose": true
+        },
+        "pcmd": {
             "file": "evaluation/ate/results/terms.json",
             "gold": { "offsid": "offside", "keeper": "keeper" },
             "output": "evaluation/ate/results/results.json",
@@ -89,7 +99,7 @@ def setup_args():
     Accepted arguments:
 
         - ``-f --file``              *<Required>* The file containing the terms to evaluate, which may be the output of the :mod:`~tools.terms` or :mod:`~tools.bootstrap` tools.
-        - ``-g --gold``              *<Required>* The file containing the gold standard, with each word on a separate line.
+        - ``-g --gold``              *<Required>* The files containing the gold standard, with each word on a separate line.
         - ``-o --output``            *<Required>* The file where to save the results.
         - ``-k --keep``              *<Optional>* The number of words in the ranking to keep (defaults to all terms).
         - ``--stem``                 *<Optional>* Stem the gold standard terms.
@@ -133,10 +143,11 @@ def main():
     """
     args = setup_args()
     cmd = tools.meta(args)
+    pcmd = tools.meta(args)
     terms = load_terms(args.file, args.keep)
     gold = load_gold(args.gold, stem=args.stem, split=args.split, unigrams=args.unigrams)
-    cmd['keep'] = cmd['keep'] or len(terms) # the number of items defaults to all
-    cmd['terms'], cmd['gold'] = terms, gold
+    pcmd['keep'] = pcmd['keep'] or len(terms) # the number of items defaults to all
+    pcmd['terms'], pcmd['gold'] = terms, gold
 
     """
     Get the results.
@@ -160,7 +171,7 @@ def main():
     """
     Save the results to the output file.
     """
-    tools.save(args.output, { 'meta': cmd, 'results': results })
+    tools.save(args.output, { 'cmd': cmd, 'pcmd': pcmd, 'results': results })
 
 def load_terms(file, keep=None):
     """
