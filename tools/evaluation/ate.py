@@ -104,7 +104,7 @@ def setup_args():
     parser = argparse.ArgumentParser(description="Evaluate the quality of an ATE algorithm's ranking.")
     parser.add_argument('-f', '--file', type=str, required=True,
                         help='<Required> The file containing the terms to evaluate, which may be the output of the terms or bootstrap tools.')
-    parser.add_argument('-g', '--gold', type=str, required=True,
+    parser.add_argument('-g', '--gold', nargs='+', required=True,
                         help='<Required> The file containing the gold standard, with each word on a separate line.')
     parser.add_argument('-o', '--output', type=str, required=True,
                         help='<Required> The file where to save the results.')
@@ -198,14 +198,14 @@ def load_terms(file, keep=None):
 
     return _terms[:(keep or len(_terms))]
 
-def load_gold(file, stem=False, split=False, unigrams=False):
+def load_gold(files, stem=False, split=False, unigrams=False):
     """
     Load the gold standard from the given file.
     The function expects one gold term on each line and returns an inverted index.
     The key is the processed term for easy look-up, and the value is the extracted term.
 
-    :param file: The path to the file containing the gold standard.
-    :type file: str
+    :param files: The path to the files containing the gold standard.
+    :type files: list of str
     :param stem: A boolean indicating whether to stem the gold standard terms.
     :type stem: bool
     :param split: A boolean indicating whether to split multi-word gold standard terms.
@@ -221,19 +221,20 @@ def load_gold(file, stem=False, split=False, unigrams=False):
     _terms = { }
     tokenizer = Tokenizer(stem=stem, remove_punctuation=False, min_length=1)
 
-    with open(file) as f:
-        _extracted = [ term.strip() for term in f.readlines() ]
-        for term in _extracted:
-            tokens = tokenizer.tokenize(term)
-            if split:
-                _terms.update({ processed: term for processed in tokens })
-            elif unigrams:
-                if len(tokens) == 1:
-                    processed = tokens[0]
+    for file in files:
+        with open(file) as f:
+            _extracted = [ term.strip() for term in f.readlines() ]
+            for term in _extracted:
+                tokens = tokenizer.tokenize(term)
+                if split:
+                    _terms.update({ processed: term for processed in tokens })
+                elif unigrams:
+                    if len(tokens) == 1:
+                        processed = tokens[0]
+                        _terms[processed] = term
+                else:
+                    processed  = ' '.join(tokens)
                     _terms[processed] = term
-            else:
-                processed  = ' '.join(tokens)
-                _terms[processed] = term
 
     return _terms
 
