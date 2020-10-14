@@ -53,9 +53,11 @@ class FileReader(ABC):
     :vartype active: bool
     :ivar stopped: A boolean indicating whether the consumer has finished processing.
     :vartype stopped: bool
+    :ivar skip_retweets: A boolean indicating whether to skip retweets.
+    :vartype skip_retweets: bool
     """
 
-    def __init__(self, queue, f, max_lines=-1, max_time=-1, skip_lines=0, skip_time=0):
+    def __init__(self, queue, f, max_lines=-1, max_time=-1, skip_lines=0, skip_time=0, skip_retweets=False):
         """
         Create the file reader with the :class:`~queues.Queue` where to add tweets and the file from where to read them.
         The ``max_lines`` and ``max_time`` parameters can be used to read only a part of the corpus.
@@ -75,6 +77,8 @@ class FileReader(ABC):
         :type skip_lines: int
         :param skip_time: The number of seconds to skip from the beginning of the file.
         :type skip_time: int
+        :param skip_retweets: A boolean indicating whether to skip retweets.
+        :type skip_retweets: bool
         """
 
         self.queue = queue
@@ -83,6 +87,7 @@ class FileReader(ABC):
         self.max_time = max_time
         self.active = False
         self.stopped = True
+        self.skip_retweets = skip_retweets
 
         self.skip(skip_lines, skip_time)
 
