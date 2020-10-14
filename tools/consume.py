@@ -350,7 +350,7 @@ def consume(file, consumer, speed, max_inactivity, max_time, skip, skip_retweets
 
     return timeline
 
-def stream_process(loop, queue, file, skip_time=0, speed=1, max_time=-1, *args, **kwargs):
+def stream_process(loop, queue, file, skip_time, speed, max_time, skip_retweets, *args, **kwargs):
     """
     Stream the file and add its tweets to the queue.
 
@@ -366,6 +366,8 @@ def stream_process(loop, queue, file, skip_time=0, speed=1, max_time=-1, *args, 
     :type speed: float
     :param max_time: The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.
     :type max_time: int
+    :param skip_retweets: Skip retweets when reading tweets from a file.
+    :type skip_retweets: bool
     """
 
     async def read(reader):
@@ -388,7 +390,8 @@ def stream_process(loop, queue, file, skip_time=0, speed=1, max_time=-1, *args, 
         await reader.read()
 
     with open(file, 'r') as f:
-        reader = SimulatedFileReader(queue, f, skip_time=skip_time, speed=speed, max_time=max_time)
+        reader = SimulatedFileReader(queue, f, skip_time=skip_time, speed=speed,
+                                               max_time=max_time, skip_retweets=skip_retweets)
         loop.run_until_complete(read(reader))
 
     logger.info("Streaming ended")
