@@ -28,6 +28,7 @@ Accepted arguments:
     - ``--skip``                    *<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
     - ``--max-inactivity``          *<Optional>* The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.
     - ``--max-time``                *<Optional>* The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.
+    - ``--skip-retweets``           *<Optional>* Skip retweets when reading tweets from a file, defaults to False.
     - ``--splits``                  *<Optional>* The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split.
     - ``--periodicity``             *<Optional>* The periodicity in seconds of the consumer (used by the `FIREConsumer`, `StatConsumer` and `ZhaoConsumer`); defaults to 60 seconds.
     - ``--no-cache``                *<Optional>* If specified, the cached understanding is not used. The new understanding is cached instead.
@@ -80,6 +81,7 @@ def setup_args():
         - ``--skip``                    *<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
         - ``--max-inactivity``          *<Optional>* The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.
         - ``--max-time``                *<Optional>* The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.
+        - ``--skip-retweets``           *<Optional>* Skip retweets when reading tweets from a file, defaults to False.
         - ``--splits``                  *<Optional>* The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split.
         - ``--periodicity``             *<Optional>* The periodicity in seconds of the consumer (used by the `FIREConsumer`, `StatConsumer` and `ZhaoConsumer`); defaults to 60 seconds.
         - ``--no-cache``                *<Optional>* If specified, the cached understanding is not used. The new understanding is cached instead.
@@ -116,6 +118,8 @@ def setup_args():
                         help='<Optional> The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.')
     parser.add_argument('--max-time', type=int, required=False, default=-1,
                         help='<Optional> The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.')
+    parser.add_argument('--skip-retweets', action="store_true",
+                        help='<Optional> Skip retweets when reading tweets from a file, defaults to False.')
     parser.add_argument('--splits', type=splits, required=False, default=None,
                         help='<Optional> The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split.')
     parser.add_argument('--periodicity', type=int, required=False, default=60,
@@ -204,7 +208,7 @@ def main():
 
     asyncio.get_event_loop().close()
 
-def understand(understanding, consumer, max_inactivity, scheme=None, *args, **kwargs):
+def understand(understanding, consumer, max_inactivity, skip_retweets, scheme=None, *args, **kwargs):
     """
     Run the understanding process.
     The arguments and keyword arguments should be the command-line arguments.
@@ -226,6 +230,8 @@ def understand(understanding, consumer, max_inactivity, scheme=None, *args, **kw
     :type consumer: :class:`~queues.consumers.consumer.Consumer`
     :param max_inactivity: The maximum time, in seconds, to wait for new tweets to arrive before stopping.
     :type max_inactivity: int
+    :param skip_retweets: Skip retweets when reading tweets from a file.
+    :type skip_retweets: bool
     :param scheme: The scheme to use when consuming the file.
     :type scheme: :class:`~nlp.weighting.TermWeightingScheme`
 
@@ -254,7 +260,7 @@ def understand(understanding, consumer, max_inactivity, scheme=None, *args, **kw
     """
     stream = Process(target=stream_process,
                      args=(loop, queue, understanding, ),
-                     kwargs={ 'speed': 120 })
+                     kwargs={ 'speed': 120, 'skip_retweets': skip_retweets })
     understand = Process(target=understand_process, args=(comm, loop, consumer, max_inactivity, ))
     stream.start()
     understand.start()
@@ -270,7 +276,7 @@ def understand(understanding, consumer, max_inactivity, scheme=None, *args, **kw
 
     return understanding
 
-def consume(file, consumer, speed, max_inactivity, max_time=-1, skip=0, *args, **kwargs):
+def consume(file, consumer, speed, max_inactivity, max_time, skip, skip_retweets, *args, **kwargs):
     """
     Run the consumption process.
     The arguments and keyword arguments should be the command-line arguments.
@@ -294,6 +300,8 @@ def consume(file, consumer, speed, max_inactivity, max_time=-1, skip=0, *args, *
     :type max_time: int
     :param skip: The amount of time to skip from the beginning of the file in minutes, defaults to 0.
     :type skip: int
+    :param skip_retweets: Skip retweets when reading tweets from a file.
+    :type skip_retweets: bool
 
     :return: A dictionary containing the timeline.
     :rtype: dict
@@ -320,7 +328,7 @@ def consume(file, consumer, speed, max_inactivity, max_time=-1, skip=0, *args, *
     """
     stream = Process(target=stream_process,
                      args=(loop, queue, file, ),
-                     kwargs={ 'speed': speed, 'skip_time': skip * 60,
+                     kwargs={ 'speed': speed, 'skip_time': skip * 60, 'skip_retweets': skip_retweets,
                                'max_time': (max_time * 60 if max_time >= 0 else max_time) })
     consume = Process(target=consume_process, args=(comm, loop, consumer, max_inactivity, ))
     stream.start()
