@@ -128,19 +128,19 @@ class TestConsume(unittest.TestCase):
             data = json.loads(f.readline())
             scheme = Exportable.decode(data)['tfidf']
 
-        consumer = consume.create_consumer(StatConsumer, Queue(), scheme=scheme, splits=splits)
+        consumer = consume.create_consumer(StatConsumer, Queue(), scheme=scheme, splits=splits, freeze_period=10)
         self.assertEqual(TokenSplitConsumer, type(consumer))
         self.assertEqual(len(splits), len(consumer.consumers))
         self.assertTrue(all( StatConsumer == type(consumer) for consumer in consumer.consumers ))
 
         consumer = consume.create_consumer(FIREConsumer, Queue(), scheme=scheme, splits=splits,
-                                           min_size=5, max_intra_similarity=0.9)
+                                           min_size=5, max_intra_similarity=0.9, freeze_period=10)
         self.assertEqual(TokenSplitConsumer, type(consumer))
         self.assertEqual(len(splits), len(consumer.consumers))
         self.assertTrue(all( FIREConsumer == type(consumer) for consumer in consumer.consumers ))
 
         consumer = consume.create_consumer(ELDConsumer, Queue(), scheme=scheme, splits=splits,
-                                           min_size=5, max_intra_similarity=0.9)
+                                           min_size=5, max_intra_similarity=0.9, freeze_period=10)
         self.assertEqual(TokenSplitConsumer, type(consumer))
         self.assertEqual(len(splits), len(consumer.consumers))
         self.assertTrue(all( ELDConsumer == type(consumer) for consumer in consumer.consumers ))
@@ -163,23 +163,25 @@ class TestConsume(unittest.TestCase):
 
         consumer = consume.create_consumer(FIREConsumer, Queue(), scheme=scheme, splits=splits, min_size=5,
                                            max_intra_similarity=0.9, min_burst=0.1, periodicity=20,
-                                           min_volume=50, burst_start=0.7)
+                                           min_volume=50, burst_start=0.7, freeze_period=10)
         self.assertTrue(all( FIREConsumer == type(consumer) for consumer in consumer.consumers ))
         self.assertTrue(all( 5 == consumer.min_size for consumer in consumer.consumers ))
         self.assertTrue(all( 20 == consumer.periodicity for consumer in consumer.consumers ))
         self.assertTrue(all( scheme == consumer.scheme for consumer in consumer.consumers ))
+        self.assertTrue(all( 10 == consumer.clustering.freeze_period for consumer in consumer.consumers ))
 
         consumer = consume.create_consumer(ELDConsumer, Queue(), scheme=scheme, splits=splits,
                                            min_size=5, min_burst=0.1, max_intra_similarity=0.9,
-                                           periodicity=20, min_volume=50, burst_start=0.7)
+                                           periodicity=20, min_volume=50, burst_start=0.7, freeze_period=10)
         self.assertTrue(all( 5 == consumer.min_size for consumer in consumer.consumers ))
         self.assertTrue(all( 0.1 == consumer.min_burst for consumer in consumer.consumers ))
         self.assertTrue(all( 0.9 == consumer.max_intra_similarity for consumer in consumer.consumers ))
         self.assertTrue(all( scheme == consumer.scheme for consumer in consumer.consumers ))
+        self.assertTrue(all( 10 == consumer.clustering.freeze_period for consumer in consumer.consumers ))
 
         consumer = consume.create_consumer(FUEGOConsumer, Queue(), scheme=scheme, splits=splits,
                                            min_size=5, min_burst=0.1, max_intra_similarity=0.9,
-                                           periodicity=20, min_volume=50, burst_start=0.7)
+                                           periodicity=20, min_volume=50, burst_start=0.7, freeze_period=10)
         self.assertTrue(all( scheme == consumer.scheme for consumer in consumer.consumers ))
         self.assertTrue(all( 50 == consumer.min_volume for consumer in consumer.consumers ))
         self.assertTrue(all( 0.7 == consumer.burst_start for consumer in consumer.consumers ))

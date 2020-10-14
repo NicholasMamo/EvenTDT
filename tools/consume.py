@@ -21,23 +21,24 @@ To run the script, use:
 
 Accepted arguments:
 
-    - ``-f --file``                    *<Required>* The file to consume.
+    - ``-f --file``                 *<Required>* The file to consume.
     - ``-c --class``                *<Required>* The consumer to use; supported: `ELDConsumer`, `FIREConsumer`, `FUEGOConsumer`, `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.
     - ``-u --understanding``        *<Optional>* The understanding file used to understand the event.
     - ``-s --speed``                *<Optional>* The speed at which the file is consumed, defaults to 1.
     - ``--skip``                    *<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
-    - ``--max-inactivity``            *<Optional>* The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.
+    - ``--max-inactivity``          *<Optional>* The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.
     - ``--max-time``                *<Optional>* The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.
-    - ``--splits``                    *<Optional>* The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split.
-    - ``--periodicity``                *<Optional>* The periodicity in seconds of the consumer (used by the `FIREConsumer`, `StatConsumer` and `ZhaoConsumer`); defaults to 60 seconds.
+    - ``--splits``                  *<Optional>* The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split.
+    - ``--periodicity``             *<Optional>* The periodicity in seconds of the consumer (used by the `FIREConsumer`, `StatConsumer` and `ZhaoConsumer`); defaults to 60 seconds.
     - ``--no-cache``                *<Optional>* If specified, the cached understanding is not used. The new understanding is cached instead.
-    - ``--scheme``                    *<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used.
-    - ``--min-volume``                *<Optional>* The minimum volume to consider the stream to be active and look for breaking terms (used by the `FUEGOConsumer`); defaults to 10.
+    - ``--scheme``                  *<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used.
+    - ``--min-volume``              *<Optional>* The minimum volume to consider the stream to be active and look for breaking terms (used by the `FUEGOConsumer`); defaults to 10.
     - ``--min-size``                *<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
-    - ``--min-burst``                *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the `FIREConsumer` and the `ELDConsumer`).
-    - ``--threshold``                *<Optional>* The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
+    - ``--min-burst``               *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the `FIREConsumer` and the `ELDConsumer`).
+    - ``--threshold``               *<Optional>* The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
     - ``--max-intra-similarity``    *<Optional>* The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
-    - ``--burst-start``                *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the `FUEGOConsumer`).
+    - ``--burst-start``             *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the `FUEGOConsumer`).
+    - ``--freeze-period``           *<Optional>* The freeze period of clusters, defaults to 20 seconds (used by the `FIREConsumer` and the `ELDConsumer`).
 
 """
 
@@ -72,23 +73,24 @@ def setup_args():
 
     Accepted arguments:
 
-        - ``-f --file``                    *<Required>* The file to consume.
+        - ``-f --file``                 *<Required>* The file to consume.
         - ``-c --class``                *<Required>* The consumer to use; supported: `ELDConsumer`, `FIREConsumer`, `FUEGOConsumer`, `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.
         - ``-u --understanding``        *<Optional>* The understanding file used to understand the event.
         - ``-s --speed``                *<Optional>* The speed at which the file is consumed, defaults to 1.
         - ``--skip``                    *<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
-        - ``--max-inactivity``            *<Optional>* The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.
+        - ``--max-inactivity``          *<Optional>* The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.
         - ``--max-time``                *<Optional>* The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.
-        - ``--splits``                    *<Optional>* The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split.
-        - ``--periodicity``                *<Optional>* The periodicity in seconds of the consumer (used by the `FIREConsumer`, `StatConsumer` and `ZhaoConsumer`); defaults to 60 seconds.
+        - ``--splits``                  *<Optional>* The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split.
+        - ``--periodicity``             *<Optional>* The periodicity in seconds of the consumer (used by the `FIREConsumer`, `StatConsumer` and `ZhaoConsumer`); defaults to 60 seconds.
         - ``--no-cache``                *<Optional>* If specified, the cached understanding is not used. The new understanding is cached instead.
-        - ``--scheme``                    *<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used. This can be overwritten if there is event understanding.
-        - ``--min-volume``                *<Optional>* The minimum volume to consider the stream to be active and look for breaking terms (used by the `FUEGOConsumer`); defaults to 10.
+        - ``--scheme``                  *<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used. This can be overwritten if there is event understanding.
+        - ``--min-volume``              *<Optional>* The minimum volume to consider the stream to be active and look for breaking terms (used by the `FUEGOConsumer`); defaults to 10.
         - ``--min-size``                *<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
-        - ``--min-burst``                *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the `FIREConsumer` and the `ELDConsumer`).
-        - ``--threshold``                *<Optional>* The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
+        - ``--min-burst``               *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the `FIREConsumer` and the `ELDConsumer`).
+        - ``--threshold``               *<Optional>* The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
         - ``--max-intra-similarity``    *<Optional>* The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
-        - ``--burst-start``                *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the `FUEGOConsumer`).
+        - ``--burst-start``             *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the `FUEGOConsumer`).
+        - ``--freeze-period``           *<Optional>* The freeze period of clusters in seconds, defaults to 20 seconds (used by the `FIREConsumer` and the `ELDConsumer`).
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
@@ -136,6 +138,8 @@ def setup_args():
                         help='<Optional> The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.')
     parser.add_argument('--burst-start', type=float, required=False, default=0.5,
                         help='<Optional> The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the `FUEGOConsumer`).')
+    parser.add_argument('--freeze-period', type=int, required=False, default=20,
+                        help='<Optional> The freeze period of clusters, defaults to 20 seconds (used by the `FIREConsumer` and the `ELDConsumer`).')
 
     args = parser.parse_args()
     return args
