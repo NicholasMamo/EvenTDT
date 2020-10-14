@@ -36,7 +36,7 @@ class StaggeredFileReader(FileReader):
     :vartype skip_rate: int
     """
 
-    def __init__(self, queue, f, max_lines=-1, max_time=-1, skip_lines=0, skip_time=0, rate=1, skip_rate=0):
+    def __init__(self, queue, f, rate=1, skip_rate=0, *args, **kwargs):
         """
         Create the :class:`~twitter.file.staggered_reader.StaggeredFileReader` with the file from where to read tweets and the :class:`~queues.Queue` where to store them.
         The ``rate`` and ``skip_rate`` are extra parameters in addition to the :class:`~twitter.file.FileReader`'s parameters.
@@ -63,15 +63,11 @@ class StaggeredFileReader(FileReader):
 
         :raises ValueError: When the rate is not an integer.
         :raises ValueError: When the rate is zero or negative.
-        :raises ValueError: When the number of lines to skip is not an integer.
-        :raises ValueError: When the number of lines to skip is negative.
-        :raises ValueError: When the number of seconds to skip is negative.
         :raises ValueError: When the number of lines to skip after each read is not an integer.
         :raises ValueError: When the number of lines to skip after each read is negative.
         """
 
-        super(StaggeredFileReader, self).__init__(queue, f, max_lines=max_lines, max_time=max_time,
-                                                            skip_lines=skip_lines, skip_time=skip_time)
+        super(StaggeredFileReader, self).__init__(queue, f, *args, **kwargs)
 
         """
         Validate the inputs.
@@ -81,15 +77,6 @@ class StaggeredFileReader(FileReader):
 
         if rate <= 0:
             raise ValueError(f"The rate must be positive; received {rate}")
-
-        if skip_lines % 1:
-            raise ValueError(f"The number of lines to skip must be an integer; received {skip_lines}")
-
-        if skip_lines < 0:
-            raise ValueError(f"The number of lines to skip cannot be negative; received {skip_lines}")
-
-        if skip_time < 0:
-            raise ValueError(f"The number of seconds to skip cannot be negative; received {skip_time}")
 
         if skip_rate % 1:
             raise ValueError(f"The rate of lines to skip after each read must be an integer; received {skip_rate}")

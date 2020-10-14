@@ -79,6 +79,10 @@ class FileReader(ABC):
         :type skip_time: int
         :param skip_retweets: A boolean indicating whether to skip retweets.
         :type skip_retweets: bool
+
+        :raises ValueError: When the number of lines to skip is not an integer.
+        :raises ValueError: When the number of lines to skip is negative.
+        :raises ValueError: When the number of seconds to skip is negative.
         """
 
         self.queue = queue
@@ -88,6 +92,18 @@ class FileReader(ABC):
         self.active = False
         self.stopped = True
         self.skip_retweets = skip_retweets
+
+        """
+        Validate the inputs.
+        """
+        if skip_lines % 1:
+            raise ValueError(f"The number of lines to skip must be an integer; received {skip_lines}")
+
+        if skip_lines < 0:
+            raise ValueError(f"The number of lines to skip cannot be negative; received {skip_lines}")
+
+        if skip_time < 0:
+            raise ValueError(f"The number of seconds to skip cannot be negative; received {skip_time}")
 
         self.skip(skip_lines, skip_time)
 

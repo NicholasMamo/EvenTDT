@@ -35,7 +35,7 @@ class SimulatedFileReader(FileReader):
     :vartype speed: int
     """
 
-    def __init__(self, queue, f, max_lines=-1, max_time=-1, skip_lines=0, skip_time=0, speed=1):
+    def __init__(self, queue, f, speed=1, *args, **kwargs):
         """
         Create the :class:`~twitter.file.simulated_reader.SimulatedFileReader` with the file from where to read tweets and the :class:`~queues.Queue` where to store them.
         The ``speed`` is an extra parameter in addition to the :class:`~twitter.file.FileReader`'s parameters.
@@ -44,45 +44,21 @@ class SimulatedFileReader(FileReader):
         :type queue: :class:`~queues.Queue`
         :param f: The opened file from where to read the tweets.
         :type f: file
-        :param max_lines: The maximum number of lines to read.
-                          If the number is negative, it is ignored.
-        :type max_lines: int
-        :param max_time: The maximum time in seconds to spend reading from the file.
-                         The time is taken from tweets' timestamps.
-                         If the number is negative, it is ignored.
-        :type max_time: int
-        :param skip_lines: The number of lines to skip from the beginning of the file.
-        :type skip_lines: int
-        :param skip_time: The number of seconds to skip from the beginning of the file.
-        :type skip_time: int
         :param speed: The reading speed, considered to be a function of time.
                       If it is set to 0.5, for example, the event progresses at half the speed.
                           If it is set to 2, the event progresses at double the speed.
         :type speed: int
 
         :raises ValueError: When the speed is zero or negative.
-        :raises ValueError: When the number of lines to skip is not an integer.
-        :raises ValueError: When the number of lines to skip is negative.
-        :raises ValueError: When the number of seconds to skip is negative.
         """
 
-        super(SimulatedFileReader, self).__init__(queue, f, max_lines=max_lines, max_time=max_time,
-                                                            skip_lines=skip_lines, skip_time=skip_time)
+        super(SimulatedFileReader, self).__init__(queue, f, *args, **kwargs)
 
         """
         Validate the inputs.
         """
         if speed <= 0:
             raise ValueError(f"The speed must be positive; received {speed}")
-
-        if skip_lines % 1:
-            raise ValueError(f"The number of lines to skip must be an integer; received {skip_lines}")
-
-        if skip_lines < 0:
-            raise ValueError(f"The number of lines to skip cannot be negative; received {skip_lines}")
-
-        if skip_time < 0:
-            raise ValueError(f"The number of seconds to skip cannot be negative; received {skip_time}")
 
         self.speed = speed
 
