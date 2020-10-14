@@ -15,22 +15,22 @@ if path not in sys.path:
 from bootstrapping import DummyBootstrapper
 
 class TestBootstrapper(unittest.TestCase):
-	"""
-	Test the functionality of the abstract bootstrapping class.
-	"""
+    """
+    Test the functionality of the abstract bootstrapping class.
+    """
 
-	def test_to_list_one_corpus(self):
-		"""
-		Test that when converting a single corpus to a list, a list with that corpus is returned.
-		"""
+    def test_to_list_one_corpus(self):
+        """
+        Test that when converting a single corpus to a list, a list with that corpus is returned.
+        """
 
-		extractor = DummyBootstrapper()
-		self.assertEqual([ 'a' ], extractor.to_list('a'))
+        extractor = DummyBootstrapper()
+        self.assertEqual([ 'a' ], extractor.to_list('a'))
 
-	def test_to_list_multiple_corpora(self):
-		"""
-		Test that when converting multiple corpora to a list, the same list is returned.
-		"""
+    def test_to_list_multiple_corpora(self):
+        """
+        Test that when converting multiple corpora to a list, the same list is returned.
+        """
 
-		extractor = DummyBootstrapper()
-		self.assertEqual([ 'a', 'b' ], extractor.to_list([ 'a', 'b' ]))
+        extractor = DummyBootstrapper()
+        self.assertEqual([ 'a', 'b' ], extractor.to_list([ 'a', 'b' ]))

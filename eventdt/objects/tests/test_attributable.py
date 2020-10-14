@@ -13,20 +13,20 @@ if path not in sys.path:
 from attributable import Attributable
 
 class TestAttributable(unittest.TestCase):
-	"""
-	Test the :class:`~objects.attributable.Attributable` class.
-	"""
+    """
+    Test the :class:`~objects.attributable.Attributable` class.
+    """
 
-	def test_create_empty(self):
-		"""
-		Test that the empty attributable object has an empty dictionary.
-		"""
+    def test_create_empty(self):
+        """
+        Test that the empty attributable object has an empty dictionary.
+        """
 
-		self.assertEqual({ }, Attributable().attributes)
+        self.assertEqual({ }, Attributable().attributes)
 
-	def test_create_with_data(self):
-		"""
-		Test that an attributable object accepts attributes in the constructor.
-		"""
+    def test_create_with_data(self):
+        """
+        Test that an attributable object accepts attributes in the constructor.
+        """
 
-		self.assertEqual({ 'a': 1 }, Attributable({ 'a': 1 }).attributes)
+        self.assertEqual({ 'a': 1 }, Attributable({ 'a': 1 }).attributes)

@@ -13,33 +13,33 @@ if path not in sys.path:
 from boolean import Boolean
 
 class TestBoolean(unittest.TestCase):
-	"""
-	Test the :class:`~nlp.weighting.local_schemes.boolean.Boolean` class.
-	"""
+    """
+    Test the :class:`~nlp.weighting.local_schemes.boolean.Boolean` class.
+    """
 
-	def test_empty_list_score(self):
-		"""
-		Test that weighting an empty list returns no weights.
-		"""
+    def test_empty_list_score(self):
+        """
+        Test that weighting an empty list returns no weights.
+        """
 
-		tokens = []
-		scheme = Boolean()
-		self.assertEqual({ }, scheme.score(tokens))
+        tokens = []
+        scheme = Boolean()
+        self.assertEqual({ }, scheme.score(tokens))
 
-	def test_list_score(self):
-		"""
-		Test that weighting a list returns the weights of the documents.
-		"""
+    def test_list_score(self):
+        """
+        Test that weighting a list returns the weights of the documents.
+        """
 
-		tokens = [ 'a', 'b' ]
-		scheme = Boolean()
-		self.assertEqual({ 'a': 1, 'b': 1 }, scheme.score(tokens))
+        tokens = [ 'a', 'b' ]
+        scheme = Boolean()
+        self.assertEqual({ 'a': 1, 'b': 1 }, scheme.score(tokens))
 
-	def test_repeated_score(self):
-		"""
-		Test that weighting a list with repeated features returns boolean weights.
-		"""
+    def test_repeated_score(self):
+        """
+        Test that weighting a list with repeated features returns boolean weights.
+        """
 
-		tokens = [ 'a', 'b', 'a' ]
-		scheme = Boolean()
-		self.assertEqual({ 'a': 1, 'b': 1 }, scheme.score(tokens))
+        tokens = [ 'a', 'b', 'a' ]
+        scheme = Boolean()
+        self.assertEqual({ 'a': 1, 'b': 1 }, scheme.score(tokens))

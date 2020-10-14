@@ -7,7 +7,7 @@ To run these consumers, check out the :mod:`~tools.consume` tool.
 
 .. warning::
 
-	In many cases, these consumers replicate most faithfully the TDT approach, not the summarization approach.
+    In many cases, these consumers replicate most faithfully the TDT approach, not the summarization approach.
 """
 
 from .eld_consumer import ELDConsumer

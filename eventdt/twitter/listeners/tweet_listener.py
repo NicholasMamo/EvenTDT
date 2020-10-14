@@ -24,155 +24,155 @@ if path not in sys.path:
 from logger import logger
 
 class TweetListener(StreamListener):
-	"""
-	The :class:`~twitter.listeners.tweet_listener.TweetListener` handles the tweets that the stream sends.
-	It does not configure the stream, but only processes the tweets it sends.
+    """
+    The :class:`~twitter.listeners.tweet_listener.TweetListener` handles the tweets that the stream sends.
+    It does not configure the stream, but only processes the tweets it sends.
 
-	The :class:`~twitter.listeners.tweet_listener.TweetListener`'s state stores the file pointer where to save files.
-	By default, it accumulates tweets until the ``THRESHOLD`` constant is reached.
-	At that point, the accumulated tweets are saved to file.
-	In the meantime, it stores the tweets in the list of ``tweets``.
+    The :class:`~twitter.listeners.tweet_listener.TweetListener`'s state stores the file pointer where to save files.
+    By default, it accumulates tweets until the ``THRESHOLD`` constant is reached.
+    At that point, the accumulated tweets are saved to file.
+    In the meantime, it stores the tweets in the list of ``tweets``.
 
-	Although listeners do not control the stream's specifications, they can stop it.
-	The :class:`~twitter.listeners.tweet_listener.TweetListener` receives the ``max_time`` parameter which specifies, in seconds, the time to spend receiving tweets.
-	The :func:`~twitter.listeners.tweet_listener.TweetListener.on_data` function stops the stream when it receives a tweet after this time expires.
-	When it stops the stream, it saves any pending tweets to file.
+    Although listeners do not control the stream's specifications, they can stop it.
+    The :class:`~twitter.listeners.tweet_listener.TweetListener` receives the ``max_time`` parameter which specifies, in seconds, the time to spend receiving tweets.
+    The :func:`~twitter.listeners.tweet_listener.TweetListener.on_data` function stops the stream when it receives a tweet after this time expires.
+    When it stops the stream, it saves any pending tweets to file.
 
-	Tweet objects contain many attributes, some of which may not be needed, but which create large corpora.
-	For example, feature-pivot algorithms that rely only on volume do not need anything except the tweet ID and the timestamp.
-	Therefore the :class:`~twitter.listeners.tweet_listener.TweetListener` also stores the ``attributes`` variable.
-	This represents a list of tweet attributes to save to file.
-	If it is not given, the tweets are stored without any filtering.
+    Tweet objects contain many attributes, some of which may not be needed, but which create large corpora.
+    For example, feature-pivot algorithms that rely only on volume do not need anything except the tweet ID and the timestamp.
+    Therefore the :class:`~twitter.listeners.tweet_listener.TweetListener` also stores the ``attributes`` variable.
+    This represents a list of tweet attributes to save to file.
+    If it is not given, the tweets are stored without any filtering.
 
-	:cvar THRESHOLD: The number of tweets to accumulate before writing them to file.
-	:vartype THRESHOLD: int
+    :cvar THRESHOLD: The number of tweets to accumulate before writing them to file.
+    :vartype THRESHOLD: int
 
-	:ivar file: The opened file pointer where to write the tweets.
-	:vartype file: file
-	:ivar tweets: The list of read tweets that have not been written to file yet.
-	:vartype tweets: list
-	:ivar max_time: The maximum time in seconds to spend receiving tweets.
-					When this time expires, the listener instructs the stream to stop accepting tweets.
-	:vartype max_time: int
-	:ivar start: The timestamp when the listener started waiting for tweets.
-				 This variable is used to calculate the time the listener has spent receiving tweets.
-	:vartype start: int
-	:ivar attributes: The attributes to save from each tweet.
-					  If ``None`` is given, the entire tweet objects are saved.
-	:vartype attributes: list of str or None
-	"""
+    :ivar file: The opened file pointer where to write the tweets.
+    :vartype file: file
+    :ivar tweets: The list of read tweets that have not been written to file yet.
+    :vartype tweets: list
+    :ivar max_time: The maximum time in seconds to spend receiving tweets.
+                    When this time expires, the listener instructs the stream to stop accepting tweets.
+    :vartype max_time: int
+    :ivar start: The timestamp when the listener started waiting for tweets.
+                 This variable is used to calculate the time the listener has spent receiving tweets.
+    :vartype start: int
+    :ivar attributes: The attributes to save from each tweet.
+                      If ``None`` is given, the entire tweet objects are saved.
+    :vartype attributes: list of str or None
+    """
 
-	THRESHOLD = 200
+    THRESHOLD = 200
 
-	def __init__(self, f, max_time=3600, attributes=None):
-		"""
-		Create the listener.
-		Simultaneously set the file and the list of tweets.
-		By default, the stream continues processing for an hour.
+    def __init__(self, f, max_time=3600, attributes=None):
+        """
+        Create the listener.
+        Simultaneously set the file and the list of tweets.
+        By default, the stream continues processing for an hour.
 
-		:param f: The opened file pointer where to write the tweets.
-		:type f: file
-		:param max_time: The maximum time in seconds to spend receiving tweets.
-						 When this time expires, the listener instructs the stream to stop accepting tweets.
-		:type max_time: int
-		:param attributes: The attributes to save from each tweet.
-						   If ``None`` is given, the entire tweet objects are saved.
-		:type attributes: list of str or None
-		"""
+        :param f: The opened file pointer where to write the tweets.
+        :type f: file
+        :param max_time: The maximum time in seconds to spend receiving tweets.
+                         When this time expires, the listener instructs the stream to stop accepting tweets.
+        :type max_time: int
+        :param attributes: The attributes to save from each tweet.
+                           If ``None`` is given, the entire tweet objects are saved.
+        :type attributes: list of str or None
+        """
 
-		self.file = f
-		self.tweets = [ ]
-		self.max_time = max_time
-		self.start = time.time()
-		self.attributes = attributes or [ ]
+        self.file = f
+        self.tweets = [ ]
+        self.max_time = max_time
+        self.start = time.time()
+        self.attributes = attributes or [ ]
 
-	def flush(self):
-		"""
-		Flush the tweets to file.
-		Data is saved as a string to file.
+    def flush(self):
+        """
+        Flush the tweets to file.
+        Data is saved as a string to file.
 
-		.. note::
+        .. note::
 
-			At this point, tweets are already JSON dictionaries and have a newline character at the end.
-			Since each tweet is a string representing a line, this function only concatenates these lines together.
-		"""
+            At this point, tweets are already JSON dictionaries and have a newline character at the end.
+            Since each tweet is a string representing a line, this function only concatenates these lines together.
+        """
 
-		self.file.write(''.join(self.tweets))
-		self.tweets = [ ]
+        self.file.write(''.join(self.tweets))
+        self.tweets = [ ]
 
-	def on_data(self, data):
-		"""
-		When the listener receives tweets, add them to a list.
-		If there are many tweets, save them to file and reset the list of tweets.
+    def on_data(self, data):
+        """
+        When the listener receives tweets, add them to a list.
+        If there are many tweets, save them to file and reset the list of tweets.
 
-		When the function adds tweets to the list, they are strings, ready to be saved by the :func:`~twitter.listeners.tweet_listener.TweetListener.flush` function.
-		That means they are JSON-encoded strings with a newline character at the end.
+        When the function adds tweets to the list, they are strings, ready to be saved by the :func:`~twitter.listeners.tweet_listener.TweetListener.flush` function.
+        That means they are JSON-encoded strings with a newline character at the end.
 
-		This function also checks if the listener has been listening for tweets for a long time.
-		If it exceeds the ``max_time``, the function returns ``False`` so that the stream ends.
+        This function also checks if the listener has been listening for tweets for a long time.
+        If it exceeds the ``max_time``, the function returns ``False`` so that the stream ends.
 
-		:param data: The received data.
-		:type data: str
+        :param data: The received data.
+        :type data: str
 
-		:return: A boolean indicating if the listener has finished reading tweets.
-				 It is set to ``True`` normally.
-				 When the elapsed time exceeds the ``max_time`` parameter, the :class:`~twitter.listeners.tweet_listener.TweetListener` returns ``False``.
-				 This instructs the stream to stop receiving tweets.
-		:rtype: bool
-		"""
+        :return: A boolean indicating if the listener has finished reading tweets.
+                 It is set to ``True`` normally.
+                 When the elapsed time exceeds the ``max_time`` parameter, the :class:`~twitter.listeners.tweet_listener.TweetListener` returns ``False``.
+                 This instructs the stream to stop receiving tweets.
+        :rtype: bool
+        """
 
-		tweet = json.loads(data)
-		if 'id' in tweet:
-			tweet = self.filter(tweet)
-			self.tweets.append(json.dumps(tweet) + "\n")
+        tweet = json.loads(data)
+        if 'id' in tweet:
+            tweet = self.filter(tweet)
+            self.tweets.append(json.dumps(tweet) + "\n")
 
-			"""
-			If the tweets have exceeded the threshold of tweets, save them to the file.
-			"""
-			if len(self.tweets) >= self.THRESHOLD:
-				self.flush()
+            """
+            If the tweets have exceeded the threshold of tweets, save them to the file.
+            """
+            if len(self.tweets) >= self.THRESHOLD:
+                self.flush()
 
-			"""
-			Stop listening if the time limit has been exceeded.
-			To stop listening, the function returns `False`, but not before saving any pending tweets.
-			"""
-			current = time.time()
-			if current - self.start < self.max_time:
-				return True
-			else:
-				self.flush()
-				return False
+            """
+            Stop listening if the time limit has been exceeded.
+            To stop listening, the function returns `False`, but not before saving any pending tweets.
+            """
+            current = time.time()
+            if current - self.start < self.max_time:
+                return True
+            else:
+                self.flush()
+                return False
 
-	def filter(self, tweet):
-		"""
-		Filter the given tweet using the attributes specified when creating the :class:`~twitter.listeners.tweet_listener.TweetListener`.
-		If no attributes were given, the tweet's attributes are all retained.
+    def filter(self, tweet):
+        """
+        Filter the given tweet using the attributes specified when creating the :class:`~twitter.listeners.tweet_listener.TweetListener`.
+        If no attributes were given, the tweet's attributes are all retained.
 
-		:param tweet: The tweet attributes as a dictionary.
-					  The keys are the attribute names and the values are the data.
-		:type tweet: dict
+        :param tweet: The tweet attributes as a dictionary.
+                      The keys are the attribute names and the values are the data.
+        :type tweet: dict
 
-		:return: The tweet as a dictionary with only the required attributes.
-		:rtype: dict
-		"""
+        :return: The tweet as a dictionary with only the required attributes.
+        :rtype: dict
+        """
 
-		"""
-		Return the tweet as it is if there are no attributes to filter.
-		"""
-		if not self.attributes:
-			return tweet
+        """
+        Return the tweet as it is if there are no attributes to filter.
+        """
+        if not self.attributes:
+            return tweet
 
-		"""
-		Otherwise, keep only the attributes in the list.
-		"""
-		return { attribute: tweet.get(attribute) for attribute in self.attributes }
+        """
+        Otherwise, keep only the attributes in the list.
+        """
+        return { attribute: tweet.get(attribute) for attribute in self.attributes }
 
-	def on_error(self, status):
-		"""
-		Print any errors.
+    def on_error(self, status):
+        """
+        Print any errors.
 
-		:param status: The error status.
-		:type status: str
-		"""
+        :param status: The error status.
+        :type status: str
+        """
 
-		logger.error(str(status))
+        logger.error(str(status))

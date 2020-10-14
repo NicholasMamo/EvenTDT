@@ -8,25 +8,25 @@ The participants should be ranked in descending order of their relevance.
 """
 
 class Extrapolator(object):
-	"""
-	The simplest extrapolator returns no new participants.
-	However, it defines the functionality that is common to all other extrapolators.
+    """
+    The simplest extrapolator returns no new participants.
+    However, it defines the functionality that is common to all other extrapolators.
 
-	The functionality revolves around the :func:`~apd.extrapolators.extrapolator.Extrapolator.extrapolate` method.
-	The input participants should be the product of a :class:`~apd.resolvers.resolver.Resolver` process: a list of strings representing participants.
-	The output, then, is a list of new participants that the extrapolator considers valid for the event.
-	"""
+    The functionality revolves around the :func:`~apd.extrapolators.extrapolator.Extrapolator.extrapolate` method.
+    The input participants should be the product of a :class:`~apd.resolvers.resolver.Resolver` process: a list of strings representing participants.
+    The output, then, is a list of new participants that the extrapolator considers valid for the event.
+    """
 
-	def extrapolate(self, participants, *args, **kwargs):
-		"""
-		Extrapolate from the given participants.
-		This extrapolator returns no new participants.
+    def extrapolate(self, participants, *args, **kwargs):
+        """
+        Extrapolate from the given participants.
+        This extrapolator returns no new participants.
 
-		:param participants: The participants found by the resolver.
-		:type participants: list of str
+        :param participants: The participants found by the resolver.
+        :type participants: list of str
 
-		:return: The new participants identified as relevant by the extrapolator.
-		:rtype: list of str
-		"""
+        :return: The new participants identified as relevant by the extrapolator.
+        :rtype: list of str
+        """
 
-		return [ ]
+        return [ ]

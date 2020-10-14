@@ -4,7 +4,7 @@ The term frequency :math:`tf_{t,d}` of a feature :math:`t` is equivalent to its 
 
 .. math::
 
-	tf_{t,d} = f_{t,d}
+    tf_{t,d} = f_{t,d}
 """
 
 import os
@@ -19,17 +19,17 @@ from weighting.local_schemes import tf
 from weighting.global_schemes.filler import Filler
 
 class TF(TermWeightingScheme):
-	"""
-	The term frequency weighting scheme is used when there is no need for a global scheme.
-	It is an instance of a :class:`~nlp.weighting.TermWeightingScheme` with:
+    """
+    The term frequency weighting scheme is used when there is no need for a global scheme.
+    It is an instance of a :class:`~nlp.weighting.TermWeightingScheme` with:
 
-	1. :class:`~nlp.weighting.local_schemes.tf.TF` as a local term-weighting scheme, and
-	2. :class:`~nlp.weighting.global_schemes.filler.Filler` as a global term-weighting scheme (that does not change the score at all).
-	"""
+    1. :class:`~nlp.weighting.local_schemes.tf.TF` as a local term-weighting scheme, and
+    2. :class:`~nlp.weighting.global_schemes.filler.Filler` as a global term-weighting scheme (that does not change the score at all).
+    """
 
-	def __init__(self):
-		"""
-		Initialize the term-weighting scheme by supplying the TF and filler schemes.
-		"""
+    def __init__(self):
+        """
+        Initialize the term-weighting scheme by supplying the TF and filler schemes.
+        """
 
-		super(TF, self).__init__(tf.TF(), Filler())
+        super(TF, self).__init__(tf.TF(), Filler())

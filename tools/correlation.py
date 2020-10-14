@@ -8,26 +8,26 @@ To run the script, use:
 .. code-block:: bash
 
     ./tools/correlation.py \\
-	--terms first half
-	--files data/tokenized_corpus.json \\
-	--method CHI \\
-	--output data/correlation.json
+    --terms first half
+    --files data/tokenized_corpus.json \\
+    --method CHI \\
+    --output data/correlation.json
 
 If the terms are stored in a file produced by the ``terms`` or ``bootstrap`` scripts, you can load them as follows:
 
-	./tools/correlation.py \\
-	--terms data/terms.json \\
-	--files data/tokenized_corpus.json \\
-	--method CHI \\
-	--output data/correlation.json
+    ./tools/correlation.py \\
+    --terms data/terms.json \\
+    --files data/tokenized_corpus.json \\
+    --method CHI \\
+    --output data/correlation.json
 
 Accepted arguments:
 
-	- ``-t --terms``		*<Required>* A list of terms, or the path to the file containing a list of terms for which to calculate the correlation. It can be the output from the ``terms`` and ``bootstrap`` tool.
-	- ``-f --files``		*<Required>* The input corpora from which to calculate the correlation betwee terms, expected to be already tokenized by the `tokenize` tool.
-	- ``-m --method``		*<Required>* The method to use to compute the correlation values; supported: `PMI`, `CHI`, `Log`.
-	- ``-o --output``		*<Required>* The path to the file where to store the correlation values.
-	- ``--max-terms``		*<Optional>* The maximum number of terms to use, useful when loading terms from files; defaults to all terms.
+    - ``-t --terms``        *<Required>* A list of terms, or the path to the file containing a list of terms for which to calculate the correlation. It can be the output from the ``terms`` and ``bootstrap`` tool.
+    - ``-f --files``        *<Required>* The input corpora from which to calculate the correlation betwee terms, expected to be already tokenized by the `tokenize` tool.
+    - ``-m --method``        *<Required>* The method to use to compute the correlation values; supported: `PMI`, `CHI`, `Log`.
+    - ``-o --output``        *<Required>* The path to the file where to store the correlation values.
+    - ``--max-terms``        *<Optional>* The maximum number of terms to use, useful when loading terms from files; defaults to all terms.
 """
 
 import argparse
@@ -46,185 +46,185 @@ from ate.bootstrapping.probability import ChiBootstrapper, LogLikelihoodRatioBoo
 from logger import logger
 
 def setup_args():
-	"""
-	Set up and get the list of command-line arguments.
+    """
+    Set up and get the list of command-line arguments.
 
-	Accepted arguments:
+    Accepted arguments:
 
-		- ``-t --terms``		*<Required>* A list of terms, or the path to the file containing a list of terms for which to calculate the correlation. It can be the output from the ``terms`` and ``bootstrap`` tool.
-		- ``-f --files``		*<Required>* The input corpora from which to calculate the correlation betwee terms, expected to be already tokenized by the `tokenize` tool.
-		- ``-m --method``		*<Required>* The method to use to compute the correlation values; supported: `PMI`, `CHI`, `Log`.
-		- ``-o --output``		*<Required>* The path to the file where to store the correlation values.
-		- ``--max-terms``		*<Optional>* The maximum number of terms to use, useful when loading terms from files; defaults to all terms.
+        - ``-t --terms``        *<Required>* A list of terms, or the path to the file containing a list of terms for which to calculate the correlation. It can be the output from the ``terms`` and ``bootstrap`` tool.
+        - ``-f --files``        *<Required>* The input corpora from which to calculate the correlation betwee terms, expected to be already tokenized by the `tokenize` tool.
+        - ``-m --method``        *<Required>* The method to use to compute the correlation values; supported: `PMI`, `CHI`, `Log`.
+        - ``-o --output``        *<Required>* The path to the file where to store the correlation values.
+        - ``--max-terms``        *<Optional>* The maximum number of terms to use, useful when loading terms from files; defaults to all terms.
 
-	:return: The command-line arguments.
-	:rtype: :class:`argparse.Namespace`
-	"""
+    :return: The command-line arguments.
+    :rtype: :class:`argparse.Namespace`
+    """
 
-	parser = argparse.ArgumentParser(description="Calculate the correlation between the given set of terms.")
+    parser = argparse.ArgumentParser(description="Calculate the correlation between the given set of terms.")
 
-	parser.add_argument('-t', '--terms',
-						nargs='+', required=True,
-						help='<Required> A list of terms, or the path to the file containing a list of terms for which to calculate the correlation. It can be the output from the ``terms`` and ``bootstrap`` tool.')
-	parser.add_argument('-f', '--files',
-						nargs='+', required=True,
-						help='<Required> The input corpora from which to calculate the correlation betwee terms, expected to be already tokenized by the `tokenize tool.')
-	parser.add_argument('-m', '--method',
-						type=method, required=True,
-						help='<Required> The method to use to compute the correlation values; supported: `PMI`, `CHI`, `Log`.')
-	parser.add_argument('-o', '--output',
-						type=str, required=True,
-						help='<Required> The path to the file where to store the correlation values.')
-	parser.add_argument('--max-terms',
-						type=int, required=False, default=None,
-						help='<Optional> The maximum number of terms to use, useful when loading terms from files; defaults to all terms.')
+    parser.add_argument('-t', '--terms',
+                        nargs='+', required=True,
+                        help='<Required> A list of terms, or the path to the file containing a list of terms for which to calculate the correlation. It can be the output from the ``terms`` and ``bootstrap`` tool.')
+    parser.add_argument('-f', '--files',
+                        nargs='+', required=True,
+                        help='<Required> The input corpora from which to calculate the correlation betwee terms, expected to be already tokenized by the `tokenize tool.')
+    parser.add_argument('-m', '--method',
+                        type=method, required=True,
+                        help='<Required> The method to use to compute the correlation values; supported: `PMI`, `CHI`, `Log`.')
+    parser.add_argument('-o', '--output',
+                        type=str, required=True,
+                        help='<Required> The path to the file where to store the correlation values.')
+    parser.add_argument('--max-terms',
+                        type=int, required=False, default=None,
+                        help='<Optional> The maximum number of terms to use, useful when loading terms from files; defaults to all terms.')
 
-	args = parser.parse_args()
-	return args
+    args = parser.parse_args()
+    return args
 
 def main():
-	"""
-	The main program loop.
-	"""
+    """
+    The main program loop.
+    """
 
-	args = setup_args()
+    args = setup_args()
 
-	"""
-	Get the meta arguments.
-	"""
-	cmd = tools.meta(args)
-	cmd['method'] = str(vars(args)['method'])
+    """
+    Get the meta arguments.
+    """
+    cmd = tools.meta(args)
+    cmd['method'] = str(vars(args)['method'])
 
-	"""
-	Load the terms.
-	"""
-	terms = load_terms(args.terms, args.max_terms)
-	cmd['terms'] = terms
+    """
+    Load the terms.
+    """
+    terms = load_terms(args.terms, args.max_terms)
+    cmd['terms'] = terms
 
-	"""
-	Calculate the correlation.
-	"""
-	extractor = create_extractor(args.method)
-	correlation = extract(extractor, args.files, terms)
+    """
+    Calculate the correlation.
+    """
+    extractor = create_extractor(args.method)
+    correlation = extract(extractor, args.files, terms)
 
-	tools.save(args.output, { 'meta': cmd, 'correlation': correlation })
+    tools.save(args.output, { 'meta': cmd, 'correlation': correlation })
 
 def load_terms(terms, max_terms=None):
-	"""
-	Load the terms from the given list.
-	If a list includes files, they are parsed accordingly:
+    """
+    Load the terms from the given list.
+    If a list includes files, they are parsed accordingly:
 
-	- If the file is the output of the ``terms`` tool, all terms are loaded from it.
-	- If the file is the output of the ``bootstrap`` tool, the seed words and the bootstrapped words are loaded from it.
+    - If the file is the output of the ``terms`` tool, all terms are loaded from it.
+    - If the file is the output of the ``bootstrap`` tool, the seed words and the bootstrapped words are loaded from it.
 
-	:param terms: A list of terms, or the path to the file containing a list of terms for which to calculate the correlation.
-				  It can be the output from the ``terms`` and ``bootstrap`` tool.
-	:type terms: list of str
-	:param max_terms: The maximum number of terms to keep.
-					  The priority of the terms is the order in which they are given.
-					  If ``None`` is given, all terms are retained.
-	:type max_terms: int or None
+    :param terms: A list of terms, or the path to the file containing a list of terms for which to calculate the correlation.
+                  It can be the output from the ``terms`` and ``bootstrap`` tool.
+    :type terms: list of str
+    :param max_terms: The maximum number of terms to keep.
+                      The priority of the terms is the order in which they are given.
+                      If ``None`` is given, all terms are retained.
+    :type max_terms: int or None
 
-	:return: A list of terms.
-	:rtype: list of str
+    :return: A list of terms.
+    :rtype: list of str
 
-	:raises ValueError: If the maximum number of terms is less than 2.
-	"""
+    :raises ValueError: If the maximum number of terms is less than 2.
+    """
 
-	if max_terms is not None and max_terms < 2:
-		raise ValueError(f"At least two terms must be given; received { max_terms }")
+    if max_terms is not None and max_terms < 2:
+        raise ValueError(f"At least two terms must be given; received { max_terms }")
 
-	_terms = [ ]
+    _terms = [ ]
 
-	for term in terms:
-		if tools.is_file(term):
-			with open(term) as f:
-				data = json.loads(''.join(f.readlines()))
+    for term in terms:
+        if tools.is_file(term):
+            with open(term) as f:
+                data = json.loads(''.join(f.readlines()))
 
-				"""
-				Check if this is the output of a tool.
-				"""
-				if 'meta' in data:
-					meta = data['meta']
-					if 'seed' in meta:
-						_terms.extend(meta['seed'])
-						_terms.extend(data['bootstrapped'])
-					elif 'terms' in data:
-						_terms.extend([ term['term'] for term in data['terms'] ])
-		else:
-			_terms.append(term)
+                """
+                Check if this is the output of a tool.
+                """
+                if 'meta' in data:
+                    meta = data['meta']
+                    if 'seed' in meta:
+                        _terms.extend(meta['seed'])
+                        _terms.extend(data['bootstrapped'])
+                    elif 'terms' in data:
+                        _terms.extend([ term['term'] for term in data['terms'] ])
+        else:
+            _terms.append(term)
 
-	max_terms = max_terms if max_terms else len(_terms)
-	return _terms[:max_terms]
+    max_terms = max_terms if max_terms else len(_terms)
+    return _terms[:max_terms]
 
 def create_extractor(cls):
-	"""
-	Instantiate the method based on the arguments that it accepts.
+    """
+    Instantiate the method based on the arguments that it accepts.
 
-	:param cls: The class type of the method to instantiate.
-	:type cls: :class:`~ate.bootstrapping.Bootstrapper`
+    :param cls: The class type of the method to instantiate.
+    :type cls: :class:`~ate.bootstrapping.Bootstrapper`
 
-	:return: The created extractor.
-	:rtype: :class:`~ate.bootstrapping.Bootstrapper`
-	"""
+    :return: The created extractor.
+    :rtype: :class:`~ate.bootstrapping.Bootstrapper`
+    """
 
-	return cls()
+    return cls()
 
 def extract(extractor, files, terms):
-	"""
-	Calculate the correlation of the given terms from the given files.
+    """
+    Calculate the correlation of the given terms from the given files.
 
-	:param extractor: The created extractor.
-	:type extractor: :class:`~ate.bootstrapping.Bootstrapper`
-	:param files: A list of paths to files from which to calculate the correlation.
-	:type files: list of str
-	:param terms: A list of terms for which to compute the correlation.
-	:type terms: list of str
+    :param extractor: The created extractor.
+    :type extractor: :class:`~ate.bootstrapping.Bootstrapper`
+    :param files: A list of paths to files from which to calculate the correlation.
+    :type files: list of str
+    :param terms: A list of terms for which to compute the correlation.
+    :type terms: list of str
 
-	:return: The correlation between all given terms.
-			 This is returned as a dictionary of dictionaries.
-			 The outer level is each term.
-			 The inner level is the outer level term's correlation with the other terms.
-	:rtype: dict of dict
-	"""
+    :return: The correlation between all given terms.
+             This is returned as a dictionary of dictionaries.
+             The outer level is each term.
+             The inner level is the outer level term's correlation with the other terms.
+    :rtype: dict of dict
+    """
 
-	logger.info(f"Calculating the correlation between { ', '.join(terms) }")
+    logger.info(f"Calculating the correlation between { ', '.join(terms) }")
 
-	correlation = extractor.bootstrap(files, terms, terms)
-	correlation = { term: { t2: c for (t1, t2), c in correlation.items()
-								  if t1 is term }
-						  for term in terms }
+    correlation = extractor.bootstrap(files, terms, terms)
+    correlation = { term: { t2: c for (t1, t2), c in correlation.items()
+                                  if t1 is term }
+                          for term in terms }
 
-	logger.info(f"Finished calculating the correlation")
-	return correlation
+    logger.info(f"Finished calculating the correlation")
+    return correlation
 
 def method(method):
-	"""
-	Convert the given string into a correlation function.
-	The accepted methods are:
+    """
+    Convert the given string into a correlation function.
+    The accepted methods are:
 
-		#. :func:`~ate.bootstrapping.probability.pmi.PMIBootstrapper`,
-		#. :func:`~ate.bootstrapping.probability.chi.ChiBootstrapper`
+        #. :func:`~ate.bootstrapping.probability.pmi.PMIBootstrapper`,
+        #. :func:`~ate.bootstrapping.probability.chi.ChiBootstrapper`
 
-	:param method: The method string.
-	:type method: str
+    :param method: The method string.
+    :type method: str
 
-	:return: The function that corresponds to the given method.
-	:rtype: function
+    :return: The function that corresponds to the given method.
+    :rtype: function
 
-	:raises argparse.ArgumentTypeError: When the given method string is invalid.
-	"""
+    :raises argparse.ArgumentTypeError: When the given method string is invalid.
+    """
 
-	methods = {
-		'pmi': PMIBootstrapper,
-		'chi': ChiBootstrapper,
-		'log': LogLikelihoodRatioBootstrapper,
-	}
+    methods = {
+        'pmi': PMIBootstrapper,
+        'chi': ChiBootstrapper,
+        'log': LogLikelihoodRatioBootstrapper,
+    }
 
-	if method.lower() in methods:
-		return methods[method.lower()]
+    if method.lower() in methods:
+        return methods[method.lower()]
 
-	raise argparse.ArgumentTypeError(f"Invalid method value: {method}")
+    raise argparse.ArgumentTypeError(f"Invalid method value: {method}")
 
 if __name__ == "__main__":
-	main()
+    main()

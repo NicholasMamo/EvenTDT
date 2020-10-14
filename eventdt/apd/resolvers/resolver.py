@@ -13,32 +13,32 @@ The functionality revolves around the :class:`~apd.resolvers.resolver.Resolver`'
 """
 
 class Resolver(object):
-	"""
-	The simplest resolver returns all candidates as resolved participants.
-	This can be thought of as a mapping from a candidate to the same candidate.
+    """
+    The simplest resolver returns all candidates as resolved participants.
+    This can be thought of as a mapping from a candidate to the same candidate.
 
-	However, the resolver, as a class, represents the kind of functionality that all sub-classes should be able to offer.
-	This functionality is namely the ability to resolve candidates.
+    However, the resolver, as a class, represents the kind of functionality that all sub-classes should be able to offer.
+    This functionality is namely the ability to resolve candidates.
 
-	The functionality revolves around one the :func:`~apd.resolvers.resolver.Resolver.resolve` method
-	The input candidates should be the product of a :class:`~apd.scorers.scorer.Scorer` process.
-	In other words, they should be a dictionary, with the keys being the candidates and the values being the score.
-	"""
+    The functionality revolves around one the :func:`~apd.resolvers.resolver.Resolver.resolve` method
+    The input candidates should be the product of a :class:`~apd.scorers.scorer.Scorer` process.
+    In other words, they should be a dictionary, with the keys being the candidates and the values being the score.
+    """
 
-	def resolve(self, candidates, *args, **kwargs):
-		"""
-		The resolution function returns the same candidates as they were given, but as a list.
-		They are sorted according to their score.
+    def resolve(self, candidates, *args, **kwargs):
+        """
+        The resolution function returns the same candidates as they were given, but as a list.
+        They are sorted according to their score.
 
-		:param candidates: The candidates to resolve.
-						   The candidates should be in the form of a dictionary.
-						   The keys should be the candidates, and the values the scores.
-		:type candidates: dict
+        :param candidates: The candidates to resolve.
+                           The candidates should be in the form of a dictionary.
+                           The keys should be the candidates, and the values the scores.
+        :type candidates: dict
 
-		:return: A tuple containing the resolved and unresolved candidates respectively.
-				 The base resolver resolves all candidates to the same candidates.
-				 Therefore unresolved candidates are empty.
-		:rtype: tuple of lists
-		"""
+        :return: A tuple containing the resolved and unresolved candidates respectively.
+                 The base resolver resolves all candidates to the same candidates.
+                 Therefore unresolved candidates are empty.
+        :rtype: tuple of lists
+        """
 
-		return (list(sorted(candidates.keys(), key=lambda candidate: candidates.get(candidate), reverse=True)), [ ])
+        return (list(sorted(candidates.keys(), key=lambda candidate: candidates.get(candidate), reverse=True)), [ ])

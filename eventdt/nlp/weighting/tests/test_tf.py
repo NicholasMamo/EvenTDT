@@ -13,33 +13,33 @@ if path not in sys.path:
 from tf import TF
 
 class TestTF(unittest.TestCase):
-	"""
-	Test the :class:`~nlp.weighting.tf.TF` class.
-	"""
+    """
+    Test the :class:`~nlp.weighting.tf.TF` class.
+    """
 
-	def test_empty_list_score(self):
-		"""
-		Test that weighting an empty list returns no weights.
-		"""
+    def test_empty_list_score(self):
+        """
+        Test that weighting an empty list returns no weights.
+        """
 
-		tokens = []
-		document = TF().create(tokens)
-		self.assertEqual({ }, document.dimensions)
+        tokens = []
+        document = TF().create(tokens)
+        self.assertEqual({ }, document.dimensions)
 
-	def test_list_score(self):
-		"""
-		Test that weighting a list returns the weights of the documents.
-		"""
+    def test_list_score(self):
+        """
+        Test that weighting a list returns the weights of the documents.
+        """
 
-		tokens = [ 'a', 'b' ]
-		document = TF().create(tokens)
-		self.assertEqual({ 'a': 1, 'b': 1 }, document.dimensions)
+        tokens = [ 'a', 'b' ]
+        document = TF().create(tokens)
+        self.assertEqual({ 'a': 1, 'b': 1 }, document.dimensions)
 
-	def test_repeated_score(self):
-		"""
-		Test that weighting a list with repeated features returns frequency counts.
-		"""
+    def test_repeated_score(self):
+        """
+        Test that weighting a list with repeated features returns frequency counts.
+        """
 
-		tokens = [ 'a', 'b', 'a' ]
-		document = TF().create(tokens)
-		self.assertEqual({ 'a': 2, 'b': 1 }, document.dimensions)
+        tokens = [ 'a', 'b', 'a' ]
+        document = TF().create(tokens)
+        self.assertEqual({ 'a': 2, 'b': 1 }, document.dimensions)

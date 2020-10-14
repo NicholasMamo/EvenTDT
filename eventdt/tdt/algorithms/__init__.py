@@ -10,34 +10,34 @@ This functionality is encapsulated in the :class:`~tdt.algorithms.TDTAlgorithm`,
 
 .. note::
 
-	Most TDT algorithms have a detection stage and a summarization stage.
-	EvenTDT separates the two into:
+    Most TDT algorithms have a detection stage and a summarization stage.
+    EvenTDT separates the two into:
 
-	- :class:`~tdt.algorithms.TDTAlgorithm` and
-	- :class:`~summarization.algorithms.SummarizationAlgorithm`.
+    - :class:`~tdt.algorithms.TDTAlgorithm` and
+    - :class:`~summarization.algorithms.SummarizationAlgorithm`.
 
-	The reason why EvenTDT enforces this separation is that the two approaches tackle vastly different problems.
-	Well-designed approaches delineate the separation between the two.
-	If the :class:`~tdt.algorithms.TDTAlgorithm` is meant to work closely together with the :class:`~summarization.algorithms.SummarizationAlgorithm`, then its output needs to be compatible with the summarization algorithm.
+    The reason why EvenTDT enforces this separation is that the two approaches tackle vastly different problems.
+    Well-designed approaches delineate the separation between the two.
+    If the :class:`~tdt.algorithms.TDTAlgorithm` is meant to work closely together with the :class:`~summarization.algorithms.SummarizationAlgorithm`, then its output needs to be compatible with the summarization algorithm.
 """
 
 from abc import ABC, abstractmethod
 
 class TDTAlgorithm(ABC):
-	"""
-	Since TDT algorithms vary greatly, there is no general state.
-	The :class:`~tdt.algorithms.TDTAlgorithm`'s purpose is to create a standard interface to TDT algorithms.
-	Although the state and the parameters change from one algorithm to the other, all of them must implement the :func:`~tdt.algorithms.TDTAlgorithm.detect` method.
-	"""
+    """
+    Since TDT algorithms vary greatly, there is no general state.
+    The :class:`~tdt.algorithms.TDTAlgorithm`'s purpose is to create a standard interface to TDT algorithms.
+    Although the state and the parameters change from one algorithm to the other, all of them must implement the :func:`~tdt.algorithms.TDTAlgorithm.detect` method.
+    """
 
-	@abstractmethod
-	def detect(self, *args, **kwargs):
-		"""
-		Detect breaking topics.
-		The parameters accepted by this function as well as the return value change according to the algorithm.
-		"""
+    @abstractmethod
+    def detect(self, *args, **kwargs):
+        """
+        Detect breaking topics.
+        The parameters accepted by this function as well as the return value change according to the algorithm.
+        """
 
-		pass
+        pass
 
 from .cataldi import Cataldi
 from .eld import ELD, SlidingELD

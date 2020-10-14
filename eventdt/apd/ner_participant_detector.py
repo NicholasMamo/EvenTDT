@@ -5,8 +5,8 @@ Nor does it extrapolate named entities: it simply extracts named entities and ra
 
 .. note::
 
-	Due to its simplicity, the NER participant detector is a good baseline for APD.
-	The first paper that proposed APD used named entities as a baseline: `ELD: Event TimeLine Detection -- A Participant-Based Approach to Tracking Events by Mamo et al. (2019) <https://dl.acm.org/doi/abs/10.1145/3342220.3344921>`_.
+    Due to its simplicity, the NER participant detector is a good baseline for APD.
+    The first paper that proposed APD used named entities as a baseline: `ELD: Event TimeLine Detection -- A Participant-Based Approach to Tracking Events by Mamo et al. (2019) <https://dl.acm.org/doi/abs/10.1145/3342220.3344921>`_.
 """
 
 import os
@@ -21,19 +21,19 @@ from extractors.local.entity_extractor import EntityExtractor
 from scorers.local.tf_scorer import TFScorer
 
 class NERParticipantDetector(ParticipantDetector):
-	"""
-	The NER participant detector is based on a normal participant detector.
-	To extract named entities, the participant detector automatically creates an extractor and a scorer:
+    """
+    The NER participant detector is based on a normal participant detector.
+    To extract named entities, the participant detector automatically creates an extractor and a scorer:
 
-		- :class:`~apd.extractors.local.entity_extractor.EntityExtractor` to extract named entities, and
-		- :class:`~apd.scorers.local.tf_scorer.TFScorer` to score named entities.
+        - :class:`~apd.extractors.local.entity_extractor.EntityExtractor` to extract named entities, and
+        - :class:`~apd.scorers.local.tf_scorer.TFScorer` to score named entities.
 
-	The NER participant detector performs no filtering, resolution, extrapolation or post-processing.
-	"""
+    The NER participant detector performs no filtering, resolution, extrapolation or post-processing.
+    """
 
-	def __init__(self):
-		"""
-		Create the NER participant detector.
-		"""
+    def __init__(self):
+        """
+        Create the NER participant detector.
+        """
 
-		super().__init__(EntityExtractor(), TFScorer())
+        super().__init__(EntityExtractor(), TFScorer())

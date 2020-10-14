@@ -15,22 +15,22 @@ if path not in sys.path:
 from extractor import DummyExtractor
 
 class TestExtractor(unittest.TestCase):
-	"""
-	Test the functionality of the abstract extractor class.
-	"""
+    """
+    Test the functionality of the abstract extractor class.
+    """
 
-	def test_to_list_one_corpus(self):
-		"""
-		Test that when converting a single corpus to a list, a list with that corpus is returned.
-		"""
+    def test_to_list_one_corpus(self):
+        """
+        Test that when converting a single corpus to a list, a list with that corpus is returned.
+        """
 
-		extractor = DummyExtractor()
-		self.assertEqual([ 'a' ], extractor.to_list('a'))
+        extractor = DummyExtractor()
+        self.assertEqual([ 'a' ], extractor.to_list('a'))
 
-	def test_to_list_multiple_corpora(self):
-		"""
-		Test that when converting multiple corpora to a list, the same list is returned.
-		"""
+    def test_to_list_multiple_corpora(self):
+        """
+        Test that when converting multiple corpora to a list, the same list is returned.
+        """
 
-		extractor = DummyExtractor()
-		self.assertEqual([ 'a', 'b' ], extractor.to_list([ 'a', 'b' ]))
+        extractor = DummyExtractor()
+        self.assertEqual([ 'a', 'b' ], extractor.to_list([ 'a', 'b' ]))

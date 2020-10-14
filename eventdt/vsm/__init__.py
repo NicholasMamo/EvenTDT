@@ -8,8 +8,8 @@ Second, there is the :class:`~vsm.vector.Vector` class, which is a vector in the
 
 .. note::
 
-	Documents are special vectors that have text.
-	You can read more about documents in the :ref:`NLP chapter <nlp>`.
+    Documents are special vectors that have text.
+    You can read more about documents in the :ref:`NLP chapter <nlp>`.
 """
 
 from .vector import *

@@ -81,19 +81,19 @@ class DictionaryFeatures(object):
             if d == '.svn':
                 continue
             with open(dictDir + "/" + d) as f:
-	            for line in f:
-	                word = line.rstrip('\n')
-	                word = word.strip(' ').lower()
-	                word = WORD_SPLITTER.sub(" ", word)
-	                word_hashtag = "".join(WORD_SPLITTER.split(word))
-	                if word not in self.word2dictionaries:
-	                    self.word2dictionaries[word] = str(i)
-	                else:
-	                    self.word2dictionaries[word] += "\t%s" % i
-	                if word_hashtag not in self.word2hashtagdictionaries:
-	                    self.word2hashtagdictionaries[word_hashtag] = str(i)
-	                else:
-	                    self.word2hashtagdictionaries[word_hashtag] += "\t%s" % i
+                for line in f:
+                    word = line.rstrip('\n')
+                    word = word.strip(' ').lower()
+                    word = WORD_SPLITTER.sub(" ", word)
+                    word_hashtag = "".join(WORD_SPLITTER.split(word))
+                    if word not in self.word2dictionaries:
+                        self.word2dictionaries[word] = str(i)
+                    else:
+                        self.word2dictionaries[word] += "\t%s" % i
+                    if word_hashtag not in self.word2hashtagdictionaries:
+                        self.word2hashtagdictionaries[word_hashtag] = str(i)
+                    else:
+                        self.word2hashtagdictionaries[word_hashtag] += "\t%s" % i
             i += 1
 
     MAX_WINDOW_SIZE=6

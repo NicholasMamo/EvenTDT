@@ -13,33 +13,33 @@ if path not in sys.path:
 from filler import Filler
 
 class TestFiller(unittest.TestCase):
-	"""
-	Test the :class:`~nlp.weighting.global_schemes.filler.Filler` class.
-	"""
+    """
+    Test the :class:`~nlp.weighting.global_schemes.filler.Filler` class.
+    """
 
-	def test_empty_list_score(self):
-		"""
-		Test that weighting an empty list returns no weights.
-		"""
+    def test_empty_list_score(self):
+        """
+        Test that weighting an empty list returns no weights.
+        """
 
-		tokens = []
-		scheme = Filler()
-		self.assertEqual({ }, scheme.score(tokens))
+        tokens = []
+        scheme = Filler()
+        self.assertEqual({ }, scheme.score(tokens))
 
-	def test_list_score(self):
-		"""
-		Test that weighting a list returns the weights of the documents.
-		"""
+    def test_list_score(self):
+        """
+        Test that weighting a list returns the weights of the documents.
+        """
 
-		tokens = [ 'a', 'b' ]
-		scheme = Filler()
-		self.assertEqual({ 'a': 1, 'b': 1 }, scheme.score(tokens))
+        tokens = [ 'a', 'b' ]
+        scheme = Filler()
+        self.assertEqual({ 'a': 1, 'b': 1 }, scheme.score(tokens))
 
-	def test_repeated_score(self):
-		"""
-		Test that weighting a list with repeated features returns boolean weights.
-		"""
+    def test_repeated_score(self):
+        """
+        Test that weighting a list with repeated features returns boolean weights.
+        """
 
-		tokens = [ 'a', 'b', 'a' ]
-		scheme = Filler()
-		self.assertEqual({ 'a': 1, 'b': 1 }, scheme.score(tokens))
+        tokens = [ 'a', 'b', 'a' ]
+        scheme = Filler()
+        self.assertEqual({ 'a': 1, 'b': 1 }, scheme.score(tokens))
