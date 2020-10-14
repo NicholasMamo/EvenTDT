@@ -37,7 +37,9 @@ The output is a JSON file with the following structure:
             "stem": true,
             "split": false,
             "unigrams": true,
-            "verbose": true
+            "verbose": true,
+            "_date": "2020-10-14T14:08:13.382725",
+            "_timestamp": 1602677293.3827367
         },
         "pcmd": {
             "file": "evaluation/ate/results/terms.json",
@@ -48,7 +50,9 @@ The output is a JSON file with the following structure:
             "stem": true,
             "split": false,
             "unigrams": true,
-            "verbose": true
+            "verbose": true,
+            "_date": "2020-10-14T14:08:13.382725",
+            "_timestamp": 1602677293.3827367
         },
         "results": {
             "summary": {

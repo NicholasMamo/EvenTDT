@@ -4,10 +4,12 @@ Keep reading to learn more about the different tools available in EvenTDT.
 """
 
 import copy
+import datetime
 import json
 import os
 import re
 import sys
+import time
 
 file_path = os.path.dirname(os.path.abspath(__file__))
 root = os.path.join(file_path, '..')
@@ -29,6 +31,8 @@ def meta(args):
 	"""
 
 	meta = copy.deepcopy(vars(args))
+	meta['_date'] = datetime.datetime.now().isoformat()
+	meta['_timestamp'] = time.time()
 	return meta
 
 def save(file, data):
