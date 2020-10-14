@@ -132,6 +132,22 @@ class FileReader(ABC):
 
         return wrapper
 
+    def valid(self, tweet):
+        """
+        Check whether the given tweet is valid, or whether it should be skipped.
+        The rules to decide whether a tweet is valid is based on the parameters of this class:
+
+        - ``skip_retweets``: if ``True``, this retweets are marked as invalid.
+
+        :param tweet: The tweet to consider.
+        :type tweet: dict
+
+        :return: A boolean indicating whether the tweet is valid.
+        :rtype: bool
+        """
+
+        return not self.skip_retweets or not is_retweet(tweet)
+
     def skip(self, lines, time):
         """
         Skip a number of lines from the file.
