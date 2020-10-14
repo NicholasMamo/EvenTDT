@@ -20,18 +20,10 @@ from queues import Queue
 from twitter import *
 from twitter.file.simulated_reader import SimulatedFileReader
 
-class TestSimulatedFileReader(unittest.TestCase):
+class TestSimulatedFileReader(unittest.IsolatedAsyncioTestCase):
     """
     Test the functionality of the simulated file reader.
     """
-
-    def async_test(f):
-        def wrapper(*args, **kwargs):
-            coro = asyncio.coroutine(f)
-            future = coro(*args, **kwargs)
-            loop = asyncio.get_event_loop()
-            loop.run_until_complete(future)
-        return wrapper
 
     def test_positive_speed(self):
         """
@@ -129,7 +121,6 @@ class TestSimulatedFileReader(unittest.TestCase):
         with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
             self.assertTrue(SimulatedFileReader(Queue(), f, skip_time=1))
 
-    @async_test
     async def test_read(self):
         """
         Test reading the corpus without skipping anything.
@@ -142,7 +133,6 @@ class TestSimulatedFileReader(unittest.TestCase):
             await reader.read()
             self.assertEqual(600, queue.length())
 
-    @async_test
     async def test_read_skip_no_lines(self):
         """
         Test that when reading the corpus after skipping no lines, all tweets are loaded.
@@ -154,7 +144,6 @@ class TestSimulatedFileReader(unittest.TestCase):
             await reader.read()
             self.assertEqual(600, queue.length())
 
-    @async_test
     async def test_read_skip_lines(self):
         """
         Test reading the corpus after skipping a number of lines.
@@ -166,7 +155,6 @@ class TestSimulatedFileReader(unittest.TestCase):
             await reader.read()
             self.assertEqual(500, queue.length())
 
-    @async_test
     async def test_read_skip_all_lines(self):
         """
         Test that when all lines are skipped, the queue is empty.
@@ -178,7 +166,6 @@ class TestSimulatedFileReader(unittest.TestCase):
             await reader.read()
             self.assertEqual(0, queue.length())
 
-    @async_test
     async def test_read_skip_excess_lines(self):
         """
         Test that when excess lines are skipped, the queue is empty.
@@ -190,7 +177,6 @@ class TestSimulatedFileReader(unittest.TestCase):
             await reader.read()
             self.assertEqual(0, queue.length())
 
-    @async_test
     async def test_read_skip_no_time(self):
         """
         Test that when reading the corpus after skipping no time, all tweets are loaded.
@@ -202,7 +188,6 @@ class TestSimulatedFileReader(unittest.TestCase):
             await reader.read()
             self.assertEqual(600, queue.length())
 
-    @async_test
     async def test_read_skip_lines(self):
         """
         Test reading the corpus after skipping some time.
@@ -227,7 +212,6 @@ class TestSimulatedFileReader(unittest.TestCase):
             await reader.read()
             self.assertEqual(600 - skipped, queue.length())
 
-    @async_test
     async def test_read_skip_all_time(self):
         """
         Test reading the corpus after skipping all time.
@@ -249,7 +233,6 @@ class TestSimulatedFileReader(unittest.TestCase):
             await reader.read()
             self.assertEqual(50, queue.length())
 
-    @async_test
     async def test_read_skip_excess_time(self):
         """
         Test reading the corpus after excess time.
@@ -271,7 +254,6 @@ class TestSimulatedFileReader(unittest.TestCase):
             await reader.read()
             self.assertEqual(0, queue.length())
 
-    @async_test
     async def test_normal_speed(self):
         """
         Test that when using normal speed, the time it takes is equivalent to the length of the corpus.
@@ -291,7 +273,6 @@ class TestSimulatedFileReader(unittest.TestCase):
             self.assertEqual(600, queue.length())
             self.assertEqual(length, round(time.time() - start))
 
-    @async_test
     async def test_double_speed(self):
         """
         Test that when using double speed, the time it takes is equivalent to half the length of the corpus.
@@ -311,7 +292,6 @@ class TestSimulatedFileReader(unittest.TestCase):
             self.assertEqual(600, queue.length())
             self.assertEqual(length / 2., round(time.time() - start, 1))
 
-    @async_test
     async def test_half_speed(self):
         """
         Test that when using half speed, the time it takes is equivalent to ouble the length of the corpus.
@@ -331,7 +311,6 @@ class TestSimulatedFileReader(unittest.TestCase):
             self.assertEqual(600, queue.length())
             self.assertEqual(length * 2., round(time.time() - start, 1))
 
-    @async_test
     async def test_max_lines(self):
         """
         Test that when limiting the number of lines, only a few are returned.
@@ -343,7 +322,6 @@ class TestSimulatedFileReader(unittest.TestCase):
             await reader.read()
             self.assertEqual(100, queue.length())
 
-    @async_test
     async def test_max_lines_zero(self):
         """
         Test that when reading zero lines, no lines are returned.
@@ -355,7 +333,6 @@ class TestSimulatedFileReader(unittest.TestCase):
             await reader.read()
             self.assertEqual(0, queue.length())
 
-    @async_test
     async def test_max_lines_all(self):
         """
         Test that when reading all lines, all lines are returned.
@@ -367,7 +344,6 @@ class TestSimulatedFileReader(unittest.TestCase):
             await reader.read()
             self.assertEqual(600, queue.length())
 
-    @async_test
     async def test_max_lines_excess(self):
         """
         Test that when reading excess lines, all lines are returned.
@@ -379,7 +355,6 @@ class TestSimulatedFileReader(unittest.TestCase):
             await reader.read()
             self.assertEqual(600, queue.length())
 
-    @async_test
     async def test_max_time(self):
         """
         Test that when limiting the time, only a few are returned.
@@ -401,7 +376,6 @@ class TestSimulatedFileReader(unittest.TestCase):
             self.assertEqual(start, extract_timestamp(queue.head()))
             self.assertEqual(start, extract_timestamp(queue.tail()))
 
-    @async_test
     async def test_max_time_zero(self):
         """
         Test that when the time is zero, nothing is returned.
@@ -413,7 +387,6 @@ class TestSimulatedFileReader(unittest.TestCase):
             await reader.read()
             self.assertEqual(0, queue.length())
 
-    @async_test
     async def test_max_time_all(self):
         """
         Test that when all the time is allowed, the entire corpus is returned.
@@ -433,7 +406,6 @@ class TestSimulatedFileReader(unittest.TestCase):
             await reader.read()
             self.assertEqual(600, queue.length())
 
-    @async_test
     async def test_max_time_excess(self):
         """
         Test that when excess time is allowed, the entire corpus is returned.
