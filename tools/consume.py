@@ -350,7 +350,7 @@ def consume(file, consumer, speed, max_inactivity, max_time, skip, skip_retweets
 
     return timeline
 
-def stream_process(loop, queue, file, skip_time, speed, max_time, skip_retweets, *args, **kwargs):
+def stream_process(loop, queue, file, skip_time=0, speed=1, max_time=-1, skip_retweets=False, *args, **kwargs):
     """
     Stream the file and add its tweets to the queue.
 
