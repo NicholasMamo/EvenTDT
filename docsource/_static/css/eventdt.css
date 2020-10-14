@@ -7,3 +7,13 @@ table th p {
 	display: table-cell;
 	vertical-align: middle;
 }
+
+.highlight {
+	max-height: 500px;
+	resize: vertical;
+	overflow: auto;
+}
+
+.highlight[style*="height"] {
+  max-height: unset;
+}
