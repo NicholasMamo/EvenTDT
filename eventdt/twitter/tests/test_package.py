@@ -191,3 +191,21 @@ class TestPackage(unittest.TestCase):
 
         if not found:
             logger.warning('Trivial test')
+
+    def test_is_retweet(self):
+        """
+        Test that when checking for retweets, the function returns true only if the `retweeted_status` key is set.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if 'retweeted_status' in tweet:
+                    found = True
+                    self.assertTrue(twitter.is_retweet(tweet))
+                else:
+                    self.assertFalse(twitter.is_retweet(tweet))
+
+        if not found:
+            logger.warning('Trivial test')

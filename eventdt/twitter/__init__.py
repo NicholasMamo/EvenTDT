@@ -57,3 +57,17 @@ def full_text(tweet):
         text = tweet.get("text", "")
 
     return text
+
+def is_retweet(tweet):
+    """
+    Check whether the given tweet is a retweet.
+    A tweet is a retweet if it has a ``retweeted_status`` key.
+
+    :param tweet: The tweet to check.
+    :type tweet: dict
+
+    :return: A boolean indicating whether the tweet is a retweet.
+    :rtype: bool
+    """
+
+    return 'retweeted_status' in tweet
