@@ -35,13 +35,9 @@ if path not in sys.path:
 
 from queues.consumers import Consumer
 
-from apd.participant_detector import ParticipantDetector
+from apd.eld_participant_detector import ELDParticipantDetector
 from apd.extractors.local.entity_extractor import EntityExtractor
-from apd.extrapolators.external.wikipedia_extrapolator import WikipediaExtrapolator
-from apd.filters.local.threshold_filter import ThresholdFilter
-from apd.postprocessors.external.wikipedia_postprocessor import WikipediaPostprocessor
-from apd.resolvers.external.wikipedia_search_resolver import WikipediaSearchResolver
-from apd.scorers.local.log_tf_scorer import LogTFScorer
+from apd.filters.local.rank_filter import RankFilter
 
 from logger import logger
 
@@ -293,31 +289,13 @@ class ELDConsumer(Consumer):
         Load the documents from the buffer.
         """
         documents = self.buffer.dequeue_all()
-        for document in documents:
-            """
-            Go through each document and clean it.
-            """
-            document.text = self.cleaner.clean(document.text)
-
-            """
-            Only documents that have a very high quality are allowed to be used by the participant detector.
-            """
-            brevity = self._brevity_score(document.text)
-            emotion = self._emotion_score(document.text)
-            if brevity * emotion < 0.9:
-                documents.remove(document)
 
         """
         Detect participants with the assumption that participants are named entities.
         """
         extractor = EntityExtractor()
-        scorer = LogTFScorer()
-        filter = ThresholdFilter(0.6)
-        resolver = WikipediaSearchResolver(self.scheme, self.tokenizer, 0.05, documents)
-        extrapolator = WikipediaExtrapolator(documents, self.tokenizer, self.scheme, threshold=0.05)
-        postprocessor = WikipediaPostprocessor()
-
-        apd = ParticipantDetector(extractor, scorer, filter, resolver, extrapolator, postprocessor)
+        filter = RankFilter(50)
+        apd = ELDParticipantDetector(extractor=extractor, filter=filter, scheme=self.scheme, corpus=documents)
         resolved, unresolved, extrapolated = apd.detect(documents)
         return resolved + extrapolated
 
