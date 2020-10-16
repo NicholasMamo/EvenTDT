@@ -68,8 +68,8 @@ class WikipediaExtrapolator(Extrapolator):
 
     Other parameters control how many links the algorithm fetches, and the minimum similarity between articles to create an edge between them.
 
-    :ivar corpus: The corpus of documents.
-    :vartype corpus: list of :class:`~nlp.document.Document`
+    :ivar domain: The event domain.
+    :vartype domain: :class:`~nlp.document.Document`
     :ivar ~.tokenizer: The tokenizer to use to create documents.
     :vartype ~.tokenizer: :class:`~nlp.tokenizer.Tokenizer`
     :ivar ~.scheme: The term-weighting scheme to use to create documents from Wikipedia pages.
@@ -112,7 +112,8 @@ class WikipediaExtrapolator(Extrapolator):
         :type second_level_similarity: float
         """
 
-        self.corpus = corpus
+        self.domain = Cluster(corpus).centroid
+        self.domain.normalize()
         self.tokenizer = tokenizer
         self.scheme = scheme
         self.threshold = threshold
@@ -135,11 +136,6 @@ class WikipediaExtrapolator(Extrapolator):
         """
 
         extrapolated = { }
-
-        """
-        Get the centroid of the corpus as a single document, representing the domain.
-        """
-        domain = Cluster(self.corpus).centroid
 
         """
         Create an empty graph.
@@ -209,7 +205,7 @@ class WikipediaExtrapolator(Extrapolator):
         Return the candidates in descending order of relevance.
         """
         extrapolated = {
-            participant: vector_math.cosine(domain, graph.nodes[participant]['document'])
+            participant: vector_math.cosine(self.domain, graph.nodes[participant]['document'])
             for participant in extrapolated
         }
         extrapolated = { participant: score for participant, score in extrapolated.items() if score >= self.threshold }
