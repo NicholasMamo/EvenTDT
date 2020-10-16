@@ -57,8 +57,8 @@ class WikipediaSearchResolver(Resolver):
     :vartype ~.tokenizer: :class:`~nlp.tokenizer.Tokenizer`
     :ivar threshold: The similarity threshold beyond which candidate participants are resolved.
     :vartype threshold: float
-    :ivar corpus: The corpus of documents.
-    :vartype corpus: list of :class:`~nlp.document.Document`
+    :ivar domain: The event domain.
+    :vartype domain: :class:`~nlp.document.Document`
     """
 
     def __init__(self, scheme, tokenizer, threshold, corpus):
@@ -81,7 +81,8 @@ class WikipediaSearchResolver(Resolver):
         self.scheme = scheme
         self.tokenizer = tokenizer
         self.threshold = threshold
-        self.corpus = corpus
+        self.domain = Cluster(corpus).centroid
+        self.domain.normalize()
 
     def resolve(self, candidates, *args, **kwargs):
         """
@@ -97,13 +98,6 @@ class WikipediaSearchResolver(Resolver):
 
         resolved_candidates, unresolved_candidates = [], []
 
-        candidates = sorted(candidates.keys(), key=lambda candidate: candidates.get(candidate), reverse=True)
-
-        """
-        Get the centroid of the corpus as a single document, representing the domain.
-        """
-        domain = Cluster(self.corpus).centroid
-
         """
         Get the possible pages for each candidate.
         From each of these pages, remove the brackets because this information is secondary.
@@ -111,6 +105,7 @@ class WikipediaSearchResolver(Resolver):
         Most often, pages with years in them are not entities.
         Unfortunately, exceptions exist, such as with the name `TSG 1899 Hoffenheim`.
         """
+        candidates = sorted(candidates.keys(), key=lambda candidate: candidates.get(candidate), reverse=True)
         for candidate in candidates:
             """
             The page name is retained as-is when checking the year.
@@ -145,8 +140,7 @@ class WikipediaSearchResolver(Resolver):
                     sentence_document = Document(introduction, tokens, scheme=self.scheme)
 
                     title_document = Document(page, self.tokenizer.tokenize(page), scheme=self.scheme)
-                    scores[page] = self._compute_score(candidate_document, title_document,
-                                                            domain, sentence_document)
+                    scores[page] = self._compute_score(candidate_document, title_document, sentence_document)
 
                 """
                 Get the most relevant article.
@@ -207,7 +201,7 @@ class WikipediaSearchResolver(Resolver):
         else:
             return text
 
-    def _compute_score(self, candidate, title, domain, sentence):
+    def _compute_score(self, candidate, title, sentence):
         """
         Compute the score of an article in terms of its relevance.
         The score is made up of two factors:
@@ -222,8 +216,6 @@ class WikipediaSearchResolver(Resolver):
         :type candidate: `nlp.document.Document`
         :param title: The title of the article.
         :type title: `nlp.document.Document`
-        :param domain: The domain of the event.
-        :type domain: `nlp.document.Document`
         :param sentence: The first sentence of the article.
         :type sentence: `nlp.document.Document`
 
@@ -233,9 +225,8 @@ class WikipediaSearchResolver(Resolver):
 
         candidate.normalize()
         title.normalize()
-        domain.normalize()
         sentence.normalize()
 
         title_score = vector_math.cosine(title, candidate)
-        text_score = vector_math.cosine(sentence, domain)
+        text_score = vector_math.cosine(sentence, self.domain)
         return title_score * text_score
