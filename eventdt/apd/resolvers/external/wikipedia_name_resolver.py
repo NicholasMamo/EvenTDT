@@ -21,6 +21,7 @@ if path not in sys.path:
 from nltk.corpus import stopwords
 
 from vsm import vector_math
+from vsm.clustering import Cluster
 
 from nlp.document import Document
 from nlp.tokenizer import Tokenizer
@@ -51,8 +52,8 @@ class WikipediaNameResolver(Resolver):
     :vartype ~.tokenizer: :class:`~nlp.tokenizer.Tokenizer`
     :ivar threshold: The threshold below which candidates become unresolved.
     :vartype threshold: float.
-    :ivar corpus: The corpus of documents.
-    :vartype corpus: list of :class:`~nlp.document.Document`
+    :ivar domain: The event domain.
+    :vartype domain: :class:`~nlp.document.Document`
     """
 
     def __init__(self, scheme, tokenizer, threshold, corpus):
@@ -75,7 +76,8 @@ class WikipediaNameResolver(Resolver):
         self.scheme = scheme
         self.tokenizer = tokenizer
         self.threshold = threshold
-        self.corpus = corpus
+        self.domain = Cluster(corpus).centroid
+        self.domain.normalize()
 
     def resolve(self, candidates, *args, **kwargs):
         """
@@ -100,12 +102,6 @@ class WikipediaNameResolver(Resolver):
         unresolved_candidates.extend(unresolved)
 
         """
-        Get the concatenated corpus as a single document, representing the domain.
-        """
-        domain = Document.concatenate(*self.corpus, tokenizer=self.tokenizer, scheme=self.scheme)
-        domain.normalize()
-
-        """
         Get the potential disambiguations of the ambiguous candidates.
         Then, find the best page for each candidate.
         If its similarity with the domain is sufficiently high, the candidate is resolved.
@@ -118,7 +114,7 @@ class WikipediaNameResolver(Resolver):
             Otherwise, the candidate cannot be resolved.
             """
             if len(pages) > 0:
-                page, score = self._disambiguate(pages, domain)
+                page, score = self._disambiguate(pages)
                 if score >= self.threshold:
                     resolved_candidates.append(page)
                     continue
@@ -172,7 +168,7 @@ class WikipediaNameResolver(Resolver):
 
         return resolved_candidates, unresolved_candidates, ambiguous_candidates
 
-    def _disambiguate(self, pages, domain):
+    def _disambiguate(self, pages):
         """
         Disambiguate a candidate by finding the link that is most similar to the domain.
         The function returns the link's page name and the associated score.
@@ -180,8 +176,6 @@ class WikipediaNameResolver(Resolver):
 
         :param pages: A list of page titles.
         :type pages: list of str
-        :param domain: A document that represents the domain.
-        :type domain: :class:`~nlp.document.Document`
 
         :return: A tuple containing the most similar page and its similarity score.
         :rtype: tuple
@@ -201,6 +195,6 @@ class WikipediaNameResolver(Resolver):
         Rank the page scores in descending order.
         Then, choose the best page and return it alongside its score.
         """
-        scores = { page: vector_math.cosine(introduction, domain) for page, introduction in pages.items() }
+        scores = { page: vector_math.cosine(introduction, self.domain) for page, introduction in pages.items() }
         article, score = sorted(scores.items(), key=lambda score: score[1], reverse=True)[0]
         return (article, score)
