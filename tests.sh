@@ -4,6 +4,7 @@
 parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
 cd "$parent_path"
 source variables.sh
+source venv/bin/activate
 
 usage() {
 	echo -e "${HIGHLIGHT}Usage: sh $0 [-t <apd|ate|base|nlp|queue|summarization|tdt|twitter|vector|wikipedia>]"${DEFAULT};
