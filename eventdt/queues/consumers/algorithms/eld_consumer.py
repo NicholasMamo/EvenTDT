@@ -224,7 +224,8 @@ class ELDConsumer(Consumer):
         self._started()
         tfidf = await self._construct_idf(max_inactivity=max_inactivity)
         logger.info(f"TF-IDF constructed with { tfidf.global_scheme.documents } documents", process=str(self))
-        participants = await self._detect_participants() if self.active else [ ]
+        # participants = await self._detect_participants() if self.active else [ ]
+        participants = [ ]
         self._stopped()
         return { 'scheme': tfidf, 'participants': participants }
 
