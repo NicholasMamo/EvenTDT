@@ -1,46 +1,112 @@
 #!/usr/bin/env python3
 
 """
-The consumer receives an input file and consumes it with one of the given consumers.
+The consume tool receives an event file and consumes it with one of the given consumers.
 This consumer is split into two asynchronous tasks.
 The first task reads the file, and the second consumes it.
 
-If an understanding file is provided, it is used for the understanding task.
-The process is similar to before, with two asynchronous tasks.
-The first task reads the file, and the second consumes it, this time to understand the event.
-
 All dataset files are expected to contain one tweet on every line, encoded as JSON strings.
+This is the standard output from the :mod:`~tools.collect` tool.
 
-To run the script, use:
+At its most basic form, the consumption tool can be run by providing an event file and a consumer:
 
 .. code-block:: bash
 
     ./tools/consume.py \\
-    -f data/event/event.json \\
-    -c PrintConsumer
+    --event data/event/event.json \\
+    --consumer PrintConsumer
 
-Accepted arguments:
+However, you can also add parameters to change how the tool reads files.
+For example, the ``--speed`` parameter changes how fast the consumer should read files.
+A value of 1 (default) reads the file in real-time.
+Reduce the speed to give more time for the consumer to process tweets, or speed it up for faster results.
 
-    - ``-f --file``                 *<Required>* The file to consume.
-    - ``-c --class``                *<Required>* The consumer to use; supported: `ELDConsumer`, `FIREConsumer`, `FUEGOConsumer`, `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.
+.. code-block:: bash
+
+    ./tools/consume.py \\
+    --event data/event/event.json \\
+    --consumer PrintConsumer \\
+    --speed 2
+
+You can also add more parameters that determine how the consumer processes files.
+For example, by default the periodicity of windowed consumers is one minute.
+However, you can change it by passing on the periodicity parameter:
+
+.. code-block:: bash
+
+    ./tools/consume.py \\
+    --event data/event/event.json \\
+    --consumer StatConsumer \\
+    --periodicity 300
+
+If an understanding file is provided, it is used for the understanding task.
+The process is similar to before, with two asynchronous tasks.
+The first task reads the file, and the second consumes it, this time to understand the event.
+After the understanding process finishes, its output is passed on to the :class:`~queues.consumers.Consumer`.
+
+.. note::
+
+    Not all consumers support understanding.
+
+The understanding file is structured in the same way as the event file, with one tweet on every line, encoded as JSON strings..
+This is the standard output from the :mod:`~tools.collect` tool.
+You can add an understanding period using the ``--understanding`` parameter:
+
+.. code-block:: bash
+
+    ./tools/consume.py \\
+    --event data/event/event.json \\
+    --understanding data/event/understanding.json \\
+    --consumer ELDConsumer
+
+Finally, you can also provide splits, which are groups of keywords.
+When you provide splits, the tweets are grouped and processed separately according to the keywords they contain.
+A splits file is a .csv file with no header line, where each line represents a comma-separated list of keywords:
+
+.. code-block:: text
+
+    yellow,card,foul,tackl
+    ref,refere,var
+    goal,shot,keeper,save
+
+You can provide the splits as follows:
+
+.. code-block:: bash
+
+    ./tools/consume.py \\
+    --event data/event/event.json \\
+    --understanding data/event/understanding.json \\
+    --consumer ELDConsumer \\
+    --splits data/splits.csv
+
+When providing splits, the tool creates one consumer for each split: each consumer receives and processes only tweets that mention keywords in its split.
+
+.. note::
+
+    If none of the keywords in a tweet are part of a split, the tweet is not processed at all.
+    If a tweet has keywords from multiple splits, the tweet is processed multiple times.
+
+The full list of accepted arguments:
+
+    - ``-e --event``                *<Required>* The event file to consume.
+    - ``-c --consumer``             *<Required>* The consumer to use: :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`, :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`, :class:`~queues.consumers.print_consumer.PrintConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer`, :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`.
     - ``-u --understanding``        *<Optional>* The understanding file used to understand the event.
-    - ``-s --speed``                *<Optional>* The speed at which the file is consumed, defaults to 1.
+    - ``--no-cache``                *<Optional>* If specified, the cached understanding is not used, but new understanding is generated.
+    - ``--speed``                   *<Optional>* The speed at which the file is consumed, defaults to 1, which is real-time speed.
     - ``--skip``                    *<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
     - ``--max-inactivity``          *<Optional>* The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.
     - ``--max-time``                *<Optional>* The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.
     - ``--skip-retweets``           *<Optional>* Skip retweets when reading tweets from a file, defaults to False.
     - ``--splits``                  *<Optional>* The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split.
-    - ``--periodicity``             *<Optional>* The periodicity in seconds of the consumer (used by the `FIREConsumer`, `StatConsumer` and `ZhaoConsumer`); defaults to 60 seconds.
-    - ``--no-cache``                *<Optional>* If specified, the cached understanding is not used. The new understanding is cached instead.
+    - ``--periodicity``             *<Optional>* The periodicity in seconds of the consumer, defaults to 60 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer` and :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`).
     - ``--scheme``                  *<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used.
-    - ``--min-volume``              *<Optional>* The minimum volume to consider the stream to be active and look for breaking terms (used by the `FUEGOConsumer`); defaults to 10.
+    - ``--min-volume``              *<Optional>* The minimum volume to consider the stream to be active and look for breaking terms (used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`); defaults to 10.
     - ``--min-size``                *<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
-    - ``--min-burst``               *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the `FIREConsumer` and the `ELDConsumer`).
+    - ``--min-burst``               *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer` and the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`).
     - ``--threshold``               *<Optional>* The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
     - ``--max-intra-similarity``    *<Optional>* The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
-    - ``--burst-start``             *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the `FUEGOConsumer`).
-    - ``--freeze-period``           *<Optional>* The freeze period of clusters, defaults to 20 seconds (used by the `FIREConsumer` and the `ELDConsumer`).
-
+    - ``--burst-start``             *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`).
+    - ``--freeze-period``           *<Optional>* The freeze period of clusters, defaults to 20 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer` and the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`).
 """
 
 import argparse
@@ -74,25 +140,25 @@ def setup_args():
 
     Accepted arguments:
 
-        - ``-f --file``                 *<Required>* The file to consume.
-        - ``-c --class``                *<Required>* The consumer to use; supported: `ELDConsumer`, `FIREConsumer`, `FUEGOConsumer`, `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.
+        - ``-e --event``                *<Required>* The event file to consume.
+        - ``-c --consumer``             *<Required>* The consumer to use: :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`, :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`, :class:`~queues.consumers.print_consumer.PrintConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer`, :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`.
         - ``-u --understanding``        *<Optional>* The understanding file used to understand the event.
-        - ``-s --speed``                *<Optional>* The speed at which the file is consumed, defaults to 1.
+        - ``--no-cache``                *<Optional>* If specified, the cached understanding is not used, but new understanding is generated.
+        - ``--speed``                   *<Optional>* The speed at which the file is consumed, defaults to 1, which is real-time speed.
         - ``--skip``                    *<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
         - ``--max-inactivity``          *<Optional>* The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.
         - ``--max-time``                *<Optional>* The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.
         - ``--skip-retweets``           *<Optional>* Skip retweets when reading tweets from a file, defaults to False.
         - ``--splits``                  *<Optional>* The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split.
-        - ``--periodicity``             *<Optional>* The periodicity in seconds of the consumer (used by the `FIREConsumer`, `StatConsumer` and `ZhaoConsumer`); defaults to 60 seconds.
-        - ``--no-cache``                *<Optional>* If specified, the cached understanding is not used. The new understanding is cached instead.
+        - ``--periodicity``             *<Optional>* The periodicity in seconds of the consumer, defaults to 60 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer` and :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`).
         - ``--scheme``                  *<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used. This can be overwritten if there is event understanding.
-        - ``--min-volume``              *<Optional>* The minimum volume to consider the stream to be active and look for breaking terms (used by the `FUEGOConsumer`); defaults to 10.
+        - ``--min-volume``              *<Optional>* The minimum volume to consider the stream to be active and look for breaking terms (used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`); defaults to 10.
         - ``--min-size``                *<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
-        - ``--min-burst``               *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the `FIREConsumer` and the `ELDConsumer`).
+        - ``--min-burst``               *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer` and the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`).
         - ``--threshold``               *<Optional>* The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
         - ``--max-intra-similarity``    *<Optional>* The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
-        - ``--burst-start``             *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the `FUEGOConsumer`).
-        - ``--freeze-period``           *<Optional>* The freeze period of clusters in seconds, defaults to 20 seconds (used by the `FIREConsumer` and the `ELDConsumer`).
+        - ``--burst-start``             *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`).
+        - ``--freeze-period``           *<Optional>* The freeze period of clusters in seconds, defaults to 20 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer` and the `ELDConsumer`).
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
@@ -104,14 +170,16 @@ def setup_args():
     Parameters that define how the corpus should be collected.
     """
 
-    parser.add_argument('-f', '--file', type=str, required=True,
-                        help='<Required> The file to consume.')
+    parser.add_argument('-e', '--event', type=str, required=True,
+                        help='<Required> The event file to consume.')
     parser.add_argument('-c', '--consumer', type=consumer, required=True,
-                        help='<Required> The consumer to use; supported: `ELDConsumer`, `FIREConsumer`, `FUEGOConsumer`, `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.')
+                        help='<Required> The consumer to use: `ELDConsumer`, `FIREConsumer`, `FUEGOConsumer`, `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.')
     parser.add_argument('-u', '--understanding', type=str, required=False,
                         help='<Optional> The understanding file used to understand the event.')
-    parser.add_argument('-s', '--speed', type=float, required=False, default=1,
-                        help='<Optional> The understanding file used to understand the event.')
+    parser.add_argument('--no-cache', action="store_true",
+                        help='<Optional> If specified, the cached understanding is not used, but new understanding is generated.')
+    parser.add_argument('--speed', type=float, required=False, default=1,
+                        help='<Optional> The speed at which the file is consumed, defaults to 1, which is real-time speed')
     parser.add_argument('--skip', type=int, required=False, default=0,
                         help='<Optional> The amount of time to skip from the beginning of the file in minutes, defaults to 0.')
     parser.add_argument('--max-inactivity', type=int, required=False, default=60,
@@ -123,13 +191,9 @@ def setup_args():
     parser.add_argument('--splits', type=splits, required=False, default=None,
                         help='<Optional> The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split.')
     parser.add_argument('--periodicity', type=int, required=False, default=60,
-                        help='<Optional> The periodicity in seconds of the consumer (used by the `FIREConsumer`, `StatConsumer` and `ZhaoConsumer`); defaults to 60 seconds.')
-    parser.add_argument('--no-cache', action="store_true",
-                        help='<Optional> If specified, the cached understanding is not used. The new understanding is cached instead.')
+                        help='<Optional> The periodicity in seconds of the consumer, defaults to 60 seconds (used by the `FIREConsumer`, `StatConsumer` and `ZhaoConsumer`).')
     parser.add_argument('--scheme', type=scheme, required=False, default=None,
-                        help="""<Optional> If specified, the path to the term-weighting scheme file.
-                                If it is not specified, the term frequency scheme is used instead.
-                                This can be overwritten if there is event understanding.""")
+                        help="""<Optional> If specified, the path to the term-weighting scheme file. If it is not specified, the term frequency scheme is used instead. This can be overwritten if there is event understanding.""")
     parser.add_argument('--min-volume', type=float, required=False, default=10,
                         help='<Optional> The minimum volume to consider the stream to be active and look for breaking terms (used by the `FUEGOConsumer`); defaults to 10.')
     parser.add_argument('--min-size', type=int, required=False, default=3,
@@ -362,7 +426,7 @@ def stream_process(loop, queue, file, skip_time=0, speed=1, max_time=-1, skip_re
     :type file: str
     :param skip_time: The amount of time to skip from the beginning of the file in minutes, defaults to 0.
     :type skip_time: int
-    :param speed: The speed at which the file is consumed, defaults to 1.
+    :param speed: The speed at which the file is consumed, defaults to 1, which is real-time speed.
     :type speed: float
     :param max_time: The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.
     :type max_time: int
