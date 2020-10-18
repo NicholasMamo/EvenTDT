@@ -30,29 +30,29 @@ The output is a JSON file with the following structure:
 
     {
         "cmd": {
+            "_date": "2020-10-14T14:08:13.382725",
+            "_timestamp": 1602677293.3827367
             "file": "evaluation/ate/results/terms.json",
             "gold": [ "evaluation/ate/results/gold.txt" ],
-            "output": "evaluation/ate/results/results.json",
             "keep": 5,
-            "stem": true,
+            "output": "evaluation/ate/results/results.json",
             "split": false,
+            "stem": true,
             "unigrams": true,
             "verbose": true,
-            "_date": "2020-10-14T14:08:13.382725",
-            "_timestamp": 1602677293.3827367
         },
         "pcmd": {
-            "file": "evaluation/ate/results/terms.json",
-            "gold": { "offsid": "offside", "keeper": "keeper" },
-            "output": "evaluation/ate/results/results.json",
-            "keep": 5,
-            "terms": [ "offsid", "ff", "keeper", "equalis", "baller" ],
-            "stem": true,
-            "split": false,
-            "unigrams": true,
-            "verbose": true,
             "_date": "2020-10-14T14:08:13.382725",
             "_timestamp": 1602677293.3827367
+            "file": "evaluation/ate/results/terms.json",
+            "gold": { "offsid": "offside", "keeper": "keeper" },
+            "keep": 5,
+            "output": "evaluation/ate/results/results.json",
+            "terms": [ "offsid", "ff", "keeper", "equalis", "baller" ],
+            "split": false,
+            "stem": true,
+            "unigrams": true,
+            "verbose": true,
         },
         "results": {
             "summary": {

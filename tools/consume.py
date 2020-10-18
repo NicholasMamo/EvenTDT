@@ -107,6 +107,68 @@ The full list of accepted arguments:
     - ``--max-intra-similarity``    *<Optional>* The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
     - ``--burst-start``             *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`).
     - ``--freeze-period``           *<Optional>* The freeze period of clusters, defaults to 20 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer` and the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`).
+
+The output is a JSON file with the following structure:
+
+.. code-block:: json
+
+    {
+        "cmd": {
+            "_date": "2020-10-18T12:56:45.635795",
+            "_timestamp": 1603018605.6359715,
+            "burst_start": 0.5,
+            "consumer": "ELDConsumer",
+            "file": "data/event/event.json",
+            "freeze_period": 20,
+            "max_inactivity": 60,
+            "max_intra_similarity": 0.8,
+            "max_time": -1,
+            "min_burst": 0.5,
+            "min_size": 3,
+            "min_volume": 10,
+            "no_cache": false,
+            "periodicity": 60,
+            "scheme": "data/idf.json",
+            "skip": 0,
+            "skip_retweets": true,
+            "speed": 1,
+            "splits": null,
+            "threshold": 0.5,
+            "understanding": "data/event/understanding.json"
+        },
+        "pcmd": {
+            "_date": "2020-10-18T12:56:45.635795",
+            "_timestamp": 1603018605.6359715,
+            "burst_start": 0.5,
+            "consumer": "<class 'queues.consumers.algorithms.eld_consumer.ELDConsumer'>",
+            "file": "data/event/event.json",
+            "freeze_period": 20,
+            "max_inactivity": 60,
+            "max_intra_similarity": 0.8,
+            "max_time": -1,
+            "min_burst": 0.5,
+            "min_size": 3,
+            "min_volume": 10,
+            "no_cache": false,
+            "periodicity": 60,
+            "scheme": "<class 'nlp.weighting.tfidf.TFIDF'>",
+            "skip": 0,
+            "skip_retweets": true,
+            "speed": 1,
+            "splits": null,
+            "threshold": 0.5,
+            "understanding": "data/event/understanding.json"
+        },
+        "timeline": {
+            "class": "<class 'summarization.timeline.Timeline'>",
+            "expiry": 90,
+            "min_similarity": 0.6,
+            "node_type": "<class 'summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode'>",
+            "nodes": []
+        }
+    }
+
+If you provide splits, the ``timeline`` key is replaced with a list of timelines, ordered to correspond to the splits.
 """
 
 import argparse
