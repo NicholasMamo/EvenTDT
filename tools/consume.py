@@ -288,6 +288,8 @@ def main():
     """
     cmd = tools.meta(args)
     pcmd = tools.meta(args)
+    cmd['consumer'] = str(vars(args)['consumer'])
+    cmd['scheme'] = str(type(vars(args)['scheme']))
     pcmd['consumer'] = str(vars(args)['consumer'])
     pcmd['scheme'] = str(type(vars(args)['scheme']))
 
