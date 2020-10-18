@@ -280,8 +280,8 @@ def main():
     """
 
     args = setup_args()
-    dir = os.path.dirname(args.file)
-    filename = os.path.basename(args.file)
+    dir = os.path.dirname(args.event)
+    filename = os.path.basename(args.event)
 
     """
     Get the meta arguments.
