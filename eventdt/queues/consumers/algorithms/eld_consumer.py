@@ -363,8 +363,8 @@ class ELDConsumer(Consumer):
                 """
                 overdue = [ document for document in documents
                                      if latest_timestamp - document.attributes['timestamp'] >= self.time_window ]
-                if overdue:
-                    logger.warning(f"Skipping { len(overdue) } tweets")
+                if len(overdue) > 10:
+                    logger.warning(f"""{ datetime.fromtimestamp(latest_timestamp - self.time_window).ctime() }: Skipping { len(overdue) } tweets""")
                 documents = [ document for document in documents
                                        if latest_timestamp - document.attributes['timestamp'] < self.time_window ]
 
