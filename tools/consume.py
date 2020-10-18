@@ -404,20 +404,20 @@ def understand(understanding, consumer, max_inactivity, skip_retweets, scheme=No
 
     return understanding
 
-def consume(file, consumer, speed, max_inactivity, max_time, skip, skip_retweets, *args, **kwargs):
+def consume(event, consumer, speed, max_inactivity, max_time, skip, skip_retweets, *args, **kwargs):
     """
     Run the consumption process.
     The arguments and keyword arguments should be the command-line arguments.
 
     Consumption uses two processes:
 
-        #. Stream the file, and
-        #. Consume the file.
+        #. Stream the event, and
+        #. Consume the event.
 
     Both processes share the same event loop and queue.
 
-    :param file: The path to the file containing the event's tweets.
-    :type file: str
+    :param event: The path to the file containing the event's tweets.
+    :type event: str
     :param consumer: The type of consumer to use.
     :type consumer: type
     :param speed: The speed with which to read the file.
@@ -455,7 +455,7 @@ def consume(file, consumer, speed, max_inactivity, max_time, skip, skip_retweets
     Create and start the streaming and consumption processes.
     """
     stream = Process(target=stream_process,
-                     args=(loop, queue, file, ),
+                     args=(loop, queue, event, ),
                      kwargs={ 'speed': speed, 'skip_time': skip * 60, 'skip_retweets': skip_retweets,
                                'max_time': (max_time * 60 if max_time >= 0 else max_time) })
     consume = Process(target=consume_process, args=(comm, loop, consumer, max_inactivity, ))
