@@ -394,7 +394,7 @@ class ELDConsumer(Consumer):
                 if timeline.nodes:
                     node = timeline.nodes[-1]
                     if node.expired(timeline.expiry, latest_timestamp) and not node.attributes.get('printed'):
-                        summary_documents = self._score_documents(node.get_all_documents())[:50]
+                        summary_documents = self._score_documents(node.get_all_documents())[:20]
 
                         """
                         Generate a query from the topical keywords and use it to come up with a summary.
