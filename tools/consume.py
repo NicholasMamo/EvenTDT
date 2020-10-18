@@ -225,8 +225,9 @@ def main():
     Get the meta arguments.
     """
     cmd = tools.meta(args)
-    cmd['consumer'] = str(vars(args)['consumer'])
-    cmd['scheme'] = str(type(vars(args)['scheme']))
+    pcmd = tools.meta(args)
+    pcmd['consumer'] = str(vars(args)['consumer'])
+    pcmd['scheme'] = str(type(vars(args)['scheme']))
 
     """
     Register the queue in the base manager.
@@ -266,7 +267,8 @@ def main():
     """
     logger.info("Starting event period")
     timeline = consume(**args)
-    timeline['meta'] = cmd
+    timeline['cmd'] = cmd
+    timeline['pcmd'] = pcmd
     tools.save(os.path.join(dir, '.out', filename), timeline)
     logger.info("Event period ended")
 
