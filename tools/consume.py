@@ -260,7 +260,7 @@ def understand(understanding, consumer, max_inactivity, skip_retweets, scheme=No
     """
     stream = Process(target=stream_process,
                      args=(loop, queue, understanding, ),
-                     kwargs={ 'speed': 120, 'skip_retweets': skip_retweets })
+                     kwargs={ 'speed': 120, 'skip_retweets': skip_retweets, 'max_time': -1 })
     understand = Process(target=understand_process, args=(comm, loop, consumer, max_inactivity, ))
     stream.start()
     understand.start()
