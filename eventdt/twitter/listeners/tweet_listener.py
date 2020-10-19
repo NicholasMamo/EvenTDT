@@ -129,11 +129,11 @@ class TweetListener(StreamListener):
 
         tweet = json.loads(data)
         if 'id' in tweet:
-            tweet = self.filter(tweet)
-
             if self.retweets or not is_retweet(tweet):
                 self.tweets.append(json.dumps(tweet) + "\n")
 
+            tweet = self.filter(tweet)
+            
             """
             If the tweets have exceeded the threshold of tweets, save them to the file.
             """
