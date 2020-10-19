@@ -31,10 +31,11 @@ If no tracking keywords are specified, a sample of all tweets is collected.
 Accepted arguments:
 
     - ``-o --output``            *<Required>* The data directory where the corpus should be written.
-    - ``-t --track``            *<Optional>* A list of tracking keywords. If none are given, the sample stream is used.
-    - ``-u --understanding``    *<Optional>* The length of the understanding period in minutes. If it is not given, the understanding period is skipped.
-    - ``-e --event``            *<Optional>* The length of the event period in minutes. If it is not given, the event period is skipped.
-    - ``-a --account``            *<Optional>* The account to use to collect the corpus with, as an index of the configuration's accounts. Defaults to the first account.
+    - ``-t --track``             *<Optional>* A list of tracking keywords. If none are given, the sample stream is used.
+    - ``-u --understanding``     *<Optional>* The length of the understanding period in minutes. If it is not given, the understanding period is skipped.
+    - ``-e --event``             *<Optional>* The length of the event period in minutes. If it is not given, the event period is skipped.
+    - ``-a --account``           *<Optional>* The account to use to collect the corpus with, as an index of the configuration's accounts. Defaults to the first account.
+    - ``--no-retweets``          *<Optional>* If given, the tweet listener will exclude all retweets.
 """
 
 import argparse
@@ -64,10 +65,11 @@ def setup_args():
     Accepted arguments:
 
         - ``-o --output``            *<Required>* The data directory where the corpus should be written.
-        - ``-t --track``            *<Optional>* A list of tracking keywords. If none are given, the sample stream is used.
-        - ``-u --understanding``    *<Optional>* The length of the understanding period in minutes. If it is not given, the understanding period is skipped.
-        - ``-e --event``            *<Optional>* The length of the event period in minutes. If it is not given, the event period is skipped.
-        - ``-a --account``            *<Optional>* The account to use to collect the corpus with, as an index of the configuration's accounts. Defaults to the first account.
+        - ``-t --track``             *<Optional>* A list of tracking keywords. If none are given, the sample stream is used.
+        - ``-u --understanding``     *<Optional>* The length of the understanding period in minutes. If it is not given, the understanding period is skipped.
+        - ``-e --event``             *<Optional>* The length of the event period in minutes. If it is not given, the event period is skipped.
+        - ``-a --account``           *<Optional>* The account to use to collect the corpus with, as an index of the configuration's accounts. Defaults to the first account.
+        - ``--no-retweets``          *<Optional>* If given, the tweet listener will exclude all retweets.
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
@@ -91,6 +93,8 @@ def setup_args():
     parser.add_argument('-a', '--account', nargs='?', type=int,
                         default=0, required=False,
                         help='<Optional> The account to use to collect the corpus with, as an index of the configuration\'s accounts. Defaults to the first account.')
+    parser.add_argument('--no-retweets', required=False, action='store_true',
+                        help='<Optional> If given, the tweet listener will exclude all retweets.')
 
     args = parser.parse_args()
     return args
@@ -127,7 +131,7 @@ def main():
 
         start = time.time()
         logger.info('Starting to collect understanding corpus')
-        collect(auth, args.track, filename, args.understanding * 60)
+        collect(auth, args.track, filename, args.understanding * 60, no_retweets=args.no_retweets)
         logger.info('Understanding corpus collected')
         end = time.time()
         meta['understanding'] = {
@@ -148,7 +152,7 @@ def main():
 
         start = time.time()
         logger.info('Starting to collect event corpus')
-        collect(auth, args.track, filename, args.event * 60)
+        collect(auth, args.track, filename, args.event * 60, no_retweets=args.no_retweets)
         logger.info('Event corpus collected')
         end = time.time()
         meta['event'] = {
@@ -161,7 +165,7 @@ def main():
     if meta:
         save_meta(os.path.join(args.output, 'meta.json'), meta)
 
-def collect(auth, track, filename, max_time, lang=None, *args, **kwargs):
+def collect(auth, track, filename, max_time, lang=None, no_retweets=False, *args, **kwargs):
     """
     Collect tweets and save them to the given file.
     The tweets are collected synchronously.
@@ -177,6 +181,8 @@ def collect(auth, track, filename, max_time, lang=None, *args, **kwargs):
     :type max_time: int
     :param lang: The tweet collection language, defaults to English.
     :type lang: list of str
+    :param no_retweets: A boolean indicating whether to skip retweets.
+    :type no_retweets: bool
     """
 
     lang = [ 'en' ] if lang is None else lang
@@ -184,7 +190,7 @@ def collect(auth, track, filename, max_time, lang=None, *args, **kwargs):
     start = time.time()
     try:
         with open(filename, 'a') as file:
-            listener = TweetListener(file, max_time=max_time, *args, **kwargs)
+            listener = TweetListener(file, max_time=max_time, retweets=(not no_retweets), *args, **kwargs)
             stream = Stream(auth, listener)
             if track:
                 stream.filter(track=track, languages=lang)
