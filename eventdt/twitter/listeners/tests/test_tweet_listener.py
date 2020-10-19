@@ -132,3 +132,55 @@ class TestTweetListener(unittest.TestCase):
             stream = Stream(self.authenticate(), listener)
             stream.filter(track=[ 'is' ])
         self.assertEqual(3, round(time.time() - start))
+
+    @clean
+    def test_collect_no_retweets(self):
+        """
+        Test that when collecting data with no retweets, no retweets are included.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), 'data.json'), 'w') as f:
+            listener = TweetListener(f, retweets=False, max_time=2, attributes=None)
+            stream = Stream(self.authenticate(), listener)
+            stream.filter(track=[ 'is' ])
+
+        with open(os.path.join(os.path.dirname(__file__), 'data.json'), 'r') as f:
+            lines = f.readlines()
+            self.assertTrue(lines)
+            for line in lines:
+                tweet = json.loads(line)
+                self.assertFalse('retweeted_status' in tweet)
+
+    @clean
+    def test_collect_retweets(self):
+        """
+        Test that when collecting data and setting the retweet explicitly, the data includes retweets.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), 'data.json'), 'w') as f:
+            listener = TweetListener(f, retweets=True, max_time=2, attributes=None)
+            stream = Stream(self.authenticate(), listener)
+            stream.filter(track=[ 'is' ])
+
+        with open(os.path.join(os.path.dirname(__file__), 'data.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            self.assertTrue(tweets)
+            self.assertTrue(any( 'retweeted_status' in tweet for tweet in tweets ))
+
+    @clean
+    def test_collect_default_retweets(self):
+        """
+        Test that when collecting data with default settings, the data includes retweets.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), 'data.json'), 'w') as f:
+            listener = TweetListener(f, max_time=2, attributes=None)
+            stream = Stream(self.authenticate(), listener)
+            stream.filter(track=[ 'is' ])
+
+        with open(os.path.join(os.path.dirname(__file__), 'data.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            self.assertTrue(tweets)
+            self.assertTrue(any( 'retweeted_status' in tweet for tweet in tweets ))

@@ -22,6 +22,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from logger import logger
+from twitter import *
 
 class TweetListener(StreamListener):
     """
@@ -57,6 +58,8 @@ class TweetListener(StreamListener):
     :ivar start: The timestamp when the listener started waiting for tweets.
                  This variable is used to calculate the time the listener has spent receiving tweets.
     :vartype start: int
+    :ivar retweets: A boolean indicating whether to collect retweets or not.
+    :vartype retweets: bool
     :ivar attributes: The attributes to save from each tweet.
                       If ``None`` is given, the entire tweet objects are saved.
     :vartype attributes: list of str or None
@@ -64,7 +67,7 @@ class TweetListener(StreamListener):
 
     THRESHOLD = 200
 
-    def __init__(self, f, max_time=3600, attributes=None):
+    def __init__(self, f, retweets=True, max_time=3600, attributes=None):
         """
         Create the listener.
         Simultaneously set the file and the list of tweets.
@@ -72,6 +75,8 @@ class TweetListener(StreamListener):
 
         :param f: The opened file pointer where to write the tweets.
         :type f: file
+        :param retweets: A boolean indicating whether to collect retweets or not.
+        :type retweets: bool
         :param max_time: The maximum time in seconds to spend receiving tweets.
                          When this time expires, the listener instructs the stream to stop accepting tweets.
         :type max_time: int
@@ -84,6 +89,7 @@ class TweetListener(StreamListener):
         self.tweets = [ ]
         self.max_time = max_time
         self.start = time.time()
+        self.retweets = retweets
         self.attributes = attributes or [ ]
 
     def flush(self):
@@ -124,7 +130,9 @@ class TweetListener(StreamListener):
         tweet = json.loads(data)
         if 'id' in tweet:
             tweet = self.filter(tweet)
-            self.tweets.append(json.dumps(tweet) + "\n")
+
+            if self.retweets or not is_retweet(tweet):
+                self.tweets.append(json.dumps(tweet) + "\n")
 
             """
             If the tweets have exceeded the threshold of tweets, save them to the file.
