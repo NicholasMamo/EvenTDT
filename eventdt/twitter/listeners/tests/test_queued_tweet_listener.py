@@ -108,3 +108,44 @@ class TestQueuedTweetListener(unittest.TestCase):
         stream = Stream(self.authenticate(), listener)
         stream.filter(track=[ 'is' ])
         self.assertEqual(3, round(time.time() - start))
+
+    def test_collect_no_retweets(self):
+        """
+        Test that when collecting data with no retweets, no retweets are included.
+        """
+
+        queue = Queue()
+        listener = QueuedTweetListener(queue, retweets=False, max_time=2, attributes=None)
+        stream = Stream(self.authenticate(), listener)
+        stream.filter(track=[ 'is' ])
+
+        tweets = queue.dequeue_all()
+        self.assertTrue(all( 'retweeted_status' not in tweet for tweet in tweets))
+
+    def test_collect_retweets(self):
+        """
+        Test that when collecting data and setting the retweet explicitly, the data includes retweets.
+        """
+
+        queue = Queue()
+        listener = QueuedTweetListener(queue, retweets=True, max_time=2, attributes=None)
+        stream = Stream(self.authenticate(), listener)
+        stream.filter(track=[ 'is' ])
+
+        tweets = queue.dequeue_all()
+        self.assertTrue(tweets)
+        self.assertTrue(any( 'retweeted_status' in tweet for tweet in tweets ))
+
+    def test_collect_default_retweets(self):
+        """
+        Test that when collecting data with default settings, the data includes retweets.
+        """
+
+        queue = Queue()
+        listener = QueuedTweetListener(queue, max_time=2, attributes=None)
+        stream = Stream(self.authenticate(), listener)
+        stream.filter(track=[ 'is' ])
+
+        tweets = queue.dequeue_all()
+        self.assertTrue(tweets)
+        self.assertTrue(any( 'retweeted_status' in tweet for tweet in tweets ))

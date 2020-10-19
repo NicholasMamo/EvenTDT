@@ -18,6 +18,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from logger import logger
+from twitter import *
 
 class QueuedTweetListener(StreamListener):
     """
@@ -40,19 +41,23 @@ class QueuedTweetListener(StreamListener):
     :vartype max_time: int
     :ivar start: The timestamp when the listener started waiting for tweets.
     :vartype start: int
+    :ivar retweets: A boolean indicating whether to collect retweets or not.
+    :vartype retweets: bool
     :ivar attributes: The attributes to save from each tweet.
                       If ``None`` is given, the entire tweet objects are saved.
     :vartype attributes: list of str or None
     """
 
-    def __init__(self, queue, max_time=3600, attributes=None):
+    def __init__(self, queue, retweets=True, max_time=3600, attributes=None):
         """
         Create the listener.
         Simultaneously set the queue.
         By default, the stream continues processing for an hour.
 
         :param queue: The queue to which to add incoming tweets.
-        :vartype queue: :class:`~queues.Queue`
+        :type queue: :class:`~queues.Queue`
+        :param retweets: A boolean indicating whether to collect retweets or not.
+        :type retweets: bool
         :param max_time: The maximum time in seconds to spend reading the file.
         :type max_time: int
         :param attributes: The attributes to save from each tweet.
@@ -63,6 +68,7 @@ class QueuedTweetListener(StreamListener):
         self.queue = queue
         self.max_time = max_time
         self.start = time.time()
+        self.retweets = retweets
         self.attributes = attributes or [ ]
 
     def on_data(self, data):
@@ -85,8 +91,10 @@ class QueuedTweetListener(StreamListener):
 
         tweet = json.loads(data)
         if 'id' in tweet:
+            if self.retweets or not is_retweet(tweet):
+                self.queue.enqueue(tweet)
+
             tweet = self.filter(tweet)
-            self.queue.enqueue(tweet)
 
             """
             Stop listening if the time limit has been exceeded.
