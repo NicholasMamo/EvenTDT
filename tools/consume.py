@@ -280,7 +280,6 @@ def main():
     """
 
     args = setup_args()
-    dir = os.path.dirname(args.event)
     filename = os.path.basename(args.event)
 
     """
@@ -315,6 +314,7 @@ def main():
     The only exception is when cache is explictly disabled or there is no cache.
     """
     args = vars(args)
+    dir = os.path.dirname(args.understanding)
     if args['understanding']:
         cache = os.path.join(dir, '.cache', os.path.basename(args['understanding']))
         if args['no_cache'] or not tools.cache_exists(args['understanding']):
@@ -333,6 +333,7 @@ def main():
     timeline = consume(**args)
     timeline['cmd'] = cmd
     timeline['pcmd'] = pcmd
+    dir = os.path.dirname(args.event)
     tools.save(os.path.join(dir, '.out', filename), timeline)
     logger.info("Event period ended")
 
