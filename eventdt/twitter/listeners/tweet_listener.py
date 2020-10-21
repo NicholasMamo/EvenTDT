@@ -48,8 +48,8 @@ class TweetListener(StreamListener):
     :cvar THRESHOLD: The number of tweets to accumulate before writing them to file.
     :vartype THRESHOLD: int
 
-    :ivar file: The opened file pointer where to write the tweets.
-    :vartype file: file
+    :ivar ~.file: The opened file pointer where to write the tweets.
+    :vartype ~.file: file
     :ivar tweets: The list of read tweets that have not been written to file yet.
     :vartype tweets: list
     :ivar max_time: The maximum time in seconds to spend receiving tweets.
@@ -133,7 +133,7 @@ class TweetListener(StreamListener):
                 self.tweets.append(json.dumps(tweet) + "\n")
 
             tweet = self.filter(tweet)
-            
+
             """
             If the tweets have exceeded the threshold of tweets, save them to the file.
             """

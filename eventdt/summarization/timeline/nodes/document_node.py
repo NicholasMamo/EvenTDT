@@ -20,8 +20,8 @@ class DocumentNode(Node):
     The :class:`~summarization.timeline.nodes.document_node.DocumentNode` class only stores :class:`~nlp.document.Document` instances.
     When it needs to compare incoming :class:`nlp.document.Document` instances, it compares them against the centroid of its own information.
 
-    :ivar documents: The list of documents in this node.
-    :vartype documents: list of :class:`~nlp.document.Document`
+    :ivar ~.documents: The list of documents in this node.
+    :vartype ~.documents: list of :class:`~nlp.document.Document`
     """
 
     def __init__(self, created_at, documents=None):

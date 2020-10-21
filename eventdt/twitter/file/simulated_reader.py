@@ -46,7 +46,7 @@ class SimulatedFileReader(FileReader):
         :type f: file
         :param speed: The reading speed, considered to be a function of time.
                       If it is set to 0.5, for example, the event progresses at half the speed.
-                          If it is set to 2, the event progresses at double the speed.
+                      If it is set to 2, the event progresses at double the speed.
         :type speed: int
 
         :raises ValueError: When the speed is zero or negative.

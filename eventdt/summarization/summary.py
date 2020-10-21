@@ -30,8 +30,8 @@ class Summary(Attributable, Exportable):
     In addition, this class provides the :func:`~summarization.summary.Summary.__str__` special function, which concatenates its documents to form a textual summary.
     If the documents contain a ``timestamp`` attribute, it automatically sorts the documents in chronological order.
 
-    :ivar documents: The documents that make up the summary.
-    :vartype documents: list of :class:`~nlp.document.Document`
+    :ivar ~.documents: The documents that make up the summary.
+    :vartype ~.documents: list of :class:`~nlp.document.Document`
     """
 
     def __init__(self, documents=None, *args, **kwargs):

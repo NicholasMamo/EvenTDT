@@ -40,8 +40,8 @@ class FileReader(ABC):
 
     :ivar queue: The queue to which to add tweets.
     :vartype queue: :class:`~queues.Queue`
-    :ivar file: The opened file pointer from where to read the tweets.
-    :vartype file: file
+    :ivar ~.file: The opened file pointer from where to read the tweets.
+    :vartype ~.file: file
     :ivar max_lines: The maximum number of lines to read.
                      If the number is negative, it is ignored.
     :vartype max_lines: int

@@ -62,9 +62,9 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
     :vartype store: :class:`~tdt.nutrition.store.NutritionStore`
     :ivar ~.scheme: The term-weighting scheme used to create documents.
     :vartype ~.scheme: :class:`~nlp.weighting.TermWeightingScheme`
-    :ivar documents: The documents that can still be used for summarization.
-                     Older documents are automatically cleared.
-    :vartype documents: :class:`~nlp.document.Document`
+    :ivar ~.documents: The documents that can still be used for summarization.
+                       Older documents are automatically cleared.
+    :vartype ~.documents: :class:`~nlp.document.Document`
     :ivar tdt: The TDT algorithm: Zhao et al.'s implementation.
     :vartype tdt: :class:`~tdt.algorithms.zhao.Zhao`
     :ivar summarization: The summarization algorithm to use.

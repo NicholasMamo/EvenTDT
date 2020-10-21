@@ -32,7 +32,7 @@ The output is a JSON file with the following structure:
         "cmd": {
             "_cmd": "EvenTDT/tools/evaluation/ate.py  --file evaluation/ate/results/terms.json  --gold evaluation/ate/results/gold.txt  --output evaluation/ate/results/results.json --stem --unigrams --verbose",
             "_date": "2020-10-14T14:08:13.382725",
-            "_timestamp": 1602677293.3827367
+            "_timestamp": 1602677293.3827367,
             "file": "evaluation/ate/results/terms.json",
             "gold": [ "evaluation/ate/results/gold.txt" ],
             "keep": 5,
@@ -40,12 +40,12 @@ The output is a JSON file with the following structure:
             "split": false,
             "stem": true,
             "unigrams": true,
-            "verbose": true,
+            "verbose": true
         },
             "pcmd": {
             "_cmd": "EvenTDT/tools/evaluation/ate.py  --file evaluation/ate/results/terms.json  --gold evaluation/ate/results/gold.txt  --output evaluation/ate/results/results.json --stem --unigrams --verbose",
             "_date": "2020-10-14T14:08:13.382725",
-            "_timestamp": 1602677293.3827367
+            "_timestamp": 1602677293.3827367,
             "file": "evaluation/ate/results/terms.json",
             "gold": { "offsid": "offside", "keeper": "keeper" },
             "keep": 5,
@@ -54,7 +54,7 @@ The output is a JSON file with the following structure:
             "split": false,
             "stem": true,
             "unigrams": true,
-            "verbose": true,
+            "verbose": true
         },
         "results": {
             "summary": {
@@ -66,9 +66,9 @@ The output is a JSON file with the following structure:
                 "1": 1,
                 "2": 0.5,
                 "3": 0.33,
-                "4": 0.5
+                "4": 0.5,
                 "5": 0.6
-            }
+            },
             "precise": {
                 "offsid": true,
                 "ff": false,
