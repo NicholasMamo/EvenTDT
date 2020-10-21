@@ -5,7 +5,7 @@ The summarization tool receives a timeline and creates a summary for each node.
 This tool is meant to summarize the ``consume`` tool's output retrospectively, after the clusters have been finalized.
 Moreover, the summarization tool makes it easier to experiment with different parameters on the fly.
 
-To run the script, use:
+To run the script, you will need to provide, at least, a timeline, an output directory and the method to use to generate summaries:
 
 .. code-block:: bash
 
@@ -13,12 +13,27 @@ To run the script, use:
     --file data/timeline.json \\
     --method MMR \\
     --output data/summaries.json \\
-    --documents 50 \\
+
+You can add provide additional parameters to control how the summaries are generated.
+If you pass the ``--verbose`` parameter, the summaries will be printed to console as they are generated.
+
+.. code-block:: bash
+
+    ./tools/summarize.py \\
+    --file data/timeline.json \\
+    --method MMR \\
+    --output data/summaries.json \\
     --length 280 \\
-    --clean \\
     --with-query
 
-Accepted arguments:
+.. warning::
+
+    The ``--length`` parameter sets the maximum length of summaries.
+    This limit is specified in terms of characters, not words.
+    Summaries can be shorter than this limit, but not longer.
+    If the length is too short, the summary may be empty.
+
+The full list of accepted arguments:
 
     - ``-f --file``          *<Required>* The path to the file containing the timeline to summarize.
     - ``-m --method``        *<Required>* The method to use to generate summaries; supported: :class:`~summarization.algorithms.dgs.DGS`, :class:`~summarization.algorithms.mmr.MMR`.
@@ -29,6 +44,46 @@ Accepted arguments:
     - ``--clean``            *<Optional>* Clean the documents before summarizing.
     - ``--lambda``           *<Optional>* The lambda parameter to balance between relevance and non-redundancy (used only with the :class:`~summarization.algorithms.mmr.MMR` algorithm; defaults to 0.5).
     - ``--with-query``       *<Optional>* Use the centroid of each timeline node's topics as a query for summarization (used only with the :class:`~summarization.algorithms.mmr.MMR` and :class:`~summarization.algorithms.dgs.DGS` algorithms).
+
+The output is a JSON file with the following structure:
+
+.. code-block:: json
+
+    {
+        "cmd": {
+            "file": "eld/CRYCHE.json",
+            "method": "<class 'summarization.algorithms.mmr.MMR'>",
+            "output": "summaries/summary.json",
+            "verbose": true,
+            "documents": null,
+            "length": 140,
+            "clean": false,
+            "lambda": 0.5,
+            "with_query": true,
+            "_date": "2020-10-21T15:03:55.863896",
+            "_timestamp": 1603285435.8639076
+        },
+        "pcmd": {
+            "file": "eld/CRYCHE.json",
+            "method": "<class 'summarization.algorithms.mmr.MMR'>",
+            "output": "summaries/summary.json",
+            "verbose": true,
+            "documents": null,
+            "length": 140,
+            "clean": false,
+            "lambda": 0.5,
+            "with_query": true,
+            "_date": "2020-10-21T15:03:55.863919",
+            "_timestamp": 1603285435.8639216
+        },
+        "summaries": [
+            "class": "<class 'summarization.summary.Summary'>",
+            "attributes": [ ],
+            "documents": [
+                { "class": "<class 'nlp.document.Document'>" }
+            ]
+        ]
+    }
 """
 
 import argparse
@@ -116,7 +171,9 @@ def main():
     Get the meta arguments.
     """
     cmd = tools.meta(args)
+    pcmd = tools.meta(args)
     cmd['method'] = str(vars(args)['method'])
+    pcmd['method'] = str(vars(args)['method'])
 
     """
     Summarize the timeline.
@@ -127,7 +184,7 @@ def main():
                           max_documents=args.documents, length=args.length,
                           with_query=args.with_query, clean=args.clean)
 
-    tools.save(args.output, { 'summaries': summaries, 'meta': cmd })
+    tools.save(args.output, { 'summaries': summaries, 'cmd': cmd, 'pcmd': pcmd })
 
 def method(method):
     """
