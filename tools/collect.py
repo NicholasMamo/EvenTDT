@@ -199,7 +199,7 @@ def collect(auth, track, filename, max_time, lang=None, no_retweets=False, *args
     except (Exception) as e:
         elapsed = time.time() - start
         logger.warning(f"{e.__class__.__name__} after {elapsed} seconds, restarting for {max_time - elapsed} seconds")
-        collect(auth, track, filename, max_time - elapsed, lang, *args, **kwargs)
+        collect(auth, track, filename, max_time - elapsed, lang, no_retweets=no_retweets, *args, **kwargs)
 
 def save_meta(filename, meta):
     """
