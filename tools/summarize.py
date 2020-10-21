@@ -2,7 +2,7 @@
 
 """
 The summarization tool receives a timeline and creates a summary for each node.
-This tool is meant to summarize the ``consume`` tool's output retrospectively, after all tweets have been assigned to the correct cluster.
+This tool is meant to summarize the ``consume`` tool's output retrospectively, after the clusters have been finalized.
 Moreover, the summarization tool makes it easier to experiment with different parameters on the fly.
 
 To run the script, use:
@@ -32,6 +32,7 @@ Accepted arguments:
 """
 
 import argparse
+from datetime import datetime
 import json
 import os
 import sys
@@ -250,7 +251,7 @@ def summarize(summarizer, timeline, verbose=False, max_documents=None, length=14
         """
         summary = summarizer.summarize(documents, length, query=query)
         if verbose:
-            logger.info(str(summary))
+            logger.info(f"{ datetime.fromtimestamp(node.created_at).ctime() }: { str(summary) }")
         summaries.append(summary)
 
     return summaries
