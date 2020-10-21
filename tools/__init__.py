@@ -33,6 +33,7 @@ def meta(args):
     meta = copy.deepcopy(vars(args))
     meta['_date'] = datetime.datetime.now().isoformat()
     meta['_timestamp'] = time.time()
+    meta['_cmd'] = ' '.join(sys.argv)
     return meta
 
 def save(file, data):

@@ -12,7 +12,7 @@ To run the script, you will need to provide, at least, a timeline, an output dir
     ./tools/summarize.py \\
     --file data/timeline.json \\
     --method MMR \\
-    --output data/summaries.json \\
+    --output data/summaries.json
 
 You can add provide additional parameters to control how the summaries are generated.
 If you pass the ``--verbose`` parameter, the summaries will be printed to console as they are generated.
@@ -51,19 +51,9 @@ The output is a JSON file with the following structure:
 
     {
         "cmd": {
-            "file": "eld/CRYCHE.json",
-            "method": "<class 'summarization.algorithms.mmr.MMR'>",
-            "output": "summaries/summary.json",
-            "verbose": true,
-            "documents": null,
-            "length": 140,
-            "clean": false,
-            "lambda": 0.5,
-            "with_query": true,
+            "_cmd": "EvenTDT/tools/summarize.py --file data/timeline.json --method MMR --output data/summaries.json",
             "_date": "2020-10-21T15:03:55.863896",
             "_timestamp": 1603285435.8639076
-        },
-        "pcmd": {
             "file": "eld/CRYCHE.json",
             "method": "<class 'summarization.algorithms.mmr.MMR'>",
             "output": "summaries/summary.json",
@@ -73,8 +63,20 @@ The output is a JSON file with the following structure:
             "clean": false,
             "lambda": 0.5,
             "with_query": true,
+        },
+        "pcmd": {
+            "_cmd": "EvenTDT/tools/summarize.py --file data/timeline.json --method MMR --output data/summaries.json",
             "_date": "2020-10-21T15:03:55.863919",
             "_timestamp": 1603285435.8639216
+            "file": "eld/CRYCHE.json",
+            "method": "<class 'summarization.algorithms.mmr.MMR'>",
+            "output": "summaries/summary.json",
+            "verbose": true,
+            "documents": null,
+            "length": 140,
+            "clean": false,
+            "lambda": 0.5,
+            "with_query": true,
         },
         "summaries": [
             "class": "<class 'summarization.summary.Summary'>",

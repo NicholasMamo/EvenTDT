@@ -114,6 +114,7 @@ The output is a JSON file with the following structure:
 
     {
         "cmd": {
+            "_cmd": "EvenTDT/tools/consume.py --event data/event/event.json --understanding data/event/understanding.json --consumer ELDConsumer",
             "_date": "2020-10-18T12:56:45.635795",
             "_timestamp": 1603018605.6359715,
             "burst_start": 0.5,
@@ -137,6 +138,7 @@ The output is a JSON file with the following structure:
             "understanding": "data/event/understanding.json"
         },
         "pcmd": {
+            "_cmd": "EvenTDT/tools/consume.py --event data/event/event.json --understanding data/event/understanding.json --consumer ELDConsumer",
             "_date": "2020-10-18T12:56:45.635795",
             "_timestamp": 1603018605.6359715,
             "burst_start": 0.5,

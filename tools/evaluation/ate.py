@@ -30,6 +30,7 @@ The output is a JSON file with the following structure:
 
     {
         "cmd": {
+            "_cmd": "EvenTDT/tools/evaluation/ate.py  --file evaluation/ate/results/terms.json  --gold evaluation/ate/results/gold.txt  --output evaluation/ate/results/results.json --stem --unigrams --verbose",
             "_date": "2020-10-14T14:08:13.382725",
             "_timestamp": 1602677293.3827367
             "file": "evaluation/ate/results/terms.json",
@@ -41,7 +42,8 @@ The output is a JSON file with the following structure:
             "unigrams": true,
             "verbose": true,
         },
-        "pcmd": {
+            "pcmd": {
+            "_cmd": "EvenTDT/tools/evaluation/ate.py  --file evaluation/ate/results/terms.json  --gold evaluation/ate/results/gold.txt  --output evaluation/ate/results/results.json --stem --unigrams --verbose",
             "_date": "2020-10-14T14:08:13.382725",
             "_timestamp": 1602677293.3827367
             "file": "evaluation/ate/results/terms.json",
