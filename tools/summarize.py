@@ -20,15 +20,15 @@ To run the script, use:
 
 Accepted arguments:
 
-    - ``-f --file``            *<Required>* The path to the file containing the timeline to summarize.
-    - ``-m --method``        *<Required>* The method to use to generate summaries; supported: `DGS`, `MMR`.
+    - ``-f --file``          *<Required>* The path to the file containing the timeline to summarize.
+    - ``-m --method``        *<Required>* The method to use to generate summaries; supported: :class:`~summarization.algorithms.dgs.DGS`, :class:`~summarization.algorithms.mmr.MMR`.
     - ``-o --output``        *<Required>* The path to the file where to store the generated summaries.
-    - ``-v --verbose``        *<Optional>* Print the summaries as they are generated.
+    - ``-v --verbose``       *<Optional>* Print the summaries as they are generated.
     - ``--documents``        *<Optional>* The maximum number of documents to use when summarizing, with a preference for quality documents, scored by the :class:`~summarization.scorers.tweet_scorer.TweetScorer`; defaults to all documents.
-    - ``--length``            *<Optional>* The length of each generated summary (in terms of the number of characters); defaults to 140 characters.
+    - ``--length``           *<Optional>* The length of each generated summary (in terms of the number of characters); defaults to 140 characters.
     - ``--clean``            *<Optional>* Clean the documents before summarizing.
-    - ``--lambda``            *<Optional>* The lambda parameter to balance between relevance and non-redundancy (used only with the :class:`~summarization.algorithms.mmr.MMR` algorithm; defaults to 0.5).
-    - ``--with-query``        *<Optional>* Use the centroid of each timeline node's topics as a query for summarization (used only with the :class:`~summarization.algorithms.dgs.DGS` algorithm).
+    - ``--lambda``           *<Optional>* The lambda parameter to balance between relevance and non-redundancy (used only with the :class:`~summarization.algorithms.mmr.MMR` algorithm; defaults to 0.5).
+    - ``--with-query``       *<Optional>* Use the centroid of each timeline node's topics as a query for summarization (used only with the :class:`~summarization.algorithms.mmr.MMR` and :class:`~summarization.algorithms.dgs.DGS` algorithms).
 """
 
 import argparse
@@ -57,15 +57,15 @@ def setup_args():
 
     Accepted arguments:
 
-        - ``-f --file``            *<Required>* The path to the file containing the timeline to summarize.
-        - ``-m --method``        *<Required>* The method to use to generate summaries; supported: `DGS`, `MMR`.
+        - ``-f --file``          *<Required>* The path to the file containing the timeline to summarize.
+        - ``-m --method``        *<Required>* The method to use to generate summaries; supported: :class:`~summarization.algorithms.dgs.DGS`, :class:`~summarization.algorithms.mmr.MMR`.
         - ``-o --output``        *<Required>* The path to the file where to store the generated summaries.
-        - ``-v --verbose``        *<Optional>* Print the summaries as they are generated.
+        - ``-v --verbose``       *<Optional>* Print the summaries as they are generated.
         - ``--documents``        *<Optional>* The maximum number of documents to use when summarizing, with a preference for quality documents, scored by the :class:`~summarization.scorers.tweet_scorer.TweetScorer`; defaults to all documents.
-        - ``--length``            *<Optional>* The length of each generated summary (in terms of the number of characters); defaults to 140 characters.
+        - ``--length``           *<Optional>* The length of each generated summary (in terms of the number of characters); defaults to 140 characters.
         - ``--clean``            *<Optional>* Clean the documents before summarizing.
-        - ``--lambda``            *<Optional>* The lambda parameter to balance between relevance and non-redundancy (used only with the :class:`~summarization.algorithms.mmr.MMR` algorithm; defaults to 0.5).
-        - ``--with-query``        *<Optional>* Use the centroid of each timeline node's topics as a query for summarization (used only with the :class:`~summarization.algorithms.dgs.DGS` algorithm).
+        - ``--lambda``           *<Optional>* The lambda parameter to balance between relevance and non-redundancy (used only with the :class:`~summarization.algorithms.mmr.MMR` algorithm; defaults to 0.5).
+        - ``--with-query``       *<Optional>* Use the centroid of each timeline node's topics as a query for summarization (used only with the :class:`~summarization.algorithms.dgs.DGS` algorithm).
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
@@ -242,7 +242,7 @@ def summarize(summarizer, timeline, verbose=False, max_documents=None, length=14
         3. The node is topical (it stores a topic).
         """
         query = None
-        if with_query and type(summarizer) is DGS and type(node) is TopicalClusterNode:
+        if with_query and type(node) is TopicalClusterNode:
             query = Cluster(vectors=node.topics).centroid
 
         """
