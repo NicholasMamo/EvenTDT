@@ -30,13 +30,16 @@ import json
 import os
 import sys
 
-path = os.path.join(os.path.dirname(__file__), '..', 'eventdt')
-if path not in sys.path:
-    sys.path.append(path)
+file_path = os.path.dirname(os.path.abspath(__file__))
+root = os.path.join(file_path, '..')
+lib = os.path.join(root, 'eventdt')
+sys.path.insert(-1, root)
+sys.path.insert(-1, lib)
 
 from nlp.weighting.tfidf import TFIDF
 from nlp.tokenizer import Tokenizer
 from objects.exportable import Exportable
+import tools
 import twitter
 
 def setup_args():
@@ -90,7 +93,7 @@ def main():
     tfidf = construct(file=args.file, remove_retweets=args.remove_retweets, normalize_words=args.normalize_words,
                       character_normalization_count=args.character_normalization_count,
                       remove_unicode_entities=args.remove_unicode_entities, stem=args.stem)
-    save(tfidf, args.output)
+    tools.save(args.output, tfidf)
 
 def construct(file, remove_retweets, *args, **kwargs):
     """
@@ -168,27 +171,6 @@ def update(idf, tokens):
         idf[token] = idf.get(token, 0) + 1
 
     return idf
-
-def save(tfidf, output):
-    """
-    Save the given TF-IDF scheme to file.
-
-    :param tfidf: The TF-IDF scheme.
-    :type tf-idf: :class:`~nlp.weighting.tfidf.TFIDF`
-    :param output: The path to the file where to save the TF-IDF scheme.
-    :type output: str
-    """
-
-    """
-    Create the data directory if it does not exist.
-    """
-    dir = os.path.dirname(output)
-    if not os.path.exists(dir):
-        os.makedirs(dir)
-
-    tfidf = { 'tfidf': tfidf }
-    with open(output, 'w') as f:
-        f.write(json.dumps(Exportable.encode(tfidf)))
 
 if __name__ == "__main__":
     main()
