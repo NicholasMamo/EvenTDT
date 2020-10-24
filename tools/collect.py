@@ -1,34 +1,61 @@
 #!/usr/bin/env python3
 
 """
-A tool to collect tweets.
+The collection tool is used to automatically-collect datasets from Twitter.
+This tool supports two modes:
 
-The tool collects a corpus of tweets.
-A corpus can be split into an understanding and an event corpus.
-Both can be collected by specifying tracking keywords.
-All related corpora are stored together in the same directory.
-Each corpus is a JSON file, where each line is one tweet.
+    - Sampling: collects a sample of all tweets being published.
 
-To run the script, use:
+    - Filtering: collects tweets that mention the given tracking keywords (capped at 50 tweets per second by Twitter).
 
-.. code-block:: bash
-
-    ./tools/collect.py \\
-    -o data/#ARSWAT \\
-    -t '#ARSWAT' Arsenal Watford \\
-    --understanding 60 \\
-    --event 60
-
-If no tracking keywords are specified, a sample of all tweets is collected.
+The default mode collects a sample of all tweets, and can be used as follows:
 
 .. code-block:: bash
 
     ./tools/collect.py \\
-    -o data/sample \\
-    --understanding 60 \\
+    --output data/sample \\
     --event 60
 
-Accepted arguments:
+The ``--output`` parameter is  a directory where the tool saves the corpora.
+The sampling corpus is saved to sample.json in this directory.
+The ``--event`` parameter specifies how long, in minutes, the tool should spend collecting the corpus.
+
+If you provide tracking keywords, the tool automatically uses the filtering mode.
+You can provide multiple keywords using the ``--track`` parameter:
+
+.. code-block:: bash
+
+    ./tools/collect.py \\
+    --output data/#ARSWAT \\
+    --event 60 \\
+    --track '#ARSWAT' 'Arsenal' 'Watford'
+
+When collecting corpora using tracking keywords, the corpus is saved to event.json instead.
+In addition to the event period, you can also collect an understanding corpus, used notably by the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`.
+The understanding period always precedes the event period when given.
+To do this, pass the ``--understanding`` parameter in the same way as the ``--event`` parameter:
+
+.. code-block:: bash
+
+    ./tools/collect.py \\
+    --output data/#ARSWAT \\
+    --understanding 60 \\
+    --event 60 \\
+    --track '#ARSWAT' 'Arsenal' 'Watford'
+
+The corpora are JSON files, where each line contains a JSON-encoded `tweet object <https://developer.twitter.com/en/docs/twitter-api/v1/data-dictionary/overview/tweet-object>`_, as returned by Twitter.
+Since the corpora can only contain tweets, the metadata is saved instead to a meta.json file in the same directory.
+
+.. note::
+
+    The tool uses the credentials saved in the `config/conf.py` file.
+    If you have multiple accounts, you can choose which one to use by providing the ``--account`` parameter.
+
+.. note::
+
+    The tool collects tweets in English only.
+
+The full list of accepted arguments:
 
     - ``-o --output``            *<Required>* The data directory where the corpus should be written.
     - ``-t --track``             *<Optional>* A list of tracking keywords. If none are given, the sample stream is used.
