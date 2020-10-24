@@ -38,8 +38,8 @@ The output always contains the ID and used text at least, but you can store more
     --output data/tokenized.json \\
     --keep timestamp_ms lang created_at
 
-Finally, the tokenizer provides functionality to keep only a subset of the tokens.
-You can provide which parts-of-speech to retain by using  the `--nouns`, `--proper-nouns`, `--verbs` and `--adjectives` arguments.
+In addition to pre-processing, the tokenizer provides functionality to keep only a subset of the tokens.
+You can choose which parts-of-speech to retain by using  the `--nouns`, `--proper-nouns`, `--verbs` and `--adjectives` arguments.
 If none are given, all tokens are collected, including other parts-of-speech, like adverbs.
 You can specify multiple parts-of-speech at a time:
 
@@ -50,11 +50,23 @@ You can specify multiple parts-of-speech at a time:
     --output data/tokenized.json \\
     --stem --nouns --verbs --adjectives
 
+Finally, like the :mod:`~tools.collect` tool, it the format of the output does not allow the metadata to be saved in the same file.
+By default, the metadata is saved to a file with the same name as the output file, but with extension ``meta.json``.
+You can save the metadata in another file as follows:
+
+.. code-block:: bash
+
+    ./tools/idf.py \\
+    --file data/sample.json \\
+    --output data/tokenized.json \\
+    --meta data/meta.json
+
 The full list of accepted arguments:
 
     - ``-f --file``                          *<Required>* The file to use to construct the tokenized corpus.
     - ``-o --output``                        *<Required>* The file where to save the tokenized corpus.
     - ``-k --keep``                          *<Optional>* The tweet attributes to store.
+    - ``--meta``                             *<Optional>* The file where to save the meta data, defaults to [--file].meta.json.
     - ``--remove-retweets``                  *<Optional>* Exclude retweets from the corpus.
     - ``--remove-unicode-entities``          *<Optional>* Remove unicode entities from the tweets.
     - ``--normalize-words``                  *<Optional>* Normalize words with repeating characters in them.
@@ -80,11 +92,14 @@ import sys
 
 from nltk.corpus import stopwords
 
-path = os.path.join(os.path.dirname(__file__), '..', 'eventdt')
-if path not in sys.path:
-    sys.path.append(path)
+file_path = os.path.dirname(os.path.abspath(__file__))
+root = os.path.join(file_path, '..')
+lib = os.path.join(root, 'eventdt')
+sys.path.insert(-1, root)
+sys.path.insert(-1, lib)
 
 from nlp.tokenizer import Tokenizer
+import tools
 import twitter
 
 def setup_args():
@@ -96,6 +111,7 @@ def setup_args():
         - ``-f --file``                          *<Required>* The file to use to construct the tokenized corpus.
         - ``-o --output``                        *<Required>* The file where to save the tokenized corpus.
         - ``-k --keep``                          *<Optional>* The tweet attributes to store.
+        - ``--meta``                             *<Optional>* The file where to save the meta data, defaults to [--file].meta.json.
         - ``--remove-retweets``                  *<Optional>* Exclude retweets from the corpus.
         - ``--remove-unicode-entities``          *<Optional>* Remove unicode entities from the tweets.
         - ``--normalize-words``                  *<Optional>* Normalize words with repeating characters in them.
@@ -123,6 +139,8 @@ def setup_args():
                         help='<Required> The file where to save the tokenized corpus.')
     parser.add_argument('-k', '--keep', type=str, nargs='+', required=False,
                         help='<Optional> The tweet attributes to store.')
+    parser.add_argument('--meta', type=str, required=False,
+                        help='<Optional> The file where to save the meta data, defaults to [--file].meta.json.')
     parser.add_argument('--remove-retweets', action="store_true",
                         help='<Optional> Exclude retweets from the corpus.')
     parser.add_argument('--remove-unicode-entities', action="store_true",
@@ -156,7 +174,9 @@ def main():
     Set up the arguments, create the tokenizer and prepare the data directory.
     """
     args = setup_args()
-    prepare_output(args.output)
+    cmd = tools.meta(args)
+    pcmd = tools.meta(args)
+    tools.save(args.output, { }) # to create the directory if it doesn't exist
     tags = get_tags(nouns=args.nouns, proper_nouns=args.proper_nouns,
                     verbs=args.verbs, adjectives=args.adjectives)
     tokenizer = Tokenizer(normalize_words=args.normalize_words, pos=tags,
@@ -164,6 +184,9 @@ def main():
                           remove_unicode_entities=args.remove_unicode_entities, stem=args.stem,
                           stopwords=({ } if not args.remove_stopwords else stopwords.words('english')))
     tokenize_corpus(args.file, args.output, tokenizer, args.keep, args.remove_retweets)
+    meta = args.meta or args.output.replace('.json', '.meta.json')
+    pcmd['meta'] = meta
+    tools.save(meta, { 'cmd': cmd, 'pcmd': pcmd })
 
 def prepare_output(output):
     """
