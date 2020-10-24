@@ -1,19 +1,29 @@
 #!/usr/bin/env python3
 
 """
-A tool to create a TF-IDF scheme from a corpus of tweets.
-
-To run the script, use:
+The IDF tool creates a TF-IDF scheme from a corpus of tweets.
+To generate the TF-IDF scheme, you must always provide the corpus of tweets (as collected using the :mod:`~tools.collect` tool) and the file where to write the IDF:
 
 .. code-block:: bash
 
     ./tools/idf.py \\
-    -f data/sample.json \\
-    -o data/idf.json \\
+    --file data/sample.json \\
+    --output data/idf.json
+
+You can optionally skip retweets by passing the ``--remove-retweets`` parameter.
+
+In addition to the basic functionality, this tool lets you specify how to pre-process tokens.
+The functions include common approaches, like stemming, as well as character normalization, which removes repeated characters:
+
+.. code-block:: bash
+
+    ./tools/idf.py \\
+    --file data/sample.json \\
+    --output data/idf.json \\
     --remove-unicode-entities \\
     --normalize-words --stem
 
-Accepted arguments:
+The full list of accepted arguments:
 
     - ``-f --file``                          *<Required>* The file to use to construct the TF-IDF scheme.
     - ``-o --output``                        *<Required>* The file where to save the TF-IDF scheme.
@@ -21,8 +31,53 @@ Accepted arguments:
     - ``--remove-unicode-entities``          *<Optional>* Remove unicode entities from the TF-IDF scheme.
     - ``--normalize-words``                  *<Optional>* Normalize words with repeating characters in them.
     - ``--character-normalization-count``    *<Optional>* The number of times a character must repeat for it to be normalized. Used only with the ``--normalize-words`` flag.
-    - ``-stem``                              *<Optional>* Stem the tokens when constructing the TF-IDF scheme.
+    - ``--stem``                             *<Optional>* Stem the tokens when constructing the TF-IDF scheme.
 
+The output is a JSON file with the following structure:
+
+.. code-block:: json
+
+    {
+        "cmd": {
+            "file": "data/sample.json",
+            "output": "data/idf.json",
+            "remove_retweets": false,
+            "remove_unicode_entities": false,
+            "normalize_words": false,
+            "character_normalization_count": 3,
+            "stem": false,
+            "_date": "2020-10-24T14:41:24.809058",
+            "_timestamp": 1603543284.8090684,
+            "_cmd": "/home/nicholas/github/EvenTDT/tools/idf.py --file data/sample.json --output data/idf.json"
+        },
+        "pcmd": {
+            "file": "data/sample.json",
+            "output": "data/idf.json",
+            "remove_retweets": false,
+            "remove_unicode_entities": false,
+            "normalize_words": false,
+            "character_normalization_count": 3,
+            "stem": false,
+            "_date": "2020-10-24T14:41:24.809077",
+            "_timestamp": 1603543284.80908,
+            "_cmd": "/home/nicholas/github/EvenTDT/tools/idf.py --file data/sample.json --output data/idf.json"
+        },
+        "tfidf": {
+            "class": "<class 'nlp.weighting.tfidf.TFIDF'>",
+            "idf": {
+                "class": "<class 'nlp.weighting.global_schemes.idf.IDF'>",
+                "documents": 15135,
+                "idf": {
+                    "teams": 118,
+                    "arsenal": 8144,
+                    "burnley": 243,
+                    "now": 802,
+                    "order": 48,
+                    "and": 2776
+                }
+            }
+        }
+    }
 """
 
 import argparse
@@ -93,7 +148,9 @@ def main():
     tfidf = construct(file=args.file, remove_retweets=args.remove_retweets, normalize_words=args.normalize_words,
                       character_normalization_count=args.character_normalization_count,
                       remove_unicode_entities=args.remove_unicode_entities, stem=args.stem)
-    tools.save(args.output, tfidf)
+    cmd = tools.meta(args)
+    pcmd = tools.meta(args)
+    tools.save({ 'cmd': cmd, 'pcmd': pcmd, 'tfidf': tfidf }, args.output)
 
 def construct(file, remove_retweets, *args, **kwargs):
     """
