@@ -1,42 +1,76 @@
 #!/usr/bin/env python3
 
 """
-A tool to tokenize a corpus of tweets.
-The tokenizer can be used to pre-process a corpus.
+The tokenizer tokenizes tweets in a corpus.
+Tokenization can be used as a pre-processing step for other tools, such as the :mod:`~tools.terms` and :mod:`~tools.bootstrap` tools.
 
-Each line in the tokenizer corresponds to a tweet.
-Each line is a JSON object containing, at minimum, the tweet ID, the text used for the tokenization and the tokens.
-
-Part-of-speech extraction can be specified by using the `--nouns`, `--proper-nouns`, `--verbs` and `--adjectives` arguments.
-If none are given, all tokens are collected, including other parts-of-speech, like adverbs.
-
-To run the script, use:
+The tokenizer goes through each line the input file and creates another line in the output file with the tokenized tweet.
+This tool always uses the full text to tokenize text.
+To generate tokens, you need to provide, at least, the input and output files:
 
 .. code-block:: bash
 
     ./tools/tokenizer.py \\
-    -f data/sample.json \\
-    -o data/idf.json \\
+    --file data/sample.json \\
+    --output data/tokenized.json
+
+By default, there will be one output line for each input line.
+This is not the case in only one scenario: when you pass on the ``--remove-retweets`` parameter, which skips retweets.
+
+In addition to the basic functionality, this tool lets you specify how to pre-process tokens.
+The functions include common approaches, like stemming, as well as character normalization, which removes repeated characters:
+
+.. code-block:: bash
+
+    ./tools/idf.py \\
+    --file data/sample.json \\
+    --output data/tokenized.json \\
     --remove-unicode-entities \\
-    --remove-stopwords \\
     --normalize-words --stem
 
-Accepted arguments:
+In addition to the tokens, you can specify tweet attributes to keep alongside the tokenized tweets.
+The output always contains the ID and used text at least, but you can store more attributes as follows:
 
-    - ``-f --file``                            *<Required>* The file to use to construct the tokenized corpus.
+.. code-block:: bash
+
+    ./tools/idf.py \\
+    --file data/sample.json \\
+    --output data/tokenized.json \\
+    --keep timestamp_ms lang created_at
+
+Finally, the tokenizer provides functionality to keep only a subset of the tokens.
+You can provide which parts-of-speech to retain by using  the `--nouns`, `--proper-nouns`, `--verbs` and `--adjectives` arguments.
+If none are given, all tokens are collected, including other parts-of-speech, like adverbs.
+You can specify multiple parts-of-speech at a time:
+
+.. code-block:: bash
+
+    ./tools/idf.py \\
+    --file data/sample.json \\
+    --output data/tokenized.json \\
+    --stem --nouns --verbs --adjectives
+
+The full list of accepted arguments:
+
+    - ``-f --file``                          *<Required>* The file to use to construct the tokenized corpus.
     - ``-o --output``                        *<Required>* The file where to save the tokenized corpus.
-    - ``-k --keep``                            *<Optional>* The tweet attributes to store.
-    - ``--remove-retweets``                    *<Optional>* Exclude retweets from the corpus.
-    - ``--remove-unicode-entities``            *<Optional>* Remove unicode entities from the tweets.
-    - ``--normalize-words``                    *<Optional>* Normalize words with repeating characters in them.
+    - ``-k --keep``                          *<Optional>* The tweet attributes to store.
+    - ``--remove-retweets``                  *<Optional>* Exclude retweets from the corpus.
+    - ``--remove-unicode-entities``          *<Optional>* Remove unicode entities from the tweets.
+    - ``--normalize-words``                  *<Optional>* Normalize words with repeating characters in them.
     - ``--character-normalization-count``    *<Optional>* The number of times a character must repeat for it to be normalized. Used only with the ``--normalize-words`` flag.
-    - ``--remove-stopwords``                *<Optional>* Remove stopwords from the tokens.
-    - ``-stem``                                *<Optional>* Stem the tokens when constructing the tokenized corpus.
+    - ``--remove-stopwords``                 *<Optional>* Remove stopwords from the tokens.
+    - ``--stem``                             *<Optional>* Stem the tokens when constructing the tokenized corpus.
     - ``--nouns``                            *<Optional>* Extract nouns from the corpus.
-    - ``--proper-nouns``                    *<Optional>* Extract proper nouns from the corpus.
+    - ``--proper-nouns``                     *<Optional>* Extract proper nouns from the corpus.
     - ``--verbs``                            *<Optional>* Extract verbs from the corpus.
-    - ``--adjectives``                        *<Optional>* Extract adjectives from the corpus.
+    - ``--adjectives``                       *<Optional>* Extract adjectives from the corpus.
 
+The output is a JSON file where each line is a JSON-encoded tweet:
+
+.. code-block:: json
+
+    { "id": 1276194677906190336, "text": "Do you know how mentally strong you have to be as an Arsenal fan to carry on watching", "tokens": ["know", "mental", "strong", "arsen", "fan", "carri", "watch"], "timestamp_ms": "1593103496420"}
 """
 
 import argparse
@@ -59,19 +93,19 @@ def setup_args():
 
     Accepted arguments:
 
-        - ``-f --file``                            *<Required>* The file to use to construct the tokenized corpus.
+        - ``-f --file``                          *<Required>* The file to use to construct the tokenized corpus.
         - ``-o --output``                        *<Required>* The file where to save the tokenized corpus.
-        - ``-k --keep``                            *<Optional>* The tweet attributes to store.
-        - ``--remove-retweets``                    *<Optional>* Exclude retweets from the corpus.
-        - ``--remove-unicode-entities``            *<Optional>* Remove unicode entities from the tweets.
-        - ``--normalize-words``                    *<Optional>* Normalize words with repeating characters in them.
+        - ``-k --keep``                          *<Optional>* The tweet attributes to store.
+        - ``--remove-retweets``                  *<Optional>* Exclude retweets from the corpus.
+        - ``--remove-unicode-entities``          *<Optional>* Remove unicode entities from the tweets.
+        - ``--normalize-words``                  *<Optional>* Normalize words with repeating characters in them.
         - ``--character-normalization-count``    *<Optional>* The number of times a character must repeat for it to be normalized. Used only with the ``--normalize-words`` flag.
-        - ``--remove-stopwords``                *<Optional>* Remove stopwords from the tokens.
-        - ``-stem``                                *<Optional>* Stem the tokens when constructing the tokenized corpus.
+        - ``--remove-stopwords``                 *<Optional>* Remove stopwords from the tokens.
+        - ``--stem``                             *<Optional>* Stem the tokens when constructing the tokenized corpus.
         - ``--nouns``                            *<Optional>* Extract nouns from the corpus.
-        - ``--proper-nouns``                    *<Optional>* Extract proper nouns from the corpus.
+        - ``--proper-nouns``                     *<Optional>* Extract proper nouns from the corpus.
         - ``--verbs``                            *<Optional>* Extract verbs from the corpus.
-        - ``--adjectives``                        *<Optional>* Extract adjectives from the corpus.
+        - ``--adjectives``                       *<Optional>* Extract adjectives from the corpus.
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
