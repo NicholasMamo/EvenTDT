@@ -33,18 +33,6 @@ If you pass the ``--verbose`` parameter, the summaries will be printed to consol
     Summaries can be shorter than this limit, but not longer.
     If the length is too short, the summary may be empty.
 
-The full list of accepted arguments:
-
-    - ``-f --file``          *<Required>* The path to the file containing the timeline to summarize.
-    - ``-m --method``        *<Required>* The method to use to generate summaries; supported: :class:`~summarization.algorithms.dgs.DGS`, :class:`~summarization.algorithms.mmr.MMR`.
-    - ``-o --output``        *<Required>* The path to the file where to store the generated summaries.
-    - ``-v --verbose``       *<Optional>* Print the summaries as they are generated.
-    - ``--documents``        *<Optional>* The maximum number of documents to use when summarizing, with a preference for quality documents, scored by the :class:`~summarization.scorers.tweet_scorer.TweetScorer`; defaults to all documents.
-    - ``--length``           *<Optional>* The length of each generated summary (in terms of the number of characters); defaults to 140 characters.
-    - ``--clean``            *<Optional>* Clean the documents before summarizing.
-    - ``--lambda``           *<Optional>* The lambda parameter to balance between relevance and non-redundancy (used only with the :class:`~summarization.algorithms.mmr.MMR` algorithm; defaults to 0.5).
-    - ``--with-query``       *<Optional>* Use the centroid of each timeline node's topics as a query for summarization (used only with the :class:`~summarization.algorithms.mmr.MMR` and :class:`~summarization.algorithms.dgs.DGS` algorithms).
-
 The output is a JSON file with the following structure:
 
 .. code-block:: json
@@ -86,6 +74,19 @@ The output is a JSON file with the following structure:
             ]
         }]
     }
+
+The full list of accepted arguments:
+
+    - ``-f --file``          *<Required>* The path to the file containing the timeline to summarize.
+    - ``-m --method``        *<Required>* The method to use to generate summaries; supported: :class:`~summarization.algorithms.dgs.DGS`, :class:`~summarization.algorithms.mmr.MMR`.
+    - ``-o --output``        *<Required>* The path to the file where to store the generated summaries.
+    - ``-v --verbose``       *<Optional>* Print the summaries as they are generated.
+    - ``--documents``        *<Optional>* The maximum number of documents to use when summarizing, with a preference for quality documents, scored by the :class:`~summarization.scorers.tweet_scorer.TweetScorer`; defaults to all documents.
+    - ``--length``           *<Optional>* The length of each generated summary (in terms of the number of characters); defaults to 140 characters.
+    - ``--clean``            *<Optional>* Clean the documents before summarizing.
+    - ``--lambda``           *<Optional>* The lambda parameter to balance between relevance and non-redundancy (used only with the :class:`~summarization.algorithms.mmr.MMR` algorithm; defaults to 0.5).
+    - ``--with-query``       *<Optional>* Use the centroid of each timeline node's topics as a query for summarization (used only with the :class:`~summarization.algorithms.mmr.MMR` and :class:`~summarization.algorithms.dgs.DGS` algorithms).
+
 """
 
 import argparse

@@ -89,29 +89,6 @@ When providing splits, the tool creates one consumer for each split: each consum
     If none of the keywords in a tweet are part of a split, the tweet is not processed at all.
     If a tweet has keywords from multiple splits, the tweet is processed multiple times.
 
-The full list of accepted arguments:
-
-    - ``-e --event``                *<Required>* The event file to consume.
-    - ``-c --consumer``             *<Required>* The consumer to use: :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`, :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`, :class:`~queues.consumers.print_consumer.PrintConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer`, :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`.
-    - ``-u --understanding``        *<Optional>* The understanding file used to understand the event.
-    - ``-o --output``               *<Optional>* The output file where to save the timeline, defaults to the ``.out`` directory relative to the event file.
-    - ``--no-cache``                *<Optional>* If specified, the cached understanding is not used, but new understanding is generated.
-    - ``--speed``                   *<Optional>* The speed at which the file is consumed, defaults to 1, which is real-time speed.
-    - ``--skip``                    *<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
-    - ``--max-inactivity``          *<Optional>* The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.
-    - ``--max-time``                *<Optional>* The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.
-    - ``--skip-retweets``           *<Optional>* Skip retweets when reading tweets from a file, defaults to False.
-    - ``--splits``                  *<Optional>* The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split.
-    - ``--periodicity``             *<Optional>* The periodicity in seconds of the consumer, defaults to 60 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer` and :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`).
-    - ``--scheme``                  *<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used.
-    - ``--min-volume``              *<Optional>* The minimum volume to consider the stream to be active and look for breaking terms (used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`); defaults to 10.
-    - ``--min-size``                *<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
-    - ``--min-burst``               *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer` and the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`).
-    - ``--threshold``               *<Optional>* The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
-    - ``--max-intra-similarity``    *<Optional>* The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
-    - ``--burst-start``             *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`).
-    - ``--freeze-period``           *<Optional>* The freeze period of clusters, defaults to 20 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer` and the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`).
-
 The output is a JSON file with the following structure:
 
 .. code-block:: json
@@ -177,6 +154,30 @@ The output is a JSON file with the following structure:
     }
 
 If you provide splits, the ``timeline`` key is replaced with a list of timelines, ordered to correspond to the splits.
+
+
+The full list of accepted arguments:
+
+    - ``-e --event``                *<Required>* The event file to consume.
+    - ``-c --consumer``             *<Required>* The consumer to use: :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`, :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`, :class:`~queues.consumers.print_consumer.PrintConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer`, :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`.
+    - ``-u --understanding``        *<Optional>* The understanding file used to understand the event.
+    - ``-o --output``               *<Optional>* The output file where to save the timeline, defaults to the ``.out`` directory relative to the event file.
+    - ``--no-cache``                *<Optional>* If specified, the cached understanding is not used, but new understanding is generated.
+    - ``--speed``                   *<Optional>* The speed at which the file is consumed, defaults to 1, which is real-time speed.
+    - ``--skip``                    *<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
+    - ``--max-inactivity``          *<Optional>* The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.
+    - ``--max-time``                *<Optional>* The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.
+    - ``--skip-retweets``           *<Optional>* Skip retweets when reading tweets from a file, defaults to False.
+    - ``--splits``                  *<Optional>* The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split.
+    - ``--periodicity``             *<Optional>* The periodicity in seconds of the consumer, defaults to 60 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer` and :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`).
+    - ``--scheme``                  *<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used.
+    - ``--min-volume``              *<Optional>* The minimum volume to consider the stream to be active and look for breaking terms (used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`); defaults to 10.
+    - ``--min-size``                *<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
+    - ``--min-burst``               *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer` and the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`).
+    - ``--threshold``               *<Optional>* The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
+    - ``--max-intra-similarity``    *<Optional>* The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
+    - ``--burst-start``             *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`).
+    - ``--freeze-period``           *<Optional>* The freeze period of clusters, defaults to 20 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer` and the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`).
 """
 
 import argparse

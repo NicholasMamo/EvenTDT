@@ -13,17 +13,6 @@ To run the tool, use:
     --output evaluation/ate/results/results.json \\
     --stem --unigrams --verbose
 
-Accepted arguments:
-
-    - ``-f --file``              *<Required>* The file containing the terms to evaluate, which may be the output of the :mod:`~tools.terms` or :mod:`~tools.bootstrap` tools.
-    - ``-g --gold``              *<Required>* The files containing the gold standard, with each word on a separate line.
-    - ``-o --output``            *<Required>* The file where to save the results.
-    - ``-k --keep``              *<Optional>* The number of words in the ranking to keep (defaults to all terms).
-    - ``--stem``                 *<Optional>* Stem the gold standard terms.
-    - ``--split``                *<Optional>* Split multi-word gold standard terms into unigrams.
-    - ``--unigrams``             *<Optional>* Consider only unigrams from the gold standard.
-    - ``--verbose``              *<Optional>* Print the results to the shell.
-
 The output is a JSON file with the following structure:
 
 .. code-block:: json
@@ -79,6 +68,17 @@ The output is a JSON file with the following structure:
             "recalled": [ "offside", "keeper" ]
         }
     }
+
+Accepted arguments:
+
+    - ``-f --file``              *<Required>* The file containing the terms to evaluate, which may be the output of the :mod:`~tools.terms` or :mod:`~tools.bootstrap` tools.
+    - ``-g --gold``              *<Required>* The files containing the gold standard, with each word on a separate line.
+    - ``-o --output``            *<Required>* The file where to save the results.
+    - ``-k --keep``              *<Optional>* The number of words in the ranking to keep (defaults to all terms).
+    - ``--stem``                 *<Optional>* Stem the gold standard terms.
+    - ``--split``                *<Optional>* Split multi-word gold standard terms into unigrams.
+    - ``--unigrams``             *<Optional>* Consider only unigrams from the gold standard.
+    - ``--verbose``              *<Optional>* Print the results to the shell.
 """
 
 import argparse

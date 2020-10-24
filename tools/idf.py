@@ -23,16 +23,6 @@ The functions include common approaches, like stemming, as well as character nor
     --remove-unicode-entities \\
     --normalize-words --stem
 
-The full list of accepted arguments:
-
-    - ``-f --file``                          *<Required>* The file to use to construct the TF-IDF scheme.
-    - ``-o --output``                        *<Required>* The file where to save the TF-IDF scheme.
-    - ``--remove-retweets``                  *<Optional>* Exclude retweets from the corpus.
-    - ``--remove-unicode-entities``          *<Optional>* Remove unicode entities from the TF-IDF scheme.
-    - ``--normalize-words``                  *<Optional>* Normalize words with repeating characters in them.
-    - ``--character-normalization-count``    *<Optional>* The number of times a character must repeat for it to be normalized. Used only with the ``--normalize-words`` flag.
-    - ``--stem``                             *<Optional>* Stem the tokens when constructing the TF-IDF scheme.
-
 The output is a JSON file with the following structure:
 
 .. code-block:: json
@@ -78,6 +68,16 @@ The output is a JSON file with the following structure:
             }
         }
     }
+
+The full list of accepted arguments:
+
+    - ``-f --file``                          *<Required>* The file to use to construct the TF-IDF scheme.
+    - ``-o --output``                        *<Required>* The file where to save the TF-IDF scheme.
+    - ``--remove-retweets``                  *<Optional>* Exclude retweets from the corpus.
+    - ``--remove-unicode-entities``          *<Optional>* Remove unicode entities from the TF-IDF scheme.
+    - ``--normalize-words``                  *<Optional>* Normalize words with repeating characters in them.
+    - ``--character-normalization-count``    *<Optional>* The number of times a character must repeat for it to be normalized. Used only with the ``--normalize-words`` flag.
+    - ``--stem``                             *<Optional>* Stem the tokens when constructing the TF-IDF scheme.
 """
 
 import argparse

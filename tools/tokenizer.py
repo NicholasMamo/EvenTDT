@@ -61,6 +61,12 @@ You can save the metadata in another file as follows:
     --output data/tokenized.json \\
     --meta data/meta.json
 
+The output is a JSON file where each line is a JSON-encoded tweet:
+
+.. code-block:: json
+
+    { "id": 1276194677906190336, "text": "Do you know how mentally strong you have to be as an Arsenal fan to carry on watching", "tokens": ["know", "mental", "strong", "arsen", "fan", "carri", "watch"], "timestamp_ms": "1593103496420"}
+
 The full list of accepted arguments:
 
     - ``-f --file``                          *<Required>* The file to use to construct the tokenized corpus.
@@ -77,12 +83,6 @@ The full list of accepted arguments:
     - ``--proper-nouns``                     *<Optional>* Extract proper nouns from the corpus.
     - ``--verbs``                            *<Optional>* Extract verbs from the corpus.
     - ``--adjectives``                       *<Optional>* Extract adjectives from the corpus.
-
-The output is a JSON file where each line is a JSON-encoded tweet:
-
-.. code-block:: json
-
-    { "id": 1276194677906190336, "text": "Do you know how mentally strong you have to be as an Arsenal fan to carry on watching", "tokens": ["know", "mental", "strong", "arsen", "fan", "carri", "watch"], "timestamp_ms": "1593103496420"}
 """
 
 import argparse
