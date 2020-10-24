@@ -55,7 +55,7 @@ def save(file, data):
     Create the directory if it doesn't exist.
     """
     dir = os.path.dirname(file)
-    if not os.path.exists(dir):
+    if dir and not os.path.exists(dir):
         os.mkdir(dir)
 
     """
