@@ -15,13 +15,13 @@ To run the script, use:
 
 Accepted arguments:
 
-    - ``-f --file``                            *<Required>* The file to use to construct the TF-IDF scheme.
+    - ``-f --file``                          *<Required>* The file to use to construct the TF-IDF scheme.
     - ``-o --output``                        *<Required>* The file where to save the TF-IDF scheme.
-    - ``--remove-retweets``                    *<Optional>* Exclude retweets from the corpus.
-    - ``--remove-unicode-entities``            *<Optional>* Remove unicode entities from the TF-IDF scheme.
-    - ``--normalize-words``                    *<Optional>* Normalize words with repeating characters in them.
+    - ``--remove-retweets``                  *<Optional>* Exclude retweets from the corpus.
+    - ``--remove-unicode-entities``          *<Optional>* Remove unicode entities from the TF-IDF scheme.
+    - ``--normalize-words``                  *<Optional>* Normalize words with repeating characters in them.
     - ``--character-normalization-count``    *<Optional>* The number of times a character must repeat for it to be normalized. Used only with the ``--normalize-words`` flag.
-    - ``-stem``                                *<Optional>* Stem the tokens when constructing the TF-IDF scheme.
+    - ``-stem``                              *<Optional>* Stem the tokens when constructing the TF-IDF scheme.
 
 """
 
@@ -45,13 +45,13 @@ def setup_args():
 
     Accepted arguments:
 
-        - ``-f --file``                            *<Required>* The file to use to construct the TF-IDF scheme.
+        - ``-f --file``                          *<Required>* The file to use to construct the TF-IDF scheme.
         - ``-o --output``                        *<Required>* The file where to save the TF-IDF scheme.
-        - ``--remove-retweets``                    *<Optional>* Exclude retweets from the corpus.
-        - ``--remove-unicode-entities``            *<Optional>* Remove unicode entities from the TF-IDF scheme.
-        - ``--normalize-words``                    *<Optional>* Normalize words with repeating characters in them.
+        - ``--remove-retweets``                  *<Optional>* Exclude retweets from the corpus.
+        - ``--remove-unicode-entities``          *<Optional>* Remove unicode entities from the TF-IDF scheme.
+        - ``--normalize-words``                  *<Optional>* Normalize words with repeating characters in them.
         - ``--character-normalization-count``    *<Optional>* The number of times a character must repeat for it to be normalized. Used only with the ``--normalize-words`` flag.
-        - ``--stem``                            *<Optional>* Stem the tokens when constructing the TF-IDF scheme.
+        - ``--stem``                             *<Optional>* Stem the tokens when constructing the TF-IDF scheme.
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
