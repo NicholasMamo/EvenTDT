@@ -1,6 +1,7 @@
 """
-EvenTDT comes with tools to help you collect corpora from Twitter and create timelines from them.
-Keep reading to learn more about the different tools available in EvenTDT.
+EvenTDT comes with tools to help you collect corpora from Twitter and process them in various ways.
+You can use EvenTDT's tools to :mod:`create timelines <tools.consume>`, :mod:`extract participants <tools.participants>`, :mod:`perform evaluations <tools.evaluation>` and more.
+Keep reading to learn more about the tools available in EvenTDT.
 """
 
 import copy
