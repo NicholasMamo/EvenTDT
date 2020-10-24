@@ -8,13 +8,16 @@ The first task reads the file, and the second consumes it.
 All dataset files are expected to contain one tweet on every line, encoded as JSON strings.
 This is the standard output from the :mod:`~tools.collect` tool.
 
-At its most basic form, the consumption tool can be run by providing an event file and a consumer:
+At its most basic form, the consumption tool can be run by providing an event file and a consumer.
+By default, the tool saves the timeline in the ``.out`` folder, which is placed in the same directory as the event file.
+However, you can provide your own ``--output`` value.
 
 .. code-block:: bash
 
     ./tools/consume.py \\
     --event data/event/event.json \\
-    --consumer PrintConsumer
+    --consumer PrintConsumer \\
+    --output data/event/timelines/event.json
 
 However, you can also add parameters to change how the tool reads files.
 For example, the ``--speed`` parameter changes how fast the consumer should read files.
@@ -91,6 +94,7 @@ The full list of accepted arguments:
     - ``-e --event``                *<Required>* The event file to consume.
     - ``-c --consumer``             *<Required>* The consumer to use: :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`, :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`, :class:`~queues.consumers.print_consumer.PrintConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer`, :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`.
     - ``-u --understanding``        *<Optional>* The understanding file used to understand the event.
+    - ``-o --output``               *<Optional>* The output file where to save the timeline, defaults to the ``.out`` directory relative to the event file.
     - ``--no-cache``                *<Optional>* If specified, the cached understanding is not used, but new understanding is generated.
     - ``--speed``                   *<Optional>* The speed at which the file is consumed, defaults to 1, which is real-time speed.
     - ``--skip``                    *<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
@@ -127,6 +131,7 @@ The output is a JSON file with the following structure:
             "min_burst": 0.5,
             "min_size": 3,
             "min_volume": 10,
+            "output": null,
             "no_cache": false,
             "periodicity": 60,
             "scheme": "data/idf.json",
@@ -151,6 +156,7 @@ The output is a JSON file with the following structure:
             "min_burst": 0.5,
             "min_size": 3,
             "min_volume": 10,
+            "output": "data/event/.out/event.json",
             "no_cache": false,
             "periodicity": 60,
             "scheme": "<class 'nlp.weighting.tfidf.TFIDF'>",
@@ -207,6 +213,7 @@ def setup_args():
         - ``-e --event``                *<Required>* The event file to consume.
         - ``-c --consumer``             *<Required>* The consumer to use: :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`, :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`, :class:`~queues.consumers.print_consumer.PrintConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer`, :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`.
         - ``-u --understanding``        *<Optional>* The understanding file used to understand the event.
+        - ``-o --output``               *<Optional>* The output file where to save the timeline, defaults to the ``.out`` directory relative to the event file.
         - ``--no-cache``                *<Optional>* If specified, the cached understanding is not used, but new understanding is generated.
         - ``--speed``                   *<Optional>* The speed at which the file is consumed, defaults to 1, which is real-time speed.
         - ``--skip``                    *<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
@@ -240,6 +247,8 @@ def setup_args():
                         help='<Required> The consumer to use: `ELDConsumer`, `FIREConsumer`, `FUEGOConsumer`, `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.')
     parser.add_argument('-u', '--understanding', type=str, required=False,
                         help='<Optional> The understanding file used to understand the event.')
+    parser.add_argument('-o', '--output', type=str, required=False,
+                        help='<Optional> The output file where to save the timeline, defaults to the `.out` directory relative to the event file.')
     parser.add_argument('--no-cache', action="store_true",
                         help='<Optional> If specified, the cached understanding is not used, but new understanding is generated.')
     parser.add_argument('--speed', type=float, required=False, default=1,
@@ -335,8 +344,12 @@ def main():
     timeline = consume(**args)
     timeline['cmd'] = cmd
     timeline['pcmd'] = pcmd
-    dir = os.path.dirname(args['event'])
-    tools.save(os.path.join(dir, '.out', filename), timeline)
+
+    """
+    Set up the output directory and save the timeline.
+    """
+    out = args['output'] or os.path.join(os.path.dirname(args['event']), '.out', filename)
+    tools.save(out, timeline)
     logger.info("Event period ended")
 
     asyncio.get_event_loop().close()
