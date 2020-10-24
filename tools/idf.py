@@ -150,7 +150,7 @@ def main():
                       remove_unicode_entities=args.remove_unicode_entities, stem=args.stem)
     cmd = tools.meta(args)
     pcmd = tools.meta(args)
-    tools.save({ 'cmd': cmd, 'pcmd': pcmd, 'tfidf': tfidf }, args.output)
+    tools.save(args.output, { 'cmd': cmd, 'pcmd': pcmd, 'tfidf': tfidf })
 
 def construct(file, remove_retweets, *args, **kwargs):
     """
