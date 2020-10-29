@@ -605,6 +605,43 @@ class TestELDConsumer(unittest.TestCase):
                                      if document.attributes['timestamp'] <= timestamp ]
             self.assertEqual(set(dimensions), set(consumer.store.get(timestamp)))
 
+    def test_checkpoint_log_nutrition(self):
+        """
+        Test that when creating checkpoints with logarithmic nutrition, the scaling uses the logarithm.
+        """
+
+        consumer = ELDConsumer(Queue(), 60, log_nutrition=True)
+        document = Document('joe biden', { 'joe': 10, 'biden': 1000 }, attributes={ 'timestamp': 10 })
+        checkpoint = consumer._checkpoint(document)
+        self.assertEqual(round(1/3, 10), round(checkpoint.get('joe'), 10))
+        self.assertEqual(1, checkpoint.get('biden'))
+
+    def test_checkpoint_no_log_nutrition(self):
+        """
+        Test that when creating checkpoints without logarithmic nutrition, the scaling does not use the logarithm.
+        """
+
+        consumer = ELDConsumer(Queue(), 60, log_nutrition=False)
+        document = Document('joe biden', { 'joe': 10, 'biden': 1000 }, attributes={ 'timestamp': 10 })
+        checkpoint = consumer._checkpoint(document)
+        self.assertEqual(round(1/100, 10), round(checkpoint.get('joe'), 10))
+        self.assertEqual(1, checkpoint.get('biden'))
+
+    def test_create_checkpoint_scale(self):
+        """
+        Test that when creating checkpoints, they are rescaled correctly.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            documents = consumer._to_documents(tweets)
+            document = Document.concatenate(*documents, tokenizer=consumer.tokenizer)
+            checkpoint = consumer._checkpoint(document)
+            self.assertLessEqual(0, min(checkpoint.values()))
+            self.assertEqual(1, max(checkpoint.values()))
+
     def test_remove_old_checkpoints_empty(self):
         """
         Test that when removing checkpoints from an empty store, nothing happens.

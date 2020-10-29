@@ -110,6 +110,11 @@ class ELDConsumer(Consumer):
     :ivar min_burst: The minimum burst of a term to be considered emerging and returned.
                      This value is exclusive.
     :vartype min_burst: float
+    :ivar log_nutrition: A boolean indicating whether the log of the nutrition should be taken before creating checkpoints.
+                         This minimizes the domination of some terms, which leads to other important terms always having a high burst.
+                         Motivating example: `trump` is a very common term, but so was `hunter` during the 2020 USA presidential elections.
+                         However, since `trump`'s nutrition was so high, `hunter` had a comparatively low nutrition, which made it bursty at all times.
+    :vartype log_nutrition: bool
     :ivar store: The nutrition store used in conjunction with extractin breaking news.
     :vartype store: :class:`~tdt.nutrition.store.NutritionStore`
     :ivar buffer: A buffer of tweets that have been processed, but which are not part of a checkpoint yet.
@@ -128,7 +133,7 @@ class ELDConsumer(Consumer):
 
     def __init__(self, queue, time_window=30, scheme=None,
                  threshold=0.5, freeze_period=20, min_size=3, cooldown=1, max_intra_similarity=0.8,
-                 sets=10, min_burst=0.5, *args, **kwargs):
+                 sets=10, min_burst=0.5, log_nutrition=False, *args, **kwargs):
         """
         Create the consumer with a queue.
         Simultaneously create a nutrition store and the topic detection algorithm container.
@@ -167,6 +172,9 @@ class ELDConsumer(Consumer):
         :param min_burst: The minimum burst of a term to be considered emerging and returned.
                           This value is exclusive.
         :type min_burst: float
+        :param log_nutrition: A boolean indicating whether the log of the nutrition should be taken before creating checkpoints.
+                              This minimizes the domination of some terms, which leads to other important terms always having a high burst.
+        :type log_nutrition: bool
         """
 
         # NOTE: 1 second cooldown is very low. Maybe this parameter isn't needed.
@@ -180,6 +188,7 @@ class ELDConsumer(Consumer):
         self.cooldown = cooldown
         self.max_intra_similarity = max_intra_similarity
         self.min_burst = min_burst
+        self.log_nutrition = log_nutrition
 
         self.store = MemoryNutritionStore()
         self.buffer = Queue()
@@ -565,12 +574,23 @@ class ELDConsumer(Consumer):
         """
         if documents:
             document = Document.concatenate(*documents, tokenizer=self.tokenizer, scheme=self.scheme)
-            max_magnitude = max(document.dimensions.values())
-            document.dimensions = { dimension: magnitude / max_magnitude
-                                    for dimension, magnitude in document.dimensions.items() }
-            self.store.add(timestamp, document.dimensions)
+            checkpoint = self._checkpoint(document)
+            self.store.add(timestamp, checkpoint)
         else:
             self.store.add(timestamp, { })
+
+    def _checkpoint(self, document):
+        """
+        Construct a checkpoint from the given concatenated document.
+        """
+
+        dimensions = (document.dimensions if not self.log_nutrition
+                                          else { dimension: math.log(magnitude, 10)
+                                                 for dimension, magnitude in document.dimensions.items() })
+        max_magnitude = max(dimensions.values())
+        checkpoint = { dimension: magnitude / max_magnitude
+                       for dimension, magnitude in dimensions.items() }
+        return checkpoint
 
     def _remove_old_checkpoints(self, timestamp):
         """
@@ -690,9 +710,7 @@ class ELDConsumer(Consumer):
         Create a pseudo-checkpoint from the cluster's documents.
         """
         document = Document.concatenate(*cluster.vectors, tokenizer=self.tokenizer, scheme=self.scheme)
-        max_magnitude = max(document.dimensions.values())
-        document.dimensions = { dimension: magnitude / max_magnitude
-                                for dimension, magnitude in document.dimensions.items() }
+        checkpoint = self._checkpoint(document)
 
         """
         Calculate the burst for all the terms in the cluster's pseudo-checkpoint.
@@ -700,7 +718,7 @@ class ELDConsumer(Consumer):
         """
         since = timestamp - self.time_window * self.sets
         until = timestamp - self.time_window
-        return self.tdt.detect(document.dimensions, min_burst=self.min_burst,
+        return self.tdt.detect(checkpoint, min_burst=self.min_burst,
                                since=since, until=until)
 
     def _score_documents(self, documents, *args, **kwargs):
