@@ -178,6 +178,7 @@ The full list of accepted arguments:
     - ``--max-intra-similarity``    *<Optional>* The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
     - ``--burst-start``             *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`).
     - ``--freeze-period``           *<Optional>* The freeze period of clusters, defaults to 20 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer` and the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`).
+    - ``--log-nutrition``           *<Optional>* Take the logarithm of nutrition (used by the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`).
 """
 
 import argparse
@@ -231,6 +232,7 @@ def setup_args():
         - ``--max-intra-similarity``    *<Optional>* The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
         - ``--burst-start``             *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`).
         - ``--freeze-period``           *<Optional>* The freeze period of clusters in seconds, defaults to 20 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer` and the `ELDConsumer`).
+        - ``--log-nutrition``           *<Optional>* Take the logarithm of nutrition (used by the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`).
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
@@ -282,6 +284,8 @@ def setup_args():
                         help='<Optional> The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the `FUEGOConsumer`).')
     parser.add_argument('--freeze-period', type=int, required=False, default=20,
                         help='<Optional> The freeze period of clusters, defaults to 20 seconds (used by the `FIREConsumer` and the `ELDConsumer`).')
+    parser.add_argument('--log-nutrition', action='store_true',
+                        help='<Optional> Take the logarithm of nutrition (used by the `ELDConsumer`).')
 
     args = parser.parse_args()
     return args
