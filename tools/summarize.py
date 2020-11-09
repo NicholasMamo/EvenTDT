@@ -26,6 +26,19 @@ If you pass the ``--verbose`` parameter, the summaries will be printed to consol
     --length 280 \\
     --with-query
 
+When debugging a feature-pivot TDT approach that extracts keywords and creates :class:`~summarization.timeline.nodes.TopicalClusterNode`, you can use this tool to debug too.
+Use the ``--query-only`` parameter with the ``--with-query`` parameter to print the keywords from each node alongside the weights associated with them when summarizing:
+
+.. code-block:: bash
+
+    ./tools/summarize.py \\
+    --file data/timeline.json \\
+    --method MMR \\
+    --output data/summaries.json \\
+    --length 280 \\
+    --with-query \\
+    --query-only
+
 .. warning::
 
     The ``--length`` parameter sets the maximum length of summaries.
@@ -50,7 +63,8 @@ The output is a JSON file with the following structure:
             "length": 140,
             "clean": false,
             "lambda": 0.5,
-            "with_query": true
+            "with_query": true,
+            "query_only": false
         },
         "pcmd": {
             "_cmd": "EvenTDT/tools/summarize.py --file data/timeline.json --method MMR --output data/summaries.json",
@@ -64,7 +78,8 @@ The output is a JSON file with the following structure:
             "length": 140,
             "clean": false,
             "lambda": 0.5,
-            "with_query": true
+            "with_query": true,
+            "query_only": false
         },
         "summaries": [{
             "class": "<class 'summarization.summary.Summary'>",
@@ -84,9 +99,9 @@ The full list of accepted arguments:
     - ``--documents``        *<Optional>* The maximum number of documents to use when summarizing, with a preference for quality documents, scored by the :class:`~summarization.scorers.tweet_scorer.TweetScorer`; defaults to all documents.
     - ``--length``           *<Optional>* The length of each generated summary (in terms of the number of characters); defaults to 140 characters.
     - ``--clean``            *<Optional>* Clean the documents before summarizing.
-    - ``--lambda``           *<Optional>* The lambda parameter to balance between relevance and non-redundancy (used only with the :class:`~summarization.algorithms.mmr.MMR` algorithm; defaults to 0.5).
-    - ``--with-query``       *<Optional>* Use the centroid of each timeline node's topics as a query for summarization (used only with the :class:`~summarization.algorithms.mmr.MMR` and :class:`~summarization.algorithms.dgs.DGS` algorithms).
-
+    - ``--lambda``           *<Optional>* The lambda parameter to balance between relevance and non-redundancy; used only with the :class:`~summarization.algorithms.mmr.MMR` algorithm; defaults to 0.5.
+    - ``--with-query``       *<Optional>* Use the centroid of each timeline node's topics as a query for summarization; used only with the :class:`~summarization.algorithms.mmr.MMR` and :class:`~summarization.algorithms.dgs.DGS` algorithms.
+    - ``--query-only``       *<Optional>* Print only the query instead of summarizing; used only with the ``--with-query`` parameter.
 """
 
 import argparse
@@ -123,8 +138,9 @@ def setup_args():
         - ``--documents``        *<Optional>* The maximum number of documents to use when summarizing, with a preference for quality documents, scored by the :class:`~summarization.scorers.tweet_scorer.TweetScorer`; defaults to all documents.
         - ``--length``           *<Optional>* The length of each generated summary (in terms of the number of characters); defaults to 140 characters.
         - ``--clean``            *<Optional>* Clean the documents before summarizing.
-        - ``--lambda``           *<Optional>* The lambda parameter to balance between relevance and non-redundancy (used only with the :class:`~summarization.algorithms.mmr.MMR` algorithm; defaults to 0.5).
-        - ``--with-query``       *<Optional>* Use the centroid of each timeline node's topics as a query for summarization (used only with the :class:`~summarization.algorithms.dgs.DGS` algorithm).
+        - ``--lambda``           *<Optional>* The lambda parameter to balance between relevance and non-redundancy; used only with the :class:`~summarization.algorithms.mmr.MMR` algorithm; defaults to 0.5.
+        - ``--with-query``       *<Optional>* Use the centroid of each timeline node's topics as a query for summarization; used only with the :class:`~summarization.algorithms.dgs.DGS` algorithm.
+        - ``--query-only``       *<Optional>* Print only the query instead of summarizing; used only with the ``--with-query`` parameter.
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
@@ -132,33 +148,26 @@ def setup_args():
 
     parser = argparse.ArgumentParser(description="Summarize a timeline.")
 
-    parser.add_argument('-f', '--file',
-                        type=str, required=True,
+    parser.add_argument('-f', '--file', type=str, required=True,
                         help='<Required> The path to the file containing the timeline to summarize.')
-    parser.add_argument('-m', '--method',
-                        type=method, required=True,
+    parser.add_argument('-m', '--method', type=method, required=True,
                         help='<Required> The method to use to generate summaries; supported: `DGS`, `MMR`.')
-    parser.add_argument('-o', '--output',
-                        type=str, required=True,
+    parser.add_argument('-o', '--output', type=str, required=True,
                         help='<Required> The path to the file where to store the generated summaries.')
-    parser.add_argument('-v', '--verbose',
-                        action='store_true', required=False, default=False,
+    parser.add_argument('-v', '--verbose', action='store_true', required=False, default=False,
                         help='<Optional> Print the summaries as they are generated.')
-    parser.add_argument('--documents',
-                        type=int, required=False, default=None,
+    parser.add_argument('--documents', type=int, required=False, default=None,
                         help='<Optional> The maximum number of documents to use when summarizing, with a preference for quality documents, scored by the tweet scorer; defaults to all documents.')
-    parser.add_argument('--length',
-                        type=int, required=False, default=140,
+    parser.add_argument('--length', type=int, required=False, default=140,
                         help='<Optional> The length of each generated summary (in terms of the number of characters); defaults to 140 characters.')
-    parser.add_argument('--clean',
-                        action='store_true', required=False,
+    parser.add_argument('--clean', action='store_true', required=False,
                         help="<Optional> Clean the documents before summarizing.")
-    parser.add_argument('--lambda',
-                        type=float, metavar='[0-1]', required=False, default=0.5,
-                        help='<Optional> The lambda parameter to balance between relevance and non-redundancy (used only with the `MMR` algorithm; defaults to 0.5).')
-    parser.add_argument('--with-query',
-                        action='store_true', required=False,
-                        help="<Optional> Use the centroid of each timeline node's topics as a query for summarization (used only with the `DGS` algorithm).")
+    parser.add_argument('--lambda', type=float, metavar='[0-1]', required=False, default=0.5,
+                        help='<Optional> The lambda parameter to balance between relevance and non-redundancy; used only with the `MMR` algorithm; defaults to 0.5).')
+    parser.add_argument('--with-query', action='store_true', required=False,
+                        help="<Optional> Use the centroid of each timeline node's topics as a query for summarization; used only with the `DGS` algorithm).")
+    parser.add_argument('--query-only', action='store_true', required=False,
+                        help='<Optional> Print only the query instead of summarizing; used only with the ``--with-query`` parameter.')
 
     args = parser.parse_args()
     return args
@@ -184,8 +193,8 @@ def main():
     timeline = load_timeline(args.file)
     summarizer = create_summarizer(args.method, l=vars(args)['lambda'])
     summaries = summarize(summarizer, timeline, verbose=args.verbose,
-                          max_documents=args.documents, length=args.length,
-                          with_query=args.with_query, clean=args.clean)
+                          max_documents=args.documents, length=args.length, clean=args.clean,
+                          with_query=args.with_query, query_only=args.query_only)
 
     tools.save(args.output, { 'summaries': summaries, 'cmd': cmd, 'pcmd': pcmd })
 
@@ -238,7 +247,7 @@ def create_summarizer(method, l=0.5):
 
     :param method: The class type of the method to instantiate.
     :type method: :class:`~summarization.algorithms.SummarizationAlgorithm`
-    :param l: The lambda parameter to balance between relevance and non-redundancy (used only with the :class:`~summarization.algorithms.mmr.MMR` algorithm).
+    :param l: The lambda parameter to balance between relevance and non-redundancy; used only with the :class:`~summarization.algorithms.mmr.MMR` algorithm.
     :type l: float
 
     :return: The created summarization algorithm.
@@ -251,7 +260,7 @@ def create_summarizer(method, l=0.5):
     return method()
 
 def summarize(summarizer, timeline, verbose=False, max_documents=None, length=140,
-              with_query=False, clean=False):
+              clean=False, with_query=False, query_only=True):
     """
     Summarize the given timeline using the given algorithm.
     This function iterates over all of the timeline's nodes and summarizes them individually.
@@ -266,11 +275,13 @@ def summarize(summarizer, timeline, verbose=False, max_documents=None, length=14
     :type max_documents: int or None
     :param length: The length of each generated summary (in terms of the number of characters); defaults to 140 characters.
     :type length: int
-    :param with_query: A boolean indicating whether to use the centroid of each timeline node's topics as a query for summarization.
-                        This is used only with the :class:`~summarization.algorithms.dgs.DGS` algorithm.
-    :type with_query: bool
     :param clean: A boolean indicating whether to clean documents before summarizing.
     :type clean: bool
+    :param with_query: A boolean indicating whether to use the centroid of each timeline node's topics as a query for summarization.
+                       This is used only with the :class:`~summarization.algorithms.dgs.DGS` algorithm.
+    :type with_query: bool
+    :param query_only: Print only the query instead of summarizing; used only when the ``with_query`` parameters is set to ``True``.
+    :type query_only: bool
 
     :return: A list of summaries, corresponding to each node.
     :rtype: list of :class:`~summarization.summary.Summary`
@@ -305,6 +316,14 @@ def summarize(summarizer, timeline, verbose=False, max_documents=None, length=14
         query = None
         if with_query and type(node) is TopicalClusterNode:
             query = Cluster(vectors=node.topics).centroid
+
+            """
+            If only the query is of interest, print only the query terms in descending order of importance.
+            """
+            if query_only:
+                query = sorted(query.dimensions.items(), key=lambda q: q[1], reverse=True)
+                logger.info(f"""{ datetime.fromtimestamp(node.created_at).ctime() }: { ', '.join([ f"{ term } ({ round(weight, 2) })" for term, weight in query ]) }""")
+                continue
 
         """
         Generate the sumamry.
