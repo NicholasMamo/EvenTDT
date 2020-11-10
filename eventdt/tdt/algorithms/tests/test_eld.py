@@ -628,12 +628,13 @@ class TestSlidingELD(unittest.TestCase):
         """
 
         store = MemoryNutritionStore()
-        algo = SlidingELD(store, windows=3, window_size=5)
-        store.add(60, { 'a': 50, 'b': 0, 'c': 50 })
-        store.add(55, { 'a': 0, 'b': 50, 'c': 50 })
-        store.add(50, { 'a': 0, 'b': 50, 'c': 50 })
+        algo = SlidingELD(store, windows=2, window_size=5)
+        store.add(60, { 'a': 1, 'b': 0, 'c': 1 })
+        store.add(55, { 'a': 0, 'b': 1, 'c': 1 })
+        store.add(50, { 'a': 0, 'b': 1, 'c': 1 })
 
         terms = algo.detect(timestamp=60, min_burst=-1.1)
+        self.assertEqual(-1, min(terms.values()))
         self.assertTrue(all( burst >= -1 for burst in terms.values() ))
 
     def test_detect_upper_bound(self):
@@ -643,11 +644,12 @@ class TestSlidingELD(unittest.TestCase):
 
         store = MemoryNutritionStore()
         algo = SlidingELD(store, windows=3, window_size=5)
-        store.add(60, { 'a': 50, 'b': 0, 'c': 50 })
-        store.add(55, { 'a': 0, 'b': 50, 'c': 50 })
-        store.add(50, { 'a': 0, 'b': 50, 'c': 50 })
+        store.add(60, { 'a': 1, 'b': 0, 'c': 1 })
+        store.add(55, { 'a': 0, 'b': 1, 'c': 1 })
+        store.add(50, { 'a': 0, 'b': 1, 'c': 1 })
 
         terms = algo.detect(timestamp=60, min_burst=-1.1)
+        self.assertEqual(1, max(terms.values()))
         self.assertTrue(all( burst <= 1 for burst in terms.values() ))
 
     def test_detect_bounds_not_normalized(self):
