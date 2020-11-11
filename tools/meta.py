@@ -43,7 +43,28 @@ def main():
     """
 
     args = setup_args()
-    print(args.file)
+    pprint(args.file)
+
+def pprint(file):
+    """
+    Pretty-print the metadata from the given file.
+
+    :param file: The path to the file from where to print the metadata.
+    :type file: str
+    """
+
+    with open(file) as f:
+        data = json.loads(''.join(f.readlines()))
+        cmd, pcmd = data['cmd'], data['pcmd']
+        del data
+
+        """
+        Print the general settings first.
+        """
+        print(f"Generated on { cmd['_date'] }")
+        print("=======================================")
+        print(f"{ cmd['_cmd'] }")
+        print()
 
 if __name__ == "__main__":
     main()
