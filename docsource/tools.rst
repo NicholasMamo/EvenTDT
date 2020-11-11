@@ -76,3 +76,9 @@ ATE
 ---
 
 .. automodule:: tools.evaluation.ate
+
+=====
+Other
+=====
+
+.. automodule:: tools.meta
