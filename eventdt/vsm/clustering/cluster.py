@@ -38,6 +38,9 @@ class Cluster(Attributable, Exportable):
     :vartype vectors: list of :class:`~vsm.vector.Vector`
     :ivar centroid: The centroid of the cluster, representing the average vector in the cluster.
     :vartype centroid: :class:`~vsm.vector.Vector`
+    :ivar _last: A snapshot of the cluster the last time that its centroid was re-calculated.
+                 This variable is used so that the centroid is not re-calculated needlessly if the cluster's vector has not changed.
+    :vartype _last: dict
     """
 
     def __init__(self, vectors=None, *args, **kwargs):
@@ -52,6 +55,7 @@ class Cluster(Attributable, Exportable):
         super(Cluster, self).__init__(*args, **kwargs)
         self.vectors = vectors
         self.centroid = Vector()
+        self._last = None
 
     def similarity(self, vector, similarity_measure=vector_math.cosine):
         """
@@ -108,7 +112,11 @@ class Cluster(Attributable, Exportable):
         :rtype: :class:`~vsm.vector.Vector`
         """
 
-        self.recalculate_centroid()
+        current = self.to_array()
+        if not self._last or self._last != current:
+            self._last = current
+            self.recalculate_centroid()
+
         return self.__centroid
 
     @centroid.setter
