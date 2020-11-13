@@ -90,13 +90,12 @@ class Cluster(Attributable, Exportable):
             This function is invoked automatically when you fetch the centroid.
         """
 
-        dimensions = set([ dimension for vector in self.vectors
-                                     for dimension in vector.dimensions ])
+        centroid = { }
+        for vector in self.vectors:
+            for dimension, magnitude in vector.dimensions.items():
+                centroid[dimension] = centroid.get(dimension, 0) + magnitude / len(self.vectors)
 
-        for dimension in dimensions:
-            weight = sum([ vector.dimensions[dimension] for vector in self.vectors ])
-            self.__centroid.dimensions[dimension] = weight/len(self.vectors)
-
+        self.__centroid = Vector(centroid)
         self.__centroid.normalize()
 
     @property
