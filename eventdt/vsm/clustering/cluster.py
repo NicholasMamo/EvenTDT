@@ -203,7 +203,8 @@ class Cluster(Attributable, Exportable):
         """
 
         if self.vectors:
-            similarities = [ self.similarity(vector, similarity_measure) for vector in self.vectors ] # calculate the similarities
+            centroid = self.centroid
+            similarities = [ similarity_measure(centroid, vector) for vector in self.vectors ]
             return sum(similarities)/len(similarities)
 
         return 0
