@@ -61,8 +61,7 @@ def normalize(v):
 
     m = magnitude(n)
     if m > 0:
-        dimensions = n.dimensions
-        dimensions = { dimension: float(value)/m for dimension, value in dimensions.items() }
+        dimensions = { dimension: float(value)/m for dimension, value in n.dimensions.items() }
         return vector.Vector(dimensions)
     else:
         return v
