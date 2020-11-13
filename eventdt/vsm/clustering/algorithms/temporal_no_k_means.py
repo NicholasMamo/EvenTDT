@@ -67,6 +67,7 @@ class TemporalNoKMeans(NoKMeans):
         """
         Vectors are clustered chronologically.
         """
+        latest = -1
         vectors = sorted(vectors, key=lambda vector: vector.attributes.get(time))
         for vector in vectors:
             timestamp = vector.attributes.get(time)
@@ -74,11 +75,14 @@ class TemporalNoKMeans(NoKMeans):
             """
             Freeze inactive clusters first.
             In this way, nothing gets added to them, thereby resetting their age.
+            Skip this step if the next vector is not newer than the previous vector.
             """
-            for cluster in self.clusters:
-                self._update_age(cluster, timestamp, time)
-                if self._to_freeze(cluster):
-                    self._freeze(cluster)
+            if latest < timestamp:
+                for cluster in self.clusters:
+                    self._update_age(cluster, timestamp, time)
+                    if self._to_freeze(cluster):
+                        self._freeze(cluster)
+                latest = timestamp
 
             """
             If there are active clusters, get the closest cluster.
