@@ -212,7 +212,7 @@ def cosine(v1, v2):
 
     m1, m2 = magnitude(v1), magnitude(v2)
     if (m1 > 0 and m2 > 0):
-        dimensions = list(set(v1.dimensions.keys()).intersection(v2.dimensions.keys()))
+        dimensions = set(list(v1.dimensions.keys()) + list(v2.dimensions.keys()))
         products = [ v1.dimensions[dimension] * v2.dimensions[dimension] for dimension in dimensions ]
         return sum(products) / (m1 * m2)
     else:
