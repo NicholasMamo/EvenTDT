@@ -451,7 +451,20 @@ class TestZhaoConsumer(unittest.TestCase):
                 consumer._create_checkpoint([ document ])
                 self.assertEqual(volume + 1, consumer.store.get(document.attributes['timestamp']))
 
-    def test_create_checkpoint_timestamp(self):
+    def test_create_checkpoint_all_documents(self):
+        """
+        Test that when creating checkpoints, all documents are stored.
+        """
+
+        consumer = ZhaoConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            documents = consumer._to_documents(tweets)
+            consumer._create_checkpoint(documents)
+            self.assertEqual(len(lines), sum(consumer.store.all().values()))
+
+    def test_create_checkpoint_all_timestamps(self):
         """
         Test that when creating checkpoints, the correct timestamp is recorded.
         """
