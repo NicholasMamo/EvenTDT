@@ -53,7 +53,7 @@ class TestZhaoConsumer(unittest.TestCase):
         """
 
         consumer = ZhaoConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             tweet = json.loads(f.readline())
             document = consumer._to_documents([ tweet ])[0]
             self.assertEqual(tweet, document.attributes['tweet'])
@@ -64,7 +64,7 @@ class TestZhaoConsumer(unittest.TestCase):
         """
 
         consumer = ZhaoConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             for line in f:
                 tweet = json.loads(line)
                 if '…' in tweet['text']:
@@ -82,7 +82,7 @@ class TestZhaoConsumer(unittest.TestCase):
         """
 
         consumer = ZhaoConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             for line in f:
                 tweet = json.loads(line)
                 if 'retweeted_status' in tweet:
@@ -104,7 +104,7 @@ class TestZhaoConsumer(unittest.TestCase):
         """
 
         consumer = ZhaoConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             for line in f:
                 tweet = json.loads(line)
                 if 'retweeted_status' in tweet:
@@ -127,7 +127,7 @@ class TestZhaoConsumer(unittest.TestCase):
         """
 
         consumer = ZhaoConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             for line in f:
                 tweet = json.loads(line)
                 if not 'retweeted_status' in tweet and not 'quoted_status' in tweet:
@@ -149,10 +149,12 @@ class TestZhaoConsumer(unittest.TestCase):
         """
 
         consumer = ZhaoConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             for line in f:
                 tweet = json.loads(line)
                 document = consumer._to_documents([ tweet ])[0]
+                if vector_math.magnitude(document) == 0:
+                    continue
                 self.assertEqual(1, round(vector_math.magnitude(document), 10))
 
     def test_latest_timestamp_empty(self):
@@ -169,7 +171,7 @@ class TestZhaoConsumer(unittest.TestCase):
         """
 
         consumer = ZhaoConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -181,21 +183,21 @@ class TestZhaoConsumer(unittest.TestCase):
         """
 
         consumer = ZhaoConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)[::-1]
             self.assertEqual(documents[0].attributes['timestamp'], consumer._latest_timestamp(documents))
 
-    def test_add_documents(self):
+    def test_add_documents_all_timestamps(self):
         """
-        Test adding documents to the historical data.
+        Test that when adding documents to the historical data, the correct timestamps are saved.
         """
 
         consumer = ZhaoConsumer(Queue(), 60)
         self.assertEqual({ }, consumer.documents)
 
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -210,7 +212,7 @@ class TestZhaoConsumer(unittest.TestCase):
         consumer = ZhaoConsumer(Queue(), 60)
         self.assertEqual({ }, consumer.documents)
 
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -227,12 +229,13 @@ class TestZhaoConsumer(unittest.TestCase):
         consumer = ZhaoConsumer(Queue(), 60)
         self.assertEqual({ }, consumer.documents)
 
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
             consumer._add_documents(documents)
-            self.assertTrue(all( len(documents) > 1 for documents in consumer.documents.values() ))
+            self.assertTrue(all( len(documents) for documents in consumer.documents.values() ))
+            self.assertTrue(any( len(documents) > 1 for documents in consumer.documents.values() ))
 
     def test_documents_since_empty(self):
         """
@@ -242,7 +245,7 @@ class TestZhaoConsumer(unittest.TestCase):
         consumer = ZhaoConsumer(Queue(), 60)
         self.assertEqual({ }, consumer.documents)
 
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -257,7 +260,7 @@ class TestZhaoConsumer(unittest.TestCase):
         consumer = ZhaoConsumer(Queue(), 60)
         self.assertEqual({ }, consumer.documents)
 
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -273,7 +276,7 @@ class TestZhaoConsumer(unittest.TestCase):
         consumer = ZhaoConsumer(Queue(), 60)
         self.assertEqual({ }, consumer.documents)
 
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -290,7 +293,7 @@ class TestZhaoConsumer(unittest.TestCase):
         consumer = ZhaoConsumer(Queue(), 60)
         self.assertEqual({ }, consumer.documents)
 
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -306,7 +309,7 @@ class TestZhaoConsumer(unittest.TestCase):
         consumer = ZhaoConsumer(Queue(), 60)
         self.assertEqual({ }, consumer.documents)
 
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -323,7 +326,7 @@ class TestZhaoConsumer(unittest.TestCase):
          consumer = ZhaoConsumer(Queue(), 60)
          self.assertEqual({ }, consumer.documents)
 
-         with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+         with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
              lines = f.readlines()
              tweets = [ json.loads(line) for line in lines ]
              documents = consumer._to_documents(tweets)
@@ -339,7 +342,7 @@ class TestZhaoConsumer(unittest.TestCase):
          consumer = ZhaoConsumer(Queue(), 60)
          self.assertEqual({ }, consumer.documents)
 
-         with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+         with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
              lines = f.readlines()
              tweets = [ json.loads(line) for line in lines ]
              documents = consumer._to_documents(tweets)
@@ -355,7 +358,7 @@ class TestZhaoConsumer(unittest.TestCase):
          consumer = ZhaoConsumer(Queue(), 60)
          self.assertEqual({ }, consumer.documents)
 
-         with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+         with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
              lines = f.readlines()
              tweets = [ json.loads(line) for line in lines ]
              documents = consumer._to_documents(tweets)
@@ -372,7 +375,7 @@ class TestZhaoConsumer(unittest.TestCase):
          consumer = ZhaoConsumer(Queue(), 60)
          self.assertEqual({ }, consumer.documents)
 
-         with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+         with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
              lines = f.readlines()
              tweets = [ json.loads(line) for line in lines ]
              documents = consumer._to_documents(tweets)
@@ -381,7 +384,11 @@ class TestZhaoConsumer(unittest.TestCase):
              consumer._remove_documents_before(documents[0].attributes['timestamp'])
              self.assertEqual(documents, consumer._documents_since(0))
              consumer._remove_documents_before(documents[-1].attributes['timestamp'])
-             self.assertEqual(documents[-50:], consumer._documents_since(0))
+             self.assertTrue(all( document in consumer._documents_since(0)
+                                           for document in documents
+                                           if document.attributes['timestamp'] >= documents[-1].attributes['timestamp'] ))
+             self.assertTrue(all( document.attributes['timestamp'] >= documents[-1].attributes['timestamp']
+                                           for document in consumer._documents_since(0) ))
 
     def test_remove_documents_before_all(self):
          """
@@ -391,7 +398,7 @@ class TestZhaoConsumer(unittest.TestCase):
          consumer = ZhaoConsumer(Queue(), 60)
          self.assertEqual({ }, consumer.documents)
 
-         with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+         with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
              lines = f.readlines()
              tweets = [ json.loads(line) for line in lines ]
              documents = consumer._to_documents(tweets)
@@ -406,7 +413,7 @@ class TestZhaoConsumer(unittest.TestCase):
         """
 
         consumer = ZhaoConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             for line in f:
                 tweet = json.loads(line)
                 documents = consumer._to_documents([ tweet ])
@@ -420,12 +427,14 @@ class TestZhaoConsumer(unittest.TestCase):
         """
 
         consumer = ZhaoConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()[:10]
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
+            self.assertEqual([ ], list(consumer.store.all().values()))
             consumer._create_checkpoint(documents)
-            self.assertEqual([ 10 ], list(consumer.store.all().values()))
+            self.assertEqual(set(document.attributes['timestamp'] for document in documents), set(consumer.store.all()))
+            self.assertTrue(all( volume > 0 for volume in consumer.store.all().values() ))
 
     def test_create_checkpoint_increment(self):
         """
@@ -433,13 +442,14 @@ class TestZhaoConsumer(unittest.TestCase):
         """
 
         consumer = ZhaoConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
-            lines = f.readlines()[:10]
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
             for i, document in enumerate(documents):
+                volume = consumer.store.get(document.attributes['timestamp']) or 0
                 consumer._create_checkpoint([ document ])
-                self.assertEqual([ i + 1 ], list(consumer.store.all().values()))
+                self.assertEqual(volume + 1, consumer.store.get(document.attributes['timestamp']))
 
     def test_create_checkpoint_timestamp(self):
         """
@@ -447,13 +457,13 @@ class TestZhaoConsumer(unittest.TestCase):
         """
 
         consumer = ZhaoConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
-            lines = f.readlines()[:10]
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
-            for i, document in enumerate(documents):
-                consumer._create_checkpoint([ document ])
-                self.assertEqual(i + 1, consumer.store.get(document.attributes['timestamp']))
+            timestamps = [ document.attributes['timestamp'] for document in documents ]
+            consumer._create_checkpoint(documents)
+            self.assertEqual(sorted(set(timestamps)), sorted(consumer.store.all().keys()))
 
     def test_create_checkpoint_range(self):
         """
@@ -461,7 +471,7 @@ class TestZhaoConsumer(unittest.TestCase):
         """
 
         consumer = ZhaoConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
