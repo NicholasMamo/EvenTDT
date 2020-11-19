@@ -117,6 +117,31 @@ class TestDocumentNode(unittest.TestCase):
         node.add([ documents[1] ])
         self.assertEqual(documents, node.documents)
 
+    def test_add_copy_repeated(self):
+        """
+        Test that when adding documents one at a time to the node, copied documents are not kept.
+        """
+
+        node = DocumentNode(0)
+        self.assertEqual([ ], node.documents)
+        document = Document('text')
+        for i in range(10):
+            node.add([ document ])
+        self.assertEqual(1, len(node.get_all_documents()))
+        self.assertEqual([ document ], node.get_all_documents())
+
+    def test_add_copy_batch(self):
+        """
+        Test that when adding documents to the node, copied documents are not kept.
+        """
+
+        node = DocumentNode(0)
+        self.assertEqual([ ], node.documents)
+        document = Document('text')
+        node.add([ document ] * 10)
+        self.assertEqual(1, len(node.get_all_documents()))
+        self.assertEqual([ document ], node.get_all_documents())
+
     def test_add_dynamic(self):
         """
         Test that when changing a document, the node's document also changes.

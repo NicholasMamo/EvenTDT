@@ -46,9 +46,12 @@ class DocumentNode(Node):
         """
 
         if type(documents) is list:
-            self.documents.extend(documents)
+            for document in documents:
+                self.add(document, *args, **kwargs)
         else:
-            self.documents.append(documents)
+            document = documents
+            if document not in self.documents:
+                self.documents.append(document)
 
     def get_all_documents(self, *args, **kwargs):
         """
