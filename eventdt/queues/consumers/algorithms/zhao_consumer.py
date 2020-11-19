@@ -2,7 +2,7 @@
 The Zhao et al. consumer mimicks the implementation by the same authors.
 It revolves around the :class:`~tdt.algorithms.zhao.Zhao` TDT algorithm.
 
-This consumer is concernedd only with the TDT approach.
+This consumer is concerned only with the TDT approach.
 The summarization in the :class:`~queues.consumers.zhao_consumer.ZhaoConsumer` uses the :class:`~summarization.algorithms.mmr.MMR` approach.
 
 The :class:`~queues.consumers.zhao_consumer.ZhaoConsumer` uses a dynamic, sliding time-window to detect topics.
@@ -14,6 +14,10 @@ You can read more about this approach in the :class:`~tdt.algorithms.zhao.Zhao` 
 .. note::
 
     This implementation is based on the algorithm presented in `Human as Real-Time Sensors of Social and Physical Events: A Case Study of Twitter and Sports Games by Zhao et al. (2011) <https://arxiv.org/abs/1106.4300>`_.
+
+    This consumer assumes that topics captured within 90 seconds of each other belong to the same topic.
+    This is based on the :class:`summarization.timeline.Timeline`'s expiry.
+    However, there is no additional tracking.
 """
 
 from datetime import datetime
@@ -105,7 +109,7 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
         :rtype: :class:`~summarization.timeline.Timeline`
         """
 
-        timeline = Timeline(DocumentNode, 0, 1)
+        timeline = Timeline(DocumentNode, expiry=90, min_similarity=1)
 
         while self.active:
             if self.buffer.length() > 0:
@@ -137,11 +141,15 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
                 if window:
                     start, _ = window
                     timeline.add(latest_timestamp, self._documents_since(start))
-                    _documents = timeline.nodes[-1].get_all_documents()
-                    _documents = [ _document for _document in _documents if len(_document.text) <= 140 ]
-                    _documents = sorted(_documents, key=lambda document: len(document.text), reverse=True)
-                    summary = self.summarization.summarize(_documents[:20], 140)
-                    logger.info(f"{datetime.fromtimestamp(latest_timestamp).ctime()}: { str(summary) }")
+
+                for node in timeline.nodes[::-1]:
+                    if node.expired(timeline.expiry, latest_timestamp) and not node.attributes.get('printed'):
+                        _documents = timeline.nodes[-1].get_all_documents()
+                        _documents = [ _document for _document in _documents if len(_document.text) <= 140 ]
+                        _documents = sorted(_documents, key=lambda document: len(document.text), reverse=True)
+                        summary = self.summarization.summarize(_documents[:20], 140)
+                        logger.info(f"{datetime.fromtimestamp(latest_timestamp).ctime()}: { str(summary) }")
+                        node.attributes['printed'] = True
 
             await self._sleep()
 
