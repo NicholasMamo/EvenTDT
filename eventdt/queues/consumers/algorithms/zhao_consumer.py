@@ -71,7 +71,7 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
     :vartype summarization: :class:`~summarization.algorithms.mmr.MMR`
     """
 
-    def __init__(self, queue, periodicity=5, scheme=None, *args, **kwargs):
+    def __init__(self, queue, periodicity=5, scheme=None, post_rate=1.7, *args, **kwargs):
         """
         Create the consumer with a :class:`~queues.Queue`.
         Simultaneously create a :class:`~tdt.nutrition.NutritionStore` and the :class:`~tdt.algorithms.zhao.Zhao` TDT algorithm.
@@ -86,13 +86,15 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
         :param scheme: The term-weighting scheme that is used to create dimensions.
                        If ``None`` is given, the :class:`~nlp.weighting.tf.TF` term-weighting scheme is used.
         :type scheme: None or :class:`~nlp.weighting.TermWeightingScheme`
+        :param post_rate: The minimum increase between the two halves of the sliding time window to represent a burst.
+        :type post_rate: float
         """
 
         super(ZhaoConsumer, self).__init__(queue, periodicity, *args, **kwargs)
         self.scheme = scheme
         self.store = MemoryNutritionStore()
         self.documents = { }
-        self.tdt = Zhao(self.store)
+        self.tdt = Zhao(self.store, post_rate)
         self.summarization = MMR()
 
     async def _process(self):

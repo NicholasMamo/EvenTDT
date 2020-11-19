@@ -47,6 +47,23 @@ class TestZhaoConsumer(unittest.TestCase):
         consumer = ZhaoConsumer(Queue(), 60)
         self.assertEqual({ }, consumer.store.all())
 
+    def test_create_consumer_default_post_rate(self):
+        """
+        Test that the default post rate is 1.7.
+        This constant is what is used by Zhao et al. in their paper.
+        """
+
+        consumer = ZhaoConsumer(Queue(), 60)
+        self.assertEqual(1.7, consumer.tdt.post_rate)
+
+    def test_create_consumer_custom_post_rate(self):
+        """
+        Test that when passing on a post rate, it is passed on to the TDT algorithm.
+        """
+
+        consumer = ZhaoConsumer(Queue(), 60, post_rate=1.9)
+        self.assertEqual(1.9, consumer.tdt.post_rate)
+
     def test_to_documents_tweet(self):
         """
         Test that when creating a document from a tweet, the tweet is saved as an attribute.
