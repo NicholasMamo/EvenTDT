@@ -93,9 +93,28 @@ class TestConsume(unittest.TestCase):
             data = json.loads(f.readline())
             scheme = Exportable.decode(data)['tfidf']
 
+        """
+        Stat consumer
+        """
         consumer = consume.create_consumer(StatConsumer, Queue(), scheme=scheme, periodicity=20)
         self.assertEqual(20, consumer.periodicity)
 
+        """
+        Zhao consumer - default
+        """
+        consumer = consume.create_consumer(ZhaoConsumer, Queue(), scheme=scheme)
+        self.assertEqual(1.7, consumer.tdt.post_rate)
+
+        """
+        Zhao consumer - custom
+        """
+        consumer = consume.create_consumer(ZhaoConsumer, Queue(), scheme=scheme, periodicity=1, post_rate=2.1)
+        self.assertEqual(1, consumer.periodicity)
+        self.assertEqual(2.1, consumer.tdt.post_rate)
+
+        """
+        FIRE consumer
+        """
         consumer = consume.create_consumer(FIREConsumer, Queue(), scheme=scheme, min_size=5, min_burst=0.1,
                                            max_intra_similarity=0.9, periodicity=20, min_volume=50,
                                            burst_start=0.7, log_nutrition=True,)
@@ -103,6 +122,9 @@ class TestConsume(unittest.TestCase):
         self.assertEqual(20, consumer.periodicity)
         self.assertEqual(scheme, consumer.scheme)
 
+        """
+        ELD consumer
+        """
         consumer = consume.create_consumer(ELDConsumer, Queue(), scheme=scheme, min_size=5, min_burst=0.1,
                                            max_intra_similarity=0.9, periodicity=20, min_volume=50,
                                            burst_start=0.7, log_nutrition=True,)
@@ -112,6 +134,9 @@ class TestConsume(unittest.TestCase):
         self.assertEqual(scheme, consumer.scheme)
         self.assertTrue(consumer.log_nutrition)
 
+        """
+        FUEGO consumer
+        """
         consumer = consume.create_consumer(FUEGOConsumer, Queue(), scheme=scheme, min_size=5, min_burst=0.1,
                                            max_intra_similarity=0.9, periodicity=20, min_volume=50,
                                            burst_start=0.7, log_nutrition=True,)
@@ -132,17 +157,26 @@ class TestConsume(unittest.TestCase):
             data = json.loads(f.readline())
             scheme = Exportable.decode(data)['tfidf']
 
+        """
+        Stat
+        """
         consumer = consume.create_consumer(StatConsumer, Queue(), scheme=scheme, splits=splits, freeze_period=10)
         self.assertEqual(TokenSplitConsumer, type(consumer))
         self.assertEqual(len(splits), len(consumer.consumers))
         self.assertTrue(all( StatConsumer == type(consumer) for consumer in consumer.consumers ))
 
+        """
+        FIRE consumer
+        """
         consumer = consume.create_consumer(FIREConsumer, Queue(), scheme=scheme, splits=splits,
                                            min_size=5, max_intra_similarity=0.9, freeze_period=10)
         self.assertEqual(TokenSplitConsumer, type(consumer))
         self.assertEqual(len(splits), len(consumer.consumers))
         self.assertTrue(all( FIREConsumer == type(consumer) for consumer in consumer.consumers ))
 
+        """
+        ELD consumer
+        """
         consumer = consume.create_consumer(ELDConsumer, Queue(), scheme=scheme, splits=splits,
                                            min_size=5, max_intra_similarity=0.9, freeze_period=10)
         self.assertEqual(TokenSplitConsumer, type(consumer))
@@ -162,9 +196,28 @@ class TestConsume(unittest.TestCase):
             data = json.loads(f.readline())
             scheme = Exportable.decode(data)['tfidf']
 
+        """
+        Stat consumer
+        """
         consumer = consume.create_consumer(StatConsumer, Queue(), scheme=scheme, splits=splits, periodicity=20)
         self.assertTrue(all( 20 == consumer.periodicity for consumer in consumer.consumers ))
 
+        """
+        Zhao consumer - default
+        """
+        consumer = consume.create_consumer(ZhaoConsumer, Queue(), scheme=scheme, splits=splits)
+        self.assertTrue(all( 1.7 == consumer.tdt.post_rate for consumer in consumer.consumers ))
+
+        """
+        Zhao consumer - custom
+        """
+        consumer = consume.create_consumer(ZhaoConsumer, Queue(), scheme=scheme, splits=splits, periodicity=1, post_rate=2.1)
+        self.assertTrue(all( 1 == consumer.periodicity for consumer in consumer.consumers ))
+        self.assertTrue(all( 2.1 == consumer.tdt.post_rate for consumer in consumer.consumers ))
+
+        """
+        FIRE consumer
+        """
         consumer = consume.create_consumer(FIREConsumer, Queue(), scheme=scheme, splits=splits, min_size=5,
                                            max_intra_similarity=0.9, min_burst=0.1, periodicity=20,
                                            min_volume=50, burst_start=0.7, freeze_period=10,
@@ -175,6 +228,9 @@ class TestConsume(unittest.TestCase):
         self.assertTrue(all( scheme == consumer.scheme for consumer in consumer.consumers ))
         self.assertTrue(all( 10 == consumer.clustering.freeze_period for consumer in consumer.consumers ))
 
+        """
+        ELD consumer
+        """
         consumer = consume.create_consumer(ELDConsumer, Queue(), scheme=scheme, splits=splits,
                                            min_size=5, min_burst=0.1, max_intra_similarity=0.9,
                                            periodicity=20, min_volume=50, burst_start=0.7, freeze_period=10,
@@ -186,6 +242,9 @@ class TestConsume(unittest.TestCase):
         self.assertTrue(all( 10 == consumer.clustering.freeze_period for consumer in consumer.consumers ))
         self.assertTrue(all( consumer.log_nutrition for consumer in consumer.consumers ))
 
+        """
+        FUEGO consumer
+        """
         consumer = consume.create_consumer(FUEGOConsumer, Queue(), scheme=scheme, splits=splits,
                                            min_size=5, min_burst=0.1, max_intra_similarity=0.9,
                                            periodicity=20, min_volume=50, burst_start=0.7, freeze_period=10,
