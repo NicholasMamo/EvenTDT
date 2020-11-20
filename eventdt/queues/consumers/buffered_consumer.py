@@ -119,8 +119,8 @@ class BufferedConsumer(Consumer):
             """
             If the queue is idle, wait for input.
             """
-            inactive = await self._wait_for_input(max_inactivity=max_inactivity)
-            if not inactive:
+            active = await self._wait_for_input(max_inactivity=max_inactivity)
+            if not active:
                 break
 
             """
