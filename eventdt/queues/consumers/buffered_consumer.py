@@ -130,6 +130,8 @@ class BufferedConsumer(Consumer):
             items = self.queue.dequeue_all()
             self.buffer.enqueue(*items)
 
+        self.active = False
+
     @abstractmethod
     async def _process():
         """
