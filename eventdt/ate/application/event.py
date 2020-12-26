@@ -495,6 +495,8 @@ class Entropy(Extractor):
 
     def extract(self, idfs, candidates=None):
         """
+        Calculate the entropy score for the given candidate terms.
+
         :param idfs: A list of IDFs, one for each event.
         :type idfs: list of :class:`~nlp.weighting.tfidf.TFIDF`
         :param candidates: A list of terms for which to calculate a score.
