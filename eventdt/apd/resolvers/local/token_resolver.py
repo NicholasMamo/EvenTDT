@@ -27,9 +27,9 @@ class TokenResolver(Resolver):
 
     :ivar ~.tokenizer: The tokenizer used to extract the tokens anew.
     :vartype ~.tokenizer: None or :class:`~nlp.tokenizer.Tokenizer`
-    :ivar corpus: The corpus of documents.
-                  This corpus is used to look for the terms that map to the tokens given as candidates.
-    :vartype corpus: list of :class:`~nlp.document.Document`
+    :ivar ~.corpus: The corpus of documents.
+                    This corpus is used to look for the terms that map to the tokens given as candidates.
+    :vartype ~.corpus: list of :class:`~nlp.document.Document`
     :ivar case_fold: A boolean indicating whether terms should be case-folded.
     :vartype case_fold: bool
     """

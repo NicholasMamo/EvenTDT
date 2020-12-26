@@ -16,8 +16,8 @@ class TFIDFScorer(Scorer):
     :ivar ~.idf: The IDF table used in conjunction with term weighting.
                  The keys are the terms, and the corresponding values are the number of documents in which they appear.
     :vartype ~.idf: dict
-    :ivar documents: The number of documents in the IDF table.
-    :vartype documents: int
+    :ivar ~.documents: The number of documents in the IDF table.
+    :vartype ~.documents: int
     """
 
     def __init__(self, idf, documents):

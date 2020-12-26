@@ -42,7 +42,7 @@ class RankFilter(Filter):
         The function sorts the candidates by score and then retains only the top _k_ candidates.
 
         :param candidates: A dictionary of candidate participants and their scores.
-                            The keys are the candidate names, and the values are their scores.
+                           The keys are the candidate names, and the values are their scores.
                            The input candidates should be the product of a :class:`~apd.scorers.scorer.Scorer` process.
         :type candidates: dict
 
