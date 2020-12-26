@@ -106,6 +106,12 @@ class LogEF(EF):
     The logarithmic Event Frequency (EF) extractor looks for terms in timelines.
     The scoring is the logarithm of the simple frequency, as calculated in :class:`~ate.application.event.EF`.
 
+    .. note::
+
+        The logarithmic base is only used to scale the ranking—it does not affect the order.
+        This is because changing the logarithmic base is the same as multiplying all scores by a constant.
+        Changing the base from :math:`a` to :math:`b` essentially means dividing the scores of all terms by the constant :math:`log_ba`.
+
     :ivar base: The logarithmic base.
     :vartype base: float
     """
@@ -113,6 +119,12 @@ class LogEF(EF):
     def __init__(self, base=2):
         """
         Create the logarithmic EF extractor with the logarithmic base.
+
+        .. note::
+
+            The logarithmic base is only used to scale the ranking—it does not affect the order.
+            This is because changing the logarithmic base is the same as multiplying all scores by a constant.
+            Changing the base from :math:`a` to :math:`b` essentially means dividing the scores of all terms by the constant :math:`log_ba`.
 
         :param base: The logarithmic base.
         :type base: float
@@ -158,6 +170,12 @@ class EFIDF(Extractor):
     The EF-IDF extractor combines the event frequency with the inverse document frequency.
     The algorithm can be made to work with the :class:`~ate.application.event.LogEF` class instead of the :class:`~ate.application.event.EF` class by providing a logarithmic base.
 
+    .. note::
+
+        The logarithmic base is only used to scale the ranking—it does not affect the order.
+        This is because changing the logarithmic base is the same as multiplying all scores by a constant.
+        Changing the base from :math:`a` to :math:`b` essentially means dividing the scores of all terms by the constant :math:`log_ba`.
+
     :ivar ~.scheme: The IDF table to use to score terms.
     :vartype scheme: :class:`~nlp.weighting.global_schemes.tfidf.TFIDF`
     :ivar base: The logarithmic base.
@@ -169,6 +187,12 @@ class EFIDF(Extractor):
     def __init__(self, scheme, base=None):
         """
         Create the EF-IDF extractor with the scheme used to score terms and the logarithmic base.
+
+        .. note::
+
+            The logarithmic base is only used to scale the ranking—it does not affect the order.
+            This is because changing the logarithmic base is the same as multiplying all scores by a constant.
+            Changing the base from :math:`a` to :math:`b` essentially means dividing the scores of all terms by the constant :math:`log_ba`.
 
         :param idf: The IDF table to use to score terms.
         :type idf: :class:`~nlp.weighting.global_schemes.tfidf.TFIDF`
