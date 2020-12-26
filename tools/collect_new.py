@@ -16,6 +16,7 @@ rules_url = "https://api.twitter.com/2/tweets/search/stream/rules"
 
 sample_rules = [
     { 'value': '(lyon OR milan) lang:en', 'tag': 'football cities' },
+    # { 'value': '(#SakhirGP or #F1) lang:en', 'tag': 'F1' },
     # { 'value': 'cat has:images -grumpy', 'tag': 'cat pictures' },
 ]
 
