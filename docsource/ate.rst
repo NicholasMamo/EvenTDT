@@ -121,6 +121,13 @@ Event Frequency-Inverse Document Frequency (EF-IDF)
    :members:
    :special-members:
 
+Event Frequency-Inverse Document Frequency-Entropy (EF-IDF-Entropy)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. autoclass:: ate.application.event.EFIDFEntropy
+   :members:
+   :special-members:
+
 Variability
 ^^^^^^^^^^^
 
