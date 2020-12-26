@@ -43,7 +43,8 @@ class TwitterNEREntityExtractor(Extractor):
     """
     Do not create the TwitterNER object if this file is being used only for its documentation.
     """
-    if 'sphinx-build' not in inspect.stack()[-1].filename:
+    if ('sphinx-build' not in inspect.stack()[-1].filename and
+        not any('sphinx/cmd/build.py' in stack_item.filename for stack_item in inspect.stack())):
         ner = TwitterNER()
         logger.info("TwitterNER finished loading features")
 
