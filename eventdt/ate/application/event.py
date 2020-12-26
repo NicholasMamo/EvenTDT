@@ -240,6 +240,90 @@ class EFIDF(Extractor):
 
         return efidf
 
+class EFIDFEntropy(EFIDF):
+    """
+    The EF-IDF-entropy extractor combines the event frequency with the inverse document frequency and entropy.
+    The algorithm can be made to work with the :class:`~ate.application.event.LogEF` class instead of the :class:`~ate.application.event.EF` class by providing a logarithmic base.
+
+    .. note::
+
+        The logarithmic base is only used to scale the ranking—it does not affect the order.
+        This is because changing the logarithmic base is the same as multiplying all scores by a constant.
+        Changing the base from :math:`a` to :math:`b` essentially means dividing the scores of all terms by the constant :math:`log_ba`.
+
+        The same logarithmic base is applied to both the :class:`~ate.application.event.LogEF` and to the :class:`~ate.application.event.Entropy`.
+
+    :ivar ~.scheme: The IDF table to use to score terms.
+    :vartype scheme: :class:`~nlp.weighting.global_schemes.tfidf.TFIDF`
+    :ivar base: The logarithmic base.
+                If it is given, the :class:`~ate.application.event.LogEF` class is used.
+                Otherwise, the :class:`~ate.application.event.EF` class is used.
+    :vartype base: None or float
+    """
+
+    def __init__(self, scheme, base=None):
+        """
+        Create the EF-IDF-entropy extractor with the scheme used to score terms and the logarithmic base.
+
+        .. note::
+
+            The logarithmic base is only used to scale the ranking—it does not affect the order.
+            This is because changing the logarithmic base is the same as multiplying all scores by a constant.
+            Changing the base from :math:`a` to :math:`b` essentially means dividing the scores of all terms by the constant :math:`log_ba`.
+
+            The same logarithmic base is applied to both the :class:`~ate.application.event.LogEF` and to the :class:`~ate.application.event.Entropy`.
+
+        :param idf: The IDF table to use to score terms.
+        :type idf: :class:`~nlp.weighting.global_schemes.tfidf.TFIDF`
+        :param base: The logarithmic base.
+                    If it is given, the :class:`~ate.application.event.LogEF` class is used.
+                    Otherwise, the :class:`~ate.application.event.EF` class is used.
+        :type base: None or float
+        """
+
+        super().__init__(scheme, base)
+
+    def extract(self, timelines, idfs, candidates=None):
+        """
+        Calculate the event-frequency-inverse-document-frequency metric for terms.
+        This is a local-global weighting scheme.
+        The local scheme is the event frequency, and the global scheme is the inverse-document-frequency.
+        If a logarithmic base is provided, the logarithmic event frequency is used instead.
+
+        :param timelines: The path to a timeline or a list of paths to timelines.
+                          If a string is given, it is assumed to be one event timeline.
+                          If a list is given, it is assumed to be a list of event timelines.
+
+                          .. note::
+
+                              It is assumed that the event timelines were extracted using the collection tool.
+                              Therefore each file should be a JSON string representing a :class:`~summarization.timeline.Timeline`.
+        :type timelines: str or list of str
+        :param idfs: A list of IDFs, one for each event, used to calculate entropy.
+        :type idfs: list of :class:`~nlp.weighting.tfidf.TFIDF`
+        :param candidates: A list of terms for which to calculate a score.
+                           If `None` is given, all words are considered to be candidates.
+        :type candidates: None or list of str
+
+        :return: A dictionary with terms as keys and their EF-IDF scores as the values.
+        :rtype: dict
+
+        :raises ValueError: When an unequal number of timelines and IDFs are given.
+        """
+
+        efidf_entropy = { }
+
+        # extract the EF-IDF score
+        extractor = EFIDF(self.scheme, base=self.base)
+        efidf = extractor.extract(timelines, candidates)
+
+        # extract the entropy score and multiply it with the EF-IDF score
+        extractor = Entropy(self.base) if self.base else Entropy()
+        entropy = extractor.extract(idfs, candidates)
+        efidf_entropy = { term: efidf[term] * entropy.get(term, 0) for term in efidf }
+
+        return efidf_entropy
+
 class Variability(Extractor):
     """
     Variability is a metric that measures the consistency of appearance of a term across different events.

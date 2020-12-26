@@ -160,9 +160,10 @@ class TestEvent(unittest.TestCase):
                   os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
                   os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
 
+        candidates = [ 'chelsea', 'goal' ]
         extractor = event.EF()
-        terms = extractor.extract(paths, candidates=[ 'chelsea', 'goal' ])
-        self.assertEqual({ 'chelsea', 'goal' }, set(terms.keys()))
+        terms = extractor.extract(paths, candidates=candidates)
+        self.assertEqual(set(candidates), set(terms.keys()))
 
     def test_ef_extract_candidates_same_scores(self):
         """
@@ -190,9 +191,11 @@ class TestEvent(unittest.TestCase):
                   os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
                   os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
 
+        candidates = [ 'superlongword' ]
         extractor = event.EF()
-        terms = extractor.extract(paths, candidates=[ 'superlongword' ])
-        self.assertEqual({ 'superlongword': 0 }, terms)
+        terms = extractor.extract(paths, candidates=candidates)
+        for candidate in candidates:
+            self.assertEqual(0, terms[candidate])
 
     def test_log_ef_lower_limit(self):
         """
@@ -300,9 +303,10 @@ class TestEvent(unittest.TestCase):
                   os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
                   os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
 
+        candidates = [ 'chelsea', 'goal' ]
         extractor = event.LogEF()
-        terms = extractor.extract(paths, candidates=[ 'chelsea', 'goal' ])
-        self.assertEqual({ 'chelsea', 'goal' }, set(terms.keys()))
+        terms = extractor.extract(paths, candidates=candidates)
+        self.assertEqual(set(candidates), set(terms.keys()))
 
     def test_log_ef_extract_candidates_same_scores(self):
         """
@@ -330,9 +334,11 @@ class TestEvent(unittest.TestCase):
                   os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
                   os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
 
+        candidates = [ 'superlongword' ]
         extractor = event.LogEF()
-        terms = extractor.extract(paths, candidates=[ 'superlongword' ])
-        self.assertEqual({ 'superlongword': 0 }, terms)
+        terms = extractor.extract(paths, candidates=candidates)
+        for candidate in candidates:
+            self.assertEqual(0, terms[candidate])
 
     def test_efidf(self):
         """
@@ -430,7 +436,7 @@ class TestEvent(unittest.TestCase):
 
         extractor = event.EFIDF(idf)
         terms = extractor.extract(paths, candidates=[ 'chelsea', 'goal' ])
-        self.assertEqual({ 'chelsea', 'goal' }, set(terms.keys()))
+        self.assertEqual(set(candidates), set(terms.keys()))
 
     def test_efidf_extract_candidates_same_scores(self):
         """
@@ -466,9 +472,11 @@ class TestEvent(unittest.TestCase):
         with open(idf_path, 'r') as f:
             idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
 
+        candidates = [ 'superlongword' ]
         extractor = event.EFIDF(idf)
-        terms = extractor.extract(paths, candidates=[ 'superlongword' ])
-        self.assertEqual({ 'superlongword': 0 }, terms)
+        terms = extractor.extract(paths, candidates=candidates)
+        for candidate in candidates:
+            self.assertEqual(0, terms[candidate])
 
     def test_efidf_log_extract_candidates(self):
         """
@@ -484,9 +492,10 @@ class TestEvent(unittest.TestCase):
         with open(idf_path, 'r') as f:
             idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
 
+        candidates = [ 'chelsea', 'goal' ]
         extractor = event.EFIDF(idf)
-        terms = extractor.extract(paths, candidates=[ 'chelsea', 'goal' ])
-        self.assertEqual({ 'chelsea', 'goal' }, set(terms.keys()))
+        terms = extractor.extract(paths, candidates=candidates)
+        self.assertEqual(set(candidates), set(terms.keys()))
 
     def test_efidf_log_extract_candidates_same_scores(self):
         """
@@ -522,9 +531,292 @@ class TestEvent(unittest.TestCase):
         with open(idf_path, 'r') as f:
             idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
 
+        candidates = [ 'superlongword' ]
         extractor = event.EFIDF(idf, base=2)
-        terms = extractor.extract(paths, candidates=[ 'superlongword' ])
-        self.assertEqual({ 'superlongword': 0 }, terms)
+        terms = extractor.extract(paths, candidates=candidates)
+        for candidate in candidates:
+            self.assertEqual(0, terms[candidate])
+
+    def test_efidf_entropy(self):
+        """
+        Test that the EF-IDF-entropy scores are assigned correctly.
+        """
+
+        idf_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+                      os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json'),
+                      os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
+                      os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
+        idfs = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'CRYCHE.json'),
+                 os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'LIVNAP.json'),
+                 os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'LIVMUN.json'),
+                 os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'MUNARS.json') ]
+
+        """
+        Calculate the EF-IDF manually.
+        """
+        with open(idf_path, 'r') as f:
+            idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
+        extractor = event.EFIDF(idf, base=2)
+        efidf = extractor.extract(timelines)
+
+        """
+        Calculate the entropy manually.
+        """
+        extractor = event.Entropy(base=2)
+        entropy = extractor.extract(idfs)
+        efidf_entropy_terms = { term: efidf[term] * entropy[term] for term in efidf }
+
+        """
+        Ensure that the scores line up.
+        """
+        extractor = event.EFIDFEntropy(idf, base=2)
+        terms = extractor.extract(timelines, idfs)
+        self.assertEqual(efidf_entropy_terms, terms)
+
+    def test_efidf_entropy_no_base(self):
+        """
+        Test that the EF-IDF-entropy scores are assigned correctly using EF without a logarithmic base when a base isn't given.
+        """
+
+        idf_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+                      os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json'),
+                      os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
+                      os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
+        idfs = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'CRYCHE.json'),
+                 os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'LIVNAP.json'),
+                 os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'LIVMUN.json'),
+                 os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'MUNARS.json') ]
+
+        """
+        Calculate the EF-IDF manually.
+        """
+        with open(idf_path, 'r') as f:
+            idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
+        extractor = event.EFIDF(idf)
+        efidf = extractor.extract(timelines)
+
+        """
+        Calculate the entropy manually.
+        """
+        extractor = event.Entropy(base=10)
+        entropy = extractor.extract(idfs)
+        efidf_entropy_terms = { term: efidf[term] * entropy[term] for term in efidf }
+
+        """
+        Ensure that the scores line up.
+        """
+        extractor = event.EFIDFEntropy(idf)
+        terms = extractor.extract(timelines, idfs)
+        self.assertEqual(efidf_entropy_terms, terms)
+
+    def test_efidf_entropy_all_terms(self):
+        """
+        Test that the EF-IDF-Entropy metric returns a score for all terms.
+        """
+
+        idf_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+                      os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json'),
+                      os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
+                      os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
+        idfs = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'CRYCHE.json'),
+                 os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'LIVNAP.json'),
+                 os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'LIVMUN.json'),
+                 os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'MUNARS.json') ]
+
+        """
+        Extract a list of terms using EF.
+        """
+        extractor = event.EF()
+        terms = extractor.extract(timelines).keys()
+
+        """
+        Calculate EF-IDF-Entropy.
+        """
+        with open(idf_path, 'r') as f:
+            idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
+
+        """
+        Ensure that the scores line up.
+        """
+        extractor = event.EFIDFEntropy(idf)
+        self.assertEqual(terms, extractor.extract(timelines, idfs).keys())
+
+    def test_efidf_entropy_only_timeline_terms(self):
+        """
+        Test that EF-IDF-Entropy ignores entropy's terms, which considers all terms, and returns only the timeline's terms.
+        """
+
+        idf_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+                      os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json'),
+                      os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
+                      os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
+        idfs = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'CRYCHE.json'),
+                 os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'LIVNAP.json'),
+                 os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'LIVMUN.json'),
+                 os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'MUNARS.json') ]
+
+        """
+        Calculate the EF-IDF manually.
+        """
+        with open(idf_path, 'r') as f:
+            idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
+        extractor = event.EFIDF(idf)
+        efidf = extractor.extract(timelines)
+
+        """
+        Calculate the entropy manually.
+        """
+        extractor = event.Entropy(base=10)
+        entropy = extractor.extract(idfs)
+        efidf_entropy_terms = { term: efidf[term] * entropy[term] for term in efidf }
+
+        """
+        Ensure that the scores line up.
+        """
+        extractor = event.EFIDFEntropy(idf)
+        terms = extractor.extract(timelines, idfs)
+        self.assertEqual(efidf_entropy_terms, terms)
+        self.assertTrue(all( term in efidf for term in terms ))
+        self.assertFalse(any( term not in efidf and term in terms for term in entropy )) # any term that is not in EF-IDF should not be in EF-IDF-Entropy
+
+    def test_efidf_entropy_same_base(self):
+        """
+        Test that EF and Entropy use the same base when given.
+        """
+
+        base = 7
+        idf_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+                      os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json'),
+                      os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
+                      os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
+        idfs = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'CRYCHE.json'),
+                 os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'LIVNAP.json'),
+                 os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'LIVMUN.json'),
+                 os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'MUNARS.json') ]
+
+        """
+        Calculate the EF-IDF manually.
+        """
+        with open(idf_path, 'r') as f:
+            idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
+        extractor = event.EFIDF(idf, base=base)
+        efidf = extractor.extract(timelines)
+
+        """
+        Calculate the entropy manually.
+        """
+        extractor = event.Entropy(base=base)
+        entropy = extractor.extract(idfs)
+        efidf_entropy_terms = { term: efidf[term] * entropy[term] for term in efidf }
+
+        """
+        Ensure that the scores line up.
+        """
+        extractor = event.EFIDFEntropy(idf, base=base)
+        terms = extractor.extract(timelines, idfs)
+        self.assertEqual(efidf_entropy_terms, terms)
+
+    def test_efidf_entropy_base_does_not_affect_order(self):
+        """
+        Test that changing the logarithmic base for EF-IDF-Entropy only affects the scores, not the order.
+        """
+
+        idf_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+                      os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json'),
+                      os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
+                      os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
+        idfs = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'CRYCHE.json'),
+                 os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'LIVNAP.json'),
+                 os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'LIVMUN.json'),
+                 os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'MUNARS.json') ]
+
+        with open(idf_path, 'r') as f:
+            idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
+
+        """
+        Calculate EF-IDF-Entropy with different bases.
+        """
+        extractor = event.EFIDFEntropy(idf, base=2)
+        terms_2 = extractor.extract(timelines, idfs)
+        terms_2 = sorted(terms_2, reverse=True, key=terms_2.get)
+
+        extractor = event.EFIDFEntropy(idf, base=10)
+        terms_10 = extractor.extract(timelines, idfs)
+        terms_10 = sorted(terms_10, reverse=True, key=terms_10.get)
+
+    def test_efidf_extract_candidates(self):
+        """
+        Test that the EF-IDF-Entropy extractor extracts scores for only select candidates if they are given.
+        """
+
+        idf_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+                      os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json'),
+                      os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
+                      os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
+        idfs = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'CRYCHE.json'),
+                 os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'LIVNAP.json'),
+                 os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'LIVMUN.json'),
+                 os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'MUNARS.json') ]
+
+        with open(idf_path, 'r') as f:
+            idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
+
+        candidates = [ 'chelsea', 'goal' ]
+        extractor = event.EFIDFEntropy(idf, base=2)
+        terms = extractor.extract(timelines, idfs, candidates=candidates)
+        self.assertEqual(set(candidates), set(terms.keys()))
+
+    def test_efidf_extract_candidates_same_scores(self):
+        """
+        Test that the EF-IDF-Entropy extractor's scores for known candidates are the same as when candidates are not known.
+        """
+
+        idf_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+                      os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json'),
+                      os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
+                      os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
+        idfs = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'CRYCHE.json'),
+                 os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'LIVNAP.json'),
+                 os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'LIVMUN.json'),
+                 os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'MUNARS.json') ]
+
+        with open(idf_path, 'r') as f:
+            idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
+
+        candidates = [ 'chelsea', 'goal' ]
+        extractor = event.EFIDFEntropy(idf, base=2)
+        terms = extractor.extract(timelines, idfs)
+        candidate_terms = extractor.extract(timelines, idfs, candidates=candidates)
+        for candidate in candidates:
+            self.assertEqual(terms[candidate], candidate_terms[candidate])
+
+    def test_efidf_extract_candidates_unknown_word(self):
+        """
+        Test that the EF-IDF-Entropy extractor's score for an unknown word is 0.
+        """
+
+        idf_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')
+        paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+                   os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json'),
+                  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
+                  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
+
+        with open(idf_path, 'r') as f:
+            idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
+
+        candidates = [ 'superlongword' ]
+        extractor = event.EFIDF(idf)
+        terms = extractor.extract(paths, candidates=candidates)
+        for candidate in candidates:
+            self.assertEqual(0, terms[candidate])
 
     def test_variability_no_idfs(self):
         """
@@ -763,9 +1055,10 @@ class TestEvent(unittest.TestCase):
             with open(path, 'r') as f:
                 idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
 
+        candidates = [ 'chelsea', 'goal' ]
         extractor = event.Variability()
-        terms = extractor.extract(idfs, candidates=[ 'chelsea', 'goal' ])
-        self.assertEqual({ 'chelsea', 'goal' }, set(terms.keys()))
+        terms = extractor.extract(idfs, candidates=candidates)
+        self.assertEqual(set(candidates), set(terms.keys()))
 
     def test_variability_extract_candidates_same_scores(self):
         """
@@ -781,8 +1074,9 @@ class TestEvent(unittest.TestCase):
             with open(path, 'r') as f:
                 idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
 
+        candidates = [ 'chelsea', 'goal' ]
         extractor = event.Variability()
-        candidate_terms = extractor.extract(idfs, candidates=[ 'chelsea', 'goal' ])
+        candidate_terms = extractor.extract(idfs, candidates=candidates)
         terms = extractor.extract(idfs)
         self.assertEqual(terms['chelsea'], candidate_terms['chelsea'])
         self.assertEqual(terms['goal'], candidate_terms['goal'])
@@ -801,9 +1095,11 @@ class TestEvent(unittest.TestCase):
             with open(path, 'r') as f:
                 idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
 
+        candidates = [ 'superlongword' ]
         extractor = event.Variability()
-        terms = extractor.extract(idfs, candidates=[ 'superlongword' ])
-        self.assertEqual({ 'superlongword': 1 }, terms)
+        terms = extractor.extract(idfs, candidates=candidates)
+        for candidate in candidates:
+            self.assertEqual(1, terms[candidate])
 
     def test_variability_vocabulary_all_one_corpus(self):
         """
@@ -1256,9 +1552,10 @@ class TestEvent(unittest.TestCase):
             with open(path, 'r') as f:
                 idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
 
+        candidates = [ 'chelsea', 'goal' ]
         extractor = event.Entropy()
-        terms = extractor.extract(idfs, candidates=[ 'chelsea', 'goal' ])
-        self.assertEqual({ 'chelsea', 'goal' }, set(terms.keys()))
+        terms = extractor.extract(idfs, candidates=candidates)
+        self.assertEqual(set(candidates), set(terms.keys()))
 
     def test_entropy_extract_candidates_same_scores(self):
         """
@@ -1274,8 +1571,9 @@ class TestEvent(unittest.TestCase):
             with open(path, 'r') as f:
                 idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
 
+        candidates = [ 'chelsea', 'goal' ]
         extractor = event.Entropy()
-        candidate_terms = extractor.extract(idfs, candidates=[ 'chelsea', 'goal' ])
+        candidate_terms = extractor.extract(idfs, candidates=candidates)
         terms = extractor.extract(idfs)
         self.assertEqual(terms['chelsea'], candidate_terms['chelsea'])
         self.assertEqual(terms['goal'], candidate_terms['goal'])
@@ -1294,9 +1592,11 @@ class TestEvent(unittest.TestCase):
             with open(path, 'r') as f:
                 idfs.append(Exportable.decode(json.loads(''.join(f.readlines())))['tfidf'])
 
+            candidates = [ 'superlongword' ]
         extractor = event.Entropy()
-        terms = extractor.extract(idfs, candidates=[ 'superlongword' ])
-        self.assertEqual({ 'superlongword': 0 }, terms)
+        terms = extractor.extract(idfs, candidates=candidates)
+        for candidate in candidates:
+            self.assertEqual(0, terms[candidate])
 
     def test_entropy_load_idfs_not_idf(self):
         """
