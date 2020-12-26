@@ -434,8 +434,9 @@ class TestEvent(unittest.TestCase):
         with open(idf_path, 'r') as f:
             idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
 
+        candidates = [ 'chelsea', 'goal' ]
         extractor = event.EFIDF(idf)
-        terms = extractor.extract(paths, candidates=[ 'chelsea', 'goal' ])
+        terms = extractor.extract(paths, candidates=candidates)
         self.assertEqual(set(candidates), set(terms.keys()))
 
     def test_efidf_extract_candidates_same_scores(self):
@@ -750,7 +751,31 @@ class TestEvent(unittest.TestCase):
         terms_10 = extractor.extract(timelines, idfs)
         terms_10 = sorted(terms_10, reverse=True, key=terms_10.get)
 
-    def test_efidf_extract_candidates(self):
+    def test_efidf_entropy_different_timelines_idfs_raises_ValueError(self):
+        """
+        Test that the EF-IDF-Entropy extractor raises a ValueError when a different number of timelines and IDFs is given.
+        """
+
+        idf_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+                      os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json'),
+                      os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
+                      os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
+        idfs = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'CRYCHE.json'),
+                 os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'LIVNAP.json'),
+                 os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'LIVMUN.json'),
+                 os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'MUNARS.json') ]
+
+        with open(idf_path, 'r') as f:
+            idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
+
+        extractor = event.EFIDFEntropy(idf, base=2)
+        self.assertEqual(len(timelines), len(idfs))
+        self.assertRaises(ValueError, extractor.extract, timelines, idfs[:len(timelines) - 1])
+        self.assertRaises(ValueError, extractor.extract, timelines[:len(idfs) - 1], idfs)
+        self.assertTrue(extractor.extract(timelines, idfs))
+
+    def test_efidf_entropy_extract_candidates(self):
         """
         Test that the EF-IDF-Entropy extractor extracts scores for only select candidates if they are given.
         """
@@ -773,7 +798,7 @@ class TestEvent(unittest.TestCase):
         terms = extractor.extract(timelines, idfs, candidates=candidates)
         self.assertEqual(set(candidates), set(terms.keys()))
 
-    def test_efidf_extract_candidates_same_scores(self):
+    def test_efidf_entropy_extract_candidates_same_scores(self):
         """
         Test that the EF-IDF-Entropy extractor's scores for known candidates are the same as when candidates are not known.
         """
@@ -798,7 +823,7 @@ class TestEvent(unittest.TestCase):
         for candidate in candidates:
             self.assertEqual(terms[candidate], candidate_terms[candidate])
 
-    def test_efidf_extract_candidates_unknown_word(self):
+    def test_efidf_entropy_extract_candidates_unknown_word(self):
         """
         Test that the EF-IDF-Entropy extractor's score for an unknown word is 0.
         """

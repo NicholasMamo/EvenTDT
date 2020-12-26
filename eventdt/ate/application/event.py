@@ -311,6 +311,9 @@ class EFIDFEntropy(EFIDF):
         :raises ValueError: When an unequal number of timelines and IDFs are given.
         """
 
+        if len(timelines) != len(idfs):
+            raise ValueError(f"The number of timelines and IDFs must be equal; received { len(timelines) } timelines and { len(idfs) } IDFs")
+
         efidf_entropy = { }
 
         # extract the EF-IDF score
