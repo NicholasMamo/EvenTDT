@@ -318,3 +318,85 @@ class TestTerms(unittest.TestCase):
         extracted = terms.extract(extractor, files)
         for i in range(0, len(extracted) - 1):
             self.assertGreaterEqual(extracted[i]['score'], extracted[i + 1]['score'])
+
+    def test_extract_keep_large(self):
+        """
+        Test that when providing a large value of terms to keep, all terms are returned.
+        """
+
+        idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+        idfs = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf_wo_rt', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EFIDFEntropy, tfidf=idf, base=2)
+        extracted = terms.extract(extractor, timelines, idfs=idfs)
+        keep = len(extracted) + 1
+        self.assertEqual(len(extracted), len(terms.extract(extractor, timelines, idfs=idfs, keep=keep)))
+
+    def test_extract_keep_all(self):
+        """
+        Test that when the number of terms to keep is the same as the number of actual terms, all terms are returned.
+        """
+
+        idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+        idfs = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf_wo_rt', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EFIDFEntropy, tfidf=idf, base=2)
+        extracted = terms.extract(extractor, timelines, idfs=idfs)
+        keep = len(extracted)
+        self.assertEqual(len(extracted), len(terms.extract(extractor, timelines, idfs=idfs, keep=keep)))
+
+    def test_extract_keep_none(self):
+        """
+        Test that when no number of terms is specified, all terms are returned,
+        """
+
+        idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+        idfs = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf_wo_rt', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EF)
+        extracted_ef = terms.extract(extractor, timelines)
+
+        extractor = terms.create_extractor(EFIDFEntropy, tfidf=idf, base=2)
+        extracted = terms.extract(extractor, timelines, idfs=idfs)
+        self.assertEqual(len(extracted_ef), len(extracted))
+
+    def test_extract_keep_top_ranks(self):
+        """
+        Test that when extracting only a few terms, the top-ranked terms are returned.
+        """
+
+        idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+        idfs = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf_wo_rt', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EFIDFEntropy, tfidf=idf, base=2)
+        extracted_all = terms.extract(extractor, timelines, idfs=idfs)
+
+        keep = 10
+        extractor = terms.create_extractor(EFIDFEntropy, tfidf=idf, base=2)
+        extracted = terms.extract(extractor, timelines, idfs=idfs, keep=keep)
+        self.assertEqual(1, extracted[0]['rank'])
+        self.assertEqual(keep, extracted[-1]['rank'])
+        self.assertEqual(extracted_all[:keep], extracted)
+
+    def test_extract_keep_top_scoring(self):
+        """
+        Test that when extracting only a few terms, the top-scoring terms are returned.
+        """
+
+        idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+        idfs = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf_wo_rt', f"{ event }.json") for event in events ]
+
+        keep = 10
+        extractor = terms.create_extractor(EFIDFEntropy, tfidf=idf, base=2)
+        extracted = terms.extract(extractor, timelines, idfs=idfs, keep=keep)
+        self.assertTrue(all( extracted[i]['score'] >= extracted[i + 1]['score'] for i in range(len(extracted) - 1) ))
