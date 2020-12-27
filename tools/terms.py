@@ -68,12 +68,12 @@ The output is a JSON file with the following structure:
 The full list of accepted arguments:
 
     - ``-f --files``         *<Required>* The input corpora from where to extract domain-specific terms.
-    - ``-m --method``        *<Required>* The method to use to extract domain-specific terms; supported: :class:`TF <ate.stat.tf.TFExtractor>`, :class:`TFIDF <ate.stat.tfidf.TFIDFExtractor>`, :class:`Rank <ate.stat.corpus.rank.RankExtractor>`, :class:`Specificity <ate.stat.corpus.specificity.SpecificityExtractor>`, :class:`TFDCF <ate.stat.corpus.tfdcf.TFDCFExtractor>`, :class:`EF <ate.application.event.EF>`, :class:`LogEF <ate.application.event.LogEF>`, :class:`EFIDF <ate.application.event.EFIDF>`.
+    - ``-m --method``        *<Required>* The method to use to extract domain-specific terms; supported: :class:`TF <ate.stat.tf.TFExtractor>`, :class:`TFIDF <ate.stat.tfidf.TFIDFExtractor>`, :class:`Rank <ate.stat.corpus.rank.RankExtractor>`, :class:`Specificity <ate.stat.corpus.specificity.SpecificityExtractor>`, :class:`TFDCF <ate.stat.corpus.tfdcf.TFDCFExtractor>`, :class:`EF <ate.application.event.EF>`, :class:`LogEF <ate.application.event.LogEF>`, :class:`EF-IDF <ate.application.event.EFIDF>`, :class:`EF-IDF-Entropy <ate.application.event.EFIDFEntropy>`.
     - ``-o --output``        *<Required>* The path to the file where to store the extracted terms.
     - ``--tfidf``            *<Optional>* The TF-IDF scheme to use to extract terms (used only with the :class:`~ate.stat.tfidf.TFIDFExtractor` and the :class:`~ate.application.event.EFIDF` methods).
     - ``--general``          *<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the :class:`~ate.stat.corpus.rank.RankExtractor`, :class:`~ate.stat.corpus.specificity.SpecificityExtractor` and :class:`~ate.stat.corpus.tfdcf.TFDCFExtractor` methods).
     - ``--cutoff``           *<Optional>* The minimum term frequency to consider when ranking terms (used only with the :class:`~ate.stat.corpus.rank.RankExtractor` method).
-    - ``--base``             *<Optional>* The logarithmic base (used only with the :class:`LogEF <ate.application.event.LogEF>` and :class:`~ate.application.event.EFIDF` methods).
+    - ``--base``             *<Optional>* The logarithmic base (used only with the :class:`LogEF <ate.application.event.LogEF>`, :class:`~ate.application.event.EFIDF` and :class:`~ate.application.event.EFIDFEntropy` methods).
 """
 
 import argparse
@@ -89,7 +89,7 @@ sys.path.insert(-1, lib)
 import tools
 from logger import logger
 from ate import linguistic
-from ate.application import EF, LogEF, EFIDF
+from ate.application import EF, LogEF, EFIDF, EFIDFEntropy
 from ate.stat import TFExtractor, TFIDFExtractor
 from ate.stat.corpus import RankExtractor, SpecificityExtractor, TFDCFExtractor
 
@@ -101,12 +101,12 @@ def setup_args():
     Accepted arguments:
 
         - ``-f --files``         *<Required>* The input corpora from where to extract domain-specific terms.
-        - ``-m --method``        *<Required>* The method to use to extract domain-specific terms; supported: :class:`TF <ate.stat.tf.TFExtractor>`, :class:`TFIDF <ate.stat.tfidf.TFIDFExtractor>`, :class:`Rank <ate.stat.corpus.rank.RankExtractor>`, :class:`Specificity <ate.stat.corpus.specificity.SpecificityExtractor>`, :class:`TFDCF <ate.stat.corpus.tfdcf.TFDCFExtractor>`, :class:`EF <ate.application.event.EF>`, :class:`LogEF <ate.application.event.LogEF>`, :class:`EFIDF <ate.application.event.EFIDF>`.
+        - ``-m --method``        *<Required>* The method to use to extract domain-specific terms; supported: :class:`TF <ate.stat.tf.TFExtractor>`, :class:`TFIDF <ate.stat.tfidf.TFIDFExtractor>`, :class:`Rank <ate.stat.corpus.rank.RankExtractor>`, :class:`Specificity <ate.stat.corpus.specificity.SpecificityExtractor>`, :class:`TFDCF <ate.stat.corpus.tfdcf.TFDCFExtractor>`, :class:`EF <ate.application.event.EF>`, :class:`LogEF <ate.application.event.LogEF>`, :class:`EF-IDF <ate.application.event.EFIDF>`.
         - ``-o --output``        *<Required>* The path to the file where to store the extracted terms.
         - ``--tfidf``            *<Optional>* The TF-IDF scheme to use to extract terms (used only with the :class:`~ate.stat.tfidf.TFIDFExtractor` and the :class:`~ate.application.event.EFIDF` methods).
         - ``--general``          *<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the :class:`~ate.stat.corpus.rank.RankExtractor`, :class:`~ate.stat.corpus.specificity.SpecificityExtractor` and :class:`~ate.stat.corpus.tfdcf.TFDCFExtractor` methods).
         - ``--cutoff``           *<Optional>* The minimum term frequency to consider when ranking terms (used only with the :class:`~ate.stat.corpus.rank.RankExtractor` method).
-        - ``--base``             *<Optional>* The logarithmic base (used only with the :class:`LogEF <ate.application.event.LogEF>` and :class:`~ate.application.event.EFIDF` methods).
+        - ``--base``             *<Optional>* The logarithmic base (used only with the :class:`LogEF <ate.application.event.LogEF>`, :class:`~ate.application.event.EFIDF` and :class:`~ate.application.event.EFIDFEntropy` methods).
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
@@ -115,7 +115,7 @@ def setup_args():
     parser.add_argument('-f', '--files', nargs='+', required=True,
                         help='<Required> The input corpora from where to extract domain-specific terms.')
     parser.add_argument('-m', '--method', type=method, required=True,
-                        help='<Required> The method to use to extract domain-specific terms; supported: `TF`, `TFIDF`, `Rank`, `Specificity`, `TFDCF`, `EF`, `LogEF`, `EFIDF`.')
+                        help='<Required> The method to use to extract domain-specific terms; supported: `TF`, `TFIDF`, `Rank`, `Specificity`, `TFDCF`, `EF`, `LogEF`, `EF-IDF`.')
     parser.add_argument('-o', '--output', type=str, required=True,
                         help='<Required> The path to the file where to store the extracted terms.')
     parser.add_argument('--tfidf', required=False, help='<Optional> The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).')
@@ -124,7 +124,7 @@ def setup_args():
     parser.add_argument('--cutoff', type=int, default=1, required=False,
                         help='<Optional> The minimum term frequency to consider when ranking terms (used only with the `Rank` method).')
     parser.add_argument('--base', type=int, default=None, required=False,
-                        help='<Optional> The logarithmic base (used only with the `LogEF` and `EF-IDF` methods).')
+                        help='<Optional> The logarithmic base (used only with the `LogEF`, `EF-IDF` and `EF-IDF-Entropy` methods).')
 
     args = parser.parse_args()
     return args
@@ -204,16 +204,25 @@ def create_extractor(method, tfidf=None, general=None, cutoff=None, base=None):
         tfidf = tools.load(tfidf)['tfidf']
         base = int(base) if base else base
         return method(tfidf, base=base)
+    elif method == EFIDFEntropy:
+        if tfidf is None:
+            parser.error("The TF-IDF scheme is required with the EF-IDF-Entropy method.")
+
+        tfidf = tools.load(tfidf)['tfidf']
+        base = int(base) if base else base
+        return method(tfidf, base=base)
 
     return method()
 
-def extract(extractor, files):
+def extract(extractor, files, idfs=None):
     """
     Extract terms using the given extractor from the given files.
 
     :param extractor: The extractor to use to extract terms.
     :type extractor: :class:`~ate.extractor.Extractor`
     :param files: The input corpora from where to extract domain-specific terms.
+    :type files: str or list of str
+    :param files: The IDF files, used by some extractors (:class:`~ate.application.event.EFIDFEntropy`) as part of the extraction.
     :type files: str or list of str
 
     :return: A list of terms, each as a dictionary including its:
@@ -224,7 +233,10 @@ def extract(extractor, files):
     :rtype: list of dict
     """
 
-    terms = extractor.extract(files)
+    if type(extractor) == EFIDFEntropy:
+        terms = extractor.extract(files, idfs=idfs)
+    else:
+        terms = extractor.extract(files)
     terms = sorted(terms.items(), key=lambda term: term[1], reverse=True)
     terms = [ { 'term': term, 'score': score, 'rank': rank + 1 } for rank, (term, score) in enumerate(terms) ]
     return terms
@@ -242,6 +254,7 @@ def method(method):
         #. :class:`~ate.application.event.EF`
         #. :class:`~ate.application.event.LogEF`
         #. :class:`~ate.application.event.EFIDF`
+        #. :class:`~ate.application.event.EFIDFEntropy`
 
     :param method: The method string.
     :type method: str
@@ -261,6 +274,7 @@ def method(method):
         'ef': EF,
         'logef': LogEF,
         'efidf': EFIDF,
+        'efidfentropy': EFIDF,
     }
 
     if method.lower() in methods:
