@@ -54,7 +54,9 @@ The output is a JSON file with the following structure:
             "base": null,
             "idfs": null,
             "reranker": "<class 'ate.application.event.EF'>",
-            "reranker-files": "data/timeline.json",
+            "reranker-files": [
+                "data/timeline.json"
+            ],
             "reranker-keep": null,
             "reranker-tfidf": "data/idf.json",
             "reranker-general": null,
@@ -78,7 +80,9 @@ The output is a JSON file with the following structure:
             "base": null,
             "idfs": null,
             "reranker": "<class 'ate.application.event.EF'>",
-            "reranker-files": "data/timeline.json",
+            "reranker-files": [
+                "data/timeline.json"
+            ],
             "reranker-keep": null,
             "reranker-tfidf": "data/idf.json",
             "reranker-general": null,
