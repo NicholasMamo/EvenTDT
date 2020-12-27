@@ -28,6 +28,7 @@ The output is a JSON file with the following structure:
             "general": null,
             "cutoff": 1,
             "base": null,
+            "idfs": null,
             "_date": "2020-12-27T12:12:22.023277",
             "_timestamp": 1609067542.0232878,
             "_cmd": "./tools/terms.py --files data/tokenized_corpus.json --output results/tfidf.json --method TFIDF --tfidf data/idf.json"
@@ -42,6 +43,7 @@ The output is a JSON file with the following structure:
             "general": null,
             "cutoff": 1,
             "base": null,
+            "idfs": null,
             "_date": "2020-12-27T12:12:22.023302",
             "_timestamp": 1609067542.023305,
             "_cmd": "./tools/terms.py --files data/tokenized_corpus.json --output results/tfidf.json --method TFIDF --tfidf data/idf.json"
@@ -74,6 +76,7 @@ The full list of accepted arguments:
     - ``--general``          *<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the :class:`~ate.stat.corpus.rank.RankExtractor`, :class:`~ate.stat.corpus.specificity.SpecificityExtractor` and :class:`~ate.stat.corpus.tfdcf.TFDCFExtractor` methods).
     - ``--cutoff``           *<Optional>* The minimum term frequency to consider when ranking terms (used only with the :class:`~ate.stat.corpus.rank.RankExtractor` method).
     - ``--base``             *<Optional>* The logarithmic base (used only with the :class:`LogEF <ate.application.event.LogEF>`, :class:`~ate.application.event.EFIDF` and :class:`~ate.application.event.EFIDFEntropy` methods).
+    - ``--idfs``             *<Optional>* The IDF files to use to calculate entropy (used only with the :class:`~ate.application.event.EFIDFEntropy` method)
 """
 
 import argparse
@@ -107,6 +110,7 @@ def setup_args():
         - ``--general``          *<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the :class:`~ate.stat.corpus.rank.RankExtractor`, :class:`~ate.stat.corpus.specificity.SpecificityExtractor` and :class:`~ate.stat.corpus.tfdcf.TFDCFExtractor` methods).
         - ``--cutoff``           *<Optional>* The minimum term frequency to consider when ranking terms (used only with the :class:`~ate.stat.corpus.rank.RankExtractor` method).
         - ``--base``             *<Optional>* The logarithmic base (used only with the :class:`LogEF <ate.application.event.LogEF>`, :class:`~ate.application.event.EFIDF` and :class:`~ate.application.event.EFIDFEntropy` methods).
+        - ``--idfs``             *<Optional>* The IDF files to use to calculate entropy (used only with the :class:`~ate.application.event.EFIDFEntropy` method)
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
@@ -125,6 +129,8 @@ def setup_args():
                         help='<Optional> The minimum term frequency to consider when ranking terms (used only with the `Rank` method).')
     parser.add_argument('--base', type=int, default=None, required=False,
                         help='<Optional> The logarithmic base (used only with the `LogEF`, `EF-IDF` and `EF-IDF-Entropy` methods).')
+    parser.add_argument('--idfs', nargs='+', required=False,
+                        help='<Optional> The IDF files to use to calculate entropy (used only with the `EF-IDF-Entropy` method).')
 
     args = parser.parse_args()
     return args
@@ -149,7 +155,7 @@ def main():
     args = vars(args)
     extractor = create_extractor(args['method'], tfidf=args['tfidf'], general=args['general'],
                                  cutoff=args['cutoff'], base=args['base'])
-    terms = extract(extractor=extractor, files=args['files'])
+    terms = extract(extractor=extractor, files=args['files'], idfs=args['idfs'])
 
     tools.save(args['output'], { 'cnd': cmd, 'pcmd': pcmd, 'terms': terms })
 
