@@ -15,12 +15,47 @@ for path in paths:
         sys.path.append(path)
 
 from tools import terms
-from ate.application import EFIDF, Variability, Entropy
+from ate.application import EF, EFIDF, Variability, Entropy
 
 class TestTerms(unittest.TestCase):
     """
     Test the functionality of the terms tool.
     """
+
+    def test_create_extractor_ef(self):
+        """
+        Test that the EF extractor results.
+        """
+
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+        extractor = terms.create_extractor(EF)
+        extracted = terms.extract(extractor, files)
+        term = [ term for term in extracted if term['term'] == 'kepa' ][0]
+        self.assertEqual(1, term['score'])
+
+    def test_create_extractor_ef_less_than_equal_events(self):
+        """
+        Test that when creating an EF extractor, the maximum score cannot be larger than the number of events.
+        """
+
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+        extractor = terms.create_extractor(EF)
+        extracted = terms.extract(extractor, files)
+        self.assertTrue(all( term['score'] <= len(events) for term in extracted ))
+        self.assertTrue(any( term['score'] == len(events) for term in extracted ))
+
+    def test_create_extractor_ef_positive_scores(self):
+        """
+        Test that when creating an EF extractor, the scores are all positive.
+        """
+
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+        extractor = terms.create_extractor(EF)
+        extracted = terms.extract(extractor, files)
+        self.assertTrue(any( term['score'] > 0 for term in extracted ))
 
     def test_create_extractor_efidf_missing_idf(self):
         """
