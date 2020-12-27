@@ -3,7 +3,21 @@
 """
 A tool to automatically extract terms from the given corpora.
 
-To run the script, use:
+To extract terms, you need to specify one or more files where to look for them, the method to use to extract terms, and where to save them.
+Most commonly, the input files should be tokenized corpora created using the :mod:`~tools.tokenizer` tool.
+However, the input can vary.
+Some :mod:`~ate.application.event` approaches expect :class:`~summarization.timeline.Timeline` files.
+
+Most ATE methods require or accept additional parameters that control their behavior.
+For example, to use the TF-IDF method, you need to specify a TF-IDF term-weighting scheme.
+
+.. code-block:: bash
+
+    ./tools/terms.py \\
+    --files data/tokenized_corpus.json \\
+    --method tfidf \\
+    --tfidf data/idf.json \\
+    --output results/tfidf.json
 
 .. code-block:: bash
 
