@@ -19,12 +19,20 @@ For example, to use the TF-IDF method, you need to specify a TF-IDF term-weighti
     --tfidf data/idf.json \\
     --output results/tfidf.json
 
+You can create more complex behaviour by using a re-ranker.
+Re-rankers compute new scores for the terms extracted by the base ATE method specified using the ``--method`` parameter.
+
+Using re-rankers is completely optional, but if you choose to use on, the process is similar to before.
+You need to specify a re-ranker method, as well as any other files it expects, but there is no need to specify an output file.
+Re-rankers accept the same parameters as normal methods, but with the ``reranker-`` prefix.
+
 .. code-block:: bash
 
     ./tools/terms.py \\
     --files data/tokenized_corpus.json \\
     --method tfidf \\
     --tfidf data/idf.json \\
+    --reranker EF \\
     --output results/tfidf.json
 
 The output is a JSON file with the following structure:
@@ -94,6 +102,10 @@ The full list of accepted arguments:
     - ``--cutoff``           *<Optional>* The minimum term frequency to consider when ranking terms (used only with the :class:`~ate.stat.corpus.rank.RankExtractor` method).
     - ``--base``             *<Optional>* The logarithmic base (used only with the :class:`LogEF <ate.application.event.LogEF>`, :class:`~ate.application.event.EFIDF` and :class:`~ate.application.event.EFIDFEntropy` methods).
     - ``--idfs``             *<Optional>* The IDF files to use to calculate entropy (used only with the :class:`~ate.application.event.EFIDFEntropy` method)
+
+When using a re-ranker, these arguments are also accepted:
+
+    - ``--reranker``        *<Optional>* The method to use to re-rank the terms extracted by the base method; supported :class:`TF <ate.stat.tf.TFExtractor>`, :class:`TFIDF <ate.stat.tfidf.TFIDFExtractor>`, :class:`Rank <ate.stat.corpus.rank.RankExtractor>`, :class:`Specificity <ate.stat.corpus.specificity.SpecificityExtractor>`, :class:`TFDCF <ate.stat.corpus.tfdcf.TFDCFExtractor>`, :class:`EF <ate.application.event.EF>`, :class:`LogEF <ate.application.event.LogEF>`, :class:`EF-IDF <ate.application.event.EFIDF>`, :class:`EF-IDF-Entropy <ate.application.event.EFIDFEntropy>`.
 """
 
 import argparse
@@ -130,6 +142,8 @@ def setup_args():
         - ``--base``             *<Optional>* The logarithmic base (used only with the :class:`LogEF <ate.application.event.LogEF>`, :class:`~ate.application.event.EFIDF` and :class:`~ate.application.event.EFIDFEntropy` methods).
         - ``--idfs``             *<Optional>* The IDF files to use to calculate entropy (used only with the :class:`~ate.application.event.EFIDFEntropy` method)
 
+        - ``--reranker``        *<Optional>* The method to use to re-rank the terms extracted by the base method; supported :class:`TF <ate.stat.tf.TFExtractor>`, :class:`TFIDF <ate.stat.tfidf.TFIDFExtractor>`, :class:`Rank <ate.stat.corpus.rank.RankExtractor>`, :class:`Specificity <ate.stat.corpus.specificity.SpecificityExtractor>`, :class:`TFDCF <ate.stat.corpus.tfdcf.TFDCFExtractor>`, :class:`EF <ate.application.event.EF>`, :class:`LogEF <ate.application.event.LogEF>`, :class:`EF-IDF <ate.application.event.EFIDF>`, :class:`EF-IDF-Entropy <ate.application.event.EFIDFEntropy>`.
+
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
     """
@@ -150,6 +164,9 @@ def setup_args():
                         help='<Optional> The logarithmic base (used only with the `LogEF`, `EF-IDF` and `EF-IDF-Entropy` methods).')
     parser.add_argument('--idfs', nargs='+', required=False,
                         help='<Optional> The IDF files to use to calculate entropy (used only with the `EF-IDF-Entropy` method).')
+
+    parser.add_argument('--reranker', type=method, required=True,
+                        help='<Optional> The method to use to re-rank the terms extracted by the base method; supported `TF`, `TFIDF`, `Rank`, `Specificity`, `TFDCF`, `EF`, `LogEF`, `EF-IDF`.')
 
     args = parser.parse_args()
     return args
