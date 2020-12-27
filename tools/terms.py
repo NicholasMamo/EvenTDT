@@ -74,13 +74,13 @@ The output is a JSON file with the following structure:
 The full list of accepted arguments:
 
     - ``-f --files``         *<Required>* The input corpora from where to extract domain-specific terms.
-    - ``-m --method``        *<Required>* The method to use to extract domain-specific terms; supported: :class:`TF <ate.stat.tf.TFExtractor>`, :class:`TFIDF <ate.stat.tfidf.TFIDFExtractor>`, :class:`Rank <ate.stat.corpus.rank.RankExtractor>`, :class:`Specificity <ate.stat.corpus.specificity.SpecificityExtractor>`, :class:`TFDCF <ate.stat.corpus.tfdcf.TFDCFExtractor>`, :class:`EF <ate.application.event.EF>`, :class:`EFIDF <ate.application.event.EFIDF>`.
+    - ``-m --method``        *<Required>* The method to use to extract domain-specific terms; supported: :class:`TF <ate.stat.tf.TFExtractor>`, :class:`TFIDF <ate.stat.tfidf.TFIDFExtractor>`, :class:`Rank <ate.stat.corpus.rank.RankExtractor>`, :class:`Specificity <ate.stat.corpus.specificity.SpecificityExtractor>`, :class:`TFDCF <ate.stat.corpus.tfdcf.TFDCFExtractor>`, :class:`EF <ate.application.event.EF>`, :class:`LogEF <ate.application.event.LogEF>`, :class:`EFIDF <ate.application.event.EFIDF>`.
     - ``-o --output``        *<Required>* The path to the file where to store the extracted terms.
     - ``-r --reranker``      *<Optional>* The method to use to re-rank terms; supported: :class:`~ate.application.event.Entropy`, :class:`~ate.application.event.Variability`; defaults to no re-ranking.
     - ``--tfidf``            *<Optional>* The TF-IDF scheme to use to extract terms (used only with the :class:`~ate.stat.tfidf.TFIDFExtractor` and the :class:`~ate.application.event.EFIDF` methods).
     - ``--general``          *<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the :class:`~ate.stat.corpus.rank.RankExtractor`, :class:`~ate.stat.corpus.specificity.SpecificityExtractor` and :class:`~ate.stat.corpus.tfdcf.TFDCFExtractor` methods).
     - ``--cutoff``           *<Optional>* The minimum term frequency to consider when ranking terms (used only with the :class:`~ate.stat.corpus.rank.RankExtractor` method).
-    - ``--base``             *<Optional>* The logarithmic base (used only with the :class:`~ate.application.event.EFIDF` method).
+    - ``--base``             *<Optional>* The logarithmic base (used only with the :class:`LogEF <ate.application.event.LogEF>` and :class:`~ate.application.event.EFIDF` methods).
     - ``--reranker-base``    *<Optional>* The logarithmic base (used only with the :class:`~ate.application.event.Variability` and :class:`~ate.application.event.Entropy` re-rankers); defaults to 10.
     - ``--reranker-files``   *<Optional>* The input corpora to use for the re-ranker.
 """
@@ -98,7 +98,7 @@ sys.path.insert(-1, lib)
 import tools
 from logger import logger
 from ate import linguistic
-from ate.application import EF, EFIDF, Entropy, Variability
+from ate.application import EF, LogEF, EFIDF, Entropy, Variability
 from ate.stat import TFExtractor, TFIDFExtractor
 from ate.stat.corpus import RankExtractor, SpecificityExtractor, TFDCFExtractor
 
@@ -110,13 +110,13 @@ def setup_args():
     Accepted arguments:
 
         - ``-f --files``         *<Required>* The input corpora from where to extract domain-specific terms.
-        - ``-m --method``        *<Required>* The method to use to extract domain-specific terms; supported: :class:`TF <ate.stat.tf.TFExtractor>`, :class:`TFIDF <ate.stat.tfidf.TFIDFExtractor>`, :class:`Rank <ate.stat.corpus.rank.RankExtractor>`, :class:`Specificity <ate.stat.corpus.specificity.SpecificityExtractor>`, :class:`TFDCF <ate.stat.corpus.tfdcf.TFDCFExtractor>`, :class:`EF <ate.application.event.EF>`, :class:`EFIDF <ate.application.event.EFIDF>`.
+        - ``-m --method``        *<Required>* The method to use to extract domain-specific terms; supported: :class:`TF <ate.stat.tf.TFExtractor>`, :class:`TFIDF <ate.stat.tfidf.TFIDFExtractor>`, :class:`Rank <ate.stat.corpus.rank.RankExtractor>`, :class:`Specificity <ate.stat.corpus.specificity.SpecificityExtractor>`, :class:`TFDCF <ate.stat.corpus.tfdcf.TFDCFExtractor>`, :class:`EF <ate.application.event.EF>`, :class:`LogEF <ate.application.event.LogEF>`, :class:`EFIDF <ate.application.event.EFIDF>`.
         - ``-o --output``        *<Required>* The path to the file where to store the extracted terms.
         - ``-r --reranker``      *<Optional>* The method to use to re-rank terms; supported: :class:`~ate.application.event.Entropy`, :class:`~ate.application.event.Variability`; defaults to no re-ranking.
         - ``--tfidf``            *<Optional>* The TF-IDF scheme to use to extract terms (used only with the :class:`~ate.stat.tfidf.TFIDFExtractor` and the :class:`~ate.application.event.EFIDF` methods).
         - ``--general``          *<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the :class:`~ate.stat.corpus.rank.RankExtractor`, :class:`~ate.stat.corpus.specificity.SpecificityExtractor` and :class:`~ate.stat.corpus.tfdcf.TFDCFExtractor` methods).
         - ``--cutoff``           *<Optional>* The minimum term frequency to consider when ranking terms (used only with the :class:`~ate.stat.corpus.rank.RankExtractor` method).
-        - ``--base``             *<Optional>* The logarithmic base (used only with the :class:`~ate.application.event.EFIDF` method).
+        - ``--base``             *<Optional>* The logarithmic base (used only with the :class:`LogEF <ate.application.event.LogEF>` and :class:`~ate.application.event.EFIDF` methods).
         - ``--reranker-base``    *<Optional>* The logarithmic base (used only with the :class:`~ate.application.event.Variability` and :class:`~ate.application.event.Entropy` re-rankers); defaults to 10.
         - ``--reranker-files``   *<Optional>* The input corpora to use for the re-ranker.
 
@@ -124,34 +124,24 @@ def setup_args():
     :rtype: :class:`argparse.Namespace`
     """
 
-    parser.add_argument('-f', '--files',
-                        nargs='+', required=True,
+    parser.add_argument('-f', '--files', nargs='+', required=True,
                         help='<Required> The input corpora from where to extract domain-specific terms.')
-    parser.add_argument('-m', '--method',
-                        type=method, required=True,
-                        help='<Required> The method to use to extract domain-specific terms; supported: `TF`, `TFIDF`, `Rank`, `Specificity`, `TFDCF`, `EF`, `EFIDF`.')
-    parser.add_argument('-o', '--output',
-                        type=str, required=True,
+    parser.add_argument('-m', '--method', type=method, required=True,
+                        help='<Required> The method to use to extract domain-specific terms; supported: `TF`, `TFIDF`, `Rank`, `Specificity`, `TFDCF`, `EF`, `LogEF`, `EFIDF`.')
+    parser.add_argument('-o', '--output', type=str, required=True,
                         help='<Required> The path to the file where to store the extracted terms.')
-    parser.add_argument('-r', '--reranker',
-                        type=reranker, required=False,
+    parser.add_argument('-r', '--reranker', type=reranker, required=False,
                         help='<Optional> The method to use to re-rank terms; supported: `Entropy`, `Variability`; defaults to no re-ranking.')
-    parser.add_argument('--tfidf', required=False,
-                        help='<Optional> The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).')
-    parser.add_argument('--general',
-                        nargs='+', required=False,
+    parser.add_argument('--tfidf', required=False, help='<Optional> The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).')
+    parser.add_argument('--general', nargs='+', required=False,
                         help='<Optional> A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `Rank`, `Specificity` and `TF-DCF` methods).')
-    parser.add_argument('--cutoff',
-                        type=int, default=1, required=False,
+    parser.add_argument('--cutoff', type=int, default=1, required=False,
                         help='<Optional> The minimum term frequency to consider when ranking terms (used only with the `Rank` method).')
-    parser.add_argument('--base',
-                        type=int, default=None, required=False,
-                        help='<Optional> The logarithmic base (used only with the `EF-IDF` method).')
-    parser.add_argument('--reranker-base',
-                        type=int, default=10, required=False,
+    parser.add_argument('--base', type=int, default=None, required=False,
+                        help='<Optional> The logarithmic base (used only with the `LogEF` and `EF-IDF` methods).')
+    parser.add_argument('--reranker-base', type=int, default=10, required=False,
                         help='<Optional> The logarithmic base (used only with the `Variability` and `Entropy` re-rankers); defaults to 10.')
-    parser.add_argument('--reranker-files',
-                        nargs='+', required=False,
+    parser.add_argument('--reranker-files', nargs='+', required=False,
                         help='<Optional> The input corpora to use for the re-ranker.')
 
     args = parser.parse_args()
@@ -233,6 +223,9 @@ def create_extractor(method, tfidf=None, general=None, cutoff=None, base=None):
             parser.error("One or more paths to general corpora are required with rank difference method.")
 
         return method(general, cutoff=cutoff)
+    elif method == LogEF:
+        base = int(base) if base else base
+        return method(base=base) if base else method()
     elif method == EFIDF:
         if tfidf is None:
             parser.error("The TF-IDF scheme is required with the EF-IDF method.")
@@ -325,6 +318,7 @@ def method(method):
         #. :class:`~ate.stat.corpus.specificity.SpecificityExtractor`
         #. :class:`~ate.stat.corpus.tfdcf.TFDCFExtractor`
         #. :class:`~ate.application.event.EF`
+        #. :class:`~ate.application.event.LogEF`
         #. :class:`~ate.application.event.EFIDF`
 
     :param method: The method string.
@@ -343,6 +337,7 @@ def method(method):
         'specificity': SpecificityExtractor,
         'tfdcf': TFDCFExtractor,
         'ef': EF,
+        'logef': LogEF,
         'efidf': EFIDF,
     }
 
