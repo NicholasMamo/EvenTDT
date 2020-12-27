@@ -33,6 +33,7 @@ Re-rankers accept the same parameters as normal methods, but with the ``reranker
     --method tfidf \\
     --tfidf data/idf.json \\
     --reranker EF \\
+    --reranker-files data/timeline.json \\
     --output results/tfidf.json
 
 The output is a JSON file with the following structure:
@@ -52,6 +53,14 @@ The output is a JSON file with the following structure:
             "cutoff": 1,
             "base": null,
             "idfs": null,
+            "reranker": "<class 'ate.application.event.EF'>",
+            "reranker-files": "data/timeline.json",
+            "reranker-keep": null,
+            "reranker-tfidf": "data/idf.json",
+            "reranker-general": null,
+            "reranker-cutoff": 1,
+            "reranker-base": null,
+            "reranker-idfs": null,
             "_date": "2020-12-27T12:12:22.023277",
             "_timestamp": 1609067542.0232878,
             "_cmd": "./tools/terms.py --files data/tokenized_corpus.json --output results/tfidf.json --method TFIDF --tfidf data/idf.json"
@@ -68,6 +77,14 @@ The output is a JSON file with the following structure:
             "cutoff": 1,
             "base": null,
             "idfs": null,
+            "reranker": "<class 'ate.application.event.EF'>",
+            "reranker-files": "data/timeline.json",
+            "reranker-keep": null,
+            "reranker-tfidf": "data/idf.json",
+            "reranker-general": null,
+            "reranker-cutoff": 1,
+            "reranker-base": null,
+            "reranker-idfs": null,
             "_date": "2020-12-27T12:12:22.023302",
             "_timestamp": 1609067542.023305,
             "_cmd": "./tools/terms.py --files data/tokenized_corpus.json --output results/tfidf.json --method TFIDF --tfidf data/idf.json"
