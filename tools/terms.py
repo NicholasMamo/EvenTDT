@@ -280,7 +280,7 @@ def method(method):
         'ef': EF,
         'logef': LogEF,
         'efidf': EFIDF,
-        'efidfentropy': EFIDF,
+        'efidfentropy': EFIDFEntropy,
     }
 
     if method.lower() in methods:
