@@ -74,14 +74,14 @@ The output is a JSON file with the following structure:
 The full list of accepted arguments:
 
     - ``-f --files``         *<Required>* The input corpora from where to extract domain-specific terms.
-    - ``-m --method``        *<Required>* The method to use to look for similar keywords; supported: `TF`, `TFIDF`, `Rank`, `Specificity`, `TFDCF`, `EFIDF`.
+    - ``-m --method``        *<Required>* The method to use to extract domain-specific terms; supported: :class:`TF <ate.stat.tf.TFExtractor>`, :class:`TFIDF <ate.stat.tfidf.TFIDFExtractor>`, :class:`Rank <ate.stat.corpus.rank.RankExtractor>`, :class:`Specificity <ate.stat.corpus.specificity.SpecificityExtractor>`, :class:`TFDCF <ate.stat.corpus.tfdcf.TFDCFExtractor>`, :class:`EFIDF <ate.application.event.EFIDF>`.
     - ``-o --output``        *<Required>* The path to the file where to store the extracted terms.
-    - ``-r --reranker``      *<Optional>* The method to use to re-rank terms; supported: `Entropy`, `Variability`; defaults to no re-ranking.
-    - ``--tfidf``            *<Optional>* The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).
-    - ``--general``          *<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `Rank`, `Specificity` and `TF-DCF` methods).
-    - ``--cutoff``           *<Optional>* The minimum term frequency to consider when ranking terms (used only with the `Rank` method).
-    - ``--base``             *<Optional>* The logarithmic base (used only with the `EF-IDF` method).
-    - ``--reranker-base``    *<Optional>* The logarithmic base (used only with the `Variability` and `Entropy` re-rankers); defaults to 10.
+    - ``-r --reranker``      *<Optional>* The method to use to re-rank terms; supported: :class:`~ate.application.event.Entropy`, :class:`~ate.application.event.Variability`; defaults to no re-ranking.
+    - ``--tfidf``            *<Optional>* The TF-IDF scheme to use to extract terms (used only with the :class:`~ate.stat.tfidf.TFIDFExtractor` and the :class:`~ate.application.event.EFIDF` methods).
+    - ``--general``          *<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the :class:`~ate.stat.corpus.rank.RankExtractor`, :class:`~ate.stat.corpus.specificity.SpecificityExtractor` and :class:`~ate.stat.corpus.tfdcf.TFDCFExtractor` methods).
+    - ``--cutoff``           *<Optional>* The minimum term frequency to consider when ranking terms (used only with the :class:`~ate.stat.corpus.rank.RankExtractor` method).
+    - ``--base``             *<Optional>* The logarithmic base (used only with the :class:`~ate.application.event.EFIDF` method).
+    - ``--reranker-base``    *<Optional>* The logarithmic base (used only with the :class:`~ate.application.event.Variability` and :class:`~ate.application.event.Entropy` re-rankers); defaults to 10.
     - ``--reranker-files``   *<Optional>* The input corpora to use for the re-ranker.
 """
 
@@ -110,14 +110,14 @@ def setup_args():
     Accepted arguments:
 
         - ``-f --files``         *<Required>* The input corpora from where to extract domain-specific terms.
-        - ``-m --method``        *<Required>* The method to use to look for similar keywords; supported: `TF`, `TFIDF`, `Rank`, `Specificity`, `TFDCF`, `EFIDF`.
+        - ``-m --method``        *<Required>* The method to use to extract domain-specific terms; supported: :class:`TF <ate.stat.tf.TFExtractor>`, :class:`TFIDF <ate.stat.tfidf.TFIDFExtractor>`, :class:`Rank <ate.stat.corpus.rank.RankExtractor>`, :class:`Specificity <ate.stat.corpus.specificity.SpecificityExtractor>`, :class:`TFDCF <ate.stat.corpus.tfdcf.TFDCFExtractor>`, :class:`EFIDF <ate.application.event.EFIDF>`.
         - ``-o --output``        *<Required>* The path to the file where to store the extracted terms.
-        - ``-r --reranker``      *<Optional>* The method to use to re-rank terms; supported: `Entropy`, `Variability`; defaults to no re-ranking.
-        - ``--tfidf``            *<Optional>* The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).
-        - ``--general``          *<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `Rank`, `Specificity` and `TF-DCF` methods).
-        - ``--cutoff``           *<Optional>* The minimum term frequency to consider when ranking terms (used only with the `Rank` method).
-        - ``--base``             *<Optional>* The logarithmic base (used only with the `EF-IDF` method).
-        - ``--reranker-base``    *<Optional>* The logarithmic base (used only with the `Variability` and `Entropy` re-rankers); defaults to 10.
+        - ``-r --reranker``      *<Optional>* The method to use to re-rank terms; supported: :class:`~ate.application.event.Entropy`, :class:`~ate.application.event.Variability`; defaults to no re-ranking.
+        - ``--tfidf``            *<Optional>* The TF-IDF scheme to use to extract terms (used only with the :class:`~ate.stat.tfidf.TFIDFExtractor` and the :class:`~ate.application.event.EFIDF` methods).
+        - ``--general``          *<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the :class:`~ate.stat.corpus.rank.RankExtractor`, :class:`~ate.stat.corpus.specificity.SpecificityExtractor` and :class:`~ate.stat.corpus.tfdcf.TFDCFExtractor` methods).
+        - ``--cutoff``           *<Optional>* The minimum term frequency to consider when ranking terms (used only with the :class:`~ate.stat.corpus.rank.RankExtractor` method).
+        - ``--base``             *<Optional>* The logarithmic base (used only with the :class:`~ate.application.event.EFIDF` method).
+        - ``--reranker-base``    *<Optional>* The logarithmic base (used only with the :class:`~ate.application.event.Variability` and :class:`~ate.application.event.Entropy` re-rankers); defaults to 10.
         - ``--reranker-files``   *<Optional>* The input corpora to use for the re-ranker.
 
     :return: The command-line arguments.
@@ -129,7 +129,7 @@ def setup_args():
                         help='<Required> The input corpora from where to extract domain-specific terms.')
     parser.add_argument('-m', '--method',
                         type=method, required=True,
-                        help='<Required> The method to use to look for similar keywords; supported: `TF`, `TFIDF`, `Rank`, `Specificity`, `TFDCF`, `EFIDF`.')
+                        help='<Required> The method to use to extract domain-specific terms; supported: `TF`, `TFIDF`, `Rank`, `Specificity`, `TFDCF`, `EFIDF`.')
     parser.add_argument('-o', '--output',
                         type=str, required=True,
                         help='<Required> The path to the file where to store the extracted terms.')
