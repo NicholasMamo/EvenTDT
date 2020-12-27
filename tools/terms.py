@@ -8,37 +8,23 @@ To run the script, use:
 .. code-block:: bash
 
     ./tools/terms.py \\
-    -f data/tokenized_corpus.json \\
-    -m tfidf \\
+    --file data/tokenized_corpus.json \\
+    --method tfidf \\
     --tfidf data/idf.json \\
-    -o data/bootstrapped.json
-
-Apart from providing the main method to extract terms, it is possible to pass on a re-ranker method.
-The re-ranker extracts terms separately.
-This tool multiplies the ATE method's scores with the re-ranker term's scores.
-
-.. code-block:: bash
-
-    ./tools/terms.py \\
-    -f data/tokenized_corpus.json \\
-    -m tfidf \\
-    --tfidf data/idf.json \\
-    -o data/bootstrapped.json
-    --reranker entropy \\
-    --reranker-files data/idf.json
+    --output data/bootstrapped.json
 
 Accepted arguments:
 
-    - ``-f --files``        *<Required>* The input corpora from where to extract domain-specific terms.
+    - ``-f --files``         *<Required>* The input corpora from where to extract domain-specific terms.
     - ``-m --method``        *<Required>* The method to use to look for similar keywords; supported: `TF`, `TFIDF`, `Rank`, `Specificity`, `TFDCF`, `EFIDF`.
     - ``-o --output``        *<Required>* The path to the file where to store the extracted terms.
-    - ``-r --reranker``        *<Optional>* The method to use to re-rank terms; supported: `Entropy`, `Variability`; defaults to no re-ranking.
+    - ``-r --reranker``      *<Optional>* The method to use to re-rank terms; supported: `Entropy`, `Variability`; defaults to no re-ranking.
     - ``--tfidf``            *<Optional>* The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).
-    - ``--general``            *<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `Rank`, `Specificity` and `TF-DCF` methods).
-    - ``--cutoff``            *<Optional>* The minimum term frequency to consider when ranking terms (used only with the `Rank` method).
-    - ``--base``            *<Optional>* The logarithmic base (used only with the `EF-IDF` method).
+    - ``--general``          *<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `Rank`, `Specificity` and `TF-DCF` methods).
+    - ``--cutoff``           *<Optional>* The minimum term frequency to consider when ranking terms (used only with the `Rank` method).
+    - ``--base``             *<Optional>* The logarithmic base (used only with the `EF-IDF` method).
     - ``--reranker-base``    *<Optional>* The logarithmic base (used only with the `Variability` and `Entropy` re-rankers); defaults to 10.
-    - ``--reranker-files``    *<Optional>* The input corpora to use for the re-ranker.
+    - ``--reranker-files``   *<Optional>* The input corpora to use for the re-ranker.
 """
 
 import argparse
@@ -65,16 +51,16 @@ def setup_args():
 
     Accepted arguments:
 
-        - ``-f --files``        *<Required>* The input corpora from where to extract domain-specific terms.
+        - ``-f --files``         *<Required>* The input corpora from where to extract domain-specific terms.
         - ``-m --method``        *<Required>* The method to use to look for similar keywords; supported: `TF`, `TFIDF`, `Rank`, `Specificity`, `TFDCF`, `EFIDF`.
         - ``-o --output``        *<Required>* The path to the file where to store the extracted terms.
-        - ``-r --reranker``        *<Optional>* The method to use to re-rank terms; supported: `Entropy`, `Variability`; defaults to no re-ranking.
+        - ``-r --reranker``      *<Optional>* The method to use to re-rank terms; supported: `Entropy`, `Variability`; defaults to no re-ranking.
         - ``--tfidf``            *<Optional>* The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).
-        - ``--general``            *<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `Rank`, `Specificity` and `TF-DCF` methods).
-        - ``--cutoff``            *<Optional>* The minimum term frequency to consider when ranking terms (used only with the `Rank` method).
-        - ``--base``            *<Optional>* The logarithmic base (used only with the `EF-IDF` method).
+        - ``--general``          *<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `Rank`, `Specificity` and `TF-DCF` methods).
+        - ``--cutoff``           *<Optional>* The minimum term frequency to consider when ranking terms (used only with the `Rank` method).
+        - ``--base``             *<Optional>* The logarithmic base (used only with the `EF-IDF` method).
         - ``--reranker-base``    *<Optional>* The logarithmic base (used only with the `Variability` and `Entropy` re-rankers); defaults to 10.
-        - ``--reranker-files``    *<Optional>* The input corpora to use for the re-ranker.
+        - ``--reranker-files``   *<Optional>* The input corpora to use for the re-ranker.
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
