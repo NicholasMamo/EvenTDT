@@ -8,12 +8,70 @@ To run the script, use:
 .. code-block:: bash
 
     ./tools/terms.py \\
-    --file data/tokenized_corpus.json \\
+    --files data/tokenized_corpus.json \\
     --method tfidf \\
     --tfidf data/idf.json \\
-    --output data/bootstrapped.json
+    --output results/tfidf.json
 
-Accepted arguments:
+The output is a JSON file with the following structure:
+
+.. code-block:: json
+
+    {
+        "cmd": {
+            "files": [
+                "data/tokenized_corpus.json"
+            ],
+            "method": "<class 'ate.stat.tfidf.TFIDFExtractor'>",
+            "output": "results/tfidf.json",
+            "reranker": "None",
+            "tfidf": "data/idf.json",
+            "general": null,
+            "cutoff": 1,
+            "base": null,
+            "reranker_base": 10,
+            "reranker_files": null,
+            "_date": "2020-12-27T12:12:22.023277",
+            "_timestamp": 1609067542.0232878,
+            "_cmd": "./tools/terms.py --files data/tokenized_corpus.json --output results/tfidf.json --method TFIDF --tfidf data/idf.json"
+        },
+        "pcmd": {
+            "files": [
+                "data/tokenized_corpus.json"
+            ],
+            "method": "<class 'ate.stat.tfidf.TFIDFExtractor'>",
+            "output": "results/tfidf.json",
+            "reranker": "None",
+            "tfidf": "data/idf.json",
+            "general": null,
+            "cutoff": 1,
+            "base": null,
+            "reranker_base": 10,
+            "reranker_files": null,
+            "_date": "2020-12-27T12:12:22.023302",
+            "_timestamp": 1609067542.023305,
+            "_cmd": "./tools/terms.py --files data/tokenized_corpus.json --output results/tfidf.json --method TFIDF --tfidf data/idf.json"
+        },
+        "terms": [
+            {
+                "term": "goal",
+                "score": 273608.3976284864,
+                "rank": 1
+            },
+            {
+                "term": "score",
+                "score": 163116.23313871748,
+                "rank": 2
+            },
+            {
+                "term": "player",
+                "score": 158593.67589002327,
+                "rank": 3
+            }
+        ]
+    }
+
+The full list of accepted arguments:
 
     - ``-f --files``         *<Required>* The input corpora from where to extract domain-specific terms.
     - ``-m --method``        *<Required>* The method to use to look for similar keywords; supported: `TF`, `TFIDF`, `Rank`, `Specificity`, `TFDCF`, `EFIDF`.
@@ -110,8 +168,9 @@ def main():
     Get the meta arguments.
     """
     cmd = tools.meta(args)
-    cmd['method'] = str(vars(args)['method'])
-    cmd['reranker'] = str(vars(args)['reranker'])
+    pcmd = tools.meta(args)
+    cmd['method'], pcmd['method'] = str(vars(args)['method']), str(vars(args)['method'])
+    cmd['reranker'], pcmd['reranker'] = str(vars(args)['reranker']), str(vars(args)['reranker'])
 
     """
     Create the extractor and extract the terms.
@@ -131,7 +190,7 @@ def main():
             parser.error("One or more paths to corpora are required when using a re-ranker (use the ``--reranker-files`` command-line parameter).")
         terms = rerank(reranker, args['reranker_files'], terms)
 
-    tools.save(args['output'], { 'meta': cmd, 'terms': terms })
+    tools.save(args['output'], { 'cnd': cmd, 'pcmd': pcmd, 'terms': terms })
 
 def create_extractor(method, tfidf=None, general=None, cutoff=None, base=None):
     """
