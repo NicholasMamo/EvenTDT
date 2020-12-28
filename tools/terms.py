@@ -233,6 +233,7 @@ def main():
     cmd = tools.meta(args)
     pcmd = tools.meta(args)
     cmd['method'], pcmd['method'] = str(vars(args)['method']), str(vars(args)['method'])
+    cmd['reranker'], pcmd['reranker'] = str(vars(args)['reranker']), str(vars(args)['reranker'])
 
     """
     Create the extractor and extract the terms.
