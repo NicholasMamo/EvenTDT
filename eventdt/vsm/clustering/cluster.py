@@ -49,7 +49,7 @@ class Cluster(Attributable, Exportable):
 
         :param vectors: An initial list of vectors, or a single vector.
                         If ``None`` is given, an empty list is initialized instead.
-        :type vectors: list of :class:`~vsm.vector.Vector` or :class:`~vsm.vector.Vector` or `None`
+        :type vectors: list of :class:`~vsm.vector.Vector` or :class:`~vsm.vector.Vector` or ``None``
         """
 
         super(Cluster, self).__init__(*args, **kwargs)

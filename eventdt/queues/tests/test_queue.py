@@ -99,7 +99,7 @@ class TestQueue(unittest.TestCase):
 
     def test_dequeue_empty_queue(self):
         """
-        Test that when dequeuing an empty queue, `None` is returned.
+        Test that when dequeuing an empty queue, ``None`` is returned.
         """
 
         queue = Queue()
@@ -192,7 +192,7 @@ class TestQueue(unittest.TestCase):
 
     def test_head_empty_queue(self):
         """
-        Test that when getting the head element of an empty queue, `None` is returned instead.
+        Test that when getting the head element of an empty queue, ``None`` is returned instead.
         """
 
         queue = Queue()
@@ -212,7 +212,7 @@ class TestQueue(unittest.TestCase):
 
     def test_tail_empty_queue(self):
         """
-        Test that when getting the tail element of an empty queue, `None` is returned instead.
+        Test that when getting the tail element of an empty queue, ``None`` is returned instead.
         """
 
         queue = Queue()

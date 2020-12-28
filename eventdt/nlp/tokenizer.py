@@ -117,7 +117,7 @@ class Tokenizer(object):
     :ivar camel_case_pattern: The pattern used to identify camel-case letters.
     :vartype camel_case_pattern: :class:`re.Pattern`
     :ivar pos: The parts of speech tags to keep.
-               If `None` is given, all tokens are retained.
+               If ``None`` is given, all tokens are retained.
                For a list of possible tags and their meanings, run:
 
                .. code-block:: python
@@ -176,7 +176,7 @@ class Tokenizer(object):
         :param normalize_special_characters: A boolean indicating whether accents should be removed and replaced with simple unicode characters.
         :type normalize_special_characters: bool
         :param pos: The parts of speech tags to keep.
-                    If `None` is given, all tokens are retained.
+                    If ``None`` is given, all tokens are retained.
                     For a list of possible tags and their meanings, run:
 
                     .. code-block:: python

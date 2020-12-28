@@ -121,7 +121,7 @@ class LogLikelihoodRatioBootstrapper(Bootstrapper):
                            If nothing is given, it is replaced with the corpora's vocabulary.
         :type candidates: None or str or list of str or tuple or list of tuple
         :param cache: A list of terms that are re-used often and which should be cached.
-                      If an empty list or `None` is given, no cache is used.
+                      If an empty list or ``None`` is given, no cache is used.
 
                       .. note::
 
@@ -196,7 +196,7 @@ class LogLikelihoodRatioBootstrapper(Bootstrapper):
                            If nothing is given, it is replaced with the corpora's vocabulary.
         :type candidates: None or str or list of str or tuple or list of tuple
         :param cache: A list of terms that are re-used often and which should be cached.
-                      If an empty list or `None` is given, no cache is used.
+                      If an empty list or ``None`` is given, no cache is used.
 
                       .. note::
 

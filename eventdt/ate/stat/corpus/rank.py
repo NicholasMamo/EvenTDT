@@ -86,7 +86,7 @@ class RankExtractor(ComparisonExtractor):
         :param corpora: A path to a corpus or a list of paths to corpora where to look for terms.
         :type corpora: str or list of str
         :param candidates: A list of terms which may be extracted.
-                           If `None` is given, all words are considered to be candidates.
+                           If ``None`` is given, all words are considered to be candidates.
 
                            .. note::
 

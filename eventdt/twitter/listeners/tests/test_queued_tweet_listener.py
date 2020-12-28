@@ -85,7 +85,7 @@ class TestQueuedTweetListener(unittest.TestCase):
 
     def test_collect_none_attribute(self):
         """
-        Test that collecting data with `None` as the attributes returns everything.
+        Test that collecting data with ``None`` as the attributes returns everything.
         """
 
         queue = Queue()

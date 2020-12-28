@@ -479,7 +479,7 @@ class TestMMR(unittest.TestCase):
 
     def test_get_next_document_empty(self):
         """
-        Test that when getting the next document from an empty list, `None` is returned.
+        Test that when getting the next document from an empty list, ``None`` is returned.
         """
 
         algo = MMR(0.5)

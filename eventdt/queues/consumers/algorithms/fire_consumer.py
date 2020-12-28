@@ -98,7 +98,7 @@ class FIREConsumer(SimulatedBufferedConsumer):
                             This defaults to 5 seconds, the same span as half the smallest time window in Zhao et al.'s algorithm.
         :type periodicity: int
         :param scheme: The term-weighting scheme that is used to create dimensions.
-                       If `None` is given, the :class:`~nlp.weighting.tf.TF` term-weighting scheme is used.
+                       If ``None`` is given, the :class:`~nlp.weighting.tf.TF` term-weighting scheme is used.
         :type scheme: None or :class:`~nlp.weighting.TermWeightingScheme`
         :param sets: The number of time windows that are considered when computing burst.
                      The higher this number, the more precise the calculations.

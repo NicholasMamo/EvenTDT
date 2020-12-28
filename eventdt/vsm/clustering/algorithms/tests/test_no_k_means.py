@@ -166,7 +166,7 @@ class TestNoKMeans(unittest.TestCase):
 
     def test_closest_cluster_none(self):
         """
-        Test that when there are no active clusters, the closest cluster returns `None`.
+        Test that when there are no active clusters, the closest cluster returns ``None``.
         """
 
         algo = NoKMeans(0.5, 10, store_frozen=True)

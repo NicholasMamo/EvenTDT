@@ -47,7 +47,7 @@ class TestSummary(unittest.TestCase):
 
     def test_set_documents_empty(self):
         """
-        Test that when setting the documents to `None`, it is transformed into an empty list.
+        Test that when setting the documents to ``None``, it is transformed into an empty list.
         """
 
         corpus = [ Document('this is not a cigar', { 'this': 1, 'cigar': 1 }),

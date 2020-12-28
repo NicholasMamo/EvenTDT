@@ -221,7 +221,7 @@ class MMR(SummarizationAlgorithm):
         :param matrix: The similarity matrix to use.
         :type matrix: dict
 
-        :return: The next document to add to the summary, or `None` if there are no documents.
+        :return: The next document to add to the summary, or ``None`` if there are no documents.
         :rtype: list of :class:`~nlp.document.Document` or None
         """
 

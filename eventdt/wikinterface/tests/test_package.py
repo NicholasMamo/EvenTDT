@@ -102,7 +102,7 @@ class TestWikinterface(unittest.TestCase):
 
     def test_construct_url_with_null_parameter(self):
         """
-        Test that when constructing a URL with a parameter that has a value of `None`, it is excluded.
+        Test that when constructing a URL with a parameter that has a value of ``None``, it is excluded.
         """
 
         parameters = {

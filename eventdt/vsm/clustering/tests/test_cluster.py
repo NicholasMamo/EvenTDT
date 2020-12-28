@@ -207,7 +207,7 @@ class TestCluster(unittest.TestCase):
 
     def test_set_vectors_none(self):
         """
-        Test that setting vectors to `None` overwrites existing vectors.
+        Test that setting vectors to ``None`` overwrites existing vectors.
         """
 
         v = [
@@ -295,7 +295,7 @@ class TestCluster(unittest.TestCase):
 
     def test_get_representative_vector_from_empty_cluster(self):
         """
-        Test that when getting the representative vector from an empty cluster, `None` is returned.
+        Test that when getting the representative vector from an empty cluster, ``None`` is returned.
         """
 
         c = Cluster()

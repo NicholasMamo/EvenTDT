@@ -189,7 +189,7 @@ class NoKMeans(ClusteringAlgorithm):
         :type vector: :class:`~vsm.vector.Vector`
 
         :return: A tuple consisting of the closest cluster and the similarity between it and the vector.
-                 If there are no active clusters, `None` is returned instead.
+                 If there are no active clusters, ``None`` is returned instead.
         :rtype: tuple or None
         """
 

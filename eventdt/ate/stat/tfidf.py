@@ -40,7 +40,7 @@ class TFIDFExtractor(Extractor):
                         This extractor expects the corpora to be tokenized.
         :type corpora: str or list of str
         :param candidates: A list of terms for which to calculate a score.
-                           If `None` is given, all words are considered to be candidates.
+                           If ``None`` is given, all words are considered to be candidates.
         :type candidates: None or list of str
 
         :return: A dictionary with terms as keys and their TF-IDF scores as values.

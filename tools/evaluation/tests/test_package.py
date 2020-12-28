@@ -308,7 +308,7 @@ class TestPackage(unittest.TestCase):
 
     def test_pk_none(self):
         """
-        Test that the P@k function accepts a value of `None` for k.
+        Test that the P@k function accepts a value of ``None`` for k.
         """
 
         self.assertTrue(pk(range(0, 5), range(0, 5)))
@@ -322,7 +322,7 @@ class TestPackage(unittest.TestCase):
 
     def test_pk_none_empty_none(self):
         """
-        Test that when the item set is empty and `None` is given as k, the function returns a dictionary.
+        Test that when the item set is empty and ``None`` is given as k, the function returns a dictionary.
         """
 
         self.assertEqual({ }, pk([ ], range(0, 5)))
@@ -363,7 +363,7 @@ class TestPackage(unittest.TestCase):
 
     def test_pk_none_duplicates(self):
         """
-        Test that the P@k function ignores duplicates when `None` is given as k.
+        Test that the P@k function ignores duplicates when ``None`` is given as k.
         """
 
         items, gold = list(range(0, 5)) + [ 4 ], range(4, 9)
@@ -373,7 +373,7 @@ class TestPackage(unittest.TestCase):
 
     def test_pk_none_example(self):
         """
-        Test the P@k function with `None` as k.
+        Test the P@k function with ``None`` as k.
         """
 
         items, gold = [ 3, 5, 7, 9, 1], range(4, 9)

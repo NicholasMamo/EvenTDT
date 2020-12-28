@@ -93,8 +93,8 @@ class Vector(Attributable, Exportable):
         If you provide ``None`` as the dimensions, the function resets the :class:`~Vector`'s :class:`~VectorSpace`.
 
         :param dimensions: The new dimensions as a dictionary.
-                           If `None` is given, the class initializes the dimensions with an empty :class:`~VectorSpace` instead.
-        :type dimensions: dict or :class:`~VectorSpace` or `None`
+                           If ``None`` is given, the class initializes the dimensions with an empty :class:`~VectorSpace` instead.
+        :type dimensions: dict or :class:`~VectorSpace` or ``None``
         """
 
         self.__dimensions = VectorSpace() if dimensions is None else VectorSpace(dimensions)

@@ -150,7 +150,7 @@ class ELDConsumer(Consumer):
         :param time_window: The size of the window after which checkpoints are created.
         :type time_window: int
         :param scheme: The term-weighting scheme that is used to create dimensions.
-                       If `None` is given, the :class:`~nlp.weighting.tf.TF` term-weighting scheme is used.
+                       If ``None`` is given, the :class:`~nlp.weighting.tf.TF` term-weighting scheme is used.
         :type scheme: None or :class:`~nlp.weighting.TermWeightingScheme`
         :param threshold: The similarity threshold to use for the :class:`~vsm.clustering.algorithms.temporal_no_k_means.TemporalNoKMeans` incremental clustering approach.
                           Documents are added to an existing cluster if their similarity with the centroid is greater than or equal to this threshold.

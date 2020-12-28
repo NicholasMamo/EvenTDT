@@ -203,7 +203,7 @@ def prepare_output(output):
 def get_tags(nouns, proper_nouns, verbs, adjectives):
     """
     Get the parts-of-speech tags based on the command-line arguments.
-    If neither of the tags are given, `None` is returned.
+    If neither of the tags are given, ``None`` is returned.
 
     :param nouns: A boolean indicating whether to extract nouns.
     :type nouns: bool
@@ -214,13 +214,13 @@ def get_tags(nouns, proper_nouns, verbs, adjectives):
     :param adjectives: A boolean indicating whether to extract adjectives.
     :type adjectives: bool
 
-    :return: A list of parts-of-speech tags corresponding to the given flags, or `None` if all tags should be collected.
+    :return: A list of parts-of-speech tags corresponding to the given flags, or ``None`` if all tags should be collected.
     :rtype: None or list of str
     """
 
     """
     If no command-line arguments for parts-of-speech tags are given, collect all tags.
-    This happens by returning `None`.
+    This happens by returning ``None``.
     """
     if not any([ nouns, proper_nouns, verbs, adjectives ]):
         return None

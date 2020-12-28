@@ -49,7 +49,7 @@ class DummyComparisonExtractor(ComparisonExtractor):
         :type corpora: str or list of str
         :param candidates: A list of terms which may be extracted.
                      This is useful when calculating scores takes a long time and the list of candidate terms are known in advance.
-                     If `None` is given, all words are considered to be candidates.
+                     If ``None`` is given, all words are considered to be candidates.
         :type candidates: None or list of str
 
         :return: An empty list of terms.

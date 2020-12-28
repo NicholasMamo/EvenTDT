@@ -106,7 +106,7 @@ class TestTweetListener(unittest.TestCase):
     @clean
     def test_collect_none_attribute(self):
         """
-        Test that collecting data with `None` as the attributes returns everything.
+        Test that collecting data with ``None`` as the attributes returns everything.
         """
 
         with open(os.path.join(os.path.dirname(__file__), 'data.json'), 'w') as f:

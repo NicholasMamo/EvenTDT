@@ -37,7 +37,7 @@ class EF(Extractor):
                               Therefore each file should be a JSON string representing a :class:`~summarization.timeline.Timeline`.
         :type timelines: str or list of str or :class:`~summarization.timeline.Timeline` or list of :class:`~summarization.timeline.Timeline`
         :param candidates: A list of terms for which to calculate a score.
-                           If `None` is given, all words are considered to be candidates.
+                           If ``None`` is given, all words are considered to be candidates.
         :type candidates: None or list of str
 
         :return: A dictionary with terms as keys and their event frequency as the values.
@@ -150,7 +150,7 @@ class LogEF(EF):
                               Therefore each file should be a JSON string representing a :class:`~summarization.timeline.Timeline`.
         :type timelines: str or list of str
         :param candidates: A list of terms for which to calculate a score.
-                           If `None` is given, all words are considered to be candidates.
+                           If ``None`` is given, all words are considered to be candidates.
         :type candidates: None or list of str
 
         :return: A dictionary with terms as keys and their logarithmic event frequency as the values.
@@ -223,7 +223,7 @@ class EFIDF(Extractor):
                               Therefore each file should be a JSON string representing a :class:`~summarization.timeline.Timeline`.
         :type timelines: str or list of str
         :param candidates: A list of terms for which to calculate a score.
-                           If `None` is given, all words are considered to be candidates.
+                           If ``None`` is given, all words are considered to be candidates.
         :type candidates: None or list of str
 
         :return: A dictionary with terms as keys and their EF-IDF scores as the values.
@@ -302,7 +302,7 @@ class EFIDFEntropy(EFIDF):
         :param idfs: A list of IDFs, one for each event, used to calculate entropy.
         :type idfs: list of :class:`~nlp.weighting.tfidf.TFIDF`
         :param candidates: A list of terms for which to calculate a score.
-                           If `None` is given, all words are considered to be candidates.
+                           If ``None`` is given, all words are considered to be candidates.
         :type candidates: None or list of str
 
         :return: A dictionary with terms as keys and their EF-IDF scores as the values.
@@ -370,7 +370,7 @@ class Variability(Extractor):
         :param idfs: A list of IDFs, one for each event, or paths to where they are stored.
         :type idfs: str or list of :class:`~nlp.weighting.tfidf.TFIDF`
         :param candidates: A list of terms for which to calculate a score.
-                           If `None` is given, all words are considered to be candidates.
+                           If ``None`` is given, all words are considered to be candidates.
         :type candidates: None or list of str
 
         :return: A dictionary with terms as keys and their inverse variability score as the values.
@@ -587,7 +587,7 @@ class Entropy(Extractor):
         :param idfs: A list of IDFs, one for each event.
         :type idfs: list of :class:`~nlp.weighting.tfidf.TFIDF`
         :param candidates: A list of terms for which to calculate a score.
-                           If `None` is given, all words are considered to be candidates.
+                           If ``None`` is given, all words are considered to be candidates.
         :type candidates: None or list of str
 
         :return: A dictionary with terms as keys and their entropy score as the values.

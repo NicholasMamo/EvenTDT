@@ -236,7 +236,7 @@ class TestTokenizer(unittest.TestCase):
 
     def test_tokenize_corpus_keep_occasional(self):
         """
-        Test that when specifying attributes to keep, an attribute that appears occasionally is still stored, but as `None`, when not found.
+        Test that when specifying attributes to keep, an attribute that appears occasionally is still stored, but as ``None``, when not found.
         """
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'

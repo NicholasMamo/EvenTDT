@@ -40,7 +40,7 @@ class TFDCFExtractor(ComparisonExtractor):
         :param corpora: A path to a corpus or a list of paths to corpora where to look for terms.
         :type corpora: str or list of str
         :param candidates: A list of terms which may be extracted.
-                           If `None` is given, all words are considered to be candidates.
+                           If ``None`` is given, all words are considered to be candidates.
         :type candidates: None or list of str
 
         :return: A dictionary with terms as keys and their TF-DCF scores as values.

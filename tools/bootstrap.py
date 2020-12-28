@@ -149,7 +149,7 @@ def bootstrap(files, seed, method, iterations, keep, candidates):
     :type iterations: int
     :param keep: The number of keywords to keep after each iteration.
     :type keep: int
-    :param candidates: The list of candidate keywords. If `None` is given, all vocabulary keywords are considered candidates.
+    :param candidates: The list of candidate keywords. If ``None`` is given, all vocabulary keywords are considered candidates.
     :type candidates: list of str or None
 
     :return: A list of bootstrapped keywords.

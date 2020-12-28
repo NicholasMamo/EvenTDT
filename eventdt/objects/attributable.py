@@ -16,7 +16,7 @@ class Attributable(object):
         Initialize the object with the attributes.
 
         :param attributes: The starting attributes.
-                           If `None` is given, an empty dictionary is created instead.
+                           If ``None`` is given, an empty dictionary is created instead.
         :type attributes: dict or None
         """
 

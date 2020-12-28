@@ -141,7 +141,7 @@ class TestMemoryNutritionStore(unittest.TestCase):
 
     def test_get_missing_nutrition(self):
         """
-        Test that when getting nutrition for a missing timestamp, `None` is returned.
+        Test that when getting nutrition for a missing timestamp, ``None`` is returned.
         """
 
         nutrition = MemoryNutritionStore()
