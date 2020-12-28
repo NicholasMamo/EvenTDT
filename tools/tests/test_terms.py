@@ -400,3 +400,97 @@ class TestTerms(unittest.TestCase):
         extractor = terms.create_extractor(EFIDFEntropy, tfidf=idf, base=2)
         extracted = terms.extract(extractor, timelines, idfs=idfs, keep=keep)
         self.assertTrue(all( extracted[i]['score'] >= extracted[i + 1]['score'] for i in range(len(extracted) - 1) ))
+
+    def test_reranker_params_only_reranker(self):
+        """
+        Test that when extracting the re-ranker parameters, only the re-ranker parameters are retained.
+        """
+
+        params = {
+            'method': 'TFIDF',
+            'files': [ 'data/tokenized1.json', 'data/tokenized2.json' ],
+            'reranker': 'EF',
+            'reranker-files': [ 'data/timeline1.json', 'data/timeline2.json' ]
+        }
+        reranker_params = terms.reranker_params(params)
+        self.assertEqual(2, len(reranker_params))
+        self.assertFalse('method' in reranker_params)
+        self.assertEqual(reranker_params['files'], params['reranker-files'])
+
+    def test_reranker_params_all_reranker(self):
+        """
+        Test that when extracting the re-ranker parameters, all the re-ranker parameters are retained.
+        """
+
+        params = {
+            'method': 'TFIDF',
+            'files': [ 'data/tokenized1.json', 'data/tokenized2.json' ],
+            'reranker': 'EF',
+            'reranker-files': [ 'data/timeline1.json', 'data/timeline2.json' ],
+            'reranker-keep': 50,
+            'reranker-tfidf': 'path/to/idf.json',
+            'reranker-general': 'path/to/general.json',
+            'reranker-cutoff': 100,
+            'reranker-base': 2,
+            'reranker-idfs': [ 'data/idf1.json', 'data/idf2.json' ]
+        }
+        reranker_params = terms.reranker_params(params)
+        self.assertEqual({ 'reranker', 'files', 'keep', 'tfidf',
+                           'general', 'cutoff', 'base', 'idfs' }, set(reranker_params))
+
+    def test_reranker_params_reranker(self):
+        """
+        Test that when extracting the re-ranker parameters, the re-ranker parameter is retained normally.
+        """
+
+        params = {
+            'method': 'TFIDF',
+            'files': [ 'data/tokenized1.json', 'data/tokenized2.json' ],
+            'reranker': 'EF',
+            'reranker-files': [ 'data/timeline1.json', 'data/timeline2.json' ],
+        }
+        reranker_params = terms.reranker_params(params)
+        self.assertTrue('reranker' in reranker_params)
+        self.assertEqual(params['reranker'], reranker_params['reranker'])
+
+    def test_reranker_params_no_prefix(self):
+        """
+        Test that when extracting the re-ranker parameters, the prefix is not retained.
+        """
+
+        params = {
+            'method': 'TFIDF',
+            'files': [ 'data/tokenized1.json', 'data/tokenized2.json' ],
+            'reranker': 'EF',
+            'reranker-files': [ 'data/timeline1.json', 'data/timeline2.json' ],
+            'reranker-keep': 50,
+            'reranker-tfidf': 'path/to/idf.json',
+            'reranker-general': 'path/to/general.json',
+            'reranker-cutoff': 100,
+            'reranker-base': 2,
+            'reranker-idfs': [ 'data/idf1.json', 'data/idf2.json' ]
+        }
+        reranker_params = terms.reranker_params(params)
+        self.assertTrue(all( not param.startswith('reranker-') for param in reranker_params ))
+
+    def test_reranker_params_unchanged(self):
+        """
+        Test that the original parameters are unchanged when extracting the re-ranker parameters.
+        """
+
+        params = {
+            'method': 'TFIDF',
+            'files': [ 'data/tokenized1.json', 'data/tokenized2.json' ],
+            'reranker': 'EF',
+            'reranker-files': [ 'data/timeline1.json', 'data/timeline2.json' ],
+            'reranker-keep': 50,
+            'reranker-tfidf': 'path/to/idf.json',
+            'reranker-general': 'path/to/general.json',
+            'reranker-cutoff': 100,
+            'reranker-base': 2,
+            'reranker-idfs': [ 'data/idf1.json', 'data/idf2.json' ]
+        }
+        params_copy = dict(params)
+        self.assertEqual(params_copy, params)
+        reranker_params = terms.reranker_params(params)
+        self.assertEqual(params_copy, params)

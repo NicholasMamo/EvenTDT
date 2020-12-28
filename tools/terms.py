@@ -242,6 +242,12 @@ def main():
                                  cutoff=args['cutoff'], base=args['base'])
     terms = extract(extractor=extractor, files=args['files'], keep=args['keep'], idfs=args['idfs'])
 
+    """
+    Extract the re-ranker parameters and re-rank.
+    """
+    if args['reranker']:
+        pass
+
     tools.save(args['output'], { 'cnd': cmd, 'pcmd': pcmd, 'terms': terms })
 
 def create_extractor(method, tfidf=None, general=None, cutoff=None, base=None):
@@ -376,6 +382,23 @@ def method(method):
         return methods[method.lower()]
 
     raise argparse.ArgumentTypeError(f"Invalid method value: { method }")
+
+def reranker_params(params):
+    """
+    Extract the re-ranker parameters and remove the ``--reranker-`` prefix.
+
+    :param args: A dictionary where the keys are the parameters and the values are the command-line arguments.
+    :type args: dict
+
+    :return: Another dictionary containing only the re-ranker parameters.
+             The ``--reranker`` is left untouched, whereas ``--reranker-``-prefixed parameters lose the prefix.
+    :rtype: dict
+    """
+
+    prefix = 'reranker-'
+    reranker_params = { 'reranker': params.get('reranker') } if 'reranker' in params else { }
+    reranker_params.update({ param[len(prefix):]: value for param, value in params.items() if param.startswith(prefix) })
+    return reranker_params
 
 if __name__ == "__main__":
     main()
