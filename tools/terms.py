@@ -200,9 +200,9 @@ def setup_args():
     parser.add_argument('--idfs', nargs='+', required=False,
                         help='<Optional> The IDF files to use to calculate entropy (used only with the `EF-IDF-Entropy` method).')
 
-    parser.add_argument('--reranker', type=method, required=True,
+    parser.add_argument('--reranker', type=method, required=False,
                         help='<Optional> The method to use to re-rank the terms extracted by the base method; supported `TF`, `TFIDF`, `Rank`, `Specificity`, `TFDCF`, `EF`, `LogEF`, `EF-IDF`.')
-    parser.add_argument('--reranker-files', nargs='+', required=True,
+    parser.add_argument('--reranker-files', nargs='+', required=False,
                         help='<Required> The corpora to use to calculate the new, re-ranked score for terms.')
     parser.add_argument('--reranker-keep', type=int, required=False,
                         help='<Optional> The number of terms to return, ordered in descending order of score; defaults to all terms.')
