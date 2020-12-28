@@ -320,7 +320,8 @@ def setup_args():
 
     parser.add_argument('--reranker', type=method, required=False,
                         help='<Optional> The method to use to re-rank the terms extracted by the base method; supported `TF`, `TFIDF`, `Rank`, `Specificity`, `TFDCF`, `EF`, `LogEF`, `EF-IDF`.')
-    parser.add_argument('--reranker-mode', type=str, required=False, default='normal',
+    parser.add_argument('--reranker-mode', type=str, required=False,
+                        choices=['normal'], default='normal',
                         help='<Optional> The re-ranking mode; supported: normal (default).')
     parser.add_argument('--reranker-files', nargs='+', required=False,
                         help='<Required> The corpora to use to calculate the new, re-ranked score for terms.')
