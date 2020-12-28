@@ -426,7 +426,7 @@ def create_extractor(method, tfidf=None, general=None, cutoff=None, base=None):
 
     return method()
 
-def extract(extractor, files, keep=None, idfs=None):
+def extract(extractor, files, candidates=None, keep=None, idfs=None):
     """
     Extract terms using the given extractor from the given files.
 
@@ -434,6 +434,9 @@ def extract(extractor, files, keep=None, idfs=None):
     :type extractor: :class:`~ate.extractor.Extractor`
     :param files: The input corpora from where to extract domain-specific terms.
     :type files: str or list of str
+    :param candidates: A list of terms for which to calculate a score.
+                       If ``None`` is given, all words are considered to be candidates.
+    :type candidates: None or list of str
     :param keep: The number of terms to return, ordered in descending order of score.
                  If ``None`` is given, all terms are returned.
     :type keep: int or None
@@ -452,9 +455,9 @@ def extract(extractor, files, keep=None, idfs=None):
         parser.error("One or more files are always required.")
 
     if type(extractor) == EFIDFEntropy:
-        terms = extractor.extract(files, idfs=idfs)
+        terms = extractor.extract(files, idfs=idfs, candidates=candidates)
     else:
-        terms = extractor.extract(files)
+        terms = extractor.extract(files, candidates=candidates)
     terms = sorted(terms.items(), key=lambda term: term[1], reverse=True)
     terms = terms[:keep] if keep else terms
     terms = [ { 'term': term, 'score': score, 'rank': rank + 1 } for rank, (term, score) in enumerate(terms) ]

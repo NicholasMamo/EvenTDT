@@ -31,6 +31,48 @@ class TestTerms(unittest.TestCase):
         self.assertRaises(SystemExit, terms.extract, EF(), None)
         self.assertRaises(SystemExit, terms.extract, EF(), [ ])
 
+    def test_extract_no_candidates(self):
+        """
+        Test that when extracting terms without candidates, all candidates are returned.
+        """
+
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+        extractor = terms.create_extractor(LogEF)
+        extracted = terms.extract(extractor, files)
+        extracted_list = terms.extract(extractor, files, candidates=[])
+        extracted_none = terms.extract(extractor, files, candidates=None)
+        self.assertGreater(len(extracted), 10)
+        self.assertEqual(len(extracted), len(extracted_list))
+        self.assertEqual(len(extracted), len(extracted_none))
+
+    def test_extract_only_candidates(self):
+        """
+        Test that when extracting candidates, only those candidates are returned.
+        """
+
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+        extractor = terms.create_extractor(LogEF)
+        candidates = [ 'kepa' ]
+        extracted = terms.extract(extractor, files, candidates=candidates)
+        self.assertEqual(1, len(extracted))
+        self.assertEqual(candidates, [ term['term'] for term in extracted ])
+
+    def test_extract_unknown_candidates(self):
+        """
+        Test that when extracting unknown candidates, only those candidates are returned.
+        This can happen when, for example, following up TF-IDF with EF-IDF (and the term is never breaking).
+        """
+
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+        extractor = terms.create_extractor(LogEF)
+        candidates = [ 'superlongword' ]
+        extracted = terms.extract(extractor, files, candidates=candidates)
+        self.assertEqual(1, len(extracted))
+        self.assertEqual(candidates, [ term['term'] for term in extracted ])
+
     def test_extract_logef(self):
         """
         Test the LogEF extractor results.
