@@ -254,6 +254,7 @@ When using a re-ranker, these arguments are also accepted:
 """
 
 import argparse
+import copy
 import os
 import sys
 
@@ -369,7 +370,8 @@ def main():
     """
     if args['reranker']:
         reranked = rerank(terms, **reranker_params(args))
-        tools.save(args['output'], { 'cmd': cmd, 'pcmd': pcmd, 'terms': reranked, 'terms_base': terms, 'terms_rerank': reranked })
+        combined = combine(args['mode'], terms, reranked)
+        tools.save(args['output'], { 'cmd': cmd, 'pcmd': pcmd, 'terms': reranked, 'terms_base': terms, 'terms_rerank': reranked }) # TODO: pass on the combined list
     else:
         tools.save(args['output'], { 'cmd': cmd, 'pcmd': pcmd, 'terms': terms })
 
@@ -492,6 +494,29 @@ def rerank(terms, **kwargs):
     reranked = extract(extractor=reranker, files=kwargs['files'], candidates=candidates,
                        keep=kwargs['keep'], idfs=kwargs['idfs'])
     return reranked
+
+def combine(mode, terms, reranked):
+    """
+    Combine the terms extracted using the base method and the re-ranker into a new list.
+
+    :param mode: The re-ranking mode; supported: normal.
+                 If `normal` is given, the re-ranked terms are returned.
+    :type mode: str
+    :param terms: The terms extracted by the base algorithm, as returned by the :func:`~tools.terms.extract` function.
+    :type terms: list of dict
+    :param reranked: The terms extracted by the re-ranker, as returned by the :func:`~tools.terms.rerank` function.
+    :type reranked: list of dict
+
+    :return: A list of re-ranked terms, each as a dictionary including its:
+
+             - ``term``,
+             - ``score``, and
+             - ``rank``.
+    :rtype: list of dict
+    """
+
+    if mode == 'normal':
+        return copy.deepcopy(reranked)
 
 def method(method):
     """

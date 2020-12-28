@@ -2,6 +2,7 @@
 Test the functionality of the terms tool.
 """
 
+import copy
 import json
 import math
 import os
@@ -580,3 +581,39 @@ class TestTerms(unittest.TestCase):
         self.assertEqual(params_copy, params)
         reranker_params = terms.reranker_params(params)
         self.assertEqual(params_copy, params)
+
+    def test_combine_normal_unchanged(self):
+        """
+        Test that when combining two lists of terms using the 'normal' mode, the returned list is the same.
+        """
+
+        idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        events = [ 'CRYCHE' ]
+        files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'tokenized', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(TFIDFExtractor, tfidf=idf)
+        extracted = terms.extract(extractor, files)
+
+        reranked = terms.rerank(extracted, reranker=TFIDFExtractor, tfidf=idf, files=files, general=None, cutoff=None, base=None, keep=None, idfs=None)
+        combined = terms.combine('normal', extracted, reranked)
+        self.assertEqual(extracted, reranked)
+        self.assertEqual(combined, extracted)
+
+    def test_combine_normal_copy(self):
+        """
+        Test that when combining two lists of terms using the 'normal' mode, the original lists are not changed.
+        """
+
+        idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        events = [ 'CRYCHE' ]
+        files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'tokenized', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(TFIDFExtractor, tfidf=idf)
+        extracted = terms.extract(extractor, files)
+        extracted_copy = copy.deepcopy(extracted)
+
+        reranked = terms.rerank(extracted, reranker=TFIDFExtractor, tfidf=idf, files=files, general=None, cutoff=None, base=None, keep=None, idfs=None)
+        reranked_copy = copy.deepcopy(reranked)
+        combined = terms.combine('normal', extracted, reranked)
+        self.assertEqual(extracted_copy, extracted)
+        self.assertEqual(reranked_copy, reranked)
