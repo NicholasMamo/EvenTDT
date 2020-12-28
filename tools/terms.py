@@ -112,6 +112,116 @@ The output is a JSON file with the following structure:
         ]
     }
 
+When re-ranking, the tool saves three sets of terms: the terms extracted by the base method, the terms extracted by the reranker, and the terms after combining these two together:
+
+.. code-block:: json
+
+    {
+        "cmd": {
+            "files": [
+                "data/tokenized_corpus.json"
+            ],
+            "method": "<class 'ate.stat.tfidf.TFIDFExtractor'>",
+            "output": "results/tfidf.json",
+            "keep": null,
+            "tfidf": "data/idf.json",
+            "general": null,
+            "cutoff": 1,
+            "base": null,
+            "idfs": null,
+            "reranker": "<class 'ate.application.event.EF'>",
+            "reranker-files": [
+                "data/timeline.json"
+            ],
+            "reranker-keep": null,
+            "reranker-tfidf": "data/idf.json",
+            "reranker-general": null,
+            "reranker-cutoff": 1,
+            "reranker-base": null,
+            "reranker-idfs": null,
+            "_date": "2020-12-27T12:12:22.023277",
+            "_timestamp": 1609067542.0232878,
+            "_cmd": "./tools/terms.py --files data/tokenized_corpus.json --output results/tfidf.json --method TFIDF --tfidf data/idf.json"
+        },
+        "pcmd": {
+            "files": [
+                "data/tokenized_corpus.json"
+            ],
+            "method": "<class 'ate.stat.tfidf.TFIDFExtractor'>",
+            "output": "results/tfidf.json",
+            "keep": null,
+            "tfidf": "data/idf.json",
+            "general": null,
+            "cutoff": 1,
+            "base": null,
+            "idfs": null,
+            "reranker": "<class 'ate.application.event.EF'>",
+            "reranker-files": [
+                "data/timeline.json"
+            ],
+            "reranker-keep": null,
+            "reranker-tfidf": "data/idf.json",
+            "reranker-general": null,
+            "reranker-cutoff": 1,
+            "reranker-base": null,
+            "reranker-idfs": null,
+            "_date": "2020-12-27T12:12:22.023302",
+            "_timestamp": 1609067542.023305,
+            "_cmd": "./tools/terms.py --files data/tokenized_corpus.json --output results/tfidf.json --method TFIDF --tfidf data/idf.json"
+        },
+        "terms": [
+            {
+                "term": "goal",
+                "score": 273608.3976284864,
+                "rank": 1
+            },
+            {
+                "term": "score",
+                "score": 163116.23313871748,
+                "rank": 2
+            },
+            {
+                "term": "player",
+                "score": 158593.67589002327,
+                "rank": 3
+            }
+        ],
+        "terms_base": [
+            {
+                "term": "score",
+                "score": 273.3976284864,
+                "rank": 1
+            },
+            {
+                "term": "goal",
+                "score": 166.23313871748,
+                "rank": 2
+            },
+            {
+                "term": "player",
+                "score": 158.67589002327,
+                "rank": 3
+            }
+        ],
+        "terms_rerank": [
+            {
+                "term": "goal",
+                "score": 273608.3976284864,
+                "rank": 1
+            },
+            {
+                "term": "score",
+                "score": 163116.23313871748,
+                "rank": 2
+            },
+            {
+                "term": "player",
+                "score": 158593.67589002327,
+                "rank": 3
+            }
+        ],
+    }
+
 The full list of accepted arguments:
 
     - ``-f --files``            *<Required>* The input corpora from where to extract domain-specific terms.
@@ -251,8 +361,9 @@ def main():
         reranker = create_extractor(reranker_args['reranker'], tfidf=reranker_args['tfidf'],
                                     general=reranker_args['general'], cutoff=reranker_args['cutoff'], base=reranker_args['base'])
         reranked = extract(extractor=reranker, files=reranker_args['files'], keep=reranker_args['keep'], idfs=reranker_args['idfs'])
-
-    tools.save(args['output'], { 'cmd': cmd, 'pcmd': pcmd, 'terms': terms })
+        tools.save(args['output'], { 'cmd': cmd, 'pcmd': pcmd, 'terms': reranked, 'terms_base': terms, 'terms_rerank': reranked })
+    else:
+        tools.save(args['output'], { 'cmd': cmd, 'pcmd': pcmd, 'terms': terms })
 
 def create_extractor(method, tfidf=None, general=None, cutoff=None, base=None):
     """
