@@ -39,6 +39,7 @@ Re-rankers accept the same parameters as normal methods, but with the ``reranker
 In addition to the basic parameters, you can also specify a re-ranking mode among the following:
 
 - normal (default): Re-rank the terms extracted using the base method by using a re-ranker
+- multiply: Multiply the scores of the terms extracted using the base method and the re-ranker
 
 The output is a JSON file with the following structure:
 
@@ -243,7 +244,7 @@ The full list of accepted arguments:
 When using a re-ranker, these arguments are also accepted:
 
     - ``--reranker``            *<Optional>* The method to use to re-rank the terms extracted by the base method; supported :class:`TF <ate.stat.tf.TFExtractor>`, :class:`TFIDF <ate.stat.tfidf.TFIDFExtractor>`, :class:`Rank <ate.stat.corpus.rank.RankExtractor>`, :class:`Specificity <ate.stat.corpus.specificity.SpecificityExtractor>`, :class:`TFDCF <ate.stat.corpus.tfdcf.TFDCFExtractor>`, :class:`EF <ate.application.event.EF>`, :class:`LogEF <ate.application.event.LogEF>`, :class:`EF-IDF <ate.application.event.EFIDF>`, :class:`EF-IDF-Entropy <ate.application.event.EFIDFEntropy>`.
-    - ``--reranker-mode``       *<Optional>* The re-ranking mode; supported: normal (default).
+    - ``--reranker-mode``       *<Optional>* The re-ranking mode; supported: normal (default), multiple.
     - ``--reranker-files``      *<Optional>* The corpora to use to calculate the new, re-ranked score for terms.
     - ``--reranker-keep``       *<Optional>* The number of terms to return, ordered in descending order of score; defaults to all terms.
     - ``--reranker-tfidf``      *<Optional>* The TF-IDF scheme to use to extract terms (used only with the :class:`~ate.stat.tfidf.TFIDFExtractor` and the :class:`~ate.application.event.EFIDF` methods).
@@ -289,7 +290,7 @@ def setup_args():
         - ``--idfs``                *<Optional>* The IDF files to use to calculate entropy (used only with the :class:`~ate.application.event.EFIDFEntropy` method)
 
         - ``--reranker``            *<Optional>* The method to use to re-rank the terms extracted by the base method; supported :class:`TF <ate.stat.tf.TFExtractor>`, :class:`TFIDF <ate.stat.tfidf.TFIDFExtractor>`, :class:`Rank <ate.stat.corpus.rank.RankExtractor>`, :class:`Specificity <ate.stat.corpus.specificity.SpecificityExtractor>`, :class:`TFDCF <ate.stat.corpus.tfdcf.TFDCFExtractor>`, :class:`EF <ate.application.event.EF>`, :class:`LogEF <ate.application.event.LogEF>`, :class:`EF-IDF <ate.application.event.EFIDF>`, :class:`EF-IDF-Entropy <ate.application.event.EFIDFEntropy>`.
-        - ``--reranker-mode``       *<Optional>* The re-ranking mode; supported: normal (default).
+        - ``--reranker-mode``       *<Optional>* The re-ranking mode; supported: normal (default), multiple.
         - ``--reranker-files``      *<Optional>* The corpora to use to calculate the new, re-ranked score for terms.
         - ``--reranker-keep``       *<Optional>* The number of terms to return, ordered in descending order of score; defaults to all terms.
         - ``--reranker-tfidf``      *<Optional>* The TF-IDF scheme to use to extract terms (used only with the :class:`~ate.stat.tfidf.TFIDFExtractor` and the :class:`~ate.application.event.EFIDF` methods).
@@ -322,8 +323,8 @@ def setup_args():
     parser.add_argument('--reranker', type=method, required=False,
                         help='<Optional> The method to use to re-rank the terms extracted by the base method; supported `TF`, `TFIDF`, `Rank`, `Specificity`, `TFDCF`, `EF`, `LogEF`, `EF-IDF`.')
     parser.add_argument('--reranker-mode', type=str, required=False,
-                        choices=['normal'], default='normal',
-                        help='<Optional> The re-ranking mode; supported: normal (default).')
+                        choices=[ 'normal', 'multiply' ], default='normal',
+                        help='<Optional> The re-ranking mode; supported: normal (default), multiple.')
     parser.add_argument('--reranker-files', nargs='+', required=False,
                         help='<Required> The corpora to use to calculate the new, re-ranked score for terms.')
     parser.add_argument('--reranker-keep', type=int, required=False,
@@ -518,8 +519,9 @@ def combine(mode, terms, reranked):
     """
     Combine the terms extracted using the base method and the re-ranker into a new list.
 
-    :param mode: The re-ranking mode; supported: normal.
+    :param mode: The re-ranking mode; supported: `normal` and `multiply`.
                  If `normal` is given, the re-ranked terms are returned.
+                 If `multiply` is given, the scores of the extracted and re-ranked terms are multiplied.
     :type mode: str
     :param terms: The terms extracted by the base algorithm, as returned by the :func:`~tools.terms.extract` function.
     :type terms: list of dict
@@ -536,6 +538,12 @@ def combine(mode, terms, reranked):
 
     if mode == 'normal':
         return copy.deepcopy(reranked)
+    elif mode == 'multiply':
+        extracted_scores = { term['term']: term['score'] for term in terms }
+        reranked_scores = { term['term']: term['score'] for term in reranked }
+        scores = { term: score * reranked_scores[term]
+                   for term, score in extracted_scores.items() }
+        return rank(scores)
 
 def method(method):
     """

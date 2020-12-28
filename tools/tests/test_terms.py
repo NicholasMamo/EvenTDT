@@ -681,14 +681,13 @@ class TestTerms(unittest.TestCase):
         Test that when combining two lists of terms using the 'normal' mode, the returned list is the same.
         """
 
-        idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
-        events = [ 'CRYCHE' ]
-        files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'tokenized', f"{ event }.json") for event in events ]
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
 
-        extractor = terms.create_extractor(TFIDFExtractor, tfidf=idf)
-        extracted = terms.extract(extractor, files)
+        extractor = terms.create_extractor(EF)
+        extracted = terms.extract(extractor, timelines)
 
-        reranked = terms.rerank(extracted, reranker=TFIDFExtractor, tfidf=idf, files=files, general=None, cutoff=None, base=None, keep=None, idfs=None)
+        reranked = terms.rerank(extracted, reranker=EF, tfidf=None, files=timelines, general=None, cutoff=None, base=None, keep=None, idfs=None)
         combined = terms.combine('normal', extracted, reranked)
         self.assertEqual(extracted, reranked)
         self.assertEqual(combined, extracted)
@@ -698,16 +697,98 @@ class TestTerms(unittest.TestCase):
         Test that when combining two lists of terms using the 'normal' mode, the original lists are not changed.
         """
 
-        idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
-        events = [ 'CRYCHE' ]
-        files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'tokenized', f"{ event }.json") for event in events ]
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
 
-        extractor = terms.create_extractor(TFIDFExtractor, tfidf=idf)
-        extracted = terms.extract(extractor, files)
+        extractor = terms.create_extractor(EF)
+        extracted = terms.extract(extractor, timelines)
         extracted_copy = copy.deepcopy(extracted)
 
-        reranked = terms.rerank(extracted, reranker=TFIDFExtractor, tfidf=idf, files=files, general=None, cutoff=None, base=None, keep=None, idfs=None)
+        reranked = terms.rerank(extracted, reranker=EF, tfidf=None, files=timelines, general=None, cutoff=None, base=None, keep=None, idfs=None)
         reranked_copy = copy.deepcopy(reranked)
         combined = terms.combine('normal', extracted, reranked)
         self.assertEqual(extracted_copy, extracted)
         self.assertEqual(reranked_copy, reranked)
+
+    def test_combine_multiply_unchanged(self):
+        """
+        Test that when combining two lists of terms using the 'multiply' mode, the returned list is the same.
+        """
+
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EF)
+        extracted = terms.extract(extractor, timelines)
+
+        reranked = terms.rerank(extracted, reranker=EF, tfidf=None, files=timelines, general=None, cutoff=None, base=None, keep=None, idfs=None)
+        combined = terms.combine('multiply', extracted, reranked)
+        self.assertEqual(extracted, reranked)
+
+    def test_combine_multiply_copy(self):
+        """
+        Test that when combining two lists of terms using the 'multiply' mode, the original lists are not changed.
+        """
+
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EF)
+        extracted = terms.extract(extractor, timelines)
+        extracted_copy = copy.deepcopy(extracted)
+
+        reranked = terms.rerank(extracted, reranker=EF, tfidf=None, files=timelines, general=None, cutoff=None, base=None, keep=None, idfs=None)
+        reranked_copy = copy.deepcopy(reranked)
+        combined = terms.combine('multiply', extracted, reranked)
+        self.assertEqual(extracted_copy, extracted)
+        self.assertEqual(reranked_copy, reranked)
+
+    def test_combine_multiply_correct(self):
+        """
+        Test that when combining two lists of terms, the results are correct.
+        """
+
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EF)
+        extracted = terms.extract(extractor, timelines)
+        extracted_scores = { term['term']: term['score'] for term in extracted }
+
+        reranked = terms.rerank(extracted, reranker=EF, tfidf=None, files=timelines, general=None, cutoff=None, base=None, keep=None, idfs=None)
+        reranked_scores = { term['term']: term['score'] for term in reranked }
+
+        combined = terms.combine('multiply', extracted, reranked)
+        self.assertTrue(all( term['score'] == extracted_scores[term['term']] * reranked_scores[term['term']]
+                             for term in combined ))
+
+    def test_combine_multiply_correct_order(self):
+        """
+        Test that when combining two lists of terms, the results are sorted in descending order of score.
+        """
+
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EF)
+        extracted = terms.extract(extractor, timelines)
+        reranked = terms.rerank(extracted, reranker=EF, tfidf=None, files=timelines, general=None, cutoff=None, base=None, keep=None, idfs=None)
+
+        combined = terms.combine('multiply', extracted, reranked)
+        self.assertTrue(all( combined[i]['score'] >= combined[i + 1]['score'] for i in range(len(combined) - 1) ))
+
+    def test_combine_multiply_correct_rank(self):
+        """
+        Test that when combining two lists of terms, the results are sorted in ascending order of rank.
+        """
+
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EF)
+        extracted = terms.extract(extractor, timelines)
+        reranked = terms.rerank(extracted, reranker=EF, tfidf=None, files=timelines, general=None, cutoff=None, base=None, keep=None, idfs=None)
+
+        combined = terms.combine('multiply', extracted, reranked)
+        self.assertEqual(1, combined[0]['rank'])
+        self.assertTrue(all( combined[i]['rank'] < combined[i + 1]['rank'] for i in range(len(combined) - 1) ))
