@@ -360,7 +360,9 @@ def main():
         reranker_args = reranker_params(args)
         reranker = create_extractor(reranker_args['reranker'], tfidf=reranker_args['tfidf'],
                                     general=reranker_args['general'], cutoff=reranker_args['cutoff'], base=reranker_args['base'])
-        reranked = extract(extractor=reranker, files=reranker_args['files'], keep=reranker_args['keep'], idfs=reranker_args['idfs'])
+        candidates = [ term['term'] for term in terms ]
+        reranked = extract(extractor=reranker, files=reranker_args['files'], candidates=candidates,
+                           keep=reranker_args['keep'], idfs=reranker_args['idfs'])
         tools.save(args['output'], { 'cmd': cmd, 'pcmd': pcmd, 'terms': reranked, 'terms_base': terms, 'terms_rerank': reranked })
     else:
         tools.save(args['output'], { 'cmd': cmd, 'pcmd': pcmd, 'terms': terms })
