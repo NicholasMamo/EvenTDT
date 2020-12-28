@@ -448,6 +448,9 @@ def extract(extractor, files, keep=None, idfs=None):
     :rtype: list of dict
     """
 
+    if not files:
+        parser.error("One or more files are always required.")
+
     if type(extractor) == EFIDFEntropy:
         terms = extractor.extract(files, idfs=idfs)
     else:

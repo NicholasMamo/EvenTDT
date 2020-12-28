@@ -23,6 +23,14 @@ class TestTerms(unittest.TestCase):
     Test the functionality of the terms tool.
     """
 
+    def test_extract_no_files(self):
+        """
+        Test that when no files are given when extracting, a SystemExit is raised.
+        """
+
+        self.assertRaises(SystemExit, terms.extract, EF(), None)
+        self.assertRaises(SystemExit, terms.extract, EF(), [ ])
+
     def test_extract_logef(self):
         """
         Test the LogEF extractor results.
