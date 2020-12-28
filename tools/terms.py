@@ -357,12 +357,7 @@ def main():
     Extract the re-ranker parameters and re-rank.
     """
     if args['reranker']:
-        reranker_args = reranker_params(args)
-        reranker = create_extractor(reranker_args['reranker'], tfidf=reranker_args['tfidf'],
-                                    general=reranker_args['general'], cutoff=reranker_args['cutoff'], base=reranker_args['base'])
-        candidates = [ term['term'] for term in terms ]
-        reranked = extract(extractor=reranker, files=reranker_args['files'], candidates=candidates,
-                           keep=reranker_args['keep'], idfs=reranker_args['idfs'])
+        reranked = rerank(terms, **reranker_params(args))
         tools.save(args['output'], { 'cmd': cmd, 'pcmd': pcmd, 'terms': reranked, 'terms_base': terms, 'terms_rerank': reranked })
     else:
         tools.save(args['output'], { 'cmd': cmd, 'pcmd': pcmd, 'terms': terms })
@@ -464,6 +459,28 @@ def extract(extractor, files, candidates=None, keep=None, idfs=None):
     terms = terms[:keep] if keep else terms
     terms = [ { 'term': term, 'score': score, 'rank': rank + 1 } for rank, (term, score) in enumerate(terms) ]
     return terms
+
+def rerank(terms, **kwargs):
+    """
+    Re-rank the given terms.
+
+    :param terms: The terms extracted by the base algorithm, as returned by the :func:`~tools.terms.extract` function.
+    :type terms: list of dict
+
+    :return: A list of re-ranked terms, each as a dictionary including its:
+
+             - ``term``,
+             - ``score``, and
+             - ``rank``.
+    :rtype: list of dict
+    """
+
+    reranker = create_extractor(kwargs['reranker'], tfidf=kwargs['tfidf'],
+                                general=kwargs['general'], cutoff=kwargs['cutoff'], base=kwargs['base'])
+    candidates = [ term['term'] for term in terms ]
+    reranked = extract(extractor=reranker, files=kwargs['files'], candidates=candidates,
+                       keep=kwargs['keep'], idfs=kwargs['idfs'])
+    return reranked
 
 def method(method):
     """

@@ -17,6 +17,7 @@ for path in paths:
 
 from tools import terms
 from ate.application import LogEF, EF, EFIDF, EFIDFEntropy, Entropy
+from ate.stat import TFIDFExtractor
 
 class TestTerms(unittest.TestCase):
     """
@@ -450,6 +451,41 @@ class TestTerms(unittest.TestCase):
         extractor = terms.create_extractor(EFIDFEntropy, tfidf=idf, base=2)
         extracted = terms.extract(extractor, timelines, idfs=idfs, keep=keep)
         self.assertTrue(all( extracted[i]['score'] >= extracted[i + 1]['score'] for i in range(len(extracted) - 1) ))
+
+    def test_rerank_same_terms_as_base(self):
+        """
+        Test that when re-ranking, the same terms extracted by the base method are returned.
+        """
+
+        idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        events = [ 'CRYCHE', 'LIVMUN' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+        files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'tokenized', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EF, base=2)
+        extracted = terms.extract(extractor, timelines)
+        extracted_terms = [ term['term'] for term in extracted ]
+
+        reranked = terms.rerank(extracted, reranker=TFIDFExtractor, tfidf=idf, files=files, general=None, cutoff=None, base=None, keep=None, idfs=None)
+        reranked_terms = [ term['term'] for term in reranked ]
+        self.assertEqual(set(extracted_terms), set(reranked_terms))
+
+    def test_rerank_scores_as_extracted(self):
+        """
+        Test that when re-ranking, the scores are the same as when extracting the terms using the same method, but as a base method.
+        """
+
+        idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        events = [ 'CRYCHE' ]
+        files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'tokenized', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(TFIDFExtractor, tfidf=idf)
+        extracted = terms.extract(extractor, files)
+        extracted_terms = [ term['term'] for term in extracted ]
+
+        reranked = terms.rerank(extracted, reranker=TFIDFExtractor, tfidf=idf, files=files, general=None, cutoff=None, base=None, keep=None, idfs=None)
+        reranked_terms = [ term['term'] for term in reranked ]
+        self.assertEqual(extracted, reranked)
 
     def test_reranker_params_only_reranker(self):
         """
