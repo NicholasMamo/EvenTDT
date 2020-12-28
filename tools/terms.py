@@ -247,7 +247,10 @@ def main():
     Extract the re-ranker parameters and re-rank.
     """
     if args['reranker']:
-        pass
+        reranker_args = reranker_params(args)
+        reranker = create_extractor(reranker_args['reranker'], tfidf=reranker_args['tfidf'],
+                                    general=reranker_args['general'], cutoff=reranker_args['cutoff'], base=reranker_args['base'])
+        reranked = extract(extractor=reranker, files=reranker_args['files'], keep=reranker_args['keep'], idfs=reranker_args['idfs'])
 
     tools.save(args['output'], { 'cmd': cmd, 'pcmd': pcmd, 'terms': terms })
 
