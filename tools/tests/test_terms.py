@@ -453,6 +453,100 @@ class TestTerms(unittest.TestCase):
         extracted = terms.extract(extractor, timelines, idfs=idfs, keep=keep)
         self.assertTrue(all( extracted[i]['score'] >= extracted[i + 1]['score'] for i in range(len(extracted) - 1) ))
 
+    def test_rank_copy(self):
+        """
+        Test that when ranking terms, the original term dictionary is not changed.
+        """
+
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EF)
+        extracted = extractor.extract(timelines)
+        original = copy.deepcopy(extracted)
+        ranked = terms.rank(extracted)
+        self.assertEqual(original, extracted)
+
+    def test_rank_all_terms(self):
+        """
+        Test that when ranking terms, all terms are returned.
+        """
+
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EF)
+        extracted = extractor.extract(timelines)
+        ranked = terms.rank(extracted)
+        ranked_terms = [ term['term'] for term in ranked ]
+        self.assertEqual(set(extracted), set(ranked_terms))
+
+    def test_rank_no_duplicates(self):
+        """
+        Test that when ranking terms, there are no duplicates.
+        """
+
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EF)
+        extracted = extractor.extract(timelines)
+        ranked = terms.rank(extracted)
+        ranked_terms = [ term['term'] for term in ranked ]
+        self.assertEqual(len(ranked_terms), len(set(ranked_terms)))
+
+    def test_rank_aligned_scores(self):
+        """
+        Test that when ranking terms, the scores are correct.
+        """
+
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EF)
+        extracted = extractor.extract(timelines)
+        ranked = terms.rank(extracted)
+        self.assertTrue(all( term['score'] == extracted[term['term']] for term in ranked ))
+
+    def test_rank_descending_scores(self):
+        """
+        Test that when ranking terms, the terms are returned in descending order of their score.
+        """
+
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EF)
+        extracted = extractor.extract(timelines)
+        ranked = terms.rank(extracted)
+        self.assertTrue(all([ ranked[i]['score'] >= ranked[i + 1]['score'] for i in range(len(ranked) - 1) ]))
+
+    def test_rank_start_from_one(self):
+        """
+        Test that when ranking terms, the ranks start from 1.
+        """
+
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EF)
+        extracted = extractor.extract(timelines)
+        ranked = terms.rank(extracted)
+        self.assertEqual(1, ranked[0]['rank'])
+
+    def test_rank_ascending_rank(self):
+        """
+        Test that when ranking terms, the ranks are in ascending order.
+        """
+
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EF)
+        extracted = extractor.extract(timelines)
+        ranked = terms.rank(extracted)
+        self.assertTrue(all([ ranked[i]['rank'] < ranked[i + 1]['rank'] for i in range(len(ranked) - 1) ]))
+
     def test_rerank_same_terms_as_base(self):
         """
         Test that when re-ranking, the same terms extracted by the base method are returned.

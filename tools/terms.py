@@ -468,8 +468,27 @@ def extract(extractor, files, candidates=None, keep=None, idfs=None):
         terms = extractor.extract(files, idfs=idfs, candidates=candidates)
     else:
         terms = extractor.extract(files, candidates=candidates)
-    terms = sorted(terms.items(), key=lambda term: term[1], reverse=True)
+    terms = rank(terms)
     terms = terms[:keep] if keep else terms
+    return terms
+
+def rank(terms, **kwargs):
+    """
+    Rank the given terms, extracted using an ATE method.
+
+    :param terms: A dictionary with terms being the keys and their scores as values.
+    :type terms: dict
+
+    :return: A list of terms, each as a dictionary including its:
+
+             - ``term``,
+             - ``score``, and
+             - ``rank``.
+    :rtype: list of dict
+    """
+
+    terms = dict(terms)
+    terms = sorted(terms.items(), key=lambda term: term[1], reverse=True)
     terms = [ { 'term': term, 'score': score, 'rank': rank + 1 } for rank, (term, score) in enumerate(terms) ]
     return terms
 
