@@ -248,7 +248,7 @@ def main():
     if args['reranker']:
         pass
 
-    tools.save(args['output'], { 'cnd': cmd, 'pcmd': pcmd, 'terms': terms })
+    tools.save(args['output'], { 'cmd': cmd, 'pcmd': pcmd, 'terms': terms })
 
 def create_extractor(method, tfidf=None, general=None, cutoff=None, base=None):
     """
