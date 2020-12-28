@@ -410,12 +410,12 @@ class TestTerms(unittest.TestCase):
             'method': 'TFIDF',
             'files': [ 'data/tokenized1.json', 'data/tokenized2.json' ],
             'reranker': 'EF',
-            'reranker-files': [ 'data/timeline1.json', 'data/timeline2.json' ]
+            'reranker_files': [ 'data/timeline1.json', 'data/timeline2.json' ]
         }
         reranker_params = terms.reranker_params(params)
         self.assertEqual(2, len(reranker_params))
         self.assertFalse('method' in reranker_params)
-        self.assertEqual(reranker_params['files'], params['reranker-files'])
+        self.assertEqual(reranker_params['files'], params['reranker_files'])
 
     def test_reranker_params_all_reranker(self):
         """
@@ -426,13 +426,13 @@ class TestTerms(unittest.TestCase):
             'method': 'TFIDF',
             'files': [ 'data/tokenized1.json', 'data/tokenized2.json' ],
             'reranker': 'EF',
-            'reranker-files': [ 'data/timeline1.json', 'data/timeline2.json' ],
-            'reranker-keep': 50,
-            'reranker-tfidf': 'path/to/idf.json',
-            'reranker-general': 'path/to/general.json',
-            'reranker-cutoff': 100,
-            'reranker-base': 2,
-            'reranker-idfs': [ 'data/idf1.json', 'data/idf2.json' ]
+            'reranker_files': [ 'data/timeline1.json', 'data/timeline2.json' ],
+            'reranker_keep': 50,
+            'reranker_tfidf': 'path/to/idf.json',
+            'reranker_general': 'path/to/general.json',
+            'reranker_cutoff': 100,
+            'reranker_base': 2,
+            'reranker_idfs': [ 'data/idf1.json', 'data/idf2.json' ]
         }
         reranker_params = terms.reranker_params(params)
         self.assertEqual({ 'reranker', 'files', 'keep', 'tfidf',
@@ -447,7 +447,7 @@ class TestTerms(unittest.TestCase):
             'method': 'TFIDF',
             'files': [ 'data/tokenized1.json', 'data/tokenized2.json' ],
             'reranker': 'EF',
-            'reranker-files': [ 'data/timeline1.json', 'data/timeline2.json' ],
+            'reranker_files': [ 'data/timeline1.json', 'data/timeline2.json' ],
         }
         reranker_params = terms.reranker_params(params)
         self.assertTrue('reranker' in reranker_params)
@@ -462,16 +462,16 @@ class TestTerms(unittest.TestCase):
             'method': 'TFIDF',
             'files': [ 'data/tokenized1.json', 'data/tokenized2.json' ],
             'reranker': 'EF',
-            'reranker-files': [ 'data/timeline1.json', 'data/timeline2.json' ],
-            'reranker-keep': 50,
-            'reranker-tfidf': 'path/to/idf.json',
-            'reranker-general': 'path/to/general.json',
-            'reranker-cutoff': 100,
-            'reranker-base': 2,
-            'reranker-idfs': [ 'data/idf1.json', 'data/idf2.json' ]
+            'reranker_files': [ 'data/timeline1.json', 'data/timeline2.json' ],
+            'reranker_keep': 50,
+            'reranker_tfidf': 'path/to/idf.json',
+            'reranker_general': 'path/to/general.json',
+            'reranker_cutoff': 100,
+            'reranker_base': 2,
+            'reranker_idfs': [ 'data/idf1.json', 'data/idf2.json' ]
         }
         reranker_params = terms.reranker_params(params)
-        self.assertTrue(all( not param.startswith('reranker-') for param in reranker_params ))
+        self.assertTrue(all( not param.startswith('reranker_') for param in reranker_params ))
 
     def test_reranker_params_unchanged(self):
         """
@@ -482,13 +482,13 @@ class TestTerms(unittest.TestCase):
             'method': 'TFIDF',
             'files': [ 'data/tokenized1.json', 'data/tokenized2.json' ],
             'reranker': 'EF',
-            'reranker-files': [ 'data/timeline1.json', 'data/timeline2.json' ],
-            'reranker-keep': 50,
-            'reranker-tfidf': 'path/to/idf.json',
-            'reranker-general': 'path/to/general.json',
-            'reranker-cutoff': 100,
-            'reranker-base': 2,
-            'reranker-idfs': [ 'data/idf1.json', 'data/idf2.json' ]
+            'reranker_files': [ 'data/timeline1.json', 'data/timeline2.json' ],
+            'reranker_keep': 50,
+            'reranker_tfidf': 'path/to/idf.json',
+            'reranker_general': 'path/to/general.json',
+            'reranker_cutoff': 100,
+            'reranker_base': 2,
+            'reranker_idfs': [ 'data/idf1.json', 'data/idf2.json' ]
         }
         params_copy = dict(params)
         self.assertEqual(params_copy, params)
