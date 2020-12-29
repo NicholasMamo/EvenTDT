@@ -47,6 +47,7 @@ The output is a JSON file with the following structure:
         },
         "results": {
             "summary": {
+                "average precision": 0.833333335,
                 "precision": 0.5,
                 "recall": 0.5,
                 "f1": 0.5
@@ -159,12 +160,12 @@ def main():
     Get the results.
     """
     precision, recall = evaluation.precision(terms, gold), evaluation.recall(terms, gold)
-    f1 = evaluation.f1(precision, recall)
     results = {
         'summary': {
+            'average precision': evaluation.average_precision(terms, gold),
             'precision': precision,
             'recall': recall,
-            'f1': f1
+            'f1': evaluation.f1(precision, recall)
         },
         'p@k': evaluation.pk(terms, gold),
         'precise': OrderedDict([ (term, evaluation.is_precise(term, gold)) for term in terms ]),
