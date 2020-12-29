@@ -112,8 +112,8 @@ def pk(items, gold, k=None):
         Use this if you need to calculate the precision at each item.
         This is much more efficient than calling the function for each item.
 
-    :param items: A list of items to evaluate.
-    :type items: list or set
+    :param items: A list of items to evaluate, which must be an ordered ranking.
+    :type items: list
     :param gold: The gold standard items.
     :type gold: list or set
     :param k: The rank at which to calculate precision.
@@ -142,6 +142,36 @@ def pk(items, gold, k=None):
         return p
     else:
         return precision(items[:k], gold)
+
+def average_precision(items, gold):
+    """
+    Calculate the average precision of the given items by evaluating the order.
+    The higher the relevant items, the higher the average precision.
+    The average precision is calculated as:
+
+    .. math::
+
+        \\text{AP} = \\frac{1}{| \\text{gold} |} \\sum_{k=1}^{n} \\text{P@k} \\cdot \\text{rel}_k
+
+    where :math:`\\text{P@k}` is the :func:`Precision at k <tools.evaluation.pk>` and :math:`\\text{rel}_k` is a boolean indicating whether the item at rank :math:`k` is relevant or not.
+    :math:`\\text{gold}` is the gold  standard list of items.
+
+    :param items: A list of items to evaluate, which must be an ordered ranking.
+    :type items: list
+    :param gold: The gold standard items.
+    :type gold: list or set
+
+    :return: The average precision value, bound between 0 and 1.
+    :rtype: float
+    """
+
+    ap = 0
+    items, gold = unique(items), unique(gold)
+    _pk = pk(items, gold)
+    for k, item in enumerate(items):
+        ap += _pk[k + 1] if is_precise(item, gold) else 0
+
+    return ap / len(gold) if len(gold) else 0
 
 def recall(items, gold):
     """

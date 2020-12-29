@@ -14,7 +14,7 @@ for path in paths:
     if path not in sys.path:
         sys.path.append(path)
 
-from evaluation import unique, is_precise, precise, recalled, precision, pk, recall, f1
+from evaluation import unique, is_precise, precise, recalled, precision, pk, average_precision, recall, f1
 
 class TestPackage(unittest.TestCase):
     """
@@ -385,6 +385,63 @@ class TestPackage(unittest.TestCase):
             4: 2/4,
             5: 2/5
         }, p)
+
+    def test_average_precision_empty_items(self):
+        """
+        Test that when the item list is empty, the average precision is zero.
+        """
+
+        self.assertEqual(0, average_precision([ ], range(0, 5)))
+
+    def test_average_precision_empty_gold(self):
+        """
+        Test that when the gold list is empty, the average precision is 0.
+        """
+
+        self.assertEqual(0, round(average_precision([ 'A', 'B', 'C', 'D', 'E', 'F' ], [ ]), 10))
+
+    def test_average_precision_example(self):
+        """
+        Test the average precision function with `an example <https://towardsdatascience.com/breaking-down-mean-average-precision-map-ae462f623a52>`_.
+        """
+
+        self.assertEqual(0.7, round(average_precision([ 'A', 'B', 'C', 'D', 'E', 'F' ], [ 'A', 'D', 'E' ]), 10))
+
+    def test_average_precision_duplicate_gold(self):
+        """
+        Test the average precision ignores duplicate gold items.
+        """
+
+        self.assertEqual(0.7, round(average_precision([ 'A', 'B', 'C', 'D', 'E', 'F' ], [ 'A', 'D', 'D', 'E' ]), 10))
+
+    def test_average_precision_duplicate_items(self):
+        """
+        Test the average precision ignores duplicate items.
+        """
+
+        self.assertEqual(0.7, round(average_precision([ 'A', 'B', 'C', 'D', 'D', 'E', 'F' ], [ 'A', 'D', 'E' ]), 10))
+
+    def test_average_precision_tail(self):
+        """
+        Test that the average precision ignores the 'tail' of the ranking (incorrect items).
+        """
+
+        self.assertEqual(0.7, round(average_precision([ 'A', 'B', 'C', 'D', 'E' ], [ 'A', 'D', 'E' ]), 10))
+        self.assertEqual(0.7, round(average_precision([ 'A', 'B', 'C', 'D', 'E', 'F', 'G' ], [ 'A', 'D', 'E' ]), 10))
+
+    def test_average_precision_min(self):
+        """
+        Test that the average precision is 0 when all items are incorrect.
+        """
+
+        self.assertEqual(0, round(average_precision([ 'B', 'C' ], [ 'A', 'D', 'E' ]), 10))
+
+    def test_average_precision_max(self):
+        """
+        Test that the average precision is 1 when all items are correct.
+        """
+
+        self.assertEqual(1, round(average_precision([ 'A', 'D', 'E' ], [ 'A', 'D', 'E' ]), 10))
 
     def test_recall_empty(self):
         """
