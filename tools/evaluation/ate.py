@@ -264,11 +264,15 @@ def pprint(results):
     :type results: dict
     """
 
-    precision, recall, f1 = results['summary']['precision'], results['summary']['recall'], results['summary']['f1']
+    precision, recall, f1, average_precision = results['summary']['precision'], results['summary']['recall'], results['summary']['f1'], results['summary']['average precision']
 
     print('Precision        Recall        F1')
     print('---------        ------        --')
-    print(f"{ str(round(precision, 4)).ljust(6, '0') }           { str(round(recall, 4)).ljust(6, '0') }        { str(round(f1, 4)).ljust(6, '0') }")
+    print(f"""{ str(round(precision, 4)).ljust(6, '0') }           { str(round(recall, 4)).ljust(6, '0') }        { str(round(f1, 4)).ljust(6, '0') }""")
+    print()
+    print('Average Precision')
+    print('-----------------')
+    print(f"""{ str(round(average_precision, 4)).ljust(6, '0') }""")
     print()
 
     print('Precision at k (P@k)')
