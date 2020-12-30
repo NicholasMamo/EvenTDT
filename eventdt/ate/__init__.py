@@ -30,7 +30,7 @@ def total_documents(corpora, focus=None):
                     2. Corpora generated using the :mod:`~tools.consume` tool.
                        Each such file is made up of a single :class:`~summarization.timeline.Timeline`.
                        Currently, only :class:`timelines <summarization.timeline.Timeline>` made up of :class:`~summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode` instances are supported.
-                       In this case, the function returns the number of nodes in the timeline.
+                       In this case, the function returns the number of documents in the timeline that contain the tokens.
     :type corpora: str or list of str
     :param focus: The tokens for which to compute the document frequency.
                   If nothing is given, the document frequency is calculated for all tokens.
@@ -72,14 +72,14 @@ def total_documents(corpora, focus=None):
         with open(corpus, 'r') as f:
             if datatype(corpus) is Timeline:
                 timeline = Exportable.decode(json.loads(f.readline()))['timeline']
+                all_documents = [ document for node in timeline.nodes for document in node.get_all_documents() ]
                 if focus:
                     for itemset in focus:
-                        for node in timeline.nodes:
-                            keywords = [ keyword for topic in node.topics for keyword in topic.dimensions ]
-                            if all( item in keywords for item in itemset ):
+                        for document in all_documents:
+                            if all( item in document.dimensions for item in itemset ):
                                 documents[itemset if len(itemset) > 1 else itemset[0]] += 1
                 else:
-                    documents['*'] = len(timeline.nodes)
+                    documents['*'] = len(all_documents)
             else:
                 for line in f:
                     document = json.loads(line)

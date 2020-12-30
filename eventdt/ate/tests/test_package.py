@@ -241,6 +241,19 @@ class TestPackage(unittest.TestCase):
         documents = ate.total_documents(path)
         self.assertEqual(int, type(documents))
 
+    def test_total_documents_timeline(self):
+        """
+        Test that the number of documents in timeline corpus is the number of documents across all nodes, not the number of nodes.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json')
+        documents = ate.total_documents(path)
+        self.assertTrue(documents)
+
+        with open(path) as f:
+            timeline = Exportable.decode(json.loads(f.readline()))['timeline']
+            self.assertEqual(len([ document for node in timeline.nodes for document in node.get_all_documents() ]), documents)
+
     def test_total_documents_timeline_token(self):
         """
         Test that when computing the number of documents in which one token appears, the frequency considers only the topical keywords.
@@ -251,11 +264,14 @@ class TestPackage(unittest.TestCase):
         token = 'via'
         with open(path) as f:
             timeline = Exportable.decode(json.loads(f.readline()))['timeline']
-            nodes = len([ node for node in timeline.nodes
-                          if token in [ keyword for topic in node.topics for keyword in topic.dimensions ] ])
-            self.assertTrue(nodes) # check that the result isn't 0: a trivial test
-            documents = ate.total_documents(path, focus=token)
-            self.assertEqual(nodes, documents)
+            documents = 0
+            for node in timeline.nodes:
+                for document in node.get_all_documents():
+                    if token in document.dimensions:
+                        documents += 1
+            self.assertTrue(documents) # check that the result isn't 0: a trivial test
+            freq = ate.total_documents(path, focus=token)
+            self.assertEqual(documents, freq)
 
     def test_total_documents_timeline_tuple(self):
         """
@@ -267,15 +283,14 @@ class TestPackage(unittest.TestCase):
         tuple = ('via', 'direct')
         with open(path) as f:
             timeline = Exportable.decode(json.loads(f.readline()))['timeline']
-            nodes = 0
+            documents = 0
             for node in timeline.nodes:
-                keywords = [ keyword for topic in node.topics
-                                     for keyword in topic.dimensions ]
-                if all( token in keywords for token in tuple ):
-                    nodes += 1
-            self.assertTrue(nodes) # check that the result isn't 0: a trivial test
-            documents = ate.total_documents(path, focus=tuple)
-            self.assertEqual(nodes, documents)
+                for document in node.get_all_documents():
+                    if all( token in document.dimensions for token in tuple ):
+                        documents += 1
+            self.assertTrue(documents) # check that the result isn't 0: a trivial test
+            freq = ate.total_documents(path, focus=tuple)
+            self.assertEqual(documents, freq)
 
     def test_total_documents_timeline_multiple_tokens(self):
         """
@@ -287,12 +302,15 @@ class TestPackage(unittest.TestCase):
         tokens = [ 'crystal', 'bissaka', 'underway' ]
         with open(path) as f:
             timeline = Exportable.decode(json.loads(f.readline()))['timeline']
-            documents = ate.total_documents(path, focus=tokens)
+            freq = ate.total_documents(path, focus=tokens)
             for token in tokens:
-                nodes = len([ node for node in timeline.nodes
-                              if token in [ keyword for topic in node.topics for keyword in topic.dimensions ] ])
-                self.assertTrue(nodes) # check that the result isn't 0: a trivial test
-                self.assertEqual(nodes, documents[token])
+                documents = 0
+                for node in timeline.nodes:
+                    for document in node.get_all_documents():
+                        if token in document.dimensions:
+                            documents += 1
+                self.assertTrue(documents) # check that the result isn't 0: a trivial test
+                self.assertEqual(documents, freq[token])
 
     def test_total_documents_timeline_multiple_tuples(self):
         """
@@ -301,19 +319,18 @@ class TestPackage(unittest.TestCase):
 
         path = os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json')
 
-        tuples = [ ('via', 'direct'), ('golo', 'shoot'), ('minut', 'underway') ]
+        tuples = [ ('via', 'direct'), ('golo', 'shoot'), ('minut', 'silenc') ]
         with open(path) as f:
             timeline = Exportable.decode(json.loads(f.readline()))['timeline']
-            documents = ate.total_documents(path, focus=tuples)
+            freq = ate.total_documents(path, focus=tuples)
             for tuple in tuples:
-                nodes = 0
+                documents = 0
                 for node in timeline.nodes:
-                    keywords = [ keyword for topic in node.topics
-                                         for keyword in topic.dimensions ]
-                    if all( token in keywords for token in tuple ):
-                        nodes += 1
-                self.assertTrue(nodes) # check that the result isn't 0: a trivial test
-                self.assertEqual(nodes, documents[tuple])
+                    for document in node.get_all_documents():
+                        if all( token in document.dimensions for token in tuple ):
+                            documents += 1
+                self.assertTrue(documents) # check that the result isn't 0: a trivial test
+                self.assertEqual(documents, freq[tuple])
 
     def test_total_documents_timeline_mix(self):
         """
@@ -322,27 +339,26 @@ class TestPackage(unittest.TestCase):
 
         path = os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json')
 
-        mix = [ 'minut', ('underway', 'minut') ]
+        mix = [ 'minut', ('silenc', 'minut') ]
         with open(path) as f:
             timeline = Exportable.decode(json.loads(f.readline()))['timeline']
-            documents = ate.total_documents(path, focus=mix)
+            freq = ate.total_documents(path, focus=mix)
             for focus in mix:
-                nodes = 0
+                documents = 0
                 for node in timeline.nodes:
-                    keywords = [ keyword for topic in node.topics
-                                         for keyword in topic.dimensions ]
-                    if type(focus) is str:
-                        if focus in keywords:
-                            nodes += 1
-                    else:
-                        if all( token in keywords for token in focus ):
-                            nodes += 1
-                self.assertTrue(nodes) # check that the result isn't 0: a trivial test
-                self.assertEqual(nodes, documents[focus])
+                    for document in node.get_all_documents():
+                        if type(focus) is str:
+                            if focus in document.dimensions:
+                                documents += 1
+                        else:
+                            if all( token in document.dimensions for token in focus ):
+                                documents += 1
+                self.assertTrue(freq[focus]) # check that the result isn't 0: a trivial test
+                self.assertEqual(documents, freq[focus])
 
     def test_total_documents_timeline_tuple_in_different_topics(self):
         """
-        Test that when computing the number of documents in which a tuple of tokens appears, the frequency considers all topics in a node, so tokens may be scattered in different topics.
+        Test that when computing the number of documents in which a tuple of tokens appears, the frequency does not consider tokens in different documents.
         """
 
         path = os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json')
@@ -350,15 +366,14 @@ class TestPackage(unittest.TestCase):
         tuple = ('via', 'watch')
         with open(path) as f:
             timeline = Exportable.decode(json.loads(f.readline()))['timeline']
-            nodes = 0
+            documents = 0
             for node in timeline.nodes:
-                keywords = [ keyword for topic in node.topics
-                                     for keyword in topic.dimensions ]
-                if all( token in keywords for token in tuple ):
-                    nodes += 1
-            self.assertTrue(nodes) # check that the result isn't 0: a trivial test
-            documents = ate.total_documents(path, focus=tuple)
-            self.assertEqual(nodes, documents)
+                for document in node.get_all_documents():
+                    if all( token in document.dimensions for token in tuple ):
+                        documents += 1
+            self.assertFalse(documents) # check that the result isn't 0: a trivial test
+            freq = ate.total_documents(path, focus=tuple)
+            self.assertFalse(freq)
 
     def test_datatype_tokenized(self):
         """
