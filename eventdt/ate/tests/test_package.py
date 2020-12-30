@@ -238,6 +238,14 @@ class TestPackage(unittest.TestCase):
         path = os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json')
         self.assertEqual(timeline.Timeline, ate.datatype(path))
 
+    def test_datatype_empty_timeline(self):
+        """
+        Test that the datatype of an empty timeline is `None`.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'timelines', 'empty.json')
+        self.assertEqual(timeline.Timeline, ate.datatype(path))
+
     def test_datatype_empty(self):
         """
         Test that the datatype of an empty corpus is `None`.
