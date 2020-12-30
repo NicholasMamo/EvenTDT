@@ -93,6 +93,8 @@ def datatype(corpus):
     Therefore this function stops at the first non-built-in type and returns it.
     Otherwise, it returns the type of the high-level decoded first line.
 
+    If the data is not JSON-encoded, the function returns ``None``.
+
     :param corpus: The path to the corpus whose datatype will be identified.
     :type corpora: str
 
@@ -104,7 +106,12 @@ def datatype(corpus):
 
     with open(corpus) as f:
         line = f.readline()
-        object = Exportable.decode(json.loads(line))
+        try:
+            decoded = json.loads(line)
+        except:
+            return None
+
+        object = Exportable.decode(decoded)
         for value in object.values():
             if not isinstance(value, primitives):
                 return type(value)
