@@ -3,6 +3,14 @@ The ATE package includes functions and classes that are likely to be useful to a
 """
 
 import json
+import os
+import sys
+
+path = os.path.join(os.path.dirname(__file__), '..')
+if path not in sys.path:
+    sys.path.append(path)
+
+from objects.exportable import Exportable
 
 def total_documents(corpora, focus=None):
     """
@@ -73,3 +81,31 @@ def total_documents(corpora, focus=None):
         return list(documents.values())[0]
     else:
         return documents
+
+def datatype(corpus):
+    """
+    Check the type of data stored in the given corpus.
+    This function reads and decodes the first line in the corpus to get the type.
+
+    In any case, the data has to be JSON-encoded.
+    This function looks through the datatypes of each value in this decoded value.
+    Based on the conventions of the :mod:`~tools`, objects are in the top-level.
+    Therefore this function stops at the first non-built-in type and returns it.
+    Otherwise, it returns the type of the high-level decoded first line.
+
+    :param corpus: The path to the corpus whose datatype will be identified.
+    :type corpora: str
+
+    :return: The datatype of the data in the corpus.
+    :rtype: any
+    """
+
+    primitives = ( int, float, str, bool, list, dict, type(None) )
+
+    with open(corpus) as f:
+        line = f.readline()
+        object = Exportable.decode(json.loads(line))
+        for value in object.values():
+            if not isinstance(value, primitives):
+                return type(value)
+        return type(object)

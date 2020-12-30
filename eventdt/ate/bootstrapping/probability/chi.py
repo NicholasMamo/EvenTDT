@@ -193,8 +193,8 @@ class ChiBootstrapper(Bootstrapper):
         Initially, the term counts will be calculated only for terms that are not cached.
         The term counts for terms that are cached can be calculated in the cache routine.
         """
-        total = ate.total_documents(corpora)
-        counts = ate.total_documents(corpora, focus=list(set(seed + candidates)))
+        total = ate.total_documents(corpora) # TODO: Create a new function to calculate the total number of nodes
+        counts = ate.total_documents(corpora, focus=list(set(seed + candidates))) # TODO: Create a new function to calculate the total number of nodes including any word among the seed set and candidates
 
         """
         Generate the pairs for which the chi-square statistic will be computed.
@@ -219,7 +219,7 @@ class ChiBootstrapper(Bootstrapper):
                 Update the A in the tables for the cached term.
                 This value represents the number of documents in which both the cached term and the other term appear.
                 """
-                documents = probability.cached(corpora, term)
+                documents = probability.cached(corpora, term) # TODO: Update the function to support calculating the probability based on topical nodes
                 for document in documents:
                     for a, b in cached_pairs:
                         if a in document['tokens'] and b in document['tokens']:
@@ -245,6 +245,7 @@ class ChiBootstrapper(Bootstrapper):
         """
         Create any remaining contingency tables.
         """
+        # TODO: Handle the case of using a topical timeline
         if pairs:
             for corpus in corpora:
                 with open(corpus, 'r') as f:

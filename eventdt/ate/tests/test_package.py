@@ -13,6 +13,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 import ate
+from summarization import timeline
 
 class TestPackage(unittest.TestCase):
     """
@@ -220,3 +221,19 @@ class TestPackage(unittest.TestCase):
                                 counts[itemset] += 1
 
         self.assertEqual(counts, freq)
+
+    def test_datatype_tokenized(self):
+        """
+        Test that the datatype of a tokenized corpus is a normal dictionary.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE-100.json')
+        self.assertEqual(dict, ate.datatype(path))
+
+    def test_datatype_timeline(self):
+        """
+        Test that the datatype of a timeline corpus is a timeline.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json')
+        self.assertEqual(timeline.Timeline, ate.datatype(path))
