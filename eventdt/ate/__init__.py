@@ -11,6 +11,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from objects.exportable import Exportable
+from summarization.timeline import Timeline
 
 def total_documents(corpora, focus=None):
     """
@@ -20,11 +21,16 @@ def total_documents(corpora, focus=None):
                     If a string is given, it is assumed to be one corpus.
                     If a list is given, it is assumed to be a list of corpora.
 
-                    .. note::
+                    It is assumed that the corpora are one of two types:
 
-                        It is assumed that the corpora were extracted using the tokenizer tool.
-                        Therefore each line should be a JSON string representing a document.
-                        Each document should have a `tokens` attribute.
+                    1. Corpora extracted using the :mod:`~tools.tokenizer` tool.
+                       Therefore each line should be a JSON string representing a document.
+                       Each document should have a ``tokens`` attribute.
+
+                    2. Corpora generated using the :mod:`~tools.consume` tool.
+                       Each such file is made up of a single :class:`~summarization.timeline.Timeline`.
+                       Currently, only :class:`timelines <summarization.timeline.Timeline>` made up of :class:`~summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode` instances are supported.
+                       In this case, the function returns the number of nodes in the timeline.
     :type corpora: str or list of str
     :param focus: The tokens for which to compute the document frequency.
                   If nothing is given, the document frequency is calculated for all tokens.
@@ -64,18 +70,29 @@ def total_documents(corpora, focus=None):
 
     for corpus in corpora:
         with open(corpus, 'r') as f:
-            for line in f:
-                document = json.loads(line)
-
-                """
-                If focus tokens or tuples were given, check which itemsets appear in the given documents.
-                """
+            if datatype(corpus) is Timeline:
+                timeline = Exportable.decode(json.loads(f.readline()))['timeline']
                 if focus:
                     for itemset in focus:
-                        if all( item in document['tokens'] for item in itemset ):
-                            documents[itemset if len(itemset) > 1 else itemset[0]] += 1
+                        for node in timeline.nodes:
+                            keywords = [ keyword for topic in node.topics for keyword in topic.dimensions ]
+                            if all( item in keywords for item in itemset ):
+                                documents[itemset if len(itemset) > 1 else itemset[0]] += 1
                 else:
-                    documents['*'] += 1
+                    documents['*'] = len(timeline.nodes)
+            else:
+                for line in f:
+                    document = json.loads(line)
+
+                    """
+                    If focus tokens or tuples were given, check which itemsets appear in the given documents.
+                    """
+                    if focus:
+                        for itemset in focus:
+                            if all( item in document['tokens'] for item in itemset ):
+                                documents[itemset if len(itemset) > 1 else itemset[0]] += 1
+                    else:
+                        documents['*'] += 1
 
     if len(documents) == 1:
         return list(documents.values())[0]
