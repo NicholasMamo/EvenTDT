@@ -29,7 +29,6 @@ def total_documents(corpora, focus=None):
 
                     2. Corpora generated using the :mod:`~tools.consume` tool.
                        Each such file is made up of a single :class:`~summarization.timeline.Timeline`.
-                       Currently, only :class:`timelines <summarization.timeline.Timeline>` made up of :class:`~summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode` instances are supported.
                        In this case, the function returns the number of documents in the timeline that contain the tokens.
     :type corpora: str or list of str
     :param focus: The tokens for which to compute the document frequency.

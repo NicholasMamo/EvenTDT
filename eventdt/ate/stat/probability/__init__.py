@@ -5,6 +5,16 @@ This includes caching functionality, which collects all documents across all cor
 """
 
 import json
+import os
+import sys
+
+path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
+if path not in sys.path:
+    sys.path.append(path)
+
+import ate
+from objects.exportable import Exportable
+from summarization.timeline import Timeline
 
 def p(corpora, focus=None, cache=None):
     """
@@ -214,17 +224,22 @@ def cached(corpora, token):
                     If a string is given, it is assumed to be one corpus.
                     If a list is given, it is assumed to be a list of corpora.
 
-                    .. note::
+                    It is assumed that the corpora are one of two types:
 
-                        It is assumed that the corpora were extracted using the tokenizer tool.
-                        Therefore each line should be a JSON string representing a document.
-                        Each document should have a `tokens` attribute.
+                    1. Corpora extracted using the :mod:`~tools.tokenizer` tool.
+                       Therefore each line should be a JSON string representing a document.
+                       Each document should have a ``tokens`` attribute.
+
+                    2. Corpora generated using the :mod:`~tools.consume` tool.
+                       Each such file is made up of a single :class:`~summarization.timeline.Timeline`.
+                       Currently, only :class:`timelines <summarization.timeline.Timeline>` made up of :class:`~summarization.timeline.nodes.topical_cluster_node.TopicalClusterNode` instances are supported.
+                       In this case, the function returns the number of nodes in the timeline.
     :type corpora: str or list of str
     :param token: The token to look for in the documents.
     :type token: str
 
-    :return: A list of documents, each represented as a dictionary, that contain the given token.
-    :rtype: list of dict
+    :return: A list of documents, each represented as a dictionary or a node, that contain the given token.
+    :rtype: list of dict or list of :class:`~summarization.timeline.nodes.Node`
     """
 
     """
@@ -235,18 +250,29 @@ def cached(corpora, token):
     documents = [ ]
     for corpus in corpora:
         with open(corpus, 'r') as f:
-            for line in f:
+            if ate.datatype(corpus) is Timeline:
                 """
-                The check is in two steps:
-
-                    1. Check whether the token appears in the line string; and
-                    2. If it appears in the line string, decode the line and double-check that the token is in the document tokens.
-
-                This saves a lot of time from needlessly decoding lines, most of which do not contain the token.
+                The check for timeline documents only has one step.
+                It goes through each document and checks whether the token appears in the document.
+                This is because the documents are already loaded.
                 """
-                if token in line:
-                    document = json.loads(line)
-                    if token in document['tokens']:
+                timeline = Exportable.decode(json.loads(f.readline()))['timeline']
+                for document in [ document for node in timeline.nodes for document in node.get_all_documents() ]:
+                    if token in document.dimensions:
                         documents.append(document)
+            else:
+                for line in f:
+                    """
+                    The check for normal documents is in two steps:
+
+                        1. Check whether the token appears in the line string; and
+                        2. If it appears in the line string, decode the line and double-check that the token is in the document tokens.
+
+                    This saves a lot of time from needlessly decoding lines, most of which do not contain the token.
+                    """
+                    if token in line:
+                        document = json.loads(line)
+                        if token in document['tokens']:
+                            documents.append(document)
 
     return documents

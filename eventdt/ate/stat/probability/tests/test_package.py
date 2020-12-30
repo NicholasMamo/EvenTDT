@@ -15,6 +15,7 @@ if path not in sys.path:
 import ate
 from ate import linguistic
 from ate.stat.probability import *
+from objects.exportable import Exportable
 
 class TestPackage(unittest.TestCase):
     """
@@ -289,6 +290,15 @@ class TestPackage(unittest.TestCase):
         cache = cached(paths, 'yellow')
         self.assertTrue(all( 'yellow' in document['tokens'] for document in cache ))
 
+    def test_cache_separate_like_joined(self):
+        """
+        Test that getting the cache separately from each corpus gives the same list as if generating the cache from all corpora at once.
+        """
+
+        paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'CRYCHE.json'),
+                   os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'tokenized', 'LIVMUN.json') ]
+        self.assertEqual(cached(paths, 'yellow'), cached(paths[0], 'yellow') + cached(paths[1], 'yellow'))
+
     def test_cache_all_valid_retrieved(self):
         """
         Test that all documents containing the token are retrieved.
@@ -308,6 +318,91 @@ class TestPackage(unittest.TestCase):
                     document = json.loads(line)
                     if 'yellow' in document['tokens']:
                         self.assertTrue(document in cache)
+                        read += 1
+
+        self.assertGreater(read, 0)
+        self.assertEqual(read, len(cache))
+
+    def test_cache_timeline_invalid_token(self):
+        """
+        Test that when caching with a token that does not appear in the timelines, an empty list is returned.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json')
+        cache = cached(path, 'superlongword')
+        self.assertFalse(cache)
+
+    def test_cache_timeline_empty_corpus(self):
+        """
+        Test that generating the cache from an empty timeline returns an empty list of documents.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'timelines', 'empty.json')
+        cache = cached(path, 'superlongword')
+        self.assertFalse(cache)
+
+    def test_cache_one_timeline(self):
+        """
+        Test that generating the cache from one timeline returns only the documents from that corpus.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json')
+        cache = cached(path, 'yellow')
+        self.assertTrue(cache)
+
+    def test_cache_multiple_timelines(self):
+        """
+        Test that generating the cache from multiple timelines returns all the documents from all timelines.
+        """
+
+        paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+                   os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json') ]
+        cache = cached(paths, 'yellow')
+        self.assertTrue(cache)
+
+    def test_cache_timeline_all_contain_token(self):
+        """
+        Test that all documents in the cache contain the given token.
+        """
+
+        paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+                   os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json') ]
+        cache = cached(paths, 'yellow')
+        self.assertTrue(all( 'yellow' in document.dimensions for document in cache ))
+
+    def test_cache_timeline_separate_like_joined(self):
+        """
+        Test that getting the cache separately from each timeline gives the same list as if generating the cache from all timelines at once.
+        """
+
+        paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+                   os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json') ]
+        cache_1 = [ document.to_array() for document in cached(paths[0], 'yellow') ]
+        cache_2 = [ document.to_array() for document in cached(paths[1], 'yellow') ]
+        cache = [ document.to_array() for document in cached(paths, 'yellow') ]
+        self.assertEqual(cache, cache_1 + cache_2)
+
+    def test_cache_timeline_all_valid_retrieved(self):
+        """
+        Test that all documents containing the token are retrieved.
+        """
+
+        paths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+                   os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json') ]
+        cache = cached(paths, 'yellow')
+        cache = [ document.to_array() for document in cache ]
+
+        """
+        Go over all the documents in the corpora.
+        """
+        read = 0
+        for path in paths:
+            with open(path, 'r') as f:
+                timeline = Exportable.decode(json.loads(f.readline()))['timeline']
+                documents = [ document for node in timeline.nodes for document in node.get_all_documents() ]
+                for document in documents:
+                    if 'yellow' in document.dimensions:
+                        self.assertTrue(document.to_array() in cache)
                         read += 1
 
         self.assertGreater(read, 0)
