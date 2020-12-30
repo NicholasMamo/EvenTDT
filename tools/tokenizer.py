@@ -279,33 +279,47 @@ def tokenize_corpus(file, output, tokenizer, keep=None, remove_retweets=False):
         else:
             for line in infile:
                 tweet = json.loads(line)
-
-                """
-                Skip the tweet if retweets should be excluded.
-                """
-                if remove_retweets and 'retweeted_status' in tweet:
+                if remove_retweets and twitter.is_retweet(tweet): # skip the tweet if retweets should be excluded
                     continue
 
-                text = twitter.full_text(tweet)
-                tokens = tokenizer.tokenize(text)
-
-                """
-                By default, each tweet object stores:
-
-                - The tweet ID,
-                - The text used to extract tokens, and
-                - The tokens themselves.
-                """
-                object = { 'id': tweet['id'], 'text': tweet['text'],
-                           'tokens': tokens }
-
-                """
-                Other attributes can be specified as arguments.
-                """
-                for attribute in keep:
-                    object[attribute] = tweet.get(attribute)
-
+                object = prepare(tweet, tokenizer, keep)
                 outfile.write(f"{ json.dumps(object) }\n")
+
+def prepare(tweet, tokenizer, keep):
+    """
+    Prepare the tweet, which includes tokenizing it and choosing which attributes to keep.
+
+    :param tweet: The tweet to tokenize.
+    :type tweet: dict
+    :param tokenizer: The tokenizer to use to create the tokenized corpus.
+    :type tokenizer: :class:`~nlp.tokenizer.Tokenizer`
+    :param keep: The list of tweet attributes to store for each tweet.
+                 By default, the tweet ID is always kept.
+    :type keep: list or None
+
+    :return: The tokenized tweet
+    """
+
+    text = twitter.full_text(tweet)
+    tokens = tokenizer.tokenize(text)
+
+    """
+    By default, each tweet object stores:
+
+    - The tweet ID,
+    - The text used to extract tokens, and
+    - The tokens themselves.
+    """
+    object = { 'id': tweet['id'], 'text': tweet['text'],
+               'tokens': tokens }
+
+    """
+    Other attributes can be specified as arguments.
+    """
+    for attribute in keep:
+        object[attribute] = tweet.get(attribute)
+
+    return object
 
 if __name__ == "__main__":
     main()

@@ -166,136 +166,6 @@ class TestTokenizer(unittest.TestCase):
 
         self.assertEqual(inids, outids)
 
-    def test_tokenize_corpus_id(self):
-        """
-        Test that when tokenizing a corpus, the ID is saved alongside each tweet.
-        """
-
-        file = 'eventdt/tests/corpora/CRYCHE-100.json'
-        output = 'tools/tests/.out/tokenized.json'
-
-        """
-        Tokenize the corpus and ensure that the ID is present in all tweets.
-        """
-        tool.prepare_output(output)
-        tool.tokenize_corpus(file, output, Tokenizer())
-        with open(output, 'r') as outfile:
-            for line in outfile:
-                self.assertTrue('id' in json.loads(line))
-
-    def test_tokenize_corpus_text(self):
-        """
-        Test that when tokenizing a corpus, the text is saved alongside each tweet.
-        """
-
-        file = 'eventdt/tests/corpora/CRYCHE-100.json'
-        output = 'tools/tests/.out/tokenized.json'
-
-        """
-        Tokenize the corpus and ensure that the ID is present in all tweets.
-        """
-        tool.prepare_output(output)
-        tool.tokenize_corpus(file, output, Tokenizer())
-        with open(output, 'r') as outfile:
-            for line in outfile:
-                self.assertTrue('text' in json.loads(line))
-
-    def test_tokenize_corpus_no_keep(self):
-        """
-        Test that when specifying no attribute to keep, the only attributes kept are the tweet ID, text and tokens.
-        """
-
-        file = 'eventdt/tests/corpora/CRYCHE-100.json'
-        output = 'tools/tests/.out/tokenized.json'
-
-        """
-        Tokenize the corpus and ensure that the ID is present in all tweets.
-        """
-        tool.prepare_output(output)
-        tool.tokenize_corpus(file, output, Tokenizer())
-        with open(output, 'r') as outfile:
-            for line in outfile:
-                self.assertEqual({ 'id', 'text', 'tokens' }, set(json.loads(line)))
-
-    def test_tokenize_corpus_keep(self):
-        """
-        Test that when specifying attributes to keep, they are always stored.
-        """
-
-        file = 'eventdt/tests/corpora/CRYCHE-100.json'
-        output = 'tools/tests/.out/tokenized.json'
-
-        """
-        Tokenize the corpus and ensure that the ID is present in all tweets.
-        """
-        tool.prepare_output(output)
-        tool.tokenize_corpus(file, output, Tokenizer(), keep=[ 'timestamp_ms' ])
-        with open(output, 'r') as outfile:
-            for line in outfile:
-                self.assertEqual({ 'id', 'text', 'tokens', 'timestamp_ms' }, set(json.loads(line)))
-
-    def test_tokenize_corpus_keep_occasional(self):
-        """
-        Test that when specifying attributes to keep, an attribute that appears occasionally is still stored, but as ``None``, when not found.
-        """
-
-        file = 'eventdt/tests/corpora/CRYCHE-100.json'
-        output = 'tools/tests/.out/tokenized.json'
-
-        """
-        Tokenize the corpus and ensure that the ID is present in all tweets.
-        """
-        tool.prepare_output(output)
-        tool.tokenize_corpus(file, output, Tokenizer(), keep=[ 'retweeted_status' ])
-        with open(output, 'r') as outfile:
-            for line in outfile:
-                self.assertEqual({ 'id', 'text', 'tokens', 'retweeted_status' }, set(json.loads(line)))
-
-    def test_tokenize_corpus_keep_multiple(self):
-        """
-        Test that when specifying multiple attributes to keep, they are always stored.
-        """
-
-        file = 'eventdt/tests/corpora/CRYCHE-100.json'
-        output = 'tools/tests/.out/tokenized.json'
-
-        """
-        Tokenize the corpus and ensure that the ID is present in all tweets.
-        """
-        tool.prepare_output(output)
-        tool.tokenize_corpus(file, output, Tokenizer(), keep=[ 'timestamp_ms', 'id_str' ])
-        with open(output, 'r') as outfile:
-            for line in outfile:
-                self.assertEqual({ 'id', 'text', 'tokens', 'timestamp_ms', 'id_str' }, set(json.loads(line)))
-
-    def test_tokenize_corpus_keep_retweets(self):
-        """
-        Test that when keeping retweets, the number of lines remains the same.
-        """
-
-        file = 'eventdt/tests/corpora/CRYCHE-100.json'
-        output = 'tools/tests/.out/tokenized.json'
-
-        """
-        Count the number of lines in the corpus.
-        """
-        inlines = 0
-        with open(file, 'r') as infile:
-            for line in infile:
-                inlines += 1
-
-        """
-        Tokenize the corpus and again count the number of lines in the tokenized corpus.
-        """
-        tool.prepare_output(output)
-        tool.tokenize_corpus(file, output, Tokenizer(), remove_retweets=False)
-        outlines = 0
-        with open(output, 'r') as outfile:
-            for line in outfile:
-                outlines += 1
-
-        self.assertEqual(inlines, outlines)
-
     def test_tokenize_corpus_remove_retweets(self):
         """
         Test that when removing retweets, the number of lines should decrease.
@@ -416,3 +286,101 @@ class TestTokenizer(unittest.TestCase):
             self.assertTrue(not any( 'feel' in json.loads(line)['tokens'] for line in outfile.readlines() ))
             outfile.seek(0)
             self.assertTrue(any( 'chelsea' in json.loads(line)['tokens'] for line in outfile.readlines() ))
+
+    def test_prepare_tweet_id(self):
+        """
+        Test that when preparing a tweet, the ID is saved alongside each tweet.
+        """
+
+        file = 'eventdt/tests/corpora/CRYCHE-100.json'
+        with open(file, 'r') as infile:
+            for line in infile:
+                tweet = json.loads(line)
+                self.assertTrue('id' in tool.prepare_tweet(tweet, Tokenizer(), [ ]))
+
+    def test_prepare_tweet_text(self):
+        """
+        Test that when preparing a tweet, the text is saved alongside each tweet.
+        """
+
+        file = 'eventdt/tests/corpora/CRYCHE-100.json'
+        with open(file, 'r') as infile:
+            for line in infile:
+                tweet = json.loads(line)
+                self.assertTrue('text' in tool.prepare_tweet(tweet, Tokenizer(), [ ]))
+
+    def test_prepare_tweet_no_keep(self):
+        """
+        Test that when specifying no attribute to keep, the only attributes kept are the tweet ID, text and tokens.
+        """
+
+        file = 'eventdt/tests/corpora/CRYCHE-100.json'
+        with open(file, 'r') as infile:
+            for line in infile:
+                tweet = json.loads(line)
+                self.assertEqual({ 'id', 'text', 'tokens' },
+                                 set(tool.prepare_tweet(tweet, Tokenizer(), [ ])))
+
+    def test_prepare_tweet_keep(self):
+        """
+        Test that when specifying attributes to keep, they are always stored.
+        """
+
+        file = 'eventdt/tests/corpora/CRYCHE-100.json'
+        with open(file, 'r') as infile:
+            for line in infile:
+                tweet = json.loads(line)
+                self.assertEqual({ 'id', 'text', 'tokens', 'timestamp_ms' },
+                                 set(tool.prepare_tweet(tweet, Tokenizer(), [ 'timestamp_ms' ])))
+
+    def test_prepare_tweet_keep_occasional(self):
+        """
+        Test that when specifying attributes to keep, an attribute that appears occasionally is still stored, but as `None`, when not found.
+        """
+
+        file = 'eventdt/tests/corpora/CRYCHE-100.json'
+        with open(file, 'r') as infile:
+            for line in infile:
+                tweet = json.loads(line)
+                self.assertEqual({ 'id', 'text', 'tokens', 'retweeted_status' },
+                                 set(tool.prepare_tweet(tweet, Tokenizer(), [ 'retweeted_status' ])))
+
+    def test_prepare_tweet_keep_multiple(self):
+        """
+        Test that when specifying multiple attributes to keep, they are always stored.
+        """
+
+        file = 'eventdt/tests/corpora/CRYCHE-100.json'
+        with open(file, 'r') as infile:
+            for line in infile:
+                tweet = json.loads(line)
+                self.assertEqual({ 'id', 'text', 'tokens', 'timestamp_ms', 'id_str' },
+                                 set(tool.prepare_tweet(tweet, Tokenizer(), [ 'timestamp_ms', 'id_str' ])))
+
+    def test_prepare_tweet_keep_retweets(self):
+        """
+        Test that when keeping retweets, the number of lines remains the same.
+        """
+
+        file = 'eventdt/tests/corpora/CRYCHE-100.json'
+        output = 'tools/tests/.out/tokenized.json'
+
+        """
+        Count the number of lines in the corpus.
+        """
+        inlines = 0
+        with open(file, 'r') as infile:
+            for line in infile:
+                inlines += 1
+
+        """
+        Tokenize the corpus and again count the number of lines in the tokenized corpus.
+        """
+        tool.prepare_output(output)
+        tool.tokenize_corpus(file, output, Tokenizer(), remove_retweets=False)
+        outlines = 0
+        with open(output, 'r') as outfile:
+            for line in outfile:
+                outlines += 1
+
+        self.assertEqual(inlines, outlines)
