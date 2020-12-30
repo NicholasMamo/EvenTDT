@@ -18,6 +18,7 @@ for path in paths:
 
 import tokenizer as tool
 from eventdt.nlp.tokenizer import Tokenizer
+from eventdt.objects.exportable import Exportable
 
 class TestTokenizer(unittest.TestCase):
     """
@@ -203,7 +204,7 @@ class TestTokenizer(unittest.TestCase):
         output = 'tools/tests/.out/tokenized.json'
 
         """
-        Tokenize the corpus and ensure that the ID is present in all tweets.
+        Tokenize the corpus and ensure that the `retweeted_status` is present in all tweets.
         """
         tool.prepare_output(output)
         tool.tokenize_corpus(file, output, Tokenizer(), keep=[ 'retweeted_status' ], remove_retweets=True)
@@ -219,7 +220,7 @@ class TestTokenizer(unittest.TestCase):
         output = 'tools/tests/.out/tokenized.json'
 
         """
-        Tokenize the corpus and ensure that the ID is present in all tweets.
+        Tokenize the corpus and ensure that the `quoted_status` is present in some tweets.
         """
         tool.prepare_output(output)
         tool.tokenize_corpus(file, output, Tokenizer(), keep=[ 'quoted_status' ], remove_retweets=True)
@@ -283,6 +284,238 @@ class TestTokenizer(unittest.TestCase):
         with open(output, 'r') as outfile:
             self.assertTrue(not any( 'while' in json.loads(line)['tokens'] for line in outfile.readlines() ))
             outfile.seek(0)
+            self.assertTrue(not any( 'feel' in json.loads(line)['tokens'] for line in outfile.readlines() ))
+            outfile.seek(0)
+            self.assertTrue(any( 'chelsea' in json.loads(line)['tokens'] for line in outfile.readlines() ))
+
+    def test_tokenize_corpus_timeline_same_documents(self):
+        """
+        Test that when tokenizing a timeline corpus, the same number of documents are outputted.
+        """
+
+        file = 'eventdt/tests/corpora/timelines/CRYCHE.json'
+        output = 'tools/tests/.out/tokenized.json'
+
+        """
+        Count the number of documents in the timeline.
+        """
+        with open(file, 'r') as infile:
+            timeline = Exportable.decode(json.loads(infile.readline()))['timeline']
+            inlines = len([ document for node in timeline.nodes for document in node.get_all_documents() ])
+
+        """
+        Tokenize the corpus and again count the number of lines in the tokenized corpus.
+        """
+        tool.prepare_output(output)
+        tool.tokenize_corpus(file, output, Tokenizer())
+        outlines = 0
+        with open(output, 'r') as outfile:
+            for line in outfile:
+                outlines += 1
+
+        self.assertEqual(inlines, outlines)
+
+    def test_tokenize_corpus_timeline_same_order(self):
+        """
+        Test that when tokenizing a timeline corpus, the tweets are saved in the correct order.
+        """
+
+        file = 'eventdt/tests/corpora/timelines/CRYCHE.json'
+        output = 'tools/tests/.out/tokenized.json'
+
+        """
+        Collect the IDs in the input file.
+        """
+        inids = [ ]
+        with open(file, 'r') as infile:
+            timeline = Exportable.decode(json.loads(infile.readline()))['timeline']
+            for document in [ document for node in timeline.nodes for document in node.get_all_documents() ]:
+                inids.append(document.attributes.get('id'))
+
+        """
+        Tokenize the corpus and again collect the lines in the tokenized corpus.
+        """
+        tool.prepare_output(output)
+        tool.tokenize_corpus(file, output, Tokenizer())
+        outids = [ ]
+        with open(output, 'r') as outfile:
+            for line in outfile:
+                outids.append(json.loads(line)['id'])
+
+        self.assertEqual(inids, outids)
+
+    def test_tokenize_corpus_timeline_id_from_document(self):
+        """
+        Test that when a timeline's documents do not have tweets associated with them, the ID is taken from the document's attributes.
+        """
+
+        file = 'eventdt/tests/corpora/timelines/CRYCHE.json'
+        output = 'tools/tests/.out/tokenized.json'
+
+        """
+        Collect the IDs in the input file.
+        """
+        inids = [ ]
+        with open(file, 'r') as infile:
+            timeline = Exportable.decode(json.loads(infile.readline()))['timeline']
+            for document in [ document for node in timeline.nodes for document in node.get_all_documents() ]:
+                inids.append(document.attributes.get('id'))
+
+        """
+        Tokenize the corpus and again collect the lines in the tokenized corpus.
+        """
+        tool.prepare_output(output)
+        tool.tokenize_corpus(file, output, Tokenizer())
+        outids = [ ]
+        with open(output, 'r') as outfile:
+            for line in outfile:
+                outids.append(json.loads(line)['id'])
+
+        self.assertEqual(inids, outids)
+
+    def test_tokenize_corpus_timeline_id_from_tweet(self):
+        """
+        Test that when a timeline's documents have tweets associated with them, the ID is taken from the tweet's attributes.
+        """
+
+        file = 'eventdt/tests/corpora/timelines/TOTLEI.json'
+        output = 'tools/tests/.out/tokenized.json'
+
+        """
+        Collect the IDs in the input file.
+        """
+        inids = [ ]
+        with open(file, 'r') as infile:
+            timeline = Exportable.decode(json.loads(infile.readline()))['timeline']
+            for document in [ document for node in timeline.nodes for document in node.get_all_documents() ]:
+                inids.append(document.attributes.get('tweet').get('id'))
+
+        """
+        Tokenize the corpus and again collect the lines in the tokenized corpus.
+        """
+        tool.prepare_output(output)
+        tool.tokenize_corpus(file, output, Tokenizer())
+        outids = [ ]
+        with open(output, 'r') as outfile:
+            for line in outfile:
+                outids.append(json.loads(line)['id'])
+
+        self.assertEqual(inids, outids)
+
+    def test_tokenize_corpus_timeline_remove_retweets(self):
+        """
+        Test that when removing retweets from a timeline, the number of lines should decrease.
+        """
+
+        file = 'eventdt/tests/corpora/timelines/TOTLEI.json'
+        output = 'tools/tests/.out/tokenized.json'
+
+        """
+        Count the number of lines in the corpus.
+        """
+        with open(file, 'r') as infile:
+            timeline = Exportable.decode(json.loads(infile.readline()))['timeline']
+            inlines = len([ document for node in timeline.nodes for document in node.get_all_documents() ])
+
+        """
+        Tokenize the corpus and again count the number of lines in the tokenized corpus.
+        """
+        tool.prepare_output(output)
+        tool.tokenize_corpus(file, output, Tokenizer(), remove_retweets=True)
+        outlines = 0
+        with open(output, 'r') as outfile:
+            for line in outfile:
+                outlines += 1
+
+        self.assertGreater(inlines, outlines)
+
+    def test_tokenize_corpus_timeline_remove_retweets_retweeted_status(self):
+        """
+        Test that when removing retweets from a timeline, the `retweeted_status` attribute is never present.
+        """
+
+        file = 'eventdt/tests/corpora/timelines/TOTLEI.json'
+        output = 'tools/tests/.out/tokenized.json'
+
+        """
+        Tokenize the corpus and ensure that the `retweeted_status` is present in all tweets.
+        """
+        tool.prepare_output(output)
+        tool.tokenize_corpus(file, output, Tokenizer(), keep=[ 'retweeted_status' ], remove_retweets=True)
+        with open(output, 'r') as outfile:
+            self.assertTrue(not any( json.loads(line)['retweeted_status'] in json.loads(line) for line in outfile ))
+
+    def test_tokenize_corpus_timeline_remove_retweets_keep_quoted(self):
+        """
+        Test that when removing retweets from a timeline, quoted statuses are retained.
+        """
+
+        file = 'eventdt/tests/corpora/timelines/TOTLEI.json'
+        output = 'tools/tests/.out/tokenized.json'
+
+        """
+        Tokenize the corpus and ensure that the `quoted_status` is present in some tweets.
+        """
+        tool.prepare_output(output)
+        tool.tokenize_corpus(file, output, Tokenizer(), keep=[ 'quoted_status' ], remove_retweets=True)
+        with open(output, 'r') as outfile:
+            self.assertTrue(any( json.loads(line)['quoted_status'] for line in outfile ))
+
+    def test_tokenize_corpus_timeline_keep_stopwords(self):
+        """
+        Test that when tokenizing a timeline corpus without removing stopwords, they are retained.
+        """
+
+        file = 'eventdt/tests/corpora/timelines/CRYCHE.json'
+        output = 'tools/tests/.out/tokenized.json'
+
+        """
+        Tokenize the corpus and again collect the lines in the tokenized corpus.
+        """
+        tool.prepare_output(output)
+        tool.tokenize_corpus(file, output, Tokenizer(stem=False, stopwords={ }))
+        with open(output, 'r') as outfile:
+            self.assertTrue(any( 'while' in json.loads(line)['tokens'] for line in outfile.readlines() ))
+            outfile.seek(0)
+            self.assertTrue(any( 'the' in json.loads(line)['tokens'] for line in outfile.readlines() ))
+            outfile.seek(0)
+            self.assertTrue(any( 'this' in json.loads(line)['tokens'] for line in outfile.readlines() ))
+
+    def test_tokenize_corpus_timeline_remove_stopwords(self):
+        """
+        Test that when tokenizing a timeline corpus and removing stopwords, no stopwords remain.
+        """
+
+        file = 'eventdt/tests/corpora/timelines/CRYCHE.json'
+        output = 'tools/tests/.out/tokenized.json'
+
+        """
+        Tokenize the corpus and again collect the lines in the tokenized corpus.
+        """
+        tool.prepare_output(output)
+        tool.tokenize_corpus(file, output, Tokenizer(stem=False, stopwords=stopwords.words('english')))
+        with open(output, 'r') as outfile:
+            self.assertTrue(not any( 'while' in json.loads(line)['tokens'] for line in outfile.readlines() ))
+            outfile.seek(0)
+            self.assertTrue(not any( 'the' in json.loads(line)['tokens'] for line in outfile.readlines() ))
+            outfile.seek(0)
+            self.assertTrue(not any( 'this' in json.loads(line)['tokens'] for line in outfile.readlines() ))
+
+    def test_tokenize_corpus_timeline_nouns(self):
+        """
+        Test that when tokenizing a corpus and retaining only nouns, other words do not remain.
+        """
+
+        file = 'eventdt/tests/corpora/timelines/CRYCHE.json'
+        output = 'tools/tests/.out/tokenized.json'
+
+        """
+        Tokenize the corpus and again collect the lines in the tokenized corpus.
+        """
+        tool.prepare_output(output)
+        tags = tool.get_tags(nouns=True, proper_nouns=False, verbs=False, adjectives=False)
+        tool.tokenize_corpus(file, output, Tokenizer(pos=tags))
+        with open(output, 'r') as outfile:
             self.assertTrue(not any( 'feel' in json.loads(line)['tokens'] for line in outfile.readlines() ))
             outfile.seek(0)
             self.assertTrue(any( 'chelsea' in json.loads(line)['tokens'] for line in outfile.readlines() ))

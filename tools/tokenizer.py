@@ -99,6 +99,7 @@ sys.path.insert(-1, root)
 sys.path.insert(-1, lib)
 
 import ate
+from nlp import Document
 from nlp.tokenizer import Tokenizer
 from objects.exportable import Exportable
 from summarization.timeline import Timeline
@@ -272,20 +273,27 @@ def tokenize_corpus(file, output, tokenizer, keep=None, remove_retweets=False):
     keep = keep or [ ]
 
     with open(file, 'r') as infile, \
-          open(output, 'w') as outfile:
+         open(output, 'w') as outfile:
         if ate.datatype(file) is Timeline:
-            timeline = Exportable.decode(json.loads(f.readline()))['timeline']
+            timeline = Exportable.decode(json.loads(infile.readline()))['timeline']
             documents = [ document for node in timeline.nodes for document in node.get_all_documents() ]
+            for document in documents:
+                tweet = document.attributes.get('tweet', document) # use the document itself if there is no saved tweet
+                if (remove_retweets and type(tweet) is dict and 'retweeted_status' in tweet): # skip the tweet if retweets should be excluded
+                    continue
+
+                object = prepare_tweet(tweet, tokenizer, keep)
+                outfile.write(f"{ json.dumps(object) }\n")
         else:
             for line in infile:
                 tweet = json.loads(line)
                 if remove_retweets and twitter.is_retweet(tweet): # skip the tweet if retweets should be excluded
                     continue
 
-                object = prepare(tweet, tokenizer, keep)
+                object = prepare_tweet(tweet, tokenizer, keep)
                 outfile.write(f"{ json.dumps(object) }\n")
 
-def prepare(tweet, tokenizer, keep):
+def prepare_tweet(tweet, tokenizer, keep):
     """
     Prepare the tweet, which includes tokenizing it and choosing which attributes to keep.
 
@@ -300,24 +308,46 @@ def prepare(tweet, tokenizer, keep):
     :return: The tokenized tweet
     """
 
-    text = twitter.full_text(tweet)
-    tokens = tokenizer.tokenize(text)
+    object = { }
+    if type(tweet) is dict:
+        text = twitter.full_text(tweet)
+        tokens = tokenizer.tokenize(text)
 
-    """
-    By default, each tweet object stores:
+        """
+        By default, each tweet object stores:
 
-    - The tweet ID,
-    - The text used to extract tokens, and
-    - The tokens themselves.
-    """
-    object = { 'id': tweet['id'], 'text': tweet['text'],
-               'tokens': tokens }
+        - The tweet ID,
+        - The text used to extract tokens, and
+        - The tokens themselves.
+        """
+        object = { 'id': tweet['id'], 'text': tweet['text'],
+                   'tokens': tokens }
 
-    """
-    Other attributes can be specified as arguments.
-    """
-    for attribute in keep:
-        object[attribute] = tweet.get(attribute)
+        """
+        Other attributes can be specified as arguments.
+        """
+        for attribute in keep:
+            object[attribute] = tweet.get(attribute)
+    elif type(tweet) is Document:
+        document = tweet
+        text = document.text
+        tokens = tokenizer.tokenize(text)
+
+        """
+        By default, each tweet object stores:
+
+        - The tweet ID,
+        - The text used to extract tokens, and
+        - The tokens themselves.
+        """
+        object = { 'id': document.attributes.get('id'), 'text': document.text,
+                   'tokens': tokens }
+
+        """
+        Other attributes can be specified as arguments.
+        """
+        for attribute in keep:
+            object[attribute] = document.attributes.get(attribute)
 
     return object
 
