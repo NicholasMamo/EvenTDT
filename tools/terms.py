@@ -371,7 +371,7 @@ def main():
     """
     if args['reranker']:
         reranked = rerank(terms, **reranker_params(args))
-        combined = combine(args['reranker-mode'], terms, reranked)
+        combined = combine(args['reranker_mode'], terms, reranked)
         tools.save(args['output'], { 'cmd': cmd, 'pcmd': pcmd, 'terms': combined, 'terms_base': terms, 'terms_rerank': reranked })
     else:
         tools.save(args['output'], { 'cmd': cmd, 'pcmd': pcmd, 'terms': terms })
