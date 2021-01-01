@@ -134,10 +134,14 @@ def pprint_tar(archive):
             # read the meta.json file differently from the others
             if basename == 'meta.json':
                 content = json.loads(file.read())
-                details['sample'] = { }
-                details['understanding'], details['event'] = content.get('understanding', { }), content.get('event', { })
+                details['sample'] = details.get('sample', { })
+                details['understanding'] = details.get('understanding', { })
+                details['event'] = details.get('event', { })
+
+                details['understanding'].update(content.get('understanding', { }))
+                details['event'].update(content.get('event', { }))
                 if not any( details[corpus] for corpus in details ):
-                    details['sample'] = content
+                    details['sample'].update(content)
             else:
                 corpus = basename.split('.')[0]
                 tweets = 0
