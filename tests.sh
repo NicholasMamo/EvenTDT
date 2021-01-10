@@ -73,6 +73,11 @@ ate_tests() {
 	python3 -m unittest eventdt.ate.stat.tests.test_tfidf
 }
 
+attribute_tests() {
+	echo -e "${HIGHLIGHT}Attribute extraction${DEFAULT}"
+	python3 -m unittest eventdt.attributes.tests.test_profile
+}
+
 base_tests() {
 	echo -e "${HIGHLIGHT}Attributable${DEFAULT}"
 	python3 -m unittest eventdt.objects.tests.test_attributable
@@ -241,6 +246,9 @@ then
 		ate)
 			ate_tests
 			;;
+		attributes)
+		    attribute_tests
+			;;
 		base)
 			base_tests
 			;;
@@ -279,6 +287,7 @@ then
 else
 	apd_tests
 	ate_tests
+	attribute_tests
 	base_tests
 	ml_tests
 	nlp_tests
