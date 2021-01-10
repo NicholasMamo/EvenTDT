@@ -17,3 +17,11 @@ Profile
 .. automodule:: attributes.profile
    :members:
    :special-members:
+
+==========
+Extractors
+==========
+
+.. automodule:: attributes.extractors
+   :members:
+   :special-members:
