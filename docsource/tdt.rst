@@ -1,5 +1,5 @@
 *************************************
-6. Topic Detection and Tracking (TDT)
+7. Topic Detection and Tracking (TDT)
 *************************************
 
 .. meta::
