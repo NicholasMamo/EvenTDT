@@ -9,3 +9,11 @@
 .. automodule:: attributes
    :members:
    :special-members:
+
+=======
+Profile
+=======
+
+.. automodule:: attributes.profile
+   :members:
+   :special-members:
