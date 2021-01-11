@@ -78,4 +78,4 @@ class LinguisticExtractor(Extractor):
 
         tokens = nltk.word_tokenize(sentence)
         tagged = nltk.pos_tag(tokens)
-        return this.parser.parse(tagged)
+        return self.parser.parse(tagged)
