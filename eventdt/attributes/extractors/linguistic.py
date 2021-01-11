@@ -42,12 +42,12 @@ class LinguisticExtractor(Extractor):
 
         # TODO: Handle head nouns in the attribute value
         # TODO: Handle proper nouns being the head nouns in the attribute value
-        # TODO: Handle prepositions/subordinating conjunctions
 
         grammar = grammar or """
                   ATRV: { <JJ.*|VBG|NN.*|CD>*<NN.*> }
                   ATRN: { <VB.*> }
-                  ATTR: { <ATRN><RB|IN|DT>*?(<ATRV><CC|,>?)+ }
+                  INATR: { <RB>*?<IN>?(<DT>?<ATRV><CC|,>?)+ }
+                  ATTR: { <ATRN><INATR>+ }
         """
         self.parser = nltk.RegexpParser(grammar)
 
@@ -71,10 +71,14 @@ class LinguisticExtractor(Extractor):
             tree = self._parse(sentence)
             subtrees = self._attribute_subtrees(tree)
             for subtree in subtrees:
-                name, values = self._to_attributes(subtree)
-                for value in values:
-                    profile.attributes[name] = profile.attributes.get(name) or set()
-                    profile.attributes[name].add(self._attribute_value(value))
+                name, value_subtrees = self._to_attributes(subtree)
+                for value_subtree in value_subtrees:
+                    preposition = self._get_preposition(value_subtree)
+                    name_pp = f"{name}_{ preposition }" if preposition else name
+                    profile.attributes[name_pp] = profile.attributes.get(name_pp) or set()
+                    attributes = self._get_attribute(value_subtree)
+                    for attribute in attributes:
+                        profile.attributes[name_pp].add(self._attribute_value(attribute))
 
         return profile
 
@@ -114,7 +118,7 @@ class LinguisticExtractor(Extractor):
         Convert the given attribute subtree into a list of attributes.
         One subtree may return multiple attributes because of conjunctions.
 
-        :param subtree: The subtree which will be converted into attributes.
+        :param subtree: The subtree which will be split into attributes.
         :type subtree: :class:`nltk.tree.Tree`
 
         :return: The attribute as a tuple, with the first value being the name and the second being the value.
@@ -124,7 +128,7 @@ class LinguisticExtractor(Extractor):
 
         name = [ component for component in subtree.subtrees() if component.label() == 'ATRN' ][0]
         name = [ text for text, pos in name.leaves() ]
-        values = [ component for component in subtree.subtrees() if component.label() == 'ATRV' ]
+        values = [ component for component in subtree.subtrees() if component.label() == 'INATR' ]
 
         return ('_'.join(name).lower(), values)
 
@@ -144,7 +148,7 @@ class LinguisticExtractor(Extractor):
 
     def _get_attribute(self, subtree):
         """
-        Extracth the attribute subtree from the given subtree.
+        Extract the attribute subtree from the given subtree.
 
         :param subtree: The subtree from where to extract the attribute value.
         :type subtree: :class:`nltk.tree.Tree`
@@ -153,7 +157,7 @@ class LinguisticExtractor(Extractor):
         :rtype: :class:`nltk.tree.Tree`
         """
 
-        return [ _subtree for _subtree in subtree.subtrees() if _subtree.label() == 'ATRV' ][0]
+        return [ _subtree for _subtree in subtree.subtrees() if _subtree.label() == 'ATRV' ]
 
     def _attribute_value(self, subtree):
         """

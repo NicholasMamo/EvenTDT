@@ -109,7 +109,7 @@ class TestLinguisticExtractor(unittest.TestCase):
 
         sentence = "Memphis Depay plays as a forward."
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'plays': { 'forward' } }, profile.attributes)
+        self.assertEqual({ 'plays_as': { 'forward' } }, profile.attributes)
 
     def test_extract_sets(self):
         """
@@ -121,8 +121,8 @@ class TestLinguisticExtractor(unittest.TestCase):
         sentence = "Memphis Depay is a footballer and rapper who plays for Lyon."
         profile = extractor.extract(sentence)
         self.assertTrue(all(set == type(value) for value in profile.attributes.values()))
-        self.assertEqual({ 'is': { 'footballer', 'rapper' }, 'plays': { 'lyon' } }, profile.attributes)
-        self.assertEqual({ 'is': { 'rapper', 'footballer' }, 'plays': { 'lyon' } }, profile.attributes)
+        self.assertEqual({ 'is': { 'footballer', 'rapper' }, 'plays_for': { 'lyon' } }, profile.attributes)
+        self.assertEqual({ 'is': { 'rapper', 'footballer' }, 'plays_for': { 'lyon' } }, profile.attributes)
 
     def test_extract_conjunctions_and(self):
         """
@@ -137,7 +137,7 @@ class TestLinguisticExtractor(unittest.TestCase):
 
         sentence = "Memphis Depay plays as a forward and midfielder."
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'plays': { 'forward', 'midfielder' } }, profile.attributes)
+        self.assertEqual({ 'plays_as': { 'forward', 'midfielder' } }, profile.attributes)
 
     def test_extract_conjunctions_or(self):
         """
@@ -152,7 +152,7 @@ class TestLinguisticExtractor(unittest.TestCase):
 
         sentence = "Memphis Depay plays as a forward or midfielder."
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'plays': { 'forward', 'midfielder' } }, profile.attributes)
+        self.assertEqual({ 'plays_as': { 'forward', 'midfielder' } }, profile.attributes)
 
     def test_extract_conjunctions(self):
         """
@@ -167,4 +167,30 @@ class TestLinguisticExtractor(unittest.TestCase):
 
         sentence = "Memphis Depay plays as a forward, winger and midfielder."
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'plays': { 'forward', 'winger', 'midfielder' } }, profile.attributes)
+        self.assertEqual({ 'plays_as': { 'forward', 'winger', 'midfielder' } }, profile.attributes)
+
+    def test_extract_prepositions_appended_to_name(self):
+        """
+        Test that when extracting attributes with prepositions, the preposition is appended to the name.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Memphis Depay plays as a forward, winger and midfielder."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'plays_as': { 'forward', 'winger', 'midfielder' } }, profile.attributes)
+
+    def test_extract_prepositions_separate(self):
+        """
+        Test that when an attribute has several prepositions, the values are stored separately.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Memphis Depay plays as a forward, winger and midfielder for Lyon."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'plays_as': { 'forward', 'winger', 'midfielder' }, 'plays_for': { 'lyon' } }, profile.attributes)
+
+        sentence = "Memphis Depay plays as a forward, winger and midfielder for Lyon with boots."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'plays_as': { 'forward', 'winger', 'midfielder' }, 'plays_for': { 'lyon' }, 'plays_with': { 'boots' } }, profile.attributes)
