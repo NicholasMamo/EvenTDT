@@ -19,6 +19,14 @@ class TestLinguisticExtractor(unittest.TestCase):
     Test the :class:`~attributes.extractors.linguistic.LinguisticExtractor` class.
     """
 
+    def test_init_default_grammar(self):
+        """
+        Test that when no grammar is provided, the extractor uses a default grammar.
+        """
+
+        extractor = LinguisticExtractor()
+        self.assertTrue(extractor.parser._grammar)
+
     def test_init_override_grammar(self):
         """
         Test that when providing a grammar, it overrides the class' default grammar.
@@ -27,3 +35,11 @@ class TestLinguisticExtractor(unittest.TestCase):
         grammar = "NP: { <DT>?<JJ.*|VBG|NN.*|CD>*<NN.*> }"
         extractor = LinguisticExtractor(grammar)
         self.assertEqual(grammar, extractor.parser._grammar)
+
+    def test_extract_returns_profile(self):
+        """
+        Test that when extracting attributes, the function always returns a profile.
+        """
+
+        extractor = LinguisticExtractor()
+        self.assertEqual(Profile, type(extractor.extract('')))
