@@ -128,6 +128,20 @@ class LinguisticExtractor(Extractor):
 
         return ('_'.join(name).lower(), values)
 
+    def _get_preposition(self, subtree):
+        """
+        Extract the preposition from the given subtree, or ``None`` if the subtree doesn't have one.
+
+        :param subtree: The subtree from where to extract the preposition.
+        :type subtree: :class:`nltk.tree.Tree`
+
+        :return: The first preposition in the subtree or ``None`` if there is no preposition.
+        :rtype: str or None
+        """
+
+        prepositions = [ text.lower() for text, pos in subtree.leaves() if pos == 'IN' ]
+        return prepositions[0] if prepositions else None
+
     def _attribute_value(self, subtree):
         """
         Extract the attribute value from the given value subtree.
