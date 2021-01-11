@@ -64,6 +64,7 @@ class LinguisticExtractor(Extractor):
         sentences = nltk.sent_tokenize(text)
         for sentence in sentences:
             tree = self._parse(sentence)
+            subtrees = self._attribute_subtrees(tree)
 
         return Profile()
 
@@ -81,3 +82,19 @@ class LinguisticExtractor(Extractor):
         tokens = nltk.word_tokenize(sentence)
         tagged = nltk.pos_tag(tokens)
         return self.parser.parse(tagged)
+
+    def _attribute_subtrees(self, tree):
+        """
+        Extract the attributes from the given tree.
+        At this point, the function only extracts the attributes as defined by the grammar.
+
+        :param tree: The parse tree of a sentence.
+        :type tree: :class:`nltk.tree.Tree`
+
+        :return: Subtrees from the tree that correspond to attributes.
+        :rtype: list of :class:`nltk.tree.Tree`
+        """
+
+        subtrees = [ node for node in tree if type(node) is nltk.tree.Tree ]
+        subtrees = [ subtree for subtree in subtrees if subtree.label() == 'ATTR' ]
+        return subtrees
