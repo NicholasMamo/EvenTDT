@@ -43,3 +43,70 @@ class TestLinguisticExtractor(unittest.TestCase):
 
         extractor = LinguisticExtractor()
         self.assertEqual(Profile, type(extractor.extract('')))
+
+    def test_extract_lowercase_keys(self):
+        """
+        Test that when extracting attributes, all keys are in lowercase.
+        """
+
+        sentence = "Memphis Depay, also known simply as Memphis, is a Dutch professional footballer and rapper who plays as a forward for French football club Lyon and the Netherlands national team."
+        extractor = LinguisticExtractor()
+        profile = extractor.extract(sentence)
+        self.assertTrue(all( name.lower() == name for name in profile.attributes ))
+
+    def test_extract_lowercase_values(self):
+        """
+        Test that when extracting attributes, all values are in lowercase.
+        """
+
+        sentence = "Memphis Depay, also known simply as Memphis, is a Dutch professional footballer and rapper who plays as a forward for French football club Lyon and the Netherlands national team."
+        extractor = LinguisticExtractor()
+        profile = extractor.extract(sentence)
+        self.assertTrue(all( value.lower() == value for value in profile.attributes.values() ))
+
+    def test_extract_multiple_sentences(self):
+        """
+        Test that when providing multiple sentences, attributes are extracted from each.
+        """
+
+        sentences = [ "Memphis Depay is a footballer.", "He plays as a forward." ]
+        extractor = LinguisticExtractor()
+        profile = extractor.extract(' '.join(sentences))
+
+        """
+        Parse the first sentence.
+        """
+        p1 = extractor.extract(sentences[0])
+        self.assertTrue(p1.attributes)
+        for name, value in p1.attributes.items():
+            self.assertTrue(name in profile.attributes)
+            self.assertEqual(value, profile.attributes[name])
+
+        """
+        Parse the second sentence.
+        """
+        p2 = extractor.extract(sentences[1])
+        self.assertTrue(p2.attributes)
+        for name, value in p2.attributes.items():
+            self.assertTrue(name in profile.attributes)
+            self.assertEqual(value, profile.attributes[name])
+
+        """
+        Make sure that all attributes from both sentences are present in either sentence's attributes.
+        """
+        self.assertTrue(all( name in p1.attributes or name in p2.attributes for name in profile.attributes ))
+
+    def test_extract_simple(self):
+        """
+        Test extracting attributes from simple sentences.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Memphis Depay is a footballer."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': 'footballer' }, profile.attributes)
+
+        sentence = "Memphis Depay plays as a forward."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'plays': 'forward' }, profile.attributes)
