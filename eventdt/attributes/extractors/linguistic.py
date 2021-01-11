@@ -43,11 +43,16 @@ class LinguisticExtractor(Extractor):
         # TODO: Handle head nouns in the attribute value
         # TODO: Handle proper nouns being the head nouns in the attribute value
 
+        # NOTE: Interesting behavior if NP does not have ENT in it
+
         grammar = grammar or """
-                  ATRV: { <JJ.*|VBG|RB.*|NN.*|CD>*?<JJ.*|CD|NN.*>+ }
-                  ATRN: { <VB.*> }
-                  INATR: { <RB>*?<IN>?(<DT>?<ATRV><CC|,>?)+ }
-                  ATTR: { <ATRN><INATR>+ }
+                  ENT: { <NNP.*>+(<CD|NNP.*>)* }
+                  NP: { <VBG>?<JJ.*|ENT|NN.*>+ }
+                  HEAD:{ <NP|ENT>|(<NP><ENT>) }
+                  VALUE: { <JJ.*|VBG|RB.*|NN.*>*?<HEAD> }
+                  NAME: { <VB.*> }
+                  PPATTR: { <RB>*?<IN>?(<DT>?<VALUE><CC|,>?)+ }
+                  ATTR: { <NAME><PPATTR>+ }
         """
         self.parser = nltk.RegexpParser(grammar)
 
@@ -126,9 +131,9 @@ class LinguisticExtractor(Extractor):
         :rtype: tuple of str and list :class:`nltk.tree.Tree`
         """
 
-        name = [ component for component in subtree.subtrees() if component.label() == 'ATRN' ][0]
+        name = [ component for component in subtree.subtrees() if component.label() == 'NAME' ][0]
         name = [ text for text, pos in name.leaves() ]
-        values = [ component for component in subtree.subtrees() if component.label() == 'INATR' ]
+        values = [ component for component in subtree.subtrees() if component.label() == 'PPATTR' ]
 
         return ('_'.join(name).lower(), values)
 
@@ -157,7 +162,7 @@ class LinguisticExtractor(Extractor):
         :rtype: :class:`nltk.tree.Tree`
         """
 
-        return [ _subtree for _subtree in subtree.subtrees() if _subtree.label() == 'ATRV' ]
+        return [ _subtree for _subtree in subtree.subtrees() if _subtree.label() == 'VALUE' ]
 
     def _attribute_value(self, subtree):
         """

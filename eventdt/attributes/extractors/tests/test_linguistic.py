@@ -198,17 +198,35 @@ class TestLinguisticExtractor(unittest.TestCase):
     def test_extract_real_examples(self):
         """
         Test extracting attributes from real example strings.
+
+        Some mistakes, such as in Lautaro Martinez's example, are due to NLTK's incorrect tagging.
         """
 
         extractor = LinguisticExtractor()
         sentence = "Memphis Depay, also known simply as Memphis, is a Dutch professional footballer and rapper who plays as a forward for French football club Lyon and the Netherlands national team."
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'known_as': { 'memphis' }, 'is': { 'dutch professional footballer', 'rapper' }, 'plays_as': { 'forward' }, 'plays_for': { 'french football club lyon', 'netherlands national team' } }, profile.attributes)
+        self.assertEqual({ 'known_as': { 'memphis' }, 'is': { 'dutch professional footballer', 'rapper' }, 'plays_as': { 'forward' }, 'plays_for': { 'lyon', 'netherlands' } }, profile.attributes)
 
         sentence = "Tinotenda \"Tino\" Kadewere is a Zimbabwean professional footballer who plays for Ligue 1 side Lyon and the Zimbabwe national team as a striker."
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'is': { 'zimbabwean professional footballer' }, 'plays_as': { 'striker' }, 'plays_for': { 'ligue 1 side lyon', 'zimbabwe national team' } }, profile.attributes)
+        self.assertEqual({ 'is': { 'zimbabwean professional footballer' }, 'plays_as': { 'striker' }, 'plays_for': { 'lyon', 'zimbabwe' } }, profile.attributes)
 
         sentence = "Lucas Tolentino Coelho de Lima, or simply Lucas Paquetá, is a Brazilian professional footballer who plays as an attacking midfielder for French Ligue 1 club Lyon and the Brazil national team."
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'is': { 'brazilian professional footballer' }, 'plays_as': { 'attacking midfielder' }, 'plays_for': { 'french ligue 1 club lyon', 'brazil national team' } }, profile.attributes)
+        self.assertEqual({ 'is': { 'brazilian professional footballer' }, 'plays_as': { 'attacking midfielder' }, 'plays_for': { 'lyon', 'brazil' } }, profile.attributes)
+
+        sentence = "Thiago Henrique Mendes Ribeiro is a Brazilian professional footballer who plays as a central midfielder for French club Lyon."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'brazilian professional footballer' }, 'plays_as': { 'central midfielder' }, 'plays_for': { 'lyon' } }, profile.attributes)
+
+        sentence = "Jason Grégory Marianne Denayer is a Belgian professional footballer who plays as a centre-back for French club Lyon and the Belgium national side."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'belgian professional footballer' }, 'plays_as': { 'centre-back' }, 'plays_for': { 'lyon', 'belgium' } }, profile.attributes)
+
+        sentence = "Romelu Menama Lukaku Bolingoli is a Belgian professional footballer who plays as a striker for Serie A club Inter Milan and the Belgium national team."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'belgian professional footballer' }, 'plays_as': { 'striker' }, 'plays_for': { 'inter milan', 'belgium' } }, profile.attributes)
+
+        sentence = "Lautaro Javier Martínez is an Argentine professional footballer who plays as a striker for Italian club Inter Milan and the Argentina national team."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'argentine' }, 'plays_as': { 'striker' }, 'plays_for': { 'inter milan', 'argentina' } }, profile.attributes)
