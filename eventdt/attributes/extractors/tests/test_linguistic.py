@@ -62,7 +62,7 @@ class TestLinguisticExtractor(unittest.TestCase):
         sentence = "Memphis Depay, also known simply as Memphis, is a Dutch professional footballer and rapper who plays as a forward for French football club Lyon and the Netherlands national team."
         extractor = LinguisticExtractor()
         profile = extractor.extract(sentence)
-        self.assertTrue(all( value.lower() == value for value in profile.attributes.values() ))
+        self.assertTrue(all( value.lower() == value for values in profile.attributes.values() for value in values ))
 
     def test_extract_multiple_sentences(self):
         """
@@ -105,8 +105,9 @@ class TestLinguisticExtractor(unittest.TestCase):
 
         sentence = "Memphis Depay is a footballer."
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'is': 'footballer' }, profile.attributes)
+        self.assertEqual({ 'is': [ 'footballer' ] }, profile.attributes)
 
         sentence = "Memphis Depay plays as a forward."
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'plays': 'forward' }, profile.attributes)
+        self.assertEqual({ 'plays': [ 'forward' ] }, profile.attributes)
+

@@ -75,7 +75,8 @@ class LinguisticExtractor(Extractor):
             for subtree in subtrees:
                 name, values = self._to_attributes(subtree)
                 for value in values:
-                    profile.attributes[name] = self._attribute_value(value)
+                    profile.attributes[name] = profile.attributes.get(name) or [ ]
+                    profile.attributes[name].append(self._attribute_value(value))
 
         return profile
 
