@@ -44,7 +44,7 @@ class LinguisticExtractor(Extractor):
         # TODO: Handle proper nouns being the head nouns in the attribute value
 
         grammar = grammar or """
-                  ATRV: { <JJ.*|VBG|NN.*|CD>*<NN.*> }
+                  ATRV: { <JJ.*|VBG|RB.*|NN.*|CD>*<NN.*> }
                   ATRN: { <VB.*> }
                   INATR: { <RB>*?<IN>?(<DT>?<ATRV><CC|,>?)+ }
                   ATTR: { <ATRN><INATR>+ }
