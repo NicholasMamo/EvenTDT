@@ -60,12 +60,18 @@ class LinguisticExtractor(Extractor):
         :rtype: :class:`~attributes.profile.Profile`
         """
 
+        profile = Profile()
+
         sentences = nltk.sent_tokenize(text)
         for sentence in sentences:
             tree = self._parse(sentence)
             subtrees = self._attribute_subtrees(tree)
+            for subtree in subtrees:
+                name, values = self._to_attributes(subtree)
+                for value in values:
+                    profile.attributes[name] = self._attribute_value(value)
 
-        return Profile()
+        return profile
 
     def _parse(self, sentence):
         """
@@ -116,3 +122,18 @@ class LinguisticExtractor(Extractor):
         values = [ component for component in subtree.subtrees() if component.label() == 'ATRV' ]
 
         return ('_'.join(name).lower(), values)
+
+    def _attribute_value(self, subtree):
+        """
+        Extract the attribute value from the given value subtree.
+        The tree has several components, including adjectives; this function extracts only the value.
+
+        :param subtree: The subtree from where to extract the attribute value.
+        :type subtree: :class:`nltk.tree.Tree`
+
+        :return: The actual value from the attribute value subtree.
+        :rtype: str
+        """
+
+        value = [ text for text, pos in subtree.leaves() ]
+        return (' '.join(value).lower())
