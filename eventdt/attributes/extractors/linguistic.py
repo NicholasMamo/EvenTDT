@@ -55,4 +55,23 @@ class LinguisticExtractor(Extractor):
         :rtype: :class:`~attributes.profile.Profile`
         """
 
+        sentences = nltk.sent_tokenize(text)
+        for sentence in sentences:
+            tree = self._parse(sentence)
+
         return Profile()
+
+    def _parse(self, sentence):
+        """
+        Parse the given sentence, creating a tree.
+
+        :param sentence: The sentence to parse.
+        :type sentence: str
+
+        :return: A parsed sentence in the form of a POS tree.
+        :rtype: :class:`nltk.tree.Tree`
+        """
+
+        tokens = nltk.word_tokenize(sentence)
+        tagged = nltk.pos_tag(tokens)
+        return this.parser.parse(tagged)
