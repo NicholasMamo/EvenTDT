@@ -125,3 +125,18 @@ class TestLinguisticExtractor(unittest.TestCase):
         sentence = "Memphis Depay plays as a forward and midfielder."
         profile = extractor.extract(sentence)
         self.assertEqual({ 'plays': { 'forward', 'midfielder' } }, profile.attributes)
+
+    def test_extract_conjunctions(self):
+        """
+        Test extracting attributes which have conjunctions.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Memphis Depay is a footballer, rapper and preacher."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'footballer', 'preacher', 'rapper' } }, profile.attributes)
+
+        sentence = "Memphis Depay plays as a forward, winger and midfielder."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'plays': { 'forward', 'winger', 'midfielder' } }, profile.attributes)

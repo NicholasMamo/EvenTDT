@@ -48,7 +48,7 @@ class LinguisticExtractor(Extractor):
         grammar = grammar or """
                   ATRV: { <JJ.*|VBG|NN.*|CD>*<NN.*> }
                   ATRN: { <VB.*> }
-                  ATTR: { <ATRN><RB|IN|DT>*?(<ATRV><CC>?)+ }
+                  ATTR: { <ATRN><RB|IN|DT>*?(<ATRV><CC|,>?)+ }
         """
         self.parser = nltk.RegexpParser(grammar)
 
