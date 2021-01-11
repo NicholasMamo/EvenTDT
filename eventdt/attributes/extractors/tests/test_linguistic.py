@@ -111,9 +111,22 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'plays': { 'forward' } }, profile.attributes)
 
-    def test_extract_conjunctions(self):
+    def test_extract_sets(self):
         """
-        Test extracting attributes which have conjunctions.
+        Test that when extracting attributes, the extractor returns sets for attribute values.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Memphis Depay is a footballer and rapper who plays for Lyon."
+        profile = extractor.extract(sentence)
+        self.assertTrue(all(set == type(value) for value in profile.attributes.values()))
+        self.assertEqual({ 'is': { 'footballer', 'rapper' }, 'plays': { 'lyon' } }, profile.attributes)
+        self.assertEqual({ 'is': { 'rapper', 'footballer' }, 'plays': { 'lyon' } }, profile.attributes)
+
+    def test_extract_conjunctions_and(self):
+        """
+        Test extracting attributes which have _and_ conjunctions.
         """
 
         extractor = LinguisticExtractor()
@@ -123,6 +136,21 @@ class TestLinguisticExtractor(unittest.TestCase):
         self.assertEqual({ 'is': { 'footballer', 'rapper' } }, profile.attributes)
 
         sentence = "Memphis Depay plays as a forward and midfielder."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'plays': { 'forward', 'midfielder' } }, profile.attributes)
+
+    def test_extract_conjunctions_or(self):
+        """
+        Test extracting attributes which have _or_ conjunctions.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Memphis Depay is a footballer or rapper, depending on who you ask."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'footballer', 'rapper' } }, profile.attributes)
+
+        sentence = "Memphis Depay plays as a forward or midfielder."
         profile = extractor.extract(sentence)
         self.assertEqual({ 'plays': { 'forward', 'midfielder' } }, profile.attributes)
 

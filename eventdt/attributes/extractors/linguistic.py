@@ -40,7 +40,6 @@ class LinguisticExtractor(Extractor):
         If a grammar is not given, a default grammar is used instead.
         """
 
-        # TODO: Handle commas in the attribute value
         # TODO: Handle head nouns in the attribute value
         # TODO: Handle proper nouns being the head nouns in the attribute value
         # TODO: Handle prepositions/subordinating conjunctions
