@@ -26,6 +26,10 @@ class LinguisticExtractor(Extractor):
     The linguistic extractor accepts an optional grammar and uses it to extract attributes from text.
     The grammar can either be defined in the constructor or, if not given, it is defined automatically by the class.
 
+    .. note::
+
+        More details about the grammar are available `here <https://www.guru99.com/pos-tagging-chunking-nltk.html>`_.
+
     :ivar parser: The parser to use to extract attributes.
     :vartype parser: :class:`nltk.RegexpParser`
     """
