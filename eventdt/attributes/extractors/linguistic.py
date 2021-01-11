@@ -40,7 +40,6 @@ class LinguisticExtractor(Extractor):
         If a grammar is not given, a default grammar is used instead.
         """
 
-        # TODO: Handle conjunctions in the attribute value
         # TODO: Handle commas in the attribute value
         # TODO: Handle head nouns in the attribute value
         # TODO: Handle proper nouns being the head nouns in the attribute value
@@ -49,7 +48,7 @@ class LinguisticExtractor(Extractor):
         grammar = grammar or """
                   ATRV: { <JJ.*|VBG|NN.*|CD>*<NN.*> }
                   ATRN: { <VB.*> }
-                  ATTR: { <ATRN><RB|IN|DT>*?<ATRV> }
+                  ATTR: { <ATRN><RB|IN|DT>*?(<ATRV><CC>?)+ }
         """
         self.parser = nltk.RegexpParser(grammar)
 
