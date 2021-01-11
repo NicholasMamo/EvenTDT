@@ -76,6 +76,9 @@ ate_tests() {
 attribute_tests() {
 	echo -e "${HIGHLIGHT}Attribute extraction${DEFAULT}"
 	python3 -m unittest eventdt.attributes.tests.test_profile
+
+	echo -e "${HIGHLIGHT}Extractors${DEFAULT}"
+	python3 -m unittest eventdt.attributes.extractors.tests.test_linguistic
 }
 
 base_tests() {
