@@ -142,6 +142,19 @@ class LinguisticExtractor(Extractor):
         prepositions = [ text.lower() for text, pos in subtree.leaves() if pos == 'IN' ]
         return prepositions[0] if prepositions else None
 
+    def _get_attribute(self, subtree):
+        """
+        Extracth the attribute subtree from the given subtree.
+
+        :param subtree: The subtree from where to extract the attribute value.
+        :type subtree: :class:`nltk.tree.Tree`
+
+        :return: The attribute value in the subtree.
+        :rtype: :class:`nltk.tree.Tree`
+        """
+
+        return [ _subtree for _subtree in subtree.subtrees() if _subtree.label() == 'ATRV' ][0]
+
     def _attribute_value(self, subtree):
         """
         Extract the attribute value from the given value subtree.
