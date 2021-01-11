@@ -34,3 +34,5 @@ class Extractor(ABC):
         """
 
         pass
+        
+from .linguistic import LinguisticExtractor
