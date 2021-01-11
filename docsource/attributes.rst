@@ -25,3 +25,10 @@ Extractors
 .. automodule:: attributes.extractors
    :members:
    :special-members:
+
+Linguistic Extractor
+--------------------
+
+.. automodule:: attributes.extractors.linguistic
+   :members:
+   :special-members:

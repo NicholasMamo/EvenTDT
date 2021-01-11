@@ -1,9 +1,9 @@
 """
 The linguistic extractor extracts attributes based on a few grammatical rules that make up a shallow parser.
-As usual, the functionality revolves around the :class:`~attributes.linguistic.LinguisticExtractor`'s :func:`~attributes.linguistic.LinguisticExtractor.extract` method.
+As usual, the functionality revolves around the :class:`~attributes.extractors.linguistic.LinguisticExtractor`'s :func:`~attributes.extractors.linguistic.LinguisticExtractor.extract` method.
 
 The default grammar assumes that attributes are defined using verbs, and attribute values are nouns.
-However, the default grammar can be overriden in the :func:`constructor <attributes.linguistic.LinguisticExtractor.__init__>`.
+However, the default grammar can be overriden in the :func:`constructor <attributes.extractors.linguistic.LinguisticExtractor.__init__>`.
 
 This extractor assumes that the text is about a single entity and therefore does not discriminate among attributes.
 """
