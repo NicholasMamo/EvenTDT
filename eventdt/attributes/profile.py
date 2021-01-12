@@ -48,3 +48,17 @@ class Profile(object):
         """
 
         self.__attributes = attributes or { }
+
+    def common(self, other):
+        """
+        Get the list of attributes that are shared between this profile and the given profile.
+
+        :param other: The second profile compare with the current one.
+        :type other: :class:`~attributes.profile.Profile`
+
+        :return: A list of attributes that are common among the two profiles.
+        :rtype: set of str
+        """
+
+        return set(self.attributes).intersection(set(other.attributes))
+

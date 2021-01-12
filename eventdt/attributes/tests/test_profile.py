@@ -96,3 +96,74 @@ class TestProfile(unittest.TestCase):
 
         del profile.attributes['age']
         self.assertEqual({ 'known_as': 'Memphis Depay' }, profile.attributes)
+
+    def test_common_empty(self):
+        """
+        Test that getting the common attributes in two empty profiles returns an empty set.
+        """
+
+        p1, p2 = Profile(), Profile()
+        self.assertEqual(set(), p1.common(p2))
+
+    def test_common_one_empty(self):
+        """
+        Test that getting the common attributes and one profile is empty, the function returns an empty set.
+        """
+
+        p1, p2 = Profile(), Profile({ 'plays_as': { 'striker' } })
+        self.assertEqual(set(), p1.common(p2))
+        self.assertEqual(set(), p2.common(p1))
+
+    def test_common_none(self):
+        """
+        Test that when two profiles share no attributes, no common attributes are returned.
+        """
+
+        p1, p2 = Profile({ 'plays_for': { 'lyon' } }), Profile({ 'plays_as': { 'striker' } })
+        self.assertEqual(set(), p1.common(p2))
+        self.assertEqual(set(), p2.common(p1))
+
+    def test_common_in_both(self):
+        """
+        Test that the common attributes actually exist in both profiles.
+        """
+
+        p1, p2 = Profile({ 'plays_for': { 'lyon' }, 'plays_as': { 'striker' } }), Profile({ 'plays_as': { 'striker' } })
+        self.assertTrue(all( attribute in p1.attributes and attribute in p2.attributes for attribute in p1.common(p2) ))
+        self.assertTrue(all( attribute in p1.attributes and attribute in p2.attributes for attribute in p2.common(p1) ))
+
+    def test_common_ignores_values(self):
+        """
+        Test that the common attributes ignores the value of attributes.
+        """
+
+        p1, p2 = Profile({ 'plays_for': { 'lyon' }, 'plays_as': { 'midfielder' } }), Profile({ 'plays_as': { 'striker' } })
+        self.assertFalse(p1.attributes['plays_as'] == p2.attributes['plays_as'])
+        self.assertEqual({ 'plays_as' }, p1.common(p2))
+        self.assertEqual({ 'plays_as' }, p2.common(p1))
+
+    def test_common_excludes_uncommon(self):
+        """
+        Test that the attributes that appear in only one profile are excluded.
+        """
+
+        p1, p2 = Profile({ 'plays_for': { 'lyon' }, 'plays_as': { 'striker' } }), Profile({ 'plays_as': { 'striker' } })
+        self.assertFalse('plays_for' in p1.common(p2))
+        self.assertFalse('plays_for' in p2.common(p1))
+
+    def test_common_set(self):
+        """
+        Test that getting the common attributes in two profiles returns an set.
+        """
+
+        p1, p2 = Profile({ 'plays_for': { 'lyon' }, 'plays_as': { 'striker' } }), Profile({ 'plays_as': { 'striker' } })
+        self.assertEqual(set, type(p1.common(p2)))
+        self.assertEqual(set, type(p2.common(p1)))
+
+    def test_common_symmetric(self):
+        """
+        Test that when getting the common attributes in two profiles, the order does not matter.
+        """
+
+        p1, p2 = Profile({ 'plays_for': { 'lyon' }, 'plays_as': { 'striker' } }), Profile({ 'plays_as': { 'striker' } })
+        self.assertEqual(p1.common(p2), p2.common(p1))
