@@ -48,10 +48,9 @@ class LinguisticExtractor(Extractor):
                   ENT: { <CD|NNP.*>*?<NNP.*><CD|NNP.*>* }
                   JJMOD: { <JJ.*>(<CC|,><JJ.*>)* }
                   MOD: { <JJMOD|RB.*>* }
-                  NP: { <MOD|JJMOD>?<VBG>?<NN.*>+ }
-                  HEAD:{ <NP|ENT>+ }
-                  VALUE: { <HEAD> }
+                  NP: { <MOD>?<VBG>?<NN.*>+ }
                   NAME: { <VB.*> }
+                  VALUE: { <NP|ENT>+ }
                   PPATTR: { <IN>?(<DT>?<VALUE><CC|,>?)+ }
                   ATTR: { <NAME><MOD>?<PPATTR>+ }
         """
@@ -178,8 +177,7 @@ class LinguisticExtractor(Extractor):
         """
 
         value = [ ]
-        head = [ node for node in subtree if node.label() == 'HEAD' ][0]
-        head = head[-1] if (type(head[-1]) is nltk.tree.Tree and head[-1].label()) == 'ENT' else head
+        head = subtree[-1] if (type(subtree[-1]) is nltk.tree.Tree and subtree[-1].label()) == 'ENT' else subtree
         for text, pos in head.leaves():
             value.append(text)
         return (' '.join(value).lower())
