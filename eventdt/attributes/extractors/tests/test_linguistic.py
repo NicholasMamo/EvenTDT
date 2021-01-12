@@ -230,3 +230,11 @@ class TestLinguisticExtractor(unittest.TestCase):
         sentence = "Lautaro Javier Martínez is an Argentine professional footballer who plays as a striker for Italian club Inter Milan and the Argentina national team."
         profile = extractor.extract(sentence)
         self.assertEqual({ 'is': { 'argentine professional footballer' }, 'plays_as': { 'striker' }, 'plays_for': { 'inter milan', 'argentina national team' } }, profile.attributes)
+
+        sentence = "Donald John Trump is the 45th and current president of the United States of America."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { '45th and current president' }, 'is_of': { 'united states', 'america' } }, profile.attributes)
+
+        sentence = "Joseph Robinette Biden Jr. is an American politician and the president-elect of the United States."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'american politician', 'president-elect' }, 'is_of': { 'united states' } }, profile.attributes)
