@@ -38,22 +38,21 @@ class LinguisticExtractor(Extractor):
         """
         Create the linguistic extractor with an optional grammar.
         If a grammar is not given, a default grammar is used instead.
-        """
 
-        # TODO: Handle head nouns in the attribute value
-        # TODO: Handle proper nouns being the head nouns in the attribute value
+        - An entity always starts with a proper noun, but it can also contain numbers (for example, Ligue 1).
+        """
 
         # NOTE: Interesting behavior if NP does not have ENT in it
 
         grammar = grammar or """
                   ENT: { <NNP.*>+(<CD|NNP.*>)* }
-                  NP: { <JJ.*|ENT|NN.*>+ }
-                  HEAD:{ <NP> }
                   MOD: { <JJ.*|VBG|RB.*>* }
-                  VALUE: { <MOD>?<HEAD> }
+                  NP: { <MOD>?<NN.*>+ }
+                  HEAD:{ <NP|ENT>+ }
+                  VALUE: { <HEAD> }
                   NAME: { <VB.*> }
-                  PPATTR: { <MOD>*?<IN>?(<DT>?<VALUE><CC|,>?)+ }
-                  ATTR: { <NAME><PPATTR>+ }
+                  PPATTR: { <IN>?(<DT>?<VALUE><CC|,>?)+ }
+                  ATTR: { <NAME><MOD>?<PPATTR>+ }
         """
         self.parser = nltk.RegexpParser(grammar)
 
@@ -179,8 +178,7 @@ class LinguisticExtractor(Extractor):
 
         value = [ ]
         head = [ node for node in subtree if node.label() == 'HEAD' ][0]
-        np = [ node for node in head if node.label() == 'NP' ][0]
-        head = np[-1] if (type(np[-1]) is nltk.tree.Tree and np[-1].label()) == 'ENT' else np
+        head = head[-1] if (type(head[-1]) is nltk.tree.Tree and head[-1].label()) == 'ENT' else head
         for text, pos in head.leaves():
             value.append(text)
         return (' '.join(value).lower())
