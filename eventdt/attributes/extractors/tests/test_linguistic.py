@@ -242,3 +242,27 @@ class TestLinguisticExtractor(unittest.TestCase):
         sentence = "Donald John Trump is the 45th, latest and current president of the United States of America."
         profile = extractor.extract(sentence)
         self.assertEqual({ 'is': { '45th , latest and current president' }, 'is_of': { 'united states', 'america' } }, profile.attributes)
+
+        sentence = "Sigismondo Benini (18th century) was an Italian painter of the Baroque period, active in Lombardy, painting landscapes or vedute."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'was': { 'italian painter' }, 'was_of': { 'baroque period' } }, profile.attributes)
+
+        sentence = "Lando Norris is a Belgian-British racing driver currently competing in Formula One with McLaren, racing under the British flag."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'belgian-british racing driver' }, 'competing_in': { 'formula one' }, 'competing_with': { 'mclaren' }, 'racing_under': { 'british flag' } }, profile.attributes)
+
+        sentence = "Sallie Kim is currently a U.S. Magistrate Judge of the United States District Court for the Northern District of California."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'u.s. magistrate judge' }, 'is_of': { 'united states district court', 'california' }, 'is_for': { 'northern district' } }, profile.attributes)
+
+        sentence = "Spalacopsis stolata is a species of beetle in the family Cerambycidae."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'species' }, 'is_of': { 'beetle' }, 'is_in': { 'cerambycidae' } }, profile.attributes)
+
+        sentence = "Wright Inlet is an ice-filled inlet receding westward between Cape Little and Cape Wheeler along the east coast of Palmer Land."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'ice-filled inlet receding westward' }, 'is_between': { 'cape little', 'cape wheeler' }, 'is_along': { 'east coast' }, 'is_of': { 'palmer land' } }, profile.attributes)
+
+        sentence = "The 2004 Kansas Jayhawks football team represented the University of Kansas in the 2004 NCAA Division I-A football season."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'represented': { 'university' }, 'represented_of': { 'kansas' }, 'represented_in': { '2004 ncaa division i-a football season' } }, profile.attributes)

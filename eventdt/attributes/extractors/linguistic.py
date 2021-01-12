@@ -45,10 +45,10 @@ class LinguisticExtractor(Extractor):
         # NOTE: Interesting behavior if NP does not have ENT in it
 
         grammar = grammar or """
-                  ENT: { <NNP.*>+(<CD|NNP.*>)* }
+                  ENT: { <CD|NNP.*>+ }
                   JJMOD: { <JJ.*>(<CC|,><JJ.*>)* }
-                  MOD: { <JJ.*|VBG|RB.*>* }
-                  NP: { <MOD|JJMOD>?<NN.*>+ }
+                  MOD: { <JJ.*|RB.*>* }
+                  NP: { <MOD|JJMOD>?<VBG>?<NN.*>+ }
                   HEAD:{ <NP|ENT>+ }
                   VALUE: { <HEAD> }
                   NAME: { <VB.*> }
