@@ -154,6 +154,17 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'plays_as': { 'forward', 'midfielder' } }, profile.attributes)
 
+    def test_extract_multiple_conjunctions(self):
+        """
+        Test extracting attributes which have multiple conjunctions.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Memphis Depay is a footballer and rapper and preacher."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'footballer', 'preacher', 'rapper' } }, profile.attributes)
+
     def test_extract_conjunctions(self):
         """
         Test extracting attributes which have conjunctions.
@@ -194,6 +205,39 @@ class TestLinguisticExtractor(unittest.TestCase):
         sentence = "Memphis Depay plays as a forward, winger and midfielder for Lyon with boots."
         profile = extractor.extract(sentence)
         self.assertEqual({ 'plays_as': { 'forward', 'winger', 'midfielder' }, 'plays_for': { 'lyon' }, 'plays_with': { 'boots' } }, profile.attributes)
+
+    def test_extract_entity_ends_number(self):
+        """
+        Test extracting an attribute value when it is an entity that ends with a number.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Mark-Alexander Uth is a German footballer who plays as a striker for Bundesliga club Schalke 04."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'german footballer' }, 'plays_as': { 'striker' }, 'plays_for': { 'schalke 04' } }, profile.attributes)
+
+    def test_extract_entity_starts_number(self):
+        """
+        Test extracting an attribute value when it is an entity that starts with a number.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Fabian Greilinger is a German professional footballer who plays as a winger for 1860 Munich."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'german professional footballer' }, 'plays_as': { 'winger' }, 'plays_for': { '1860 munich' } }, profile.attributes)
+
+    def test_extract_entity_has_number(self):
+        """
+        Test extracting an attribute value when it is an entity that has a number in the middle.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Dennis Erdmann is a German professional footballer who plays as a defensive midfielder or defensive midfielder for TSV 1860 Munich."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'german professional footballer' }, 'plays_as': { 'defensive midfielder', 'defensive midfielder' }, 'plays_for': { 'tsv 1860 munich' } }, profile.attributes)
 
     def test_extract_real_examples(self):
         """

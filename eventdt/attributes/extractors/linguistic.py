@@ -37,17 +37,17 @@ class LinguisticExtractor(Extractor):
     def __init__(self, grammar=None):
         """
         Create the linguistic extractor with an optional grammar.
-        If a grammar is not given, a default grammar is used instead.
+        If a grammar is not given, a default grammar is used instead:
 
-        - An entity always starts with a proper noun, but it can also contain numbers (for example, Ligue 1).
+        - :math:`ENT: <CD|NNP.*>*?<NNP.*><CD|NNP.*>*` - An entity can start with (`1860 Munich`) or end with a number (`Schalke 04`), but it must always include at least one proper noun.
         """
 
         # NOTE: Interesting behavior if NP does not have ENT in it
 
         grammar = grammar or """
-                  ENT: { <CD|NNP.*>+ }
+                  ENT: { <CD|NNP.*>*?<NNP.*><CD|NNP.*>* }
                   JJMOD: { <JJ.*>(<CC|,><JJ.*>)* }
-                  MOD: { <JJ.*|RB.*>* }
+                  MOD: { <JJMOD|RB.*>* }
                   NP: { <MOD|JJMOD>?<VBG>?<NN.*>+ }
                   HEAD:{ <NP|ENT>+ }
                   VALUE: { <HEAD> }
