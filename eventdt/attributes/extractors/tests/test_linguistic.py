@@ -213,7 +213,7 @@ class TestLinguisticExtractor(unittest.TestCase):
 
         sentence = "Lucas Tolentino Coelho de Lima, or simply Lucas Paquetá, is a Brazilian professional footballer who plays as an attacking midfielder for French Ligue 1 club Lyon and the Brazil national team."
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'is': { 'brazilian professional footballer' }, 'plays_as': { 'attacking midfielder' }, 'plays_for': { 'lyon', 'brazil' } }, profile.attributes)
+        self.assertEqual({ 'is': { 'brazilian professional footballer' }, 'plays_as': { 'midfielder' }, 'plays_for': { 'lyon', 'brazil' } }, profile.attributes)
 
         sentence = "Thiago Henrique Mendes Ribeiro is a Brazilian professional footballer who plays as a central midfielder for French club Lyon."
         profile = extractor.extract(sentence)

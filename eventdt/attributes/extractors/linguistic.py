@@ -47,11 +47,12 @@ class LinguisticExtractor(Extractor):
 
         grammar = grammar or """
                   ENT: { <NNP.*>+(<CD|NNP.*>)* }
-                  NP: { <VBG>?<JJ.*|ENT|NN.*>+ }
-                  HEAD:{ <NP|ENT>|(<NP><ENT>) }
-                  VALUE: { <JJ.*|VBG|RB.*|NN.*>*?<HEAD> }
+                  NP: { <JJ.*|ENT|NN.*>+ }
+                  HEAD:{ (<NP>*?<ENT>)|<NP> }
+                  MOD: { <JJ.*|VBG|RB.*|NN.*>* }
+                  VALUE: { <MOD>?<HEAD> }
                   NAME: { <VB.*> }
-                  PPATTR: { <RB>*?<IN>?(<DT>?<VALUE><CC|,>?)+ }
+                  PPATTR: { <MOD>*?<IN>?(<DT>?<VALUE><CC|,>?)+ }
                   ATTR: { <NAME><PPATTR>+ }
         """
         self.parser = nltk.RegexpParser(grammar)
