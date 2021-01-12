@@ -3,6 +3,8 @@ Each class or instance can have multiple attributes.
 The :class:`~attributes.profile.Profile` is a simple container for these attributes.
 """
 
+from collections.abc import Iterable
+
 class Profile(object):
     """
     The :class:`~attributes.profile.Profile` stores a list of attributes and their respective values.
@@ -62,3 +64,32 @@ class Profile(object):
 
         return set(self.attributes).intersection(set(other.attributes))
 
+    def match(self, other, policy=any):
+        """
+        Get a list of attributes that are common between this profile and the other profile.
+
+        :param other: The second profile compare with the current one.
+        :type other: :class:`~attributes.profile.Profile`
+        :param policy: A function to check the overlap between the two profiles when an attribute's values are iterable:
+
+                       - If ``any`` is given, then it suffices for two profiles to share one value for a given attribute to match the attribute.
+                       - If ``all`` is given, then the two profiles' values for a given attribute must be the same to match the attribute.
+
+        :return: A list of attributes that are common among the two profiles and have the same values, based on the matching policy.
+        :rtype: set of str
+        """
+
+        matching = set()
+
+        common = self.common(other)
+        for attribute in common:
+            # convert the attribute values into iterables if they aren't already (except for strings)
+            v1, v2 = self.attributes[attribute], other.attributes[attribute]
+            v1 = v1 if (isinstance(v1, Iterable) and not isinstance(v1, str)) else { v1 }
+            v2 = v2 if (isinstance(v2, Iterable) and not isinstance(v2, str)) else { v2 }
+
+            # check that any (or all) values in one profile's attribute exist in the other profile's attribute, and vice-versa
+            if policy(v in v2 for v in v1) and policy(v in v1 for v in v2):
+                matching.add(attribute)
+
+        return matching
