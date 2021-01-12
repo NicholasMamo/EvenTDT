@@ -266,3 +266,7 @@ class TestLinguisticExtractor(unittest.TestCase):
         sentence = "The 2004 Kansas Jayhawks football team represented the University of Kansas in the 2004 NCAA Division I-A football season."
         profile = extractor.extract(sentence)
         self.assertEqual({ 'represented': { 'university' }, 'represented_of': { 'kansas' }, 'represented_in': { '2004 ncaa division i-a football season' } }, profile.attributes)
+
+        sentence = "Granada Club de Fútbol, S.A.D., known simply as Granada, is a Spanish football club in the city of Granada, in the autonomous community of Andalusia that plays in La Liga."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'known_as': { 'granada' }, 'is': { 'spanish football club' }, 'is_in': { 'city', 'autonomous community' }, 'is_of': { 'granada', 'andalusia' }, 'plays_in': { 'la liga' } }, profile.attributes)
