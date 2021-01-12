@@ -46,7 +46,7 @@ class LinguisticExtractor(Extractor):
 
         grammar = grammar or """
                   ENT: { <NNP.*>+(<CD|NNP.*>)* }
-                  JJMOD: { <JJ.*>(<CC|,><JJ.*>)+? }
+                  JJMOD: { <JJ.*>(<CC|,><JJ.*>)* }
                   MOD: { <JJ.*|VBG|RB.*>* }
                   NP: { <MOD|JJMOD>?<NN.*>+ }
                   HEAD:{ <NP|ENT>+ }

@@ -238,3 +238,7 @@ class TestLinguisticExtractor(unittest.TestCase):
         sentence = "Joseph Robinette Biden Jr. is an American politician and the president-elect of the United States."
         profile = extractor.extract(sentence)
         self.assertEqual({ 'is': { 'american politician', 'president-elect' }, 'is_of': { 'united states' } }, profile.attributes)
+
+        sentence = "Donald John Trump is the 45th, latest and current president of the United States of America."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { '45th , latest and current president' }, 'is_of': { 'united states', 'america' } }, profile.attributes)
