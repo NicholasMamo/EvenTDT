@@ -48,8 +48,8 @@ class LinguisticExtractor(Extractor):
         grammar = grammar or """
                   ENT: { <NNP.*>+(<CD|NNP.*>)* }
                   NP: { <JJ.*|ENT|NN.*>+ }
-                  HEAD:{ (<NP>*?<ENT>)|<NP> }
-                  MOD: { <JJ.*|VBG|RB.*|NN.*>* }
+                  HEAD:{ <NP> }
+                  MOD: { <JJ.*|VBG|RB.*>* }
                   VALUE: { <MOD>?<HEAD> }
                   NAME: { <VB.*> }
                   PPATTR: { <MOD>*?<IN>?(<DT>?<VALUE><CC|,>?)+ }
@@ -178,6 +178,9 @@ class LinguisticExtractor(Extractor):
         """
 
         value = [ ]
-        for text, pos in list(subtree.subtrees())[-1].leaves():
+        head = [ node for node in subtree if node.label() == 'HEAD' ][0]
+        np = [ node for node in head if node.label() == 'NP' ][0]
+        head = np[-1] if (type(np[-1]) is nltk.tree.Tree and np[-1].label()) == 'ENT' else np
+        for text, pos in head.leaves():
             value.append(text)
         return (' '.join(value).lower())
