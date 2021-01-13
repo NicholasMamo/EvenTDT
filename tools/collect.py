@@ -61,13 +61,35 @@ The output is a JSON file with the following structure:
 .. code-block:: json
 
     {
+        "cmd": {
+            "output": "data",
+            "track": [
+                "PSG"
+            ],
+            "understanding": null,
+            "event": 1,
+            "account": 0,
+            "no_retweets": false,
+            "_date": "2021-01-13T16:38:11.654496",
+            "_timestamp": 1610552291.6545098,
+            "_cmd": "./tools/collect.py --output data --event 1 --track PSG"
+        },
+        "pcmd": {
+            "output": "data",
+            "track": [
+                "PSG"
+            ],
+            "understanding": null,
+            "event": 1,
+            "account": 0,
+            "no_retweets": false,
+            "_date": "2021-01-13T16:38:11.654520",
+            "_timestamp": 1610552291.6545227,
+            "_cmd": "./tools/collect.py --output data --event 1 --track PSG"
+        },
         "understanding": {
             "keywords": [
-                "#BREWBA",
-                "Brentford",
-                "West Brom",
-                "Bromwich",
-                "Albion"
+                "PSG"
             ],
             "output": "/mnt/data/#BREWBA/understanding.json",
             "start": 1593192602.7365842,
@@ -75,11 +97,7 @@ The output is a JSON file with the following structure:
         },
         "event": {
             "keywords": [
-                "#BREWBA",
-                "Brentford",
-                "West Brom",
-                "Bromwich",
-                "Albion"
+                "PSG"
             ],
             "output": "/mnt/data/#BREWBA/event.json",
             "start": 1593204301.1733663,
@@ -93,9 +111,34 @@ If no filter keywords were provided, the file collects a sample, and the ``meta.
 .. code-block:: json
 
     {
-        "output": "/mnt/data/sample/sample.json",
-        "start": 1586633750.5460582,
-        "end": 1586676950.8020885
+        "cmd": {
+            "output": "data",
+            "track": null,
+            "understanding": null,
+            "event": 60,
+            "account": 0,
+            "no_retweets": false,
+            "_date": "2021-01-13T16:35:57.414309",
+            "_timestamp": 1610552157.414321,
+            "_cmd": "./tools/collect.py --output data --event 60"
+        },
+        "pcmd": {
+            "output": "data",
+            "track": null,
+            "understanding": null,
+            "event": 60,
+            "account": 0,
+            "no_retweets": false,
+            "_date": "2021-01-13T16:35:57.414329",
+            "_timestamp": 1610552157.4143317,
+            "_cmd": "./tools/collect.py --output data --event 60"
+        },
+        "event": {
+            "keywords": null,
+            "output": "data/sample.json",
+            "start": 1610552157.4145017,
+            "end": 1610552217.9032204
+        }
     }
 
 The full list of accepted arguments:
@@ -120,13 +163,13 @@ lib = os.path.join(root, 'eventdt')
 sys.path.insert(-1, root)
 sys.path.insert(-1, lib)
 
-from logger import logger
-from twitter.listeners import TweetListener
-
 from tweepy import OAuthHandler
 from tweepy import Stream
 
 from config import conf
+from logger import logger
+import tools
+from twitter.listeners import TweetListener
 
 def setup_args():
     """
@@ -175,6 +218,9 @@ def main():
     """
 
     args = setup_args()
+    cmd = tools.meta(args)
+    pcmd = tools.meta(args)
+    meta = { 'cmd': cmd, 'pcmd': pcmd }
 
     """
     Create the data directory if it does not exist.
@@ -192,7 +238,6 @@ def main():
     """
     Collect the tweets for the understanding period.
     """
-    meta = { }
     if args.understanding is not None:
         if args.understanding <= 0:
             raise ValueError("The understanding period must be longer than 0 minutes")
