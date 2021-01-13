@@ -124,6 +124,8 @@ def pprint_tar(archive):
 
     tar = tarfile.open(archive, "r:gz")
     files = [ 'meta.json', 'understanding.json', 'event.json', 'sample.json' ]
+
+    # try to load the details from the meta.json file
     for member in tar.getmembers():
         name = member.name
         basename = os.path.basename(name)
@@ -142,8 +144,18 @@ def pprint_tar(archive):
                 details['event'].update(content.get('event', { }))
                 if not any( details[corpus] for corpus in details ):
                     details['sample'].update(content)
-            else:
-                corpus = basename.split('.')[0]
+
+    # load the files to add any missing statistics
+    for member in tar.getmembers():
+        name = member.name
+        basename = os.path.basename(name)
+        full_path = name.split('/')
+        if basename in files and not basename == 'meta.json' and not ('.out' in full_path or '.cache' in full_path):
+            file = tar.extractfile(member)
+            corpus = basename.split('.')[0]
+
+            # only read the number of tweets in the corpus if the statistic wasn't available in the meta.json file (for backwards compatibility)
+            if not details[corpus].get('collected'):
                 collected = 0
                 while file.readline():
                     collected += 1
