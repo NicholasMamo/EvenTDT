@@ -70,7 +70,7 @@ The output is a JSON file with the following structure:
         }
     }
 
-Accepted arguments:
+The full list of accepted arguments:
 
     - ``-f --file``              *<Required>* The file containing the terms to evaluate, which may be the output of the :mod:`~tools.terms` or :mod:`~tools.bootstrap` tools.
     - ``-g --gold``              *<Required>* The files containing the gold standard, with each word on a separate line.

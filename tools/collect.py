@@ -55,6 +55,49 @@ Since the corpora can only contain tweets, the metadata is saved instead to a me
 
     The tool collects tweets in English only.
 
+After collecting the datasets, the collection tool writes the details to a separate ``meta.json`` file in the same ``--output`` directory.
+The output is a JSON file with the following structure:
+
+.. code-block:: json
+
+    {
+        "understanding": {
+            "keywords": [
+                "#BREWBA",
+                "Brentford",
+                "West Brom",
+                "Bromwich",
+                "Albion"
+            ],
+            "output": "/mnt/data/#BREWBA/understanding.json",
+            "start": 1593192602.7365842,
+            "end": 1593196204.672771
+        },
+        "event": {
+            "keywords": [
+                "#BREWBA",
+                "Brentford",
+                "West Brom",
+                "Bromwich",
+                "Albion"
+            ],
+            "output": "/mnt/data/#BREWBA/event.json",
+            "start": 1593204301.1733663,
+            "end": 1593204901.384444
+        }
+    }
+
+The top-level keys depend on whether the collected corpus was from a filtered stream, and whether it includes the understanding or event period.
+If no filter keywords were provided, the file collects a sample, and the ``meta.json`` file has the following structure:
+
+.. code-block:: json
+
+    {
+        "output": "/mnt/data/sample/sample.json",
+        "start": 1586633750.5460582,
+        "end": 1586676950.8020885
+    }
+
 The full list of accepted arguments:
 
     - ``-o --output``            *<Required>* The data directory where the corpus should be written.
