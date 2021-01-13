@@ -319,8 +319,13 @@ def collect(auth, track, filename, max_time, lang=None, no_retweets=False, *args
     :type lang: list of str
     :param no_retweets: A boolean indicating whether to skip retweets.
     :type no_retweets: bool
+
+    :return: The number of collected tweets.
+    :rtype: int
     """
 
+    collected = 0
+    listener = None
     lang = [ 'en' ] if lang is None else lang
 
     start = time.time()
@@ -332,10 +337,14 @@ def collect(auth, track, filename, max_time, lang=None, no_retweets=False, *args
                 stream.filter(track=track, languages=lang)
             else:
                 stream.sample(languages=lang)
+            collected += listener.collected # add the number of collected tweets when the listener stops collecting tweets
     except (Exception) as e:
+        collected += listener.collected if listener else 0 # if the listener could be initialized, add the number of collected tweets
         elapsed = time.time() - start
         logger.warning(f"{e.__class__.__name__} after {elapsed} seconds, restarting for {max_time - elapsed} seconds")
-        collect(auth, track, filename, max_time - elapsed, lang, no_retweets=no_retweets, *args, **kwargs)
+        collected += collect(auth, track, filename, max_time - elapsed, lang, no_retweets=no_retweets, *args, **kwargs) # add the number of collected tweets from the new process
+
+    return collected
 
 def save_meta(filename, meta):
     """
