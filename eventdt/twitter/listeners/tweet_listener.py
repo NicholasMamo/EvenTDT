@@ -106,6 +106,7 @@ class TweetListener(StreamListener):
             Since each tweet is a string representing a line, this function only concatenates these lines together.
         """
 
+        self.collected += len(self.tweets)
         self.file.write(''.join(self.tweets))
         self.tweets = [ ]
 
@@ -135,7 +136,6 @@ class TweetListener(StreamListener):
             if self.retweets or not is_retweet(tweet):
                 tweet = self.filter(tweet)
                 self.tweets.append(json.dumps(tweet) + "\n")
-                self.collected += 1
 
 
             """
