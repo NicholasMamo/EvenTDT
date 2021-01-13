@@ -90,7 +90,8 @@ The output is a JSON file with the following structure:
             },
             "output": "/mnt/data/#BREWBA/understanding.json",
             "start": 1593192602.7365842,
-            "end": 1593196204.672771
+            "end": 1593196204.672771,
+            "collected": 120
         },
         "event": {
             "cmd": {
@@ -121,7 +122,8 @@ The output is a JSON file with the following structure:
             },
             "output": "/mnt/data/#BREWBA/event.json",
             "start": 1593204301.1733663,
-            "end": 1593204901.384444
+            "end": 1593204901.384444,
+            "collected": 131
         }
     }
 
@@ -156,7 +158,8 @@ If no filter keywords were provided, the file collects a sample, and the ``meta.
             },
             "output": "data/sample.json",
             "start": 1610552157.4145017,
-            "end": 1610552217.9032204
+            "end": 1610552217.9032204,
+            "collected": 1342
         }
     }
 
@@ -265,7 +268,7 @@ def main():
 
         start = time.time()
         logger.info('Starting to collect understanding corpus')
-        collect(auth, args.track, filename, args.understanding * 60, no_retweets=args.no_retweets)
+        collected = collect(auth, args.track, filename, args.understanding * 60, no_retweets=args.no_retweets)
         logger.info('Understanding corpus collected')
         end = time.time()
         meta['understanding'] = {
@@ -273,7 +276,8 @@ def main():
             'pcmd': pcmd,
             'output': filename,
             'start': start,
-            'end': end
+            'end': end,
+            'collected': collected
         }
 
     """
@@ -287,7 +291,7 @@ def main():
 
         start = time.time()
         logger.info('Starting to collect event corpus')
-        collect(auth, args.track, filename, args.event * 60, no_retweets=args.no_retweets)
+        collected = collect(auth, args.track, filename, args.event * 60, no_retweets=args.no_retweets)
         logger.info('Event corpus collected')
         end = time.time()
         meta['event'] = {
@@ -295,7 +299,8 @@ def main():
             'pcmd': pcmd,
             'output': filename,
             'start': start,
-            'end': end
+            'end': end,
+            'collected': collected
         }
 
     if meta:
