@@ -144,10 +144,10 @@ def pprint_tar(archive):
                     details['sample'].update(content)
             else:
                 corpus = basename.split('.')[0]
-                tweets = 0
+                collected = 0
                 while file.readline():
-                    tweets += 1
-                details[corpus].update({ 'tweets': tweets })
+                    collected += 1
+                details[corpus].update({ 'collected': collected })
 
     """
     Print the metadata for each corpus.
@@ -160,7 +160,7 @@ def pprint_tar(archive):
 
         print(f"{ corpus.title() }")
         print("=======================================")
-        print(f"Collected { details[corpus]['tweets'] } tweets between { start.strftime('%Y-%m-%d %H:%M:%S') }–{ end.strftime('%Y-%m-%d %H:%M:%S') }")
+        print(f"Collected { details[corpus]['collected'] } tweets between { start.strftime('%Y-%m-%d %H:%M:%S') }–{ end.strftime('%Y-%m-%d %H:%M:%S') }")
         if 'keywords' in details[corpus]:
             print(f"Keywords: { ', '.join(details[corpus]['keywords']) }")
         print()
