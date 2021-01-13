@@ -63,6 +63,8 @@ class TweetListener(StreamListener):
     :ivar attributes: The attributes to save from each tweet.
                       If ``None`` is given, the entire tweet objects are saved.
     :vartype attributes: list of str or None
+    :var collected: The number of collected tweets, after filtering.
+    :vartype collected: int
     """
 
     THRESHOLD = 200
@@ -91,6 +93,7 @@ class TweetListener(StreamListener):
         self.start = time.time()
         self.retweets = retweets
         self.attributes = attributes or [ ]
+        self.collected = 0
 
     def flush(self):
         """
@@ -132,6 +135,7 @@ class TweetListener(StreamListener):
             if self.retweets or not is_retweet(tweet):
                 tweet = self.filter(tweet)
                 self.tweets.append(json.dumps(tweet) + "\n")
+                self.collected += 1
 
 
             """

@@ -184,3 +184,31 @@ class TestTweetListener(unittest.TestCase):
             tweets = [ json.loads(line) for line in lines ]
             self.assertTrue(tweets)
             self.assertTrue(any( 'retweeted_status' in tweet for tweet in tweets ))
+
+    @clean
+    def test_collect_collected(self):
+        """
+        Test that when collecting data, the number of collected tweets is recorded properly.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), 'data.json'), 'w') as f:
+            listener = TweetListener(f, max_time=2, attributes=None)
+            stream = Stream(self.authenticate(), listener)
+            stream.filter(track=[ 'is' ])
+
+        with open(os.path.join(os.path.dirname(__file__), 'data.json'), 'r') as f:
+            self.assertEqual(len(f.readlines()), listener.collected)
+
+    @clean
+    def test_collect_retweets_collected(self):
+        """
+        Test that when collecting retweets, the number of collected tweets includes only the retweets.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), 'data.json'), 'w') as f:
+            listener = TweetListener(f, retweets=True, max_time=2, attributes=None)
+            stream = Stream(self.authenticate(), listener)
+            stream.filter(track=[ 'is' ])
+
+        with open(os.path.join(os.path.dirname(__file__), 'data.json'), 'r') as f:
+            self.assertEqual(len(f.readlines()), listener.collected)
