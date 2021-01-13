@@ -180,8 +180,10 @@ def pprint_tar(archive, force_count):
         print(f"{ corpus.title() }")
         print("=======================================")
         print(f"Collected { details[corpus]['collected'] } tweets between { start.strftime('%Y-%m-%d %H:%M:%S') }–{ end.strftime('%Y-%m-%d %H:%M:%S') }")
-        if 'keywords' in details[corpus] or 'cmd' in details[corpus]:
-            print(f"Keywords: { ', '.join(details[corpus].get('keywords', details[corpus]['cmd']['track'])) }")
+        if 'keywords' in details[corpus]:
+            print(f"Keywords: { ', '.join(details[corpus]['keywords']) }")
+        elif 'cmd' in details[corpus]:
+            print(f"Keywords: { ', '.join(details[corpus]['cmd']['track']) }")
         print()
 
 if __name__ == "__main__":
