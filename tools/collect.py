@@ -61,44 +61,64 @@ The output is a JSON file with the following structure:
 .. code-block:: json
 
     {
-        "cmd": {
-            "output": "data",
-            "track": [
-                "PSG"
-            ],
-            "understanding": null,
-            "event": 1,
-            "account": 0,
-            "no_retweets": false,
-            "_date": "2021-01-13T16:38:11.654496",
-            "_timestamp": 1610552291.6545098,
-            "_cmd": "./tools/collect.py --output data --event 1 --track PSG"
-        },
-        "pcmd": {
-            "output": "data",
-            "track": [
-                "PSG"
-            ],
-            "understanding": null,
-            "event": 1,
-            "account": 0,
-            "no_retweets": false,
-            "_date": "2021-01-13T16:38:11.654520",
-            "_timestamp": 1610552291.6545227,
-            "_cmd": "./tools/collect.py --output data --event 1 --track PSG"
-        },
         "understanding": {
-            "keywords": [
-                "PSG"
-            ],
+            "cmd": {
+                "output": "data",
+                "track": [
+                    "PSG"
+                ],
+                "understanding": null,
+                "event": 1,
+                "account": 0,
+                "no_retweets": false,
+                "_date": "2021-01-13T16:38:11.654496",
+                "_timestamp": 1610552291.6545098,
+                "_cmd": "./tools/collect.py --output data --event 1 --track PSG"
+            },
+            "pcmd": {
+                "output": "data",
+                "track": [
+                    "PSG"
+                ],
+                "understanding": null,
+                "event": 1,
+                "account": 0,
+                "no_retweets": false,
+                "_date": "2021-01-13T16:38:11.654520",
+                "_timestamp": 1610552291.6545227,
+                "_cmd": "./tools/collect.py --output data --event 1 --track PSG"
+            },
             "output": "/mnt/data/#BREWBA/understanding.json",
             "start": 1593192602.7365842,
             "end": 1593196204.672771
         },
         "event": {
-            "keywords": [
-                "PSG"
-            ],
+            "cmd": {
+                "output": "data",
+                "track": [
+                    "PSG"
+                ],
+                "understanding": null,
+                "event": 1,
+                "account": 0,
+                "no_retweets": false,
+                "_date": "2021-01-13T16:38:11.654496",
+                "_timestamp": 1610552291.6545098,
+                "_cmd": "./tools/collect.py --output data --event 1 --track PSG"
+            },
+            "pcmd": {
+                "output": "data",
+                "track": [
+                    "PSG"
+                ],
+                "understanding": null,
+                "event": 1,
+                "account": 0,
+                "no_retweets": false,
+                "_date": "2021-01-13T16:38:11.654520",
+                "_timestamp": 1610552291.6545227,
+                "_cmd": "./tools/collect.py --output data --event 1 --track PSG"
+            },
             "output": "/mnt/data/#BREWBA/event.json",
             "start": 1593204301.1733663,
             "end": 1593204901.384444
@@ -111,30 +131,29 @@ If no filter keywords were provided, the file collects a sample, and the ``meta.
 .. code-block:: json
 
     {
-        "cmd": {
-            "output": "data",
-            "track": null,
-            "understanding": null,
-            "event": 60,
-            "account": 0,
-            "no_retweets": false,
-            "_date": "2021-01-13T16:35:57.414309",
-            "_timestamp": 1610552157.414321,
-            "_cmd": "./tools/collect.py --output data --event 60"
-        },
-        "pcmd": {
-            "output": "data",
-            "track": null,
-            "understanding": null,
-            "event": 60,
-            "account": 0,
-            "no_retweets": false,
-            "_date": "2021-01-13T16:35:57.414329",
-            "_timestamp": 1610552157.4143317,
-            "_cmd": "./tools/collect.py --output data --event 60"
-        },
         "event": {
-            "keywords": null,
+            "cmd": {
+                "output": "data",
+                "track": null,
+                "understanding": null,
+                "event": 60,
+                "account": 0,
+                "no_retweets": false,
+                "_date": "2021-01-13T16:35:57.414309",
+                "_timestamp": 1610552157.414321,
+                "_cmd": "./tools/collect.py --output data --event 60"
+            },
+            "pcmd": {
+                "output": "data",
+                "track": null,
+                "understanding": null,
+                "event": 60,
+                "account": 0,
+                "no_retweets": false,
+                "_date": "2021-01-13T16:35:57.414329",
+                "_timestamp": 1610552157.4143317,
+                "_cmd": "./tools/collect.py --output data --event 60"
+            },
             "output": "data/sample.json",
             "start": 1610552157.4145017,
             "end": 1610552217.9032204
@@ -220,7 +239,7 @@ def main():
     args = setup_args()
     cmd = tools.meta(args)
     pcmd = tools.meta(args)
-    meta = { 'cmd': cmd, 'pcmd': pcmd }
+    meta = { }
 
     """
     Create the data directory if it does not exist.
@@ -250,7 +269,8 @@ def main():
         logger.info('Understanding corpus collected')
         end = time.time()
         meta['understanding'] = {
-            'keywords': args.track,
+            'cmd': cmd,
+            'pcmd': pcmd,
             'output': filename,
             'start': start,
             'end': end
@@ -271,7 +291,8 @@ def main():
         logger.info('Event corpus collected')
         end = time.time()
         meta['event'] = {
-            'keywords': args.track,
+            'cmd': cmd,
+            'pcmd': pcmd,
             'output': filename,
             'start': start,
             'end': end
