@@ -42,8 +42,6 @@ class LinguisticExtractor(Extractor):
         - :math:`ENT: <CD|NNP.*>*?<NNP.*><CD|NNP.*>*` - An entity can start with (`1860 Munich`) or end with a number (`Schalke 04`), but it must always include at least one proper noun.
         """
 
-        # NOTE: Interesting behavior if NP does not have ENT in it
-
         grammar = grammar or """
                   ENT: { <CD|NNP.*>*?<NNP.*><CD|NNP.*>* }
                   JJMOD: { <JJ.*>(<CC|,><JJ.*>)* }
@@ -179,7 +177,7 @@ class LinguisticExtractor(Extractor):
         """
 
         value = [ ]
-        head = subtree[-1] if (type(subtree[-1]) is nltk.tree.Tree and subtree[-1].label()) == 'ENT' else subtree
+        head = subtree[-1] if (type(subtree[-1]) is nltk.tree.Tree and subtree[-1].label() == 'ENT') else subtree
         for text, pos in head.leaves():
             value.append(text)
         return (' '.join(value).lower())
