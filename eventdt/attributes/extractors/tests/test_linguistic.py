@@ -44,6 +44,22 @@ class TestLinguisticExtractor(unittest.TestCase):
         extractor = LinguisticExtractor()
         self.assertEqual(Profile, type(extractor.extract('')))
 
+    def test_extract_default_name(self):
+        """
+        Test that the default name is an empty string.
+        """
+
+        extractor = LinguisticExtractor()
+        self.assertEqual('', extractor.extract('').name)
+
+    def test_extract_with_name(self):
+        """
+        Test that when passing a name while extracting, it is saved as the profile's name.
+        """
+
+        extractor = LinguisticExtractor()
+        self.assertEqual('profile name', extractor.extract('', name='profile name').name)
+
     def test_extract_lowercase_keys(self):
         """
         Test that when extracting attributes, all keys are in lowercase.

@@ -61,6 +61,8 @@ class LinguisticExtractor(Extractor):
         Extract attributes from the given text.
         This function assumes that the text is about a single entity and therefore does not discriminate among attributes.
 
+        Any additional arguments and keyword arguments are passed on to the :class:`~attributes.profile.Profile` :func:`constructor <~attributes.profile.Profile.__init__>`.
+
         :param text: The text from where to extract attributes.
         :type text: str
 
@@ -69,7 +71,7 @@ class LinguisticExtractor(Extractor):
         :rtype: :class:`~attributes.profile.Profile`
         """
 
-        profile = Profile()
+        profile = Profile(*args, **kwargs)
 
         sentences = nltk.sent_tokenize(text)
         for sentence in sentences:
