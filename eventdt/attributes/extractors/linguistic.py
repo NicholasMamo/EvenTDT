@@ -76,12 +76,12 @@ class LinguisticExtractor(Extractor):
             tree = self._parse(sentence)
             subtrees = self._attribute_subtrees(tree)
             for subtree in subtrees:
-                name, value_subtrees = self._to_attributes(subtree)
-                for value_subtree in value_subtrees:
-                    preposition = self._get_preposition(value_subtree)
+                name, PPATTR = self._to_attributes(subtree)
+                for _PPATTR in PPATTR:
+                    preposition = self._get_preposition(_PPATTR)
                     name_pp = f"{name}_{ preposition }" if preposition else name
                     profile.attributes[name_pp] = profile.attributes.get(name_pp) or set()
-                    attributes = self._get_attribute(value_subtree)
+                    attributes = self._get_attribute(_PPATTR)
                     for attribute in attributes:
                         profile.attributes[name_pp].add(self._attribute_value(attribute))
 
@@ -148,8 +148,8 @@ class LinguisticExtractor(Extractor):
         :rtype: str or None
         """
 
-        prepositions = [ text.lower() for text, pos in subtree.leaves() if pos == 'IN' ]
-        return prepositions[0] if prepositions else None
+        text, pos = subtree.flatten()[0]
+        return text if pos == 'IN' else None
 
     def _get_attribute(self, subtree):
         """
