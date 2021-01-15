@@ -31,7 +31,7 @@ class TestProfile(unittest.TestCase):
         Test that the attributes are initially set to an empty dictionary when ``None`` is given.
         """
 
-        profile = Profile(None)
+        profile = Profile(attributes=None)
         self.assertEqual({ }, profile.attributes)
 
     def test_init_default_attributes(self):
@@ -39,15 +39,32 @@ class TestProfile(unittest.TestCase):
         Test that when providing default attributes, they are stored.
         """
 
-        profile = Profile({ 'known_as': 'Memphis', 'age': 26 })
+        profile = Profile(attributes={ 'known_as': 'Memphis', 'age': 26 })
         self.assertEqual({ 'known_as': 'Memphis', 'age': 26 }, profile.attributes)
+
+    def test_init_default_name_empty(self):
+        """
+        Test that by default, the name is empty.
+        """
+
+        profile = Profile()
+        self.assertEqual(str, type(profile.name))
+        self.assertEqual('', profile.name)
+
+    def test_init_name(self):
+        """
+        Test that when initializing a profile with a name, it is saved.
+        """
+
+        profile = Profile('profile name')
+        self.assertEqual('profile name', profile.name)
 
     def test_attributes_overwrite(self):
         """
         Test that setting the attributes overwrites the previous attributes.
         """
 
-        profile = Profile({ 'known_as': 'Memphis', 'age': 26 })
+        profile = Profile(attributes={ 'known_as': 'Memphis', 'age': 26 })
         self.assertEqual({ 'known_as': 'Memphis', 'age': 26 }, profile.attributes)
 
         profile.attributes = { 'name': 'Memphis Depay' }
@@ -58,7 +75,7 @@ class TestProfile(unittest.TestCase):
         Test that overwriting the attributes with ``None`` creates an empty dictionary of attributes.
         """
 
-        profile = Profile({ 'known_as': 'Memphis', 'age': 26 })
+        profile = Profile(attributes={ 'known_as': 'Memphis', 'age': 26 })
         self.assertEqual({ 'known_as': 'Memphis', 'age': 26 }, profile.attributes)
 
         profile.attributes = None
@@ -80,7 +97,7 @@ class TestProfile(unittest.TestCase):
         Test update an existing attribute in a profile.
         """
 
-        profile = Profile({ 'known_as': 'Memphis Depay', 'age': 26 })
+        profile = Profile(attributes={ 'known_as': 'Memphis Depay', 'age': 26 })
         self.assertEqual({ 'known_as': 'Memphis Depay', 'age': 26 }, profile.attributes)
 
         profile.attributes['known_as'] = 'Memphis'
@@ -91,7 +108,7 @@ class TestProfile(unittest.TestCase):
         Test removing an existing attribute from a profile.
         """
 
-        profile = Profile({ 'known_as': 'Memphis Depay', 'age': 26 })
+        profile = Profile(attributes={ 'known_as': 'Memphis Depay', 'age': 26 })
         self.assertEqual({ 'known_as': 'Memphis Depay', 'age': 26 }, profile.attributes)
 
         del profile.attributes['age']
@@ -110,7 +127,7 @@ class TestProfile(unittest.TestCase):
         Test that getting the common attributes and one profile is empty, the function returns an empty set.
         """
 
-        p1, p2 = Profile(), Profile({ 'plays_as': { 'striker' } })
+        p1, p2 = Profile(), Profile(attributes={ 'plays_as': { 'striker' } })
         self.assertEqual(set(), p1.common(p2))
         self.assertEqual(set(), p2.common(p1))
 
@@ -119,7 +136,7 @@ class TestProfile(unittest.TestCase):
         Test that when two profiles share no attributes, no common attributes are returned.
         """
 
-        p1, p2 = Profile({ 'plays_for': { 'lyon' } }), Profile({ 'plays_as': { 'striker' } })
+        p1, p2 = Profile(attributes={ 'plays_for': { 'lyon' } }), Profile(attributes={ 'plays_as': { 'striker' } })
         self.assertEqual(set(), p1.common(p2))
         self.assertEqual(set(), p2.common(p1))
 
@@ -128,7 +145,7 @@ class TestProfile(unittest.TestCase):
         Test that the common attributes actually exist in both profiles.
         """
 
-        p1, p2 = Profile({ 'plays_for': { 'lyon' }, 'plays_as': { 'striker' } }), Profile({ 'plays_as': { 'striker' } })
+        p1, p2 = Profile(attributes={ 'plays_for': { 'lyon' }, 'plays_as': { 'striker' } }), Profile(attributes={ 'plays_as': { 'striker' } })
         self.assertTrue(all( attribute in p1.attributes and attribute in p2.attributes for attribute in p1.common(p2) ))
         self.assertTrue(all( attribute in p1.attributes and attribute in p2.attributes for attribute in p2.common(p1) ))
 
@@ -137,7 +154,7 @@ class TestProfile(unittest.TestCase):
         Test that the common attributes ignores the value of attributes.
         """
 
-        p1, p2 = Profile({ 'plays_for': { 'lyon' }, 'plays_as': { 'midfielder' } }), Profile({ 'plays_as': { 'striker' } })
+        p1, p2 = Profile(attributes={ 'plays_for': { 'lyon' }, 'plays_as': { 'midfielder' } }), Profile(attributes={ 'plays_as': { 'striker' } })
         self.assertFalse(p1.attributes['plays_as'] == p2.attributes['plays_as'])
         self.assertEqual({ 'plays_as' }, p1.common(p2))
         self.assertEqual({ 'plays_as' }, p2.common(p1))
@@ -147,7 +164,7 @@ class TestProfile(unittest.TestCase):
         Test that the attributes that appear in only one profile are excluded.
         """
 
-        p1, p2 = Profile({ 'plays_for': { 'lyon' }, 'plays_as': { 'striker' } }), Profile({ 'plays_as': { 'striker' } })
+        p1, p2 = Profile(attributes={ 'plays_for': { 'lyon' }, 'plays_as': { 'striker' } }), Profile(attributes={ 'plays_as': { 'striker' } })
         self.assertFalse('plays_for' in p1.common(p2))
         self.assertFalse('plays_for' in p2.common(p1))
 
@@ -156,7 +173,7 @@ class TestProfile(unittest.TestCase):
         Test that getting the common attributes in two profiles returns an set.
         """
 
-        p1, p2 = Profile({ 'plays_for': { 'lyon' }, 'plays_as': { 'striker' } }), Profile({ 'plays_as': { 'striker' } })
+        p1, p2 = Profile(attributes={ 'plays_for': { 'lyon' }, 'plays_as': { 'striker' } }), Profile(attributes={ 'plays_as': { 'striker' } })
         self.assertEqual(set, type(p1.common(p2)))
         self.assertEqual(set, type(p2.common(p1)))
 
@@ -165,7 +182,7 @@ class TestProfile(unittest.TestCase):
         Test that when getting the common attributes in two profiles, the order does not matter.
         """
 
-        p1, p2 = Profile({ 'plays_for': { 'lyon' }, 'plays_as': { 'striker' } }), Profile({ 'plays_as': { 'striker' } })
+        p1, p2 = Profile(attributes={ 'plays_for': { 'lyon' }, 'plays_as': { 'striker' } }), Profile(attributes={ 'plays_as': { 'striker' } })
         self.assertEqual(p1.common(p2), p2.common(p1))
 
     def test_match_empty(self):
@@ -181,7 +198,7 @@ class TestProfile(unittest.TestCase):
         Test that getting the matching attributes and one profile is empty, the function returns an empty set.
         """
 
-        p1, p2 = Profile(), Profile({ 'plays_as': { 'striker' } })
+        p1, p2 = Profile(), Profile(attributes={ 'plays_as': { 'striker' } })
         self.assertEqual(set(), p1.match(p2))
         self.assertEqual(set(), p2.match(p1))
 
@@ -190,7 +207,7 @@ class TestProfile(unittest.TestCase):
         Test that when two profiles share no attributes, no match attributes are returned.
         """
 
-        p1, p2 = Profile({ 'plays_for': { 'lyon' } }), Profile({ 'plays_as': { 'striker' } })
+        p1, p2 = Profile(attributes={ 'plays_for': { 'lyon' } }), Profile(attributes={ 'plays_as': { 'striker' } })
         self.assertEqual(set(), p1.match(p2))
         self.assertEqual(set(), p2.match(p1))
 
@@ -199,7 +216,7 @@ class TestProfile(unittest.TestCase):
         Test that the matching attributes actually exist in both profiles.
         """
 
-        p1, p2 = Profile({ 'plays_for': { 'lyon' }, 'plays_as': { 'striker' } }), Profile({ 'plays_as': { 'striker' } })
+        p1, p2 = Profile(attributes={ 'plays_for': { 'lyon' }, 'plays_as': { 'striker' } }), Profile(attributes={ 'plays_as': { 'striker' } })
         self.assertTrue(all( attribute in p1.attributes and attribute in p2.attributes for attribute in p1.match(p2) ))
         self.assertTrue(all( attribute in p1.attributes and attribute in p2.attributes for attribute in p2.match(p1) ))
 
@@ -208,7 +225,7 @@ class TestProfile(unittest.TestCase):
         Test that the matching attributes are actually common.
         """
 
-        p1, p2 = Profile({ 'plays_as': { 'striker' } }), Profile({ 'plays_as': { 'striker' } })
+        p1, p2 = Profile(attributes={ 'plays_as': { 'striker' } }), Profile(attributes={ 'plays_as': { 'striker' } })
         self.assertTrue(p1.match(p2))
         self.assertTrue(all( attribute in p1.common(p2) for attribute in p1.match(p2) ))
 
@@ -217,7 +234,7 @@ class TestProfile(unittest.TestCase):
         Test that when matching attributes, the attribute names are returned.
         """
 
-        p1, p2 = Profile({ 'plays_as': { 'striker' } }), Profile({ 'plays_as': { 'striker' } })
+        p1, p2 = Profile(attributes={ 'plays_as': { 'striker' } }), Profile(attributes={ 'plays_as': { 'striker' } })
         self.assertTrue(p1.match(p2))
         self.assertTrue(all( attribute in p1.attributes for attribute in p1.match(p2) ))
         self.assertTrue(all( attribute in p2.attributes for attribute in p1.match(p2) ))
@@ -227,7 +244,7 @@ class TestProfile(unittest.TestCase):
         Test that the attributes that appear in only one profile are excluded.
         """
 
-        p1, p2 = Profile({ 'plays_for': { 'lyon' }, 'plays_as': { 'striker' } }), Profile({ 'plays_as': { 'striker' } })
+        p1, p2 = Profile(attributes={ 'plays_for': { 'lyon' }, 'plays_as': { 'striker' } }), Profile(attributes={ 'plays_as': { 'striker' } })
         self.assertFalse('plays_for' in p1.match(p2))
         self.assertFalse('plays_for' in p2.match(p1))
 
@@ -236,7 +253,7 @@ class TestProfile(unittest.TestCase):
         Test that getting the matching attributes in two profiles returns an set.
         """
 
-        p1, p2 = Profile({ 'plays_for': { 'lyon' }, 'plays_as': { 'striker' } }), Profile({ 'plays_as': { 'striker' } })
+        p1, p2 = Profile(attributes={ 'plays_for': { 'lyon' }, 'plays_as': { 'striker' } }), Profile(attributes={ 'plays_as': { 'striker' } })
         self.assertEqual(set, type(p1.match(p2)))
         self.assertEqual(set, type(p2.match(p1)))
 
@@ -245,7 +262,7 @@ class TestProfile(unittest.TestCase):
         Test that when getting the matching attributes in two profiles, the order does not matter.
         """
 
-        p1, p2 = Profile({ 'plays_for': { 'lyon' }, 'plays_as': { 'striker' } }), Profile({ 'plays_as': { 'striker' } })
+        p1, p2 = Profile(attributes={ 'plays_for': { 'lyon' }, 'plays_as': { 'striker' } }), Profile(attributes={ 'plays_as': { 'striker' } })
         self.assertEqual(p1.match(p2), p2.match(p1))
 
     def test_match_numbers(self):
@@ -253,7 +270,7 @@ class TestProfile(unittest.TestCase):
         Test that when matching numbers, attributes are matched correctly.
         """
 
-        p1, p2 = Profile({ 'age': 26 }), Profile({ 'age': 26 })
+        p1, p2 = Profile(attributes={ 'age': 26 }), Profile(attributes={ 'age': 26 })
         self.assertEqual({ 'age' }, p1.match(p2))
 
     def test_match_numbers_policy_irrelevant(self):
@@ -261,7 +278,7 @@ class TestProfile(unittest.TestCase):
         Test that when matching numbers, the policy has no effect.
         """
 
-        p1, p2 = Profile({ 'age': 26 }), Profile({ 'age': 26 })
+        p1, p2 = Profile(attributes={ 'age': 26 }), Profile(attributes={ 'age': 26 })
         self.assertEqual({ 'age' }, p1.match(p2, policy=any))
         self.assertEqual(p1.match(p2, policy=any), p1.match(p2, policy=all))
 
@@ -270,7 +287,7 @@ class TestProfile(unittest.TestCase):
         Test that when matching strings, attributes are matched correctly.
         """
 
-        p1, p2 = Profile({ 'plays_as': 'striker' }), Profile({ 'plays_as': 'striker' })
+        p1, p2 = Profile(attributes={ 'plays_as': 'striker' }), Profile(attributes={ 'plays_as': 'striker' })
         self.assertEqual({ 'plays_as' }, p1.match(p2))
 
     def test_match_strings_not_iterable(self):
@@ -278,9 +295,9 @@ class TestProfile(unittest.TestCase):
         Test that strings are not treated as iterables.
         """
 
-        p1, p2 = Profile({ 'plays_in': 'all' }), Profile({ 'plays_in': 'al' })
+        p1, p2 = Profile(attributes={ 'plays_in': 'all' }), Profile(attributes={ 'plays_in': 'al' })
         self.assertEqual(set(), p1.match(p2))
-        p1, p2 = Profile({ 'plays_in': 'all' }), Profile({ 'plays_in': 'all' })
+        p1, p2 = Profile(attributes={ 'plays_in': 'all' }), Profile(attributes={ 'plays_in': 'all' })
         self.assertEqual({ 'plays_in' }, p1.match(p2))
 
     def test_match_strings_policy_irrelevant(self):
@@ -288,7 +305,7 @@ class TestProfile(unittest.TestCase):
         Test that when matching strings, the policy has no effect.
         """
 
-        p1, p2 = Profile({ 'plays_as': 'striker' }), Profile({ 'plays_as': 'striker' })
+        p1, p2 = Profile(attributes={ 'plays_as': 'striker' }), Profile(attributes={ 'plays_as': 'striker' })
         self.assertEqual({ 'plays_as' }, p1.match(p2, policy=any))
         self.assertEqual(p1.match(p2, policy=any), p1.match(p2, policy=all))
 
@@ -297,7 +314,7 @@ class TestProfile(unittest.TestCase):
         Test that when matching sets of values, the policy has an effect.
         """
 
-        p1, p2 = Profile({ 'plays_as': { 'striker', 'midfielder' }, 'plays_for': { 'lyon' } }), Profile({ 'plays_as': { 'striker', 'defender' }, 'plays_for': { 'marseille' } })
+        p1, p2 = Profile(attributes={ 'plays_as': { 'striker', 'midfielder' }, 'plays_for': { 'lyon' } }), Profile(attributes={ 'plays_as': { 'striker', 'defender' }, 'plays_for': { 'marseille' } })
         self.assertEqual({ 'plays_as' }, p1.match(p2, policy=any))
         self.assertEqual(set(), p1.match(p2, policy=all))
 
@@ -306,7 +323,7 @@ class TestProfile(unittest.TestCase):
         Test that when matching lists of values, the policy has an effect.
         """
 
-        p1, p2 = Profile({ 'plays_as': [ 'striker', 'midfielder' ], 'plays_for': [ 'lyon' ] }), Profile({ 'plays_as': [ 'striker', 'defender' ], 'plays_for': [ 'marseille' ] })
+        p1, p2 = Profile(attributes={ 'plays_as': [ 'striker', 'midfielder' ], 'plays_for': [ 'lyon' ] }), Profile(attributes={ 'plays_as': [ 'striker', 'defender' ], 'plays_for': [ 'marseille' ] })
         self.assertEqual({ 'plays_as' }, p1.match(p2, policy=any))
         self.assertEqual(set(), p1.match(p2, policy=all))
 
@@ -315,7 +332,7 @@ class TestProfile(unittest.TestCase):
         Test that when matching lists of values, the policy has an effect.
         """
 
-        p1, p2 = Profile({ 'plays_as': [ 'striker', 'midfielder' ], 'plays_for': [ 'lyon' ] }), Profile({ 'plays_as': [ 'striker', 'defender' ], 'plays_for': [ 'marseille' ] })
+        p1, p2 = Profile(attributes={ 'plays_as': [ 'striker', 'midfielder' ], 'plays_for': [ 'lyon' ] }), Profile(attributes={ 'plays_as': [ 'striker', 'defender' ], 'plays_for': [ 'marseille' ] })
         self.assertEqual({ 'plays_as' }, p1.match(p2, policy=any))
         self.assertEqual(set(), p1.match(p2, policy=all))
 
@@ -324,6 +341,6 @@ class TestProfile(unittest.TestCase):
         Test that when matching an iterable, both sides are checked.
         """
 
-        p1, p2 = Profile({ 'plays_as': [ 'striker' ] }), Profile({ 'plays_as': [ 'striker', 'defender' ] })
+        p1, p2 = Profile(attributes={ 'plays_as': [ 'striker' ] }), Profile(attributes={ 'plays_as': [ 'striker', 'defender' ] })
         self.assertEqual({ 'plays_as' }, p1.match(p2, policy=any))
         self.assertEqual(set(), p1.match(p2, policy=all))

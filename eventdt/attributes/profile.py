@@ -11,20 +11,25 @@ class Profile(object):
     This class stores these attributes as a dictionary, which can be accessed directly.
     It expects attribute names to be strings, but values can be any datatype.
 
+    :ivar name: The name of the entity that the profile represents.
+    :vartype name: str
     :ivar attributes: The attributes stored in this profile.
                       The attribute name is the key, and the value is the corresponding attribute value.
     :vartype attributes: dict
     """
 
-    def __init__(self, attributes=None):
+    def __init__(self, name=None, attributes=None):
         """
         Initialize the profile with attributes.
 
+        :param name: The name of the entity that the profile represents.
+        :type name: str or None
         :param attributes: The default attributes.
                            If ``None`` is given, an empty dictionary is initialized instead.
         :type attributes: None or dict
         """
 
+        self.name = name or ''
         self.attributes = attributes or { }
 
     @property
