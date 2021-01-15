@@ -98,3 +98,24 @@ class Profile(object):
                 matching.add(attribute)
 
         return matching
+
+    def __str__(self):
+        """
+        Get the string representation of the profile.
+        This function returns the profile name, if it is set, and a list of attributes.
+
+        :return: The string representation of the summary.
+        :rtype: str
+        """
+
+        _str = ''
+
+        title = self.name or super().__str__()
+        _str += f"{ title }\n"
+        _str += f"{ '-' * len(title) }\n"
+        _str += '\n'
+
+        for attribute, value in self.attributes.items():
+            _str += f"    { attribute }: { str(value) }\n"
+
+        return _str
