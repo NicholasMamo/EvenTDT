@@ -64,9 +64,16 @@ def main():
     """
 
     """
-    Set up the arguments, create the tokenizer and prepare the data directory.
+    Set up the arguments and prepare the data directory.
     """
     args = setup_args()
+    cmd = tools.meta(args)
+    pcmd = tools.meta(args)
+    tools.save(args.output, { }) # to create the directory if it doesn't exist
+
+    meta = args.meta or args.output.replace('.json', '.meta.json')
+    pcmd['meta'] = meta
+    tools.save(meta, { 'cmd': cmd, 'pcmd': pcmd })
 
 if __name__ == "__main__":
     main()
