@@ -28,9 +28,22 @@ The full list of accepted arguments:
     - ``-f --file``                          *<Required>* The original corpus collected by the :mod:`~tools.collect` tool.
     - ``-o --output``                        *<Required>* The file where to save the shareable corpus.
     - ``--meta``                             *<Optional>* The file where to save the meta data, defaults to [--file].meta.json.
+
+The tool writes one tweet ID on each line in the output file.
 """
 
 import argparse
+import json
+import os
+import sys
+
+file_path = os.path.dirname(os.path.abspath(__file__))
+root = os.path.join(file_path, '..')
+lib = os.path.join(root, 'eventdt')
+sys.path.insert(-1, root)
+sys.path.insert(-1, lib)
+
+import tools
 
 def setup_args():
     """
@@ -70,10 +83,27 @@ def main():
     cmd = tools.meta(args)
     pcmd = tools.meta(args)
     tools.save(args.output, { }) # to create the directory if it doesn't exist
+    write(args.file, args.output)
 
     meta = args.meta or args.output.replace('.json', '.meta.json')
     pcmd['meta'] = meta
     tools.save(meta, { 'cmd': cmd, 'pcmd': pcmd })
+
+def write(file, output):
+    """
+    Make the given file shareable, writing the tweet IDs into the given output file.
+
+    :param file: The path to the original corpus of tweets.
+    :type file: str
+    :param output: The path where to write the tweet IDs.
+    :type output: str
+    """
+
+    with open(file, 'r') as infile, \
+         open(output, 'w') as outfile:
+        for line in infile:
+            tweet = json.loads(line)
+            outfile.write(f"{ tweet['id_str'] }\n")
 
 if __name__ == "__main__":
     main()
