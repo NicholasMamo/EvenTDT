@@ -15,6 +15,7 @@ To run this tool, use the following:
 The full list of accepted arguments:
 
     - ``-f --file``                          *<Required>* The original corpus collected by the :mod:`~tools.collect` tool.
+    - ``-o --output``                        *<Required>* The file where to save the shareable corpus.
 """
 
 import argparse
@@ -26,6 +27,7 @@ def setup_args():
     Accepted arguments:
 
         - ``-f --file``             *<Required>* The original corpus collected by the :mod:`~tools.collect` tool.
+        - ``-o --output``           *<Required>* The file where to save the shareable corpus.
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
@@ -35,6 +37,8 @@ def setup_args():
 
     parser.add_argument('-f', '--file', type=str, required=True,
                         help='<Required> The original corpus collected by the `collect` tool.')
+    parser.add_argument('-o', '--output', type=str, required=True,
+                        help='<Required> The file where to save the shareable corpus.')
 
     args = parser.parse_args()
     return args
