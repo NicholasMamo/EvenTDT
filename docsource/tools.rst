@@ -12,7 +12,15 @@
 Data Collection
 ===============
 
+Collection
+----------
+
 .. automodule:: tools.collect
+
+Sharing
+-------
+
+.. automodule:: tools.shareable
 
 ==============
 Pre-processing

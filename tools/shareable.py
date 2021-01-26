@@ -14,7 +14,7 @@ To run this tool, use the following:
     --output data/shareable.json
 
 By default, the tool saves the meta details to a file in the same directory.
-However, you can save the meta file in a different path by providing the ``--meta` parameter:
+However, you can save the meta file in a different path by providing the ``--meta`` parameter:
 
 .. code-block:: bash
 
