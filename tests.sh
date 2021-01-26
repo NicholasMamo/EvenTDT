@@ -189,6 +189,9 @@ tools_tests() {
 	echo -e "${HIGHLIGHT}ATE${DEFAULT}"
 	python3 -m unittest tools.tests.test_terms
 
+	echo -e "${HIGHLIGHT}Shareable${DEFAULT}"
+	python3 -m unittest tools.tests.test_shareable
+
 	echo -e "${HIGHLIGHT}Tokenizer${DEFAULT}"
 	python3 -m unittest tools.tests.test_tokenizer
 
