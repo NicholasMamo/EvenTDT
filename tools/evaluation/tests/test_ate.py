@@ -224,8 +224,22 @@ class TestATE(unittest.TestCase):
         for file in files:
             with open(file, 'r') as f:
                 for word in f:
-                    self.assertTrue(word.strip() in gold.keys())
+                    self.assertTrue(word.strip().lower() in gold.keys())
                     self.assertTrue(word.strip() in gold.values())
+
+    def test_load_gold_lower(self):
+        """
+        Test that when loading the gold standard words, they are all loaded in lowercase.
+        """
+
+        files = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'eventdt', 'tests', 'corpora', 'ate', 'gold.txt'),
+                  os.path.join(os.path.dirname(__file__), '..', '..', '..', 'eventdt', 'tests', 'corpora', 'ate', 'gold_other.txt') ]
+        gold = ate.load_gold(files)
+
+        """
+        Assert that all words are in lowercase.
+        """
+        self.assertTrue(all( term.lower() == term for term in gold ))
 
     def test_load_gold_dict(self):
         """
