@@ -236,6 +236,21 @@ class TestEvent(unittest.TestCase):
         extractor = event.EF()
         self.assertRaises(ValueError, extractor._load_timelines, paths)
 
+    def test_ef_load_one_timeline_path(self):
+        """
+        Test that when loading a timeline from a path, the same timeline are loaded as when loaded manually.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json')
+        with open(path, 'r') as f:
+            timeline = Exportable.decode(json.loads(''.join(f.readlines())))['timeline']
+
+        extractor = event.EF()
+        extracted = extractor._load_timelines(path)
+        self.assertEqual(1, len(extracted))
+        self.assertTrue(all( [ timeline.nodes[i].created_at == extracted[0].nodes[i].created_at
+                               for i in range(len(timeline.nodes)) ] ))
+
     def test_ef_load_timelines(self):
         """
         Test that when loading timelines from paths, the same timelines are loaded as when loaded manually.

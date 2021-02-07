@@ -49,12 +49,11 @@ class EF(Extractor):
         ef = { } if not candidates else dict.fromkeys(candidates, 0)
 
         timelines = self.to_list(timelines)
-        timelines = self._load_timelines(timelines)
-
         for timeline in timelines:
             """
             Extract all the topical terms from the timeline.
             """
+            timeline = self._load_timelines(timeline)[0]
             terms = set( term for node in timeline.nodes
                               for topic in node.topics
                               for term in topic.dimensions )
@@ -73,8 +72,8 @@ class EF(Extractor):
         """
         Load the timelines if paths to files are given.
 
-        :param timelines: A list of timelines, one for each event, or paths to timelines.
-        :type timelines: list of str or list of :class:`~summarization.timeline.Timeline`
+        :param timelines: A timeline, or a list of timelines, one for each event, or paths to timelines.
+        :type timelines: str or list of str or list of :class:`~summarization.timeline.Timeline`
 
         :return: A list of timelines, loaded from files where necessary.
         :rtype: list of :class:`~summarization.timeline.Timeline`
@@ -82,6 +81,7 @@ class EF(Extractor):
         :raises ValueError: When the given file does not contain a timeline.
         """
 
+        timelines = self.to_list(timelines)
         _timelines = [ ]
 
         for timeline in timelines:
