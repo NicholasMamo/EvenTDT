@@ -542,3 +542,59 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
             for line in f:
                 tweet = json.loads(line)
                 self.assertTrue(tweet in queue.queue)
+
+    async def test_skip_unverified(self):
+        """
+        Test that when skipping tweets from unverified authors, none of the tweets read from the corpus are from unverified authors.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+            queue = Queue()
+            reader = StaggeredFileReader(queue, f, rate=1000, skip_unverified=True)
+            await reader.read()
+            self.assertTrue(queue.length())
+            self.assertTrue(all( not is_verified(tweet) for tweet in queue.queue ))
+
+        """
+        Test that all the correct tweets are in the queue.
+        """
+        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if is_verified(tweet):
+                    self.assertFalse(tweet in queue.queue)
+                else:
+                    self.assertTrue(tweet in queue.queue)
+
+    async def test_no_skip_unverified(self):
+        """
+        Test that when not skipping tweets from unverified authors, all of the tweets in the corpus are retained.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+            queue = Queue()
+            reader = StaggeredFileReader(queue, f, rate=1000, skip_unverified=False)
+            await reader.read()
+            self.assertTrue(queue.length())
+            self.assertTrue(any( is_verified(tweet) for tweet in queue.queue ))
+
+        """
+        Test that all the tweets are in the queue.
+        """
+        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                self.assertTrue(tweet in queue.queue)
+
+    async def test_skip_retweets_but_not_unverified(self):
+        """
+        Test that when skipping retweets, but not tweets from unverified authors, retweets are not retained.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+            queue = Queue()
+            reader = StaggeredFileReader(queue, f, rate=1000, skip_retweets=True, skip_unverified=False)
+            await reader.read()
+            self.assertTrue(queue.length())
+            self.assertTrue(not any( is_retweet(tweet) for tweet in queue.queue ))
+            self.assertTrue(any( is_verified(tweet) for tweet in queue.queue ))

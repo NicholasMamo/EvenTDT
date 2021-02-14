@@ -55,9 +55,12 @@ class FileReader(ABC):
     :vartype stopped: bool
     :ivar skip_retweets: A boolean indicating whether to skip retweets.
     :vartype skip_retweets: bool
+    :ivar skip_unverified: A boolean indicating whether to skip tweets by unverified authors.
+    :vartype skip_unverified: bool
     """
 
-    def __init__(self, queue, f, max_lines=-1, max_time=-1, skip_lines=0, skip_time=0, skip_retweets=False):
+    def __init__(self, queue, f, max_lines=-1, max_time=-1, skip_lines=0, skip_time=0,
+                 skip_unverified=False, skip_retweets=False):
         """
         Create the file reader with the :class:`~queues.Queue` where to add tweets and the file from where to read them.
         The ``max_lines`` and ``max_time`` parameters can be used to read only a part of the corpus.
@@ -77,6 +80,8 @@ class FileReader(ABC):
         :type skip_lines: int
         :param skip_time: The number of seconds to skip from the beginning of the file.
         :type skip_time: int
+        :param skip_unverified: A boolean indicating whether to skip tweets by unverified authors.
+        :type skip_unverified: bool
         :param skip_retweets: A boolean indicating whether to skip retweets.
         :type skip_retweets: bool
 
@@ -92,6 +97,7 @@ class FileReader(ABC):
         self.active = False
         self.stopped = True
         self.skip_retweets = skip_retweets
+        self.skip_unverified = skip_unverified
 
         """
         Validate the inputs.
@@ -146,7 +152,9 @@ class FileReader(ABC):
         :rtype: bool
         """
 
-        return not self.skip_retweets or not is_retweet(tweet)
+        valid = not self.skip_retweets or not is_retweet(tweet)
+        valid = valid and (not self.skip_unverified or not is_verified(tweet))
+        return valid
 
     def skip(self, lines, time):
         """
