@@ -153,7 +153,7 @@ class FileReader(ABC):
         """
 
         valid = not self.skip_retweets or not is_retweet(tweet)
-        valid = valid and (not self.skip_unverified or not is_verified(tweet))
+        valid = valid and (not self.skip_unverified or is_verified(tweet))
         return valid
 
     def skip(self, lines, time):
