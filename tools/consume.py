@@ -114,6 +114,7 @@ The output is a JSON file with the following structure:
             "scheme": "data/idf.json",
             "skip": 0,
             "skip_retweets": true,
+            "skip_unverified": false,
             "speed": 1,
             "splits": null,
             "threshold": 0.5,
@@ -140,6 +141,7 @@ The output is a JSON file with the following structure:
             "scheme": "<class 'nlp.weighting.tfidf.TFIDF'>",
             "skip": 0,
             "skip_retweets": true,
+            "skip_unverified": false,
             "speed": 1,
             "splits": null,
             "threshold": 0.5,
@@ -170,6 +172,7 @@ The full list of accepted arguments:
     - ``--max-inactivity``          *<Optional>* The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.
     - ``--max-time``                *<Optional>* The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.
     - ``--skip-retweets``           *<Optional>* Skip retweets when reading tweets from a file, defaults to False.
+    - ``--skip-unverified``         *<Optional>* Skip tweets from unverified authors when reading tweets from a file, defaults to False.
     - ``--splits``                  *<Optional>* The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split.
     - ``--periodicity``             *<Optional>* The periodicity in seconds of the consumer, defaults to 60 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer` and :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`).
     - ``--scheme``                  *<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used.
@@ -225,6 +228,7 @@ def setup_args():
         - ``--max-inactivity``          *<Optional>* The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.
         - ``--max-time``                *<Optional>* The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.
         - ``--skip-retweets``           *<Optional>* Skip retweets when reading tweets from a file, defaults to False.
+        - ``--skip-unverified``         *<Optional>* Skip tweets from unverified authors when reading tweets from a file, defaults to False.
         - ``--splits``                  *<Optional>* The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split.
         - ``--periodicity``             *<Optional>* The periodicity in seconds of the consumer, defaults to 60 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer` and :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`).
         - ``--scheme``                  *<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used. This can be overwritten if there is event understanding.
@@ -268,6 +272,8 @@ def setup_args():
                         help='<Optional> The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.')
     parser.add_argument('--skip-retweets', action="store_true",
                         help='<Optional> Skip retweets when reading tweets from a file, defaults to False.')
+    parser.add_argument('--skip-unverified', action="store_true",
+                        help='<Optional> Skip tweets from unverified authors when reading tweets from a file, defaults to False.')
     parser.add_argument('--splits', type=splits, required=False, default=None,
                         help='<Optional> The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split.')
     parser.add_argument('--periodicity', type=int, required=False, default=60,
@@ -365,7 +371,7 @@ def main():
 
     asyncio.get_event_loop().close()
 
-def understand(understanding, consumer, max_inactivity, skip_retweets, scheme=None, *args, **kwargs):
+def understand(understanding, consumer, max_inactivity, skip_retweets, skip_unverified, scheme=None, *args, **kwargs):
     """
     Run the understanding process.
     The arguments and keyword arguments should be the command-line arguments.
@@ -388,6 +394,8 @@ def understand(understanding, consumer, max_inactivity, skip_retweets, scheme=No
     :param max_inactivity: The maximum time, in seconds, to wait for new tweets to arrive before stopping.
     :type max_inactivity: int
     :param skip_retweets: Skip retweets when reading tweets from a file.
+    :type skip_retweets: bool
+    :param skip_unverified: Skip tweets from unverified authors when reading tweets from a file.
     :type skip_retweets: bool
     :param scheme: The scheme to use when consuming the file.
     :type scheme: :class:`~nlp.weighting.TermWeightingScheme`
@@ -417,7 +425,8 @@ def understand(understanding, consumer, max_inactivity, skip_retweets, scheme=No
     """
     stream = Process(target=stream_process,
                      args=(loop, queue, understanding, ),
-                     kwargs={ 'speed': 120, 'skip_retweets': skip_retweets, 'max_time': -1 })
+                     kwargs={ 'speed': 120, 'skip_retweets': skip_retweets,
+                              'skip_unverified': skip_unverified, 'max_time': -1 })
     understand = Process(target=understand_process, args=(comm, loop, consumer, max_inactivity, ))
     stream.start()
     understand.start()
@@ -433,7 +442,7 @@ def understand(understanding, consumer, max_inactivity, skip_retweets, scheme=No
 
     return understanding
 
-def consume(event, consumer, speed, max_inactivity, max_time, skip, skip_retweets, *args, **kwargs):
+def consume(event, consumer, speed, max_inactivity, max_time, skip, skip_retweets, skip_unverified, *args, **kwargs):
     """
     Run the consumption process.
     The arguments and keyword arguments should be the command-line arguments.
@@ -458,6 +467,8 @@ def consume(event, consumer, speed, max_inactivity, max_time, skip, skip_retweet
     :param skip: The amount of time to skip from the beginning of the file in minutes, defaults to 0.
     :type skip: int
     :param skip_retweets: Skip retweets when reading tweets from a file.
+    :type skip_retweets: bool
+    :param skip_unverified: Skip tweets from unverified authors when reading tweets from a file.
     :type skip_retweets: bool
 
     :return: A dictionary containing the timeline.
@@ -486,7 +497,7 @@ def consume(event, consumer, speed, max_inactivity, max_time, skip, skip_retweet
     stream = Process(target=stream_process,
                      args=(loop, queue, event, ),
                      kwargs={ 'speed': speed, 'skip_time': skip * 60, 'skip_retweets': skip_retweets,
-                               'max_time': (max_time * 60 if max_time >= 0 else max_time) })
+                               'skip_unverified': skip_unverified, 'max_time': (max_time * 60 if max_time >= 0 else max_time) })
     consume = Process(target=consume_process, args=(comm, loop, consumer, max_inactivity, ))
     stream.start()
     consume.start()
@@ -507,7 +518,8 @@ def consume(event, consumer, speed, max_inactivity, max_time, skip, skip_retweet
 
     return timeline
 
-def stream_process(loop, queue, file, skip_time=0, speed=1, max_time=-1, skip_retweets=False, *args, **kwargs):
+def stream_process(loop, queue, file, skip_time=0, speed=1, max_time=-1,
+                   skip_retweets=False, skip_unverified=False, *args, **kwargs):
     """
     Stream the file and add its tweets to the queue.
 
@@ -524,6 +536,8 @@ def stream_process(loop, queue, file, skip_time=0, speed=1, max_time=-1, skip_re
     :param max_time: The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.
     :type max_time: int
     :param skip_retweets: Skip retweets when reading tweets from a file.
+    :type skip_retweets: bool
+    :param skip_unverified: Skip tweets from unverified authors when reading tweets from a file.
     :type skip_retweets: bool
     """
 
@@ -547,8 +561,8 @@ def stream_process(loop, queue, file, skip_time=0, speed=1, max_time=-1, skip_re
         await reader.read()
 
     with open(file, 'r') as f:
-        reader = SimulatedFileReader(queue, f, skip_time=skip_time, speed=speed,
-                                               max_time=max_time, skip_retweets=skip_retweets)
+        reader = SimulatedFileReader(queue, f, skip_time=skip_time, speed=speed, max_time=max_time,
+                                               skip_retweets=skip_retweets, skip_unverified=skip_unverified)
         loop.run_until_complete(read(reader))
 
     logger.info("Streaming ended")
