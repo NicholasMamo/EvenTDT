@@ -71,3 +71,17 @@ def is_retweet(tweet):
     """
 
     return 'retweeted_status' in tweet
+
+def is_verified(tweet):
+    """
+    Check whether the given tweet's author is verified.
+    Verified authors have a ``verified`` key set to ``true``.
+
+    :param tweet: The tweet to check.
+    :type tweet: dict
+
+    :return: A boolean indicating whether the tweet is from a verified author.
+    :rtype: bool
+    """
+
+    return tweet['user']['verified']

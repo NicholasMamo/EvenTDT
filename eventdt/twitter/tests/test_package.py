@@ -209,3 +209,54 @@ class TestPackage(unittest.TestCase):
 
         if not found:
             logger.warning('Trivial test')
+
+    def test_is_verified(self):
+        """
+        Test that when checking whether the tweet is from a verified author, the function returns ``True`` only if the author is verified.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if tweet['user']['verified']:
+                    found = True
+                    self.assertTrue(twitter.is_verified(tweet))
+                else:
+                    self.assertFalse(twitter.is_verified(tweet))
+
+        if not found:
+            logger.warning('Trivial test')
+
+    def test_not_verified_retweet(self):
+        """
+        Test that when checking whether a retweet is from a verified author, the retweeting author is checked
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if not twitter.is_retweet(tweet):
+                    continue
+
+                if tweet['user']['verified'] and not tweet['retweeted_status']['user']['verified']:
+                    found = True
+                    self.assertTrue(twitter.is_verified(tweet))
+
+        if not found:
+            logger.warning('Trivial test')
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if not twitter.is_retweet(tweet):
+                    continue
+
+                if not tweet['user']['verified'] and tweet['retweeted_status']['user']['verified']:
+                    found = True
+                    self.assertFalse(twitter.is_verified(tweet))
+
+        if not found:
+            logger.warning('Trivial test')
