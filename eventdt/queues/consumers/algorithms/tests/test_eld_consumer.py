@@ -605,6 +605,16 @@ class TestELDConsumer(unittest.TestCase):
                                      if document.attributes['timestamp'] <= timestamp ]
             self.assertEqual(set(dimensions), set(consumer.store.get(timestamp)))
 
+    def test_checkpoint_empty(self):
+        """
+        Test that when creating a checkpoint from a document with no dimensions, an empty checkpoint is returned.
+        """
+
+        consumer = ELDConsumer(Queue(), 60, log_nutrition=True)
+        document = Document('is not', { }, attributes={ 'timestamp': 10 })
+        checkpoint = consumer._checkpoint(document)
+        self.assertEqual({ }, checkpoint)
+
     def test_checkpoint_log_nutrition(self):
         """
         Test that when creating checkpoints with logarithmic nutrition, the scaling uses the logarithm.

@@ -582,11 +582,17 @@ class ELDConsumer(Consumer):
     def _checkpoint(self, document):
         """
         Construct a checkpoint from the given concatenated document.
+
+        :param document: A document, made up of the concatenation of a set of documents.
+        :type document: :class:`~nlp.document.Document`
         """
 
         dimensions = (document.dimensions if not self.log_nutrition
                                           else { dimension: math.log(magnitude, 10)
                                                  for dimension, magnitude in document.dimensions.items() })
+        if not dimensions:
+            return { }
+
         max_magnitude = max(dimensions.values())
         checkpoint = { dimension: magnitude / max_magnitude
                        for dimension, magnitude in dimensions.items() }
