@@ -190,7 +190,7 @@ def construct(file, remove_retweets=False, skip_unverified=False, *args, **kwarg
             """
             Skip the tweet if retweets should be excluded.
             """
-            if remove_retweets and 'retweeted_status' in tweet:
+            if remove_retweets and twitter.is_retweet(tweet):
                 continue
 
             """
