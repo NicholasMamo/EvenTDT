@@ -151,7 +151,7 @@ def main():
     """
 
     args = setup_args()
-    tfidf = construct(file=args.file, remove_retweets=args.remove_retweets, skip_unverified=skip_unverified,
+    tfidf = construct(file=args.file, remove_retweets=args.remove_retweets, skip_unverified=args.skip_unverified,
                       normalize_words=args.normalize_words, character_normalization_count=args.character_normalization_count,
                       remove_unicode_entities=args.remove_unicode_entities, stem=args.stem)
     cmd = tools.meta(args)
