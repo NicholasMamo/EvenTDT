@@ -607,7 +607,7 @@ class TestTerms(unittest.TestCase):
         extracted = terms.extract(extractor, timelines)
         extracted_terms = [ term['term'] for term in extracted ]
 
-        reranked = terms.rerank(extracted, reranker=TFIDFExtractor, tfidf=idf, files=files, general=None, cutoff=None, base=None, keep=None, idfs=None)
+        reranked = terms.rerank(extracted, reranker=TFIDFExtractor, tfidf=idf, files=files, general=None, cutoff=None, base=None, keep=None, normalized=None, idfs=None)
         reranked_terms = [ term['term'] for term in reranked ]
         self.assertEqual(set(extracted_terms), set(reranked_terms))
 
@@ -624,9 +624,69 @@ class TestTerms(unittest.TestCase):
         extracted = terms.extract(extractor, files)
         extracted_terms = [ term['term'] for term in extracted ]
 
-        reranked = terms.rerank(extracted, reranker=TFIDFExtractor, tfidf=idf, files=files, general=None, cutoff=None, base=None, keep=None, idfs=None)
+        reranked = terms.rerank(extracted, reranker=TFIDFExtractor, tfidf=idf, files=files, general=None, cutoff=None, base=None, keep=None, normalized=None, idfs=None)
         reranked_terms = [ term['term'] for term in reranked ]
         self.assertEqual(extracted, reranked)
+
+    def test_rerank_no_normalize(self):
+        """
+        Test that when reranking terms without the normalization flag, the scores are not normalized.
+        """
+
+        idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        events = [ 'CRYCHE', 'LIVMUN' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+        idfs = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf_wo_rt', f"{ event }.json") for event in events ]
+        files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'tokenized', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EF, tfidf=idf, base=2)
+        extracted = terms.extract(extractor, timelines, idfs=idfs, normalized=False)
+        reranked = terms.rerank(extracted, reranker=TFIDFExtractor, tfidf=idf, files=files,
+                                general=None, cutoff=None, base=None, keep=None,
+                                normalized=False, idfs=None)
+        self.assertTrue(any( term['score'] > 1 for term in reranked ))
+
+    def test_rerank_normalize(self):
+        """
+        Test that when reranking terms with the normalization flag, the scores are all normalized.
+        """
+
+        idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        events = [ 'CRYCHE', 'LIVMUN' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+        idfs = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf_wo_rt', f"{ event }.json") for event in events ]
+        files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'tokenized', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EF, tfidf=idf, base=2)
+        extracted = terms.extract(extractor, timelines, idfs=idfs, normalized=True)
+        reranked = terms.rerank(extracted, reranker=TFIDFExtractor, tfidf=idf, files=files,
+                                general=None, cutoff=None, base=None, keep=None,
+                                normalized=True, idfs=None)
+        self.assertTrue(all( 0 <= term['score'] <= 1 for term in reranked ))
+        self.assertEqual(1, reranked[0]['score'])
+        self.assertEqual(0, reranked[-1]['score'])
+
+    def test_rerank_normalize_same_order(self):
+        """
+        Test that normalizing the reranker's scores, it does not affect the order of the terms.
+        """
+
+        idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        events = [ 'CRYCHE', 'LIVMUN' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+        idfs = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf_wo_rt', f"{ event }.json") for event in events ]
+        files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'tokenized', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EF, tfidf=idf, base=2)
+        extracted = terms.extract(extractor, timelines, idfs=idfs, normalized=False)
+        reranked = terms.rerank(extracted, reranker=TFIDFExtractor, tfidf=idf, files=files,
+                                general=None, cutoff=None, base=None, keep=None,
+                                normalized=False, idfs=None)
+        normalized = terms.rerank(extracted, reranker=TFIDFExtractor, tfidf=idf, files=files,
+                                  general=None, cutoff=None, base=None, keep=None,
+                                  normalized=True, idfs=None)
+        self.assertEqual([ term['term'] for term in reranked ],
+                         [ term['term'] for term in normalized ])
 
     def test_reranker_params_only_reranker(self):
         """
@@ -655,6 +715,7 @@ class TestTerms(unittest.TestCase):
             'reranker': 'EF',
             'reranker_files': [ 'data/timeline1.json', 'data/timeline2.json' ],
             'reranker_keep': 50,
+            'reranker_normalize': False,
             'reranker_tfidf': 'path/to/idf.json',
             'reranker_general': 'path/to/general.json',
             'reranker_cutoff': 100,
@@ -662,8 +723,8 @@ class TestTerms(unittest.TestCase):
             'reranker_idfs': [ 'data/idf1.json', 'data/idf2.json' ]
         }
         reranker_params = terms.reranker_params(params)
-        self.assertEqual({ 'reranker', 'files', 'keep', 'tfidf',
-                           'general', 'cutoff', 'base', 'idfs' }, set(reranker_params))
+        self.assertEqual({ 'reranker', 'files', 'keep', 'normalize',
+                           'tfidf', 'general', 'cutoff', 'base', 'idfs' }, set(reranker_params))
 
     def test_reranker_params_reranker(self):
         """
@@ -851,7 +912,7 @@ class TestTerms(unittest.TestCase):
         extractor = terms.create_extractor(EF)
         extracted = terms.extract(extractor, timelines)
 
-        reranked = terms.rerank(extracted, reranker=EF, tfidf=None, files=timelines, general=None, cutoff=None, base=None, keep=None, idfs=None)
+        reranked = terms.rerank(extracted, reranker=EF, tfidf=None, files=timelines, general=None, cutoff=None, base=None, keep=None, normalized=None, idfs=None)
         combined = terms.combine('normal', extracted, reranked)
         self.assertEqual(extracted, reranked)
         self.assertEqual(combined, extracted)
@@ -868,7 +929,7 @@ class TestTerms(unittest.TestCase):
         extracted = terms.extract(extractor, timelines)
         extracted_copy = copy.deepcopy(extracted)
 
-        reranked = terms.rerank(extracted, reranker=EF, tfidf=None, files=timelines, general=None, cutoff=None, base=None, keep=None, idfs=None)
+        reranked = terms.rerank(extracted, reranker=EF, tfidf=None, files=timelines, general=None, cutoff=None, base=None, keep=None, normalized=None, idfs=None)
         reranked_copy = copy.deepcopy(reranked)
         combined = terms.combine('normal', extracted, reranked)
         self.assertEqual(extracted_copy, extracted)
@@ -885,7 +946,7 @@ class TestTerms(unittest.TestCase):
         extractor = terms.create_extractor(EF)
         extracted = terms.extract(extractor, timelines)
 
-        reranked = terms.rerank(extracted, reranker=EF, tfidf=None, files=timelines, general=None, cutoff=None, base=None, keep=None, idfs=None)
+        reranked = terms.rerank(extracted, reranker=EF, tfidf=None, files=timelines, general=None, cutoff=None, base=None, keep=None, normalized=None, idfs=None)
         combined = terms.combine('multiply', extracted, reranked)
         self.assertEqual(extracted, reranked)
 
@@ -901,7 +962,7 @@ class TestTerms(unittest.TestCase):
         extracted = terms.extract(extractor, timelines)
         extracted_copy = copy.deepcopy(extracted)
 
-        reranked = terms.rerank(extracted, reranker=EF, tfidf=None, files=timelines, general=None, cutoff=None, base=None, keep=None, idfs=None)
+        reranked = terms.rerank(extracted, reranker=EF, tfidf=None, files=timelines, general=None, cutoff=None, base=None, keep=None, normalized=None, idfs=None)
         reranked_copy = copy.deepcopy(reranked)
         combined = terms.combine('multiply', extracted, reranked)
         self.assertEqual(extracted_copy, extracted)
@@ -919,7 +980,7 @@ class TestTerms(unittest.TestCase):
         extracted = terms.extract(extractor, timelines)
         extracted_scores = { term['term']: term['score'] for term in extracted }
 
-        reranked = terms.rerank(extracted, reranker=EF, tfidf=None, files=timelines, general=None, cutoff=None, base=None, keep=None, idfs=None)
+        reranked = terms.rerank(extracted, reranker=EF, tfidf=None, files=timelines, general=None, cutoff=None, base=None, keep=None, normalized=None, idfs=None)
         reranked_scores = { term['term']: term['score'] for term in reranked }
 
         combined = terms.combine('multiply', extracted, reranked)
@@ -936,7 +997,7 @@ class TestTerms(unittest.TestCase):
 
         extractor = terms.create_extractor(EF)
         extracted = terms.extract(extractor, timelines)
-        reranked = terms.rerank(extracted, reranker=EF, tfidf=None, files=timelines, general=None, cutoff=None, base=None, keep=None, idfs=None)
+        reranked = terms.rerank(extracted, reranker=EF, tfidf=None, files=timelines, general=None, cutoff=None, base=None, keep=None, normalized=None, idfs=None)
 
         combined = terms.combine('multiply', extracted, reranked)
         self.assertTrue(all( combined[i]['score'] >= combined[i + 1]['score'] for i in range(len(combined) - 1) ))
@@ -951,8 +1012,38 @@ class TestTerms(unittest.TestCase):
 
         extractor = terms.create_extractor(EF)
         extracted = terms.extract(extractor, timelines)
-        reranked = terms.rerank(extracted, reranker=EF, tfidf=None, files=timelines, general=None, cutoff=None, base=None, keep=None, idfs=None)
+        reranked = terms.rerank(extracted, reranker=EF, tfidf=None, files=timelines, general=None, cutoff=None, base=None, keep=None, normalized=None, idfs=None)
 
         combined = terms.combine('multiply', extracted, reranked)
         self.assertEqual(1, combined[0]['rank'])
         self.assertTrue(all( combined[i]['rank'] < combined[i + 1]['rank'] for i in range(len(combined) - 1) ))
+
+    def test_combine_normal_normalized(self):
+        """
+        Test that when combining two lists of terms using the 'normal' mode, and the re-ranker uses normalization, the combined scores are also normalized.
+        """
+
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EF)
+        extracted = terms.extract(extractor, timelines)
+
+        reranked = terms.rerank(extracted, reranker=EF, tfidf=None, files=timelines, general=None, cutoff=None, base=None, keep=None, normalized=True, idfs=None)
+        combined = terms.combine('normal', extracted, reranked)
+        self.assertTrue(all( 0 <= term['score'] <= 1 for term in combined ))
+
+    def test_combine_multiply_normalized(self):
+        """
+        Test that when combining two lists of terms using the 'multiply' mode,the combined scores are normalized if both extractor and re-ranker use normalization.
+        """
+
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EF)
+        extracted = terms.extract(extractor, timelines, normalized=True)
+
+        reranked = terms.rerank(extracted, reranker=EF, tfidf=None, files=timelines, general=None, cutoff=None, base=None, keep=None, normalized=True, idfs=None)
+        combined = terms.combine('multiply', extracted, reranked)
+        self.assertTrue(all( 0 <= term['score'] <= 1 for term in combined ))

@@ -53,6 +53,7 @@ The output is a JSON file with the following structure:
             "method": "<class 'ate.stat.tfidf.TFIDFExtractor'>",
             "output": "results/tfidf.json",
             "keep": null,
+            "normalized": false,
             "tfidf": "data/idf.json",
             "general": null,
             "cutoff": 1,
@@ -63,6 +64,7 @@ The output is a JSON file with the following structure:
                 "data/timeline.json"
             ],
             "reranker-keep": null,
+            "reranker-normalized": false,
             "reranker-tfidf": "data/idf.json",
             "reranker-general": null,
             "reranker-cutoff": 1,
@@ -79,6 +81,7 @@ The output is a JSON file with the following structure:
             "method": "<class 'ate.stat.tfidf.TFIDFExtractor'>",
             "output": "results/tfidf.json",
             "keep": null,
+            "normalized": false,
             "tfidf": "data/idf.json",
             "general": null,
             "cutoff": 1,
@@ -89,6 +92,7 @@ The output is a JSON file with the following structure:
                 "data/timeline.json"
             ],
             "reranker-keep": null,
+            "reranker-normalized": null,
             "reranker-tfidf": "data/idf.json",
             "reranker-general": null,
             "reranker-cutoff": 1,
@@ -129,7 +133,7 @@ When re-ranking, the tool saves three sets of terms: the terms extracted by the 
             "method": "<class 'ate.stat.tfidf.TFIDFExtractor'>",
             "output": "results/tfidf.json",
             "keep": null,
-            "normalize": false,
+            "normalized": false,
             "tfidf": "data/idf.json",
             "general": null,
             "cutoff": 1,
@@ -141,6 +145,7 @@ When re-ranking, the tool saves three sets of terms: the terms extracted by the 
                 "data/timeline.json"
             ],
             "reranker-keep": null,
+            "reranker-normalized": null,
             "reranker-tfidf": "data/idf.json",
             "reranker-general": null,
             "reranker-cutoff": 1,
@@ -157,7 +162,7 @@ When re-ranking, the tool saves three sets of terms: the terms extracted by the 
             "method": "<class 'ate.stat.tfidf.TFIDFExtractor'>",
             "output": "results/tfidf.json",
             "keep": null,
-            "normalize": false,
+            "normalized": false,
             "tfidf": "data/idf.json",
             "general": null,
             "cutoff": 1,
@@ -169,6 +174,7 @@ When re-ranking, the tool saves three sets of terms: the terms extracted by the 
                 "data/timeline.json"
             ],
             "reranker-keep": null,
+            "reranker-normalized": false,
             "reranker-tfidf": "data/idf.json",
             "reranker-general": null,
             "reranker-cutoff": 1,
@@ -237,7 +243,7 @@ The full list of accepted arguments:
     - ``-m --method``           *<Required>* The method to use to extract domain-specific terms; supported: :class:`TF <ate.stat.tf.TFExtractor>`, :class:`TFIDF <ate.stat.tfidf.TFIDFExtractor>`, :class:`Rank <ate.stat.corpus.rank.RankExtractor>`, :class:`Specificity <ate.stat.corpus.specificity.SpecificityExtractor>`, :class:`TFDCF <ate.stat.corpus.tfdcf.TFDCFExtractor>`, :class:`EF <ate.application.event.EF>`, :class:`LogEF <ate.application.event.LogEF>`, :class:`EF-IDF <ate.application.event.EFIDF>`.
     - ``-o --output``           *<Required>* The path to the file where to store the extracted terms.
     - ``--keep``                *<Optional>* The number of terms to return, ordered in descending order of score; defaults to all terms.
-    - ``--normalize``           *<Optional>* Normalize the scores between 0 and 1.
+    - ``--normalized``           *<Optional>* Normalize the scores between 0 and 1.
     - ``--tfidf``               *<Optional>* The TF-IDF scheme to use to extract terms (used only with the :class:`~ate.stat.tfidf.TFIDFExtractor` and the :class:`~ate.application.event.EFIDF` methods).
     - ``--general``             *<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the :class:`~ate.stat.corpus.rank.RankExtractor`, :class:`~ate.stat.corpus.specificity.SpecificityExtractor` and :class:`~ate.stat.corpus.tfdcf.TFDCFExtractor` methods).
     - ``--cutoff``              *<Optional>* The minimum term frequency to consider when ranking terms (used only with the :class:`~ate.stat.corpus.rank.RankExtractor` method).
@@ -250,6 +256,7 @@ When using a re-ranker, these arguments are also accepted:
     - ``--reranker-mode``       *<Optional>* The re-ranking mode; supported: normal (default), multiple.
     - ``--reranker-files``      *<Optional>* The corpora to use to calculate the new, re-ranked score for terms.
     - ``--reranker-keep``       *<Optional>* The number of terms to return, ordered in descending order of score; defaults to all terms.
+    - ``--reranker-normalized``  *<Optional>* Normalize the scores between 0 and 1.
     - ``--reranker-tfidf``      *<Optional>* The TF-IDF scheme to use to extract terms (used only with the :class:`~ate.stat.tfidf.TFIDFExtractor` and the :class:`~ate.application.event.EFIDF` methods).
     - ``--reranker-general``    *<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the :class:`~ate.stat.corpus.rank.RankExtractor`, :class:`~ate.stat.corpus.specificity.SpecificityExtractor` and :class:`~ate.stat.corpus.tfdcf.TFDCFExtractor` methods).
     - ``--reranker-cutoff``     *<Optional>* The minimum term frequency to consider when ranking terms (used only with the :class:`~ate.stat.corpus.rank.RankExtractor` method).
@@ -286,7 +293,7 @@ def setup_args():
         - ``-m --method``           *<Required>* The method to use to extract domain-specific terms; supported: :class:`TF <ate.stat.tf.TFExtractor>`, :class:`TFIDF <ate.stat.tfidf.TFIDFExtractor>`, :class:`Rank <ate.stat.corpus.rank.RankExtractor>`, :class:`Specificity <ate.stat.corpus.specificity.SpecificityExtractor>`, :class:`TFDCF <ate.stat.corpus.tfdcf.TFDCFExtractor>`, :class:`EF <ate.application.event.EF>`, :class:`LogEF <ate.application.event.LogEF>`, :class:`EF-IDF <ate.application.event.EFIDF>`.
         - ``-o --output``           *<Required>* The path to the file where to store the extracted terms.
         - ``--keep``                *<Optional>* The number of terms to return, ordered in descending order of score; defaults to all terms.
-        - ``--normalize``           *<Optional>* Normalize the scores between 0 and 1.
+        - ``--normalized``           *<Optional>* Normalize the scores between 0 and 1.
         - ``--tfidf``               *<Optional>* The TF-IDF scheme to use to extract terms (used only with the :class:`~ate.stat.tfidf.TFIDFExtractor` and the :class:`~ate.application.event.EFIDF` methods).
         - ``--general``             *<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the :class:`~ate.stat.corpus.rank.RankExtractor`, :class:`~ate.stat.corpus.specificity.SpecificityExtractor` and :class:`~ate.stat.corpus.tfdcf.TFDCFExtractor` methods).
         - ``--cutoff``              *<Optional>* The minimum term frequency to consider when ranking terms (used only with the :class:`~ate.stat.corpus.rank.RankExtractor` method).
@@ -297,6 +304,7 @@ def setup_args():
         - ``--reranker-mode``       *<Optional>* The re-ranking mode; supported: normal (default), multiple.
         - ``--reranker-files``      *<Optional>* The corpora to use to calculate the new, re-ranked score for terms.
         - ``--reranker-keep``       *<Optional>* The number of terms to return, ordered in descending order of score; defaults to all terms.
+        - ``--reranker-normalized``  *<Optional>* Normalize the scores between 0 and 1.
         - ``--reranker-tfidf``      *<Optional>* The TF-IDF scheme to use to extract terms (used only with the :class:`~ate.stat.tfidf.TFIDFExtractor` and the :class:`~ate.application.event.EFIDF` methods).
         - ``--reranker-general``    *<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the :class:`~ate.stat.corpus.rank.RankExtractor`, :class:`~ate.stat.corpus.specificity.SpecificityExtractor` and :class:`~ate.stat.corpus.tfdcf.TFDCFExtractor` methods).
         - ``--reranker-cutoff``     *<Optional>* The minimum term frequency to consider when ranking terms (used only with the :class:`~ate.stat.corpus.rank.RankExtractor` method).
@@ -314,7 +322,7 @@ def setup_args():
     parser.add_argument('-o', '--output', type=str, required=True,
                         help='<Required> The path to the file where to store the extracted terms.')
     parser.add_argument('--keep', type=int, required=False, help='<Optional> The number of terms to return, ordered in descending order of score; defaults to all terms.')
-    parser.add_argument('--normalize', action="store_true", required=False, help='<Optional> Normalize the scores between 0 and 1.')
+    parser.add_argument('--normalized', action="store_true", required=False, help='<Optional> Normalize the scores between 0 and 1.')
     parser.add_argument('--tfidf', required=False, help='<Optional> The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).')
     parser.add_argument('--general', nargs='+', required=False,
                         help='<Optional> A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `Rank`, `Specificity` and `TF-DCF` methods).')
@@ -334,6 +342,8 @@ def setup_args():
                         help='<Required> The corpora to use to calculate the new, re-ranked score for terms.')
     parser.add_argument('--reranker-keep', type=int, required=False,
                         help='<Optional> The number of terms to return, ordered in descending order of score; defaults to all terms.')
+    parser.add_argument('--reranker-normalized', action='store_true',
+                        help='<Optional> Normalize the scores between 0 and 1.')
     parser.add_argument('--reranker-tfidf', required=False,
                         help='<Optional> The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).')
     parser.add_argument('--reranker-general', nargs='+', required=False,
@@ -369,7 +379,7 @@ def main():
     args = vars(args)
     extractor = create_extractor(args['method'], tfidf=args['tfidf'], general=args['general'],
                                  cutoff=args['cutoff'], base=args['base'])
-    terms = extract(extractor=extractor, files=args['files'], keep=args['keep'], normalized=args['normalize'], idfs=args['idfs'])
+    terms = extract(extractor=extractor, files=args['files'], keep=args['keep'], normalized=args['normalized'], idfs=args['idfs'])
 
     """
     Extract the re-ranker parameters and re-rank.
@@ -557,7 +567,7 @@ def rerank(terms, **kwargs):
                                 general=kwargs['general'], cutoff=kwargs['cutoff'], base=kwargs['base'])
     candidates = [ term['term'] for term in terms ]
     reranked = extract(extractor=reranker, files=kwargs['files'], candidates=candidates,
-                       keep=kwargs['keep'], idfs=kwargs['idfs'])
+                       keep=kwargs['keep'], normalized=kwargs['normalized'], idfs=kwargs['idfs'])
     return reranked
 
 def combine(mode, terms, reranked):
