@@ -453,6 +453,52 @@ class TestTerms(unittest.TestCase):
         extracted = terms.extract(extractor, timelines, idfs=idfs, keep=keep)
         self.assertTrue(all( extracted[i]['score'] >= extracted[i + 1]['score'] for i in range(len(extracted) - 1) ))
 
+    def test_extract_no_normalize(self):
+        """
+        Test that when extracting terms without the normalization flag, the scores are not normalized.
+        """
+
+        idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+        idfs = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf_wo_rt', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EFIDFEntropy, tfidf=idf, base=2)
+        extracted = terms.extract(extractor, timelines, idfs=idfs, normalized=False)
+        self.assertTrue(any( term['score'] > 1 for term in extracted ))
+
+    def test_extract_normalize(self):
+        """
+        Test that when extracting terms with the normalization flag, the scores are all normalized.
+        """
+
+        idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+        idfs = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf_wo_rt', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EFIDFEntropy, tfidf=idf, base=2)
+        extracted = terms.extract(extractor, timelines, idfs=idfs, normalized=True)
+        self.assertTrue(all( 0 <= term['score'] <= 1 for term in extracted ))
+        self.assertEqual(1, extracted[0]['score'])
+        self.assertEqual(0, extracted[-1]['score'])
+
+    def test_extract_normalize_same_order(self):
+        """
+        Test that normalizing scores does not affect the order of the terms.
+        """
+
+        idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+        idfs = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf_wo_rt', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EFIDFEntropy, tfidf=idf, base=2)
+        extracted = terms.extract(extractor, timelines, idfs=idfs, normalized=False)
+        normalized = terms.extract(extractor, timelines, idfs=idfs, normalized=True)
+        self.assertEqual([ term['term'] for term in extracted ],
+                         [ term['term'] for term in normalized ])
+
     def test_rank_copy(self):
         """
         Test that when ranking terms, the original term dictionary is not changed.

@@ -129,6 +129,7 @@ When re-ranking, the tool saves three sets of terms: the terms extracted by the 
             "method": "<class 'ate.stat.tfidf.TFIDFExtractor'>",
             "output": "results/tfidf.json",
             "keep": null,
+            "normalize": false,
             "tfidf": "data/idf.json",
             "general": null,
             "cutoff": 1,
@@ -156,6 +157,7 @@ When re-ranking, the tool saves three sets of terms: the terms extracted by the 
             "method": "<class 'ate.stat.tfidf.TFIDFExtractor'>",
             "output": "results/tfidf.json",
             "keep": null,
+            "normalize": false,
             "tfidf": "data/idf.json",
             "general": null,
             "cutoff": 1,
@@ -235,6 +237,7 @@ The full list of accepted arguments:
     - ``-m --method``           *<Required>* The method to use to extract domain-specific terms; supported: :class:`TF <ate.stat.tf.TFExtractor>`, :class:`TFIDF <ate.stat.tfidf.TFIDFExtractor>`, :class:`Rank <ate.stat.corpus.rank.RankExtractor>`, :class:`Specificity <ate.stat.corpus.specificity.SpecificityExtractor>`, :class:`TFDCF <ate.stat.corpus.tfdcf.TFDCFExtractor>`, :class:`EF <ate.application.event.EF>`, :class:`LogEF <ate.application.event.LogEF>`, :class:`EF-IDF <ate.application.event.EFIDF>`.
     - ``-o --output``           *<Required>* The path to the file where to store the extracted terms.
     - ``--keep``                *<Optional>* The number of terms to return, ordered in descending order of score; defaults to all terms.
+    - ``--normalize``           *<Optional>* Normalize the scores between 0 and 1.
     - ``--tfidf``               *<Optional>* The TF-IDF scheme to use to extract terms (used only with the :class:`~ate.stat.tfidf.TFIDFExtractor` and the :class:`~ate.application.event.EFIDF` methods).
     - ``--general``             *<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the :class:`~ate.stat.corpus.rank.RankExtractor`, :class:`~ate.stat.corpus.specificity.SpecificityExtractor` and :class:`~ate.stat.corpus.tfdcf.TFDCFExtractor` methods).
     - ``--cutoff``              *<Optional>* The minimum term frequency to consider when ranking terms (used only with the :class:`~ate.stat.corpus.rank.RankExtractor` method).
@@ -283,6 +286,7 @@ def setup_args():
         - ``-m --method``           *<Required>* The method to use to extract domain-specific terms; supported: :class:`TF <ate.stat.tf.TFExtractor>`, :class:`TFIDF <ate.stat.tfidf.TFIDFExtractor>`, :class:`Rank <ate.stat.corpus.rank.RankExtractor>`, :class:`Specificity <ate.stat.corpus.specificity.SpecificityExtractor>`, :class:`TFDCF <ate.stat.corpus.tfdcf.TFDCFExtractor>`, :class:`EF <ate.application.event.EF>`, :class:`LogEF <ate.application.event.LogEF>`, :class:`EF-IDF <ate.application.event.EFIDF>`.
         - ``-o --output``           *<Required>* The path to the file where to store the extracted terms.
         - ``--keep``                *<Optional>* The number of terms to return, ordered in descending order of score; defaults to all terms.
+        - ``--normalize``           *<Optional>* Normalize the scores between 0 and 1.
         - ``--tfidf``               *<Optional>* The TF-IDF scheme to use to extract terms (used only with the :class:`~ate.stat.tfidf.TFIDFExtractor` and the :class:`~ate.application.event.EFIDF` methods).
         - ``--general``             *<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the :class:`~ate.stat.corpus.rank.RankExtractor`, :class:`~ate.stat.corpus.specificity.SpecificityExtractor` and :class:`~ate.stat.corpus.tfdcf.TFDCFExtractor` methods).
         - ``--cutoff``              *<Optional>* The minimum term frequency to consider when ranking terms (used only with the :class:`~ate.stat.corpus.rank.RankExtractor` method).
@@ -310,6 +314,7 @@ def setup_args():
     parser.add_argument('-o', '--output', type=str, required=True,
                         help='<Required> The path to the file where to store the extracted terms.')
     parser.add_argument('--keep', type=int, required=False, help='<Optional> The number of terms to return, ordered in descending order of score; defaults to all terms.')
+    parser.add_argument('--normalize', action="store_true", required=False, help='<Optional> Normalize the scores between 0 and 1.')
     parser.add_argument('--tfidf', required=False, help='<Optional> The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).')
     parser.add_argument('--general', nargs='+', required=False,
                         help='<Optional> A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `Rank`, `Specificity` and `TF-DCF` methods).')
@@ -364,7 +369,7 @@ def main():
     args = vars(args)
     extractor = create_extractor(args['method'], tfidf=args['tfidf'], general=args['general'],
                                  cutoff=args['cutoff'], base=args['base'])
-    terms = extract(extractor=extractor, files=args['files'], keep=args['keep'], idfs=args['idfs'])
+    terms = extract(extractor=extractor, files=args['files'], keep=args['keep'], normalized=args['normalize'], idfs=args['idfs'])
 
     """
     Extract the re-ranker parameters and re-rank.
@@ -437,7 +442,7 @@ def create_extractor(method, tfidf=None, general=None, cutoff=None, base=None):
 
     return method()
 
-def extract(extractor, files, candidates=None, keep=None, idfs=None):
+def extract(extractor, files, candidates=None, keep=None, normalized=False, idfs=None):
     """
     Extract terms using the given extractor from the given files.
 
@@ -451,6 +456,8 @@ def extract(extractor, files, candidates=None, keep=None, idfs=None):
     :param keep: The number of terms to return, ordered in descending order of score.
                  If ``None`` is given, all terms are returned.
     :type keep: int or None
+    :param normalized: A boolean indicating whether to normalize the scores between 0 and 1.
+    :type normalized: bool
     :param idfs: The IDF files, used by some extractors (:class:`~ate.application.event.EFIDFEntropy`) as part of the extraction.
     :type idfs: str or list of str
 
@@ -471,6 +478,7 @@ def extract(extractor, files, candidates=None, keep=None, idfs=None):
         terms = extractor.extract(files, candidates=candidates)
     terms = rank(terms)
     terms = terms[:keep] if keep else terms
+    terms = normalize(terms) if normalized else terms
     return terms
 
 def rank(terms, **kwargs):
