@@ -676,6 +676,124 @@ class TestTerms(unittest.TestCase):
         reranker_params = terms.reranker_params(params)
         self.assertEqual(params_copy, params)
 
+    def test_normalize_empty(self):
+        """
+        Test that normalizing an empty set of terms returns another empty set of terms.
+        """
+
+        self.assertEqual({ }, terms.normalize({ }))
+
+    def test_normalize_copy(self):
+        """
+        Test that score normalization creates a copy and does not affect the original list of terms.
+        """
+
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EF)
+        extracted = terms.extract(extractor, timelines)
+        _extracted = copy.deepcopy(extracted)
+        self.assertEqual(extracted, _extracted)
+        normalized = terms.normalize(extracted)
+        self.assertEqual(extracted, _extracted)
+        self.assertFalse(normalized == extracted)
+
+    def test_normalize_zero_inclusive(self):
+        """
+        Test that when normalizing, the lowest score is 0.
+        """
+
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EF)
+        extracted = terms.extract(extractor, timelines)
+        normalized = terms.normalize(extracted)
+        self.assertEqual(0, min( term['score'] for term in normalized ))
+
+    def test_normalize_one_inclusive(self):
+        """
+        Test that when normalizing, the highest score is 1.
+        """
+
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EF)
+        extracted = terms.extract(extractor, timelines)
+        normalized = terms.normalize(extracted)
+        self.assertEqual(1, max( term['score'] for term in normalized ))
+
+    def test_normalize_bounds(self):
+        """
+        Test that when normalizing, the new term scores are bound between 0 and 1.
+        """
+
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EF)
+        extracted = terms.extract(extractor, timelines)
+        normalized = terms.normalize(extracted)
+        self.assertTrue(all( 0 <= term['score'] <= 1 for term in normalized ))
+
+    def test_normalize_same_order(self):
+        """
+        Test that when normalizing, the same order is kept for all terms.
+        """
+
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EF)
+        extracted = terms.extract(extractor, timelines)
+        normalized = terms.normalize(extracted)
+        self.assertEqual([ term['term'] for term in extracted ],
+                         [ term['term'] for term in normalized ])
+
+    def test_normalize_same_terms(self):
+        """
+        Test that normalizing returns all terms from the original list.
+        """
+
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EF)
+        extracted = terms.extract(extractor, timelines)
+        normalized = terms.normalize(extracted)
+        self.assertEqual(list(set([ term['term'] for term in extracted ])),
+                         list(set([ term['term'] for term in normalized ])))
+
+    def test_normalize_same_ranks(self):
+        """
+        Test that the terms' ranks are correct after normalizing.
+        """
+
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EF)
+        extracted = terms.extract(extractor, timelines)
+        ranks = { term['rank']: term['term'] for term in extracted }
+        normalized = terms.normalize(extracted)
+        self.assertTrue(all( ranks[term['rank']] == term['term'] for term in normalized ))
+
+    def test_normalize_descending_order_of_score(self):
+        """
+        Test that when normalizing scores, the returned list is in descending order of scores.
+        """
+
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EF)
+        extracted = terms.extract(extractor, timelines)
+        normalized = terms.normalize(extracted)
+        self.assertTrue([ normalized[i]['rank'] < normalized[i + 1]['rank'] for i in range(len(normalized) - 1) ])
+        self.assertTrue([ normalized[i]['score'] >= normalized[i + 1]['score'] for i in range(len(normalized) - 1) ])
+
     def test_combine_normal_unchanged(self):
         """
         Test that when combining two lists of terms using the 'normal' mode, the returned list is the same.

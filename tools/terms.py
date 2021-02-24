@@ -493,11 +493,48 @@ def rank(terms, **kwargs):
     terms = [ { 'term': term, 'score': score, 'rank': rank + 1 } for rank, (term, score) in enumerate(terms) ]
     return terms
 
+def normalize(terms):
+    """
+    Normalize the given terms, such that the scores range from 0 to 1, both inclusive.
+
+    :param terms: A list of terms, each as a dictionary including its:
+
+                  - ``term``,
+                  - ``score``, and
+                  - ``rank``.
+    :type terms: list of dict
+
+    :return: The same list of terms, but with updated scores:
+
+             - ``term``,
+             - ``score``, and
+             - ``rank``.
+    :rtype terms: list of dict
+    """
+
+    _terms = copy.deepcopy(terms)
+    if not _terms:
+        return _terms
+
+    # extract the scores, and the minimum and maximum values
+    _scores = [ term['score'] for term in _terms ]
+    _min, _max = min(_scores), max(_scores)
+
+    # update the scores
+    for term in _terms:
+        term['score'] = (term['score'] - _min) / (_max - _min)
+
+    return _terms
+
 def rerank(terms, **kwargs):
     """
     Re-rank the given terms.
 
-    :param terms: The terms extracted by the base algorithm, as returned by the :func:`~tools.terms.extract` function.
+    :param terms: A list of terms, each as a dictionary including its:
+
+                  - ``term``,
+                  - ``score``, and
+                  - ``rank``.
     :type terms: list of dict
 
     :return: A list of re-ranked terms, each as a dictionary including its:
