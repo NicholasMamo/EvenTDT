@@ -127,7 +127,7 @@ class TweetCleaner(Cleaner):
         :rtype: str
         """
 
-        url_pattern = re.compile("(https?:\/\/)?([^\s]+)?\.[a-zA-Z0-9]+?\/?([^\s,\.]+)?")
+        url_pattern = re.compile("(https?:\/\/)?([^\s]+)?\.[a-zA-Z0-9]{2,}?\/?([^\s,\.]+)?")
         return url_pattern.sub(' ', text)
 
     def _split_hashtags(self, text):

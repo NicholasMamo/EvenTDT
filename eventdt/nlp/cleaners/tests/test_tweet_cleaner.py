@@ -128,6 +128,16 @@ class TestTweetCleaner(unittest.TestCase):
         text = 'Thank you @BillGates. It\'s amazing, almost as incredible as the fact that you use Gmail. https://t.co/drawyFHHQM'
         self.assertEqual('Thank you @BillGates. It\'s amazing, almost as incredible as the fact that you use Gmail.', cleaner.clean(text))
 
+    def test_remove_url_country(self):
+        """
+        Test that when removing URLs, domain names with just one character are not considered to be URLs.
+        """
+
+        cleaner = TweetCleaner(remove_urls=True)
+
+        text = 'Saudi Arabia\'s crown prince likely approved an operation to kill or capture a U.S.-based journalist Jamal Khashoggi inside the Saudi consulate in Istanbul, according to a newly declassified U.S. intelligence report.​'
+        self.assertEqual(text, cleaner.clean(text))
+
     def test_remove_url_without_protocol(self):
         """
         Test the URL removal functionality when there is no protocol.
