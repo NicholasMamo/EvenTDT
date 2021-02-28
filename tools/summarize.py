@@ -260,7 +260,7 @@ def create_summarizer(method, l=0.5):
     return method()
 
 def summarize(summarizer, timeline, verbose=False, max_documents=None, length=140,
-              clean=False, with_query=False, query_only=True):
+              clean=False, with_query=True, query_only=False):
     """
     Summarize the given timeline using the given algorithm.
     This function iterates over all of the timeline's nodes and summarizes them individually.
