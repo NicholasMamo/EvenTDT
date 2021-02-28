@@ -268,7 +268,7 @@ def summarize(summarizer, timeline, verbose=False, max_documents=None, length=14
     :param summarizer: The summarization method to use.
     :type summarizer: :class:`~summarization.algorithms.SummarizationAlgorithm`
     :param timeline: The timeline to summarize.
-    :type timeline: :class:`~summarization.timeline.
+    :type timeline: :class:`~summarization.timeline`.
     :param verbose: A boolean indicating whether to print the summaries as they are generated.
     :type verbose: bool
     :param max_documents: The maximum number of documents to use when summarizing, with a preference for long documents.
@@ -315,7 +315,7 @@ def summarize(summarizer, timeline, verbose=False, max_documents=None, length=14
         """
         query = None
         if with_query and type(node) is TopicalClusterNode:
-            query = Cluster(vectors=node.topics).centroid
+            query = construct_query(node)
 
             """
             If only the query is of interest, print only the query terms in descending order of importance.
@@ -334,6 +334,19 @@ def summarize(summarizer, timeline, verbose=False, max_documents=None, length=14
         summaries.append(summary)
 
     return summaries
+
+def construct_query(node):
+    """
+    Construct a summarization query from the given node.
+
+    :param node: The node from which to extract the query.
+    :type node: :class:`~summarization.timeline.nodes.Node`
+
+    :return: A vector, representing the topical query.
+    :rtype: :class:`~vsm.vector.Vector`
+    """
+
+    return Cluster(vectors=node.topics).centroid
 
 def filter_documents(documents, max_documents=None):
     """
