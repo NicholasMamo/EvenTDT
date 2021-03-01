@@ -46,6 +46,14 @@ Document Graph Summarizer (DGS) - Mamo et al. (2019)
 
 .. _summarization_timelines:
 
+=======
+Scorers
+=======
+
+.. automodule:: summarization.scorers
+   :members:
+   :special-members:
+
 =========
 Timelines
 =========
