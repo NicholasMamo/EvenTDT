@@ -220,10 +220,11 @@ def main():
     """
     timeline = load_timeline(args.file)
     summarizer = create_summarizer(args.method, l=vars(args)['lambda'])
-    terms = load_terms(args.domain_terms, args.max_domain_terms) if args.domain_terms else terms
+    terms = load_terms(args.domain_terms, args.max_domain_terms) if args.domain_terms else args.domain_terms
     summaries = summarize(summarizer, timeline, verbose=args.verbose,
                           max_documents=args.documents, length=args.length, clean=args.clean,
-                          with_query=args.with_query, query_only=args.query_only)
+                          with_query=args.with_query, query_only=args.query_only,
+                          terms=terms)
 
     tools.save(args.output, { 'summaries': summaries, 'cmd': cmd, 'pcmd': pcmd })
 
