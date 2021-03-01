@@ -142,7 +142,7 @@ from logger import logger
 from nlp.cleaners import TweetCleaner
 from objects.exportable import Exportable
 from summarization.algorithms import DGS, MMR
-from summarization.scorers import TweetScorer
+from summarization.scorers import DomainScorer, TweetScorer
 from summarization.timeline.nodes import TopicalClusterNode
 from vsm.clustering import Cluster
 import tools
@@ -289,7 +289,7 @@ def create_summarizer(method, l=0.5):
     return method()
 
 def summarize(summarizer, timeline, verbose=False, max_documents=None, length=140,
-              clean=False, with_query=True, query_only=False):
+              clean=False, with_query=True, query_only=False, terms=None):
     """
     Summarize the given timeline using the given algorithm.
     This function iterates over all of the timeline's nodes and summarizes them individually.
@@ -311,6 +311,9 @@ def summarize(summarizer, timeline, verbose=False, max_documents=None, length=14
     :type with_query: bool
     :param query_only: Print only the query instead of summarizing; used only when the ``with_query`` parameters is set to ``True``.
     :type query_only: bool
+    :param terms: A list of domain terms.
+                  If given, the function scores documents using the :class:`~summarization.scorers.domain_scorer.DomainScorer` instead of the :class:`~summarization.scorers.tweet_scorer.TweetScorer`.
+    :type terms: list of str
 
     :return: A list of summaries, corresponding to each node.
     :rtype: list of :class:`~summarization.summary.Summary`
@@ -332,7 +335,7 @@ def summarize(summarizer, timeline, verbose=False, max_documents=None, length=14
                                    split_hashtags=True, remove_retweet_prefix=True)
             for document in documents:
                 document.text = cleaner.clean(document.text)
-        documents = filter_documents(documents, max_documents)
+        documents = filter_documents(documents, max_documents, terms=terms)
 
         """
         Construct the query if need be.
@@ -412,7 +415,7 @@ def construct_query(node):
 
     return Cluster(vectors=node.topics).centroid
 
-def filter_documents(documents, max_documents=None):
+def filter_documents(documents, max_documents=None, terms=None):
     """
     Filter the given list of documents.
     This function removes duplicates.
@@ -424,37 +427,39 @@ def filter_documents(documents, max_documents=None):
     :param max_documents: The maximum number of documents to use when summarizing, with a preference for long documents.
                           If ``None`` is given, all documents are used.
     :type max_documents: int or None
+    :param terms: A list of domain terms.
+                  If given, the function scores documents using the :class:`~summarization.scorers.domain_scorer.DomainScorer` instead of the :class:`~summarization.scorers.tweet_scorer.TweetScorer`.
+    :type terms: list of str
 
     :return: The filtered list of documents without duplicates.
     :rtype documents: list of :class:`~nlp.document.Document`
     """
 
-    """
-    Remove duplicates.
-    Immediately after, load the documents again to ensure that they are in the same order.
-    """
+    # remove duplicates and then load the documents again to ensure that they are in the same order
     filtered = { document.text.lower(): document for document in documents }
     documents = [ document for document in documents
                            if document in filtered.values() ]
 
-    """
-    If the number of documents is given, sort them in ascending order of score and retain only the top ones.
-    """
-    scorer = TweetScorer()
-    if max_documents is not None:
+    # if the number of documents is given, sort them in ascending order of score and retain only the top ones
+    scorer = DomainScorer(terms) if terms else TweetScorer()
+
+    # pre-process the terms for the tweet scorer if need be
+    if not terms:
         for document in documents:
             tokens = document.text.split()
             document.attributes['tokens'] = tokens
 
+    if max_documents is not None:
         documents = sorted(documents, key=lambda document: scorer.score(document), reverse=True)
 
-        for document in documents:
-            del document.attributes['tokens']
+        # post-process the terms for the tweet scorer if need be
+        if not terms:
+            for document in documents:
+                del document.attributes['tokens']
 
         return documents[:max_documents]
-    else:
-        return documents
 
+    return documents
 
 if __name__ == "__main__":
     main()

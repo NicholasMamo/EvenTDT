@@ -90,6 +90,27 @@ class TestSummarize(unittest.TestCase):
         self.assertEqual(1, len(summaries[0].documents))
         self.assertEqual(str(documents[0]), str(summaries[0]))
 
+    def test_summarize_with_domain_terms(self):
+        """
+        Test that when summarizing with domain terms, they are used to rank documents instead of quality indicators.
+        """
+
+        summarizer = summarize.create_summarizer(MMR)
+        timeline = Timeline(TopicalClusterNode, 60, 0.5)
+        documents = [ Document('this is not a pipe', { 'this': 1/math.sqrt(2), 'pipe': 1/math.sqrt(2) }),
+                       Document('this is not a cigar', { 'this': 1/math.sqrt(2), 'cigar': 1/math.sqrt(2) }),
+                      Document('cigars are where it is at', { 'where': 1/math.sqrt(2), 'cigar': 1/math.sqrt(2) }) ]
+        cluster = Cluster(documents)
+        timeline.add(cluster=cluster, topic=Vector({ 'cigar': 1, 'pipe': 1 })) # no discrimination here
+
+        terms = [ 'cigar' ]
+        summaries = summarize.summarize(summarizer, timeline, length=30, with_query=True, max_documents=1, terms=terms)
+        self.assertTrue(summaries[0].documents[0] in documents[1:])
+
+        terms = [ 'pipe' ]
+        summaries = summarize.summarize(summarizer, timeline, length=30, with_query=True, max_documents=1, terms=terms)
+        self.assertEqual(documents[0], summaries[0].documents[0])
+
     def test_load_terms_all_words(self):
         """
         Test that when loading the terms, all words are returned.
@@ -266,3 +287,17 @@ class TestSummarize(unittest.TestCase):
 
         documents = [ Document('aaa'), Document('bb'), Document('c') ]
         self.assertEqual(documents[:2], summarize.filter_documents(documents, max_documents=2))
+
+    def test_filter_documents_with_domain_terms(self):
+        """
+        Test that when filterind documents and providing the domain terms, they are used to rank documents.
+        """
+
+        documents = [ Document('this is not a pipe', { 'this': 1/math.sqrt(2), 'pipe': 1/math.sqrt(2) }),
+                      Document('this is not a cigar', { 'this': 1/math.sqrt(2), 'cigar': 1/math.sqrt(2) }) ]
+
+        terms = [ 'pipe' ]
+        self.assertEqual(documents[0], summarize.filter_documents(documents, max_documents=1, terms=terms)[0])
+
+        terms = [ 'cigar' ]
+        self.assertEqual(documents[1], summarize.filter_documents(documents, max_documents=1, terms=terms)[0])
