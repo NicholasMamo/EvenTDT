@@ -52,3 +52,74 @@ class TestDomainScorer(unittest.TestCase):
         scorer = DomainScorer(terms)
         self.assertEqual(set(terms), set(scorer.terms))
         self.assertEqual(list, type(scorer.terms))
+
+    def test_score_empty_document(self):
+        """
+        Test that the score of an empty document is 0.
+        """
+
+        terms = { 'baller', 'keeper', 'offsid', 'ff', 'equalis', 'gol', 'goalkeep', 'var', 'foul', 'goal' }
+        scorer = DomainScorer(terms)
+
+        # create the document
+        text = ''
+        tokenizer = Tokenizer(stem=True)
+        tokens = tokenizer.tokenize(text)
+        document = Document(text, dimensions=tokens)
+
+        self.assertEqual(0, scorer.score(document))
+
+    def test_score_exact_matches(self):
+        """
+        Test that the scorer only counts exact matches, which means that 'offside' does not match 'offsid'.
+        """
+
+        terms = { 'baller', 'keeper', 'offsid', 'ff', 'equalis', 'gol', 'goalkeep', 'var', 'foul', 'goal' }
+        scorer = DomainScorer(terms)
+
+        # create the document
+        text = 'Goal! But the referee chalks it off for offside.'
+        tokenizer = Tokenizer(stem=False)
+        tokens = tokenizer.tokenize(text)
+        document = Document(text, dimensions=tokens)
+        self.assertTrue('goal' in document.dimensions)
+        self.assertTrue('offside' in document.dimensions)
+
+        self.assertEqual(1, scorer.score(document))
+
+    def test_score_dimensions(self):
+        """
+        Test that when scoring documents, it is only the dimensions that are considered.
+        """
+
+        terms = { 'baller', 'keeper', 'offsid', 'ff', 'equalis', 'gol', 'goalkeep', 'var', 'foul', 'goal' }
+        scorer = DomainScorer(terms)
+
+        # create the document with no text, but with tokens
+        text = 'Goal! But the referee chalks it off for offside.'
+        tokenizer = Tokenizer(stem=True)
+        tokens = tokenizer.tokenize(text)
+        document = Document('', dimensions=tokens)
+        self.assertEqual(2, scorer.score(document))
+
+        # create the same document again, but this time with text, but no dimensions
+        document = Document(text)
+        self.assertEqual(0, scorer.score(document))
+
+    def test_score_unique_only(self):
+        """
+        Test that when a term appears multiple times, it is only counted once by the domain scorer.
+        """
+
+        terms = { 'baller', 'keeper', 'offsid', 'ff', 'equalis', 'gol', 'goalkeep', 'var', 'foul', 'goal' }
+        scorer = DomainScorer(terms)
+
+        # create the document
+        text = 'Goal! And what a goal, my word!'
+        tokenizer = Tokenizer(stem=True)
+        tokens = tokenizer.tokenize(text)
+        document = Document(text, dimensions=tokens)
+
+        self.assertTrue('goal' in document.dimensions)
+        self.assertEqual(2, document.dimensions['goal'])
+        self.assertEqual(1, scorer.score(document))

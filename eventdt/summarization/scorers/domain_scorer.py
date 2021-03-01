@@ -31,6 +31,7 @@ class DomainScorer(Scorer):
     def score(self, document, *args, **kwargs):
         """
         Evaluate the score of the given document.
+        The function considers only the dimensions of documents, which means that if a term appears multiple times, it is only counted once.
 
         :param tweet: The document to score
         :type tweet: :class:`~vsm.nlp.document.Document`
@@ -39,4 +40,4 @@ class DomainScorer(Scorer):
         :rtype: int
         """
 
-        return 1
+        return len([ term for term in document.dimensions if term in self.terms ])
