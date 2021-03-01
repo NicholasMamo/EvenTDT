@@ -442,21 +442,22 @@ def filter_documents(documents, max_documents=None, terms=None):
                            if document in filtered.values() ]
 
     # if the number of documents is given, sort them in ascending order of score and retain only the top ones
-    scorer = DomainScorer(terms) if terms else TweetScorer()
+    scorers = [ ]
+    if terms:
+        scorers.append(DomainScorer(terms))
+    scorers.append(TweetScorer())
 
     # pre-process the terms for the tweet scorer if need be
-    if not terms:
-        for document in documents:
-            tokens = document.text.split()
-            document.attributes['tokens'] = tokens
+    for document in documents:
+        tokens = document.text.split()
+        document.attributes['tokens'] = tokens
 
     if max_documents is not None:
-        documents = sorted(documents, key=lambda document: scorer.score(document), reverse=True)
+        documents = sorted(documents, key=lambda document: [ scorer.score(document) for scorer in scorers ], reverse=True)
 
         # post-process the terms for the tweet scorer if need be
-        if not terms:
-            for document in documents:
-                del document.attributes['tokens']
+        for document in documents:
+            del document.attributes['tokens']
 
         return documents[:max_documents]
 

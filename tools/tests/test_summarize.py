@@ -290,7 +290,7 @@ class TestSummarize(unittest.TestCase):
 
     def test_filter_documents_with_domain_terms(self):
         """
-        Test that when filterind documents and providing the domain terms, they are used to rank documents.
+        Test that when filtering documents and providing the domain terms, they are used to rank documents.
         """
 
         documents = [ Document('this is not a pipe', { 'this': 1/math.sqrt(2), 'pipe': 1/math.sqrt(2) }),
@@ -301,3 +301,18 @@ class TestSummarize(unittest.TestCase):
 
         terms = [ 'cigar' ]
         self.assertEqual(documents[1], summarize.filter_documents(documents, max_documents=1, terms=terms)[0])
+
+    def test_filter_documents_break_ties(self):
+        """
+        Test that when filtering documents and providing the domain terms, ties are broken using quality indicators.
+        """
+
+        documents = [ Document('this is not a pipe', { 'this': 1/math.sqrt(2), 'pipe': 1/math.sqrt(2) }),
+                      Document('this is not a pipe ... or is it?', { 'this': 1/math.sqrt(2), 'pipe': 1/math.sqrt(2) }),
+                      Document('this is not a cigar', { 'this': 1/math.sqrt(2), 'cigar': 1/math.sqrt(2) }) ]
+
+        terms = [ 'pipe' ]
+        self.assertEqual(documents[1], summarize.filter_documents(documents, max_documents=1, terms=terms)[0])
+
+        terms = [ 'cigar' ]
+        self.assertEqual(documents[2], summarize.filter_documents(documents, max_documents=1, terms=terms)[0])
