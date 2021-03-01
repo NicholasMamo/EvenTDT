@@ -52,6 +52,7 @@ Normally, the summarization tool considers the top quality documents, but if you
     --length 280 \\
     --documents 200 \\
     --domain-terms data/football.json \\
+    --max-domain-terms 50 \\
     --with-query
 
 .. warning::
@@ -75,6 +76,7 @@ The output is a JSON file with the following structure:
             "output": "summaries/summary.json",
             "verbose": true,
             "domain_terms": null,
+            "max_domain_terms": null,
             "documents": null,
             "length": 140,
             "clean": false,
@@ -91,6 +93,7 @@ The output is a JSON file with the following structure:
             "output": "summaries/summary.json",
             "verbose": true,
             "domain_terms": null,
+            "max_domain_terms": null,
             "documents": null,
             "length": 140,
             "clean": false,
@@ -114,6 +117,7 @@ The full list of accepted arguments:
     - ``-o --output``        *<Required>* The path to the file where to store the generated summaries.
     - ``-v --verbose``       *<Optional>* Print the summaries as they are generated.
     - ``--domain-terms``     *<Optional>* The path to a file containing a list of domain terms, expected to contain one keyword on each line. Alternatively, the output from the :class:`~tools.terms` tool can be provided. If given, the loaded terms are used with the :class:`~summarization.scorers.domain_scorer.DomainScorer` to select the top documents.
+    - ``--max-domain-terms`` *<Optional>* The number of domain terms to retain; defaults to all terms in the file.
     - ``--documents``        *<Optional>* The maximum number of documents to use when summarizing. If no domain terms are given, preference is given for quality documents, scored by the :class:`~summarization.scorers.tweet_scorer.TweetScorer`; defaults to all documents.
     - ``--length``           *<Optional>* The length of each generated summary (in terms of the number of characters); defaults to 140 characters.
     - ``--clean``            *<Optional>* Clean the documents before summarizing.
@@ -154,6 +158,7 @@ def setup_args():
         - ``-o --output``        *<Required>* The path to the file where to store the generated summaries.
         - ``-v --verbose``       *<Optional>* Print the summaries as they are generated.
         - ``--domain-terms``     *<Optional>* The path to a file containing a list of domain terms, expected to contain one keyword on each line. Alternatively, the output from the :class:`~tools.terms` tool can be provided. If given, the loaded terms are used with the :class:`~summarization.scorers.domain_scorer.DomainScorer` to select the top documents.
+        - ``--max-domain-terms`` *<Optional>* The number of domain terms to retain; defaults to all terms in the file.
         - ``--documents``        *<Optional>* The maximum number of documents to use when summarizing. If no domain terms are given, preference is given for quality documents, scored by the :class:`~summarization.scorers.tweet_scorer.TweetScorer`; defaults to all documents.
         - ``--length``           *<Optional>* The length of each generated summary (in terms of the number of characters); defaults to 140 characters.
         - ``--clean``            *<Optional>* Clean the documents before summarizing.
@@ -177,6 +182,8 @@ def setup_args():
                         help='<Optional> Print the summaries as they are generated.')
     parser.add_argument('--domain-terms', type=str, required=False, default=None,
                         help='<Optional> The path to a file containing a list of domain terms, expected to contain one keyword on each line. Alternatively, the output from the `terms` tool can be provided. If given, the loaded terms are used with the Domain Scorer to select the top documents.')
+    parser.add_argument('--max-domain-terms', type=int, required=False, default=None,
+                        help='<Optional> The number of domain terms to retain; defaults to all terms in the file.')
     parser.add_argument('--documents', type=int, required=False, default=None,
                         help='<Optional> The maximum number of documents to use when summarizing, with a preference for quality documents, scored by the tweet scorer; defaults to all documents.')
     parser.add_argument('--length', type=int, required=False, default=140,
@@ -213,7 +220,7 @@ def main():
     """
     timeline = load_timeline(args.file)
     summarizer = create_summarizer(args.method, l=vars(args)['lambda'])
-    terms = load_terms(args.domain_terms) if args.domain_terms else terms
+    terms = load_terms(args.domain_terms, args.max_domain_terms) if args.domain_terms else terms
     summaries = summarize(summarizer, timeline, verbose=args.verbose,
                           max_documents=args.documents, length=args.length, clean=args.clean,
                           with_query=args.with_query, query_only=args.query_only)
