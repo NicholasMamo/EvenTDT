@@ -335,6 +335,41 @@ def summarize(summarizer, timeline, verbose=False, max_documents=None, length=14
 
     return summaries
 
+def load_terms(term_file, max_terms=None):
+    """
+    Load the terms from the given term file.
+    The function expects a file with one term word on each line.
+
+    :param term_file: The path to the term file.
+    :type term_file: str
+    :param max_terms: The number of terms to retain.
+                      If ``None`` is given, the function retains all terms.
+    :type max_terms: None or int
+
+    :return: A list of terms.
+    :rtype: list of str
+
+    :raises ValueError: When zero or fewer terms should be retained.
+    """
+
+    if max_terms is not None and max_terms <= 0:
+        raise ValueError(f"At least one term must be used; received { max_terms }")
+
+    term_list = [ ]
+
+    with open(term_file, 'r') as f:
+        if tools.is_json(term_file):
+            term_list = Exportable.decode(json.loads(f.readline()))['terms']
+            term_list = [ term['term'] for term in term_list ]
+        else:
+            term_list.extend(f.readlines())
+            term_list = [ word.strip() for word in term_list ]
+
+    max_terms = max_terms or len(term_list)
+    if not term_list:
+        raise ValueError("The term list cannot be empty if it is given")
+    return term_list[:max_terms]
+
 def construct_query(node):
     """
     Construct a summarization query from the given node.

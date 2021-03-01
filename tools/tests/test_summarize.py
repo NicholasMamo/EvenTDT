@@ -90,6 +90,127 @@ class TestSummarize(unittest.TestCase):
         self.assertEqual(1, len(summaries[0].documents))
         self.assertEqual(str(documents[0]), str(summaries[0]))
 
+    def test_load_terms_all_words(self):
+        """
+        Test that when loading the terms, all words are returned.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.txt')
+        terms = summarize.load_terms(file)
+
+        """
+        Assert that the correct number of terms are loaded.
+        """
+        self.assertEqual(30, len(terms))
+
+        """
+        Load each term set separately and ensure it has been loaded.
+        """
+        with open(file, 'r') as f:
+            for word in f:
+                self.assertTrue(word.strip() in terms)
+
+    def test_load_terms_list(self):
+        """
+        Test that when loading the terms, they are returned as a list.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.txt')
+        terms = summarize.load_terms(file)
+
+        """
+        Assert that the terms list is returned as a list.
+        """
+        self.assertEqual(list, type(terms))
+
+    def test_load_terms_from_terms(self):
+        """
+        Test that when loading the terms from the `terms` tool's output, they are returned as a list.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.json')
+        terms = summarize.load_terms(file)
+
+        """
+        Assert that the terms list is returned as a list.
+        """
+        self.assertEqual(list, type(terms))
+        self.assertTrue(len(terms))
+
+    def test_load_terms_no_newlines(self):
+        """
+        Test that when loading the terms, the newline symbol is removed.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.txt')
+        terms = summarize.load_terms(file)
+
+        """
+        Assert that the terms list is returned as a list.
+        """
+        self.assertTrue(all( '\n' not in word for word in terms ))
+
+    def test_load_terms_max_terms_zero(self):
+        """
+        Test that when loading the terms and keeping zero words, a ``ValueError`` is raised.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.txt')
+        self.assertRaises(ValueError, summarize.load_terms, file, 0)
+
+    def test_load_terms_max_terms_negative(self):
+        """
+        Test that when loading the terms and keeping negative words, a ``ValueError`` is raised.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.txt')
+        self.assertRaises(ValueError, summarize.load_terms, file, -1)
+
+    def test_load_terms_max_terms_respected(self):
+        """
+        Test that when loading the terms, the specified number of words are returned.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.txt')
+        terms = summarize.load_terms(file, 10)
+        self.assertEqual(10, len(terms))
+
+    def test_load_terms_max_terms_top_words(self):
+        """
+        Test that when loading the terms with a cutoff, the top words are returned.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.txt')
+        all = summarize.load_terms(file)
+        terms = summarize.load_terms(file, 10)
+        self.assertEqual(all[:10], terms)
+
+    def test_load_terms_max_terms_very_large(self):
+        """
+        Test that when loading the terms with a large cutoff, all words are retained.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.txt')
+        terms = summarize.load_terms(file, 50)
+        self.assertEqual(30, len(terms))
+
+    def test_load_terms_max_terms_none(self):
+        """
+        Test that when loading the terms with no specified cutoff, all words are retained.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.txt')
+        terms = summarize.load_terms(file, None)
+        self.assertEqual(30, len(terms))
+
+    def test_load_terms_empty(self):
+        """
+        Test that when the terms file is empty, a ``ValueError`` is raised.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'empty.txt')
+        self.assertRaises(ValueError, summarize.load_terms, file)
+
     def test_filter_documents_order(self):
         """
         Test that when filtering documents, the documents are returned in the same order.
