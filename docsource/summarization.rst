@@ -54,6 +54,13 @@ Scorers
    :members:
    :special-members:
 
+Domain Scorer
+-------------
+
+.. automodule:: summarization.scorers.domain_scorer
+  :members:
+  :special-members:
+
 =========
 Timelines
 =========
