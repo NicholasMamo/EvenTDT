@@ -13,16 +13,16 @@ To run the script, use:
     -o data/bootstrapped.json \\
     -f data/tokenized_corpus.json
 
-The seed and candidates files can be either text files or the output from the ``terms`` tool.
+The seed and candidates files can be either text files or the output from the :class:`~tools.terms` tool.
 If a text file is given, this tool expects one word on each line.
 
 Accepted arguments:
 
-    - ``-s --seed``            *<Required>* The path to the file containing seed keywords, expected to contain one keyword on each line. Alternatively, the output from the ``terms`` tool can be provided.
+    - ``-s --seed``            *<Required>* The path to the file containing seed keywords, expected to contain one keyword on each line. Alternatively, the output from the :class:`~tools.terms` tool can be provided.
     - ``-f --files``        *<Required>* The input corpora where to look for similar keywords, expected to be already tokenized by the `tokenize` tool.
     - ``-m --method``        *<Required>* The method to use to look for similar keywords; supported: `CHI`, `Log`, `PMI`.
     - ``-o --output``        *<Required>* The path to the file where to store the bootstrapped keywords.
-    - ``-c --candidates``    *<Optional>* The path to the file containing candidate keywords, expected to contain one keyword on each line. Alternatively, the output from the ``terms`` tool can be provided. If no candidates are given, all vocabulary keywords are considered candidates.
+    - ``-c --candidates``    *<Optional>* The path to the file containing candidate keywords, expected to contain one keyword on each line. Alternatively, the output from the :class:`~tools.terms` tool can be provided. If no candidates are given, all vocabulary keywords are considered candidates.
     - ``-i --iterations``    *<Optional>* The number of iterations to spend bootstrapping; defaults to 1.
     - ``-k --keep``            *<Optional>* The number of keywords to keep after each iteration; defaults to 5.
     - ``--generate``        *<Optional>* The number of candidate keywords to generate if no candidates are provided; defaults to 100.
@@ -53,11 +53,11 @@ def setup_args():
 
     Accepted arguments:
 
-        - ``-s --seed``            *<Required>* The path to the file containing seed keywords, expected to contain one keyword on each line. Alternatively, the output from the ``terms`` tool can be provided.
+        - ``-s --seed``            *<Required>* The path to the file containing seed keywords, expected to contain one keyword on each line. Alternatively, the output from the :class:`~tools.terms` tool can be provided.
         - ``-f --files``        *<Required>* The input corpora where to look for similar keywords, expected to be already tokenized by the `tokenize` tool.
         - ``-m --method``        *<Required>* The method to use to look for similar keywords; supported: `CHI`, `Log`, `PMI`.
         - ``-o --output``        *<Required>* The path to the file where to store the bootstrapped keywords.
-        - ``-c --candidates``    *<Optional>* The path to the file containing candidate keywords, expected to contain one keyword on each line. Alternatively, the output from the ``terms`` tool can be provided. If no candidates are given, all vocabulary keywords are considered candidates.
+        - ``-c --candidates``    *<Optional>* The path to the file containing candidate keywords, expected to contain one keyword on each line. Alternatively, the output from the :class:`~tools.terms` tool can be provided. If no candidates are given, all vocabulary keywords are considered candidates.
         - ``-i --iterations``    *<Optional>* The number of iterations to spend bootstrapping; defaults to 1.
         - ``-k --keep``            *<Optional>* The number of keywords to keep after each iteration; defaults to 5.
         - ``--generate``        *<Optional>* The number of candidate keywords to generate if no candidates are provided; defaults to 100.
@@ -72,7 +72,7 @@ def setup_args():
 
     parser.add_argument('-s', '--seed',
                         required=True,
-                        help='<Required> The path to the file containing seed keywords, expected to contain one keyword on each line. Alternatively, the output from the ``terms`` tool can be provided.')
+                        help='<Required> The path to the file containing seed keywords, expected to contain one keyword on each line. Alternatively, the output from the :class:`~tools.terms` tool can be provided.')
     parser.add_argument('-f', '--files',
                         nargs='+', required=True,
                         help='<Required> The input corpora where to look for similar keywords, expected to be already tokenized by the `tokenize` tool.')
@@ -84,7 +84,7 @@ def setup_args():
                         help='<Required> The path to the file where to store the bootstrapped keywords.')
     parser.add_argument('-c', '--candidates',
                         required=False, default=None,
-                        help='<Required> The path to the file containing candidate keywords, expected to contain one keyword on each line. Alternatively, the output from the ``terms`` tool can be provided. If no candidates are given, all vocabulary keywords are considered candidates.')
+                        help='<Required> The path to the file containing candidate keywords, expected to contain one keyword on each line. Alternatively, the output from the :class:`~tools.terms` tool can be provided. If no candidates are given, all vocabulary keywords are considered candidates.')
     parser.add_argument('-i', '--iterations',
                         type=int, required=False, default=1,
                         help='<Optional> The number of iterations to spend bootstrapping; defaults to 1.')
