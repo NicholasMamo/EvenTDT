@@ -10,7 +10,7 @@ path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
-from eventdt.summarization.scorers.domain_scorer import DomainScorer
+from eventdt.summarization.scorers import DomainScorer
 
 from eventdt.nlp.document import Document
 from eventdt.nlp.tokenizer import Tokenizer
