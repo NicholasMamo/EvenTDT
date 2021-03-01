@@ -170,7 +170,7 @@ class Cluster(Attributable, Exportable):
 
         :return: The representative vectors.
                  If the number of vectors that is sought is one, only the closest vector is returned.
-                  Otherwise, a list of vectors is returned.
+                 Otherwise, a list of vectors is returned.
         :rtype: :class:`~vsm.vector.Vector` or list of :class:`~vsm.vector.Vector`
         """
 

@@ -41,9 +41,9 @@ class IDF(Exportable, SchemeScorer):
     The number of documents in the corpus, which is required by this class, can be extracted trivially.
 
     :ivar ~.idf: The IDF table used in conjunction with term weighting.
-    :vartype idf: dict
-    :ivar documents: The number of documents in the corpus.
-    :vartype documents: int
+    :vartype ~.idf: dict
+    :ivar ~.documents: The number of documents in the corpus.
+    :vartype ~.documents: int
     """
 
     def __init__(self, idf, documents):

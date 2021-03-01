@@ -1,6 +1,6 @@
-************
+*************
 10. Consumers
-************
+*************
 
 .. meta::
    :description: The consumer functionality of EvenTDT
