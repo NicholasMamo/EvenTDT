@@ -118,7 +118,7 @@ The full list of accepted arguments:
     - ``-v --verbose``       *<Optional>* Print the summaries as they are generated.
     - ``--domain-terms``     *<Optional>* The path to a file containing a list of domain terms, expected to contain one keyword on each line. Alternatively, the output from the :class:`~tools.terms` tool can be provided. If given, the loaded terms are used with the :class:`~summarization.scorers.domain_scorer.DomainScorer` to select the top documents.
     - ``--max-domain-terms`` *<Optional>* The number of domain terms to retain; defaults to all terms in the file.
-    - ``--documents``        *<Optional>* The maximum number of documents to use when summarizing. If no domain terms are given, preference is given for quality documents, scored by the :class:`~summarization.scorers.tweet_scorer.TweetScorer`; defaults to all documents.
+    - ``--documents``        *<Optional>* The maximum number of documents to use when summarizing. If no domain terms are given, preference is given for quality documents, scored by the :class:`~summarization.scorers.tweet_scorer.TweetScorer` or the :class:`~summarization.scorers.domain_scorer.DomainScorer`; defaults to all documents.
     - ``--length``           *<Optional>* The length of each generated summary (in terms of the number of characters); defaults to 140 characters.
     - ``--clean``            *<Optional>* Clean the documents before summarizing.
     - ``--lambda``           *<Optional>* The lambda parameter to balance between relevance and non-redundancy; used only with the :class:`~summarization.algorithms.mmr.MMR` algorithm; defaults to 0.5.
@@ -159,7 +159,7 @@ def setup_args():
         - ``-v --verbose``       *<Optional>* Print the summaries as they are generated.
         - ``--domain-terms``     *<Optional>* The path to a file containing a list of domain terms, expected to contain one keyword on each line. Alternatively, the output from the :class:`~tools.terms` tool can be provided. If given, the loaded terms are used with the :class:`~summarization.scorers.domain_scorer.DomainScorer` to select the top documents.
         - ``--max-domain-terms`` *<Optional>* The number of domain terms to retain; defaults to all terms in the file.
-        - ``--documents``        *<Optional>* The maximum number of documents to use when summarizing. If no domain terms are given, preference is given for quality documents, scored by the :class:`~summarization.scorers.tweet_scorer.TweetScorer`; defaults to all documents.
+        - ``--documents``        *<Optional>* The maximum number of documents to use when summarizing. If no domain terms are given, preference is given for quality documents, scored by the :class:`~summarization.scorers.tweet_scorer.TweetScorer` or the :class:`~summarization.scorers.domain_scorer.DomainScorer`; defaults to all documents.
         - ``--length``           *<Optional>* The length of each generated summary (in terms of the number of characters); defaults to 140 characters.
         - ``--clean``            *<Optional>* Clean the documents before summarizing.
         - ``--lambda``           *<Optional>* The lambda parameter to balance between relevance and non-redundancy; used only with the :class:`~summarization.algorithms.mmr.MMR` algorithm; defaults to 0.5.
@@ -185,7 +185,7 @@ def setup_args():
     parser.add_argument('--max-domain-terms', type=int, required=False, default=None,
                         help='<Optional> The number of domain terms to retain; defaults to all terms in the file.')
     parser.add_argument('--documents', type=int, required=False, default=None,
-                        help='<Optional> The maximum number of documents to use when summarizing, with a preference for quality documents, scored by the tweet scorer; defaults to all documents.')
+                        help='<Optional> The maximum number of documents to use when summarizing, with a preference for quality documents, scored by the tweet scorer or the domain scorer; defaults to all documents.')
     parser.add_argument('--length', type=int, required=False, default=140,
                         help='<Optional> The length of each generated summary (in terms of the number of characters); defaults to 140 characters.')
     parser.add_argument('--clean', action='store_true', required=False,
