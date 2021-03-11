@@ -111,7 +111,10 @@ class Exportable(ABC):
         :rtype: dict or list or object
         """
 
-        data = copy.deepcopy(data)
+        if type(data) not in ( dict, list ):
+            return data
+
+        _data = { } if type(data) is dict else [ ]
 
         if type(data) is dict and 'class' in data:
             """
@@ -119,7 +122,7 @@ class Exportable(ABC):
             """
             module = importlib.import_module(Exportable.get_module(data.get('class')))
             cls = getattr(module, Exportable.get_class(data.get('class')))
-            data = cls.from_array(data)
+            _data = cls.from_array(data)
         elif type(data) is dict:
             """
             The second case is when a dictionary is given and all keys need to be decoded because some may represent an object.
@@ -128,9 +131,9 @@ class Exportable(ABC):
                 if type(data.get(key)) is dict and 'class' in data.get(key):
                     module = importlib.import_module(Exportable.get_module(data.get(key).get('class')))
                     cls = getattr(module, Exportable.get_class(data.get(key).get('class')))
-                    data[key] = cls.from_array(data.get(key))
+                    _data[key] = cls.from_array(data.get(key))
                 else:
-                    data[key] = Exportable.decode(data.get(key))
+                    _data[key] = Exportable.decode(data.get(key))
         elif type(data) is list:
             """
             The second case is when a list is given and all items need to be decoded because some may represent an object.
@@ -139,11 +142,13 @@ class Exportable(ABC):
                 if type(item) is dict and 'class' in item:
                     module = importlib.import_module(Exportable.get_module(item.get('class')))
                     cls = getattr(module, Exportable.get_class(item.get('class')))
-                    data[i] = cls.from_array(item)
+                    _data.append(cls.from_array(item))
                 else:
-                    data[i] = Exportable.decode(item)
+                    _data.append(Exportable.decode(item))
+        else:
+            _data = copy.deepcopy(_data)
 
-        return data
+        return _data
 
     @staticmethod
     def get_module(cls):

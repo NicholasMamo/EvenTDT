@@ -15,7 +15,7 @@ from objects.exportable import Exportable
 from vsm.vector import Vector
 from nlp.weighting.tfidf import TFIDF
 
-class TestAttributable(unittest.TestCase):
+class TestExportable(unittest.TestCase):
     """
     Test the :class:`~objects.exportable.Exportable` class.
     """
