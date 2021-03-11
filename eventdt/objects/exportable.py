@@ -15,6 +15,7 @@ class Exportable(ABC):
 
     ALIASES = { 'nlp.term_weighting': 'nlp.weighting',
                 'summarization.timeline.timeline': 'summarization.timeline' }
+    CLASS_PATTERN = re.compile('<class \'(.+)?\.?\'>')
 
     @abstractmethod
     def to_array(self):
@@ -162,11 +163,10 @@ class Exportable(ABC):
         :raises ValueError: When the class name is invalid.
         """
 
-        class_pattern = re.compile('<class \'(.+)?\.?\'>')
-        if not class_pattern.match(cls):
+        if not Exportable.CLASS_PATTERN.match(cls):
             raise ValueError(f"Invalid class name {cls}")
 
-        path = class_pattern.findall(cls)[0]
+        path = Exportable.CLASS_PATTERN.findall(cls)[0]
 
         """
         If the path is an alias, replace it with the proper package name.
@@ -193,9 +193,8 @@ class Exportable(ABC):
         :raises ValueError: When the class name is invalid.
         """
 
-        class_pattern = re.compile('<class \'(.+)?\.?\'>')
-        if not class_pattern.match(cls):
+        if not Exportable.CLASS_PATTERN.match(cls):
             raise ValueError(f"Invalid class name {cls}")
 
-        path = class_pattern.findall(cls)[0].split('.')
+        path = Exportable.CLASS_PATTERN.findall(cls)[0].split('.')
         return path[-1]
