@@ -55,7 +55,7 @@ class TFIDFExtractor(Extractor):
                 for line in f:
                     document = self.scheme.create(json.loads(line)['tokens'])
                     for term, score in document.dimensions.items():
-                        if (candidates and term in candidates) or not candidates:
+                        if not candidates or (candidates and term in candidates):
                             scores[term] = scores.get(term, 0) + score
 
         return scores
