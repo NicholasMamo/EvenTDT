@@ -40,9 +40,8 @@ class TFExtractor(Extractor):
         scores = { } if not candidates else dict.fromkeys(candidates, 0)
 
         corpora = self.to_list(corpora)
-        scheme = TF()
         for corpus in corpora:
-            with open(corpus, 'r') as f:
+            with open(corpus) as f:
                 for line in f:
                     tokens = json.loads(line)['tokens']
                     tokens = tokens if not candidates else [ token for token in tokens if token in candidates ]

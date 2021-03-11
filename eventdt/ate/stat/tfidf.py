@@ -51,11 +51,12 @@ class TFIDFExtractor(Extractor):
 
         corpora = self.to_list(corpora)
         for corpus in corpora:
-            with open(corpus, 'r') as f:
+            with open(corpus) as f:
                 for line in f:
-                    document = self.scheme.create(json.loads(line)['tokens'])
-                    for term, score in document.dimensions.items():
-                        if not candidates or (candidates and term in candidates):
-                            scores[term] = scores.get(term, 0) + score
+                    tokens = json.loads(line)['tokens']
+                    tokens = tokens if not candidates else [ token for token in tokens if token in candidates ]
+                    idf_scores = self.scheme.global_scheme.score(tokens)
+                    for token in tokens:
+                        scores[token] = scores.get(token, 0) + idf_scores[token]
 
         return scores
