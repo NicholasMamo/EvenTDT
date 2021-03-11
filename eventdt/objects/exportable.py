@@ -138,15 +138,13 @@ class Exportable(ABC):
             """
             The second case is when a list is given and all items need to be decoded because some may represent an object.
             """
-            for i, item in enumerate(data):
+            for item in data:
                 if type(item) is dict and 'class' in item:
                     module = importlib.import_module(Exportable.get_module(item.get('class')))
                     cls = getattr(module, Exportable.get_class(item.get('class')))
                     _data.append(cls.from_array(item))
                 else:
                     _data.append(Exportable.decode(item))
-        else:
-            _data = copy.deepcopy(_data)
 
         return _data
 
