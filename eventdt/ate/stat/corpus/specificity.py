@@ -90,8 +90,8 @@ class SpecificityExtractor(ComparisonExtractor):
         Calculate the scores for all known words.
         """
         unknown_words = self._unknown(p_d, p_g)
-        scores.update({ term: p_d[term] / p_g[term] for term in p_d
-                                                     if term not in unknown_words })
+        known_words = set(p_d).difference(set(unknown_words))
+        scores = { term: p_d[term] / p_g[term] for term in known_words }
 
         """
         If unknown words should not be ignored, set their score.
