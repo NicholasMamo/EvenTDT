@@ -16,6 +16,7 @@ class Exportable(ABC):
     ALIASES = { 'nlp.term_weighting': 'nlp.weighting',
                 'summarization.timeline.timeline': 'summarization.timeline' }
     CLASS_PATTERN = re.compile('<class \'(.+)?\.?\'>')
+    IMPORTED = { }
 
     @abstractmethod
     def to_array(self):
@@ -121,7 +122,9 @@ class Exportable(ABC):
             """
             The first case is when the dictionary itself represents an object.
             """
-            module = importlib.import_module(Exportable.get_module(data.get('class')))
+            _module = Exportable.get_module(data.get('class'))
+            module = Exportable.IMPORTED.get(_module, importlib.import_module(_module))
+            Exportable.IMPORTED[_module] = module
             cls = getattr(module, Exportable.get_class(data.get('class')))
             _data = cls.from_array(data)
         elif type(data) is dict:
@@ -130,7 +133,9 @@ class Exportable(ABC):
             """
             for key in data:
                 if type(data.get(key)) is dict and 'class' in data.get(key):
-                    module = importlib.import_module(Exportable.get_module(data.get(key).get('class')))
+                    _module = Exportable.get_module(data.get(key).get('class'))
+                    module = Exportable.IMPORTED.get(_module, importlib.import_module(_module))
+                    Exportable.IMPORTED[_module] = module
                     cls = getattr(module, Exportable.get_class(data.get(key).get('class')))
                     _data[key] = cls.from_array(data.get(key))
                 else:
@@ -141,7 +146,9 @@ class Exportable(ABC):
             """
             for item in data:
                 if type(item) is dict and 'class' in item:
-                    module = importlib.import_module(Exportable.get_module(item.get('class')))
+                    _module = Exportable.get_module(item.get('class'))
+                    module = Exportable.IMPORTED.get(_module, importlib.import_module(_module))
+                    Exportable.IMPORTED[_module] = module
                     cls = getattr(module, Exportable.get_class(item.get('class')))
                     _data.append(cls.from_array(item))
                 else:
