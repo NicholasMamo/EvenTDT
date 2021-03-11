@@ -4,6 +4,7 @@ Term Frequency (TF) is a simple ATE approach that ranks terms based on the numbe
 
 import json
 import os
+import re
 import sys
 
 paths = [ os.path.join(os.path.dirname(__file__), '..'),
@@ -17,7 +18,7 @@ from nlp.weighting import TF
 
 class TFExtractor(Extractor):
     """
-    The TF extractor uses the TF term-weighting scheme to score all tokens in the given corpora.
+    The TF extractor assigns a score to tokens similarly to the TF term-weighting scheme.
     The class expects tokenized corpora.
     """
 
@@ -43,9 +44,9 @@ class TFExtractor(Extractor):
         for corpus in corpora:
             with open(corpus, 'r') as f:
                 for line in f:
-                    document = scheme.create(json.loads(line)['tokens'])
-                    for term, score in document.dimensions.items():
-                        if not candidates or (candidates and term in candidates):
-                            scores[term] = scores.get(term, 0) + score
+                    tokens = json.loads(line)['tokens']
+                    tokens = tokens if not candidates else [ token for token in tokens if token in candidates ]
+                    for token in tokens:
+                        scores[token] = scores.get(token, 0) + 1
 
         return scores
