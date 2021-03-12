@@ -34,6 +34,28 @@ class TestTokenizer(unittest.TestCase):
                 test(self, *args, **kwargs)
         return perform_test
 
+    def test_tokenize_same_order(self):
+        """
+        Test that when tokenizing, the order of the tokens is the same as in the text.
+        """
+
+        text = "The man was mad at the woman"
+        tokenizer = Tokenizer(min_length=1, stem=False)
+        self.assertEqual([ 'the', 'man', 'was', 'mad', 'at', 'the', 'woman' ], tokenizer.tokenize(text))
+
+    def test_tokenize_duplicate(self):
+        """
+        Test that when tokenizing, duplicate tokens can appear
+        """
+
+        text = "The man was mad at the woman because the woman angered the man"
+        tokenizer = Tokenizer(min_length=1, stem=False)
+        self.assertEqual([ 'the', 'man', 'was', 'mad', 'at', 'the', 'woman',
+                           'because', 'the', 'woman', 'angered', 'the', 'man' ], tokenizer.tokenize(text))
+        self.assertEqual(4, tokenizer.tokenize(text).count('the'))
+        self.assertEqual(2, tokenizer.tokenize(text).count('man'))
+        self.assertEqual(2, tokenizer.tokenize(text).count('woman'))
+
     def test_remove_mentions(self):
         """
         Test the mention removal functionality.
