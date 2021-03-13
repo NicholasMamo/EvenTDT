@@ -151,10 +151,10 @@ def average_precision(items, gold):
 
     .. math::
 
-        \\text{AP} = \\frac{1}{| \\text{gold} |} \\sum_{k=1}^{n} \\text{P@k} \\cdot \\text{rel}_k
+        \\text{AP} = \\frac{1}{| \\text{captured} |} \\sum_{k=1}^{n} \\text{P@k} \\cdot \\text{rel}_k
 
     where :math:`\\text{P@k}` is the :func:`Precision at k <tools.evaluation.pk>` and :math:`\\text{rel}_k` is a boolean indicating whether the item at rank :math:`k` is relevant or not.
-    :math:`\\text{gold}` is the gold  standard list of items.
+    :math:`\\text{captured}` is the number of gold standard items that were actually captured in the ranking.
 
     :param items: A list of items to evaluate, which must be an ordered ranking.
     :type items: list
@@ -167,11 +167,12 @@ def average_precision(items, gold):
 
     ap = 0
     items, gold = unique(items), unique(gold)
+    captured = set(items).intersection(set(gold)) # the number of gold items that were actually captured in the ranking
     _pk = pk(items, gold)
     for k, item in enumerate(items):
         ap += _pk[k + 1] if is_precise(item, gold) else 0
 
-    return ap / len(gold) if len(gold) else 0
+    return ap / len(captured) if len(captured) else 0
 
 def recall(items, gold):
     """
