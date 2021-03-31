@@ -287,13 +287,13 @@ class FUEGOConsumer(Consumer):
                     if topic_documents:
                         timeline.add(time, topic_documents)
 
-                if timeline.nodes:
-                    node = timeline.nodes[-1]
-                    if node.expired(timeline.expiry, time) and not node.attributes.get('printed'):
-                        summary = self._summarize(node)
-                        cleaner = TweetCleaner(collapse_new_lines=True, collapse_whitespaces=True, remove_unicode_entities=True)
-                        logger.info(f"{datetime.fromtimestamp(node.created_at).ctime()}: { cleaner.clean(str(summary)) }", process=str(self))
-                        node.attributes['printed'] = True
+            if timeline.nodes:
+                node = timeline.nodes[-1]
+                if node.expired(timeline.expiry, time) and not node.attributes.get('printed'):
+                    summary = self._summarize(node)
+                    cleaner = TweetCleaner(collapse_new_lines=True, collapse_whitespaces=True, remove_unicode_entities=True)
+                    logger.info(f"{datetime.fromtimestamp(node.created_at).ctime()}: { cleaner.clean(str(summary)) }", process=str(self))
+                    node.attributes['printed'] = True
 
         return timeline
 
