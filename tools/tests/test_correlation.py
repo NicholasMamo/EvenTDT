@@ -55,6 +55,19 @@ class TestCorrelation(unittest.TestCase):
             original = [ term['term'] for term in original ]
         self.assertEqual(len(original), len(terms))
 
+    def test_load_terms_extracted_cmd(self):
+        """
+        Test that when loading terms from the output of the ``terms`` tool, the terms themselves are loaded.
+        """
+
+        files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', 'sample.json') ]
+        terms = correlation.load_terms(files)
+        self.assertTrue(all( type(term) is str for term in terms ))
+        with open(files[0]) as f:
+            original = json.loads(''.join(f.readlines()))['terms']
+            original = [ term['term'] for term in original ]
+        self.assertEqual(len(original), len(terms))
+
     def test_load_terms_extracted_order(self):
         """
         Test that when loading terms from the output of the ``terms`` tool, they are loaded in order of rank.
