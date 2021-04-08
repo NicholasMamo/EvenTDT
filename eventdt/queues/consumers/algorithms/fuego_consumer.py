@@ -540,8 +540,9 @@ class FUEGOConsumer(Consumer):
         """
 
         current, historic = self._partition(timestamp)
-        median = statistics.median(historic.values()) if historic else 0
-        return current <= median + self.min_volume
+        mean = statistics.mean(historic.values()) if historic else 0
+        stdev = statistics.stdev(historic.values()) if historic and len(historic) >= 2 else 0
+        return current <= max(self.min_volume, mean + stdev * 2)
 
     def _partition(self, timestamp):
         """

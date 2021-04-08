@@ -6,6 +6,7 @@ import asyncio
 import copy
 import json
 import os
+import statistics
 import sys
 import unittest
 
@@ -1636,11 +1637,11 @@ class TestFUEGOConsumer(unittest.TestCase):
 
         consumer = FUEGOConsumer(Queue(), min_volume=1)
         consumer.volume.add(10, 1.1)
-        self.assertFalse(consumer._dormant(10)) # median 0, threshold 1
+        self.assertFalse(consumer._dormant(10))
         consumer.volume.add(10, 1)
-        self.assertTrue(consumer._dormant(10)) # median 0, threshold 1
+        self.assertTrue(consumer._dormant(10)) # equal to the minimum volume
         consumer.volume.add(10, 0.9)
-        self.assertTrue(consumer._dormant(10)) # median 0, threshold 1
+        self.assertTrue(consumer._dormant(10)) # less than the minimum volume
 
     def test_dormant_end_timestamp_inclusive(self):
         """
@@ -1649,10 +1650,10 @@ class TestFUEGOConsumer(unittest.TestCase):
 
         consumer = FUEGOConsumer(Queue(), min_volume=1)
         consumer.volume.add(10, 1)
-        self.assertTrue(consumer._dormant(9)) # median 0, threshold 1
-        self.assertTrue(consumer._dormant(10)) # median 0, threshold 1
+        self.assertTrue(consumer._dormant(9))
+        self.assertTrue(consumer._dormant(10)) # equal to the minimum volume
         consumer.volume.add(10, 2)
-        self.assertFalse(consumer._dormant(10)) # median 0, threshold 1
+        self.assertFalse(consumer._dormant(10)) # higher than the minimum volume
 
     def test_dormant_start_timestamp_exclusive(self):
         """
@@ -1660,31 +1661,44 @@ class TestFUEGOConsumer(unittest.TestCase):
         """
 
         consumer = FUEGOConsumer(Queue(), min_volume=1, window_size=5)
-        consumer.volume.add(5, 0) # median 1, threshold 1
-        self.assertTrue(consumer._dormant(10))
+        consumer.volume.add(5, 0)
+        self.assertTrue(consumer._dormant(10)) # there is no volume at timestamp 10
 
         """
         Increase the window size so it covers timestamp 5 at timestamp 10.
         """
         consumer = FUEGOConsumer(Queue(), min_volume=1, window_size=6)
-        consumer.volume.add(5, 0) # median 1, threshold 1
+        consumer.volume.add(5, 0)
         self.assertTrue(consumer._dormant(10))
+        consumer.volume.add(10, 1)
+        self.assertTrue(consumer._dormant(10)) # equal to the minimum volume
+        consumer.volume.add(10, 1.1)
+        self.assertFalse(consumer._dormant(10)) # equal to the minimum volume
 
-    def test_dormant_median_min_volume(self):
+    def test_dormant_mean_min_volume(self):
         """
-        Test that when checking the volume, the function adds the median and the minimum volume.
+        Test that when checking the volume, if the minimum volume is very low, the function considers the mean.
         """
 
         consumer = FUEGOConsumer(Queue(), min_volume=2, window_size=10)
-        consumer.volume.add(60, 20) # median 30, threshold 32
-        consumer.volume.add(50, 30) # median 30, threshold 32
-        consumer.volume.add(40, 30) # median 30, threshold 32
-        consumer.volume.add(30, 30) # median 30, threshold 27
-        consumer.volume.add(20, 30) # median 25, threshold 22
-        consumer.volume.add(10, 20) # median 20, threshold 2
-        self.assertFalse(consumer._dormant(10))
-        self.assertFalse(consumer._dormant(20))
-        self.assertFalse(consumer._dormant(30))
+        consumer.volume.add(10, 20)
+        consumer.volume.add(20, 30)
+        consumer.volume.add(30, 30)
+        consumer.volume.add(40, 30)
+        consumer.volume.add(50, 30)
+        consumer.volume.add(60, 20)
+
+        self.assertFalse(consumer._dormant(10)) # higher than the minimum volume volume
+
+        _, historic = consumer._partition(20)
+        self.assertEqual(20, statistics.mean(historic.values()))
+        self.assertFalse(consumer._dormant(20)) # higher than the mean
+
+        _, historic = consumer._partition(30)
+        self.assertEqual(25, statistics.mean(historic.values()))
+        self.assertEqual(7.07, round(statistics.stdev(historic.values()), 2))
+        self.assertTrue(consumer._dormant(30)) # lower than mean + 2 * stdev
+
         self.assertTrue(consumer._dormant(40))
         self.assertTrue(consumer._dormant(50))
         self.assertTrue(consumer._dormant(60))
