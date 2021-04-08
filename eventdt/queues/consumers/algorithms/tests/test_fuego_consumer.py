@@ -1629,18 +1629,18 @@ class TestFUEGOConsumer(unittest.TestCase):
         self.assertTrue(consumer._dormant(9))
         self.assertTrue(consumer._dormant(10))
 
-    def test_dormant_inclusive(self):
+    def test_dormant_exclusive(self):
         """
-        Test that when checking the volume in the last time window, the check is inclusive.
+        Test that when checking the volume in the last time window, the check is exclusive.
         """
 
         consumer = FUEGOConsumer(Queue(), min_volume=1)
         consumer.volume.add(10, 1.1)
-        self.assertFalse(consumer._dormant(10))
+        self.assertFalse(consumer._dormant(10)) # median 0, threshold 1
         consumer.volume.add(10, 1)
-        self.assertFalse(consumer._dormant(10))
+        self.assertTrue(consumer._dormant(10)) # median 0, threshold 1
         consumer.volume.add(10, 0.9)
-        self.assertTrue(consumer._dormant(10))
+        self.assertTrue(consumer._dormant(10)) # median 0, threshold 1
 
     def test_dormant_end_timestamp_inclusive(self):
         """
@@ -1649,8 +1649,10 @@ class TestFUEGOConsumer(unittest.TestCase):
 
         consumer = FUEGOConsumer(Queue(), min_volume=1)
         consumer.volume.add(10, 1)
-        self.assertTrue(consumer._dormant(9))
-        self.assertFalse(consumer._dormant(10))
+        self.assertTrue(consumer._dormant(9)) # median 0, threshold 1
+        self.assertTrue(consumer._dormant(10)) # median 0, threshold 1
+        consumer.volume.add(10, 2)
+        self.assertFalse(consumer._dormant(10)) # median 0, threshold 1
 
     def test_dormant_start_timestamp_exclusive(self):
         """
@@ -1658,50 +1660,31 @@ class TestFUEGOConsumer(unittest.TestCase):
         """
 
         consumer = FUEGOConsumer(Queue(), min_volume=1, window_size=5)
-        consumer.volume.add(5, 1)
+        consumer.volume.add(5, 0) # median 1, threshold 1
         self.assertTrue(consumer._dormant(10))
 
         """
         Increase the window size so it covers timestamp 5 at timestamp 10.
         """
         consumer = FUEGOConsumer(Queue(), min_volume=1, window_size=6)
-        consumer.volume.add(5, 1)
-        self.assertFalse(consumer._dormant(10))
+        consumer.volume.add(5, 0) # median 1, threshold 1
+        self.assertTrue(consumer._dormant(10))
 
-    def test_dormant_median(self):
+    def test_dormant_median_min_volume(self):
         """
-        Test that even if the tweet volume is above the minimum volume, if it is below the median, the stream is considered dormant.
+        Test that when checking the volume, the function adds the median and the minimum volume.
         """
 
-        consumer = FUEGOConsumer(Queue(), min_volume=1, window_size=10)
-        consumer.volume.add(60, 20)
-        consumer.volume.add(50, 29)
-        consumer.volume.add(40, 30)
-        consumer.volume.add(30, 30)
-        consumer.volume.add(20, 30)
-        consumer.volume.add(10, 20)
+        consumer = FUEGOConsumer(Queue(), min_volume=2, window_size=10)
+        consumer.volume.add(60, 20) # median 30, threshold 32
+        consumer.volume.add(50, 30) # median 30, threshold 32
+        consumer.volume.add(40, 30) # median 30, threshold 32
+        consumer.volume.add(30, 30) # median 30, threshold 27
+        consumer.volume.add(20, 30) # median 25, threshold 22
+        consumer.volume.add(10, 20) # median 20, threshold 2
         self.assertFalse(consumer._dormant(10))
         self.assertFalse(consumer._dormant(20))
         self.assertFalse(consumer._dormant(30))
-        self.assertFalse(consumer._dormant(40))
-        self.assertTrue(consumer._dormant(50))
-        self.assertTrue(consumer._dormant(60))
-
-    def test_dormant_median_less_volume(self):
-        """
-        Test that if the median is below the minimum volume, it is ignored.
-        """
-
-        consumer = FUEGOConsumer(Queue(), min_volume=31, window_size=10)
-        consumer.volume.add(60, 20)
-        consumer.volume.add(50, 29)
-        consumer.volume.add(40, 30)
-        consumer.volume.add(30, 30)
-        consumer.volume.add(20, 30)
-        consumer.volume.add(10, 20)
-        self.assertTrue(consumer._dormant(10))
-        self.assertTrue(consumer._dormant(20))
-        self.assertTrue(consumer._dormant(30))
         self.assertTrue(consumer._dormant(40))
         self.assertTrue(consumer._dormant(50))
         self.assertTrue(consumer._dormant(60))
