@@ -112,21 +112,15 @@ def main():
 
     args = setup_args()
 
-    """
-    Get the meta arguments.
-    """
+    # get the meta arguments
     cmd = tools.meta(args)
     cmd['method'] = str(vars(args)['method'])
 
-    """
-    Load the seed and candidate keywords.
-    """
+    # load the seed and candidate keywords
     seed = load_seed(args.seed, args.max_seed)
     cmd['seed'] = seed
 
-    """
-    If no candidates are provided, select them from among the most common candidates in the given corpora.
-    """
+    # if no candidates are provided, select them from among the most common candidates in the given corpora
     candidates = load_candidates(args.candidates, args.max_candidates) if args.candidates else generate_candidates(args.files, generate=args.generate)
     cmd['candidates'] = candidates
 
@@ -167,44 +161,31 @@ def bootstrap(files, seed, method, iterations, keep, candidates):
         3. Update the scores.
     """
     scores = { } # the list of candidates and scores given by the seed set
+
+    # select the next seeds
     for i in range(iterations):
-        """
-        Select the next seeds.
-        In the first iteration, the original seeds are used.
-        In subsequent iterations, the highest scoring candidates are used instead.
-        """
+        # in the first iteration, the original seeds are used
         if i == 0:
             next_seed = seed
         else:
-            """
-            Filter out candidates that have already been reviewed.
-            Then, Choose the top seeds to bootstrap with next.
-            """
-            scores = filter_candidates(scores, seed, bootstrapped)
-            next_seed = choose_next(scores, keep)
+            # in subsequent iterations, the highest scoring candidates are used instead
+            scores = filter_candidates(scores, seed, bootstrapped) # filter out candidates that have already been reviewed
+            next_seed = choose_next(scores, keep) # choose the next seed terms
             bootstrapped.extend(next_seed)
 
-        """
-        If there are no candidates left, stop looking.
-        """
+        # if there are no candidates left, stop looking
         if not next_seed:
             break
 
-        """
-        Bootstrap the next seed keywords and save them as bootstrapped.
-        """
+        # bootstrap the next seed keywords and save them as bootstrapped
         logger.info(f"Bootstrapping with { ', '.join(next_seed) }")
         bootstrapper = method()
         _scores = bootstrapper.bootstrap(files, seed=next_seed, candidates=candidates, cache=next_seed)
 
-        """
-        Get the scores of the new candidates.
-        """
+        # get the scores of the new candidates
         scores = update_scores(scores, _scores)
 
-    """
-    Add the top candidates to the list of bootstrapped keywords.
-    """
+    # add the top candidates to the list of bootstrapped keywords
     scores = filter_candidates(scores, seed, bootstrapped)
     next_seed = choose_next(scores, keep)
     bootstrapped.extend(next_seed)
