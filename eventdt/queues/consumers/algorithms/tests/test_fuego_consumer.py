@@ -1675,6 +1675,54 @@ class TestFUEGOConsumer(unittest.TestCase):
         consumer.volume.add(10, 1.1)
         self.assertFalse(consumer._dormant(10)) # equal to the minimum volume
 
+    def test_dormant_mean_negative(self):
+        """
+        Test that when checking the volume, if the average value of the past historic windows is negative, the minimum value is considered.
+        This function is mainly meant to test that the function does not fail with negative historic windows.
+        """
+
+        consumer = FUEGOConsumer(Queue(), min_volume=2, window_size=10)
+        consumer.volume.add(10, -20)
+        consumer.volume.add(20, -30)
+        consumer.volume.add(30, -30)
+        consumer.volume.add(40, -30)
+        consumer.volume.add(50, -30)
+        consumer.volume.add(60, -20)
+
+        self.assertTrue(consumer._dormant(60))
+
+    def test_dormant_mean_zero(self):
+        """
+        Test that when checking the volume, if the average value of the past historic windows is zero, the minimum value is considered.
+        This function is mainly meant to test that the function does not fail with zero historic windows.
+        """
+
+        consumer = FUEGOConsumer(Queue(), min_volume=2, window_size=10)
+        consumer.volume.add(10, 0)
+        consumer.volume.add(20, 0)
+        consumer.volume.add(30, 0)
+        consumer.volume.add(40, 0)
+        consumer.volume.add(50, 0)
+        consumer.volume.add(60, 0)
+
+        self.assertTrue(consumer._dormant(60))
+
+    def test_dormant_mean_small_numbers(self):
+        """
+        Test that when checking the volume, if the average value of the past historic windows is very small, the minimum value is considered.
+        This function is mainly meant to test that the function does not fail with very small historic windows.
+        """
+
+        consumer = FUEGOConsumer(Queue(), min_volume=2, window_size=10)
+        consumer.volume.add(10, 1e-300)
+        consumer.volume.add(20, 4e-300)
+        consumer.volume.add(30, 2e-300)
+        consumer.volume.add(40, 3e-300)
+        consumer.volume.add(50, 1e-300)
+        consumer.volume.add(60, 1e-300)
+
+        self.assertTrue(consumer._dormant(60))
+
     def test_dormant_mean_min_volume(self):
         """
         Test that when checking the volume, if the minimum volume is very low, the function considers the mean.
