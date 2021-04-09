@@ -180,9 +180,11 @@ def main():
     cmd = tools.meta(args)
     pcmd = tools.meta(args)
 
-    # get the meta arguments
+    # get the meta arguments and encode the necessary ones
     cmd['method'] = str(vars(args)['method'])
     pcmd['method'] = str(vars(args)['method'])
+    cmd['choose'] = str(vars(args)['choose'])
+    pcmd['choose'] = str(vars(args)['choose'])
 
     # load the seed and candidate keywords
     seed = load_seed(args.seed, args.max_seed)
