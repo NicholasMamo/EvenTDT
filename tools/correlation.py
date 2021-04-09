@@ -145,7 +145,7 @@ def load_terms(terms, max_terms=None):
                 Check if this is the output of a tool.
                 """
                 if 'cmd' in data or 'meta' in data:
-                    meta = data['cmd'] if 'cmd' in data else data['meta']
+                    meta = data['pcmd'] if 'pcmd' in data else data['meta']
                     if 'seed' in meta:
                         _terms.extend(meta['seed'])
                         _terms.extend(data['bootstrapped'])
