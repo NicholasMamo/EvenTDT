@@ -547,8 +547,8 @@ class FUEGOConsumer(Consumer):
         if historic and len(historic) >= 2:
             _stdev = (sum([ (val - mean) ** 2 for val in historic.values() ]) / len(historic)) ** 0.5
             if _stdev > 0:
-                stdev = statistics.stdev(historic.values()) if historic and len(historic) >= 2 and sum(historic.values()) > 0 else 0
-        
+                stdev = statistics.stdev(historic.values())
+
         return current <= max(self.min_volume, mean + stdev * 2)
 
     def _partition(self, timestamp):
