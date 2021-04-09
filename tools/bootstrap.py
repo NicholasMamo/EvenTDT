@@ -18,16 +18,17 @@ If a text file is given, this tool expects one word on each line.
 
 Accepted arguments:
 
-    - ``-s --seed``            *<Required>* The path to the file containing seed keywords, expected to contain one keyword on each line. Alternatively, the output from the :class:`~tools.terms` tool can be provided.
-    - ``-f --files``        *<Required>* The input corpora where to look for similar keywords, expected to be already tokenized by the `tokenize` tool.
-    - ``-m --method``        *<Required>* The method to use to look for similar keywords; supported: `CHI`, `Log`, `PMI`.
+    - ``-s --seed``          *<Required>* The path to the file containing seed keywords, expected to contain one keyword on each line. Alternatively, the output from the :class:`~tools.terms` tool can be provided.
+    - ``-f --files``         *<Required>* The input corpora where to look for similar keywords, expected to be already tokenized by the ``tokenize`` tool.
+    - ``-m --method``        *<Required>* The method to use to look for similar keywords; supported: ``CHI``, ``Log``, ``PMI``.
     - ``-o --output``        *<Required>* The path to the file where to store the bootstrapped keywords.
     - ``-c --candidates``    *<Optional>* The path to the file containing candidate keywords, expected to contain one keyword on each line. Alternatively, the output from the :class:`~tools.terms` tool can be provided. If no candidates are given, all vocabulary keywords are considered candidates.
     - ``-i --iterations``    *<Optional>* The number of iterations to spend bootstrapping; defaults to 1.
-    - ``-k --keep``            *<Optional>* The number of keywords to keep after each iteration; defaults to 5.
-    - ``--generate``        *<Optional>* The number of candidate keywords to generate if no candidates are provided; defaults to 100.
-    - ``--max-seed``        *<Optional>* The number of seed words to use from the given files; defaults to all words.
-    - ``--max-candidates``    *<Optional>* The number of candidate words to use from the given files; defaults to all words.
+    - ``-k --keep``          *<Optional>* The number of keywords to keep after each iteration; defaults to 5.
+    - ``--choose``           *<Optional>* The function to use to choose new seed terms; defaults to choosing candidates that have the highest scores; supported: ``max``, ``mean``.
+    - ``--generate``         *<Optional>* The number of candidate keywords to generate if no candidates are provided; defaults to 100.
+    - ``--max-seed``         *<Optional>* The number of seed words to use from the given files; defaults to all words.
+    - ``--max-candidates``   *<Optional>* The number of candidate words to use from the given files; defaults to all words.
 """
 
 import argparse
@@ -54,16 +55,17 @@ def setup_args():
 
     Accepted arguments:
 
-        - ``-s --seed``            *<Required>* The path to the file containing seed keywords, expected to contain one keyword on each line. Alternatively, the output from the :class:`~tools.terms` tool can be provided.
-        - ``-f --files``        *<Required>* The input corpora where to look for similar keywords, expected to be already tokenized by the `tokenize` tool.
-        - ``-m --method``        *<Required>* The method to use to look for similar keywords; supported: `CHI`, `Log`, `PMI`.
+        - ``-s --seed``          *<Required>* The path to the file containing seed keywords, expected to contain one keyword on each line. Alternatively, the output from the :class:`~tools.terms` tool can be provided.
+        - ``-f --files``         *<Required>* The input corpora where to look for similar keywords, expected to be already tokenized by the ``tokenize`` tool.
+        - ``-m --method``        *<Required>* The method to use to look for similar keywords; supported: ``CHI``, ``Log``, ``PMI``.
         - ``-o --output``        *<Required>* The path to the file where to store the bootstrapped keywords.
         - ``-c --candidates``    *<Optional>* The path to the file containing candidate keywords, expected to contain one keyword on each line. Alternatively, the output from the :class:`~tools.terms` tool can be provided. If no candidates are given, all vocabulary keywords are considered candidates.
         - ``-i --iterations``    *<Optional>* The number of iterations to spend bootstrapping; defaults to 1.
-        - ``-k --keep``            *<Optional>* The number of keywords to keep after each iteration; defaults to 5.
-        - ``--generate``        *<Optional>* The number of candidate keywords to generate if no candidates are provided; defaults to 100.
-        - ``--max-seed``        *<Optional>* The number of seed words to use from the given files; defaults to all words.
-        - ``--max-candidates``    *<Optional>* The number of candidate words to use from the given files; defaults to all words.
+        - ``-k --keep``          *<Optional>* The number of keywords to keep after each iteration; defaults to 5.
+        - ``--choose``           *<Optional>* The function to use to choose new seed terms; defaults to choosing candidates that have the highest scores; supported: ``max``, ``mean``.
+        - ``--generate``         *<Optional>* The number of candidate keywords to generate if no candidates are provided; defaults to 100.
+        - ``--max-seed``         *<Optional>* The number of seed words to use from the given files; defaults to all words.
+        - ``--max-candidates``   *<Optional>* The number of candidate words to use from the given files; defaults to all words.
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
@@ -92,6 +94,9 @@ def setup_args():
     parser.add_argument('-k', '--keep',
                         type=int, required=False, default=5,
                         help='<Optional> The number of keywords to keep after each iteration; defaults to 5.')
+    parser.add_argument('--choose',
+                        type=choose, required=False, default=max,
+                        help='<Optional> THe function to use to choose new seed terms; defaults to choosing candidates that have the highest scores; supported: `max`, `mean`.')
     parser.add_argument('--generate',
                         type=int, required=False, default=100,
                         help='<Optional> The number of candidate keywords to generate if no candidates are provided; defaults to 100.')
@@ -379,6 +384,33 @@ def method(method):
         'pmi': PMIBootstrapper,
         'chi': ChiBootstrapper,
         'log': LogLikelihoodRatioBootstrapper,
+    }
+
+    if method.lower() in methods:
+        return methods[method.lower()]
+
+    raise argparse.ArgumentTypeError(f"Invalid method value: {method}")
+
+def choose(method):
+    """
+    Convert the given string into a scoring function.
+    The accepted methods are:
+
+        #. :func:`max`
+        #. :func:`statistics.mean`
+
+    :param method: The method string.
+    :type method: str
+
+    :return: The function that corresponds to the given method.
+    :rtype: function
+
+    :raises argparse.ArgumentTypeError: When the given method string is invalid.
+    """
+
+    methods = {
+        'max': max,
+        'mean': statistics.mean,
     }
 
     if method.lower() in methods:
