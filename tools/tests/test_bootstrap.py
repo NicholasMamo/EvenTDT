@@ -4,6 +4,7 @@ Test the functionality of the bootstrap tool.
 
 import json
 import os
+import statistics
 import sys
 import unittest
 
@@ -510,6 +511,18 @@ class TestBootstrap(unittest.TestCase):
         scores = { 'second': { 'half': 10 }, 'first': { 'half': 2 }, 'third': { 'half': 4 } }
         next_seed = bootstrap.choose_next(scores, keep)
         self.assertEqual([ 'second', 'third' ], next_seed)
+
+    def test_choose_next_highest_mean(self):
+        """
+        Test that when choosing the next seed terms with the highest mean, the maximum score is not used.
+        """
+
+        scores = { 'yellow': { 'card': 10, 'tackl': 8 }, 'red': { 'card': 11, 'tackl': 5 } }
+        next_seed = bootstrap.choose_next(scores, 1, choose=max) # using the maximum score
+        self.assertEqual([ 'red' ], next_seed)
+
+        next_seed = bootstrap.choose_next(scores, 1, choose=statistics.mean) # using the mean score
+        self.assertEqual([ 'yellow' ], next_seed)
 
     def test_update_scores_lower(self):
         """

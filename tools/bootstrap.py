@@ -301,7 +301,7 @@ def filter_candidates(candidates, seed, bootstrapped):
                                     if candidate not in seed + bootstrapped }
     return candidates
 
-def choose_next(candidates, keep):
+def choose_next(candidates, keep, choose=max):
     """
     Choose the next set of candidates that will be added to the seed set.
 
@@ -311,13 +311,17 @@ def choose_next(candidates, keep):
     :type candidates: dict
     :param keep: The number of candidates to choose.
     :type keep: int
+    :param choose: The function to use to map the candidates' scores to a single value.
+                   By default, the candidate score that the function considers is the highest one it has.
+                   In other words, the function defaults to choosing the candidates with the highest scores.
+    :type choose: func
 
     :return: A list of candidates to add to the seed set.
     :rtype: list of str
     """
 
     _scores = copy.deepcopy(candidates)
-    _scores = { candidate: max(scores.values()) for candidate, scores in _scores.items() } # map the scores to a single value
+    _scores = { candidate: choose(scores.values()) for candidate, scores in _scores.items() } # map the scores to a single value
     _scores = sorted(_scores, key=_scores.get, reverse=True) # reverse the candidates in descending order of their scores
     return _scores[:keep]
 
