@@ -182,6 +182,7 @@ def main():
 
     # get the meta arguments
     cmd['method'] = str(vars(args)['method'])
+    pcmd['method'] = str(vars(args)['method'])
 
     # load the seed and candidate keywords
     seed = load_seed(args.seed, args.max_seed)
