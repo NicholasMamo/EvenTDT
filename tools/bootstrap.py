@@ -131,12 +131,12 @@ def main():
     cmd['candidates'] = candidates
 
     bootstrapped = bootstrap(args.files, seed, args.method,
-                             args.iterations, args.keep,
+                             args.iterations, args.keep, args.choose,
                              candidates=candidates)
 
     tools.save(args.output, { 'meta': cmd, 'bootstrapped': bootstrapped })
 
-def bootstrap(files, seed, method, iterations, keep, candidates):
+def bootstrap(files, seed, method, iterations, keep, choose, candidates):
     """
     Bootstrap the given seed set from the given files.
 
@@ -150,6 +150,8 @@ def bootstrap(files, seed, method, iterations, keep, candidates):
     :type iterations: int
     :param keep: The number of keywords to keep after each iteration.
     :type keep: int
+    :param choose: The function to use to choose new seed terms.
+    :type choose: func
     :param candidates: The list of candidate keywords. If ``None`` is given, all vocabulary keywords are considered candidates.
     :type candidates: list of str or None
 
@@ -176,7 +178,7 @@ def bootstrap(files, seed, method, iterations, keep, candidates):
         else:
             # in subsequent iterations, the highest scoring candidates are used instead
             scores = filter_candidates(scores, seed, bootstrapped) # filter out candidates that have already been reviewed
-            next_seed = choose_next(scores, keep) # choose the next seed terms
+            next_seed = choose_next(scores, keep, choose) # choose the next seed terms
             bootstrapped.extend(next_seed)
 
         # if there are no candidates left, stop looking
@@ -193,7 +195,7 @@ def bootstrap(files, seed, method, iterations, keep, candidates):
 
     # add the top candidates to the list of bootstrapped keywords
     scores = filter_candidates(scores, seed, bootstrapped)
-    next_seed = choose_next(scores, keep)
+    next_seed = choose_next(scores, keep, choose) # choose the final seed terms
     bootstrapped.extend(next_seed)
     logger.info(f"Bootstrapped { ', '.join(bootstrapped) }")
 
