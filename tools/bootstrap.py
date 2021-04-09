@@ -35,6 +35,7 @@ import argparse
 import copy
 import json
 import os
+import statistics
 import sys
 
 file_path = os.path.dirname(os.path.abspath(__file__))
