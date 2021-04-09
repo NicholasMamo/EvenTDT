@@ -166,7 +166,7 @@ def bootstrap(files, seed, method, iterations, keep, candidates):
         2. Use the new candidates to bootstrap new keywords,
         3. Update the scores.
     """
-    scores = { } # the list of candidates and their best scores yet
+    scores = { } # the list of candidates and scores given by the seed set
     for i in range(iterations):
         """
         Select the next seeds.
@@ -336,6 +336,7 @@ def choose_next(candidates, keep):
     """
 
     _scores = copy.deepcopy(candidates)
+    _scores = { candidate: max(scores.values()) for candidate, scores in _scores.items() } # map the scores to a single value
     _scores = sorted(_scores, key=_scores.get, reverse=True) # reverse the candidates in descending order of their scores
     return _scores[:keep]
 
@@ -344,11 +345,12 @@ def update_scores(candidates, scores):
     Update the scores of the candidates.
     The maximum score is always retained.
 
-    :param candidates: A dictionary with candidates as keys and their scores as values.
+    :param candidates: A dictionary with candidates as keys and their current scores as values.
+                       The keys should be the candidates themselves.
+                       The values are again dictionaries, with seed terms as keys and their scores for the candidate as values.
     :type candidates: dict
     :param scores: The new scores as a dictionary.
                    The keys are tuples: the keyword that extracted the candidate, and the candidate itself.
-                   Only the candidate is considered.
                    The values are the corresponding values.
     :type scores: dict
 
@@ -356,20 +358,20 @@ def update_scores(candidates, scores):
     :rtype: dict
     """
 
-    candidates = dict(candidates)
+    _candidates = copy.deepcopy(candidates)
     for (seed, candidate), score in scores.items():
-        """
-        If the seed and the candidate are the same, skip it.
-        """
+        # if the seed and the candidate are the same, skip it.
         if seed == candidate:
             continue
 
-        if candidate not in candidates:
-            candidates[candidate] = score
+        if candidate not in _candidates:
+            # create a new dictionary to hold the scores for the candidate if it doesn't have one already
+            _candidates[candidate] = { seed: score }
         else:
-            candidates[candidate] = max(candidates.get(candidate), score)
+            # add the seed term's score for the candidate to the candidate's scores
+            _candidates[candidate][seed] = score
 
-    return candidates
+    return _candidates
 
 def method(method):
     """

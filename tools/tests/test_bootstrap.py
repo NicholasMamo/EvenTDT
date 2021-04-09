@@ -469,7 +469,7 @@ class TestBootstrap(unittest.TestCase):
         Test that when choosing the next seed terms, a list of terms is returned.
         """
 
-        scores = { 'second': 10, 'first': 2 }
+        scores = { 'second': { 'half': 10 }, 'first': { 'half': 2 } }
         next_seed = bootstrap.choose_next(scores, 10)
         self.assertEqual(list, type(next_seed))
         self.assertTrue(all( type(seed) is str for seed in next_seed ))
@@ -479,7 +479,7 @@ class TestBootstrap(unittest.TestCase):
         Test that when choosing the next seed terms, the original scores dictionary does not change.
         """
 
-        scores = { 'second': 10, 'first': 2 }
+        scores = { 'second': { 'half': 10 }, 'first': { 'half': 2 } }
         next_seed = bootstrap.choose_next(scores, 10)
         self.assertEqual(set([ 'second', 'first' ]), set(scores.keys()))
 
@@ -488,7 +488,7 @@ class TestBootstrap(unittest.TestCase):
         Test that when choosing the next seed terms and there are few terms relative to how many should be kept, all are returned.
         """
 
-        scores = { 'second': 10, 'first': 2 }
+        scores = { 'second': { 'half': 10 }, 'first': { 'half': 2 } }
         next_seed = bootstrap.choose_next(scores, 10)
         self.assertEqual(set(scores.keys()), set(next_seed))
 
@@ -497,7 +497,7 @@ class TestBootstrap(unittest.TestCase):
         Test that when choosing the next seed terms, the ``keep`` parameter is inclusive.
         """
 
-        scores = { 'second': 10, 'first': 2, 'third': 4 }
+        scores = { 'second': { 'half': 10 }, 'first': { 'half': 2 }, 'third': { 'half': 4 } }
         next_seed = bootstrap.choose_next(scores, 3)
         self.assertEqual(set(scores.keys()), set(next_seed))
 
@@ -507,34 +507,34 @@ class TestBootstrap(unittest.TestCase):
         """
 
         keep = 2
-        scores = { 'second': 10, 'first': 2, 'third': 4 }
+        scores = { 'second': { 'half': 10 }, 'first': { 'half': 2 }, 'third': { 'half': 4 } }
         next_seed = bootstrap.choose_next(scores, keep)
-        self.assertEqual(sorted(scores.keys(), key=scores.get, reverse=True)[:keep], next_seed)
+        self.assertEqual([ 'second', 'third' ], next_seed)
 
     def test_update_scores_lower(self):
         """
-        Test that when updating the scores, lower scores are not considered.
+        Test that when updating the scores, lower scores are kept, but new keys are added.
         """
 
-        candidates = { 'ff': 2 }
+        candidates = { 'ff': { 'fuck': 2 } }
         scores = { ('goal', 'ff'): 1 }
-        self.assertEqual(candidates, bootstrap.update_scores(candidates, scores))
+        self.assertEqual({ 'ff': { 'fuck': 2, 'goal': 1 } }, bootstrap.update_scores(candidates, scores))
 
     def test_update_scores_higher(self):
         """
-        Test that when updating the scores, higher scores replace lower scores.
+        Test that when updating the scores, higher scores are kept, but as new keys.
         """
 
-        candidates = { 'ff': 2 }
+        candidates = { 'ff': { 'fuck': 2 } }
         scores = { ('goal', 'ff'): 3 }
-        self.assertEqual({ 'ff': 3 }, bootstrap.update_scores(candidates, scores))
+        self.assertEqual({ 'ff': { 'fuck': 2, 'goal': 3 } }, bootstrap.update_scores(candidates, scores))
 
     def test_update_scores_same(self):
         """
         Test that when updating the scores, scores where the seed and candidate words are the same are ignored.
         """
 
-        candidates = { 'ff': 2 }
+        candidates = { 'ff': { 'ff': 2 } }
         scores = { ('ff', 'ff'): 3 }
         self.assertEqual(candidates, bootstrap.update_scores(candidates, scores))
 
@@ -543,18 +543,31 @@ class TestBootstrap(unittest.TestCase):
         Test that when updating the scores, new terms are added to the candidate list.
         """
 
-        candidates = { 'ff': 2 }
+        candidates = { 'ff': { 'fuck': 2 } }
         scores = { ('goal', 'wtf'): 3 }
-        self.assertEqual({ 'ff': 2, 'wtf': 3 }, bootstrap.update_scores(candidates, scores))
+        self.assertEqual({ 'ff': { 'fuck': 2 }, 'wtf': { 'goal': 3 } }, bootstrap.update_scores(candidates, scores))
 
     def test_update_scores_missing_score(self):
         """
-        Test that when updating the scores, existing terms without a new score are not touched
+        Test that when updating the scores, existing terms without a new score are not touched.
         """
 
-        candidates = { 'ff': 2 }
+        candidates = { 'ff': { 'fuck': 2 } }
         scores = { ('goal', 'wtf'): 3 }
-        self.assertEqual({ 'ff': 2, 'wtf': 3 }, bootstrap.update_scores(candidates, scores))
+        self.assertEqual({ 'ff': { 'fuck': 2 }, 'wtf': { 'goal': 3 } }, bootstrap.update_scores(candidates, scores))
+
+    def test_update_scores_seed_inner(self):
+        """
+        Test that when updating the scores, the seed term, which gives a score for the candidates, is the inner key of the candidate's score.
+        """
+
+        candidates = {  }
+        seed, candidate, score = 'goal', 'wtf', 3
+        scores = { (seed, candidate): score }
+        updated = bootstrap.update_scores(candidates, scores)
+        self.assertEqual({ candidate }, set(updated.keys()))
+        self.assertEqual({ seed }, set(updated[candidate].keys()))
+        self.assertEqual(score, updated[candidate][seed])
 
     def test_update_scores_empty_candidates(self):
         """
@@ -563,7 +576,7 @@ class TestBootstrap(unittest.TestCase):
 
         candidates = { }
         scores = { ('goal', 'wtf'): 3 }
-        self.assertEqual({ 'wtf': 3 }, bootstrap.update_scores(candidates, scores))
+        self.assertEqual({ 'wtf': { 'goal': 3 } }, bootstrap.update_scores(candidates, scores))
 
     def test_update_scores_empty_scores(self):
         """
@@ -579,8 +592,19 @@ class TestBootstrap(unittest.TestCase):
         Test that when updating the scores, the original candidates are not changed.
         """
 
-        candidates = { 'ff': 2 }
+        candidates = { 'ff': { 'fuck': 2} }
         scores = { ('goal', 'ff'): 3 }
         updated = bootstrap.update_scores(candidates, scores)
-        self.assertEqual({ 'ff': 2 }, candidates)
-        self.assertEqual({ 'ff': 3 }, updated)
+        self.assertEqual({ 'ff': { 'fuck': 2 } }, candidates)
+        self.assertEqual({ 'ff': { 'fuck': 2, 'goal': 3 } }, updated)
+
+    def test_update_scores_same_score_keys(self):
+        """
+        Test that when updating the scores, all candidates should have the same keys.
+        """
+
+        candidates = { 'yellow': { 'card': 10 }, 'red': { 'card': 3 } }
+        scores = { ('tackl', 'yellow'): 5, ('tackl', 'red'): 3 }
+        updated = bootstrap.update_scores(candidates, scores)
+        self.assertEqual({ 'card', 'tackl' }, set(updated['yellow'].keys()))
+        self.assertEqual(set(updated['red'].keys()), set(updated['yellow'].keys()))
