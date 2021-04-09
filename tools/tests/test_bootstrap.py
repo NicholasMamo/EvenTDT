@@ -456,6 +456,61 @@ class TestBootstrap(unittest.TestCase):
         for i, word in enumerate(seed[10:]):
             self.assertEqual(i + 10, filtered[word])
 
+    def test_choose_next_empty(self):
+        """
+        Test that when choosing the next seed terms and there are no scores, an empty list is returned.
+        """
+
+        scores = { }
+        self.assertEqual([ ], bootstrap.choose_next(scores, 10))
+
+    def test_choose_next_list(self):
+        """
+        Test that when choosing the next seed terms, a list of terms is returned.
+        """
+
+        scores = { 'second': 10, 'first': 2 }
+        next_seed = bootstrap.choose_next(scores, 10)
+        self.assertEqual(list, type(next_seed))
+        self.assertTrue(all( type(seed) is str for seed in next_seed ))
+
+    def test_choose_next_copy(self):
+        """
+        Test that when choosing the next seed terms, the original scores dictionary does not change.
+        """
+
+        scores = { 'second': 10, 'first': 2 }
+        next_seed = bootstrap.choose_next(scores, 10)
+        self.assertEqual(set([ 'second', 'first' ]), set(scores.keys()))
+
+    def test_choose_next_all(self):
+        """
+        Test that when choosing the next seed terms and there are few terms relative to how many should be kept, all are returned.
+        """
+
+        scores = { 'second': 10, 'first': 2 }
+        next_seed = bootstrap.choose_next(scores, 10)
+        self.assertEqual(set(scores.keys()), set(next_seed))
+
+    def test_choose_next_keep_inclusive(self):
+        """
+        Test that when choosing the next seed terms, the ``keep`` parameter is inclusive.
+        """
+
+        scores = { 'second': 10, 'first': 2, 'third': 4 }
+        next_seed = bootstrap.choose_next(scores, 3)
+        self.assertEqual(set(scores.keys()), set(next_seed))
+
+    def test_choose_next_highest(self):
+        """
+        Test that when choosing the next seed terms, the ones with the highest scores are retained.
+        """
+
+        keep = 2
+        scores = { 'second': 10, 'first': 2, 'third': 4 }
+        next_seed = bootstrap.choose_next(scores, keep)
+        self.assertEqual(sorted(scores.keys(), key=scores.get, reverse=True)[:keep], next_seed)
+
     def test_update_scores_lower(self):
         """
         Test that when updating the scores, lower scores are not considered.

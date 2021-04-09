@@ -31,6 +31,7 @@ Accepted arguments:
 """
 
 import argparse
+import copy
 import json
 import os
 import sys
@@ -165,7 +166,7 @@ def bootstrap(files, seed, method, iterations, keep, candidates):
         2. Use the new candidates to bootstrap new keywords,
         3. Update the scores.
     """
-    candidate_scores = { } # the list of candidates and their best scores yet
+    scores = { } # the list of candidates and their best scores yet
     for i in range(iterations):
         """
         Select the next seeds.
@@ -179,12 +180,12 @@ def bootstrap(files, seed, method, iterations, keep, candidates):
             Filter out candidates that have already been reviewed.
             Then, Choose the top seeds to bootstrap with next.
             """
-            candidate_scores = filter_candidates(candidate_scores, seed, bootstrapped)
-            next_seed = sorted(candidate_scores, key=candidate_scores.get, reverse=True)[:keep]
+            scores = filter_candidates(scores, seed, bootstrapped)
+            next_seed = choose_next(scores, keep)
             bootstrapped.extend(next_seed)
 
         """
-        If there are no promising candidates left, stop looking.
+        If there are no candidates left, stop looking.
         """
         if not next_seed:
             break
@@ -194,19 +195,19 @@ def bootstrap(files, seed, method, iterations, keep, candidates):
         """
         logger.info(f"Bootstrapping with { ', '.join(next_seed) }")
         bootstrapper = method()
-        scores = bootstrapper.bootstrap(files, seed=next_seed, candidates=candidates, cache=next_seed)
+        _scores = bootstrapper.bootstrap(files, seed=next_seed, candidates=candidates, cache=next_seed)
 
         """
         Get the scores of the new candidates.
         """
-        candidate_scores = update_scores(candidate_scores, scores)
+        scores = update_scores(scores, _scores)
 
     """
     Add the top candidates to the list of bootstrapped keywords.
     """
-    candidate_scores = filter_candidates(candidate_scores, seed, bootstrapped)
-    final = sorted(candidate_scores, key=candidate_scores.get, reverse=True)[:keep]
-    bootstrapped.extend(final)
+    scores = filter_candidates(scores, seed, bootstrapped)
+    next_seed = choose_next(scores, keep)
+    bootstrapped.extend(next_seed)
     logger.info(f"Bootstrapped { ', '.join(bootstrapped) }")
 
     return bootstrapped
@@ -314,10 +315,29 @@ def filter_candidates(candidates, seed, bootstrapped):
     :rtype: dict
     """
 
-    candidates = dict(candidates) # create a copy of the dictionary
+    candidates = copy.deepcopy(candidates) # create a copy of the dictionary
     candidates = { candidate: score for candidate, score in candidates.items()
                                     if candidate not in seed + bootstrapped }
     return candidates
+
+def choose_next(candidates, keep):
+    """
+    Choose the next set of candidates that will be added to the seed set.
+
+    :param candidates: A list of candidates from where to pick the next set of seed set elements.
+                       They should be provided as a dictionary with the keys being the candidates.
+                       The corresponding values are their scores.
+    :type candidates: dict
+    :param keep: The number of candidates to choose.
+    :type keep: int
+
+    :return: A list of candidates to add to the seed set.
+    :rtype: list of str
+    """
+
+    _scores = copy.deepcopy(candidates)
+    _scores = sorted(_scores, key=_scores.get, reverse=True) # reverse the candidates in descending order of their scores
+    return _scores[:keep]
 
 def update_scores(candidates, scores):
     """
