@@ -8,15 +8,75 @@ To run the script, use:
 .. code-block:: bash
 
     ./tools/bootstrap.py \\
-    -s data/seed.txt \\
-    -c data/candidates.txt \\
-    -o data/bootstrapped.json \\
-    -f data/tokenized_corpus.json
+    --seed data/seed.txt \\
+    --candidates data/candidates.txt \\
+    --output data/bootstrapped.json \\
+    --files data/tokenized_corpus.json
 
 The seed and candidates files can be either text files or the output from the :class:`~tools.terms` tool.
 If a text file is given, this tool expects one word on each line.
 
-Accepted arguments:
+The output is a JSON file with the following structure:
+
+The output is a JSON file with the following structure:
+
+.. code-block:: json
+
+    {
+        "cmd": {
+            "files": [
+                "data/tokenized_corpus.json"
+            ],
+            "method": "<class 'ate.bootstrapping.probability'>",
+            "seed": "data/seed.txt",
+            "candidates": "data/candidates.txt",
+            "output": "data/bootstrapped.json",
+            "iterations": 17,
+            "keep": null,
+            "choose": "max",
+            "generate": 100,
+            "max_seed": 30,
+            "max_candidates": 200,
+            "_date": "2021-04-09T12:12:22.023277",
+            "_timestamp": 1609067542.0232878,
+            "_cmd": "./tools/terms.py --files data/tokenized_corpus.json --output data/bootstrapped.json --method CHI"
+        },
+        "pcmd": {
+            "files": [
+                "data/tokenized_corpus.json"
+            ],
+            "method": "<class 'ate.bootstrapping.probability'>",
+            "seed": [
+                "yellow",
+                "card",
+                "red",
+                "goal",
+                "gol"
+            ],
+            "candidates": [
+                "foul",
+                "var",
+                "tackl"
+            ],
+            "output": "data/bootstrapped.json",
+            "iterations": 17,
+            "keep": null,
+            "choose": "max",
+            "generate": 100,
+            "max_seed": 30,
+            "max_candidates": 200,
+            "_date": "2020-12-27T12:12:22.023302",
+            "_timestamp": 1609067542.023305,
+            "_cmd": "./tools/terms.py --files data/tokenized_corpus.json --output data/bootstrapped.json --method CHI"
+        },
+        "bootstrapped": [
+            "foul",
+            "tackl",
+            "var"
+        ]
+    }
+
+The full list of accepted arguments:
 
     - ``-s --seed``          *<Required>* The path to the file containing seed keywords, expected to contain one keyword on each line. Alternatively, the output from the :class:`~tools.terms` tool can be provided.
     - ``-f --files``         *<Required>* The input corpora where to look for similar keywords, expected to be already tokenized by the ``tokenize`` tool.
@@ -117,24 +177,25 @@ def main():
     """
 
     args = setup_args()
+    cmd = tools.meta(args)
+    pcmd = tools.meta(args)
 
     # get the meta arguments
-    cmd = tools.meta(args)
     cmd['method'] = str(vars(args)['method'])
 
     # load the seed and candidate keywords
     seed = load_seed(args.seed, args.max_seed)
-    cmd['seed'] = seed
+    pcmd['seed'] = seed
 
     # if no candidates are provided, select them from among the most common candidates in the given corpora
     candidates = load_candidates(args.candidates, args.max_candidates) if args.candidates else generate_candidates(args.files, generate=args.generate)
-    cmd['candidates'] = candidates
+    pcmd['candidates'] = candidates
 
     bootstrapped = bootstrap(args.files, seed, args.method,
                              args.iterations, args.keep, args.choose,
                              candidates=candidates)
 
-    tools.save(args.output, { 'meta': cmd, 'bootstrapped': bootstrapped })
+    tools.save(args.output, { 'cmd': cmd, 'pcmd': pcmd, 'bootstrapped': bootstrapped })
 
 def bootstrap(files, seed, method, iterations, keep, choose, candidates):
     """
