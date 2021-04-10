@@ -72,6 +72,20 @@ def is_retweet(tweet):
 
     return 'retweeted_status' in tweet
 
+def is_reply(tweet):
+    """
+    Check whether the given tweet is a reply to another tweet.
+    A tweet is a reply if it has a non-null ``in_reply_to_status_id_str`` (or any other attribute that starts with ``in_reply_to_``).
+
+    :param tweet: The tweet to check.
+    :type tweet: dict
+
+    :return: A boolean indicating whether the tweet is a retweet.
+    :rtype: bool
+    """
+
+    return tweet['in_reply_to_status_id_str'] is not None
+
 def is_verified(tweet):
     """
     Check whether the given tweet's author is verified.

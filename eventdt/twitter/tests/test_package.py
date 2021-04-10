@@ -194,7 +194,7 @@ class TestPackage(unittest.TestCase):
 
     def test_is_retweet(self):
         """
-        Test that when checking for retweets, the function returns true only if the `retweeted_status` key is set.
+        Test that when checking for retweets, the function returns ``True`` only if the ``retweeted_status`` key is set.
         """
 
         found = False
@@ -206,6 +206,24 @@ class TestPackage(unittest.TestCase):
                     self.assertTrue(twitter.is_retweet(tweet))
                 else:
                     self.assertFalse(twitter.is_retweet(tweet))
+
+        if not found:
+            logger.warning('Trivial test')
+
+    def test_is_reply_all_not_replies(self):
+        """
+        Test that when checking for replies, the function returns ``True`` only if the ``in_reply_to_status_id_str`` key is not None.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if tweet['in_reply_to_status_id_str'] is not None:
+                    found = True
+                    self.assertTrue(twitter.is_reply(tweet))
+                else:
+                    self.assertFalse(twitter.is_reply(tweet))
 
         if not found:
             logger.warning('Trivial test')
