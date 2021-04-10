@@ -502,6 +502,46 @@ class TestFUEGOConsumer(unittest.TestCase):
         if trivial:
             logger.warning("Trivial test")
 
+    def test_filter_replies(self):
+        """
+        Test that if the tweet is a reply, it is filtered out.
+        """
+
+        trivial = True
+
+        consumer = FUEGOConsumer(Queue())
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            for tweet in tweets:
+                if tweet['in_reply_to_status_id_str'] is not None:
+                    self.assertFalse(consumer._validate_tweet(tweet))
+                    trivial = False
+
+        if trivial:
+            logger.warning("Trivial test")
+
+    def test_filter_reply_retweet(self):
+        """
+        Test that if the tweet is a retweet of a reply, it is filtered out.
+        """
+
+        trivial = True
+
+        consumer = FUEGOConsumer(Queue())
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            for tweet in tweets:
+                if 'retweeted_status' in tweet and tweet['retweeted_status']['in_reply_to_status_id_str'] is not None:
+                    self.assertFalse(consumer._validate_tweet(tweet))
+                    trivial = False
+
+        if trivial:
+            logger.warning("Trivial test")
+
     def test_to_documents_tweet(self):
         """
         Test that when creating a document from a tweet, the tweet is saved as an attribute.

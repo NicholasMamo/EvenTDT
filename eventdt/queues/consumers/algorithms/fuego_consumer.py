@@ -340,6 +340,7 @@ class FUEGOConsumer(Consumer):
 
         ELD also contained a rule that removed tweets with more than one URL.
         FUEGO's filtering is harsher and excludes all tweets with URLs.
+        It also filters out all replies.
 
         :param tweet: The tweet to validate.
         :type tweet: dict
@@ -350,6 +351,9 @@ class FUEGOConsumer(Consumer):
 
         while 'retweeted_status' in tweet:
             tweet = tweet['retweeted_status'] if 'retweeted_status' in tweet else tweet
+
+        if twitter.is_reply(tweet):
+            return False
 
         if not tweet['lang'] == 'en':
             return False
