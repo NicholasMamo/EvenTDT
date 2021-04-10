@@ -228,6 +228,22 @@ class TestPackage(unittest.TestCase):
         if not found:
             logger.warning('Trivial test')
 
+    def test_is_reply_allows_mentions(self):
+        """
+        Test that when checking for replies, just because the tweet includes a mention does not make it a reply.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if tweet['entities']['user_mentions'] and tweet['in_reply_to_status_id_str'] is None:
+                    found = True
+                    self.assertFalse(twitter.is_reply(tweet))
+
+        if not found:
+            logger.warning('Trivial test')
+
     def test_is_verified(self):
         """
         Test that when checking whether the tweet is from a verified author, the function returns ``True`` only if the author is verified.
