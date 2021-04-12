@@ -2214,6 +2214,134 @@ class TestFUEGOConsumer(unittest.TestCase):
         self.assertEqual([ 'tackl' ], consumer._new_topics(topics, terms))
         self.assertTrue(all( term not in topics for term in consumer._new_topics(topics, terms) ))
 
+    def test_update_topics_by_reference(self):
+        """
+        Test that topics are updated by reference.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        topics = {
+            'goal': (Vector({ 'goal': 0.7 }), Cluster()),
+            'foul': (Vector({ 'foul': 0.6 }), Cluster()),
+        }
+        bursty = { 'goal': 0.8, 'foul': 0.5 }
+        updated = consumer._update_topics(topics, bursty)
+        self.assertEqual(updated, topics)
+
+    def test_update_topics_smaller_burst(self):
+        """
+        Test that when updating topics, the vector's burst does not change if the burst is smaller.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        topics = {
+            'goal': (Vector({ 'goal': 0.7 }), Cluster()),
+            'foul': (Vector({ 'foul': 0.6 }), Cluster()),
+        }
+        bursty = { 'goal': 0.5 }
+        updated = consumer._update_topics(topics, bursty)
+        self.assertTrue(all( topics[term][0].to_array() == updated[term][0].to_array() for term in updated ))
+
+    def test_update_topics_larger_burst(self):
+        """
+        Test that when updating topics, the vector's burst only changes if the burst is larger.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        topics = {
+            'goal': (Vector({ 'goal': 0.7 }), Cluster()),
+            'foul': (Vector({ 'foul': 0.6 }), Cluster()),
+        }
+        bursty = { 'goal': 0.8, 'foul': 0.5 }
+        updated = consumer._update_topics(topics, bursty)
+        self.assertEqual(topics['goal'][0].dimensions['goal'], bursty['goal'])
+        self.assertEqual(0.6, topics['foul'][0].dimensions['foul'])
+
+    def test_update_topics_missing_terms(self):
+        """
+        Test that if there are currently-bursting topics which are no longer bursty, the function ignores them.
+        Note that this scenario should not happen normally.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        topics = {
+            'goal': (Vector({ 'goal': 0.7 }), Cluster()),
+            'foul': (Vector({ 'foul': 0.6 }), Cluster()),
+        }
+        tracking = list(topics)
+        bursty = { 'goal': 0.8 }
+        updated = consumer._update_topics(topics, bursty)
+        self.assertEqual(set(tracking), set(updated))
+
+    def test_update_topics_corresponding_burst(self):
+        """
+        Test that when updating topics, the vector's burst changes depending on the associated term's burst.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        topics = {
+            'goal': (Vector({ 'goal': 0.7 }), Cluster()),
+            'foul': (Vector({ 'foul': 0.6 }), Cluster()),
+        }
+        bursty = { 'goal': 0.8, 'foul': 0.9 }
+        updated = consumer._update_topics(topics, bursty)
+        self.assertEqual(topics['goal'][0].dimensions['goal'], bursty['goal'])
+        self.assertEqual(topics['foul'][0].dimensions['foul'], bursty['foul'])
+
+    def test_update_topics_new_terms(self):
+        """
+        Test that when introducing new terms as topics, the function adds a vector and an empty cluster.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        topics = { }
+        bursty = { 'goal': 0.8 }
+        updated = consumer._update_topics(topics, bursty)
+        self.assertTrue(all( term in updated for term in bursty ))
+        self.assertTrue(all( Vector == type(updated[term][0]) for term in bursty ))
+        self.assertTrue(all( updated[term][0].dimensions[term] == bursty[term] for term in bursty ))
+        self.assertTrue(all( Cluster == type(updated[term][1]) for term in bursty ))
+
+    def test_update_topics_empty_topics(self):
+        """
+        Test that when there are no topics, all bursty terms are new topics.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        topics = { }
+        bursty = { 'goal': 0.8, 'foul': 0.5 }
+        updated = consumer._update_topics(topics, bursty)
+        self.assertEqual(set(bursty), set(updated))
+
+    def test_update_topics_empty_burst(self):
+        """
+        Test that when updating topics, if there are no bursty terms, the function returns the previous topics.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        topics = {
+            'goal': (Vector({ 'goal': 0.7 }), Cluster()),
+            'foul': (Vector({ 'foul': 0.6 }), Cluster()),
+        }
+        tracking = set(topics)
+        updated = consumer._update_topics(topics, { })
+        self.assertEqual(tracking, set(updated))
+
+    def test_update_topics_does_not_change_clusters(self):
+        """
+        Test that when updating topics, existing clusters do not change.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        topics = {
+            'goal': (Vector({ 'goal': 0.7 }), Cluster(vectors=[ Document('ABC') ])),
+            'foul': (Vector({ 'foul': 0.6 }), Cluster(vectors=[ Document('DEF') ])),
+        }
+        clusters = { term: topics[term][1].to_array() for term in topics }
+        bursty = { 'goal': 0.8, 'foul': 0.5 }
+        updated = consumer._update_topics(topics, bursty)
+        self.assertTrue(all( updated[term][1].to_array() == clusters[term] for term in topics ))
+
     def test_collect_empty(self):
         """
         Test that when collecting from an empty list of documents, another empty list is returned.

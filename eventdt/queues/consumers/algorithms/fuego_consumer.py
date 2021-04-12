@@ -657,6 +657,35 @@ class FUEGOConsumer(Consumer):
 
         return [ term for term in bursty if term not in topics ]
 
+    def _update_topics(self, topics, bursty):
+        """
+        Update the bursting topics.
+
+        :param topics: The bursting topics as a dictionary.
+                       The keys are the bursting terms.
+                       The values are tuples, pairs with a burst value and a cluster.
+        :type topics: dict
+        :param bursty: A list of terms that are currently breaking.
+                       The keys are the terms and the values are their burst values.
+        :type bursty: dict
+
+        :param topics: The bursting topics as a dictionary, including any newly-bursting topics.
+                       The keys are the bursting terms.
+                       The values are tuples, pairs with a burst value and a cluster.
+        :type topics: dict
+        """
+
+        for term, burst in bursty.items():
+            if term in topics:
+                # if the term was already bursting, update its burst
+                vector, cluster = topics[term]
+                vector.dimensions[term] = max(vector.dimensions[term], burst) # only update the burst if the new burst is higher than it was before
+            else:
+                # otherwise, add a new topic with a vector that has one dimension (the term) and an empty cluster
+                topics[term] = ( Vector({ term: burst }), Cluster())
+
+        return topics
+
     def _collect(self, term, documents):
         """
         Collect all documents that contain the given term.
