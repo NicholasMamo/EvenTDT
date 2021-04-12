@@ -630,11 +630,12 @@ class FUEGOConsumer(Consumer):
         :param timestamp: The timestamp at which to detect bursty terms.
         :type timestamp: float
 
-        :return: A list of keywords that are bursty at the given timestamp.
-        :rtype: list of str
+        :return: The bursty keywords as a dictionary.
+                 The keys are the terms and the values are their burst.
+        :rtype: dict
         """
 
-        return list(self.tdt.detect(timestamp, min_burst=self.burst_start).keys())
+        return self.tdt.detect(timestamp, min_burst=self.burst_start)
 
     def _collect(self, term, documents):
         """

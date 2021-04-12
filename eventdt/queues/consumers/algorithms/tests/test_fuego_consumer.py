@@ -2009,19 +2009,20 @@ class TestFUEGOConsumer(unittest.TestCase):
             current, historic = consumer._partition(max(timestamps))
             self.assertEqual(len(lines), current + sum(historic.values()))
 
-    def test_detect_list_of_str(self):
+    def test_detect_dict(self):
         """
-        Test that when detecting bursty terms, the function returns a list of strings.
+        Test that when detecting bursty terms, the function returns a dictionary with strings as keys and burst values as values.
         """
 
         consumer = FUEGOConsumer(Queue(), burst_start=0, window_size=5, windows=3)
         consumer.nutrition.add(10, { 'a': 10, 'b': 2, 'c': 3 })
         consumer.nutrition.add(5, { 'a': 0, 'b': 10, 'c': 0 })
         bursty = consumer._detect(10)
-        self.assertEqual(list, type(bursty))
+        self.assertEqual(dict, type(bursty))
         self.assertTrue(bursty)
-        self.assertEqual(set([ 'a', 'c' ]), set(bursty))
-        self.assertTrue(all( str == type(term) for term in bursty ))
+        self.assertEqual(set([ 'a', 'c' ]), set(bursty.keys()))
+        self.assertTrue(all( str == type(term) for term in bursty.keys() ))
+        self.assertTrue(all( float == type(burst) for burst in bursty.values() ))
 
     def test_detect_burst_start(self):
         """
