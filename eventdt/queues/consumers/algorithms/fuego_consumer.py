@@ -31,7 +31,7 @@ from queues.consumers import Consumer
 from summarization import Summary
 from summarization.algorithms import DGS
 from summarization.timeline import Timeline
-from summarization.timeline.nodes import DocumentNode
+from summarization.timeline.nodes import TopicalClusterNode
 from tdt.algorithms import SlidingELD
 from tdt.nutrition import MemoryNutritionStore
 import twitter
@@ -233,69 +233,55 @@ class FUEGOConsumer(Consumer):
         :rtype: :class:`~summarization.timeline.Timeline`
         """
 
-        timeline = Timeline(DocumentNode, expiry=60*5, min_similarity=0.6, max_time=600)
+        timeline = Timeline(TopicalClusterNode, expiry=60*5, min_similarity=0.6, max_time=600)
 
-        """
-        The consumer keeps track of the keywords that are breaking at any given moment.
-        """
-        ongoing = [ ]
+        # the consumer keeps track of the keywords that are breaking at any given moment
+        # these terms are stored in a dictionary where the keys are terms
+        # the values are a tuple with a vector representing the term's highest burst so far, and associated documents stored in a cluster
+        topics = { }
 
-        """
-        The consumer keeps working until it is stopped or it receives no more tweets for a long period of time.
-        """
+        # the consumer keeps working until it is stopped or it receives no more tweets for a long period of time
         while self.active:
-            """
-            If the queue is idle, stop and wait for input.
-            """
+            # if the queue is idle, stop and wait for input
             active = await self._wait_for_input(max_inactivity=max_inactivity)
             if not active:
                 break
 
+            # get all the tweets in the queue and convert them to documents.
             if self.queue.length():
-                """
-                Get all the tweets in the queue and convert them to documents.
-                """
                 tweets = self.queue.dequeue_all()
                 tweets = self._filter_tweets(tweets)
                 documents = self._to_documents(tweets)
                 if not documents:
                     continue
-                time = self._time(documents)
+                time = self._time(documents) # get the current timestamp from the last document
 
-                """
-                The TDT process is as follows:
-
-                    1. Update the volume nutrition.
-                    2. Update the term nutrition values.
-                    3. Identify whether the currently-breaking terms are still bursty (tracking).
-                    4. If the stream is not dormant (receiving very few tweets), identify any new bursty terms.
-                """
+                # update the historical volume and the nutrition of individual keywords
                 self._update_volume(documents) # update the historical volume
                 self._update_nutrition(documents) # update the nutrition of individual keywords
-                ongoing = self._track(ongoing, time) # check whether bursty terms are still bursting
+
+                # check whether previously-bursting terms are still bursting and update their highest burst value
+                tracking = self._track(topics.keys(), time) # check which bursting terms are still bursting
+                topics = self._filter_topics(topics, tracking)  # keep only the bursting terms
+                topics = self._update_topics(topics, tracking) # update the burst values of the ongoing terms
 
                 # if the volume of the stream is higher than a dynamic threshold, detect newly-bursting terms
                 if not self._dormant(time):
-                    bursty = self._detect(time)
-                    ongoing = list(set(ongoing + bursty))
+                    bursty = self._detect(time) # detect bursty terms
+                    topics = self._update_topics(topics, bursty) # update the burst values and create new vectors and clusters for new topics
+                    self._add_to_timeline(time, timeline, topics) # add the new topics to the timeline (the function filters duplicates automatically)
 
-                """
-                The summarization process is as follows:
+                # collect tweets mentioning any bursty term
+                for term, (_, cluster) in topics.items():
+                    _documents = self._collect(term, documents) # collect the tweets mentioning any of the currently bursty terms
+                    cluster.vectors.extend(_documents) # add the topic documents to their cluster
 
-                1. Collect the tweets mentioning any of the currently bursty terms.
-                2. Add them to the timeline.
-                3. If the timeline creates a new node, summarize the last finished node.
-                """
-                for term in ongoing:
-                    topic_documents = self._collect(term, documents)
-                    if topic_documents:
-                        timeline.add(time, topic_documents)
-
+            # if the timeline is not empty, try to summarize the latest node
             if timeline.nodes:
-                node = timeline.nodes[-1]
-                if node.expired(timeline.expiry, time) and not node.attributes.get('printed'):
-                    summary = self._summarize(node)
-                    cleaner = TweetCleaner(collapse_new_lines=True, collapse_whitespaces=True, remove_unicode_entities=True)
+                node = timeline.nodes[-1] # get the latest node
+                if node.expired(timeline.expiry, time) and not node.attributes.get('printed'): # if the node has expired and it has not been print it, summarize it and print it
+                    summary = self._summarize(node) # summarize the node
+                    cleaner = TweetCleaner(collapse_new_lines=True, collapse_whitespaces=True, remove_unicode_entities=True) # clean the summary and print it
                     logger.info(f"{datetime.fromtimestamp(node.created_at).ctime()}: { cleaner.clean(str(summary)) }", process=str(self))
                     node.attributes['printed'] = True
 
