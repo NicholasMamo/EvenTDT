@@ -4,9 +4,16 @@ The Twitter-specific functionality involves retweet prefixes (`RT` at the start 
 The tweet cleaner is also capable of removing unicode entities, like certain emojis, and URLs.
 """
 
+import os
 import re
+import sys
+
+path = os.path.join(os.path.dirname(__file__), '..', '..')
+if path not in sys.path:
+    sys.path.append(path)
 
 from . import Cleaner
+import twitter
 
 class TweetCleaner(Cleaner):
     """
@@ -209,32 +216,4 @@ class TweetCleaner(Cleaner):
         if self.replace_mentions and not tweet:
             raise ValueError("The tweet must be given in order to replace mentions.")
 
-        """
-        Create a mapping between user mentions and their display names.
-        User mentions can appear in:
-
-            #. The base tweet,
-            #. The retweeted tweet, and
-            #. The quoted status.
-        """
-        mentions = { }
-        mentions.update({ f"@{ mention['screen_name'] }": mention['name']
-                          for mention in tweet['entities']['user_mentions'] })
-        mentions.update({ f"@{ mention['screen_name'] }": mention['name']
-                          for mention in tweet.get('extended_tweet', { }).get('entities', { }).get('user_mentions', { }) })
-        mentions.update({ f"@{ mention['screen_name'] }": mention['name']
-                          for mention in tweet.get('retweeted_status', { }).get('entities', { }).get('user_mentions', { }) })
-        mentions.update({ f"@{ mention['screen_name'] }": mention['name']
-                          for mention in tweet.get('retweeted_status', { }).get('extended_tweet', { }).get('entities', { }).get('user_mentions', { }) })
-        mentions.update({ f"@{ mention['screen_name'] }": mention['name']
-                          for mention in tweet.get('quoted_status', { }).get('entities', { }).get('user_mentions', { }) })
-        mentions.update({ f"@{ mention['screen_name'] }": mention['name']
-                          for mention in tweet.get('quoted_status', { }).get('extended_tweet', { }).get('entities', { }).get('user_mentions', { }) })
-
-        for handle, name in mentions.items():
-            if '\\' in name:
-                continue
-            pattern = re.compile(f"{ re.escape(handle) }\\b", flags=re.I)
-            text = re.sub(pattern, name, text)
-
-        return text
+        return twitter.expand_mentions(text, tweet)

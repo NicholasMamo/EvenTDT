@@ -4,6 +4,7 @@ At the package-level there are functions to help with general processing tasks.
 """
 
 from dateutil.parser import parse
+import re
 
 def extract_timestamp(tweet):
     """
@@ -99,3 +100,48 @@ def is_verified(tweet):
     """
 
     return tweet['user']['verified']
+
+def expand_mentions(text, tweet):
+    """
+    Replace all mentions in the text with the user's display name.
+
+    :param text: The text to clean.
+    :type text: str
+    :param tweet: The tweet dictionary.
+    :type tweet: dict
+
+    :return: The cleaned text.
+    :rtype: str
+
+    :raises ValueError: When the tweet is not given and the mentions should be replaced.
+    """
+
+    """
+    Create a mapping between user mentions and their display names.
+    User mentions can appear in:
+
+        #. The base tweet,
+        #. The retweeted tweet, and
+        #. The quoted status.
+    """
+    mentions = { }
+    mentions.update({ f"@{ mention['screen_name'] }": mention['name']
+                      for mention in tweet['entities']['user_mentions'] })
+    mentions.update({ f"@{ mention['screen_name'] }": mention['name']
+                      for mention in tweet.get('extended_tweet', { }).get('entities', { }).get('user_mentions', { }) })
+    mentions.update({ f"@{ mention['screen_name'] }": mention['name']
+                      for mention in tweet.get('retweeted_status', { }).get('entities', { }).get('user_mentions', { }) })
+    mentions.update({ f"@{ mention['screen_name'] }": mention['name']
+                      for mention in tweet.get('retweeted_status', { }).get('extended_tweet', { }).get('entities', { }).get('user_mentions', { }) })
+    mentions.update({ f"@{ mention['screen_name'] }": mention['name']
+                      for mention in tweet.get('quoted_status', { }).get('entities', { }).get('user_mentions', { }) })
+    mentions.update({ f"@{ mention['screen_name'] }": mention['name']
+                      for mention in tweet.get('quoted_status', { }).get('extended_tweet', { }).get('entities', { }).get('user_mentions', { }) })
+
+    for handle, name in mentions.items():
+        if '\\' in name:
+            continue
+        pattern = re.compile(f"{ re.escape(handle) }\\b", flags=re.I)
+        text = re.sub(pattern, name, text)
+
+    return text
