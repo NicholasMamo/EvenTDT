@@ -272,7 +272,7 @@ class FUEGOConsumer(Consumer):
                     self._add_to_timeline(time, timeline, topics) # add the new topics to the timeline (the function filters duplicates automatically)
 
                 # collect tweets mentioning any bursty term
-                for term, (_, cluster) in topics.items():
+                for term, (vector, cluster) in topics.items():
                     _documents = self._collect(term, documents) # collect the tweets mentioning any of the currently bursty terms
                     cluster.vectors.extend(_documents) # add the topic documents to their cluster
 
@@ -285,6 +285,7 @@ class FUEGOConsumer(Consumer):
                     logger.info(f"{datetime.fromtimestamp(node.created_at).ctime()}: { cleaner.clean(str(summary)) }", process=str(self))
                     node.attributes['printed'] = True
 
+        logger.info("Terminated", process=str(self))
         return timeline
 
     def _filter_tweets(self, tweets):
@@ -710,7 +711,7 @@ class FUEGOConsumer(Consumer):
         """
 
         return [ document for document in documents
-                           if document.dimensions[term] > 0 ]
+                          if document.dimensions[term] > 0 ]
 
     def _summarize(self, node):
         """
