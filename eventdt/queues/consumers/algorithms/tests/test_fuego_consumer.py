@@ -556,6 +556,17 @@ class TestFUEGOConsumer(unittest.TestCase):
             document = consumer._to_documents([ tweet ])[0]
             self.assertEqual(tweet['id'], document.attributes['id'])
 
+    def test_to_documents_mentions_in_dimensions(self):
+        """
+        Test that when creating a document from a tweet, the expanded mentions are part of the dimensions.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'examples', '#ParmaMilan-hakan.json'), 'r') as f:
+            tweet = json.loads(f.readline())
+            document = consumer._to_documents([ tweet ])[0]
+            self.assertTrue('Çalhanoğlu' in document.text)
+            self.assertTrue('calhanoglu' in document.dimensions)
 
     def test_to_documents_expands_mentions(self):
         """
