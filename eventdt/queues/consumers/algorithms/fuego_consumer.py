@@ -263,14 +263,16 @@ class FUEGOConsumer(Consumer):
                 """
                 The TDT process is as follows:
 
-                1. Update the volume nutrition.
-                2. Update the term nutrition values.
-                3. Identify whether the currently-breaking terms are still bursty (tracking).
-                4. If the stream is not dormant (receiving very few tweets), identify any new bursty terms.
+                    1. Update the volume nutrition.
+                    2. Update the term nutrition values.
+                    3. Identify whether the currently-breaking terms are still bursty (tracking).
+                    4. If the stream is not dormant (receiving very few tweets), identify any new bursty terms.
                 """
-                self._update_volume(documents)
-                self._update_nutrition(documents)
-                ongoing = self._track(ongoing, time)
+                self._update_volume(documents) # update the historical volume
+                self._update_nutrition(documents) # update the nutrition of individual keywords
+                ongoing = self._track(ongoing, time) # check whether bursty terms are still bursting
+
+                # if the volume of the stream is higher than a dynamic threshold, detect newly-bursting terms
                 if not self._dormant(time):
                     bursty = self._detect(time)
                     ongoing = list(set(ongoing + bursty))
