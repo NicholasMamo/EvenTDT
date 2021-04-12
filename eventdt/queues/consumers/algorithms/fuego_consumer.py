@@ -546,10 +546,10 @@ class FUEGOConsumer(Consumer):
         :param tracking: A list of terms that are still breaking.
         :type tracking: list of str
 
-        :return: A list of topics that are still breaking.
-        :rtype: The remaining bursting topics as a dictionary.
-                The keys are the bursting terms.
-                The values are tuples, pairs with a burst value and a cluster.
+        :return: A dictionary of topics that are still breaking.
+                 The keys are the bursting terms.
+                 The values are tuples, pairs with a vector containing the burst value, and a cluster.
+        :rtype: dict
         """
 
         return { topic: topics[topic] for topic in tracking }
