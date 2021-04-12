@@ -24,7 +24,7 @@ from queues.consumers.algorithms import FUEGOConsumer
 from summarization import Summary
 from summarization.algorithms import DGS
 from summarization.timeline import Timeline
-from summarization.timeline.nodes import DocumentNode, TopicalClusterNode
+from summarization.timeline.nodes import TopicalClusterNode
 from tdt.algorithms import SlidingELD
 import twitter
 from vsm import vector_math, Vector
@@ -2476,7 +2476,7 @@ class TestFUEGOConsumer(unittest.TestCase):
         """
 
         consumer = FUEGOConsumer(Queue())
-        node = DocumentNode(created_at=10)
+        node = TopicalClusterNode(created_at=10)
         summary = consumer._summarize(node)
         self.assertEqual(Summary, type(summary))
         self.assertEqual([ ], summary.documents)
@@ -2492,9 +2492,9 @@ class TestFUEGOConsumer(unittest.TestCase):
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
 
-            node = DocumentNode(created_at=10)
-            node.add([ document for document in documents
-                                 if len(str(document)) < 140 ])
+            node = TopicalClusterNode(created_at=10)
+            node.add(Cluster([ document for document in documents
+                                 if len(str(document)) < 140 ]), Vector({ 'chelsea': 0.6 }))
             summary = consumer._summarize(node)
             self.assertEqual(Summary, type(summary))
             self.assertTrue(summary.documents)

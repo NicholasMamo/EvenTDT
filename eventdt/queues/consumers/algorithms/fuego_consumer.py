@@ -757,4 +757,5 @@ class FUEGOConsumer(Consumer):
         summary_documents = sorted(summary_documents.items(), key=lambda document: len(document[0]) * self._damp(document[1]), reverse=True)
         summary_documents = [ document for _, document in summary_documents[:20] ]
 
-        return self.summarization.summarize(summary_documents, 300)
+        query = Cluster(vectors=node.topics).centroid
+        return self.summarization.summarize(summary_documents, 300, query=query)
