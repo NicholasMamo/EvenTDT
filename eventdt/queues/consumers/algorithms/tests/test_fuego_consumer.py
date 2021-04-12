@@ -565,6 +565,8 @@ class TestFUEGOConsumer(unittest.TestCase):
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'examples', '#ParmaMilan-hakan.json'), 'r') as f:
             tweet = json.loads(f.readline())
             document = consumer._to_documents([ tweet ])[0]
+            self.assertTrue('Hakan' in document.text)
+            self.assertTrue('hakan' in document.dimensions)
             self.assertTrue('Çalhanoğlu' in document.text)
             self.assertTrue('calhanoglu' in document.dimensions)
 
