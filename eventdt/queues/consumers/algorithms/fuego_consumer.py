@@ -637,6 +637,25 @@ class FUEGOConsumer(Consumer):
 
         return self.tdt.detect(timestamp, min_burst=self.burst_start)
 
+    def _new_topics(self, topics, bursty):
+        """
+        Extract the new topics from the list of bursty terms.
+        This function returns only the terms that are new.
+
+        The bursting topics as a dictionary.
+                       The keys are the bursting terms.
+                       The values are tuples, pairs with a burst value and a cluster.
+        :type topics: dict
+        :param bursty: A list of terms that are currently breaking.
+                       The keys are the terms and the values are their burst values.
+        :type bursty: dict
+
+        :return: A list of topics that were not already breaking.
+        :rtype: list of str
+        """
+
+        return [ term for term in bursty if term not in topics ]
+
     def _collect(self, term, documents):
         """
         Collect all documents that contain the given term.

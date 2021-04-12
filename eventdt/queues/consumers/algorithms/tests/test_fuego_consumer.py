@@ -2143,6 +2143,77 @@ class TestFUEGOConsumer(unittest.TestCase):
         bursty = consumer._detect(10)
         self.assertEqual(set([ 'a' ]), set(bursty))
 
+    def test_new_topics_list_of_str(self):
+        """
+        Test that the new topics are a list of strings.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        topics = {
+            'goal': (Vector({ 'goal': 0.7 }), Cluster()),
+            'foul': (Vector({ 'foul': 0.6 }), Cluster()),
+        }
+        terms = { 'goal': 0.7, 'foul': 0.5, 'tackl': 0.6 }
+        self.assertEqual(list, type(consumer._new_topics({ }, terms)))
+        self.assertTrue(all( str == type(term) for term in consumer._new_topics({ }, terms)))
+
+    def test_new_topics_empty_topics(self):
+        """
+        Test that when there are no topics, all the bursty terms are new topics.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        terms = { 'goal': 0.7, 'foul': 0.5 }
+        self.assertEqual(set(terms), set(consumer._new_topics({ }, terms)))
+
+    def test_new_topics_empty_bursty(self):
+        """
+        Test that when there are no bursty terms, there are no new topics.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        self.assertEqual([ ], consumer._new_topics({ }, [ ]))
+
+    def test_new_topics_not_in_topics(self):
+        """
+        Test that any new topics are not already in the list of topics.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        topics = {
+            'goal': (Vector({ 'goal': 0.7 }), Cluster()),
+            'foul': (Vector({ 'foul': 0.6 }), Cluster()),
+        }
+        terms = { 'goal': 0.7, 'foul': 0.5, 'tackl': 0.6 }
+        self.assertEqual([ 'tackl' ], consumer._new_topics(topics, terms))
+
+    def test_new_topics_are_bursty(self):
+        """
+        Test that all new topics are bursty.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        topics = {
+            'goal': (Vector({ 'goal': 0.7 }), Cluster()),
+            'foul': (Vector({ 'foul': 0.6 }), Cluster()),
+        }
+        terms = { 'goal': 0.7, 'foul': 0.5, 'tackl': 0.6 }
+        self.assertTrue(all( term in terms for term in consumer._new_topics(topics, terms) ))
+
+    def test_new_topics_ignore_no_longer_bursty(self):
+        """
+        Test that when checking for new topics, terms that were bursting previously do not affect the function.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        topics = {
+            'goal': (Vector({ 'goal': 0.7 }), Cluster()),
+            'foul': (Vector({ 'foul': 0.6 }), Cluster()),
+        }
+        terms = { 'tackl': 0.6 }
+        self.assertEqual([ 'tackl' ], consumer._new_topics(topics, terms))
+        self.assertTrue(all( term not in topics for term in consumer._new_topics(topics, terms) ))
+
     def test_collect_empty(self):
         """
         Test that when collecting from an empty list of documents, another empty list is returned.
