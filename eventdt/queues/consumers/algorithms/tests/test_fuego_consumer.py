@@ -6,6 +6,7 @@ import asyncio
 import copy
 import json
 import os
+import re
 import statistics
 import sys
 import unittest
@@ -553,6 +554,44 @@ class TestFUEGOConsumer(unittest.TestCase):
             document = consumer._to_documents([ tweet ])[0]
             self.assertEqual(tweet['id'], document.attributes['id'])
 
+
+    def test_to_documents_expands_mentions(self):
+        """
+        Test that when converting a list of tweets to documents, mentions are expanded.
+        """
+
+        wrong_pattern = re.compile("@[0-9,\\s…]")
+        no_space_pattern = re.compile("[^\\s]@")
+        end_pattern = re.compile('@$')
+
+        """
+        Check that when there are two tokens in the same document, and one of them is rarer than the other, it has a higher TF-IDF score.
+        """
+        consumer = FUEGOConsumer(Queue())
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                text = twitter.full_text(tweet)
+                document = consumer._to_documents([ tweet ])[0]
+
+                """
+                Allow for some manual validation.
+                """
+                not_accounts = [ 'real_realestsounds', 'nevilleiesta', 'naija927', 'naijafm92.7', 'manchesterunited', 'ManchesterUnited',
+                                 'clintasena', 'Maksakal88', 'Aubamayeng7', 'JustWenginIt', 'marcosrojo5', 'btsportsfootball',
+                                 'Nsibirwahall', 'YouTubeより', 'juniorpepaseed', 'Mezieblog', 'UtdAlamin', 'spurs_vincente' ]
+                if '@' in document.text:
+                    if '@@' in text or ' @ ' in text or '@&gt;' in text or any(account in text for account in not_accounts):
+                        continue
+                    if end_pattern.findall(text):
+                        continue
+                    if no_space_pattern.findall(text) or no_space_pattern.findall(document.text):
+                        continue
+                    if wrong_pattern.findall(text):
+                        continue
+
+                self.assertFalse('@' in document.text)
+
     def test_to_documents_ellipsis(self):
         """
         Test that when the text has an ellipsis, the full text is used.
@@ -584,9 +623,11 @@ class TestFUEGOConsumer(unittest.TestCase):
                     document = consumer._to_documents([ tweet ])[0]
 
                     if 'extended_tweet' in tweet:
-                        self.assertEqual(tweet["extended_tweet"].get("full_text", tweet.get("text", "")), document.text)
+                        self.assertEqual(twitter.expand_mentions(tweet["extended_tweet"].get("full_text", tweet.get("text", "")), tweet),
+                                         twitter.expand_mentions(document.text, tweet))
                     else:
-                        self.assertEqual(tweet.get('text'), document.text)
+                        self.assertEqual(twitter.expand_mentions(tweet.get('text'), tweet),
+                                         twitter.expand_mentions(document.text, tweet))
 
     def test_to_documents_retweeted(self):
         """
@@ -602,9 +643,11 @@ class TestFUEGOConsumer(unittest.TestCase):
 
                     retweet = tweet['retweeted_status']
                     if 'extended_tweet' in retweet:
-                        self.assertEqual(retweet["extended_tweet"].get("full_text", retweet.get("text", "")), document.text)
+                        self.assertEqual(twitter.expand_mentions(retweet["extended_tweet"].get("full_text", retweet.get("text", "")), tweet),
+                                         twitter.expand_mentions(document.text, tweet))
                     else:
-                        self.assertEqual(retweet.get('text'), document.text)
+                        self.assertEqual(twitter.expand_mentions(retweet.get('text'), tweet),
+                                         twitter.expand_mentions(document.text, tweet))
 
                     """
                     Tweets shouldn't start with 'RT'.
@@ -624,9 +667,11 @@ class TestFUEGOConsumer(unittest.TestCase):
                     document = consumer._to_documents([ tweet ])[0]
 
                     if 'extended_tweet' in tweet:
-                        self.assertEqual(tweet["extended_tweet"].get("full_text", tweet.get("text", "")), document.text)
+                        self.assertEqual(twitter.expand_mentions(tweet["extended_tweet"].get("full_text", tweet.get("text", "")), tweet),
+                                         twitter.expand_mentions(document.text, tweet))
                     else:
-                        self.assertEqual(tweet.get('text'), document.text)
+                        self.assertEqual(twitter.expand_mentions(tweet.get('text'), tweet),
+                                         twitter.expand_mentions(document.text, tweet))
 
                     """
                     There should be no ellipsis in the text now.

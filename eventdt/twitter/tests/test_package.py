@@ -403,7 +403,6 @@ class TestPackage(unittest.TestCase):
         Test that after replacing mentions, there are no '@' symbols.
         """
 
-
         wrong_pattern = re.compile("@[0-9,\\s…]")
         no_space_pattern = re.compile("[^\\s]@")
         end_pattern = re.compile('@$')

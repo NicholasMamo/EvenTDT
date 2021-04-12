@@ -400,6 +400,7 @@ class FUEGOConsumer(Consumer):
         for item in tweets:
             tweet = item.attributes['tweet'] if type(item) is Document else item
             text = twitter.full_text(tweet)
+            text = twitter.expand_mentions(text, tweet)
 
             """
             Create the document and save the tweet in it.
