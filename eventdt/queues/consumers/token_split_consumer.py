@@ -115,10 +115,11 @@ class TokenSplitConsumer(SplitConsumer):
         """
 
         text = twitter.full_text(tweet)
+        text = twitter.expand_mentions(text, tweet)
         tokens = self.tokenizer.tokenize(text)
         document = self.scheme.create(tokens, text=text,
                                       attributes={ 'tweet': tweet,
-                                                     'timestamp': twitter.extract_timestamp(tweet) })
+                                                   'timestamp': twitter.extract_timestamp(tweet) })
         document.normalize()
         return document
 
