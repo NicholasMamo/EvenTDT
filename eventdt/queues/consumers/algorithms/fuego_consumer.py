@@ -35,6 +35,8 @@ from summarization.timeline.nodes import DocumentNode
 from tdt.algorithms import SlidingELD
 from tdt.nutrition import MemoryNutritionStore
 import twitter
+from vsm import Vector
+from vsm.clustering import Cluster
 
 class FUEGOConsumer(Consumer):
     """
@@ -669,10 +671,10 @@ class FUEGOConsumer(Consumer):
                        The keys are the terms and the values are their burst values.
         :type bursty: dict
 
-        :param topics: The bursting topics as a dictionary, including any newly-bursting topics.
-                       The keys are the bursting terms.
-                       The values are tuples, pairs with a burst value and a cluster.
-        :type topics: dict
+        :return: The bursting topics as a dictionary, including any newly-bursting topics.
+                 The keys are the bursting terms.
+                 The values are tuples, pairs with a burst value and a cluster.
+        :rtype: dict
         """
 
         for term, burst in bursty.items():
@@ -685,6 +687,27 @@ class FUEGOConsumer(Consumer):
                 topics[term] = ( Vector({ term: burst }), Cluster())
 
         return topics
+
+    def _add_to_timeline(self, timestamp, timeline, topics):
+        """
+        Add the given topics to the timeline.
+
+        :param timestamp: The current time, used only when adding a new node.
+        :type timestamp: int
+        :param timeline: The timeline where to add the topics.
+        :type timeline: :class:`~summarization.timeline.Timeline`
+        :param topics: The bursting topics as a dictionary, including any newly-bursting topics.
+                       The keys are the bursting terms.
+                       The values are tuples, pairs with a burst value and a cluster.
+        :type topics: dict
+        """
+
+        for vector, cluster in topics.values():
+            # skip adding duplicate topics
+            if any( topic == vector for node in timeline.nodes for topic in node.topics ):
+                continue
+
+            timeline.add(timestamp, cluster, vector)
 
     def _collect(self, term, documents):
         """

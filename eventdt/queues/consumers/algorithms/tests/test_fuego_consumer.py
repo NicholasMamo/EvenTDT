@@ -23,7 +23,8 @@ from queues import Queue
 from queues.consumers.algorithms import FUEGOConsumer
 from summarization import Summary
 from summarization.algorithms import DGS
-from summarization.timeline.nodes import DocumentNode
+from summarization.timeline import Timeline
+from summarization.timeline.nodes import DocumentNode, TopicalClusterNode
 from tdt.algorithms import SlidingELD
 import twitter
 from vsm import vector_math, Vector
@@ -2341,6 +2342,67 @@ class TestFUEGOConsumer(unittest.TestCase):
         bursty = { 'goal': 0.8, 'foul': 0.5 }
         updated = consumer._update_topics(topics, bursty)
         self.assertTrue(all( updated[term][1].to_array() == clusters[term] for term in topics ))
+
+    def test_add_to_timeline_no_topics(self):
+        """
+        Test that when adding no topics to the timeline, the timeline does not change.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        timeline = Timeline(TopicalClusterNode, expiry=60, min_similarity=0.5)
+        consumer._add_to_timeline(101, timeline, { })
+
+    def test_add_to_timeline_by_reference(self):
+        """
+        Test that when adding topics to the timeline, vectors and clusters are copied by reference.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        timeline = Timeline(TopicalClusterNode, expiry=60, min_similarity=0.5)
+        topics = {
+            'goal': (Vector({ 'goal': 0.7 }), Cluster(vectors=[ Document('ABC') ])),
+            'foul': (Vector({ 'foul': 0.6 }), Cluster(vectors=[ Document('DEF') ])),
+        }
+
+        # add a new node to the timeline
+        consumer._add_to_timeline(101, timeline, topics)
+        self.assertEqual(101, timeline.nodes[0].created_at)
+
+        for i, (topic, (vector, cluster)) in enumerate(topics.items()):
+            # update the burst of the vector
+            new_burst = vector.dimensions[topic] + 1
+            vector.dimensions[topic] = new_burst
+            self.assertEqual(new_burst, timeline.nodes[0].topics[i].dimensions[topic])
+
+            # add a new document to each cluster
+            cluster.vectors.append(Document(topic))
+            self.assertEqual(topic, timeline.nodes[0].clusters[i].vectors[-1].text)
+
+    def test_add_to_timeline_no_duplicates(self):
+        """
+        Test when adding topics to the timeline, the function rejects duplicates.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        timeline = Timeline(TopicalClusterNode, expiry=60, min_similarity=0.5)
+        topics = {
+            'goal': (Vector({ 'goal': 0.7 }), Cluster(vectors=[ Document('ABC') ])),
+            'foul': (Vector({ 'foul': 0.6 }), Cluster(vectors=[ Document('DEF') ])),
+        }
+
+        # add a new node to the timeline
+        consumer._add_to_timeline(101, timeline, topics)
+        self.assertEqual(101, timeline.nodes[0].created_at)
+        self.assertEqual(1, len(timeline.nodes))
+        self.assertEqual(2, len(timeline.nodes[0].topics))
+        self.assertEqual(2, len(timeline.nodes[0].clusters))
+
+        # try to add the same topics to the timeline
+        consumer._add_to_timeline(101, timeline, topics)
+        self.assertEqual(101, timeline.nodes[0].created_at)
+        self.assertEqual(1, len(timeline.nodes))
+        self.assertEqual(2, len(timeline.nodes[0].topics))
+        self.assertEqual(2, len(timeline.nodes[0].clusters))
 
     def test_collect_empty(self):
         """
