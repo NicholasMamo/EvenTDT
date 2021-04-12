@@ -26,7 +26,8 @@ from summarization.algorithms import DGS
 from summarization.timeline.nodes import DocumentNode
 from tdt.algorithms import SlidingELD
 import twitter
-from vsm import vector_math
+from vsm import vector_math, Vector
+from vsm.clustering import Cluster
 
 logger.set_logging_level(logger.LogLevel.WARNING)
 
@@ -1704,6 +1705,62 @@ class TestFUEGOConsumer(unittest.TestCase):
         consumer.nutrition.add(5, { 'a': 0, 'b': 1, 'c': 0 })
         tracked = consumer._track([ 'a', 'b', 'c' ], 10)
         self.assertEqual(set([ 'a' ]), set(tracked))
+
+    def test_filter_topics_empty_topics(self):
+        """
+        Test that when filtering topics and there are no topics, another empty dictionary is returned.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        self.assertEqual({ }, consumer._filter_topics({ }, [ ]))
+
+    def test_filter_topics_empty_tracking(self):
+        """
+        Test that when filtering topics and there are no topics to track, another empty dictionary is returned.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        self.assertEqual({ }, consumer._filter_topics({ 'goal': (Vector(), Cluster()) }, [ ]))
+
+    def test_filter_topics_only_tracking(self):
+        """
+        Test that when filtering topics, the function only returns the terms that are still bursting.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        topics = {
+            'goal': (Vector(), Cluster()),
+            'foul': (Vector(), Cluster()),
+        }
+        self.assertEqual({ 'goal' }, set(consumer._filter_topics(topics, [ 'goal' ])))
+
+    def test_filter_topics_same_vectors(self):
+        """
+        Test that the topics' vectors do not change when filtering them.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        topics = {
+            'goal': (Vector({ 'goal': 0.7 }), Cluster()),
+            'foul': (Vector({ 'foul': 0.6 }), Cluster()),
+        }
+        tracked = consumer._filter_topics(topics, topics.keys())
+        self.assertTrue(all( tracked[term][0] == topics[term][0] for term in topics ))
+        self.assertTrue(all( tracked[term][0].to_array() == topics[term][0].to_array() for term in topics ))
+
+    def test_filter_topics_same_clusters(self):
+        """
+        Test that the topics' clusters do not change when filtering them.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        topics = {
+            'goal': (Vector({ 'goal': 0.7 }), Cluster()),
+            'foul': (Vector({ 'foul': 0.6 }), Cluster()),
+        }
+        tracked = consumer._filter_topics(topics, topics.keys())
+        self.assertTrue(all( tracked[term][1] == topics[term][1] for term in topics ))
+        self.assertTrue(all( tracked[term][1].to_array() == topics[term][1].to_array() for term in topics ))
 
     def test_dormant_empty(self):
         """

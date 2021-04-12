@@ -535,6 +535,25 @@ class FUEGOConsumer(Consumer):
         ongoing = list(set(topics).intersection(set(bursty.keys())))
         return ongoing
 
+    def _filter_topics(self, topics, tracking):
+        """
+        Filter the given topics, retaining only those that are still bursting.
+
+        :param topics: The bursting topics as a dictionary.
+                       The keys are the bursting terms.
+                       The values are tuples, pairs with a burst value and a cluster.
+        :type topics: dict
+        :param tracking: A list of terms that are still breaking.
+        :type tracking: list of str
+
+        :return: A list of topics that are still breaking.
+        :rtype: The remaining bursting topics as a dictionary.
+                The keys are the bursting terms.
+                The values are tuples, pairs with a burst value and a cluster.
+        """
+
+        return { topic: topics[topic] for topic in tracking }
+
     def _dormant(self, timestamp):
         """
         Check whether the stream is dormant.
