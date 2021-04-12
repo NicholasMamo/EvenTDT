@@ -1565,9 +1565,9 @@ class TestFUEGOConsumer(unittest.TestCase):
         consumer.nutrition.add(10, { 'a': 10, 'b': 2, 'c': 3 })
         consumer.nutrition.add(5, { 'a': 0, 'b': 10, 'c': 0 })
         tracked = consumer._track([ 'a', 'b', 'c' ], 10)
-        self.assertEqual(list, type(tracked))
+        self.assertEqual(dict, type(tracked))
         self.assertTrue(tracked)
-        self.assertEqual(set([ 'a', 'c' ]), set(tracked))
+        self.assertEqual(set([ 'a', 'c' ]), set(tracked.keys()))
         self.assertTrue(all( str == type(term) for term in tracked ))
 
     def test_track_burst_end(self):

@@ -527,13 +527,14 @@ class FUEGOConsumer(Consumer):
         :param timestamp: The timestamp at which to detect bursty terms.
         :type timestamp: float
 
-        :return: The list of keywords that are still ongoing at the given timestamp.
-        :rtype: list of str
+        :return: The keywords that are still bursting as a dictionary.
+                 The keys are the terms and the values are their burst.
+        :rtype: dict
         """
 
         bursty = self.tdt.detect(timestamp, min_burst=self.burst_end)
         ongoing = list(set(topics).intersection(set(bursty.keys())))
-        return ongoing
+        return { term: bursty[term] for term in ongoing }
 
     def _filter_topics(self, topics, tracking):
         """
@@ -544,7 +545,7 @@ class FUEGOConsumer(Consumer):
                        The values are tuples, pairs with a burst value and a cluster.
         :type topics: dict
         :param tracking: A list of terms that are still breaking.
-        :type tracking: list of str
+        :type tracking: dict
 
         :return: A dictionary of topics that are still breaking.
                  The keys are the bursting terms.
@@ -642,7 +643,7 @@ class FUEGOConsumer(Consumer):
         Extract the new topics from the list of bursty terms.
         This function returns only the terms that are new.
 
-        The bursting topics as a dictionary.
+        :param topics: The bursting topics as a dictionary.
                        The keys are the bursting terms.
                        The values are tuples, pairs with a burst value and a cluster.
         :type topics: dict
