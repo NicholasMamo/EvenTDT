@@ -132,6 +132,36 @@ class TestSplitConsumer(unittest.TestCase):
         self.assertTrue(all( _consumer.stopped for _consumer in consumer.consumers ))
 
     @async_test
+    async def test_run_stops_consumers(self):
+        """
+        Test that it is only after the split consumer finishes that running stops the consumers.
+        """
+
+        splits = [ (0, 50), (50, 100) ]
+        consumer = DummySplitConsumer(Queue(), splits, PrintConsumer)
+        self.assertFalse(consumer.active)
+        self.assertTrue(consumer.stopped)
+        self.assertTrue(all( not _consumer.active for _consumer in consumer.consumers ))
+        self.assertTrue(all( _consumer.stopped for _consumer in consumer.consumers ))
+
+        """
+        Run the consumer.
+        """
+        running = asyncio.ensure_future(consumer.run(max_inactivity=5))
+        await asyncio.sleep(1)
+        self.assertTrue(consumer.active)
+        self.assertFalse(consumer.stopped)
+        self.assertTrue(all( _consumer.active for _consumer in consumer.consumers ))
+        self.assertTrue(all( not _consumer.stopped for _consumer in consumer.consumers ))
+
+        """
+        Wait for the consumer to finish.
+        """
+        result = await asyncio.gather(running)
+        self.assertTrue(all( not _consumer.active for _consumer in consumer.consumers ))
+        self.assertTrue(all( _consumer.stopped for _consumer in consumer.consumers ))
+
+    @async_test
     async def test_run_returns_timelines(self):
         """
         Test that when running the split consumer, it returns the timelines from its consumers.

@@ -124,7 +124,7 @@ class SplitConsumer(Consumer):
         self._started()
         results = await asyncio.gather(
             self._consume(*args, max_inactivity=max_inactivity, **kwargs),
-            *[ consumer.run(wait=wait, max_inactivity=max_inactivity) for consumer in self.consumers ]
+            *[ consumer.run(wait=wait, max_inactivity=-1) for consumer in self.consumers ]
         )
         self._stopped()
         return results[1:]
@@ -174,6 +174,8 @@ class SplitConsumer(Consumer):
                 for split, consumer in zip(self.splits, self.consumers):
                     if self._satisfies(item, split):
                         consumer.queue.enqueue(item)
+                        
+        self.stop()
 
     @abstractmethod
     def _satisfies(self, item, condition):
