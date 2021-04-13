@@ -736,6 +736,24 @@ class FUEGOConsumer(Consumer):
         return [ document for document in documents
                           if document.dimensions[term] > 0 ]
 
+    def _difference(self, to_add, current):
+        """
+        Find unique documents from the second list that are not already in the second list.
+        This is, essentially, a difference operation that checks for duplicates.
+
+        :param to_add: The new documents to add to the first list.
+        :type to_add: list of :class:`~nlp.document.Document`
+        :param current: The existing documents.
+        :type current: list of :class:`~nlp.document.Document`
+
+        :return: A subset of the second list, containing documents that are not already in the first list.
+        :rtype: list of :class:`~nlp.document.Document`
+        """
+
+        _new = [ document for document in to_add if document not in current ]
+        _new = list(dict.fromkeys(_new))
+        return _new
+
     def _summarize(self, node):
         """
         Summarize the given node.

@@ -8,6 +8,7 @@ import json
 import os
 import re
 import statistics
+import string
 import sys
 import unittest
 
@@ -2588,6 +2589,94 @@ class TestFUEGOConsumer(unittest.TestCase):
             collected = consumer._collect('chelsea', documents)
             self.assertTrue(collected)
             self.assertTrue(all( document in documents for document in collected ))
+
+    def test_difference_empty_to_add(self):
+        """
+        Test that when getting unique documents, and the current documents is an empty list, the new unique documents are returned.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        to_add = [ Document('ABC'), Document('DEF') ]
+        self.assertFalse(to_add is consumer._difference(to_add, [ ]))
+        self.assertEqual(to_add, consumer._difference(to_add, [ ]))
+
+    def test_difference_empty_current(self):
+        """
+        Test that when checking for unique documents without providing any documents, an empty list is returned, regardless of the existing documents.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        current = [ Document('ABC'), Document('DEF') ]
+        self.assertEqual([ ], consumer._difference([ ], current))
+
+    def test_difference_list_of_document(self):
+        """
+        Test that when getting the difference, a list of documents is returned.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        to_add = [ Document('ABC'), Document('DEF') ]
+        self.assertEqual(list, type(consumer._difference(to_add, [ ])))
+        self.assertTrue(all( Document is type(document) for document in consumer._difference(to_add, [ ]) ))
+
+    def test_difference_keep_to_add(self):
+        """
+        Test when using the difference operation, the original list of documents is not changed.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        current = [ Document('ABC'), Document('DEF') ]
+        to_add = [ Document('GHI'), Document('JKL') ]
+        self.assertEqual(to_add, consumer._difference(to_add, current))
+        self.assertEqual(2, len(to_add))
+
+    def test_difference_keep_current(self):
+        """
+        Test when using the difference operation, the original list of documents is not changed.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        current = [ Document('ABC'), Document('DEF') ]
+        to_add = [ Document('GHI'), Document('JKL') ]
+        self.assertEqual(to_add, consumer._difference(to_add, current))
+        self.assertEqual(2, len(current))
+
+    def test_difference_copy_by_reference(self):
+        """
+        Test that when getting the difference between two lists of documents, the documents are copied by reference.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        current = [ Document('ABC'), Document('DEF') ]
+        to_add = [ Document('GHI'), Document('JKL') ]
+        self.assertEqual(to_add, consumer._difference(to_add, current))
+        self.assertFalse(to_add is consumer._difference(to_add, current))
+        self.assertTrue(all( document in to_add for document in consumer._difference(to_add, current) ))
+
+    def test_difference_remove_duplicates_in_to_add(self):
+        """
+        Test that when getting the difference between two lists of documents, duplicates in the original list are not kept.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        current = [ Document('ABC'), Document('DEF') ]
+        document = Document('GHI')
+        to_add = [ document, document ]
+        self.assertFalse(to_add == consumer._difference(to_add, current))
+        self.assertEqual(2, len(to_add))
+        self.assertEqual(1, len(consumer._difference(to_add, current)))
+        self.assertEqual([ document ], consumer._difference(to_add, current))
+        self.assertEqual(list(set(to_add)), consumer._difference(to_add, current))
+
+    def test_difference_same_order(self):
+        """
+        Test that the documents are kept in their original order when getting the difference.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        documents = [ Document(letter) for letter in string.ascii_uppercase ]
+        difference = consumer._difference(documents, [ ])
+        self.assertEqual(string.ascii_uppercase, ''.join([ document.text for document in difference ]))
 
     def test_summarize_empty_node(self):
         """
