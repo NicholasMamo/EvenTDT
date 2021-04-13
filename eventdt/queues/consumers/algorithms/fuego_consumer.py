@@ -285,7 +285,6 @@ class FUEGOConsumer(Consumer):
                     logger.info(f"{datetime.fromtimestamp(node.created_at).ctime()}: { cleaner.clean(str(summary)) }", process=str(self))
                     node.attributes['printed'] = True
 
-        logger.info("Terminated", process=str(self))
         return timeline
 
     def _filter_tweets(self, tweets):
