@@ -431,6 +431,30 @@ class FUEGOConsumer(Consumer):
         timestamps = [ document.attributes['timestamp'] for document in documents ]
         return max(timestamps)
 
+    def _update_cache(self, documents, cache, timestamp):
+        """
+        Add the newly-given documents to the cache.
+        The function also removes old documents from the cache.
+
+        :param documents: The new documents to add to the cache.
+        :type documents: list of :class:`~nlp.document.Document`
+        :param cache: The currently-cached documents.
+        :type cache: list of :class:`~nlp.document.Document`
+        :param timestamp: The current timestamp, used to remove old documents from the cache.
+                          By old, this function understands documents published before the current time window.
+                          Like :func:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer._partition` function, the end of the time window (the timestamp is inclusive), but the start isn't.
+        :type timestamp: float
+
+        :return: The updated cache.
+        :rtype: list of :class:`~nlp.document.Document`
+        """
+
+        cache = list(cache) # create a shallow copy
+        cache.extend(documents) # add all documents to the cache
+        cache = [ document for document in cache
+                           if document.attributes['timestamp'] > timestamp - self.tdt.window_size ]
+        return cache
+
     def _update_volume(self, documents):
         """
         Update the volume based on the given documents.

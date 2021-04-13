@@ -817,6 +817,112 @@ class TestFUEGOConsumer(unittest.TestCase):
             timestamp = documents[-1].attributes['timestamp']
             self.assertEqual(timestamp, consumer._time(documents[::-1]))
 
+    def test_update_cache_no_documents(self):
+        """
+        Test that when updating the cache without providing any documents, the same cache is returned.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+
+        cache = [ Document('ABC', attributes={ 'timestamp': 10 }),
+                  Document('DEF', attributes={ 'timestamp': 10 }) ]
+        _cache = consumer._update_cache([ ], cache, 10)
+        self.assertEqual(set(cache), set(_cache))
+
+    def test_update_cache_no_cache(self):
+        """
+        Test that when updating an empty cache, the new cache only has the new documents.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+
+        documents = [ Document('ABC', attributes={ 'timestamp': 10 }),
+                      Document('DEF', attributes={ 'timestamp': 10 }) ]
+        cache = consumer._update_cache(documents, [ ], 10)
+        self.assertEqual(set(documents), set(cache))
+
+    def test_update_cache_copy_by_reference(self):
+        """
+        Test that when updating the cache, the documents are added by reference, not copied.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+
+        documents = [ Document('ABC', attributes={ 'timestamp': 10 }),
+                      Document('DEF', attributes={ 'timestamp': 10 }) ]
+        cache = consumer._update_cache(documents, [ ], 10)
+        self.assertTrue(all( document in documents for document in cache ))
+
+    def test_update_cache_list_of_documents(self):
+        """
+        Test that updating cache returns a list of documents.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+
+        documents = [ Document('ABC', attributes={ 'timestamp': 10 }),
+                      Document('DEF', attributes={ 'timestamp': 10 }) ]
+        cache = consumer._update_cache(documents, [ ], 10)
+        self.assertEqual(list, type(cache))
+        self.assertTrue(all( Document is type(document) for document in cache ))
+
+    def test_update_cache_copy(self):
+        """
+        Test that when updating the cache, the new cache is a copied list.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+
+        cache = [ Document('ABC', attributes={ 'timestamp': 10 }),
+                  Document('DEF', attributes={ 'timestamp': 10 }) ]
+        _cache = consumer._update_cache([ ], cache, 10)
+        self.assertFalse(cache is _cache)
+        self.assertTrue(all( document in _cache for document in cache ))
+        self.assertTrue(all( document in cache for document in _cache ))
+
+    def test_update_cache_remove_old(self):
+        """
+        Test that when updating the cache, old documents are removed.
+        """
+
+        consumer = FUEGOConsumer(Queue(), window_size=10)
+
+        cache = [ Document('ABC', attributes={ 'timestamp': 10 }),
+                  Document('DEF', attributes={ 'timestamp': 10 }) ]
+        _cache = consumer._update_cache([ ], cache, 30)
+        self.assertFalse(_cache)
+
+    def test_update_cache_window_start_exclusive(self):
+        """
+        Test that the window start is exclusive when removing documents from the cache.
+        """
+
+        window_size, time = 10, 20
+        consumer = FUEGOConsumer(Queue(), window_size=window_size)
+
+        cache = [ Document('ABC', attributes={ 'timestamp': time - window_size - 1 }),
+                  Document('DEF', attributes={ 'timestamp': time - window_size }),
+                  Document('GHI', attributes={ 'timestamp': time - window_size + 1 }), ]
+        _cache = consumer._update_cache([ ], cache, time)
+        self.assertEqual(3, len(cache))
+        self.assertEqual(1, len(_cache))
+        self.assertTrue(all( document.attributes['timestamp'] > time - window_size for document in _cache ))
+
+    def test_update_cache_remove_old_new_documents(self):
+        """
+        Test that when updating cache, the function also removes new documents that are old.
+        """
+
+        window_size, time = 10, 20
+        consumer = FUEGOConsumer(Queue(), window_size=window_size)
+
+        documents = [ Document('ABC', attributes={ 'timestamp': time - window_size - 1 }),
+                      Document('DEF', attributes={ 'timestamp': time - window_size }),
+                      Document('GHI', attributes={ 'timestamp': time - window_size + 1 }), ]
+        cache = consumer._update_cache(documents, [ ], time)
+        self.assertEqual(1, len(cache))
+        self.assertTrue(all( document.attributes['timestamp'] > time - window_size for document in cache ))
+
     def test_update_volume_all_documents(self):
         """
         Test that the volume function counts all the documents properly.
