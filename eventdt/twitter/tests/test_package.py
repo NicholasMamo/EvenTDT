@@ -22,6 +22,42 @@ class TestPackage(unittest.TestCase):
     Test the functionality of the tweet package-level functions.
     """
 
+    def acceptable_mention(self, text):
+        """
+        Check whether any mentions in the given text are acceptable.
+        This happens when the mention is not actually a mention, but just an @, or an @ linking to a broken handle.
+
+        :param text: The text to check for validity.
+        :type text: str
+
+        :return: A boolean indicating whether any mentions are acceptable.
+                 If at least one is acceptable, the function returns True, essentially ending the test for the tweet.
+        :rtype: bool
+        """
+
+        wrong_pattern = re.compile("@[0-9,\\s…]")
+        no_space_pattern = re.compile("[^\\s]@")
+        end_pattern = re.compile('@$')
+
+        """
+        Allow for some manual validation.
+        """
+        not_accounts = [ 'real_realestsounds', 'nevilleiesta', 'naija927', 'naijafm92.7', 'manchesterunited', 'ManchesterUnited',
+                         'clintasena', 'Maksakal88', 'Aubamayeng7', 'JustWenginIt', 'marcosrojo5', 'btsportsfootball',
+                         'Nsibirwahall', 'YouTubeより', 'juniorpepaseed', 'Mezieblog', 'UtdAlamin', 'spurs_vincente',
+                         '@sports_sell', '@Coast2CoastFM', '@Scottangus12' ]
+        if '@' in text:
+            if '@@' in text or ' @ ' in text or '@&gt;' in text or any(account in text for account in not_accounts):
+                return True
+            if end_pattern.findall(text):
+                return True
+            if no_space_pattern.findall(text):
+                return True
+            if wrong_pattern.findall(text):
+                return True
+
+        return False
+
     def test_timestamp_ms_date(self):
         """
         Test that the timestamp date is the same and correct for all tweets in the corpus.
@@ -296,7 +332,7 @@ class TestPackage(unittest.TestCase):
         if not found:
             logger.warning('Trivial test')
 
-    def test_replace_mentions(self):
+    def test_expand_mentions(self):
         """
         Test replacing mentions in a sample tweet.
         """
@@ -312,7 +348,7 @@ class TestPackage(unittest.TestCase):
                 }
         self.assertEqual("Python visualization library Multiplex: It looks amazing, great job  Nicholas Mamo", twitter.expand_mentions(text, tweet))
 
-    def test_replace_mentions_case_insensitive(self):
+    def test_expand_mentions_case_insensitive(self):
         """
         Test that when replacing mentions, the replacement is case-insensitive.
         """
@@ -328,7 +364,7 @@ class TestPackage(unittest.TestCase):
                 }
         self.assertEqual("Python visualization library Multiplex: It looks amazing, great job  Nicholas Mamo", twitter.expand_mentions(text, tweet))
 
-    def test_replace_mentions_multiple_times(self):
+    def test_expand_mentions_multiple_times(self):
         """
         Test that when a mention appears multiple times, all such mentions are replaced.
         """
@@ -344,7 +380,7 @@ class TestPackage(unittest.TestCase):
                 }
         self.assertEqual("Python visualization library Multiplex by Nicholas Mamo: It looks amazing, great job  Nicholas Mamo", twitter.expand_mentions(text, tweet))
 
-    def test_replace_mentions_several(self):
+    def test_expand_mentions_several(self):
         """
         Test that when there are several mentions, they are all replaced.
         """
@@ -363,7 +399,7 @@ class TestPackage(unittest.TestCase):
                 }
         self.assertEqual("RT Quantum Stat: Python visualization library Multiplex: It looks amazing, great job  Nicholas Mamo", twitter.expand_mentions(text, tweet))
 
-    def test_replace_mentions_retain_unknown(self):
+    def test_expand_mentions_retain_unknown(self):
         """
         Test that when there are unknown mentions, they are retained.
         """
@@ -379,7 +415,7 @@ class TestPackage(unittest.TestCase):
                 }
         self.assertEqual("RT @Quantum_Stat: Python visualization library Multiplex: It looks amazing, great job  Nicholas Mamo", twitter.expand_mentions(text, tweet))
 
-    def test_replace_mentions_correct(self):
+    def test_expand_mentions_correct(self):
         """
         Test that mentions are replaced correctly.
         """
@@ -398,14 +434,12 @@ class TestPackage(unittest.TestCase):
                 }
         self.assertEqual("RT Quantum Stat: From the latest Quantum Stat newsletter: Python visualization library Multiplex: It looks amazing, great job  Nicholas Mamo", twitter.expand_mentions(text, tweet))
 
-    def test_replace_mentions_all(self):
+    def test_expand_mentions_all(self):
         """
         Test that after replacing mentions, there are no '@' symbols.
         """
 
-        wrong_pattern = re.compile("@[0-9,\\s…]")
         no_space_pattern = re.compile("[^\\s]@")
-        end_pattern = re.compile('@$')
 
         corpus = os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'understanding', 'CRYCHE.json')
         with open(corpus) as f:
@@ -429,20 +463,24 @@ class TestPackage(unittest.TestCase):
 
                 cleaned = twitter.expand_mentions(text, original)
 
-                """
-                Allow for some manual validation.
-                """
-                not_accounts = [ 'real_realestsounds', 'nevilleiesta', 'naija927', 'naijafm92.7', 'manchesterunited', 'ManchesterUnited',
-                                 'clintasena', 'Maksakal88', 'Aubamayeng7', 'JustWenginIt', 'marcosrojo5', 'btsportsfootball',
-                                 'Nsibirwahall', 'YouTubeより', 'juniorpepaseed', 'Mezieblog', 'UtdAlamin', 'spurs_vincente' ]
-                if '@' in cleaned:
-                    if '@@' in text or ' @ ' in text or '@&gt;' in text or any(account in text for account in not_accounts):
-                        continue
-                    if end_pattern.findall(text):
-                        continue
-                    if no_space_pattern.findall(text) or no_space_pattern.findall(cleaned):
-                        continue
-                    if wrong_pattern.findall(text):
-                        continue
+                if self.acceptable_mention(cleaned) or no_space_pattern.findall(text):
+                    continue
 
                 self.assertFalse('@' in cleaned)
+
+    def test_expand_mentions_none(self):
+        """
+        Test expanding mentions from a corpus where one user has an empty display name.
+        """
+
+        corpus = os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', '#CeltaSevillaFC.json')
+        with open(corpus) as f:
+            for line in f:
+                tweet = json.loads(line)
+                text = twitter.full_text(tweet)
+                text = twitter.expand_mentions(text, tweet)
+
+                if self.acceptable_mention(text):
+                    continue
+
+                self.assertFalse('@' in text)

@@ -138,6 +138,9 @@ def expand_mentions(text, tweet):
     mentions.update({ f"@{ mention['screen_name'] }": mention['name']
                       for mention in tweet.get('quoted_status', { }).get('extended_tweet', { }).get('entities', { }).get('user_mentions', { }) })
 
+    # fix a pesky bug where some people have an empty name
+    mentions = { handle: name for handle, name in mentions.items() if name }
+
     for handle, name in mentions.items():
         if '\\' in name:
             continue
