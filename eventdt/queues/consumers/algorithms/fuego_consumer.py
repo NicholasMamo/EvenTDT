@@ -240,6 +240,10 @@ class FUEGOConsumer(Consumer):
         # the values are a tuple with a vector representing the term's highest burst so far, and associated documents stored in a cluster
         topics = { }
 
+        # a cache of documents published since the last time window
+        # this cache is used to collect recent documents after a term starts bursting
+        cache = [ ]
+
         # the consumer keeps working until it is stopped or it receives no more tweets for a long period of time
         while self.active:
             # if the queue is idle, stop and wait for input
@@ -255,6 +259,7 @@ class FUEGOConsumer(Consumer):
                 if not documents:
                     continue
                 time = self._time(documents) # get the current timestamp from the last document
+                cache = self._update_cache(documents, cache, time) # add the new documents to the cache (and remove old documents)
 
                 # update the historical volume and the nutrition of individual keywords
                 self._update_volume(documents) # update the historical volume
@@ -274,7 +279,7 @@ class FUEGOConsumer(Consumer):
                 # collect tweets mentioning any bursty term
                 for term, (vector, cluster) in topics.items():
                     _documents = self._collect(term, documents) # collect the tweets mentioning any of the currently bursty terms
-                    cluster.vectors.extend(_documents) # add the topic documents to their cluster
+                    cluster.vectors.extend(self._difference(cache, cluster.vectors)) # add the new topic documents to their cluster
 
             # if the timeline is not empty, try to summarize the latest node
             if timeline.nodes:
