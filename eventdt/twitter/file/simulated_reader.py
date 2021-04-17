@@ -102,7 +102,7 @@ class SimulatedFileReader(FileReader):
             It is only after it catches up that the tweet is added to the queue.
             """
             elapsed = time.time() - start
-            if (created_at - first) / self.speed > elapsed:
+            if (created_at - first) / self.speed > elapsed and self.active:
                 await asyncio.sleep((created_at - first) / self.speed - elapsed)
 
             """
