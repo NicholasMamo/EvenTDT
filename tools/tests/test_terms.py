@@ -987,6 +987,35 @@ class TestTerms(unittest.TestCase):
         self.assertTrue(all( term['score'] == extracted_scores[term['term']] * reranked_scores[term['term']]
                              for term in combined ))
 
+    def test_combine_base_order_zero_score(self):
+        """
+        Test that when combining two lists of terms, all terms with a zero score have the same order as in the baseline.
+        """
+
+        events = [ 'CRYCHE', 'LIVMUN' ]
+        files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'tokenized', f"{ event }.json") for event in events ]
+        idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+
+        # extract the terms using TF-IDF
+        extractor = terms.create_extractor(TFIDFExtractor, tfidf=idf)
+        extracted = terms.extract(extractor, files, keep=200)
+        extracted_scores = { term['term']: term['score'] for term in extracted }
+        base_terms = sorted(extracted_scores.keys(), key=extracted_scores.get, reverse=True)
+
+        # rerank the terms without Laplace smoothing
+        reranked = terms.rerank(extracted, reranker=EF, tfidf=None, files=timelines,
+                                general=None, cutoff=None, base=None, keep=None,
+                                normalized=True, idfs=None, laplace=False)
+        reranked_scores = { term['term']: term['score'] for term in reranked }
+        combined = terms.combine('multiply', extracted, reranked)
+
+        # test that the terms with a combined score of zero are ordered in the same way as in the original list
+        zero_terms = [ term['term'] for term in combined if term['score'] == 0 ]
+        self.assertTrue(zero_terms)
+        for i in range(len(zero_terms) - 1):
+            self.assertLess(base_terms.index(zero_terms[i]), base_terms.index(zero_terms[i + 1]))
+
     def test_combine_multiply_correct_order(self):
         """
         Test that when combining two lists of terms, the results are sorted in descending order of score.

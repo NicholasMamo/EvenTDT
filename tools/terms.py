@@ -568,6 +568,7 @@ def rerank(terms, **kwargs):
     candidates = [ term['term'] for term in terms ]
     reranked = extract(extractor=reranker, files=kwargs['files'], candidates=candidates,
                        keep=kwargs['keep'], normalized=kwargs['normalized'], idfs=kwargs['idfs'])
+
     return reranked
 
 def combine(mode, terms, reranked):
