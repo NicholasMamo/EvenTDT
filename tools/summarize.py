@@ -217,9 +217,7 @@ def setup_args():
     return args
 
 def main():
-    """
-    Main program loop.
-    """
+    # main program loop
 
     args = setup_args()
 
@@ -231,9 +229,7 @@ def main():
     cmd['method'] = str(vars(args)['method'])
     pcmd['method'] = str(vars(args)['method'])
 
-    """
-    Summarize the timeline.
-    """
+    # summarize the timeline
     timeline = load_timeline(args.file)
     summarizer = create_summarizer(args.method, l=vars(args)['lambda'])
     terms = load_terms(args.domain_terms, args.max_domain_terms) if args.domain_terms else args.domain_terms
@@ -377,6 +373,7 @@ def summarize(summarizer, timeline, verbose=False, max_documents=None, length=14
         Generate the sumamry.
         """
         summary = summarizer.summarize(documents, length, query=query)
+        summary.attributes['timestamp'] = node.created_at
         if verbose:
             logger.info(f"{ datetime.fromtimestamp(node.created_at).ctime() }: { str(summary) }")
         summaries.append(summary)

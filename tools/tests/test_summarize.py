@@ -2,6 +2,7 @@
 Test the functionality of the summarization tool.
 """
 
+from datetime import datetime
 import json
 import math
 import os
@@ -110,6 +111,24 @@ class TestSummarize(unittest.TestCase):
         terms = [ 'pipe' ]
         summaries = summarize.summarize(summarizer, timeline, length=30, with_query=True, max_documents=1, terms=terms)
         self.assertEqual(documents[0], summaries[0].documents[0])
+
+    def test_summarize_stores_created_at(self):
+        """
+        Test that when summarizing, the function stores the summary's time as an attribute.
+        """
+
+        timestamp = datetime.now().timestamp()
+
+        summarizer = summarize.create_summarizer(MMR)
+        timeline = Timeline(TopicalClusterNode, 60, 0.5)
+        documents = [ Document('this is not a pipe', { 'this': 1/math.sqrt(2), 'pipe': 1/math.sqrt(2) }),
+                       Document('this is not a cigar', { 'this': 1/math.sqrt(2), 'cigar': 1/math.sqrt(2) }),
+                      Document('cigars are where it is at', { 'where': 1/math.sqrt(2), 'cigar': 1/math.sqrt(2) }) ]
+        cluster = Cluster(documents)
+        timeline.add(timestamp=timestamp, cluster=cluster, topic=Vector({ 'cigar': 1, 'pipe': 1 })) # no discrimination here
+
+        summaries = summarize.summarize(summarizer, timeline, length=30)
+        self.assertEqual(timestamp, summaries[0].attributes['timestamp'])
 
     def test_load_terms_all_words(self):
         """
