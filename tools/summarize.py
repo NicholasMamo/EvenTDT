@@ -62,6 +62,16 @@ Normally, the summarization tool considers the top quality documents, but if you
     Summaries can be shorter than this limit, but not longer.
     If the length is too short, the summary may be empty.
 
+Instead of saving summaries to a JSON file, you can also save them to a CSV file using the ``--format`` parameter:
+
+.. code-block:: bash
+
+    ./tools/summarize.py \\
+    --file data/timeline.json \\
+    --method MMR \\
+    --output data/summaries.csv \\
+    --format csv
+
 The output is a JSON file with the following structure:
 
 .. code-block:: json
@@ -75,6 +85,7 @@ The output is a JSON file with the following structure:
             "method": "<class 'summarization.algorithms.mmr.MMR'>",
             "output": "summaries/summary.json",
             "verbose": true,
+            "format": "json",
             "domain_terms": null,
             "max_domain_terms": null,
             "documents": null,
@@ -92,6 +103,7 @@ The output is a JSON file with the following structure:
             "method": "<class 'summarization.algorithms.mmr.MMR'>",
             "output": "summaries/summary.json",
             "verbose": true,
+            "format": "json",
             "domain_terms": null,
             "max_domain_terms": null,
             "documents": null,
@@ -116,6 +128,7 @@ The full list of accepted arguments:
     - ``-m --method``        *<Required>* The method to use to generate summaries; supported: :class:`~summarization.algorithms.dgs.DGS`, :class:`~summarization.algorithms.mmr.MMR`.
     - ``-o --output``        *<Required>* The path to the file where to store the generated summaries.
     - ``-v --verbose``       *<Optional>* Print the summaries as they are generated.
+    - ``--format``           *<Optional>* The format of the summaries output file; supported: `json` (default), `csv`.
     - ``--domain-terms``     *<Optional>* The path to a file containing a list of domain terms, expected to contain one keyword on each line. Alternatively, the output from the :class:`~tools.terms` tool can be provided. If given, the loaded terms are used with the :class:`~summarization.scorers.domain_scorer.DomainScorer` to select the top documents.
     - ``--max-domain-terms`` *<Optional>* The number of domain terms to retain; defaults to all terms in the file.
     - ``--documents``        *<Optional>* The maximum number of documents to use when summarizing. If no domain terms are given, preference is given for quality documents, scored by the :class:`~summarization.scorers.tweet_scorer.TweetScorer` or the :class:`~summarization.scorers.domain_scorer.DomainScorer`; defaults to all documents.
@@ -157,6 +170,7 @@ def setup_args():
         - ``-m --method``        *<Required>* The method to use to generate summaries; supported: :class:`~summarization.algorithms.dgs.DGS`, :class:`~summarization.algorithms.mmr.MMR`.
         - ``-o --output``        *<Required>* The path to the file where to store the generated summaries.
         - ``-v --verbose``       *<Optional>* Print the summaries as they are generated.
+        - ``--format``           *<Optional>* The format of the summaries output file; supported: `json` (default), `csv`.
         - ``--domain-terms``     *<Optional>* The path to a file containing a list of domain terms, expected to contain one keyword on each line. Alternatively, the output from the :class:`~tools.terms` tool can be provided. If given, the loaded terms are used with the :class:`~summarization.scorers.domain_scorer.DomainScorer` to select the top documents.
         - ``--max-domain-terms`` *<Optional>* The number of domain terms to retain; defaults to all terms in the file.
         - ``--documents``        *<Optional>* The maximum number of documents to use when summarizing. If no domain terms are given, preference is given for quality documents, scored by the :class:`~summarization.scorers.tweet_scorer.TweetScorer` or the :class:`~summarization.scorers.domain_scorer.DomainScorer`; defaults to all documents.
@@ -180,6 +194,8 @@ def setup_args():
                         help='<Required> The path to the file where to store the generated summaries.')
     parser.add_argument('-v', '--verbose', action='store_true', required=False, default=False,
                         help='<Optional> Print the summaries as they are generated.')
+    parser.add_argument('--format', type=str, required=False, default='json',
+                        help='<Optional> The format of the summaries output file; supported: `json` (default), `csv`.')
     parser.add_argument('--domain-terms', type=str, required=False, default=None,
                         help='<Optional> The path to a file containing a list of domain terms, expected to contain one keyword on each line. Alternatively, the output from the `terms` tool can be provided. If given, the loaded terms are used with the Domain Scorer to select the top documents.')
     parser.add_argument('--max-domain-terms', type=int, required=False, default=None,
