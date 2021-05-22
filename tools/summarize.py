@@ -194,7 +194,7 @@ def setup_args():
                         help='<Required> The path to the file where to store the generated summaries.')
     parser.add_argument('-v', '--verbose', action='store_true', required=False, default=False,
                         help='<Optional> Print the summaries as they are generated.')
-    parser.add_argument('--format', type=str, required=False, default='json',
+    parser.add_argument('--format', type=str.lower, required=False, default='json',
                         help='<Optional> The format of the summaries output file; supported: `json` (default), `csv`.')
     parser.add_argument('--domain-terms', type=str, required=False, default=None,
                         help='<Optional> The path to a file containing a list of domain terms, expected to contain one keyword on each line. Alternatively, the output from the `terms` tool can be provided. If given, the loaded terms are used with the Domain Scorer to select the top documents.')
