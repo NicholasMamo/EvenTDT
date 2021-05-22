@@ -5,6 +5,7 @@ Keep reading to learn more about the tools available in EvenTDT.
 """
 
 import copy
+import csv
 import datetime
 import json
 import os
@@ -65,6 +66,39 @@ def save(file, data):
     data = Exportable.encode(data)
     with open(file, 'w') as f:
         f.write(json.dumps(data))
+
+def save_csv(file, data, headers=None, delimiter=','):
+    """
+    Save the given data to a CSV file.
+
+    :param file: The path to the file where to save the data.
+    :type file: str
+    :param data: The data to save.
+                 The function expects a list of values for each record.
+    :type data: list
+    :param headers: The headers to save at the top of the file.
+                    If given, the function expects a list.
+    :type headers: list
+    :param delimiter: The delimiter to use, defaults to a comma.
+    :type delimiter: str
+    """
+
+    # create the directory if it doesn't exist
+    dir = os.path.dirname(file)
+    if dir and not os.path.exists(dir):
+        os.mkdir(dir)
+
+    # save the headers and the data
+    with open(file, 'w', encoding='utf-8') as f:
+        writer = csv.writer(f, delimiter=delimiter) # create the writer
+
+        # write the headers if given
+        if headers:
+            writer.writerow(headers)
+
+        # write the data
+        for row in data:
+            writer.writerow(row)
 
 def load(file):
     """
