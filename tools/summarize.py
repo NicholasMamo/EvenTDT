@@ -375,7 +375,7 @@ def summarize(summarizer, timeline, verbose=False, max_documents=None, length=14
         summary = summarizer.summarize(documents, length, query=query)
         summary.attributes['timestamp'] = node.created_at
         if query:
-            summary.attributes['query'] = query
+            summary.attributes['query'] = query.dimensions
         if verbose:
             logger.info(f"{ datetime.fromtimestamp(node.created_at).ctime() }: { str(summary) }")
         summaries.append(summary)
@@ -399,7 +399,7 @@ def tabulate(summaries):
 
     # go through each summary and tabulate it as a row
     for summary in summaries:
-        query = summary.attributes.get('query', Vector()).dimensions
+        query = summary.attributes.get('query', { })
         query = sorted(query.items(), key=lambda q: q[1], reverse=True) # sort the query in descending order of weight
         table.append([ summary.attributes['timestamp'], json.dumps(dict(query)), str(summary)])
 

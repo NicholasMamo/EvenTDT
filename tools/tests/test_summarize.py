@@ -109,7 +109,7 @@ class TestSummarize(unittest.TestCase):
 
         summaries = summarize.summarize(summarizer, timeline, length=30, with_query=True)
         self.assertEqual(1, len(summaries[0].documents))
-        self.assertEqual(query.dimensions, summaries[0].attributes['query'].dimensions)
+        self.assertEqual(query.dimensions, summaries[0].attributes['query'])
 
     def test_summarize_without_query(self):
         """
