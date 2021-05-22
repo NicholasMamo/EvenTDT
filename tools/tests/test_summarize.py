@@ -91,6 +91,44 @@ class TestSummarize(unittest.TestCase):
         self.assertEqual(1, len(summaries[0].documents))
         self.assertEqual(str(documents[0]), str(summaries[0]))
 
+    def test_summarize_with_query(self):
+        """
+        Test that when summarizing with a query, the queries are stored alongside the summary.
+        """
+
+        query = Vector({ 'where': 1 })
+
+        summarizer = summarize.create_summarizer(MMR)
+        timeline = Timeline(TopicalClusterNode, 60, 0.5)
+        documents = [ Document('this is not a pipe', { 'this': 1/math.sqrt(2), 'pipe': 1/math.sqrt(2) }),
+                       Document('this is not a cigar', { 'this': 1/math.sqrt(2), 'cigar': 1/math.sqrt(2) }),
+                      Document('cigars are where it is at', { 'where': 1/math.sqrt(2), 'cigar': 1/math.sqrt(2) }) ]
+        cluster = Cluster(documents)
+        timeline.add(cluster=cluster, topic=query)
+
+        summaries = summarize.summarize(summarizer, timeline, length=30, with_query=True)
+        self.assertEqual(1, len(summaries[0].documents))
+        self.assertEqual(query.dimensions, summaries[0].attributes['query'].dimensions)
+
+    def test_summarize_without_query(self):
+        """
+        Test that when summarizing without a query, no queries are generated or stored alongside the summary.
+        """
+
+        query = Vector({ 'where': 1 })
+
+        summarizer = summarize.create_summarizer(MMR)
+        timeline = Timeline(TopicalClusterNode, 60, 0.5)
+        documents = [ Document('this is not a pipe', { 'this': 1/math.sqrt(2), 'pipe': 1/math.sqrt(2) }),
+                       Document('this is not a cigar', { 'this': 1/math.sqrt(2), 'cigar': 1/math.sqrt(2) }),
+                      Document('cigars are where it is at', { 'where': 1/math.sqrt(2), 'cigar': 1/math.sqrt(2) }) ]
+        cluster = Cluster(documents)
+        timeline.add(cluster=cluster, topic=query)
+
+        summaries = summarize.summarize(summarizer, timeline, length=30, with_query=False)
+        self.assertEqual(1, len(summaries[0].documents))
+        self.assertFalse('query' in summaries[0].attributes)
+
     def test_summarize_with_domain_terms(self):
         """
         Test that when summarizing with domain terms, they are used to rank documents instead of quality indicators.

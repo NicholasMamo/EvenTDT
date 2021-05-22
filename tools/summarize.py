@@ -374,6 +374,8 @@ def summarize(summarizer, timeline, verbose=False, max_documents=None, length=14
         """
         summary = summarizer.summarize(documents, length, query=query)
         summary.attributes['timestamp'] = node.created_at
+        if query:
+            summary.attributes['query'] = query
         if verbose:
             logger.info(f"{ datetime.fromtimestamp(node.created_at).ctime() }: { str(summary) }")
         summaries.append(summary)
