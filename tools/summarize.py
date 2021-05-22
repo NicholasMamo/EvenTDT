@@ -382,6 +382,29 @@ def summarize(summarizer, timeline, verbose=False, max_documents=None, length=14
 
     return summaries
 
+def tabulate(summaries):
+    """
+    Convert the given summaries into a table-like structure to prepare to save them as CSV files.
+    This format stores only a basic representation of summaries, including when the summary was originally created, the query and the actual summary.
+
+    :param summaries: A list of summaries to tabulate.
+    :type summaries: list of :class:`~summarization.summary.Summary`
+
+    :return: A list of lists, where each outer list is a summary.
+             Each summary is made up of a list containing of the summary's details.
+    :rtype: list of list
+    """
+
+    table = [ ]
+
+    # go through each summary and tabulate it as a row
+    for summary in summaries:
+        query = summary.attributes.get('query', Vector()).dimensions
+        query = sorted(query.items(), key=lambda q: q[1], reverse=True) # sort the query in descending order of weight
+        table.append([ summary.attributes['timestamp'], json.dumps(dict(query)), str(summary)])
+
+    return table
+
 def load_terms(term_file, max_terms=None):
     """
     Load the terms from the given term file.

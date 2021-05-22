@@ -18,6 +18,7 @@ for path in paths:
 
 from nlp import Document
 from summarization.algorithms import MMR, DGS
+from summarization import Summary
 from summarization.timeline import Timeline
 from summarization.timeline.nodes import TopicalClusterNode
 from tools import summarize
@@ -167,6 +168,150 @@ class TestSummarize(unittest.TestCase):
 
         summaries = summarize.summarize(summarizer, timeline, length=30)
         self.assertEqual(timestamp, summaries[0].attributes['timestamp'])
+
+    def test_tabulate_empty(self):
+        """
+        Test that when tabulating an empty list of summaries, another empty list is created.
+        """
+
+        self.assertEqual([ ], summarize.tabulate([ ]))
+
+    def test_tabulate_equal_to_summaries(self):
+        """
+        Test that when tabulating summaries, the outer list contains as many lists as the number of summaries.
+        """
+
+        timestamp = datetime.now().timestamp()
+        summarizer = summarize.create_summarizer(MMR)
+        timeline = Timeline(TopicalClusterNode, 60, 0.5)
+        documents = [ Document('this is not a pipe', { 'this': 1/math.sqrt(2), 'pipe': 1/math.sqrt(2) }),
+                       Document('this is not a cigar', { 'this': 1/math.sqrt(2), 'cigar': 1/math.sqrt(2) }),
+                      Document('cigars are where it is at', { 'where': 1/math.sqrt(2), 'cigar': 1/math.sqrt(2) }) ]
+        cluster = Cluster(documents)
+        timeline.add(timestamp=timestamp, cluster=cluster, topic=Vector({ 'cigar': 1, 'pipe': 1 })) # no discrimination here
+
+        summaries = summarize.summarize(summarizer, timeline, length=30)
+        self.assertEqual(len(summaries), len(summarize.tabulate(summaries)))
+
+    def test_tabulate_includes_timestamp(self):
+        """
+        Test that when tabulating summaries, the first column is the timestamp.
+        """
+
+        timestamp = datetime.now().timestamp()
+        summarizer = summarize.create_summarizer(MMR)
+        timeline = Timeline(TopicalClusterNode, 60, 0.5)
+        documents = [ Document('this is not a pipe', { 'this': 1/math.sqrt(2), 'pipe': 1/math.sqrt(2) }),
+                       Document('this is not a cigar', { 'this': 1/math.sqrt(2), 'cigar': 1/math.sqrt(2) }),
+                      Document('cigars are where it is at', { 'where': 1/math.sqrt(2), 'cigar': 1/math.sqrt(2) }) ]
+        cluster = Cluster(documents)
+        timeline.add(timestamp=timestamp, cluster=cluster, topic=Vector({ 'cigar': 1, 'pipe': 1 })) # no discrimination here
+
+        summaries = summarize.summarize(summarizer, timeline, length=30)
+        tabulated = summarize.tabulate(summaries)
+        self.assertEqual(timestamp, tabulated[0][0])
+
+    def test_tabulate_includes_query(self):
+        """
+        Test that when tabulating summaries, the second column is the query.
+        """
+
+        query = Vector({ 'cigar': 1, 'pipe': 1 })
+        query.normalize()
+        timestamp = datetime.now().timestamp()
+        summarizer = summarize.create_summarizer(MMR)
+        timeline = Timeline(TopicalClusterNode, 60, 0.5)
+        documents = [ Document('this is not a pipe', { 'this': 1/math.sqrt(2), 'pipe': 1/math.sqrt(2) }),
+                       Document('this is not a cigar', { 'this': 1/math.sqrt(2), 'cigar': 1/math.sqrt(2) }),
+                      Document('cigars are where it is at', { 'where': 1/math.sqrt(2), 'cigar': 1/math.sqrt(2) }) ]
+        cluster = Cluster(documents)
+        timeline.add(timestamp=timestamp, cluster=cluster, topic=query) # no discrimination here
+
+        summaries = summarize.summarize(summarizer, timeline, length=30)
+        tabulated = summarize.tabulate(summaries)
+        self.assertTrue(all( round(query.dimensions[topic], 7) == round(json.loads(tabulated[0][1])[topic], 7) for topic in query.dimensions ))
+
+    def test_tabulate_query_string(self):
+        """
+        Test that when tabulating summaries, the query is stored as a string.
+        """
+
+        query = Vector({ 'cigar': 1, 'pipe': 1 })
+        query.normalize()
+        timestamp = datetime.now().timestamp()
+        summarizer = summarize.create_summarizer(MMR)
+        timeline = Timeline(TopicalClusterNode, 60, 0.5)
+        documents = [ Document('this is not a pipe', { 'this': 1/math.sqrt(2), 'pipe': 1/math.sqrt(2) }),
+                       Document('this is not a cigar', { 'this': 1/math.sqrt(2), 'cigar': 1/math.sqrt(2) }),
+                      Document('cigars are where it is at', { 'where': 1/math.sqrt(2), 'cigar': 1/math.sqrt(2) }) ]
+        cluster = Cluster(documents)
+        timeline.add(timestamp=timestamp, cluster=cluster, topic=query) # no discrimination here
+
+        summaries = summarize.summarize(summarizer, timeline, length=30)
+        tabulated = summarize.tabulate(summaries)
+        self.assertEqual(str, type(tabulated[0][1]))
+
+    def test_tabulate_query_ordered(self):
+        """
+        Test that when tabulating summaries, the query is sorted in descending order of weight.
+        """
+
+        query = Vector({ 'cigar': 0.8, 'pipe': 1 })
+        timestamp = datetime.now().timestamp()
+        summarizer = summarize.create_summarizer(MMR)
+        timeline = Timeline(TopicalClusterNode, 60, 0.5)
+        documents = [ Document('this is not a pipe', { 'this': 1/math.sqrt(2), 'pipe': 1/math.sqrt(2) }),
+                       Document('this is not a cigar', { 'this': 1/math.sqrt(2), 'cigar': 1/math.sqrt(2) }),
+                      Document('cigars are where it is at', { 'where': 1/math.sqrt(2), 'cigar': 1/math.sqrt(2) }) ]
+        cluster = Cluster(documents)
+        timeline.add(timestamp=timestamp, cluster=cluster, topic=query) # no discrimination here
+
+        summaries = summarize.summarize(summarizer, timeline, length=30)
+        tabulated = summarize.tabulate(summaries)
+        decoded = json.loads(tabulated[0][1])
+        self.assertEqual(max(query.dimensions, key=query.dimensions.get), list(decoded.keys())[0])
+        self.assertEqual(min(query.dimensions, key=query.dimensions.get), list(decoded.keys())[-1])
+        self.assertTrue(all( decoded[list(decoded.keys())[i]] > decoded[list(decoded.keys())[i + 1]]
+                             for i in range(len(decoded.keys()) - 1) ))
+
+    def test_tabulate_no_query(self):
+        """
+        Test that if the summary is created without a query, the tabulated summaries have an empty query.
+        """
+
+        query = Vector({ 'cigar': 1, 'pipe': 1 })
+        query.normalize()
+        timestamp = datetime.now().timestamp()
+        summarizer = summarize.create_summarizer(MMR)
+        timeline = Timeline(TopicalClusterNode, 60, 0.5)
+        documents = [ Document('this is not a pipe', { 'this': 1/math.sqrt(2), 'pipe': 1/math.sqrt(2) }),
+                       Document('this is not a cigar', { 'this': 1/math.sqrt(2), 'cigar': 1/math.sqrt(2) }),
+                      Document('cigars are where it is at', { 'where': 1/math.sqrt(2), 'cigar': 1/math.sqrt(2) }) ]
+        cluster = Cluster(documents)
+        timeline.add(timestamp=timestamp, cluster=cluster, topic=query) # no discrimination here
+
+        summaries = summarize.summarize(summarizer, timeline, length=30, with_query=False)
+        tabulated = summarize.tabulate(summaries)
+        self.assertEqual(json.dumps({ }), tabulated[0][1])
+
+    def test_tabulate_includes_summary(self):
+        """
+        Test that when tabulating summaries, the last column is the actual summary.
+        """
+
+        timestamp = datetime.now().timestamp()
+        summarizer = summarize.create_summarizer(MMR)
+        timeline = Timeline(TopicalClusterNode, 60, 0.5)
+        documents = [ Document('this is not a pipe', { 'this': 1/math.sqrt(2), 'pipe': 1/math.sqrt(2) }),
+                       Document('this is not a cigar', { 'this': 1/math.sqrt(2), 'cigar': 1/math.sqrt(2) }),
+                      Document('cigars are where it is at', { 'where': 1/math.sqrt(2), 'cigar': 1/math.sqrt(2) }) ]
+        cluster = Cluster(documents)
+        timeline.add(timestamp=timestamp, cluster=cluster, topic=Vector({ 'cigar': 1, 'pipe': 1 })) # no discrimination here
+
+        summaries = summarize.summarize(summarizer, timeline, length=30)
+        tabulated = summarize.tabulate(summaries)
+        self.assertEqual(str, type(tabulated[0][-1]))
+        self.assertTrue(any( tabulated[0][-1] == str(document) for document in documents ))
 
     def test_load_terms_all_words(self):
         """
