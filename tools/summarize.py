@@ -238,7 +238,13 @@ def main():
                           with_query=args.with_query, query_only=args.query_only,
                           terms=terms)
 
-    tools.save(args.output, { 'summaries': summaries, 'cmd': cmd, 'pcmd': pcmd })
+    # if the file format is CSV, convert summaries to CSV
+    if args.format == 'csv':
+        headers = [ 'timestamp', 'query', 'summary' ]
+        summaries = tabulate(summaries)
+        tools.save_csv(args.output, summaries, headers=headers)
+    else:
+        tools.save(args.output, { 'summaries': summaries, 'cmd': cmd, 'pcmd': pcmd })
 
 def method(method):
     """
