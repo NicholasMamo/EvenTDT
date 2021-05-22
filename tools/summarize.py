@@ -85,6 +85,7 @@ The output is a JSON file with the following structure:
             "method": "<class 'summarization.algorithms.mmr.MMR'>",
             "output": "summaries/summary.json",
             "verbose": true,
+            "meta": null,
             "format": "json",
             "domain_terms": null,
             "max_domain_terms": null,
@@ -103,6 +104,7 @@ The output is a JSON file with the following structure:
             "method": "<class 'summarization.algorithms.mmr.MMR'>",
             "output": "summaries/summary.json",
             "verbose": true,
+            "meta": null,
             "format": "json",
             "domain_terms": null,
             "max_domain_terms": null,
@@ -128,6 +130,7 @@ The full list of accepted arguments:
     - ``-m --method``        *<Required>* The method to use to generate summaries; supported: :class:`~summarization.algorithms.dgs.DGS`, :class:`~summarization.algorithms.mmr.MMR`.
     - ``-o --output``        *<Required>* The path to the file where to store the generated summaries.
     - ``-v --verbose``       *<Optional>* Print the summaries as they are generated.
+    - ``--meta``             *<Optional>* The file where to save the meta data, defaults to [--file].meta.json (only used if the format is `csv`).
     - ``--format``           *<Optional>* The format of the summaries output file; supported: `json` (default), `csv`.
     - ``--domain-terms``     *<Optional>* The path to a file containing a list of domain terms, expected to contain one keyword on each line. Alternatively, the output from the :class:`~tools.terms` tool can be provided. If given, the loaded terms are used with the :class:`~summarization.scorers.domain_scorer.DomainScorer` to select the top documents.
     - ``--max-domain-terms`` *<Optional>* The number of domain terms to retain; defaults to all terms in the file.
@@ -170,6 +173,7 @@ def setup_args():
         - ``-m --method``        *<Required>* The method to use to generate summaries; supported: :class:`~summarization.algorithms.dgs.DGS`, :class:`~summarization.algorithms.mmr.MMR`.
         - ``-o --output``        *<Required>* The path to the file where to store the generated summaries.
         - ``-v --verbose``       *<Optional>* Print the summaries as they are generated.
+        - ``--meta``             *<Optional>* The file where to save the meta data, defaults to [--file].meta.json (only used if the format is `csv`).
         - ``--format``           *<Optional>* The format of the summaries output file; supported: `json` (default), `csv`.
         - ``--domain-terms``     *<Optional>* The path to a file containing a list of domain terms, expected to contain one keyword on each line. Alternatively, the output from the :class:`~tools.terms` tool can be provided. If given, the loaded terms are used with the :class:`~summarization.scorers.domain_scorer.DomainScorer` to select the top documents.
         - ``--max-domain-terms`` *<Optional>* The number of domain terms to retain; defaults to all terms in the file.
@@ -194,6 +198,8 @@ def setup_args():
                         help='<Required> The path to the file where to store the generated summaries.')
     parser.add_argument('-v', '--verbose', action='store_true', required=False, default=False,
                         help='<Optional> Print the summaries as they are generated.')
+    parser.add_argument('--meta', type=str, required=False,
+                        help='<Optional> The file where to save the meta data, defaults to [--file].meta.json (only used if the format is `csv`).')
     parser.add_argument('--format', type=str.lower, required=False, default='json',
                         help='<Optional> The format of the summaries output file; supported: `json` (default), `csv`.')
     parser.add_argument('--domain-terms', type=str, required=False, default=None,
@@ -240,9 +246,13 @@ def main():
 
     # if the file format is CSV, convert summaries to CSV
     if args.format == 'csv':
-        headers = [ 'timestamp', 'query', 'summary' ]
-        summaries = tabulate(summaries)
-        tools.save_csv(args.output, summaries, headers=headers)
+        headers = [ 'timestamp', 'query', 'summary' ] # the CSV headers
+        summaries = tabulate(summaries) # tabulate the summaries
+        tools.save_csv(args.output, summaries, headers=headers) # save the summaries
+
+        meta = args.meta or args.output.replace('.csv', '.meta.json') # find the meta file path
+        pcmd['meta'] = meta # update the processed version
+        tools.save(meta, { 'cmd': cmd, 'pcmd': pcmd }) # save the metadata
     else:
         tools.save(args.output, { 'summaries': summaries, 'cmd': cmd, 'pcmd': pcmd })
 
