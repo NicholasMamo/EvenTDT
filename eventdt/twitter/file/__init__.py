@@ -126,15 +126,20 @@ class FileReader(ABC):
             """
             Set the ``active`` flag to ``True`` and the ``stopped`` flag to ``False`` before starting to read.
             After finishing reading, set the ``active`` flag to ``False`` and the ``stopped`` flag to ``True``.
+
+            :return: The number of tweets read from the file.
+            :rtype: int
             """
 
             self.active = True
             self.stopped = False
 
-            await f(self, *args, **kwargs)
+            read = await f(self, *args, **kwargs)
 
             self.active = False
             self.stopped = True
+
+            return read
 
         return wrapper
 
