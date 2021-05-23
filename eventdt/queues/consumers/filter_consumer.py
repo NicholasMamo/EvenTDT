@@ -104,6 +104,25 @@ class FilterConsumer(Consumer):
 
         pass
 
+    def _preprocess(self, tweet):
+        """
+        Pre-process the given tweet.
+
+        This function is used when all of the :class:`~queues.consumers.filter_consumer.FilterConsumer`'s own consumers perform the same pre-processing on the tweet.
+        In this case, pre-processing can be used to make the child consumers more efficient by pre-processing the tweets only once.
+
+        By default, this function does not change the tweet.
+
+        :param tweet: The tweet to pre-process.
+        :type tweet: dict
+
+        :return: The pre-processed tweet.
+                 This function does not change the tweet at all, but it can be overriden.
+        :rtype: dict
+        """
+
+        return tweet
+
 class DummyFilterConsumer(FilterConsumer):
     """
     A dummy :class:`~queues.consumers.filter_consumer.FilterConsumer` that accepts all tweets.

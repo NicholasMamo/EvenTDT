@@ -15,7 +15,7 @@ if path not in sys.path:
 from logger import logger
 from queues import Queue
 from queues.consumers import PrintConsumer
-from queues.consumers.algorithms import ZhaoConsumer
+from queues.consumers.algorithms import ELDConsumer, ZhaoConsumer
 from queues.consumers.filter_consumer import DummyFilterConsumer
 
 logger.set_logging_level(logger.LogLevel.WARNING)
@@ -79,3 +79,15 @@ class TestFilterConsumer(unittest.TestCase):
 
         consumer = DummyFilterConsumer(Queue(), filters, ZhaoConsumer, periodicity=10)
         self.assertEqual(10, consumer.consumer.periodicity)
+
+    def test_preprocess_identical(self):
+        """
+        Test that the default pre-processing step does not change the tweet at all.
+        """
+
+        splits = [ (0, 50), (50, 100) ]
+        consumer = DummyFilterConsumer(Queue(), splits, ELDConsumer)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
+            for line in f:
+                tweet = json.loads(line)
+                self.assertEqual(tweet, consumer._preprocess(tweet))
