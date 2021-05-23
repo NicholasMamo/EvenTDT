@@ -151,6 +151,16 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
         with open(file, 'r') as f:
             self.assertTrue(StaggeredFileReader(Queue(), f, skip_time=1))
 
+    def test_init_default_sample(self):
+        """
+        Test that when creating a staggered file reader, the default sampling rate is 1.
+        """
+
+        file = 'eventdt/tests/corpora/CRYCHE-100.json'
+        with open(file, 'r') as f:
+            reader = StaggeredFileReader(Queue(), f)
+            self.assertEqual(1, reader.sample)
+
     def test_floating_point_sample(self):
         """
         Test that when creating a staggered file reader with a floating point number of lines to skip after each read, a ValueError is raised.
