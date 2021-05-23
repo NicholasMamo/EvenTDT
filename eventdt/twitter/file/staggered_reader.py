@@ -29,8 +29,8 @@ class StaggeredFileReader(FileReader):
     The :class:`~twitter.file.staggered_reader.StaggeredFileReader` does not read a bunch of tweets and sleeps for the rest of the second, but spaces them out over a second.
 
     On the other hand, the ``sample`` parameter is used as a systematic sampling mechanism.
-    For every $sample$ tweets, the staggered reader reads only one.
-    By the end, the staggered reader reads $1/sample$ of all tweets in the corpus.
+    For every :math:`sample` tweets, the staggered reader reads only one.
+    By the end, the staggered reader reads :math:`1/sample` of all tweets in the corpus.
 
     :ivar rate: The number of lines to read per second.
     :vartype rate: float

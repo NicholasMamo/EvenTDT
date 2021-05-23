@@ -30,8 +30,8 @@ class SimulatedFileReader(FileReader):
     Since the :class:`~twitter.file.simulated_reader.SimulatedFileReader` simulates the stream as if it is happening in real-time, the ``speed`` is a function of time as well.
 
     The ``sample`` parameter is used as a systematic sampling mechanism.
-    For every $sample$ tweets, the simulated reader reads only one.
-    By the end, the simulated reader reads $1/sample$ of all tweets in the corpus.
+    For every :math:`sample` tweets, the simulated reader reads only one.
+    By the end, the simulated reader reads :math:`1/sample` of all tweets in the corpus.
 
     :ivar speed: The reading speed as a function of time.
                  If it is set to 0.5, for example, the event progresses at half the speed.
