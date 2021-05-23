@@ -119,7 +119,8 @@ The output is a JSON file with the following structure:
             "splits": null,
             "threshold": 0.5,
             "post_rate": 1.7,
-            "understanding": "data/event/understanding.json"
+            "understanding": "data/event/understanding.json",
+            "read": 500
         },
         "pcmd": {
             "_cmd": "EvenTDT/tools/consume.py --event data/event/event.json --understanding data/event/understanding.json --consumer ELDConsumer",
@@ -146,7 +147,8 @@ The output is a JSON file with the following structure:
             "splits": null,
             "threshold": 0.5,
             "post_rate": 1.7,
-            "understanding": "data/event/understanding.json"
+            "understanding": "data/event/understanding.json",
+            "read": 500
         },
         "timeline": {
             "class": "<class 'summarization.timeline.Timeline'>",
@@ -347,9 +349,9 @@ def main():
         cache = os.path.join(dir, '.cache', os.path.basename(args['understanding']))
         if args['no_cache'] or not tools.cache_exists(args['understanding']):
             logger.info("Starting understanding period")
-            understanding = understand(**args)['understanding']
-            tools.save(cache, understanding)
-            args.update(understanding)
+            read, understanding = understand(**args)
+            tools.save(cache, understanding['understanding'])
+            args.update(understanding['understanding'])
             logger.info("Understanding period ended")
         else:
             args.update(tools.load(cache))
@@ -358,7 +360,9 @@ def main():
     Consume the event with the main file.
     """
     logger.info("Starting event period")
-    timeline = consume(**args)
+    read, timeline = consume(**args)
+    cmd['read'] = read
+    pcmd['read'] = read
     timeline['cmd'] = cmd
     timeline['pcmd'] = pcmd
 
@@ -400,8 +404,8 @@ def understand(understanding, consumer, max_inactivity, skip_retweets, skip_unve
     :param scheme: The scheme to use when consuming the file.
     :type scheme: :class:`~nlp.weighting.TermWeightingScheme`
 
-    :return: A dictionary containing the understanding.
-    :rtype: dict
+    :return: A tuple containing the number of read tweets and a dictionary containing the understanding.
+    :rtype: tuple of int and dict
     """
 
     loop = asyncio.get_event_loop()
@@ -424,7 +428,7 @@ def understand(understanding, consumer, max_inactivity, skip_retweets, skip_unve
     Create and start the streaming and understanding processes.
     """
     stream = Process(target=stream_process,
-                     args=(loop, queue, understanding, ),
+                     args=(comm, loop, queue, understanding, ),
                      kwargs={ 'speed': 120, 'skip_retweets': skip_retweets,
                               'skip_unverified': skip_unverified, 'max_time': -1 })
     understand = Process(target=understand_process, args=(comm, loop, consumer, max_inactivity, ))
@@ -436,11 +440,12 @@ def understand(understanding, consumer, max_inactivity, skip_retweets, skip_unve
     """
     Clean up understanding.
     """
+    read = comm.pop('read')
     understanding = dict(comm)
     manager.shutdown()
     queue_manager.shutdown()
 
-    return understanding
+    return read, understanding
 
 def consume(event, consumer, speed, max_inactivity, max_time, skip, skip_retweets, skip_unverified, *args, **kwargs):
     """
@@ -471,8 +476,8 @@ def consume(event, consumer, speed, max_inactivity, max_time, skip, skip_retweet
     :param skip_unverified: Skip tweets from unverified authors when reading tweets from a file.
     :type skip_retweets: bool
 
-    :return: A dictionary containing the timeline.
-    :rtype: dict
+    :return: A tuple containing the number of read tweets and a dictionary containing the timeline.
+    :rtype: tuple of int and dict
     """
 
     loop = asyncio.get_event_loop()
@@ -495,7 +500,7 @@ def consume(event, consumer, speed, max_inactivity, max_time, skip, skip_retweet
     Create and start the streaming and consumption processes.
     """
     stream = Process(target=stream_process,
-                     args=(loop, queue, event, ),
+                     args=(comm, loop, queue, event, ),
                      kwargs={ 'speed': speed, 'skip_time': skip * 60, 'skip_retweets': skip_retweets,
                                'skip_unverified': skip_unverified, 'max_time': (max_time * 60 if max_time >= 0 else max_time) })
     consume = Process(target=consume_process, args=(comm, loop, consumer, max_inactivity, ))
@@ -512,17 +517,20 @@ def consume(event, consumer, speed, max_inactivity, max_time, skip, skip_retweet
     """
     Clean up after the consumption.
     """
+    read = comm.pop('read')
     timeline = dict(comm)
     manager.shutdown()
     queue_manager.shutdown()
 
-    return timeline
+    return read, timeline
 
-def stream_process(loop, queue, file, skip_time=0, speed=1, max_time=-1,
+def stream_process(comm, loop, queue, file, skip_time=0, speed=1, max_time=-1,
                    skip_retweets=False, skip_unverified=False, *args, **kwargs):
     """
     Stream the file and add its tweets to the queue.
 
+    :param comm: The dictionary used by the understanding process to communicate data back to the main loop.
+    :type comm: :class:`multiprocessing.managers.DictProxy`
     :param loop: The main event loop.
     :type loop: :class:`asyncio.unix_events._UnixSelectorEventLoop`
     :param queue: The queue where to add tweets.
@@ -558,12 +566,12 @@ def stream_process(loop, queue, file, skip_time=0, speed=1, max_time=-1,
 
         signal.signal(signal.SIGINT, sigint_handler)
 
-        await reader.read()
+        return await reader.read()
 
     with open(file, 'r') as f:
         reader = SimulatedFileReader(queue, f, skip_time=skip_time, speed=speed, max_time=max_time,
                                                skip_retweets=skip_retweets, skip_unverified=skip_unverified)
-        loop.run_until_complete(read(reader))
+        comm['read'] = loop.run_until_complete(read(reader))
 
     logger.info("Streaming ended")
 
