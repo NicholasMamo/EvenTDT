@@ -43,6 +43,10 @@ For example, the next code snippet reads every other tweet from the corpus:
     --consumer PrintConsumer \\
     --sample 1
 
+.. note::
+
+    Sampling does not affect the understanding period.
+
 You can also add more parameters that determine how the consumer processes files.
 For example, by default the periodicity of windowed consumers is one minute.
 However, you can change it by passing on the periodicity parameter:
@@ -393,7 +397,7 @@ def main():
 
     asyncio.get_event_loop().close()
 
-def understand(understanding, consumer, max_inactivity, skip_retweets, skip_unverified, scheme=None, *args, **kwargs):
+def understand(understanding, consumer, sample, max_inactivity, skip_retweets, skip_unverified, scheme=None, *args, **kwargs):
     """
     Run the understanding process.
     The arguments and keyword arguments should be the command-line arguments.
@@ -413,12 +417,15 @@ def understand(understanding, consumer, max_inactivity, skip_retweets, skip_unve
     :type understanding: str
     :param consumer: The type of consumer to use.
     :type consumer: :class:`~queues.consumers.consumer.Consumer`
+    :param sample: The systematic sampling rate when reading the corpus; defaults to 1, which reads all tweets.
+                   Sampling is not used when understanding.
+    :type sample: int
     :param max_inactivity: The maximum time, in seconds, to wait for new tweets to arrive before stopping.
     :type max_inactivity: int
     :param skip_retweets: Skip retweets when reading tweets from a file.
     :type skip_retweets: bool
     :param skip_unverified: Skip tweets from unverified authors when reading tweets from a file.
-    :type skip_retweets: bool
+    :type skip_unverified: bool
     :param scheme: The scheme to use when consuming the file.
     :type scheme: :class:`~nlp.weighting.TermWeightingScheme`
 
@@ -465,7 +472,7 @@ def understand(understanding, consumer, max_inactivity, skip_retweets, skip_unve
 
     return read, understanding
 
-def consume(event, consumer, speed, max_inactivity, max_time, skip, skip_retweets, skip_unverified, *args, **kwargs):
+def consume(event, consumer, sample, speed, max_inactivity, max_time, skip, skip_retweets, skip_unverified, *args, **kwargs):
     """
     Run the consumption process.
     The arguments and keyword arguments should be the command-line arguments.
@@ -481,6 +488,8 @@ def consume(event, consumer, speed, max_inactivity, max_time, skip, skip_retweet
     :type event: str
     :param consumer: The type of consumer to use.
     :type consumer: type
+    :param sample: The systematic sampling rate when reading the corpus; defaults to 1, which reads all tweets.
+    :type sample: int
     :param speed: The speed with which to read the file.
     :type speed: float
     :param max_inactivity: The maximum time, in seconds, to wait for new tweets to arrive before stopping.
@@ -492,7 +501,7 @@ def consume(event, consumer, speed, max_inactivity, max_time, skip, skip_retweet
     :param skip_retweets: Skip retweets when reading tweets from a file.
     :type skip_retweets: bool
     :param skip_unverified: Skip tweets from unverified authors when reading tweets from a file.
-    :type skip_retweets: bool
+    :type skip_unverified: bool
 
     :return: A tuple containing the number of read tweets and a dictionary containing the timeline.
     :rtype: tuple of int and dict
@@ -519,7 +528,7 @@ def consume(event, consumer, speed, max_inactivity, max_time, skip, skip_retweet
     """
     stream = Process(target=stream_process,
                      args=(comm, loop, queue, event, ),
-                     kwargs={ 'speed': speed, 'skip_time': skip * 60, 'skip_retweets': skip_retweets,
+                     kwargs={ 'sample': sample, 'speed': speed, 'skip_time': skip * 60, 'skip_retweets': skip_retweets,
                                'skip_unverified': skip_unverified, 'max_time': (max_time * 60 if max_time >= 0 else max_time) })
     consume = Process(target=consume_process, args=(comm, loop, consumer, max_inactivity, ))
     stream.start()
@@ -542,7 +551,7 @@ def consume(event, consumer, speed, max_inactivity, max_time, skip, skip_retweet
 
     return read, timeline
 
-def stream_process(comm, loop, queue, file, skip_time=0, speed=1, max_time=-1,
+def stream_process(comm, loop, queue, file, skip_time=0, sample=1, speed=1, max_time=-1,
                    skip_retweets=False, skip_unverified=False, *args, **kwargs):
     """
     Stream the file and add its tweets to the queue.
@@ -557,6 +566,8 @@ def stream_process(comm, loop, queue, file, skip_time=0, speed=1, max_time=-1,
     :type file: str
     :param skip_time: The amount of time to skip from the beginning of the file in minutes, defaults to 0.
     :type skip_time: int
+    :param sample: The systematic sampling rate when reading the corpus; defaults to 1, which reads all tweets.
+    :type sample: int
     :param speed: The speed at which the file is consumed, defaults to 1, which is real-time speed.
     :type speed: float
     :param max_time: The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.
@@ -587,7 +598,7 @@ def stream_process(comm, loop, queue, file, skip_time=0, speed=1, max_time=-1,
         return await reader.read()
 
     with open(file, 'r') as f:
-        reader = SimulatedFileReader(queue, f, skip_time=skip_time, speed=speed, max_time=max_time,
+        reader = SimulatedFileReader(queue, f, skip_time=skip_time, sample=sample, speed=speed, max_time=max_time,
                                                skip_retweets=skip_retweets, skip_unverified=skip_unverified)
         comm['read'] = loop.run_until_complete(read(reader))
 
