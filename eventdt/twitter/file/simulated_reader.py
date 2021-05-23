@@ -138,7 +138,8 @@ class SimulatedFileReader(FileReader):
             Only add a tweet if it is valid.
             """
             if self.valid(tweet):
-                self.queue.enqueue(tweet)
-                read += 1
+                if not i % self.sample:
+                    self.queue.enqueue(tweet)
+                    read += 1
 
         return read

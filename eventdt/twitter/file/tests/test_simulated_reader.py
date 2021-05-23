@@ -205,7 +205,6 @@ class TestSimulatedFileReader(unittest.IsolatedAsyncioTestCase):
         """
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
-
         with open(file, 'r') as f:
             queue = Queue()
             reader = SimulatedFileReader(queue, f, speed=10)
@@ -376,6 +375,52 @@ class TestSimulatedFileReader(unittest.IsolatedAsyncioTestCase):
             reader = SimulatedFileReader(queue, f, speed=100)
             read = await reader.read()
             self.assertEqual(queue.length(), read)
+
+    async def test_read_sample_all(self):
+        """
+        Test that when reading the corpus with full sampling, the full corpus is read.
+        """
+
+        file = 'eventdt/tests/corpora/CRYCHE-100.json'
+        with open(file, 'r') as f:
+            queue = Queue()
+            reader = SimulatedFileReader(queue, f, speed=10)
+            read = await reader.read()
+            self.assertEqual(100, read)
+
+    async def test_read_sample(self):
+        """
+        Test that when reading the corpus with sampling, only a part of the corpus is read.
+        """
+
+        file = 'eventdt/tests/corpora/CRYCHE-100.json'
+        with open(file, 'r') as f:
+            queue = Queue()
+            reader = SimulatedFileReader(queue, f, speed=10, sample=2)
+            read = await reader.read()
+            self.assertEqual(50, read)
+
+        with open(file, 'r') as f:
+            queue = Queue()
+            reader = SimulatedFileReader(queue, f, speed=10, sample=3)
+            read = await reader.read()
+            self.assertEqual(34, read)
+
+    async def test_read_sample_not_adjacent(self):
+        """
+        Test that when reading the corpus with full sampling, the tweets are equally-spaced.
+        """
+
+        file = 'eventdt/tests/corpora/CRYCHE-100.json'
+        with open(file, 'r') as f:
+            tweets = [ json.loads(tweet) for tweet in f.readlines() ]
+
+        with open(file, 'r') as f:
+            queue = Queue()
+            reader = SimulatedFileReader(queue, f, speed=10, sample=2)
+            read = await reader.read()
+            self.assertEqual(50, read)
+            self.assertEqual(tweets[::2], queue.queue)
 
     async def test_normal_speed(self):
         """
