@@ -17,6 +17,7 @@ from queues import Queue
 from queues.consumers import PrintConsumer
 from queues.consumers.algorithms import ELDConsumer, ZhaoConsumer
 from queues.consumers.filter_consumer import DummyFilterConsumer
+from summarization.timeline import Timeline
 
 logger.set_logging_level(logger.LogLevel.WARNING)
 
@@ -80,13 +81,102 @@ class TestFilterConsumer(unittest.TestCase):
         consumer = DummyFilterConsumer(Queue(), filters, ZhaoConsumer, periodicity=10)
         self.assertEqual(10, consumer.consumer.periodicity)
 
+    @async_test
+    async def test_run_starts_consumers(self):
+        """
+        Test that when running the filter consumer, it also runs its own consumer.
+        """
+
+        filters = [ (0, 50), (50, 100) ]
+        consumer = DummyFilterConsumer(Queue(), filters, PrintConsumer)
+        self.assertFalse(consumer.active)
+        self.assertTrue(consumer.stopped)
+        self.assertFalse(consumer.consumer.active)
+        self.assertTrue(consumer.consumer.stopped)
+
+        """
+        Run the consumer.
+        """
+        running = asyncio.ensure_future(consumer.run(max_inactivity=1))
+        await asyncio.sleep(1)
+        self.assertTrue(consumer.active)
+        self.assertFalse(consumer.stopped)
+        self.assertTrue(consumer.consumer.active)
+        self.assertFalse(consumer.consumer.stopped)
+
+        """
+        Wait for the consumer to finish.
+        """
+        result = await asyncio.gather(running)
+        self.assertFalse(consumer.consumer.active)
+        self.assertTrue(consumer.consumer.stopped)
+
+    @async_test
+    async def test_run_stops_consumers(self):
+        """
+        Test that it is only after the filter consumer finishes that running stops its consumer.
+        """
+
+        filters = [ (0, 50), (50, 100) ]
+        consumer = DummyFilterConsumer(Queue(), filters, PrintConsumer)
+        self.assertFalse(consumer.active)
+        self.assertTrue(consumer.stopped)
+        self.assertFalse(consumer.consumer.active)
+        self.assertTrue(consumer.consumer.stopped)
+
+        """
+        Run the consumer.
+        """
+        running = asyncio.ensure_future(consumer.run(max_inactivity=5))
+        await asyncio.sleep(1)
+        self.assertTrue(consumer.active)
+        self.assertFalse(consumer.stopped)
+        self.assertTrue(consumer.consumer.active)
+        self.assertFalse(consumer.consumer.stopped)
+
+        """
+        Wait for the consumer to finish.
+        """
+        result = await asyncio.gather(running)
+        self.assertFalse(consumer.consumer.active)
+        self.assertTrue(consumer.consumer.stopped)
+
+    @async_test
+    async def test_run_returns_timeline(self):
+        """
+        Test that when running the filter consumer, it returns the timeline from its own consumers.
+        """
+
+        filters = [ (0, 50), (50, 100) ]
+        consumer = DummyFilterConsumer(Queue(), filters, ELDConsumer)
+        self.assertFalse(consumer.active)
+        self.assertTrue(consumer.stopped)
+        self.assertFalse(consumer.consumer.active)
+        self.assertTrue(consumer.consumer.stopped)
+
+        """
+        Run the consumer.
+        """
+        running = asyncio.ensure_future(consumer.run(max_inactivity=1))
+        await asyncio.sleep(1)
+        self.assertTrue(consumer.active)
+        self.assertFalse(consumer.stopped)
+        self.assertTrue(consumer.consumer.active)
+        self.assertFalse(consumer.consumer.stopped)
+
+        """
+        Wait for the consumer to finish.
+        """
+        timeline = (await asyncio.gather(running))[0]
+        self.assertEqual(Timeline, type(timeline))
+
     def test_preprocess_identical(self):
         """
         Test that the default pre-processing step does not change the tweet at all.
         """
 
-        splits = [ (0, 50), (50, 100) ]
-        consumer = DummyFilterConsumer(Queue(), splits, ELDConsumer)
+        filters = [ (0, 50), (50, 100) ]
+        consumer = DummyFilterConsumer(Queue(), filters, ELDConsumer)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
             for line in f:
                 tweet = json.loads(line)

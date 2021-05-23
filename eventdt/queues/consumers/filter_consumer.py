@@ -93,6 +93,40 @@ class FilterConsumer(Consumer):
         self.matches = matches
         self.consumer = consumer(Queue(), *args, **kwargs)
 
+    async def run(self, wait=0, max_inactivity=-1, *args, **kwargs):
+        """
+        Update the flags to indicate that the consumer is running and start consuming the :class:`~queues.Queue`.
+        At the same time, the :class:`~queues.consumers.filter_consumer.FilterConsumer` starts running the consumer that processes filtered tweets.
+
+        If the :class:`~queues.Queue` is being populated by a :class:`~twitter.file.FileReader`, there might be an initial delay until the :class:`~queues.Queue` receives any data.
+        This is because the :class:`~twitter.file.FileReader` supports skipping tweets, which introduces some latency.
+        When skipping a lot of time or lines, this latency can get very large.
+        You can use the ``wait`` parameter to delay running the consumer by a few seconds to wait for the :class:`~twitter.file.FileReader` to finish skipping part of the corpus.
+
+        In addition, corpora may be sparse with periods of time during which little data is fed to the consumer.
+        This can also happen when the :class:`~twitter.listeners.TweetListener` fails to collect tweets because of errors in the Twitter API.
+        The ``max_inactivity`` parameter is the allowance, in seconds, for how long the consumer should wait without receiving input before it decides no more data will arrive and stop.
+
+        :param wait: The time, in seconds, to wait until starting to consume the :class:`~queues.Queue`.
+                     This is used when the :class:`~twitter.file.FileReader` spends a lot of time skipping tweets.
+        :type wait: int
+        :param max_inactivity: The maximum time, in seconds, to wait idly without input before stopping the consumer.
+                               If it is negative, the consumer keeps waiting for input indefinitely.
+        :type max_inactivity: int
+
+        :return: The output from the filter consumer's own consumer.
+        :rtype: any
+        """
+
+        await asyncio.sleep(wait)
+        self._started()
+        results = await asyncio.gather(
+            self._consume(*args, max_inactivity=max_inactivity, **kwargs),
+            self.consumer.run(wait=wait, max_inactivity=-1)
+        )
+        self._stopped()
+        return results[1]
+
     async def _consume(self, max_inactivity, *args, **kwargs):
         """
         Consume the queue, filtering the tweets before passing them on to the consumer
