@@ -25,6 +25,16 @@ class TestSimulatedFileReader(unittest.IsolatedAsyncioTestCase):
     Test the functionality of the simulated file reader.
     """
 
+    def test_init_default_speed(self):
+        """
+        Test that when creating a simulated file reader, the default speed is 1.
+        """
+
+        file = 'eventdt/tests/corpora/CRYCHE-100.json'
+        with open(file, 'r') as f:
+            reader = SimulatedFileReader(Queue(), f)
+            self.assertEqual(1, reader.speed)
+
     def test_positive_speed(self):
         """
         Test that when creating a simulated file reader with a positive speed, no ValueError is raised.
@@ -145,9 +155,19 @@ class TestSimulatedFileReader(unittest.IsolatedAsyncioTestCase):
         with open(file, 'r') as f:
             self.assertTrue(SimulatedFileReader(Queue(), f, skip_time=1))
 
+    def test_init_default_sample(self):
+        """
+        Test that when creating a simulated file reader, the default sampling rate is 1.
+        """
+
+        file = 'eventdt/tests/corpora/CRYCHE-100.json'
+        with open(file, 'r') as f:
+            reader = SimulatedFileReader(Queue(), f)
+            self.assertEqual(1, reader.sample)
+
     def test_init_floating_point_sample(self):
         """
-        Test that when creating a simulaed file reader with a floating point number of lines to skip after each read, a ValueError is raised.
+        Test that when creating a simulated file reader with a floating point number of lines to skip after each read, a ValueError is raised.
         """
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
@@ -156,7 +176,7 @@ class TestSimulatedFileReader(unittest.IsolatedAsyncioTestCase):
 
     def test_init_float_sample(self):
         """
-        Test that when creating a simulaed file reader with a rounded float number of lines to skip after each read, no ValueError is raised.
+        Test that when creating a simulated file reader with a rounded float number of lines to skip after each read, no ValueError is raised.
         """
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
@@ -165,7 +185,7 @@ class TestSimulatedFileReader(unittest.IsolatedAsyncioTestCase):
 
     def test_init_integer_sample(self):
         """
-        Test that when creating a simulaed file reader with an integer number of lines to skip after each read, no ValueError is raised.
+        Test that when creating a simulated file reader with an integer number of lines to skip after each read, no ValueError is raised.
         """
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
@@ -174,7 +194,7 @@ class TestSimulatedFileReader(unittest.IsolatedAsyncioTestCase):
 
     def test_init_negative_sample(self):
         """
-        Test that when creating a simulaed file reader with a negative number of lines to skip after each read, a ValueError is raised.
+        Test that when creating a simulated file reader with a negative number of lines to skip after each read, a ValueError is raised.
         """
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
@@ -183,7 +203,7 @@ class TestSimulatedFileReader(unittest.IsolatedAsyncioTestCase):
 
     def test_init_zero_sample(self):
         """
-        Test that when creating a simulaed file reader with a sampling rate of 0, it raises a ValueError.
+        Test that when creating a simulated file reader with a sampling rate of 0, it raises a ValueError.
         """
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
@@ -192,7 +212,7 @@ class TestSimulatedFileReader(unittest.IsolatedAsyncioTestCase):
 
     def test_init_positive_sample(self):
         """
-        Test that when creating a simulaed file reader that samples each line, no ValueError is raised.
+        Test that when creating a simulated file reader that samples each line, no ValueError is raised.
         """
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
