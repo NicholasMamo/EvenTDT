@@ -91,13 +91,17 @@ class StaggeredFileReader(FileReader):
     async def read(self):
         """
         Read the file and add each line as a dictionary to the queue.
+
+        :return: The number of tweets read from the file.
+        :rtype: int
         """
 
-        file = self.file
+        read = 0
 
         """
         Extract the timestamp from the first tweet, then reset the file pointer.
         """
+        file = self.file
         pos = file.tell()
         line = file.readline()
         if not line:
@@ -133,6 +137,7 @@ class StaggeredFileReader(FileReader):
             """
             if self.valid(tweet):
                 self.queue.enqueue(tweet)
+                read += 1
 
             """
             Skip some lines if need be.
@@ -149,3 +154,5 @@ class StaggeredFileReader(FileReader):
                 sleep = 1/self.rate - elapsed
                 if sleep > 0:
                     time.sleep(sleep)
+
+        return read
