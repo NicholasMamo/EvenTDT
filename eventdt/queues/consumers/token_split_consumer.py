@@ -13,10 +13,12 @@ path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
+from .token_filter_consumer import TokenFilterConsumer
 from .split_consumer import SplitConsumer
 from nlp import Tokenizer
 from nltk.corpus import stopwords
 from nlp.weighting import TF
+from queues import Queue
 import twitter
 
 class TokenSplitConsumer(SplitConsumer):
@@ -38,6 +40,13 @@ class TokenSplitConsumer(SplitConsumer):
         However, the downstream consumers can tokenize the tweets again themselves.
         All documents have their full text stored in the document's text.
         In addition, the original tweets are stored in the documents' ``tweet`` attribute.
+
+    .. note::
+
+        This class is actually more complicated than it looks.
+        Each downstream consumer is actually a :class:`~queues.consumers.token_filter_consumer.TokenFilterConsumer`.
+        This class sends all tweets to all token filter consumers.
+        It is up to the token filter consumers to accept or reject incoming tweets.
 
     :ivar matches: The function that is used to check whether a tweet includes the tokens defined in the splits.
 
@@ -92,40 +101,20 @@ class TokenSplitConsumer(SplitConsumer):
         splits = [ [ split ] if type(split) is str else list(split)
                               for split in splits ]
 
-        super(TokenSplitConsumer, self).__init__(queue, splits, consumer, scheme=scheme, *args, **kwargs)
+        self.matches = matches
         self.tokenizer = tokenizer or Tokenizer(stopwords=stopwords.words('english'),
                                                 normalize_words=True, character_normalization_count=3,
                                                 remove_unicode_entities=True, stem=True)
         self.scheme = scheme or TF()
-        self.matches = matches
-
-    def _preprocess(self, tweet):
-        """
-        Pre-process the given tweet.
-
-        This function assumes that all of the downstream consumers will work with :class:`~nlp.document.Document` instances.
-        Therefore it tokenizes the tweets and uses the scheme to convert them into documents.
-
-        :param tweet: The tweet to pre-process.
-        :type tweet: dict
-
-        :return: The tweet as a document.
-        :rtype: :class:`~nlp.document.Document`
-        """
-
-        text = twitter.full_text(tweet)
-        text = twitter.expand_mentions(text, tweet)
-        tokens = self.tokenizer.tokenize(text)
-        document = self.scheme.create(tokens, text=text,
-                                      attributes={ 'tweet': tweet,
-                                                   'timestamp': twitter.extract_timestamp(tweet) })
-        document.normalize()
-        return document
+        super(TokenSplitConsumer, self).__init__(queue, splits, consumer, scheme=scheme, *args, **kwargs)
 
     def _satisfies(self, document, tokens):
         """
         Check whether the given document includes the given tokens.
         The function checks if any of the given tokens are present in the document's dimensions.
+
+        In reality, this is a dummy function.
+        This class sends all tweets downstream to all consumers; it is then the responsibiltiy of each :class:`~queues.consumers.token_filter_consumer.TokenFilterConsumer` to accept or reject tweets.
 
         :param document: The document to validate whether it contains the given tokens.
         :type document: :class:`~nlp.document.Document`
@@ -136,4 +125,28 @@ class TokenSplitConsumer(SplitConsumer):
         :rtype: bool
         """
 
-        return self.matches( token in document.dimensions for token in tokens )
+        # NOTE: The TokenFilterConsumer consumer will accept or reject tweets
+        return True
+
+    def _consumers(self, consumer, splits, *args, **kwargs):
+        """
+        Create the consumers which will receive the tweets from each stream.
+
+        Any additional arguments or keyword arguments are passed on to the consumer's constructor.
+
+        :param consumer: The type of :class:`~queues.consumers.Consumer` to create.
+        :type consumer: type
+        :param splits: The splits corresponding to the created consumers.
+                       This is used to generate a name for each child consumer.
+        :type splits: list or tuple
+
+        :return: A number of consumers, equivalent to the given number.
+                 All consumers are identical to each other, but have their own :class:`~queues.Queue`.
+        :rtype: list of :class:`~queues.consumers.Consumer`
+        """
+
+        # NOTE: The scheme is passed as part of the kwargs
+        return [ TokenFilterConsumer(Queue(), split, consumer, name=str(split),
+                                     matches=self.matches, tokenizer=self.tokenizer,
+                                     *args, **kwargs)
+                 for split in splits ]

@@ -19,7 +19,7 @@ from nlp.weighting import TF
 from objects.exportable import Exportable
 from queues import Queue
 from queues.consumers.algorithms import ELDConsumer, ZhaoConsumer
-from queues.consumers.token_split_consumer import TokenSplitConsumer
+from queues.consumers import TokenFilterConsumer, TokenSplitConsumer
 import twitter
 from vsm import vector_math
 
@@ -59,6 +59,19 @@ class TestTokenSplitConsumer(unittest.TestCase):
         tokenizer = Tokenizer(stem=False)
         consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer, tokenizer=tokenizer)
         self.assertFalse(consumer.tokenizer.stem)
+
+    def test_create_token_filter_with_tokenizer(self):
+        """
+        Test that the token filter consumers inherit the token split consumer's tokenizer.
+        """
+
+        splits = [ ('tackl'), ('goal') ]
+        consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer)
+        self.assertTrue(consumer.tokenizer.stem)
+        tokenizer = Tokenizer(stem=False)
+        consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer, tokenizer=tokenizer)
+        self.assertFalse(consumer.tokenizer.stem)
+        self.assertTrue(not any( _consumer.tokenizer.stem for _consumer in consumer.consumers ))
 
     def test_init_list_of_list_splits(self):
         """
@@ -113,8 +126,50 @@ class TestTokenSplitConsumer(unittest.TestCase):
 
         splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
         consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer)
-        self.assertEqual("['yellow', 'card']", str(consumer.consumers[0]))
-        self.assertEqual("['foul', 'tackl']", str(consumer.consumers[1]))
+        self.assertEqual("['yellow', 'card']", str(consumer.consumers[0].consumer))
+        self.assertEqual("['foul', 'tackl']", str(consumer.consumers[1].consumer))
+
+    def test_init_consumers_are_token_filter(self):
+        """
+        Test that when initializing the token split consumer, its consumers are actually token filter consumers.
+        """
+
+        splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+        consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer)
+        self.assertEqual(2, len(consumer.consumers))
+        self.assertTrue(all( type(_consumer) == TokenFilterConsumer for _consumer in consumer.consumers ))
+        self.assertTrue(all( type(_consumer.consumer) == ELDConsumer for _consumer in consumer.consumers ))
+
+    def test_create_token_filter_with_scheme(self):
+        """
+        Test that the token filter consumers inherit the token split consumer's scheme.
+        """
+
+        # create the consumer with a TF-IDF scheme
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
+            idf = Exportable.decode(json.loads(f.readline()))['tfidf']
+
+        splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+        consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer, scheme=idf)
+        self.assertTrue(all( _consumer.scheme == idf for _consumer in consumer.consumers ))
+        self.assertTrue(all( _consumer.consumer.scheme == idf for _consumer in consumer.consumers ))
+
+    def test_create_token_filter_with_matches(self):
+        """
+        Test that when creating the token filter consumers, they inherit the ``matches`` parameter.
+        """
+
+        splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+
+        # test with the 'any' function
+        consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer, matches=any)
+        self.assertEqual(any, consumer.matches)
+        self.assertTrue(all( any == _consumer.matches for _consumer in consumer.consumers ))
+
+        # test with the 'all' function
+        consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer, matches=all)
+        self.assertEqual(all, consumer.matches)
+        self.assertTrue(all( all == _consumer.matches for _consumer in consumer.consumers ))
 
     def test_init_default_scheme(self):
         """
@@ -132,211 +187,10 @@ class TestTokenSplitConsumer(unittest.TestCase):
 
         splits = [ (0, 50), (50, 100) ]
         consumer = TokenSplitConsumer(Queue(), splits, ZhaoConsumer)
-        self.assertTrue(all( 5 == _consumer.periodicity for _consumer in consumer.consumers ))
+        self.assertTrue(all( 5 == _consumer.consumer.periodicity for _consumer in consumer.consumers ))
 
         consumer = TokenSplitConsumer(Queue(), splits, ZhaoConsumer, periodicity=10)
-        self.assertTrue(all( 10 == _consumer.periodicity for _consumer in consumer.consumers ))
-
-    def test_preprocess_creates_documents(self):
-        """
-        Test that when pre-processing tweets, the function creates documents.
-        """
-
-        splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
-        consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer)
-        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
-            for line in f:
-                tweet = json.loads(line)
-                self.assertEqual(Document, type(consumer._preprocess(tweet)))
-
-    def test_preprocess_removes_stopwords(self):
-        """
-        Test that when pre-processing tweets, the returned documents do not have stopwords in them.
-        """
-
-        trivial = True
-
-        """
-        Create the consumer with a TF-IDF scheme.
-        """
-        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
-            idf = Exportable.decode(json.loads(f.readline()))['tfidf']
-
-        """
-        Tokenize all of the tweets.
-        Words like 'hazard' should have a greater weight than more common words, like 'goal'.
-        """
-        splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
-        consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer, scheme=idf)
-        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
-            for line in f:
-                document = consumer._preprocess(json.loads(line))
-                if 'and' in document.text.lower() or 'while' in document.text.lower():
-                    trivial = False
-
-                self.assertFalse('and' in document.dimensions)
-                self.assertFalse('while' in document.dimensions)
-                self.assertFalse('whil' in document.dimensions)
-
-        if trivial:
-            logger.warning("Trivial test")
-
-    def test_preprocess_uses_scheme(self):
-        """
-        Test that when pre-processing tweets, the function uses the term-weighting scheme.
-        """
-
-        trivial = True
-
-        """
-        Create the consumer with a TF-IDF scheme.
-        """
-        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
-            idf = Exportable.decode(json.loads(f.readline()))['tfidf']
-
-        """
-        Tokenize all of the tweets.
-        Words like 'hazard' should have a greater weight than more common words, like 'goal'.
-        """
-        splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
-        consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer, scheme=idf)
-        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
-            for line in f:
-                document = consumer._preprocess(json.loads(line))
-                if 'hazard' in document.dimensions and 'goal' in document.dimensions:
-                    trivial = False
-                    self.assertGreater(document.dimensions['hazard'], document.dimensions['goal'])
-
-        if trivial:
-            logger.warning("Trivial test")
-
-    def test_preprocess_normalizes_documents(self):
-        """
-        Test that when pre-processing tweets, the returned documents are normalized.
-        """
-
-        """
-        Create the consumer with a TF-IDF scheme.
-        """
-        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
-            idf = Exportable.decode(json.loads(f.readline()))['tfidf']
-
-        """
-        Tokenize all of the tweets.
-        Words like 'hazard' should have a greater weight than more common words, like 'goal'.
-        """
-        splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
-        consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer, scheme=idf)
-        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
-            for line in f:
-                document = consumer._preprocess(json.loads(line))
-                self.assertTrue(round(vector_math.magnitude(document), 10) in [ 0, 1 ])
-
-    def test_preprocess_with_text(self):
-        """
-        Test that when pre-processing tweets, the returned documents have non-empty text.
-        """
-
-        """
-        Create the consumer with a TF-IDF scheme.
-        """
-        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
-            idf = Exportable.decode(json.loads(f.readline()))['tfidf']
-
-        """
-        Tokenize all of the tweets.
-        Words like 'hazard' should have a greater weight than more common words, like 'goal'.
-        """
-        splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
-        consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer, scheme=idf)
-        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
-            for line in f:
-                document = consumer._preprocess(json.loads(line))
-                self.assertTrue(document.text)
-
-    def test_preprocess_with_full_text(self):
-        """
-        Test that when pre-processing tweets, the returned documents use the full text.
-        """
-
-        """
-        Create the consumer with a TF-IDF scheme.
-        """
-        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
-            idf = Exportable.decode(json.loads(f.readline()))['tfidf']
-
-        """
-        Tokenize all of the tweets.
-        Words like 'hazard' should have a greater weight than more common words, like 'goal'.
-        """
-        splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
-        consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer, scheme=idf)
-        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
-            for line in f:
-                document = consumer._preprocess(json.loads(line))
-                self.assertFalse(document.text.endswith('…'))
-
-    def test_preprocess_with_tweet(self):
-        """
-        Test that when pre-processing tweets, the returned documents include the original tweet.
-        """
-
-        """
-        Create the consumer with a TF-IDF scheme.
-        """
-        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
-            idf = Exportable.decode(json.loads(f.readline()))['tfidf']
-
-        """
-        Tokenize all of the tweets.
-        """
-        splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
-        consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer, scheme=idf)
-        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
-            for line in f:
-                tweet = json.loads(line)
-                document = consumer._preprocess(tweet)
-                self.assertEqual(tweet, document.attributes['tweet'])
-
-    def test_preprocess_with_timestamp(self):
-        """
-        Test that when pre-processing tweets, the returned documents include the timestamp as an attribute.
-        """
-
-        """
-        Create the consumer with a TF-IDF scheme.
-        """
-        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
-            idf = Exportable.decode(json.loads(f.readline()))['tfidf']
-
-        """
-        Tokenize all of the tweets.
-        """
-        splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
-        consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer, scheme=idf)
-        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
-            for line in f:
-                tweet = json.loads(line)
-                document = consumer._preprocess(tweet)
-                self.assertEqual(twitter.extract_timestamp(tweet), document.attributes['timestamp'])
-
-    def test_to_documents_mentions_in_dimensions(self):
-        """
-        Test that when creating a document from a tweet, the expanded mentions are part of the dimensions.
-        """
-
-        # tokenize all of the tweets
-        splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
-        consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer)
-        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'examples', '#ParmaMilan-hakan.json'), 'r') as f:
-            tweet = json.loads(f.readline())
-            document = consumer._preprocess(tweet)
-            self.assertEqual(twitter.extract_timestamp(tweet), document.attributes['timestamp'])
-
-            self.assertTrue('Hakan' in document.text)
-            self.assertTrue('hakan' in document.dimensions)
-            self.assertTrue('Çalhanoğlu' in document.text)
-            self.assertTrue('calhanoglu' in document.dimensions)
+        self.assertTrue(all( 10 == _consumer.consumer.periodicity for _consumer in consumer.consumers ))
 
     def test_to_documents_expands_mentions(self):
         """
@@ -354,7 +208,7 @@ class TestTokenSplitConsumer(unittest.TestCase):
             for line in f:
                 tweet = json.loads(f.readline())
                 text = twitter.full_text(tweet)
-                document = consumer._preprocess(tweet)
+                document = consumer.consumers[0]._preprocess(tweet)
 
                 # allow for some manual validation
                 not_accounts = [ 'real_realestsounds', 'nevilleiesta', 'naija927', 'naijafm92.7', 'manchesterunited', 'ManchesterUnited',
@@ -393,12 +247,12 @@ class TestTokenSplitConsumer(unittest.TestCase):
                 If the document contains either of the tokens, it should succeed.
                 Otherwise, the function should fail.
                 """
-                document = consumer._preprocess(json.loads(line))
+                document = consumer.consumers[0]._preprocess(json.loads(line))
                 if splits[0][0] in document.dimensions or splits[0][1] in document.dimensions:
                     trivial = False
-                    self.assertTrue(consumer._satisfies(document, splits[0]))
+                    self.assertTrue(consumer.consumers[0]._satisfies(document, splits[0]))
                 else:
-                    self.assertFalse(consumer._satisfies(document, splits[0]))
+                    self.assertFalse(consumer.consumers[0]._satisfies(document, splits[0]))
 
         if trivial:
             logger.warning("Trivial test")
@@ -424,12 +278,12 @@ class TestTokenSplitConsumer(unittest.TestCase):
                 If the document contains both tokens, it should succeed.
                 Otherwise, the function should fail.
                 """
-                document = consumer._preprocess(json.loads(line))
+                document = consumer.consumers[0]._preprocess(json.loads(line))
                 if splits[0][0] in document.dimensions and splits[0][1] in document.dimensions:
                     trivial = False
-                    self.assertTrue(consumer._satisfies(document, splits[0]))
+                    self.assertTrue(consumer.consumers[0]._satisfies(document, splits[0]))
                 else:
-                    self.assertFalse(consumer._satisfies(document, splits[0]))
+                    self.assertFalse(consumer.consumers[0]._satisfies(document, splits[0]))
 
         if trivial:
             logger.warning("Trivial test")
@@ -477,13 +331,13 @@ class TestTokenSplitConsumer(unittest.TestCase):
         """
         results = (await asyncio.gather(running))[0]
         self.assertEqual(2, len(consumer.consumers))
-        self.assertTrue(sum( consumer.buffer.length() for consumer in consumer.consumers )) # documents go from the queue into the buffer since it's a buffered consumer
+        self.assertTrue(sum( consumer.consumer.buffer.length() for consumer in consumer.consumers )) # documents go from the queue into the buffer since it's a buffered consumer
 
         """
         Ensure that the documents were partitioned properly.
         """
         for split, consumer in zip(splits, consumer.consumers):
-            documents = consumer.buffer.dequeue_all()
+            documents = consumer.consumer.buffer.dequeue_all()
             for document in documents:
                 self.assertTrue(any( token in document.dimensions for token in split ))
 
@@ -530,13 +384,14 @@ class TestTokenSplitConsumer(unittest.TestCase):
         """
         results = (await asyncio.gather(running))[0]
         self.assertEqual(2, len(consumer.consumers))
-        self.assertTrue(sum( consumer.buffer.length() for consumer in consumer.consumers )) # documents go from the queue into the buffer since it's a buffered consumer
+        self.assertTrue(sum( consumer.consumer.buffer.length() for consumer in consumer.consumers )) # documents go from the queue into the buffer since it's a buffered consumer
 
         """
         Ensure that the documents were partitioned properly.
         """
         documents = [ ]
         for split, consumer in zip(splits, consumer.consumers):
-            documents.extend(consumer.buffer.dequeue_all())
+            documents.extend(consumer.consumer.buffer.dequeue_all())
 
-        self.assertGreater(len(documents), len(set(documents)))
+        ids = [ document.attributes['tweet']['id'] for document in documents ]
+        self.assertGreater(len(ids), len(set(ids)))
