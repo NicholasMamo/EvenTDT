@@ -145,6 +145,60 @@ class TestSimulatedFileReader(unittest.IsolatedAsyncioTestCase):
         with open(file, 'r') as f:
             self.assertTrue(SimulatedFileReader(Queue(), f, skip_time=1))
 
+    def test_init_floating_point_sample(self):
+        """
+        Test that when creating a simulaed file reader with a floating point number of lines to skip after each read, a ValueError is raised.
+        """
+
+        file = 'eventdt/tests/corpora/CRYCHE-100.json'
+        with open(file, 'r') as f:
+            self.assertRaises(ValueError, SimulatedFileReader, Queue(), f, sample=1.1)
+
+    def test_init_float_sample(self):
+        """
+        Test that when creating a simulaed file reader with a rounded float number of lines to skip after each read, no ValueError is raised.
+        """
+
+        file = 'eventdt/tests/corpora/CRYCHE-100.json'
+        with open(file, 'r') as f:
+            self.assertTrue(SimulatedFileReader(Queue(), f, sample=1.0))
+
+    def test_init_integer_sample(self):
+        """
+        Test that when creating a simulaed file reader with an integer number of lines to skip after each read, no ValueError is raised.
+        """
+
+        file = 'eventdt/tests/corpora/CRYCHE-100.json'
+        with open(file, 'r') as f:
+            self.assertTrue(SimulatedFileReader(Queue(), f, sample=1))
+
+    def test_init_negative_sample(self):
+        """
+        Test that when creating a simulaed file reader with a negative number of lines to skip after each read, a ValueError is raised.
+        """
+
+        file = 'eventdt/tests/corpora/CRYCHE-100.json'
+        with open(file, 'r') as f:
+            self.assertRaises(ValueError, SimulatedFileReader, Queue(), f, sample=-1)
+
+    def test_init_zero_sample(self):
+        """
+        Test that when creating a simulaed file reader with a sampling rate of 0, it raises a ValueError.
+        """
+
+        file = 'eventdt/tests/corpora/CRYCHE-100.json'
+        with open(file, 'r') as f:
+            self.assertRaises(ValueError, SimulatedFileReader, Queue(), f, sample=0)
+
+    def test_init_positive_sample(self):
+        """
+        Test that when creating a simulaed file reader that samples each line, no ValueError is raised.
+        """
+
+        file = 'eventdt/tests/corpora/CRYCHE-100.json'
+        with open(file, 'r') as f:
+            self.assertTrue(SimulatedFileReader(Queue(), f, sample=1))
+
     async def test_read(self):
         """
         Test reading the corpus without skipping anything.

@@ -29,13 +29,21 @@ class SimulatedFileReader(FileReader):
     In addition to the parameters accepted by the :class:`~twitter.file.FileReader`, it also accepts the ``speed``.
     Since the :class:`~twitter.file.simulated_reader.SimulatedFileReader` simulates the stream as if it is happening in real-time, the ``speed`` is a function of time as well.
 
+    The ``sample`` parameter is used as a systematic sampling mechanism.
+    For every $sample$ tweets, the simulated reader reads only one.
+    By the end, the simulated reader reads $1/sample$ of all tweets in the corpus.
+
     :ivar speed: The reading speed as a function of time.
                  If it is set to 0.5, for example, the event progresses at half the speed.
                  If it is set to 2, the event progresses at double the speed.
     :vartype speed: int
+    :ivar sample: The sampling rate.
+                  The reader uses systematic sampling, reading one tweet out of every $n$ samples.
+                  If 1 is given, the simulated reader reads all tweets.
+    :vartype sample: int
     """
 
-    def __init__(self, queue, f, speed=1, *args, **kwargs):
+    def __init__(self, queue, f, speed=1, sample=1, *args, **kwargs):
         """
         Create the :class:`~twitter.file.simulated_reader.SimulatedFileReader` with the file from where to read tweets and the :class:`~queues.Queue` where to store them.
         The ``speed`` is an extra parameter in addition to the :class:`~twitter.file.FileReader`'s parameters.
@@ -48,6 +56,10 @@ class SimulatedFileReader(FileReader):
                       If it is set to 0.5, for example, the event progresses at half the speed.
                       If it is set to 2, the event progresses at double the speed.
         :type speed: int
+        :param sample: The sampling rate.
+                       The reader uses systematic sampling, reading one tweet out of every $n$ samples.
+                       If 1 is given, the simulated reader reads all tweets.
+        :type sample: int
 
         :raises ValueError: When the speed is zero or negative.
         """
@@ -60,7 +72,14 @@ class SimulatedFileReader(FileReader):
         if speed <= 0:
             raise ValueError(f"The speed must be positive; received {speed}")
 
+        if sample % 1:
+            raise ValueError(f"The rate of lines to skip after each read must be an integer; received {sample}")
+
+        if sample < 1:
+            raise ValueError(f"The rate of lines to skip after each read cannot be negative; received {sample}")
+
         self.speed = speed
+        self.sample = sample
 
     @FileReader.reading
     async def read(self):
