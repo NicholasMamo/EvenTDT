@@ -151,59 +151,59 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
         with open(file, 'r') as f:
             self.assertTrue(StaggeredFileReader(Queue(), f, skip_time=1))
 
-    def test_floating_point_skip_rate(self):
+    def test_floating_point_sample(self):
         """
         Test that when creating a staggered file reader with a floating point number of lines to skip after each read, a ValueError is raised.
         """
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
-            self.assertRaises(ValueError, StaggeredFileReader, Queue(), f, skip_rate=0.1)
+            self.assertRaises(ValueError, StaggeredFileReader, Queue(), f, sample=1.1)
 
-    def test_float_skip_rate(self):
+    def test_float_sample(self):
         """
         Test that when creating a staggered file reader with a rounded float number of lines to skip after each read, no ValueError is raised.
         """
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
-            self.assertTrue(StaggeredFileReader(Queue(), f, skip_rate=1.0))
+            self.assertTrue(StaggeredFileReader(Queue(), f, sample=1.0))
 
-    def test_integer_skip_rate(self):
+    def test_integer_sample(self):
         """
         Test that when creating a staggered file reader with an integer number of lines to skip after each read, no ValueError is raised.
         """
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
-            self.assertTrue(StaggeredFileReader(Queue(), f, skip_rate=1))
+            self.assertTrue(StaggeredFileReader(Queue(), f, sample=1))
 
-    def test_negative_skip_rate(self):
+    def test_negative_sample(self):
         """
         Test that when creating a staggered file reader with a negative number of lines to skip after each read, a ValueError is raised.
         """
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
-            self.assertRaises(ValueError, StaggeredFileReader, Queue(), f, skip_rate=-1)
+            self.assertRaises(ValueError, StaggeredFileReader, Queue(), f, sample=-1)
 
-    def test_zero_skip_rate(self):
+    def test_zero_sample(self):
         """
-        Test that when creating a staggered file reader that skips no lines, no ValueError is raised.
-        """
-
-        file = 'eventdt/tests/corpora/CRYCHE-100.json'
-        with open(file, 'r') as f:
-            self.assertTrue(StaggeredFileReader(Queue(), f, skip_rate=0))
-
-    def test_positive_skip_rate(self):
-        """
-        Test that when creating a staggered file reader that skips a positive number of lines after each read, no ValueError is raised.
+        Test that when creating a staggered file reader with a sampling rate of 0, it raises a ValueError.
         """
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
-            self.assertTrue(StaggeredFileReader(Queue(), f, skip_rate=1))
+            self.assertRaises(ValueError, StaggeredFileReader, Queue(), f, sample=0)
+
+    def test_positive_sample(self):
+        """
+        Test that when creating a staggered file reader that samples each line, no ValueError is raised.
+        """
+
+        file = 'eventdt/tests/corpora/CRYCHE-100.json'
+        with open(file, 'r') as f:
+            self.assertTrue(StaggeredFileReader(Queue(), f, sample=1))
 
     async def test_read(self):
         """
@@ -374,7 +374,7 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
             read = await reader.read()
             self.assertEqual(queue.length(), read)
 
-    async def test_skip_rate(self):
+    async def test_sample(self):
         """
         Test that when using the skip rate, the tweets are distributed evenly.
         """
@@ -391,9 +391,9 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=100, skip_rate=1)
+            reader = StaggeredFileReader(queue, f, rate=100, sample=2)
             await reader.read()
-            self.assertEqual(50, queue.length()) # read 1, skip 1 (100 / 2)
+            self.assertEqual(50, queue.length())
             self.assertEqual(start, extract_timestamp(queue.head()))
             self.assertEqual(end, extract_timestamp(queue.tail()))
 
@@ -475,9 +475,9 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
 
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=100, max_lines=100, skip_rate=5)
+            reader = StaggeredFileReader(queue, f, rate=100, max_lines=100, sample=5)
             await reader.read()
-            self.assertEqual(17, queue.length()) # 100 / 6
+            self.assertEqual(20, queue.length())
             self.assertEqual(start, extract_timestamp(queue.head()))
             self.assertEqual(end, extract_timestamp(queue.tail()))
 

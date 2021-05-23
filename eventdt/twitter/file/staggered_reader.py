@@ -24,22 +24,26 @@ class StaggeredFileReader(FileReader):
     However, unlike the :class:`~twitter.file.simulated_reader.SimulatedFileReader`, it reads tweets at a constant pace.
     It reads a few tweets at a time, stops and waits.
 
-    The pace of the :class:`~twitter.file.staggered_reader.StaggeredFileReader` is governed by the ``rate`` and the ``skip_rate``.
+    The pace of the :class:`~twitter.file.staggered_reader.StaggeredFileReader` is governed by the ``rate`` and the ``sample``.
     The ``rate`` is the number of tweets to read per second from the file.
     The :class:`~twitter.file.staggered_reader.StaggeredFileReader` does not read a bunch of tweets and sleeps for the rest of the second, but spaces them out over a second.
-    On the other hand, the ``skip_rate`` is the number is the number of tweets to skip every second.
-    Therefore the approach works skips a number of tweets per second, and then reads a number of tweets.
+
+    On the other hand, the ``sample`` parameter is used as a systematic sampling mechanism.
+    For every $sample$ tweets, the staggered reader reads only one.
+    By the end, the staggered reader reads $1/sample$ of all tweets in the corpus.
 
     :ivar rate: The number of lines to read per second.
     :vartype rate: float
-    :ivar skip_rate: The number of lines to skip for each line read.
-    :vartype skip_rate: int
+    :ivar sample: The sampling rate.
+                  The reader uses systematic sampling, reading one tweet out of every $n$ samples.
+                  If 1 is given, the staggered reader reads all tweets.
+    :vartype sample: int
     """
 
-    def __init__(self, queue, f, rate=1, skip_rate=0, *args, **kwargs):
+    def __init__(self, queue, f, rate=1, sample=1, *args, **kwargs):
         """
         Create the :class:`~twitter.file.staggered_reader.StaggeredFileReader` with the file from where to read tweets and the :class:`~queues.Queue` where to store them.
-        The ``rate`` and ``skip_rate`` are extra parameters in addition to the :class:`~twitter.file.FileReader`'s parameters.
+        The ``rate`` and ``sample`` are extra parameters in addition to the :class:`~twitter.file.FileReader`'s parameters.
 
         :param queue: The queue to which to add the tweets.
         :type queue: :class:`~queues.Queue`
@@ -58,8 +62,10 @@ class StaggeredFileReader(FileReader):
         :type skip_time: int
         :param rate: The number of lines to read per second.
         :type rate: float
-        :param skip_rate: The number of lines to skip for each line read.
-        :type skip_rate: int
+        :param sample: The sampling rate.
+                       The reader uses systematic sampling, reading one tweet out of every $n$ samples.
+                       If 1 is given, the staggered reader reads all tweets.
+        :type sample: int
 
         :raises ValueError: When the rate is not an integer.
         :raises ValueError: When the rate is zero or negative.
@@ -78,14 +84,14 @@ class StaggeredFileReader(FileReader):
         if rate <= 0:
             raise ValueError(f"The rate must be positive; received {rate}")
 
-        if skip_rate % 1:
-            raise ValueError(f"The rate of lines to skip after each read must be an integer; received {skip_rate}")
+        if sample % 1:
+            raise ValueError(f"The rate of lines to skip after each read must be an integer; received {sample}")
 
-        if skip_rate < 0:
-            raise ValueError(f"The rate of lines to skip after each read cannot be negative; received {skip_rate}")
+        if sample < 1:
+            raise ValueError(f"The rate of lines to skip after each read cannot be negative; received {sample}")
 
         self.rate = rate
-        self.skip_rate = skip_rate
+        self.sample = sample
 
     @FileReader.reading
     async def read(self):
@@ -142,7 +148,7 @@ class StaggeredFileReader(FileReader):
             """
             Skip some lines if need be.
             """
-            for _ in range(self.skip_rate):
+            for _ in range(self.sample - 1):
                 file.readline()
 
             """
