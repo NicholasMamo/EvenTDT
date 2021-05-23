@@ -783,5 +783,24 @@ def splits(file):
 
     return splits
 
+def filters(file):
+    """
+    Load the filters from the given file.
+
+    :param file: The path to the filters file.
+                 This function expects file with one token on each line.
+    :type file: str
+
+    :return: A list of filters.
+    :rtype: list of str
+    """
+
+    filters = [ ]
+
+    with open(file) as f:
+        return [ token.strip() for token in f.readlines() ]
+
+    return filters
+
 if __name__ == "__main__":
     main()

@@ -26,6 +26,48 @@ class TestConsume(unittest.TestCase):
     Test the functionality of the consume tool.
     """
 
+    def test_filters_all_words(self):
+        """
+        Test that when loading the filter tokens, all words are returned.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'consume', 'filters.csv')
+        filters = consume.filters(file)
+
+        """
+        Assert that the correct number of filter tokens are loaded.
+        """
+        self.assertEqual(11, len(filters))
+        self.assertEqual([ 'yellow', 'card', 'foul', 'tackl', 'ref',
+                           'refere', 'var', 'goal', 'shot', 'keeper', 'save' ], filters)
+
+    def test_filters_list(self):
+        """
+        Test that when loading the filter tokens, they are returned as a list.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'consume', 'filters.csv')
+        filters = consume.filters(file)
+
+        """
+        Assert that the filters list is returned as a list.
+        """
+        self.assertEqual(list, type(filters))
+
+    def test_filters_no_newlines(self):
+        """
+        Test that when loading the filter tokens, the newline symbol is removed.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'consume', 'filters.csv')
+        filters = consume.filters(file)
+
+        """
+        Assert that the filters list does not contain any newlines.
+        """
+        self.assertFalse('\n' in filters)
+        self.assertTrue(all( not token.endswith('\n') for token in filters ))
+
     def test_splits_all_words(self):
         """
         Test that when loading the split tokens, all words are returned.
