@@ -39,7 +39,6 @@ class TokenSplitConsumer(SplitConsumer):
         All documents have their full text stored in the document's text.
         In addition, the original tweets are stored in the documents' ``tweet`` attribute.
 
-
     :ivar matches: The function that is used to check whether a tweet includes the tokens defined in the splits.
 
                    - If ``any`` is provided, the consumer assigns a tweet to a stream if it includes any of the tokens defined in the corresponding split.
