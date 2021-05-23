@@ -98,6 +98,12 @@ You can provide the filters as follows:
     --consumer ELDConsumer \\
     --filters data/filters.csv
 
+.. warn::
+
+    The number of ``read`` tweets in the meta data includes tweets that were filtered out.
+    In other words, it includes all tweets read by the :class:`~twitter.file.FileReader` class.
+    This is because filtering happens later in the :class:`~queues.consumers.token_filter_consumer.TokenFilterConsumer` class.
+
 Finally, you can also provide splits, which are groups of keywords.
 When you provide splits, the tweets are grouped and processed separately according to the keywords they contain.
 A splits file is a .csv file with no header line, where each line represents a comma-separated list of keywords:
