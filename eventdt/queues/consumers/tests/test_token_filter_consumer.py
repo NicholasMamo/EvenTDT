@@ -104,8 +104,8 @@ class TestTokenFilterConsumer(unittest.TestCase):
         Test that when pre-processing tweets, the function creates documents.
         """
 
-        splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
-        consumer = TokenFilterConsumer(Queue(), splits, ELDConsumer)
+        filters = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+        consumer = TokenFilterConsumer(Queue(), filters, ELDConsumer)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
             for line in f:
                 tweet = json.loads(line)
@@ -128,8 +128,8 @@ class TestTokenFilterConsumer(unittest.TestCase):
         Tokenize all of the tweets.
         Words like 'hazard' should have a greater weight than more common words, like 'goal'.
         """
-        splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
-        consumer = TokenFilterConsumer(Queue(), splits, ELDConsumer, scheme=idf)
+        filters = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+        consumer = TokenFilterConsumer(Queue(), filters, ELDConsumer, scheme=idf)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
             for line in f:
                 document = consumer._preprocess(json.loads(line))
@@ -160,8 +160,8 @@ class TestTokenFilterConsumer(unittest.TestCase):
         Tokenize all of the tweets.
         Words like 'hazard' should have a greater weight than more common words, like 'goal'.
         """
-        splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
-        consumer = TokenFilterConsumer(Queue(), splits, ELDConsumer, scheme=idf)
+        filters = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+        consumer = TokenFilterConsumer(Queue(), filters, ELDConsumer, scheme=idf)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
             for line in f:
                 document = consumer._preprocess(json.loads(line))
@@ -187,8 +187,8 @@ class TestTokenFilterConsumer(unittest.TestCase):
         Tokenize all of the tweets.
         Words like 'hazard' should have a greater weight than more common words, like 'goal'.
         """
-        splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
-        consumer = TokenFilterConsumer(Queue(), splits, ELDConsumer, scheme=idf)
+        filters = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+        consumer = TokenFilterConsumer(Queue(), filters, ELDConsumer, scheme=idf)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
             for line in f:
                 document = consumer._preprocess(json.loads(line))
@@ -209,8 +209,8 @@ class TestTokenFilterConsumer(unittest.TestCase):
         Tokenize all of the tweets.
         Words like 'hazard' should have a greater weight than more common words, like 'goal'.
         """
-        splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
-        consumer = TokenFilterConsumer(Queue(), splits, ELDConsumer, scheme=idf)
+        filters = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+        consumer = TokenFilterConsumer(Queue(), filters, ELDConsumer, scheme=idf)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
             for line in f:
                 document = consumer._preprocess(json.loads(line))
@@ -231,8 +231,8 @@ class TestTokenFilterConsumer(unittest.TestCase):
         Tokenize all of the tweets.
         Words like 'hazard' should have a greater weight than more common words, like 'goal'.
         """
-        splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
-        consumer = TokenFilterConsumer(Queue(), splits, ELDConsumer, scheme=idf)
+        filters = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+        consumer = TokenFilterConsumer(Queue(), filters, ELDConsumer, scheme=idf)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
             for line in f:
                 document = consumer._preprocess(json.loads(line))
@@ -252,8 +252,8 @@ class TestTokenFilterConsumer(unittest.TestCase):
         """
         Tokenize all of the tweets.
         """
-        splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
-        consumer = TokenFilterConsumer(Queue(), splits, ELDConsumer, scheme=idf)
+        filters = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+        consumer = TokenFilterConsumer(Queue(), filters, ELDConsumer, scheme=idf)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
             for line in f:
                 tweet = json.loads(line)
@@ -274,8 +274,8 @@ class TestTokenFilterConsumer(unittest.TestCase):
         """
         Tokenize all of the tweets.
         """
-        splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
-        consumer = TokenFilterConsumer(Queue(), splits, ELDConsumer, scheme=idf)
+        filters = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+        consumer = TokenFilterConsumer(Queue(), filters, ELDConsumer, scheme=idf)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
             for line in f:
                 tweet = json.loads(line)
@@ -288,8 +288,8 @@ class TestTokenFilterConsumer(unittest.TestCase):
         """
 
         # tokenize all of the tweets
-        splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
-        consumer = TokenFilterConsumer(Queue(), splits, ELDConsumer)
+        filters = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+        consumer = TokenFilterConsumer(Queue(), filters, ELDConsumer)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'examples', '#ParmaMilan-hakan.json'), 'r') as f:
             tweet = json.loads(f.readline())
             document = consumer._preprocess(tweet)
@@ -310,8 +310,8 @@ class TestTokenFilterConsumer(unittest.TestCase):
         end_pattern = re.compile('@$')
 
         # tokenize all of the tweets
-        splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
-        consumer = TokenFilterConsumer(Queue(), splits, ELDConsumer)
+        filters = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+        consumer = TokenFilterConsumer(Queue(), filters, ELDConsumer)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             for line in f:
                 tweet = json.loads(f.readline())
@@ -333,3 +333,65 @@ class TestTokenFilterConsumer(unittest.TestCase):
                                     continue
 
                                     self.assertFalse('@' in document.text)
+
+    def test_satisfies_any(self):
+        """
+        Test that when validating tweets using the ``any`` function, only one token needs to be in the document for it to be valid.
+        """
+
+        trivial = True
+
+        """
+        Create the consumer with a TF-IDF scheme.
+        """
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
+            idf = Exportable.decode(json.loads(f.readline()))['tfidf']
+
+        filters = [ 'chelsea', 'cfc' ]
+        consumer = TokenFilterConsumer(Queue(), filters, ELDConsumer, matches=any, scheme=idf)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
+            for line in f:
+                """
+                If the document contains either of the tokens, it should succeed.
+                Otherwise, the function should fail.
+                """
+                document = consumer._preprocess(json.loads(line))
+                if filters[0] in document.dimensions or filters[1] in document.dimensions:
+                    trivial = False
+                    self.assertTrue(consumer._satisfies(document, filters))
+                else:
+                    self.assertFalse(consumer._satisfies(document, filters))
+
+        if trivial:
+            logger.warning("Trivial test")
+
+    def test_satisfies_all(self):
+        """
+        Test that when validating tweets using the ``all`` function, all tokens need to be in the document for it to be valid.
+        """
+
+        trivial = True
+
+        """
+        Create the consumer with a TF-IDF scheme.
+        """
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
+            idf = Exportable.decode(json.loads(f.readline()))['tfidf']
+
+        filters = [ 'chelsea', 'cfc' ]
+        consumer = TokenFilterConsumer(Queue(), filters, ELDConsumer, matches=all, scheme=idf)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
+            for line in f:
+                """
+                If the document contains both tokens, it should succeed.
+                Otherwise, the function should fail.
+                """
+                document = consumer._preprocess(json.loads(line))
+                if filters[0] in document.dimensions and filters[1] in document.dimensions:
+                    trivial = False
+                    self.assertTrue(consumer._satisfies(document, filters))
+                else:
+                    self.assertFalse(consumer._satisfies(document, filters))
+
+        if trivial:
+            logger.warning("Trivial test")

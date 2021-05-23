@@ -100,17 +100,18 @@ class TokenFilterConsumer(FilterConsumer):
         document.normalize()
         return document
 
-    def _satisfies(self, item, condition):
+    def _satisfies(self, document, tokens):
         """
-        This function always returns true, adding the tweets to all streams.
+        Check whether the given document includes the given tokens.
+        The function checks if any of the given tokens are present in the document's dimensions.
 
-        :param item: The tweet, or a pre-processed version of it.
-        :type item: any
-        :param condition: The condition to check for.
-        :type condition: any
+        :param document: The document to validate whether it contains the given tokens.
+        :type document: :class:`~nlp.document.Document`
+        :param tokens: The list of tokens that need to be present in the given document.
+        :type tokens: list of str
 
-        :return: A boolean value of ``True``, adding the tweet to all streams.
+        :return: A boolean indicating whether the given document contains the tokens.
         :rtype: bool
         """
 
-        return True
+        return self.matches( token in document.dimensions for token in tokens )
