@@ -39,3 +39,56 @@ class TokenFilterConsumer(FilterConsumer):
     :ivar scheme: The term-weighting scheme that is used to create documents from tweets.
     :vartype scheme: :class:`~nlp.weighting.TermWeightingScheme`
     """
+
+    def __init__(self, queue, filters, consumer, matches=any, tokenizer=None, scheme=None, *args, **kwargs):
+        """
+        Initialize the consumer with its :class:`~queues.Queue`, which receives tweets to filter.
+        This function creates one :class:`~queues.consumers.Consumer` which will receive the filtered tweets.
+        Any additional arguments or keyword arguments are passed on to this consumer's constructor.
+
+        The constructor also creates a :class:`~nlp.tokenizer.Tokenizer`, which it later uses to tokenize and filter tweets.
+
+        :param queue: The queue that receives the entire stream.
+        :type queue: :class:`~queues.Queue`
+        :param filters: A list of filters, or conditions that determine whether a tweet should be retained or discarded.
+                        The filters can be lists of tokens, or even lists of lists of tokens.
+        :type filters: list of str or list of list of str or list of tuple of str
+        :param consumer: The type of :class:`~queues.consumers.Consumer` to create, which will process filtered lists.
+        :type consumer: type
+        :param matches: The function that is used to check whether a tweet satisfies the filters.
+
+                        - If ``any`` is provided, the consumer assigns a tweet to a stream if it satisfies any of the filters.
+                        - If ``all`` is provided, the consumer assigns a tweet to a stream if it satisfies all of the filters.
+
+                        A custom function can be provided.
+                        For example, a custom function can define that a tweet satisfies the filter if it includes at least two conditions in it.
+                        If one is given, it must receive as input a number of boolean values.
+                        Its output must be a boolean indicating whether the tweet satisfies the conditions of the split.
+        :type matches: func
+        """
+
+        filters = [ [ filter ] if type(filter) is str else list(filter)
+                               for filter in filters ]
+
+        super(TokenFilterConsumer, self).__init__(queue, filters, consumer, matches,
+                                                  scheme=scheme, *args, **kwargs) # save the scheme in the downstream consumer
+
+        self.tokenizer = tokenizer or Tokenizer(stopwords=stopwords.words('english'),
+                                                normalize_words=True, character_normalization_count=3,
+                                                remove_unicode_entities=True, stem=True)
+        self.scheme = scheme or TF()
+
+    def _satisfies(self, item, condition):
+        """
+        This function always returns true, adding the tweets to all streams.
+
+        :param item: The tweet, or a pre-processed version of it.
+        :type item: any
+        :param condition: The condition to check for.
+        :type condition: any
+
+        :return: A boolean value of ``True``, adding the tweet to all streams.
+        :rtype: bool
+        """
+
+        return True
