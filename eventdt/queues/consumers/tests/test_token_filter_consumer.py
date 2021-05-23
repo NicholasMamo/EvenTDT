@@ -395,3 +395,45 @@ class TestTokenFilterConsumer(unittest.TestCase):
 
         if trivial:
             logger.warning("Trivial test")
+
+    @async_test
+    async def test_run_filters(self):
+        """
+        Test that when running, the downstream consumer receives filtered tweets.
+        """
+
+        # create the consumer with a TF-IDF scheme
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
+            idf = Exportable.decode(json.loads(f.readline()))['tfidf']
+
+        """
+        Create an empty queue.
+        Use it to create a split consumer and set it running.
+        Wait a second so that the buffered consumer (ZhaoConsumer) finds nothing and goes to sleep.
+        """
+        queue = Queue()
+        filters = [ 'chelsea', 'cfc' ]
+        consumer = TokenFilterConsumer(queue, filters, ZhaoConsumer, matches=any, scheme=idf, periodicity=300) # 5 minutes periodicity so that the queue is never emptied
+        running = asyncio.ensure_future(consumer.run(max_inactivity=3))
+        await asyncio.sleep(0.1)
+
+        # load all tweets into the queue
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
+            for line in f:
+                queue.enqueue(json.loads(line))
+
+        """
+        Wait some time for the consumer passes on its tweets to the downstream consumers, and then for those consumers to move the tweets from the queue to the buffer.
+        Then, stop the consumers before they process any tweets.
+        """
+        await asyncio.sleep(0.5)
+        consumer.stop()
+
+        # wait for the consumer to finish
+        results = (await asyncio.gather(running))[0]
+        self.assertTrue(consumer.consumer.buffer.length()) # documents go from the queue into the buffer since it's a buffered consumer
+
+        # ensure that the documents were partitioned properly
+        documents = consumer.consumer.buffer.dequeue_all()
+        for document in documents:
+            self.assertTrue(any( token in document.dimensions for token in filters ))
