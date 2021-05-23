@@ -212,6 +212,9 @@ class FileReader(ABC):
     async def read(self):
         """
         Read the file and add each line as a dictionary to the queue.
+
+        :return: The number of tweets read from the file.
+        :rtype: int
         """
 
         pass
