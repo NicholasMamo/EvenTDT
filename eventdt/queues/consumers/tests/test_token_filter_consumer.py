@@ -116,3 +116,238 @@ class TestTokenFilterConsumer(unittest.TestCase):
 
         consumer = TokenFilterConsumer(Queue(), filters, ZhaoConsumer, periodicity=10)
         self.assertEqual(10, consumer.consumer.periodicity)
+
+    def test_preprocess_creates_documents(self):
+        """
+        Test that when pre-processing tweets, the function creates documents.
+        """
+
+        splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+        consumer = TokenFilterConsumer(Queue(), splits, ELDConsumer)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
+            for line in f:
+                tweet = json.loads(line)
+                self.assertEqual(Document, type(consumer._preprocess(tweet)))
+
+    def test_preprocess_removes_stopwords(self):
+        """
+        Test that when pre-processing tweets, the returned documents do not have stopwords in them.
+        """
+
+        trivial = True
+
+        """
+        Create the consumer with a TF-IDF scheme.
+        """
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
+            idf = Exportable.decode(json.loads(f.readline()))['tfidf']
+
+        """
+        Tokenize all of the tweets.
+        Words like 'hazard' should have a greater weight than more common words, like 'goal'.
+        """
+        splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+        consumer = TokenFilterConsumer(Queue(), splits, ELDConsumer, scheme=idf)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
+            for line in f:
+                document = consumer._preprocess(json.loads(line))
+                if 'and' in document.text.lower() or 'while' in document.text.lower():
+                    trivial = False
+
+                self.assertFalse('and' in document.dimensions)
+                self.assertFalse('while' in document.dimensions)
+                self.assertFalse('whil' in document.dimensions)
+
+        if trivial:
+            logger.warning("Trivial test")
+
+    def test_preprocess_uses_scheme(self):
+        """
+        Test that when pre-processing tweets, the function uses the term-weighting scheme.
+        """
+
+        trivial = True
+
+        """
+        Create the consumer with a TF-IDF scheme.
+        """
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
+            idf = Exportable.decode(json.loads(f.readline()))['tfidf']
+
+        """
+        Tokenize all of the tweets.
+        Words like 'hazard' should have a greater weight than more common words, like 'goal'.
+        """
+        splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+        consumer = TokenFilterConsumer(Queue(), splits, ELDConsumer, scheme=idf)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
+            for line in f:
+                document = consumer._preprocess(json.loads(line))
+                if 'hazard' in document.dimensions and 'goal' in document.dimensions:
+                    trivial = False
+                    self.assertGreater(document.dimensions['hazard'], document.dimensions['goal'])
+
+        if trivial:
+            logger.warning("Trivial test")
+
+    def test_preprocess_normalizes_documents(self):
+        """
+        Test that when pre-processing tweets, the returned documents are normalized.
+        """
+
+        """
+        Create the consumer with a TF-IDF scheme.
+        """
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
+            idf = Exportable.decode(json.loads(f.readline()))['tfidf']
+
+        """
+        Tokenize all of the tweets.
+        Words like 'hazard' should have a greater weight than more common words, like 'goal'.
+        """
+        splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+        consumer = TokenFilterConsumer(Queue(), splits, ELDConsumer, scheme=idf)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
+            for line in f:
+                document = consumer._preprocess(json.loads(line))
+                self.assertTrue(round(vector_math.magnitude(document), 10) in [ 0, 1 ])
+
+    def test_preprocess_with_text(self):
+        """
+        Test that when pre-processing tweets, the returned documents have non-empty text.
+        """
+
+        """
+        Create the consumer with a TF-IDF scheme.
+        """
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
+            idf = Exportable.decode(json.loads(f.readline()))['tfidf']
+
+        """
+        Tokenize all of the tweets.
+        Words like 'hazard' should have a greater weight than more common words, like 'goal'.
+        """
+        splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+        consumer = TokenFilterConsumer(Queue(), splits, ELDConsumer, scheme=idf)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
+            for line in f:
+                document = consumer._preprocess(json.loads(line))
+                self.assertTrue(document.text)
+
+    def test_preprocess_with_full_text(self):
+        """
+        Test that when pre-processing tweets, the returned documents use the full text.
+        """
+
+        """
+        Create the consumer with a TF-IDF scheme.
+        """
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
+            idf = Exportable.decode(json.loads(f.readline()))['tfidf']
+
+        """
+        Tokenize all of the tweets.
+        Words like 'hazard' should have a greater weight than more common words, like 'goal'.
+        """
+        splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+        consumer = TokenFilterConsumer(Queue(), splits, ELDConsumer, scheme=idf)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
+            for line in f:
+                document = consumer._preprocess(json.loads(line))
+                self.assertFalse(document.text.endswith('…'))
+
+    def test_preprocess_with_tweet(self):
+        """
+        Test that when pre-processing tweets, the returned documents include the original tweet.
+        """
+
+        """
+        Create the consumer with a TF-IDF scheme.
+        """
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
+            idf = Exportable.decode(json.loads(f.readline()))['tfidf']
+
+        """
+        Tokenize all of the tweets.
+        """
+        splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+        consumer = TokenFilterConsumer(Queue(), splits, ELDConsumer, scheme=idf)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
+            for line in f:
+                tweet = json.loads(line)
+                document = consumer._preprocess(tweet)
+                self.assertEqual(tweet, document.attributes['tweet'])
+
+    def test_preprocess_with_timestamp(self):
+        """
+        Test that when pre-processing tweets, the returned documents include the timestamp as an attribute.
+        """
+
+        """
+        Create the consumer with a TF-IDF scheme.
+        """
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
+            idf = Exportable.decode(json.loads(f.readline()))['tfidf']
+
+        """
+        Tokenize all of the tweets.
+        """
+        splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+        consumer = TokenFilterConsumer(Queue(), splits, ELDConsumer, scheme=idf)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
+            for line in f:
+                tweet = json.loads(line)
+                document = consumer._preprocess(tweet)
+                self.assertEqual(twitter.extract_timestamp(tweet), document.attributes['timestamp'])
+
+    def test_to_documents_mentions_in_dimensions(self):
+        """
+        Test that when creating a document from a tweet, the expanded mentions are part of the dimensions.
+        """
+
+        # tokenize all of the tweets
+        splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+        consumer = TokenFilterConsumer(Queue(), splits, ELDConsumer)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'examples', '#ParmaMilan-hakan.json'), 'r') as f:
+            tweet = json.loads(f.readline())
+            document = consumer._preprocess(tweet)
+            self.assertEqual(twitter.extract_timestamp(tweet), document.attributes['timestamp'])
+
+            self.assertTrue('Hakan' in document.text)
+            self.assertTrue('hakan' in document.dimensions)
+            self.assertTrue('Çalhanoğlu' in document.text)
+            self.assertTrue('calhanoglu' in document.dimensions)
+
+    def test_to_documents_expands_mentions(self):
+        """
+        Test that when converting a list of tweets to documents, mentions are expanded.
+        """
+
+        wrong_pattern = re.compile("@[0-9,\\s…]")
+        no_space_pattern = re.compile("[^\\s]@")
+        end_pattern = re.compile('@$')
+
+        # tokenize all of the tweets
+        splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+        consumer = TokenFilterConsumer(Queue(), splits, ELDConsumer)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(f.readline())
+                text = twitter.full_text(tweet)
+                document = consumer._preprocess(tweet)
+
+                # allow for some manual validation
+                not_accounts = [ 'real_realestsounds', 'nevilleiesta', 'naija927', 'naijafm92.7', 'manchesterunited', 'ManchesterUnited',
+                'clintasena', 'Maksakal88', 'Aubamayeng7', 'JustWenginIt', 'marcosrojo5', 'btsportsfootball',
+                'Nsibirwahall', 'YouTubeより', 'juniorpepaseed', 'Mezieblog', 'UtdAlamin', 'spurs_vincente' ]
+                if '@' in document.text:
+                    if '@@' in text or ' @ ' in text or '@&gt;' in text or any(account in text for account in not_accounts):
+                        continue
+                        if end_pattern.findall(text):
+                            continue
+                            if no_space_pattern.findall(text) or no_space_pattern.findall(document.text):
+                                continue
+                                if wrong_pattern.findall(text):
+                                    continue
+
+                                    self.assertFalse('@' in document.text)

@@ -78,6 +78,29 @@ class TokenFilterConsumer(FilterConsumer):
                                                 remove_unicode_entities=True, stem=True)
         self.scheme = scheme or TF()
 
+    def _preprocess(self, tweet):
+        """
+        Pre-process the given tweet.
+
+        This function assumes that all of the downstream consumers will work with :class:`~nlp.document.Document` instances.
+        Therefore it tokenizes the tweets and uses the scheme to convert them into documents.
+
+        :param tweet: The tweet to pre-process.
+        :type tweet: dict
+
+        :return: The tweet as a document.
+        :rtype: :class:`~nlp.document.Document`
+        """
+
+        text = twitter.full_text(tweet)
+        text = twitter.expand_mentions(text, tweet)
+        tokens = self.tokenizer.tokenize(text)
+        document = self.scheme.create(tokens, text=text,
+                                      attributes={ 'tweet': tweet,
+                                                   'timestamp': twitter.extract_timestamp(tweet) })
+        document.normalize()
+        return document
+
     def _satisfies(self, item, condition):
         """
         This function always returns true, adding the tweets to all streams.
