@@ -170,6 +170,38 @@ class TestFilterConsumer(unittest.TestCase):
         timeline = (await asyncio.gather(running))[0]
         self.assertEqual(Timeline, type(timeline))
 
+    @async_test
+    async def test_stop_stops_consumers(self):
+        """
+        Test that when stopping the filter consumer, it also stops its child consumer.
+        """
+
+        filters = [ (0, 50), (50, 100) ]
+        consumer = DummyFilterConsumer(Queue(), filters, ZhaoConsumer, periodicity=10)
+        self.assertFalse(consumer.active)
+        self.assertTrue(consumer.stopped)
+        self.assertFalse(consumer.consumer.active)
+        self.assertTrue(consumer.consumer.stopped)
+
+        """
+        Run the consumer.
+        """
+        running = asyncio.ensure_future(consumer.run(max_inactivity=60)) # set a high maximum inactivity so the consumer doesn't end on its own
+        await asyncio.sleep(1)
+        self.assertTrue(consumer.active)
+        self.assertFalse(consumer.stopped)
+        self.assertTrue(consumer.consumer.active)
+        self.assertFalse(consumer.consumer.stopped)
+
+        """
+        Stop the consumer
+        """
+        consumer.stop()
+        await asyncio.sleep(0.5)
+        self.assertTrue(consumer.consumer.active)
+        self.assertTrue(consumer.consumer.stopped)
+        result = await asyncio.gather(running)
+
     def test_preprocess_identical(self):
         """
         Test that the default pre-processing step does not change the tweet at all.

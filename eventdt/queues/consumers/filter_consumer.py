@@ -127,6 +127,20 @@ class FilterConsumer(Consumer):
         self._stopped()
         return results[1]
 
+    def stop(self):
+        """
+        Set a flag to stop accepting new tweets.
+        This function also stops the child consumer.
+
+        .. note::
+            Contrary to the name of the function, the function sets the ``active`` flag to ``False``, not the ``stopped`` flag to ``True``.
+            This function merely asks the consumer to stop accepting new tweets for processing.
+            When the consumer actually stops, after it finishes processing whatever tweets it has, it sets the ``stopped`` flag to ``True`` itself.
+        """
+
+        self.active = False
+        self.consumer.stop()
+
     async def _consume(self, max_inactivity, *args, **kwargs):
         """
         Consume the queue, filtering the tweets before passing them on to the consumer
