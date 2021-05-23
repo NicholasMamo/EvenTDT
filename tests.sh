@@ -127,6 +127,7 @@ queue_tests() {
 	echo -e "${HIGHLIGHT}Consumers${DEFAULT}"
 	python3 -m unittest eventdt.queues.consumers.tests.test_buffered_consumer
 	python3 -m unittest eventdt.queues.consumers.tests.test_filter_consumer
+	python3 -m unittest eventdt.queues.consumers.tests.test_token_filter_consumer
 	python3 -m unittest eventdt.queues.consumers.tests.test_split_consumer
 	python3 -m unittest eventdt.queues.consumers.tests.test_token_split_consumer
 	python3 -m unittest eventdt.queues.consumers.algorithms.tests.test_eld_consumer
