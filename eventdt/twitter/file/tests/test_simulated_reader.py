@@ -293,12 +293,35 @@ class TestSimulatedFileReader(unittest.IsolatedAsyncioTestCase):
             skip = end - start
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
-
         with open(file, 'r') as f:
             queue = Queue()
             reader = SimulatedFileReader(queue, f, speed=100, skip_time=skip + 1)
             await reader.read()
             self.assertEqual(0, queue.length())
+
+    async def test_read_return_read_lines(self):
+        """
+        Test that when reading the corpus, the function returns the number of read tweets.
+        """
+
+        file = 'eventdt/tests/corpora/CRYCHE-100.json'
+        with open(file, 'r') as f:
+            queue = Queue()
+            reader = SimulatedFileReader(queue, f, speed=100)
+            read = await reader.read()
+            self.assertEqual(100, read)
+
+    async def test_read_return_equals_queue_length(self):
+        """
+        Test that when reading the corpus, the number of read tweets is the same as the number of tweets in the queue.
+        """
+
+        file = 'eventdt/tests/corpora/CRYCHE-100.json'
+        with open(file, 'r') as f:
+            queue = Queue()
+            reader = SimulatedFileReader(queue, f, speed=100)
+            read = await reader.read()
+            self.assertEqual(queue.length(), read)
 
     async def test_normal_speed(self):
         """
