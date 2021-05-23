@@ -43,57 +43,39 @@ class TestTokenFilterConsumer(unittest.TestCase):
         Test that when creating the token filter consumer with a custom tokenizer, it is used instead of the default one.
         """
 
-        filters = [ ('tackl'), ('goal') ]
+        filters = [ 'tackl', 'goal' ]
         consumer = TokenFilterConsumer(Queue(), filters, ELDConsumer)
         self.assertTrue(consumer.tokenizer.stem)
         tokenizer = Tokenizer(stem=False)
         consumer = TokenFilterConsumer(Queue(), filters, ELDConsumer, tokenizer=tokenizer)
         self.assertFalse(consumer.tokenizer.stem)
 
-    def test_init_list_of_list_filters(self):
+    def test_init_str_filters(self):
         """
-        Test that when providing a list of list for filters, they are unchanged.
+        Test that when providing string as a filter, it is converted into lists.
         """
 
-        filters = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+        filters = 'yellow'
         consumer = TokenFilterConsumer(Queue(), filters, ELDConsumer)
-        self.assertEqual(filters, consumer.filters)
-
-    def test_init_list_of_tuple_filters(self):
-        """
-        Test that when providing a list of tuples for filters, they are converted into lists.
-        """
-
-        filters = [ ( 'yellow', 'card' ), ( 'foul', 'tackl' ) ]
-        consumer = TokenFilterConsumer(Queue(), filters, ELDConsumer)
-        self.assertEqual([ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ], consumer.filters)
+        self.assertEqual([ 'yellow' ], consumer.filters)
 
     def test_init_list_of_str_filters(self):
         """
-        Test that when providing a list of strings for filters, they are converted into lists.
+        Test that when providing a list of strings for filters, they are retained as a list.
         """
 
         filters = [ 'yellow', 'card' ]
         consumer = TokenFilterConsumer(Queue(), filters, ELDConsumer)
-        self.assertEqual([ [ 'yellow' ], [ 'card' ] ], consumer.filters)
-
-    def test_init_mixed_filters(self):
-        """
-        Test that when providing a mix of filters, they are converted into lists.
-        """
-
-        filters = [ 'book', [ 'yellow', 'card' ], ( 'foul', 'tackl' ) ]
-        consumer = TokenFilterConsumer(Queue(), filters, ELDConsumer)
-        self.assertEqual([ [ 'book' ], [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ], consumer.filters)
+        self.assertEqual([ 'yellow', 'card' ], consumer.filters)
 
     def test_init_consumer_filters(self):
         """
         Test that the token filter consumer creates as many consumers as the number of filters.
         """
 
-        filters = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+        filters = [ 'yellow', 'card', 'foul', 'tackl' ]
         consumer = TokenFilterConsumer(Queue(), filters, ELDConsumer)
-        self.assertEqual(2, len(consumer.filters))
+        self.assertEqual(4, len(consumer.filters))
         self.assertTrue(consumer.consumer)
 
     def test_init_default_scheme(self):

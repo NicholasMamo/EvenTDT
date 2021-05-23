@@ -51,8 +51,8 @@ class TokenFilterConsumer(FilterConsumer):
         :param queue: The queue that receives the entire stream.
         :type queue: :class:`~queues.Queue`
         :param filters: A list of filters, or conditions that determine whether a tweet should be retained or discarded.
-                        The filters can be lists of tokens, or even lists of lists of tokens.
-        :type filters: list of str or list of list of str or list of tuple of str
+                        The filters must lists of tokens.
+        :type filters: str or list of str
         :param consumer: The type of :class:`~queues.consumers.Consumer` to create, which will process filtered lists.
         :type consumer: type
         :param matches: The function that is used to check whether a tweet satisfies the filters.
@@ -67,8 +67,7 @@ class TokenFilterConsumer(FilterConsumer):
         :type matches: func
         """
 
-        filters = [ [ filter ] if type(filter) is str else list(filter)
-                               for filter in filters ]
+        filters = [ filters ] if type(filters) is str else list(filters)
 
         super(TokenFilterConsumer, self).__init__(queue, filters, consumer, matches,
                                                   scheme=scheme, *args, **kwargs) # save the scheme in the downstream consumer
