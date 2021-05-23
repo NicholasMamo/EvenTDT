@@ -706,7 +706,7 @@ def consume_process(comm, loop, consumer, max_inactivity):
     comm['timeline'] = loop.run_until_complete(consume(consumer, max_inactivity))
     logger.info("Consumption ended")
 
-def create_consumer(consumer, queue, splits=None, *args, **kwargs):
+def create_consumer(consumer, queue, filters=None, splits=None, *args, **kwargs):
     """
     Create a consumer.
     If splits are given, the function creates a :class:`~queues.consumers.token_split_consumer.TokenSplitConsumer`.
@@ -718,10 +718,15 @@ def create_consumer(consumer, queue, splits=None, *args, **kwargs):
     :param splits: A list of splits for the consumer.
                    If they are given, the function uses a :class:`~queues.consumers.token_split_consumer.TokenSplitConsumer`.
     :type splits: list of list of str
+    :param filters: A list of tokens which must be in a tweet for it to be processed.
+    :type filters: list of str
 
     :return: A consumer with the given parameters.
     :rtype: :class:`~queues.consumers.Consumer`
     """
+
+    if filters:
+        return TokenFilterConsumer(queue, filters, consumer, *args, **kwargs)
 
     if splits:
         return TokenSplitConsumer(queue, splits, consumer, *args, **kwargs)
