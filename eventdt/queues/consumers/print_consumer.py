@@ -13,6 +13,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from logger import logger
+from nlp import Document
 from queues.consumers import Consumer
 
 class PrintConsumer(Consumer):
@@ -46,4 +47,7 @@ class PrintConsumer(Consumer):
             """
             while self.queue.length():
                 tweet = self.queue.dequeue()
-                logger.info(tweet.get('text'))
+                if type(tweet) is Document:
+                    logger.info(str(tweet))
+                else:
+                    logger.info(tweet.get('text'))
