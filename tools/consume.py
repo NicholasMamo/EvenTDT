@@ -78,6 +78,26 @@ You can add an understanding period using the ``--understanding`` parameter:
     --understanding data/event/understanding.json \\
     --consumer ELDConsumer
 
+You can also filter the file using tokens.
+Currently, the only filtering mode accepts any tweet if it mentions any filter keyword.
+A filters file is a .csv file with no header line, where each line represents one keyword:
+
+.. code-block:: text
+
+    yellow
+    ref
+    goal
+
+You can provide the filters as follows:
+
+.. code-block:: bash
+
+    ./tools/consume.py \\
+    --event data/event/event.json \\
+    --understanding data/event/understanding.json \\
+    --consumer ELDConsumer \\
+    --filters data/filters.csv
+
 Finally, you can also provide splits, which are groups of keywords.
 When you provide splits, the tweets are grouped and processed separately according to the keywords they contain.
 A splits file is a .csv file with no header line, where each line represents a comma-separated list of keywords:
@@ -133,6 +153,7 @@ The output is a JSON file with the following structure:
             "skip_unverified": false,
             "sample": 1,
             "speed": 1,
+            "filters": null,
             "splits": null,
             "threshold": 0.5,
             "post_rate": 1.7,
@@ -162,6 +183,7 @@ The output is a JSON file with the following structure:
             "skip_unverified": false,
             "sample": 1,
             "speed": 1,
+            "filters": null,
             "splits": null,
             "threshold": 0.5,
             "post_rate": 1.7,
@@ -194,6 +216,7 @@ The full list of accepted arguments:
     - ``--max-time``                *<Optional>* The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.
     - ``--skip-retweets``           *<Optional>* Skip retweets when reading tweets from a file, defaults to False.
     - ``--skip-unverified``         *<Optional>* Skip tweets from unverified authors when reading tweets from a file, defaults to False.
+    - ``--filters``                 *<Optional>* The path to a file containing filters for the consumer, filtering the stream based on the tokens in tweets. If given, the tool expects a CSV file, where each line contains one token.
     - ``--splits``                  *<Optional>* The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split.
     - ``--periodicity``             *<Optional>* The periodicity in seconds of the consumer, defaults to 60 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer` and :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`).
     - ``--scheme``                  *<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used.
@@ -251,6 +274,7 @@ def setup_args():
         - ``--max-time``                *<Optional>* The maximum time in minutes to spend reading the corpus, indefinite if it is less than 0.
         - ``--skip-retweets``           *<Optional>* Skip retweets when reading tweets from a file, defaults to False.
         - ``--skip-unverified``         *<Optional>* Skip tweets from unverified authors when reading tweets from a file, defaults to False.
+        - ``--filters``                 *<Optional>* The path to a file containing filters for the consumer, filtering the stream based on the tokens in tweets. If given, the tool expects a CSV file, where each line contains one token.
         - ``--splits``                  *<Optional>* The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split.
         - ``--periodicity``             *<Optional>* The periodicity in seconds of the consumer, defaults to 60 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer` and :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`).
         - ``--scheme``                  *<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used. This can be overwritten if there is event understanding.
@@ -298,6 +322,8 @@ def setup_args():
                         help='<Optional> Skip retweets when reading tweets from a file, defaults to False.')
     parser.add_argument('--skip-unverified', action="store_true",
                         help='<Optional> Skip tweets from unverified authors when reading tweets from a file, defaults to False.')
+    parser.add_argument('--filters', type=filters, required=False, default=None,
+                        help='<Optional> The path to a file containing filters for the consumer, filtering the stream based on the tokens in tweets. If given, the tool expects a CSV file, where each line contains one token.')
     parser.add_argument('--splits', type=splits, required=False, default=None,
                         help='<Optional> The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split.')
     parser.add_argument('--periodicity', type=int, required=False, default=60,
