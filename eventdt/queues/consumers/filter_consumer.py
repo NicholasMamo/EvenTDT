@@ -104,6 +104,24 @@ class FilterConsumer(Consumer):
 
         pass
 
+    @abstractmethod
+    def _satisfies(self, item, condition):
+        """
+        Check whether the given item satisfies the condition.
+
+        :param item: The tweet, or a pre-processed version of it.
+        :type item: any
+        :param condition: The condition to check for.
+                          The type of the condition depends on what the function looks for.
+        :type condition: any
+
+        :return: A boolean indicating whether the given item satisfies the condition.
+                 If it satisfies the condition, the split consumer adds the item to the corresponding stream.
+        :rtype: bool
+        """
+
+        pass
+
     def _preprocess(self, tweet):
         """
         Pre-process the given tweet.
@@ -128,3 +146,18 @@ class DummyFilterConsumer(FilterConsumer):
     A dummy :class:`~queues.consumers.filter_consumer.FilterConsumer` that accepts all tweets.
     It is used only for testing purposes.
     """
+
+    def _satisfies(self, item, condition):
+        """
+        This function always returns true, adding the tweets to all streams.
+
+        :param item: The tweet, or a pre-processed version of it.
+        :type item: any
+        :param condition: The condition to check for.
+        :type condition: any
+
+        :return: A boolean value of ``True``, adding the tweet to all streams.
+        :rtype: bool
+        """
+
+        return True
