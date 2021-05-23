@@ -91,6 +91,7 @@ class FilterConsumer(Consumer):
 
         self.filters = filters
         self.matches = matches
+        self.consumer = consumer(Queue(), *args, **kwargs)
 
     async def _consume(self, max_inactivity, *args, **kwargs):
         """

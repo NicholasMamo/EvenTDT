@@ -15,6 +15,7 @@ if path not in sys.path:
 from logger import logger
 from queues import Queue
 from queues.consumers import PrintConsumer
+from queues.consumers.algorithms import ZhaoConsumer
 from queues.consumers.filter_consumer import DummyFilterConsumer
 
 logger.set_logging_level(logger.LogLevel.WARNING)
@@ -57,3 +58,24 @@ class TestFilterConsumer(unittest.TestCase):
 
         filters = 50
         self.assertRaises(ValueError, DummyFilterConsumer, Queue(), filters, PrintConsumer)
+
+    def test_init_consumer(self):
+        """
+        Test that when creating the filter consumer, it also creates its own consumer.
+        """
+
+        filters = [ (0, 50), (50, 100) ]
+        consumer = DummyFilterConsumer(Queue(), filters, PrintConsumer)
+        self.assertEqual(PrintConsumer, type(consumer.consumer))
+
+    def test_init_consumer_arguments(self):
+        """
+        Test that when passing on extra arguments to the filter consumer, they are passed on to the consumer.
+        """
+
+        filters = [ (0, 50), (50, 100) ]
+        consumer = DummyFilterConsumer(Queue(), filters, ZhaoConsumer)
+        self.assertEqual(5, consumer.consumer.periodicity)
+
+        consumer = DummyFilterConsumer(Queue(), filters, ZhaoConsumer, periodicity=10)
+        self.assertEqual(10, consumer.consumer.periodicity)
