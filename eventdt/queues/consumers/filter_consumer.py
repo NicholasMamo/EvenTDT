@@ -150,7 +150,23 @@ class FilterConsumer(Consumer):
         :type max_inactivity: int
         """
 
-        pass
+        # the consumer should keep working until it is stopped
+        while self.active:
+            # if the queue is idle, wait for input
+            inactive = await self._wait_for_input(max_inactivity=max_inactivity)
+            if not inactive:
+                break
+
+            # consumption empties the queue and goes over all of its items
+            items = self.queue.dequeue_all()
+            items = [ self._preprocess(item) for item in items ]
+
+            # check which items satisfy conditions to be added to the consumers
+            for item in items:
+                if self._satisfies(item, self.filters):
+                    self.consumer.queue.enqueue(item)
+
+        self.stop()
 
     @abstractmethod
     def _satisfies(self, item, condition):
