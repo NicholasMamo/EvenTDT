@@ -25,6 +25,9 @@ class StatConsumer(BufferedConsumer):
     async def _process(self):
         """
         Count and report the number of tweets received in the last period.
+
+        :return: The processing's output: an empty tuple.
+        :rtype: tuple
         """
 
         """
@@ -35,3 +38,5 @@ class StatConsumer(BufferedConsumer):
             logger.info(f"{ self.buffer.length() } tweets in {self.periodicity} seconds", process=str(self))
             self.buffer.empty()
             await self._sleep()
+
+        return tuple()
