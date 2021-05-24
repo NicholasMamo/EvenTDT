@@ -142,6 +142,61 @@ class TestFilterConsumer(unittest.TestCase):
         self.assertTrue(consumer.consumer.stopped)
 
     @async_test
+    async def test_run_returns_consumed(self):
+        """
+        Test that at the end, the filter consumer returns the number of consumed tweets.
+        """
+
+        """
+        Create an empty queue.
+        Use it to create a consumer and set it running.
+        """
+        queue = Queue()
+        filters = [ (0, 50), (50, 100) ]
+        consumer = DummyFilterConsumer(Queue(), filters, ELDConsumer)
+        running = asyncio.ensure_future(consumer.run(max_inactivity=3))
+        await asyncio.sleep(0.5)
+
+        """
+        Load all tweets into the queue.
+        """
+        with open(os.path.join(os.path.dirname(__file__), '../../../tests/corpora/CRYCHE-500.json')) as f:
+            tweets = [ json.loads(line) for line in f ]
+            queue.enqueue(*tweets)
+
+        output = await running
+        self.assertEqual(dict, type(output))
+        self.assertTrue('consumed' in output)
+
+    @async_test
+    async def test_run_returns_consumed_after_filter(self):
+        """
+        Test that at the end, when the filter consumer returns the number of consumed tweets, the count includes only filtered tweets.
+        """
+
+        """
+        Create an empty queue.
+        Use it to create a consumer and set it running.
+        """
+        queue = Queue()
+        filters = [ (0, 50), (50, 100) ]
+        consumer = DummyFilterConsumer(Queue(), filters, ELDConsumer)
+        running = asyncio.ensure_future(consumer.run(max_inactivity=3))
+        await asyncio.sleep(0.5)
+
+        """
+        Load all tweets into the queue.
+        """
+        with open(os.path.join(os.path.dirname(__file__), '../../../tests/corpora/CRYCHE-500.json')) as f:
+            tweets = [ json.loads(line) for line in f ]
+            queue.enqueue(*tweets)
+
+        output = await running
+        self.assertEqual(dict, type(output))
+        self.assertTrue('consumed' in output)
+        self.assertGreater(500, output['consumed'])
+
+    @async_test
     async def test_run_returns_timeline(self):
         """
         Test that when running the filter consumer, it returns the timeline from its own consumers.
@@ -167,8 +222,10 @@ class TestFilterConsumer(unittest.TestCase):
         """
         Wait for the consumer to finish.
         """
-        timeline = (await asyncio.gather(running))[0]
-        self.assertEqual(Timeline, type(timeline))
+        output = (await asyncio.gather(running))[0]
+        self.assertEqual(dict, type(output))
+        self.assertTrue('timeline' in output)
+        self.assertEqual(Timeline, type(output['timeline']))
 
     @async_test
     async def test_stop_stops_consumers(self):
@@ -198,7 +255,7 @@ class TestFilterConsumer(unittest.TestCase):
         """
         consumer.stop()
         await asyncio.sleep(0.5)
-        self.assertTrue(consumer.consumer.active)
+        self.assertFalse(consumer.consumer.active)
         self.assertTrue(consumer.consumer.stopped)
         result = await asyncio.gather(running)
 

@@ -125,7 +125,7 @@ class FilterConsumer(Consumer):
             self.consumer.run(wait=wait, max_inactivity=-1)
         )
         self._stopped()
-        return results[1]
+        return { **results[1], **results[0] } # reversed so that the number of filtered tweets is not overwritten
 
     def stop(self):
         """
@@ -148,7 +148,13 @@ class FilterConsumer(Consumer):
         :param max_inactivity: The maximum time in seconds to wait idly without input before stopping.
                                If it is negative, the consumer keeps waiting for input until the maximum time expires.
         :type max_inactivity: int
+
+        :return: A dictionary with the number of consumed tweets in the ``consumed`` key.
+                 Only tweets that pass through the filters are considered to be consumed.
+        :rtype: dict
         """
+
+        consumed = 0
 
         # the consumer should keep working until it is stopped
         while self.active:
@@ -164,9 +170,11 @@ class FilterConsumer(Consumer):
             # check which items satisfy conditions to be added to the consumers
             for item in items:
                 if self._satisfies(item, self.filters):
+                    consumed += 1
                     self.consumer.queue.enqueue(item)
 
         self.stop()
+        return { 'consumed': consumed }
 
     @abstractmethod
     def _satisfies(self, item, condition):
