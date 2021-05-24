@@ -26,8 +26,8 @@ class StatConsumer(BufferedConsumer):
         """
         Count and report the number of tweets received in the last period.
 
-        :return: The processing's output: an empty tuple.
-        :rtype: tuple
+        :return: The processing's output: an empty dictionary.
+        :rtype: dict
         """
 
         """
@@ -39,4 +39,4 @@ class StatConsumer(BufferedConsumer):
             self.buffer.empty()
             await self._sleep()
 
-        return tuple()
+        return { }

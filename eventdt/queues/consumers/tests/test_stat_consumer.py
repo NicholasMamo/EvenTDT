@@ -53,6 +53,6 @@ class TestStatConsumer(unittest.TestCase):
             queue.enqueue(*tweets)
 
         consumed = await running
-        self.assertEqual(tuple, type(consumed))
-        self.assertEqual(1, len(consumed))
-        self.assertEqual(500, consumed[0])
+        self.assertEqual(dict, type(consumed))
+        self.assertEqual(1, len(consumed)) # the second element is the processing's return value
+        self.assertEqual(500, consumed['consumed'])

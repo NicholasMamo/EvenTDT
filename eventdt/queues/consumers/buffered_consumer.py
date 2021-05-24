@@ -255,7 +255,7 @@ class DummySimulatedBufferedConsumer(SimulatedBufferedConsumer):
         """
         Discard all tweets from the buffer.
 
-        :return: The processing's output: an empty dictionary
+        :return: The processing's output: an empty dictionary.
         :rtype: dict
         """
 
