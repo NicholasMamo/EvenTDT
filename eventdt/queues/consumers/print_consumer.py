@@ -30,8 +30,8 @@ class PrintConsumer(Consumer):
                                If it is negative, the consumer keeps waiting for input until the maximum time expires.
         :type max_inactivity: int
 
-        :return: A tuple with an integer: the number of consumed tweets.
-        :rtype: tuple
+        :return: The output of the consumption process, a dictionary which includes the ``consumed`` key, or the number of read tweets.
+        :rtype: dict
         """
 
         consumed = 0
@@ -58,4 +58,4 @@ class PrintConsumer(Consumer):
                 else:
                     logger.info(tweet.get('text'))
 
-        return (consumed, )
+        return { 'consumed': consumed }
