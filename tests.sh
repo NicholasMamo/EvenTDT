@@ -131,6 +131,7 @@ queue_tests() {
 	python3 -m unittest eventdt.queues.consumers.tests.test_print_consumer
 	python3 -m unittest eventdt.queues.consumers.tests.test_split_consumer
 	python3 -m unittest eventdt.queues.consumers.tests.test_token_split_consumer
+	python3 -m unittest eventdt.queues.consumers.tests.test_stat_consumer
 	python3 -m unittest eventdt.queues.consumers.algorithms.tests.test_eld_consumer
 	python3 -m unittest eventdt.queues.consumers.algorithms.tests.test_fire_consumer
 	python3 -m unittest eventdt.queues.consumers.algorithms.tests.test_fuego_consumer
