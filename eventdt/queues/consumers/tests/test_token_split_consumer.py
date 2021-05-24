@@ -20,6 +20,7 @@ from objects.exportable import Exportable
 from queues import Queue
 from queues.consumers.algorithms import ELDConsumer, ZhaoConsumer
 from queues.consumers import TokenFilterConsumer, TokenSplitConsumer
+from summarization.timeline import Timeline
 import twitter
 from vsm import vector_math
 
@@ -191,6 +192,67 @@ class TestTokenSplitConsumer(unittest.TestCase):
 
         consumer = TokenSplitConsumer(Queue(), splits, ZhaoConsumer, periodicity=10)
         self.assertTrue(all( 10 == _consumer.consumer.periodicity for _consumer in consumer.consumers ))
+
+    @async_test
+    async def test_run_returns_timelines(self):
+        """
+        Test that when running the split consumer, it returns the timelines and other data from its consumers.
+        """
+
+        splits = [ (0, 50), (50, 100) ]
+        consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer)
+        self.assertFalse(consumer.active)
+        self.assertTrue(consumer.stopped)
+        self.assertTrue(all( not _consumer.active for _consumer in consumer.consumers ))
+        self.assertTrue(all( _consumer.stopped for _consumer in consumer.consumers ))
+
+        """
+        Run the consumer.
+        """
+        running = asyncio.ensure_future(consumer.run(max_inactivity=1))
+        await asyncio.sleep(1)
+        self.assertTrue(consumer.active)
+        self.assertFalse(consumer.stopped)
+        self.assertTrue(all( _consumer.active for _consumer in consumer.consumers ))
+        self.assertTrue(all( not _consumer.stopped for _consumer in consumer.consumers ))
+
+        """
+        Wait for the consumer to finish.
+        """
+        results = (await asyncio.gather(running))[0]
+        self.assertEqual({ 'consumed', 'filtered', 'skipped', 'timeline' }, set(results.keys()))
+        self.assertTrue(all( type(timeline) is Timeline for timeline in results['timeline'] ))
+
+    @async_test
+    async def test_run_consumed_(self):
+        """
+        Test that when running the split consumer, the returned document includes a ``consume`` key with one value for each split.
+        """
+
+        splits = [ (0, 50), (50, 100) ]
+        consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer)
+        self.assertFalse(consumer.active)
+        self.assertTrue(consumer.stopped)
+        self.assertTrue(all( not _consumer.active for _consumer in consumer.consumers ))
+        self.assertTrue(all( _consumer.stopped for _consumer in consumer.consumers ))
+
+        """
+        Run the consumer.
+        """
+        running = asyncio.ensure_future(consumer.run(max_inactivity=1))
+        await asyncio.sleep(1)
+        self.assertTrue(consumer.active)
+        self.assertFalse(consumer.stopped)
+        self.assertTrue(all( _consumer.active for _consumer in consumer.consumers ))
+        self.assertTrue(all( not _consumer.stopped for _consumer in consumer.consumers ))
+
+        """
+        Wait for the consumer to finish.
+        """
+        results = (await asyncio.gather(running))[0]
+        self.assertEqual({ 'consumed', 'filtered', 'skipped', 'timeline' }, set(results.keys()))
+        self.assertTrue(all( len(splits) == len(results[key]) for key in results ))
+        self.assertEqual(len(splits), len(results['consumed']))
 
     def test_to_documents_expands_mentions(self):
         """
