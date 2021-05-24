@@ -58,4 +58,4 @@ class PrintConsumer(Consumer):
                 else:
                     logger.info(tweet.get('text'))
 
-        return consumed
+        return (consumed, )

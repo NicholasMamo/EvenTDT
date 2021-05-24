@@ -53,4 +53,6 @@ class TestPrintConsumer(unittest.TestCase):
             queue.enqueue(*tweets)
 
         consumed = await running
-        self.assertEqual(500, consumed)
+        self.assertEqual(tuple, type(consumed))
+        self.assertEqual(1, len(consumed))
+        self.assertEqual(500, consumed[0])
