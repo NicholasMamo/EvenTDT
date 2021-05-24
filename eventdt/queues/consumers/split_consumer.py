@@ -116,8 +116,10 @@ class SplitConsumer(Consumer):
                                If it is negative, the consumer keeps waiting for input indefinitely.
         :type max_inactivity: int
 
-        :return: The outputs of the split consumer's individual consumers as a list.
-        :rtype: list
+        :return: The outputs of the split consumer's individual consumers as a dictionary.
+                 The dictionary keys include ``consume`` and any other keys returned by the downstream consumers.
+                 The values are always lists, equal to the number of splits and consumers.
+        :rtype: dict
         """
 
         await asyncio.sleep(wait)
@@ -127,7 +129,10 @@ class SplitConsumer(Consumer):
             *[ consumer.run(wait=wait, max_inactivity=-1) for consumer in self.consumers ]
         )
         self._stopped()
-        return results[1:]
+
+        # NOTE: The next line transform a list of dictionaries returned by each downstream consumer to a dictionary of lists, assuming that each timeline returns the same keys (which it should)
+        return { **{ key: [ result[key] for result in results[1:] ] for key in results[1] },
+                 **results[0] }
 
     def stop(self):
         """
@@ -151,7 +156,13 @@ class SplitConsumer(Consumer):
         :param max_inactivity: The maximum time in seconds to wait idly without input before stopping.
                                If it is negative, the consumer keeps waiting for input until the maximum time expires.
         :type max_inactivity: int
+
+        :return: A dictionary with the number of consumed tweets in the ``consumed`` key.
+                 The value is actually a list, corresponding to the number of tweets passed to each split.
+        :rtype: dict
         """
+
+        consumed = [ 0 ] * len(self.splits)
 
         """
         The consumer should keep working until it is stopped.
@@ -171,11 +182,13 @@ class SplitConsumer(Consumer):
             items = self.queue.dequeue_all()
             items = [ self._preprocess(item) for item in items ]
             for item in items:
-                for split, consumer in zip(self.splits, self.consumers):
+                for i, (split, consumer) in enumerate(zip(self.splits, self.consumers)):
                     if self._satisfies(item, split):
+                        consumed[i] += 1
                         consumer.queue.enqueue(item)
-                        
+
         self.stop()
+        return { 'consumed': consumed }
 
     @abstractmethod
     def _satisfies(self, item, condition):
