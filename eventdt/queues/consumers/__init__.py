@@ -116,7 +116,7 @@ class Consumer(ABC):
     @abstractmethod
     async def _consume(self, max_inactivity, *args, **kwargs):
         """
-        Consume the queue.
+        Consume the queue's tweets.
         This is the function where most processing occurs.
 
         :param max_inactivity: The maximum time in seconds to wait idly without input before stopping.
