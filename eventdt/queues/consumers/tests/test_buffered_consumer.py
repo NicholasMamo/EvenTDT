@@ -43,6 +43,33 @@ class TestSimulatedBufferedConsumer(unittest.TestCase):
         self.assertEqual(name, str(consumer))
 
     @async_test
+    async def test_run_returns_consumed_tweets(self):
+        """
+        Test that at the end, the buffered consumer returns the number of consumed tweets.
+        """
+
+        """
+        Create an empty queue.
+        Use it to create a buffered consumer and set it running.
+        """
+        queue = Queue()
+        consumer = DummySimulatedBufferedConsumer(queue, periodicity=1)
+        running = asyncio.ensure_future(consumer.run(max_inactivity=3))
+        await asyncio.sleep(0.5)
+
+        """
+        Load all tweets into the queue.
+        """
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
+            tweets = [ json.loads(line) for line in f ]
+            queue.enqueue(*tweets)
+
+        consumed = await running
+        self.assertEqual(tuple, type(consumed))
+        self.assertEqual(1, len(consumed)) # the second element is the processing's return value
+        self.assertEqual(500, consumed[0])
+
+    @async_test
     async def test_binning(self):
         """
         Test that binning works as it should.

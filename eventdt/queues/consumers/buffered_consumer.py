@@ -90,8 +90,8 @@ class BufferedConsumer(Consumer):
                                If it is negative, the consumer keeps waiting for input until the maximum time expires.
         :type max_inactivity: int
 
-        :return: The output of the consumption process.
-        :rtype: any
+        :return: The output of the consumption process, a tuple whose first item must be an integer: the number of read tweets.
+        :rtype: tuple
         """
 
         await asyncio.sleep(wait)
@@ -101,7 +101,7 @@ class BufferedConsumer(Consumer):
             self._process(*args, **kwargs),
         )
         self._stopped()
-        return results[1]
+        return (results[0][0], *results[1]) # the number of consumed tweets and the processing's output
 
     async def _consume(self, max_inactivity):
         """
@@ -110,7 +110,12 @@ class BufferedConsumer(Consumer):
         :param max_inactivity: The maximum time in seconds to wait idly without input before stopping.
                                If it is negative, the consumer keeps waiting for input until the maximum time expires.
         :type max_inactivity: int
+
+        :return: A tuple with an integer: the number of consumed tweets.
+        :rtype: tuple
         """
+
+        consumed = 0
 
         """
         The consumer should keep working until it is stopped.
@@ -128,14 +133,22 @@ class BufferedConsumer(Consumer):
             The buffer is processed separately in the :func:`~queues.consumers.buffered_consumer.BufferedConsumer.process` function.
             """
             items = self.queue.dequeue_all()
+            consumed += len(items)
             self.buffer.enqueue(*items)
 
         self.active = False
+
+        return (consumed, )
 
     @abstractmethod
     async def _process():
         """
         Process the buffered items.
+
+        This function normally does not need to return the number of processed tweets because most consumers process all consumed tweets (and maybe filter them later).
+
+        :return: The processing's output as a tuple, even if empty.
+        :rtype: tuple
         """
 
         pass
@@ -241,9 +254,14 @@ class DummySimulatedBufferedConsumer(SimulatedBufferedConsumer):
     async def _process(self):
         """
         Discard all tweets from the buffer.
+
+        :return: The processing's output: an empty tuple.
+        :rtype: tuple
         """
 
         while self.active:
             if self.buffer.length() > 0:
                 self.buffer.dequeue_all()
             await self._sleep()
+
+        return tuple()
