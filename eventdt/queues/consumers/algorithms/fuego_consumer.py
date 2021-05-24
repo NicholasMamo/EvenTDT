@@ -229,9 +229,15 @@ class FUEGOConsumer(Consumer):
                                If it is negative, the consumer keeps waiting for input until the maximum time expires.
         :type max_inactivity: int
 
-        :return: The constructed timeline.
-        :rtype: :class:`~summarization.timeline.Timeline`
+        :return: A dictionary with the following keys:
+                   - ``consumed``: the number of consumed tweets
+                   - ``filtered``: the number of filtered tweets
+                   - ``skipped``: the number of skipped tweets (because they were backlogged)
+                   - ``timeline``: the constructed :class:`~summarization.timeline.Timeline`
+        :rtype: dict
         """
+
+        consumed, filtered = 0, 0
 
         timeline = Timeline(TopicalClusterNode, expiry=60*5, min_similarity=0.6, max_time=600)
 
@@ -254,7 +260,9 @@ class FUEGOConsumer(Consumer):
             # get all the tweets in the queue and convert them to documents.
             if self.queue.length():
                 tweets = self.queue.dequeue_all()
+                consumed += len(tweets)
                 tweets = self._filter_tweets(tweets)
+                filtered += len(tweets)
                 documents = self._to_documents(tweets)
                 if not documents:
                     continue
@@ -290,7 +298,7 @@ class FUEGOConsumer(Consumer):
                     logger.info(f"{datetime.fromtimestamp(node.created_at).ctime()}: { cleaner.clean(str(summary)) }", process=str(self))
                     node.attributes['printed'] = True
 
-        return timeline
+        return { 'consumed': consumed, 'filtered': filtered, 'timeline': timeline }
 
     def _filter_tweets(self, tweets):
         """

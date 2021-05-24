@@ -305,6 +305,70 @@ class TestFUEGOConsumer(unittest.TestCase):
                 count = len([ document for document in documents if term in document.dimensions ])
                 self.assertEqual(count, scheme.global_scheme.idf[term])
 
+    @async_test
+    async def test_run_returns(self):
+        """
+        Test that at the end, the FUEGO consumer returns the number of consumed, filtered and skipped tweets, and a timeline.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'idf.json'), 'r') as f:
+            data = json.loads(f.readline())
+            scheme = Exportable.decode(data)['tfidf']
+
+        """
+        Create an empty queue.
+        Use it to create a consumer and set it running.
+        """
+        queue = Queue()
+        consumer = FUEGOConsumer(queue, scheme=scheme)
+        running = asyncio.ensure_future(consumer.run(max_inactivity=3))
+        await asyncio.sleep(0.5)
+
+        """
+        Load all tweets into the queue.
+        """
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
+            tweets = [ json.loads(line) for line in f ]
+            queue.enqueue(*tweets)
+
+        output = await running
+        self.assertEqual(dict, type(output))
+        self.assertEqual(3, len(output))
+        self.assertEqual({ 'consumed', 'filtered', 'timeline' }, set(output.keys()))
+        self.assertEqual(500, output['consumed'])
+        self.assertTrue(output['filtered'])
+        self.assertEqual(Timeline, type(output['timeline']))
+
+    @async_test
+    async def test_run_returns_consumed_greater_than_filtered(self):
+        """
+        Test that at the end, the number of filtered tweets is less than the number of consumed tweets.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'idf.json'), 'r') as f:
+            data = json.loads(f.readline())
+            scheme = Exportable.decode(data)['tfidf']
+
+        """
+        Create an empty queue.
+        Use it to create a consumer and set it running.
+        """
+        queue = Queue()
+        consumer = FUEGOConsumer(queue, scheme=scheme)
+        running = asyncio.ensure_future(consumer.run(max_inactivity=3))
+        await asyncio.sleep(0.5)
+
+        """
+        Load all tweets into the queue.
+        """
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
+            tweets = [ json.loads(line) for line in f ]
+            queue.enqueue(*tweets)
+
+        output = await running
+        self.assertEqual(dict, type(output))
+        self.assertLess(output['filtered'], output['consumed'])
+
     def test_filter_tweets_empty(self):
         """
         Test that when filtering a list of empty tweets, another empty list is returned.
