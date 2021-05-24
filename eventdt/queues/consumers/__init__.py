@@ -89,8 +89,8 @@ class Consumer(ABC):
                                If it is negative, the consumer keeps waiting for input indefinitely.
         :type max_inactivity: int
 
-        :return: The output of the consumption process.
-        :rtype: any
+        :return: The output of the consumption process, a tuple whose first item must be an integer: the number of read tweets.
+        :rtype: tuple
         """
 
         await asyncio.sleep(wait)
@@ -122,6 +122,9 @@ class Consumer(ABC):
         :param max_inactivity: The maximum time in seconds to wait idly without input before stopping.
                                If it is negative, the consumer keeps waiting for input until the maximum time expires.
         :type max_inactivity: int
+
+        :return: A tuple, with the first element being the number of consumed tweets.
+        :rtype: tuple
         """
 
         pass
