@@ -16,6 +16,7 @@ from queues import Queue
 from queues.consumers.algorithms import ELDConsumer
 from nlp.document import Document
 from nlp.weighting import TF
+from summarization.timeline import Timeline
 from vsm import vector_math
 from vsm.clustering import Cluster
 import twitter
@@ -142,6 +143,34 @@ class TestELDConsumer(unittest.TestCase):
             documents = consumer._to_documents(tweets)
             for document, buffered in zip(documents, consumer.buffer.queue):
                 self.assertEqual(document.text, buffered.text)
+
+    @async_test
+    async def test_run_returns_consumed_tweets(self):
+        """
+        Test that at the end, the ELD consumer returns the number of consumed tweets.
+        """
+
+        """
+        Create an empty queue.
+        Use it to create a buffered consumer and set it running.
+        """
+        queue = Queue()
+        consumer = ELDConsumer(queue, 60)
+        running = asyncio.ensure_future(consumer.run(max_inactivity=3))
+        await asyncio.sleep(0.5)
+
+        """
+        Load all tweets into the queue.
+        """
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
+            tweets = [ json.loads(line) for line in f ]
+            queue.enqueue(*tweets)
+
+        consumed = await running
+        self.assertEqual(tuple, type(consumed))
+        self.assertEqual(2, len(consumed))
+        self.assertEqual(500, consumed[0])
+        self.assertEqual(Timeline, type(consumed[1]))
 
     def test_filter_tweets_empty(self):
         """

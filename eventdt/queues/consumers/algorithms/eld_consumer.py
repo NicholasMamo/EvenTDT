@@ -318,10 +318,11 @@ class ELDConsumer(Consumer):
                                If it is negative, the consumer keeps waiting for input until the maximum time expires.
         :type max_inactivity: int
 
-        :return: The constructed timeline.
-        :rtype: :class:`~summarization.timeline.Timeline`
+        :return: A tuple, with the first element being the number of consumed tweets and the second element being the constructed timeline.
+        :rtype: tuple of int and :class:`~summarization.timeline.Timeline`
         """
 
+        consumed = 0
         timeline = Timeline(TopicalClusterNode, expiry=90, min_similarity=0.6)
 
         """
@@ -343,6 +344,7 @@ class ELDConsumer(Consumer):
                 These documents are added to the buffer so that they can become part of a checkpoint later.
                 """
                 tweets = self.queue.dequeue_all()
+                consumed += len(tweets)
                 tweets = self._filter_tweets(tweets)
                 documents = self._to_documents(tweets)
                 if not tweets:
@@ -413,7 +415,7 @@ class ELDConsumer(Consumer):
                         logger.info(f"{datetime.fromtimestamp(node.created_at).ctime()}: { str(self.cleaner.clean(str(summary))) }", process=str(self))
                         node.attributes['printed'] = True
 
-        return timeline
+        return (consumed, timeline)
 
     def _filter_tweets(self, tweets):
         """
