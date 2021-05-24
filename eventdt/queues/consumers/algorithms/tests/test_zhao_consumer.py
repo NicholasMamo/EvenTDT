@@ -2,6 +2,7 @@
 Test the functionality of the Zhao et al. consumer.
 """
 
+import asyncio
 import json
 import os
 import sys
@@ -13,12 +14,21 @@ if path not in sys.path:
 
 from queues import Queue
 from queues.consumers.algorithms import ZhaoConsumer
+from summarization.timeline import Timeline
 from vsm import vector_math
 
 class TestZhaoConsumer(unittest.TestCase):
     """
     Test the implementation of the Zhao et al. consumer.
     """
+
+    def async_test(f):
+        def wrapper(*args, **kwargs):
+            coro = asyncio.coroutine(f)
+            future = coro(*args, **kwargs)
+            loop = asyncio.get_event_loop()
+            loop.run_until_complete(future)
+        return wrapper
 
     def test_init_name(self):
         """
@@ -63,6 +73,35 @@ class TestZhaoConsumer(unittest.TestCase):
 
         consumer = ZhaoConsumer(Queue(), 60, post_rate=1.9)
         self.assertEqual(1.9, consumer.tdt.post_rate)
+
+    @async_test
+    async def test_run_returns(self):
+        """
+        Test that at the end, the Zhao consumer returns the number of consumed, filtered and skipped tweets, and a timeline.
+        """
+
+        """
+        Create an empty queue.
+        Use it to create a buffered consumer and set it running.
+        """
+        queue = Queue()
+        consumer = ZhaoConsumer(queue, 60)
+        running = asyncio.ensure_future(consumer.run(max_inactivity=3))
+        await asyncio.sleep(0.5)
+
+        """
+        Load all tweets into the queue.
+        """
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
+            tweets = [ json.loads(line) for line in f ]
+            queue.enqueue(*tweets)
+
+        output = await running
+        self.assertEqual(dict, type(output))
+        self.assertEqual(2, len(output))
+        self.assertEqual({ 'consumed', 'timeline' }, set(output.keys()))
+        self.assertEqual(500, output['consumed'])
+        self.assertEqual(Timeline, type(output['timeline']))
 
     def test_to_documents_tweet(self):
         """

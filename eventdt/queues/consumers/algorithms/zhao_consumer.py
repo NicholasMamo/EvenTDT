@@ -105,8 +105,8 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
         """
         Find breaking develpoments based on changes in volume.
 
-        :return: The constructed timeline.
-        :rtype: :class:`~summarization.timeline.Timeline`
+        :return: A dictionary with the one key, the ``timeline``, containing the constructed :class:`~summarization.timeline.Timeline`
+        :rtype: dict
         """
 
         timeline = Timeline(DocumentNode, expiry=90, min_similarity=1)
@@ -153,7 +153,7 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
 
             await self._sleep()
 
-        return timeline
+        return { 'timeline': timeline }
 
     def _to_documents(self, tweets):
         """
