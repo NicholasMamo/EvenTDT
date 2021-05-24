@@ -318,11 +318,15 @@ class ELDConsumer(Consumer):
                                If it is negative, the consumer keeps waiting for input until the maximum time expires.
         :type max_inactivity: int
 
-        :return: A tuple, with the first element being the number of consumed tweets and the second element being the constructed timeline.
-        :rtype: tuple of int and :class:`~summarization.timeline.Timeline`
+        :return: A dictionary with the following keys:
+                   - ``consumed``: the number of consumed tweets
+                   - ``filtered``: the number of filtered tweets
+                   - ``skipped``: the number of skipped tweets (because they were backlogged)
+                   - ``timeline``: the constructed timeline (``timeline``)
+        :rtype: dict
         """
 
-        consumed = 0
+        consumed, filtered, skipped = 0, 0, 0
         timeline = Timeline(TopicalClusterNode, expiry=90, min_similarity=0.6)
 
         """
@@ -346,6 +350,7 @@ class ELDConsumer(Consumer):
                 tweets = self.queue.dequeue_all()
                 consumed += len(tweets)
                 tweets = self._filter_tweets(tweets)
+                filtered += len (tweets)
                 documents = self._to_documents(tweets)
                 if not tweets:
                     continue
@@ -374,6 +379,7 @@ class ELDConsumer(Consumer):
                 """
                 overdue = [ document for document in documents
                                      if latest_timestamp - document.attributes['timestamp'] >= self.time_window ]
+                skipped += len(overdue)
                 if len(overdue) > 10:
                     logger.warning(f"""{ datetime.fromtimestamp(latest_timestamp - self.time_window).ctime() }: Skipping { len(overdue) } tweets""")
                 documents = [ document for document in documents
@@ -415,7 +421,7 @@ class ELDConsumer(Consumer):
                         logger.info(f"{datetime.fromtimestamp(node.created_at).ctime()}: { str(self.cleaner.clean(str(summary))) }", process=str(self))
                         node.attributes['printed'] = True
 
-        return (consumed, timeline)
+        return { 'consumed': consumed, 'filtered': filtered, 'skipped': skipped, 'timeline': timeline }
 
     def _filter_tweets(self, tweets):
         """

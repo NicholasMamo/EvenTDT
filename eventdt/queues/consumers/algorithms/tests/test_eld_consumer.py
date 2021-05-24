@@ -145,9 +145,9 @@ class TestELDConsumer(unittest.TestCase):
                 self.assertEqual(document.text, buffered.text)
 
     @async_test
-    async def test_run_returns_consumed_tweets(self):
+    async def test_run_returns(self):
         """
-        Test that at the end, the ELD consumer returns the number of consumed tweets.
+        Test that at the end, the ELD consumer returns the number of consumed, filtered and skipped tweets, and a timeline.
         """
 
         """
@@ -166,11 +166,67 @@ class TestELDConsumer(unittest.TestCase):
             tweets = [ json.loads(line) for line in f ]
             queue.enqueue(*tweets)
 
-        consumed = await running
-        self.assertEqual(tuple, type(consumed))
-        self.assertEqual(2, len(consumed))
-        self.assertEqual(500, consumed[0])
-        self.assertEqual(Timeline, type(consumed[1]))
+        output = await running
+        self.assertEqual(dict, type(output))
+        self.assertEqual(4, len(output))
+        self.assertEqual({ 'consumed', 'filtered', 'skipped', 'timeline' }, set(output.keys()))
+        self.assertEqual(500, output['consumed'])
+        self.assertTrue(output['filtered'])
+        self.assertLess(output['filtered'], output['consumed'])
+        self.assertLess(output['skipped'], output['consumed'])
+        self.assertEqual(Timeline, type(output['timeline']))
+
+    @async_test
+    async def test_run_returns_consumed_greater_than_filtered(self):
+        """
+        Test that at the end, the number of filtered tweets is less than the number of consumed tweets.
+        """
+
+        """
+        Create an empty queue.
+        Use it to create a buffered consumer and set it running.
+        """
+        queue = Queue()
+        consumer = ELDConsumer(queue, 60)
+        running = asyncio.ensure_future(consumer.run(max_inactivity=3))
+        await asyncio.sleep(0.5)
+
+        """
+        Load all tweets into the queue.
+        """
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
+            tweets = [ json.loads(line) for line in f ]
+            queue.enqueue(*tweets)
+
+        output = await running
+        self.assertEqual(dict, type(output))
+        self.assertLess(output['filtered'], output['consumed'])
+
+    @async_test
+    async def test_run_returns_consumed_greater_than_skipped(self):
+        """
+        Test that at the end, the number of skipped tweets is less than the number of consumed tweets.
+        """
+
+        """
+        Create an empty queue.
+        Use it to create a buffered consumer and set it running.
+        """
+        queue = Queue()
+        consumer = ELDConsumer(queue, 60)
+        running = asyncio.ensure_future(consumer.run(max_inactivity=3))
+        await asyncio.sleep(0.5)
+
+        """
+        Load all tweets into the queue.
+        """
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
+            tweets = [ json.loads(line) for line in f ]
+            queue.enqueue(*tweets)
+
+        output = await running
+        self.assertEqual(dict, type(output))
+        self.assertLess(output['skipped'], output['consumed'])
 
     def test_filter_tweets_empty(self):
         """
