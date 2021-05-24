@@ -29,7 +29,12 @@ class PrintConsumer(Consumer):
         :param max_inactivity: The maximum time in seconds to wait idly without input before stopping.
                                If it is negative, the consumer keeps waiting for input until the maximum time expires.
         :type max_inactivity: int
+
+        :return: A tuple with an integer: the number of consumed tweets.
+        :rtype: tuple
         """
+
+        consumed = 0
 
         """
         The consumer keeps working until it is stopped.
@@ -47,7 +52,10 @@ class PrintConsumer(Consumer):
             """
             while self.queue.length():
                 tweet = self.queue.dequeue()
+                consumed += 1
                 if type(tweet) is Document:
                     logger.info(str(tweet))
                 else:
                     logger.info(tweet.get('text'))
+
+        return consumed
