@@ -12,18 +12,29 @@ path = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
+from logger import logger
 from queues import Queue
 from queues.consumers.algorithms import FIREConsumer
 from nlp.document import Document
 from nlp.weighting import TF
+from summarization.timeline import Timeline
 from vsm import vector_math
 from vsm.clustering import Cluster
 import twitter
+logger.set_logging_level(logger.LogLevel.WARNING)
 
 class TestFIREConsumer(unittest.TestCase):
     """
     Test the implementation of the FIRE consumer.
     """
+
+    def async_test(f):
+        def wrapper(*args, **kwargs):
+            coro = asyncio.coroutine(f)
+            future = coro(*args, **kwargs)
+            loop = asyncio.get_event_loop()
+            loop.run_until_complete(future)
+        return wrapper
 
     def test_init_name(self):
         """
@@ -44,6 +55,62 @@ class TestFIREConsumer(unittest.TestCase):
         self.assertEqual(queue, consumer.queue)
         self.assertEqual(60, consumer.periodicity)
         self.assertEqual(TF, type(consumer.scheme))
+
+    @async_test
+    async def test_run_returns(self):
+        """
+        Test that at the end, the FIRE consumer returns the number of consumed, filtered and skipped tweets, and a timeline.
+        """
+
+        """
+        Create an empty queue.
+        Use it to create a buffered consumer and set it running.
+        """
+        queue = Queue()
+        consumer = FIREConsumer(queue, 60)
+        running = asyncio.ensure_future(consumer.run(max_inactivity=3))
+        await asyncio.sleep(0.5)
+
+        """
+        Load all tweets into the queue.
+        """
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
+            tweets = [ json.loads(line) for line in f ]
+            queue.enqueue(*tweets)
+
+        output = await running
+        self.assertEqual(dict, type(output))
+        self.assertEqual(3, len(output))
+        self.assertEqual({ 'consumed', 'filtered', 'timeline' }, set(output.keys()))
+        self.assertEqual(500, output['consumed'])
+        self.assertTrue(output['filtered'])
+        self.assertEqual(Timeline, type(output['timeline']))
+
+    @async_test
+    async def test_run_returns_consumed_greater_than_filtered(self):
+        """
+        Test that at the end, the number of filtered tweets is less than the number of consumed tweets.
+        """
+
+        """
+        Create an empty queue.
+        Use it to create a buffered consumer and set it running.
+        """
+        queue = Queue()
+        consumer = FIREConsumer(queue, 60)
+        running = asyncio.ensure_future(consumer.run(max_inactivity=3))
+        await asyncio.sleep(0.5)
+
+        """
+        Load all tweets into the queue.
+        """
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
+            tweets = [ json.loads(line) for line in f ]
+            queue.enqueue(*tweets)
+
+        output = await running
+        self.assertEqual(dict, type(output))
+        self.assertLess(output['filtered'], output['consumed'])
 
     def test_filter_tweets_empty(self):
         """

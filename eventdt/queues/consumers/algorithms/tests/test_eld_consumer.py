@@ -172,8 +172,6 @@ class TestELDConsumer(unittest.TestCase):
         self.assertEqual({ 'consumed', 'filtered', 'skipped', 'timeline' }, set(output.keys()))
         self.assertEqual(500, output['consumed'])
         self.assertTrue(output['filtered'])
-        self.assertLess(output['filtered'], output['consumed'])
-        self.assertLess(output['skipped'], output['consumed'])
         self.assertEqual(Timeline, type(output['timeline']))
 
     @async_test

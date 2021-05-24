@@ -130,10 +130,13 @@ class FIREConsumer(SimulatedBufferedConsumer):
         """
         Find breaking develpoments based on how people are talking.
 
-        :return: The constructed timeline.
-        :rtype: :class:`~summarization.timeline.Timeline`
+        :return: A dictionary with the following keys:
+                   - ``filtered``: the number of filtered tweets
+                   - ``timeline``: the constructed :class:`~summarization.timeline.Timeline`
+        :rtype: dict
         """
 
+        filtered = 0
         timeline = Timeline(ClusterNode, 0, 1)
 
         while self.active:
@@ -143,6 +146,7 @@ class FIREConsumer(SimulatedBufferedConsumer):
                 """
                 tweets = self.buffer.dequeue_all()
                 tweets = self._filter_tweets(tweets)
+                filtered += len(tweets)
                 documents = self._to_documents(tweets)
                 latest_timestamp = self._latest_timestamp(documents)
                 documents = self._filter_documents(documents)
@@ -170,7 +174,7 @@ class FIREConsumer(SimulatedBufferedConsumer):
 
             await self._sleep()
 
-        return timeline
+        return { 'filtered': filtered, 'timeline': timeline }
 
     def _filter_tweets(self, tweets):
         """

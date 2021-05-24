@@ -322,7 +322,7 @@ class ELDConsumer(Consumer):
                    - ``consumed``: the number of consumed tweets
                    - ``filtered``: the number of filtered tweets
                    - ``skipped``: the number of skipped tweets (because they were backlogged)
-                   - ``timeline``: the constructed timeline (``timeline``)
+                   - ``timeline``: the constructed :class:`~summarization.timeline.Timeline`
         :rtype: dict
         """
 
