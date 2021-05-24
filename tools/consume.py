@@ -709,7 +709,7 @@ def consume_process(comm, loop, consumer, max_inactivity):
 
         return await consumer.run(max_inactivity=max_inactivity)
 
-    comm['timeline'] = loop.run_until_complete(consume(consumer, max_inactivity))
+    comm.update(loop.run_until_complete(consume(consumer, max_inactivity)))
     logger.info("Consumption ended")
 
 def create_consumer(consumer, queue, filters=None, splits=None, *args, **kwargs):
