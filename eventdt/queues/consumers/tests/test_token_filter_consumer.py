@@ -20,6 +20,7 @@ from objects.exportable import Exportable
 from queues import Queue
 from queues.consumers.algorithms import ELDConsumer, ZhaoConsumer
 from queues.consumers.token_filter_consumer import TokenFilterConsumer
+from summarization.timeline import Timeline
 import twitter
 from vsm import vector_math
 
@@ -98,6 +99,107 @@ class TestTokenFilterConsumer(unittest.TestCase):
 
         consumer = TokenFilterConsumer(Queue(), filters, ZhaoConsumer, periodicity=10)
         self.assertEqual(10, consumer.consumer.periodicity)
+
+    @async_test
+    async def test_run_filters(self):
+        """
+        Test that when running, the downstream consumer receives filtered tweets.
+        """
+
+        # create the consumer with a TF-IDF scheme
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
+            idf = Exportable.decode(json.loads(f.readline()))['tfidf']
+
+        """
+        Create an empty queue.
+        Use it to create a split consumer and set it running.
+        Wait a second so that the buffered consumer (ZhaoConsumer) finds nothing and goes to sleep.
+        """
+        queue = Queue()
+        filters = [ 'chelsea', 'cfc' ]
+        consumer = TokenFilterConsumer(queue, filters, ZhaoConsumer, matches=any, scheme=idf, periodicity=300) # 5 minutes periodicity so that the queue is never emptied
+        running = asyncio.ensure_future(consumer.run(max_inactivity=3))
+        await asyncio.sleep(0.1)
+
+        # load all tweets into the queue
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
+            for line in f:
+                queue.enqueue(json.loads(line))
+
+        """
+        Wait some time for the consumer passes on its tweets to the downstream consumers, and then for those consumers to move the tweets from the queue to the buffer.
+        Then, stop the consumers before they process any tweets.
+        """
+        await asyncio.sleep(0.5)
+        consumer.stop()
+
+        # wait for the consumer to finish
+        results = (await asyncio.gather(running))[0]
+        self.assertTrue(consumer.consumer.buffer.length()) # documents go from the queue into the buffer since it's a buffered consumer
+
+        # ensure that the documents were partitioned properly
+        documents = consumer.consumer.buffer.dequeue_all()
+        for document in documents:
+            self.assertTrue(any( token in document.dimensions for token in filters ))
+
+    @async_test
+    async def test_run_returns_consumed_after_filter(self):
+        """
+        Test that at the end, when the filter consumer returns the number of consumed tweets, the count includes only filtered tweets.
+        """
+
+        """
+        Create an empty queue.
+        Use it to create a consumer and set it running.
+        """
+        queue = Queue()
+        filters = [ 'chelsea', 'cfc' ]
+        consumer = TokenFilterConsumer(queue, filters, ELDConsumer)
+        running = asyncio.ensure_future(consumer.run(max_inactivity=3))
+        await asyncio.sleep(0.5)
+
+        """
+        Load all tweets into the queue.
+        """
+        with open(os.path.join(os.path.dirname(__file__), '../../../tests/corpora/CRYCHE-500.json')) as f:
+            tweets = [ json.loads(line) for line in f ]
+            queue.enqueue(*tweets)
+
+        output = await running
+        self.assertEqual(dict, type(output))
+        self.assertTrue('consumed' in output)
+        self.assertGreater(500, output['consumed'])
+
+    @async_test
+    async def test_run_returns_timeline(self):
+        """
+        Test that when running the filter consumer, it returns the timeline from its own consumers.
+        """
+
+        filters = [ 'chelsea', 'cfc' ]
+        consumer = TokenFilterConsumer(Queue(), filters, ELDConsumer)
+        self.assertFalse(consumer.active)
+        self.assertTrue(consumer.stopped)
+        self.assertFalse(consumer.consumer.active)
+        self.assertTrue(consumer.consumer.stopped)
+
+        """
+        Run the consumer.
+        """
+        running = asyncio.ensure_future(consumer.run(max_inactivity=1))
+        await asyncio.sleep(1)
+        self.assertTrue(consumer.active)
+        self.assertFalse(consumer.stopped)
+        self.assertTrue(consumer.consumer.active)
+        self.assertFalse(consumer.consumer.stopped)
+
+        """
+        Wait for the consumer to finish.
+        """
+        output = (await asyncio.gather(running))[0]
+        self.assertEqual(dict, type(output))
+        self.assertTrue('timeline' in output)
+        self.assertEqual(Timeline, type(output['timeline']))
 
     def test_preprocess_creates_documents(self):
         """
@@ -395,45 +497,3 @@ class TestTokenFilterConsumer(unittest.TestCase):
 
         if trivial:
             logger.warning("Trivial test")
-
-    @async_test
-    async def test_run_filters(self):
-        """
-        Test that when running, the downstream consumer receives filtered tweets.
-        """
-
-        # create the consumer with a TF-IDF scheme
-        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
-            idf = Exportable.decode(json.loads(f.readline()))['tfidf']
-
-        """
-        Create an empty queue.
-        Use it to create a split consumer and set it running.
-        Wait a second so that the buffered consumer (ZhaoConsumer) finds nothing and goes to sleep.
-        """
-        queue = Queue()
-        filters = [ 'chelsea', 'cfc' ]
-        consumer = TokenFilterConsumer(queue, filters, ZhaoConsumer, matches=any, scheme=idf, periodicity=300) # 5 minutes periodicity so that the queue is never emptied
-        running = asyncio.ensure_future(consumer.run(max_inactivity=3))
-        await asyncio.sleep(0.1)
-
-        # load all tweets into the queue
-        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
-            for line in f:
-                queue.enqueue(json.loads(line))
-
-        """
-        Wait some time for the consumer passes on its tweets to the downstream consumers, and then for those consumers to move the tweets from the queue to the buffer.
-        Then, stop the consumers before they process any tweets.
-        """
-        await asyncio.sleep(0.5)
-        consumer.stop()
-
-        # wait for the consumer to finish
-        results = (await asyncio.gather(running))[0]
-        self.assertTrue(consumer.consumer.buffer.length()) # documents go from the queue into the buffer since it's a buffered consumer
-
-        # ensure that the documents were partitioned properly
-        documents = consumer.consumer.buffer.dequeue_all()
-        for document in documents:
-            self.assertTrue(any( token in document.dimensions for token in filters ))

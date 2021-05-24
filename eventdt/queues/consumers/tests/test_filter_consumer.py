@@ -180,7 +180,7 @@ class TestFilterConsumer(unittest.TestCase):
         """
         queue = Queue()
         filters = [ (0, 50), (50, 100) ]
-        consumer = DummyFilterConsumer(Queue(), filters, ELDConsumer)
+        consumer = DummyFilterConsumer(queue, filters, ELDConsumer)
         running = asyncio.ensure_future(consumer.run(max_inactivity=3))
         await asyncio.sleep(0.5)
 
@@ -194,7 +194,7 @@ class TestFilterConsumer(unittest.TestCase):
         output = await running
         self.assertEqual(dict, type(output))
         self.assertTrue('consumed' in output)
-        self.assertGreater(500, output['consumed'])
+        self.assertEqual(500, output['consumed'])
 
     @async_test
     async def test_run_returns_timeline(self):
