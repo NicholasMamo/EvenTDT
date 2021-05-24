@@ -136,6 +136,7 @@ The output is a JSON file with the following structure:
 .. code-block:: json
 
     {
+        "read": 500,
         "cmd": {
             "_cmd": "EvenTDT/tools/consume.py --event data/event/event.json --understanding data/event/understanding.json --consumer ELDConsumer",
             "_date": "2020-10-18T12:56:45.635795",
@@ -163,8 +164,7 @@ The output is a JSON file with the following structure:
             "splits": null,
             "threshold": 0.5,
             "post_rate": 1.7,
-            "understanding": "data/event/understanding.json",
-            "read": 500
+            "understanding": "data/event/understanding.json"
         },
         "pcmd": {
             "_cmd": "EvenTDT/tools/consume.py --event data/event/event.json --understanding data/event/understanding.json --consumer ELDConsumer",
@@ -193,8 +193,7 @@ The output is a JSON file with the following structure:
             "splits": null,
             "threshold": 0.5,
             "post_rate": 1.7,
-            "understanding": "data/event/understanding.json",
-            "read": 500
+            "understanding": "data/event/understanding.json"
         },
         "timeline": {
             "class": "<class 'summarization.timeline.Timeline'>",
@@ -415,8 +414,7 @@ def main():
     """
     logger.info("Starting event period")
     read, timeline = consume(**args)
-    cmd['read'] = read
-    pcmd['read'] = read
+    timeline['read'] = read
     timeline['cmd'] = cmd
     timeline['pcmd'] = pcmd
 
