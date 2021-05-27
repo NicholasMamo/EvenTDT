@@ -30,14 +30,14 @@ Buffered (Windowed) Consumers
    :special-members:
 
 Filter Consumers
----------------
+----------------
 
 .. automodule:: queues.consumers.filter_consumer
    :members:
    :special-members:
 
 Token Filter Consumer
-^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: queues.consumers.token_filter_consumer
    :members:

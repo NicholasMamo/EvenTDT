@@ -98,7 +98,7 @@ You can provide the filters as follows:
     --consumer ELDConsumer \\
     --filters data/filters.csv
 
-.. warn::
+.. warning::
 
     The number of ``read`` tweets in the meta data includes tweets that were filtered out.
     In other words, it includes all tweets read by the :class:`~twitter.file.FileReader` class.
