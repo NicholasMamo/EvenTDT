@@ -176,3 +176,10 @@ Log-Likelihood Ratio
 .. automodule:: ate.bootstrapping.probability.llratio
    :members:
    :special-members:
+
+Lexical concepts
+================
+
+.. automodule:: ate.concepts
+   :members:
+   :special-members:
