@@ -621,6 +621,30 @@ class TestFUEGOConsumer(unittest.TestCase):
             document = consumer._to_documents([ tweet ])[0]
             self.assertEqual(tweet['id'], document.attributes['id'])
 
+    def test_to_documents_split_dash(self):
+        """
+        Test that when creating a document from a tweet, dashes are split.
+        """
+
+        trivial = True
+
+        term = ' kick-off'
+        tokenized = [ 'kick' ] # off is a stopword
+
+        consumer = FUEGOConsumer(Queue())
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for tweet in f:
+                tweet = json.loads(tweet)
+                text = twitter.full_text(tweet)
+                if term in text.lower():
+                    trivial = False
+                    document = consumer._to_documents([ tweet ])[0]
+                    for token in tokenized:
+                        self.assertTrue(token in document.dimensions)
+
+        if trivial:
+            logger.warning("Trivial test")
+
     def test_to_documents_mentions_in_dimensions(self):
         """
         Test that when creating a document from a tweet, the expanded mentions are part of the dimensions.
