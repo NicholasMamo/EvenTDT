@@ -13,7 +13,7 @@ To run the script, use:
     --method CHI \\
     --output data/correlation.json
 
-If the terms are stored in a file produced by the ``terms`` or ``bootstrap`` scripts, you can load them as follows:
+If the terms are stored in a file produced by the ``terms`` or ``bootstrap`` tools, you can load them as follows:
 
     ./tools/correlation.py \\
     --terms data/terms.json \\
@@ -21,13 +21,67 @@ If the terms are stored in a file produced by the ``terms`` or ``bootstrap`` scr
     --method CHI \\
     --output data/correlation.json
 
-Accepted arguments:
+The output is a JSON file with the following structure:
+
+.. code-block:: json
+
+    {
+        "cmd": {
+            "terms": [
+                "data/terms.json"
+            ],
+            "files": [
+                "data/tokenized.json"
+            ],
+            "method": "<class 'ate.bootstrapping.probability.chi.ChiBootstrapper'>",
+            "output": "data/correlations.json",
+            "max_terms": 3,
+            "_date": "2021-05-28T14:24:43.273255",
+            "_timestamp": 1622204683.2732654,
+            "_cmd": "EvenTDT/tools/correlation.py --terms data/terms.json --files data/tokenized.json --method CHI --output data/correlations.json --max-terms 3"
+        },
+        "pcmd": {
+            "terms": [
+                "baller",
+                "keeper",
+                "offsid",
+            ],
+            "files": [
+                "data/tokenized.json"
+            ],
+            "method": "<class 'ate.bootstrapping.probability.chi.ChiBootstrapper'>",
+            "output": "data/correlations.json",
+            "max_terms": 3,
+            "_date": "2021-05-28T14:24:43.273276",
+            "_timestamp": 1622204683.2732787,
+            "_cmd": "EvenTDT/tools/correlation.py --terms data/terms.json --files data/tokenized.json --method CHI --output data/correlations.json --max-terms 3"
+        },
+         "correlations": {
+            "baller": {
+                "baller": 136392.0,
+                "keeper": 1.2095082368220593,
+                "offsid": 0.39059949968121854,
+            },
+            "keeper": {
+                "baller": 1.2095082368220593,
+                "keeper": 136392.0,
+                "offsid": 0.8995066474238657,
+            },
+            "offsid": {
+                "baller": 0.39059949968121854,
+                "keeper": 0.8995066474238657,
+                "offsid": 136392.0,
+            }
+        }
+    }
+
+The full list of accepted arguments:
 
     - ``-t --terms``        *<Required>* A list of terms, or the path to the file containing a list of terms for which to calculate the correlation. It can be the output from the ``terms`` and ``bootstrap`` tool.
-    - ``-f --files``        *<Required>* The input corpora from which to calculate the correlation betwee terms, expected to be already tokenized by the `tokenize` tool.
-    - ``-m --method``        *<Required>* The method to use to compute the correlation values; supported: `PMI`, `CHI`, `Log`.
-    - ``-o --output``        *<Required>* The path to the file where to store the correlation values.
-    - ``--max-terms``        *<Optional>* The maximum number of terms to use, useful when loading terms from files; defaults to all terms.
+    - ``-f --files``        *<Required>* The input corpora from which to calculate the correlation betwee terms, expected to be already tokenized by the ``tokenize`` tool.
+    - ``-m --method``       *<Required>* The method to use to compute the correlation values; supported: ``PMI``, ``CHI``, ``Log``.
+    - ``-o --output``       *<Required>* The path to the file where to store the correlation values.
+    - ``--max-terms``       *<Optional>* The maximum number of terms to use, useful when loading terms from files; defaults to all terms.
 """
 
 import argparse
@@ -53,9 +107,9 @@ def setup_args():
 
         - ``-t --terms``        *<Required>* A list of terms, or the path to the file containing a list of terms for which to calculate the correlation. It can be the output from the ``terms`` and ``bootstrap`` tool.
         - ``-f --files``        *<Required>* The input corpora from which to calculate the correlation betwee terms, expected to be already tokenized by the `tokenize` tool.
-        - ``-m --method``        *<Required>* The method to use to compute the correlation values; supported: `PMI`, `CHI`, `Log`.
-        - ``-o --output``        *<Required>* The path to the file where to store the correlation values.
-        - ``--max-terms``        *<Optional>* The maximum number of terms to use, useful when loading terms from files; defaults to all terms.
+        - ``-m --method``       *<Required>* The method to use to compute the correlation values; supported: `PMI`, `CHI`, `Log`.
+        - ``-o --output``       *<Required>* The path to the file where to store the correlation values.
+        - ``--max-terms``       *<Optional>* The maximum number of terms to use, useful when loading terms from files; defaults to all terms.
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
@@ -92,22 +146,22 @@ def main():
     """
     Get the meta arguments.
     """
-    cmd = tools.meta(args)
-    cmd['method'] = str(vars(args)['method'])
+    cmd, pcmd = tools.meta(args), tools.meta(args)
+    cmd['method'], pcmd['method'] = str(vars(args)['method']), str(vars(args)['method'])
 
     """
     Load the terms.
     """
     terms = load_terms(args.terms, args.max_terms)
-    cmd['terms'] = terms
+    pcmd['terms'] = terms
 
     """
     Calculate the correlation.
     """
     extractor = create_extractor(args.method)
-    correlation = extract(extractor, args.files, terms)
+    correlations = extract(extractor, args.files, terms)
 
-    tools.save(args.output, { 'meta': cmd, 'correlation': correlation })
+    tools.save(args.output, { 'cmd': cmd, 'pcmd': pcmd, 'correlations': correlations })
 
 def load_terms(terms, max_terms=None):
     """
