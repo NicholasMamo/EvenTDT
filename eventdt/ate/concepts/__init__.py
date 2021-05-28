@@ -18,9 +18,9 @@ class TermClusteringAlgorithm(ABC):
     The :class:`~ate.concepts.TermClusteringAlgorithm` loads the term similarities from a file created by the :mod:`~tools.correlation` tool and stores them in its state.
 
     :ivar ~.similarity: The correlation between all given terms.
-                      This is returned as a dictionary of dictionaries.
-                      The outer level is each term.
-                      The inner level is the outer level term's correlation with the other terms.
+                        This is returned as a dictionary of dictionaries.
+                        The outer level is each term.
+                        The inner level is the outer level term's correlation with the other terms.
     :vartype ~.similarity: dict of dict
     """
 
@@ -38,10 +38,28 @@ class TermClusteringAlgorithm(ABC):
     @abstractmethod
     def cluster(self, *args, **kwargs):
         """
-        Cluster the term, returning sets of terms.
+        Create lexical concepts by clustering the terms.
+        This function returns sets of terms.
 
         :return: A group of term clusters.
         :rtype: set of set
         """
 
         pass
+
+class DummyTermClusteringAlgorithm(TermClusteringAlgorithm):
+    """
+    A dummy test clustering algorithm that returns trivial clusters.
+    This algorithm should only be used for testing purposes.
+    """
+
+    def cluster(self):
+        """
+        Create lexical concepts by clustering the terms.
+        This function returns sets of terms.
+
+        :return: A group of term clusters.
+        :rtype: set of set
+        """
+
+        return set( )
