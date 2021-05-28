@@ -71,6 +71,10 @@ ate_tests() {
 	python3 -m unittest eventdt.ate.stat.probability.tests.test_package
 	python3 -m unittest eventdt.ate.stat.tests.test_tf
 	python3 -m unittest eventdt.ate.stat.tests.test_tfidf
+
+	echo -e "${HIGHLIGHT}Concepts${DEFAULT}"
+	python3 -m unittest eventdt.ate.concepts.tests.test_package
+	python3 -m unittest eventdt.ate.concepts.tests.test_gnclustering
 }
 
 attribute_tests() {
