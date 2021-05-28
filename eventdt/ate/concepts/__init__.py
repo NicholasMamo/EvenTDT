@@ -5,6 +5,7 @@ For example, by grouping *yellow* and *card* together, the new concept is a clea
 """
 
 from abc import ABC, abstractmethod
+import json
 
 class TermClusteringAlgorithm(ABC):
     """
@@ -33,7 +34,24 @@ class TermClusteringAlgorithm(ABC):
         :class file: :class:`_io.TextIOWrapper`
         """
 
-        self.similarity = { }
+        self.similarity = self.read_correlations(file)
+
+    def read_correlations(self, file):
+        """
+        Read the terms from the given correlations file.
+        This function reads in both the terms and correlations, returning the latter.
+
+        :param file: The open file wrapper.
+                     This function loads the term similarities from this file.
+        :class file: :class:`_io.TextIOWrapper`
+
+        :return: A correlation dictionary.
+                 The outer level is each term, and can be used as a list of terms.
+                 The inner level is the outer level's term correlation with the other terms.
+        :return: dict of dict
+        """
+
+        return json.loads(file.readline())['correlations']
 
     @abstractmethod
     def cluster(self, *args, **kwargs):
