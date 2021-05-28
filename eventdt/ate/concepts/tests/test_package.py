@@ -1,5 +1,5 @@
 """
-Test the functionality of the concepts package-level functions.
+Test the functionality of the :class:`~ate.concepts.TermClusteringAlgorithm` class.
 """
 
 import json
@@ -15,7 +15,7 @@ from ate.concepts import DummyTermClusteringAlgorithm
 
 class TestPackage(unittest.TestCase):
     """
-    Test the functionality of the concepts package-level functions.
+    Test the functionality of the :class:`~ate.concepts.TermClusteringAlgorithm` class.
     """
 
     def test_read_correlations_all(self):

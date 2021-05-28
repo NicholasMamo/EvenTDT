@@ -81,3 +81,5 @@ class DummyTermClusteringAlgorithm(TermClusteringAlgorithm):
         """
 
         return set( )
+
+from .gnclustering import GNClustering
