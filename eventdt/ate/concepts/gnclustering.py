@@ -7,12 +7,18 @@ This algorithm constructs a graph made up of terms, with the edges between them 
     This algorithm uses the `networkx <https://networkx.org/>`_ package for Python to construct the graph.
 """
 
+import networkx as nx
+
 from . import TermClusteringAlgorithm
 
 class GNClustering(TermClusteringAlgorithm):
     """
     The Girvan-Newman term clustering algorithm keeps in its state a graph that it constructs.
     Later, the term clusters can be extracted from this graph by calling the :func:`~ate.concepts.gnclustering.GNClustering.cluster` method.
+
+    :ivar graph: The term graph, constructed from the term correlations.
+                 The nodes are the terms, and edges between them are weighted based on correlations.
+    :vartype graph: :class:`nx.Graph`
     """
 
     def __init__(self, file):
@@ -25,7 +31,19 @@ class GNClustering(TermClusteringAlgorithm):
         :class file: :class:`_io.TextIOWrapper`
         """
 
-        super(GNClustering).__init__(file)
+        super(GNClustering, self).__init__(file)
+        self.graph = self._construct_graph()
+
+    def _construct_graph(self):
+        """
+        Construct the term graph.
+
+        :return: The term graph, constructed from the term correlations.
+                 The nodes are the terms, and edges between them are weighted based on correlations.
+        :rtype: :class:`~nx.Graph`
+        """
+
+        return nx.Graph()
 
     def cluster(self, *args, **kwargs):
         """
