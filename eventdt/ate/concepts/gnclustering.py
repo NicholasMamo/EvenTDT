@@ -80,7 +80,10 @@ class GNClustering(TermClusteringAlgorithm):
         :rtype: dict of dict
         """
 
-        return correlations
+        return { t1: { t2: weight
+                       for t2, weight in correlations[t1].items()
+                       if t1 != t2 }
+                 for t1 in correlations }
 
     def _normalize_edges(self, correlations):
         """
