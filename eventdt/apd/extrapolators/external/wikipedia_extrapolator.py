@@ -287,7 +287,7 @@ class WikipediaExtrapolator(Extrapolator):
             Therefore more paths go through that edge.
 
         :param graph: The graph to which to add the new nodes and edges.
-        :type graph: :class:`~nx.Graph`
+        :type graph: :class:`networkx.Graph`
         :param outgoing_links: The dictionary of links.
                                The keys should be the source articles.
                                The values should be the outgoing links from these articles.

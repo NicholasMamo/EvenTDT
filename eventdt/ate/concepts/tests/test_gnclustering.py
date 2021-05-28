@@ -29,3 +29,13 @@ class TestGNClustering(unittest.TestCase):
         with open(path) as file:
             algo = GNClustering(file)
             self.assertEqual(nx.Graph, type(algo.graph))
+
+    def test_construct_graph_not_directed(self):
+        """
+        Test that when constructing a graph, the resulting graph is not directed.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file)
+            self.assertFalse(nx.is_directed(algo.graph))

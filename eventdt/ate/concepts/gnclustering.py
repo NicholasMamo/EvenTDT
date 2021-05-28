@@ -21,7 +21,7 @@ class GNClustering(TermClusteringAlgorithm):
     :vartype graph: :class:`nx.Graph`
     """
 
-    def __init__(self, file):
+    def __init__(self, file, percentile=0.95):
         """
         Initialize the clustering algorithm by loading the term similarities from file.
         Afterwards, the function creates a term graph.
@@ -29,21 +29,14 @@ class GNClustering(TermClusteringAlgorithm):
         :param file: The open file wrapper.
                      This function loads the term similarities from this file.
         :class file: :class:`_io.TextIOWrapper`
+        :param percentile: The percentile of edges to keep when constructing the graph.
+                           The percentile must be between 0 and 1.
+                           A percentile of 0.95% means that only edges that have a higher correlation than 95% of the rest are retained.
+        :type percentile: float
         """
 
         super(GNClustering, self).__init__(file)
-        self.graph = self._construct_graph()
-
-    def _construct_graph(self):
-        """
-        Construct the term graph.
-
-        :return: The term graph, constructed from the term correlations.
-                 The nodes are the terms, and edges between them are weighted based on correlations.
-        :rtype: :class:`~nx.Graph`
-        """
-
-        return nx.Graph()
+        self.graph = self._construct_graph(percentile)
 
     def cluster(self, *args, **kwargs):
         """
@@ -55,3 +48,103 @@ class GNClustering(TermClusteringAlgorithm):
         """
 
         pass
+
+    def _construct_graph(self, percentile):
+        """
+        Construct the term graph.
+
+        :param percentile: The percentile of edges to retain.
+                           The percentile must be between 0 and 1.
+        :type percentile: float
+
+        :return: The term graph, constructed from the term correlations.
+                 The nodes are the terms, and edges between them are weighted based on correlations.
+        :rtype: :class:`networkx.Graph`
+        """
+
+        correlations = self._remove_loops(self.similarity)
+        correlations = self._normalize_edges(correlations)
+        edges = self._to_edges(correlations)
+        edges = self._filter_edges(edges, percentile)
+        return self._to_graph(edges)
+
+    def _remove_loops(self, correlations):
+        """
+        Remove edges between a term and itself, loops.
+
+        :param: A correlation dictionary.
+                The outer level is each term, and the inner level is the term's correlation with the other terms.
+        :type: dict of dict
+
+        :return: A correlation dictionary without loops.
+        :rtype: dict of dict
+        """
+
+        return correlations
+
+    def _normalize_edges(self, correlations):
+        """
+        Normalize the correlations as probabilities.
+        For each edge, the sum of the correlations add up to 1.
+        Higher values indicate that two terms are closely correlated.
+
+        :param: A correlation dictionary.
+                The outer level is each term, and the inner level is the term's correlation with the other terms.
+        :type: dict of dict
+
+        :return: A correlation dictionary with normalized edges.
+        :rtype: dict of dict
+        """
+
+        return correlations
+
+    def _to_edges(self, correlations):
+        """
+        Convert the correlations to weighted edges.
+
+        :param: A correlation dictionary.
+                The outer level is each term, and the inner level is the term's correlation with the other terms.
+        :type: dict of dict
+
+        :return: A list of tuples, each one representing an edge.
+                 Edge tuples include the source term, the target term, and a weight.
+        :rtype: list of tuple
+        """
+
+        return [ ]
+
+    def _filter_edges(self, edges, percentile):
+        """
+        Convert the correlations to weighted edges.
+
+        :param edges: A list of tuples, each one representing an edge.
+                      Edge tuples include the source term, the target term, and a weight.
+        :type edges: list of tuple
+        :param percentile: The percentile of edges to retain.
+                           The percentile must be between 0 and 1.
+        :type percentile: float
+
+        :return: A list of tuples, each one representing an edge.
+                 Edge tuples include the source term, the target term, and a
+        :rtype: list of tuple
+        """
+
+        if not 0 <= percentile <= 1:
+            raise ValueError(f"The edge percentile must be between 0 and 1, received { percentile }")
+
+        return [ ]
+
+    def _to_graph(self, edges):
+        """
+        Convert the given edges to a graph.
+
+        :param edges: A list of tuples, each one representing an edge.
+                 Edge tuples include the source term, the target term, and a
+        :type edges: list of tuple
+
+        :return: An undirected term graph.
+                 The nodes are the terms, and edges between them are weighted based on correlations.
+        :rtype: :class:`networkx.Graph`
+        """
+
+        return nx.Graph()
