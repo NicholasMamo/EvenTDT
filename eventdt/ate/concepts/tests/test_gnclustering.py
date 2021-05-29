@@ -130,3 +130,98 @@ class TestGNClustering(unittest.TestCase):
             self.assertTrue(all( filtered[t1][t2] == correlations[t1][t2]
                                  for t1 in filtered.keys()
                                  for t2 in filtered[t1].keys() ))
+
+    def test_normalize_edges_copy(self):
+        """
+        Test that when normalizing edges, a new dictionary is created.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file)
+
+            # load the terms 'manually'
+            file.seek(0)
+            correlations = json.loads(file.readline())['correlations']
+
+            # normalize the edges and ensure that the original dictionary has not changed
+            filtered = algo._remove_loops(correlations)
+            _filtered = json.dumps(filtered) # encode the correlations so they don't change
+            normalized = algo._normalize_edges(filtered)
+            self.assertEqual(filtered, json.loads(_filtered))
+
+    def test_normalize_edges_sum_one(self):
+        """
+        Test that when normalizing edges, the sums of the weights are 1.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file)
+
+            # load the terms 'manually'
+            file.seek(0)
+            correlations = json.loads(file.readline())['correlations']
+
+            # normalize the edges
+            filtered = algo._remove_loops(correlations)
+            normalized = algo._normalize_edges(filtered)
+            self.assertTrue(all( 1 == round(sum(normalized[term].values()), 10) for term in normalized ))
+
+    def test_normalize_edges_max(self):
+        """
+        Test that when normalizing edges, the maximum probability for each term gets the maximum normalized weight.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file)
+
+            # load the terms 'manually'
+            file.seek(0)
+            correlations = json.loads(file.readline())['correlations']
+
+            # normalize the edges
+            filtered = algo._remove_loops(correlations)
+            top_correlations = { term: max(filtered[term], key=filtered[term].get) for term in filtered }
+            normalized = algo._normalize_edges(filtered)
+            self.assertTrue(all( top_correlations[term] == max(normalized[term], key=normalized[term].get)
+                                 for term in normalized ))
+
+    def test_normalize_edges_same_outer_terms(self):
+        """
+        Test that when normalizing edges, all outer-level terms are retained.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file)
+
+            # load the terms 'manually'
+            file.seek(0)
+            correlations = json.loads(file.readline())['correlations']
+            terms = set(correlations)
+
+            # normalize the edges
+            filtered = algo._remove_loops(correlations)
+            normalized = algo._normalize_edges(filtered)
+            self.assertEqual(terms, set(normalized))
+
+    def test_normalize_edges_same_inner_terms(self):
+        """
+        Test that when normalizing edges, all inner-level terms are retained.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file)
+
+            # load the terms 'manually'
+            file.seek(0)
+            correlations = json.loads(file.readline())['correlations']
+            terms = set(correlations)
+
+            # normalize the edges
+            filtered = algo._remove_loops(correlations)
+            normalized = algo._normalize_edges(filtered)
+            self.assertTrue(all( set(normalized[t1]) == { t2 for t2 in terms if t2 != t1 } for t1 in normalized ))

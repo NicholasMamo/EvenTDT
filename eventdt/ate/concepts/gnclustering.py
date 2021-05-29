@@ -99,7 +99,9 @@ class GNClustering(TermClusteringAlgorithm):
         :rtype: dict of dict
         """
 
-        return correlations
+        return { t1: { t2: weight / sum(correlations[t1].values())
+                       for t2, weight in correlations[t1].items() }
+                 for t1 in correlations }
 
     def _to_edges(self, correlations):
         """
