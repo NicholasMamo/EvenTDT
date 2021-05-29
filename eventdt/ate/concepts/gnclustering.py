@@ -21,7 +21,7 @@ class GNClustering(TermClusteringAlgorithm):
     :vartype graph: :class:`nx.Graph`
     """
 
-    def __init__(self, file, percentile=0.95):
+    def __init__(self, file, percentile=0.95, *args, **kwargs):
         """
         Initialize the clustering algorithm by loading the term similarities from file.
         Afterwards, the function creates a term graph.
