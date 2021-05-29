@@ -8,6 +8,7 @@ This algorithm constructs a graph made up of terms, with the edges between them 
 """
 
 import networkx as nx
+from networkx.algorithms.centrality import edge_betweenness_centrality
 
 from . import TermClusteringAlgorithm
 
@@ -60,6 +61,26 @@ class GNClustering(TermClusteringAlgorithm):
             raise ValueError(f"The number of clusters should be between 1 and the number of terms ({ self.graph.order() }), received { n }")
 
         return set( set( ) )
+
+    def _most_central_edge(self, graph):
+        """
+        Find the most central edge in the given graph.
+        The algorithm uses NetworkX's betweenness centrality, but it is based on weight.
+        The lower the weight, the more shortest paths could go through it.
+
+        In the term graph, the lower the weight, the less correlated two terms are.
+        Therefore this function breaks links between terms that are not closely-correlated.
+
+        :param graph: The graph on which the algorithm operates.
+        :type graph: :class:`~networkx.Graph`
+
+        :return: The most central edge, made up of the source and edge nodes.
+        :rtype: tuple
+        """
+
+        centrality = edge_betweenness_centrality(graph, weight='weight')
+        edge = max(centrality, key=centrality.get)
+        return edge
 
     def _construct_graph(self, percentile):
         """
