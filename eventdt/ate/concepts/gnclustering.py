@@ -66,7 +66,7 @@ class GNClustering(TermClusteringAlgorithm):
         correlations = self._normalize_edges(correlations)
         edges = self._to_edges(correlations)
         edges = self._filter_edges(edges, percentile)
-        return self._to_graph(edges)
+        return self._to_graph(list(correlations.keys()), edges)
 
     def _remove_loops(self, correlations):
         """
@@ -144,12 +144,15 @@ class GNClustering(TermClusteringAlgorithm):
         keep = round((1 - percentile) * len(edges)) # get the number of edges to keep
         return edges[:keep]
 
-    def _to_graph(self, edges):
+    def _to_graph(self, nodes, edges):
         """
         Convert the given edges to a graph.
 
+        :param nodes: The nodes, or terms, in the graph.
+                      These are given separately from the edges so that isolated nodes, which have no edes, are still in the graph.
+        :type nodes: list of str or tuple of str or set of str
         :param edges: A list of tuples, each one representing an edge.
-                 Edge tuples include the source term, the target term, and a
+                      Edge tuples include the source term, the target term, and a
         :type edges: list of tuple
 
         :return: An undirected term graph.
@@ -157,4 +160,7 @@ class GNClustering(TermClusteringAlgorithm):
         :rtype: :class:`networkx.Graph`
         """
 
-        return nx.Graph()
+        G = nx.Graph()
+        G.add_nodes_from(nodes) # so that isolated nodes are still added
+        G.add_weighted_edges_from(edges)
+        return G

@@ -509,3 +509,177 @@ class TestGNClustering(unittest.TestCase):
             self.assertTrue(all( any( _t1 == t2 and _t2 == t1 # test that the reciprocal exists
                                      for _t1, _t2, _ in edges )
                                 for t1, t2, _ in edges ))
+
+    def test_to_graph_retains_edges(self):
+        """
+        Test that when converting edges to a graph, the original edges are not changed.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file)
+
+            # load the terms 'manually'
+            file.seek(0)
+            correlations = json.loads(file.readline())['correlations']
+            terms = set(correlations)
+
+            filtered = algo._remove_loops(correlations)
+            normalized = algo._normalize_edges(filtered)
+            edges = algo._to_edges(normalized)
+            edges = algo._filter_edges(edges, 0.5)
+            _edges = json.dumps(edges)
+            algo._to_graph(terms, edges)
+            self.assertEqual([ tuple(edge) for edge in json.loads(_edges) ], edges)
+
+    def test_to_graph_returns_graph(self):
+        """
+        Test that when converting edges to a graph, the function actually returns a graph.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file)
+
+            # load the terms 'manually'
+            file.seek(0)
+            correlations = json.loads(file.readline())['correlations']
+            terms = set(correlations)
+
+            filtered = algo._remove_loops(correlations)
+            normalized = algo._normalize_edges(filtered)
+            edges = algo._to_edges(normalized)
+            edges = algo._filter_edges(edges, 0.5)
+            graph = algo._to_graph(terms, edges)
+            self.assertEqual(nx.Graph, type(graph))
+
+    def test_to_graph_is_undirected(self):
+        """
+        Test that when converting edges to a graph, the graph is undirected.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file)
+
+            # load the terms 'manually'
+            file.seek(0)
+            correlations = json.loads(file.readline())['correlations']
+            terms = set(correlations)
+
+            filtered = algo._remove_loops(correlations)
+            normalized = algo._normalize_edges(filtered)
+            edges = algo._to_edges(normalized)
+            edges = algo._filter_edges(edges, 0.5)
+            graph = algo._to_graph(terms, edges)
+            self.assertFalse(graph.is_directed())
+
+    def test_to_graph_is_weighted(self):
+        """
+        Test that when converting edges to a graph, the graph is weighted.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file)
+
+            # load the terms 'manually'
+            file.seek(0)
+            correlations = json.loads(file.readline())['correlations']
+            terms = set(correlations)
+
+            filtered = algo._remove_loops(correlations)
+            normalized = algo._normalize_edges(filtered)
+            edges = algo._to_edges(normalized)
+            edges = algo._filter_edges(edges, 0.5)
+            graph = algo._to_graph(terms, edges)
+            self.assertTrue(nx.is_weighted(graph))
+
+    def test_to_graph_no_duplicate_edges(self):
+        """
+        Test that when converting edges to a graph, there are no duplicate edges.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file)
+
+            # load the terms 'manually'
+            file.seek(0)
+            correlations = json.loads(file.readline())['correlations']
+            terms = set(correlations)
+
+            filtered = algo._remove_loops(correlations)
+            normalized = algo._normalize_edges(filtered)
+            edges = algo._to_edges(normalized)
+            edges = algo._filter_edges(edges, 0.5)
+            graph = algo._to_graph(terms, edges)
+            self.assertEqual((len(terms) * (len(terms) - 1))/4, len(graph.edges))
+            self.assertTrue(all( (( t1, t2 ) in list(graph.edges) and not ( t2, t1 ) in list(graph.edges)) or
+                                 (not ( t1, t2 ) in list(graph.edges) and ( t2, t1 ) in list(graph.edges))
+                                 for ( t1, t2, _ ) in edges ))
+
+    def test_to_graph_all_terms(self):
+        """
+        Test that when converting edges to a graph, all terms are in it.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file)
+
+            # load the terms 'manually'
+            file.seek(0)
+            correlations = json.loads(file.readline())['correlations']
+            terms = set(correlations)
+
+            filtered = algo._remove_loops(correlations)
+            normalized = algo._normalize_edges(filtered)
+            edges = algo._to_edges(normalized)
+            edges = algo._filter_edges(edges, 0.95)
+            graph = algo._to_graph(terms, edges)
+            self.assertEqual(len(terms), len(graph.nodes))
+
+    def test_to_graph_all_edges(self):
+        """
+        Test that when converting edges to a graph, the new graph includes all filtered edges.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file)
+
+            # load the terms 'manually'
+            file.seek(0)
+            correlations = json.loads(file.readline())['correlations']
+            terms = set(correlations)
+
+            filtered = algo._remove_loops(correlations)
+            normalized = algo._normalize_edges(filtered)
+            edges = algo._to_edges(normalized)
+            edges = algo._filter_edges(edges, 0.5)
+            graph = algo._to_graph(terms, edges)
+            self.assertTrue(all( ( t1, t2 ) in list(graph.edges) or ( t2, t1 ) in list(graph.edges)
+                                 for ( t1, t2, _ ) in edges ))
+
+    def test_to_graph_correct_weights(self):
+        """
+        Test that when converting edges to a graph, all edges have the correct weights.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file)
+
+            # load the terms 'manually'
+            file.seek(0)
+            correlations = json.loads(file.readline())['correlations']
+            terms = set(correlations)
+
+            filtered = algo._remove_loops(correlations)
+            normalized = algo._normalize_edges(filtered)
+            edges = algo._to_edges(normalized)
+            edges = algo._filter_edges(edges, 0.5)
+            graph = algo._to_graph(terms, edges)
+            self.assertTrue(all( graph.get_edge_data(t1, t2)['weight'] == weight
+                                 for (t1, t2, weight) in edges ))
