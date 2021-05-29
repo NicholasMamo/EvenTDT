@@ -106,6 +106,7 @@ class GNClustering(TermClusteringAlgorithm):
     def _to_edges(self, correlations):
         """
         Convert the correlations to weighted edges.
+        The weight is the average correlation between the two terms.
 
         :param: A correlation dictionary.
                 The outer level is each term, and the inner level is the term's correlation with the other terms.
@@ -116,7 +117,9 @@ class GNClustering(TermClusteringAlgorithm):
         :rtype: list of tuple
         """
 
-        return [ ]
+        return [ (t1, t2, (correlations[t1][t2] + correlations[t2][t1]) / 2.)
+                 for t1 in correlations
+                 for t2 in correlations[t1] ]
 
     def _filter_edges(self, edges, percentile):
         """

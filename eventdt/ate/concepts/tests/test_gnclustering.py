@@ -225,3 +225,102 @@ class TestGNClustering(unittest.TestCase):
             filtered = algo._remove_loops(correlations)
             normalized = algo._normalize_edges(filtered)
             self.assertTrue(all( set(normalized[t1]) == { t2 for t2 in terms if t2 != t1 } for t1 in normalized ))
+
+    def test_to_edges_retains_correlations(self):
+        """
+        Test that when converting correlations to edges, the correlations are unchanged.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file)
+
+            # load the terms 'manually'
+            file.seek(0)
+            correlations = json.loads(file.readline())['correlations']
+
+            # create the edges and ensure that the original dictionary has not changed
+            filtered = algo._remove_loops(correlations)
+            normalized = algo._normalize_edges(filtered)
+            _normalized = json.dumps(normalized) # encode the normalized correlations so they don't change
+            edges = algo._to_edges(normalized)
+            self.assertEqual(json.loads(_normalized), normalized)
+
+    def test_to_edges_all_edges(self):
+        """
+        Test that when converting correlations to edges, all edges are returned.
+        This includes duplicate edges (:math:`t1⇒t2` and :math:`t2⇒t1`).
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file)
+
+            # load the terms 'manually'
+            file.seek(0)
+            correlations = json.loads(file.readline())['correlations']
+            terms = set(correlations)
+
+            filtered = algo._remove_loops(correlations)
+            normalized = algo._normalize_edges(filtered)
+            edges = algo._to_edges(normalized)
+
+            # check that there are mirrored edges by re-constructing the edges
+            reconstructed = { t1: { t2: weight
+                                    for _t1, t2, weight in edges
+                                    if _t1 == t1 }
+                              for t1 in terms }
+            self.assertEqual(len(terms) * (len(terms) - 1), len(edges))
+            self.assertTrue(all( t1 in reconstructed for t1 in terms ))
+            self.assertTrue(all( t2 in reconstructed[t1]
+                                 for t1 in terms
+                                 for t2 in terms
+                                 if t1 != t2 ))
+
+    def test_to_edges_average_weight(self):
+        """
+        Test that when converting correlations to edges, the weights are averaged.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file)
+
+            # load the terms 'manually'
+            file.seek(0)
+            correlations = json.loads(file.readline())['correlations']
+
+            filtered = algo._remove_loops(correlations)
+            normalized = algo._normalize_edges(filtered)
+            edges = algo._to_edges(normalized)
+
+            self.assertTrue(all( weight == (normalized[t1][t2] + normalized[t2][t1]) / 2.
+                                for t1, t2, weight in edges ))
+
+    def test_to_edges_mirrored_weights(self):
+        """
+        Test that when converting correlations to edges, the weights between :math:`t1⇒t2` and :math:`t2⇒t1` are the same.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file)
+
+            # load the terms 'manually'
+            file.seek(0)
+            correlations = json.loads(file.readline())['correlations']
+            terms = set(correlations)
+
+            filtered = algo._remove_loops(correlations)
+            normalized = algo._normalize_edges(filtered)
+            edges = algo._to_edges(normalized)
+
+            # check that there are mirrored edges by re-constructing the edges
+            reconstructed = { t1: { t2: weight
+                                    for _t1, t2, weight in edges
+                                    if _t1 == t1 }
+                              for t1 in terms }
+            self.assertTrue(all( reconstructed[t1][t2] == reconstructed[t2][t1]
+                                 for t1 in terms
+                                 for t2 in terms
+                                 if t1 != t2 ))
