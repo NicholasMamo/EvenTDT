@@ -105,6 +105,127 @@ class TestGNClustering(unittest.TestCase):
             terms = set(algo.similarity)
             self.assertRaises(ValueError, algo.cluster, len(terms) + 1)
 
+    def test_cluster(self):
+        """
+        Test that term clustering makes sense.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file, percentile=0.9)
+            terms = set(algo.similarity)
+            concepts = algo.cluster(10)
+
+            # check that there is a cluster with both 'yellow' and 'card' in it
+            self.assertTrue(any( all( term in cluster for term in { 'yellow', 'card' } )
+                                 for cluster in concepts ))
+
+            # check that there is a cluster with both 'second' and 'half' in it
+            self.assertTrue(any( all( term in cluster for term in { 'second', 'half' } )
+                                 for cluster in concepts ))
+
+    def test_cluster_set_of_frozen_sets(self):
+        """
+        Test that the term clusters are returned as a set of frozen sets.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file, percentile=0.9)
+            terms = set(algo.similarity)
+            concepts = algo.cluster(10)
+            self.assertEqual(set, type(concepts))
+            self.assertTrue(all( type(concept) == frozenset for concept in concepts ))
+
+    def test_cluster_none_empty(self):
+        """
+        Test that none of the returned term concepts are empty.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file, percentile=0.9)
+            terms = set(algo.similarity)
+            concepts = algo.cluster(10)
+            self.assertTrue(not any( len(concept) == 0 for concept in concepts ))
+
+    def test_cluster_returns_all_terms(self):
+        """
+        Test that all of the terms are returned in one cluster or another.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file, percentile=0.9)
+            terms = set(algo.similarity)
+            concepts = algo.cluster(10)
+            self.assertEqual(terms, { term for concept in concepts for term in concept })
+
+    def test_cluster_no_overlap(self):
+        """
+        Test that none of the concepts overlap.
+        This test counts the number of concepts in which a term appears, which should always be 1.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file, percentile=0.9)
+            terms = set(algo.similarity)
+            concepts = algo.cluster(10)
+            self.assertTrue(all( 1 == sum( term in concept for concept in concepts ) for term in terms ))
+
+    def test_cluster_1_cluster(self):
+        """
+        Test that when clustering terms with 1 cluster, the function returns all terms in one cluster.
+        This only works if the percentile is 0.
+        Otherwise, it's possible that edge filtering will create isolated communities even without using the Girvan-Newman algorithm.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file, percentile=0)
+            terms = set(algo.similarity)
+            concepts = algo.cluster(1)
+            self.assertEqual(1, len(concepts))
+            self.assertEqual({ frozenset(terms) }, concepts)
+
+    def test_cluster_1_cluster_with_filtering(self):
+        """
+        Test that when clustering terms with 1 cluster, the function returns all terms in one cluster even with filtering.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file, percentile=0)
+            terms = set(algo.similarity)
+            concepts = algo.cluster(1)
+            self.assertEqual(1, len(concepts))
+            self.assertEqual({ frozenset(terms) }, concepts)
+
+    def test_cluster_2_clusters(self):
+        """
+        Test that when clustering terms with 2 clusters, the function returns two clusters, unless there are existing communities in the graph.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file, percentile=0)
+            terms = set(algo.similarity)
+            concepts = algo.cluster(2)
+            self.assertEqual(2, len(concepts))
+
+    def test_cluster_n_clusters(self):
+        """
+        Test that when clustering terms with :math:`n` clusters, the function returns each term in a separate cluster.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file, percentile=0.9)
+            terms = set(algo.similarity)
+            concepts = algo.cluster(len(terms))
+            self.assertEqual(len(terms), len(concepts))
+
     def test_edge_centrality(self):
         """
         Test that the edge centrality correctly identifies the most central edge.

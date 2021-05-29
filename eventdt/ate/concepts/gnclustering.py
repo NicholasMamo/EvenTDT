@@ -9,6 +9,7 @@ This algorithm constructs a graph made up of terms, with the edges between them 
 
 import networkx as nx
 from networkx.algorithms.centrality import edge_betweenness_centrality
+from networkx.algorithms.community import girvan_newman
 
 from . import TermClusteringAlgorithm
 
@@ -44,6 +45,11 @@ class GNClustering(TermClusteringAlgorithm):
         Create lexical concepts by clustering the terms.
         This function returns sets of terms extracted using the Girvan-Newman algorithm.
 
+        .. note::
+
+            This function does not guarantee that :math:`n` clusters will always be returned, but that at least :math:`n` clusters will always be returned.
+            Because of the :func:`~ate.concepts.gnclustering.GNClustering._filter_edges` function, nodes may be split into communities even before applying the Girvan-Newman algorithm.
+
         :param n: The number of clusters to return.
         :type n: int
 
@@ -60,7 +66,19 @@ class GNClustering(TermClusteringAlgorithm):
         if not 1 <= n <= self.graph.order():
             raise ValueError(f"The number of clusters should be between 1 and the number of terms ({ self.graph.order() }), received { n }")
 
-        return set( set( ) )
+        # if only one clustered is requested, return all nodes as one cluster regardless of any communities in the graph
+        if n == 1:
+            return { frozenset( self.graph.nodes ) }
+
+        # extract the communities
+        communities = girvan_newman(self.graph, most_valuable_edge=self._most_central_edge)
+        partitions = list(next(communities))
+
+        # NOTE: This is used instead of a for loop since, by default, the graph might be split into communities beforehand
+        while len(partitions) < n:
+            partitions = list(next(communities))
+
+        return set( frozenset(partition) for partition in partitions )
 
     def _most_central_edge(self, graph):
         """
