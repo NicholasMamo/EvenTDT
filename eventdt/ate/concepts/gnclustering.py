@@ -48,7 +48,7 @@ class GNClustering(TermClusteringAlgorithm):
         :type n: int
 
         :return: A group of term clusters.
-        :rtype: set of set
+        :rtype: set of frozenset
 
         :raises ValueError: When the number of clusters is not an integer.
         :raises ValueError: When the number of clusters is not between 1 and the order of the graph.

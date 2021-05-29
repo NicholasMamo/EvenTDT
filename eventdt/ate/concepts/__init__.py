@@ -60,7 +60,7 @@ class TermClusteringAlgorithm(ABC):
         This function returns sets of terms.
 
         :return: A group of term clusters.
-        :rtype: set of set
+        :rtype: set of frozenset
         """
 
         pass
