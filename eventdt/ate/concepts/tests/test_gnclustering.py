@@ -20,7 +20,17 @@ class TestGNClustering(unittest.TestCase):
     Test the functionality of the :class:`~ate.concepts.gnclustering.GNClustering` class.
     """
 
-    def test_construct_graph_returns_graph(self):
+    def test_init_saves_graph(self):
+        """
+        Test that when initializing the algorithm, the graph is saved as an instance variable.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file)
+            self.assertTrue(algo.graph)
+
+    def test_init_graph_is_graph(self):
         """
         Test that when constructing a graph, the function actually returns a graph.
         """
@@ -30,7 +40,7 @@ class TestGNClustering(unittest.TestCase):
             algo = GNClustering(file)
             self.assertEqual(nx.Graph, type(algo.graph))
 
-    def test_construct_graph_not_directed(self):
+    def test_init_graph_undirected(self):
         """
         Test that when constructing a graph, the resulting graph is not directed.
         """
@@ -39,6 +49,30 @@ class TestGNClustering(unittest.TestCase):
         with open(path) as file:
             algo = GNClustering(file)
             self.assertFalse(nx.is_directed(algo.graph))
+
+    def test_init_graph_no_loops(self):
+        """
+        Test that when constructing a graph, the resulting graph has no loops.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file)
+            terms = set(algo.similarity)
+            self.assertTrue(not any( (term, term) in list(algo.graph.edges)
+                            for term in terms ))
+
+    def test_init_graph_filtered(self):
+        """
+        Test that when constructing a graph, the percentile is used to filter edges.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file, percentile=0.9)
+            terms = set(algo.similarity)
+            self.assertEqual((len(terms) * (len(terms) - 1))/20, # 1/10 (90th percentile) × 1/2 (remove duplicate edges)
+                             len(algo.graph.edges))
 
     def test_remove_loops_copy(self):
         """
@@ -436,8 +470,14 @@ class TestGNClustering(unittest.TestCase):
             filtered = algo._remove_loops(correlations)
             normalized = algo._normalize_edges(filtered)
             edges = algo._to_edges(normalized)
-            edges = algo._filter_edges(edges, 0.5)
-            self.assertEqual((len(terms) * (len(terms) - 1))/2., len(edges))
+
+            # test using the median
+            _edges = algo._filter_edges(edges, 0.5)
+            self.assertEqual((len(terms) * (len(terms) - 1))/2., len(_edges))
+
+            # test using a split that is not in the middle
+            _edges = algo._filter_edges(edges, 0.9)
+            self.assertEqual((len(terms) * (len(terms) - 1))/10., len(_edges))
 
     def test_filter_edges_highest_weighted_retained(self):
         """
@@ -457,12 +497,12 @@ class TestGNClustering(unittest.TestCase):
             filtered = algo._remove_loops(correlations)
             normalized = algo._normalize_edges(filtered)
             edges = algo._to_edges(normalized)
-            filtered = algo._filter_edges(edges, 0.5)
+            filtered = algo._filter_edges(edges, 0.9)
 
             # sort the edges in descending order of weight, and then check that the highest-rated
             edges = sorted(edges, key=lambda x: x[2], reverse=True)
             self.assertGreater(edges[0][2], edges[-1][2]) # ensure that the sorting is correct
-            self.assertEqual(set(filtered), set(edges[:int(len(edges)/2.)])) # check that the top-weighted edges are retained
+            self.assertEqual(set(filtered), set(edges[:int(len(edges)/10.)])) # check that the top-weighted edges are retained
             self.assertTrue(all( edge[2] > max([weight for _, _, weight in edges[int(len(edges)/2.):]])
                                  for edge in filtered )) # check that the edge weights are greater than the ones that weren't chosen
 
