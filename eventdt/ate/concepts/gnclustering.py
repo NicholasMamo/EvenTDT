@@ -38,16 +38,28 @@ class GNClustering(TermClusteringAlgorithm):
         super(GNClustering, self).__init__(file)
         self.graph = self._construct_graph(percentile)
 
-    def cluster(self, *args, **kwargs):
+    def cluster(self, n, *args, **kwargs):
         """
         Create lexical concepts by clustering the terms.
         This function returns sets of terms extracted using the Girvan-Newman algorithm.
 
+        :param n: The number of clusters to return.
+        :type n: int
+
         :return: A group of term clusters.
         :rtype: set of set
+
+        :raises ValueError: When the number of clusters is not an integer.
+        :raises ValueError: When the number of clusters is not between 1 and the order of the graph.
         """
 
-        pass
+        if not type(n) is int:
+            raise ValueError(f"The number of clusters should be an integer, received { type(n) }")
+
+        if not 1 <= n <= self.graph.order():
+            raise ValueError(f"The number of clusters should be between 1 and the number of terms ({ self.graph.order() }), received { n }")
+
+        return set( set( ) )
 
     def _construct_graph(self, percentile):
         """

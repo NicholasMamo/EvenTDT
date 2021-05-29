@@ -74,6 +74,37 @@ class TestGNClustering(unittest.TestCase):
             self.assertEqual((len(terms) * (len(terms) - 1))/20, # 1/10 (90th percentile) × 1/2 (remove duplicate edges)
                              len(algo.graph.edges))
 
+    def test_cluster_float_clusters(self):
+        """
+        Test that when clustering terms with a floating number of clusters, the function raises a ValueError.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file, percentile=0.9)
+            self.assertRaises(ValueError, algo.cluster, 0.1)
+
+    def test_cluster_0_clusters(self):
+        """
+        Test that when clustering terms with 0 clusters, the function raises a ValueError.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file, percentile=0.9)
+            self.assertRaises(ValueError, algo.cluster, 0)
+
+    def test_cluster_n_1_clusters(self):
+        """
+        Test that when clustering terms with :math:`n+1` clusters, where :math:`n` is the number of terms, the function raises a ValueError.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file, percentile=0.9)
+            terms = set(algo.similarity)
+            self.assertRaises(ValueError, algo.cluster, len(terms) + 1)
+
     def test_remove_loops_copy(self):
         """
         Test that when removing loops, a new dictionary is created.
