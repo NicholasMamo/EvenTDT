@@ -140,7 +140,9 @@ class GNClustering(TermClusteringAlgorithm):
         if not 0 <= percentile <= 1:
             raise ValueError(f"The edge percentile must be between 0 and 1, received { percentile }")
 
-        return [ ]
+        edges = sorted(edges, key=lambda x: x[2], reverse=True) # sort the edges in descending order of weight
+        keep = round((1 - percentile) * len(edges)) # get the number of edges to keep
+        return edges[:keep]
 
     def _to_graph(self, edges):
         """

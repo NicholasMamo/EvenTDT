@@ -324,3 +324,188 @@ class TestGNClustering(unittest.TestCase):
                                  for t1 in terms
                                  for t2 in terms
                                  if t1 != t2 ))
+
+    def test_filter_edges_percentile_below_0(self):
+        """
+        Test when filtering edges, a percentile below 0 raises a ValueError.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file)
+
+            # load the terms 'manually'
+            file.seek(0)
+            correlations = json.loads(file.readline())['correlations']
+
+            filtered = algo._remove_loops(correlations)
+            normalized = algo._normalize_edges(filtered)
+            edges = algo._to_edges(normalized)
+            self.assertRaises(ValueError, algo._filter_edges, edges, -1)
+
+    def test_filter_edges_percentile_above_1(self):
+        """
+        Test when filtering edges, a percentile above 1 raises a ValueError.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file)
+
+            # load the terms 'manually'
+            file.seek(0)
+            correlations = json.loads(file.readline())['correlations']
+
+            filtered = algo._remove_loops(correlations)
+            normalized = algo._normalize_edges(filtered)
+            edges = algo._to_edges(normalized)
+            self.assertRaises(ValueError, algo._filter_edges, edges, 2)
+
+    def test_filter_edges_percentile_0(self):
+        """
+        Test that when filtering edges with a percentile of 0, all edges are retained.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file)
+
+            # load the terms 'manually'
+            file.seek(0)
+            correlations = json.loads(file.readline())['correlations']
+
+            filtered = algo._remove_loops(correlations)
+            normalized = algo._normalize_edges(filtered)
+            edges = algo._to_edges(normalized)
+            _edges = algo._filter_edges(edges, 0)
+            self.assertEqual(set(edges), set(_edges))
+
+    def test_filter_edges_percentile_1(self):
+        """
+        Test that when filtering edges with a percentile of 1, no edges are retained.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file)
+
+            # load the terms 'manually'
+            file.seek(0)
+            correlations = json.loads(file.readline())['correlations']
+
+            filtered = algo._remove_loops(correlations)
+            normalized = algo._normalize_edges(filtered)
+            edges = algo._to_edges(normalized)
+            edges = algo._filter_edges(edges, 1)
+            self.assertFalse(edges)
+
+    def test_filter_edges_does_not_change_edges(self):
+        """
+        Test that when filtering edges, the original list of edges does not change.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file)
+
+            # load the terms 'manually'
+            file.seek(0)
+            correlations = json.loads(file.readline())['correlations']
+
+            filtered = algo._remove_loops(correlations)
+            normalized = algo._normalize_edges(filtered)
+            edges = algo._to_edges(normalized)
+            _edges = json.dumps(edges)
+            algo._filter_edges(edges, 1)
+            self.assertEqual([ tuple(edge) for edge in json.loads(_edges) ], edges)
+
+    def test_filter_edges_uses_percentile(self):
+        """
+        Test that when filtering edges, the percentile is used to filter edges.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file)
+
+            # load the terms 'manually'
+            file.seek(0)
+            correlations = json.loads(file.readline())['correlations']
+            terms = set(correlations)
+
+            filtered = algo._remove_loops(correlations)
+            normalized = algo._normalize_edges(filtered)
+            edges = algo._to_edges(normalized)
+            edges = algo._filter_edges(edges, 0.5)
+            self.assertEqual((len(terms) * (len(terms) - 1))/2., len(edges))
+
+    def test_filter_edges_highest_weighted_retained(self):
+        """
+        Test that when filtering edges, the highest-weighted edges are retained.
+        The highest-weighted edges correspond to the most correlated terms.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file)
+
+            # load the terms 'manually'
+            file.seek(0)
+            correlations = json.loads(file.readline())['correlations']
+            terms = set(correlations)
+
+            filtered = algo._remove_loops(correlations)
+            normalized = algo._normalize_edges(filtered)
+            edges = algo._to_edges(normalized)
+            filtered = algo._filter_edges(edges, 0.5)
+
+            # sort the edges in descending order of weight, and then check that the highest-rated
+            edges = sorted(edges, key=lambda x: x[2], reverse=True)
+            self.assertGreater(edges[0][2], edges[-1][2]) # ensure that the sorting is correct
+            self.assertEqual(set(filtered), set(edges[:int(len(edges)/2.)])) # check that the top-weighted edges are retained
+            self.assertTrue(all( edge[2] > max([weight for _, _, weight in edges[int(len(edges)/2.):]])
+                                 for edge in filtered )) # check that the edge weights are greater than the ones that weren't chosen
+
+    def test_filter_edges_sorted_edges(self):
+        """
+        Test that the filtered edges are returned sorted in descending order of weight.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file)
+
+            # load the terms 'manually'
+            file.seek(0)
+            correlations = json.loads(file.readline())['correlations']
+            terms = set(correlations)
+
+            filtered = algo._remove_loops(correlations)
+            normalized = algo._normalize_edges(filtered)
+            edges = algo._to_edges(normalized)
+            edges = algo._filter_edges(edges, 0.5)
+            self.assertTrue(all( edges[i][2] >= edges[i+1][2] for i in range(len(edges) - 1) ))
+
+    def test_filter_edges_duplicates(self):
+        """
+        Test that filtered edges still have duplicates (t1⇒t2 and t2⇒t1).
+        This is how we know that the filtering is being done correctly.
+        If t1⇒t2 is in the list, then t2⇒t1 should be too.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../../tests/corpora/ate/correlations.json')
+        with open(path) as file:
+            algo = GNClustering(file)
+
+            # load the terms 'manually'
+            file.seek(0)
+            correlations = json.loads(file.readline())['correlations']
+            terms = set(correlations)
+
+            filtered = algo._remove_loops(correlations)
+            normalized = algo._normalize_edges(filtered)
+            edges = algo._to_edges(normalized)
+            edges = algo._filter_edges(edges, 0.5)
+            self.assertTrue(all( any( _t1 == t2 and _t2 == t1 # test that the reciprocal exists
+                                     for _t1, _t2, _ in edges )
+                                for t1, t2, _ in edges ))
