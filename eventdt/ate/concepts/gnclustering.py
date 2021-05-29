@@ -135,6 +135,8 @@ class GNClustering(TermClusteringAlgorithm):
         :return: A list of tuples, each one representing an edge.
                  Edge tuples include the source term, the target term, and a
         :rtype: list of tuple
+
+        :raises ValueError: When the percentile is not between 0 and 1.
         """
 
         if not 0 <= percentile <= 1:
