@@ -3,13 +3,29 @@
 """
 A tool to extract lexical concepts from terms.
 
-To extract concepts, specify two files: a file containing the correlations between files, generated using the :mod:`~tools.correlation` tool, and the output file:
+To extract concepts, specify two files: a file containing the correlations between files, generated using the :mod:`~tools.correlation` tool, and the output file.
+You also need to specify the method to use and the number of concepts to extract:
 
 .. code-block:: bash
 
     ./tools/terms.py \\
     --correlations data/terms.json \\
-    --output data/concepts.json
+    --output data/concepts.json \\
+    --method GNClustering \\
+    --concepts 10
+
+By default, the tool uses all correlations.
+However, the :class:`~ate.oncepts.gnclustering.GNClustering` algorithm supports edge filtering to remove weak correlations.
+You can specify edge filtering using the ``--percentile`` parameter:
+
+.. code-block:: bash
+
+    ./tools/terms.py \\
+    --correlations data/terms.json \\
+    --output data/concepts.json \\
+    --method GNClustering \\
+    --concepts 10 \\
+    --percentile 0.95
 
 The output is a JSON file with the following structure:
 
@@ -21,6 +37,7 @@ The output is a JSON file with the following structure:
             "method": "<class 'ate.concepts.gnclustering.GNClustering'>",
             "output": "data/concepts.json",
             "concepts": 3,
+            "percentile": 0,
             "_date": "2021-05-30T11:32:04.775216",
             "_timestamp": 1622367124.7752266,
             "_cmd": "./tools/concepts.py --correlations data/correlations.json --output data/concepts.json --concepts 3"
@@ -30,6 +47,7 @@ The output is a JSON file with the following structure:
             "method": "<class 'ate.concepts.gnclustering.GNClustering'>",
             "output": "data/concepts.json",
             "concepts": 3,
+            "percentile": 0,
             "_date": "2021-05-30T11:32:04.775232",
             "_timestamp": 1622367124.775234,
             "_cmd": "./tools/concepts.py --correlations data/correlations.json --output data/concepts.json --concepts 3"
@@ -87,6 +105,7 @@ The full list of accepted arguments:
     - ``-m --method``           *<Required>* The method to use to extract the lexical concepts; supported: `GNClustering`.
     - ``-o --output``           *<Required>* The path to the file where to store the extracted terms.
     - ``--concepts``            *<Required>* The number of concepts to extract.
+    - ``--percentile``          *<Optional>* The percentile of edges to retain, preferring highly-correlated terms, used by the :class:`~ate.concepts.gnclustering.GNClustering` class (defaults to all edges).
 """
 
 import argparse
@@ -114,6 +133,7 @@ def setup_args():
         - ``-m --method``           *<Required>* The method to use to extract the lexical concepts; supported: `GNClustering`.
         - ``-o --output``           *<Required>* The path to the file where to store the extracted concepts.
         - ``--concepts``            *<Required>* The number of concepts to extract.
+        - ``--percentile``          *<Optional>* The percentile of edges to retain, preferring highly-correlated terms, used by the :class:`~ate.concepts.gnclustering.GNClustering` class (defaults to all edges).
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
@@ -127,6 +147,8 @@ def setup_args():
                         help='<Required> The path to the file where to store the extracted concepts.')
     parser.add_argument('--concepts', type=nn, required=True,
                         help='<Optional> The number of concepts to extract.')
+    parser.add_argument('--percentile', type=float, required=False, default=0, metavar='[0-1]',
+                        help='<Optional> The percentile of edges to retain, preferring highly-correlated terms, used by the `GNClustering` class (defaults to all edges).')
 
     args = parser.parse_args()
     return args
