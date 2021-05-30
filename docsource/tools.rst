@@ -55,6 +55,11 @@ Correlation
 
 .. automodule:: tools.correlation
 
+Concepts
+--------
+
+.. automodule:: tools.concepts
+
 ===============================
 Automatic Participant Detection
 ===============================

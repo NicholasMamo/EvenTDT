@@ -37,20 +37,20 @@ The output is a JSON file with the following structure:
             "method": "<class 'ate.concepts.gnclustering.GNClustering'>",
             "output": "data/concepts.json",
             "concepts": 3,
-            "percentile": 0,
+            "percentile": 0.95,
             "_date": "2021-05-30T11:32:04.775216",
             "_timestamp": 1622367124.7752266,
-            "_cmd": "./tools/concepts.py --correlations data/correlations.json --output data/concepts.json --concepts 3"
+            "_cmd": "./tools/concepts.py --correlations data/correlations.json --output data/concepts.json --concepts 3 --percentile 0.95"
         },
         "pcmd": {
             "correlations": "data/correlations.json",
             "method": "<class 'ate.concepts.gnclustering.GNClustering'>",
             "output": "data/concepts.json",
             "concepts": 3,
-            "percentile": 0,
+            "percentile": 0.95,
             "_date": "2021-05-30T11:32:04.775232",
             "_timestamp": 1622367124.775234,
-            "_cmd": "./tools/concepts.py --correlations data/correlations.json --output data/concepts.json --concepts 3"
+            "_cmd": "./tools/concepts.py --correlations data/correlations.json --output data/concepts.json --concepts 3 --percentile 0.95"
         },
         "concepts": [
             [
@@ -95,7 +95,7 @@ The output is a JSON file with the following structure:
                 "net",
                 "save"
             ]
-        }
+        ]
     }
 
 
