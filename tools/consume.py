@@ -80,7 +80,7 @@ You can add an understanding period using the ``--understanding`` parameter:
 
 You can also filter the file using tokens.
 Currently, the only filtering mode accepts any tweet if it mentions any filter keyword.
-A filters file is a .csv file with no header line, where each line represents one keyword:
+A filters file is either the output from the :mod:`~tools.terms` or :mod:`~tools.bootstrap` tools or a .csv file with no header line, where each line represents one keyword:
 
 .. code-block:: text
 
@@ -96,7 +96,7 @@ You can provide the filters as follows:
     --event data/event/event.json \\
     --understanding data/event/understanding.json \\
     --consumer ELDConsumer \\
-    --filters data/filters.csv
+    --filters data/filters.json
 
 .. warning::
 
@@ -106,7 +106,7 @@ You can provide the filters as follows:
 
 Finally, you can also provide splits, which are groups of keywords.
 When you provide splits, the tweets are grouped and processed separately according to the keywords they contain.
-A splits file is a .csv file with no header line, where each line represents a comma-separated list of keywords:
+A splits file is either the output from the :mod:`~tools.concepts` tool or a .csv file with no header line, where each line represents a comma-separated list of keywords:
 
 .. code-block:: text
 
@@ -122,7 +122,7 @@ You can provide the splits as follows:
     --event data/event/event.json \\
     --understanding data/event/understanding.json \\
     --consumer ELDConsumer \\
-    --splits data/splits.csv
+    --splits data/splits.json
 
 When providing splits, the tool creates one consumer for each split: each consumer receives and processes only tweets that mention keywords in its split.
 
@@ -836,7 +836,19 @@ def filters(file):
     filters = [ ]
 
     with open(file) as f:
-        return [ token.strip() for token in f.readlines() ]
+        if tools.is_json(file):
+            data = json.loads(''.join(f.readlines()))
+
+            # check if this is the output of a tool
+            if 'cmd' in data or 'meta' in data:
+                meta = data['pcmd'] if 'pcmd' in data else data['meta']
+                if 'seed' in meta:
+                    filters.extend(meta['seed'])
+                    filters.extend(data['bootstrapped'])
+                elif 'terms' in data:
+                    filters.extend([ term['term'] for term in data['terms'] ])
+        else:
+            return [ token.strip() for token in f.readlines() ]
 
     return filters
 

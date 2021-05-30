@@ -68,6 +68,69 @@ class TestConsume(unittest.TestCase):
         self.assertFalse('\n' in filters)
         self.assertTrue(all( not token.endswith('\n') for token in filters ))
 
+    def test_filters_extracted(self):
+        """
+        Test that when loading terms from the output of the ``terms`` tool, the terms themselves are loaded.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/bootstrapping/seed.json')
+        terms = consume.filters(file)
+        self.assertTrue(all( type(term) is str for term in terms ))
+        with open(file) as f:
+            original = json.loads(''.join(f.readlines()))['terms']
+            original = [ term['term'] for term in original ]
+        self.assertEqual(len(original), len(terms))
+
+    def test_filters_extracted_cmd(self):
+        """
+        Test that when loading terms from the output of the ``terms`` tool, the terms themselves are loaded.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', 'sample.json')
+        terms = consume.filters(file)
+        self.assertTrue(all( type(term) is str for term in terms ))
+        with open(file) as f:
+            original = json.loads(''.join(f.readlines()))['terms']
+            original = [ term['term'] for term in original ]
+        self.assertEqual(len(original), len(terms))
+
+    def test_filters_extracted_order(self):
+        """
+        Test that when loading terms from the output of the ``terms`` tool, they are loaded in order of rank.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/bootstrapping/seed.json')
+        terms = consume.filters(file)
+        with open(file) as f:
+            original = json.loads(''.join(f.readlines()))['terms']
+            original = [ term['term'] for term in original ]
+        self.assertEqual(original, terms)
+
+    def test_filters_bootstrapped(self):
+        """
+        Test that when loading terms from the output of the ``bootstrap`` tool, the terms themselves are loaded.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/bootstrapping/bootstrapped.json')
+        terms = consume.filters(file)
+        self.assertTrue(all( type(term) is str for term in terms ))
+        with open(file) as f:
+            data = json.loads(''.join(f.readlines()))
+            original = data['meta']['seed'] + data['bootstrapped']
+        self.assertEqual(len(original), len(terms))
+
+    def test_filters_bootstrapped_order(self):
+        """
+        Test that when loading terms from the output of the ``bootstrap`` tool, the seed terms are first, followed by the bootstrapped terms.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/bootstrapping/bootstrapped.json')
+        terms = consume.filters(file)
+        with open(file) as f:
+            data = json.loads(''.join(f.readlines()))
+            original = data['meta']['seed'] + data['bootstrapped']
+        self.assertEqual(original, terms)
+
     def test_splits_concepts(self):
         """
         Test that when loading splits from concepts, the concepts are loaded correctly.
