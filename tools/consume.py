@@ -336,7 +336,7 @@ def setup_args():
                         help='<Optional> The path to a file containing filters for the consumer, filtering the stream based on the tokens in tweets. If given, the tool expects a CSV file, where each line contains one token.')
     parser.add_argument('--filters-keep', type=int, required=False, default=None,
                         help='<Optional> The number of filter keywords to retain, most useful when reading keywords from the output of the `terms` or `bootstrap` tools, defaults to all keywords.')
-    parser.add_argument('--splits', type=splits, required=False, default=None,
+    parser.add_argument('--splits', required=False, default=None,
                         help='<Optional> The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split, or a JSON file created by the :mod:`~tools.concepts` tool.')
     parser.add_argument('--periodicity', type=int, required=False, default=60,
                         help='<Optional> The periodicity in seconds of the consumer, defaults to 60 seconds (used by the `FIREConsumer`, `StatConsumer` and `ZhaoConsumer`).')
@@ -382,9 +382,11 @@ def main():
     pcmd['consumer'] = str(vars(args)['consumer'])
     pcmd['scheme'] = str(type(vars(args)['scheme']))
 
-    # load the filters
+    # load the filters and splits
     filter = filters(args.filters, args.filters_keep) if args.filters else [ ]
     args.filters, pcmd['filters'] = filter, filter
+    split = splits(args.splits) if args.splits else [ ]
+    args.splits, pcmd['splits'] = split, split
 
     """
     Register the queue in the base manager.
