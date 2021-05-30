@@ -120,5 +120,31 @@ def method(method):
 
     raise argparse.ArgumentTypeError(f"Invalid method value: {method}")
 
+def nn(n):
+    """
+    Validate the given integer.
+    The number of clusters must be 1 or greater, and always an integer.
+
+    :param n: The number of clusters to extract.
+    :type n: str
+
+    :return: The same number as an integer, if it is valid.
+    :rtype: int
+
+    :raises argparse.ArgumentTypeError: When the given number is not an integer.
+    :raises argparse.ArgumentTypeError: When the given number is not greater than 0.
+    """
+
+    try:
+        if not float(n).is_integer():
+            raise argparse.ArgumentTypeError(f"The number of clusters must be an integer, received {n}")
+    except:
+        raise argparse.ArgumentTypeError(f"The number of clusters must be an integer, received {n}")
+
+    if int(n) > 0:
+        return int(n)
+    else:
+        raise argparse.ArgumentTypeError(f"The number of clusters must be greater than 0, received {n}")
+
 if __name__ == "__main__":
     main()
