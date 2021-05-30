@@ -2,6 +2,10 @@
 
 """
 A tool to extract lexical concepts from terms.
+
+The full list of accepted arguments:
+
+    - ``-o --output``           *<Required>* The path to the file where to store the extracted terms.
 """
 
 import argparse
@@ -22,9 +26,16 @@ def setup_args():
     """
     Set up and get the list of command-line arguments.
 
+    Accepted arguments:
+
+        - ``-o --output``           *<Required>* The path to the file where to store the extracted concepts.
+
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
     """
+
+    parser.add_argument('-o', '--output', type=str, required=True,
+                        help='<Required> The path to the file where to store the extracted concepts.')
 
     args = parser.parse_args()
     return args
