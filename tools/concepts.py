@@ -18,6 +18,7 @@ The output is a JSON file with the following structure:
     {
         "cmd": {
             "correlations": "data/correlations.json",
+            "method": "<class 'ate.concepts.gnclustering.GNClustering'>",
             "output": "data/concepts.json",
             "_date": "2021-05-30T11:32:04.775216",
             "_timestamp": 1622367124.7752266,
@@ -25,6 +26,7 @@ The output is a JSON file with the following structure:
         },
         "pcmd": {
             "correlations": "data/correlations.json",
+            "method": "<class 'ate.concepts.gnclustering.GNClustering'>",
             "output": "data/concepts.json",
             "_date": "2021-05-30T11:32:04.775232",
             "_timestamp": 1622367124.775234,
@@ -36,6 +38,7 @@ The output is a JSON file with the following structure:
 The full list of accepted arguments:
 
     - ``-c --correlations``     *<Required>* The path to the file containing correlations between terms, generated using the :mod:`~tools.correlation` tool.
+    - ``-m --method``           *<Required>* The method to use to extract the lexical concepts; supported: `GNClustering`.
     - ``-o --output``           *<Required>* The path to the file where to store the extracted terms.
 """
 
@@ -49,6 +52,7 @@ lib = os.path.join(root, 'eventdt')
 sys.path.insert(-1, root)
 sys.path.insert(-1, lib)
 
+from ate.concepts import GNClustering
 import tools
 from logger import logger
 
@@ -60,6 +64,7 @@ def setup_args():
     Accepted arguments:
 
         - ``-c --correlations``     *<Required>* The path to the file containing correlations between terms, generated using the :mod:`~tools.correlation` tool.
+        - ``-m --method``           *<Required>* The method to use to extract the lexical concepts; supported: `GNClustering`.
         - ``-o --output``           *<Required>* The path to the file where to store the extracted concepts.
 
     :return: The command-line arguments.
@@ -68,6 +73,8 @@ def setup_args():
 
     parser.add_argument('-c', '--correlations', required=True,
                         help='<Required> The path to the file containing correlations between terms, generated using the ``correlation`` tool.')
+    parser.add_argument('-m', '--method', type=method, required=True,
+                        help='<Required> The method to use to extract the lexical concepts; supported: `GNClustering`.')
     parser.add_argument('-o', '--output', type=str, required=True,
                         help='<Required> The path to the file where to store the extracted concepts.')
 
@@ -83,9 +90,35 @@ def main():
 
     # get the meta arguments
     cmd, pcmd = tools.meta(args), tools.meta(args)
+    cmd['method'], pcmd['method'] = str(vars(args)['method']), str(vars(args)['method'])
 
     # save the meta data and concepts to file
     tools.save(args.output, { 'cmd': cmd, 'pcmd': pcmd })
+
+def method(method):
+    """
+    Convert the given string into a lexical concept algorithm.
+    The accepted methods are:
+
+        #. :func:`~ate.concepts.gnclustering.GNClustering`
+
+    :param method: The method string.
+    :type method: str
+
+    :return: The function that corresponds to the given method.
+    :rtype: function
+
+    :raises argparse.ArgumentTypeError: When the given method string is invalid.
+    """
+
+    methods = {
+        'gnclustering': GNClustering,
+    }
+
+    if method.lower() in methods:
+        return methods[method.lower()]
+
+    raise argparse.ArgumentTypeError(f"Invalid method value: {method}")
 
 if __name__ == "__main__":
     main()
