@@ -98,8 +98,27 @@ def main():
     cmd, pcmd = tools.meta(args), tools.meta(args)
     cmd['method'], pcmd['method'] = str(vars(args)['method']), str(vars(args)['method'])
 
+    extractor = create_extractor(args.method, file=args.correlations, **vars(args)) # create the extractor
+
     # save the meta data and concepts to file
     tools.save(args.output, { 'cmd': cmd, 'pcmd': pcmd })
+
+def create_extractor(_type, correlations, *args, **kwargs):
+    """
+    Create the extractor that will be used to identify lexical concepts.
+    Any arguments or keyword arguments are passed on to the extractor's constructor.
+
+    :param _type: The type of extractor to create as returned by the :func:`~tools.concepts.method` function.
+    :type _type: type
+    :param correlations: The path to the file containing correlations between terms.
+    :type correlations: str
+
+    :return: A new extractor that can be used to extract lexical concepts.
+    :rtype: :class:`~ate.concepts.TermClusteringAlgorithm`
+    """
+
+    with open(correlations) as file:
+        return _type(file=file, *args, **kwargs)
 
 def method(method):
     """

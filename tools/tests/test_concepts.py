@@ -26,6 +26,14 @@ class TestConcepts(unittest.TestCase):
     Test the functionality of the concepts tool.
     """
 
+    def test_create_extractor_returns_extractor(self):
+        """
+        Test that when creating an extractor, it actually returns an extractor.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/ate/correlations.json')
+        self.assertTrue(isinstance(concepts.create_extractor(GNClustering, correlations=path), TermClusteringAlgorithm))
+
     def test_method_lowercase(self):
         """
         Test that the method parsing converts the string to lowercase.
