@@ -20,19 +20,63 @@ The output is a JSON file with the following structure:
             "correlations": "data/correlations.json",
             "method": "<class 'ate.concepts.gnclustering.GNClustering'>",
             "output": "data/concepts.json",
-            "concepts": 10,
+            "concepts": 3,
             "_date": "2021-05-30T11:32:04.775216",
             "_timestamp": 1622367124.7752266,
-            "_cmd": "./tools/concepts.py --correlations data/correlations.json --output data/concepts.json --concepts 10"
+            "_cmd": "./tools/concepts.py --correlations data/correlations.json --output data/concepts.json --concepts 3"
         },
         "pcmd": {
             "correlations": "data/correlations.json",
             "method": "<class 'ate.concepts.gnclustering.GNClustering'>",
             "output": "data/concepts.json",
-            "concepts": 10,
+            "concepts": 3,
             "_date": "2021-05-30T11:32:04.775232",
             "_timestamp": 1622367124.775234,
-            "_cmd": "./tools/concepts.py --correlations data/correlations.json --output data/concepts.json --concepts 10"
+            "_cmd": "./tools/concepts.py --correlations data/correlations.json --output data/concepts.json --concepts 3"
+        },
+        "concepts": [
+            [
+                "offsid",
+                "cheat",
+                "book",
+                "handbal",
+                "clear",
+                "pen",
+                "foul",
+                "dive",
+                "refere",
+                "decis",
+                "var",
+                "ref",
+                "given",
+                "penalti"
+            ],
+            [
+                "live",
+                "gol",
+                "hit",
+                "ff",
+                "post",
+                "reddit",
+                "stream",
+                "onlin",
+                "link",
+                "free",
+                "bring",
+                "manchest"
+            ],
+            [
+                "equalis",
+                "kick",
+                "shot",
+                "header",
+                "great",
+                "deflect",
+                "score",
+                "corner",
+                "net",
+                "save"
+            ]
         }
     }
 
@@ -96,12 +140,13 @@ def main():
 
     # get the meta arguments
     cmd, pcmd = tools.meta(args), tools.meta(args)
-    cmd['method'], pcmd['method'] = str(vars(args)['method']), str(vars(args)['method'])
+    cmd['method'], pcmd['method'] = str(args.method), str(args.method)
 
-    extractor = create_extractor(args.method, file=args.correlations, **vars(args)) # create the extractor
+    extractor = create_extractor(args.method, **vars(args)) # create the extractor
+    concepts = extract(extractor, args.concepts, **vars(args)) # extract the concepts
 
     # save the meta data and concepts to file
-    tools.save(args.output, { 'cmd': cmd, 'pcmd': pcmd })
+    tools.save(args.output, { 'cmd': cmd, 'pcmd': pcmd, 'concepts': concepts })
 
 def create_extractor(_type, correlations, *args, **kwargs):
     """
@@ -119,6 +164,27 @@ def create_extractor(_type, correlations, *args, **kwargs):
 
     with open(correlations) as file:
         return _type(file=file, *args, **kwargs)
+
+def extract(extractor, n, *args, **kwargs):
+    """
+    Extract clusters from the correlations.
+    Any arguments or keyword arguments are passed on to the :class:`~ate.concepts.TermClusteringAlgorithm.cluster` function.
+
+    :param extractor: The extractor to use to extract clusters.
+    :type extractor: :class:`~ate.concepts.TermClusteringAlgorithm`
+    :param n: The number of clusters to extract.
+    :type n: int
+
+    :return: A list of term clusters.
+             Unlike the specifications of the :class:`~ate.concepts.TermClusteringAlgorithm` class, this function returns a list of lists to facilitate JSON encoding.
+             The concepts are sorted in descending order of size.
+    :rtype: list
+    """
+
+    concepts = extractor.cluster(n, *args, **kwargs)
+    concepts = [ list(concept) for concept in concepts ]
+    concepts = sorted(concepts, key=len, reverse=True)
+    return concepts
 
 def method(method):
     """

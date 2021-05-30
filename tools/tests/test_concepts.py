@@ -34,6 +34,52 @@ class TestConcepts(unittest.TestCase):
         path = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/ate/correlations.json')
         self.assertTrue(isinstance(concepts.create_extractor(GNClustering, correlations=path), TermClusteringAlgorithm))
 
+    def test_extract_list_of_lists(self):
+        """
+        Test that when extracting, the function returns a list of lists.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/ate/correlations.json')
+        extractor = concepts.create_extractor(GNClustering, correlations=path)
+        _concepts = concepts.extract(extractor, 10)
+        self.assertEqual(list, type(_concepts))
+        self.assertTrue(all( list == type(concept) for concept in _concepts ))
+
+    def test_extract_1_concept(self):
+        """
+        Test that when extracting one concept, there is a list of list with all terms.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/ate/correlations.json')
+        with open(path) as f:
+            terms = set(json.loads(f.readline())['correlations'])
+
+        extractor = concepts.create_extractor(GNClustering, correlations=path)
+        _concepts = concepts.extract(extractor, 1)
+        self.assertEqual(1, len(_concepts))
+        self.assertEqual(terms, set(_concepts[0]))
+
+    def test_extract_n_concepts(self):
+        """
+        Test that when extracting concepts, the correct number of concepts are returned.
+        This test ignores the fact that sometimes the term graph may be too fragmented, returning too many concepts.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/ate/correlations.json')
+        extractor = concepts.create_extractor(GNClustering, correlations=path)
+        _concepts = concepts.extract(extractor, 15)
+        self.assertEqual(15, len(_concepts))
+
+    def test_extract_sorted(self):
+        """
+        Test that the extracted concepts are sorted with the largest clusters first.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/ate/correlations.json')
+        extractor = concepts.create_extractor(GNClustering, correlations=path)
+        _concepts = concepts.extract(extractor, 15)
+        self.assertTrue(all( len(_concepts[i]) >= len(_concepts[i + 1]) for i in range(len(_concepts) - 1) ))
+
     def test_method_lowercase(self):
         """
         Test that the method parsing converts the string to lowercase.
