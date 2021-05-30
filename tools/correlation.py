@@ -258,7 +258,8 @@ def method(method):
     The accepted methods are:
 
         #. :func:`~ate.bootstrapping.probability.pmi.PMIBootstrapper`,
-        #. :func:`~ate.bootstrapping.probability.chi.ChiBootstrapper`
+        #. :func:`~ate.bootstrapping.probability.chi.ChiBootstrapper`,
+        #. :func:`~ate.bootstrapping.probability.llratio.LogLikelihoodRatioBootstrapper`
 
     :param method: The method string.
     :type method: str
