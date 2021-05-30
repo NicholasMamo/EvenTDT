@@ -182,6 +182,9 @@ tools_tests() {
 	echo -e "${HIGHLIGHT}Consumer${DEFAULT}"
 	python3 -m unittest tools.tests.test_consume
 
+	echo -e "${HIGHLIGHT}Concepts${DEFAULT}"
+	python3 -m unittest tools.tests.test_concepts
+
 	echo -e "${HIGHLIGHT}Correlation${DEFAULT}"
 	python3 -m unittest tools.tests.test_correlation
 
