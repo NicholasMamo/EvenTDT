@@ -3,11 +3,12 @@
 """
 A tool to extract lexical concepts from terms.
 
-To extract concepts, specify the output file:
+To extract concepts, specify two files: a file containing the correlations between files, generated using the :mod:`~tools.correlation` tool, and the output file:
 
 .. code-block:: bash
 
     ./tools/terms.py \\
+    --correlations data/terms.json \\
     --output data/concepts.json
 
 The output is a JSON file with the following structure:
@@ -16,22 +17,25 @@ The output is a JSON file with the following structure:
 
     {
         "cmd": {
+            "correlations": "data/correlations.json",
             "output": "data/concepts.json",
             "_date": "2021-05-30T11:32:04.775216",
             "_timestamp": 1622367124.7752266,
-            "_cmd": "./tools/concepts.py --output data/concepts.json"
+            "_cmd": "./tools/concepts.py --correlations data/correlations.json --output data/concepts.json"
         },
         "pcmd": {
+            "correlations": "data/correlations.json",
             "output": "data/concepts.json",
             "_date": "2021-05-30T11:32:04.775232",
             "_timestamp": 1622367124.775234,
-            "_cmd": "./tools/concepts.py --output data/concepts.json"
+            "_cmd": "./tools/concepts.py --correlations data/correlations.json --output data/concepts.json"
         }
     }
 
 
 The full list of accepted arguments:
 
+    - ``-c --correlations``     *<Required>* The path to the file containing correlations between terms, generated using the :mod:`~tools.correlation` tool.
     - ``-o --output``           *<Required>* The path to the file where to store the extracted terms.
 """
 
@@ -55,12 +59,15 @@ def setup_args():
 
     Accepted arguments:
 
+        - ``-c --correlations``     *<Required>* The path to the file containing correlations between terms, generated using the :mod:`~tools.correlation` tool.
         - ``-o --output``           *<Required>* The path to the file where to store the extracted concepts.
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
     """
 
+    parser.add_argument('-c', '--correlations', required=True,
+                        help='<Required> The path to the file containing correlations between terms, generated using the ``correlation`` tool.')
     parser.add_argument('-o', '--output', type=str, required=True,
                         help='<Required> The path to the file where to store the extracted concepts.')
 
