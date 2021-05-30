@@ -31,7 +31,7 @@ class TestConsume(unittest.TestCase):
         Test that when loading the filter tokens, all words are returned.
         """
 
-        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'consume', 'filters.csv')
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/consume/filters.csv')
         filters = consume.filters(file)
 
         """
@@ -46,7 +46,7 @@ class TestConsume(unittest.TestCase):
         Test that when loading the filter tokens, they are returned as a list.
         """
 
-        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'consume', 'filters.csv')
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/consume/filters.csv')
         filters = consume.filters(file)
 
         """
@@ -59,7 +59,7 @@ class TestConsume(unittest.TestCase):
         Test that when loading the filter tokens, the newline symbol is removed.
         """
 
-        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'consume', 'filters.csv')
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/consume/filters.csv')
         filters = consume.filters(file)
 
         """
@@ -68,12 +68,23 @@ class TestConsume(unittest.TestCase):
         self.assertFalse('\n' in filters)
         self.assertTrue(all( not token.endswith('\n') for token in filters ))
 
+    def test_splits_concepts(self):
+        """
+        Test that when loading splits from concepts, the concepts are loaded correctly.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/ate/concepts.json')
+        splits = consume.splits(file)
+        with open(file) as f:
+            concepts = json.loads(f.readline())['concepts']
+            self.assertEqual(concepts, splits)
+
     def test_splits_all_words(self):
         """
         Test that when loading the split tokens, all words are returned.
         """
 
-        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'consume', 'splits.csv')
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/consume/splits.csv')
         splits = consume.splits(file)
 
         """
@@ -84,12 +95,24 @@ class TestConsume(unittest.TestCase):
         self.assertEqual([ 'ref', 'refere', 'var' ], splits[1])
         self.assertEqual([ 'goal', 'shot', 'keeper', 'save' ], splits[2])
 
+    def test_splits_concepts_list(self):
+        """
+        Test that when loading splits from concepts, they are returned as a list
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/ate/concepts.json')
+        splits = consume.splits(file)
+
+        # assert that the splits list is returned as a list
+        self.assertEqual(list, type(splits))
+        self.assertTrue(all( type(split) is list for split in splits ))
+
     def test_splits_list(self):
         """
         Test that when loading the split tokens, they are returned as a list.
         """
 
-        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'consume', 'splits.csv')
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/consume/splits.csv')
         splits = consume.splits(file)
 
         """
@@ -103,7 +126,7 @@ class TestConsume(unittest.TestCase):
         Test that when loading the split tokens, the newline symbol is removed.
         """
 
-        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'consume', 'splits.csv')
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/consume/splits.csv')
         splits = consume.splits(file)
 
         """
@@ -117,7 +140,7 @@ class TestConsume(unittest.TestCase):
         Test that when loading the split tokens, there are no commas.
         """
 
-        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'consume', 'splits.csv')
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/consume/splits.csv')
         splits = consume.splits(file)
 
         """
@@ -191,7 +214,7 @@ class TestConsume(unittest.TestCase):
         Test that when creating a consumer with splits, the function create a token split consumer with the correct consumers.
         """
 
-        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'consume', 'splits.csv')
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/consume/splits.csv')
         splits = consume.splits(file)
 
         idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
@@ -233,7 +256,7 @@ class TestConsume(unittest.TestCase):
         Test that when creating a consumer with splits, the function sends the right parameters to the child consumers.
         """
 
-        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'consume', 'splits.csv')
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/consume/splits.csv')
         splits = consume.splits(file)
 
         idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
@@ -304,7 +327,7 @@ class TestConsume(unittest.TestCase):
         Test that when creating a consumer with filters, the function create a token filter consumer with the correct consumers.
         """
 
-        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'consume', 'filters.csv')
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/consume/filters.csv')
         filters = consume.filters(file)
 
         idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
@@ -340,7 +363,7 @@ class TestConsume(unittest.TestCase):
         Test that when creating a consumer with filters, the function sends the right parameters to the child consumers.
         """
 
-        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'consume', 'filters.csv')
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/consume/filters.csv')
         filters = consume.filters(file)
 
         idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')

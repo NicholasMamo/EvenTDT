@@ -222,7 +222,7 @@ The full list of accepted arguments:
     - ``--skip-retweets``           *<Optional>* Skip retweets when reading tweets from a file, defaults to False.
     - ``--skip-unverified``         *<Optional>* Skip tweets from unverified authors when reading tweets from a file, defaults to False.
     - ``--filters``                 *<Optional>* The path to a file containing filters for the consumer, filtering the stream based on the tokens in tweets. If given, the tool expects a CSV file, where each line contains one token.
-    - ``--splits``                  *<Optional>* The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split.
+    - ``--splits``                  *<Optional>* The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split, or a JSON file created by the :mod:`~tools.concepts` tool.
     - ``--periodicity``             *<Optional>* The periodicity in seconds of the consumer, defaults to 60 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer` and :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`).
     - ``--scheme``                  *<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used.
     - ``--min-volume``              *<Optional>* The minimum volume to consider the stream to be active and look for breaking terms (used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`); defaults to 10.
@@ -280,7 +280,7 @@ def setup_args():
         - ``--skip-retweets``           *<Optional>* Skip retweets when reading tweets from a file, defaults to False.
         - ``--skip-unverified``         *<Optional>* Skip tweets from unverified authors when reading tweets from a file, defaults to False.
         - ``--filters``                 *<Optional>* The path to a file containing filters for the consumer, filtering the stream based on the tokens in tweets. If given, the tool expects a CSV file, where each line contains one token.
-        - ``--splits``                  *<Optional>* The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split.
+        - ``--splits``                  *<Optional>* The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split, or a JSON file created by the :mod:`~tools.concepts` tool.
         - ``--periodicity``             *<Optional>* The periodicity in seconds of the consumer, defaults to 60 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer` and :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`).
         - ``--scheme``                  *<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used. This can be overwritten if there is event understanding.
         - ``--min-volume``              *<Optional>* The minimum volume to consider the stream to be active and look for breaking terms (used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`); defaults to 10.
@@ -330,7 +330,7 @@ def setup_args():
     parser.add_argument('--filters', type=filters, required=False, default=None,
                         help='<Optional> The path to a file containing filters for the consumer, filtering the stream based on the tokens in tweets. If given, the tool expects a CSV file, where each line contains one token.')
     parser.add_argument('--splits', type=splits, required=False, default=None,
-                        help='<Optional> The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split.')
+                        help='<Optional> The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split, or a JSON file created by the :mod:`~tools.concepts` tool.')
     parser.add_argument('--periodicity', type=int, required=False, default=60,
                         help='<Optional> The periodicity in seconds of the consumer, defaults to 60 seconds (used by the `FIREConsumer`, `StatConsumer` and `ZhaoConsumer`).')
     parser.add_argument('--scheme', type=scheme, required=False, default=None,
@@ -801,7 +801,7 @@ def splits(file):
     Load the splits from the given file.
 
     :param file: The path to the splits file.
-                 This function expects a CSV file.
+                 This function expects a CSV file or a JSON file created by the :mod:`~tools.concepts` tool.
     :type file: str
 
     :return: A list of splits.
@@ -811,10 +811,13 @@ def splits(file):
     splits = [ ]
 
     with open(file) as f:
-        for line in f:
-            tokens = line.split(',')
-            tokens = [ token.strip() for token in tokens ]
-            splits.append(tokens)
+        if tools.is_json(file):
+            splits = json.loads(f.readline())['concepts']
+        else:
+            for line in f:
+                tokens = line.split(',')
+                tokens = [ token.strip() for token in tokens ]
+                splits.append(tokens)
 
     return splits
 
