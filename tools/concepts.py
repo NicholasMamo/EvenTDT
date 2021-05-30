@@ -20,17 +20,19 @@ The output is a JSON file with the following structure:
             "correlations": "data/correlations.json",
             "method": "<class 'ate.concepts.gnclustering.GNClustering'>",
             "output": "data/concepts.json",
+            "concepts": 10,
             "_date": "2021-05-30T11:32:04.775216",
             "_timestamp": 1622367124.7752266,
-            "_cmd": "./tools/concepts.py --correlations data/correlations.json --output data/concepts.json"
+            "_cmd": "./tools/concepts.py --correlations data/correlations.json --output data/concepts.json --concepts 10"
         },
         "pcmd": {
             "correlations": "data/correlations.json",
             "method": "<class 'ate.concepts.gnclustering.GNClustering'>",
             "output": "data/concepts.json",
+            "concepts": 10,
             "_date": "2021-05-30T11:32:04.775232",
             "_timestamp": 1622367124.775234,
-            "_cmd": "./tools/concepts.py --correlations data/correlations.json --output data/concepts.json"
+            "_cmd": "./tools/concepts.py --correlations data/correlations.json --output data/concepts.json --concepts 10"
         }
     }
 
@@ -40,6 +42,7 @@ The full list of accepted arguments:
     - ``-c --correlations``     *<Required>* The path to the file containing correlations between terms, generated using the :mod:`~tools.correlation` tool.
     - ``-m --method``           *<Required>* The method to use to extract the lexical concepts; supported: `GNClustering`.
     - ``-o --output``           *<Required>* The path to the file where to store the extracted terms.
+    - ``--concepts``            *<Required>* The number of concepts to extract.
 """
 
 import argparse
@@ -66,6 +69,7 @@ def setup_args():
         - ``-c --correlations``     *<Required>* The path to the file containing correlations between terms, generated using the :mod:`~tools.correlation` tool.
         - ``-m --method``           *<Required>* The method to use to extract the lexical concepts; supported: `GNClustering`.
         - ``-o --output``           *<Required>* The path to the file where to store the extracted concepts.
+        - ``--concepts``            *<Required>* The number of concepts to extract.
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
@@ -77,6 +81,8 @@ def setup_args():
                         help='<Required> The method to use to extract the lexical concepts; supported: `GNClustering`.')
     parser.add_argument('-o', '--output', type=str, required=True,
                         help='<Required> The path to the file where to store the extracted concepts.')
+    parser.add_argument('--concepts', type=nn, required=True,
+                        help='<Optional> The number of concepts to extract.')
 
     args = parser.parse_args()
     return args
@@ -122,8 +128,7 @@ def method(method):
 
 def nn(n):
     """
-    Validate the given integer.
-    The number of clusters must be 1 or greater, and always an integer.
+    Validate that the given integer is a natural number, or an integer greater than 0.
 
     :param n: The number of clusters to extract.
     :type n: str
