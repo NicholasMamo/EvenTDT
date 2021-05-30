@@ -131,7 +131,7 @@ When providing splits, the tool creates one consumer for each split: each consum
     If none of the keywords in a tweet are part of a split, the tweet is not processed at all.
     If a tweet has keywords from multiple splits, the tweet is processed multiple times.
 
-The output is a JSON file with the following structure:
+The output is a JSON file with the following structure, although additional data can be provided by the different consumers, not shown here:
 
 .. code-block:: json
 
@@ -142,7 +142,7 @@ The output is a JSON file with the following structure:
             "_date": "2020-10-18T12:56:45.635795",
             "_timestamp": 1603018605.6359715,
             "burst_start": 0.5,
-            "consumer": "ELDConsumer",
+            "consumer": "<class 'queues.consumers.algorithms.eld_consumer.ELDConsumer'>",
             "file": "data/event/event.json",
             "freeze_period": 20,
             "max_inactivity": 60,
