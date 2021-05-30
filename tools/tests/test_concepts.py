@@ -16,6 +16,7 @@ for path in paths:
     if path not in sys.path:
         sys.path.append(path)
 
+from ate.concepts import *
 import concepts
 from logger import logger
 logger.set_logging_level(logger.LogLevel.ERROR)
@@ -24,6 +25,21 @@ class TestConcepts(unittest.TestCase):
     """
     Test the functionality of the concepts tool.
     """
+
+    def test_method_lowercase(self):
+        """
+        Test that the method parsing converts the string to lowercase.
+        """
+
+        self.assertEqual(GNClustering, concepts.method('gnclustering'))
+        self.assertEqual(GNClustering, concepts.method('GNClustering'))
+
+    def test_method_unknown(self):
+        """
+        Test that if the method is unknown, the concepts tool raises an ArgumentTypeError.
+        """
+
+        self.assertRaises(argparse.ArgumentTypeError, concepts.method, 'unknown')
 
     def test_nn_string(self):
         """
