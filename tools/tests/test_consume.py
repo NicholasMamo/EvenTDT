@@ -131,6 +131,50 @@ class TestConsume(unittest.TestCase):
             original = data['meta']['seed'] + data['bootstrapped']
         self.assertEqual(original, terms)
 
+    def test_filters_keep_two(self):
+        """
+        Test that when the maximum number of terms is 2, the first 2 terms are returned.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/bootstrapping/bootstrapped.json')
+        with open(file) as f:
+            data = json.loads(''.join(f.readlines()))
+            terms = data['meta']['seed'] + data['bootstrapped']
+        self.assertEqual(terms[:2], consume.filters(file, keep=2))
+
+    def test_filters_no_keep(self):
+        """
+        Test that when no maximum number of terms is given, all terms are retained.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/bootstrapping/bootstrapped.json')
+        with open(file) as f:
+            data = json.loads(''.join(f.readlines()))
+            terms = data['meta']['seed'] + data['bootstrapped']
+        self.assertEqual(terms, consume.filters(file, keep=None))
+
+    def test_filters_keep(self):
+        """
+        Test that when the maximum number of terms is given, the first few terms are returned.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/bootstrapping/bootstrapped.json')
+        with open(file) as f:
+            data = json.loads(''.join(f.readlines()))
+            terms = data['meta']['seed'] + data['bootstrapped']
+        self.assertEqual(terms[:3], consume.filters(file, keep=3))
+
+    def test_filters_keep_many(self):
+        """
+        Test that when the maximum number of terms is higher than the number of terms, all terms are returned.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/bootstrapping/bootstrapped.json')
+        with open(file) as f:
+            data = json.loads(''.join(f.readlines()))
+            terms = data['meta']['seed'] + data['bootstrapped']
+        self.assertEqual(terms, consume.filters(file, keep=len(terms) + 1))
+
     def test_splits_concepts(self):
         """
         Test that when loading splits from concepts, the concepts are loaded correctly.

@@ -96,7 +96,8 @@ You can provide the filters as follows:
     --event data/event/event.json \\
     --understanding data/event/understanding.json \\
     --consumer ELDConsumer \\
-    --filters data/filters.json
+    --filters data/filters.json \\
+    --filters-keep 80
 
 .. warning::
 
@@ -161,6 +162,7 @@ The output is a JSON file with the following structure, although additional data
             "sample": 1,
             "speed": 1,
             "filters": null,
+            "filters_keep": null,
             "splits": null,
             "threshold": 0.5,
             "post_rate": 1.7,
@@ -190,6 +192,7 @@ The output is a JSON file with the following structure, although additional data
             "sample": 1,
             "speed": 1,
             "filters": null,
+            "filters_keep": null,
             "splits": null,
             "threshold": 0.5,
             "post_rate": 1.7,
@@ -222,6 +225,7 @@ The full list of accepted arguments:
     - ``--skip-retweets``           *<Optional>* Skip retweets when reading tweets from a file, defaults to False.
     - ``--skip-unverified``         *<Optional>* Skip tweets from unverified authors when reading tweets from a file, defaults to False.
     - ``--filters``                 *<Optional>* The path to a file containing filters for the consumer, filtering the stream based on the tokens in tweets. If given, the tool expects a CSV file, where each line contains one token.
+    - ``--filters-keep``            *<Optional>* The number of filter keywords to retain, most useful when reading keywords from the output of the :mod:`~tools.terms` or :mod:`~tools.bootstrap` tools, defaults to all keywords.
     - ``--splits``                  *<Optional>* The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split, or a JSON file created by the :mod:`~tools.concepts` tool.
     - ``--periodicity``             *<Optional>* The periodicity in seconds of the consumer, defaults to 60 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer` and :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`).
     - ``--scheme``                  *<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used.
@@ -280,6 +284,7 @@ def setup_args():
         - ``--skip-retweets``           *<Optional>* Skip retweets when reading tweets from a file, defaults to False.
         - ``--skip-unverified``         *<Optional>* Skip tweets from unverified authors when reading tweets from a file, defaults to False.
         - ``--filters``                 *<Optional>* The path to a file containing filters for the consumer, filtering the stream based on the tokens in tweets. If given, the tool expects a CSV file, where each line contains one token.
+        - ``--filters-keep``            *<Optional>* The number of filter keywords to retain, most useful when reading keywords from the output of the :mod:`~tools.terms` or :mod:`~tools.bootstrap` tools, defaults to all keywords.
         - ``--splits``                  *<Optional>* The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split, or a JSON file created by the :mod:`~tools.concepts` tool.
         - ``--periodicity``             *<Optional>* The periodicity in seconds of the consumer, defaults to 60 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer` and :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`).
         - ``--scheme``                  *<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used. This can be overwritten if there is event understanding.
@@ -327,8 +332,10 @@ def setup_args():
                         help='<Optional> Skip retweets when reading tweets from a file, defaults to False.')
     parser.add_argument('--skip-unverified', action="store_true",
                         help='<Optional> Skip tweets from unverified authors when reading tweets from a file, defaults to False.')
-    parser.add_argument('--filters', type=filters, required=False, default=None,
+    parser.add_argument('--filters', required=False, default=None,
                         help='<Optional> The path to a file containing filters for the consumer, filtering the stream based on the tokens in tweets. If given, the tool expects a CSV file, where each line contains one token.')
+    parser.add_argument('--filters-keep', type=int, required=False, default=None,
+                        help='<Optional> The number of filter keywords to retain, most useful when reading keywords from the output of the `terms` or `bootstrap` tools, defaults to all keywords.')
     parser.add_argument('--splits', type=splits, required=False, default=None,
                         help='<Optional> The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split, or a JSON file created by the :mod:`~tools.concepts` tool.')
     parser.add_argument('--periodicity', type=int, required=False, default=60,
@@ -374,6 +381,10 @@ def main():
     cmd['scheme'] = str(type(vars(args)['scheme']))
     pcmd['consumer'] = str(vars(args)['consumer'])
     pcmd['scheme'] = str(type(vars(args)['scheme']))
+
+    # load the filters
+    filter = filters(args.filters, args.filters_keep) if args.filters else [ ]
+    args.filters, pcmd['filters'] = filter, filter
 
     """
     Register the queue in the base manager.
@@ -821,13 +832,16 @@ def splits(file):
 
     return splits
 
-def filters(file):
+def filters(file, keep=None):
     """
     Load the filters from the given file.
 
     :param file: The path to the filters file.
                  This function expects file with one token on each line.
     :type file: str
+    :param keep: The number of terms to keep.
+                 If it is not given, all terms are used.
+    :type keep: int or None
 
     :return: A list of filters.
     :rtype: list of str
@@ -848,9 +862,9 @@ def filters(file):
                 elif 'terms' in data:
                     filters.extend([ term['term'] for term in data['terms'] ])
         else:
-            return [ token.strip() for token in f.readlines() ]
+            filters = [ token.strip() for token in f.readlines() ]
 
-    return filters
+    return filters[:keep] if keep else filters
 
 if __name__ == "__main__":
     main()
