@@ -36,5 +36,8 @@ def main():
 
     args = setup_args()
 
+    # get the meta arguments
+    cmd, pcmd = tools.meta(args), tools.meta(args)
+
 if __name__ == "__main__":
     main()
