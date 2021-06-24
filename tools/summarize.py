@@ -240,7 +240,7 @@ def main():
     streams = load_splits(args.file)
     summarizer = create_summarizer(args.method, l=vars(args)['lambda'])
     terms = load_terms(args.domain_terms, args.max_domain_terms) if args.domain_terms else args.domain_terms
-    summaries = summarize(summarizer, timeline, verbose=args.verbose,
+    summaries = summarize(summarizer, timeline, streams, verbose=args.verbose,
                           max_documents=args.documents, length=args.length, clean=args.clean,
                           with_query=args.with_query, query_only=args.query_only,
                           terms=terms)
@@ -334,7 +334,7 @@ def create_summarizer(method, l=0.5):
 
     return method()
 
-def summarize(summarizer, timeline, verbose=False, max_documents=None, length=140,
+def summarize(summarizer, timeline, splits, verbose=False, max_documents=None, length=140,
               clean=False, with_query=True, query_only=False, terms=None):
     """
     Summarize the given timeline using the given algorithm.
@@ -345,6 +345,8 @@ def summarize(summarizer, timeline, verbose=False, max_documents=None, length=14
     :param timeline: The timeline to summarize.
                      In case of a split stream, the timeline could be a list of timelines instead.
     :type timeline: :class:`~summarization.timeline.Timeline` or list of :class:`~summarization.timeline.Timeline`
+    :param splits: A list of splits, one for each timeline.
+    :type splits: list of list of str
     :param verbose: A boolean indicating whether to print the summaries as they are generated.
     :type verbose: bool
     :param max_documents: The maximum number of documents to use when summarizing, with a preference for long documents.
@@ -373,7 +375,7 @@ def summarize(summarizer, timeline, verbose=False, max_documents=None, length=14
                            capitalize_first=True, remove_unicode_entities=False, remove_urls=True,
                            split_hashtags=True, remove_retweet_prefix=True)
 
-    merged = merge(timeline)
+    merged = merge(timeline, splits)
 
     for nodes in merged:
         for node in nodes:
@@ -420,23 +422,48 @@ def summarize(summarizer, timeline, verbose=False, max_documents=None, length=14
 
     return summaries
 
-def merge(timelines):
+def merge(timelines, splits=None):
     """
     Merge the given timelines and extract a list of lists of nodes.
 
     :param timeline: The timeline to summarize.
                      In case of a split stream, the timeline could be a list of timelines instead.
     :type timeline: :class:`~summarization.timeline.Timeline` or list of :class:`~summarization.timeline.Timeline`
+    :param splits: A list of splits, one for each timeline.
+                   If `None` is given, it is assumed that only one timeline is given.
+    :type splits: list of list of str
 
     :return: A list of list of nodes.
              Each outer list is made up of an inner list of nodes published at around the same time, as specified by the timeline's expiry.
+             The split, if applicable, is saved as an attribute on each node.
     :rtype: list of list of :class:`~summarization.timeline.nodes.Node`
     """
 
-    if type(timelines) is list:
-        pass
+    nodes = [ ]
+
+    if splits:
+        # add the stream to each node
+        for timeline, split in zip(timelines, splits):
+            for node in timeline.nodes:
+                node.attributes['split'] = split
+
+        # get a list of nodes sorted in chronological order
+        _nodes = [ node for timeline in timelines for node in timeline.nodes ]
+        _nodes = sorted(_nodes, key=lambda node: node.created_at)
+
+        expiry = timelines[0].expiry # get the expiry of the first timeline, assuming that all timelines have the same expiry
+
+        # create the merged timeline
+        created_at = 0
+        for node in _nodes:
+            if node.created_at -  created_at >= expiry: # create a new combined node if the current node has expired
+                nodes.append([ ])
+                created_at = node.created_at
+            nodes[-1].append(node)
     else:
-        return [ [ node ] for node in timelines.nodes ]
+        nodes = [ [ node ] for node in timelines.nodes ]
+
+    return nodes
 
 def tabulate(summaries):
     """

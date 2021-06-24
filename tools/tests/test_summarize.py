@@ -51,17 +51,17 @@ class TestSummarize(unittest.TestCase):
         cluster = Cluster(documents)
         timeline.add(cluster=cluster, topic=Vector({ 'where': 1 }))
 
-        summaries = summarize.summarize(summarizer, timeline, length=30, with_query=False)
+        summaries = summarize.summarize(summarizer, timeline, splits=[], length=30, with_query=False)
         self.assertEqual(1, len(summaries[0].documents))
         self.assertEqual(str(documents[2]), str(summaries[0]))
 
-        summaries = summarize.summarize(summarizer, timeline, length=30, with_query=True)
+        summaries = summarize.summarize(summarizer, timeline, splits=[], length=30, with_query=True)
         self.assertEqual(1, len(summaries[0].documents))
         self.assertEqual(str(documents[2]), str(summaries[0]))
 
         timeline = Timeline(TopicalClusterNode, 60, 0.5)
         timeline.add(cluster=cluster, topic=Vector({ 'this': 1 }))
-        summaries = summarize.summarize(summarizer, timeline, length=30, with_query=True)
+        summaries = summarize.summarize(summarizer, timeline, splits=[], length=30, with_query=True)
         self.assertEqual(1, len(summaries[0].documents))
         self.assertEqual(str(documents[1]), str(summaries[0]))
 
@@ -78,17 +78,17 @@ class TestSummarize(unittest.TestCase):
         cluster = Cluster(documents)
         timeline.add(cluster=cluster, topic=Vector({ 'where': 1 }))
 
-        summaries = summarize.summarize(summarizer, timeline, length=30, with_query=False)
+        summaries = summarize.summarize(summarizer, timeline, splits=[], length=30, with_query=False)
         self.assertEqual(1, len(summaries[0].documents))
         self.assertEqual(str(documents[1]), str(summaries[0]))
 
-        summaries = summarize.summarize(summarizer, timeline, length=30, with_query=True)
+        summaries = summarize.summarize(summarizer, timeline, splits=[], length=30, with_query=True)
         self.assertEqual(1, len(summaries[0].documents))
         self.assertEqual(str(documents[2]), str(summaries[0]))
 
         timeline = Timeline(TopicalClusterNode, 60, 0.5)
         timeline.add(cluster=cluster, topic=Vector({ 'this': 1, 'pipe': 1 }))
-        summaries = summarize.summarize(summarizer, timeline, length=30, with_query=True)
+        summaries = summarize.summarize(summarizer, timeline, splits=[], length=30, with_query=True)
         self.assertEqual(1, len(summaries[0].documents))
         self.assertEqual(str(documents[0]), str(summaries[0]))
 
@@ -107,7 +107,7 @@ class TestSummarize(unittest.TestCase):
         cluster = Cluster(documents)
         timeline.add(cluster=cluster, topic=query)
 
-        summaries = summarize.summarize(summarizer, timeline, length=30, with_query=True)
+        summaries = summarize.summarize(summarizer, timeline, splits=[], length=30, with_query=True)
         self.assertEqual(1, len(summaries[0].documents))
         self.assertEqual(query.dimensions, summaries[0].attributes['query'])
 
@@ -126,7 +126,7 @@ class TestSummarize(unittest.TestCase):
         cluster = Cluster(documents)
         timeline.add(cluster=cluster, topic=query)
 
-        summaries = summarize.summarize(summarizer, timeline, length=30, with_query=False)
+        summaries = summarize.summarize(summarizer, timeline, splits=[], length=30, with_query=False)
         self.assertEqual(1, len(summaries[0].documents))
         self.assertFalse('query' in summaries[0].attributes)
 
@@ -144,11 +144,11 @@ class TestSummarize(unittest.TestCase):
         timeline.add(cluster=cluster, topic=Vector({ 'cigar': 1, 'pipe': 1 })) # no discrimination here
 
         terms = [ 'cigar' ]
-        summaries = summarize.summarize(summarizer, timeline, length=30, with_query=True, max_documents=1, terms=terms)
+        summaries = summarize.summarize(summarizer, timeline, splits=[], length=30, with_query=True, max_documents=1, terms=terms)
         self.assertTrue(summaries[0].documents[0] in documents[1:])
 
         terms = [ 'pipe' ]
-        summaries = summarize.summarize(summarizer, timeline, length=30, with_query=True, max_documents=1, terms=terms)
+        summaries = summarize.summarize(summarizer, timeline, splits=[], length=30, with_query=True, max_documents=1, terms=terms)
         self.assertEqual(documents[0], summaries[0].documents[0])
 
     def test_summarize_stores_created_at(self):
@@ -166,7 +166,7 @@ class TestSummarize(unittest.TestCase):
         cluster = Cluster(documents)
         timeline.add(timestamp=timestamp, cluster=cluster, topic=Vector({ 'cigar': 1, 'pipe': 1 })) # no discrimination here
 
-        summaries = summarize.summarize(summarizer, timeline, length=30)
+        summaries = summarize.summarize(summarizer, timeline, splits=[], length=30)
         self.assertEqual(timestamp, summaries[0].attributes['timestamp'])
 
     def test_tabulate_empty(self):
@@ -190,7 +190,7 @@ class TestSummarize(unittest.TestCase):
         cluster = Cluster(documents)
         timeline.add(timestamp=timestamp, cluster=cluster, topic=Vector({ 'cigar': 1, 'pipe': 1 })) # no discrimination here
 
-        summaries = summarize.summarize(summarizer, timeline, length=30)
+        summaries = summarize.summarize(summarizer, timeline, splits=[], length=30)
         self.assertEqual(len(summaries), len(summarize.tabulate(summaries)))
 
     def test_tabulate_includes_timestamp(self):
@@ -207,7 +207,7 @@ class TestSummarize(unittest.TestCase):
         cluster = Cluster(documents)
         timeline.add(timestamp=timestamp, cluster=cluster, topic=Vector({ 'cigar': 1, 'pipe': 1 })) # no discrimination here
 
-        summaries = summarize.summarize(summarizer, timeline, length=30)
+        summaries = summarize.summarize(summarizer, timeline, splits=[], length=30)
         tabulated = summarize.tabulate(summaries)
         self.assertEqual(timestamp, tabulated[0][0])
 
@@ -227,7 +227,7 @@ class TestSummarize(unittest.TestCase):
         cluster = Cluster(documents)
         timeline.add(timestamp=timestamp, cluster=cluster, topic=query) # no discrimination here
 
-        summaries = summarize.summarize(summarizer, timeline, length=30)
+        summaries = summarize.summarize(summarizer, timeline, splits=[], length=30)
         tabulated = summarize.tabulate(summaries)
         self.assertTrue(all( round(query.dimensions[topic], 7) == round(json.loads(tabulated[0][1])[topic], 7) for topic in query.dimensions ))
 
@@ -247,7 +247,7 @@ class TestSummarize(unittest.TestCase):
         cluster = Cluster(documents)
         timeline.add(timestamp=timestamp, cluster=cluster, topic=query) # no discrimination here
 
-        summaries = summarize.summarize(summarizer, timeline, length=30)
+        summaries = summarize.summarize(summarizer, timeline, splits=[], length=30)
         tabulated = summarize.tabulate(summaries)
         self.assertEqual(str, type(tabulated[0][1]))
 
@@ -266,7 +266,7 @@ class TestSummarize(unittest.TestCase):
         cluster = Cluster(documents)
         timeline.add(timestamp=timestamp, cluster=cluster, topic=query) # no discrimination here
 
-        summaries = summarize.summarize(summarizer, timeline, length=30)
+        summaries = summarize.summarize(summarizer, timeline, splits=[], length=30)
         tabulated = summarize.tabulate(summaries)
         decoded = json.loads(tabulated[0][1])
         self.assertEqual(max(query.dimensions, key=query.dimensions.get), list(decoded.keys())[0])
@@ -290,7 +290,7 @@ class TestSummarize(unittest.TestCase):
         cluster = Cluster(documents)
         timeline.add(timestamp=timestamp, cluster=cluster, topic=query) # no discrimination here
 
-        summaries = summarize.summarize(summarizer, timeline, length=30, with_query=False)
+        summaries = summarize.summarize(summarizer, timeline, splits=[], length=30, with_query=False)
         tabulated = summarize.tabulate(summaries)
         self.assertEqual(json.dumps({ }), tabulated[0][1])
 
@@ -308,7 +308,7 @@ class TestSummarize(unittest.TestCase):
         cluster = Cluster(documents)
         timeline.add(timestamp=timestamp, cluster=cluster, topic=Vector({ 'cigar': 1, 'pipe': 1 })) # no discrimination here
 
-        summaries = summarize.summarize(summarizer, timeline, length=30)
+        summaries = summarize.summarize(summarizer, timeline, splits=[], length=30)
         tabulated = summarize.tabulate(summaries)
         self.assertEqual(str, type(tabulated[0][-1]))
         self.assertTrue(any( tabulated[0][-1] == str(document) for document in documents ))
@@ -572,3 +572,86 @@ class TestSummarize(unittest.TestCase):
         merged = summarize.merge(timeline)
         self.assertEqual(len(timeline.nodes), len(merged))
         self.assertTrue(all( _og == nodes[0] for _og, nodes in zip(timeline.nodes, merged) ))
+
+    def test_merge_split_list_of_lists(self):
+        """
+        Test that when merging a split timeline, the nodes are returned as a list of list of nodes.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/timelines/#ParmaMilan-streams.json')
+        timelines, splits = summarize.load_timeline(file), summarize.load_splits(file)
+        merged = summarize.merge(timelines, splits)
+        self.assertTrue(list, type(merged))
+        self.assertTrue(all( list == type(nodes) for nodes in merged ))
+        self.assertTrue(all( isinstance(node, Node) for nodes in merged for node in nodes ))
+
+    def test_merge_split_all_nodes(self):
+        """
+        Test that when merging a split timeline, all nodes are present.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/timelines/#ParmaMilan-streams.json')
+        timelines, splits = summarize.load_timeline(file), summarize.load_splits(file)
+        merged = summarize.merge(timelines, splits)
+        self.assertEqual(len([ node for timeline in timelines for node in timeline.nodes ]),
+                             len([ node for nodes in merged for node in nodes ]))
+        self.assertTrue(all( any( node in nodes for nodes in merged ) for timeline in timelines for node in timeline.nodes))
+
+    def test_merge_split_all_nodes_similar_time(self):
+        """
+        Test that all nodes in the same list have a similar time.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/timelines/#ParmaMilan-streams.json')
+        timelines, splits = summarize.load_timeline(file), summarize.load_splits(file)
+        merged = summarize.merge(timelines, splits)
+
+        # check the expiry of each list of nodes
+        expiry = timelines[0].expiry
+        for nodes in merged:
+            self.assertTrue(nodes[-1].created_at - nodes[0].created_at <= expiry)
+
+    def test_merge_split_chronological_lists(self):
+        """
+        Test that the node lists are ordered chronologically.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/timelines/#ParmaMilan-streams.json')
+        timelines, splits = summarize.load_timeline(file), summarize.load_splits(file)
+        merged = summarize.merge(timelines, splits)
+
+        self.assertTrue(all( merged[i][0].created_at < merged[i + 1][0].created_at
+                             for i in range(len(merged) - 1) ))
+
+    def test_merge_split_chronological_nodes(self):
+        """
+        Test that the nodes in the lists are ordered chronologically.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/timelines/#ParmaMilan-streams.json')
+        timelines, splits = summarize.load_timeline(file), summarize.load_splits(file)
+        merged = summarize.merge(timelines, splits)
+
+        for nodes in merged:
+            self.assertTrue(all( nodes[i].created_at < nodes[i + 1].created_at for i in range(len(nodes) - 1) ))
+
+    def test_merge_split_saves_split_attribute(self):
+        """
+        Test that when merging timelines, the split is saved as an attribute.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/timelines/#ParmaMilan-streams.json')
+        timelines, splits = summarize.load_timeline(file), summarize.load_splits(file)
+        merged = summarize.merge(timelines, splits)
+        self.assertTrue(all( 'split' in node.attributes for nodes in merged for node in nodes ))
+
+    def test_merge_split_correct_split(self):
+        """
+        Test that when merging timelines, the correct split is saved as an attribute.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/timelines/#ParmaMilan-streams.json')
+        timelines, splits = summarize.load_timeline(file), summarize.load_splits(file)
+        merged = summarize.merge(timelines, splits)
+        for timeline, split in zip(timelines, splits):
+            self.assertTrue(all( split == node.attributes['split'] for node in timeline.nodes ))
