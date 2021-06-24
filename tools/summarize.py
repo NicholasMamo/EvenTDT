@@ -237,6 +237,7 @@ def main():
 
     # summarize the timeline
     timeline = load_timeline(args.file)
+    streams = load_splits(args.file)
     summarizer = create_summarizer(args.method, l=vars(args)['lambda'])
     terms = load_terms(args.domain_terms, args.max_domain_terms) if args.domain_terms else args.domain_terms
     summaries = summarize(summarizer, timeline, verbose=args.verbose,
@@ -299,6 +300,22 @@ def load_timeline(file):
         data = json.loads(''.join(f.readlines()))
         return Exportable.decode(data)['timeline']
 
+def load_splits(file):
+    """
+    Load the splits, or streams from the given file.
+
+    :param file: The path to the file where the timeline is saved.
+                 This function assumes that the timeline was created using the ``consume`` tool.
+    :type file: str
+
+    :return: A list of splits.
+    :rtype: list of list of str
+    """
+
+    with open(file) as f:
+        data = json.loads(''.join(f.readlines()))
+        return data['pcmd']['splits'] if 'pcmd' in data and 'splits' in data['pcmd'] and data['pcmd']['splits'] else [ ]
+
 def create_summarizer(method, l=0.5):
     """
     Instantiate the summarization algorithm based on the arguments that it accepts.
@@ -326,7 +343,7 @@ def summarize(summarizer, timeline, verbose=False, max_documents=None, length=14
     :param summarizer: The summarization method to use.
     :type summarizer: :class:`~summarization.algorithms.SummarizationAlgorithm`
     :param timeline: The timeline to summarize.
-    :type timeline: :class:`~summarization.timeline`.
+    :type timeline: :class:`~summarization.timeline.Timeline` or list of :class:`~summarization.timeline.Timeline`
     :param verbose: A boolean indicating whether to print the summaries as they are generated.
     :type verbose: bool
     :param max_documents: The maximum number of documents to use when summarizing, with a preference for long documents.
@@ -350,6 +367,11 @@ def summarize(summarizer, timeline, verbose=False, max_documents=None, length=14
 
     summaries = [ ]
 
+    cleaner = TweetCleaner(remove_alt_codes=True, complete_sentences=True,
+                           collapse_new_lines=True, collapse_whitespaces=True,
+                           capitalize_first=True, remove_unicode_entities=False, remove_urls=True,
+                           split_hashtags=True, remove_retweet_prefix=True)
+
     for node in timeline.nodes:
         """
         Extract and filter the documents to consider for summarization.
@@ -357,10 +379,6 @@ def summarize(summarizer, timeline, verbose=False, max_documents=None, length=14
         """
         documents = node.get_all_documents()
         if clean:
-            cleaner = TweetCleaner(remove_alt_codes=True, complete_sentences=True,
-                                   collapse_new_lines=True, collapse_whitespaces=True,
-                                   capitalize_first=True, remove_unicode_entities=False, remove_urls=True,
-                                   split_hashtags=True, remove_retweet_prefix=True)
             for document in documents:
                 document.text = cleaner.clean(document.text)
         documents = filter_documents(documents, max_documents, terms=terms)

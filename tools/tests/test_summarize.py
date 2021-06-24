@@ -518,3 +518,24 @@ class TestSummarize(unittest.TestCase):
 
         terms = [ 'cigar' ]
         self.assertEqual(documents[2], summarize.filter_documents(documents, max_documents=1, terms=terms)[0])
+
+    def test_load_splits_old_file(self):
+        """
+        Test loading the splits from an old file that uses no splits.
+        The function should return an empty list.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/timelines/CRYCHE.json')
+        splits = summarize.load_splits(file)
+        self.assertEqual([ ], splits)
+
+    def test_load_splits_streamed_timeline(self):
+        """
+        Test loading the splits from a timeline that has splits.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/timelines/#ParmaMilan-streams.json')
+        splits = summarize.load_splits(file)
+        with open(file) as f:
+            streams = json.loads(f.readline())['pcmd']['splits']
+            self.assertEqual(streams, splits)
