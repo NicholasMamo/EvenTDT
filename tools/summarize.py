@@ -250,7 +250,7 @@ def main():
         headers = [ 'timestamp', 'query', 'summary' ] # the CSV headers
         if streams:
             headers.insert(1, 'split')
-        summaries = tabulate(summaries) # tabulate the summaries
+        summaries = tabulate(summaries, headers) # tabulate the summaries
         tools.save_csv(args.output, summaries, headers=headers) # save the summaries
 
         meta = args.meta or args.output.replace('.csv', '.meta.json') # find the meta file path
@@ -471,13 +471,15 @@ def merge(timelines, splits=None):
 
     return nodes
 
-def tabulate(merged):
+def tabulate(merged, headers):
     """
     Convert the given summaries into a table-like structure to prepare to save them as CSV files.
     This format stores only a basic representation of summaries, including when the summary was originally created, the query and the actual summary.
 
     :param merged: A list of summaries to tabulate.
     :type merged: list of list of :class:`~summarization.summary.Summary`
+    :param headers: The ordered headers to tabulate the data.
+    :type headers: list of str
 
     :return: A list of lists, where each outer list is a summary.
              Each summary is made up of a list containing of the summary's details.
@@ -488,10 +490,20 @@ def tabulate(merged):
 
     # go through each summary and tabulate it as a row
     for summaries in merged:
+        table.append({ header: [ ] for header in headers })
         for summary in summaries:
             query = summary.attributes.get('query', { })
             query = sorted(query.items(), key=lambda q: q[1], reverse=True) # sort the query in descending order of weight
-            table.append([ summary.attributes['timestamp'], json.dumps(dict(query)), str(summary)])
+            table[-1]['query'].append(json.dumps(query))
+            table[-1]['timestamp'].append(str(summary.attributes['timestamp']))
+            table[-1]['summary'].append(str(summary))
+
+            if 'split' in headers:
+                table[-1]['split'].append(str(summary.attributes.get('split')))
+
+        # make each summary look like a list if there are splits
+        table[-1] = { key: '\n'.join(value) for key, value in table[-1].items() }
+        table[-1] = [ table[-1][key] for key in headers ]
 
     return table
 

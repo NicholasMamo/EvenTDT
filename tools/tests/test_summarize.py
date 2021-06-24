@@ -185,7 +185,7 @@ class TestSummarize(unittest.TestCase):
         Test that when tabulating an empty list of summaries, another empty list is created.
         """
 
-        self.assertEqual([ ], summarize.tabulate([ ]))
+        self.assertEqual([ ], summarize.tabulate([ ], [ ]))
 
     def test_tabulate_equal_to_summaries(self):
         """
@@ -201,8 +201,9 @@ class TestSummarize(unittest.TestCase):
         cluster = Cluster(documents)
         timeline.add(timestamp=timestamp, cluster=cluster, topic=Vector({ 'cigar': 1, 'pipe': 1 })) # no discrimination here
 
-        summaries = summarize.summarize(summarizer, timeline, splits=[], length=30)
-        self.assertEqual(len(summaries), len(summarize.tabulate(summaries)))
+        summaries = summarize.summarize(summarizer, timeline, splits=[ ], length=30)
+        headers = [ 'timestamp', 'query', 'summary' ]
+        self.assertEqual(len(summaries), len(summarize.tabulate(summaries, headers)))
 
     def test_tabulate_includes_timestamp(self):
         """
@@ -219,8 +220,9 @@ class TestSummarize(unittest.TestCase):
         timeline.add(timestamp=timestamp, cluster=cluster, topic=Vector({ 'cigar': 1, 'pipe': 1 })) # no discrimination here
 
         summaries = summarize.summarize(summarizer, timeline, splits=[], length=30)
-        tabulated = summarize.tabulate(summaries)
-        self.assertEqual(timestamp, tabulated[0][0])
+        headers = [ 'timestamp', 'query', 'summary' ]
+        tabulated = summarize.tabulate(summaries, headers)
+        self.assertEqual(str(timestamp), tabulated[0][0])
 
     def test_tabulate_includes_query(self):
         """
@@ -239,8 +241,10 @@ class TestSummarize(unittest.TestCase):
         timeline.add(timestamp=timestamp, cluster=cluster, topic=query) # no discrimination here
 
         summaries = summarize.summarize(summarizer, timeline, splits=[], length=30)
-        tabulated = summarize.tabulate(summaries)
-        self.assertTrue(all( round(query.dimensions[topic], 7) == round(json.loads(tabulated[0][1])[topic], 7) for topic in query.dimensions ))
+        headers = [ 'timestamp', 'query', 'summary' ]
+        tabulated = summarize.tabulate(summaries, headers)
+        self.assertTrue(all( round(query.dimensions[topic], 7) == round(dict(json.loads(tabulated[0][1]))[topic], 7)
+                        for topic in query.dimensions ))
 
     def test_tabulate_query_string(self):
         """
@@ -259,7 +263,8 @@ class TestSummarize(unittest.TestCase):
         timeline.add(timestamp=timestamp, cluster=cluster, topic=query) # no discrimination here
 
         summaries = summarize.summarize(summarizer, timeline, splits=[], length=30)
-        tabulated = summarize.tabulate(summaries)
+        headers = [ 'timestamp', 'query', 'summary' ]
+        tabulated = summarize.tabulate(summaries, headers)
         self.assertEqual(str, type(tabulated[0][1]))
 
     def test_tabulate_query_ordered(self):
@@ -278,12 +283,13 @@ class TestSummarize(unittest.TestCase):
         timeline.add(timestamp=timestamp, cluster=cluster, topic=query) # no discrimination here
 
         summaries = summarize.summarize(summarizer, timeline, splits=[], length=30)
-        tabulated = summarize.tabulate(summaries)
+        headers = [ 'timestamp', 'query', 'summary' ]
+        tabulated = summarize.tabulate(summaries, headers)
         decoded = json.loads(tabulated[0][1])
-        self.assertEqual(max(query.dimensions, key=query.dimensions.get), list(decoded.keys())[0])
-        self.assertEqual(min(query.dimensions, key=query.dimensions.get), list(decoded.keys())[-1])
-        self.assertTrue(all( decoded[list(decoded.keys())[i]] > decoded[list(decoded.keys())[i + 1]]
-                             for i in range(len(decoded.keys()) - 1) ))
+        self.assertEqual(max(query.dimensions, key=query.dimensions.get), decoded[0][0])
+        self.assertEqual(min(query.dimensions, key=query.dimensions.get), decoded[-1][0])
+        self.assertTrue(all( decoded[i][1] > decoded[i + 1][1]
+                             for i in range(len(decoded) - 1) ))
 
     def test_tabulate_no_query(self):
         """
@@ -302,8 +308,9 @@ class TestSummarize(unittest.TestCase):
         timeline.add(timestamp=timestamp, cluster=cluster, topic=query) # no discrimination here
 
         summaries = summarize.summarize(summarizer, timeline, splits=[], length=30, with_query=False)
-        tabulated = summarize.tabulate(summaries)
-        self.assertEqual(json.dumps({ }), tabulated[0][1])
+        headers = [ 'timestamp', 'query', 'summary' ]
+        tabulated = summarize.tabulate(summaries, headers)
+        self.assertEqual(json.dumps([ ]), tabulated[0][1])
 
     def test_tabulate_includes_summary(self):
         """
@@ -320,9 +327,23 @@ class TestSummarize(unittest.TestCase):
         timeline.add(timestamp=timestamp, cluster=cluster, topic=Vector({ 'cigar': 1, 'pipe': 1 })) # no discrimination here
 
         summaries = summarize.summarize(summarizer, timeline, splits=[], length=30)
-        tabulated = summarize.tabulate(summaries)
+        headers = [ 'timestamp', 'query', 'summary' ]
+        tabulated = summarize.tabulate(summaries, headers)
         self.assertEqual(str, type(tabulated[0][-1]))
         self.assertTrue(any( tabulated[0][-1] == str(document) for document in documents ))
+
+    def test_tabulate_with_splits(self):
+        """
+        Test that when tabulating a split timeline, the summary's splits are stored.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/timelines/#ParmaMilan-streams.json')
+        timelines, splits = summarize.load_timeline(file), summarize.load_splits(file)
+        summarizer = summarize.create_summarizer(MMR)
+        summaries = summarize.summarize(summarizer, timelines, splits=splits, length=30)
+        headers = [ 'timestamp', 'query', 'summary', 'split' ]
+        tabulated = summarize.tabulate(summaries, headers)
+        self.assertTrue(all( len(headers) == len(row) for row in tabulated ))
 
     def test_load_terms_all_words(self):
         """
