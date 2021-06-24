@@ -142,6 +142,7 @@ The output is a JSON file with the following structure, although additional data
             "_cmd": "EvenTDT/tools/consume.py --event data/event/event.json --understanding data/event/understanding.json --consumer ELDConsumer",
             "_date": "2020-10-18T12:56:45.635795",
             "_timestamp": 1603018605.6359715,
+            "burst_end": 0.2,
             "burst_start": 0.5,
             "consumer": "<class 'queues.consumers.algorithms.eld_consumer.ELDConsumer'>",
             "file": "data/event/event.json",
@@ -172,6 +173,7 @@ The output is a JSON file with the following structure, although additional data
             "_cmd": "EvenTDT/tools/consume.py --event data/event/event.json --understanding data/event/understanding.json --consumer ELDConsumer",
             "_date": "2020-10-18T12:56:45.635795",
             "_timestamp": 1603018605.6359715,
+            "burst_end": 0.2,
             "burst_start": 0.5,
             "consumer": "<class 'queues.consumers.algorithms.eld_consumer.ELDConsumer'>",
             "file": "data/event/event.json",
@@ -236,6 +238,7 @@ The full list of accepted arguments:
     - ``--post-rate``               *<Optional>* The minimum increase in posting rate to accept a sliding time-window as representing a breaking topic, defaults to 1.7 (used by the :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`).
     - ``--max-intra-similarity``    *<Optional>* The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
     - ``--burst-start``             *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`).
+    - ``--burst-end``               *<Optional>* The maximum burst to stop considering a term to be breaking, defaults to 0.2 (used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`).
     - ``--freeze-period``           *<Optional>* The freeze period of clusters, defaults to 20 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer` and the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`).
     - ``--log-nutrition``           *<Optional>* Take the logarithm of nutrition (used by the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`).
 """
@@ -295,6 +298,7 @@ def setup_args():
         - ``--post-rate``               *<Optional>* The minimum increase in posting rate to accept a sliding time-window as representing a breaking topic, defaults to 1.7 (used by the :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`).
         - ``--max-intra-similarity``    *<Optional>* The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
         - ``--burst-start``             *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`).
+        - ``--burst-end``               *<Optional>* The maximum burst to stop considering a term to be breaking, defaults to 0.2 (used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`).
         - ``--freeze-period``           *<Optional>* The freeze period of clusters in seconds, defaults to 20 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer` and the `ELDConsumer`).
         - ``--log-nutrition``           *<Optional>* Take the logarithm of nutrition (used by the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`).
 
@@ -356,6 +360,8 @@ def setup_args():
                         help='<Optional> The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.')
     parser.add_argument('--burst-start', type=float, required=False, default=0.5,
                         help='<Optional> The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the `FUEGOConsumer`).')
+    parser.add_argument('--burst-end', type=float, required=False, default=0.2,
+                        help='<Optional> The maximum burst to stop considering a term to be breaking, defaults to 0.2 (used by the `FUEGOConsumer`).')
     parser.add_argument('--freeze-period', type=int, required=False, default=20,
                         help='<Optional> The freeze period of clusters, defaults to 20 seconds (used by the `FIREConsumer` and the `ELDConsumer`).')
     parser.add_argument('--log-nutrition', action='store_true',
