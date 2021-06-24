@@ -418,10 +418,12 @@ def summarize(summarizer, timeline, splits, verbose=False, max_documents=None, l
             """
             summary = summarizer.summarize(documents, length, query=query)
             summary.attributes['timestamp'] = node.created_at
+            if splits:
+                summary.attributes['split'] = str(node.attributes['split'])
             if query:
                 summary.attributes['query'] = query.dimensions
             if verbose:
-                logger.info(f"{ datetime.fromtimestamp(node.created_at).ctime() }: { str(summary) }")
+                logger.info(f"{ datetime.fromtimestamp(node.created_at).ctime() }: { str(summary) }", process=summary.attributes.get('split'))
             summaries[-1].append(summary)
 
     return summaries

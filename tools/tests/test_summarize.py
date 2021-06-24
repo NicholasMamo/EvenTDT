@@ -169,6 +169,17 @@ class TestSummarize(unittest.TestCase):
         summaries = summarize.summarize(summarizer, timeline, splits=[], length=30)
         self.assertEqual(timestamp, summaries[0][0].attributes['timestamp'])
 
+    def test_summarize_with_split(self):
+        """
+        Test that when summarizing a split timeline, each summary has a split attribute.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/timelines/#ParmaMilan-streams.json')
+        timelines, splits = summarize.load_timeline(file), summarize.load_splits(file)
+        summarizer = summarize.create_summarizer(MMR)
+        merged = summarize.summarize(summarizer, timelines, splits)
+        self.assertTrue(all( summary.attributes['split'] for summaries in merged for summary in summaries ))
+
     def test_tabulate_empty(self):
         """
         Test that when tabulating an empty list of summaries, another empty list is created.
