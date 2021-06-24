@@ -343,6 +343,7 @@ def summarize(summarizer, timeline, verbose=False, max_documents=None, length=14
     :param summarizer: The summarization method to use.
     :type summarizer: :class:`~summarization.algorithms.SummarizationAlgorithm`
     :param timeline: The timeline to summarize.
+                     In case of a split stream, the timeline could be a list of timelines instead.
     :type timeline: :class:`~summarization.timeline.Timeline` or list of :class:`~summarization.timeline.Timeline`
     :param verbose: A boolean indicating whether to print the summaries as they are generated.
     :type verbose: bool
@@ -372,49 +373,70 @@ def summarize(summarizer, timeline, verbose=False, max_documents=None, length=14
                            capitalize_first=True, remove_unicode_entities=False, remove_urls=True,
                            split_hashtags=True, remove_retweet_prefix=True)
 
-    for node in timeline.nodes:
-        """
-        Extract and filter the documents to consider for summarization.
-        Cleaning happens before selecting the documents so that the clean text is considered.
-        """
-        documents = node.get_all_documents()
-        if clean:
-            for document in documents:
-                document.text = cleaner.clean(document.text)
-        documents = filter_documents(documents, max_documents, terms=terms)
+    merged = merge(timeline)
 
-        """
-        Construct the query if need be.
-        Queries can only be used if:
-
-        1. The appropriate flag is given,
-        2. The summarizer is :class:`~summarization.algorithms.dgs.DGS`, and
-        3. The node is topical (it stores a topic).
-        """
-        query = None
-        if with_query and type(node) is TopicalClusterNode:
-            query = construct_query(node)
+    for nodes in merged:
+        for node in nodes:
+            """
+            Extract and filter the documents to consider for summarization.
+            Cleaning happens before selecting the documents so that the clean text is considered.
+            """
+            documents = node.get_all_documents()
+            if clean:
+                for document in documents:
+                    document.text = cleaner.clean(document.text)
+            documents = filter_documents(documents, max_documents, terms=terms)
 
             """
-            If only the query is of interest, print only the query terms in descending order of importance.
-            """
-            if query_only:
-                query = sorted(query.dimensions.items(), key=lambda q: q[1], reverse=True)
-                logger.info(f"""{ datetime.fromtimestamp(node.created_at).ctime() }: { ', '.join([ f"{ term } ({ round(weight, 2) })" for term, weight in query ]) }""")
-                continue
+            Construct the query if need be.
+            Queries can only be used if:
 
-        """
-        Generate the sumamry.
-        """
-        summary = summarizer.summarize(documents, length, query=query)
-        summary.attributes['timestamp'] = node.created_at
-        if query:
-            summary.attributes['query'] = query.dimensions
-        if verbose:
-            logger.info(f"{ datetime.fromtimestamp(node.created_at).ctime() }: { str(summary) }")
-        summaries.append(summary)
+            1. The appropriate flag is given,
+            2. The summarizer is :class:`~summarization.algorithms.dgs.DGS`, and
+            3. The node is topical (it stores a topic).
+            """
+            query = None
+            if with_query and type(node) is TopicalClusterNode:
+                query = construct_query(node)
+
+                """
+                If only the query is of interest, print only the query terms in descending order of importance.
+                """
+                if query_only:
+                    query = sorted(query.dimensions.items(), key=lambda q: q[1], reverse=True)
+                    logger.info(f"""{ datetime.fromtimestamp(node.created_at).ctime() }: { ', '.join([ f"{ term } ({ round(weight, 2) })" for term, weight in query ]) }""")
+                    continue
+
+            """
+            Generate the sumamry.
+            """
+            summary = summarizer.summarize(documents, length, query=query)
+            summary.attributes['timestamp'] = node.created_at
+            if query:
+                summary.attributes['query'] = query.dimensions
+            if verbose:
+                logger.info(f"{ datetime.fromtimestamp(node.created_at).ctime() }: { str(summary) }")
+            summaries.append(summary)
 
     return summaries
+
+def merge(timelines):
+    """
+    Merge the given timelines and extract a list of lists of nodes.
+
+    :param timeline: The timeline to summarize.
+                     In case of a split stream, the timeline could be a list of timelines instead.
+    :type timeline: :class:`~summarization.timeline.Timeline` or list of :class:`~summarization.timeline.Timeline`
+
+    :return: A list of list of nodes.
+             Each outer list is made up of an inner list of nodes published at around the same time, as specified by the timeline's expiry.
+    :rtype: list of list of :class:`~summarization.timeline.nodes.Node`
+    """
+
+    if type(timelines) is list:
+        pass
+    else:
+        return [ [ node ] for node in timelines.nodes ]
 
 def tabulate(summaries):
     """

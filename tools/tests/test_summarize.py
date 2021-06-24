@@ -20,7 +20,7 @@ from nlp import Document
 from summarization.algorithms import MMR, DGS
 from summarization import Summary
 from summarization.timeline import Timeline
-from summarization.timeline.nodes import TopicalClusterNode
+from summarization.timeline.nodes import Node, TopicalClusterNode
 from tools import summarize
 from vsm import Vector
 from vsm.clustering import Cluster
@@ -539,3 +539,36 @@ class TestSummarize(unittest.TestCase):
         with open(file) as f:
             streams = json.loads(f.readline())['pcmd']['splits']
             self.assertEqual(streams, splits)
+
+    def test_merge_list_of_lists(self):
+        """
+        Test that when merging a simple timeline, the nodes are returned as a list of list of nodes.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/timelines/CRYCHE.json')
+        timeline = summarize.load_timeline(file)
+        merged = summarize.merge(timeline)
+        self.assertTrue(list, type(merged))
+        self.assertTrue(all( list == type(nodes) for nodes in merged ))
+        self.assertTrue(all( isinstance(node, Node) for nodes in merged for node in nodes ))
+
+    def test_merge_simple_node_per_list(self):
+        """
+        Test that when merging a simple timeline, each list has only one node.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/timelines/CRYCHE.json')
+        timeline = summarize.load_timeline(file)
+        merged = summarize.merge(timeline)
+        self.assertTrue(all( 1 == len(nodes) for nodes in merged ))
+
+    def test_merge_simple_all_nodes(self):
+        """
+        Test that when merging a simple timeline, all nodes are present.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/timelines/CRYCHE.json')
+        timeline = summarize.load_timeline(file)
+        merged = summarize.merge(timeline)
+        self.assertEqual(len(timeline.nodes), len(merged))
+        self.assertTrue(all( _og == nodes[0] for _og, nodes in zip(timeline.nodes, merged) ))
