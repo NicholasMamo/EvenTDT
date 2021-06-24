@@ -250,6 +250,7 @@ def main():
         headers = [ 'timestamp', 'query', 'summary' ] # the CSV headers
         if streams:
             headers.insert(1, 'split')
+            headers.insert(0, 'node')
         summaries = tabulate(summaries, headers) # tabulate the summaries
         tools.save_csv(args.output, summaries, headers=headers) # save the summaries
 
@@ -489,21 +490,25 @@ def tabulate(merged, headers):
     table = [ ]
 
     # go through each summary and tabulate it as a row
-    for summaries in merged:
-        table.append({ header: [ ] for header in headers })
+    for node, summaries in enumerate(merged):
         for summary in summaries:
+            table.append({ header: '' for header in headers })
             query = summary.attributes.get('query', { })
             query = sorted(query.items(), key=lambda q: q[1], reverse=True) # sort the query in descending order of weight
-            table[-1]['query'].append(json.dumps(query))
-            table[-1]['timestamp'].append(str(summary.attributes['timestamp']))
-            table[-1]['summary'].append(str(summary))
+            table[-1]['query'] = json.dumps(query)
+            table[-1]['timestamp'] = str(summary.attributes['timestamp'])
+            table[-1]['summary'] = str(summary)
 
+            # add the splits
             if 'split' in headers:
-                table[-1]['split'].append(str(summary.attributes.get('split')))
+                table[-1]['split'] = str(summary.attributes.get('split'))
 
-        # make each summary look like a list if there are splits
-        table[-1] = { key: '\n'.join(value) for key, value in table[-1].items() }
-        table[-1] = [ table[-1][key] for key in headers ]
+            # add the node number
+            if 'node' in headers:
+                table[-1]['node'] = node
+
+            # convert into an actual list of strings
+            table[-1] = [ table[-1][header] for header in headers ]
 
     return table
 
