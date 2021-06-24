@@ -248,6 +248,8 @@ def main():
     # if the file format is CSV, convert summaries to CSV
     if args.format == 'csv':
         headers = [ 'timestamp', 'query', 'summary' ] # the CSV headers
+        if streams:
+            headers.insert(1, 'split')
         summaries = tabulate(summaries) # tabulate the summaries
         tools.save_csv(args.output, summaries, headers=headers) # save the summaries
 
@@ -364,8 +366,9 @@ def summarize(summarizer, timeline, splits, verbose=False, max_documents=None, l
                   If given, the function scores documents using the :class:`~summarization.scorers.domain_scorer.DomainScorer` instead of the :class:`~summarization.scorers.tweet_scorer.TweetScorer`.
     :type terms: list of str
 
-    :return: A list of summaries, corresponding to each node.
-    :rtype: list of :class:`~summarization.summary.Summary`
+    :return: A list of list of summaries, corresponding to each node.
+             Each list can have multiple summaries in case of split timelines.
+    :rtype: list of list of :class:`~summarization.summary.Summary`
     """
 
     summaries = [ ]
@@ -378,6 +381,7 @@ def summarize(summarizer, timeline, splits, verbose=False, max_documents=None, l
     merged = merge(timeline, splits)
 
     for nodes in merged:
+        summaries.append([ ])
         for node in nodes:
             """
             Extract and filter the documents to consider for summarization.
@@ -418,7 +422,7 @@ def summarize(summarizer, timeline, splits, verbose=False, max_documents=None, l
                 summary.attributes['query'] = query.dimensions
             if verbose:
                 logger.info(f"{ datetime.fromtimestamp(node.created_at).ctime() }: { str(summary) }")
-            summaries.append(summary)
+            summaries[-1].append(summary)
 
     return summaries
 
@@ -465,13 +469,13 @@ def merge(timelines, splits=None):
 
     return nodes
 
-def tabulate(summaries):
+def tabulate(merged):
     """
     Convert the given summaries into a table-like structure to prepare to save them as CSV files.
     This format stores only a basic representation of summaries, including when the summary was originally created, the query and the actual summary.
 
-    :param summaries: A list of summaries to tabulate.
-    :type summaries: list of :class:`~summarization.summary.Summary`
+    :param merged: A list of summaries to tabulate.
+    :type merged: list of list of :class:`~summarization.summary.Summary`
 
     :return: A list of lists, where each outer list is a summary.
              Each summary is made up of a list containing of the summary's details.
@@ -481,10 +485,11 @@ def tabulate(summaries):
     table = [ ]
 
     # go through each summary and tabulate it as a row
-    for summary in summaries:
-        query = summary.attributes.get('query', { })
-        query = sorted(query.items(), key=lambda q: q[1], reverse=True) # sort the query in descending order of weight
-        table.append([ summary.attributes['timestamp'], json.dumps(dict(query)), str(summary)])
+    for summaries in merged:
+        for summary in summaries:
+            query = summary.attributes.get('query', { })
+            query = sorted(query.items(), key=lambda q: q[1], reverse=True) # sort the query in descending order of weight
+            table.append([ summary.attributes['timestamp'], json.dumps(dict(query)), str(summary)])
 
     return table
 

@@ -52,18 +52,18 @@ class TestSummarize(unittest.TestCase):
         timeline.add(cluster=cluster, topic=Vector({ 'where': 1 }))
 
         summaries = summarize.summarize(summarizer, timeline, splits=[], length=30, with_query=False)
-        self.assertEqual(1, len(summaries[0].documents))
-        self.assertEqual(str(documents[2]), str(summaries[0]))
+        self.assertEqual(1, len(summaries[0][0].documents))
+        self.assertEqual(str(documents[2]), str(summaries[0][0]))
 
         summaries = summarize.summarize(summarizer, timeline, splits=[], length=30, with_query=True)
-        self.assertEqual(1, len(summaries[0].documents))
-        self.assertEqual(str(documents[2]), str(summaries[0]))
+        self.assertEqual(1, len(summaries[0][0].documents))
+        self.assertEqual(str(documents[2]), str(summaries[0][0]))
 
         timeline = Timeline(TopicalClusterNode, 60, 0.5)
         timeline.add(cluster=cluster, topic=Vector({ 'this': 1 }))
         summaries = summarize.summarize(summarizer, timeline, splits=[], length=30, with_query=True)
-        self.assertEqual(1, len(summaries[0].documents))
-        self.assertEqual(str(documents[1]), str(summaries[0]))
+        self.assertEqual(1, len(summaries[0][0].documents))
+        self.assertEqual(str(documents[1]), str(summaries[0][0]))
 
     def test_summarize_mmr_with_query(self):
         """
@@ -79,18 +79,18 @@ class TestSummarize(unittest.TestCase):
         timeline.add(cluster=cluster, topic=Vector({ 'where': 1 }))
 
         summaries = summarize.summarize(summarizer, timeline, splits=[], length=30, with_query=False)
-        self.assertEqual(1, len(summaries[0].documents))
-        self.assertEqual(str(documents[1]), str(summaries[0]))
+        self.assertEqual(1, len(summaries[0][0].documents))
+        self.assertEqual(str(documents[1]), str(summaries[0][0]))
 
         summaries = summarize.summarize(summarizer, timeline, splits=[], length=30, with_query=True)
-        self.assertEqual(1, len(summaries[0].documents))
-        self.assertEqual(str(documents[2]), str(summaries[0]))
+        self.assertEqual(1, len(summaries[0][0].documents))
+        self.assertEqual(str(documents[2]), str(summaries[0][0]))
 
         timeline = Timeline(TopicalClusterNode, 60, 0.5)
         timeline.add(cluster=cluster, topic=Vector({ 'this': 1, 'pipe': 1 }))
         summaries = summarize.summarize(summarizer, timeline, splits=[], length=30, with_query=True)
-        self.assertEqual(1, len(summaries[0].documents))
-        self.assertEqual(str(documents[0]), str(summaries[0]))
+        self.assertEqual(1, len(summaries[0][0].documents))
+        self.assertEqual(str(documents[0]), str(summaries[0][0]))
 
     def test_summarize_with_query(self):
         """
@@ -108,8 +108,8 @@ class TestSummarize(unittest.TestCase):
         timeline.add(cluster=cluster, topic=query)
 
         summaries = summarize.summarize(summarizer, timeline, splits=[], length=30, with_query=True)
-        self.assertEqual(1, len(summaries[0].documents))
-        self.assertEqual(query.dimensions, summaries[0].attributes['query'])
+        self.assertEqual(1, len(summaries[0][0].documents))
+        self.assertEqual(query.dimensions, summaries[0][0].attributes['query'])
 
     def test_summarize_without_query(self):
         """
@@ -127,8 +127,8 @@ class TestSummarize(unittest.TestCase):
         timeline.add(cluster=cluster, topic=query)
 
         summaries = summarize.summarize(summarizer, timeline, splits=[], length=30, with_query=False)
-        self.assertEqual(1, len(summaries[0].documents))
-        self.assertFalse('query' in summaries[0].attributes)
+        self.assertEqual(1, len(summaries[0][0].documents))
+        self.assertFalse('query' in summaries[0][0].attributes)
 
     def test_summarize_with_domain_terms(self):
         """
@@ -145,11 +145,11 @@ class TestSummarize(unittest.TestCase):
 
         terms = [ 'cigar' ]
         summaries = summarize.summarize(summarizer, timeline, splits=[], length=30, with_query=True, max_documents=1, terms=terms)
-        self.assertTrue(summaries[0].documents[0] in documents[1:])
+        self.assertTrue(summaries[0][0].documents[0] in documents[1:])
 
         terms = [ 'pipe' ]
         summaries = summarize.summarize(summarizer, timeline, splits=[], length=30, with_query=True, max_documents=1, terms=terms)
-        self.assertEqual(documents[0], summaries[0].documents[0])
+        self.assertEqual(documents[0], summaries[0][0].documents[0])
 
     def test_summarize_stores_created_at(self):
         """
@@ -167,7 +167,7 @@ class TestSummarize(unittest.TestCase):
         timeline.add(timestamp=timestamp, cluster=cluster, topic=Vector({ 'cigar': 1, 'pipe': 1 })) # no discrimination here
 
         summaries = summarize.summarize(summarizer, timeline, splits=[], length=30)
-        self.assertEqual(timestamp, summaries[0].attributes['timestamp'])
+        self.assertEqual(timestamp, summaries[0][0].attributes['timestamp'])
 
     def test_tabulate_empty(self):
         """
