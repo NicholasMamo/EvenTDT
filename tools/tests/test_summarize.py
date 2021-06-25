@@ -466,6 +466,39 @@ class TestSummarize(unittest.TestCase):
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'empty.txt')
         self.assertRaises(ValueError, summarize.load_terms, file)
 
+    def test_construct_query_single_node_single_cluster(self):
+        """
+        Test that when computing the query with a single node that has only one cluster, the same query is returned.
+        """
+
+        query = Vector({ 'where': 1 })
+        node = TopicalClusterNode(0, clusters=[ Cluster() ], topics=[ query ])
+        self.assertEqual(query.dimensions, summarize.construct_query(node).dimensions)
+
+    def test_construct_query_single_node_multiple_clusters(self):
+        """
+        Test that when computing the query with a single node that has more than one cluster, the centroid of topics is returned.
+        """
+
+        queries = [ Vector({ 'where': 1 }), Vector({ 'pipe': 1, 'cigar': 0.5 }) ]
+        node = TopicalClusterNode(0, clusters=[ Cluster() ] * 2, topics=queries)
+        self.assertEqual(Cluster(vectors=queries).centroid.dimensions,
+                         summarize.construct_query(node).dimensions)
+
+    def test_construct_query_list_nodes_multiple_clusters(self):
+        """
+        Test that when computing the query with a list of nodes, the centroid of their pooled topics is returned.
+        """
+
+        q1 = [ Vector({ 'where': 1 }), Vector({ 'pipe': 1, 'cigar': 0.5 }) ]
+        n1 = TopicalClusterNode(0, clusters=[ Cluster() ] * 2, topics=q1)
+
+        q2 = [ Vector({ 'pipe': 1, 'cigar': 0.5 }) ]
+        n2 = TopicalClusterNode(0, clusters=[ Cluster() ], topics=q2)
+
+        self.assertEqual(Cluster(vectors=q1+q2).centroid.dimensions,
+                         summarize.construct_query([ n1, n2 ]).dimensions)
+
     def test_filter_documents_order(self):
         """
         Test that when filtering documents, the documents are returned in the same order.

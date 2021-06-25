@@ -466,7 +466,7 @@ def combine(timelines, splits=None):
 
         expiry = timelines[0].expiry # get the expiry of the first timeline, assuming that all timelines have the same expiry
 
-        # create the merged timeline
+        # create the combined timeline
         created_at = 0
         for node in _nodes:
             if node.created_at -  created_at >= expiry: # create a new combined node if the current node has expired
@@ -478,13 +478,13 @@ def combine(timelines, splits=None):
 
     return nodes
 
-def tabulate(merged, headers):
+def tabulate(combined, headers):
     """
     Convert the given summaries into a table-like structure to prepare to save them as CSV files.
     This format stores only a basic representation of summaries, including when the summary was originally created, the query and the actual summary.
 
-    :param merged: A list of summaries to tabulate.
-    :type merged: list of list of :class:`~summarization.summary.Summary`
+    :param combined: A list of summaries to tabulate.
+    :type combined: list of list of :class:`~summarization.summary.Summary`
     :param headers: The ordered headers to tabulate the data.
     :type headers: list of str
 
@@ -496,7 +496,7 @@ def tabulate(merged, headers):
     table = [ ]
 
     # go through each summary and tabulate it as a row
-    for node, summaries in enumerate(merged):
+    for node, summaries in enumerate(combined):
         for summary in summaries:
             table.append({ header: '' for header in headers })
             query = summary.attributes.get('query', { })
@@ -553,18 +553,22 @@ def load_terms(term_file, max_terms=None):
         raise ValueError("The term list cannot be empty if it is given")
     return term_list[:max_terms]
 
-def construct_query(node):
+def construct_query(nodes):
     """
-    Construct a summarization query from the given node.
+    Construct a summarization query from the given nodes.
 
-    :param node: The node from which to extract the query.
-    :type node: :class:`~summarization.timeline.nodes.Node`
+    :param nodes: The nodes from which to extract the query, or a list of nodes.
+    :type nodes: :class:`~summarization.timeline.nodes.Node` or list of :class:`~summarization.timeline.nodes.Node`
 
     :return: A vector, representing the topical query.
     :rtype: :class:`~vsm.vector.Vector`
     """
 
-    return Cluster(vectors=node.topics).centroid
+    if type(nodes) is list:
+        topics = [ topic for node in nodes for topic in node.topics ]
+        return Cluster(vectors=topics).centroid
+    else:
+        return Cluster(vectors=nodes.topics).centroid
 
 def filter_documents(documents, max_documents=None, terms=None):
     """
