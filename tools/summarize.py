@@ -87,6 +87,7 @@ The output is a JSON file with the following structure:
             "verbose": true,
             "meta": null,
             "format": "json",
+            "merge": false,
             "domain_terms": null,
             "max_domain_terms": null,
             "documents": null,
@@ -106,6 +107,7 @@ The output is a JSON file with the following structure:
             "verbose": true,
             "meta": null,
             "format": "json",
+            "merge": false,
             "domain_terms": null,
             "max_domain_terms": null,
             "documents": null,
@@ -132,6 +134,7 @@ The full list of accepted arguments:
     - ``-v --verbose``       *<Optional>* Print the summaries as they are generated.
     - ``--meta``             *<Optional>* The file where to save the meta data, defaults to [--file].meta.json (only used if the format is `csv`).
     - ``--format``           *<Optional>* The format of the summaries output file; supported: `json` (default), `csv`.
+    - ``--merge``            *<Optional>* Merge split timelines after combining them, creating one summary from nodes in separate timelines that broke at the same time; defaults to `False` if not given.
     - ``--domain-terms``     *<Optional>* The path to a file containing a list of domain terms, expected to contain one keyword on each line. Alternatively, the output from the :class:`~tools.terms` tool can be provided. If given, the loaded terms are used with the :class:`~summarization.scorers.domain_scorer.DomainScorer` to select the top documents.
     - ``--max-domain-terms`` *<Optional>* The number of domain terms to retain; defaults to all terms in the file.
     - ``--documents``        *<Optional>* The maximum number of documents to use when summarizing. If no domain terms are given, preference is given for quality documents, scored by the :class:`~summarization.scorers.tweet_scorer.TweetScorer` or the :class:`~summarization.scorers.domain_scorer.DomainScorer`; defaults to all documents.
@@ -175,6 +178,7 @@ def setup_args():
         - ``-v --verbose``       *<Optional>* Print the summaries as they are generated.
         - ``--meta``             *<Optional>* The file where to save the meta data, defaults to [--file].meta.json (only used if the format is `csv`).
         - ``--format``           *<Optional>* The format of the summaries output file; supported: `json` (default), `csv`.
+        - ``--merge``            *<Optional>* Merge split timelines after combining them, creating one summary from nodes in separate timelines that broke at the same time; defaults to `False` if not given.
         - ``--domain-terms``     *<Optional>* The path to a file containing a list of domain terms, expected to contain one keyword on each line. Alternatively, the output from the :class:`~tools.terms` tool can be provided. If given, the loaded terms are used with the :class:`~summarization.scorers.domain_scorer.DomainScorer` to select the top documents.
         - ``--max-domain-terms`` *<Optional>* The number of domain terms to retain; defaults to all terms in the file.
         - ``--documents``        *<Optional>* The maximum number of documents to use when summarizing. If no domain terms are given, preference is given for quality documents, scored by the :class:`~summarization.scorers.tweet_scorer.TweetScorer` or the :class:`~summarization.scorers.domain_scorer.DomainScorer`; defaults to all documents.
@@ -202,6 +206,8 @@ def setup_args():
                         help='<Optional> The file where to save the meta data, defaults to [--file].meta.json (only used if the format is `csv`).')
     parser.add_argument('--format', type=str.lower, required=False, default='json',
                         help='<Optional> The format of the summaries output file; supported: `json` (default), `csv`.')
+    parser.add_argument('--merge', action='store_true',
+                        help='<Optional> Merge split timelines after combining them, creating one summary from nodes in separate timelines that broke at the same time; defaults to False if not given.')
     parser.add_argument('--domain-terms', type=str, required=False, default=None,
                         help='<Optional> The path to a file containing a list of domain terms, expected to contain one keyword on each line. Alternatively, the output from the `terms` tool can be provided. If given, the loaded terms are used with the Domain Scorer to select the top documents.')
     parser.add_argument('--max-domain-terms', type=int, required=False, default=None,
