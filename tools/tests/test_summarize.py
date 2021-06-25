@@ -177,8 +177,8 @@ class TestSummarize(unittest.TestCase):
         file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/timelines/#ParmaMilan-streams.json')
         timelines, splits = summarize.load_timeline(file), summarize.load_splits(file)
         summarizer = summarize.create_summarizer(MMR)
-        merged = summarize.summarize(summarizer, timelines, splits)
-        self.assertTrue(all( summary.attributes['split'] for summaries in merged for summary in summaries ))
+        combined = summarize.summarize(summarizer, timelines, splits)
+        self.assertTrue(all( summary.attributes['split'] for summaries in combined for summary in summaries ))
 
     def test_tabulate_empty(self):
         """
@@ -572,118 +572,118 @@ class TestSummarize(unittest.TestCase):
             streams = json.loads(f.readline())['pcmd']['splits']
             self.assertEqual(streams, splits)
 
-    def test_merge_list_of_lists(self):
+    def test_combine_list_of_lists(self):
         """
-        Test that when merging a simple timeline, the nodes are returned as a list of list of nodes.
-        """
-
-        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/timelines/CRYCHE.json')
-        timeline = summarize.load_timeline(file)
-        merged = summarize.merge(timeline)
-        self.assertTrue(list, type(merged))
-        self.assertTrue(all( list == type(nodes) for nodes in merged ))
-        self.assertTrue(all( isinstance(node, Node) for nodes in merged for node in nodes ))
-
-    def test_merge_simple_node_per_list(self):
-        """
-        Test that when merging a simple timeline, each list has only one node.
+        Test that when combining a simple timeline, the nodes are returned as a list of list of nodes.
         """
 
         file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/timelines/CRYCHE.json')
         timeline = summarize.load_timeline(file)
-        merged = summarize.merge(timeline)
-        self.assertTrue(all( 1 == len(nodes) for nodes in merged ))
+        combined = summarize.combine(timeline)
+        self.assertTrue(list, type(combined))
+        self.assertTrue(all( list == type(nodes) for nodes in combined ))
+        self.assertTrue(all( isinstance(node, Node) for nodes in combined for node in nodes ))
 
-    def test_merge_simple_all_nodes(self):
+    def test_combine_simple_node_per_list(self):
         """
-        Test that when merging a simple timeline, all nodes are present.
+        Test that when combining a simple timeline, each list has only one node.
         """
 
         file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/timelines/CRYCHE.json')
         timeline = summarize.load_timeline(file)
-        merged = summarize.merge(timeline)
-        self.assertEqual(len(timeline.nodes), len(merged))
-        self.assertTrue(all( _og == nodes[0] for _og, nodes in zip(timeline.nodes, merged) ))
+        combined = summarize.combine(timeline)
+        self.assertTrue(all( 1 == len(nodes) for nodes in combined ))
 
-    def test_merge_split_list_of_lists(self):
+    def test_combine_simple_all_nodes(self):
         """
-        Test that when merging a split timeline, the nodes are returned as a list of list of nodes.
+        Test that when combining a simple timeline, all nodes are present.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/timelines/CRYCHE.json')
+        timeline = summarize.load_timeline(file)
+        combined = summarize.combine(timeline)
+        self.assertEqual(len(timeline.nodes), len(combined))
+        self.assertTrue(all( _og == nodes[0] for _og, nodes in zip(timeline.nodes, combined) ))
+
+    def test_combine_split_list_of_lists(self):
+        """
+        Test that when combining a split timeline, the nodes are returned as a list of list of nodes.
         """
 
         file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/timelines/#ParmaMilan-streams.json')
         timelines, splits = summarize.load_timeline(file), summarize.load_splits(file)
-        merged = summarize.merge(timelines, splits)
-        self.assertTrue(list, type(merged))
-        self.assertTrue(all( list == type(nodes) for nodes in merged ))
-        self.assertTrue(all( isinstance(node, Node) for nodes in merged for node in nodes ))
+        combined = summarize.combine(timelines, splits)
+        self.assertTrue(list, type(combined))
+        self.assertTrue(all( list == type(nodes) for nodes in combined ))
+        self.assertTrue(all( isinstance(node, Node) for nodes in combined for node in nodes ))
 
-    def test_merge_split_all_nodes(self):
+    def test_combine_split_all_nodes(self):
         """
-        Test that when merging a split timeline, all nodes are present.
+        Test that when combining a split timeline, all nodes are present.
         """
 
         file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/timelines/#ParmaMilan-streams.json')
         timelines, splits = summarize.load_timeline(file), summarize.load_splits(file)
-        merged = summarize.merge(timelines, splits)
+        combined = summarize.combine(timelines, splits)
         self.assertEqual(len([ node for timeline in timelines for node in timeline.nodes ]),
-                             len([ node for nodes in merged for node in nodes ]))
-        self.assertTrue(all( any( node in nodes for nodes in merged ) for timeline in timelines for node in timeline.nodes))
+                             len([ node for nodes in combined for node in nodes ]))
+        self.assertTrue(all( any( node in nodes for nodes in combined ) for timeline in timelines for node in timeline.nodes))
 
-    def test_merge_split_all_nodes_similar_time(self):
+    def test_combine_split_all_nodes_similar_time(self):
         """
         Test that all nodes in the same list have a similar time.
         """
 
         file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/timelines/#ParmaMilan-streams.json')
         timelines, splits = summarize.load_timeline(file), summarize.load_splits(file)
-        merged = summarize.merge(timelines, splits)
+        combined = summarize.combine(timelines, splits)
 
         # check the expiry of each list of nodes
         expiry = timelines[0].expiry
-        for nodes in merged:
+        for nodes in combined:
             self.assertTrue(nodes[-1].created_at - nodes[0].created_at <= expiry)
 
-    def test_merge_split_chronological_lists(self):
+    def test_combine_split_chronological_lists(self):
         """
         Test that the node lists are ordered chronologically.
         """
 
         file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/timelines/#ParmaMilan-streams.json')
         timelines, splits = summarize.load_timeline(file), summarize.load_splits(file)
-        merged = summarize.merge(timelines, splits)
+        combined = summarize.combine(timelines, splits)
 
-        self.assertTrue(all( merged[i][0].created_at < merged[i + 1][0].created_at
-                             for i in range(len(merged) - 1) ))
+        self.assertTrue(all( combined[i][0].created_at < combined[i + 1][0].created_at
+                             for i in range(len(combined) - 1) ))
 
-    def test_merge_split_chronological_nodes(self):
+    def test_combine_split_chronological_nodes(self):
         """
         Test that the nodes in the lists are ordered chronologically.
         """
 
         file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/timelines/#ParmaMilan-streams.json')
         timelines, splits = summarize.load_timeline(file), summarize.load_splits(file)
-        merged = summarize.merge(timelines, splits)
+        combined = summarize.combine(timelines, splits)
 
-        for nodes in merged:
+        for nodes in combined:
             self.assertTrue(all( nodes[i].created_at < nodes[i + 1].created_at for i in range(len(nodes) - 1) ))
 
-    def test_merge_split_saves_split_attribute(self):
+    def test_combine_split_saves_split_attribute(self):
         """
-        Test that when merging timelines, the split is saved as an attribute.
-        """
-
-        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/timelines/#ParmaMilan-streams.json')
-        timelines, splits = summarize.load_timeline(file), summarize.load_splits(file)
-        merged = summarize.merge(timelines, splits)
-        self.assertTrue(all( 'split' in node.attributes for nodes in merged for node in nodes ))
-
-    def test_merge_split_correct_split(self):
-        """
-        Test that when merging timelines, the correct split is saved as an attribute.
+        Test that when combining timelines, the split is saved as an attribute.
         """
 
         file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/timelines/#ParmaMilan-streams.json')
         timelines, splits = summarize.load_timeline(file), summarize.load_splits(file)
-        merged = summarize.merge(timelines, splits)
+        combined = summarize.combine(timelines, splits)
+        self.assertTrue(all( 'split' in node.attributes for nodes in combined for node in nodes ))
+
+    def test_combine_split_correct_split(self):
+        """
+        Test that when combining timelines, the correct split is saved as an attribute.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/timelines/#ParmaMilan-streams.json')
+        timelines, splits = summarize.load_timeline(file), summarize.load_splits(file)
+        combined = summarize.combine(timelines, splits)
         for timeline, split in zip(timelines, splits):
             self.assertTrue(all( split == node.attributes['split'] for node in timeline.nodes ))

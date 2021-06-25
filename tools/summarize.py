@@ -379,7 +379,7 @@ def summarize(summarizer, timeline, splits, verbose=False, max_documents=None, l
                            capitalize_first=True, remove_unicode_entities=False, remove_urls=True,
                            split_hashtags=True, remove_retweet_prefix=True)
 
-    merged = merge(timeline, splits)
+    merged = combine(timeline, splits)
 
     for nodes in merged:
         summaries.append([ ])
@@ -429,7 +429,7 @@ def summarize(summarizer, timeline, splits, verbose=False, max_documents=None, l
 
     return summaries
 
-def merge(timelines, splits=None):
+def combine(timelines, splits=None):
     """
     Merge the given timelines and extract a list of lists of nodes.
 
