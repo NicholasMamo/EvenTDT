@@ -239,7 +239,7 @@ class FUEGOConsumer(Consumer):
 
         consumed, filtered = 0, 0
 
-        timeline = Timeline(TopicalClusterNode, expiry=60*5, min_similarity=0.6, max_time=600)
+        timeline = Timeline(TopicalClusterNode, expiry=90, min_similarity=0.6, max_time=600)
 
         # the consumer keeps track of the keywords that are breaking at any given moment
         # these terms are stored in a dictionary where the keys are terms
