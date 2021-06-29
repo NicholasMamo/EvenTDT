@@ -29,7 +29,7 @@ def main():
         # so we use expansions.flatten to get all the information in a single JSON
         tweet = expansions.flatten(result)
         # Here we are printing the full Tweet object JSON to the console
-        print(json.dumps(tweet))
+        print(json.dumps(tweet)) # prints a list with a dictionary, the tweet, but seemingly each list contains only one tweet
         # Replace with the desired number of Tweets
         if count > 100:
             break
