@@ -292,17 +292,46 @@ class TestELDConsumer(unittest.TestCase):
 
     def test_filter_tweets_urls(self):
         """
-        Test that when filtering tweets, they can have no more than one URL.
+        Test that when filtering tweets, they can have no more than one URL unless they are quotes.
         """
 
-        consumer = ELDConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        consumer = ELDConsumer(Queue())
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             count = len(tweets)
             tweets = consumer._filter_tweets(tweets)
-            self.assertTrue(all(len(tweet['entities']['urls']) <= 1 for tweet in tweets))
+            self.assertTrue(all( len(tweet['entities']['urls']) <= 1 or
+                                 len(tweet['entities']['urls']) <= 2 and twitter.is_quote(tweet)
+                                for tweet in tweets ))
             self.assertGreater(count, len(tweets))
+
+    def test_filter_tweets_urls_quoted(self):
+        """
+        Test that when filtering tweets, none of the retained ones have URLs in them.
+        """
+
+        consumer = ELDConsumer(Queue())
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            filtered = consumer._filter_tweets(tweets)
+            self.assertTrue(all( len(tweet['entities']['urls']) <= 1 or
+                                 len(tweet['entities']['urls']) <= 2 and twitter.is_quote(tweet)
+                                for tweet in filtered ))
+            self.assertGreater(len(tweets), len(filtered))
+
+    def test_filter_tweets_keeps_quotes(self):
+        """
+        Test that when filtering tweets, quotes are not automatically filtered.
+        """
+
+        consumer = ELDConsumer(Queue())
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            filtered = consumer._filter_tweets(tweets)
+            self.assertTrue(any( twitter.is_quote(tweet) for tweet in filtered ))
 
     def test_filter_tweets_bio(self):
         """

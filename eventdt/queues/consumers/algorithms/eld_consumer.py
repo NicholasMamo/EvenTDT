@@ -483,7 +483,10 @@ class ELDConsumer(Consumer):
         if tweet['user']['followers_count'] / tweet['user']['statuses_count'] < 1e-3:
             return False
 
-        if len(tweet['entities']['urls']) > 1:
+        # filter out URLs, but allow one URL in quoted tweets (referring to the quoted tweet)
+        urls = tweet['entities']['urls']
+        if (len(urls) > 1 and not twitter.is_quote(tweet) # non-quote tweets may only have one URL
+            or len(urls) > 2 and twitter.is_quote(tweet)): # quote tweets may only have two URLs (the quoted tweet and another link)
             return False
 
         if not tweet['user']['description']:
