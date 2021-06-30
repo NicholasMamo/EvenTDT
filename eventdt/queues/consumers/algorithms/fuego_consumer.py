@@ -352,7 +352,7 @@ class FUEGOConsumer(Consumer):
         :rtype: str
         """
 
-        while 'retweeted_status' in tweet:
+        while twitter.is_retweet(tweet):
             tweet = tweet['retweeted_status'] if 'retweeted_status' in tweet else tweet
 
         if twitter.is_reply(tweet):
