@@ -73,6 +73,20 @@ def is_retweet(tweet):
 
     return 'retweeted_status' in tweet
 
+def is_quote(tweet):
+    """
+    Check whether the given tweet is a quoted status.
+    A tweet is a quoted status if it has a ``quoted_status`` key.
+
+    :param tweet: The tweet to check.
+    :type tweet: dict
+
+    :return: A boolean indicating whether the tweet is a quote.
+    :rtype: bool
+    """
+
+    return 'quoted_status' in tweet
+
 def is_reply(tweet):
     """
     Check whether the given tweet is a reply to another tweet.

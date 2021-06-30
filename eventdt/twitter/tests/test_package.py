@@ -247,6 +247,44 @@ class TestPackage(unittest.TestCase):
         if not found:
             logger.warning('Trivial test')
 
+    def test_is_quote(self):
+        """
+        Test that when checking for quotes, the function returns ``True`` only if the ``quoted_status`` key is set.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if 'quoted_status' in tweet:
+                    found = True
+                    self.assertTrue(twitter.is_quote(tweet))
+                else:
+                    self.assertFalse(twitter.is_quote(tweet))
+
+        if not found:
+            logger.warning('Trivial test')
+
+    def test_is_quote_retweet(self):
+        """
+        Test that when checking for quotes, if the quote is retweeted, the function returns ``True``.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if 'quoted_status' in tweet and 'retweeted_status' in tweet:
+                    found = True
+                    self.assertTrue(twitter.is_retweet(tweet))
+                    self.assertTrue(twitter.is_quote(tweet))
+                elif not 'quoted_status' in tweet and not 'retweeted_status' in tweet:
+                    self.assertFalse(twitter.is_quote(tweet))
+                    self.assertFalse(twitter.is_retweet(tweet))
+
+        if not found:
+            logger.warning('Trivial test')
+
     def test_is_reply_all_not_replies(self):
         """
         Test that when checking for replies, the function returns ``True`` only if the ``in_reply_to_status_id_str`` key is not None.
