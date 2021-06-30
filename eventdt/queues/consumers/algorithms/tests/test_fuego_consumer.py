@@ -464,8 +464,37 @@ class TestFUEGOConsumer(unittest.TestCase):
             tweets = [ json.loads(line) for line in lines ]
             count = len(tweets)
             tweets = consumer._filter_tweets(tweets)
-            self.assertTrue(all(len(tweet['entities']['urls']) == 0 for tweet in tweets))
+            self.assertTrue(all( len(tweet['entities']['urls']) == 0 or
+                                 len(tweet['entities']['urls']) == 1 and twitter.is_quote(tweet)
+                                for tweet in tweets ))
             self.assertGreater(count, len(tweets))
+
+    def test_filter_tweets_urls_quoted(self):
+        """
+        Test that when filtering tweets, none of the retained ones have URLs in them.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            filtered = consumer._filter_tweets(tweets)
+            self.assertTrue(all( len(tweet['entities']['urls']) == 0 or
+                                 len(tweet['entities']['urls']) == 1 and twitter.is_quote(tweet)
+                                for tweet in filtered ))
+            self.assertGreater(len(tweets), len(filtered))
+
+    def test_filter_tweets_keeps_quotes(self):
+        """
+        Test that when filtering tweets, quotes are not automatically filtered.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            filtered = consumer._filter_tweets(tweets)
+            self.assertTrue(any( twitter.is_quote(tweet) for tweet in filtered ))
 
     def test_filter_tweets_urls_not_media(self):
         """
@@ -478,7 +507,9 @@ class TestFUEGOConsumer(unittest.TestCase):
             tweets = [ json.loads(line) for line in lines ]
             count = len(tweets)
             tweets = consumer._filter_tweets(tweets)
-            self.assertTrue(all(len(tweet['entities']['urls']) == 0 for tweet in tweets))
+            self.assertTrue(all( len(tweet['entities']['urls']) == 0 or
+                                 len(tweet['entities']['urls']) == 1 and twitter.is_quote(tweet)
+                                for tweet in tweets ))
             self.assertTrue(any('media' in tweet['entities'] and len(tweet['entities']['media']) for tweet in tweets))
             self.assertGreater(count, len(tweets))
 
@@ -735,7 +766,7 @@ class TestFUEGOConsumer(unittest.TestCase):
 
     def test_to_documents_retweeted(self):
         """
-        Test that when the tweet is a quote, the retweet's text is used.
+        Test that when the tweet is a retweet, the retweet's text is used.
         """
 
         consumer = FUEGOConsumer(Queue())
