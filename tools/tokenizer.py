@@ -320,8 +320,7 @@ def prepare_tweet(tweet, tokenizer, keep):
         - The text used to extract tokens, and
         - The tokens themselves.
         """
-        object = { 'id': tweet['id'], 'text': tweet['text'],
-                   'tokens': tokens }
+        object = { 'id': tweet['id'], 'text': text, 'tokens': tokens }
 
         """
         Other attributes can be specified as arguments.
@@ -340,8 +339,7 @@ def prepare_tweet(tweet, tokenizer, keep):
         - The text used to extract tokens, and
         - The tokens themselves.
         """
-        object = { 'id': document.attributes.get('id'), 'text': document.text,
-                   'tokens': tokens }
+        object = { 'id': document.attributes.get('id'), 'text': document.text, 'tokens': tokens }
 
         """
         Other attributes can be specified as arguments.
