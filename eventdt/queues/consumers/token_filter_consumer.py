@@ -51,7 +51,7 @@ class TokenFilterConsumer(FilterConsumer):
         :param queue: The queue that receives the entire stream.
         :type queue: :class:`~queues.Queue`
         :param filters: A list of filters, or conditions that determine whether a tweet should be retained or discarded.
-                        The filters must lists of tokens.
+                        The filters must be lists of tokens.
         :type filters: str or list of str
         :param consumer: The type of :class:`~queues.consumers.Consumer` to create, which will process filtered lists.
         :type consumer: type

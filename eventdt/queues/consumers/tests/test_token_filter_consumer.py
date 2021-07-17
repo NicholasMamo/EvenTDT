@@ -15,7 +15,7 @@ if path not in sys.path:
 
 from logger import logger
 from nlp import Document, Tokenizer
-from nlp.weighting import TF
+from nlp.weighting import TF, TFIDF
 from objects.exportable import Exportable
 from queues import Queue
 from queues.consumers.algorithms import ELDConsumer, ZhaoConsumer
@@ -87,6 +87,38 @@ class TestTokenFilterConsumer(unittest.TestCase):
         filters = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
         consumer = TokenFilterConsumer(Queue(), filters, ELDConsumer)
         self.assertEqual(TF, type(consumer.scheme))
+
+    def test_init_saves_scheme(self):
+        """
+        Test that the token filter consumer stores the given scheme.
+        """
+
+        """
+        Create the consumer with a TF-IDF scheme.
+        """
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
+            idf = Exportable.decode(json.loads(f.readline()))['tfidf']
+
+        filters = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+        consumer = TokenFilterConsumer(Queue(), filters, ELDConsumer, scheme=idf)
+        self.assertEqual(idf, consumer.scheme)
+        self.assertEqual(TFIDF, type(consumer.scheme))
+
+    def test_init_saves_scheme_to_consumers(self):
+        """
+        Test that the token filter consumer also stores the given scheme in its consumers.
+        """
+
+        """
+        Create the consumer with a TF-IDF scheme.
+        """
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
+            idf = Exportable.decode(json.loads(f.readline()))['tfidf']
+
+        filters = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+        consumer = TokenFilterConsumer(Queue(), filters, ELDConsumer, scheme=idf)
+        self.assertEqual(idf, consumer.consumer.scheme)
+        self.assertEqual(TFIDF, type(consumer.consumer.scheme))
 
     def test_init_consumers_arguments(self):
         """
