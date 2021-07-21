@@ -74,6 +74,7 @@ The full list of accepted arguments:
     - ``-k --keep``                          *<Optional>* The tweet attributes to store.
     - ``--meta``                             *<Optional>* The file where to save the meta data, defaults to [--file].meta.json.
     - ``--remove-retweets``                  *<Optional>* Exclude retweets from the corpus.
+    - ``--skip-unverified``                  *<Optional>* Skip tweets from unverified authors when reading tweets, defaults to False.
     - ``--remove-unicode-entities``          *<Optional>* Remove unicode entities from the tweets.
     - ``--normalize-words``                  *<Optional>* Normalize words with repeating characters in them.
     - ``--character-normalization-count``    *<Optional>* The number of times a character must repeat for it to be normalized. Used only with the ``--normalize-words`` flag.
@@ -117,6 +118,7 @@ def setup_args():
         - ``-k --keep``                          *<Optional>* The tweet attributes to store.
         - ``--meta``                             *<Optional>* The file where to save the meta data, defaults to [--file].meta.json.
         - ``--remove-retweets``                  *<Optional>* Exclude retweets from the corpus.
+        - ``--skip-unverified``                  *<Optional>* Skip tweets from unverified authors when reading tweets, defaults to False.
         - ``--remove-unicode-entities``          *<Optional>* Remove unicode entities from the tweets.
         - ``--normalize-words``                  *<Optional>* Normalize words with repeating characters in them.
         - ``--character-normalization-count``    *<Optional>* The number of times a character must repeat for it to be normalized. Used only with the ``--normalize-words`` flag.
@@ -145,6 +147,8 @@ def setup_args():
                         help='<Optional> The tweet attributes to store.')
     parser.add_argument('--meta', type=str, required=False,
                         help='<Optional> The file where to save the meta data, defaults to [--file].meta.json.')
+    parser.add_argument('--skip-unverified', action="store_true",
+                        help='<Optional> Skip tweets from unverified authors when reading tweets, defaults to False.')
     parser.add_argument('--remove-retweets', action="store_true",
                         help='<Optional> Exclude retweets from the corpus.')
     parser.add_argument('--remove-unicode-entities', action="store_true",
@@ -187,7 +191,7 @@ def main():
                           character_normalization_count=args.character_normalization_count,
                           remove_unicode_entities=args.remove_unicode_entities, stem=args.stem,
                           stopwords=({ } if not args.remove_stopwords else stopwords.words('english')))
-    tokenize_corpus(args.file, args.output, tokenizer, args.keep, args.remove_retweets)
+    tokenize_corpus(args.file, args.output, tokenizer, args.keep, args.remove_retweets, args.skip_unverified)
     meta = args.meta or args.output.replace('.json', '.meta.json')
     pcmd['meta'] = meta
     tools.save(meta, { 'cmd': cmd, 'pcmd': pcmd })
@@ -268,6 +272,8 @@ def tokenize_corpus(file, output, tokenizer, keep=None, remove_retweets=False):
     :type keep: list or None
     :param remove_retweets: A boolean indicating whether to xclude retweets from the corpus.
     :type remove_retweets: bool
+    :param skip_unverified: Skip tweets from unverified authors when reading tweets.
+    :type skip_unverified: bool
     """
 
     keep = keep or [ ]
@@ -288,6 +294,10 @@ def tokenize_corpus(file, output, tokenizer, keep=None, remove_retweets=False):
             for line in infile:
                 tweet = json.loads(line)
                 if remove_retweets and twitter.is_retweet(tweet): # skip the tweet if retweets should be excluded
+                    continue
+
+                # skip tweets from unverified authors if they should be excluded
+                if skip_unverified and not twitter.is_verified(tweet):
                     continue
 
                 object = prepare_tweet(tweet, tokenizer, keep)
