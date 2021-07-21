@@ -255,7 +255,7 @@ def get_tags(nouns, proper_nouns, verbs, adjectives):
 
     return tags
 
-def tokenize_corpus(file, output, tokenizer, keep=None, remove_retweets=False):
+def tokenize_corpus(file, output, tokenizer, keep=None, remove_retweets=False, skip_unverified=False):
     """
     Tokenize the corpus represented by the given file.
     The function iterates over each tweet, tokenizes it and saves it to the file.
