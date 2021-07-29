@@ -32,7 +32,7 @@ Reduce the speed to give more time for the consumer to process tweets, or speed 
     --speed 2
 
 In addition to speed, you can also control the number of tweets that the file reader reads from the file.
-he ``--sample`` parameter is used to systematically sample the file, reading :math:`1/sample` of all tweets in the corpus.
+The ``--sample`` parameter is used to systematically sample the file, reading :math:`(sample * 100)%` of all tweets in the corpus.
 The number of tweets are then saved as part of the timeline's information.
 For example, the next code snippet reads every other tweet from the corpus:
 
@@ -41,7 +41,7 @@ For example, the next code snippet reads every other tweet from the corpus:
     ./tools/consume.py \\
     --event data/event/event.json \\
     --consumer PrintConsumer \\
-    --sample 1
+    --sample 0.5
 
 .. note::
 
@@ -219,7 +219,7 @@ The full list of accepted arguments:
     - ``-u --understanding``        *<Optional>* The understanding file used to understand the event.
     - ``-o --output``               *<Optional>* The output file where to save the timeline, defaults to the ``.out`` directory relative to the event file.
     - ``--no-cache``                *<Optional>* If specified, the cached understanding is not used, but new understanding is generated.
-    - ``--sample``                  *<Optional>* The systematic sampling rate when reading the corpus; defaults to 1, which reads all tweets.
+    - ``--sample``                  *<Optional>* The systematic sampling rate when reading the corpus [0–1]; defaults to 1, which reads all tweets.
     - ``--speed``                   *<Optional>* The speed at which the file is consumed, defaults to 1, which is real-time speed.
     - ``--skip``                    *<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
     - ``--max-inactivity``          *<Optional>* The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.
@@ -279,7 +279,7 @@ def setup_args():
         - ``-u --understanding``        *<Optional>* The understanding file used to understand the event.
         - ``-o --output``               *<Optional>* The output file where to save the timeline, defaults to the ``.out`` directory relative to the event file.
         - ``--no-cache``                *<Optional>* If specified, the cached understanding is not used, but new understanding is generated.
-        - ``--sample``                  *<Optional>* The systematic sampling rate when reading the corpus; defaults to 1, which reads all tweets.
+        - ``--sample``                  *<Optional>* The systematic sampling rate when reading the corpus [0–1]; defaults to 1, which reads all tweets.
         - ``--speed``                   *<Optional>* The speed at which the file is consumed, defaults to 1, which is real-time speed.
         - ``--skip``                    *<Optional>* The amount of time to skip from the beginning of the file in minutes, defaults to 0.
         - ``--max-inactivity``          *<Optional>* The maximum time in seconds to wait for new tweets to arrive before stopping, defaults to 60 seconds.
@@ -323,7 +323,7 @@ def setup_args():
     parser.add_argument('--no-cache', action="store_true",
                         help='<Optional> If specified, the cached understanding is not used, but new understanding is generated.')
     parser.add_argument('--sample', type=float, required=False, default=1,
-                        help='<Optional> The systematic sampling rate when reading the corpus; defaults to 1, which reads all tweets.')
+                        help='<Optional> The systematic sampling rate when reading the corpus [0–1]; defaults to 1, which reads all tweets.')
     parser.add_argument('--speed', type=float, required=False, default=1,
                         help='<Optional> The speed at which the file is consumed, defaults to 1, which is real-time speed.')
     parser.add_argument('--skip', type=int, required=False, default=0,
