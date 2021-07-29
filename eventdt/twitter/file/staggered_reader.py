@@ -119,6 +119,7 @@ class StaggeredFileReader(FileReader):
         Go through each line and add it to the queue
         Time how long it takes to read each tweet to avoid extra time skipping.
         """
+        sample = 0 # the sampling progress: when it reaches or exceeds 1, the reader reads the next tweet and resets it to the remainder
         for i, line in enumerate(file):
             start = time.time()
 
@@ -142,14 +143,15 @@ class StaggeredFileReader(FileReader):
             Only add a tweet if it is valid.
             """
             if self.valid(tweet):
-                self.queue.enqueue(tweet)
-                read += 1
-
-            """
-            Skip some lines if need be.
-            """
-            for _ in range(self.sample - 1):
-                file.readline()
+                """
+                The increment is the sampling interval, but the reader only reads a tweet if the sampling weight reaches 1.
+                If the sampling interval is 0.5, the sampling weight reaches 1 at every other tweet, so the reader will read every other tweet.
+                """
+                sample += self.sample
+                if sample >= 1: # if it's time to read a new tweet, read one
+                    sample -= 1 # keep the remainder
+                    self.queue.enqueue(tweet)
+                    read += 1
 
             """
             If there is a limit on the number of lines to read per minute, sleep a bit.

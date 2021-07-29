@@ -375,28 +375,63 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
             read = await reader.read()
             self.assertEqual(queue.length(), read)
 
-    async def test_sample(self):
+    async def test_read_sample_all(self):
         """
-        Test that when using the skip rate, the tweets are distributed evenly.
+        Test that when reading the corpus with full sampling, the full corpus is read.
         """
-
-        """
-        Calculate the start and end of the corpus.
-        """
-        file = 'eventdt/tests/corpora/CRYCHE-100.json'
-        with open(file, 'r') as f:
-            lines = f.readlines()
-            start = extract_timestamp(json.loads(lines[0]))
-            end = extract_timestamp(json.loads(lines[-1]))
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=100, sample=2)
-            await reader.read()
-            self.assertEqual(50, queue.length())
-            self.assertEqual(start, extract_timestamp(queue.head()))
-            self.assertEqual(end, extract_timestamp(queue.tail()))
+            reader = StaggeredFileReader(queue, f, rate=20, sample=1)
+            read = await reader.read()
+            self.assertEqual(100, read)
+
+    async def test_read_sample_none(self):
+        """
+        Test that when reading the corpus with a sampling rate of 0, no tweets are read.
+        """
+
+        file = 'eventdt/tests/corpora/CRYCHE-100.json'
+        with open(file, 'r') as f:
+            queue = Queue()
+            reader = StaggeredFileReader(queue, f, rate=20, sample=0)
+            read = await reader.read()
+            self.assertEqual(0, read)
+
+    async def test_read_sample(self):
+        """
+        Test that when reading the corpus with sampling, only a part of the corpus is read.
+        """
+
+        file = 'eventdt/tests/corpora/CRYCHE-100.json'
+        with open(file, 'r') as f:
+            queue = Queue()
+            reader = StaggeredFileReader(queue, f, rate=20, sample=0.5)
+            read = await reader.read()
+            self.assertEqual(50, read)
+
+        with open(file, 'r') as f:
+            queue = Queue()
+            reader = StaggeredFileReader(queue, f, rate=20, sample=(1/3))
+            read = await reader.read()
+            self.assertEqual(33, read)
+
+    async def test_read_sample_not_adjacent(self):
+        """
+        Test that when reading the corpus with full sampling, the tweets are equally-spaced.
+        """
+
+        file = 'eventdt/tests/corpora/CRYCHE-100.json'
+        with open(file, 'r') as f:
+            tweets = [ json.loads(tweet) for tweet in f.readlines() ]
+
+        with open(file, 'r') as f:
+            queue = Queue()
+            reader = StaggeredFileReader(queue, f, rate=20, sample=0.5)
+            read = await reader.read()
+            self.assertEqual(50, read)
+            self.assertEqual(tweets[1::2], queue.queue)
 
     async def test_rate(self):
         """
@@ -476,7 +511,7 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
 
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=100, max_lines=100, sample=5)
+            reader = StaggeredFileReader(queue, f, rate=100, max_lines=100, sample=0.2)
             await reader.read()
             self.assertEqual(20, queue.length())
             self.assertEqual(start, extract_timestamp(queue.head()))
