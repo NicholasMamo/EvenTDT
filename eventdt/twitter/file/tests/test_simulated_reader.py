@@ -395,9 +395,21 @@ class TestSimulatedFileReader(unittest.IsolatedAsyncioTestCase):
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             queue = Queue()
-            reader = SimulatedFileReader(queue, f, speed=10)
+            reader = SimulatedFileReader(queue, f, speed=10, sample=1)
             read = await reader.read()
             self.assertEqual(100, read)
+
+    async def test_read_sample_none(self):
+        """
+        Test that when reading the corpus with a sampling rate of 0, no tweets are read.
+        """
+
+        file = 'eventdt/tests/corpora/CRYCHE-100.json'
+        with open(file, 'r') as f:
+            queue = Queue()
+            reader = SimulatedFileReader(queue, f, speed=10, sample=0)
+            read = await reader.read()
+            self.assertEqual(0, read)
 
     async def test_read_sample(self):
         """
@@ -407,15 +419,15 @@ class TestSimulatedFileReader(unittest.IsolatedAsyncioTestCase):
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             queue = Queue()
-            reader = SimulatedFileReader(queue, f, speed=10, sample=2)
+            reader = SimulatedFileReader(queue, f, speed=10, sample=0.5)
             read = await reader.read()
             self.assertEqual(50, read)
 
         with open(file, 'r') as f:
             queue = Queue()
-            reader = SimulatedFileReader(queue, f, speed=10, sample=3)
+            reader = SimulatedFileReader(queue, f, speed=10, sample=(1/3))
             read = await reader.read()
-            self.assertEqual(34, read)
+            self.assertEqual(33, read)
 
     async def test_read_sample_not_adjacent(self):
         """
@@ -428,10 +440,10 @@ class TestSimulatedFileReader(unittest.IsolatedAsyncioTestCase):
 
         with open(file, 'r') as f:
             queue = Queue()
-            reader = SimulatedFileReader(queue, f, speed=10, sample=2)
+            reader = SimulatedFileReader(queue, f, speed=10, sample=0.5)
             read = await reader.read()
             self.assertEqual(50, read)
-            self.assertEqual(tweets[::2], queue.queue)
+            self.assertEqual(tweets[1::2], queue.queue)
 
     async def test_normal_speed(self):
         """

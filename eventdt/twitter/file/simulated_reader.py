@@ -106,6 +106,7 @@ class SimulatedFileReader(FileReader):
         """
         Go through each line and add it to the queue.
         """
+        sample = 0 # the sampling progress: when it reaches or exceeds 0.5, the reader reads the next tweet and resets it to the remainder
         start = time.time()
         for i, line in enumerate(file):
             tweet = json.loads(line)
@@ -138,7 +139,13 @@ class SimulatedFileReader(FileReader):
             Only add a tweet if it is valid.
             """
             if self.valid(tweet):
-                if not i % self.sample:
+                """
+                The increment is the sampling interval, but the reader only reads a tweet if the sampling weight reaches 1.
+                If the sampling interval is 0.5, the sampling weight reaches 1 at every other tweet, so the reader will read every other tweet.
+                """
+                sample += self.sample
+                if sample >= 1: # if it's time to read a new tweet, read one
+                    sample -= 1 # keep the remainder
                     self.queue.enqueue(tweet)
                     read += 1
 
