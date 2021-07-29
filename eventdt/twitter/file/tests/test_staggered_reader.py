@@ -153,7 +153,7 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
 
     def test_init_default_sample(self):
         """
-        Test that when creating a staggered file reader, the default sampling rate is 1.
+        Test that when creating a simulated file reader, the default sampling rate is 1.
         """
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
@@ -161,59 +161,50 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
             reader = StaggeredFileReader(Queue(), f)
             self.assertEqual(1, reader.sample)
 
-    def test_floating_point_sample(self):
+    def test_init_float_sample(self):
         """
-        Test that when creating a staggered file reader with a floating point number of lines to skip after each read, a ValueError is raised.
-        """
-
-        file = 'eventdt/tests/corpora/CRYCHE-100.json'
-        with open(file, 'r') as f:
-            self.assertRaises(ValueError, StaggeredFileReader, Queue(), f, sample=1.1)
-
-    def test_float_sample(self):
-        """
-        Test that when creating a staggered file reader with a rounded float number of lines to skip after each read, no ValueError is raised.
+        Test that when creating a simulated file reader with a rounded float number of lines to skip after each read, no ValueError is raised.
         """
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             self.assertTrue(StaggeredFileReader(Queue(), f, sample=1.0))
 
-    def test_integer_sample(self):
+    def test_init_integer_sample(self):
         """
-        Test that when creating a staggered file reader with an integer number of lines to skip after each read, no ValueError is raised.
+        Test that when creating a simulated file reader with an integer number of lines to skip after each read, no ValueError is raised.
         """
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             self.assertTrue(StaggeredFileReader(Queue(), f, sample=1))
 
-    def test_negative_sample(self):
+    def test_init_negative_sample(self):
         """
-        Test that when creating a staggered file reader with a negative number of lines to skip after each read, a ValueError is raised.
+        Test that when creating a simulated file reader with a negative number of lines to skip after each read, a ValueError is raised.
         """
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             self.assertRaises(ValueError, StaggeredFileReader, Queue(), f, sample=-1)
 
-    def test_zero_sample(self):
+    def test_init_zero_sample(self):
         """
-        Test that when creating a staggered file reader with a sampling rate of 0, it raises a ValueError.
-        """
-
-        file = 'eventdt/tests/corpora/CRYCHE-100.json'
-        with open(file, 'r') as f:
-            self.assertRaises(ValueError, StaggeredFileReader, Queue(), f, sample=0)
-
-    def test_positive_sample(self):
-        """
-        Test that when creating a staggered file reader that samples each line, no ValueError is raised.
+        Test that when creating a simulated file reader with a sampling rate of 0, no ValueError is raised.
         """
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             self.assertTrue(StaggeredFileReader(Queue(), f, sample=1))
+
+    def test_init_float_sample(self):
+        """
+        Test that when creating a simulated file reader with a floating-point sampling rate, no ValueError is raised.
+        """
+
+        file = 'eventdt/tests/corpora/CRYCHE-100.json'
+        with open(file, 'r') as f:
+            self.assertTrue(StaggeredFileReader(Queue(), f, sample=0.5))
 
     async def test_read(self):
         """
