@@ -37,6 +37,7 @@ class StaggeredFileReader(FileReader):
     :ivar sample: The sampling rate.
                   The reader uses systematic sampling, reading one tweet out of every $n$ samples.
                   If 1 is given, the staggered reader reads all tweets.
+                  If 2 is given, the simulated reader reads every other tweet.
     :vartype sample: int
     """
 
@@ -65,12 +66,15 @@ class StaggeredFileReader(FileReader):
         :param sample: The sampling rate.
                        The reader uses systematic sampling, reading one tweet out of every $n$ samples.
                        If 1 is given, the staggered reader reads all tweets.
+                       If 2 is given, the simulated reader reads every other tweet.
         :type sample: int
 
         :raises ValueError: When the rate is not an integer.
         :raises ValueError: When the rate is zero or negative.
         :raises ValueError: When the number of lines to skip after each read is not an integer.
         :raises ValueError: When the number of lines to skip after each read is negative.
+        :raises ValueError: When the sampling rate is not an integer.
+        :raises ValueError: When the sampling rate is less than 1.
         """
 
         super(StaggeredFileReader, self).__init__(queue, f, *args, **kwargs)

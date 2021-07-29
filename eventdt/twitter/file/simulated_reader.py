@@ -40,6 +40,7 @@ class SimulatedFileReader(FileReader):
     :ivar sample: The sampling rate.
                   The reader uses systematic sampling, reading one tweet out of every $n$ samples.
                   If 1 is given, the simulated reader reads all tweets.
+                  If 2 is given, the simulated reader reads every other tweet.
     :vartype sample: int
     """
 
@@ -59,9 +60,12 @@ class SimulatedFileReader(FileReader):
         :param sample: The sampling rate.
                        The reader uses systematic sampling, reading one tweet out of every $n$ samples.
                        If 1 is given, the simulated reader reads all tweets.
+                       If 2 is given, the simulated reader reads every other tweet.
         :type sample: int
 
         :raises ValueError: When the speed is zero or negative.
+        :raises ValueError: When the sampling rate is not an integer.
+        :raises ValueError: When the sampling rate is less than 1.
         """
 
         super(SimulatedFileReader, self).__init__(queue, f, *args, **kwargs)
