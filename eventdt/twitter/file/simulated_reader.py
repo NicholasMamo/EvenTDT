@@ -37,11 +37,11 @@ class SimulatedFileReader(FileReader):
                  If it is set to 0.5, for example, the event progresses at half the speed.
                  If it is set to 2, the event progresses at double the speed.
     :vartype speed: int
-    :ivar sample: The sampling rate.
-                  The reader uses systematic sampling, reading one tweet out of every $n$ samples.
+    :ivar sample: The fraction of tweets to read.
+                  The reader uses systematic sampling, reading $\\frac{1}{n}$ samples.
                   If 1 is given, the simulated reader reads all tweets.
-                  If 2 is given, the simulated reader reads every other tweet.
-    :vartype sample: int
+                  If 0.5 is given, the simulated reader reads every other tweet.
+    :vartype sample: int or float
     """
 
     def __init__(self, queue, f, speed=1, sample=1, *args, **kwargs):
@@ -57,15 +57,14 @@ class SimulatedFileReader(FileReader):
                       If it is set to 0.5, for example, the event progresses at half the speed.
                       If it is set to 2, the event progresses at double the speed.
         :type speed: int
-        :param sample: The sampling rate.
-                       The reader uses systematic sampling, reading one tweet out of every $n$ samples.
+        :param sample: The fraction of tweets to read.
+                       The reader uses systematic sampling, reading $\\frac{1}{n}$ samples.
                        If 1 is given, the simulated reader reads all tweets.
-                       If 2 is given, the simulated reader reads every other tweet.
-        :type sample: int
+                       If 0.5 is given, the simulated reader reads every other tweet.
+        :type sample: int or float
 
         :raises ValueError: When the speed is zero or negative.
-        :raises ValueError: When the sampling rate is not an integer.
-        :raises ValueError: When the sampling rate is less than 1.
+        :raises ValueError: When the sampling rate is not between 0 and 1.
         """
 
         super(SimulatedFileReader, self).__init__(queue, f, *args, **kwargs)
@@ -76,11 +75,8 @@ class SimulatedFileReader(FileReader):
         if speed <= 0:
             raise ValueError(f"The speed must be positive; received {speed}")
 
-        if sample % 1:
-            raise ValueError(f"The rate of lines to skip after each read must be an integer; received {sample}")
-
-        if sample < 1:
-            raise ValueError(f"The rate of lines to skip after each read cannot be negative; received {sample}")
+        if sample > 1 or sample < 0:
+            raise ValueError(f"The rate of lines to skip after each read must be between 0 and 1; received {sample}")
 
         self.speed = speed
         self.sample = sample
