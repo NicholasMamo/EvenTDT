@@ -547,6 +547,33 @@ class FUEGOConsumer(Consumer):
 
             self.correlations.add(timestamp, correlations)
 
+    def _combine_correlations(self, timestamp):
+        """
+        Combine the correlations in the past window, relative to the given timestamp.
+        The end value, or the given timestamp, is inclusive, but the start value (one time window before the given timestamp) is exclusive.
+
+        :param timestamp: The timestamp at which to create the time windows.
+        :type timestamp: float
+
+        :return: A correlation dictionary for each term.
+                 The outer dictionary has terms as keys, and the values are the term's correlations as a dictionary.
+                 The inner dictionary, therefore, also has terms as keys, with the values being the number of documents in which the two terms appear together.
+        :rtype: dict
+        """
+
+        correlations = { }
+
+        # NOTE: In this function, the ``since`` is exclusive, and the ``until`` is inclusive.
+        historic = self.correlations.between(timestamp - self.tdt.window_size + 1, timestamp + 1)
+
+        for timestamp in historic:
+            for t0 in historic[timestamp]:
+                correlations[t0] = correlations.get(t0, { })
+                for t1, value in historic[timestamp][t0].items():
+                    correlations[t0][t1] = correlations[t0].get(t1, 0) + value
+
+        return correlations
+
     def _damp(self, document):
         """
         Get the damping factor from the document.

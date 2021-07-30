@@ -1534,7 +1534,7 @@ class TestFUEGOConsumer(unittest.TestCase):
         """
 
         consumer = FUEGOConsumer(Queue(), damping=0)
-        self.assertEqual({ }, consumer.nutrition.all())
+        self.assertEqual({ }, consumer.correlations.all())
 
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
@@ -1550,7 +1550,7 @@ class TestFUEGOConsumer(unittest.TestCase):
         """
 
         consumer = FUEGOConsumer(Queue(), damping=0)
-        self.assertEqual({ }, consumer.nutrition.all())
+        self.assertEqual({ }, consumer.correlations.all())
 
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
@@ -1584,7 +1584,7 @@ class TestFUEGOConsumer(unittest.TestCase):
         """
 
         consumer = FUEGOConsumer(Queue(), damping=0)
-        self.assertEqual({ }, consumer.nutrition.all())
+        self.assertEqual({ }, consumer.correlations.all())
 
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
@@ -1620,11 +1620,11 @@ class TestFUEGOConsumer(unittest.TestCase):
 
     def test_update_correlations_sum_gradual(self):
         """
-        Test that when updating the correlations gradually, the correct term correlationss are recorded.
+        Test that when updating the correlations gradually, the correct term correlations are recorded.
         """
 
         consumer = FUEGOConsumer(Queue(), damping=0)
-        self.assertEqual({ }, consumer.nutrition.all())
+        self.assertEqual({ }, consumer.correlations.all())
 
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
@@ -1665,7 +1665,7 @@ class TestFUEGOConsumer(unittest.TestCase):
         """
 
         consumer = FUEGOConsumer(Queue(), damping=0.5)
-        self.assertEqual({ }, consumer.nutrition.all())
+        self.assertEqual({ }, consumer.correlations.all())
 
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
@@ -1691,7 +1691,7 @@ class TestFUEGOConsumer(unittest.TestCase):
         """
 
         consumer = FUEGOConsumer(Queue(), damping=0)
-        self.assertEqual({ }, consumer.nutrition.all())
+        self.assertEqual({ }, consumer.correlations.all())
 
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
@@ -1715,7 +1715,7 @@ class TestFUEGOConsumer(unittest.TestCase):
         """
 
         consumer = FUEGOConsumer(Queue(), damping=0)
-        self.assertEqual({ }, consumer.nutrition.all())
+        self.assertEqual({ }, consumer.correlations.all())
 
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
@@ -1752,7 +1752,7 @@ class TestFUEGOConsumer(unittest.TestCase):
         """
 
         consumer = FUEGOConsumer(Queue(), damping=0.5)
-        self.assertEqual({ }, consumer.nutrition.all())
+        self.assertEqual({ }, consumer.correlations.all())
 
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
@@ -1773,7 +1773,7 @@ class TestFUEGOConsumer(unittest.TestCase):
         """
 
         consumer = FUEGOConsumer(Queue(), damping=0.5)
-        self.assertEqual({ }, consumer.nutrition.all())
+        self.assertEqual({ }, consumer.correlations.all())
 
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
@@ -1792,7 +1792,7 @@ class TestFUEGOConsumer(unittest.TestCase):
         """
 
         consumer = FUEGOConsumer(Queue(), damping=0.5)
-        self.assertEqual({ }, consumer.nutrition.all())
+        self.assertEqual({ }, consumer.correlations.all())
 
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
@@ -1804,6 +1804,123 @@ class TestFUEGOConsumer(unittest.TestCase):
                                  for timestamp in consumer.correlations.all()
                                  for t0 in consumer.correlations.get(timestamp)
                                  for t1 in consumer.correlations.get(timestamp)[t0] ))
+
+    def test_combine_correlations_empy(self):
+        """
+        Test that when combining correlations, an empty dictionary is returned if there are no correlations.
+        """
+
+    def test_combine_correlations_dict(self):
+        """
+        Test that when combining correlations, the return value is a dictionary of terms.
+        """
+
+        consumer = FUEGOConsumer(Queue(), damping=0)
+        self.assertEqual({ }, consumer.correlations.all())
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            documents = consumer._to_documents(tweets)
+            timestamp = documents[-1].attributes['timestamp']
+            consumer._update_correlations(documents)
+            self.assertEqual(dict, type(consumer._combine_correlations(timestamp)))
+
+    def test_combine_correlations_dict_of_dict(self):
+        """
+        Test that when combining correlations, the return value is a dictionary of terms, and each term is associated with another dictionary.
+        """
+
+        consumer = FUEGOConsumer(Queue(), damping=0)
+        self.assertEqual({ }, consumer.correlations.all())
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            documents = consumer._to_documents(tweets)
+            timestamp = documents[-1].attributes['timestamp']
+            consumer._update_correlations(documents)
+            correlations = consumer._combine_correlations(timestamp)
+            self.assertTrue(all( dict == type(correlations[term]) for term in correlations ))
+
+    def test_combine_correlations_start_exclusive(self):
+        """
+        Test that when combining correlations, the start of the correlations time window is exclusive.
+        """
+
+        consumer = FUEGOConsumer(Queue(), window_size=60)
+        self.assertEqual({ }, consumer.correlations.all())
+        documents = [ Document('', dimensions={ 'a': 10, 'b': 10 }, attributes={ 'timestamp': 10 }),
+                      Document('', dimensions={ 'a': 20, 'b': 20 }, attributes={ 'timestamp': 70 }) ]
+        consumer._update_correlations(documents)
+        correlations = consumer._combine_correlations(70)
+        self.assertEqual({ 'a': { 'b': 1 }, 'b': { 'a': 1 } }, correlations)
+
+    def test_combine_correlations_end_inclusive(self):
+        """
+        Test that when combining correlations, the end of the correlations time window is inclusive.
+        """
+
+        consumer = FUEGOConsumer(Queue(), window_size=60)
+        self.assertEqual({ }, consumer.correlations.all())
+        documents = [ Document('', dimensions={ 'a': 10, 'b': 10 }, attributes={ 'timestamp': 10 }),
+                      Document('', dimensions={ 'a': 20, 'b': 20 }, attributes={ 'timestamp': 70 }) ]
+        consumer._update_correlations(documents)
+        correlations = consumer._combine_correlations(70)
+        self.assertEqual({ 'a': { 'b': 1 }, 'b': { 'a': 1 } }, correlations)
+
+    def test_combine_correlations_all_terms(self):
+        """
+        Test that when combining correlations, the combined dictionary includes all terms.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        self.assertEqual({ }, consumer.correlations.all())
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            documents = consumer._to_documents(tweets)
+            timestamp = documents[-1].attributes['timestamp']
+            consumer._update_correlations(documents)
+
+            # extract all terms in the past time window
+            correlations = consumer.correlations.between(timestamp - consumer.tdt.window_size + 1, timestamp + 1)
+            terms = set([ term for timestamp in correlations for term in correlations[timestamp] ])
+
+            # compare the two sets of terms
+            correlations = consumer._combine_correlations(timestamp)
+            self.assertEqual(terms, set(correlations))
+
+    def test_combine_correlations_add(self):
+        """
+        Test that when combining correlations, the function adds the scores at each timestamp.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        self.assertEqual({ }, consumer.correlations.all())
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            documents = consumer._to_documents(tweets)
+            timestamp = documents[-1].attributes['timestamp']
+
+            # calculate the correlations from the latest time window
+            recent = [ document for document in documents if document.attributes['timestamp'] > timestamp - consumer.tdt.window_size ]
+            _correlations = { }
+            for document in recent:
+                for t0 in document.dimensions:
+                    _correlations[t0] = _correlations.get(t0, { })
+                    for t1 in document.dimensions:
+                        if t0 == t1:
+                            continue
+
+                        _correlations[t0][t1] = _correlations[t0].get(t1, 0) + 1
+
+            consumer._update_correlations(documents)
+            correlations = consumer._combine_correlations(timestamp)
+            self.assertEqual(_correlations, correlations)
 
     def test_damp_lower_bound(self):
         """
