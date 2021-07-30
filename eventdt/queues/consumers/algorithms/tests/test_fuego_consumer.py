@@ -1922,6 +1922,97 @@ class TestFUEGOConsumer(unittest.TestCase):
             correlations = consumer._combine_correlations(timestamp)
             self.assertEqual(_correlations, correlations)
 
+    def test_combine_correlations_normalized_upper_bound(self):
+        """
+        Test that when combining correlations and normalizing, the upper bound of correlations for each term is 1.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        self.assertEqual({ }, consumer.correlations.all())
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            documents = consumer._to_documents(tweets)
+            timestamp = documents[-1].attributes['timestamp']
+            consumer._update_correlations(documents)
+            correlations = consumer._combine_correlations(timestamp, normalize=True)
+            self.assertTrue(all( max(correlations[term].values()) <= 1 for term in correlations ))
+
+    def test_combine_correlations_normalized_lower_bound(self):
+        """
+        Test that when combining correlations and normalizing, the lower bound of correlations for each term is 0.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        self.assertEqual({ }, consumer.correlations.all())
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            documents = consumer._to_documents(tweets)
+            timestamp = documents[-1].attributes['timestamp']
+            consumer._update_correlations(documents)
+            correlations = consumer._combine_correlations(timestamp, normalize=True)
+            self.assertTrue(all( 0 <= min(correlations[term].values()) for term in correlations ))
+
+    def test_combine_correlations_normalized_sum(self):
+        """
+        Test that when combining correlations and normalizing, the sum of correlations for each term is 1.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        self.assertEqual({ }, consumer.correlations.all())
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            documents = consumer._to_documents(tweets)
+            timestamp = documents[-1].attributes['timestamp']
+            consumer._update_correlations(documents)
+            correlations = consumer._combine_correlations(timestamp, normalize=True)
+            self.assertTrue(all( 1 == round(sum(correlations[term].values()), 10)
+                                 for term in correlations ))
+
+    def test_combine_correlations_same_terms(self):
+        """
+        Test that when combining correlations and normalizing, all the same terms are retained.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        self.assertEqual({ }, consumer.correlations.all())
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            documents = consumer._to_documents(tweets)
+            timestamp = documents[-1].attributes['timestamp']
+            consumer._update_correlations(documents)
+            original = consumer._combine_correlations(timestamp, normalize=False)
+            normalized = consumer._combine_correlations(timestamp, normalize=True)
+            self.assertEqual(set(original), set(normalized))
+            self.assertTrue(all( set(original[term]) == set(normalized[term]) for term in original ))
+
+    def test_combine_correlations_same_order(self):
+        """
+        Test that when combining correlations and normalizing, the highest correlations remain the highest, and vice-versa.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        self.assertEqual({ }, consumer.correlations.all())
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            documents = consumer._to_documents(tweets)
+            timestamp = documents[-1].attributes['timestamp']
+            consumer._update_correlations(documents)
+            original = consumer._combine_correlations(timestamp, normalize=False)
+            normalized = consumer._combine_correlations(timestamp, normalize=True)
+
+            self.assertTrue(all( sorted(original[term], key=original[term].get) == sorted(normalized[term], key=normalized[term].get)
+                                 for term in original ))
+
     def test_damp_lower_bound(self):
         """
         Test that damping has a lower bound of 0.

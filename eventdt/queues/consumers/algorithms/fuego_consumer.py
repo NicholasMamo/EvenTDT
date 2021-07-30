@@ -547,13 +547,16 @@ class FUEGOConsumer(Consumer):
 
             self.correlations.add(timestamp, correlations)
 
-    def _combine_correlations(self, timestamp):
+    def _combine_correlations(self, timestamp, normalize=False):
         """
         Combine the correlations in the past window, relative to the given timestamp.
         The end value, or the given timestamp, is inclusive, but the start value (one time window before the given timestamp) is exclusive.
 
         :param timestamp: The timestamp at which to create the time windows.
         :type timestamp: float
+        :param normalize: A parameter indicating whether to normalize the correlations.
+                          In this context, normalizing means transforming the correlations of each term into a probability.
+        :type normalize: bool
 
         :return: A correlation dictionary for each term.
                  The outer dictionary has terms as keys, and the values are the term's correlations as a dictionary.
@@ -571,6 +574,13 @@ class FUEGOConsumer(Consumer):
                 correlations[t0] = correlations.get(t0, { })
                 for t1, value in historic[timestamp][t0].items():
                     correlations[t0][t1] = correlations[t0].get(t1, 0) + value
+
+        # normalize the correlations if need be
+        correlations = {
+            t0: { t1: correlation / sum(correlations[t0].values())
+                  for t1, correlation in correlations[t0].items() }
+            for t0 in correlations
+        } if normalize else correlations
 
         return correlations
 
