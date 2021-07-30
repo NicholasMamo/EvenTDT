@@ -278,6 +278,7 @@ class FUEGOConsumer(Consumer):
                 # update the historical volume and the nutrition of individual keywords
                 self._update_volume(documents) # update the historical volume
                 self._update_nutrition(documents) # update the nutrition of individual keywords
+                self._update_correlations(documents) # update the term correlations
 
                 # check whether previously-bursting terms are still bursting and update their highest burst value
                 tracking = self._track(topics.keys(), time) # check which bursting terms are still bursting
