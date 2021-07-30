@@ -64,6 +64,11 @@ class FUEGOConsumer(Consumer):
     :ivar nutrition: A nutrition store that contains the nutrition of terms from tweets.
                      The nutrition is stored for each second.
     :vartype nutrition: :class:`~tdt.nutrition.memory.MemoryNutritionStore`
+    :ivar correlations: A store that contains the correlations of terms from tweets.
+                        The correlations are stored for each second and for each term, as a dictionary.
+                        Each term, the key, has another dictionary as a value.
+                        In turn, the inner dictionary's keys are other terms, and the values are the number of times that the two terms co-occur.
+    :vartype correlations: :class:`~tdt.nutrition.memory.MemoryNutritionStore`
     :ivar tdt: The TDT algorithm used by the consumer to detect and track bursty terms.
     :vartype tdt: :class:`~tdt.algorithms.eld.SlidingELD`
     :ivar burst_start: The minimum burst value to consider a term to be bursty.
@@ -144,6 +149,7 @@ class FUEGOConsumer(Consumer):
         # TDT
         self.volume = MemoryNutritionStore()
         self.nutrition = MemoryNutritionStore()
+        self.correlations = MemoryNutritionStore()
         self.tdt = SlidingELD(self.nutrition, window_size=window_size, windows=windows)
         self.burst_start = burst_start
         self.burst_end = burst_end

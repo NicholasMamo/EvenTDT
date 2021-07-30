@@ -135,6 +135,15 @@ class TestFUEGOConsumer(unittest.TestCase):
         self.assertTrue(consumer.nutrition)
         self.assertEqual({ }, consumer.nutrition.all())
 
+    def test_init_correlations_store(self):
+        """
+        Test that when creating a consumer, the class creates an empty correlations store.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        self.assertTrue(consumer.correlations)
+        self.assertEqual({ }, consumer.correlations.all())
+
     def test_init_with_tdt(self):
         """
         Test that when creating a consumer, the class creates the TDT algorithm.
