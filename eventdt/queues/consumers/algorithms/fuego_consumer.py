@@ -743,7 +743,23 @@ class FUEGOConsumer(Consumer):
         :rtype: dict
         """
 
-        return self.tdt.detect(timestamp, min_burst=self.burst_start)
+        burst = self.tdt.detect(timestamp, min_burst=-1.1) # calculate the correlation of all terms since they are used for weighting
+
+        weights = self._combine_correlations(timestamp, normalize=True)
+        if weights: # exception for unit tests
+            neighbors = { term: sum( burst[neighbor] * weights[term][neighbor]
+                                     for neighbor in weights.get(term, { }) )
+                          for term in burst
+                          if term in weights }
+
+            # if the term has no neighbors, use its burst
+            burst = { term: (burst[term] + neighbors[term]) / 2 if term in neighbors else burst[term]
+                      for term in burst }
+
+        # filtter terms with a low burst
+        burst = { term: burst[term] for term in burst
+                                    if burst[term] > self.burst_start }
+        return burst
 
     def _new_topics(self, topics, bursty):
         """
