@@ -512,6 +512,41 @@ class FUEGOConsumer(Consumer):
                 nutrition[dimension] = nutrition.get(dimension, 0) + magnitude * damping
             self.nutrition.add(timestamp, nutrition)
 
+    def _update_correlations(self, documents):
+        """
+        Update the correlations based on the given documents.
+
+        The function adds the correlations of each term and updates the class' correlations store.
+        The procedure separates the correlations for each second.
+
+        In turn, each second stores the correlations of each term as a dictionary.
+        The store associates each term with all other terms, excluding itself, as a dictionary.
+        The values are the number of documents in which the two terms appear together.
+
+        :param documents: The list of documents from where to get the timestamp.
+        :type documents: list of :class:`~nlp.document.Document`
+        """
+
+        for document in documents:
+            timestamp = document.attributes['timestamp']
+            correlations = self.correlations.get(timestamp) or { } # the stored correlations
+
+            # NOTE: The correlations are written as follows so that 1 can be replaced with another value, such as a damping factor
+            _correlations = { t0: { t1: 1
+                                        for t1 in document.dimensions
+                                        if t0 != t1
+                                  }
+                                  for t0 in document.dimensions
+                            }
+            correlations = { t0: { t1: correlations.get(t0, { }).get(t1, 0) + _correlations.get(t0, { }).get(t1, 0)
+                                       for t1 in correlations.get(t0, { }).keys() | _correlations.get(t0, { }).keys()
+                                       if t0 != t1
+                                 }
+                                 for t0 in correlations.keys() | _correlations.keys()
+                           }
+
+            self.correlations.add(timestamp, correlations)
+
     def _damp(self, document):
         """
         Get the damping factor from the document.
