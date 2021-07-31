@@ -278,7 +278,6 @@ class FUEGOConsumer(Consumer):
                 # update the historical volume and the nutrition of individual keywords
                 self._update_volume(documents) # update the historical volume
                 self._update_nutrition(documents) # update the nutrition of individual keywords
-                self._update_correlations(documents) # update the term correlations
 
                 # check whether previously-bursting terms are still bursting and update their highest burst value
                 tracking = self._track(topics.keys(), time) # check which bursting terms are still bursting
@@ -528,6 +527,8 @@ class FUEGOConsumer(Consumer):
         :type documents: list of :class:`~nlp.document.Document`
         """
 
+        # NOTE: Deprecated
+
         for document in documents:
             timestamp = document.attributes['timestamp']
             correlations = self.correlations.get(timestamp) or { } # the stored correlations
@@ -564,6 +565,8 @@ class FUEGOConsumer(Consumer):
                  The inner dictionary, therefore, also has terms as keys, with the values being the number of documents in which the two terms appear together.
         :rtype: dict
         """
+
+        # NOTE: Deprecated
 
         correlations = { }
 
@@ -743,22 +746,7 @@ class FUEGOConsumer(Consumer):
         :rtype: dict
         """
 
-        burst = self.tdt.detect(timestamp, min_burst=-1.1) # calculate the correlation of all terms since they are used for weighting
-
-        weights = self._combine_correlations(timestamp, normalize=True)
-        if weights: # exception for unit tests
-            neighbors = { term: sum( burst[neighbor] * weights[term][neighbor]
-                                     for neighbor in weights.get(term, { }) )
-                          for term in burst
-                          if term in weights }
-
-            burst = { term: burst[term] if term in neighbors and neighbors[term] > 0 else 0
-                      for term in burst }
-
-        # filtter terms with a low burst
-        burst = { term: burst[term] for term in burst
-                                    if burst[term] > self.burst_start }
-        return burst
+        return self.tdt.detect(timestamp, min_burst=self.burst_start)
 
     def _new_topics(self, topics, bursty):
         """
