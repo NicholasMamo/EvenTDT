@@ -302,6 +302,7 @@ class FUEGOConsumer(Consumer):
                 if node.expired(timeline.expiry, time) and not node.attributes.get('printed'): # if the node has expired and it has not been print it, summarize it and print it
                     summary = self._summarize(node) # summarize the node
                     cleaner = TweetCleaner(collapse_new_lines=True, collapse_whitespaces=True, remove_unicode_entities=True) # clean the summary and print it
+                    logger.info(f"{datetime.fromtimestamp(node.created_at).ctime()}: { ', '.join(self._query(node).dimensions.keys()) }", process=str(self))
                     logger.info(f"{datetime.fromtimestamp(node.created_at).ctime()}: { cleaner.clean(str(summary)) }", process=str(self))
                     node.attributes['printed'] = True
 
@@ -752,8 +753,7 @@ class FUEGOConsumer(Consumer):
                           for term in burst
                           if term in weights }
 
-            # if the term has no neighbors, use its burst
-            burst = { term: (burst[term] + neighbors[term]) / 2 if term in neighbors else burst[term]
+            burst = { term: burst[term] if term in neighbors and neighbors[term] > 0 else 0
                       for term in burst }
 
         # filtter terms with a low burst
