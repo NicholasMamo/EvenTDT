@@ -896,5 +896,18 @@ class FUEGOConsumer(Consumer):
         summary_documents = sorted(summary_documents.items(), key=lambda document: len(document[0]) * self._damp(document[1]), reverse=True)
         summary_documents = [ document for _, document in summary_documents[:20] ]
 
-        query = Cluster(vectors=node.topics).centroid
+        query = self._query(documents)
         return self.summarization.summarize(summary_documents, 300, query=query)
+
+    def _query(self, node):
+        """
+        Generate a query from the given documents.
+
+        :param node: The node from which to create the query.
+        :type node: :class:`~summarization.timeline.nodes.Node`
+
+        :return: A query, constructed by taking the centroid of the node's topics.
+        :rtype: class:`~nlp.document.Document`
+        """
+
+        return Cluster(vectors=node.topics).centroid
