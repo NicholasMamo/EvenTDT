@@ -302,7 +302,6 @@ class FUEGOConsumer(Consumer):
                 if node.expired(timeline.expiry, time) and not node.attributes.get('printed'): # if the node has expired and it has not been print it, summarize it and print it
                     summary = self._summarize(node) # summarize the node
                     cleaner = TweetCleaner(collapse_new_lines=True, collapse_whitespaces=True, remove_unicode_entities=True) # clean the summary and print it
-                    logger.info(f"{datetime.fromtimestamp(node.created_at).ctime()}: { ', '.join(self._query(node).dimensions.keys()) }", process=str(self))
                     logger.info(f"{datetime.fromtimestamp(node.created_at).ctime()}: { cleaner.clean(str(summary)) }", process=str(self))
                     node.attributes['printed'] = True
 
