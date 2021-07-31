@@ -687,7 +687,7 @@ class FUEGOConsumer(Consumer):
             if _stdev > 0:
                 stdev = statistics.stdev(historic.values())
 
-        return current <= max(self.min_volume, mean + stdev)
+        return current <= max(self.min_volume, mean)
 
     def _partition(self, timestamp):
         """
