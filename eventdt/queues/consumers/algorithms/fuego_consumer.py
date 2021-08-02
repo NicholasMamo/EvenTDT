@@ -347,9 +347,16 @@ class FUEGOConsumer(Consumer):
 
             #. The biography of the tweet's author cannot be empty because that is indicative of bots.
 
-        ELD also contained a rule that removed tweets with more than one URL.
-        FUEGO's filtering is harsher and excludes all tweets with URLs.
-        It also filters out all replies.
+        FUEGO's new rules are:
+
+            #. The tweet cannot be a reply,
+
+            #. The tweet cannot be a quoted tweet, and
+
+            #. The tweet cannot have any URLs.
+
+        FUEGO's filters, removing replies and quoted tweets, are mainly aimed at removing reaction tweets to minimize subjectivity.
+        Removing all tweets with URLs also removes premeditated tweets.
 
         :param tweet: The tweet to validate.
         :type tweet: dict
