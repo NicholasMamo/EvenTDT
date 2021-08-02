@@ -2589,21 +2589,22 @@ class TestFUEGOConsumer(unittest.TestCase):
         consumer = FUEGOConsumer(Queue(), min_volume=2, window_size=10)
         consumer.volume.add(10, 20)
         consumer.volume.add(20, 30)
-        consumer.volume.add(30, 30)
-        consumer.volume.add(40, 30)
-        consumer.volume.add(50, 30)
+        consumer.volume.add(30, 25)
+        consumer.volume.add(40, 20)
+        consumer.volume.add(50, 20)
         consumer.volume.add(60, 20)
 
-        self.assertFalse(consumer._dormant(10)) # higher than the minimum volume volume
+        self.assertFalse(consumer._dormant(10)) # higher than the minimum volume
 
         _, historic = consumer._partition(20)
         self.assertEqual(20, statistics.mean(historic.values()))
-        self.assertFalse(consumer._dormant(20)) # higher than the mean
+        self.assertFalse(consumer._dormant(20)) # equal to the mean
 
         _, historic = consumer._partition(30)
         self.assertEqual(25, statistics.mean(historic.values()))
         self.assertEqual(7.07, round(statistics.stdev(historic.values()), 2))
-        self.assertTrue(consumer._dormant(30)) # lower than mean + 2 * stdev
+        # self.assertTrue(consumer._dormant(30)) # lower than mean + stdev
+        self.assertTrue(consumer._dormant(30)) # lower than mean
 
         self.assertTrue(consumer._dormant(40))
         self.assertTrue(consumer._dormant(50))
@@ -2851,54 +2852,6 @@ class TestFUEGOConsumer(unittest.TestCase):
             consumer._update_correlations(documents)
             topics = consumer._detect(documents[-1].attributes['timestamp'])
             self.assertGreater(0, min(topics.values()))
-
-    def test_detect_burst_weights(self):
-        """
-        Test that when detecting topics using correlation weights, the weights of correlated terms affect the burst.
-        """
-
-        consumer = FUEGOConsumer(Queue(), burst_start=-0.5, window_size=5, windows=3)
-        consumer.nutrition.add(10, { 'a': 1, 'b': 0, 'c': 0.5 })
-        consumer.nutrition.add(5, { 'a': 0, 'b': 1, 'c': 0 })
-        b0 = consumer._detect(10)
-        self.assertEqual(1, b0['a'])
-
-        # add a correlation between A and B
-        consumer.correlations.add(10, { 'a': { 'b': 1 }, 'b': { 'a': 1 } })
-        b1 = consumer._detect(10)
-        self.assertEqual(0, b1['a'])
-        self.assertEqual(0, b1['b'])
-
-    def test_detect_burst_with_no_weights(self):
-        """
-        Test that when detecting topics using correlation weights, but a term has no correlated weights, its burst does not change.
-        """
-
-        consumer = FUEGOConsumer(Queue(), burst_start=-0.5, window_size=5, windows=3)
-        consumer.nutrition.add(10, { 'a': 1, 'b': 0, 'c': 0.5 })
-        consumer.nutrition.add(5, { 'a': 0, 'b': 1, 'c': 0 })
-        b0 = consumer._detect(10)
-
-        # add a correlation between A and B, but not with C
-        consumer.correlations.add(10, { 'a': { 'b': 1 }, 'b': { 'a': 1 } })
-        b1 = consumer._detect(10)
-        self.assertEqual(b0['c'], b1['c'])
-
-    def test_detect_burst_weighted_weights(self):
-        """
-        Test that when detecting topics using correlation weights, the bursts are affected most by the closest terms.
-        """
-
-        consumer = FUEGOConsumer(Queue(), burst_start=-1, window_size=5, windows=3)
-        consumer.nutrition.add(10, { 'a': 1, 'b': 0.1, 'c': 0.5 })
-        consumer.nutrition.add(5, { 'a': 0, 'b': 1, 'c': 0 })
-        b0 = consumer._detect(10)
-
-        # add a correlation between A, B and C
-        correlations = { 'a': { 'b': 0.1, 'c': 0.9 }, 'b': { 'a': 7, 'c': 0.3 }, 'c': { 'a': 0.9, 'b': 0.1 } }
-        consumer.correlations.add(10, correlations)
-        b1 = consumer._detect(10)
-        self.assertEqual(b1['a'], (b0['a'] + (b0['b'] * correlations['a']['b'] + b0['c'] * correlations['a']['c'])) / 2 )
 
     def test_detect_no_duplicates(self):
         """
