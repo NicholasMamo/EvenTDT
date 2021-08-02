@@ -364,6 +364,9 @@ class FUEGOConsumer(Consumer):
         if twitter.is_reply(tweet):
             return False
 
+        if twitter.is_quote(tweet):
+            return False
+
         if not tweet['lang'] == 'en':
             return False
 
@@ -378,8 +381,7 @@ class FUEGOConsumer(Consumer):
 
         # filter out URLs, but allow one URL in quoted tweets (referring to the quoted tweet)
         urls = tweet['entities']['urls']
-        if (len(urls) == 1 and not twitter.is_quote(tweet) # non-quote tweets may not have any URLs
-            or len(urls) > 1 and twitter.is_quote(tweet)): # quote tweets may only have one URL
+        if len(urls) == 1: # remove any tweets with URLs in them, implicitly removing quote tweets
             return False
 
         if not tweet['user']['description']:
