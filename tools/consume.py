@@ -738,7 +738,7 @@ def consume_process(comm, loop, consumer, max_inactivity):
     comm.update(loop.run_until_complete(consume(consumer, max_inactivity)))
     logger.info("Consumption ended")
 
-def create_consumer(consumer, queue, filters=None, splits=None, *args, **kwargs):
+def create_consumer(consumer, queue, filters=None, splits=None, threshold_type=None, *args, **kwargs):
     """
     Create a consumer.
     If splits are given, the function creates a :class:`~queues.consumers.token_split_consumer.TokenSplitConsumer`.
@@ -752,10 +752,14 @@ def create_consumer(consumer, queue, filters=None, splits=None, *args, **kwargs)
     :type splits: list of list of str
     :param filters: A list of tokens which must be in a tweet for it to be processed.
     :type filters: list of str
+    :param threshold_type: The threshold type that the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer` should use.
+    :type threshold_type: :class:`~queues.consumers.algorithms.fuego_consumer.DynamicThreshold`
 
     :return: A consumer with the given parameters.
     :rtype: :class:`~queues.consumers.Consumer`
     """
+
+    kwargs['threshold'] = threshold_type if consumer.__name__ == 'FUEGOConsumer' else kwargs.get('threshold')
 
     if filters:
         return TokenFilterConsumer(queue, filters, consumer, *args, **kwargs)

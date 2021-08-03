@@ -317,21 +317,23 @@ class TestConsume(unittest.TestCase):
         FIRE consumer
         """
         consumer = consume.create_consumer(FIREConsumer, Queue(), scheme=scheme, min_size=5, min_burst=0.1,
-                                           max_intra_similarity=0.9, periodicity=20, min_volume=50,
+                                           max_intra_similarity=0.9, periodicity=20, min_volume=50, threshold=0.8,
                                            burst_start=0.7, burst_end=0.4, log_nutrition=True,)
         self.assertEqual(5, consumer.min_size)
         self.assertEqual(20, consumer.periodicity)
         self.assertEqual(scheme, consumer.scheme)
+        self.assertEqual(0.8, consumer.clustering.threshold)
 
         """
         ELD consumer
         """
         consumer = consume.create_consumer(ELDConsumer, Queue(), scheme=scheme, min_size=5, min_burst=0.1,
-                                           max_intra_similarity=0.9, periodicity=20, min_volume=50,
+                                           max_intra_similarity=0.9, periodicity=20, min_volume=50, threshold=0.8,
                                            burst_start=0.7, burst_end=0.4, log_nutrition=True,)
         self.assertEqual(5, consumer.min_size)
         self.assertEqual(0.1, consumer.min_burst)
         self.assertEqual(0.9, consumer.max_intra_similarity)
+        self.assertEqual(0.8, consumer.clustering.threshold)
         self.assertEqual(scheme, consumer.scheme)
         self.assertTrue(consumer.log_nutrition)
 
@@ -339,12 +341,13 @@ class TestConsume(unittest.TestCase):
         FUEGO consumer
         """
         consumer = consume.create_consumer(FUEGOConsumer, Queue(), scheme=scheme, min_size=5, min_burst=0.1,
-                                           max_intra_similarity=0.9, periodicity=20, min_volume=50,
-                                           burst_start=0.7, burst_end=0.4, log_nutrition=True,)
+                                           max_intra_similarity=0.9, periodicity=20, min_volume=50, threshold=0.8,
+                                           burst_start=0.7, burst_end=0.4, log_nutrition=True, threshold_type=DynamicThreshold.MEAN_STDEV)
         self.assertEqual(scheme, consumer.scheme)
         self.assertEqual(50, consumer.min_volume)
         self.assertEqual(0.7, consumer.burst_start)
         self.assertEqual(0.4, consumer.burst_end)
+        self.assertEqual(DynamicThreshold.MEAN_STDEV, consumer.threshold)
 
     def test_create_consumer_with_splits(self):
         """
@@ -424,7 +427,7 @@ class TestConsume(unittest.TestCase):
         FIRE consumer
         """
         consumer = consume.create_consumer(FIREConsumer, Queue(), scheme=scheme, splits=splits, min_size=5,
-                                           max_intra_similarity=0.9, min_burst=0.1, periodicity=20,
+                                           max_intra_similarity=0.9, min_burst=0.1, periodicity=20, threshold=0.8,
                                            min_volume=50, burst_start=0.7, burst_end=0.4, freeze_period=10,
                                            log_nutrition=True)
         self.assertTrue(all( FIREConsumer == type(consumer.consumer) for consumer in consumer.consumers ))
@@ -432,12 +435,13 @@ class TestConsume(unittest.TestCase):
         self.assertTrue(all( 20 == consumer.consumer.periodicity for consumer in consumer.consumers ))
         self.assertTrue(all( scheme == consumer.consumer.scheme for consumer in consumer.consumers ))
         self.assertTrue(all( 10 == consumer.consumer.clustering.freeze_period for consumer in consumer.consumers ))
+        self.assertTrue(all( 0.8 == consumer.consumer.clustering.threshold for consumer in consumer.consumers ))
 
         """
         ELD consumer
         """
         consumer = consume.create_consumer(ELDConsumer, Queue(), scheme=scheme, splits=splits,
-                                           min_size=5, min_burst=0.1, max_intra_similarity=0.9,
+                                           min_size=5, min_burst=0.1, max_intra_similarity=0.9, threshold=0.8,
                                            periodicity=20, min_volume=50, burst_start=0.7, burst_end=0.4,
                                            freeze_period=10, log_nutrition=True)
         self.assertTrue(all( 5 == consumer.consumer.min_size for consumer in consumer.consumers ))
@@ -445,20 +449,21 @@ class TestConsume(unittest.TestCase):
         self.assertTrue(all( 0.9 == consumer.consumer.max_intra_similarity for consumer in consumer.consumers ))
         self.assertTrue(all( scheme == consumer.consumer.scheme for consumer in consumer.consumers ))
         self.assertTrue(all( 10 == consumer.consumer.clustering.freeze_period for consumer in consumer.consumers ))
+        self.assertTrue(all( 0.8 == consumer.consumer.clustering.threshold for consumer in consumer.consumers ))
         self.assertTrue(all( consumer.consumer.log_nutrition for consumer in consumer.consumers ))
 
         """
         FUEGO consumer
         """
-        consumer = consume.create_consumer(FUEGOConsumer, Queue(), scheme=scheme, splits=splits,
-                                           min_size=5, min_burst=0.1, max_intra_similarity=0.9,
+        consumer = consume.create_consumer(FUEGOConsumer, Queue(), scheme=scheme, splits=splits, threshold=0.8,
+                                           min_size=5, min_burst=0.1, max_intra_similarity=0.9, threshold_type=DynamicThreshold.MEAN_STDEV,
                                            periodicity=20, min_volume=50, burst_start=0.7, burst_end=0.4,
                                            freeze_period=10, log_nutrition=True)
         self.assertTrue(all( scheme == consumer.consumer.scheme for consumer in consumer.consumers ))
         self.assertTrue(all( 50 == consumer.consumer.min_volume for consumer in consumer.consumers ))
         self.assertTrue(all( 0.7 == consumer.consumer.burst_start for consumer in consumer.consumers ))
         self.assertTrue(all( 0.4 == consumer.consumer.burst_end for consumer in consumer.consumers ))
-
+        self.assertTrue(all( DynamicThreshold.MEAN_STDEV == consumer.consumer.threshold for consumer in consumer.consumers ))
 
     def test_create_consumer_with_filters(self):
         """
@@ -532,26 +537,28 @@ class TestConsume(unittest.TestCase):
         FIRE consumer
         """
         consumer = consume.create_consumer(FIREConsumer, Queue(), scheme=scheme, filters=filters, min_size=5,
-                                           max_intra_similarity=0.9, min_burst=0.1, periodicity=20,
+                                           max_intra_similarity=0.9, min_burst=0.1, periodicity=20, threshold=0.8,
                                            min_volume=50, burst_start=0.7, burst_end=0.4, freeze_period=10,
-                                           log_nutrition=True)
+                                           log_nutrition=True, threshold_type=DynamicThreshold.MEAN_STDEV)
         self.assertEqual(FIREConsumer, type(consumer.consumer))
         self.assertEqual(5, consumer.consumer.min_size)
         self.assertEqual(20, consumer.consumer.periodicity)
         self.assertEqual(scheme, consumer.consumer.scheme)
         self.assertEqual(10, consumer.consumer.clustering.freeze_period)
+        self.assertEqual(0.8, consumer.consumer.clustering.threshold)
 
         """
         ELD consumer
         """
         consumer = consume.create_consumer(ELDConsumer, Queue(), scheme=scheme, filters=filters,
-                                           min_size=5, min_burst=0.1, max_intra_similarity=0.9,
+                                           min_size=5, min_burst=0.1, max_intra_similarity=0.9, threshold=0.8,
                                            periodicity=20, min_volume=50, burst_start=0.7, burst_end=0.4, freeze_period=10,
-                                           log_nutrition=True)
+                                           log_nutrition=True, threshold_type=DynamicThreshold.MEAN_STDEV)
         self.assertEqual(5, consumer.consumer.min_size)
         self.assertEqual(0.1, consumer.consumer.min_burst)
         self.assertEqual(0.9, consumer.consumer.max_intra_similarity)
         self.assertEqual(scheme, consumer.consumer.scheme)
+        self.assertEqual(0.8, consumer.consumer.clustering.threshold)
         self.assertEqual(10, consumer.consumer.clustering.freeze_period)
         self.assertTrue(consumer.consumer.log_nutrition)
 
@@ -559,10 +566,11 @@ class TestConsume(unittest.TestCase):
         FUEGO consumer
         """
         consumer = consume.create_consumer(FUEGOConsumer, Queue(), scheme=scheme, filters=filters,
-                                           min_size=5, min_burst=0.1, max_intra_similarity=0.9,
+                                           min_size=5, min_burst=0.1, max_intra_similarity=0.9, threshold=0.8,
                                            periodicity=20, min_volume=50, burst_start=0.7, burst_end=0.4, freeze_period=10,
-                                           log_nutrition=True)
+                                           log_nutrition=True, threshold_type=DynamicThreshold.MEAN_STDEV)
         self.assertEqual(scheme, consumer.consumer.scheme)
         self.assertEqual(50, consumer.consumer.min_volume)
         self.assertEqual(0.7, consumer.consumer.burst_start)
         self.assertEqual(0.4, consumer.consumer.burst_end)
+        self.assertEqual(DynamicThreshold.MEAN_STDEV, consumer.consumer.threshold)
