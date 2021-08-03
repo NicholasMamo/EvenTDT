@@ -2603,7 +2603,7 @@ class TestFUEGOConsumer(unittest.TestCase):
         Test that when checking the volume, if the minimum volume is very low, the function considers the mean.
         """
 
-        consumer = FUEGOConsumer(Queue(), min_volume=2, window_size=10)
+        consumer = FUEGOConsumer(Queue(), min_volume=2, window_size=10, threshold=DynamicThreshold.MEAN)
         consumer.volume.add(10, 20)
         consumer.volume.add(20, 30)
         consumer.volume.add(30, 25)
@@ -2622,6 +2622,64 @@ class TestFUEGOConsumer(unittest.TestCase):
         self.assertEqual(7.07, round(statistics.stdev(historic.values()), 2))
         # self.assertTrue(consumer._dormant(30)) # lower than mean + stdev
         self.assertTrue(consumer._dormant(30)) # lower than mean
+
+        self.assertTrue(consumer._dormant(40))
+        self.assertTrue(consumer._dormant(50))
+        self.assertTrue(consumer._dormant(60))
+
+    def test_dormant_moving_mean_recent_only(self):
+        """
+        Test that when checking the mean volume, the function only considers the recent time windows.
+        """
+
+        consumer = FUEGOConsumer(Queue(), min_volume=2, window_size=10, windows=3, threshold=DynamicThreshold.MOVING_MEAN)
+        consumer.volume.add(10, 20) # mean = 0 (no previous windows)
+        consumer.volume.add(20, 30) # mean = 20 (from t=10)
+        consumer.volume.add(30, 25) # mean = 25
+        consumer.volume.add(40, 20) # mean = 25
+        consumer.volume.add(50, 20) # mean = 25
+
+        self.assertFalse(consumer._dormant(10)) # higher than the minimum volume
+
+        _, historic = consumer._partition(20)
+        self.assertEqual(20, statistics.mean(historic.values()))
+        self.assertFalse(consumer._dormant(20)) # equal to the mean
+        self.assertTrue(consumer._dormant(30)) # equal to the mean
+        self.assertTrue(consumer._dormant(40)) # lower than the mean
+        self.assertTrue(consumer._dormant(50)) # lower than the mean
+
+        _, historic = consumer._partition(60)
+        self.assertEqual(115 / 5, statistics.mean(historic.values()))
+
+        consumer.volume.add(60, 22) # mean = 21.67 (average of 20, 20 and 25); overall mean: 23
+        self.assertFalse(consumer._dormant(60)) # higher than the mean
+
+        consumer.volume.add(60, 21) # mean = 21.67 (average of 20, 20 and 25); overall mean: 23
+        self.assertTrue(consumer._dormant(60)) # equal to the mean
+
+    def test_dormant_mean_stdev_volume(self):
+        """
+        Test that when checking the volume, if the minimum volume is very low, the function considers the mean and the standard deviation.
+        """
+
+        consumer = FUEGOConsumer(Queue(), min_volume=2, window_size=10, threshold=DynamicThreshold.MEAN_STDEV)
+        consumer.volume.add(10, 20)
+        consumer.volume.add(20, 30)
+        consumer.volume.add(30, 25)
+        consumer.volume.add(40, 20)
+        consumer.volume.add(50, 20)
+        consumer.volume.add(60, 20)
+
+        self.assertFalse(consumer._dormant(10)) # higher than the minimum volume
+
+        _, historic = consumer._partition(20)
+        self.assertEqual(20, statistics.mean(historic.values()))
+        self.assertFalse(consumer._dormant(20)) # equal to the mean
+
+        _, historic = consumer._partition(30)
+        self.assertEqual(25, statistics.mean(historic.values()))
+        self.assertEqual(7.07, round(statistics.stdev(historic.values()), 2))
+        self.assertTrue(consumer._dormant(30)) # lower than mean + stdev
 
         self.assertTrue(consumer._dormant(40))
         self.assertTrue(consumer._dormant(50))

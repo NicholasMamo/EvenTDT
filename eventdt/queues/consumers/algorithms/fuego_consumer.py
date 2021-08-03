@@ -706,17 +706,28 @@ class FUEGOConsumer(Consumer):
         :rtype: bool
         """
 
+        threshold = 0
+
         current, historic = self._partition(timestamp)
-        mean = statistics.mean(historic.values()) if historic else 0
 
-        # to fix a weird bug in the statistics package
-        stdev = 0
-        if historic and len(historic) >= 2:
-            _stdev = (sum([ (val - mean) ** 2 for val in historic.values() ]) / len(historic)) ** 0.5
-            if _stdev > 0:
-                stdev = statistics.stdev(historic.values())
+        if self.threshold == DynamicThreshold.MEAN:
+            threshold = statistics.mean(historic.values()) if historic else 0
+        elif self.threshold == DynamicThreshold.MOVING_MEAN:
+            recent = sorted(historic.keys(), reverse=True)[:self.tdt.windows]
+            threshold = statistics.mean([ historic[t] for t in recent ]) if historic else 0
+        elif self.threshold == DynamicThreshold.MEAN_STDEV:
+            mean = statistics.mean(historic.values()) if historic else 0
 
-        return current <= max(self.min_volume, mean)
+            # to fix a weird bug in the statistics package
+            stdev = 0
+            if historic and len(historic) >= 2:
+                _stdev = (sum([ (val - mean) ** 2 for val in historic.values() ]) / len(historic)) ** 0.5
+                if _stdev > 0:
+                    stdev = statistics.stdev(historic.values())
+
+            threshold = mean + stdev
+
+        return current <= max(self.min_volume, threshold)
 
     def _partition(self, timestamp):
         """
