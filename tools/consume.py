@@ -166,6 +166,7 @@ The output is a JSON file with the following structure, although additional data
             "filters_keep": null,
             "splits": null,
             "threshold": 0.5,
+            "threshold": "MEAN",
             "post_rate": 1.7,
             "understanding": "data/event/understanding.json"
         },
@@ -197,6 +198,7 @@ The output is a JSON file with the following structure, although additional data
             "filters_keep": null,
             "splits": null,
             "threshold": 0.5,
+            "threshold": "MEAN",
             "post_rate": 1.7,
             "understanding": "data/event/understanding.json"
         },
@@ -235,6 +237,7 @@ The full list of accepted arguments:
     - ``--min-size``                *<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
     - ``--min-burst``               *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer` and the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`).
     - ``--threshold``               *<Optional>* The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
+    - ``--threshold-type``          *<Optional>* The type of dynamic volume threshold to use with the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`: `MEAN` (default), `MOVING_MEAN` or `MEAN_STDEV`.
     - ``--post-rate``               *<Optional>* The minimum increase in posting rate to accept a sliding time-window as representing a breaking topic, defaults to 1.7 (used by the :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`).
     - ``--max-intra-similarity``    *<Optional>* The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
     - ``--burst-start``             *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`).
@@ -266,6 +269,7 @@ from nlp.weighting import TermWeightingScheme
 from eventdt.queues import Queue
 from queues.consumers import *
 from queues.consumers.algorithms import *
+from queues.consumers.algorithms.fuego_consumer import DynamicThreshold
 from twitter.file import SimulatedFileReader
 
 def setup_args():
@@ -295,6 +299,7 @@ def setup_args():
         - ``--min-size``                *<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
         - ``--min-burst``               *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer` and the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`).
         - ``--threshold``               *<Optional>* The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
+        - ``--threshold-type``          *<Optional>* The type of dynamic volume threshold to use with the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`: `MEAN` (default), `MOVING_MEAN` or `MEAN_STDEV`.
         - ``--post-rate``               *<Optional>* The minimum increase in posting rate to accept a sliding time-window as representing a breaking topic, defaults to 1.7 (used by the :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`).
         - ``--max-intra-similarity``    *<Optional>* The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
         - ``--burst-start``             *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`).
@@ -354,6 +359,8 @@ def setup_args():
                         help='<Optional> The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the `FIREConsumer` and the `ELDConsumer`).')
     parser.add_argument('--threshold', type=float, required=False, default=0.5,
                         help='<Optional> The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.')
+    parser.add_argument('--threshold-type', type=threshold, required=False, default='mean',
+                        help='<Optional> The type of dynamic volume threshold to use with the `FUEGOConsumer`: `MEAN` (default), `MOVING_MEAN` or `MEAN_STDEV`.')
     parser.add_argument('--post-rate', type=float, required=False, default=1.7,
                         help='<Optional> The minimum increase in posting rate to accept a sliding time-window as representing a breaking topic, defaults to 1.7 (used by the `ZhaoConsumer`).')
     parser.add_argument('--max-intra-similarity', type=float, required=False, default=0.8,
@@ -385,8 +392,10 @@ def main():
     pcmd = tools.meta(args)
     cmd['consumer'] = str(vars(args)['consumer'])
     cmd['scheme'] = str(type(vars(args)['scheme']))
+    cmd['threshold_type'] = str(vars(args)['threshold_type'])
     pcmd['consumer'] = str(vars(args)['consumer'])
     pcmd['scheme'] = str(type(vars(args)['scheme']))
+    pcmd['threshold_type'] = str(vars(args)['threshold_type'])
 
     # load the filters and splits
     filter = filters(args.filters, args.filters_keep) if args.filters else [ ]
@@ -873,6 +882,23 @@ def filters(file, keep=None):
             filters = [ token.strip() for token in f.readlines() ]
 
     return filters[:keep] if keep else filters
+
+def threshold(threshold_type):
+    """
+    Convert the given threshold name to an actual threshold type.
+
+    :param threshold_type: The name of the threshold to use: `MEAN`, `MOVING_MEAN` or `MEAN_STDEV`
+    :type threshold_type: str
+
+    :return: An actual threshold type that can be parsed by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`.
+    :rtype: :class:`~queues.consumers.algorithms.fuego_consumer.DynamicThreshold`
+    """
+
+    return {
+        'MEAN': DynamicThreshold.MEAN,
+        'MOVING_MEAN': DynamicThreshold.MOVING_MEAN,
+        'MEAN_STDEV': DynamicThreshold.MEAN_STDEV,
+    }[threshold_type.upper()]
 
 if __name__ == "__main__":
     main()

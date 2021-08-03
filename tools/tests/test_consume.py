@@ -20,6 +20,7 @@ from objects.exportable import Exportable
 from queues import Queue
 from queues.consumers import StatConsumer, TokenFilterConsumer, TokenSplitConsumer
 from queues.consumers.algorithms import *
+from queues.consumers.algorithms.fuego_consumer import DynamicThreshold
 
 class TestConsume(unittest.TestCase):
     """
@@ -254,6 +255,34 @@ class TestConsume(unittest.TestCase):
         Assert that the splits list is returned as a list.
         """
         self.assertTrue(all( ',' not in token for split in splits for token in split ))
+
+    def test_threshold_mean(self):
+        """
+        Test that the threshold function correctly maps 'mean' to the :class:`~queues.consumers.algorithms.fuego_consumer.DynamicThreshold.MEAN`.
+        """
+
+        self.assertEqual(DynamicThreshold.MEAN, consume.threshold('mean'))
+
+    def test_threshold_moving_mean(self):
+        """
+        Test that the threshold function correctly maps 'moving_mean' to the :class:`~queues.consumers.algorithms.fuego_consumer.DynamicThreshold.MOVING_MEAN`.
+        """
+
+        self.assertEqual(DynamicThreshold.MOVING_MEAN, consume.threshold('moving_mean'))
+
+    def test_threshold_mean_stdev(self):
+        """
+        Test that the threshold function correctly maps 'mean_stdev' to the :class:`~queues.consumers.algorithms.fuego_consumer.DynamicThreshold.MEAN_STDEV`.
+        """
+
+        self.assertEqual(DynamicThreshold.MEAN_STDEV, consume.threshold('mean_stdev'))
+
+    def test_threshold_case_insensitive(self):
+        """
+        Test that the threshold function ignores the case when mapping.
+        """
+
+        self.assertEqual(DynamicThreshold.MEAN_STDEV, consume.threshold('Mean_STDEV'))
 
     def test_create_consumer_correct_routing(self):
         """
