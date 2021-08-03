@@ -10,6 +10,7 @@ This allows for more accurate results in real-time.
     For a combination of document-pivot and feature-pivot approaches, see the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`.
 """
 
+from enum import Enum
 import math
 import os
 import statistics
@@ -37,6 +38,20 @@ from tdt.nutrition import MemoryNutritionStore
 import twitter
 from vsm import Vector
 from vsm.clustering import Cluster
+
+class DynamicThreshold(Enum):
+    """
+    The type of dynamic threshold to use.
+    Options:
+
+        - MEAN - The mean volume observed so far
+        - MOVING_MEAN - The mean volume from the previous $n$ windows
+        - MEAN_STDEV - One standard deviation above the mean volume observed so far
+    """
+
+    MEAN = 1
+    MOVING_MEAN = 2
+    MEAN_STDEV = 3
 
 class FUEGOConsumer(Consumer):
     """
