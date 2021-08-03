@@ -100,13 +100,15 @@ class FUEGOConsumer(Consumer):
                       This is not the raw number of tweets, but considers the damping factor of tweets.
                       If the volume drops below this value, the consumer does not look for bursty terms.
     :vartype min_volume: float
+    :ivar threshold: The type of dynamic threshold to use.
+    :vartype threshold: :class:`~queues.consumers.algorithms.fuego_consumer.DynamicThreshold`
     :ivar summarization: The summarization algorithm to use.
     :vartype summarization: :class:`~summarization.algorithms.dgs.DGS`
     """
 
     def __init__(self, queue, scheme=None, damping=0.5,
                  window_size=60, windows=5, burst_start=0.5, burst_end=0.2, min_volume=15,
-                 *args, **kwargs):
+                 threshold=DynamicThreshold.MEAN, *args, **kwargs):
         """
         Create the consumer with a queue.
 
@@ -137,6 +139,8 @@ class FUEGOConsumer(Consumer):
                            This is not the raw number of tweets, but considers the damping factor of tweets.
                            If the volume drops below this value, the consumer does not look for bursty terms.
         :type min_volume: float
+        :param threshold: The type of dynamic threshold to use.
+        :type threshold: :class:`~queues.consumers.algorithms.fuego_consumer.DynamicThreshold`
 
         :raises ValueError: When the damping factor is negative.
         :raises ValueError: When the burst start parameter is not between -1 and 1.
@@ -169,6 +173,7 @@ class FUEGOConsumer(Consumer):
         self.burst_start = burst_start
         self.burst_end = burst_end
         self.min_volume = min_volume
+        self.threshold = threshold
 
         # summarization
         self.summarization = DGS()

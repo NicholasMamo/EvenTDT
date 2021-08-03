@@ -22,6 +22,7 @@ from nlp.weighting import TF
 from objects.exportable import Exportable
 from queues import Queue
 from queues.consumers.algorithms import FUEGOConsumer
+from queues.consumers.algorithms.fuego_consumer import DynamicThreshold
 from summarization import Summary
 from summarization.algorithms import DGS
 from summarization.timeline import Timeline
@@ -244,6 +245,22 @@ class TestFUEGOConsumer(unittest.TestCase):
 
         consumer = FUEGOConsumer(Queue(), min_volume=0)
         self.assertEqual(0, consumer.min_volume)
+
+    def test_init_default_threshold(self):
+        """
+        Test the default dynamic threshold when creating a consumer.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        self.assertEqual(DynamicThreshold.MEAN, consumer.threshold)
+
+    def test_init_threshold(self):
+        """
+        Test setting the type of dynamic threshold when creating a consumer.
+        """
+
+        consumer = FUEGOConsumer(Queue(), threshold=DynamicThreshold.MOVING_MEAN)
+        self.assertEqual(DynamicThreshold.MOVING_MEAN, consumer.threshold)
 
     def test_init_with_summarization(self):
         """
