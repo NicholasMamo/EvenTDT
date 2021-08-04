@@ -38,6 +38,7 @@ from queues.consumers.buffered_consumer import SimulatedBufferedConsumer
 
 from nlp.document import Document
 from nlp.tokenizer import Tokenizer
+from nlp.weighting import TF
 
 from logger import logger
 
@@ -95,7 +96,7 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
         """
 
         super(ZhaoConsumer, self).__init__(queue, periodicity, *args, **kwargs)
-        self.scheme = scheme
+        self.scheme = scheme or TF()
         self.store = MemoryNutritionStore()
         self.documents = { }
         self.tdt = Zhao(self.store, post_rate)
@@ -177,14 +178,15 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
         However, if the tweet is a plain retweet, get the full text.
         """
         tokenizer = Tokenizer(stopwords=stopwords.words("english"), remove_unicode_entities=True)
-        for tweet in tweets:
+        for item in tweets:
+            tweet = item.attributes['tweet'] if type(item) is Document else item
             text = twitter.full_text(tweet)
 
             """
             Create the document and save the tweet in it.
             """
             tokens = tokenizer.tokenize(text)
-            document = Document(text, tokens, scheme=self.scheme)
+            document = item if type(item) is Document else self.scheme.create(tokens, text=text)
             document.attributes["tweet"] = tweet
             document.attributes['timestamp'] = twitter.extract_timestamp(tweet)
             document.normalize()
