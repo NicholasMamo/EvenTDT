@@ -149,7 +149,7 @@ class ZhaoConsumer(SimulatedBufferedConsumer):
                         _documents = [ _document for _document in _documents if len(_document.text) <= 140 ]
                         _documents = sorted(_documents, key=lambda document: len(document.text), reverse=True)
                         summary = self.summarization.summarize(_documents[:20], 140)
-                        logger.info(f"{datetime.fromtimestamp(latest_timestamp).ctime()}: { str(summary) }")
+                        logger.info(f"{datetime.fromtimestamp(latest_timestamp).ctime()}: { str(summary) }", process=str(self))
                         node.attributes['printed'] = True
 
             await self._sleep()
