@@ -412,14 +412,14 @@ def summarize(summarizer, timeline, splits, merge=False, verbose=False, max_docu
                     logger.info(f"""{ datetime.fromtimestamp(node.created_at).ctime() }: { ', '.join([ f"{ term } ({ round(weight, 2) })" for term, weight in query ]) }""")
                     continue
 
-                # generate the summary
-                summary = summarizer.summarize(documents, length, query=query)
-                summary.attributes['timestamp'] = nodes[0].created_at
-                if query:
-                    summary.attributes['query'] = query.dimensions
-                if verbose:
-                    logger.info(f"{ datetime.fromtimestamp(node.created_at).ctime() }: { str(summary) }")
-                summaries[-1].append(summary)
+            # generate the summary
+            summary = summarizer.summarize(documents, length, query=query)
+            summary.attributes['timestamp'] = nodes[0].created_at
+            if query:
+                summary.attributes['query'] = query.dimensions
+            if verbose:
+                logger.info(f"{ datetime.fromtimestamp(node.created_at).ctime() }: { str(summary) }")
+            summaries[-1].append(summary)
         else:
             for node in nodes:
                 """
