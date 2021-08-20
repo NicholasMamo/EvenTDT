@@ -151,7 +151,7 @@ class FUEGOConsumer(Consumer):
 
         self.tokenizer = Tokenizer(stopwords=stopwords.words('english'),
                                    normalize_words=True, character_normalization_count=3,
-                                   remove_unicode_entities=True)
+                                   remove_unicode_entities=True, remove_hashtags=True)
         self.scheme = scheme or TF()
 
         if damping < 0:
