@@ -446,8 +446,7 @@ class FUEGOConsumer(Consumer):
             """
             Create the document and save the tweet in it.
             """
-            tokens = self.tokenizer.tokenize(text)
-            document = item if type(item) is Document else self.scheme.create(tokens, text=text)
+            document = self.scheme.create(self.tokenizer.tokenize(text), text=text)
             document.text = text
             document.attributes['id'] = tweet.get('id')
             document.attributes['timestamp'] = twitter.extract_timestamp(tweet)

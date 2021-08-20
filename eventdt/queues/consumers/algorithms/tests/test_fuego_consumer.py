@@ -17,6 +17,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from logger import logger
+from nlp import Tokenizer
 from nlp.document import Document
 from nlp.weighting import TF
 from objects.exportable import Exportable
@@ -835,15 +836,17 @@ class TestFUEGOConsumer(unittest.TestCase):
 
     def test_to_documents_documents(self):
         """
-        Test that when converting a list of documents to documents, they are retained.
+        Test that when converting a list of documents to documents, they are re-created again.
         """
+
+        self.tokenizer = Tokenizer()
 
         consumer = FUEGOConsumer(Queue())
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
-            self.assertEqual(documents, consumer._to_documents(documents))
+            self.assertFalse(documents == consumer._to_documents(documents))
 
     def test_to_documents_documents_with_attributes(self):
         """
