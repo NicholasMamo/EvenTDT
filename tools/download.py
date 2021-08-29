@@ -174,7 +174,7 @@ def download(file, output, auth):
                 last_output = progress
                 elapsed = time.time() - start
                 eta =  elapsed * (1 - progress) / progress
-                logger.info(f"Downloaded { round(progress * 100) }% ({ len(retrieved) }/{ len(retrieved) + len(irretrievable) }) - ETA { math.floor(eta / 60) } minute(s) { round(eta / 60) } seconds")
+                logger.info(f"Downloaded { round(progress * 100) }% ({ len(retrieved) }/{ len(retrieved) + len(irretrievable) }) - ETA { math.floor(eta / 60) }m { round(eta / 60) }s")
 
     return (retrieved, irretrievable)
 
