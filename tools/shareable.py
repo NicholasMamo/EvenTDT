@@ -27,7 +27,7 @@ The full list of accepted arguments:
 
     - ``-f --file``                          *<Required>* The original corpus collected by the :mod:`~tools.collect` tool.
     - ``-o --output``                        *<Required>* The file where to save the shareable corpus.
-    - ``--meta``                             *<Optional>* The file where to save the meta data, defaults to [--file].meta.json.
+    - ``--meta``                             *<Optional>* The file where to save the meta data, defaults to [--file].meta.
 
 The tool writes one tweet ID on each line in the output file.
 """
@@ -53,7 +53,7 @@ def setup_args():
 
         - ``-f --file``             *<Required>* The original corpus collected by the :mod:`~tools.collect` tool.
         - ``-o --output``           *<Required>* The file where to save the shareable corpus.
-        - ``--meta``                *<Optional>* The file where to save the meta data, defaults to [--file].meta.json.
+        - ``--meta``                *<Optional>* The file where to save the meta data, defaults to [--file].meta.
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
@@ -66,7 +66,7 @@ def setup_args():
     parser.add_argument('-o', '--output', type=str, required=True,
                         help='<Required> The file where to save the shareable corpus.')
     parser.add_argument('--meta', type=str, required=False,
-                        help='<Optional> The file where to save the meta data, defaults to [--file].meta.json.')
+                        help='<Optional> The file where to save the meta data, defaults to [--file].meta.')
 
     args = parser.parse_args()
     return args
@@ -85,7 +85,7 @@ def main():
     tools.save(args.output, { }) # to create the directory if it doesn't exist
     write(args.file, args.output)
 
-    meta = args.meta or args.output.replace('.json', '.meta.json')
+    meta = args.meta or f"{ args.output }.meta"
     pcmd['meta'] = meta
     tools.save(meta, { 'cmd': cmd, 'pcmd': pcmd })
 
