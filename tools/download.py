@@ -81,11 +81,17 @@ def main():
     cmd = tools.meta(args)
     pcmd = tools.meta(args)
     tools.save(args.output, { }) # to create the directory if it doesn't exist
+    start = time.time()
     auth = authenticate()
-    download(args.file, args.output, auth)
+    retrieved, irretrievable = download(args.file, args.output, auth)
+    end = time.time()
 
     meta = args.meta or f"{ args.output }.meta"
     pcmd['meta'] = meta
+    pcmd['retrieved'], pcmd['irretrievable'] = retrieved, irretrievable
+    pcmd['start'] = start
+    pcmd['elapsed'] = time.time() - start
+    pcmd['end'] = end
     tools.save(meta, { 'cmd': cmd, 'pcmd': pcmd })
 
 def authenticate():
