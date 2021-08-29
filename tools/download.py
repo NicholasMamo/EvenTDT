@@ -24,10 +24,13 @@ import argparse
 import os
 import sys
 
+from tweepy import OAuthHandler
+
 file_path = os.path.dirname(os.path.abspath(__file__))
 root = os.path.join(file_path, '..')
 sys.path.insert(-1, root)
 
+from config import conf
 import tools
 
 def setup_args():
@@ -66,10 +69,24 @@ def main():
     cmd = tools.meta(args)
     pcmd = tools.meta(args)
     tools.save(args.output, { }) # to create the directory if it doesn't exist
+    auth = authenticate()
 
     meta = args.meta or f"{ args.output }.meta"
     pcmd['meta'] = meta
     tools.save(meta, { 'cmd': cmd, 'pcmd': pcmd })
+
+def authenticate():
+    """
+    Authenticate with the Twitter API.
+
+    :return: The authentication object.
+    :rtype: :class:`tweepy.auth.OAuthHandler`
+    """
+
+    account = conf.ACCOUNTS[0]
+    auth = OAuthHandler(account['CONSUMER_KEY'], account['CONSUMER_SECRET'])
+    auth.set_access_token(account['ACCESS_TOKEN'], account['ACCESS_TOKEN_SECRET'])
+    return auth
 
 if __name__ == "__main__":
     main()
