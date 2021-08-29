@@ -122,6 +122,8 @@ def download(file, output, auth):
     :rtype: tuple of list
     """
 
+    start, last_output = time.time(), 0
+
     retrieved, irretrievable = [ ], [ ]
 
     # create the API object
@@ -159,6 +161,14 @@ def download(file, output, auth):
                 except tweepy.error.RateLimitError:
                     logger.warning("Rate limit reached")
                     time.sleep(60)
+
+            # print progress updates regularly
+            progress = (len(retrieved) + len(irretrievable)) / len(ids)
+            if progress - last_output > 0.1: # every 10%
+                last_output = progress
+                elapsed = time.time() - start
+                eta =  elapsed * (1 - progress) / progress
+                logger.info(f"Downloaded { round(progress * 100) }% ({ len(retrieved) }/{ len(retrieved) + len(irretrievable) }) - ETA { math.floor(eta / 60) } minute(s) { round(eta / 60) } seconds")
 
     return (retrieved, irretrievable)
 
