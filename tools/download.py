@@ -61,8 +61,15 @@ def main():
     Main program loop.
     """
 
-    # set up the arguments
+    # set up the arguments and prepare the data directory
     args = setup_args()
+    cmd = tools.meta(args)
+    pcmd = tools.meta(args)
+    tools.save(args.output, { }) # to create the directory if it doesn't exist
+
+    meta = args.meta or f"{ args.output }.meta"
+    pcmd['meta'] = meta
+    tools.save(meta, { 'cmd': cmd, 'pcmd': pcmd })
 
 if __name__ == "__main__":
     main()
