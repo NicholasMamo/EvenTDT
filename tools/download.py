@@ -122,7 +122,7 @@ def download(file, output, auth):
     :rtype: tuple of list
     """
 
-    downloaded, deleted = [ ], [ ]
+    retrieved, irretrievable = [ ], [ ]
 
     # create the API object
     api = API(auth)
@@ -150,8 +150,8 @@ def download(file, output, auth):
                     statuses = sorted(statuses, key=lambda status: _ids.index(status['id_str']))
 
                     # find which statuses could be retrieved
-                    downloaded.extend([ status['id_str'] for status in statuses ])
-                    deleted.extend([ id for id in _ids if id not in downloaded ])
+                    retrieved.extend([ status['id_str'] for status in statuses ])
+                    irretrievable.extend([ id for id in _ids if id not in retrieved ])
 
                     for status in statuses:
                         outfile.write(f"{ json.dumps(status)}\n")
@@ -160,7 +160,7 @@ def download(file, output, auth):
                     logger.warning("Rate limit reached")
                     time.sleep(60)
 
-    return (downloaded, deleted)
+    return (retrieved, irretrievable)
 
 if __name__ == "__main__":
     main()

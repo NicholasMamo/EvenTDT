@@ -93,3 +93,16 @@ class TestDownload(unittest.TestCase):
         with open(output, 'r') as outfile:
             downloaded = [ json.loads(tweet)['id_str'] for tweet in outfile.readlines() ]
             self.assertEqual(len(downloaded), len(set(downloaded)))
+
+    def test_download_return_no_overlap(self):
+        """
+        Test that there are no duplicates in the downloaded tweets.
+        """
+
+        file = 'eventdt/tests/corpora/ids-100.txt'
+        original = 'eventdt/tests/corpora/#SOUARS-100.json'
+        output = 'tools/tests/.out/downloaded.json'
+
+        tools.save(output, {})
+        retrieved, irretrievable = tool.download(file, output, tool.authenticate())
+        self.assertFalse(set(retrieved).intersection(set(irretrievable)))
