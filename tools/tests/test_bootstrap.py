@@ -3,6 +3,7 @@ Test the functionality of the bootstrap tool.
 """
 
 import json
+import math
 import os
 import statistics
 import sys
@@ -523,6 +524,59 @@ class TestBootstrap(unittest.TestCase):
 
         next_seed = bootstrap.choose_next(scores, 1, choose=statistics.mean) # using the mean score
         self.assertEqual([ 'yellow' ], next_seed)
+
+    def test_wmean_correct_score(self):
+        """
+        Test that the weighted mean assigns the correct score.
+        """
+
+        scores = { 'card': 10, 'tackl': 8 }
+        bootstrapped = [ 'card', 'tackl' ]
+        self.assertEqual(sum(scores[term] * math.exp(-( bootstrapped.index(term) + 1 )) for term in scores), bootstrap.wmean(scores, bootstrapped))
+
+        scores = { 'card': 10, 'tackl': 8 }
+        bootstrapped = [ 'tackl', 'card' ]
+        self.assertEqual(sum(scores[term] * math.exp(-( bootstrapped.index(term) + 1 )) for term in scores), bootstrap.wmean(scores, bootstrapped))
+
+    def test_wmean_lambda(self):
+        """
+        Test that the weighted mean uses the lambda parameter to assign the correct score.
+        """
+
+        scores = { 'card': 10, 'tackl': 8 }
+        bootstrapped = [ 'card', 'tackl' ]
+        l = 0.5
+        self.assertEqual(sum(scores[term] * l * math.exp(-l * ( bootstrapped.index(term) + 1 )) for term in scores), bootstrap.wmean(scores, bootstrapped, l=l))
+
+    def test_wmean_drift(self):
+        """
+        Test that the the smaller the lambda value, the more semantic drift is allowed.
+        """
+
+        scores = { 'yellow': { 'card': 10, 'tackl': 8 }, 'red': { 'card': 8, 'tackl': 10 } }
+        bootstrapped = [ 'card', 'tackl' ]
+
+        l = 0.1
+        low_l = bootstrap.wmean(scores['yellow'], bootstrapped, l=l)/bootstrap.wmean(scores['red'], bootstrapped, l=l)
+
+        l = 10
+        high_l = bootstrap.wmean(scores['yellow'], bootstrapped, l=l)/bootstrap.wmean(scores['red'], bootstrapped, l=l)
+
+        self.assertGreater(high_l, low_l) # there is a bigger ratio between the two terms when lambda is bigger
+
+    def test_wmean_lambda_order(self):
+        """
+        Test that the lambda value affects the order of the terms.
+        """
+
+        scores = { 'yellow': { 'card': 10, 'tackl': 8, 'foul': 2 }, 'red': { 'card': 8, 'tackl': 10, 'foul': 10 } }
+        bootstrapped = [ 'card', 'tackl', 'foul' ]
+
+        l = 0.1
+        self.assertLess(bootstrap.wmean(scores['yellow'], bootstrapped, l=l), bootstrap.wmean(scores['red'], bootstrapped, l=l))
+
+        l = 10
+        self.assertGreater(bootstrap.wmean(scores['yellow'], bootstrapped, l=l), bootstrap.wmean(scores['red'], bootstrapped, l=l))
 
     def test_update_scores_lower(self):
         """

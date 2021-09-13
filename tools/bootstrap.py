@@ -397,6 +397,35 @@ def choose_next(candidates, keep, choose=max):
     _scores = sorted(_scores, key=_scores.get, reverse=True) # reverse the candidates in descending order of their scores
     return _scores[:keep]
 
+def wmean(scores, bootstrapped, l=1):
+    """
+    Calculate the weighted mean for the given candidate by combining its scores with the ranks of already-bootstrapped terms.
+    The weight, :math:`w`, is taken from the exponential distribution:
+
+    .. math::
+
+        w = \\lambda e^{-\\lambda x}
+
+    where :math:`\\lambda` is taken to be 1 by default.
+
+    This function is useful to minimize semantic drift.
+    The weighted mean favors terms that are closely-correlated with terms that appear high up in the bootstrapped ranking, and also considers the seed set.
+
+    :param scores: The scores of a candidate term with all other bootstrapped terms.
+    :type scores: dict
+    :param bootstrapped: A list of seed terms and bootstrapped terms, in the original order.
+    :type bootstraped: list of str
+    :param l: The exponential distribution's rate parameter.
+              The higher the value of :math:`\\lambda`, the less semantic drift the function allows.
+    :type l: float
+
+    :return: A single score for the given candidate.
+    :rtype: float
+    """
+
+    rank = { term: r + 1 for r, term in enumerate(bootstrapped) }
+    return sum([ score * (l * math.exp(-l * rank[term])) for term, score in scores.items() ])
+
 def update_scores(candidates, scores):
     """
     Update the scores of the candidates.
