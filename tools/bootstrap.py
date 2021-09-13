@@ -381,7 +381,7 @@ def filter_candidates(candidates, seed, bootstrapped):
                                     if candidate not in seed + bootstrapped }
     return candidates
 
-def choose_next(candidates, keep, choose=max, bootstrapped=None, **kwargs):
+def choose_next(candidates, keep, choose=max, bootstrapped=None, *args, **kwargs):
     """
     Choose the next set of candidates that will be added to the seed set.
 
