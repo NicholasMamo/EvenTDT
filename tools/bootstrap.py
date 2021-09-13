@@ -267,7 +267,7 @@ def bootstrap(files, seed, method, iterations, keep, choose, candidates, *args, 
 
     # add the top candidates to the list of bootstrapped keywords
     scores = filter_candidates(scores, seed, bootstrapped)
-    next_seed = choose_next(scores, keep, choose) # choose the final seed terms
+    next_seed = choose_next(scores, keep, choose, seed + bootstrapped, *args, **kwargs) # choose the final seed terms
     bootstrapped.extend(next_seed)
     logger.info(f"Bootstrapped { ', '.join(bootstrapped) }")
 
