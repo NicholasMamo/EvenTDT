@@ -35,7 +35,7 @@ class TestBootstrap(unittest.TestCase):
         files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'tokenized', 'CRYCHE.json') ]
         candidates = bootstrap.generate_candidates(files, generate=200)
 
-        bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMIBootstrapper, 1, 5, candidates)
+        bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMIBootstrapper, 1, 5, max, candidates)
         self.assertEqual(list, type(bootstrapped))
 
     def test_bootstrap_iterations(self):
@@ -46,9 +46,9 @@ class TestBootstrap(unittest.TestCase):
         files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'tokenized', 'CRYCHE.json') ]
         candidates = bootstrap.generate_candidates(files, generate=200)
 
-        bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMIBootstrapper, 1, 1, candidates)
+        bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMIBootstrapper, 1, 1, max, candidates)
         self.assertEqual(1, len(bootstrapped))
-        bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMIBootstrapper, 2, 1, candidates)
+        bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMIBootstrapper, 2, 1, max, candidates)
         self.assertEqual(2, len(bootstrapped))
 
     def test_bootstrap_keep(self):
@@ -59,9 +59,9 @@ class TestBootstrap(unittest.TestCase):
         files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'tokenized', 'CRYCHE.json') ]
         candidates = bootstrap.generate_candidates(files, generate=200)
 
-        bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMIBootstrapper, 1, 2, candidates)
+        bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMIBootstrapper, 1, 2, max, candidates)
         self.assertEqual(2, len(bootstrapped))
-        bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMIBootstrapper, 2, 2, candidates)
+        bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMIBootstrapper, 2, 2, max, candidates)
         self.assertEqual(4, len(bootstrapped))
 
     def test_bootstrap_unique(self):
@@ -72,7 +72,7 @@ class TestBootstrap(unittest.TestCase):
         files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'tokenized', 'CRYCHE.json') ]
         candidates = bootstrap.generate_candidates(files, generate=200)
 
-        bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMIBootstrapper, 2, 5, candidates)
+        bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMIBootstrapper, 2, 5, max, candidates)
         self.assertEqual(sorted(list(set(bootstrapped))), sorted(bootstrapped))
 
     def test_bootstrap(self):
@@ -83,7 +83,7 @@ class TestBootstrap(unittest.TestCase):
         files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'tokenized', 'CRYCHE.json') ]
         candidates = bootstrap.generate_candidates(files, generate=200)
 
-        bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMIBootstrapper, 1, 5, candidates)
+        bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMIBootstrapper, 1, 5, max, candidates)
         self.assertTrue('second' in bootstrapped)
         self.assertTrue('first' in bootstrapped)
 
