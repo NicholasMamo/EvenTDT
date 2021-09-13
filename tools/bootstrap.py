@@ -35,6 +35,7 @@ The output is a JSON file with the following structure:
             "keep": null,
             "choose": "<built-in function max>",
             "generate": 100,
+            "lambda": 1,
             "max_seed": 30,
             "max_candidates": 200,
             "_date": "2021-04-09T12:12:22.023277",
@@ -63,6 +64,7 @@ The output is a JSON file with the following structure:
             "keep": null,
             "choose": "<built-in function max>",
             "generate": 100,
+            "lambda": 1,
             "max_seed": 30,
             "max_candidates": 200,
             "_date": "2020-12-27T12:12:22.023302",
@@ -89,6 +91,7 @@ The full list of accepted arguments:
     - ``--generate``         *<Optional>* The number of candidate keywords to generate if no candidates are provided; defaults to 100.
     - ``--max-seed``         *<Optional>* The number of seed words to use from the given files; defaults to all words.
     - ``--max-candidates``   *<Optional>* The number of candidate words to use from the given files; defaults to all words.
+    - ``--lambda``           *<Optional>* The lambda value used with the ``wmean`` scoring method; defaults to 1.
 """
 
 import argparse
@@ -128,6 +131,7 @@ def setup_args():
         - ``--generate``         *<Optional>* The number of candidate keywords to generate if no candidates are provided; defaults to 100.
         - ``--max-seed``         *<Optional>* The number of seed words to use from the given files; defaults to all words.
         - ``--max-candidates``   *<Optional>* The number of candidate words to use from the given files; defaults to all words.
+        - ``--lambda``           *<Optional>* The lambda value used with the ``wmean`` scoring method; defaults to 1.
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
@@ -168,6 +172,9 @@ def setup_args():
     parser.add_argument('--max-candidates',
                         type=int, required=False, default=None,
                         help='<Optional> The number of candidate words to use from the given files; defaults to all words.')
+    parser.add_argument('--lambda',
+                        type=int, required=False, default=1,
+                        help='<Optional> The lambda value used with the wmean scoring method.')
 
     args = parser.parse_args()
     return args
@@ -197,11 +204,11 @@ def main():
 
     bootstrapped = bootstrap(args.files, seed, args.method,
                              args.iterations, args.keep, args.choose,
-                             candidates=candidates)
+                             candidates=candidates, l=vars(args)['lambda'])
 
     tools.save(args.output, { 'cmd': cmd, 'pcmd': pcmd, 'bootstrapped': bootstrapped })
 
-def bootstrap(files, seed, method, iterations, keep, choose, candidates):
+def bootstrap(files, seed, method, iterations, keep, choose, candidates, *args, **kwargs):
     """
     Bootstrap the given seed set from the given files.
 
@@ -243,7 +250,7 @@ def bootstrap(files, seed, method, iterations, keep, choose, candidates):
         else:
             # in subsequent iterations, the highest scoring candidates are used instead
             scores = filter_candidates(scores, seed, bootstrapped) # filter out candidates that have already been reviewed
-            next_seed = choose_next(scores, keep, choose, seed + bootstrapped) # choose the next seed terms
+            next_seed = choose_next(scores, keep, choose, seed + bootstrapped, *args, **kwargs) # choose the next seed terms
             bootstrapped.extend(next_seed)
 
         # if there are no candidates left, stop looking
@@ -374,7 +381,7 @@ def filter_candidates(candidates, seed, bootstrapped):
                                     if candidate not in seed + bootstrapped }
     return candidates
 
-def choose_next(candidates, keep, choose=max, bootstrapped=None):
+def choose_next(candidates, keep, choose=max, bootstrapped=None, *args, *kwargs):
     """
     Choose the next set of candidates that will be added to the seed set.
 
@@ -399,7 +406,7 @@ def choose_next(candidates, keep, choose=max, bootstrapped=None):
 
     _scores = copy.deepcopy(candidates)
     if choose == wmean:
-        _scores = { candidate: choose(scores, bootstrapped) for candidate, scores in _scores.items() } # map the scores to a single value
+        _scores = { candidate: choose(scores, bootstrapped, *args, **kwargs) for candidate, scores in _scores.items() } # map the scores to a single value
     else:
         _scores = { candidate: choose(scores.values()) for candidate, scores in _scores.items() } # map the scores to a single value
     _scores = sorted(_scores, key=_scores.get, reverse=True) # reverse the candidates in descending order of their scores
