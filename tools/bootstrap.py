@@ -173,7 +173,7 @@ def setup_args():
                         type=int, required=False, default=None,
                         help='<Optional> The number of candidate words to use from the given files; defaults to all words.')
     parser.add_argument('--lambda',
-                        type=int, required=False, default=1,
+                        type=float, required=False, default=1,
                         help='<Optional> The lambda value used with the wmean scoring method.')
 
     args = parser.parse_args()
