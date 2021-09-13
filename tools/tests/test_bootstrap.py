@@ -525,6 +525,18 @@ class TestBootstrap(unittest.TestCase):
         next_seed = bootstrap.choose_next(scores, 1, choose=statistics.mean) # using the mean score
         self.assertEqual([ 'yellow' ], next_seed)
 
+    def test_choose_next_wmean_order_matters(self):
+        """
+        Test that when choosing the next seed terms with the highest mean, the order of the previously-bootstrapped (or seed) terms matters.
+        """
+
+        scores = { 'yellow': { 'card': 10, 'tackl': 8 }, 'red': { 'card': 8, 'tackl': 10 } }
+        next_seed = bootstrap.choose_next(scores, 1, choose=bootstrap.wmean, bootstrapped=[ 'card', 'tackl' ]) # using the maximum score
+        self.assertEqual([ 'yellow' ], next_seed)
+
+        next_seed = bootstrap.choose_next(scores, 1, choose=bootstrap.wmean, bootstrapped=[ 'tackl', 'card' ]) # using the maximum score
+        self.assertEqual([ 'red' ], next_seed)
+
     def test_wmean_correct_score(self):
         """
         Test that the weighted mean assigns the correct score.

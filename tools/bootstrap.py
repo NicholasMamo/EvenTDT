@@ -85,7 +85,7 @@ The full list of accepted arguments:
     - ``-c --candidates``    *<Optional>* The path to the file containing candidate keywords, expected to contain one keyword on each line. Alternatively, the output from the :class:`~tools.terms` tool can be provided. If no candidates are given, all vocabulary keywords are considered candidates.
     - ``-i --iterations``    *<Optional>* The number of iterations to spend bootstrapping; defaults to 1.
     - ``-k --keep``          *<Optional>* The number of keywords to keep after each iteration; defaults to 5.
-    - ``--choose``           *<Optional>* The function to use to choose new seed terms; defaults to choosing candidates that have the highest scores; supported: ``max``, ``mean``.
+    - ``--choose``           *<Optional>* The function to use to choose new seed terms; defaults to choosing candidates that have the highest scores; supported: ``max``, ``mean``, ``wmean`` (weighted mean).
     - ``--generate``         *<Optional>* The number of candidate keywords to generate if no candidates are provided; defaults to 100.
     - ``--max-seed``         *<Optional>* The number of seed words to use from the given files; defaults to all words.
     - ``--max-candidates``   *<Optional>* The number of candidate words to use from the given files; defaults to all words.
@@ -94,6 +94,7 @@ The full list of accepted arguments:
 import argparse
 import copy
 import json
+import math
 import os
 import statistics
 import sys
@@ -123,7 +124,7 @@ def setup_args():
         - ``-c --candidates``    *<Optional>* The path to the file containing candidate keywords, expected to contain one keyword on each line. Alternatively, the output from the :class:`~tools.terms` tool can be provided. If no candidates are given, all vocabulary keywords are considered candidates.
         - ``-i --iterations``    *<Optional>* The number of iterations to spend bootstrapping; defaults to 1.
         - ``-k --keep``          *<Optional>* The number of keywords to keep after each iteration; defaults to 5.
-        - ``--choose``           *<Optional>* The function to use to choose new seed terms; defaults to choosing candidates that have the highest scores; supported: ``max``, ``mean``.
+        - ``--choose``           *<Optional>* The function to use to choose new seed terms; defaults to choosing candidates that have the highest scores; supported: ``max``, ``mean``, ``wmean`` (weighted mean).
         - ``--generate``         *<Optional>* The number of candidate keywords to generate if no candidates are provided; defaults to 100.
         - ``--max-seed``         *<Optional>* The number of seed words to use from the given files; defaults to all words.
         - ``--max-candidates``   *<Optional>* The number of candidate words to use from the given files; defaults to all words.
@@ -157,7 +158,7 @@ def setup_args():
                         help='<Optional> The number of keywords to keep after each iteration; defaults to 5.')
     parser.add_argument('--choose',
                         type=choose, required=False, default=max,
-                        help='<Optional> THe function to use to choose new seed terms; defaults to choosing candidates that have the highest scores; supported: `max`, `mean`.')
+                        help='<Optional> The function to use to choose new seed terms; defaults to choosing candidates that have the highest scores; supported: `max`, `mean`, `wmean` (weighted mean).')
     parser.add_argument('--generate',
                         type=int, required=False, default=100,
                         help='<Optional> The number of candidate keywords to generate if no candidates are provided; defaults to 100.')
@@ -242,7 +243,7 @@ def bootstrap(files, seed, method, iterations, keep, choose, candidates):
         else:
             # in subsequent iterations, the highest scoring candidates are used instead
             scores = filter_candidates(scores, seed, bootstrapped) # filter out candidates that have already been reviewed
-            next_seed = choose_next(scores, keep, choose) # choose the next seed terms
+            next_seed = choose_next(scores, keep, choose, seed + bootstrapped) # choose the next seed terms
             bootstrapped.extend(next_seed)
 
         # if there are no candidates left, stop looking
@@ -373,7 +374,7 @@ def filter_candidates(candidates, seed, bootstrapped):
                                     if candidate not in seed + bootstrapped }
     return candidates
 
-def choose_next(candidates, keep, choose=max):
+def choose_next(candidates, keep, choose=max, bootstrapped=None):
     """
     Choose the next set of candidates that will be added to the seed set.
 
@@ -387,13 +388,20 @@ def choose_next(candidates, keep, choose=max):
                    By default, the candidate score that the function considers is the highest one it has.
                    In other words, the function defaults to choosing the candidates with the highest scores.
     :type choose: func
+    :param bootstrapped: The list of seed terms and other terms that have already been bootstrapped.
+                         The terms should be provided in the same order as they were bootstrapped.
+                         This parameter is only used when the choice function is :func:`~tools.bootstrap.wmean`.
+    :type bootstrapped: list of str
 
     :return: A list of candidates to add to the seed set.
     :rtype: list of str
     """
 
     _scores = copy.deepcopy(candidates)
-    _scores = { candidate: choose(scores.values()) for candidate, scores in _scores.items() } # map the scores to a single value
+    if choose == wmean:
+        _scores = { candidate: choose(scores, bootstrapped) for candidate, scores in _scores.items() } # map the scores to a single value
+    else:
+        _scores = { candidate: choose(scores.values()) for candidate, scores in _scores.items() } # map the scores to a single value
     _scores = sorted(_scores, key=_scores.get, reverse=True) # reverse the candidates in descending order of their scores
     return _scores[:keep]
 
@@ -507,6 +515,7 @@ def choose(method):
     methods = {
         'max': max,
         'mean': statistics.mean,
+        'wmean': wmean
     }
 
     if method.lower() in methods:
