@@ -87,7 +87,7 @@ The full list of accepted arguments:
     - ``-c --candidates``    *<Optional>* The path to the file containing candidate keywords, expected to contain one keyword on each line. Alternatively, the output from the :class:`~tools.terms` tool can be provided. If no candidates are given, all vocabulary keywords are considered candidates.
     - ``-i --iterations``    *<Optional>* The number of iterations to spend bootstrapping; defaults to 1.
     - ``-k --keep``          *<Optional>* The number of keywords to keep after each iteration; defaults to 5.
-    - ``--choose``           *<Optional>* The function to use to choose new seed terms; defaults to choosing candidates that have the highest scores; supported: ``max``, ``mean``, ``wmean`` (weighted mean).
+    - ``--choose``           *<Optional>* The function to use to choose new seed terms; defaults to choosing candidates that have the highest scores; supported: ``max``, ``mean``, ``median``, ``wmean`` (weighted mean).
     - ``--generate``         *<Optional>* The number of candidate keywords to generate if no candidates are provided; defaults to 100.
     - ``--max-seed``         *<Optional>* The number of seed words to use from the given files; defaults to all words.
     - ``--max-candidates``   *<Optional>* The number of candidate words to use from the given files; defaults to all words.
@@ -127,7 +127,7 @@ def setup_args():
         - ``-c --candidates``    *<Optional>* The path to the file containing candidate keywords, expected to contain one keyword on each line. Alternatively, the output from the :class:`~tools.terms` tool can be provided. If no candidates are given, all vocabulary keywords are considered candidates.
         - ``-i --iterations``    *<Optional>* The number of iterations to spend bootstrapping; defaults to 1.
         - ``-k --keep``          *<Optional>* The number of keywords to keep after each iteration; defaults to 5.
-        - ``--choose``           *<Optional>* The function to use to choose new seed terms; defaults to choosing candidates that have the highest scores; supported: ``max``, ``mean``, ``wmean`` (weighted mean).
+        - ``--choose``           *<Optional>* The function to use to choose new seed terms; defaults to choosing candidates that have the highest scores; supported: ``max``, ``mean``, ``median``, ``wmean`` (weighted mean).
         - ``--generate``         *<Optional>* The number of candidate keywords to generate if no candidates are provided; defaults to 100.
         - ``--max-seed``         *<Optional>* The number of seed words to use from the given files; defaults to all words.
         - ``--max-candidates``   *<Optional>* The number of candidate words to use from the given files; defaults to all words.
@@ -162,7 +162,7 @@ def setup_args():
                         help='<Optional> The number of keywords to keep after each iteration; defaults to 5.')
     parser.add_argument('--choose',
                         type=choose, required=False, default=max,
-                        help='<Optional> The function to use to choose new seed terms; defaults to choosing candidates that have the highest scores; supported: `max`, `mean`, `wmean` (weighted mean).')
+                        help='<Optional> The function to use to choose new seed terms; defaults to choosing candidates that have the highest scores; supported: `max`, `mean`, `median`, `wmean` (weighted mean).')
     parser.add_argument('--generate',
                         type=int, required=False, default=100,
                         help='<Optional> The number of candidate keywords to generate if no candidates are provided; defaults to 100.')
@@ -509,6 +509,8 @@ def choose(method):
 
         #. :func:`max`
         #. :func:`statistics.mean`
+        #. :func:`statistics.median`
+        #. :func:`~tools.bootstrap.wmean`
 
     :param method: The method string.
     :type method: str
@@ -522,6 +524,7 @@ def choose(method):
     methods = {
         'max': max,
         'mean': statistics.mean,
+        'median': statistics.median,
         'wmean': wmean
     }
 
