@@ -400,8 +400,8 @@ def choose_next(candidates, keep, choose=max, bootstrapped=None, *args, **kwargs
                          This parameter is only used when the choice function is :func:`~tools.bootstrap.wmean`.
     :type bootstrapped: list of str
 
-    :return: A list of candidates to add to the seed set.
-    :rtype: list of str
+    :return: A list of candidates, as a tuple, to add to the seed set with their score.
+    :rtype: list of tuple of str and float
     """
 
     _scores = copy.deepcopy(candidates)
@@ -409,7 +409,7 @@ def choose_next(candidates, keep, choose=max, bootstrapped=None, *args, **kwargs
         _scores = { candidate: choose(scores, bootstrapped, *args, **kwargs) for candidate, scores in _scores.items() } # map the scores to a single value
     else:
         _scores = { candidate: choose(scores.values()) for candidate, scores in _scores.items() } # map the scores to a single value
-    _scores = sorted(_scores, key=_scores.get, reverse=True) # reverse the candidates in descending order of their scores
+    _scores = sorted(_scores.items(), key=lambda s: s[1], reverse=True) # reverse the candidates in descending order of their scores
     return _scores[:keep]
 
 def wmean(scores, bootstrapped, l=1):

@@ -468,13 +468,15 @@ class TestBootstrap(unittest.TestCase):
 
     def test_choose_next_list(self):
         """
-        Test that when choosing the next seed terms, a list of terms is returned.
+        Test that when choosing the next seed terms, a list of tuples is returned, and that each first element is a string and each second element is a floating number.
         """
 
         scores = { 'second': { 'half': 10 }, 'first': { 'half': 2 } }
         next_seed = bootstrap.choose_next(scores, 10)
         self.assertEqual(list, type(next_seed))
-        self.assertTrue(all( type(seed) is str for seed in next_seed ))
+        self.assertTrue(all( type(seed) is tuple for seed in next_seed ))
+        self.assertTrue(all( type(seed[0]) is str for seed in next_seed ))
+        self.assertTrue(all( type(seed[1]) is float or type(seed[1]) is int for seed in next_seed ))
 
     def test_choose_next_copy(self):
         """
@@ -492,7 +494,8 @@ class TestBootstrap(unittest.TestCase):
 
         scores = { 'second': { 'half': 10 }, 'first': { 'half': 2 } }
         next_seed = bootstrap.choose_next(scores, 10)
-        self.assertEqual(set(scores.keys()), set(next_seed))
+        terms = [ term for term, _ in next_seed ]
+        self.assertEqual(set(scores.keys()), set(terms))
 
     def test_choose_next_keep_inclusive(self):
         """
@@ -501,7 +504,8 @@ class TestBootstrap(unittest.TestCase):
 
         scores = { 'second': { 'half': 10 }, 'first': { 'half': 2 }, 'third': { 'half': 4 } }
         next_seed = bootstrap.choose_next(scores, 3)
-        self.assertEqual(set(scores.keys()), set(next_seed))
+        terms = [ term for term, _ in next_seed ]
+        self.assertEqual(set(scores.keys()), set(terms))
 
     def test_choose_next_highest(self):
         """
@@ -511,7 +515,18 @@ class TestBootstrap(unittest.TestCase):
         keep = 2
         scores = { 'second': { 'half': 10 }, 'first': { 'half': 2 }, 'third': { 'half': 4 } }
         next_seed = bootstrap.choose_next(scores, keep)
-        self.assertEqual([ 'second', 'third' ], next_seed)
+        terms = [ term for term, _ in next_seed ]
+        self.assertEqual([ 'second', 'third' ], terms)
+
+    def test_choose_next_sorted_scores(self):
+        """
+        Test that when choosing the next seed terms, the terms are sorted in descending order of score.
+        """
+
+        keep = 2
+        scores = { 'second': { 'half': 10 }, 'first': { 'half': 2 }, 'third': { 'half': 4 } }
+        next_seed = bootstrap.choose_next(scores, keep)
+        self.assertTrue(all( next_seed[i][1] >= next_seed[i + 1][1] for i in range(len(next_seed) - 1) ))
 
     def test_choose_next_highest_mean(self):
         """
@@ -520,10 +535,12 @@ class TestBootstrap(unittest.TestCase):
 
         scores = { 'yellow': { 'card': 10, 'tackl': 8 }, 'red': { 'card': 11, 'tackl': 5 } }
         next_seed = bootstrap.choose_next(scores, 1, choose=max) # using the maximum score
-        self.assertEqual([ 'red' ], next_seed)
+        terms = [ term for term, _ in next_seed ]
+        self.assertEqual([ 'red' ], terms)
 
         next_seed = bootstrap.choose_next(scores, 1, choose=statistics.mean) # using the mean score
-        self.assertEqual([ 'yellow' ], next_seed)
+        terms = [ term for term, _ in next_seed ]
+        self.assertEqual([ 'yellow' ], terms)
 
     def test_choose_next_wmean_order_matters(self):
         """
@@ -532,10 +549,12 @@ class TestBootstrap(unittest.TestCase):
 
         scores = { 'yellow': { 'card': 10, 'tackl': 8 }, 'red': { 'card': 8, 'tackl': 10 } }
         next_seed = bootstrap.choose_next(scores, 1, choose=bootstrap.wmean, bootstrapped=[ 'card', 'tackl' ]) # using the maximum score
-        self.assertEqual([ 'yellow' ], next_seed)
+        terms = [ term for term, _ in next_seed ]
+        self.assertEqual([ 'yellow' ], terms)
 
         next_seed = bootstrap.choose_next(scores, 1, choose=bootstrap.wmean, bootstrapped=[ 'tackl', 'card' ]) # using the maximum score
-        self.assertEqual([ 'red' ], next_seed)
+        terms = [ term for term, _ in next_seed ]
+        self.assertEqual([ 'red' ], terms)
 
     def test_wmean_correct_score(self):
         """
