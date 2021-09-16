@@ -72,6 +72,31 @@ class TestATE(unittest.TestCase):
             original = data['meta']['seed'] + data['bootstrapped']
         self.assertEqual(original, terms)
 
+    def test_load_terms_bootstrapped_new(self):
+        """
+        Test that when loading terms from the output of the :mod:`~tools.bootstrap` tool, the terms themselves are loaded.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'bootstrapped-new.json')
+        terms = ate.load_terms(file)
+        self.assertTrue(all( type(term) is str for term in terms ))
+        with open(file) as f:
+            data = json.loads(''.join(f.readlines()))
+            original = data['pcmd']['seed'] + [ term['term'] for term in data['bootstrapped'] ]
+        self.assertEqual(len(original), len(terms))
+
+    def test_load_terms_bootstrapped_new_order(self):
+        """
+        Test that when loading terms from the output of the :mod:`~tools.bootstrap` tool, the seed terms are first, followed by the bootstrapped terms.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'bootstrapped-new.json')
+        terms = ate.load_terms(file)
+        with open(file) as f:
+            data = json.loads(''.join(f.readlines()))
+            original = data['pcmd']['seed'] + [ term['term'] for term in data['bootstrapped'] ]
+        self.assertEqual(original, terms)
+
     def test_load_terms_default_keep(self):
         """
         Test that when loading terms without specifying the number of terms to keep, all of the terms are kept.
