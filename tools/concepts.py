@@ -8,7 +8,7 @@ You also need to specify the method to use and the number of concepts to extract
 
 .. code-block:: bash
 
-    ./tools/terms.py \\
+    ./tools/concepts.py \\
     --correlations data/terms.json \\
     --output data/concepts.json \\
     --method GNClustering \\
@@ -20,7 +20,7 @@ You can specify edge filtering using the ``--percentile`` parameter:
 
 .. code-block:: bash
 
-    ./tools/terms.py \\
+    ./tools/concepts.py \\
     --correlations data/terms.json \\
     --output data/concepts.json \\
     --method GNClustering \\
