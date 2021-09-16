@@ -72,9 +72,21 @@ The output is a JSON file with the following structure:
             "_cmd": "./tools/terms.py --files data/tokenized_corpus.json --output data/bootstrapped.json --method CHI"
         },
         "bootstrapped": [
-            "foul",
-            "tackl",
-            "var"
+            {
+             "term": "foul",
+             "score": 10.2,
+             "rank": 6
+            },
+            {
+             "term": "tackl",
+             "score": 9.8,
+             "rank": 7
+            },
+            {
+             "term": "var",
+             "score": 5.4,
+             "rank": 6
+            }
         ]
     }
 
@@ -228,10 +240,12 @@ def bootstrap(files, seed, method, iterations, keep, choose, candidates, *args, 
     :type candidates: list of str or None
 
     :return: A list of bootstrapped keywords.
-    :rtype: list of str
+             Each keyword includes the term, its score when chosen, and its rank.
+             The ranks are offset by the number of seed terms, and therefore do not start from 1.
+    :rtype: list of dict
     """
 
-    bootstrapped = [ ]
+    terms = [ ]
 
     """
     For each iteration:
@@ -240,27 +254,33 @@ def bootstrap(files, seed, method, iterations, keep, choose, candidates, *args, 
         2. Use the new candidates to bootstrap new keywords,
         3. Update the scores.
     """
+    bootstrapped = [ ]
     scores = { } # the list of candidates and scores given by the seed set
 
     # select the next seeds
     for i in range(iterations):
         # in the first iteration, the original seeds are used
         if i == 0:
-            next_seed = seed
+            _terms = seed
         else:
             # in subsequent iterations, the highest scoring candidates are used instead
             scores = filter_candidates(scores, seed, bootstrapped) # filter out candidates that have already been reviewed
             next_seed = choose_next(scores, keep, choose, seed + bootstrapped, *args, **kwargs) # choose the next seed terms
-            bootstrapped.extend(next_seed)
+            _terms = [ term for term, _ in next_seed ]
+            terms.extend([ { 'term': term,
+                             'score': score,
+                             'rank': len(seed) + len(terms) + r + 1 }
+                           for r, (term, score) in enumerate(next_seed) ])
+            bootstrapped.extend(_terms)
 
         # if there are no candidates left, stop looking
-        if not next_seed:
+        if not _terms:
             break
 
         # bootstrap the next seed keywords and save them as bootstrapped
-        logger.info(f"Bootstrapping with { ', '.join(next_seed) }")
+        logger.info(f"Bootstrapping with { ', '.join(_terms) }")
         bootstrapper = method()
-        _scores = bootstrapper.bootstrap(files, seed=next_seed, candidates=candidates, cache=next_seed)
+        _scores = bootstrapper.bootstrap(files, seed=_terms, candidates=candidates, cache=_terms)
 
         # get the scores of the new candidates
         scores = update_scores(scores, _scores)
@@ -268,10 +288,15 @@ def bootstrap(files, seed, method, iterations, keep, choose, candidates, *args, 
     # add the top candidates to the list of bootstrapped keywords
     scores = filter_candidates(scores, seed, bootstrapped)
     next_seed = choose_next(scores, keep, choose, seed + bootstrapped, *args, **kwargs) # choose the final seed terms
-    bootstrapped.extend(next_seed)
+    _terms = [ term for term, _ in next_seed ]
+    terms.extend([ { 'term': term,
+                     'score': score,
+                     'rank': len(seed) + len(terms) + r + 1 }
+                   for r, (term, score) in enumerate(next_seed) ])
+    bootstrapped.extend(_terms)
     logger.info(f"Bootstrapped { ', '.join(bootstrapped) }")
 
-    return bootstrapped
+    return terms
 
 def load_seed(seed_file, max_seed=None):
     """

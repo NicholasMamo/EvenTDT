@@ -74,6 +74,7 @@ class TestBootstrap(unittest.TestCase):
         candidates = bootstrap.generate_candidates(files, generate=200)
 
         bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMIBootstrapper, 2, 5, max, candidates)
+        bootstrapped = [ term['term'] for term in bootstrapped ]
         self.assertEqual(sorted(list(set(bootstrapped))), sorted(bootstrapped))
 
     def test_bootstrap(self):
@@ -85,8 +86,20 @@ class TestBootstrap(unittest.TestCase):
         candidates = bootstrap.generate_candidates(files, generate=200)
 
         bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMIBootstrapper, 1, 5, max, candidates)
+        bootstrapped = [ term['term'] for term in bootstrapped ]
         self.assertTrue('second' in bootstrapped)
         self.assertTrue('first' in bootstrapped)
+
+    def test_bootstrap_ordered_rank(self):
+        """
+        Test that bootstrapping results have the correct ranks.
+        """
+
+        files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'tokenized', 'CRYCHE.json') ]
+        candidates = bootstrap.generate_candidates(files, generate=200)
+
+        bootstrapped = bootstrap.bootstrap(files, [ 'half' ], PMIBootstrapper, 1, 5, max, candidates)
+        self.assertTrue(all( bootstrapped[i + 1]['rank'] - bootstrapped[i]['rank'] == 1 for i in range(len(bootstrapped) - 1) ))
 
     def test_load_seed_all_words(self):
         """
