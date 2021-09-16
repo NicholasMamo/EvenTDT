@@ -202,7 +202,10 @@ def load_terms(terms, max_terms=None):
                     meta = data['pcmd'] if 'pcmd' in data else data['meta']
                     if 'seed' in meta:
                         _terms.extend(meta['seed'])
-                        _terms.extend(data['bootstrapped'])
+                        if data['bootstrapped'] and type(data['bootstrapped'][0]) is str:
+                            _terms.extend(data['bootstrapped'])
+                        else:
+                            _terms.extend([ term['term'] for term in data['bootstrapped'] ])
                     elif 'terms' in data:
                         _terms.extend([ term['term'] for term in data['terms'] ])
         else:

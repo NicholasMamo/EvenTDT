@@ -105,6 +105,31 @@ class TestCorrelation(unittest.TestCase):
             original = data['meta']['seed'] + data['bootstrapped']
         self.assertEqual(original, terms)
 
+    def test_load_terms_bootstrapped_new(self):
+        """
+        Test that when loading terms from the output of the ``bootstrap`` tool, the terms themselves are loaded.
+        """
+
+        files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'bootstrapped-new.json') ]
+        terms = correlation.load_terms(files)
+        self.assertTrue(all( type(term) is str for term in terms ))
+        with open(files[0]) as f:
+            data = json.loads(''.join(f.readlines()))
+            original = data['pcmd']['seed'] + [ term['term'] for term in data['bootstrapped'] ]
+        self.assertEqual(len(original), len(terms))
+
+    def test_load_terms_bootstrapped_new_order(self):
+        """
+        Test that when loading terms from the output of the ``bootstrap`` tool, the seed terms are first, followed by the bootstrapped terms.
+        """
+
+        files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'bootstrapped-new.json') ]
+        terms = correlation.load_terms(files)
+        with open(files[0]) as f:
+            data = json.loads(''.join(f.readlines()))
+            original = data['pcmd']['seed'] + [ term['term'] for term in data['bootstrapped'] ]
+        self.assertEqual(original, terms)
+
     def test_load_terms_mix(self):
         """
         Test that when loading terms from a mix of words and files, they are all loaded in the same order.
