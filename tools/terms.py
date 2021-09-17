@@ -40,6 +40,7 @@ In addition to the basic parameters, you can also specify a re-ranking mode amon
 
 - normal (default): Re-rank the terms extracted using the base method by using a re-ranker
 - multiply: Multiply the scores of the terms extracted using the base method and the re-ranker
+- harmonic: Calculate the harmonic mean of the scores of the terms extracted using the base method and the re-ranker
 
 The output is a JSON file with the following structure:
 
@@ -253,7 +254,7 @@ The full list of accepted arguments:
 When using a re-ranker, these arguments are also accepted:
 
     - ``--reranker``            *<Optional>* The method to use to re-rank the terms extracted by the base method; supported :class:`TF <ate.stat.tf.TFExtractor>`, :class:`TFIDF <ate.stat.tfidf.TFIDFExtractor>`, :class:`Rank <ate.stat.corpus.rank.RankExtractor>`, :class:`Specificity <ate.stat.corpus.specificity.SpecificityExtractor>`, :class:`TFDCF <ate.stat.corpus.tfdcf.TFDCFExtractor>`, :class:`EF <ate.application.event.EF>`, :class:`LogEF <ate.application.event.LogEF>`, :class:`EF-IDF <ate.application.event.EFIDF>`, :class:`EF-IDF-Entropy <ate.application.event.EFIDFEntropy>`.
-    - ``--reranker-mode``       *<Optional>* The re-ranking mode; supported: normal (default), multiple.
+    - ``--reranker-mode``       *<Optional>* The re-ranking mode; supported: normal (default), multiply, harmonic [mean].
     - ``--reranker-files``      *<Optional>* The corpora to use to calculate the new, re-ranked score for terms.
     - ``--reranker-keep``       *<Optional>* The number of terms to return, ordered in descending order of score; defaults to all terms.
     - ``--reranker-normalized``  *<Optional>* Normalize the scores between 0 and 1.
@@ -301,7 +302,7 @@ def setup_args():
         - ``--idfs``                *<Optional>* The IDF files to use to calculate entropy (used only with the :class:`~ate.application.event.EFIDFEntropy` method)
 
         - ``--reranker``            *<Optional>* The method to use to re-rank the terms extracted by the base method; supported :class:`TF <ate.stat.tf.TFExtractor>`, :class:`TFIDF <ate.stat.tfidf.TFIDFExtractor>`, :class:`Rank <ate.stat.corpus.rank.RankExtractor>`, :class:`Specificity <ate.stat.corpus.specificity.SpecificityExtractor>`, :class:`TFDCF <ate.stat.corpus.tfdcf.TFDCFExtractor>`, :class:`EF <ate.application.event.EF>`, :class:`LogEF <ate.application.event.LogEF>`, :class:`EF-IDF <ate.application.event.EFIDF>`, :class:`EF-IDF-Entropy <ate.application.event.EFIDFEntropy>`.
-        - ``--reranker-mode``       *<Optional>* The re-ranking mode; supported: normal (default), multiple.
+        - ``--reranker-mode``       *<Optional>* The re-ranking mode; supported: normal (default), multiply, harmonic [mean].
         - ``--reranker-files``      *<Optional>* The corpora to use to calculate the new, re-ranked score for terms.
         - ``--reranker-keep``       *<Optional>* The number of terms to return, ordered in descending order of score; defaults to all terms.
         - ``--reranker-normalized``  *<Optional>* Normalize the scores between 0 and 1.
@@ -337,7 +338,7 @@ def setup_args():
                         help='<Optional> The method to use to re-rank the terms extracted by the base method; supported `TF`, `TFIDF`, `Rank`, `Specificity`, `TFDCF`, `EF`, `LogEF`, `EF-IDF`.')
     parser.add_argument('--reranker-mode', type=str, required=False,
                         choices=[ 'normal', 'multiply' ], default='normal',
-                        help='<Optional> The re-ranking mode; supported: normal (default), multiple.')
+                        help='<Optional> The re-ranking mode; supported: normal (default), multiply, harmonic [mean].')
     parser.add_argument('--reranker-files', nargs='+', required=False,
                         help='<Required> The corpora to use to calculate the new, re-ranked score for terms.')
     parser.add_argument('--reranker-keep', type=int, required=False,
@@ -578,6 +579,7 @@ def combine(mode, terms, reranked):
     :param mode: The re-ranking mode; supported: `normal` and `multiply`.
                  If `normal` is given, the re-ranked terms are returned.
                  If `multiply` is given, the scores of the extracted and re-ranked terms are multiplied.
+                 If `harmonic` is given, the scores of the extracted and re-ranked terms are combined using the harmonic mean.
     :type mode: str
     :param terms: The terms extracted by the base algorithm, as returned by the :func:`~tools.terms.extract` function.
     :type terms: list of dict
@@ -598,6 +600,12 @@ def combine(mode, terms, reranked):
         extracted_scores = { term['term']: term['score'] for term in terms }
         reranked_scores = { term['term']: term['score'] for term in reranked }
         scores = { term: score * reranked_scores[term]
+                   for term, score in extracted_scores.items() }
+        return rank(scores)
+    elif mode =='harmonic':
+        extracted_scores = { term['term']: term['score'] for term in terms }
+        reranked_scores = { term['term']: term['score'] for term in reranked }
+        scores = { term: 2 * score * reranked_scores[term] / (score + reranked_scores[term])
                    for term, score in extracted_scores.items() }
         return rank(scores)
 

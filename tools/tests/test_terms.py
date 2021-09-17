@@ -18,7 +18,7 @@ for path in paths:
 
 from tools import terms
 from ate.application import LogEF, EF, EFIDF, EFIDFEntropy, Entropy
-from ate.stat import TFIDFExtractor
+from ate.stat import TFExtractor, TFIDFExtractor
 
 class TestTerms(unittest.TestCase):
     """
@@ -986,6 +986,66 @@ class TestTerms(unittest.TestCase):
         combined = terms.combine('multiply', extracted, reranked)
         self.assertTrue(all( term['score'] == extracted_scores[term['term']] * reranked_scores[term['term']]
                              for term in combined ))
+
+    def test_combine_harmonic_copy(self):
+        """
+        Test that when combining two lists of terms using the 'harmonic' mode, the original lists are not changed.
+        """
+
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EF)
+        extracted = terms.extract(extractor, timelines)
+        extracted_copy = copy.deepcopy(extracted)
+
+        reranked = terms.rerank(extracted, reranker=EF, tfidf=None, files=timelines, general=None, cutoff=None, base=None, keep=None, normalized=None, idfs=None)
+        reranked_copy = copy.deepcopy(reranked)
+        combined = terms.combine('harmonic', extracted, reranked)
+        self.assertEqual(extracted_copy, extracted)
+        self.assertEqual(reranked_copy, reranked)
+
+    def test_combine_harmonic_correct(self):
+        """
+        Test that when combining two lists of terms, the results are correct.
+        """
+
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(EF)
+        extracted = terms.extract(extractor, timelines)
+        extracted_scores = { term['term']: term['score'] for term in extracted }
+
+        reranked = terms.rerank(extracted, reranker=EF, tfidf=None, files=timelines, general=None, cutoff=None, base=None, keep=None, normalized=None, idfs=None)
+        reranked_scores = { term['term']: term['score'] for term in reranked }
+
+        combined = terms.combine('harmonic', extracted, reranked)
+        self.assertTrue(all( term['score'] == 2 * extracted_scores[term['term']] * reranked_scores[term['term']] / (extracted_scores[term['term']] + reranked_scores[term['term']])
+                             for term in combined ))
+
+    def test_combine_harmonic_zero_reranker(self):
+        """
+        Test that when combining two lists of terms, terms whose reranked score is zero also get a zero score.
+        """
+
+        events = [ 'CRYCHE', 'LIVMUN' ]
+        files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'tokenized', f"{ event }.json") for event in events ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+
+        extractor = terms.create_extractor(TFExtractor)
+        extracted = terms.extract(extractor, files, keep=200)
+        extracted_scores = { term['term']: term['score'] for term in extracted }
+
+        reranked = terms.rerank(extracted, reranker=EF, tfidf=None, files=timelines, general=None, cutoff=None, base=None, keep=None, normalized=None, idfs=None)
+        reranked_scores = { term['term']: term['score'] for term in reranked }
+
+        combined = terms.combine('harmonic', extracted, reranked)
+        zero_scores = { term: score for term, score in reranked_scores.items()
+                                    if score == 0 }
+        self.assertTrue(zero_scores)
+        combined_scores = { term['term']: term['score'] for term in combined }
+        self.assertTrue(all( combined_scores[term] == 0 for term in zero_scores ))
 
     def test_combine_base_order_zero_score(self):
         """
