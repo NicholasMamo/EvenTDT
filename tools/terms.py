@@ -606,6 +606,7 @@ def combine(mode, terms, reranked):
         extracted_scores = { term['term']: term['score'] for term in terms }
         reranked_scores = { term['term']: term['score'] for term in reranked }
         scores = { term: 2 * score * reranked_scores[term] / (score + reranked_scores[term])
+                         if score + reranked_scores[term] > 0 else 0
                    for term, score in extracted_scores.items() }
         return rank(scores)
 

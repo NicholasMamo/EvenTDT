@@ -1047,6 +1047,28 @@ class TestTerms(unittest.TestCase):
         combined_scores = { term['term']: term['score'] for term in combined }
         self.assertTrue(all( combined_scores[term] == 0 for term in zero_scores ))
 
+    def test_combine_harmonic_zero_denominator(self):
+        """
+        Test that when combining two lists of terms, the harmonic mean of a term whose scores are both 0 is also 0.
+        """
+
+        extracted, reranked = [ { 'term': 'term', 'score': 0 } ], [ { 'term': 'term', 'score': 0 } ]
+        combined = terms.combine('harmonic', extracted, reranked)
+        self.assertEqual(0, combined[0]['score'])
+
+    def test_combine_harmonic_same_score(self):
+        """
+        Test that when combining two lists of terms, the harmonic mean of a term whose scores are the same do not chage.
+        """
+
+        extracted, reranked = [ { 'term': f"t{ i }", 'score': i/10 } for i in range(0, 11) ], [ { 'term': f"t{ i }", 'score': i/10 } for i in range(0, 11) ]
+        extracted_scores = { term['term']: term['score'] for term in extracted }
+        reranked_scores = { term['term']: term['score'] for term in reranked }
+        combined = terms.combine('harmonic', extracted, reranked)
+        combined_scores = { term['term']: term['score'] for term in combined }
+        self.assertTrue(all( round(score, 10) == extracted_scores[term] for term, score in combined_scores.items() ))
+        self.assertTrue(all( round(score, 10) == reranked_scores[term] for term, score in combined_scores.items() ))
+
     def test_combine_base_order_zero_score(self):
         """
         Test that when combining two lists of terms, all terms with a zero score have the same order as in the baseline.
