@@ -174,7 +174,7 @@ class FilterConsumer(Consumer):
                     self.consumer.queue.enqueue(item)
 
         self.stop()
-        return { 'filter_consumed': consumed }
+        return { 'filter.consumed': consumed }
 
     @abstractmethod
     def _satisfies(self, item, condition):

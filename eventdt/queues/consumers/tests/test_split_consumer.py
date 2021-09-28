@@ -188,7 +188,7 @@ class TestSplitConsumer(unittest.TestCase):
         Wait for the consumer to finish.
         """
         results = (await asyncio.gather(running))[0]
-        self.assertEqual({ 'split_consumed', 'consumed', 'filtered', 'skipped', 'timeline' }, set(results.keys()))
+        self.assertEqual({ 'split.consumed', 'consumed', 'filtered', 'skipped', 'timeline' }, set(results.keys()))
         self.assertTrue(all( type(timeline) is Timeline for timeline in results['timeline'] ))
 
     @async_test
@@ -218,7 +218,7 @@ class TestSplitConsumer(unittest.TestCase):
         Wait for the consumer to finish.
         """
         results = (await asyncio.gather(running))[0]
-        self.assertEqual({ 'split_consumed', 'consumed', 'filtered', 'skipped', 'timeline' }, set(results.keys()))
+        self.assertEqual({ 'split.consumed', 'consumed', 'filtered', 'skipped', 'timeline' }, set(results.keys()))
         self.assertTrue(all( len(splits) == len(results[key]) for key in results ))
         self.assertEqual(len(splits), len(results['consumed']))
 
