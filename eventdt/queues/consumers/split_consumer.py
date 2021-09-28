@@ -188,7 +188,7 @@ class SplitConsumer(Consumer):
                         consumer.queue.enqueue(item)
 
         self.stop()
-        return { 'consumed': consumed }
+        return { 'split_consumed': consumed }
 
     @abstractmethod
     def _satisfies(self, item, condition):
