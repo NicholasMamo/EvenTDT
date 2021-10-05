@@ -406,9 +406,9 @@ class FUEGOConsumer(Consumer):
         if not tweet['user']['statuses_count'] or tweet['user']['followers_count'] / tweet['user']['statuses_count'] < 1e-3:
             return False
 
-        # filter out URLs, but allow one URL in quoted tweets (referring to the quoted tweet)
+        # filter out tweets with URLs
         urls = tweet['entities']['urls']
-        if len(urls) == 1: # remove any tweets with URLs in them, implicitly removing quote tweets
+        if len(urls):
             return False
 
         if not tweet['user']['description']:
