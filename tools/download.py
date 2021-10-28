@@ -22,6 +22,7 @@ The full list of accepted arguments:
 
     - ``-f --file``                          *<Required>* The shareable corpus created by the :mod:`~tools.collect` tool.
     - ``-o --output``                        *<Required>* The file where to save the downloaded corpus.
+    - ``-a --account``                       *<Optional>* The account to use to collect the corpus with, as an index of the configuration's accounts. Defaults to the first account.
     - ``--meta``                             *<Optional>* The file where to save the meta data, defaults to [--file].meta.
 """
 
@@ -53,6 +54,7 @@ def setup_args():
 
         - ``-f --file``                          *<Required>* The shareable corpus created by the :mod:`~tools.collect` tool.
         - ``-o --output``                        *<Required>* The file where to save the downloaded corpus.
+        - ``-a --account``                       *<Optional>* The account to use to collect the corpus with, as an index of the configuration's accounts. Defaults to the first account.
         - ``--meta``                             *<Optional>* The file where to save the meta data, defaults to [--file].meta.
 
     :return: The command-line arguments.
@@ -65,6 +67,9 @@ def setup_args():
                         help='<Required> The shareable corpus created by the `shareable` tool.')
     parser.add_argument('-o', '--output', type=str, required=True,
                         help='<Required> The file where to save the downloaded corpus.')
+    parser.add_argument('-a', '--account', nargs='?', type=int,
+                        default=0, required=False,
+                        help='<Optional> The account to use to collect the corpus with, as an index of the configuration\'s accounts. Defaults to the first account.')
     parser.add_argument('--meta', type=str, required=False,
                         help='<Optional> The file where to save the meta data, defaults to [--file].meta.')
 
@@ -82,7 +87,7 @@ def main():
     pcmd = tools.meta(args)
     tools.save(args.output, { }) # to create the directory if it doesn't exist
     start = time.time()
-    auth = authenticate()
+    auth = authenticate(args.account)
     retrieved, irretrievable = download(args.file, args.output, auth)
     end = time.time()
 
@@ -94,15 +99,18 @@ def main():
     pcmd['end'] = end
     tools.save(meta, { 'cmd': cmd, 'pcmd': pcmd })
 
-def authenticate():
+def authenticate(account):
     """
     Authenticate with the Twitter API.
+
+    :param account: The account to use to collect the corpus with, as an index of the configuration's accounts.
+    :type account: int
 
     :return: The authentication object.
     :rtype: :class:`tweepy.auth.OAuthHandler`
     """
 
-    account = conf.ACCOUNTS[0]
+    account = conf.ACCOUNTS[account]
     auth = OAuthHandler(account['CONSUMER_KEY'], account['CONSUMER_SECRET'])
     auth.set_access_token(account['ACCESS_TOKEN'], account['ACCESS_TOKEN_SECRET'])
     return auth
