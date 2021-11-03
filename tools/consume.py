@@ -441,6 +441,7 @@ def main():
     Consume the event with the main file.
     """
     logger.info("Starting event period")
+    # NOTE: If the understanding periods a TF-ICF scheme, it should be stored in the `scheme` key so it is replaced in the `args` and the new consumer uses it
     read, timeline = consume(**args)
     timeline['read'] = read
     timeline['cmd'] = cmd
@@ -541,6 +542,10 @@ def consume(event, consumer, sample, speed, max_inactivity, max_time, skip, skip
         #. Consume the event.
 
     Both processes share the same event loop and queue.
+
+    .. note::
+
+        If the understanding periods a TF-ICF scheme, it should be stored in the `scheme` key so it is replaced in the `args` and the new consumer uses it.
 
     :param event: The path to the file containing the event's tweets.
     :type event: str
