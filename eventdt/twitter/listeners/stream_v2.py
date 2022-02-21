@@ -56,7 +56,17 @@ class Streamv2():
         :rtype: list of dict
         """
 
-        pass
+        # delete the rules first
+        self.delete_all_rules()
+
+        # add the new rules
+        payload = { 'add': rules }
+        response = requests.post(self.RULES_URL, auth=self.auth, json=payload)
+
+        if response.status_code != 201:
+            raise Exception(f"Cannot create rules (HTTP %d): %s" % (response.status_code, response.text))
+
+        return self.get_all_rules()
 
     def get_all_rules(self):
         """
