@@ -67,7 +67,7 @@ class TweetListener(StreamListener):
     :vartype collected: int
     """
 
-    THRESHOLD = 200
+    THRESHOLD = 1
 
     def __init__(self, f, retweets=True, max_time=3600, attributes=None):
         """
