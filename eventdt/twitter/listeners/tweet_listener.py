@@ -107,8 +107,8 @@ class TweetListener(StreamListener):
         """
 
         self.collected += len(self.tweets)
-        self.file.write(''.join(self.tweets))
-        self.tweets = [ ]
+        while len(self.tweets):
+            self.file.write(self.tweets.pop(0))
 
     def on_data(self, data):
         """
