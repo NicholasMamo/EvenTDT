@@ -233,8 +233,8 @@ def setup_args():
     parser.add_argument('-a', '--account', nargs='?', type=int,
                         default=0, required=False,
                         help='<Optional> The account to use to collect the corpus with, as an index of the configuration\'s accounts. Defaults to the first account.')
-    parser.add_argument('--lang', nargs='?', type=str, required=False,
-                        help='<Optional> If given, only collect tweets in the given language.')
+    parser.add_argument('--lang', nargs='?', type=str, default='en', required=False,
+                        help='<Optional> If given, only collect tweets in the given language. Defaults to English.')
     parser.add_argument('--no-retweets', required=False, action='store_true',
                         help='<Optional> If given, the tweet listener will exclude all retweets.')
     parser.add_argument('--v2', required=False, action='store_true',
