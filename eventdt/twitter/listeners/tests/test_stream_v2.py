@@ -33,6 +33,17 @@ class TestStreamv2(unittest.TestCase):
         auth = BearerTokenAuth(conf.ACCOUNTS[2]['CONSUMER_KEY'], conf.ACCOUNTS[2]['CONSUMER_SECRET'])
         stream = Streamv2(auth)
         self.assertEqual(list, type(stream.get_all_rules()))
+
+    def test_get_all_rules_none(self):
+        """
+        Test that if there are no rules, getting all rules still returns an empty list instead of failing.
+        """
+
+        auth = BearerTokenAuth(conf.ACCOUNTS[2]['CONSUMER_KEY'], conf.ACCOUNTS[2]['CONSUMER_SECRET'])
+        stream = Streamv2(auth)
+        stream.delete_all_rules()
+        self.assertEqual([ ], stream.get_all_rules())
+
     def test_delete_rules(self):
         """
         Test that after deleting rules, there really are no rules left.

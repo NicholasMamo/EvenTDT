@@ -71,8 +71,9 @@ class Streamv2():
         if response.status_code != 200:
             raise Exception(f"Cannot get rules (HTTP %d): %s" % (response.status_code, response.text))
 
+        # return the rules
         rules = response.json()
-        return rules['data']
+        return rules['data'] if 'data' in rules else [ ]
 
     def delete_all_rules(self):
         """
