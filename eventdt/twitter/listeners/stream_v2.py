@@ -21,6 +21,11 @@ class Streamv2():
     The API endpoint that handles rules.
     """
 
+    STREAM_URL = "https://api.twitter.com/2/tweets/search/stream?expansions=author_id,referenced_tweets.id,entities.mentions.username"
+    """
+    The API endpoint from where to stream tweets.
+    """
+
     def __init__(self, auth):
         """
         Initialize the stream with the bearer token authentication.
@@ -40,7 +45,17 @@ class Streamv2():
         :type listener: :class:`~tweepy.streaming.StreamListener`
         """
 
-        pass
+        response = requests.get(self.STREAM_URL, auth=self.auth, stream=True)
+
+        """
+        Keep collecting tweets until the listener decides to stop.
+        This is done so that the stream acts just like tweepy.
+        """
+        collect = True
+        for response_line in response.iter_lines():
+            collect = listener.on_data(response_line)
+            if not collect:
+                break
 
     def set_rules(self, rules):
         """
