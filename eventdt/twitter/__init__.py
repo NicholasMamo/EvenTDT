@@ -162,3 +162,5 @@ def expand_mentions(text, tweet):
         text = re.sub(pattern, name, text)
 
     return text
+
+from .listeners.bearer_token_auth import BearerTokenAuth
