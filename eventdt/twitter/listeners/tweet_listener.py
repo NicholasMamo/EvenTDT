@@ -30,9 +30,6 @@ class TweetListener(StreamListener):
     It does not configure the stream, but only processes the tweets it sends.
 
     The :class:`~twitter.listeners.tweet_listener.TweetListener`'s state stores the file pointer where to save files.
-    By default, it accumulates tweets until the ``THRESHOLD`` constant is reached.
-    At that point, the accumulated tweets are saved to file.
-    In the meantime, it stores the tweets in the list of ``tweets``.
 
     Although listeners do not control the stream's specifications, they can stop it.
     The :class:`~twitter.listeners.tweet_listener.TweetListener` receives the ``max_time`` parameter which specifies, in seconds, the time to spend receiving tweets.
@@ -44,9 +41,6 @@ class TweetListener(StreamListener):
     Therefore the :class:`~twitter.listeners.tweet_listener.TweetListener` also stores the ``attributes`` variable.
     This represents a list of tweet attributes to save to file.
     If it is not given, the tweets are stored without any filtering.
-
-    :cvar THRESHOLD: The number of tweets to accumulate before writing them to file.
-    :vartype THRESHOLD: int
 
     :ivar ~.file: The opened file pointer where to write the tweets.
     :vartype ~.file: file
@@ -66,8 +60,6 @@ class TweetListener(StreamListener):
     :var collected: The number of collected tweets, after filtering.
     :vartype collected: int
     """
-
-    THRESHOLD = 1
 
     def __init__(self, f, retweets=True, max_time=3600, attributes=None):
         """
@@ -137,12 +129,10 @@ class TweetListener(StreamListener):
                 tweet = self.filter(tweet)
                 self.tweets.append(json.dumps(tweet) + "\n")
 
-
             """
-            If the tweets have exceeded the threshold of tweets, save them to the file.
+            Save the tweets to file
             """
-            if len(self.tweets) >= self.THRESHOLD:
-                self.flush()
+            self.flush()
 
             """
             Stop listening if the time limit has been exceeded.
