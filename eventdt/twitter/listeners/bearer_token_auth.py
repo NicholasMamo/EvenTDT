@@ -2,6 +2,7 @@
 A class used to connect with the Twitter APIv2.
 """
 
+import requests
 from requests.auth import AuthBase
 
 class BearerTokenAuth(AuthBase):
