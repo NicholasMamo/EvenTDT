@@ -192,6 +192,7 @@ from tweepy import Stream
 from config import conf
 from logger import logger
 import tools
+from twitter import BearerTokenAuth
 from twitter.listeners import TweetListener
 
 def setup_args():
@@ -254,7 +255,7 @@ def main():
     if not os.path.exists(args.output):
         os.makedirs(args.output)
 
-    auth = authenticate(args.account)
+    auth = authenticate(args.account, args.v2)
 
     """
     Collect the tweets for the understanding period.
@@ -267,7 +268,10 @@ def main():
 
         start = time.time()
         logger.info('Starting to collect understanding corpus')
-        collected = collect(auth, args.track, filename, args.understanding * 60, no_retweets=args.no_retweets)
+        if args.v2:
+            collected = None
+        else:
+            collected = collect(auth, args.track, filename, args.understanding * 60, no_retweets=args.no_retweets)
         logger.info('Understanding corpus collected')
         end = time.time()
         meta['understanding'] = {
@@ -290,7 +294,10 @@ def main():
 
         start = time.time()
         logger.info('Starting to collect event corpus')
-        collected = collect(auth, args.track, filename, args.event * 60, no_retweets=args.no_retweets)
+        if args.v2:
+            collected = None
+        else:
+            collected = collect(auth, args.track, filename, args.event * 60, no_retweets=args.no_retweets)
         logger.info('Event corpus collected')
         end = time.time()
         meta['event'] = {
@@ -305,22 +312,28 @@ def main():
     if meta:
         save_meta(os.path.join(args.output, 'meta.json'), meta)
 
-def authenticate(account):
+def authenticate(account, v2=False):
     """
     Set up the authentication with the Twitter Stream API.
 
     :param account: The account number to use to authenticate.
                     The account number refers to the :mod:`configured accounts <~config.conf>`
     :type account: int
+    :param v2: A boolean indicating whether to use the Twitter APIv2.
+    :type v2: bool
 
     :return: The authentication.
-    :rtype: :class:`tweepy.auth.OAuthHandler`
+    :rtype: :class:`tweepy.auth.OAuthHandler` or :class:`~twitter.listeners.bearer_token_auth.BearerTokenAuth`
     """
 
     account = conf.ACCOUNTS[account]
-    auth = OAuthHandler(account['CONSUMER_KEY'], account['CONSUMER_SECRET'])
-    auth.set_access_token(account['ACCESS_TOKEN'], account['ACCESS_TOKEN_SECRET'])
-    return auth
+
+    if v2:
+        return BearerTokenAuth(account['CONSUMER_KEY'], account['CONSUMER_SECRET'])
+    else:
+        auth = OAuthHandler(account['CONSUMER_KEY'], account['CONSUMER_SECRET'])
+        auth.set_access_token(account['ACCESS_TOKEN'], account['ACCESS_TOKEN_SECRET'])
+        return auth
 
 def collect(auth, track, filename, max_time, lang=None, no_retweets=False, *args, **kwargs):
     """
