@@ -170,6 +170,7 @@ The full list of accepted arguments:
     - ``-u --understanding``     *<Optional>* The length of the understanding period in minutes. If it is not given, the understanding period is skipped.
     - ``-e --event``             *<Optional>* The length of the event period in minutes. If it is not given, the event period is skipped.
     - ``-a --account``           *<Optional>* The account to use to collect the corpus with, as an index of the configuration's accounts. Defaults to the first account.
+    - ``--lang``                 *<Optional>* If given, only collect tweets in the given language.
     - ``--no-retweets``          *<Optional>* If given, the tweet listener will exclude all retweets.
     - ``--v2``                   *<Optional>* Use the Twitter APIv2 (not implemented to use tweepy).
 """
@@ -192,7 +193,7 @@ from tweepy import Stream
 from config import conf
 from logger import logger
 import tools
-from twitter import BearerTokenAuth
+from twitter import BearerTokenAuth, Streamv2
 from twitter.listeners import TweetListener
 
 def setup_args():
@@ -206,6 +207,7 @@ def setup_args():
         - ``-u --understanding``     *<Optional>* The length of the understanding period in minutes. If it is not given, the understanding period is skipped.
         - ``-e --event``             *<Optional>* The length of the event period in minutes. If it is not given, the event period is skipped.
         - ``-a --account``           *<Optional>* The account to use to collect the corpus with, as an index of the configuration's accounts. Defaults to the first account.
+        - ``--lang``                 *<Optional>* If given, only collect tweets in the given language.
         - ``--no-retweets``          *<Optional>* If given, the tweet listener will exclude all retweets.
         - ``--v2``                   *<Optional>* Use the Twitter APIv2 (not implemented to use tweepy).
 
@@ -231,6 +233,8 @@ def setup_args():
     parser.add_argument('-a', '--account', nargs='?', type=int,
                         default=0, required=False,
                         help='<Optional> The account to use to collect the corpus with, as an index of the configuration\'s accounts. Defaults to the first account.')
+    parser.add_argument('--lang', nargs='?', type=str, required=False,
+                        help='<Optional> If given, only collect tweets in the given language.')
     parser.add_argument('--no-retweets', required=False, action='store_true',
                         help='<Optional> If given, the tweet listener will exclude all retweets.')
     parser.add_argument('--v2', required=False, action='store_true',
@@ -268,10 +272,7 @@ def main():
 
         start = time.time()
         logger.info('Starting to collect understanding corpus')
-        if args.v2:
-            collected = None
-        else:
-            collected = collect(auth, args.track, filename, args.understanding * 60, no_retweets=args.no_retweets)
+        collected = collect(auth, args.track, filename, args.understanding * 60, lang=args.lang, no_retweets=args.no_retweets)
         logger.info('Understanding corpus collected')
         end = time.time()
         meta['understanding'] = {
@@ -294,10 +295,7 @@ def main():
 
         start = time.time()
         logger.info('Starting to collect event corpus')
-        if args.v2:
-            collected = None
-        else:
-            collected = collect(auth, args.track, filename, args.event * 60, no_retweets=args.no_retweets)
+        collected = collect(auth, args.track, filename, args.event * 60, lang=args.lang, no_retweets=args.no_retweets)
         logger.info('Event corpus collected')
         end = time.time()
         meta['event'] = {
