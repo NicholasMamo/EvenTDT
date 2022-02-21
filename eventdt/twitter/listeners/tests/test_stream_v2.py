@@ -22,7 +22,7 @@ from listeners import BearerTokenAuth, Streamv2
 
 class TestStreamv2(unittest.TestCase):
     """
-    Test the functionality of the Streamv2.
+    Test the functionality of the Streamv2 class.
     """
 
     def test_get_all_rules_list(self):

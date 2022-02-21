@@ -335,6 +335,32 @@ def authenticate(account, v2=False):
         auth.set_access_token(account['ACCESS_TOKEN'], account['ACCESS_TOKEN_SECRET'])
         return auth
 
+def setup_rules(track, lang=None, no_retweets=False):
+    """
+    Setup the rules used to collect tweets from the Twitter APIv2.
+
+    Note that this function is most appropriate for `Elevated and Academic Research tracks <https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/introduction>`_.
+    Since this function creates one rule for each tracking keyword, the rule limits can be reached very quickly.
+
+    :param track: The list of tracking keywords.
+    :type track: list of str
+    :param lang: The tweet collection language, defaults to English.
+    :type lang: str or None
+    :param no_retweets: A boolean indicating whether to skip retweets.
+    :type no_retweets: bool
+
+    :return: A list of rules as expected by the :fun:`~twitter.listeners.stream_v2.Streamv2.set_rules` function.
+    :rtype: list of dict
+    """
+
+    if lang is None:
+        logger.warning("No language set")
+
+    rules = [ { 'value': f"{ _track } { 'lang:' + str(lang) if lang else '' } { '-is:retweet' if no_retweets else '' }".strip(),
+                'tag': _track }
+              for _track in track ]
+    return rules
+
 def collect(auth, track, filename, max_time, lang=None, no_retweets=False, *args, **kwargs):
     """
     Collect tweets and save them to the given file.
@@ -343,14 +369,14 @@ def collect(auth, track, filename, max_time, lang=None, no_retweets=False, *args
 
     :param auth: The OAuth handler to connect with Twitter's API.
     :type auth: :class:`tweepy.OAuthHandler`
-    :param track: The tracking keywords:
+    :param track: The list of tracking keywords.
     :type track: list of str
     :param filename: The filename where to save the collected tweets.
     :type filename: str
     :param max_time: The number of seconds to spend collecting tweets.
     :type max_time: int
     :param lang: The tweet collection language, defaults to English.
-    :type lang: list of str
+    :type lang: list of str or None
     :param no_retweets: A boolean indicating whether to skip retweets.
     :type no_retweets: bool
 
