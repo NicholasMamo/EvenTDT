@@ -272,7 +272,7 @@ def main():
 
         start = time.time()
         logger.info('Starting to collect understanding corpus')
-        collected = collect(auth, args.track, filename, args.understanding * 60, lang=args.lang, no_retweets=args.no_retweets)
+        collected = collect(auth, args.track, filename, args.understanding * 60, lang=args.lang, no_retweets=args.no_retweets, v2=args.v2)
         logger.info('Understanding corpus collected')
         end = time.time()
         meta['understanding'] = {
@@ -295,7 +295,7 @@ def main():
 
         start = time.time()
         logger.info('Starting to collect event corpus')
-        collected = collect(auth, args.track, filename, args.event * 60, lang=args.lang, no_retweets=args.no_retweets)
+        collected = collect(auth, args.track, filename, args.event * 60, lang=args.lang, no_retweets=args.no_retweets, v2=args.v2)
         logger.info('Event corpus collected')
         end = time.time()
         meta['event'] = {
@@ -359,7 +359,7 @@ def setup_rules(track, lang=None, no_retweets=False):
               for _track in track ]
     return rules
 
-def collect(auth, track, filename, max_time, lang=None, no_retweets=False, *args, **kwargs):
+def collect(auth, track, filename, max_time, lang=None, no_retweets=False, v2=False, *args, **kwargs):
     """
     Collect tweets and save them to the given file.
     The tweets are collected synchronously.
@@ -377,6 +377,8 @@ def collect(auth, track, filename, max_time, lang=None, no_retweets=False, *args
     :type lang: list of str or None
     :param no_retweets: A boolean indicating whether to skip retweets.
     :type no_retweets: bool
+    :param v2: A boolean indicating whether to collect tweets using the Twitter APIv2 or not.
+    :type v2: bool
 
     :return: The number of collected tweets.
     :rtype: int
@@ -384,23 +386,32 @@ def collect(auth, track, filename, max_time, lang=None, no_retweets=False, *args
 
     collected = 0
     listener = None
-    lang = [ 'en' ] if lang is None else lang
 
     start = time.time()
     try:
         with open(filename, 'a') as file:
             listener = TweetListener(file, max_time=max_time, retweets=(not no_retweets), *args, **kwargs)
-            stream = Stream(auth, listener)
-            if track:
-                stream.filter(track=track, languages=lang)
+
+            if v2:
+                stream = Streamv2(auth)
+                rules = setup_rules(track, lang=lang, no_retweets=no_retweets)
+                logger.info(rules)
+                stream.set_rules(rules)
+                stream.connect(listener)
             else:
-                stream.sample(languages=lang)
+                lang = [ 'en' ] if lang is None else [ lang ]
+                stream = Stream(auth, listener)
+                if track:
+                    stream.filter(track=track, languages=lang)
+                else:
+                    stream.sample(languages=lang)
+
             collected += listener.collected # add the number of collected tweets when the listener stops collecting tweets
     except (Exception) as e:
         collected += listener.collected if listener else 0 # if the listener could be initialized, add the number of collected tweets
         elapsed = time.time() - start
         logger.warning(f"{e.__class__.__name__} after {elapsed} seconds, restarting for {max_time - elapsed} seconds")
-        collected += collect(auth, track, filename, max_time - elapsed, lang, no_retweets=no_retweets, *args, **kwargs) # add the number of collected tweets from the new process
+        collected += collect(auth, track, filename, max_time - elapsed, lang, no_retweets=no_retweets, v2=v2, *args, **kwargs) # add the number of collected tweets from the new process
 
     return collected
 
