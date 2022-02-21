@@ -82,4 +82,19 @@ class Streamv2():
         :rtype: list of dict
         """
 
-        pass
+        # fetch all rules and their IDs
+        rules = self.get_all_rules()
+        ids = list(map(lambda rule: rule['id'], rules))
+
+        # if there are no rules, fetch all rules as confirmation and return
+        if not ids:
+            return [ ]
+
+        # delete all rules
+        payload = { 'delete': { 'ids': ids } }
+        response = requests.post(self.RULES_URL, auth=self.auth, json=payload)
+
+        if response.status_code != 200:
+            raise Exception(f"Cannot delete rules (HTTP %d): %s" % (response.status_code, response.text))
+
+        return self.get_all_rules()
