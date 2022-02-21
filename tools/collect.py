@@ -387,7 +387,6 @@ def collect(auth, track, filename, max_time, lang=None, no_retweets=False, v2=Fa
     collected = 0
     listener = None
 
-    start = time.time()
     try:
         with open(filename, 'a') as file:
             listener = TweetListener(file, max_time=max_time, retweets=(not no_retweets), *args, **kwargs)
@@ -397,8 +396,10 @@ def collect(auth, track, filename, max_time, lang=None, no_retweets=False, v2=Fa
                 rules = setup_rules(track, lang=lang, no_retweets=no_retweets)
                 logger.info(rules)
                 stream.set_rules(rules)
+                start = time.time()
                 stream.connect(listener)
             else:
+                start = time.time()
                 lang = [ 'en' ] if lang is None else [ lang ]
                 stream = Stream(auth, listener)
                 if track:
