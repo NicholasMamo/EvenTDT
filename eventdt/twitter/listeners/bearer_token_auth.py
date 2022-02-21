@@ -1,5 +1,7 @@
 """
 A class used to connect with the Twitter APIv2.
+
+Code based on `Twitter's Labs sample code <https://github.com/twitterdev/labs-sample-code/blob/master/Filtered_Stream%20v1/filtered_stream.py>`_.
 """
 
 import requests
@@ -8,8 +10,6 @@ from requests.auth import AuthBase
 class BearerTokenAuth(AuthBase):
     """
     A class that implements the connection to generate a bearer token and connect with the Twitter APIv2.
-
-    Code based on `Twitter's Labs sample code <https://github.com/twitterdev/labs-sample-code/blob/master/Filtered_Stream%20v1/filtered_stream.py>`_.
 
     :ivar consumer_key: The unique key identifying the consumer.
     :vartype consumer_key: str
