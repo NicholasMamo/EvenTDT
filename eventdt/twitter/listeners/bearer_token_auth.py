@@ -61,13 +61,12 @@ class BearerTokenAuth(AuthBase):
         The code adds two headers: the access token and the user agent.
 
         :param request: The request to which the function will add headers.
-        :type request: ?
+        :type request: :class:`requests.models.PreparedRequest`
 
         :return: The updated request.
-        :rtype: ?
+        :rtype: :class:`requests.models.PreparedRequest`
         """
 
-        print(type(request))
         request.headers['Authorization'] = f"Bearer %s" % self.bearer_token
         request.headers['User-Agent'] = 'EvenTDT'
         return request
