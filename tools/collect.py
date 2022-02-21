@@ -254,12 +254,7 @@ def main():
     if not os.path.exists(args.output):
         os.makedirs(args.output)
 
-    """
-    Set up the authentication with the Twitter Stream API.
-    """
-    account = conf.ACCOUNTS[args.account]
-    auth = OAuthHandler(account['CONSUMER_KEY'], account['CONSUMER_SECRET'])
-    auth.set_access_token(account['ACCESS_TOKEN'], account['ACCESS_TOKEN_SECRET'])
+    auth = authenticate(args.account)
 
     """
     Collect the tweets for the understanding period.
@@ -309,6 +304,23 @@ def main():
 
     if meta:
         save_meta(os.path.join(args.output, 'meta.json'), meta)
+
+def authenticate(account):
+    """
+    Set up the authentication with the Twitter Stream API.
+
+    :param account: The account number to use to authenticate.
+                    The account number refers to the :mod:`configured accounts <~config.conf>`
+    :type account: int
+
+    :return: The authentication.
+    :rtype: :class:`tweepy.auth.OAuthHandler`
+    """
+
+    account = conf.ACCOUNTS[account]
+    auth = OAuthHandler(account['CONSUMER_KEY'], account['CONSUMER_SECRET'])
+    auth.set_access_token(account['ACCESS_TOKEN'], account['ACCESS_TOKEN_SECRET'])
+    return auth
 
 def collect(auth, track, filename, max_time, lang=None, no_retweets=False, *args, **kwargs):
     """
