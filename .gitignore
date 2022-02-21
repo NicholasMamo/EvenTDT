@@ -5,3 +5,4 @@ docs/*
 config/conf.py
 notebooks
 venv
+temp
