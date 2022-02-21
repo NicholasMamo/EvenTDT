@@ -123,8 +123,11 @@ class TweetListener(StreamListener):
         :rtype: bool
         """
 
+        if not data:
+            return True
+
         tweet = json.loads(data)
-        if 'id' in tweet:
+        if 'id' in tweet or ('data' in tweet and 'id' in tweet['data']):
             if self.retweets or not is_retweet(tweet):
                 tweet = self.filter(tweet)
                 self.tweets.append(json.dumps(tweet) + "\n")
