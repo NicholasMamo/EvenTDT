@@ -171,6 +171,7 @@ The full list of accepted arguments:
     - ``-e --event``             *<Optional>* The length of the event period in minutes. If it is not given, the event period is skipped.
     - ``-a --account``           *<Optional>* The account to use to collect the corpus with, as an index of the configuration's accounts. Defaults to the first account.
     - ``--no-retweets``          *<Optional>* If given, the tweet listener will exclude all retweets.
+    - ``--v2``                   *<Optional>* Use the Twitter APIv2 (not implemented to use tweepy).
 """
 
 import argparse
@@ -205,6 +206,7 @@ def setup_args():
         - ``-e --event``             *<Optional>* The length of the event period in minutes. If it is not given, the event period is skipped.
         - ``-a --account``           *<Optional>* The account to use to collect the corpus with, as an index of the configuration's accounts. Defaults to the first account.
         - ``--no-retweets``          *<Optional>* If given, the tweet listener will exclude all retweets.
+        - ``--v2``                   *<Optional>* Use the Twitter APIv2 (not implemented to use tweepy).
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
@@ -230,6 +232,8 @@ def setup_args():
                         help='<Optional> The account to use to collect the corpus with, as an index of the configuration\'s accounts. Defaults to the first account.')
     parser.add_argument('--no-retweets', required=False, action='store_true',
                         help='<Optional> If given, the tweet listener will exclude all retweets.')
+    parser.add_argument('--v2', required=False, action='store_true',
+                        help='<Optional> Use the Twitter APIv2 (not implemented to use tweepy).')
 
     args = parser.parse_args()
     return args
