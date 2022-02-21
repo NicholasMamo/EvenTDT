@@ -1,5 +1,5 @@
 """
-Test the functionality of the TweetrListener.
+Test the functionality of the TweetListener.
 """
 
 import json
@@ -22,7 +22,7 @@ from listeners import TweetListener
 
 class TestTweetListener(unittest.TestCase):
     """
-    Test the functionality of the TweetrListener.
+    Test the functionality of the TweetListener.
     """
 
     def clean(f):

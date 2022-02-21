@@ -4,6 +4,8 @@ A class that implements a simple Twitter stream.
 Code based on `Twitter's Labs sample code <https://github.com/twitterdev/labs-sample-code/blob/master/Filtered_Stream%20v1/filtered_stream.py>`_.
 """
 
+import requests
+
 class Streamv2():
     """
     A simple class that connects with the Twitter stream for the APIv2.
@@ -12,6 +14,11 @@ class Streamv2():
     :ivar auth: The authentication class, a bearer token authentication.
                 The class uses this class to communicate with the APIv2.
     :vartype auth: :class:`~twitter.listeners.bearer_token_auth.BearerTokenAuth`
+    """
+
+    RULES_URL = "https://api.twitter.com/2/tweets/search/stream/rules"
+    """
+    The API endpoint that handles rules.
     """
 
     def __init__(self, auth):
@@ -59,7 +66,13 @@ class Streamv2():
         :rtype: list of dict
         """
 
-        pass
+        response = requests.get(self.RULES_URL, auth=self.auth)
+
+        if response.status_code != 200:
+            raise Exception(f"Cannot get rules (HTTP %d): %s" % (response.status_code, response.text))
+
+        rules = response.json()
+        return rules['data']
 
     def delete_all_rules(self):
         """
