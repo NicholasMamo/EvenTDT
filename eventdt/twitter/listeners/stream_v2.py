@@ -21,7 +21,9 @@ class Streamv2():
     The API endpoint that handles rules.
     """
 
-    STREAM_URL = "https://api.twitter.com/2/tweets/search/stream?expansions=author_id,referenced_tweets.id,in_reply_to_user_id,attachments.media_keys,attachments.poll_ids,geo.place_id,entities.mentions.username,referenced_tweets.id.author_id"
+    STREAM_URL = """https://api.twitter.com/2/tweets/search/stream?expansions=author_id,referenced_tweets.id,in_reply_to_user_id,attachments.media_keys,attachments.poll_ids,geo.place_id,entities.mentions.username,referenced_tweets.id.author_id&\
+                    tweet.fields=attachments,author_id,context_annotations,conversation_id,created_at,entities,geo,in_reply_to_user_id,lang,non_public_metrics,organic_metrics,possibly_sensitive,promoted_metrics,public_metrics,referenced_tweets,reply_settings,source,withheld&\
+                    user.fields=created_at,description,entities,location,pinned_tweet_id,profile_image_url,protected,public_metrics,url,verified,withheld""".replace(' ', '')
     """
     The API endpoint from where to stream tweets.
     """

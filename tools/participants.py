@@ -218,6 +218,7 @@ def load_corpus(filename, clean):
         for i, line in enumerate(f):
             tweet = json.loads(line)
             original = tweet
+            # TODO: Use full text function
             while "retweeted_status" in tweet:
                 tweet = tweet["retweeted_status"]
 
