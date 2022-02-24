@@ -150,9 +150,9 @@ def main():
     cmd['extrapolator'], pcmd['extrapolator'] = str(type(detector.extrapolator).__name__), str(type(detector.extrapolator).__name__)
     cmd['postprocessor'], pcmd['postprocessor'] = str(type(detector.postprocessor).__name__), str(type(detector.postprocessor).__name__)
 
-    extracted, scored, filtered, resolved, extrapolated, postprocessed = detect(detector=detector, corpus=corpus)
+    scored, filtered, resolved, extrapolated, postprocessed = detect(detector=detector, corpus=corpus)
     tools.save(args['output'], { 'cmd': cmd, 'pcmd': pcmd,
-                                 'extracted': extracted, 'scored': scored, 'filtered': filtered,
+                                 'scored': scored, 'filtered': filtered,
                                  'resolved': resolved, 'extrapolated': extrapolated, 'postprocessed': postprocessed })
 
 def create_detector(model, extractor, scorer, filter, corpus=None, *args, **kwargs):
@@ -201,7 +201,7 @@ def detect(detector, corpus):
     """
 
     extracted, scored, filtered, resolved, extrapolated, postprocessed = detector.detect(corpus)
-    return (rank(extracted), rank(scored), rank(filtered),
+    return (rank(scored), rank(filtered),
             rank(resolved), rank(extrapolated), rank(postprocessed))
 
 def rank(participants):
