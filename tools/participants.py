@@ -42,16 +42,16 @@ For example, this snippet uses the :class:`~apd.extractors.local.entity_extracto
 
 Accepted arguments:
 
-    - ``-f --file``            *<Required>* The input corpus from where to extract participants.
-    - ``-o --output``        *<Required>* The path to the file where to store the extracted participants.
-    - ``--clean``            *<Optional>* Clean the tweets before extracting participants. This replaces tweet mentions with the display name using the :class:`~nlp.cleaners.tweet_cleaner.TweetCleaner`.
-    - ``-m --model``        *<Optional>* The type of model to use; supported: `ELDParticipantDetector`; defaults to a normal participant detector.
-    - ``--extractor``        *<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.
-    - ``--scorer``            *<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
-    - ``--filter``            *<Optional>* The filter to use to filter candidate participants; supported: `RankFilter`, `ThresholdFilter`; defaults to no filter.
-    - ``-k``                *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
-    - ``--threshold``        *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).
-    - ``--tfidf``            *<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
+    - ``-f --file``             *<Required>* The input corpus from where to extract participants.
+    - ``-o --output``           *<Required>* The path to the file where to store the extracted participants.
+    - ``--clean``               *<Optional>* Clean the tweets before extracting participants. This replaces tweet mentions with the display name using the :class:`~nlp.cleaners.tweet_cleaner.TweetCleaner`.
+    - ``-m --model``            *<Optional>* The type of model to use; supported: `ELDParticipantDetector`; defaults to a normal participant detector.
+    - ``--extractor``           *<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.
+    - ``--scorer``              *<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
+    - ``--filter``              *<Optional>* The filter to use to filter candidate participants; supported: `RankFilter`, `ThresholdFilter`; defaults to no filter.
+    - ``-k``                    *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
+    - ``--threshold``           *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).
+    - ``--tfidf``               *<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
 """
 
 import argparse
@@ -85,16 +85,16 @@ def setup_args():
 
     Accepted arguments:
 
-        - ``-f --file``            *<Required>* The input corpus from where to extract participants.
-        - ``-o --output``        *<Required>* The path to the file where to store the extracted participants.
-        - ``--clean``            *<Optional>* Clean the tweets before extracting participants. This replaces tweet mentions with the display name using the :class:`~nlp.cleaners.tweet_cleaner.TweetCleaner`.
-        - ``-m --model``        *<Optional>* The type of model to use; supported: `ELDParticipantDetector`; defaults to a normal participant detector.
-        - ``--extractor``        *<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.
-        - ``--scorer``            *<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
-        - ``--filter``            *<Optional>* The filter to use to filter candidate participants; supported: `RankFilter`, `ThresholdFilter`; defaults to no filter.
-        - ``-k``                *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
-        - ``--threshold``        *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).
-        - ``--tfidf``            *<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
+        - ``-f --file``             *<Required>* The input corpus from where to extract participants.
+        - ``-o --output``           *<Required>* The path to the file where to store the extracted participants.
+        - ``--clean``               *<Optional>* Clean the tweets before extracting participants. This replaces tweet mentions with the display name using the :class:`~nlp.cleaners.tweet_cleaner.TweetCleaner`.
+        - ``-m --model``            *<Optional>* The type of model to use; supported: `ELDParticipantDetector`; defaults to a normal participant detector.
+        - ``--extractor``           *<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.
+        - ``--scorer``              *<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
+        - ``--filter``              *<Optional>* The filter to use to filter candidate participants; supported: `RankFilter`, `ThresholdFilter`; defaults to no filter.
+        - ``-k``                    *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
+        - ``--threshold``           *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).
+        - ``--tfidf``               *<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
@@ -142,13 +142,13 @@ def main():
                                scorer=args.pop('scorer'), filter=args.pop('filter'),
                                corpus=corpus, **args)
 
-    pcmd['model'] = str(type(detector).__name__)
-    pcmd['extractor'] = str(type(detector.extractor).__name__)
-    pcmd['scorer'] = str(type(detector.scorer).__name__)
-    pcmd['filter'] = str(type(detector.filter).__name__)
-    pcmd['resolver'] = str(type(detector.resolver).__name__)
-    pcmd['extraploator'] = str(type(detector.extrapolator).__name__)
-    pcmd['postprocessor'] = str(type(detector.postprocessor).__name__)
+    cmd['model'], pcmd['model'] = str(type(detector).__name__), str(type(detector).__name__)
+    cmd['extractor'], pcmd['extractor'] = str(type(detector.extractor).__name__), str(type(detector.extractor).__name__)
+    cmd['scorer'], pcmd['scorer'] = str(type(detector.scorer).__name__), str(type(detector.scorer).__name__)
+    cmd['filter'], pcmd['filter'] = str(type(detector.filter).__name__), str(type(detector.filter).__name__)
+    cmd['resolver'], pcmd['resolver'] = str(type(detector.resolver).__name__), str(type(detector.resolver).__name__)
+    cmd['extrapolator'], pcmd['extrapolator'] = str(type(detector.extrapolator).__name__), str(type(detector.extrapolator).__name__)
+    cmd['postprocessor'], pcmd['postprocessor'] = str(type(detector.postprocessor).__name__), str(type(detector.postprocessor).__name__)
 
     extracted, scored, filtered, resolved, extrapolated, postprocessed = detect(detector=detector, corpus=corpus)
     tools.save(args['output'], { 'cmd': cmd, 'pcmd': pcmd,
