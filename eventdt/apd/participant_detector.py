@@ -107,17 +107,17 @@ class ParticipantDetector(object):
         :rtype: tuple of list of str
         """
 
-        candidates = self.extractor.extract(corpus)
-        candidates = self.scorer.score(candidates)
-        candidates = self.filter.filter(candidates)
-        logger.info(f"Resolving { ', '.join(sorted(candidates, key=candidates.get, reverse=True)) }")
+        extracted = self.extractor.extract(corpus)
+        scored = self.scorer.score(extracted)
+        filtered = self.filter.filter(scored)
+        logger.info(f"Resolving { ', '.join(sorted(filtered, key=filtered.get, reverse=True)) }")
 
-        resolved, unresolved = self.resolver.resolve(candidates)
+        resolved, unresolved = self.resolver.resolve(filtered)
         logger.info(f"Resolved { ', '.join(resolved) }")
         extrapolated = self.extrapolator.extrapolate(resolved)
         resolved = self.postprocessor.postprocess(resolved)
-        extrapolated = self.postprocessor.postprocess(extrapolated)
+        postprocessed = self.postprocessor.postprocess(extrapolated)
         logger.info(f"Resolved { ', '.join(resolved) }")
         logger.info(f"Extrapolated { ', '.join(extrapolated) }")
 
-        return resolved, unresolved, extrapolated
+        return extracted, scored, filtered, resolved, extrapolated, postprocessed

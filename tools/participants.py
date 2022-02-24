@@ -196,7 +196,7 @@ def detect(detector, corpus):
     :rtype: tuple of list of str
     """
 
-    resolved, _, extrapolated, = detector.detect(corpus)
+    _, _, _, resolved, extrapolated, _ = detector.detect(corpus)
     return resolved, extrapolated
 
 def load_corpus(filename, clean):
