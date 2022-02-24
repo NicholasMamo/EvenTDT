@@ -201,7 +201,8 @@ def detect(detector, corpus):
     """
 
     extracted, scored, filtered, resolved, extrapolated, postprocessed = detector.detect(corpus)
-    return extracted, scored, filtered, resolved, extrapolated, postprocessed
+    return (rank(extracted), rank(scored), rank(filtered),
+            rank(resolved), rank(extrapolated), rank(postprocessed))
 
 def rank(participants):
     """
