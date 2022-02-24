@@ -140,7 +140,7 @@ def main():
     detector = create_detector(model=args.pop('model'), extractor=args.pop('extractor'),
                                scorer=args.pop('scorer'), filter=args.pop('filter'),
                                corpus=corpus, **args)
-    resolved, extrapolated = detect(detector=detector, corpus=corpus)
+    extracted, scored, filtered, resolved, extrapolated, postprocessed = detect(detector=detector, corpus=corpus)
 
     cmd['model'] = str(type(detector).__name__)
     cmd['extractor'] = str(type(detector.extractor).__name__)
@@ -192,12 +192,12 @@ def detect(detector, corpus):
     :param corpus: A list of :class:`~nlp.document.Document` making up the corpus.
     :type corpus: list of :class:`~nlp.document.Document`
 
-    :return: Two list of participants detected in the corpus: the resolved and extrapolated participants.
+    :return: A list of participants detected at each stage: the extracted, scored, filtered, resolved, extrapolated and post-processed participants.
     :rtype: tuple of list of str
     """
 
-    _, _, _, resolved, extrapolated, _ = detector.detect(corpus)
-    return resolved, extrapolated
+    extracted, scored, filtered, resolved, extrapolated, postprocessed = detector.detect(corpus)
+    return extracted, scored, filtered, resolved, extrapolated, postprocessed
 
 def load_corpus(filename, clean):
     """
