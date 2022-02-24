@@ -75,6 +75,7 @@ from logger import logger
 from nlp.cleaners import TweetCleaner
 from nlp.document import Document
 from nlp.tokenizer import Tokenizer
+import twitter
 
 parser = argparse.ArgumentParser(description="Extract event participants from the understanding corpora.")
 def setup_args():
@@ -217,17 +218,8 @@ def load_corpus(filename, clean):
     with open(filename) as f:
         for i, line in enumerate(f):
             tweet = json.loads(line)
-            original = tweet
-            # TODO: Use full text function
-            while "retweeted_status" in tweet:
-                tweet = tweet["retweeted_status"]
-
-            if "extended_tweet" in tweet:
-                text = tweet["extended_tweet"].get("full_text", tweet.get("text", ""))
-            else:
-                text = tweet.get("text", "")
-
-            text = cleaner.clean(text, original) if clean else text
+            text = twitter.full_text(tweet)
+            text = cleaner.clean(text, tweet) if clean else text
             document = Document(text)
             corpus.append(document)
 
