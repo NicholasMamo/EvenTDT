@@ -57,6 +57,7 @@ Accepted arguments:
 import argparse
 import copy
 import json
+import numbers
 import os
 import sys
 
@@ -219,9 +220,21 @@ def rank(participants):
     :rtype: list of dict
     """
 
+    ranked = [ ]
+
     participants = copy.deepcopy(participants)
-    participants = [ { 'participant': participant, 'rank': rank + 1 } for rank, participant in enumerate(participants) ]
-    return participants
+
+    # if the list of participants is a dictionary, assume that the key is the participant's name and the value its score
+    if type(participants) is dict:
+        # sort the participants in descending order of score first
+        ranked = sorted(participants.items(), key=lambda participant: participant[1], reverse=True)
+        ranked = [ { 'participant': participant, 'score': score, 'rank': rank + 1 } for rank, (participant, score) in enumerate(ranked) ]
+
+    # if the list of participants is a list, assumed that it has already been sorted
+    if type(participants) is list:
+        ranked = [ { 'participant': participant, 'rank': rank + 1 } for rank, participant in enumerate(participants) ]
+
+    return ranked
 
 def load_corpus(filename, clean):
     """

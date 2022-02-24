@@ -260,6 +260,68 @@ class TestAPD(unittest.TestCase):
         ranked = apd.rank(resolved)
         self.assertTrue(all( ranked[i]['rank'] == ranked[i + 1]['rank'] - 1 for i in range(len(ranked) - 1) ))
 
+    def test_rank_scored_descending(self):
+        """
+        Test that when ranking scored participants, the rank is calculated by sorting them in descending order of score.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        corpus = apd.load_corpus(file, True)
+        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
+        _, scored, _, _, _, _ = detector.detect(corpus)
+        ranked = apd.rank(scored)
+        self.assertTrue(all( ranked[i]['score'] >= ranked[i + 1]['score'] - 1 for i in range(len(ranked) - 1) ))
+        self.assertTrue(all( ranked[i]['rank'] >= ranked[i + 1]['rank'] - 1 for i in range(len(ranked) - 1) ))
+
+    def test_rank_filtered_descending(self):
+        """
+        Test that when ranking filtered participants, the rank is calculated by sorting them in descending order of score.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        corpus = apd.load_corpus(file, True)
+        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
+        _, _, filtered, _, _, _ = detector.detect(corpus)
+        ranked = apd.rank(filtered)
+        self.assertTrue(all( ranked[i]['score'] >= ranked[i + 1]['score'] - 1 for i in range(len(ranked) - 1) ))
+        self.assertTrue(all( ranked[i]['rank'] >= ranked[i + 1]['rank'] - 1 for i in range(len(ranked) - 1) ))
+
+    def test_rank_resolved_order_unchanged(self):
+        """
+        Test that the order of resolved participants does not change when ranking.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        corpus = apd.load_corpus(file, True)
+        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
+        _, _, _, resolved, _, _ = detector.detect(corpus)
+        ranked = apd.rank(resolved)
+        self.assertTrue(all( _ranked['participant'] == _resolved for _ranked, _resolved in zip(ranked, resolved) ))
+
+    def test_rank_extrapolated_order_unchanged(self):
+        """
+        Test that the order of extrapolated participants does not change when ranking.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        corpus = apd.load_corpus(file, True)
+        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
+        _, _, _, _, extrapolated, _ = detector.detect(corpus)
+        ranked = apd.rank(extrapolated)
+        self.assertTrue(all( _ranked['participant'] == _extrapolated for _ranked, _extrapolated in zip(ranked, extrapolated) ))
+
+    def test_rank_postprocessed_order_unchanged(self):
+        """
+        Test that the order of postprocessed participants does not change when ranking.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        corpus = apd.load_corpus(file, True)
+        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
+        _, _, _, _, _, postprocessed = detector.detect(corpus)
+        ranked = apd.rank(postprocessed)
+        self.assertTrue(all( _ranked['participant'] == _postprocessed for _ranked, _postprocessed in zip(ranked, postprocessed) ))
+
     def test_load_corpus_all_lines(self):
         """
         Test that when loading the corpus, all tweets are loaded.
