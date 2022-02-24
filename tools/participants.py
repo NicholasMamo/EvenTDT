@@ -140,7 +140,6 @@ def main():
     detector = create_detector(model=args.pop('model'), extractor=args.pop('extractor'),
                                scorer=args.pop('scorer'), filter=args.pop('filter'),
                                corpus=corpus, **args)
-    extracted, scored, filtered, resolved, extrapolated, postprocessed = detect(detector=detector, corpus=corpus)
 
     cmd['model'] = str(type(detector).__name__)
     cmd['extractor'] = str(type(detector.extractor).__name__)
@@ -149,7 +148,11 @@ def main():
     cmd['resolver'] = str(type(detector.resolver).__name__)
     cmd['extraploator'] = str(type(detector.extrapolator).__name__)
     cmd['postprocessor'] = str(type(detector.postprocessor).__name__)
-    tools.save(args['output'], { 'meta': cmd, 'resolved': resolved, 'extrapolated': extrapolated })
+
+    extracted, scored, filtered, resolved, extrapolated, postprocessed = detect(detector=detector, corpus=corpus)
+    tools.save(args['output'], { 'cmd': cmd,
+                                 'extracted': extracted, 'scored': scored, 'filtered': filtered,
+                                 'resolved': resolved, 'extrapolated': extrapolated, 'postprocessed': postprocessed })
 
 def create_detector(model, extractor, scorer, filter, corpus=None, *args, **kwargs):
     """
