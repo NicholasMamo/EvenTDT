@@ -133,7 +133,7 @@ def main():
     """
     Get the meta arguments.
     """
-    cmd = tools.meta(args)
+    cmd, pcmd = tools.meta(args), tools.meta(args)
 
     args = vars(args)
     corpus = load_corpus(filename=args.pop('file'), clean=args.pop('clean'))
@@ -141,16 +141,16 @@ def main():
                                scorer=args.pop('scorer'), filter=args.pop('filter'),
                                corpus=corpus, **args)
 
-    cmd['model'] = str(type(detector).__name__)
-    cmd['extractor'] = str(type(detector.extractor).__name__)
-    cmd['scorer'] = str(type(detector.scorer).__name__)
-    cmd['filter'] = str(type(detector.filter).__name__)
-    cmd['resolver'] = str(type(detector.resolver).__name__)
-    cmd['extraploator'] = str(type(detector.extrapolator).__name__)
-    cmd['postprocessor'] = str(type(detector.postprocessor).__name__)
+    pcmd['model'] = str(type(detector).__name__)
+    pcmd['extractor'] = str(type(detector.extractor).__name__)
+    pcmd['scorer'] = str(type(detector.scorer).__name__)
+    pcmd['filter'] = str(type(detector.filter).__name__)
+    pcmd['resolver'] = str(type(detector.resolver).__name__)
+    pcmd['extraploator'] = str(type(detector.extrapolator).__name__)
+    pcmd['postprocessor'] = str(type(detector.postprocessor).__name__)
 
     extracted, scored, filtered, resolved, extrapolated, postprocessed = detect(detector=detector, corpus=corpus)
-    tools.save(args['output'], { 'cmd': cmd,
+    tools.save(args['output'], { 'cmd': cmd, 'pcmd': pcmd,
                                  'extracted': extracted, 'scored': scored, 'filtered': filtered,
                                  'resolved': resolved, 'extrapolated': extrapolated, 'postprocessed': postprocessed })
 
