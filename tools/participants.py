@@ -55,6 +55,7 @@ Accepted arguments:
 """
 
 import argparse
+import copy
 import json
 import os
 import sys
@@ -201,6 +202,25 @@ def detect(detector, corpus):
 
     extracted, scored, filtered, resolved, extrapolated, postprocessed = detector.detect(corpus)
     return extracted, scored, filtered, resolved, extrapolated, postprocessed
+
+def rank(participants):
+    """
+    Convert the list of participants into a ranked list.
+    The ranked list includes not just the participant but also the associated rank for easier parsing.
+
+    :param participants: The list of participants to rank.
+    :type participants: list of str
+
+    :return: A ranked list of participants as a dictionary, each including, at least:
+
+             - ``participant``, and
+             - ``rank.
+    :rtype: list of dict
+    """
+
+    participants = copy.deepcopy(participants)
+    participants = [ { 'participant': participant, 'rank': rank + 1 } for rank, participant in enumerate(participants) ]
+    return participants
 
 def load_corpus(filename, clean):
     """
