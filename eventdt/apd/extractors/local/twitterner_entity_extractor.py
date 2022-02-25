@@ -16,6 +16,7 @@ The difference between the :class:`TwitterNEREntityExtractor` and the :class:`~a
     The data, and more instructions on how to get GloVe pre-trained on Twitter are available in `TwitterNER's GitHub repository <https://github.com/napsternxg/TwitterNER>`_.
 """
 
+import json
 import os
 import sys
 import inspect
@@ -30,6 +31,7 @@ from ..extractor import Extractor
 from logger import logger
 from run_ner import TwitterNER
 from twokenize import tokenizeRawTweetText
+import twitter
 
 class TwitterNEREntityExtractor(Extractor):
     """
@@ -55,8 +57,8 @@ class TwitterNEREntityExtractor(Extractor):
         Each outer list represents a document.
         Each inner list is the candidates in that document.
 
-        :param corpus: The corpus of documents where to extract candidate participants.
-        :type corpus: list
+        :param corpus: A path to the corpus of documents from where to extract candidate participants.
+        :type corpus: str
 
         :return: A list of candidates separated by the document in which they were found.
         :rtype: list of list of str
@@ -64,11 +66,23 @@ class TwitterNEREntityExtractor(Extractor):
 
         candidates = [ ]
 
-        for document in corpus:
-            document_entities = [ ]
-            tokens = tokenizeRawTweetText(document.text)
+        try:
+            with open(corpus) as f:
+                for line in f:
+                    tweet = json.loads(line)
+                    text = twitter.full_text(tweet)
+                    text = twitter.expand_mentions(text, tweet)
 
+                    tokens = tokenizeRawTweetText(text)
+                    entities = TwitterNEREntityExtractor.ner.get_entities(tokens)
+
+                    candidates.append([ " ".join(tokens[start:end]).lower()
+                                        for (start, end, type) in entities ])
+        except Exception as e:
+            # this block only used to test with TwitterNER's example
+            tokens = tokenizeRawTweetText(corpus)
             entities = TwitterNEREntityExtractor.ner.get_entities(tokens)
+
             candidates.append([ " ".join(tokens[start:end]).lower()
                                 for (start, end, type) in entities ])
 
