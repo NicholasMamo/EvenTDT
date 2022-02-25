@@ -46,6 +46,7 @@ class LogDFScorer(DFScorer):
         :rtype: dict
         """
 
+        candidates = self._fold(candidates)
         scores = self._sum(candidates)
         scores = { candidate: math.log(score + 1, self.base) for candidate, score in scores.items() } # apply Laplace smoothing
         return self._normalize(scores) if normalize_scores else scores
