@@ -7,12 +7,17 @@ The entity extractor considers only named entities to be candidate participants.
     If NLTK is not installed, this extractor will fail.
 """
 
+import json
+import nltk
 import os
 import sys
 
-import nltk
+path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
+if path not in sys.path:
+    sys.path.append(path)
 
 from ..extractor import Extractor
+import twitter
 
 class EntityExtractor(Extractor):
     """
@@ -49,8 +54,8 @@ class EntityExtractor(Extractor):
         Each outer list represents a document.
         Each inner list is the candidates in that document.
 
-        :param corpus: The corpus of documents where to extract candidate participants.
-        :type corpus: list
+        :param corpus: A path to the corpus of documents from where to extract candidate participants.
+        :type corpus: str
 
         :return: A list of candidates separated by the document in which they were found.
         :rtype: list of list of str
@@ -58,19 +63,19 @@ class EntityExtractor(Extractor):
 
         candidates = [ ]
 
-        for document in corpus:
-            document_entities = []
+        with open(corpus) as f:
+            for line in f:
+                candidates.append([ ])
+                tweet = json.loads(line)
+                text = twitter.full_text(tweet)
+                text = twitter.expand_mentions(text, tweet)
 
-            """
-            Split the document into sentences, and extract the named entities from each sentence.
-            """
-            sentences = nltk.sent_tokenize(document.text)
-            for sentence in sentences:
-                chunks = self._extract_entities(sentence)
-                named_entities = self._combine_adjacent_entities(chunks)
-                document_entities.extend(named_entities)
-
-            candidates.append(document_entities)
+                # split the document into sentences, and extract the named entities from each sentence
+                sentences = nltk.sent_tokenize(text)
+                for sentence in sentences:
+                    chunks = self._extract_entities(sentence)
+                    named_entities = self._combine_adjacent_entities(chunks)
+                    candidates[-1].extend(named_entities)
 
         return candidates
 
@@ -122,9 +127,7 @@ class EntityExtractor(Extractor):
                     named_entities.append(' '.join(entity).strip().lower())
                     entity, entity_type = [], None
 
-                """
-                Add the tokens to the named entity sequence.
-                """
+                # add the tokens to the named entity sequence
                 entity_type = label
                 named_entity_tokens = [ pair[0].lower() for pair in chunk ]
                 entity.extend(named_entity_tokens)
