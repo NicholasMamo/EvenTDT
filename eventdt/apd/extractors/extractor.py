@@ -24,8 +24,8 @@ class Extractor(ABC):
         Each outer list represents a document.
         Each inner list is the candidates in that document.
 
-        :param corpus: The corpus of documents from where to extract candidate participants.
-        :type corpus: list of :class:`~nlp.document.Document`
+        :param corpus: A path to the corpus of documents from where to extract candidate participants.
+        :type corpus: str
 
         :return: A list of candidates separated by the document in which they were found.
         :rtype: list of list of str
