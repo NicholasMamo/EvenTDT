@@ -76,14 +76,14 @@ class TwitterNEREntityExtractor(Extractor):
                     tokens = tokenizeRawTweetText(text)
                     entities = TwitterNEREntityExtractor.ner.get_entities(tokens)
 
-                    candidates.append([ " ".join(tokens[start:end]).lower()
+                    candidates.append([ " ".join(tokens[start:end])
                                         for (start, end, type) in entities ])
         except Exception as e:
             # this block only used to test with TwitterNER's example
             tokens = tokenizeRawTweetText(corpus)
             entities = TwitterNEREntityExtractor.ner.get_entities(tokens)
 
-            candidates.append([ " ".join(tokens[start:end]).lower()
+            candidates.append([ " ".join(tokens[start:end])
                                 for (start, end, type) in entities ])
 
         return candidates
