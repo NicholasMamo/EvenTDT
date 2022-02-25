@@ -19,6 +19,17 @@ Listeners
    :members:
    :special-members:
 
+Twitter APIv2
+-------------
+
+.. automodule:: twitter.listeners.bearer_token_auth
+   :members:
+   :special-members:
+
+.. automodule:: twitter.listeners.stream_v2
+   :members:
+   :special-members:
+
 Tweet Listener
 --------------
 
