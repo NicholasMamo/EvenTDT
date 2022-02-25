@@ -37,6 +37,20 @@ class Scorer(ABC):
 
         pass
 
+    def _fold(self, candidates):
+        """
+        Case-fold all the given candidates.
+
+        :param candidates: A list of candidate praticipants separated by the document in which they appeared.
+                           The input candidates should be the product of a :class:`~apd.extractors.extractor.Extractor` process.
+        :type candidates: list of list
+
+        :param candidates: The same list of candidate praticipants separated by the document in which they appeared but case-folded.
+        :type candidates: list of list
+        """
+
+        return [ [ candidate.lower() for candidate in candidate_set ] for candidate_set in candidates ]
+
     def _normalize(self, scores, *args, **kwargs):
         """
         Normalize the scores.
