@@ -2,6 +2,7 @@
 Test the functionality of the TF-IDF scorer.
 """
 
+import copy
 import math
 import os
 import sys
@@ -61,36 +62,59 @@ class TestTFIDFScorer(unittest.TestCase):
             "Damascus says Erdogan 'disconnected from reality' after threats",
         ]
 
-        corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
-
-        extractor = TokenExtractor(tokenizer=tokenizer)
         scorer = TFIDFScorer({ 'erdogan': 1, 'threats': 2 }, 10)
-        candidates = extractor.extract(corpus)
-        scores = scorer.score(candidates)
+        scores = scorer.score([ tokenizer.tokenize(post) for post in posts ])
         self.assertGreater(scores.get('erdogan'), scores.get('damascus'))
         self.assertEqual(scores.get('everywhere'), scores.get('disconnected')) # they appear the same number of times
         self.assertGreater(scores.get('erdogan'), scores.get('threats')) # 'threats' and 'erdogan' appear with the same frequency, but 'threats' has a higher DF
+
+    def test_score_candidates_unchanged(self):
+        """
+        Test that the original list of candidates do not change after undergoing case-folding.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
+        extractor = TokenExtractor()
+        scorer = TFIDFScorer({ 'erdogan': 1, 'threats': 2 }, 10)
+        candidates = extractor.extract(path)
+        original = copy.deepcopy(candidates)
+        scorer.score(candidates)
+        self.assertEqual(original, candidates)
+
+    def test_score_candidates_folded(self):
+        """
+        Test that the candidates are case-folded when scoring.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
+        extractor = TokenExtractor()
+        scorer = TFIDFScorer({ 'erdogan': 1, 'threats': 2 }, 10)
+        candidates = extractor.extract(path)
+        scores = scorer.score(candidates)
+        self.assertTrue(all( candidate.lower() == candidate for candidate in scores ))
+
+    def test_score_candidates_all_retained(self):
+        """
+        Test that when scoring candidates, all of them are retained, if folded.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
+        extractor = TokenExtractor()
+        scorer = TFIDFScorer({ 'erdogan': 1, 'threats': 2 }, 10)
+        candidates = extractor.extract(path)
+        scores = scorer.score(candidates)
+        self.assertTrue(all( candidate.lower() in scores for candidate_set in candidates for candidate in candidate_set ))
 
     def test_min_score(self):
         """
         Test that the minimum score is greater than 0.
         """
 
-        """
-        Create the test data.
-        """
-        tokenizer = Tokenizer(stem=False)
-        posts = [
-            "Erdogan with threats to attack regime forces 'everywhere' in Syria",
-            "Damascus says Erdogan 'disconnected from reality' after threats",
-        ]
-
-        corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
-
+        path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
         extractor = TokenExtractor()
-        scorer = TFIDFScorer({ 'erdogan': 1, 'threats': 2 }, 10)
-        candidates = extractor.extract(corpus)
-        scores = scorer.score(candidates, normalize_scores=True)
+        scorer = TFIDFScorer({ 'chelsea': 10 }, 100)
+        candidates = extractor.extract(path)
+        scores = scorer.score(candidates)
         self.assertTrue(all( score > 0 for score in scores.values() ))
 
     def test_max_score(self):
@@ -98,21 +122,11 @@ class TestTFIDFScorer(unittest.TestCase):
         Test that the maximum score is 1 when normalization is enabled.
         """
 
-        """
-        Create the test data.
-        """
-        tokenizer = Tokenizer(stem=False)
-        posts = [
-            "Erdogan with threats to attack regime forces 'everywhere' in Syria",
-            "Damascus says Erdogan 'disconnected from reality' after threats",
-        ]
-
-        corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
-
+        path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
         extractor = TokenExtractor()
-        scorer = TFIDFScorer({ 'erdogan': 1, 'threats': 2 }, 10)
-        candidates = extractor.extract(corpus)
-        scores = scorer.score(candidates, normalize_scores=True)
+        scorer = TFIDFScorer({ 'chelsea': 10 }, 100)
+        candidates = extractor.extract(path)
+        scores = scorer.score(candidates)
         self.assertTrue(all( score <= 1 for score in scores.values() ))
 
     def test_score_of_unknown_token(self):
@@ -120,67 +134,25 @@ class TestTFIDFScorer(unittest.TestCase):
         Test that the score of an unknown token is 0.
         """
 
-        """
-        Create the test data.
-        """
-        tokenizer = Tokenizer(stem=False)
-        posts = [
-            "Erdogan with threats to attack regime forces 'everywhere' in Syria",
-            "Damascus says Erdogan 'disconnected from reality' after threats",
-        ]
-
-        corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
-
+        path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
         extractor = TokenExtractor()
-        scorer = TFIDFScorer({ 'erdogan': 1, 'threats': 2 }, 10)
-        candidates = extractor.extract(corpus)
+        scorer = TFIDFScorer({ 'chelsea': 10 }, 100)
+        candidates = extractor.extract(path)
         scores = scorer.score(candidates)
         self.assertFalse(scores.get('unknown'))
-
-    def test_score_across_multiple_documents(self):
-        """
-        Test that the score is based on document frequency.
-        """
-
-        """
-        Create the test data.
-        """
-        tokenizer = Tokenizer(stem=False)
-        posts = [
-            "Erdogan with threats to attack regime forces 'everywhere' in Syria",
-            "Syria reacts to Erdogan's threats: Damascus says Erdogan 'disconnected from reality' after threats",
-        ]
-
-        corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
-
-        extractor = TokenExtractor(tokenizer=tokenizer)
-        scorer = TFIDFScorer({ 'erdogan': 1, 'threats': 2 }, 10)
-        candidates = extractor.extract(corpus)
-        scores = scorer.score(candidates, normalize_scores=False)
-        self.assertEqual(3 * math.log(10 / 1, 10), scores.get('erdogan'))
-        self.assertEqual(3 * math.log(10 / 2, 10), scores.get('threats'))
 
     def test_normalization(self):
         """
         Test that when normalization is enabled, the returned scores are integers.
         """
 
-        """
-        Create the test data.
-        """
-        tokenizer = Tokenizer(stem=False)
-        posts = [
-            "Erdogan with threats to attack regime forces 'everywhere' in Syria",
-            "After Erdogan's statement, Damascus says Erdogan 'disconnected from reality' after threats",
-        ]
-
-        corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
-
-        extractor = TokenExtractor(tokenizer=tokenizer)
-        scorer = TFIDFScorer({ 'erdogan': 1, 'threats': 2 }, 10)
-        candidates = extractor.extract(corpus)
-        scores = scorer.score(candidates, normalize_scores=True)
-        self.assertEqual(1, scores.get('erdogan'))
+        path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
+        extractor = TokenExtractor()
+        scorer = TFIDFScorer({ 'chelsea': 10 }, 100)
+        candidates = extractor.extract(path)
+        scores = scorer.score(candidates, normalize_scores=False)
+        self.assertTrue(all( score >= 1 for score in scores.values() ))
+        self.assertTrue(all( score % 1 == 0 for score in scores.values() ))
 
     def test_repeated_tokens(self):
         """
@@ -199,6 +171,5 @@ class TestTFIDFScorer(unittest.TestCase):
 
         extractor = TokenExtractor(tokenizer=tokenizer)
         scorer = TFIDFScorer({ 'erdogan': 3, 'threats': 2 }, 10)
-        candidates = extractor.extract(corpus)
-        scores = scorer.score(candidates, normalize_scores=False)
+        scores = scorer.score([ tokenizer.tokenize(post) for post in posts ], normalize_scores=False)
         self.assertEqual(2 * math.log(10 / 3, 10), scores.get('erdogan'))

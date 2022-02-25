@@ -61,6 +61,8 @@ class TFIDFScorer(Scorer):
         :rtype: dict
         """
 
+        candidates = self._fold(candidates)
+
         """
         Go through each document, and then each of its candidates.
         For all of these candidates, increment their score by calculating the TF-IDF in that document.
