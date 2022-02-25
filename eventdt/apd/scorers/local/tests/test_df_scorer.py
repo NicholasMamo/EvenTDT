@@ -133,4 +133,4 @@ class TestDFScorer(unittest.TestCase):
         extractor = TokenExtractor()
         scorer = DFScorer()
         candidates = extractor.extract(path)
-        self.assertTrue(all( score == 1 for candidate_set in candidates for score in scorer.score([ candidate_set ]).values() ))
+        self.assertTrue(all( score == 1 for candidate_set in candidates for score in scorer.score([ candidate_set ], normalize_scores=False).values() ))

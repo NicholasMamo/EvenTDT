@@ -28,6 +28,7 @@ class TFScorer(Scorer):
         :rtype: dict
         """
 
+        candidates = self._fold(candidates)
         scores = self._sum(candidates, *args, **kwargs)
         return self._normalize(scores) if normalize_scores else scores
 
