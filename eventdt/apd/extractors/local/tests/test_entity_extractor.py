@@ -31,8 +31,8 @@ class TestExtractors(unittest.TestCase):
 
         extractor = EntityExtractor()
         candidates = extractor.extract(path)
-        self.assertEqual([ "bayern munich", "chelsea", "callum" ], candidates[0])
-        self.assertEqual([ "eden", "maurizio sarri", "cryche" ], candidates[1])
+        self.assertEqual([ "Bayern Munich", "Chelsea", "Callum" ], candidates[0])
+        self.assertEqual([ "Eden", "Maurizio Sarri", "CRYCHE" ], candidates[1])
 
     def test_empty_corpus(self):
         """
@@ -71,7 +71,7 @@ class TestExtractors(unittest.TestCase):
                 text = twitter.expand_mentions(text, tweet)
                 corpus.append(text)
 
-        self.assertTrue(any( text.lower().startswith(entity) for entities, text in zip(candidates, corpus) for entity in entities ))
+        self.assertTrue(any( text.startswith(entity) for entities, text in zip(candidates, corpus) for entity in entities ))
 
     def test_named_entity_at_end(self):
         """
@@ -90,7 +90,7 @@ class TestExtractors(unittest.TestCase):
                 text = twitter.expand_mentions(text, tweet)
                 corpus.append(text)
 
-        self.assertTrue(any( text.lower().endswith(entity) for entities, text in zip(candidates, corpus) for entity in entities ))
+        self.assertTrue(any( text.endswith(entity) for entities, text in zip(candidates, corpus) for entity in entities ))
 
     def test_multiple_sentences(self):
         """
@@ -100,7 +100,7 @@ class TestExtractors(unittest.TestCase):
         path = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
         extractor = EntityExtractor()
         candidates = extractor.extract(path)
-        self.assertEqual([ "bayern munich", "chelsea", "callum" ], candidates[0])
+        self.assertEqual([ "Bayern Munich", "Chelsea", "Callum" ], candidates[0])
 
     def test_repeated_named_entities(self):
         """
@@ -110,7 +110,7 @@ class TestExtractors(unittest.TestCase):
         path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
         extractor = EntityExtractor(binary=False)
         candidates = extractor.extract(path)
-        self.assertEqual(2, candidates[1].count('eden'))
+        self.assertEqual(2, candidates[1].count('Eden'))
 
     def test_binary_named_entities(self):
         """
@@ -121,11 +121,11 @@ class TestExtractors(unittest.TestCase):
 
         extractor = EntityExtractor(binary=False)
         candidates = extractor.extract(path)
-        self.assertEqual([ "bayern", "munich", "chelsea", "callum" ], candidates[0]) # Bayern and Munich have different types
+        self.assertEqual([ "Bayern", "Munich", "Chelsea", "Callum" ], candidates[0]) # Bayern and Munich have different types
 
         extractor = EntityExtractor(binary=True)
         candidates = extractor.extract(path)
-        self.assertEqual([ "bayern munich", "chelsea", "callum" ], candidates[0]) # Bayern and Munich have different types, but it doesn't matter here
+        self.assertEqual([ "Bayern Munich", "Chelsea", "Callum" ], candidates[0]) # Bayern and Munich have different types, but it doesn't matter here
 
     def test_comma_separated_entities(self):
         """
@@ -135,7 +135,7 @@ class TestExtractors(unittest.TestCase):
         path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
         extractor = EntityExtractor()
         candidates = extractor.extract(path)
-        self.assertEqual([ "bayern munich", "chelsea", "callum" ], candidates[0])
+        self.assertEqual([ "Bayern Munich", "Chelsea", "Callum" ], candidates[0])
 
     def test_extract_from_text(self):
         """
@@ -152,4 +152,4 @@ class TestExtractors(unittest.TestCase):
                 text = twitter.full_text(tweet)
                 text = twitter.expand_mentions(text, tweet)
 
-                self.assertTrue(all( candidate in text.lower() or '\n' in text for candidate in candidates[i] ))
+                self.assertTrue(all( candidate in text or '\n' in text for candidate in candidates[i] ))

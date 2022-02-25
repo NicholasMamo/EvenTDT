@@ -124,22 +124,22 @@ class EntityExtractor(Extractor):
                 """
                 label = chunk.label()
                 if label != entity_type:
-                    named_entities.append(' '.join(entity).strip().lower())
+                    named_entities.append(' '.join(entity).strip())
                     entity, entity_type = [], None
 
                 # add the tokens to the named entity sequence
                 entity_type = label
-                named_entity_tokens = [ pair[0].lower() for pair in chunk ]
+                named_entity_tokens = [ pair[0] for pair in chunk ]
                 entity.extend(named_entity_tokens)
             else:
-                named_entities.append(' '.join(entity).strip().lower())
+                named_entities.append(' '.join(entity).strip())
                 entity, entity_type = [], None
 
         """
         Save the last named entity.
         Filter out named entities that have no length.
         """
-        named_entities.append(' '.join(entity).strip().lower())
+        named_entities.append(' '.join(entity).strip())
         named_entities = [ entity for entity in named_entities if len(entity) ]
 
         return named_entities
