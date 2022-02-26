@@ -30,17 +30,7 @@ class TestWikipediaPostprocessor(unittest.TestCase):
         participants = [ 'Youssouf Koné (footballer, born 1995)', 'Pedro (footballer, born 1987)' ]
         self.assertEqual(set(participants), set(postprocessor.postprocess(participants)))
 
-    def test_postprocess_dict_returns_dict(self):
-        """
-        Test that post-processing a dictionary returns another dictionary.
-        """
-
-        postprocessor = WikipediaPostprocessor(remove_accents=False, remove_brackets=True, surname_only=False)
-        participants = { 'Kone': 'Youssouf Koné (footballer, born 1995)', 'Pedro': 'Pedro (footballer, born 1987)' }
-        postprocessed = postprocessor.postprocess(participants)
-        self.assertEqual(dict, type(postprocessed))
-
-    def test_postprocess_list_returns_list(self):
+    def test_postprocess_returns_list(self):
         """
         Test that post-processing a list returns another list.
         """
@@ -50,58 +40,13 @@ class TestWikipediaPostprocessor(unittest.TestCase):
         postprocessed = postprocessor.postprocess(participants)
         self.assertEqual(list, type(postprocessed))
 
-    def test_postprocess_dict_same_as_list(self):
-        """
-        Test that when post-processing a dictioanry, the output is identical to post-processing a list.
-        """
-
-        postprocessor = WikipediaPostprocessor(remove_accents=True, remove_brackets=True, surname_only=True)
-        participants = [ 'Youssouf Koné (footballer, born 1995)', 'Pedro (footballer, born 1987)' ]
-        postprocessed_list = postprocessor.postprocess(participants)
-
-        participants = { 'Kone': 'Youssouf Koné (footballer, born 1995)', 'Pedro': 'Pedro (footballer, born 1987)' }
-        postprocessed_dict = postprocessor.postprocess(participants)
-
-        self.assertEqual(postprocessed_list, list(postprocessed_dict.values()))
-
-    def test_postprocess_dict_changes_values(self):
-        """
-        Test that when post-processing a dictionary, only the values change.
-        """
-
-        postprocessor = WikipediaPostprocessor(remove_accents=True, remove_brackets=True, surname_only=True)
-        participants = { 'Kone': 'Youssouf Koné (footballer, born 1995)', 'Pedro': 'Pedro (footballer, born 1987)' }
-        postprocessed_dict = postprocessor.postprocess(participants)
-        self.assertEqual(postprocessed_dict.keys(), participants.keys())
-
-    def test_postprocess_dict_retains_alignment(self):
-        """
-        Test that when post-processing a dictionary, the keys are still bound to the same values.
-        """
-
-        postprocessor = WikipediaPostprocessor(remove_accents=False, remove_brackets=True, surname_only=True)
-        participants = { 'Koné': 'Youssouf Koné (footballer, born 1995)', 'Pedro': 'Pedro (footballer, born 1987)' }
-        postprocessed_dict = postprocessor.postprocess(participants)
-        self.assertTrue(all( key in value for key, value in postprocessed_dict.items() ))
-
-    def test_postprocess_list_makes_copy(self):
+    def test_postprocess_makes_copy(self):
         """
         Test that when post-processing, the original list does not change.
         """
 
         postprocessor = WikipediaPostprocessor(remove_accents=True, remove_brackets=True, surname_only=True)
         participants = [ 'Youssouf Koné (footballer, born 1995)', 'Pedro (footballer, born 1987)' ]
-        original = copy.deepcopy(participants)
-        postprocessor.postprocess(participants)
-        self.assertEqual(original, participants)
-
-    def test_postprocess_dict_makes_copy(self):
-        """
-        Test that when post-processing, the original dictionary does not change.
-        """
-
-        postprocessor = WikipediaPostprocessor(remove_accents=True, remove_brackets=True, surname_only=True)
-        participants = { 'Kone': 'Youssouf Koné (footballer, born 1995)', 'Pedro': 'Pedro (footballer, born 1987)' }
         original = copy.deepcopy(participants)
         postprocessor.postprocess(participants)
         self.assertEqual(original, participants)

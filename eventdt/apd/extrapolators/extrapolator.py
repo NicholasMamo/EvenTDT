@@ -23,10 +23,10 @@ class Extrapolator(object):
         This extrapolator returns no new participants.
 
         :param participants: The participants found by the resolver.
-        :type participants: list of str
+        :type participants: dict
 
         :return: The new participants identified as relevant by the extrapolator.
-        :rtype: list of str
+        :rtype: dict
         """
 
         return [ ]
