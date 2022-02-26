@@ -13,28 +13,28 @@ class RankFilter(Filter):
     The _k_ parameter is passed on to the constructor and stored as an instance variable.
     It is then re-used by the :func:`~apd.filters.local.rank_filter.RankFilter.filter` method.
 
-    :vartype k: The number of candidates to retain.
-    :vartype k: int
+    :vartype keep: The number of candidates to retain.
+    :vartype keep: int
     """
 
-    def __init__(self, k):
+    def __init__(self, keep=10, *args, **kwargs):
         """
-        Create the filter with the k that will decide whether candidate participants will be retained.
+        Create the filter with the keep that will decide whether candidate participants will be retained.
 
-        :param k: The number of candidates to retain.
-        :type k: int
+        :param keep: The number of candidates to retain.
+        :type keep: int
 
         :raises ValueError: When _k_ is not an integer.
         :raises ValueError: When _k_ is not positive.
         """
 
-        if type(k) is not int:
-            raise ValueError(f"k must be an integer; received {k} ({ type(k) })")
+        if type(keep) is not int:
+            raise ValueError(f"keep must be an integer; received {keep} ({ type(keep) })")
 
-        if k <= 0:
-            raise ValueError(f"k must be a positive integer; received {k}")
+        if keep <= 0:
+            raise ValueError(f"keep must be a positive integer; received {keep}")
 
-        self.k = k
+        self.keep = keep
 
     def filter(self, candidates, *args, **kwargs):
         """
@@ -50,5 +50,5 @@ class RankFilter(Filter):
         :rtype: dict
         """
 
-        retain = sorted(candidates, key=candidates.get, reverse=True)[:self.k]
+        retain = sorted(candidates, key=candidates.get, reverse=True)[:self.keep]
         return { candidate: candidates.get(candidate) for candidate in retain }

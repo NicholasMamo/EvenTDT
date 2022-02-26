@@ -61,7 +61,7 @@ class WikipediaPostprocessor(Postprocessor):
     :vartype surname_only: bool
     """
 
-    def __init__(self, remove_accents=True, remove_brackets=True, surname_only=True):
+    def __init__(self, remove_accents=True, remove_brackets=True, surname_only=True, *args, **kwargs):
         """
         Create the postprocessor.
 

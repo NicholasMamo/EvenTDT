@@ -49,7 +49,7 @@ class ELDParticipantDetector(ParticipantDetector):
     """
 
     def __init__(self, scheme=None, corpus=None, extractor=None, scorer=None, filter=None,
-                 resolver=None, extrapolator=None, postprocessor=None):
+                 resolver=None, extrapolator=None, postprocessor=None, *args, **kwargs):
         """
         Create the ELD participant detector.
         Any parameter that is not given uses the default configuration.
@@ -99,12 +99,12 @@ class ELDParticipantDetector(ParticipantDetector):
         """
         if not extractor:
             from extractors.local.twitterner_entity_extractor import TwitterNEREntityExtractor
-            extractor = TwitterNEREntityExtractor()
-        scorer = scorer or TFScorer()
-        filter = filter or RankFilter(20)
+            extractor = TwitterNEREntityExtractor(*args, **kwargs)
+        scorer = scorer or TFScorer(*args, **kwargs)
+        filter = filter or RankFilter(*args, **kwargs)
         resolver = resolver or WikipediaSearchResolver(scheme, tokenizer, 0.05, corpus)
         extrapolator = extrapolator or WikipediaExtrapolator(scheme, tokenizer, corpus, threshold=0.05,
                                                              first_level_links=100, second_level_links=500)
-        postprocessor = postprocessor or WikipediaPostprocessor()
+        postprocessor = postprocessor or WikipediaPostprocessor(*args, **kwargs)
 
         super().__init__(extractor, scorer, filter, resolver, extrapolator, postprocessor)

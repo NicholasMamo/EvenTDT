@@ -48,7 +48,7 @@ Accepted arguments:
     - ``--extractor``           *<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.
     - ``--scorer``              *<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
     - ``--filter``              *<Optional>* The filter to use to filter candidate participants; supported: `RankFilter`, `ThresholdFilter`; defaults to no filter.
-    - ``-k``                    *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
+    - ``-k --keep``             *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
     - ``--threshold``           *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).
     - ``--tfidf``               *<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
 """
@@ -91,7 +91,7 @@ def setup_args():
         - ``--extractor``           *<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.
         - ``--scorer``              *<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
         - ``--filter``              *<Optional>* The filter to use to filter candidate participants; supported: `RankFilter`, `ThresholdFilter`; defaults to no filter.
-        - ``-k``                    *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
+        - ``-k --keep``             *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
         - ``--threshold``           *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).
         - ``--tfidf``               *<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
 
@@ -111,7 +111,7 @@ def setup_args():
                         help='<Optional> The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.')
     parser.add_argument('--filter', type=filter, required=False, default=None,
                         help='<Optional> The filter to use to filter candidate participants; supported: `RankFilter`, `ThresholdFilter`; defaults to no filter.')
-    parser.add_argument('-k', required=False,
+    parser.add_argument('-k', '--keep', required=False, type=int,
                         help='<Optional> The number of candidates to retain when filtering candidates (used only with the `RankFilter`).')
     parser.add_argument('--threshold', required=False,
                         help='<Optional> The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).')
@@ -260,8 +260,8 @@ def create_model(model, extractor, scorer, filter, corpus, tfidf=None, *args, **
         scheme = tools.load(tfidf)['tfidf']
         return model(scheme=scheme, corpus=corpus, extractor=extractor, scorer=scorer, filter=filter, *args, **kwargs)
     elif model.__name__ == ParticipantDetector.__name__:
-        extractor = extractor or local.EntityExtractor()
-        scorer = scorer or TFScorer()
+        extractor = extractor or local.EntityExtractor(*args, **kwargs)
+        scorer = scorer or TFScorer(*args, **kwargs)
         return model(extractor, scorer, filter, *args, **kwargs)
 
 def create_extractor(extractor, *args, **kwargs):

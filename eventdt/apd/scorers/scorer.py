@@ -19,6 +19,13 @@ class Scorer(ABC):
     This can be a simple rescaling function.
     """
 
+    def __init__(self, *args, **kwargs):
+        """
+        Initialize the scorer.
+        """
+
+        pass
+
     @abstractmethod
     def score(self, candidates, normalize_scores=True, *args, **kwargs):
         """

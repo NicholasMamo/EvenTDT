@@ -63,7 +63,7 @@ class WikipediaSearchResolver(Resolver):
     :vartype domain: :class:`~nlp.document.Document`
     """
 
-    def __init__(self, scheme, tokenizer, threshold, corpus):
+    def __init__(self, scheme, tokenizer, threshold, corpus, *args, **kwargs):
         """
         Create the resolver.
 
