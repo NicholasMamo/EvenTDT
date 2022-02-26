@@ -50,6 +50,13 @@ class TwitterNEREntityExtractor(Extractor):
         ner = TwitterNER()
         logger.info("TwitterNER finished loading features")
 
+    def __init__(self, *args, **kwargs):
+        """
+        Initialize the extractor.
+        """
+
+        pass
+
     def extract(self, corpus, *args, **kwargs):
         """
         Extract all the named entities from the corpus.

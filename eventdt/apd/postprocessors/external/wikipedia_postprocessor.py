@@ -87,7 +87,27 @@ class WikipediaPostprocessor(Postprocessor):
 
         :param participants: The participants to postprocess.
                              It is assumed that all map to a Wikipedia page.
-        :type participants: list of str
+        :type participants: list of str or dict
+
+        :return: The postprocessed participants.
+        :rtype: list of str or dict
+        """
+
+        if type(participants) is dict:
+            names = list(participants.keys())
+            pages = [ participants[name] for name in names ]
+            postprocessed = self._postprocess(pages)
+            return dict(zip(names, postprocessed))
+        else:
+            return self._postprocess(list(participants))
+
+    def _postprocess(self, participants):
+        """
+        Perform the actual post-processing.
+
+        :param participants: The participants to postprocess.
+                             It is assumed that all map to a Wikipedia page.
+        :type participants: list of str or dict
 
         :return: The postprocessed participants.
         :rtype: list of str
