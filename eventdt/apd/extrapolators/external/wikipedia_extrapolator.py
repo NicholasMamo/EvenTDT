@@ -27,6 +27,7 @@ The most relevant articles in these communities are scored for relevance by the 
 """
 
 import asyncio
+import json
 import math
 import os
 import re
@@ -43,13 +44,13 @@ from networkx.algorithms import community
 import nltk
 from nltk.corpus import stopwords, words
 
-from vsm import vector_math
-from vsm.clustering import Cluster
+from ..extrapolator import Extrapolator
 from nlp.document import Document
 from nlp.tokenizer import Tokenizer
+import twitter
+from vsm import vector_math
+from vsm.clustering import Cluster
 from wikinterface import info, links, search, text
-
-from ..extrapolator import Extrapolator
 
 class WikipediaExtrapolator(Extrapolator):
     """
@@ -87,14 +88,14 @@ class WikipediaExtrapolator(Extrapolator):
     :vartype second_level_similarity: float
     """
 
-    def __init__(self, corpus, tokenizer, scheme, threshold=0,
+    def __init__(self, scheme, tokenizer, corpus, threshold=0,
                  first_level_links=100, second_level_links=1000,
                  first_level_similarity=0, second_level_similarity=0.5):
         """
         Create the extrapolator.
 
-        :param corpus: The corpus of documents.
-        :type corpus: list of :class:`~nlp.document.Document`
+        :param corpus: The path to the corpus of documents.
+        :type corpus: str
         :param tokenizer: The tokenizer to use to create documents.
         :type tokenizer: :class:`~nlp.tokenizer.Tokenizer`
         :param scheme: The term-weighting scheme to use to create documents from Wikipedia pages.
@@ -112,11 +113,10 @@ class WikipediaExtrapolator(Extrapolator):
         :type second_level_similarity: float
         """
 
-        self.domain = Cluster(corpus).centroid
-        self.domain.normalize()
         self.tokenizer = tokenizer
         self.scheme = scheme
         self.threshold = threshold
+        self.domain = self._generate_domain(corpus)
         self.first_level_links = first_level_links
         self.second_level_links = second_level_links
         self.first_level_similarity = first_level_similarity
@@ -136,6 +136,7 @@ class WikipediaExtrapolator(Extrapolator):
         """
 
         extrapolated = { }
+        participants = list(participants.values()) if type(participants) is dict else participants
 
         """
         Create an empty graph.
@@ -357,3 +358,26 @@ class WikipediaExtrapolator(Extrapolator):
         centrality = edge_betweenness_centrality(graph, weight='weight')
         edge = max(centrality, key=centrality.get)
         return edge
+
+    def _generate_domain(self, corpus):
+        """
+        Generate the domain, or a centroid of all the documents in the corpus.
+
+        :param corpus: The path to the corpus of documents.
+        :type corpus: str
+        """
+
+        cluster = Cluster()
+
+        with open(corpus) as f:
+            for line in f:
+                tweet = json.loads(line)
+                text = twitter.full_text(tweet)
+                text = twitter.expand_mentions(text, tweet)
+
+                document = Document(text, self.tokenizer.tokenize(text), scheme=self.scheme)
+                cluster.vectors.append(document)
+
+        domain = cluster.centroid
+        domain.normalize()
+        return domain

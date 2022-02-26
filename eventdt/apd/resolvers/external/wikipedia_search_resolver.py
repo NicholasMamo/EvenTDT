@@ -94,7 +94,7 @@ class WikipediaSearchResolver(Resolver):
         :type candidates: list
 
         :return: A tuple containing the resolved and unresolved candidates respectively.
-        :rtype: tuple of lists
+        :rtype: tuple of dict and list
         """
 
         resolved, unresolved = { }, [ ]

@@ -89,7 +89,7 @@ class WikipediaNameResolver(Resolver):
         :type candidates: dict
 
         :return: A tuple containing the resolved and unresolved candidates respectively.
-        :rtype: tuple of lists
+        :rtype: tuple of dict and list
         """
 
         resolved, unresolved = { }, [ ]
