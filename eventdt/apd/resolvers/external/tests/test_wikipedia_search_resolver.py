@@ -30,7 +30,7 @@ class TestWikipediaSearchResolver(unittest.TestCase):
     Test the implementation and results of the Wikipedia search resolver.
     """
 
-    def no_test_year_check(self):
+    def test_year_check(self):
         """
         Test that when checking for a year, the function returns a boolean.
         """
@@ -40,7 +40,7 @@ class TestWikipediaSearchResolver(unittest.TestCase):
         resolver = WikipediaSearchResolver(TF(), Tokenizer(), 0, path)
         self.assertTrue(resolver._has_year(article))
 
-    def no_test_year_check_range(self):
+    def test_year_check_range(self):
         """
         Test that when checking for a year in a range, the function returns `True`.
         """
@@ -54,7 +54,7 @@ class TestWikipediaSearchResolver(unittest.TestCase):
         resolver = WikipediaSearchResolver(TF(), Tokenizer(), 0, path)
         self.assertTrue(resolver._has_year(article))
 
-    def no_test_year_check_short_number(self):
+    def test_year_check_short_number(self):
         """
         Test that when checking for a year with a short number, the function does not detect a year.
         """
@@ -64,7 +64,7 @@ class TestWikipediaSearchResolver(unittest.TestCase):
         resolver = WikipediaSearchResolver(TF(), Tokenizer(), 0, path)
         self.assertFalse(resolver._has_year(article))
 
-    def no_test_year_check_long_number(self):
+    def test_year_check_long_number(self):
         """
         Test that when checking for a year with a long number, the function does not detect a year.
         """
@@ -74,7 +74,7 @@ class TestWikipediaSearchResolver(unittest.TestCase):
         resolver = WikipediaSearchResolver(TF(), Tokenizer(), 0, path)
         self.assertFalse(resolver._has_year(article))
 
-    def no_test_remove_brackets(self):
+    def test_remove_brackets(self):
         """
         Test that when removing brackets, they are completely removed.
         """
@@ -84,7 +84,7 @@ class TestWikipediaSearchResolver(unittest.TestCase):
         resolver = WikipediaSearchResolver(TF(), Tokenizer(), 0, path)
         self.assertEqual('Youssouf Koné', resolver._remove_brackets(article).strip())
 
-    def no_test_remove_unclosed_brackets(self):
+    def test_remove_unclosed_brackets(self):
         """
         Test that when removing brackets that are not closed, they are not removed.
         """
@@ -94,7 +94,7 @@ class TestWikipediaSearchResolver(unittest.TestCase):
         resolver = WikipediaSearchResolver(TF(), Tokenizer(), 0, path)
         self.assertEqual('Youssouf Koné (footballer, born 1995', resolver._remove_brackets(article).strip())
 
-    def no_test_get_first_sentence(self):
+    def test_get_first_sentence(self):
         """
         Test that when getting the first sentence from text, only the first sentence is returned.
         """
@@ -111,7 +111,7 @@ class TestWikipediaSearchResolver(unittest.TestCase):
         self.assertEqual("Memphis Depay (Dutch pronunciation: [ˈmɛmfɪs dəˈpɑi]; born 13 February 1994), commonly known simply as Memphis,[2] is a Dutch professional footballer and music artist who plays as a forward and captains French club Lyon and plays for the Netherlands national team.",
                          re.sub('([ \t]+)', ' ', resolver._get_first_sentence(text)).strip())
 
-    def no_test_get_first_sentence_full(self):
+    def test_get_first_sentence_full(self):
         """
         Test that when getting the first sentence from a text that has only one sentence, the whole text is returned.
         """
@@ -121,7 +121,7 @@ class TestWikipediaSearchResolver(unittest.TestCase):
         resolver = WikipediaSearchResolver(TF(), Tokenizer(), 0, path)
         self.assertEqual(text, resolver._get_first_sentence(text))
 
-    def no_test_get_first_sentence_full_without_period(self):
+    def test_get_first_sentence_full_without_period(self):
         """
         Test that when getting the first sentence from a text that has only one sentence, but without punctuation, the whole text is returned.
         """
@@ -131,7 +131,7 @@ class TestWikipediaSearchResolver(unittest.TestCase):
         resolver = WikipediaSearchResolver(TF(), Tokenizer(), 0, path)
         self.assertEqual(text, resolver._get_first_sentence(text))
 
-    def no_test_get_first_sentence_empty(self):
+    def test_get_first_sentence_empty(self):
         """
         Test that when getting the first sentence from an empty string, an empty string is returned.
         """
@@ -141,7 +141,7 @@ class TestWikipediaSearchResolver(unittest.TestCase):
         resolver = WikipediaSearchResolver(TF(), Tokenizer(), 0, path)
         self.assertEqual(text, resolver._get_first_sentence(text))
 
-    def no_test_score_upper_bound(self):
+    def test_score_upper_bound(self):
         """
         Test that the score has an upper bound of 1.
         """
@@ -160,7 +160,7 @@ class TestWikipediaSearchResolver(unittest.TestCase):
         resolver.domain = domain
         self.assertEqual(1, round(resolver._compute_score(candidate_document, title_document, sentence), 5))
 
-    def no_test_score_lower_bound(self):
+    def test_score_lower_bound(self):
         """
         Test that the score has a lower bound of 0.
         """
@@ -179,7 +179,7 @@ class TestWikipediaSearchResolver(unittest.TestCase):
         resolver.domain = domain
         self.assertEqual(0, round(resolver._compute_score(candidate_document, title_document, sentence), 5))
 
-    def no_test_score_relevance(self):
+    def test_score_relevance(self):
         """
         Test that when two documents are provided, one more relevant than the other, the score reflects it.
         """
@@ -207,7 +207,7 @@ class TestWikipediaSearchResolver(unittest.TestCase):
         score_2 = resolver._compute_score(candidate_document, title_document_2, sentence_document_2)
         self.assertGreater(score_1, score_2)
 
-    def no_test_wikipedia_name_resolver(self):
+    def test_wikipedia_search_resolver(self):
         """
         Test the Wikipedia search resolver.
         """
@@ -215,11 +215,11 @@ class TestWikipediaSearchResolver(unittest.TestCase):
         path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
         tokenizer = Tokenizer(min_length=2, stem=True, stopwords=list(stopwords.words("english")))
         resolver = WikipediaSearchResolver(TF(), tokenizer, 0, path)
-        resolved, unresolved = resolver.resolve({ 'Chelsea': 1, 'Sarri': 0.5 })
-        self.assertTrue('Chelsea F.C.' in resolved)
-        self.assertTrue('Maurizio Sarri' in resolved)
+        resolved, unresolved = resolver.resolve({ 'Chelsea': 1, 'Callum': 0.5 })
+        self.assertEqual('Chelsea F.C.', resolved['Chelsea'])
+        self.assertEqual('Callum Hudson-Odoi', resolved['Callum'])
 
-    def no_test_all_resolved_or_unresolved(self):
+    def test_all_resolved_or_unresolved(self):
         """
         Test that the resolver either resolves or does not resolve named entities.
         """
@@ -230,10 +230,9 @@ class TestWikipediaSearchResolver(unittest.TestCase):
         scores = { 'Chelsea': 1, 'Sarri': 0.5, 'Callum': 0.25, 'Eden': 0.1 }
         resolved, unresolved = resolver.resolve(scores)
         self.assertEqual(len(scores), len(resolved) + len(unresolved))
-        self.assertEqual([ 'Callum Hudson-Odoi' ], resolved)
-        self.assertEqual([ 'Chelsea', 'Sarri', 'Eden' ], unresolved)
+        self.assertTrue(all( candidate in resolved or candidate in unresolved for candidate in scores ))
 
-    def no_test_random_string_unresolved(self):
+    def test_random_string_unresolved(self):
         """
         Test that a random string is unresolved.
         """
@@ -246,7 +245,7 @@ class TestWikipediaSearchResolver(unittest.TestCase):
         resolved, unresolved = resolver.resolve(scores)
         self.assertTrue(random_string in unresolved)
 
-    def no_test_zero_threshold(self):
+    def test_zero_threshold(self):
         """
         Test that when the threshold is zero, it excludes no candidates.
         """
@@ -259,7 +258,7 @@ class TestWikipediaSearchResolver(unittest.TestCase):
         self.assertEqual(4, len(resolved))
         self.assertFalse(unresolved)
 
-    def no_test_threshold(self):
+    def test_threshold(self):
         """
         Test that when the threshold is not zero, it excludes some candidates.
         """
@@ -272,7 +271,7 @@ class TestWikipediaSearchResolver(unittest.TestCase):
         self.assertEqual(len(scores), len(resolved) + len(unresolved))
         self.assertEqual([ 'Chelsea', 'Sarri', 'Eden' ], unresolved)
 
-    def no_test_high_threshold(self):
+    def test_high_threshold(self):
         """
         Test that when the threshold is high, it excludes all candidates.
         """
@@ -285,7 +284,7 @@ class TestWikipediaSearchResolver(unittest.TestCase):
         self.assertFalse(resolved)
         self.assertEqual(4, len(unresolved))
 
-    def no_test_resolve_empty(self):
+    def test_resolve_empty(self):
         """
         Test that when resolving an empty set of candidates, the resolver returns empty lists.
         """
@@ -293,13 +292,13 @@ class TestWikipediaSearchResolver(unittest.TestCase):
         path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
         tokenizer = Tokenizer(min_length=2, stem=True, stopwords=list(stopwords.words("english")))
         resolver = WikipediaSearchResolver(TF(), tokenizer, 0, path)
-        resolved, unresolved = resolver.resolve({scores})
+        resolved, unresolved = resolver.resolve({ })
         self.assertFalse(resolved)
         self.assertFalse(unresolved)
 
-    def test_resolve_no_duplicates(self):
+    def test_resolve_duplicates(self):
         """
-        Test that resolution does not include duplicates.
+        Test that resolution's duplicates are retained but separately for each candidate.
         """
 
         path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
@@ -307,11 +306,12 @@ class TestWikipediaSearchResolver(unittest.TestCase):
         resolver = WikipediaSearchResolver(TF(), tokenizer, 0, path)
         scores = { 'Chelsea': 1, 'Chelsea F.C.': 0.5 }
         resolved, unresolved = resolver.resolve(scores)
-        self.assertEqual(1, len(resolved))
-        self.assertEqual([ 'Chelsea F.C.' ], resolved)
+        self.assertEqual(2, len(resolved))
+        self.assertEqual('Chelsea F.C.', resolved['Chelsea'])
+        self.assertEqual('Chelsea F.C.', resolved['Chelsea F.C.'])
         self.assertFalse(unresolved)
 
-    def no_test_sorting(self):
+    def test_sorting(self):
         """
         Test that the resolver sorts the named entities in descending order of score.
         """
@@ -323,4 +323,4 @@ class TestWikipediaSearchResolver(unittest.TestCase):
         resolved, unresolved = resolver.resolve(scores)
 
         order = sorted(scores, key=scores.get, reverse=True)
-        self.assertEqual(order, resolved)
+        self.assertEqual(order, list(resolved.keys()))

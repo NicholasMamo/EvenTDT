@@ -97,7 +97,7 @@ class WikipediaSearchResolver(Resolver):
         :rtype: tuple of lists
         """
 
-        resolved_candidates, unresolved_candidates = [], []
+        resolved, unresolved = { }, [ ]
 
         """
         Get the possible pages for each candidate.
@@ -150,14 +150,12 @@ class WikipediaSearchResolver(Resolver):
                 """
                 article, score = sorted(scores.items(), key=lambda score: score[1], reverse=True)[0]
                 if score >= self.threshold:
-                    if article not in resolved_candidates:
-                        resolved_candidates.append(article)
-
+                    resolved[candidate] = article
                     continue
 
-            unresolved_candidates.append(candidate)
+            unresolved.append(candidate)
 
-        return (resolved_candidates, unresolved_candidates)
+        return (resolved, unresolved)
 
     def _has_year(self, title):
         """
