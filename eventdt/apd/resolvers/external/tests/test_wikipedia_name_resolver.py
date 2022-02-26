@@ -77,7 +77,8 @@ class TestWikipediaNameResolver(unittest.TestCase):
         resolver = WikipediaNameResolver(TF(), tokenizer, 0, path)
         scores = { 'Chelsea F.C.': 1, 'Maurizio Sarri': 0.5, 'Callum': 0.25, 'Eden': 0.1 }
         resolved, unresolved = resolver.resolve(scores)
-        self.assertTrue('Eden Hazard' in resolved)
+        self.assertTrue('Eden' in resolved)
+        self.assertEqual('Eden Hazard', resolved['Eden'])
 
     def test_low_threshold(self):
         """
@@ -115,7 +116,7 @@ class TestWikipediaNameResolver(unittest.TestCase):
         resolved, unresolved = resolver.resolve(scores)
 
         order = sorted(scores, key=scores.get, reverse=True)
-        self.assertEqual(order, resolved)
+        self.assertEqual(order, list(resolved.keys()))
 
     def test_sorting_ambiguous(self):
         """
@@ -130,4 +131,4 @@ class TestWikipediaNameResolver(unittest.TestCase):
 
         order = sorted(scores, key=scores.get, reverse=True)
         order.remove('Eden')
-        self.assertEqual(order + [ 'Eden Hazard' ], resolved)
+        self.assertEqual(order + [ 'Eden Hazard' ], list(resolved.values()))

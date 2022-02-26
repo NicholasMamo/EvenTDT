@@ -92,12 +92,10 @@ class WikipediaNameResolver(Resolver):
         :rtype: tuple of lists
         """
 
-        resolved_candidates, unresolved_candidates = [], []
+        resolved, unresolved = { }, [ ]
 
         candidates = sorted(candidates.keys(), key=lambda candidate: candidates.get(candidate), reverse=True)
         resolved, unresolved, ambiguous = self._resolve_unambiguous_candidates(candidates)
-        resolved_candidates.extend(resolved)
-        unresolved_candidates.extend(unresolved)
 
         """
         Get the potential disambiguations of the ambiguous candidates.
@@ -114,12 +112,12 @@ class WikipediaNameResolver(Resolver):
             if len(pages) > 0:
                 page, score = self._disambiguate(pages)
                 if score >= self.threshold:
-                    resolved_candidates.append(page)
+                    resolved[candidate] = page
                     continue
 
-            unresolved_candidates.append(candidate)
+            unresolved.append(candidate)
 
-        return (resolved_candidates, unresolved_candidates)
+        return (resolved, unresolved)
 
     def _resolve_unambiguous_candidates(self, candidates):
         """
@@ -141,7 +139,7 @@ class WikipediaNameResolver(Resolver):
         :rtype: tuple of lists
         """
 
-        resolved_candidates, unresolved_candidates, ambiguous_candidates = [], [], []
+        resolved_candidates, unresolved_candidates, ambiguous_candidates = { }, [ ], [ ]
 
         for candidate in candidates:
             text = info.types([ candidate ])
@@ -151,7 +149,7 @@ class WikipediaNameResolver(Resolver):
                 Those pages are retained unchanged to respect domain discourse.
                 """
                 if type is info.ArticleType.NORMAL:
-                    resolved_candidates.append(candidate)
+                    resolved_candidates[candidate] = page
                     break
                 elif type is info.ArticleType.DISAMBIGUATION:
                     ambiguous_candidates.append(candidate)
