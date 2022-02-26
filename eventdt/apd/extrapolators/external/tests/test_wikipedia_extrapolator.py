@@ -289,6 +289,23 @@ class TestWikipediaExtrapolator(unittest.TestCase):
         self.assertTrue('Ligue 1' in graph.nodes)
         self.assertFalse(random_string in graph.nodes)
 
+    def test_extrapolate_returns_dict(self):
+        """
+        Test that when extrapolating, the return object is a dictionary with article names as keys and scores as values.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
+
+        tokenizer = Tokenizer(stem=True, stopwords=list(stopwords.words("english")))
+        extrapolator = WikipediaExtrapolator(TF(), tokenizer, path,
+                                             first_level_links=2, second_level_links=20)
+        resolved = { 'Chelsea': 'Chelsea F.C.', 'Villa': 'Aston Villa F.C.',
+                     'Arsenal': 'Arsenal F.C.', 'Everton': 'Everton F.C.' }
+        extrapolated = extrapolator.extrapolate(resolved)
+        self.assertEqual(dict, type(extrapolated))
+        self.assertTrue(all( type(key) is str for key in extrapolated.keys() ))
+        self.assertTrue(all( type(value) is float for value in extrapolated.values() ))
+
     def test_extrapolate_excludes_resolved(self):
         """
         Test that when extrapolating, resolved participants are not returned.
@@ -336,3 +353,19 @@ class TestWikipediaExtrapolator(unittest.TestCase):
         self.assertTrue('Manchester United F.C.' in extrapolated)
         self.assertTrue('Southampton F.C.' in extrapolated)
         self.assertTrue('Liverpool F.C.' in extrapolated)
+
+    def test_extrapolate_descending_score(self):
+        """
+        Test that the returned dictionary is sorted in descending order of score.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
+
+        tokenizer = Tokenizer(stem=True, stopwords=list(stopwords.words("english")))
+        extrapolator = WikipediaExtrapolator(TF(), tokenizer, path,
+                                             first_level_links=2, second_level_links=20)
+        resolved = { 'Chelsea': 'Chelsea F.C.', 'Villa': 'Aston Villa F.C.',
+                     'Arsenal': 'Arsenal F.C.', 'Everton': 'Everton F.C.' }
+        extrapolated = extrapolator.extrapolate(resolved)
+        self.assertTrue(all( extrapolated[list(extrapolated.keys())[i]] >= extrapolated[list(extrapolated.keys())[i + 1]]
+                             for i in range(len(extrapolated) - 1) ))

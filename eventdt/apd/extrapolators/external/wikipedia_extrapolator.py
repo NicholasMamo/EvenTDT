@@ -210,7 +210,7 @@ class WikipediaExtrapolator(Extrapolator):
             for participant in extrapolated
         }
         extrapolated = { participant: score for participant, score in extrapolated.items() if score >= self.threshold }
-        extrapolated = sorted(extrapolated.keys(), key=lambda participant: extrapolated.get(participant), reverse=True)
+        extrapolated = dict(sorted(extrapolated.items(), key=lambda participant: participant[1], reverse=True))
         return extrapolated
 
     def _has_year(self, title):
