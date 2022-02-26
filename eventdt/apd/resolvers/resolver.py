@@ -41,4 +41,4 @@ class Resolver(object):
         :rtype: tuple of dict and list
         """
 
-        return (list(sorted(candidates.keys(), key=lambda candidate: candidates.get(candidate), reverse=True)), [ ])
+        return({ candidate: candidate for candidate in sorted(candidates.keys(), key=candidates.get, reverse=True)}, [ ])
