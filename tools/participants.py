@@ -224,8 +224,8 @@ def rank(participants):
 
     participants = copy.deepcopy(participants)
 
-    # if the list of participants is a dictionary, assume that the key is the participant's name and the value its score
-    if type(participants) is dict:
+    # if the participants are a dictionary, assume that the key is the participant's name and the value its score
+    if type(participants) is dict and all( isinstance(value, numbers.Number) for value in participants.values() ):
         # sort the participants in descending order of score first
         ranked = sorted(participants.items(), key=lambda participant: participant[1], reverse=True)
         ranked = [ { 'participant': participant, 'score': score, 'rank': rank + 1 } for rank, (participant, score) in enumerate(ranked) ]
