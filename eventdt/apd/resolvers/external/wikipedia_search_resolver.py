@@ -11,6 +11,7 @@ For candidate participants that could be resolved, the resolver returns the page
 This acts as a link to the concept.
 """
 
+import json
 import os
 import re
 import sys
@@ -21,10 +22,11 @@ if path not in sys.path:
 
 import nltk
 
-from vsm import vector_math
-from vsm.clustering import Cluster
 from nlp.document import Document
 from nlp.tokenizer import Tokenizer
+import twitter
+from vsm import vector_math
+from vsm.clustering import Cluster
 from wikinterface import info, links, search, text
 
 from ..resolver import Resolver
@@ -49,7 +51,7 @@ class WikipediaSearchResolver(Resolver):
     These are all instance variables and are required in the constructor.
 
     :ivar ~.scheme: The term-weighting scheme to use to create documents from Wikipedia pages.
-                  These documents are used to compare the similarity with the domain of the candidates.
+                    These documents are used to compare the similarity with the domain of the candidates.
     :vartype ~.scheme: :class:`~nlp.weighting.TermWeightingScheme`
     :ivar threshold: The threshold below which candidates become unresolved.
     :vartype threshold: float.
@@ -74,15 +76,14 @@ class WikipediaSearchResolver(Resolver):
         :type tokenizer: :class:`~nlp.tokenizer.Tokenizer`
         :param threshold: The similarity threshold beyond which candidate participants are resolved.
         :type threshold: float
-        :param corpus: The corpus of documents.
-        :type corpus: list of :class:`~nlp.document.Document`
+        :param corpus: The path to the corpus of documents.
+        :type corpus: str
         """
 
         self.scheme = scheme
         self.tokenizer = tokenizer
         self.threshold = threshold
-        self.domain = Cluster(corpus).centroid
-        self.domain.normalize()
+        self.domain = self._generate_domain(corpus)
 
     def resolve(self, candidates, *args, **kwargs):
         """
@@ -148,8 +149,10 @@ class WikipediaSearchResolver(Resolver):
                 If it fails to exceed the threshold, the candidate is added to the unresolved candidates.
                 """
                 article, score = sorted(scores.items(), key=lambda score: score[1], reverse=True)[0]
-                if score >= self.threshold and article not in resolved_candidates:
-                    resolved_candidates.append(article)
+                if score >= self.threshold:
+                    if article not in resolved_candidates:
+                        resolved_candidates.append(article)
+
                     continue
 
             unresolved_candidates.append(candidate)
@@ -230,3 +233,26 @@ class WikipediaSearchResolver(Resolver):
         title_score = vector_math.cosine(title, candidate)
         text_score = vector_math.cosine(sentence, self.domain)
         return title_score * text_score
+
+    def _generate_domain(self, corpus):
+        """
+        Generate the domain, or a centroid of all the documents in the corpus.
+
+        :param corpus: The path to the corpus of documents.
+        :type corpus: str
+        """
+
+        cluster = Cluster()
+
+        with open(corpus) as f:
+            for line in f:
+                tweet = json.loads(line)
+                text = twitter.full_text(tweet)
+                text = twitter.expand_mentions(text, tweet)
+
+                document = Document(text, self.tokenizer.tokenize(text), scheme=self.scheme)
+                cluster.vectors.append(document)
+
+        domain = cluster.centroid
+        domain.normalize()
+        return domain
