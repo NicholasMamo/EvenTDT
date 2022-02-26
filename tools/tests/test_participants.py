@@ -36,11 +36,10 @@ class TestAPD(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-        corpus = apd.load_corpus(file, True)
-        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, Filter)
-        _, _, resolved, _, _ = apd.detect(detector, corpus)
-        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
-        _, _, resolved_k, _, _ = apd.detect(detector, corpus)
+        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, Filter, corpus=file)
+        _, _, resolved, _, _ = apd.detect(detector, corpus=file)
+        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, keep=10, corpus=file)
+        _, _, resolved_k, _, _ = apd.detect(detector, corpus=file)
         self.assertTrue(all( participant in resolved for participant in resolved_k ))
 
     def test_rank_filter_subset_k(self):
@@ -49,11 +48,10 @@ class TestAPD(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-        corpus = apd.load_corpus(file, True)
-        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=20)
-        _, _, lenient, _, _ = apd.detect(detector, corpus)
-        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
-        _, _, strict, _, _ = apd.detect(detector, corpus)
+        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, keep=20, corpus=file)
+        _, _, lenient, _, _ = apd.detect(detector, corpus=file)
+        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, keep=10, corpus=file)
+        _, _, strict, _, _ = apd.detect(detector, corpus=file)
         self.assertEqual(20, len(lenient))
         self.assertEqual(10, len(strict))
         self.assertTrue(all( participant in lenient for participant in strict ))
@@ -64,8 +62,7 @@ class TestAPD(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-        corpus = apd.load_corpus(file, True)
-        self.assertRaises(ValueError, apd.create_detector, ParticipantDetector, EntityExtractor, TFScorer, RankFilter)
+        self.assertRaises(ValueError, apd.create_detector, ParticipantDetector, EntityExtractor, TFScorer, RankFilter, corpus=file)
 
     def test_rank_filter_length(self):
         """
@@ -73,9 +70,8 @@ class TestAPD(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-        corpus = apd.load_corpus(file, True)
-        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
-        _, _, resolved, _, _ = apd.detect(detector, corpus)
+        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, keep=10, corpus=file)
+        _, _, resolved, _, _ = apd.detect(detector, corpus=file)
         self.assertEqual(10, len(resolved))
 
     def test_threshold_filter_subset(self):
@@ -84,11 +80,10 @@ class TestAPD(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-        corpus = apd.load_corpus(file, True)
-        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, Filter)
-        _, _, resolved, _, _ = apd.detect(detector, corpus)
+        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, Filter, corpus=file)
+        _, _, resolved, _, _ = apd.detect(detector, corpus=file)
         detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, ThresholdFilter, threshold=0.5)
-        _, _, resolved_k, _, _ = apd.detect(detector, corpus)
+        _, _, resolved_k, _, _ = apd.detect(detector, corpus=file)
         self.assertTrue(all( participant in resolved for participant in resolved_k ))
 
     def test_threshold_filter_all(self):
@@ -97,11 +92,10 @@ class TestAPD(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-        corpus = apd.load_corpus(file, True)
-        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, Filter)
-        _, _, resolved, _, _ = apd.detect(detector, corpus)
+        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, Filter, corpus=file)
+        _, _, resolved, _, _ = apd.detect(detector, corpus=file)
         detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, ThresholdFilter, threshold=0)
-        _, _, resolved_k, _, _ = apd.detect(detector, corpus)
+        _, _, resolved_k, _, _ = apd.detect(detector, corpus=file)
         self.assertEqual(resolved, resolved_k)
 
     def test_rank_filter_float_threshold(self):
@@ -110,11 +104,10 @@ class TestAPD(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-        corpus = apd.load_corpus(file, True)
-        detector = apd.create_detector(ParticipantDetector, EntityExtractor, LogTFScorer, ThresholdFilter, threshold=0.2)
-        _, _, lenient, _, _ = apd.detect(detector, corpus)
-        detector = apd.create_detector(ParticipantDetector, EntityExtractor, LogTFScorer, ThresholdFilter, threshold=0.8)
-        _, _, strict, _, _ = apd.detect(detector, corpus)
+        detector = apd.create_detector(ParticipantDetector, EntityExtractor, LogTFScorer, ThresholdFilter, threshold=0.2, corpus=file)
+        _, _, lenient, _, _ = apd.detect(detector, corpus=file)
+        detector = apd.create_detector(ParticipantDetector, EntityExtractor, LogTFScorer, ThresholdFilter, threshold=0.8, corpus=file)
+        _, _, strict, _, _ = apd.detect(detector, corpus=file)
         self.assertTrue(all( participant in lenient for participant in strict ))
         self.assertLess(len(strict), len(lenient))
 
@@ -124,8 +117,7 @@ class TestAPD(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-        corpus = apd.load_corpus(file, True)
-        self.assertRaises(ValueError, apd.create_detector, ParticipantDetector, EntityExtractor, TFScorer, ThresholdFilter)
+        self.assertRaises(ValueError, apd.create_detector, ParticipantDetector, EntityExtractor, TFScorer, ThresholdFilter, corpus=file)
 
     def test_eld_participant_detector_missing_tfidf(self):
         """
@@ -133,8 +125,7 @@ class TestAPD(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-        corpus = apd.load_corpus(file, True)
-        self.assertRaises(ValueError, apd.create_detector, ParticipantDetector, EntityExtractor, TFScorer, ThresholdFilter)
+        self.assertRaises(ValueError, apd.create_detector, ParticipantDetector, EntityExtractor, TFScorer, ThresholdFilter, corpus=file)
 
     def test_detect_scored_ranked(self):
         """
@@ -142,9 +133,8 @@ class TestAPD(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-        corpus = apd.load_corpus(file, True)
-        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
-        scored, _, _, _, _ = apd.detect(detector, corpus)
+        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, keep=10, corpus=file)
+        scored, _, _, _, _ = apd.detect(detector, corpus=file)
         self.assertTrue(all( 'rank' in participant for participant in scored ))
         self.assertTrue(all( scored[i]['rank'] == scored[i + 1]['rank'] - 1 for i in range(len(scored) - 1) ))
 
@@ -154,9 +144,8 @@ class TestAPD(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-        corpus = apd.load_corpus(file, True)
-        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
-        _, filtered, _, _, _ = apd.detect(detector, corpus)
+        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, keep=10, corpus=file)
+        _, filtered, _, _, _ = apd.detect(detector, corpus=file)
         self.assertTrue(all( 'rank' in participant for participant in filtered ))
         self.assertTrue(all( filtered[i]['rank'] == filtered[i + 1]['rank'] - 1 for i in range(len(filtered) - 1) ))
 
@@ -166,9 +155,8 @@ class TestAPD(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-        corpus = apd.load_corpus(file, True)
-        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
-        _, _, resolved, _, _ = apd.detect(detector, corpus)
+        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, keep=10, corpus=file)
+        _, _, resolved, _, _ = apd.detect(detector, corpus=file)
         self.assertTrue(all( 'rank' in participant for participant in resolved ))
         self.assertTrue(all( resolved[i]['rank'] == resolved[i + 1]['rank'] - 1 for i in range(len(resolved) - 1) ))
 
@@ -178,9 +166,8 @@ class TestAPD(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-        corpus = apd.load_corpus(file, True)
-        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
-        _, _, _, extrapolated, _ = apd.detect(detector, corpus)
+        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, keep=10, corpus=file)
+        _, _, _, extrapolated, _ = apd.detect(detector, corpus=file)
         self.assertTrue(all( 'rank' in participant for participant in extrapolated ))
         self.assertTrue(all( extrapolated[i]['rank'] == extrapolated[i + 1]['rank'] - 1 for i in range(len(extrapolated) - 1) ))
 
@@ -190,9 +177,8 @@ class TestAPD(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-        corpus = apd.load_corpus(file, True)
-        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
-        _, _, _, _, postprocessed = apd.detect(detector, corpus)
+        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, keep=10, corpus=file)
+        _, _, _, _, postprocessed = apd.detect(detector, corpus=file)
         self.assertTrue(all( 'rank' in participant for participant in postprocessed ))
         self.assertTrue(all( postprocessed[i]['rank'] == postprocessed[i + 1]['rank'] - 1 for i in range(len(postprocessed) - 1) ))
 
@@ -202,9 +188,8 @@ class TestAPD(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-        corpus = apd.load_corpus(file, True)
-        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
-        _, _, _, resolved, _, _ = detector.detect(corpus)
+        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, keep=10, corpus=file)
+        _, _, _, resolved, _, _ = detector.detect(corpus=file)
         original = copy.deepcopy(resolved)
         ranked = apd.rank(resolved)
         self.assertEqual(original, resolved)
@@ -215,12 +200,11 @@ class TestAPD(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-        corpus = apd.load_corpus(file, True)
-        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
-        _, _, _, resolved, _, _ = detector.detect(corpus)
+        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, keep=10, corpus=file)
+        _, _, _, resolved, _, _ = detector.detect(corpus=file)
         ranked = apd.rank(resolved)
         self.assertEqual(len(resolved), len(ranked))
-        self.assertEqual([ participant['participant'] for participant in ranked ], resolved)
+        self.assertEqual({ participant['participant']: participant['participant'] for participant in ranked }, resolved)
 
     def test_rank_no_duplicates(self):
         """
@@ -228,9 +212,8 @@ class TestAPD(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-        corpus = apd.load_corpus(file, True)
-        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
-        _, _, _, resolved, _, _ = detector.detect(corpus)
+        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, keep=10, corpus=file)
+        _, _, _, resolved, _, _ = detector.detect(corpus=file)
         ranked = apd.rank(resolved)
         ranked = [ participant['participant'] for participant in ranked ]
         self.assertEqual(len(ranked), len(set(ranked)))
@@ -241,9 +224,8 @@ class TestAPD(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-        corpus = apd.load_corpus(file, True)
-        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
-        _, _, _, resolved, _, _ = detector.detect(corpus)
+        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, keep=10, corpus=file)
+        _, _, _, resolved, _, _ = detector.detect(corpus=file)
         ranked = apd.rank(resolved)
         ranks = [ participant['rank'] for participant in ranked ]
         self.assertEqual(1, min(ranks))
@@ -254,9 +236,8 @@ class TestAPD(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-        corpus = apd.load_corpus(file, True)
-        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
-        _, _, _, resolved, _, _ = detector.detect(corpus)
+        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, keep=10, corpus=file)
+        _, _, _, resolved, _, _ = detector.detect(corpus=file)
         ranked = apd.rank(resolved)
         self.assertTrue(all( ranked[i]['rank'] == ranked[i + 1]['rank'] - 1 for i in range(len(ranked) - 1) ))
 
@@ -266,9 +247,8 @@ class TestAPD(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-        corpus = apd.load_corpus(file, True)
-        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
-        _, scored, _, _, _, _ = detector.detect(corpus)
+        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, keep=10, corpus=file)
+        _, scored, _, _, _, _ = detector.detect(corpus=file)
         ranked = apd.rank(scored)
         self.assertTrue(all( ranked[i]['score'] >= ranked[i + 1]['score'] - 1 for i in range(len(ranked) - 1) ))
         self.assertTrue(all( ranked[i]['rank'] >= ranked[i + 1]['rank'] - 1 for i in range(len(ranked) - 1) ))
@@ -279,9 +259,8 @@ class TestAPD(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-        corpus = apd.load_corpus(file, True)
-        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
-        _, _, filtered, _, _, _ = detector.detect(corpus)
+        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, keep=10, corpus=file)
+        _, _, filtered, _, _, _ = detector.detect(corpus=file)
         ranked = apd.rank(filtered)
         self.assertTrue(all( ranked[i]['score'] >= ranked[i + 1]['score'] - 1 for i in range(len(ranked) - 1) ))
         self.assertTrue(all( ranked[i]['rank'] >= ranked[i + 1]['rank'] - 1 for i in range(len(ranked) - 1) ))
@@ -292,11 +271,22 @@ class TestAPD(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-        corpus = apd.load_corpus(file, True)
-        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
-        _, _, _, resolved, _, _ = detector.detect(corpus)
+        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, keep=10, corpus=file)
+        _, _, _, resolved, _, _ = detector.detect(corpus=file)
         ranked = apd.rank(resolved)
         self.assertTrue(all( _ranked['participant'] == _resolved for _ranked, _resolved in zip(ranked, resolved) ))
+
+    def test_rank_resolved_order_unchanged(self):
+        """
+        Test that when ranking resolved participants, the value associated with each key is kept.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, keep=10, corpus=file)
+        _, _, _, resolved, _, _ = detector.detect(corpus=file)
+        ranked = apd.rank(resolved)
+        self.assertTrue(all( _ranked['participant'] == _resolved for _ranked, _resolved in zip(ranked, resolved) ))
+        self.assertTrue(all( _ranked['details'] == _resolved for _ranked, _resolved in zip(ranked, resolved) ))
 
     def test_rank_extrapolated_order_unchanged(self):
         """
@@ -304,9 +294,8 @@ class TestAPD(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-        corpus = apd.load_corpus(file, True)
-        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
-        _, _, _, _, extrapolated, _ = detector.detect(corpus)
+        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, keep=10, corpus=file)
+        _, _, _, _, extrapolated, _ = detector.detect(corpus=file)
         ranked = apd.rank(extrapolated)
         self.assertTrue(all( _ranked['participant'] == _extrapolated for _ranked, _extrapolated in zip(ranked, extrapolated) ))
 
@@ -316,105 +305,7 @@ class TestAPD(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-        corpus = apd.load_corpus(file, True)
-        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, k=10)
-        _, _, _, _, _, postprocessed = detector.detect(corpus)
+        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, RankFilter, keep=10, corpus=file)
+        _, _, _, _, _, postprocessed = detector.detect(corpus=file)
         ranked = apd.rank(postprocessed)
         self.assertTrue(all( _ranked['participant'] == _postprocessed for _ranked, _postprocessed in zip(ranked, postprocessed) ))
-
-    def test_load_corpus_all_lines(self):
-        """
-        Test that when loading the corpus, all tweets are loaded.
-        """
-
-        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE.json')
-        with open(file) as f:
-            tweets = len(f.readlines())
-
-        corpus = apd.load_corpus(file, True)
-        self.assertTrue(len(corpus))
-        self.assertEqual(tweets, len(corpus))
-
-    def test_load_corpus_complete_tweets(self):
-        """
-        Test that when loading the corpus, there are generally no ellipses (the tweets are complete).
-        """
-
-        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE.json')
-        corpus = apd.load_corpus(file, True)
-        self.assertTrue(len(corpus))
-
-        """
-        This check does not have access to tweet IDs.
-        These tweets are not incomplete, but are published with the ellipses in them.
-        """
-        incomplete = 0
-        for tweet in corpus:
-            if '…' in tweet.text:
-                incomplete += 1
-        self.assertGreater(50, incomplete)
-
-    def test_load_corpus_no_clean(self):
-        """
-        Test that when tweets are not cleaned, some mentions remain.
-        """
-
-        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE.json')
-        corpus = apd.load_corpus(file, False)
-        self.assertTrue(len(corpus))
-        self.assertTrue(any( '@' in tweet.text for tweet in corpus ))
-
-    def test_load_corpus_clean(self):
-        """
-        Test that when loading and cleaning tweets, there are no mentions.
-        """
-
-        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE.json')
-        corpus = apd.load_corpus(file, True)
-        self.assertTrue(len(corpus))
-
-        """
-        Make some exceptions for mentions that aren't really mentions.
-        Some of them may look like mentions but refer to accounts that don't exist.
-        """
-        wrong_pattern = re.compile("@[0-9,\\s…]")
-        no_space_pattern = re.compile("[^\\s]@")
-        end_pattern = re.compile('@$')
-        not_accounts = [ 'EPL', 'real_realestsounds', 'nevilleiesta', 'naija927', 'naijafm92.7', 'manchesterunited', 'ManchesterUnited',
-                         'clintasena', 'Maksakal88', 'Aubamayeng7', 'JustWenginIt', 'marcosrojo5', 'btsportsfootball',
-                         'Nsibirwahall', 'YouTubeより', 'juniorpepaseed', 'Mezieblog', 'UtdAlamin', 'spurs_vincente' ]
-        for tweet in corpus:
-            if '@' in tweet.text:
-                if '@@' in tweet.text or ' @ ' in tweet.text or '@&gt;' in tweet.text or any(account in tweet.text for account in not_accounts):
-                    continue
-                if end_pattern.findall(tweet.text):
-                    continue
-                if no_space_pattern.findall(tweet.text):
-                    continue
-                if wrong_pattern.findall(tweet.text):
-                    continue
-
-                self.fail()
-
-    def test_quoted_and_retweeted(self):
-        """
-        Test that in the case of a retweeted quoted tweet, the quoted tweet's text is loaded.
-        """
-
-        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE.json')
-        corpus = apd.load_corpus(file, clean=False)
-        with open(file) as f:
-            lines = f.readlines()
-            tweets = [ json.loads(line) for line in lines ]
-            self.assertTrue(any( 'retweeted_status' in tweet for tweet in tweets ))
-            self.assertTrue(any( 'quoted_status' in tweet for tweet in tweets ))
-            for document, tweet in zip(corpus, tweets):
-                if tweet['id'] == 1079327490907271168:
-                    self.assertFalse(document.text.lower().startswith('rt'))
-                    self.assertTrue(document.text.startswith('This is a great article for those wishing to read a bit more of an insight into Christian Pulisic.'))
-
-                if tweet['id'] == 1079342260788056064:
-                    self.assertFalse(document.text.lower().startswith('rt'))
-                    self.assertTrue(document.text.startswith('1). Reports are saying RLC is still not 100% fit'))
-                    self.assertTrue('…' in tweet['text'])
-                    self.assertFalse('…' in document.text)

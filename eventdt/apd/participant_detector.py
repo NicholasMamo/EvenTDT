@@ -65,7 +65,7 @@ class ParticipantDetector(object):
     """
 
     def __init__(self,  extractor, scorer=None, filter=None,
-                 resolver=None, extrapolator=None, postprocessor=None):
+                 resolver=None, extrapolator=None, postprocessor=None, *args, **kwargs):
         """
         Create the participant detector, which is made up of a number of components.
 

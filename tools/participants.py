@@ -287,17 +287,17 @@ def create_scorer(scorer, *args, **kwargs):
 
     return scorer() if scorer else scorer
 
-def create_filter(filter, k=None, threshold=None, *args, **kwargs):
+def create_filter(filter, keep=None, threshold=None, *args, **kwargs):
     """
     Create a filter from the given class.
 
     :param filter: The class of the filter with which to filter candidate participants.
     :type filter: :class:`~apd.filters.filter.Filter`
-    :param k: The number of candidates to retain when filtering.
-              This is used only with the :class:`~apd.filters.local.rank_filter.RankFilter`.
-    :type k: int
+    :param keep: The number of candidates to retain when filtering.
+                 This is used only with the :class:`~apd.filters.local.rank_filter.RankFilter`.
+    :type keep: int
     :param threshold: The score threshold to use when filtering candidates.
-                       This is used only with the :class:`~appd.filters.local.threshold_filter.ThresholdFilter`.
+                      This is used only with the :class:`~appd.filters.local.threshold_filter.ThresholdFilter`.
 
     :raises ValueError: When a :class:`~apd.filters.local.rank_filter.RankFilter` is to be created, but _k_ is not given.
     :raises ValueError: When a :class:`~appd.filters.local.threshold_filter.ThresholdFilter` is to be created, but the threshold is not given.
@@ -307,9 +307,9 @@ def create_filter(filter, k=None, threshold=None, *args, **kwargs):
         return filter
 
     if filter.__name__ == RankFilter.__name__:
-        if k is None:
-            raise ValueError("The Rank Filter requires the `k` parameter (the number of candidates to retain).")
-        return filter(int(k))
+        if keep is None:
+            raise ValueError("The Rank Filter requires the `keep` parameter (the number of candidates to retain).")
+        return filter(int(keep))
     if filter.__name__ == ThresholdFilter.__name__:
         if threshold is None:
             raise ValueError("The Threshold Filter requires the `threshold` parameter (the minimum score of a candidate to retain it).")
