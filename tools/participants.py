@@ -44,7 +44,6 @@ Accepted arguments:
 
     - ``-f --file``             *<Required>* The input corpus from where to extract participants.
     - ``-o --output``           *<Required>* The path to the file where to store the extracted participants.
-    - ``--clean``               *<Optional>* Clean the tweets before extracting participants. This replaces tweet mentions with the display name using the :class:`~nlp.cleaners.tweet_cleaner.TweetCleaner`.
     - ``-m --model``            *<Optional>* The type of model to use; supported: `ELDParticipantDetector`; defaults to a normal participant detector.
     - ``--extractor``           *<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.
     - ``--scorer``              *<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
@@ -88,7 +87,6 @@ def setup_args():
 
         - ``-f --file``             *<Required>* The input corpus from where to extract participants.
         - ``-o --output``           *<Required>* The path to the file where to store the extracted participants.
-        - ``--clean``               *<Optional>* Clean the tweets before extracting participants. This replaces tweet mentions with the display name using the :class:`~nlp.cleaners.tweet_cleaner.TweetCleaner`.
         - ``-m --model``            *<Optional>* The type of model to use; supported: `ELDParticipantDetector`; defaults to a normal participant detector.
         - ``--extractor``           *<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.
         - ``--scorer``              *<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
@@ -105,8 +103,6 @@ def setup_args():
                         help='<Required> The input corpus from where to extract participants.')
     parser.add_argument('-o', '--output', type=str, required=True,
                         help='<Required> The path to the file where to store the extracted terms.')
-    parser.add_argument('--clean', action='store_true', required=False, default=False,
-                        help='<Optional> Clean the tweets before extracting participants. This replaces tweet mentions with the display name using the TweetCleaner.')
     parser.add_argument('-m', '--model', type=model, required=False, default=ParticipantDetector,
                         help='<Optional> The type of model to use; supported: `ELDParticipantDetector`; defaults to a normal participant detector.')
     parser.add_argument('--extractor', type=extractor, required=False, default=None,
@@ -138,10 +134,9 @@ def main():
     cmd, pcmd = tools.meta(args), tools.meta(args)
 
     args = vars(args)
-    corpus = load_corpus(filename=args.pop('file'), clean=args.pop('clean'))
     detector = create_detector(model=args.pop('model'), extractor=args.pop('extractor'),
                                scorer=args.pop('scorer'), filter=args.pop('filter'),
-                               corpus=corpus, **args)
+                               corpus=args['file'], **args)
 
     cmd['model'], pcmd['model'] = str(type(detector).__name__), str(type(detector).__name__)
     cmd['extractor'], pcmd['extractor'] = str(type(detector.extractor).__name__), str(type(detector.extractor).__name__)
@@ -151,7 +146,7 @@ def main():
     cmd['extrapolator'], pcmd['extrapolator'] = str(type(detector.extrapolator).__name__), str(type(detector.extrapolator).__name__)
     cmd['postprocessor'], pcmd['postprocessor'] = str(type(detector.postprocessor).__name__), str(type(detector.postprocessor).__name__)
 
-    scored, filtered, resolved, extrapolated, postprocessed = detect(detector=detector, corpus=corpus)
+    scored, filtered, resolved, extrapolated, postprocessed = detect(detector=detector, corpus=args['file'])
     tools.save(args['output'], { 'cmd': cmd, 'pcmd': pcmd,
                                  'scored': scored, 'filtered': filtered,
                                  'resolved': resolved, 'extrapolated': extrapolated, 'postprocessed': postprocessed })
@@ -194,14 +189,14 @@ def detect(detector, corpus):
 
     :param detector: The participant detector to use to extract participants.
     :type detector: :class:`~apd.participant_detector.ParticipantDetector`
-    :param corpus: A list of :class:`~nlp.document.Document` making up the corpus.
-    :type corpus: list of :class:`~nlp.document.Document`
+    :param corpus: The path to the corpus.
+    :type corpus: str
 
     :return: A list of participants detected at each stage: the extracted, scored, filtered, resolved, extrapolated and post-processed participants.
     :rtype: tuple of list of str
     """
 
-    extracted, scored, filtered, resolved, extrapolated, postprocessed = detector.detect(corpus)
+    extracted, scored, filtered, resolved, extrapolated, postprocessed = detector.detect(corpus=corpus)
     return (rank(scored), rank(filtered),
             rank(resolved), rank(extrapolated), rank(postprocessed))
 
@@ -236,32 +231,6 @@ def rank(participants):
 
     return ranked
 
-def load_corpus(filename, clean):
-    """
-    Load the corpus from the given filename.
-
-    :param filename: The path to the corpus from where to detect participants.
-    :type filename: str
-    :param clean: A boolean indicating whether tweets should be cleaned while loading them.
-    :type clean: bool
-
-    :return: A list of :class:`~nlp.document.Document` making up the corpus.
-    :rtype: list of :class:`~nlp.document.Document`
-    """
-
-    cleaner = TweetCleaner(replace_mentions=True)
-
-    corpus = [ ]
-    with open(filename) as f:
-        for i, line in enumerate(f):
-            tweet = json.loads(line)
-            text = twitter.full_text(tweet)
-            text = cleaner.clean(text, tweet) if clean else text
-            document = Document(text)
-            corpus.append(document)
-
-    return corpus
-
 def create_model(model, extractor, scorer, filter, corpus, tfidf=None, *args, **kwargs):
     """
     Create a participant detector model from the given components.
@@ -289,11 +258,11 @@ def create_model(model, extractor, scorer, filter, corpus, tfidf=None, *args, **
         if tfidf is None:
             raise ValueError("The TF-IDF scheme is required with the ELDParticipantDetector model.")
         scheme = tools.load(tfidf)['tfidf']
-        return model(scheme=scheme, corpus=corpus, extractor=extractor, scorer=scorer, filter=filter)
+        return model(scheme=scheme, corpus=corpus, extractor=extractor, scorer=scorer, filter=filter, *args, **kwargs)
     elif model.__name__ == ParticipantDetector.__name__:
         extractor = extractor or local.EntityExtractor()
         scorer = scorer or TFScorer()
-        return model(extractor, scorer, filter)
+        return model(extractor, scorer, filter, *args, **kwargs)
 
 def create_extractor(extractor, *args, **kwargs):
     """
