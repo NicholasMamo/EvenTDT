@@ -12,10 +12,12 @@ for path in paths:
     if path not in sys.path:
         sys.path.append(path)
 
+from logger import logger
 from ner_participant_detector import NERParticipantDetector
-
 from nlp.document import Document
 from nlp.tokenizer import Tokenizer
+
+logger.set_logging_level(logger.LogLevel.WARNING)
 
 class TestNERParticipantDetector(unittest.TestCase):
     """
@@ -27,36 +29,20 @@ class TestNERParticipantDetector(unittest.TestCase):
         Test extracting named entities.
         """
 
-        """
-        Create the test data.
-        """
-        tokenizer = Tokenizer(stem=False)
-        posts = [
-            "Liverpool falter against Tottenham Hotspur",
-            "Mourinho under pressure as Tottenham follow with a loss",
-        ]
-        corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+        path = os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
         detector = NERParticipantDetector()
+        _, _, _, resolved, _, _ = detector.detect(corpus=path)
 
-        participants, _, _ = detector.detect(corpus)
-        self.assertEqual(set([ 'liverpool', 'tottenham hotspur', 'tottenham', 'mourinho' ]), set(participants))
+        self.assertTrue('chelsea' in resolved)
 
     def test_named_entity_sorting(self):
         """
         Test that the named entities are sorted in descending order of their frequency.
         """
 
-        """
-        Create the test data.
-        """
-        tokenizer = Tokenizer(stem=False)
-        posts = [
-            "Tottenham in yet another loss, this time against Chelsea",
-            "Another loss for Tottenham as Mourinho sees red",
-            "Mourinho's Tottenham lose again",
-        ]
-        corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+        path = os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
         detector = NERParticipantDetector()
+        _, scored, _, resolved, _, _ = detector.detect(corpus=path)
 
-        participants, unresolved, _ = detector.detect(corpus)
-        self.assertEqual([ 'tottenham', 'mourinho', 'chelsea' ], participants)
+        self.assertTrue(all( scored[list(resolved.keys())[i]] >= scored[list(resolved.keys())[i + 1]]
+                             for i in range(len(resolved) - 1) ))
