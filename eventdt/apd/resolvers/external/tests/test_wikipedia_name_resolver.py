@@ -34,108 +34,71 @@ class TestWikipediaNameResolver(unittest.TestCase):
         Test the Wikipedia name resolver.
         """
 
-        """
-        Create the test data
-        """
+        path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
         tokenizer = Tokenizer(min_length=1, stem=False)
-        posts = [
-            "Manchester United falter against Burnley",
-        ]
-        corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+        resolver = WikipediaNameResolver(TF(), tokenizer, 0, path)
+        resolved, unresolved = resolver.resolve({ 'Chelsea F.C.': 1, 'Maurizio Sarri': 0.5 })
 
-        candidates = EntityExtractor().extract(corpus, binary=True)
-        scores = TFScorer().score(candidates)
-        scores = ThresholdFilter(0).filter(scores)
-
-        resolver = WikipediaNameResolver(TF(), tokenizer, 0, corpus)
-        resolved, unresolved = resolver.resolve(scores)
-
-        self.assertTrue('manchester united' in resolved)
-        self.assertTrue('burnley' in resolved)
+        self.assertTrue('Chelsea F.C.' in resolved)
+        self.assertTrue('Maurizio Sarri' in resolved)
 
     def test_all_resolved_or_unresolved(self):
         """
         Test that the resolver either resolves or does not resolve named entities.
         """
 
-        """
-        Create the test data
-        """
+        path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
         tokenizer = Tokenizer(min_length=1, stem=False)
-        posts = [
-            "Manchester United falter against Burnley",
-        ]
-        corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
-
-        candidates = EntityExtractor().extract(corpus, binary=True)
-        scores = TFScorer().score(candidates)
-        scores = ThresholdFilter(0).filter(scores)
-
-        resolver = WikipediaNameResolver(TF(), tokenizer, 0, corpus)
+        resolver = WikipediaNameResolver(TF(), tokenizer, 0, path)
+        scores = { 'Chelsea F.C.': 1, 'Maurizio Sarri': 0.5, 'Callum': 0.25, 'EvenTDT': 0.1 }
         resolved, unresolved = resolver.resolve(scores)
-        self.assertEqual(len(scores), len(resolved + unresolved))
+        self.assertTrue(all( candidate in resolved or candidate in unresolved for candidate in scores ))
 
     def test_random_string_unresolved(self):
         """
         Test that a random string is unresolved.
         """
 
-        random_string = ''.join(random.choice(string.ascii_lowercase + string.digits) for i in range(32))
-
+        path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
         tokenizer = Tokenizer(min_length=1, stem=False)
-        resolver = WikipediaNameResolver(TF(), tokenizer, 0, [ ])
-        resolved, unresolved = resolver.resolve({ random_string: 1 })
+        resolver = WikipediaNameResolver(TF(), tokenizer, 0, path)
+        random_string = ''.join(random.choice(string.ascii_lowercase + string.digits) for i in range(32))
+        scores = { random_string: 1 }
+        resolved, unresolved = resolver.resolve(scores)
         self.assertTrue(random_string in unresolved)
 
-    def test_low_threshold(self):
+    def test_zero_threshold(self):
         """
         Test that when the threshold is zero, it includes all ambiguous candidates.
         """
 
-        """
-        Create the test data
-        """
-        tokenizer = Tokenizer(min_length=2, stem=True, stopwords=list(stopwords.words("english")))
-        posts = [
-            "Memphis mum about his future at Lyon after the Dutch footballer wins it for the Ligue 1 team",
-        ]
-        corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
-
-        candidates = EntityExtractor().extract(corpus, binary=True)
-        scores = TFScorer().score(candidates)
-
-        resolver = WikipediaNameResolver(TF(), tokenizer, 0.1, corpus)
+        path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
+        tokenizer = Tokenizer(min_length=1, stem=False, stopwords=list(stopwords.words("english")))
+        resolver = WikipediaNameResolver(TF(), tokenizer, 0, path)
+        scores = { 'Chelsea F.C.': 1, 'Maurizio Sarri': 0.5, 'Callum': 0.25, 'Eden': 0.1 }
         resolved, unresolved = resolver.resolve(scores)
-        self.assertTrue('Memphis Depay' in resolved)
-        self.assertFalse(unresolved)
+        self.assertTrue('Eden Hazard' in resolved)
 
     def test_low_threshold(self):
         """
         Test that when the threshold is not zero, it excludes some ambiguous candidates.
         """
 
-        """
-        Create the test data
-        """
-        tokenizer = Tokenizer(min_length=2, stem=True, stopwords=list(stopwords.words("english")))
-        posts = [
-            "Memphis mum about his future at Lyon after the Dutch footballer wins it for the Ligue 1 team",
-        ]
-        corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
-
-        candidates = EntityExtractor().extract(corpus, binary=True)
-        scores = TFScorer().score(candidates)
-
-        resolver = WikipediaNameResolver(TF(), tokenizer, 0.4, corpus)
+        path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
+        tokenizer = Tokenizer(min_length=1, stem=False, stopwords=list(stopwords.words("english")))
+        resolver = WikipediaNameResolver(TF(), tokenizer, 0.5, path)
+        scores = { 'Chelsea F.C.': 1, 'Maurizio Sarri': 0.5, 'Callum': 0.25, 'Eden': 0.1 }
         resolved, unresolved = resolver.resolve(scores)
-        self.assertTrue('Memphis' in unresolved)
+        self.assertFalse('Eden Hazard' in resolved)
+        self.assertTrue('Eden' in unresolved)
 
     def test_resolve_empty(self):
         """
         Test that when resolving an empty set of candidates, the resolver returns empty lists.
         """
 
-        resolver = WikipediaNameResolver(TF(), Tokenizer(), 0, [ ])
+        path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'empty.json')
+        resolver = WikipediaNameResolver(TF(), Tokenizer(), 0, path)
         resolved, unresolved = resolver.resolve({ })
         self.assertFalse(len(resolved))
         self.assertFalse(len(unresolved))
@@ -145,45 +108,26 @@ class TestWikipediaNameResolver(unittest.TestCase):
         Test that the resolver sorts the named entities in descending order of score.
         """
 
-        """
-        Create the test data
-        """
-        tokenizer = Tokenizer(min_length=3, stem=False, case_fold=True)
-        posts = [
-            "Manchester United falter against Manchester City",
-            "Manchester United unable to avoid defeat to Watford",
-            "Watford lose again",
-        ]
-        corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+        path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
+        tokenizer = Tokenizer(min_length=1, stem=False, stopwords=list(stopwords.words("english")))
+        resolver = WikipediaNameResolver(TF(), tokenizer, 0, path)
+        scores = { 'Chelsea F.C.': 1, 'Maurizio Sarri': 0.5, 'Callum': 0.1, 'Eden Hazard': 0.25 }
+        resolved, unresolved = resolver.resolve(scores)
 
-        candidates = EntityExtractor().extract(corpus, binary=True)
-        scores = TFScorer().score(candidates)
-        scores = ThresholdFilter(0).filter(scores)
-        resolved, unresolved = WikipediaNameResolver(TF(), tokenizer, 0, corpus).resolve(scores)
-        self.assertEqual('manchester united', resolved[0])
-        self.assertEqual('watford', resolved[1])
-        self.assertEqual('manchester city', resolved[2])
+        order = sorted(scores, key=scores.get, reverse=True)
+        self.assertEqual(order, resolved)
 
     def test_sorting_ambiguous(self):
         """
         Test that the resolver sorts the named entities in descending order of score, but ambiguous candidates are at the end.
         """
 
-        """
-        Create the test data
-        """
-        tokenizer = Tokenizer(min_length=3, stem=False, case_fold=True)
-        posts = [
-            "Manchester United falter against Manchester City",
-            "Manchester United unable to avoid defeat to Tottenham",
-            "Tottenham lose again",
-        ]
-        corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
+        path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
+        tokenizer = Tokenizer(min_length=1, stem=False, stopwords=list(stopwords.words("english")))
+        resolver = WikipediaNameResolver(TF(), tokenizer, 0, path)
+        scores = { 'Chelsea F.C.': 1, 'Maurizio Sarri': 0.5, 'Callum': 0.1, 'Eden': 0.25 }
+        resolved, unresolved = resolver.resolve(scores)
 
-        candidates = EntityExtractor().extract(corpus, binary=True)
-        scores = TFScorer().score(candidates)
-        scores = ThresholdFilter(0).filter(scores)
-        resolved, unresolved = WikipediaNameResolver(TF(), tokenizer, 0, corpus).resolve(scores)
-        self.assertEqual('manchester united', resolved[0])
-        self.assertEqual('manchester city', resolved[1])
-        self.assertEqual('tottenham', resolved[2])
+        order = sorted(scores, key=scores.get, reverse=True)
+        order.remove('Eden')
+        self.assertEqual(order + [ 'Eden Hazard' ], resolved)
