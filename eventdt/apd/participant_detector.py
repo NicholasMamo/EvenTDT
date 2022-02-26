@@ -100,8 +100,8 @@ class ParticipantDetector(object):
         """
         Identify participants in the corpus.
 
-        :param corpus: The corpus of documents from where to identify participants.
-        :type corpus: list of :class:`~nlp.document.Document`
+        :param corpus: The path to the corpus of documents from where to identify participants.
+        :type corpus: str
 
         :return: A three-tuple, made up of the resolved, unresolved and extrapolated participants respectively.
         :rtype: tuple of list of str

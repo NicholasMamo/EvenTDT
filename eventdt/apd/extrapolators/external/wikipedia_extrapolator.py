@@ -94,13 +94,13 @@ class WikipediaExtrapolator(Extrapolator):
         """
         Create the extrapolator.
 
-        :param corpus: The path to the corpus of documents.
-        :type corpus: str
-        :param tokenizer: The tokenizer to use to create documents.
-        :type tokenizer: :class:`~nlp.tokenizer.Tokenizer`
         :param scheme: The term-weighting scheme to use to create documents from Wikipedia pages.
                        These documents are used to compare the similarity with the domain of the candidates.
         :type scheme: :class:`~nlp.weighting.TermWeightingScheme`
+        :param tokenizer: The tokenizer to use to create documents.
+        :type tokenizer: :class:`~nlp.tokenizer.Tokenizer`
+        :param corpus: The path to the corpus of documents.
+        :type corpus: str
         :param threshold: The similarity threshold beyond which new participants are are added.
         :type threshold: float
         :param first_level_links: The number of first-level links to retain.

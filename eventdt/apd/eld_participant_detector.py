@@ -26,6 +26,7 @@ for path in paths:
         sys.path.append(path)
 
 from participant_detector import ParticipantDetector
+from extractors.local import EntityExtractor
 from scorers.local import TFScorer
 from filters.local import RankFilter
 from resolvers.external import WikipediaSearchResolver
@@ -57,7 +58,7 @@ class ELDParticipantDetector(ParticipantDetector):
         :param scheme: The term-weighting scheme to use by the :class:`~apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver` and :class:`~apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator`.
                        These documents are used to compare the similarity with the domain of the candidates.
         :type scheme: :class:`~nlp.weighting.TermWeightingScheme`
-        :param corpus: The corpus of documents.
+        :param corpus: The path to the corpus of documents.
                        These documents may be tokenized already, but this class re-tokenizes them with its own :class:`~nlp.tokenizer.Tokenizer`.
         :type corpus: list of :class:`~nlp.document.Document`
         :param extractor: The participant detector's extractor.
@@ -92,8 +93,6 @@ class ELDParticipantDetector(ParticipantDetector):
         tokenizer = Tokenizer(stopwords=stopwords.words('english'),
                               normalize_words=True, character_normalization_count=3,
                               remove_unicode_entities=True)
-        if scheme:
-            corpus = self._tokenize_corpus(corpus, scheme, tokenizer)
 
         """
         Set up the ELD participant detector.
@@ -104,30 +103,8 @@ class ELDParticipantDetector(ParticipantDetector):
         scorer = scorer or TFScorer()
         filter = filter or RankFilter(20)
         resolver = resolver or WikipediaSearchResolver(scheme, tokenizer, 0.05, corpus)
-        extrapolator = extrapolator or WikipediaExtrapolator(corpus, tokenizer, scheme, 0.05,
+        extrapolator = extrapolator or WikipediaExtrapolator(scheme, tokenizer, corpus, threshold=0.05,
                                                              first_level_links=100, second_level_links=500)
         postprocessor = postprocessor or WikipediaPostprocessor()
 
         super().__init__(extractor, scorer, filter, resolver, extrapolator, postprocessor)
-
-    def _tokenize_corpus(self, corpus, scheme, tokenizer):
-        """
-        Tokenize the corpus.
-
-        :param corpus: The corpus of documents to tokenize.
-        :type corpus: list of :class:`~nlp.document.Document`
-        :param scheme: The term-weighting scheme to use by the :class:`~apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver` and :class:`~apd.extrapolators.external.wikipedia_extrapolator.WikipediaExtrapolator`.
-                       These documents are used to compare the similarity with the domain of the candidates.
-        :type scheme: :class:`~nlp.weighting.TermWeightingScheme`
-        :param tokenizer: The tokenizer to use to create the new documents.
-        :type tokenizer: :class:`~nlp.tokenizer.Tokenizer`
-
-        :return: The corpus, tokenized anew.
-        :rtype: list of :class:`~nlp.document.Document`
-        """
-
-        corpus = [ scheme.create(text=document.text, tokens=tokenizer.tokenize(document.text))
-                   for document in corpus ]
-        for document in corpus:
-            document.normalize()
-        return corpus
