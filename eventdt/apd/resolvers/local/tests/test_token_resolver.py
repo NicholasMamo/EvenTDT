@@ -126,10 +126,10 @@ class TestTokenResolver(unittest.TestCase):
         scores = TFScorer().score(candidates)
         scores = ThresholdFilter(0).filter(scores)
         resolved, unresolved = TokenResolver(tokenizer, path, case_fold=False).resolve(scores)
-        self.assertTrue('Chelsea' in resolved)
+        self.assertEqual('Chelsea', resolved.get('chelsea'))
 
         resolved, unresolved = TokenResolver(tokenizer, path, case_fold=True).resolve(scores)
-        self.assertTrue('chelsea' in resolved)
+        self.assertEqual('chelsea', resolved.get('chelsea'))
 
     def test_case_folding_all_lower(self):
         """
@@ -155,5 +155,6 @@ class TestTokenResolver(unittest.TestCase):
         scores = TFScorer().score(candidates)
         scores = ThresholdFilter(0).filter(scores)
         resolved, unresolved = TokenResolver(tokenizer, path).resolve(scores)
+        resolved = list(resolved) # convert the dictionary keys into a list
 
         self.assertLess(resolved.index('chelsea'), resolved.index('sarri'))

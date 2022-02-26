@@ -64,10 +64,10 @@ class TokenResolver(Resolver):
         :type candidates: dict
 
         :return: A tuple containing the resolved and unresolved candidates respectively.
-        :rtype: tuple of lists
+        :rtype: tuple of dict and list
         """
 
-        unresolved_candidates, resolved_candidates = [], []
+        resolved_candidates, unresolved_candidates = { }, [ ]
 
         """
         Generate the inverted index.
@@ -83,7 +83,7 @@ class TokenResolver(Resolver):
         candidates = sorted(candidates.keys(), key=lambda candidate: candidates.get(candidate), reverse=True)
         for candidate in candidates:
             if candidate in inverted_index:
-                resolved_candidates.append(inverted_index.get(candidate))
+                resolved_candidates[candidate] = inverted_index.get(candidate)
             else:
                 unresolved_candidates.append(candidate)
 

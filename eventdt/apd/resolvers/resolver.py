@@ -38,7 +38,7 @@ class Resolver(object):
         :return: A tuple containing the resolved and unresolved candidates respectively.
                  The base resolver resolves all candidates to the same candidates.
                  Therefore unresolved candidates are empty.
-        :rtype: tuple of lists
+        :rtype: tuple of dict and list
         """
 
         return (list(sorted(candidates.keys(), key=lambda candidate: candidates.get(candidate), reverse=True)), [ ])
