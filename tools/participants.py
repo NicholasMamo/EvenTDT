@@ -310,7 +310,7 @@ def create_scorer(scorer, *args, **kwargs):
 
     return scorer() if scorer else scorer
 
-def create_filter(filter, keep=None, filter_threshold=None, *args, **kwargs):
+def create_filter(filter, keep=None, *args, **kwargs):
     """
     Create a filter from the given class.
 
@@ -319,9 +319,6 @@ def create_filter(filter, keep=None, filter_threshold=None, *args, **kwargs):
     :param keep: The number of candidates to retain when filtering.
                  This is used only with the :class:`~apd.filters.local.rank_filter.RankFilter`.
     :type keep: int
-    :param filter_threshold: The score threshold to use when filtering candidates.
-                             This is used only with the :class:`~appd.filters.local.threshold_filter.ThresholdFilter`.
-    :type filter_threshold: float
 
     :raises ValueError: When a :class:`~apd.filters.local.rank_filter.RankFilter` is to be created, but _k_ is not given.
     :raises ValueError: When a :class:`~appd.filters.local.threshold_filter.ThresholdFilter` is to be created, but the threshold is not given.
@@ -329,6 +326,8 @@ def create_filter(filter, keep=None, filter_threshold=None, *args, **kwargs):
     :return: The created filter.
     :class:`~apd.filters.filter.Filter`
     """
+
+    _kwargs = tools.remove_prefix('filter_', **kwargs)
 
     if not filter:
         return filter
@@ -338,9 +337,9 @@ def create_filter(filter, keep=None, filter_threshold=None, *args, **kwargs):
             raise ValueError("The Rank Filter requires the `keep` parameter (the number of candidates to retain).")
         return filter(int(keep))
     if filter.__name__ == ThresholdFilter.__name__:
-        if filter_threshold is None:
+        if _kwargs.get('threshold') is None:
             raise ValueError("The Threshold Filter requires the `threshold` parameter (the minimum score of a candidate to retain it).")
-        return filter(float(filter_threshold))
+        return filter(**_kwargs)
 
     return filter()
 
