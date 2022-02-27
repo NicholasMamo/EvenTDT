@@ -116,8 +116,11 @@ class ParticipantDetector(object):
         logger.info(f"Resolved { ', '.join(resolved) }")
         extrapolated = self.extrapolator.extrapolate(resolved)
 
-        postprocessed = (self.postprocessor.postprocess([ str(participant) for participant in resolved.values() ]) +
-                         self.postprocessor.postprocess(list(extrapolated)))
+        presolved = self.postprocessor.postprocess([ str(participant) for participant in resolved.values() ])
+        pextrapolated = self.postprocessor.postprocess(list(extrapolated))
+        postprocessed = { participant: _postprocessed
+                          for participant, _postprocessed in (list(presolved.items()) + list(pextrapolated.items())) }
+        
         logger.info(f"Resolved { ', '.join(resolved) }")
         logger.info(f"Extrapolated { ', '.join(extrapolated) }")
 
