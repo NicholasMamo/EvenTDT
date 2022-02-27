@@ -42,17 +42,19 @@ For example, this snippet uses the :class:`~apd.extractors.local.entity_extracto
 
 Accepted arguments:
 
-    - ``-f --file``             *<Required>* The input corpus from where to extract participants.
-    - ``-o --output``           *<Required>* The path to the file where to store the extracted participants.
-    - ``-m --model``            *<Optional>* The type of model to use; supported: `ELDParticipantDetector`; defaults to a normal participant detector.
-    - ``--extractor``           *<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.
-    - ``--scorer``              *<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
-    - ``--filter``              *<Optional>* The filter to use to filter candidate participants; supported: `Filter`, `RankFilter`, `ThresholdFilter`; defaults to no filter.
-    - ``--resolver``            *<Optional>* The resolver to use to resolve candidate participants; supported: `Resolver`, `TokenResolver`, `WikipediaNameResolver`, `WikipediaSearchResolver`; defaults to no filter.
-    - ``--extrapolator``        *<Optional>* The extrapolator to use to extrapolate participants; supported: `Extrapolator`, `WikipediaExtrapolator`; defaults to no extrapolator.
-    - ``-k --keep``             *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
-    - ``--filter-threshold``    *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).
-    - ``--scheme``              *<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
+    - ``-f --file``                *<Required>* The input corpus from where to extract participants.
+    - ``-o --output``              *<Required>* The path to the file where to store the extracted participants.
+    - ``-m --model``               *<Optional>* The type of model to use; supported: `ELDParticipantDetector`; defaults to a normal participant detector.
+    - ``--extractor``              *<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.
+    - ``--scorer``                 *<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
+    - ``--filter``                 *<Optional>* The filter to use to filter candidate participants; supported: `Filter`, `RankFilter`, `ThresholdFilter`; defaults to no filter.
+    - ``--resolver``               *<Optional>* The resolver to use to resolve candidate participants; supported: `Resolver`, `TokenResolver`, `WikipediaNameResolver`, `WikipediaSearchResolver`; defaults to no filter.
+    - ``--extrapolator``           *<Optional>* The extrapolator to use to extrapolate participants; supported: `Extrapolator`, `WikipediaExtrapolator`; defaults to no extrapolator.
+    - ``-k --keep``                *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
+    - ``--filter-threshold``       *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`); defaults to 0.
+    - ``--resolver-threshold``     *<Optional>* The threshold to use when resolving candidates (used only with the `WikipediaNameResolver` and `WikipediaSearchResolver`).
+    - ``--extrapolator-threshold`` *<Optional>* The threshold to use when extrapolating candidates (used only with the `WikipediaExtrapolator`); defaults to 0.
+    - ``--scheme``                 *<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
 """
 
 import argparse
@@ -95,17 +97,19 @@ def setup_args():
 
     Accepted arguments:
 
-        - ``-f --file``             *<Required>* The input corpus from where to extract participants.
-        - ``-o --output``           *<Required>* The path to the file where to store the extracted participants.
-        - ``-m --model``            *<Optional>* The type of model to use; supported: `ELDParticipantDetector`; defaults to a normal participant detector.
-        - ``--extractor``           *<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.
-        - ``--scorer``              *<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
-        - ``--filter``              *<Optional>* The filter to use to filter candidate participants; supported: `Filter`, `RankFilter`, `ThresholdFilter`; defaults to no filter.
-        - ``--resolver``            *<Optional>* The resolver to use to resolve candidate participants; supported: `Resolver`, `TokenResolver`, `WikipediaNameResolver`, `WikipediaSearchResolver`; defaults to no resolver.
-        - ``--extrapolator``        *<Optional>* The extrapolator to use to extrapolate participants; supported: `Extrapolator`, `WikipediaExtrapolator`; defaults to no extrapolator.
-        - ``-k --keep``             *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
-        - ``--filter-threshold``    *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).
-        - ``--scheme``              *<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
+        - ``-f --file``                *<Required>* The input corpus from where to extract participants.
+        - ``-o --output``              *<Required>* The path to the file where to store the extracted participants.
+        - ``-m --model``               *<Optional>* The type of model to use; supported: `ELDParticipantDetector`; defaults to a normal participant detector.
+        - ``--extractor``              *<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.
+        - ``--scorer``                 *<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
+        - ``--filter``                 *<Optional>* The filter to use to filter candidate participants; supported: `Filter`, `RankFilter`, `ThresholdFilter`; defaults to no filter.
+        - ``--resolver``               *<Optional>* The resolver to use to resolve candidate participants; supported: `Resolver`, `TokenResolver`, `WikipediaNameResolver`, `WikipediaSearchResolver`; defaults to no resolver.
+        - ``--extrapolator``           *<Optional>* The extrapolator to use to extrapolate participants; supported: `Extrapolator`, `WikipediaExtrapolator`; defaults to no extrapolator.
+        - ``-k --keep``                *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
+        - ``--filter-threshold``       *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`); defaults to 0.
+        - ``--resolver-threshold``     *<Optional>* The threshold to use when resolving candidates (used only with the `WikipediaNameResolver` and `WikipediaSearchResolver`); defaults to 0.
+        - ``--extrapolator-threshold`` *<Optional>* The threshold to use when extrapolating candidates (used only with the `WikipediaExtrapolator`); defaults to 0.
+        - ``--scheme``                 *<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
@@ -130,9 +134,11 @@ def setup_args():
     parser.add_argument('-k', '--keep', required=False, type=int,
                         help='<Optional> The number of candidates to retain when filtering candidates (used only with the `RankFilter`).')
     parser.add_argument('--filter-threshold', required=False, default=0,
-                        help='<Optional> The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).')
+                        help='<Optional> The score threshold to use when filtering candidates (used only with the `ThresholdFilter`); defaults to 0.')
     parser.add_argument('--resolver-threshold', required=False, default=0,
-                        help='<Optional> The threshold to use when resolving candidates (used only with the `WikipediaNameResolver` and `WikipediaSearchResolver`).')
+                        help='<Optional> The threshold to use when resolving candidates (used only with the `WikipediaNameResolver` and `WikipediaSearchResolver`); defaults to 0.')
+    parser.add_argument('--extrapolator-threshold', required=False, default=0,
+                        help='<Optional> The threshold to use when extrapolating candidates (used only with the `WikipediaExtrapolator`); defaults to 0..')
     parser.add_argument('--scheme', required=False, default=None,
                         help='<Optional> The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).')
 
@@ -154,7 +160,7 @@ def main():
     args = vars(args)
     detector = create_detector(model=args.pop('model'), extractor=args.pop('extractor'),
                                scorer=args.pop('scorer'), filter=args.pop('filter'),
-                               resolver=args.pop('resolver'), **args)
+                               resolver=args.pop('resolver'), extrapolator=args.pop('extrapolator'), **args)
 
     cmd['model'], pcmd['model'] = str(type(detector).__name__), str(type(detector).__name__)
     cmd['extractor'], pcmd['extractor'] = str(type(detector.extractor).__name__), str(type(detector.extractor).__name__)
@@ -169,7 +175,7 @@ def main():
                                  'scored': scored, 'filtered': filtered,
                                  'resolved': resolved, 'extrapolated': extrapolated, 'postprocessed': postprocessed })
 
-def create_detector(model, extractor, scorer, filter, resolver, *args, **kwargs):
+def create_detector(model, extractor, scorer, filter, resolver, extrapolator, *args, **kwargs):
     """
     Create all the components of the participant detector.
 
@@ -183,6 +189,8 @@ def create_detector(model, extractor, scorer, filter, resolver, *args, **kwargs)
     :type filter: :class:`~apd.filters.filter.Filter`
     :param resolver: The class of the resolver with which to resolve candidate participants.
     :type resolver: :class:`~apd.resolvers.resolver.Resolver`
+    :param extrapolator: The class of the extrapolator with which to extrapolate candidate participants.
+    :type extrapolator: :class:`~apd.extrapolators.extrapolator.Extrapolator`
 
     :return: The created participant detector.
     :rtype: :class:`~apd.participant_detector.ParticipantDetector`
@@ -192,7 +200,8 @@ def create_detector(model, extractor, scorer, filter, resolver, *args, **kwargs)
     scorer = create_scorer(scorer, *args, **kwargs)
     filter = create_filter(filter, *args, **kwargs)
     resolver = create_resolver(resolver, *args, **kwargs)
-    detector = create_model(model, extractor, scorer, filter, resolver, *args, **kwargs)
+    extrapolator = create_extrapolator(extrapolator, *args, **kwargs)
+    detector = create_model(model, extractor, scorer, filter, resolver, extrapolator, *args, **kwargs)
     logger.info(f"Extractor: { type(detector.extractor).__name__ }")
     logger.info(f"Scorer: { type(detector.scorer).__name__ }")
     logger.info(f"Filter: { type(detector.filter).__name__ }")
@@ -358,8 +367,6 @@ def create_resolver(resolver, *args, **kwargs):
 
     :param resolver: The class of the resolver with which to resolve candidate participants.
     :type resolver: type or None
-    :param scheme: The path the TF-IDF scheme.
-    :type scheme: str
 
     :return: The created resolver.
     :rtype: :class:`~apd.resolvers.resolver.Resolver`
@@ -384,6 +391,34 @@ def create_resolver(resolver, *args, **kwargs):
         return resolver(tokenizer=tokenizer, corpus=_kwargs.pop('file'), scheme=scheme, **_kwargs)
 
     return resolver()
+
+def create_extrapolator(extrapolator, *args, **kwargs):
+    """
+    Create a extrapolator from the given class.
+
+    :param extrapolator: The class of the extrapolator with which to resolve candidate participants.
+    :type extrapolator: type or None
+
+    :return: The created extrapolator.
+    :rtype: :class:`~apd.resolvers.extrapolator.Resolver`
+    """
+
+    _kwargs = tools.remove_prefix('extrapolator_', **kwargs)
+
+    if not extrapolator:
+        return extrapolator
+
+    if extrapolator.__name__ == WikipediaExtrapolator.__name__:
+        if _kwargs.get('scheme') is None:
+            raise ValueError(f"The { extrapolator.__name__ } requires the term-weighting `scheme` parameter.")
+
+        if _kwargs.get('threshold') is None:
+            raise ValueError(f"The { extrapolator.__name__ } requires the `threshold` parameter (the minimum score of a candidate to accept it as a participant).")
+
+        scheme = tools.load(_kwargs.pop('scheme'))['tfidf']
+        return extrapolator(tokenizer=tokenizer, corpus=_kwargs.pop('file'), scheme=scheme, **_kwargs)
+
+    return extrapolator()
 
 def model(method):
     """

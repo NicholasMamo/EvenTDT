@@ -90,7 +90,7 @@ class WikipediaExtrapolator(Extrapolator):
 
     def __init__(self, scheme, tokenizer, corpus, threshold=0,
                  first_level_links=100, second_level_links=1000,
-                 first_level_similarity=0, second_level_similarity=0.5):
+                 first_level_similarity=0, second_level_similarity=0.5, *args, **kwargs):
         """
         Create the extrapolator.
 
