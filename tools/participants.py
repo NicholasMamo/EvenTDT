@@ -81,7 +81,7 @@ from nlp.document import Document
 from nlp.tokenizer import Tokenizer
 import twitter
 
-tokenizer = Tokenizer(stem=False, stopwords=list(stopwords.words("english")))
+tokenizer = Tokenizer(stem=True, split_hashtags=False, stopwords=list(stopwords.words("english")))
 """
 A common tokenizer used by all extractors, resolvers and extrapolators.
 """
@@ -126,6 +126,8 @@ def setup_args():
                         help='<Optional> The number of candidates to retain when filtering candidates (used only with the `RankFilter`).')
     parser.add_argument('--filter-threshold', required=False,
                         help='<Optional> The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).')
+    parser.add_argument('--filter-threshold', required=False,
+                        help='<Optional> The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).')
     parser.add_argument('--scheme', required=False, default=None,
                         help='<Optional> The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).')
 
@@ -147,6 +149,7 @@ def main():
     args = vars(args)
     detector = create_detector(model=args.pop('model'), extractor=args.pop('extractor'),
                                scorer=args.pop('scorer'), filter=args.pop('filter'),
+                               resolver=args.pop('resolver'),
                                corpus=args['file'], **args)
 
     cmd['model'], pcmd['model'] = str(type(detector).__name__), str(type(detector).__name__)
@@ -162,7 +165,7 @@ def main():
                                  'scored': scored, 'filtered': filtered,
                                  'resolved': resolved, 'extrapolated': extrapolated, 'postprocessed': postprocessed })
 
-def create_detector(model, extractor, scorer, filter, corpus=None, *args, **kwargs):
+def create_detector(model, extractor, scorer, filter, resolver, *args, **kwargs):
     """
     Create all the components of the participant detector.
 
@@ -174,8 +177,8 @@ def create_detector(model, extractor, scorer, filter, corpus=None, *args, **kwar
     :type scorer: :class:`~apd.scorers.scorer.Scorer`
     :param filter: The class of the filter with which to filter candidate participants.
     :type filter: :class:`~apd.filters.filter.Filter`
-    :param corpus: A list of :class:`~nlp.document.Document` making up the corpus.
-    :type corpus: list of :class:`~nlp.document.Document`
+    :param resolver: The class of the resolver with which to resolve candidate participants.
+    :type resolver: :class:`~apd.resolvers.resolver.Resolver`
 
     :return: The created participant detector.
     :rtype: :class:`~apd.participant_detector.ParticipantDetector`
@@ -184,7 +187,8 @@ def create_detector(model, extractor, scorer, filter, corpus=None, *args, **kwar
     extractor = create_extractor(extractor, *args, **kwargs)
     scorer = create_scorer(scorer, *args, **kwargs)
     filter = create_filter(filter, *args, **kwargs)
-    detector = create_model(model, extractor, scorer, filter, corpus=corpus, *args, **kwargs)
+    resolver = create_resolver(resolver, *args, **kwargs)
+    detector = create_model(model, extractor, scorer, filter, resolver, *args, **kwargs)
     logger.info(f"Extractor: { type(detector.extractor).__name__ }")
     logger.info(f"Scorer: { type(detector.scorer).__name__ }")
     logger.info(f"Filter: { type(detector.filter).__name__ }")
@@ -245,7 +249,7 @@ def rank(participants):
 
     return ranked
 
-def create_model(model, extractor, scorer, filter, corpus, tfidf=None, *args, **kwargs):
+def create_model(model, extractor, scorer, filter, resolver, scheme=None, *args, **kwargs):
     """
     Create a participant detector model from the given components.
 
@@ -257,8 +261,8 @@ def create_model(model, extractor, scorer, filter, corpus, tfidf=None, *args, **
     :type scorer: :class:`~apd.scorers.scorer.Scorer`
     :param filter: The filter with which to filter candidate participants.
     :type filter: :class:`~apd.filters.filter.Filter`
-    :param corpus: A list of :class:`~nlp.document.Document` making up the corpus.
-    :type corpus: list of :class:`~nlp.document.Document`
+    :param resolver: The class of the resolver with which to resolve candidate participants.
+    :type resolver: :class:`~apd.resolvers.resolver.Resolver`
     :param scheme: The path the TF-IDF scheme.
     :type scheme: str
 
@@ -272,12 +276,12 @@ def create_model(model, extractor, scorer, filter, corpus, tfidf=None, *args, **
         if scheme is None:
             raise ValueError("The TF-IDF scheme is required with the ELDParticipantDetector model.")
         scheme = tools.load(scheme)['scheme']
-        return model(scheme=scheme, corpus=corpus, extractor=extractor,
+        return model(scheme=scheme, extractor=extractor,
                      scorer=scorer, filter=filter, resolver=resolver, *args, **kwargs)
     elif model.__name__ == ParticipantDetector.__name__:
         extractor = extractor or local.EntityExtractor(*args, **kwargs)
         scorer = scorer or TFScorer(*args, **kwargs)
-        return model(extractor, scorer, filter, *args, **kwargs)
+        return model(extractor, scorer, filter, resolver, *args, **kwargs)
 
 def create_extractor(extractor, *args, **kwargs):
     """
@@ -343,6 +347,32 @@ def create_filter(filter, keep=None, *args, **kwargs):
         return filter(**_kwargs)
 
     return filter()
+
+def create_resolver(resolver, *args, **kwargs):
+    """
+    Create a resolver from the given class.
+
+    :param resolver: The class of the resolver with which to resolve candidate participants.
+    :type resolver: type or None
+    :param scheme: The path the TF-IDF scheme.
+    :type scheme: str
+
+    :return: The created resolver.
+    :rtype: :class:`~apd.resolvers.resolver.Resolver`
+    """
+
+    _kwargs = tools.remove_prefix('resolver_', **kwargs)
+
+    if not resolver:
+        return resolver
+
+    if resolver.__name__ == TokenResolver.__name__:
+        return resolver(tokenizer=tokenizer, corpus=_kwargs.pop('file'), **_kwargs)
+
+    if resolver.__name__ in (WikipediaNameResolver.__name__, WikipediaSearchResolver.__name__):
+        scheme = tools.load(scheme)['scheme']
+
+    return resolver()
 
 def model(method):
     """

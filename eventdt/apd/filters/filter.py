@@ -15,6 +15,13 @@ class Filter(object):
     The function returns a subset of the input candidates (and their scores) that passed the filtering test.
     """
 
+    def __init__(self, *args, **kwargs):
+        """
+        Create the Filter.
+        """
+
+        pass
+
     def filter(self, candidates, *args, **kwargs):
         """
         Filter candidate participants that are not credible.

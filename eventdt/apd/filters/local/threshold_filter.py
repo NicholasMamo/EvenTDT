@@ -17,7 +17,7 @@ class ThresholdFilter(Filter):
     :vartype threshold: float
     """
 
-    def __init__(self, threshold):
+    def __init__(self, threshold, *args, **kwargs):
         """
         Create the filter with the threshold that will decide whether candidate participants will be retained.
 
