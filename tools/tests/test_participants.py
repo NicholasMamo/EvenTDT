@@ -59,6 +59,46 @@ class TestAPD(unittest.TestCase):
         self.assertEqual(TokenExtractor, type(extractor))
         self.assertEqual(apd.tokenizer, extractor.tokenizer)
 
+    def test_create_extractor_threshold_filter(self):
+        """
+        Test that when creating a threshold filter, the actual threshold is used.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        filter = apd.create_filter(ThresholdFilter, filter_threshold=0.5)
+        self.assertEqual(ThresholdFilter, type(filter))
+        self.assertEqual(0.5, filter.threshold)
+
+    def test_create_extractor_threshold_filter_behaviour(self):
+        """
+        Test that when creating a threshold filter, the actual threshold is used to filter tokens.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, ThresholdFilter, Resolver, corpus=file, filter_threshold=0.2)
+        _, filtered, _, _, _ = apd.detect(detector, corpus=file)
+        self.assertTrue(all( participant['score'] >= 0.2 for participant in filtered ))
+
+    def test_create_extractor_threshold_filter_all(self):
+        """
+        Test that when using the minimum threshold filter, all participants are returned.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, Filter, Resolver, corpus=file)
+        _, _, resolved, _, _ = apd.detect(detector, corpus=file)
+        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, ThresholdFilter, Resolver, filter_threshold=0)
+        _, _, resolved_k, _, _ = apd.detect(detector, corpus=file)
+        self.assertEqual(resolved, resolved_k)
+
+    def test_create_extractor_threshold_filter_missing_threshold(self):
+        """
+        Test that when using the threshold filter without a threshold, a ValueError is raised.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        self.assertRaises(ValueError, apd.create_detector, ParticipantDetector, EntityExtractor, TFScorer, ThresholdFilter, Resolver, corpus=file)
+
     def test_rank_filter_subset(self):
         """
         Test that when using the rank filter, a subset of all participants are returned.
@@ -115,18 +155,6 @@ class TestAPD(unittest.TestCase):
         _, _, resolved_k, _, _ = apd.detect(detector, corpus=file)
         self.assertTrue(all( participant in resolved for participant in resolved_k ))
 
-    def test_threshold_filter_all(self):
-        """
-        Test that when using the minimum threshold filter, all participants are returned.
-        """
-
-        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, Filter, corpus=file)
-        _, _, resolved, _, _ = apd.detect(detector, corpus=file)
-        detector = apd.create_detector(ParticipantDetector, EntityExtractor, TFScorer, ThresholdFilter, threshold=0)
-        _, _, resolved_k, _, _ = apd.detect(detector, corpus=file)
-        self.assertEqual(resolved, resolved_k)
-
     def test_rank_filter_float_threshold(self):
         """
         Test that when using the threshold filter, the threshold is used as a float.
@@ -139,14 +167,6 @@ class TestAPD(unittest.TestCase):
         _, _, strict, _, _ = apd.detect(detector, corpus=file)
         self.assertTrue(all( participant in lenient for participant in strict ))
         self.assertLess(len(strict), len(lenient))
-
-    def test_threshold_filter_missing_threshold(self):
-        """
-        Test that when using the threshold filter without a threshold, a ValueError is raised.
-        """
-
-        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-        self.assertRaises(ValueError, apd.create_detector, ParticipantDetector, EntityExtractor, TFScorer, ThresholdFilter, corpus=file)
 
     def test_eld_participant_detector_missing_tfidf(self):
         """

@@ -49,7 +49,7 @@ Accepted arguments:
     - ``--scorer``              *<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
     - ``--filter``              *<Optional>* The filter to use to filter candidate participants; supported: `RankFilter`, `ThresholdFilter`; defaults to no filter.
     - ``-k --keep``             *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
-    - ``--threshold``           *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).
+    - ``--filter-threshold``    *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).
     - ``--tfidf``               *<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
 """
 
@@ -98,7 +98,7 @@ def setup_args():
         - ``--scorer``              *<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
         - ``--filter``              *<Optional>* The filter to use to filter candidate participants; supported: `RankFilter`, `ThresholdFilter`; defaults to no filter.
         - ``-k --keep``             *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
-        - ``--threshold``           *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).
+        - ``--filter-threshold``    *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).
         - ``--tfidf``               *<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
 
     :return: The command-line arguments.
@@ -119,7 +119,7 @@ def setup_args():
                         help='<Optional> The filter to use to filter candidate participants; supported: `RankFilter`, `ThresholdFilter`; defaults to no filter.')
     parser.add_argument('-k', '--keep', required=False, type=int,
                         help='<Optional> The number of candidates to retain when filtering candidates (used only with the `RankFilter`).')
-    parser.add_argument('--threshold', required=False,
+    parser.add_argument('--filter-threshold', required=False,
                         help='<Optional> The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).')
     parser.add_argument('--tfidf', required=False, default=None,
                         help='<Optional> The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).')
@@ -302,20 +302,24 @@ def create_scorer(scorer, *args, **kwargs):
 
     return scorer() if scorer else scorer
 
-def create_filter(filter, keep=None, threshold=None, *args, **kwargs):
+def create_filter(filter, keep=None, filter_threshold=None, *args, **kwargs):
     """
     Create a filter from the given class.
 
     :param filter: The class of the filter with which to filter candidate participants.
-    :type filter: :class:`~apd.filters.filter.Filter`
+    :type filter: type or None
     :param keep: The number of candidates to retain when filtering.
                  This is used only with the :class:`~apd.filters.local.rank_filter.RankFilter`.
     :type keep: int
-    :param threshold: The score threshold to use when filtering candidates.
-                      This is used only with the :class:`~appd.filters.local.threshold_filter.ThresholdFilter`.
+    :param filter_threshold: The score threshold to use when filtering candidates.
+                             This is used only with the :class:`~appd.filters.local.threshold_filter.ThresholdFilter`.
+    :type filter_threshold: float
 
     :raises ValueError: When a :class:`~apd.filters.local.rank_filter.RankFilter` is to be created, but _k_ is not given.
     :raises ValueError: When a :class:`~appd.filters.local.threshold_filter.ThresholdFilter` is to be created, but the threshold is not given.
+
+    :return: The created filter.
+    :class:`~apd.filters.filter.Filter`
     """
 
     if not filter:
@@ -326,9 +330,9 @@ def create_filter(filter, keep=None, threshold=None, *args, **kwargs):
             raise ValueError("The Rank Filter requires the `keep` parameter (the number of candidates to retain).")
         return filter(int(keep))
     if filter.__name__ == ThresholdFilter.__name__:
-        if threshold is None:
+        if filter_threshold is None:
             raise ValueError("The Threshold Filter requires the `threshold` parameter (the minimum score of a candidate to retain it).")
-        return filter(float(threshold))
+        return filter(float(filter_threshold))
 
     return filter()
 
