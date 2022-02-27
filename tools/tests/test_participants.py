@@ -17,10 +17,10 @@ for path in paths:
 
 from tools import participants as apd
 from eventdt.apd import ELDParticipantDetector, ParticipantDetector
-from eventdt.apd.extractors.local import EntityExtractor
-from eventdt.apd.scorers.local import LogTFScorer, TFScorer
-from eventdt.apd.filters import Filter
-from eventdt.apd.filters.local import RankFilter, ThresholdFilter
+from eventdt.apd.extractors import *
+from eventdt.apd.scorers import *
+from eventdt.apd.filters import *
+from eventdt.apd.resolvers import *
 
 from logger import logger
 logger.set_logging_level(logger.LogLevel.WARNING)
@@ -29,6 +29,35 @@ class TestAPD(unittest.TestCase):
     """
     Test the functionality of the APD tool.
     """
+
+    def test_create_extractor_none(self):
+        """
+        Test that when no extractor is provided, the default extractor is returned.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        extractor = apd.create_extractor(None)
+        self.assertEqual(None, extractor)
+
+    def test_create_extractor_entity_extractor(self):
+        """
+        Test that when the EntityExtractor is provided, the default EntityExtractor is returned.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        extractor = apd.create_extractor(EntityExtractor)
+        self.assertEqual(EntityExtractor, type(extractor))
+        self.assertTrue(extractor.binary)
+
+    def test_create_extractor_token_extractor(self):
+        """
+        Test that when the TokenExtractor is provided, the module-wide tokenizer is used.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        extractor = apd.create_extractor(TokenExtractor)
+        self.assertEqual(TokenExtractor, type(extractor))
+        self.assertEqual(apd.tokenizer, extractor.tokenizer)
 
     def test_rank_filter_subset(self):
         """

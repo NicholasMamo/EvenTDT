@@ -55,6 +55,7 @@ Accepted arguments:
 
 import argparse
 import copy
+from nltk.corpus import stopwords
 import json
 import numbers
 import os
@@ -68,7 +69,7 @@ sys.path.insert(-1, lib)
 
 import tools
 from apd import ParticipantDetector, ELDParticipantDetector
-from apd.extractors import local
+from apd.extractors import *
 from apd.scorers.local import *
 from apd.filters import Filter
 from apd.filters.local import *
@@ -77,6 +78,11 @@ from nlp.cleaners import TweetCleaner
 from nlp.document import Document
 from nlp.tokenizer import Tokenizer
 import twitter
+
+tokenizer = Tokenizer(stem=False, stopwords=list(stopwords.words("english")))
+"""
+A common tokenizer used by all extractors, resolvers and extrapolators.
+"""
 
 parser = argparse.ArgumentParser(description="Extract event participants from the understanding corpora.")
 def setup_args():
@@ -272,10 +278,19 @@ def create_extractor(extractor, *args, **kwargs):
     Create an extractor from the given class.
 
     :param extractor: The class of the extractor with which to extract candidate participants.
-    :type extractor: :class:`~apd.extractors.extractor.Extractor`
+    :type extractor: type or None
+
+    :return: The created extractor.
+    :rtype: :class:`~apd.extractors.extractor.Extractor`
     """
 
-    return extractor() if extractor else extractor
+    if not extractor:
+        return extractor
+
+    if extractor.__name__ == TokenExtractor.__name__:
+        return extractor(tokenizer)
+
+    return extractor()
 
 def create_scorer(scorer, *args, **kwargs):
     """
