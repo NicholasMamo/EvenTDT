@@ -25,8 +25,8 @@ class Extrapolator(object):
         :param participants: The participants found by the resolver.
         :type participants: dict
 
-        :return: The new participants identified as relevant by the extrapolator.
+        :return: The new participants and their scores.
         :rtype: dict
         """
 
-        return [ ]
+        return { }
