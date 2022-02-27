@@ -15,13 +15,14 @@ class Postprocessor(object):
 
     def postprocess(self, participants, *args, **kwargs):
         """
-        Return the same participants as those received.
+        The function returns the mapping from the received participants to the post-processed versions.
+        The basic post-processor changes nothing in the mapping.
 
         :param participants: The participants to postprocess.
         :type participants: list of str
 
         :return: The postprocessed participants.
-        :rtype: list of str
+        :rtype: dict
         """
 
-        return participants
+        return { participant: participant for participant in participants }
