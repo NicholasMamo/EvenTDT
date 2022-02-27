@@ -49,7 +49,7 @@ Accepted arguments:
     - ``--scorer``              *<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
     - ``--filter``              *<Optional>* The filter to use to filter candidate participants; supported: `Filter`, `RankFilter`, `ThresholdFilter`; defaults to no filter.
     - ``--resolver``            *<Optional>* The resolver to use to resolve candidate participants; supported: `Resolver`, `TokenResolver`, `WikipediaNameResolver`, `WikipediaSearchResolver`; defaults to no filter.
-    - ``--extrapolator``        *<Optional>* The extrapolator to use to extrapolate participants; supported: `WikipediaExtrapolator`; defaults to no filter.
+    - ``--extrapolator``        *<Optional>* The extrapolator to use to extrapolate participants; supported: `Extrapolator`, `WikipediaExtrapolator`; defaults to no extrapolator.
     - ``-k --keep``             *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
     - ``--filter-threshold``    *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).
     - ``--scheme``              *<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
@@ -102,7 +102,7 @@ def setup_args():
         - ``--scorer``              *<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
         - ``--filter``              *<Optional>* The filter to use to filter candidate participants; supported: `Filter`, `RankFilter`, `ThresholdFilter`; defaults to no filter.
         - ``--resolver``            *<Optional>* The resolver to use to resolve candidate participants; supported: `Resolver`, `TokenResolver`, `WikipediaNameResolver`, `WikipediaSearchResolver`; defaults to no resolver.
-        - ``--extrapolator``        *<Optional>* The extrapolator to use to extrapolate participants; supported: `WikipediaExtrapolator`; defaults to no extrapolator.
+        - ``--extrapolator``        *<Optional>* The extrapolator to use to extrapolate participants; supported: `Extrapolator`, `WikipediaExtrapolator`; defaults to no extrapolator.
         - ``-k --keep``             *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
         - ``--filter-threshold``    *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).
         - ``--scheme``              *<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
@@ -126,7 +126,7 @@ def setup_args():
     parser.add_argument('--resolver', type=resolver, required=False, default=None,
                         help='<Optional> The resolver to use to resolve candidate participants; supported: `Resolver`, `TokenResolver`, `WikipediaNameResolver`, `WikipediaSearchResolver`; defaults to no filter.')
     parser.add_argument('--extrapolator', type=extrapolator, required=False, default=None,
-                        help='<Optional> The extrapolator to use to extrapolate participants; supported: `WikipediaExtrapolator`; defaults to no extrapolator.')
+                        help='<Optional> The extrapolator to use to extrapolate participants; supported: `Extrapolator`, `WikipediaExtrapolator`; defaults to no extrapolator.')
     parser.add_argument('-k', '--keep', required=False, type=int,
                         help='<Optional> The number of candidates to retain when filtering candidates (used only with the `RankFilter`).')
     parser.add_argument('--filter-threshold', required=False, default=0,
@@ -523,6 +523,7 @@ def extrapolator(method):
     Convert the given string into an extrapolator class.
     The accepted classes are:
 
+        #. :class:`~apd.extrapolators.Extrapolator`
         #. :class:`~apd.extrapolators.external.WikipediaExtrapolator`
 
     :param method: The extrapolator string.
@@ -533,6 +534,7 @@ def extrapolator(method):
     """
 
     methods = {
+        'extrapolator': Extrapolator,
         'wikipediaextrapolator': WikipediaExtrapolator,
     }
 
