@@ -12,7 +12,7 @@ To use a ready-made model, use:
     -f data/understanding.json \\
     --clean \\
     --model ELDParticipantDetector \\
-    --tfidf data/idf.json \\
+    --scheme data/idf.json \\
     -o data/participants.json
 
 Alternatively, you can create your own model:
@@ -36,7 +36,7 @@ For example, this snippet uses the :class:`~apd.extractors.local.entity_extracto
     -f data/understanding.json \\
     --clean \\
     --model ELDParticipantDetector \\
-    --tfidf data/idf.json \\
+    --scheme data/idf.json \\
     --extractor EntityExtractor \\
     -o data/participants.json
 
@@ -51,7 +51,7 @@ Accepted arguments:
     - ``--resolver``            *<Optional>* The resolver to use to resolve candidate participants; supported: `TokenResolver`, `WikipediaNameResolver`, `WikipediaSearchResolver`; defaults to no filter.
     - ``-k --keep``             *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
     - ``--filter-threshold``    *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).
-    - ``--tfidf``               *<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
+    - ``--scheme``               *<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
 """
 
 import argparse
@@ -102,7 +102,7 @@ def setup_args():
         - ``--resolver``            *<Optional>* The resolver to use to resolve candidate participants; supported: `TokenResolver`, `WikipediaNameResolver`, `WikipediaSearchResolver`; defaults to no filter.
         - ``-k --keep``             *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
         - ``--filter-threshold``    *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).
-        - ``--tfidf``               *<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
+        - ``--scheme``               *<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
@@ -126,7 +126,7 @@ def setup_args():
                         help='<Optional> The number of candidates to retain when filtering candidates (used only with the `RankFilter`).')
     parser.add_argument('--filter-threshold', required=False,
                         help='<Optional> The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).')
-    parser.add_argument('--tfidf', required=False, default=None,
+    parser.add_argument('--scheme', required=False, default=None,
                         help='<Optional> The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).')
 
     args = parser.parse_args()
@@ -259,8 +259,8 @@ def create_model(model, extractor, scorer, filter, corpus, tfidf=None, *args, **
     :type filter: :class:`~apd.filters.filter.Filter`
     :param corpus: A list of :class:`~nlp.document.Document` making up the corpus.
     :type corpus: list of :class:`~nlp.document.Document`
-    :param tfidf: The path the TF-IDF scheme.
-    :type tfidf: str
+    :param scheme: The path the TF-IDF scheme.
+    :type scheme: str
 
     :return: A new participant detector model.
     :rtype: :class:`~apd.participant_detector.ParticipantDetector`
@@ -269,10 +269,11 @@ def create_model(model, extractor, scorer, filter, corpus, tfidf=None, *args, **
     """
 
     if model.__name__ == ELDParticipantDetector.__name__:
-        if tfidf is None:
+        if scheme is None:
             raise ValueError("The TF-IDF scheme is required with the ELDParticipantDetector model.")
-        scheme = tools.load(tfidf)['tfidf']
-        return model(scheme=scheme, corpus=corpus, extractor=extractor, scorer=scorer, filter=filter, *args, **kwargs)
+        scheme = tools.load(scheme)['scheme']
+        return model(scheme=scheme, corpus=corpus, extractor=extractor,
+                     scorer=scorer, filter=filter, resolver=resolver, *args, **kwargs)
     elif model.__name__ == ParticipantDetector.__name__:
         extractor = extractor or local.EntityExtractor(*args, **kwargs)
         scorer = scorer or TFScorer(*args, **kwargs)
