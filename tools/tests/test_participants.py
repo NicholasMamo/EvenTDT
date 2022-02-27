@@ -15,13 +15,14 @@ for path in paths:
     if path not in sys.path:
         sys.path.append(path)
 
+import tools
 from tools import participants as apd
 from eventdt.apd import ELDParticipantDetector, ParticipantDetector
 from eventdt.apd.extractors import *
 from eventdt.apd.scorers import *
 from eventdt.apd.filters import *
 from eventdt.apd.resolvers import *
-
+from eventdt.objects.exportable import Exportable
 from logger import logger
 logger.set_logging_level(logger.LogLevel.WARNING)
 
@@ -217,7 +218,7 @@ class TestAPD(unittest.TestCase):
         self.assertEqual(TokenExtractor, type(extractor))
         self.assertEqual(apd.tokenizer, extractor.tokenizer)
 
-    def test_create_extractor_threshold_filter(self):
+    def test_create_filter_threshold_filter(self):
         """
         Test that when creating a threshold filter, the actual threshold is used.
         """
@@ -227,7 +228,7 @@ class TestAPD(unittest.TestCase):
         self.assertEqual(ThresholdFilter, type(filter))
         self.assertEqual(0.5, filter.threshold)
 
-    def test_create_extractor_threshold_filter_missing_threshold(self):
+    def test_create_filter_threshold_filter_missing_threshold(self):
         """
         Test that when using the threshold filter without a threshold, a ValueError is raised.
         """
@@ -235,8 +236,7 @@ class TestAPD(unittest.TestCase):
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
         self.assertRaises(ValueError, apd.create_detector, ParticipantDetector, EntityExtractor, TFScorer, ThresholdFilter, Resolver, file=file)
 
-
-    def test_create_extractor_threshold_filter_zero(self):
+    def test_create_filter_threshold_filter_zero(self):
         """
         Test that when creating a threshold filter with a threshold of zero, it is accepted.
         """
@@ -245,6 +245,16 @@ class TestAPD(unittest.TestCase):
         filter = apd.create_filter(ThresholdFilter, filter_threshold=0)
         self.assertEqual(ThresholdFilter, type(filter))
         self.assertEqual(0, filter.threshold)
+
+    def test_create_filter_threshold_filter_ignores_other_thresholds(self):
+        """
+        Test that when creating a threshold filter, it only considers the `filter_threshold` parameter.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        filter = apd.create_filter(ThresholdFilter, filter_threshold=0.2, resolver_threshold=0.5, extrapolator_threshold=0.8)
+        self.assertEqual(ThresholdFilter, type(filter))
+        self.assertEqual(0.2, filter.threshold)
 
     def test_create_filter_rank_filter_missing_k(self):
         """
@@ -299,6 +309,49 @@ class TestAPD(unittest.TestCase):
         resolver = apd.create_resolver(WikipediaNameResolver, file=file, scheme=scheme, threshold=0)
         self.assertEqual(WikipediaNameResolver, type(resolver))
 
+    def test_create_resolver_wikipedia_name_resolver_threshold(self):
+        """
+        Test that when creating a `WikipediaNameResolver`, it sets the threshold correctly.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        scheme = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        resolver = apd.create_resolver(WikipediaNameResolver, file=file, scheme=scheme, resolver_threshold=0.5)
+        self.assertEqual(0.5, resolver.threshold)
+
+    def test_create_resolver_wikipedia_name_resolver_scheme(self):
+        """
+        Test that when creating a `WikipediaNameResolver`, it loads the scheme correctly.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        scheme = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        resolver = apd.create_resolver(WikipediaNameResolver, file=file, scheme=scheme, resolver_threshold=0.5)
+        _scheme = tools.load(scheme)['tfidf']
+        self.assertEqual(Exportable.encode(_scheme), Exportable.encode(resolver.scheme))
+
+    def test_create_resolver_wikipedia_name_resolver_ignores_other_thresholds(self):
+        """
+        Test that when creating a `WikipediaNameResolver`, it only considers the `resolver_threshold` parameter.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        scheme = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        resolver = apd.create_resolver(WikipediaNameResolver, file=file, scheme=scheme, filter_threshold=0.2, resolver_threshold=0.5, extrapolator_threshold=0.8)
+        self.assertEqual(WikipediaNameResolver, type(resolver))
+        self.assertEqual(0.5, resolver.threshold)
+
+    def test_create_resolver_wikipedia_name_resolver_ignores_other_thresholds(self):
+        """
+        Test that when creating a `WikipediaNameResolver`, it only considers the `resolver_threshold` parameter.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        scheme = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        resolver = apd.create_resolver(WikipediaNameResolver, file=file, scheme=scheme, filter_threshold=0.2, resolver_threshold=0.5, extrapolator_threshold=0.8)
+        self.assertEqual(WikipediaNameResolver, type(resolver))
+        self.assertEqual(0.5, resolver.threshold)
+
     def test_create_resolver_wikipedia_name_resolver_without_scheme(self):
         """
         Test that creating the `WikipediaNameResolver` without a scheme raises a `ValueError`.
@@ -337,6 +390,38 @@ class TestAPD(unittest.TestCase):
         scheme = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
         resolver = apd.create_resolver(WikipediaSearchResolver, file=file, scheme=scheme, threshold=0)
         self.assertEqual(WikipediaSearchResolver, type(resolver))
+
+    def test_create_resolver_wikipedia_search_resolver_threshold(self):
+        """
+        Test that when creating a `WikipediaSearchResolver`, it sets the threshold correctly.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        scheme = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        resolver = apd.create_resolver(WikipediaSearchResolver, file=file, scheme=scheme, resolver_threshold=0.5)
+        self.assertEqual(0.5, resolver.threshold)
+
+    def test_create_resolver_wikipedia_search_resolver_scheme(self):
+        """
+        Test that when creating a `WikipediaSearchResolver`, it loads the scheme correctly.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        scheme = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        resolver = apd.create_resolver(WikipediaSearchResolver, file=file, scheme=scheme, resolver_threshold=0.5)
+        _scheme = tools.load(scheme)['tfidf']
+        self.assertEqual(Exportable.encode(_scheme), Exportable.encode(resolver.scheme))
+
+    def test_create_resolver_wikipedia_search_resolver_ignores_other_thresholds(self):
+        """
+        Test that when creating a `WikipediaSearchResolver`, it only considers the `resolver_threshold` parameter.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        scheme = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        resolver = apd.create_resolver(WikipediaSearchResolver, file=file, scheme=scheme, filter_threshold=0.2, resolver_threshold=0.5, extrapolator_threshold=0.8)
+        self.assertEqual(WikipediaSearchResolver, type(resolver))
+        self.assertEqual(0.5, resolver.threshold)
 
     def test_create_resolver_wikipedia_search_resolver_without_scheme(self):
         """
