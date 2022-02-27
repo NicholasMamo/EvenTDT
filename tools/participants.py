@@ -48,6 +48,7 @@ Accepted arguments:
     - ``--extractor``           *<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.
     - ``--scorer``              *<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
     - ``--filter``              *<Optional>* The filter to use to filter candidate participants; supported: `RankFilter`, `ThresholdFilter`; defaults to no filter.
+    - ``--resolver``            *<Optional>* The resolver to use to resolve candidate participants; supported: `TokenResolver`, `WikipediaNameResolver`, `WikipediaSearchResolver`; defaults to no filter.
     - ``-k --keep``             *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
     - ``--filter-threshold``    *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).
     - ``--tfidf``               *<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
@@ -73,6 +74,7 @@ from apd.extractors import *
 from apd.scorers.local import *
 from apd.filters import Filter
 from apd.filters.local import *
+from apd.resolvers import *
 from logger import logger
 from nlp.cleaners import TweetCleaner
 from nlp.document import Document
@@ -97,6 +99,7 @@ def setup_args():
         - ``--extractor``           *<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.
         - ``--scorer``              *<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
         - ``--filter``              *<Optional>* The filter to use to filter candidate participants; supported: `RankFilter`, `ThresholdFilter`; defaults to no filter.
+        - ``--resolver``            *<Optional>* The resolver to use to resolve candidate participants; supported: `TokenResolver`, `WikipediaNameResolver`, `WikipediaSearchResolver`; defaults to no filter.
         - ``-k --keep``             *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
         - ``--filter-threshold``    *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).
         - ``--tfidf``               *<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
@@ -117,6 +120,8 @@ def setup_args():
                         help='<Optional> The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.')
     parser.add_argument('--filter', type=filter, required=False, default=None,
                         help='<Optional> The filter to use to filter candidate participants; supported: `RankFilter`, `ThresholdFilter`; defaults to no filter.')
+    parser.add_argument('--resolver', type=resolver, required=False, default=None,
+                        help='<Optional> The resolver to use to resolve candidate participants; supported: `TokenResolver`, `WikipediaNameResolver`, `WikipediaSearchResolver`; defaults to no filter.')
     parser.add_argument('-k', '--keep', required=False, type=int,
                         help='<Optional> The number of candidates to retain when filtering candidates (used only with the `RankFilter`).')
     parser.add_argument('--filter-threshold', required=False,
@@ -297,7 +302,10 @@ def create_scorer(scorer, *args, **kwargs):
     Create a scorer from the given class.
 
     :param scorer: The class of the scorer with which to score candidate participants.
-    :type scorer: :class:`~apd.scorers.scorer.Scorer`
+    :type scorer: type or None
+
+    :return: The created scorer.
+    :rtype: :class:`~apd.scorers.scorer.Scorer`
     """
 
     return scorer() if scorer else scorer
@@ -372,8 +380,8 @@ def extractor(method):
     """
 
     methods = {
-        'entityextractor': local.EntityExtractor,
-        'tokenextractor': local.TokenExtractor,
+        'entityextractor': EntityExtractor,
+        'tokenextractor': TokenExtractor,
     }
 
     if method.lower() in methods:
@@ -437,6 +445,33 @@ def filter(method):
         return methods[method.lower()]
 
     raise argparse.ArgumentTypeError(f"Invalid filter method: {method}")
+
+def resolver(method):
+    """
+    Convert the given string into a filter class.
+    The accepted classes are:
+
+        #. :class:`~apd.resolvers.local.TokenResolver`
+        #. :class:`~apd.resolvers.external.WikipediaNameResolver`
+        #. :class:`~apd.resolvers.external.WikipediaSearchResolver`
+
+    :param method: The filter string.
+    :type method: str
+
+    :return: The extractor type that corresponds to the given method.
+    :rtype: :class:`~apd.filters.filter.Filter`
+    """
+
+    methods = {
+        'tokenresolver': TokenResolver,
+        'wikipedianameresolver': WikipediaNameResolver,
+        'wikipediasearchresolver': WikipediaSearchResolver,
+    }
+
+    if method.lower() in methods:
+        return methods[method.lower()]
+
+    raise argparse.ArgumentTypeError(f"Invalid resolver method: {method}")
 
 if __name__ == "__main__":
     main()
