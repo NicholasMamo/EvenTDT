@@ -50,6 +50,7 @@ Accepted arguments:
     - ``--filter``                 *<Optional>* The filter to use to filter candidate participants; supported: `Filter`, `RankFilter`, `ThresholdFilter`; defaults to no filter.
     - ``--resolver``               *<Optional>* The resolver to use to resolve candidate participants; supported: `Resolver`, `TokenResolver`, `WikipediaNameResolver`, `WikipediaSearchResolver`; defaults to no filter.
     - ``--extrapolator``           *<Optional>* The extrapolator to use to extrapolate participants; supported: `Extrapolator`, `WikipediaExtrapolator`; defaults to no extrapolator.
+    - ``--postprocessor``          *<Optional>* The post-processor to use to post-process participants; supported: `Postprocessor`, `WikiPostprocessor`; defaults to no post-processor.
     - ``-k --keep``                *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
     - ``--filter-threshold``       *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`); defaults to 0.
     - ``--resolver-threshold``     *<Optional>* The threshold to use when resolving candidates (used only with the `WikipediaNameResolver` and `WikipediaSearchResolver`).
@@ -79,6 +80,7 @@ from apd.filters import Filter
 from apd.filters.local import *
 from apd.resolvers import *
 from apd.extrapolators import *
+from apd.postprocessors import *
 from logger import logger
 from nlp.cleaners import TweetCleaner
 from nlp.document import Document
@@ -105,6 +107,7 @@ def setup_args():
         - ``--filter``                 *<Optional>* The filter to use to filter candidate participants; supported: `Filter`, `RankFilter`, `ThresholdFilter`; defaults to no filter.
         - ``--resolver``               *<Optional>* The resolver to use to resolve candidate participants; supported: `Resolver`, `TokenResolver`, `WikipediaNameResolver`, `WikipediaSearchResolver`; defaults to no resolver.
         - ``--extrapolator``           *<Optional>* The extrapolator to use to extrapolate participants; supported: `Extrapolator`, `WikipediaExtrapolator`; defaults to no extrapolator.
+        - ``--postprocessor``          *<Optional>* The post-processor to use to post-process participants; supported: `Postprocessor`, `WikiPostprocessor`; defaults to no post-processor.
         - ``-k --keep``                *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
         - ``--filter-threshold``       *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`); defaults to 0.
         - ``--resolver-threshold``     *<Optional>* The threshold to use when resolving candidates (used only with the `WikipediaNameResolver` and `WikipediaSearchResolver`); defaults to 0.
@@ -131,6 +134,8 @@ def setup_args():
                         help='<Optional> The resolver to use to resolve candidate participants; supported: `Resolver`, `TokenResolver`, `WikipediaNameResolver`, `WikipediaSearchResolver`; defaults to no filter.')
     parser.add_argument('--extrapolator', type=extrapolator, required=False, default=None,
                         help='<Optional> The extrapolator to use to extrapolate participants; supported: `Extrapolator`, `WikipediaExtrapolator`; defaults to no extrapolator.')
+    parser.add_argument('--postprocessor', type=postprocessor, required=False, default=None,
+                        help='<Optional> The post-processor to use to post-process participants; supported: `Postprocessor`, `WikiPostprocessor`; defaults to no post-processor.')
     parser.add_argument('-k', '--keep', required=False, type=int,
                         help='<Optional> The number of candidates to retain when filtering candidates (used only with the `RankFilter`).')
     parser.add_argument('--filter-threshold', required=False, default=0,
@@ -571,6 +576,31 @@ def extrapolator(method):
     methods = {
         'extrapolator': Extrapolator,
         'wikipediaextrapolator': WikipediaExtrapolator,
+    }
+
+    if method.lower() in methods:
+        return methods[method.lower()]
+
+    raise argparse.ArgumentTypeError(f"Invalid extrapolator method: {method}")
+
+def postprocessor(method):
+    """
+    Convert the given string into an postprocessor class.
+    The accepted classes are:
+
+        #. :class:`~apd.postprocessor.Postprocessor`
+        #. :class:`~apd.postprocessor.external.Postprocessor`
+
+    :param method: The postprocessor string.
+    :type method: str
+
+    :return: The extractor type that corresponds to the given method.
+    :rtype: :class:`~apd.postprocessor.postprocessor.Postprocessor`
+    """
+
+    methods = {
+        'postprocessor': Postprocessor,
+        'wikipediapostprocessor': WikipediaPostprocessor,
     }
 
     if method.lower() in methods:
