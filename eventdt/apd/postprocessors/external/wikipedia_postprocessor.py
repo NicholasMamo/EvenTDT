@@ -90,10 +90,10 @@ class WikipediaPostprocessor(Postprocessor):
         :type participants: list of str or dict
 
         :return: The postprocessed participants.
-        :rtype: list of str
+        :rtype: dict
         """
 
-        participants = list(participants)
+        postprocessed = list(participants)
 
         if self.surname_only:
             """
@@ -105,21 +105,20 @@ class WikipediaPostprocessor(Postprocessor):
             """
             persons = info.is_person(participants)
             for i, participant in enumerate(participants):
-                # TODO: Look for "commonly known simply as" (Memphis) or "commonly known as" (Juninho) relations.
                 if persons[participant]:
-                    participants[i] = self._get_surname(participant)
+                    postprocessed[i] = self._get_surname(participant)
 
         """
         Remove the brackets if need be.
         """
-        participants = [ self._remove_brackets(participant) for participant in participants ] if self.remove_brackets else participants
+        postprocessed = [ self._remove_brackets(participant) for participant in postprocessed ] if self.remove_brackets else postprocessed
 
         """
         Remove the accents if need be.
         """
-        participants = [ self._remove_accents(participant) for participant in participants ] if self.remove_accents else participants
+        postprocessed = [ self._remove_accents(participant) for participant in postprocessed ] if self.remove_accents else postprocessed
 
-        return participants
+        return dict(zip(participants, postprocessed))
 
     def _get_surname(self, participant):
         """

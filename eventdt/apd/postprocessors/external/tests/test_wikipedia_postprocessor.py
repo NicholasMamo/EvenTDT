@@ -28,17 +28,51 @@ class TestWikipediaPostprocessor(unittest.TestCase):
 
         postprocessor = WikipediaPostprocessor(remove_accents=False, remove_brackets=False, surname_only=False)
         participants = [ 'Youssouf Koné (footballer, born 1995)', 'Pedro (footballer, born 1987)' ]
-        self.assertEqual(set(participants), set(postprocessor.postprocess(participants)))
+        postprocessed = postprocessor.postprocess(participants)
+        self.assertEqual(set(participants), set(postprocessed))
+        self.assertTrue(all( participant == _postprocessed
+                             for participant, _postprocessed in postprocessed.items() ))
 
-    def test_postprocess_returns_list(self):
+    def test_postprocess_returns_dict(self):
         """
-        Test that post-processing a list returns another list.
+        Test that post-processing returns a dictionary.
         """
 
         postprocessor = WikipediaPostprocessor(remove_accents=False, remove_brackets=True, surname_only=False)
         participants = [ 'Youssouf Koné (footballer, born 1995)', 'Pedro (footballer, born 1987)' ]
         postprocessed = postprocessor.postprocess(participants)
-        self.assertEqual(list, type(postprocessed))
+        self.assertEqual(dict, type(postprocessed))
+
+    def test_postprocess_all_participants(self):
+        """
+        Test that the post-processor returns all participants.
+        """
+
+        postprocessor = WikipediaPostprocessor(remove_accents=False, remove_brackets=True, surname_only=False)
+        participants = [ 'Eden Hazard', 'Chelsea F.C.', 'Maurizio Sarri' ]
+        postprocessed = postprocessor.postprocess(participants)
+        self.assertTrue(all( participant in postprocessed for participant in participants ))
+
+    def test_postprocess_no_duplicates(self):
+        """
+        Test that the post-processor returns no duplicates.
+        """
+
+        postprocessor = WikipediaPostprocessor(remove_accents=False, remove_brackets=True, surname_only=False)
+        participants = [ 'Eden Hazard', 'Chelsea F.C.', 'Maurizio Sarri', 'Eden Hazard' ]
+        postprocessed = postprocessor.postprocess(participants)
+        self.assertEqual(len(postprocessed), len(set(participants)))
+        self.assertEqual(sorted(set(postprocessed)), sorted(set(participants)))
+
+    def test_postprocess_same_order(self):
+        """
+        Test that the post-processor returns the participants in teh same order.
+        """
+
+        postprocessor = WikipediaPostprocessor(remove_accents=False, remove_brackets=True, surname_only=False)
+        participants = [ 'Eden Hazard', 'Chelsea F.C.', 'Maurizio Sarri' ]
+        postprocessed = postprocessor.postprocess(participants)
+        self.assertEqual(participants, list(postprocessed))
 
     def test_postprocess_makes_copy(self):
         """
@@ -58,7 +92,9 @@ class TestWikipediaPostprocessor(unittest.TestCase):
 
         postprocessor = WikipediaPostprocessor(surname_only=True)
         participants = [ 'Apple Inc.' ]
-        self.assertEqual(set(participants), set(postprocessor.postprocess(participants)))
+        postprocessed = postprocessor.postprocess(participants)
+        self.assertTrue(all( participant == _postprocessed
+                             for participant, _postprocessed in postprocessed.items() ))
 
     def test_surname_only_location(self):
         """
@@ -67,7 +103,9 @@ class TestWikipediaPostprocessor(unittest.TestCase):
 
         postprocessor = WikipediaPostprocessor(surname_only=True)
         participants = [ 'Hell, California' ]
-        self.assertEqual(set(participants), set(postprocessor.postprocess(participants)))
+        postprocessed = postprocessor.postprocess(participants)
+        self.assertTrue(all( participant == _postprocessed
+                             for participant, _postprocessed in postprocessed.items() ))
 
     def test_surname_only_person(self):
         """
@@ -76,7 +114,7 @@ class TestWikipediaPostprocessor(unittest.TestCase):
 
         postprocessor = WikipediaPostprocessor(surname_only=True)
         participants = [ 'Memphis Depay' ]
-        self.assertEqual([ 'Depay' ], postprocessor.postprocess(participants))
+        self.assertEqual({ 'Memphis Depay': 'Depay' }, postprocessor.postprocess(participants))
 
     def test_surname_only_person_no_name(self):
         """
@@ -85,7 +123,7 @@ class TestWikipediaPostprocessor(unittest.TestCase):
 
         postprocessor = WikipediaPostprocessor(surname_only=True)
         participants = [ 'Pedro (footballer, born 1987)' ]
-        self.assertEqual([ 'Pedro' ], postprocessor.postprocess(participants))
+        self.assertEqual({ 'Pedro (footballer, born 1987)': 'Pedro' }, postprocessor.postprocess(participants))
 
     def test_surname_only_person_word(self):
         """
@@ -94,7 +132,7 @@ class TestWikipediaPostprocessor(unittest.TestCase):
 
         postprocessor = WikipediaPostprocessor(surname_only=True)
         participants = [ 'Martin Terrier' ]
-        self.assertEqual(participants, postprocessor.postprocess(participants))
+        self.assertEqual({ 'Martin Terrier': 'Martin Terrier' }, postprocessor.postprocess(participants))
 
     def test_surname_only_person_with_accent(self):
         """
@@ -103,7 +141,7 @@ class TestWikipediaPostprocessor(unittest.TestCase):
 
         postprocessor = WikipediaPostprocessor(surname_only=True)
         participants = [ 'Bertrand Traoré' ]
-        self.assertEqual([ 'Traore' ], postprocessor.postprocess(participants))
+        self.assertEqual({ 'Bertrand Traoré': 'Traore' }, postprocessor.postprocess(participants))
 
     def test_surname_only_person_with_multiple_components(self):
         """
@@ -112,7 +150,7 @@ class TestWikipediaPostprocessor(unittest.TestCase):
 
         postprocessor = WikipediaPostprocessor(surname_only=True)
         participants = [ 'David De Gea' ]
-        self.assertEqual([ 'De Gea'], postprocessor.postprocess(participants))
+        self.assertEqual({ 'David De Gea': 'De Gea' }, postprocessor.postprocess(participants))
 
     def test_surname_only_person_with_brackets(self):
         """
@@ -121,7 +159,7 @@ class TestWikipediaPostprocessor(unittest.TestCase):
 
         postprocessor = WikipediaPostprocessor(surname_only=True)
         participants = [ 'Ronaldo (Brazilian footballer)', 'Moussa Dembélé (French footballer)' ]
-        self.assertEqual([ 'Ronaldo', 'Dembele' ], postprocessor.postprocess(participants))
+        self.assertEqual({ 'Ronaldo (Brazilian footballer)': 'Ronaldo', 'Moussa Dembélé (French footballer)': 'Dembele' }, postprocessor.postprocess(participants))
 
     def test_remove_brackets(self):
         """
@@ -130,7 +168,7 @@ class TestWikipediaPostprocessor(unittest.TestCase):
 
         postprocessor = WikipediaPostprocessor(remove_brackets=True)
         participants = [ 'Apple (Company)' ]
-        self.assertEqual([ 'Apple' ], postprocessor.postprocess(participants))
+        self.assertEqual({ 'Apple (Company)': 'Apple' }, postprocessor.postprocess(participants))
 
     def test_no_remove_brackets(self):
         """
@@ -139,7 +177,7 @@ class TestWikipediaPostprocessor(unittest.TestCase):
 
         postprocessor = WikipediaPostprocessor(remove_brackets=False)
         participants = [ 'Apple (Company)' ]
-        self.assertEqual([ 'Apple (Company)' ], postprocessor.postprocess(participants))
+        self.assertEqual({ 'Apple (Company)': 'Apple (Company)' }, postprocessor.postprocess(participants))
 
     def test_remove_brackets_no_brackets(self):
         """
@@ -148,7 +186,7 @@ class TestWikipediaPostprocessor(unittest.TestCase):
 
         postprocessor = WikipediaPostprocessor(remove_brackets=True)
         participants = [ 'Apple Inc.' ]
-        self.assertEqual([ 'Apple Inc.' ], postprocessor.postprocess(participants))
+        self.assertEqual({ 'Apple Inc.': 'Apple Inc.' }, postprocessor.postprocess(participants))
 
     def test_remove_french_accents(self):
         """
@@ -157,7 +195,7 @@ class TestWikipediaPostprocessor(unittest.TestCase):
 
         postprocessor = WikipediaPostprocessor(remove_accents=True, surname_only=False)
         participants = [ 'Moussa Dembélé' ]
-        self.assertEqual([ 'Moussa Dembele' ], postprocessor.postprocess(participants))
+        self.assertEqual({ 'Moussa Dembélé': 'Moussa Dembele' }, postprocessor.postprocess(participants))
 
     def test_retain_french_accents(self):
         """
@@ -166,7 +204,7 @@ class TestWikipediaPostprocessor(unittest.TestCase):
 
         postprocessor = WikipediaPostprocessor(remove_accents=False, surname_only=False)
         participants = [ 'Moussa Dembélé' ]
-        self.assertEqual([ 'Moussa Dembélé' ], postprocessor.postprocess(participants))
+        self.assertEqual({ 'Moussa Dembélé': 'Moussa Dembélé' }, postprocessor.postprocess(participants))
 
     def test_remove_germanic_accents(self):
         """
@@ -176,8 +214,8 @@ class TestWikipediaPostprocessor(unittest.TestCase):
         postprocessor = WikipediaPostprocessor(remove_accents=True, surname_only=False)
         participants = [ 'Erling Braut Håland', 'Anel Ahmedhodžić',
                          'Alexander Kačaniklić', 'Robin Söder' ]
-        self.assertEqual([ 'Erling Braut Haland', 'Anel Ahmedhodzic',
-                            'Alexander Kacaniklic', 'Robin Soder' ], postprocessor.postprocess(participants))
+        self.assertEqual({ 'Erling Braut Håland': 'Erling Braut Haland', 'Anel Ahmedhodžić': 'Anel Ahmedhodzic',
+                           'Alexander Kačaniklić': 'Alexander Kacaniklic', 'Robin Söder': 'Robin Soder' }, postprocessor.postprocess(participants))
 
     def test_retain_germanic_accents(self):
         """
@@ -187,5 +225,5 @@ class TestWikipediaPostprocessor(unittest.TestCase):
         postprocessor = WikipediaPostprocessor(remove_accents=False, surname_only=False)
         participants = [ 'Erling Braut Håland', 'Anel Ahmedhodžić',
                          'Alexander Kačaniklić', 'Robin Söder' ]
-        self.assertEqual([ 'Erling Braut Håland', 'Anel Ahmedhodžić',
-                            'Alexander Kačaniklić', 'Robin Söder' ], postprocessor.postprocess(participants))
+        self.assertEqual({ 'Erling Braut Håland': 'Erling Braut Håland', 'Anel Ahmedhodžić': 'Anel Ahmedhodžić',
+                           'Alexander Kačaniklić': 'Alexander Kačaniklić', 'Robin Söder': 'Robin Söder' }, postprocessor.postprocess(participants))

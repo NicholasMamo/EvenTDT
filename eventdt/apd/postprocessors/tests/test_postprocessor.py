@@ -44,11 +44,11 @@ class TestPostprocessor(unittest.TestCase):
         Test that the post-processor returns no duplicates.
         """
 
-        participants = [ 'Eden Hazard', 'Chelsea F.C.', 'Maurizio Sarri' ]
+        participants = [ 'Eden Hazard', 'Chelsea F.C.', 'Maurizio Sarri', 'Eden Hazard' ]
         postprocessor = Postprocessor()
         postprocessed = postprocessor.postprocess(participants)
         self.assertEqual(len(postprocessed), len(set(participants)))
-        self.assertEqual(sorted(set(postprocessed)), sorted(participants))
+        self.assertEqual(sorted(set(postprocessed)), sorted(set(participants)))
 
     def test_postprocess_same_order(self):
         """
@@ -60,7 +60,7 @@ class TestPostprocessor(unittest.TestCase):
         postprocessed = postprocessor.postprocess(participants)
         self.assertEqual(participants, list(postprocessed))
 
-    def test_postprocess_no_chage(self):
+    def test_postprocess_no_change(self):
         """
         Test that the basic post-processor does not change the participants.
         """
