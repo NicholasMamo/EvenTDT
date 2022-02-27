@@ -281,6 +281,15 @@ class TestAPD(unittest.TestCase):
         resolver = apd.create_resolver(None)
         self.assertEqual(None, resolver)
 
+    def test_create_resolver_resolver(self):
+        """
+        Test that when creating the base `Resolver`, it is created correctly.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        resolver = apd.create_resolver(Resolver)
+        self.assertEqual(Resolver, type(resolver))
+
     def test_create_resolver_token_resolver_none(self):
         """
         Test that when no resolver is provided, the default resolver is returned.

@@ -48,7 +48,7 @@ Accepted arguments:
     - ``--extractor``           *<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.
     - ``--scorer``              *<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
     - ``--filter``              *<Optional>* The filter to use to filter candidate participants; supported: `Filter`, `RankFilter`, `ThresholdFilter`; defaults to no filter.
-    - ``--resolver``            *<Optional>* The resolver to use to resolve candidate participants; supported: `TokenResolver`, `WikipediaNameResolver`, `WikipediaSearchResolver`; defaults to no filter.
+    - ``--resolver``            *<Optional>* The resolver to use to resolve candidate participants; supported: `Resolver`, `TokenResolver`, `WikipediaNameResolver`, `WikipediaSearchResolver`; defaults to no filter.
     - ``--extrapolator``        *<Optional>* The extrapolator to use to extrapolate participants; supported: `WikipediaExtrapolator`; defaults to no filter.
     - ``-k --keep``             *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
     - ``--filter-threshold``    *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).
@@ -101,7 +101,7 @@ def setup_args():
         - ``--extractor``           *<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.
         - ``--scorer``              *<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
         - ``--filter``              *<Optional>* The filter to use to filter candidate participants; supported: `Filter`, `RankFilter`, `ThresholdFilter`; defaults to no filter.
-        - ``--resolver``            *<Optional>* The resolver to use to resolve candidate participants; supported: `TokenResolver`, `WikipediaNameResolver`, `WikipediaSearchResolver`; defaults to no resolver.
+        - ``--resolver``            *<Optional>* The resolver to use to resolve candidate participants; supported: `Resolver`, `TokenResolver`, `WikipediaNameResolver`, `WikipediaSearchResolver`; defaults to no resolver.
         - ``--extrapolator``        *<Optional>* The extrapolator to use to extrapolate participants; supported: `WikipediaExtrapolator`; defaults to no extrapolator.
         - ``-k --keep``             *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
         - ``--filter-threshold``    *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).
@@ -124,7 +124,7 @@ def setup_args():
     parser.add_argument('--filter', type=filter, required=False, default=None,
                         help='<Optional> The filter to use to filter candidate participants; supported: `Filter`, `RankFilter`, `ThresholdFilter`; defaults to no filter.')
     parser.add_argument('--resolver', type=resolver, required=False, default=None,
-                        help='<Optional> The resolver to use to resolve candidate participants; supported: `TokenResolver`, `WikipediaNameResolver`, `WikipediaSearchResolver`; defaults to no filter.')
+                        help='<Optional> The resolver to use to resolve candidate participants; supported: `Resolver`, `TokenResolver`, `WikipediaNameResolver`, `WikipediaSearchResolver`; defaults to no filter.')
     parser.add_argument('--extrapolator', type=extrapolator, required=False, default=None,
                         help='<Optional> The extrapolator to use to extrapolate participants; supported: `WikipediaExtrapolator`; defaults to no extrapolator.')
     parser.add_argument('-k', '--keep', required=False, type=int,
@@ -467,6 +467,7 @@ def filter(method):
     Convert the given string into a filter class.
     The accepted classes are:
 
+        #. :class:`~apd.filters.Filter`
         #. :class:`~apd.filters.local.RankFilter`
         #. :class:`~apd.filters.local.ThresholdFilter`
 
@@ -493,6 +494,7 @@ def resolver(method):
     Convert the given string into a resolver class.
     The accepted classes are:
 
+        #. :class:`~apd.resolvers.Resolver`
         #. :class:`~apd.resolvers.local.TokenResolver`
         #. :class:`~apd.resolvers.external.WikipediaNameResolver`
         #. :class:`~apd.resolvers.external.WikipediaSearchResolver`
@@ -505,6 +507,7 @@ def resolver(method):
     """
 
     methods = {
+        'resolver': Resolver,
         'tokenresolver': TokenResolver,
         'wikipedianameresolver': WikipediaNameResolver,
         'wikipediasearchresolver': WikipediaSearchResolver,
