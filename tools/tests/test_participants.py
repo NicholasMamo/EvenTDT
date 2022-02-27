@@ -218,6 +218,15 @@ class TestAPD(unittest.TestCase):
         self.assertEqual(TokenExtractor, type(extractor))
         self.assertEqual(apd.tokenizer, extractor.tokenizer)
 
+    def test_create_filter_filter(self):
+        """
+        Test that when creating the base `Filter`, it is created correctly.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        filter = apd.create_filter(Filter)
+        self.assertEqual(Filter, type(filter))
+
     def test_create_filter_threshold_filter(self):
         """
         Test that when creating a threshold filter, the actual threshold is used.

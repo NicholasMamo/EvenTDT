@@ -47,7 +47,7 @@ Accepted arguments:
     - ``-m --model``            *<Optional>* The type of model to use; supported: `ELDParticipantDetector`; defaults to a normal participant detector.
     - ``--extractor``           *<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.
     - ``--scorer``              *<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
-    - ``--filter``              *<Optional>* The filter to use to filter candidate participants; supported: `RankFilter`, `ThresholdFilter`; defaults to no filter.
+    - ``--filter``              *<Optional>* The filter to use to filter candidate participants; supported: `Filter`, `RankFilter`, `ThresholdFilter`; defaults to no filter.
     - ``--resolver``            *<Optional>* The resolver to use to resolve candidate participants; supported: `TokenResolver`, `WikipediaNameResolver`, `WikipediaSearchResolver`; defaults to no filter.
     - ``--extrapolator``        *<Optional>* The extrapolator to use to extrapolate participants; supported: `WikipediaExtrapolator`; defaults to no filter.
     - ``-k --keep``             *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
@@ -100,7 +100,7 @@ def setup_args():
         - ``-m --model``            *<Optional>* The type of model to use; supported: `ELDParticipantDetector`; defaults to a normal participant detector.
         - ``--extractor``           *<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.
         - ``--scorer``              *<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
-        - ``--filter``              *<Optional>* The filter to use to filter candidate participants; supported: `RankFilter`, `ThresholdFilter`; defaults to no filter.
+        - ``--filter``              *<Optional>* The filter to use to filter candidate participants; supported: `Filter`, `RankFilter`, `ThresholdFilter`; defaults to no filter.
         - ``--resolver``            *<Optional>* The resolver to use to resolve candidate participants; supported: `TokenResolver`, `WikipediaNameResolver`, `WikipediaSearchResolver`; defaults to no resolver.
         - ``--extrapolator``        *<Optional>* The extrapolator to use to extrapolate participants; supported: `WikipediaExtrapolator`; defaults to no extrapolator.
         - ``-k --keep``             *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
@@ -122,7 +122,7 @@ def setup_args():
     parser.add_argument('--scorer', type=scorer, required=False, default=None,
                         help='<Optional> The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.')
     parser.add_argument('--filter', type=filter, required=False, default=None,
-                        help='<Optional> The filter to use to filter candidate participants; supported: `RankFilter`, `ThresholdFilter`; defaults to no filter.')
+                        help='<Optional> The filter to use to filter candidate participants; supported: `Filter`, `RankFilter`, `ThresholdFilter`; defaults to no filter.')
     parser.add_argument('--resolver', type=resolver, required=False, default=None,
                         help='<Optional> The resolver to use to resolve candidate participants; supported: `TokenResolver`, `WikipediaNameResolver`, `WikipediaSearchResolver`; defaults to no filter.')
     parser.add_argument('--extrapolator', type=extrapolator, required=False, default=None,
@@ -478,6 +478,7 @@ def filter(method):
     """
 
     methods = {
+        'filter': Filter,
         'rankfilter': RankFilter,
         'thresholdfilter': ThresholdFilter,
     }
