@@ -172,3 +172,24 @@ def is_file(string):
 
     pattern = re.compile('.*\..*')
     return pattern.match(string)
+
+def remove_prefix(prefix, **kwargs):
+    """
+    Remove the given prefix from the keyword arguments.
+
+    :param prefix: The prefix to remove from the keyword arguments.
+    :type prefix: str
+
+    :return: The keyword arguments with prefixed removed.
+    :rtype: dict
+    """
+
+    clean = { }
+
+    for kwarg, value in kwargs.items():
+        if kwarg.startswith(prefix):
+            clean[kwarg[len(prefix):]] = value
+        else:
+            clean[kwarg] = value
+
+    return clean

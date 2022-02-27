@@ -63,3 +63,70 @@ class TestPackage(unittest.TestCase):
         """
 
         self.assertTrue(tools.is_file('data/file.tar.gz'))
+
+    def test_remove_prefix_empty(self):
+        """
+        Test that if the prefix is empty, the kwargs are unchanged.
+        """
+
+        kwargs = { 'filter_threshold': 0.5, 'resolver_threshold': 0.2 }
+        _kwargs = tools.remove_prefix('', **kwargs)
+        self.assertEqual(kwargs, _kwargs)
+
+    def test_remove_prefix_returns_dict(self):
+        """
+        Test that removing the prefix returns another dictionary.
+        """
+
+        kwargs = { 'filter_threshold': 0.5, 'resolver_threshold': 0.2 }
+        _kwargs = tools.remove_prefix('', **kwargs)
+        self.assertEqual(dict, type(_kwargs))
+
+    def test_remove_prefix_returns_all(self):
+        """
+        Test that removing the prefix does not change the kwargs size.
+        """
+
+        kwargs = { 'filter_threshold': 0.5, 'resolver_threshold': 0.2 }
+        _kwargs = tools.remove_prefix('', **kwargs)
+        self.assertEqual(len(kwargs), len(_kwargs))
+
+    def test_remove_prefix_original_unchanged(self):
+        """
+        Test that removing the prefix does not change the original dictionary.
+        """
+
+        kwargs = { 'filter_threshold': 0.5, 'resolver_threshold': 0.2 }
+        original = dict(kwargs)
+        _kwargs = tools.remove_prefix('', **kwargs)
+        self.assertEqual(original, kwargs)
+
+    def test_remove_prefix_behaviour(self):
+        """
+        Test that removing the prefix works correctly.
+        """
+
+        kwargs = { 'filter_threshold': 0.5, 'resolver_threshold': 0.2 }
+        _kwargs = tools.remove_prefix('filter_', **kwargs)
+        self.assertEqual({ 'threshold': 0.5, 'resolver_threshold': 0.2 }, _kwargs)
+
+        _kwargs = tools.remove_prefix('resolver_', **kwargs)
+        self.assertEqual({ 'filter_threshold': 0.5, 'threshold': 0.2 }, _kwargs)
+
+    def test_remove_prefix_from_start_only(self):
+        """
+        Test that the prefix is only removed from the start of the keyword arguments.
+        """
+
+        kwargs = { 'filter_threshold': 0.5, 'resolver_threshold': 0.2 }
+        _kwargs = tools.remove_prefix('threshold', **kwargs)
+        self.assertEqual(kwargs, _kwargs)
+
+    def test_remove_prefix_same_values(self):
+        """
+        Test that the values do not change when removing the prefix.
+        """
+
+        kwargs = { 'filter_threshold': 0.5, 'resolver_threshold': 0.2 }
+        _kwargs = tools.remove_prefix('filter_', **kwargs)
+        self.assertEqual(list(kwargs.values()), list(_kwargs.values()))
