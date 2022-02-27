@@ -124,10 +124,10 @@ def setup_args():
                         help='<Optional> The resolver to use to resolve candidate participants; supported: `TokenResolver`, `WikipediaNameResolver`, `WikipediaSearchResolver`; defaults to no filter.')
     parser.add_argument('-k', '--keep', required=False, type=int,
                         help='<Optional> The number of candidates to retain when filtering candidates (used only with the `RankFilter`).')
-    parser.add_argument('--filter-threshold', required=False,
+    parser.add_argument('--filter-threshold', required=False, default=0,
                         help='<Optional> The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).')
-    parser.add_argument('--filter-threshold', required=False,
-                        help='<Optional> The score threshold to use when filtering candidates (used only with the `ThresholdFilter`).')
+    parser.add_argument('--resolver-threshold', required=False, default=0,
+                        help='<Optional> The threshold to use when resolving candidates (used only with the `WikipediaNameResolver` and `WikipediaSearchResolver`).')
     parser.add_argument('--scheme', required=False, default=None,
                         help='<Optional> The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).')
 
@@ -149,8 +149,7 @@ def main():
     args = vars(args)
     detector = create_detector(model=args.pop('model'), extractor=args.pop('extractor'),
                                scorer=args.pop('scorer'), filter=args.pop('filter'),
-                               resolver=args.pop('resolver'),
-                               corpus=args['file'], **args)
+                               resolver=args.pop('resolver'), **args)
 
     cmd['model'], pcmd['model'] = str(type(detector).__name__), str(type(detector).__name__)
     cmd['extractor'], pcmd['extractor'] = str(type(detector.extractor).__name__), str(type(detector.extractor).__name__)
@@ -370,7 +369,14 @@ def create_resolver(resolver, *args, **kwargs):
         return resolver(tokenizer=tokenizer, corpus=_kwargs.pop('file'), **_kwargs)
 
     if resolver.__name__ in (WikipediaNameResolver.__name__, WikipediaSearchResolver.__name__):
-        scheme = tools.load(scheme)['scheme']
+        if _kwargs.get('scheme') is None:
+            raise ValueError(f"The { resolver.__name__ } requires the term-weighting `scheme` parameter.")
+
+        if _kwargs.get('threshold') is None:
+            raise ValueError(f"The { resolver.__name__ } requires the `threshold` parameter (the minimum score of a candidate to accept it as a participant).")
+
+        scheme = tools.load(_kwargs.pop('scheme'))['tfidf']
+        return resolver(tokenizer=tokenizer, corpus=_kwargs.pop('file'), scheme=scheme, **_kwargs)
 
     return resolver()
 
