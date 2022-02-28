@@ -104,6 +104,7 @@ def revert_redirects(results, redirects):
         """
         if page in targets:
             pages[targets[page]] = pages[page]
+            del pages[page]
 
     """
     In some cases, two pages may redirect to the same page.
