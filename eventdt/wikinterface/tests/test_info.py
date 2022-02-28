@@ -61,6 +61,15 @@ class TestInfo(unittest.TestCase):
         type = info.types(page)
         self.assertEqual(info.ArticleType.NORMAL, type[page])
 
+    def test_get_type_help(self):
+        """
+        Test getting the type of a help page returns the correct type.
+        """
+
+        page = 'Help:Disambiguation'
+        type = info.types(page)
+        self.assertEqual(info.ArticleType.HELP, type[page])
+
     def test_get_type_list(self):
         """
         Test getting the type of a page that is a list of articles.
@@ -162,15 +171,15 @@ class TestInfo(unittest.TestCase):
 
         pages = [ 'Anthony Lopes', 'Mapou Yanga-Mbiwa', 'Joachim Andersen (footballer)',
                   'Rafael (footballer, born 1990)',  'Jason Denayer',
-                  'Houssem Aouar',  'Moussa Dembélé (French_footballer)',
+                  'Houssem Aouar',  'Moussa Dembélé (French footballer)',
                   'Memphis Depay', 'Thiago Mendes', 'Léo Dubois', 'Oumar Solet',
                   'Jeff Reine-Adélaïde', 'Rayan Cherki', 'Bruno Guimarães',
                   'Amine Gouiri', 'Fernando Marçal', 'Karl Toko Ekambi',
                   'Kenny Tete', 'Maxence Caqueret', 'Camilo Reijers de Oliveira',
                   'Maxwel Cornet', 'Youssouf Koné (footballer, born 1995)',
-                  'Ciprian Tătărușanu', 'Boubacar Fofana', 'Bertrand Traoré',
-                  'Martin Terrier', 'Marcelo (footballer, born 1987)',
-                  'Jean Lucas Oliveira', 'Lucas Tousart' ]
+                  'Ciprian Tătărușanu', 'Bertrand Traoré',
+                  'Martin Terrier', 'Jean-Michel Aulas', 'Marcelo (footballer, born 1987)',
+                  'Jean Lucas (footballer)', 'Lucas Tousart' ]
 
         classes = info.is_person(pages)
         self.assertEqual(len(pages), len(classes))

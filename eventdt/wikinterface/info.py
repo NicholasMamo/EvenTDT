@@ -35,6 +35,7 @@ class ArticleType(Enum):
     DISAMBIGUATION = 1
     MISSING = 2
     LIST = 3
+    HELP = 4
 
 def types(titles):
     """
@@ -112,6 +113,10 @@ def types(titles):
 
                 if 'disambiguation' in page.get('pageprops'):
                     types[title] = ArticleType.DISAMBIGUATION
+                    continue
+
+                if title.lower().startswith("help:"):
+                    types[title] = ArticleType.HELP
                     continue
 
                 types[title] = ArticleType.NORMAL
