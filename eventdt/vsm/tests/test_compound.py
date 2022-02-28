@@ -165,7 +165,7 @@ class TestCompound(unittest.TestCase):
 
     def test_add_update_none(self):
         """
-        Test that updating a :class:`~vsm.compound.Compound` with nothing does not change the or size dimensions.
+        Test that updating a :class:`~vsm.compound.Compound` with nothing does not change the size or dimensions.
         """
 
         vectors = [ Vector({ 'a': 1, 'b': 2 }), Vector({ 'c': 3, 'd': 1 }) ]
@@ -191,3 +191,108 @@ class TestCompound(unittest.TestCase):
         self.assertEqual(2, compound.size)
         self.assertTrue(all( compound.dimensions[dimension] == v1.dimensions[dimension]
                              for dimension in v1.dimensions ))
+
+    def test_remove_without_add(self):
+        """
+        Test that when removing vectors without adding, the dimensions are accepted and placed in the negative.
+        """
+
+        vector = Vector({ 'a': 1, 'b': 2 })
+        compound = Compound()
+        compound.remove(vector)
+        self.assertEqual(-1, compound.size)
+        self.assertTrue(all( magnitude == -vector.dimensions[dimension]
+                             for dimension, magnitude in compound.dimensions.items() ))
+
+    def test_remove_after_add(self):
+        """
+        Test that adding and removing the same vector results in an empty :class:`~vsm.compound.Compound` with dimensions set to zero.
+        """
+
+        vector = Vector({ 'a': 1, 'b': 2 })
+        compound = Compound()
+        self.assertEqual(0, compound.size)
+        compound.add(vector)
+        self.assertEqual(1, compound.size)
+        compound.remove(vector)
+        self.assertEqual(0, compound.size)
+        self.assertEqual({ dimension: 0 for dimension in vector.dimensions }, compound.dimensions)
+
+    def test_remove_none(self):
+        """
+        Test that removing no vector does not change the :class:`~vsm.compound.Compound`
+        """
+
+        vector = Vector({ 'a': 1, 'b': 2 })
+
+        compound = Compound()
+        self.assertEqual({ }, compound.dimensions)
+        self.assertEqual(0, compound.size)
+        compound.remove()
+        self.assertEqual({ }, compound.dimensions)
+        self.assertEqual(0, compound.size)
+
+        compound.add(vector)
+        self.assertEqual(vector.dimensions, compound.dimensions)
+        self.assertEqual(1, compound.size)
+        compound.remove()
+        self.assertEqual(vector.dimensions, compound.dimensions)
+        self.assertEqual(1, compound.size)
+
+    def test_remove_one(self):
+        """
+        Test that removing one vector removes the other vectors.
+        """
+
+        v1, v2 = Vector({ 'a': 1, 'b': 2 }), Vector({ 'b': 3, 'c': 1 })
+        compound = Compound()
+        compound.add(v1, v2)
+        self.assertEqual(2, compound.size)
+        self.assertEqual(vector_math.concatenate([ v1, v2 ]).dimensions, compound.dimensions)
+
+        compound.remove(v2)
+        self.assertEqual(1, compound.size)
+        self.assertEqual({ dimension: v1.dimensions[dimension]
+                           for dimension in [ dimension for vector in [v1, v2]
+                                                        for dimension in vector.dimensions ] },
+                           compound.dimensions)
+
+    def test_remove_multiple(self):
+        """
+        Test that removing multiple vectors from the :class:`~vsm.compound.Compound` does remove them.
+        """
+
+        vectors = [ Vector({ 'a': 1, 'b': 2 }), Vector({ 'b': 3, 'c': 1 }) ]
+        compound = Compound()
+        compound.add(*vectors)
+        self.assertEqual(2, compound.size)
+        self.assertEqual(vector_math.concatenate(vectors).dimensions, compound.dimensions)
+
+        compound.remove(*vectors)
+        self.assertEqual(0, compound.size)
+        self.assertEqual({ dimension: 0 for dimension in [ dimension for vector in vectors
+                                                                     for dimension in vector.dimensions ] },
+                           compound.dimensions)
+
+
+    def test_remove_multiple_incremental(self):
+        """
+        Test that removing multiple vectors from the :class:`~vsm.compound.Compound` does remove them is like removing them one-by-one.
+        """
+
+        v1, v2 = Vector({ 'a': 1, 'b': 2 }), Vector({ 'b': 3, 'c': 1 })
+        compound = Compound()
+        compound.add(v1, v2)
+        self.assertEqual(2, compound.size)
+        self.assertEqual(vector_math.concatenate([ v1, v2 ]).dimensions, compound.dimensions)
+
+        compound.remove(v2)
+        self.assertEqual(1, compound.size)
+        self.assertEqual({ dimension: v1.dimensions[dimension]
+                           for dimension in [ dimension for vector in [v1, v2]
+                                                        for dimension in vector.dimensions ] },
+                           compound.dimensions)
+
+        compound.remove(v1)
+        self.assertEqual(0, compound.size)
+        self.assertTrue(all( 0 == magnitude for magnitude in compound.dimensions.values() ))

@@ -17,6 +17,7 @@ if path not in sys.path:
 
 from vsm.vector import Vector
 from vsm import vector_math
+from logger import logger
 
 class Compound(Vector):
     """
@@ -56,7 +57,13 @@ class Compound(Vector):
         Remove the given :class:`~vsm.vector.Vector` arguments from the :class:`~Compound`.
         """
 
-        pass
+        if len(args) > self.size:
+            logger.warning("Removing more vectors from compound than exist")
+
+        self.size -= len(args)
+        for vector in args:
+            for dimension, magnitude in vector.dimensions.items():
+                self.dimensions[dimension] = self.dimensions.get(dimension, 0) - magnitude
 
     def centroid(self):
         """
