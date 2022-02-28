@@ -42,20 +42,21 @@ For example, this snippet uses the :class:`~apd.extractors.local.entity_extracto
 
 Accepted arguments:
 
-    - ``-f --file``                *<Required>* The input corpus from where to extract participants.
-    - ``-o --output``              *<Required>* The path to the file where to store the extracted participants.
-    - ``-m --model``               *<Optional>* The type of model to use; supported: `ELDParticipantDetector`; defaults to a normal participant detector.
-    - ``--extractor``              *<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.
-    - ``--scorer``                 *<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
-    - ``--filter``                 *<Optional>* The filter to use to filter candidate participants; supported: `Filter`, `RankFilter`, `ThresholdFilter`; defaults to no filter.
-    - ``--resolver``               *<Optional>* The resolver to use to resolve candidate participants; supported: `Resolver`, `TokenResolver`, `WikipediaNameResolver`, `WikipediaSearchResolver`; defaults to no filter.
-    - ``--extrapolator``           *<Optional>* The extrapolator to use to extrapolate participants; supported: `Extrapolator`, `WikipediaExtrapolator`; defaults to no extrapolator.
-    - ``--postprocessor``          *<Optional>* The post-processor to use to post-process participants; supported: `Postprocessor`, `WikiPostprocessor`; defaults to no post-processor.
-    - ``-k --keep``                *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
-    - ``--filter-threshold``       *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`); defaults to 0.
-    - ``--resolver-threshold``     *<Optional>* The threshold to use when resolving candidates (used only with the `WikipediaNameResolver` and `WikipediaSearchResolver`).
-    - ``--extrapolator-threshold`` *<Optional>* The threshold to use when extrapolating candidates (used only with the `WikipediaExtrapolator`); defaults to 0.
-    - ``--scheme``                 *<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
+    - ``-f --file``                       *<Required>* The input corpus from where to extract participants.
+    - ``-o --output``                     *<Required>* The path to the file where to store the extracted participants.
+    - ``-m --model``                      *<Optional>* The type of model to use; supported: `ELDParticipantDetector`; defaults to a normal participant detector.
+    - ``--extractor``                     *<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.
+    - ``--scorer``                        *<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
+    - ``--filter``                        *<Optional>* The filter to use to filter candidate participants; supported: `Filter`, `RankFilter`, `ThresholdFilter`; defaults to no filter.
+    - ``--resolver``                      *<Optional>* The resolver to use to resolve candidate participants; supported: `Resolver`, `TokenResolver`, `WikipediaNameResolver`, `WikipediaSearchResolver`; defaults to no filter.
+    - ``--extrapolator``                  *<Optional>* The extrapolator to use to extrapolate participants; supported: `Extrapolator`, `WikipediaExtrapolator`; defaults to no extrapolator.
+    - ``--postprocessor``                 *<Optional>* The post-processor to use to post-process participants; supported: `Postprocessor`, `WikiPostprocessor`; defaults to no post-processor.
+    - ``-k --keep``                       *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
+    - ``--filter-threshold``              *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`); defaults to 0.
+    - ``--resolver-threshold``            *<Optional>* The threshold to use when resolving candidates (used only with the `WikipediaNameResolver` and `WikipediaSearchResolver`).
+    - ``--extrapolator-threshold``        *<Optional>* The threshold to use when extrapolating candidates (used only with the `WikipediaExtrapolator`); defaults to 0.
+    - ``--scheme``                        *<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
+    - ``--postprocessor-remove-accents``  *<Optional>* Remove accents when post-processing participants (used only with the `WikipediaPostprocessor`).
 """
 
 import argparse
@@ -99,20 +100,21 @@ def setup_args():
 
     Accepted arguments:
 
-        - ``-f --file``                *<Required>* The input corpus from where to extract participants.
-        - ``-o --output``              *<Required>* The path to the file where to store the extracted participants.
-        - ``-m --model``               *<Optional>* The type of model to use; supported: `ELDParticipantDetector`; defaults to a normal participant detector.
-        - ``--extractor``              *<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.
-        - ``--scorer``                 *<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
-        - ``--filter``                 *<Optional>* The filter to use to filter candidate participants; supported: `Filter`, `RankFilter`, `ThresholdFilter`; defaults to no filter.
-        - ``--resolver``               *<Optional>* The resolver to use to resolve candidate participants; supported: `Resolver`, `TokenResolver`, `WikipediaNameResolver`, `WikipediaSearchResolver`; defaults to no resolver.
-        - ``--extrapolator``           *<Optional>* The extrapolator to use to extrapolate participants; supported: `Extrapolator`, `WikipediaExtrapolator`; defaults to no extrapolator.
-        - ``--postprocessor``          *<Optional>* The post-processor to use to post-process participants; supported: `Postprocessor`, `WikiPostprocessor`; defaults to no post-processor.
-        - ``-k --keep``                *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
-        - ``--filter-threshold``       *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`); defaults to 0.
-        - ``--resolver-threshold``     *<Optional>* The threshold to use when resolving candidates (used only with the `WikipediaNameResolver` and `WikipediaSearchResolver`); defaults to 0.
-        - ``--extrapolator-threshold`` *<Optional>* The threshold to use when extrapolating candidates (used only with the `WikipediaExtrapolator`); defaults to 0.
-        - ``--scheme``                 *<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
+        - ``-f --file``                       *<Required>* The input corpus from where to extract participants.
+        - ``-o --output``                     *<Required>* The path to the file where to store the extracted participants.
+        - ``-m --model``                      *<Optional>* The type of model to use; supported: `ELDParticipantDetector`; defaults to a normal participant detector.
+        - ``--extractor``                     *<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.
+        - ``--scorer``                        *<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
+        - ``--filter``                        *<Optional>* The filter to use to filter candidate participants; supported: `Filter`, `RankFilter`, `ThresholdFilter`; defaults to no filter.
+        - ``--resolver``                      *<Optional>* The resolver to use to resolve candidate participants; supported: `Resolver`, `TokenResolver`, `WikipediaNameResolver`, `WikipediaSearchResolver`; defaults to no resolver.
+        - ``--extrapolator``                  *<Optional>* The extrapolator to use to extrapolate participants; supported: `Extrapolator`, `WikipediaExtrapolator`; defaults to no extrapolator.
+        - ``--postprocessor``                 *<Optional>* The post-processor to use to post-process participants; supported: `Postprocessor`, `WikiPostprocessor`; defaults to no post-processor.
+        - ``-k --keep``                       *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
+        - ``--filter-threshold``              *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`); defaults to 0.
+        - ``--resolver-threshold``            *<Optional>* The threshold to use when resolving candidates (used only with the `WikipediaNameResolver` and `WikipediaSearchResolver`); defaults to 0.
+        - ``--extrapolator-threshold``        *<Optional>* The threshold to use when extrapolating candidates (used only with the `WikipediaExtrapolator`); defaults to 0.
+        - ``--scheme``                        *<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
+        - ``--postprocessor-remove-accents``  *<Optional>* Remove accents when post-processing participants (used only with the `WikipediaPostprocessor`).
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
@@ -138,14 +140,16 @@ def setup_args():
                         help='<Optional> The post-processor to use to post-process participants; supported: `Postprocessor`, `WikiPostprocessor`; defaults to no post-processor.')
     parser.add_argument('-k', '--keep', required=False, type=int,
                         help='<Optional> The number of candidates to retain when filtering candidates (used only with the `RankFilter`).')
-    parser.add_argument('--filter-threshold', required=False, default=0,
+    parser.add_argument('--filter-threshold', required=False, default=0, type=float,
                         help='<Optional> The score threshold to use when filtering candidates (used only with the `ThresholdFilter`); defaults to 0.')
-    parser.add_argument('--resolver-threshold', required=False, default=0,
+    parser.add_argument('--resolver-threshold', required=False, default=0, type=float,
                         help='<Optional> The threshold to use when resolving candidates (used only with the `WikipediaNameResolver` and `WikipediaSearchResolver`); defaults to 0.')
-    parser.add_argument('--extrapolator-threshold', required=False, default=0,
+    parser.add_argument('--extrapolator-threshold', required=False, default=0, type=float,
                         help='<Optional> The threshold to use when extrapolating candidates (used only with the `WikipediaExtrapolator`); defaults to 0..')
     parser.add_argument('--scheme', required=False, default=None,
                         help='<Optional> The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).')
+    parser.add_argument('--postprocessor-remove-accents', required=False, action='store_true',
+                        help='<Optional> Remove accents when post-processing participants (used only with the `WikipediaPostprocessor`).')
 
     args = parser.parse_args()
     return args

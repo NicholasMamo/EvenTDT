@@ -614,6 +614,26 @@ class TestAPD(unittest.TestCase):
         postprocessor = apd.create_postprocessor(WikipediaPostprocessor, file=file, scheme=scheme, threshold=0)
         self.assertEqual(WikipediaPostprocessor, type(postprocessor))
 
+    def test_create_postprocessor_wikipedia_postprocessor_remove_accents(self):
+        """
+        Test that when creating the `WikipediaPostprocessor` with the instruction to remove accents, the created post-processor removes accents.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        scheme = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        postprocessor = apd.create_postprocessor(WikipediaPostprocessor, remove_accents=True)
+        self.assertTrue(postprocessor.remove_accents)
+
+    def test_create_postprocessor_wikipedia_postprocessor_keep_accents(self):
+        """
+        Test that when creating the `WikipediaPostprocessor` with the instruction to keep accents, the created post-processor keeps accents.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        scheme = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        postprocessor = apd.create_postprocessor(WikipediaPostprocessor, remove_accents=False)
+        self.assertFalse(postprocessor.remove_accents)
+
     def test_rank_copy(self):
         """
         Test that when ranking participants, the original term dictionary is not changed.
