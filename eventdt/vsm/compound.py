@@ -30,12 +30,16 @@ class Compound(Vector):
     def __init__(self, vectors=None, *args, **kwargs):
         """
         Initialize the :class:`~Compound`.
+
+        :param vectors: The list of vectors to add to the :class:`~Compound`.
+                        If no vector is given, the :class:`~Compound` is initialized empty.
+        :type vectors: list of :class:`~vsm.vector.Vector` or None
         """
 
         super(Compound, self).__init__(*args, **kwargs)
         self.size = 0
         vectors = vectors or [ ]
-        # TODO: Add the vectors to the compound
+        self.add(*vectors)
 
     def add(self, *args):
         """

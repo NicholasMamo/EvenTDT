@@ -43,6 +43,29 @@ class TestCompound(unittest.TestCase):
         self.assertEqual({ }, compound.dimensions)
         self.assertEqual(0, compound.size)
 
+    def test_init_with_vectors(self):
+        """
+        Test that when creating the :class:`~vsm.compound.Compound` with vectors, they are added correctly and the size set correctly.
+        """
+
+        vectors = [ Vector({ 'a': 1, 'b': 2 }), Vector({ 'c': 3, 'd': 1 }) ]
+
+        compound = Compound(vectors)
+        self.assertEqual(len(vectors), compound.size)
+        self.assertEqual(vector_math.concatenate(vectors).dimensions, compound.dimensions)
+
+    def test_init_with_vectors_like_add(self):
+        """
+        Test that creating the :class:`~vsm.compound.Compound` with vectors is like creating an empty :class:`~vsm.compound.Compound` and then adding vectors.
+        """
+
+        vectors = [ Vector({ 'a': 1, 'b': 2 }), Vector({ 'c': 3, 'd': 1 }) ]
+
+        c1 = Compound(vectors)
+        c2 = Compound()
+        c2.add(*vectors)
+        self.assertEqual(c2.dimensions, c1.dimensions)
+
     def test_init_attributes_empty(self):
         """
         Test that by default, the :class:`~vsm.compound.Compound` has no attributes.
