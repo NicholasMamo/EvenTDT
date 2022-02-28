@@ -13,3 +13,4 @@ Second, there is the :class:`~vsm.vector.Vector` class, which is a vector in the
 """
 
 from .vector import *
+from .compound import *

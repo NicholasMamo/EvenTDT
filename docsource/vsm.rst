@@ -18,6 +18,10 @@ Vectors
    :members:
    :special-members:
 
+.. automodule:: vsm.compound
+   :members:
+   :special-members:
+
 Vector Math
 -----------
 
