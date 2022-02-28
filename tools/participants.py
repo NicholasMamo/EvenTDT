@@ -57,6 +57,7 @@ Accepted arguments:
     - ``--extrapolator-threshold``        *<Optional>* The threshold to use when extrapolating candidates (used only with the `WikipediaExtrapolator`); defaults to 0.
     - ``--scheme``                        *<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
     - ``--postprocessor-remove-accents``  *<Optional>* Remove accents when post-processing participants (used only with the `WikipediaPostprocessor`).
+    - ``--postprocessor-remove-brackets`` *<Optional>* Remove brackets when post-processing participants (used only with the `WikipediaPostprocessor`).
 """
 
 import argparse
@@ -115,6 +116,7 @@ def setup_args():
         - ``--extrapolator-threshold``        *<Optional>* The threshold to use when extrapolating candidates (used only with the `WikipediaExtrapolator`); defaults to 0.
         - ``--scheme``                        *<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
         - ``--postprocessor-remove-accents``  *<Optional>* Remove accents when post-processing participants (used only with the `WikipediaPostprocessor`).
+        - ``--postprocessor-remove-brackets`` *<Optional>* Remove brackets when post-processing participants (used only with the `WikipediaPostprocessor`).
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
@@ -150,6 +152,8 @@ def setup_args():
                         help='<Optional> The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).')
     parser.add_argument('--postprocessor-remove-accents', required=False, action='store_true',
                         help='<Optional> Remove accents when post-processing participants (used only with the `WikipediaPostprocessor`).')
+    parser.add_argument('--postprocessor-remove-brackets', required=False, action='store_true',
+                        help='<Optional> Remove brackets when post-processing participants (used only with the `WikipediaPostprocessor`).')
 
     args = parser.parse_args()
     return args

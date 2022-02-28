@@ -634,6 +634,26 @@ class TestAPD(unittest.TestCase):
         postprocessor = apd.create_postprocessor(WikipediaPostprocessor, remove_accents=False)
         self.assertFalse(postprocessor.remove_accents)
 
+    def test_create_postprocessor_wikipedia_postprocessor_remove_brackets(self):
+        """
+        Test that when creating the `WikipediaPostprocessor` with the instruction to remove brackets, the created post-processor removes brackets.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        scheme = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        postprocessor = apd.create_postprocessor(WikipediaPostprocessor, remove_brackets=True)
+        self.assertTrue(postprocessor.remove_brackets)
+
+    def test_create_postprocessor_wikipedia_postprocessor_keep_brackets(self):
+        """
+        Test that when creating the `WikipediaPostprocessor` with the instruction to keep brackets, the created post-processor keeps brackets.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        scheme = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        postprocessor = apd.create_postprocessor(WikipediaPostprocessor, remove_brackets=False)
+        self.assertFalse(postprocessor.remove_brackets)
+
     def test_rank_copy(self):
         """
         Test that when ranking participants, the original term dictionary is not changed.
