@@ -8,20 +8,33 @@ The class is used by applications that do not need a comprehensive list of vecto
 If a single
 """
 
-from .vector import Vector
+import os
+import sys
+
+path = os.path.join(os.path.dirname(__file__), '..')
+if path not in sys.path:
+    sys.path.append(path)
+
+from vsm.vector import Vector
 
 class Compound(Vector):
     """
     The :class:`~Compound` class is a special type of :class:`~vsm.vector.Vector` that represents several vectors.
     The class only stores a representation of the vectors, adding each vector's dimensions to form one single vector.
+
+    :var size: The numebr of vectors represented by the :class:`~Compound` vector.
+    :vartype size: int
     """
 
-    def __init__(self, vectors, *args, **kwargs):
+    def __init__(self, vectors=None, *args, **kwargs):
         """
         Initialize the :class:`~Compound`.
         """
 
-        pass
+        super(Compound, self).__init__(*args, **kwargs)
+        self.size = 0
+        vectors = vectors or [ ]
+        # TODO: Add the vectors to the compound
 
     def add(self, *args):
         """
