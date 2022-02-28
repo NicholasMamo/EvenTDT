@@ -207,7 +207,7 @@ class TestWikipediaSearchResolver(unittest.TestCase):
         score_2 = resolver._compute_score(candidate_document, title_document_2, sentence_document_2)
         self.assertGreater(score_1, score_2)
 
-    def test_wikipedia_search_resolver(self):
+    def test_wikipedia_search_resolver_behaviour(self):
         """
         Test the Wikipedia search resolver.
         """
@@ -215,9 +215,9 @@ class TestWikipediaSearchResolver(unittest.TestCase):
         path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
         tokenizer = Tokenizer(min_length=2, stem=True, stopwords=list(stopwords.words("english")))
         resolver = WikipediaSearchResolver(TF(), tokenizer, 0, path)
-        resolved, unresolved = resolver.resolve({ 'Chelsea': 1, 'Callum': 0.5 })
+        resolved, unresolved = resolver.resolve({ 'Chelsea': 1, 'Hudson-Odoi': 0.5 })
         self.assertEqual('Chelsea F.C.', resolved['Chelsea'])
-        self.assertEqual('Callum Hudson-Odoi', resolved['Callum'])
+        self.assertEqual('Callum Hudson-Odoi', resolved['Hudson-Odoi'])
 
     def test_all_resolved_or_unresolved(self):
         """
@@ -266,10 +266,11 @@ class TestWikipediaSearchResolver(unittest.TestCase):
         path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
         tokenizer = Tokenizer(min_length=2, stem=True, stopwords=list(stopwords.words("english")))
         resolver = WikipediaSearchResolver(TF(), tokenizer, 0.05, path)
-        scores = { 'Chelsea': 1, 'Sarri': 0.5, 'Callum': 0.25, 'Eden': 0.1 }
+        scores = { 'Chelsea': 1, 'Sarri': 0.5, 'Callum': 0.25, 'Eden Hazard': 0.1 }
         resolved, unresolved = resolver.resolve(scores)
         self.assertEqual(len(scores), len(resolved) + len(unresolved))
-        self.assertEqual([ 'Chelsea', 'Sarri', 'Eden' ], unresolved)
+        self.assertEqual([ 'Eden Hazard' ], list(resolved.keys()))
+        self.assertEqual([ 'Chelsea', 'Sarri', 'Callum' ], unresolved)
 
     def test_high_threshold(self):
         """
