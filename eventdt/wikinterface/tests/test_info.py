@@ -129,6 +129,15 @@ class TestInfo(unittest.TestCase):
         self.assertEqual(1, len(types))
         self.assertEqual('Zlatan Ibrahimović', list(types.keys())[0])
 
+    def test_get_type_with_hashtag(self):
+        """
+        Test that when getting the type of a page that starts with a hashtag, it returns no pages.
+        """
+
+        page = '#Chelsea'
+        types = info.types(page)
+        self.assertEqual({ }, types)
+
     def test_is_person_no_articles(self):
         """
         Test that when no articles are given, an empty dictionary is returned.
@@ -181,7 +190,7 @@ class TestInfo(unittest.TestCase):
         page = 'Messi'
         classes = info.is_person(page)
         self.assertTrue(page in classes)
-        self.assertEqual(2, len(classes))
+        self.assertEqual(1, len(classes))
         self.assertTrue(all(classes.values()))
 
     def test_is_person_many_pages(self):

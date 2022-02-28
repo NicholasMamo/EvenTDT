@@ -93,8 +93,8 @@ def types(titles, undo_redirects=True):
             """
             Extract the page types from the responses.
             """
-            pages = response['query']['pages']
-            redirects = response['query']['redirects'] if 'redirects' in response['query'] else {}
+            pages = response['query']['pages'] if 'pages' in response['query'] else { }
+            redirects = response['query']['redirects'] if 'redirects' in response['query'] else { }
 
             """
             Go through each page and find its type.
