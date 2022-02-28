@@ -234,8 +234,7 @@ twitter_tests() {
 vector_tests() {
 	echo -e "${HIGHLIGHT}Vectors${DEFAULT}"
 	python3 -m unittest eventdt.vsm.tests.test_vector
-
-	echo -e "${HIGHLIGHT}Vector math${DEFAULT}"
+	python3 -m unittest eventdt.vsm.tests.test_compound
 	python3 -m unittest eventdt.vsm.tests.test_vector_math
 
 	echo -e "${HIGHLIGHT}Clusters${DEFAULT}"
