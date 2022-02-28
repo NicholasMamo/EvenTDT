@@ -13,6 +13,8 @@ if path not in sys.path:
     sys.path.append(path)
 
 from compound import Compound
+from vector import Vector
+import vector_math
 
 class TestCompound(unittest.TestCase):
     """
@@ -57,3 +59,112 @@ class TestCompound(unittest.TestCase):
         attributes = { 'a': 1, 'b': 2 }
         compound = Compound(attributes=attributes)
         self.assertEqual(attributes, compound.attributes)
+
+    def test_add_none(self):
+        """
+        Test that when adding no new vectors, the dimensions and size remain unchanged.
+        """
+
+        compound = Compound()
+        self.assertEqual(0, compound.size)
+        compound.add()
+        self.assertEqual(0, compound.size)
+        self.assertEqual({ }, compound.dimensions)
+
+    def test_add_one_to_empty(self):
+        """
+        Test that when adding one vector to an empty :class:`~vsm.compound.Compound`, the dimensions are equal to the added vector.
+        """
+
+        vector = Vector({ 'a': 1, 'b': 2 })
+
+        compound = Compound()
+        self.assertEqual(0, compound.size)
+        compound.add(vector)
+        self.assertEqual(1, compound.size)
+        self.assertEqual(vector.dimensions, compound.dimensions)
+
+    def test_add_multiple_to_empty(self):
+        """
+        Test that when adding multiple vectors to an empty :class:`~vsm.compound.Compound`, the dimension are equal to the aggregate of all.
+        """
+
+        vectors = [ Vector({ 'a': 1, 'b': 2 }), Vector({ 'a': 3, 'b': 1 }) ]
+
+        compound = Compound()
+        self.assertEqual(0, compound.size)
+        compound.add(*vectors)
+        self.assertEqual(len(vectors), compound.size)
+        self.assertEqual(vector_math.concatenate(vectors).dimensions, compound.dimensions)
+
+    def test_add_all_dimensions(self):
+        """
+        Test that when adding multiple vectors to a :class:`~vsm.compound.Compound`, all dimensions are retained.
+        """
+
+        vectors = [ Vector({ 'a': 1, 'b': 2 }), Vector({ 'c': 3, 'd': 1 }) ]
+        dimensions = [ dimension for vector in vectors for dimension in vector.dimensions ]
+
+        compound = Compound()
+        self.assertEqual(0, compound.size)
+        compound.add(*vectors)
+        self.assertEqual(len(vectors), compound.size)
+        self.assertEqual(dimensions, list(compound.dimensions.keys()))
+
+    def test_add_update(self):
+        """
+        Test updating the vectors in the :class:`~vsm.compound.Compound`.
+        """
+
+        v1, v2 = Vector({ 'a': 1, 'b': 2 }), Vector({ 'c': 3, 'd': 1 })
+        compound = Compound()
+        compound.add(v1)
+        self.assertEqual(v1.dimensions, compound.dimensions)
+
+        compound.add(v2)
+        self.assertEqual(2, compound.size)
+        self.assertEqual(vector_math.concatenate([ v1, v2 ]).dimensions, compound.dimensions)
+
+    def test_add_update_incremental(self):
+        """
+        Test that updating the :class:`~vsm.compound.Compound` is the same as adding them at once.
+        """
+
+        vectors = [ Vector({ 'a': 1, 'b': 2 }), Vector({ 'c': 3, 'd': 1 }) ]
+        c1 = Compound()
+        c1.add(*vectors)
+
+        c2 = Compound()
+        for vector in vectors:
+            c2.add(vector)
+
+        self.assertEqual(c1.dimensions, c2.dimensions)
+
+    def test_add_update_none(self):
+        """
+        Test that updating a :class:`~vsm.compound.Compound` with nothing does not change the or size dimensions.
+        """
+
+        vectors = [ Vector({ 'a': 1, 'b': 2 }), Vector({ 'c': 3, 'd': 1 }) ]
+        compound = Compound()
+        compound.add(*vectors)
+        dimensions = dict(compound.dimensions)
+        compound.add()
+        self.assertEqual(2, len(vectors))
+        self.assertEqual(dimensions, compound.dimensions)
+
+    def test_add_update_keeps_previous_dimensions(self):
+        """
+        Test that updating a :class:`~vsm.compound.Compound` does not overwrite the previous vectors' dimensions.
+        """
+
+        v1, v2 = Vector({ 'a': 1, 'b': 2 }), Vector({ 'c': 3, 'd': 1 })
+        compound = Compound()
+        compound.add(v1)
+        self.assertEqual(1, compound.size)
+        self.assertEqual(v1.dimensions, compound.dimensions)
+
+        compound.add(v2)
+        self.assertEqual(2, compound.size)
+        self.assertTrue(all( compound.dimensions[dimension] == v1.dimensions[dimension]
+                             for dimension in v1.dimensions ))

@@ -16,6 +16,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from vsm.vector import Vector
+from vsm import vector_math
 
 class Compound(Vector):
     """
@@ -41,7 +42,10 @@ class Compound(Vector):
         Add the given :class:`~vsm.vector.Vector` arguments to the :class:`~Compound`.
         """
 
-        pass
+        self.size += len(args)
+        for vector in args:
+            for dimension, magnitude in vector.dimensions.items():
+                self.dimensions[dimension] = self.dimensions.get(dimension, 0) + magnitude
 
     def remove(self, *args):
         """
