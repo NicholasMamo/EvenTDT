@@ -37,13 +37,15 @@ class ArticleType(Enum):
     LIST = 3
     HELP = 4
 
-def types(titles):
+def types(titles, undo_redirects=True):
     """
     Get the type of page each page title returns.
     The page type is one of the values in the :class:`~wikinterface.info.ArticleType` enum.
 
     :param titles: A title, or a list of titles of the pages whose types will be retrieved.
     :type titles: list of str or str
+    :param undo_redirects: A boolean indicating whether to revert redirects.
+    :type undo_redirects: bool
 
     :return: A dictionary with page titles as keys and the types as :class:`~wikinterface.info.ArticleType` values.
     :rtype: dict
@@ -69,7 +71,7 @@ def types(titles):
     """
     if len(urllib.parse.quote('|'.join(titles))) > 1024:
         for i in range(0, math.ceil(len(titles) / stagger)):
-            subset = types(titles[(i * stagger):((i + 1) * stagger)])
+            subset = types(titles[(i * stagger):((i + 1) * stagger)], undo_redirects=undo_redirects)
             _types.update(subset)
         return _types
 
@@ -126,7 +128,7 @@ def types(titles):
         Put the original page titles as keys.
         This is useful in case there were any redirects.
         """
-        _types = revert_redirects(_types, redirects)
+        _types = revert_redirects(_types, redirects) if undo_redirects else _types
 
     return _types
 

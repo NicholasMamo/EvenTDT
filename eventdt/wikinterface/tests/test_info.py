@@ -109,6 +109,26 @@ class TestInfo(unittest.TestCase):
         self.assertEqual(set(pages), set(list(types.keys())))
         self.assertEqual(info.ArticleType.DISAMBIGUATION, types['Rafael'])
 
+    def test_get_type_undo_redirects_true(self):
+        """
+        Test that when setting undoing redirects to `True`, the keys might change.
+        """
+
+        page = 'Zlatan Ibrahimovic'
+        types = info.types(page, undo_redirects=True)
+        self.assertEqual(1, len(types))
+        self.assertEqual(page, list(types.keys())[0])
+
+    def test_get_type_undo_redirects_false(self):
+        """
+        Test that when setting undoing redirects to `False`, the original keys are returned.
+        """
+
+        page = 'Zlatan Ibrahimovic'
+        types = info.types(page, undo_redirects=False)
+        self.assertEqual(1, len(types))
+        self.assertEqual('Zlatan Ibrahimović', list(types.keys())[0])
+
     def test_is_person_no_articles(self):
         """
         Test that when no articles are given, an empty dictionary is returned.
