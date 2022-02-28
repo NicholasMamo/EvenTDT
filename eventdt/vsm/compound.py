@@ -37,12 +37,12 @@ class Compound(Vector):
 
         pass
 
-    def size(self):
+    def centroid(self):
         """
-        Get the number of vectors in the :class:`~Compound`.
+        Calculate the centroid of the :class:`~Compound`.
 
-        :return: The number of vectors in the :class:`~Compound`.
-        :rtype: int
+        :return: A new, normalized :class:`~vsm.vector.Vector` representing the centroid of all vectors in the :class:`~Compound`.
+        :rtype: :class:`~vsm.vector.Vector`
         """
 
         pass
