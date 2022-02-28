@@ -49,7 +49,7 @@ def types(titles):
     :rtype: dict
     """
 
-    types = { }
+    _types = { }
 
     titles = titles if type(titles) is list else [ titles ]
 
@@ -69,10 +69,9 @@ def types(titles):
     """
     if len(urllib.parse.quote('|'.join(titles))) > 1024:
         for i in range(0, math.ceil(len(titles) / stagger)):
-            subset = collect(titles[(i * stagger):((i + 1) * stagger)],
-                             introduction_only=introduction_only)
-            types.update(subset)
-        return types
+            subset = types(titles[(i * stagger):((i + 1) * stagger)])
+            _types.update(subset)
+        return _types
 
     """
     If page titles are given, collect information about them.
@@ -104,22 +103,22 @@ def types(titles):
                 title = page['title']
 
                 if title.lower().startswith("list of"):
-                    types[title] = ArticleType.LIST
+                    _types[title] = ArticleType.LIST
                     continue
 
                 if 'pageprops' not in page:
-                    types[title] = ArticleType.MISSING
+                    _types[title] = ArticleType.MISSING
                     continue
 
                 if 'disambiguation' in page.get('pageprops'):
-                    types[title] = ArticleType.DISAMBIGUATION
+                    _types[title] = ArticleType.DISAMBIGUATION
                     continue
 
                 if title.lower().startswith("help:"):
-                    types[title] = ArticleType.HELP
+                    _types[title] = ArticleType.HELP
                     continue
 
-                types[title] = ArticleType.NORMAL
+                _types[title] = ArticleType.NORMAL
 
             parameters['excontinue'] = response['continue']['excontinue'] if 'continue' in response else None
 
@@ -127,9 +126,9 @@ def types(titles):
         Put the original page titles as keys.
         This is useful in case there were any redirects.
         """
-        types = revert_redirects(types, redirects)
+        _types = revert_redirects(_types, redirects)
 
-    return types
+    return _types
 
 def is_person(titles):
     """
