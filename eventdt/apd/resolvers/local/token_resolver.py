@@ -36,7 +36,7 @@ class TokenResolver(Resolver):
     :vartype case_fold: bool
     """
 
-    def __init__(self, tokenizer, corpus, case_fold=True):
+    def __init__(self, tokenizer, corpus, case_fold=True, *args, **kwargs):
         """
         Create the resolver.
 

@@ -180,7 +180,7 @@ def main():
                                  'scored': scored, 'filtered': filtered,
                                  'resolved': resolved, 'extrapolated': extrapolated, 'postprocessed': postprocessed })
 
-def create_detector(model, extractor, scorer, filter, resolver, extrapolator, *args, **kwargs):
+def create_detector(model, extractor, scorer, filter, resolver, extrapolator, postprocessor, *args, **kwargs):
     """
     Create all the components of the participant detector.
 
@@ -196,6 +196,8 @@ def create_detector(model, extractor, scorer, filter, resolver, extrapolator, *a
     :type resolver: :class:`~apd.resolvers.resolver.Resolver`
     :param extrapolator: The class of the extrapolator with which to extrapolate candidate participants.
     :type extrapolator: :class:`~apd.extrapolators.extrapolator.Extrapolator`
+    :param postprocessor: The post-processor to use to post-process participants
+    :type postprocessor: :class:`~apd.postprocessors.postprocessor.Postprocessor`
 
     :return: The created participant detector.
     :rtype: :class:`~apd.participant_detector.ParticipantDetector`
@@ -206,7 +208,8 @@ def create_detector(model, extractor, scorer, filter, resolver, extrapolator, *a
     filter = create_filter(filter, *args, **kwargs)
     resolver = create_resolver(resolver, *args, **kwargs)
     extrapolator = create_extrapolator(extrapolator, *args, **kwargs)
-    detector = create_model(model, extractor, scorer, filter, resolver, extrapolator, *args, **kwargs)
+    postprocessor = create_postprocessor(postprocessor, *args, **kwargs)
+    detector = create_model(model, extractor, scorer, filter, resolver, extrapolator, postprocessor, *args, **kwargs)
     logger.info(f"Extractor: { type(detector.extractor).__name__ }")
     logger.info(f"Scorer: { type(detector.scorer).__name__ }")
     logger.info(f"Filter: { type(detector.filter).__name__ }")
@@ -267,7 +270,7 @@ def rank(participants):
 
     return ranked
 
-def create_model(model, extractor, scorer, filter, resolver, scheme=None, *args, **kwargs):
+def create_model(model, extractor, scorer, filter, resolver, extrapolator, postprocessor, scheme=None, *args, **kwargs):
     """
     Create a participant detector model from the given components.
 
@@ -281,6 +284,10 @@ def create_model(model, extractor, scorer, filter, resolver, scheme=None, *args,
     :type filter: :class:`~apd.filters.filter.Filter`
     :param resolver: The class of the resolver with which to resolve candidate participants.
     :type resolver: :class:`~apd.resolvers.resolver.Resolver`
+    :param extrapolator: The class of the extrapolator with which to extrapolate candidate participants.
+    :type extrapolator: :class:`~apd.extrapolators.extrapolator.Extrapolator`
+    :param postprocessor: The post-processor to use to post-process participants
+    :type postprocessor: :class:`~apd.postprocessors.postprocessor.Postprocessor`
     :param scheme: The path the TF-IDF scheme.
     :type scheme: str
 
@@ -295,11 +302,13 @@ def create_model(model, extractor, scorer, filter, resolver, scheme=None, *args,
             raise ValueError("The TF-IDF scheme is required with the ELDParticipantDetector model.")
         scheme = tools.load(scheme)['scheme']
         return model(scheme=scheme, extractor=extractor,
-                     scorer=scorer, filter=filter, resolver=resolver, *args, **kwargs)
+                     scorer=scorer, filter=filter, resolver=resolver,
+                     extrapolator=extrapolator, postprocessor=postprocessor, *args, **kwargs)
     elif model.__name__ == ParticipantDetector.__name__:
         extractor = extractor or local.EntityExtractor(*args, **kwargs)
         scorer = scorer or TFScorer(*args, **kwargs)
-        return model(extractor, scorer, filter, resolver, *args, **kwargs)
+        return model(extractor, scorer, filter, resolver,
+                     extrapolator, postprocessor, *args, **kwargs)
 
 def create_extractor(extractor, *args, **kwargs):
     """
@@ -405,7 +414,7 @@ def create_extrapolator(extrapolator, *args, **kwargs):
     :type extrapolator: type or None
 
     :return: The created extrapolator.
-    :rtype: :class:`~apd.resolvers.extrapolator.Resolver`
+    :rtype: :class:`~apd.extrapolators.extrapolator.Extrapolator`
     """
 
     _kwargs = tools.remove_prefix('extrapolator_', **kwargs)
@@ -424,6 +433,27 @@ def create_extrapolator(extrapolator, *args, **kwargs):
         return extrapolator(tokenizer=tokenizer, corpus=_kwargs.pop('file'), scheme=scheme, **_kwargs)
 
     return extrapolator()
+
+def create_postprocessor(postprocessor, *args, **kwargs):
+    """
+    Create a postprocessor from the given class.
+
+    :param postprocessor: The class of the postprocessor with which to resolve candidate participants.
+    :type postprocessor: type or None
+
+    :return: The created postprocessor.
+    :rtype: :class:`~apd.postprocessors.postprocessor.Postprocessor`
+    """
+
+    _kwargs = tools.remove_prefix('postprocessor_', **kwargs)
+
+    if not postprocessor:
+        return postprocessor
+
+    if postprocessor.__name__ == WikipediaPostprocessor.__name__:
+        return postprocessor(**_kwargs)
+
+    return postprocessor()
 
 def model(method):
     """
