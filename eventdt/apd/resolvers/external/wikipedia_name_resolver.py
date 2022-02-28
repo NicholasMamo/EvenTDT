@@ -102,8 +102,8 @@ class WikipediaNameResolver(Resolver):
         Then, find the best page for each candidate.
         If its similarity with the domain is sufficiently high, the candidate is resolved.
         """
-        ambiguous = links.collect(ambiguous, introduction_only=False)
-        for candidate, pages in ambiguous.items():
+        disambiguations = links.collect([ candidate.title() for candidate in ambiguous ], introduction_only=False)
+        for candidate, (title, pages) in zip(ambiguous, disambiguations.items()):
             """
             If there are candidate pages, get the most similar page.
             If the most similar page exceeds the similarity threshold, resolve the candidate to that page.
@@ -139,30 +139,30 @@ class WikipediaNameResolver(Resolver):
         :rtype: tuple of lists
         """
 
-        resolved_candidates, unresolved_candidates, ambiguous_candidates = { }, [ ], [ ]
+        resolved, unresolved, ambiguous = { }, [ ], [ ]
 
         for candidate in candidates:
-            text = info.types([ candidate ])
+            text = info.types([ candidate.title() ])
             for page, type in text.items():
                 """
                 Some pages resolve directly, though may need to redirect.
                 Those pages are retained unchanged to respect domain discourse.
                 """
                 if type is info.ArticleType.NORMAL:
-                    resolved_candidates[candidate] = page
+                    resolved[candidate] = page
                     break
                 elif type is info.ArticleType.DISAMBIGUATION:
-                    ambiguous_candidates.append(candidate)
+                    ambiguous.append(candidate)
                     break
 
             """
             If the candidate could not be resolved or if it does not have a disambiguation, the candidate cannot be resolved.
             """
-            if (candidate not in resolved_candidates and
-                candidate not in ambiguous_candidates):
-                unresolved_candidates.append(candidate)
+            if (candidate not in resolved and
+                candidate not in ambiguous):
+                unresolved.append(candidate)
 
-        return resolved_candidates, unresolved_candidates, ambiguous_candidates
+        return resolved, unresolved, ambiguous
 
     def _disambiguate(self, pages):
         """
@@ -176,6 +176,10 @@ class WikipediaNameResolver(Resolver):
         :return: A tuple containing the most similar page and its similarity score.
         :rtype: tuple
         """
+
+        types = info.types(pages)
+        pages = [ page for page, type in types.items()
+                       if type == info.ArticleType.NORMAL ]
 
         """
         Get the first section of each page.

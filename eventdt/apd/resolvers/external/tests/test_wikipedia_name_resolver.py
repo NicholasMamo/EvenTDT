@@ -29,7 +29,7 @@ class TestWikipediaNameResolver(unittest.TestCase):
     Test the implementation and results of the Wikipedia name resolver.
     """
 
-    def test_wikipedia_name_resolver(self):
+    def test_resolve_wikipedia_name_resolver(self):
         """
         Test the Wikipedia name resolver.
         """
@@ -42,7 +42,7 @@ class TestWikipediaNameResolver(unittest.TestCase):
         self.assertTrue('Chelsea F.C.' in resolved)
         self.assertTrue('Maurizio Sarri' in resolved)
 
-    def test_all_resolved_or_unresolved(self):
+    def test_resolve_all_resolved_or_unresolved(self):
         """
         Test that the resolver either resolves or does not resolve named entities.
         """
@@ -54,7 +54,7 @@ class TestWikipediaNameResolver(unittest.TestCase):
         resolved, unresolved = resolver.resolve(scores)
         self.assertTrue(all( candidate in resolved or candidate in unresolved for candidate in scores ))
 
-    def test_random_string_unresolved(self):
+    def test_resolve_random_string_unresolved(self):
         """
         Test that a random string is unresolved.
         """
@@ -66,6 +66,68 @@ class TestWikipediaNameResolver(unittest.TestCase):
         scores = { random_string: 1 }
         resolved, unresolved = resolver.resolve(scores)
         self.assertTrue(random_string in unresolved)
+
+    def test_resolve_uses_title_case(self):
+        """
+        Test that when resolving, candidates are converted to title case.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
+        tokenizer = Tokenizer(min_length=1, stem=False)
+        resolver = WikipediaNameResolver(TF(), tokenizer, 0, path)
+        scores = { 'zlatan ibrahimovic': 1, 'fikayo tomori': 0.5 }
+        resolved, unresolved = resolver.resolve(scores)
+        self.assertEqual('Zlatan Ibrahimović', resolved['zlatan ibrahimovic'])
+        self.assertEqual('Fikayo Tomori', resolved['fikayo tomori'])
+
+    def test_resolve_returns_same_case(self):
+        """
+        Test that when resolving, candidates are returned with the same case, not title case.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
+        tokenizer = Tokenizer(min_length=1, stem=False)
+        resolver = WikipediaNameResolver(TF(), tokenizer, 0, path)
+        scores = { 'zlatan ibrahimovic': 1, 'fikayo tomori': 0.5 }
+        resolved, unresolved = resolver.resolve(scores)
+        self.assertEqual(list(scores.keys()), list(resolved.keys()))
+
+    def test_resolve_ambiguous_ignores_help_pages(self):
+        """
+        Test that when resolving ambiguous candidates, help pages are ignored.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
+        tokenizer = Tokenizer(min_length=1, stem=False)
+        resolver = WikipediaNameResolver(TF(), tokenizer, 0, path)
+        scores = { 'inter': 1 } # this page normally resolves to Help:Disambiguation
+        resolved, unresolved = resolver.resolve(scores)
+        self.assertFalse(resolved['inter'] == 'Help:Disambiguation')
+
+    def test_resolve_ambiguous_same_case(self):
+        """
+        Test that when resolving ambiguous candidates, the candidates are returned in the original case.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
+        tokenizer = Tokenizer(stem=True, stopwords=list(stopwords.words("english")))
+        resolver = WikipediaNameResolver(TF(), tokenizer, 0, path)
+        scores = { 'crystal palace': 1 }
+        resolved, unresolved = resolver.resolve(scores)
+        self.assertEqual(list(scores.keys()), list(resolved.keys()))
+
+    def test_resolve_ignores_accents(self):
+        """
+        Test that when resolving, candidates with accents are still resolved even without accents.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
+        tokenizer = Tokenizer(min_length=1, stem=False)
+        resolver = WikipediaNameResolver(TF(), tokenizer, 0, path)
+        scores = { 'Zlatan Ibrahimovic': 1, 'Raphael Guerreiro': 0.5 }
+        resolved, unresolved = resolver.resolve(scores)
+        self.assertEqual('Zlatan Ibrahimović', resolved['Zlatan Ibrahimovic'])
+        self.assertEqual('Raphaël Guerreiro', resolved['Raphael Guerreiro'])
 
     def test_zero_threshold(self):
         """
