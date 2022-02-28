@@ -654,6 +654,26 @@ class TestAPD(unittest.TestCase):
         postprocessor = apd.create_postprocessor(WikipediaPostprocessor, remove_brackets=False)
         self.assertFalse(postprocessor.remove_brackets)
 
+    def test_create_postprocessor_wikipedia_postprocessor_surname_only(self):
+        """
+        Test that when creating the `WikipediaPostprocessor` with the instruction to keep the surname only, the created post-processor keeps only surnames.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        scheme = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        postprocessor = apd.create_postprocessor(WikipediaPostprocessor, surname_only=True)
+        self.assertTrue(postprocessor.surname_only)
+
+    def test_create_postprocessor_wikipedia_postprocessor_name_and_surname(self):
+        """
+        Test that when creating the `WikipediaPostprocessor` with the instruction to keep the first name, the created post-processor keeps the first name.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        scheme = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        postprocessor = apd.create_postprocessor(WikipediaPostprocessor, surname_only=False)
+        self.assertFalse(postprocessor.surname_only)
+
     def test_rank_copy(self):
         """
         Test that when ranking participants, the original term dictionary is not changed.
