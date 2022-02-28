@@ -142,7 +142,7 @@ class WikipediaNameResolver(Resolver):
         resolved, unresolved, ambiguous = { }, [ ], [ ]
 
         for candidate in candidates:
-            text = info.types([ candidate.title() ])
+            text = info.types([ candidate.title() ], undo_redirects=False)
             for page, type in text.items():
                 """
                 Some pages resolve directly, though may need to redirect.
@@ -177,7 +177,7 @@ class WikipediaNameResolver(Resolver):
         :rtype: tuple
         """
 
-        types = info.types(pages)
+        types = info.types(pages, undo_redirects=False)
         pages = [ page for page, type in types.items()
                        if type == info.ArticleType.NORMAL ]
 
