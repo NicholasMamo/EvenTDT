@@ -2,6 +2,7 @@
 Test the functionality of the Wikipedia search resolver.
 """
 
+import json
 import os
 import random
 import re
@@ -24,6 +25,11 @@ from apd.resolvers.external.wikipedia_search_resolver import WikipediaSearchReso
 from nlp.document import Document
 from nlp.tokenizer import Tokenizer
 from nlp.weighting.tf import TF
+
+import twitter
+
+from vsm import vector_math
+from vsm.clustering import Cluster
 
 class TestWikipediaSearchResolver(unittest.TestCase):
     """
@@ -325,3 +331,40 @@ class TestWikipediaSearchResolver(unittest.TestCase):
 
         order = sorted(scores, key=scores.get, reverse=True)
         self.assertEqual(order, list(resolved.keys()))
+
+    def test_generate_domain_normalized(self):
+        """
+        Test that the domain is normalized.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
+        tokenizer = Tokenizer(min_length=1, stem=False, stopwords=list(stopwords.words("english")))
+        resolver = WikipediaSearchResolver(TF(), tokenizer, 0, path)
+        domain = resolver._generate_domain(path)
+        self.assertEqual(1, round(vector_math.magnitude(domain), 10))
+
+    def test_generate_domain_like_cluster_centroid(self):
+        """
+        Test that the domain generated using a :class:`~vsm.compound.Compound` is identical to one generated using a :class:`~vsm.clustering.cluster.Cluster`.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
+        tokenizer = Tokenizer(min_length=1, stem=False, stopwords=list(stopwords.words("english")))
+        resolver = WikipediaSearchResolver(TF(), tokenizer, 0, path)
+
+        cluster = Cluster()
+        with open(path) as f:
+            for line in f:
+                tweet = json.loads(line)
+                text = twitter.full_text(tweet)
+                text = twitter.expand_mentions(text, tweet)
+                document = Document(text, tokenizer.tokenize(text))
+                cluster.vectors.append(document)
+
+        centroid = cluster.centroid
+        centroid.normalize()
+
+        domain = resolver._generate_domain(path)
+        self.assertEqual(set(domain.dimensions), set(centroid.dimensions))
+        self.assertTrue(all( round(domain.dimensions[dimension], 10) == round(centroid.dimensions[dimension], 10)
+                             for dimension in domain.dimensions ))
