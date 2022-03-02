@@ -365,6 +365,9 @@ class WikipediaExtrapolator(Extrapolator):
 
         :param corpus: The path to the corpus of documents.
         :type corpus: str
+
+        :return: The normalized centroid representing the event domain.
+        :rtype: :class:`~vsm.vector.Vector`
         """
 
         cluster = Cluster()
