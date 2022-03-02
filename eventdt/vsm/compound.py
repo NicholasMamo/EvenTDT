@@ -89,7 +89,9 @@ class Compound(Vector):
         :rtype: dict
         """
 
-        pass
+        array = super(Compound, self).to_array()
+        array.update({ 'size': self.size })
+        return array
 
     @staticmethod
     def from_array(array):
@@ -109,4 +111,6 @@ class Compound(Vector):
         :rtype: :class:`~Compound`
         """
 
-        pass
+        compound = Compound([ ], dimensions=array.get('dimensions'), attributes=array.get('attributes'))
+        compound.size = array.get('size')
+        return compound

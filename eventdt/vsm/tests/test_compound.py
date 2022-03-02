@@ -296,3 +296,39 @@ class TestCompound(unittest.TestCase):
         compound.remove(v1)
         self.assertEqual(0, compound.size)
         self.assertTrue(all( 0 == magnitude for magnitude in compound.dimensions.values() ))
+
+    def test_to_array(self):
+        """
+        Test exporting and importing instances of the :class:`~vsm.compound.Compound` class.
+        """
+
+        vector = Vector({ 'x': 3 })
+        compound = Compound([ vector ])
+        exported = compound.to_array()
+        self.assertEqual(compound.attributes, Compound.from_array(exported).attributes)
+        self.assertEqual(compound.dimensions, Compound.from_array(exported).dimensions)
+        self.assertEqual(compound.__dict__, Compound.from_array(exported).__dict__)
+
+    def test_to_array_attributes(self):
+        """
+        Test that exporting and importing instances of the  :class:`~vsm.compound.Compound` class includes attributes.
+        """
+
+        vector = Vector({ 'x': 3 })
+        compound = Compound([ vector ], { "y": True })
+        exported = compound.to_array()
+        self.assertEqual(compound.attributes, Compound.from_array(exported).attributes)
+        self.assertEqual(compound.__dict__, Compound.from_array(exported).__dict__)
+
+    def test_to_array_attributes(self):
+        """
+        Test that exporting and importing instances of the  :class:`~vsm.compound.Compound` class includes the size.
+        """
+
+        vectors = [ Vector({ 'a': 1, 'b': 2 }), Vector({ 'b': 3, 'c': 1 }) ]
+        compound = Compound(vectors)
+        self.assertEqual(2, compound.size)
+
+        exported = compound.to_array()
+        self.assertEqual(compound.__dict__, Compound.from_array(exported).__dict__)
+        self.assertEqual(compound.size, Compound.from_array(exported).size)
