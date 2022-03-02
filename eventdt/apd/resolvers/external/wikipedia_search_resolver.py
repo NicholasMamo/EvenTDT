@@ -26,7 +26,6 @@ from nlp.document import Document
 from nlp.tokenizer import Tokenizer
 import twitter
 from vsm import Compound, vector_math
-from vsm.clustering import Cluster
 from wikinterface import info, links, search, text
 
 from ..resolver import Resolver

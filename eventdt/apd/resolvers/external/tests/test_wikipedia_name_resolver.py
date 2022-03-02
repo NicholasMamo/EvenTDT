@@ -221,7 +221,6 @@ class TestWikipediaNameResolver(unittest.TestCase):
         tokenizer = Tokenizer(min_length=1, stem=False, stopwords=list(stopwords.words("english")))
         resolver = WikipediaNameResolver(TF(), tokenizer, 0, path)
 
-
         cluster = Cluster()
         with open(path) as f:
             for line in f:

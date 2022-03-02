@@ -48,8 +48,7 @@ from ..extrapolator import Extrapolator
 from nlp.document import Document
 from nlp.tokenizer import Tokenizer
 import twitter
-from vsm import vector_math
-from vsm.clustering import Cluster
+from vsm import Compound, vector_math
 from wikinterface import info, links, search, text
 
 class WikipediaExtrapolator(Extrapolator):
@@ -370,7 +369,7 @@ class WikipediaExtrapolator(Extrapolator):
         :rtype: :class:`~vsm.vector.Vector`
         """
 
-        cluster = Cluster()
+        domain = Compound()
 
         with open(corpus) as f:
             for line in f:
@@ -379,8 +378,6 @@ class WikipediaExtrapolator(Extrapolator):
                 text = twitter.expand_mentions(text, tweet)
 
                 document = Document(text, self.tokenizer.tokenize(text), scheme=self.scheme)
-                cluster.vectors.append(document)
+                domain.add(document)
 
-        domain = cluster.centroid
-        domain.normalize()
-        return domain
+        return domain.centroid
