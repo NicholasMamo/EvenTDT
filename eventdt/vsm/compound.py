@@ -65,7 +65,7 @@ class Compound(Vector):
             for dimension, magnitude in vector.dimensions.items():
                 self.dimensions[dimension] = self.dimensions.get(dimension, 0) - magnitude
 
-    def centroid(self):
+    def _calculate_centroid(self):
         """
         Calculate the centroid of the :class:`~Compound`.
 
@@ -80,6 +80,17 @@ class Compound(Vector):
                              for dimension, magnitude in self.dimensions.items() })
         _centroid.normalize()
         return _centroid
+
+    @property
+    def centroid(self):
+        """
+        Get the :class:`~Compound`'s centroid.
+
+        :return: The :class:`~Compound`'s centroid.
+        :rtype: :class:`~vsm.vector.Vector`
+        """
+
+        return self._calculate_centroid()
 
     def to_array(self):
         """

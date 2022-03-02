@@ -304,7 +304,7 @@ class TestCompound(unittest.TestCase):
         """
 
         compound = Compound()
-        self.assertEqual(Vector, type(compound.centroid()))
+        self.assertEqual(Vector, type(compound.centroid))
 
     def test_centroid_empty(self):
         """
@@ -312,7 +312,7 @@ class TestCompound(unittest.TestCase):
         """
 
         compound = Compound()
-        self.assertEqual({ }, compound.centroid().dimensions)
+        self.assertEqual({ }, compound.centroid.dimensions)
 
     def test_centroid_newly_empty(self):
         """
@@ -323,7 +323,7 @@ class TestCompound(unittest.TestCase):
         compound = Compound()
         compound.add(vector)
         compound.remove(vector)
-        self.assertEqual({ }, compound.centroid().dimensions)
+        self.assertEqual({ }, compound.centroid.dimensions)
 
     def test_centroid_one_vector(self):
         """
@@ -334,7 +334,7 @@ class TestCompound(unittest.TestCase):
         compound = Compound()
         compound.add(vector)
         vector.normalize()
-        self.assertEqual(vector.dimensions, compound.centroid().dimensions)
+        self.assertEqual(vector.dimensions, compound.centroid.dimensions)
 
     def test_centroid_multiple_vectors(self):
         """
@@ -345,7 +345,7 @@ class TestCompound(unittest.TestCase):
         compound = Compound(vectors)
         concatenated = vector_math.concatenate(vectors)
         concatenated.normalize()
-        self.assertEqual(concatenated.dimensions, compound.centroid().dimensions)
+        self.assertEqual(concatenated.dimensions, compound.centroid.dimensions)
 
     def test_centroid_normalized(self):
         """
@@ -354,7 +354,7 @@ class TestCompound(unittest.TestCase):
 
         vectors = [ Vector({ 'a': 1, 'b': 2 }), Vector({ 'b': 3, 'c': 1 }) ]
         compound = Compound(vectors)
-        self.assertEqual(1, vector_math.magnitude(compound.centroid()))
+        self.assertEqual(1, vector_math.magnitude(compound.centroid))
 
     def test_centroid_like_cluster(self):
         """
@@ -364,7 +364,7 @@ class TestCompound(unittest.TestCase):
         vectors = [ Vector({ 'a': 1, 'b': 2 }), Vector({ 'b': 3, 'c': 1 }) ]
         compound = Compound(vectors)
         cluster = Cluster(vectors=vectors)
-        self.assertEqual(compound.centroid().dimensions, cluster.centroid.dimensions)
+        self.assertEqual(compound.centroid.dimensions, cluster.centroid.dimensions)
 
     def test_to_array(self):
         """
