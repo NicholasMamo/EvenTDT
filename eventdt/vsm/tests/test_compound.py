@@ -8,13 +8,14 @@ import sys
 import unittest
 
 path = os.path.dirname(__file__)
-path = os.path.join(path, '..')
+path = os.path.join(path, '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
-from compound import Compound
-from vector import Vector
-import vector_math
+from vsm.clustering import Cluster
+from vsm.compound import Compound
+from vsm.vector import Vector
+from vsm import vector_math
 
 class TestCompound(unittest.TestCase):
     """
@@ -296,6 +297,74 @@ class TestCompound(unittest.TestCase):
         compound.remove(v1)
         self.assertEqual(0, compound.size)
         self.assertTrue(all( 0 == magnitude for magnitude in compound.dimensions.values() ))
+
+    def test_centroid_returns_vector(self):
+        """
+        Test that calculating the centroid always returns a :class:`~vsm.vector.Vector`.
+        """
+
+        compound = Compound()
+        self.assertEqual(Vector, type(compound.centroid()))
+
+    def test_centroid_empty(self):
+        """
+        Test that calculating the centroid of an empty :class:`~vsm.compound.Compound` returns an empty centroid.
+        """
+
+        compound = Compound()
+        self.assertEqual({ }, compound.centroid().dimensions)
+
+    def test_centroid_newly_empty(self):
+        """
+        Test that calculating the centroid of a :class:`~vsm.compound.Compound` after removing all vectors returns an empty centroid.
+        """
+
+        vector = Vector({ 'a': 1, 'b': 2 })
+        compound = Compound()
+        compound.add(vector)
+        compound.remove(vector)
+        self.assertEqual({ }, compound.centroid().dimensions)
+
+    def test_centroid_one_vector(self):
+        """
+        Test that the centroid of a :class:`~vsm.compound.Compound` with one vector is like that one vector but normalized.
+        """
+
+        vector = Vector({ 'a': 1, 'b': 2 })
+        compound = Compound()
+        compound.add(vector)
+        vector.normalize()
+        self.assertEqual(vector.dimensions, compound.centroid().dimensions)
+
+    def test_centroid_multiple_vectors(self):
+        """
+        Test that the centroid of a :class:`~vsm.compound.Compound` with multiple vectors is calculated correctly.
+        """
+
+        vectors = [ Vector({ 'a': 1, 'b': 2 }), Vector({ 'b': 3, 'c': 1 }) ]
+        compound = Compound(vectors)
+        concatenated = vector_math.concatenate(vectors)
+        concatenated.normalize()
+        self.assertEqual(concatenated.dimensions, compound.centroid().dimensions)
+
+    def test_centroid_normalized(self):
+        """
+        Test that the centroid of a :class:`~vsm.compound.Compound` is normalized.
+        """
+
+        vectors = [ Vector({ 'a': 1, 'b': 2 }), Vector({ 'b': 3, 'c': 1 }) ]
+        compound = Compound(vectors)
+        self.assertEqual(1, vector_math.magnitude(compound.centroid()))
+
+    def test_centroid_like_cluster(self):
+        """
+        Test that the centroid of a :class:`~vsm.compound.Compound` is the same as the centroid of :class:`~vsm.clustering.cluster.Cluster` with the same vectors.
+        """
+
+        vectors = [ Vector({ 'a': 1, 'b': 2 }), Vector({ 'b': 3, 'c': 1 }) ]
+        compound = Compound(vectors)
+        cluster = Cluster(vectors=vectors)
+        self.assertEqual(compound.centroid().dimensions, cluster.centroid.dimensions)
 
     def test_to_array(self):
         """

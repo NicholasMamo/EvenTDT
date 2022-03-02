@@ -58,7 +58,7 @@ class Compound(Vector):
         """
 
         if len(args) > self.size:
-            logger.warning("Removing more vectors from compound than exist")
+            logger.warning("Removing more vectors from `Compound` than exist")
 
         self.size -= len(args)
         for vector in args:
@@ -73,7 +73,13 @@ class Compound(Vector):
         :rtype: :class:`~vsm.vector.Vector`
         """
 
-        pass
+        if not self.size:
+            return Vector()
+
+        _centroid = Vector({ dimension: magnitude / self.size
+                             for dimension, magnitude in self.dimensions.items() })
+        _centroid.normalize()
+        return _centroid
 
     def to_array(self):
         """
