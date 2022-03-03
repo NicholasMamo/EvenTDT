@@ -13,7 +13,7 @@ if path not in sys.path:
 
 from objects import Attributable, Exportable
 
-class Profile(Attributable):
+class Profile(Attributable, Exportable):
     """
     The :class:`~attributes.profile.Profile` stores a list of attributes and their respective values.
     This class stores these attributes as a dictionary, which can be accessed directly.
@@ -109,7 +109,7 @@ class Profile(Attributable):
 
             1. The class name,
             2. The name of the entity represented by this object, and
-            2. The :class:`~Profile`'s attributes as a ``dict``.
+            3. The :class:`~Profile`'s attributes as a ``dict``.
 
         :param array: The ``dict`` with the attributes to create the :class:`~Profile`.
         :type array: dict
