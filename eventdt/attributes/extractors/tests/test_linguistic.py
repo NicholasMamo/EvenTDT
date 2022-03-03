@@ -140,6 +140,91 @@ class TestLinguisticExtractor(unittest.TestCase):
         self.assertEqual({ 'is': { 'footballer', 'rapper' }, 'plays_for': { 'lyon' } }, profile.attributes)
         self.assertEqual({ 'is': { 'rapper', 'footballer' }, 'plays_for': { 'lyon' } }, profile.attributes)
 
+    def test_extract_DATE(self):
+        """
+        Test extracting a date.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Emmanuel Jean-Michel Frédéric Macron is a French politician who has been serving as the president of France since 14 May 2017."
+        profile = extractor.extract(sentence, name='Emmanuel Macron')
+        self.assertEqual({ 'is': { 'french politician' }, 'serving_as': { 'president' }, 'serving_of': { 'france' }, 'serving_since': { '14 may 2017' } }, profile.attributes)
+
+    def test_extract_ENT_ends_number(self):
+        """
+        Test extracting an attribute value when it is an entity that ends with a number.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Mark-Alexander Uth is a German footballer who plays as a striker for Bundesliga club Schalke 04."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'german footballer' }, 'plays_as': { 'striker' }, 'plays_for': { 'schalke 04' } }, profile.attributes)
+
+    def test_extract_ENT_starts_number(self):
+        """
+        Test extracting an attribute value when it is an entity that starts with a number.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Fabian Greilinger is a German professional footballer who plays as a winger for 1860 Munich."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'german professional footballer' }, 'plays_as': { 'winger' }, 'plays_for': { '1860 munich' } }, profile.attributes)
+
+    def test_extract_ENT_number_only(self):
+        """
+        Test that a number on its own does not constitute an entity.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Fabian Greilinger is a German professional footballer who plays as a winger for 1860."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'german professional footballer' }, 'plays_as': { 'winger' } }, profile.attributes)
+
+    def test_extract_ENT_has_number(self):
+        """
+        Test extracting an attribute value when it is an entity that has a number in the middle.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Dennis Erdmann is a German professional footballer who plays as a defensive midfielder or attacking midfielder for TSV 1860 Munich."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'german professional footballer' }, 'plays_as': { 'defensive midfielder', 'attacking midfielder' }, 'plays_for': { 'tsv 1860 munich' } }, profile.attributes)
+
+    def test_extract_ENT_with_IN(self):
+        """
+        Test extracting an entity with a preposition in it.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Donald John Trump is the 45th and current president of the United States of America."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { '45th and current president' }, 'is_of': { 'united states of america' } }, profile.attributes)
+
+        sentence = "Donald John Trump is the 45th, latest and current president of the United States of America."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { '45th , latest and current president' }, 'is_of': { 'united states of america' } }, profile.attributes)
+
+        sentence = "Sallie Kim is currently a U.S. Magistrate Judge of the United States District Court for the Northern District of California."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'u.s. magistrate judge' }, 'is_of': { 'united states district court' }, 'is_for': { 'northern district of california' } }, profile.attributes)
+
+    def test_extract_NAME_gerund(self):
+        """
+        Test that an attribute name may be a gerund.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Emmanuel Jean-Michel Frédéric Macron is a French politician who has been serving as the president of France since 14 May 2017."
+        profile = extractor.extract(sentence, name='Emmanuel Macron')
+        self.assertEqual({ 'is': { 'french politician' }, 'serving_as': { 'president' }, 'serving_of': { 'france' }, 'serving_since': { '14 may 2017' } }, profile.attributes)
+
     def test_extract_PPATR_and(self):
         """
         Test extracting attributes which have _and_ conjunctions.
@@ -243,69 +328,6 @@ class TestLinguisticExtractor(unittest.TestCase):
         sentence = "Lawrence Joseph Ellison is an American businessman and investor who is the co-founder, executive chairman, chief technology officer and former chief executive officer of Oracle Corporation."
         profile = extractor.extract(sentence)
         self.assertEqual({ 'is': { 'american businessman', 'investor', 'co-founder', 'executive chairman', 'chief technology officer', 'former chief executive officer' }, 'is_of': { 'oracle corporation' } }, profile.attributes)
-
-    def test_extract_ENT_ends_number(self):
-        """
-        Test extracting an attribute value when it is an entity that ends with a number.
-        """
-
-        extractor = LinguisticExtractor()
-
-        sentence = "Mark-Alexander Uth is a German footballer who plays as a striker for Bundesliga club Schalke 04."
-        profile = extractor.extract(sentence)
-        self.assertEqual({ 'is': { 'german footballer' }, 'plays_as': { 'striker' }, 'plays_for': { 'schalke 04' } }, profile.attributes)
-
-    def test_extract_ENT_starts_number(self):
-        """
-        Test extracting an attribute value when it is an entity that starts with a number.
-        """
-
-        extractor = LinguisticExtractor()
-
-        sentence = "Fabian Greilinger is a German professional footballer who plays as a winger for 1860 Munich."
-        profile = extractor.extract(sentence)
-        self.assertEqual({ 'is': { 'german professional footballer' }, 'plays_as': { 'winger' }, 'plays_for': { '1860 munich' } }, profile.attributes)
-
-    def test_extract_ENT_number_only(self):
-        """
-        Test that a number on its own does not constitute an entity.
-        """
-
-        extractor = LinguisticExtractor()
-
-        sentence = "Fabian Greilinger is a German professional footballer who plays as a winger for 1860."
-        profile = extractor.extract(sentence)
-        self.assertEqual({ 'is': { 'german professional footballer' }, 'plays_as': { 'winger' } }, profile.attributes)
-
-    def test_extract_ENT_has_number(self):
-        """
-        Test extracting an attribute value when it is an entity that has a number in the middle.
-        """
-
-        extractor = LinguisticExtractor()
-
-        sentence = "Dennis Erdmann is a German professional footballer who plays as a defensive midfielder or attacking midfielder for TSV 1860 Munich."
-        profile = extractor.extract(sentence)
-        self.assertEqual({ 'is': { 'german professional footballer' }, 'plays_as': { 'defensive midfielder', 'attacking midfielder' }, 'plays_for': { 'tsv 1860 munich' } }, profile.attributes)
-
-    def test_extract_ENT_with_IN(self):
-        """
-        Test extracting an entity with a preposition in it.
-        """
-
-        extractor = LinguisticExtractor()
-
-        sentence = "Donald John Trump is the 45th and current president of the United States of America."
-        profile = extractor.extract(sentence)
-        self.assertEqual({ 'is': { '45th and current president' }, 'is_of': { 'united states of america' } }, profile.attributes)
-
-        sentence = "Donald John Trump is the 45th, latest and current president of the United States of America."
-        profile = extractor.extract(sentence)
-        self.assertEqual({ 'is': { '45th , latest and current president' }, 'is_of': { 'united states of america' } }, profile.attributes)
-
-        sentence = "Sallie Kim is currently a U.S. Magistrate Judge of the United States District Court for the Northern District of California."
-        profile = extractor.extract(sentence)
-        self.assertEqual({ 'is': { 'u.s. magistrate judge' }, 'is_of': { 'united states district court' }, 'is_for': { 'northern district of california' } }, profile.attributes)
 
     def test_extract_real_examples(self):
         """

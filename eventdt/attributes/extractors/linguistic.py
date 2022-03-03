@@ -39,6 +39,11 @@ class LinguisticExtractor(Extractor):
         Create the linguistic extractor with an optional grammar.
         If a grammar is not given, a default grammar is used instead:
 
+        **DATE**
+        (``DATE: <CD> <NNP> <CD>``)
+
+        The grammar assumes that a pattern of number, a proper noun and a number forms a date (*14/CD May/NNP 2017/CD*).
+
         **Entity**
         (``ENT: <CD>? <NNP.*> (<IN>? <CD|NNP.*>)*``)
 
@@ -54,9 +59,9 @@ class LinguisticExtractor(Extractor):
 
         An attribute name is formed by any verb (*plays/VBZ*), including past participles (*driven/VBN*).
 
-        **Attribute value** (``VALUE: { <NP|ENT>+ }``)
+        **Attribute value** (``VALUE: { <NP|ENT|DATE>+ }``)
 
-        The attribute value can be either a noun phrase (*Brazilian/JJ professional/JJ footballer/NN*) or an entity (*Lyon/ENT*), or several (*(Ligue 1)/ENT (club/NN)/NP Lyon/ENT*).
+        The attribute value can be either a noun phrase (*Brazilian/JJ professional/JJ footballer/NN*), an entity (*Lyon/ENT*), a date, or several at once (*(Ligue 1)/ENT (club/NN)/NP Lyon/ENT*).
 
         **Prepositional phrase attribute** (``PPATTR: <IN>? (<DT>?<VALUE><CC|,>*)+``)
 
@@ -73,11 +78,12 @@ class LinguisticExtractor(Extractor):
         # TODO: Add support for ENT as adjectives ("_Ligue 1_ club Lyon")
 
         grammar = grammar or """
+                  DATE: { <CD> <NNP> <CD> }
                   ENT: { <CD>? <NNP.*> (<IN>? <CD|NNP.*>)* }
                   MOD: { <JJ.*|RB.*>+ (<CC|,><JJ.*|RB.*>+)* }
                   NP: { <MOD>? <VBG>? <NN.*>+ }
                   NAME: { <VB.*> }
-                  VALUE: { <NP|ENT>+ }
+                  VALUE: { <NP|ENT|DATE>+ }
                   PPATTR: { <IN>? (<DT>?<VALUE><CC|,>*)+ }
                   ATTR: { <NAME> <MOD>? <PPATTR>+ }
         """
