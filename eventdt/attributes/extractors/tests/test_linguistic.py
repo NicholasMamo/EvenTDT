@@ -316,6 +316,10 @@ class TestLinguisticExtractor(unittest.TestCase):
 
         extractor = LinguisticExtractor()
 
+        sentence = "Emmanuel Jean-Michel Frédéric Macron (French: [emanɥɛl ʒɑ̃ miʃɛl fʁedeʁik makʁɔ̃]; born 21 December 1977) is a French politician who has been serving as the president of France since 14 May 2017. Born in Amiens, Macron studied philosophy at Paris Nanterre University, later completing a master's degree in public affairs at Sciences Po and graduating from the École nationale d'administration in 2004. He worked as a senior civil servant at the Inspectorate General of Finances and later became an investment banker at Rothschild & Co."
+        profile = extractor.extract(sentence)
+        print(str(profile))
+
         sentence = "Lucas Tolentino Coelho de Lima known as Lucas Paquetá, is a Brazilian professional footballer who plays as an attacking midfielder for Ligue 1 club Lyon and the Brazil national team."
         profile = extractor.extract(sentence)
         self.assertEqual({ 'known_as': { 'lucas paquetá' }, 'is': { 'brazilian professional footballer' }, 'plays_as': { 'attacking midfielder' }, 'plays_for': { 'lyon', 'brazil national team' } }, profile.attributes)
