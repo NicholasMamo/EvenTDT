@@ -4,8 +4,16 @@ The :class:`~attributes.profile.Profile` is a simple container for these attribu
 """
 
 from collections.abc import Iterable
+import os
+import sys
 
-class Profile(object):
+path = os.path.join(os.path.dirname(__file__), '..')
+if path not in sys.path:
+    sys.path.append(path)
+
+from objects import Attributable
+
+class Profile(Attributable):
     """
     The :class:`~attributes.profile.Profile` stores a list of attributes and their respective values.
     This class stores these attributes as a dictionary, which can be accessed directly.
@@ -18,43 +26,16 @@ class Profile(object):
     :vartype attributes: dict
     """
 
-    def __init__(self, name=None, attributes=None):
+    def __init__(self, name=None, *args, **kwargs):
         """
         Initialize the profile with attributes.
 
         :param name: The name of the entity that the profile represents.
         :type name: str or None
-        :param attributes: The default attributes.
-                           If ``None`` is given, an empty dictionary is initialized instead.
-        :type attributes: None or dict
         """
 
+        super(Profile, self).__init__(*args, **kwargs)
         self.name = name or ''
-        self.attributes = attributes or { }
-
-    @property
-    def attributes(self):
-        """
-        Get the attributes of this profile.
-
-        :return: The attributes stored in this profile.
-                 The attribute name is the key, and the value is the corresponding attribute value.
-        :rtype: dict
-        """
-
-        return self.__attributes
-
-    @attributes.setter
-    def attributes(self, attributes):
-        """
-        Override the attributes in this profile.
-
-        :param attributes: The new attributes.
-                           If ``None`` is given, an empty dictionary is initialized instead.
-        :type attributes: None or dict
-        """
-
-        self.__attributes = attributes or { }
 
     def common(self, other):
         """
