@@ -154,9 +154,9 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'be': { 'french politician' }, 'serve_as': { 'president' }, 'serve_of': { 'france from 2012' } }, profile.attributes)
 
-    def test_extract_DATE(self):
+    def test_extract_DATE_format_1(self):
         """
-        Test extracting a date.
+        Test extracting a date in the format DD MM YYYY.
         """
 
         extractor = LinguisticExtractor()
@@ -164,6 +164,17 @@ class TestLinguisticExtractor(unittest.TestCase):
         sentence = "Emmanuel Jean-Michel Frédéric Macron is a French politician who has been serving as the president of France since 14 May 2017."
         profile = extractor.extract(sentence, name='Emmanuel Macron')
         self.assertEqual({ 'is': { 'french politician' }, 'serving_as': { 'president' }, 'serving_of': { 'france' }, 'serving_since': { '14 may 2017' } }, profile.attributes)
+
+    def test_extract_DATE_format_2(self):
+        """
+        Test extracting a date in the format MM DD, YYYY.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "William Henry Gates III (born on October 28, 1955) is an American business magnate, software developer, investor, author, and philanthropist."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'born_on': { 'october 28 , 1955' }, 'is': { 'american business magnate', 'software developer', 'investor', 'author', 'philanthropist' } }, profile.attributes)
 
     def test_extract_ENT_ends_number(self):
         """
@@ -279,6 +290,10 @@ class TestLinguisticExtractor(unittest.TestCase):
         sentence = "Jeffrey Preston Bezos is an American entrepreneur, media proprietor, investor and computer engineer and commercial astronaut."
         profile = extractor.extract(sentence)
         self.assertEqual({ 'is': { 'american entrepreneur', 'media proprietor', 'investor', 'computer engineer', 'commercial astronaut' } }, profile.attributes)
+
+        sentence = "Taipei, officially Taipei City, is the capital and a special municipality of Taiwan."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'capital', 'special municipality' }, 'is_of': { 'taiwan' } }, profile.attributes)
 
     def test_extract_PPATR_multiple_conjunctions_with_oxford_comma(self):
         """

@@ -43,9 +43,9 @@ class LinguisticExtractor(Extractor):
         If a grammar is not given, a default grammar is used instead:
 
         **DATE**
-        (``DATE: <CD> <NNP> <CD>``)
+        (``DATE: <CD> <NNP> <CD>|<NNP> <CD> <,> <CD>``)
 
-        The grammar assumes that a pattern of number, a proper noun and a number forms a date (*14/CD May/NNP 2017/CD*).
+        The grammar assumes that a pattern involving two numbers and a proper noun in various formats represents a date (*14/CD May/NNP 2017/CD*).
 
         **Entity**
         (``ENT: <CD>? <NNP.*> (<IN>? <CD|NNP.*>)*``)
@@ -66,14 +66,15 @@ class LinguisticExtractor(Extractor):
 
         The attribute value can be either a noun phrase (*Brazilian/JJ professional/JJ footballer/NN*), an entity (*Lyon/ENT*), a date, or several at once (*(Ligue 1)/ENT (club/NN)/NP Lyon/ENT*).
 
-        **Prepositional phrase attribute** (``PPATTR: <IN>? (<DT>?<VALUE><CC|,>*)+``)
+        **Value list** (``VALUES: <IN>? (<DT>?<VALUE><CC|,>*)+``)
 
-        A prepositional phrase modifies the attribute name; a footballer does not simply play but *plays/VBZ for/IN*.
-        A prepositional phrase attribute optionally accepts that a preposition (*for/IN*) in the beginning and then any number of values.
+        Each attribute can have several values (*[is an] (VALUE American/JJ business/NN magnate/NN),/, (VALUE software/NN developer/NN) and/CC (VALUE investor/NN)*)
         The attribute value may take an article just before the value (*is/VBZ a/DT footballer/NN*).
         The prepositional attribute accepts several such values as long as they are separated by coordinating conjunctions (*and*, *or*) or commas.
 
-        **Attribute** (``ATTR: <NAME> <MOD>? <PPATTR>``)
+        Before the list of values, there may be a preposition, which modifies the relationship between the attribute and its values; a footballer does not simply play but *plays/VBZ for/IN*.
+
+        **Attribute** (``ATTR: <NAME> <MOD>? <VALUES>``)
 
         The complete attribute therefore has a name, optional modifiers and a prepositional phrase attribute.
 
@@ -89,14 +90,14 @@ class LinguisticExtractor(Extractor):
         # TODO: Add support for ENT as adjectives ("_Ligue 1_ club Lyon")
 
         grammar = grammar or """
-                  DATE: { <CD> <NNP> <CD> }
+                  DATE: { (<CD> <NNP> <CD>|<NNP> <CD> <,> <CD>) }
                   ENT: { <CD>? <NNP.*> (<IN>? <CD|NNP.*>)* }
                   MOD: { <JJ.*|RB.*>+ (<CC|,><JJ.*|RB.*>+)* }
                   NP: { <MOD>? <VBG>? <NN.*>+ }
                   NAME: { <VB.*> }
                   VALUE: { <NP|ENT|DATE>+ }
-                  PPATTR: { <IN>? (<DT>?<VALUE><CC|,>*)+ }
-                  ATTR: { <NAME> <MOD>? <PPATTR>+ }
+                  VALUES: { <IN>? (<DT>?<VALUE><CC|,>*)+ }
+                  ATTR: { <NAME> <MOD>? <VALUES>+ }
         """
         self.parser = nltk.RegexpParser(grammar)
         self.lemmatizer = nltk.WordNetLemmatizer() if lemmatize else None
@@ -127,12 +128,12 @@ class LinguisticExtractor(Extractor):
                 print(tree)
             ATTR = self._attribute_subtrees(tree)
             for _ATTR in ATTR:
-                NAME, PPATTR = self._to_attributes(_ATTR)
-                for _PPATTR in PPATTR:
-                    IN = self._get_preposition(_PPATTR)
+                NAME, VALUES = self._to_attributes(_ATTR)
+                for _VALUES in VALUES:
+                    IN = self._get_preposition(_VALUES)
                     name = f"{NAME}_{ IN }" if IN else NAME
                     profile.attributes[name] = profile.attributes.get(name) or set()
-                    attributes = self._get_attribute(_PPATTR)
+                    attributes = self._get_attribute(_VALUES)
                     for attribute in attributes:
                         # TODO: Extract and split adjectives (first extract the head noun or the head entity).
                         profile.attributes[name].add(self._attribute_value(attribute))
@@ -186,7 +187,7 @@ class LinguisticExtractor(Extractor):
         name = [ component for component in ATTR.subtrees() if component.label() == 'NAME' ][0]
         name = [ self.lemmatizer.lemmatize(text, pos='v') if self.lemmatizer else text
                  for text, pos in name.leaves() ]
-        PPATR = [ component for component in ATTR.subtrees() if component.label() == 'PPATTR' ]
+        PPATR = [ component for component in ATTR.subtrees() if component.label() == 'VALUES' ]
         return ('_'.join(name).lower(), PPATR)
 
     def _get_preposition(self, PPATR):
