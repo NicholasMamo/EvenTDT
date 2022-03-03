@@ -54,7 +54,7 @@ class LinguisticExtractor(Extractor):
         """
         self.parser = nltk.RegexpParser(grammar)
 
-    def extract(self, text, *args, **kwargs):
+    def extract(self, text, verbose=False, *args, **kwargs):
         """
         Extract attributes from the given text.
         This function assumes that the text is about a single entity and therefore does not seek to confirm who the attributes are discussing.
@@ -63,6 +63,8 @@ class LinguisticExtractor(Extractor):
 
         :param text: The text from where to extract attributes.
         :type text: str
+        :param verbose: A boolean indicating whether to print the tree as a way of debugging.
+        :type verbose: bool
 
         :return: A profile of attributes.
                  Each attribute may have a list of values.
@@ -74,6 +76,8 @@ class LinguisticExtractor(Extractor):
         sentences = nltk.sent_tokenize(text)
         for sentence in sentences:
             tree = self._parse(sentence)
+            if verbose:
+                print(tree)
             ATTR = self._attribute_subtrees(tree)
             for _ATTR in ATTR:
                 NAME, PPATTR = self._to_attributes(_ATTR)
@@ -83,6 +87,7 @@ class LinguisticExtractor(Extractor):
                     profile.attributes[name] = profile.attributes.get(name) or set()
                     attributes = self._get_attribute(_PPATTR)
                     for attribute in attributes:
+                        # TODO: Extract and split adjectives.
                         profile.attributes[name].add(self._attribute_value(attribute))
 
         return profile
