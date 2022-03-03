@@ -344,3 +344,24 @@ class TestProfile(unittest.TestCase):
         p1, p2 = Profile(attributes={ 'plays_as': [ 'striker' ] }), Profile(attributes={ 'plays_as': [ 'striker', 'defender' ] })
         self.assertEqual({ 'plays_as' }, p1.matching(p2, policy=any))
         self.assertEqual(set(), p1.matching(p2, policy=all))
+
+    def test_export(self):
+        """
+        Test exporting and importing :class:`~attributes.profile.Profile`.
+        """
+
+        profile = Profile('Test entity', { 'x': 3 })
+        exported = profile.to_array()
+        self.assertEqual(profile.attributes, Profile.from_array(exported).attributes)
+        self.assertEqual(profile.__dict__, Profile.from_array(exported).__dict__)
+
+    def test_export_name(self):
+        """
+        Test that exporting and importing :class:`~attributes.profile.Profile` includes the name.
+        """
+
+        name = 'Test entity'
+        profile = Profile(name, { 'x': 3 })
+        exported = profile.to_array()
+        self.assertEqual(name, Profile.from_array(exported).name)
+        self.assertEqual(profile.__dict__, Profile.from_array(exported).__dict__)
