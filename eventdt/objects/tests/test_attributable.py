@@ -25,12 +25,30 @@ class TestAttributable(unittest.TestCase):
 
         self.assertEqual({ }, Attributable().attributes)
 
+    def test_create_None(self):
+        """
+        Test that a :class:`~objects.attributable.Attributable` object created with `None` attributes still has an empty dictionary.
+        """
+
+        self.assertEqual({ }, Attributable(None).attributes)
+
     def test_create_with_data(self):
         """
         Test that an :class:`~objects.attributable.Attributable` object accepts attributes in the constructor.
         """
 
         self.assertEqual({ 'a': 1 }, Attributable({ 'a': 1 }).attributes)
+
+    def test_init_name_attributes_overwrite_none(self):
+        """
+        Test that overwriting the attributes with ``None`` creates an empty dictionary of attributes.
+        """
+
+        attributable = Attributable({ 'a': 1 })
+        self.assertEqual(1, attributable.a)
+
+        attributable.attributes = None
+        self.assertEqual({ }, attributable.attributes)
 
     def test_get_attribute_as_property(self):
         """

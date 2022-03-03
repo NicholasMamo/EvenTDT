@@ -20,7 +20,7 @@ class Attributable(object):
         :type attributes: dict or None
         """
 
-        self.attributes = dict(attributes or { })
+        self.attributes = attributes
 
     def __getattr__(self, name):
         """
@@ -39,3 +39,27 @@ class Attributable(object):
         """
 
         return self.attributes.get(name)
+
+    @property
+    def attributes(self):
+        """
+        Get the attributes of this profile.
+
+        :return: The attributes stored in this profile.
+                 The attribute name is the key, and the value is the corresponding attribute value.
+        :rtype: dict
+        """
+
+        return self.__attributes
+
+    @attributes.setter
+    def attributes(self, attributes):
+        """
+        Override the attributes in this profile.
+
+        :param attributes: The new attributes.
+                           If ``None`` is given, an empty dictionary is initialized instead.
+        :type attributes: None or dict
+        """
+
+        self.__attributes = attributes or { }
