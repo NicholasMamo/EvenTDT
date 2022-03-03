@@ -317,7 +317,7 @@ class TestLinguisticExtractor(unittest.TestCase):
         extractor = LinguisticExtractor()
 
         sentence = "Lucas Tolentino Coelho de Lima known as Lucas Paquetá, is a Brazilian professional footballer who plays as an attacking midfielder for Ligue 1 club Lyon and the Brazil national team."
-        profile = extractor.extract(sentence, verbose=True)
+        profile = extractor.extract(sentence)
         self.assertEqual({ 'known_as': { 'lucas paquetá' }, 'is': { 'brazilian professional footballer' }, 'plays_as': { 'attacking midfielder' }, 'plays_for': { 'lyon', 'brazil national team' } }, profile.attributes)
 
         sentence = "Memphis Depay, also known simply as Memphis, is a Dutch professional footballer and rapper who plays as a forward for French football club Lyon and the Netherlands national team."
@@ -327,10 +327,6 @@ class TestLinguisticExtractor(unittest.TestCase):
         sentence = "Tinotenda \"Tino\" Kadewere is a Zimbabwean professional footballer who plays for Ligue 1 side Lyon and the Zimbabwe national team as a striker."
         profile = extractor.extract(sentence)
         self.assertEqual({ 'is': { 'zimbabwean professional footballer' }, 'plays_as': { 'striker' }, 'plays_for': { 'lyon', 'zimbabwe national team' } }, profile.attributes)
-
-        sentence = "Lucas Tolentino Coelho de Lima, or simply Lucas Paquetá, is a Brazilian professional footballer who plays as an attacking midfielder for French Ligue 1 club Lyon and the Brazil national team."
-        profile = extractor.extract(sentence)
-        self.assertEqual({ 'is': { 'brazilian professional footballer' }, 'plays_as': { 'attacking midfielder' }, 'plays_for': { 'lyon', 'brazil national team' } }, profile.attributes)
 
         sentence = "Thiago Henrique Mendes Ribeiro is a Brazilian professional footballer who plays as a central midfielder for French club Lyon."
         profile = extractor.extract(sentence)

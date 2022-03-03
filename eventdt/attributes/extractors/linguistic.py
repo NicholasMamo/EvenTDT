@@ -39,18 +39,43 @@ class LinguisticExtractor(Extractor):
         Create the linguistic extractor with an optional grammar.
         If a grammar is not given, a default grammar is used instead:
 
-        - :math:`ENT: <CD|NNP.*>*?<NNP.*><CD|NNP.*>*` - An entity can start with (`1860 Munich`) or end with a number (`Schalke 04`), but it must always include at least one proper noun.
+        - **Entity** (``ENT: <CD|NNP.*>*? <NNP.*> (<IN>? <CD|NNP.*>)*``):
+          An entity can start with (*1860/CD Munich/NNP*) or end with a number (*Schalke/NNP 04/CD*), but it must always include at least one proper noun.
+          Entities may have a preposition (*United/NNP States/NP of/IN America/NP*) but never at the start or at the end.
+
+        - **Adjective modifier** (``JJMOD: <JJ.*> (<CC|,><JJ.*>)*``):
+          An adjective modifier is a list of adjectives (*Brazilian/JJ professional/JJ*) separated by commas or coordinating conjunction.
+
+        - **Modifier** (``MOD: <JJMOD|RB.*>*``):
+          A modifier is a list of adjectives (*Brazilian/JJ professional/JJ*) or adverbs that modify something else.
+
+        - **Attribute name** (``NAME: <VB.*>``):
+          An attribute name is formed by any verb (*plays/VBZ*), including past participles (*driven/VBN*).
+
+        - **Attribute value** (``VALUE: { <NP|ENT>+ }``):
+          The attribute value can be either a noun phrase (*Brazilian/JJ professional/JJ footballer/NN*) or an entity (*Lyon/ENT*), or several (*(Ligue 1)/ENT (club/NN)/NP Lyon/ENT*).
+
+        - **Prepositional phrase attribute** (``PPATTR: <IN>? (<DT>?<VALUE><CC|,>*)+``):
+          A prepositional phrase modifies the attribute name; a footballer does not simply play but *plays/VBZ for/IN*.
+          A prepositional phrase attribute optionally accepts that a preposition (*for/IN*) in the beginning and then any number of values.
+          The attribute value may take an article just before the value (*is/VBZ a/DT footballer/NN*).
+          The prepositional attribute accepts several such values as long as they are separated by coordinating conjunctions (*and*, *or*) or commas.
+
+        - **Attribute**: (``ATTR: <NAME> <MOD>? <PPATTR>``):
+          The complete attribute therefore has a name, optional modifiers and a prepositional phrase attribute.
         """
 
+        # TODO: Add support for ENT as adjectives ("_Ligue 1_ club Lyon")
+
         grammar = grammar or """
-                  ENT: { <CD|NNP.*>*? <NNP.*> (<IN>? <CD|NNP.*>)* }
+                  ENT: { <CD|NNP.*>* <NNP.*> (<IN>? <CD|NNP.*>)* }
                   JJMOD: { <JJ.*>+ (<CC|,><JJ.*>+)* }
-                  MOD: { <JJMOD|RB.*>* }
-                  NP: { <MOD>?<VBG>?<NN.*>+ }
+                  MOD: { <JJMOD|RB.*> }
+                  NP: { <MOD>? <VBG>? <NN.*>+ }
                   NAME: { <VB.*> }
                   VALUE: { <NP|ENT>+ }
-                  PPATTR: { <IN>?(<DT>?<VALUE><CC|,>?)+ }
-                  ATTR: { <NAME><MOD>?<PPATTR>+ }
+                  PPATTR: { <IN>? (<DT>?<VALUE><CC|,>*)+ }
+                  ATTR: { <NAME> <MOD>? <PPATTR>+ }
         """
         self.parser = nltk.RegexpParser(grammar)
 
@@ -87,7 +112,7 @@ class LinguisticExtractor(Extractor):
                     profile.attributes[name] = profile.attributes.get(name) or set()
                     attributes = self._get_attribute(_PPATTR)
                     for attribute in attributes:
-                        # TODO: Extract and split adjectives.
+                        # TODO: Extract and split adjectives (first extract the head noun or the head entity).
                         profile.attributes[name].add(self._attribute_value(attribute))
 
         return profile
