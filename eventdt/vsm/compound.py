@@ -24,8 +24,8 @@ class Compound(Vector):
     The :class:`~Compound` class is a special type of :class:`~vsm.vector.Vector` that represents several vectors.
     The class only stores a representation of the vectors, adding each vector's dimensions to form one single vector.
 
-    :var size: The numebr of vectors represented by the :class:`~Compound` vector.
-    :vartype size: int
+    :var ~.size: The numebr of vectors represented by the :class:`~Compound` vector.
+    :vartype ~.size: int
     """
 
     def __init__(self, vectors=None, *args, **kwargs):

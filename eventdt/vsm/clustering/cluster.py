@@ -36,8 +36,8 @@ class Cluster(Attributable, Exportable):
 
     :ivar vectors: The list of vectors that make up the cluster.
     :vartype vectors: list of :class:`~vsm.vector.Vector`
-    :ivar centroid: The centroid of the cluster, representing the average vector in the cluster.
-    :vartype centroid: :class:`~vsm.vector.Vector`
+    :ivar ~.centroid: The centroid of the cluster, representing the average vector in the cluster.
+    :vartype ~.centroid: :class:`~vsm.vector.Vector`
     :ivar _last: A snapshot of the cluster the last time that its centroid was re-calculated.
                  This variable is used so that the centroid is not re-calculated needlessly if the cluster's vector has not changed.
     :vartype _last: dict
