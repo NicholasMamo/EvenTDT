@@ -5,7 +5,7 @@ As usual, the functionality revolves around the :class:`~attributes.extractors.l
 The default grammar assumes that attributes are defined using verbs, and attribute values are nouns.
 However, the default grammar can be overriden in the :func:`constructor <attributes.extractors.linguistic.LinguisticExtractor.__init__>`.
 
-This extractor assumes that the text is about a single entity and therefore does not discriminate among attributes.
+This extractor assumes that the text is about a single entity and therefore does not seek to confirm who the attributes are discussing.
 """
 
 import os
@@ -57,7 +57,7 @@ class LinguisticExtractor(Extractor):
     def extract(self, text, *args, **kwargs):
         """
         Extract attributes from the given text.
-        This function assumes that the text is about a single entity and therefore does not discriminate among attributes.
+        This function assumes that the text is about a single entity and therefore does not seek to confirm who the attributes are discussing.
 
         Any additional arguments and keyword arguments are passed on to the :class:`~attributes.profile.Profile` :func:`constructor <~attributes.profile.Profile.__init__>`.
 
