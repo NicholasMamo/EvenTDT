@@ -17,7 +17,7 @@ class Profile(Attributable):
     """
     The :class:`~attributes.profile.Profile` stores a list of attributes and their respective values.
     This class stores these attributes as a dictionary, which can be accessed directly.
-    It expects attribute names to be strings, but values can be any datatype.
+    It expects attribute names to be strings, but values can have any datatype.
 
     :ivar name: The name of the entity that the profile represents.
     :vartype name: str
@@ -39,7 +39,7 @@ class Profile(Attributable):
 
     def common(self, other):
         """
-        Get the list of attributes that are shared between this profile and the given profile.
+        Get the list of attributes that appear in this profile and the given profile.
 
         :param other: The second profile compare with the current one.
         :type other: :class:`~attributes.profile.Profile`
@@ -50,9 +50,11 @@ class Profile(Attributable):
 
         return set(self.attributes).intersection(set(other.attributes))
 
-    def match(self, other, policy=any):
+    def matching(self, other, policy=any):
         """
-        Get a list of attributes that are common between this profile and the other profile.
+        Get the list of attributes that appear in this profile and the given profile with the same values.
+
+        This function can be used to calculate the Jaccard similarity as it gives the intersection of attributes between two profiles as long as they have the same value.
 
         :param other: The second profile compare with the current one.
         :type other: :class:`~attributes.profile.Profile`
@@ -65,7 +67,7 @@ class Profile(Attributable):
         :rtype: set of str
         """
 
-        matching = set()
+        _matching = set()
 
         common = self.common(other)
         for attribute in common:
@@ -76,9 +78,9 @@ class Profile(Attributable):
 
             # check that any (or all) values in one profile's attribute exist in the other profile's attribute, and vice-versa
             if policy(v in v2 for v in v1) and policy(v in v1 for v in v2):
-                matching.add(attribute)
+                _matching.add(attribute)
 
-        return matching
+        return _matching
 
     def __str__(self):
         """

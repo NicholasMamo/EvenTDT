@@ -185,162 +185,162 @@ class TestProfile(unittest.TestCase):
         p1, p2 = Profile(attributes={ 'plays_for': { 'lyon' }, 'plays_as': { 'striker' } }), Profile(attributes={ 'plays_as': { 'striker' } })
         self.assertEqual(p1.common(p2), p2.common(p1))
 
-    def test_match_empty(self):
+    def test_matching_empty(self):
         """
         Test that getting the matching attributes in two empty profiles returns an empty set.
         """
 
         p1, p2 = Profile(), Profile()
-        self.assertEqual(set(), p1.match(p2))
+        self.assertEqual(set(), p1.matching(p2))
 
-    def test_match_one_empty(self):
+    def test_matching_one_empty(self):
         """
         Test that getting the matching attributes and one profile is empty, the function returns an empty set.
         """
 
         p1, p2 = Profile(), Profile(attributes={ 'plays_as': { 'striker' } })
-        self.assertEqual(set(), p1.match(p2))
-        self.assertEqual(set(), p2.match(p1))
+        self.assertEqual(set(), p1.matching(p2))
+        self.assertEqual(set(), p2.matching(p1))
 
-    def test_match_none(self):
+    def test_matching_none(self):
         """
-        Test that when two profiles share no attributes, no match attributes are returned.
+        Test that when two profiles share no attributes, no matching attributes are returned.
         """
 
         p1, p2 = Profile(attributes={ 'plays_for': { 'lyon' } }), Profile(attributes={ 'plays_as': { 'striker' } })
-        self.assertEqual(set(), p1.match(p2))
-        self.assertEqual(set(), p2.match(p1))
+        self.assertEqual(set(), p1.matching(p2))
+        self.assertEqual(set(), p2.matching(p1))
 
-    def test_match_in_both(self):
+    def test_matching_in_both(self):
         """
         Test that the matching attributes actually exist in both profiles.
         """
 
         p1, p2 = Profile(attributes={ 'plays_for': { 'lyon' }, 'plays_as': { 'striker' } }), Profile(attributes={ 'plays_as': { 'striker' } })
-        self.assertTrue(all( attribute in p1.attributes and attribute in p2.attributes for attribute in p1.match(p2) ))
-        self.assertTrue(all( attribute in p1.attributes and attribute in p2.attributes for attribute in p2.match(p1) ))
+        self.assertTrue(all( attribute in p1.attributes and attribute in p2.attributes for attribute in p1.matching(p2) ))
+        self.assertTrue(all( attribute in p1.attributes and attribute in p2.attributes for attribute in p2.matching(p1) ))
 
-    def test_match_common(self):
+    def test_matching_common(self):
         """
         Test that the matching attributes are actually common.
         """
 
         p1, p2 = Profile(attributes={ 'plays_as': { 'striker' } }), Profile(attributes={ 'plays_as': { 'striker' } })
-        self.assertTrue(p1.match(p2))
-        self.assertTrue(all( attribute in p1.common(p2) for attribute in p1.match(p2) ))
+        self.assertTrue(p1.matching(p2))
+        self.assertTrue(all( attribute in p1.common(p2) for attribute in p1.matching(p2) ))
 
-    def test_match_returns_attributes(self):
+    def test_matching_returns_attributes(self):
         """
         Test that when matching attributes, the attribute names are returned.
         """
 
         p1, p2 = Profile(attributes={ 'plays_as': { 'striker' } }), Profile(attributes={ 'plays_as': { 'striker' } })
-        self.assertTrue(p1.match(p2))
-        self.assertTrue(all( attribute in p1.attributes for attribute in p1.match(p2) ))
-        self.assertTrue(all( attribute in p2.attributes for attribute in p1.match(p2) ))
+        self.assertTrue(p1.matching(p2))
+        self.assertTrue(all( attribute in p1.attributes for attribute in p1.matching(p2) ))
+        self.assertTrue(all( attribute in p2.attributes for attribute in p1.matching(p2) ))
 
-    def test_match_excludes_unmatch(self):
+    def test_matching_excludes_unmatch(self):
         """
         Test that the attributes that appear in only one profile are excluded.
         """
 
         p1, p2 = Profile(attributes={ 'plays_for': { 'lyon' }, 'plays_as': { 'striker' } }), Profile(attributes={ 'plays_as': { 'striker' } })
-        self.assertFalse('plays_for' in p1.match(p2))
-        self.assertFalse('plays_for' in p2.match(p1))
+        self.assertFalse('plays_for' in p1.matching(p2))
+        self.assertFalse('plays_for' in p2.matching(p1))
 
-    def test_match_set(self):
+    def test_matching_set(self):
         """
         Test that getting the matching attributes in two profiles returns an set.
         """
 
         p1, p2 = Profile(attributes={ 'plays_for': { 'lyon' }, 'plays_as': { 'striker' } }), Profile(attributes={ 'plays_as': { 'striker' } })
-        self.assertEqual(set, type(p1.match(p2)))
-        self.assertEqual(set, type(p2.match(p1)))
+        self.assertEqual(set, type(p1.matching(p2)))
+        self.assertEqual(set, type(p2.matching(p1)))
 
-    def test_match_symmetric(self):
+    def test_matching_symmetric(self):
         """
         Test that when getting the matching attributes in two profiles, the order does not matter.
         """
 
         p1, p2 = Profile(attributes={ 'plays_for': { 'lyon' }, 'plays_as': { 'striker' } }), Profile(attributes={ 'plays_as': { 'striker' } })
-        self.assertEqual(p1.match(p2), p2.match(p1))
+        self.assertEqual(p1.matching(p2), p2.matching(p1))
 
-    def test_match_numbers(self):
+    def test_matching_numbers(self):
         """
         Test that when matching numbers, attributes are matched correctly.
         """
 
         p1, p2 = Profile(attributes={ 'age': 26 }), Profile(attributes={ 'age': 26 })
-        self.assertEqual({ 'age' }, p1.match(p2))
+        self.assertEqual({ 'age' }, p1.matching(p2))
 
-    def test_match_numbers_policy_irrelevant(self):
+    def test_matching_numbers_policy_irrelevant(self):
         """
         Test that when matching numbers, the policy has no effect.
         """
 
         p1, p2 = Profile(attributes={ 'age': 26 }), Profile(attributes={ 'age': 26 })
-        self.assertEqual({ 'age' }, p1.match(p2, policy=any))
-        self.assertEqual(p1.match(p2, policy=any), p1.match(p2, policy=all))
+        self.assertEqual({ 'age' }, p1.matching(p2, policy=any))
+        self.assertEqual(p1.matching(p2, policy=any), p1.matching(p2, policy=all))
 
-    def test_match_strings(self):
+    def test_matching_strings(self):
         """
         Test that when matching strings, attributes are matched correctly.
         """
 
         p1, p2 = Profile(attributes={ 'plays_as': 'striker' }), Profile(attributes={ 'plays_as': 'striker' })
-        self.assertEqual({ 'plays_as' }, p1.match(p2))
+        self.assertEqual({ 'plays_as' }, p1.matching(p2))
 
-    def test_match_strings_not_iterable(self):
+    def test_matching_strings_not_iterable(self):
         """
         Test that strings are not treated as iterables.
         """
 
         p1, p2 = Profile(attributes={ 'plays_in': 'all' }), Profile(attributes={ 'plays_in': 'al' })
-        self.assertEqual(set(), p1.match(p2))
+        self.assertEqual(set(), p1.matching(p2))
         p1, p2 = Profile(attributes={ 'plays_in': 'all' }), Profile(attributes={ 'plays_in': 'all' })
-        self.assertEqual({ 'plays_in' }, p1.match(p2))
+        self.assertEqual({ 'plays_in' }, p1.matching(p2))
 
-    def test_match_strings_policy_irrelevant(self):
+    def test_matching_strings_policy_irrelevant(self):
         """
         Test that when matching strings, the policy has no effect.
         """
 
         p1, p2 = Profile(attributes={ 'plays_as': 'striker' }), Profile(attributes={ 'plays_as': 'striker' })
-        self.assertEqual({ 'plays_as' }, p1.match(p2, policy=any))
-        self.assertEqual(p1.match(p2, policy=any), p1.match(p2, policy=all))
+        self.assertEqual({ 'plays_as' }, p1.matching(p2, policy=any))
+        self.assertEqual(p1.matching(p2, policy=any), p1.matching(p2, policy=all))
 
-    def test_match_set_policy(self):
+    def test_matching_set_policy(self):
         """
         Test that when matching sets of values, the policy has an effect.
         """
 
         p1, p2 = Profile(attributes={ 'plays_as': { 'striker', 'midfielder' }, 'plays_for': { 'lyon' } }), Profile(attributes={ 'plays_as': { 'striker', 'defender' }, 'plays_for': { 'marseille' } })
-        self.assertEqual({ 'plays_as' }, p1.match(p2, policy=any))
-        self.assertEqual(set(), p1.match(p2, policy=all))
+        self.assertEqual({ 'plays_as' }, p1.matching(p2, policy=any))
+        self.assertEqual(set(), p1.matching(p2, policy=all))
 
-    def test_match_list_policy(self):
+    def test_matching_list_policy(self):
         """
         Test that when matching lists of values, the policy has an effect.
         """
 
         p1, p2 = Profile(attributes={ 'plays_as': [ 'striker', 'midfielder' ], 'plays_for': [ 'lyon' ] }), Profile(attributes={ 'plays_as': [ 'striker', 'defender' ], 'plays_for': [ 'marseille' ] })
-        self.assertEqual({ 'plays_as' }, p1.match(p2, policy=any))
-        self.assertEqual(set(), p1.match(p2, policy=all))
+        self.assertEqual({ 'plays_as' }, p1.matching(p2, policy=any))
+        self.assertEqual(set(), p1.matching(p2, policy=all))
 
-    def test_match_list_policy(self):
+    def test_matching_list_policy(self):
         """
         Test that when matching lists of values, the policy has an effect.
         """
 
         p1, p2 = Profile(attributes={ 'plays_as': [ 'striker', 'midfielder' ], 'plays_for': [ 'lyon' ] }), Profile(attributes={ 'plays_as': [ 'striker', 'defender' ], 'plays_for': [ 'marseille' ] })
-        self.assertEqual({ 'plays_as' }, p1.match(p2, policy=any))
-        self.assertEqual(set(), p1.match(p2, policy=all))
+        self.assertEqual({ 'plays_as' }, p1.matching(p2, policy=any))
+        self.assertEqual(set(), p1.matching(p2, policy=all))
 
-    def test_match_iterable_symmetric(self):
+    def test_matching_iterable_symmetric(self):
         """
         Test that when matching an iterable, both sides are checked.
         """
 
         p1, p2 = Profile(attributes={ 'plays_as': [ 'striker' ] }), Profile(attributes={ 'plays_as': [ 'striker', 'defender' ] })
-        self.assertEqual({ 'plays_as' }, p1.match(p2, policy=any))
-        self.assertEqual(set(), p1.match(p2, policy=all))
+        self.assertEqual({ 'plays_as' }, p1.matching(p2, policy=any))
+        self.assertEqual(set(), p1.matching(p2, policy=all))
