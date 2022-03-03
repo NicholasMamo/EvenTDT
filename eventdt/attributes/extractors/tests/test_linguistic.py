@@ -138,7 +138,21 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertTrue(all(set == type(value) for value in profile.attributes.values()))
         self.assertEqual({ 'is': { 'footballer', 'rapper' }, 'plays_for': { 'lyon' } }, profile.attributes)
-        self.assertEqual({ 'is': { 'rapper', 'footballer' }, 'plays_for': { 'lyon' } }, profile.attributes)
+
+    def test_extract_with_lemmatization(self):
+        """
+        Test that when initializing the extractor with the lemmatizer, the attribute names are lemmatized.
+        """
+
+        extractor = LinguisticExtractor(lemmatize=False)
+        sentence = "François Gérard Georges Nicolas Hollande is a French politician who served as president of France from 2012 to 2017."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'french politician' }, 'served_as': { 'president' }, 'served_of': { 'france from 2012' } }, profile.attributes)
+
+        extractor = LinguisticExtractor(lemmatize=True)
+        sentence = "François Gérard Georges Nicolas Hollande is a French politician who served as president of France from 2012 to 2017."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'be': { 'french politician' }, 'serve_as': { 'president' }, 'serve_of': { 'france from 2012' } }, profile.attributes)
 
     def test_extract_DATE(self):
         """

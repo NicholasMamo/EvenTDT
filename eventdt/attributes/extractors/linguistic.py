@@ -32,9 +32,12 @@ class LinguisticExtractor(Extractor):
 
     :ivar parser: The parser to use to extract attributes.
     :vartype parser: :class:`nltk.RegexpParser`
+    :ivar lemmatizer: The lemmatizer with which to lemmatize attribute names.
+                      If lemmatization is disabled, the variable is ``None``.
+    :vartype: :class:`nltk.WordNetLemmatizer` or ``None``.
     """
 
-    def __init__(self, grammar=None):
+    def __init__(self, grammar=None, lemmatize=False):
         """
         Create the linguistic extractor with an optional grammar.
         If a grammar is not given, a default grammar is used instead:
@@ -73,6 +76,14 @@ class LinguisticExtractor(Extractor):
         **Attribute** (``ATTR: <NAME> <MOD>? <PPATTR>``)
 
         The complete attribute therefore has a name, optional modifiers and a prepositional phrase attribute.
+
+        :param grammar: The grammar with which to extract attributes.
+                        The grammar must have a way to extract entities (``ENT``), attributes (``ATTR``) and prepositional attributes (``PPATR``), and attribute names (``NAME``) and values (``VALUE``).
+        :type grammar: str
+        :param lemmatize: A boolean indicating whether to lemmatize a verb or not.
+                          Lemmatization helps reduce the impact of conjugation and sentence structure on the attributes, such as whether the sentence uses the passive or active voice.
+                          However, it also eliminates the tense, which means that past attributes have the same name as present or future attributes.
+        :type lemmatize: bool
         """
 
         # TODO: Add support for ENT as adjectives ("_Ligue 1_ club Lyon")
@@ -88,6 +99,7 @@ class LinguisticExtractor(Extractor):
                   ATTR: { <NAME> <MOD>? <PPATTR>+ }
         """
         self.parser = nltk.RegexpParser(grammar)
+        self.lemmatizer = nltk.WordNetLemmatizer() if lemmatize else None
 
     def extract(self, text, verbose=False, *args, **kwargs):
         """
@@ -172,7 +184,8 @@ class LinguisticExtractor(Extractor):
         """
 
         name = [ component for component in ATTR.subtrees() if component.label() == 'NAME' ][0]
-        name = [ text for text, pos in name.leaves() ]
+        name = [ self.lemmatizer.lemmatize(text, pos='v') if self.lemmatizer else text
+                 for text, pos in name.leaves() ]
         PPATR = [ component for component in ATTR.subtrees() if component.label() == 'PPATTR' ]
         return ('_'.join(name).lower(), PPATR)
 
