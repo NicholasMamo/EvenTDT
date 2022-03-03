@@ -21,3 +21,21 @@ class Attributable(object):
         """
 
         self.attributes = dict(attributes or { })
+
+    def __getattr__(self, name):
+        """
+        The magic function through which most of the :class:`~Attributable`'s functionality passes.
+        This function receives any unknown call and tries to return an attribute with the same name.
+
+        .. note::
+
+            This function cannot be used to set an attribute.
+
+        :param name: The name of the attribute.
+        :type name: str
+
+        :return: The attribute value or `None` if it is not set.
+        :rtype: any or None
+        """
+
+        return self.attributes.get(name)
