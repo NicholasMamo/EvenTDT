@@ -40,7 +40,7 @@ class LinguisticExtractor(Extractor):
         If a grammar is not given, a default grammar is used instead:
 
         **Entity**
-        (``ENT: <CD|NNP.*>*? <NNP.*> (<IN>? <CD|NNP.*>)*``)
+        (``ENT: <CD>? <NNP.*> (<IN>? <CD|NNP.*>)*``)
 
         An entity can start with (*1860/CD Munich/NNP*) or end with a number (*Schalke/NNP 04/CD*), but it must always include at least one proper noun.
         Entities may have a preposition (*United/NNP States/NP of/IN America/NP*) but never at the start or at the end.
@@ -73,7 +73,7 @@ class LinguisticExtractor(Extractor):
         # TODO: Add support for ENT as adjectives ("_Ligue 1_ club Lyon")
 
         grammar = grammar or """
-                  ENT: { <CD|NNP.*>* <NNP.*> (<IN>? <CD|NNP.*>)* }
+                  ENT: { <CD>? <NNP.*> (<IN>? <CD|NNP.*>)* }
                   MOD: { <JJ.*|RB.*>+ (<CC|,><JJ.*|RB.*>+)* }
                   NP: { <MOD>? <VBG>? <NN.*>+ }
                   NAME: { <VB.*> }
