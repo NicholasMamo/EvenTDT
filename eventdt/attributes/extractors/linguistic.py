@@ -284,8 +284,9 @@ class LinguisticExtractor(Extractor):
         :return: The attribute value in the subtree.
         :rtype: :class:`nltk.tree.Tree`
         """
-
-        return [ _subtree for _subtree in VALUES.subtrees() if _subtree.label() == 'VALUE' ]
+        
+        return [ _subtree for _subtree in VALUES.subtrees()
+                 if _subtree.label() == 'VALUE' ]
 
     def _attribute_value(self, VALUE):
         """

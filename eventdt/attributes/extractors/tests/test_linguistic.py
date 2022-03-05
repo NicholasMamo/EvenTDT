@@ -266,6 +266,17 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence, remove_parentheses=False)
         self.assertEqual({ 'born': { '6 january 1990' }, 'is': { 'english professional footballer' }, 'played_as': { 'defender' } }, profile.attributes)
 
+    def test_extract_with_periods(self):
+        """
+        Test extracting attributes from a sentence that has periods.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Ampelokipoi Larissa F.C. (Greek: ΑΟ Αμπελοκήπων) is a football club based in Larissa, Thessaly, Greece and currently competes in the Larissa FCA league."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'football club' }, 'based_in': { 'larissa', 'thessaly', 'greece' }, 'competes_in': { 'larissa fca league' } }, profile.attributes)
+
     def test_extract_DATE_format_1(self):
         """
         Test extracting a date in the format DD MM YYYY.
@@ -396,21 +407,6 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'is': { 'transcontinental country' }, 'spanning': { 'western europe', 'overseas regions', 'territories' }, 'spanning_in': { 'americas', 'atlantic', 'pacific', 'indian oceans' } }, profile.attributes)
 
-    def test_extract_ENT_with_PRP(self):
-        """
-        Test that I is considered to be as part of the entity when it follows one.
-        """
-
-        extractor = LinguisticExtractor()
-
-        sentence = "World War I, often abbreviated as WW I or WW1, also known as the First World War or the Great War, was an international conflict that began on 28 July 1914 and ended on 11 November 1918."
-        profile = extractor.extract(sentence)
-        self.assertEqual({ 'abbreviated_as': { 'ww i', 'ww1' }, 'known_as': { 'first world war', 'great war' }, 'was': { 'international conflict' }, 'began_on': { '28 july 1914' }, 'ended_on': { '11 november 1918' } }, profile.attributes)
-
-        sentence = "Paul Charles François Adrien Henri Dieudonné Thiébault (14 December 1769, Berlin - 14 October 1846, Paris) was a general who fought in Napoleon I's army."
-        profile = extractor.extract(sentence)
-        self.assertEqual({ 'fought_in': { 'napoleon i', 'army', 'napoleon i \'s army' } }, profile.attributes)
-
     def test_extract_NAME_VBG(self):
         """
         Test that an attribute name may be a gerund.
@@ -495,6 +491,10 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'is': { 'belgian professional footballer' }, 'plays_as': { 'centre-back' }, 'plays_for': { 'lyon', 'belgium national side' } }, profile.attributes)
 
+        sentence = "Mathis Rayan Cherki (French pronunciation: ​[ʁajan ʃɛʁki]; Arabic: رايان شرقي; born 17 August 2003) is a French professional footballer who plays as attacking midfielder for Ligue 1 club Lyon."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'french professional footballer' }, 'plays_as': { 'attacking midfielder' }, 'plays_for': { 'lyon' } }, profile.attributes)
+
         sentence = "Romelu Menama Lukaku Bolingoli is a Belgian professional footballer who plays as a striker for Serie A club Inter Milan and the Belgium national team."
         profile = extractor.extract(sentence)
         self.assertEqual({ 'is': { 'belgian professional footballer' }, 'plays_as': { 'striker' }, 'plays_for': { 'inter milan', 'belgium national team' } }, profile.attributes)
@@ -514,6 +514,23 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'known_as': { 'granada' }, 'is': { 'spanish football club' }, 'is_in': { 'city', 'autonomous community' }, 'is_of': { 'granada', 'andalusia' }, 'plays_in': { 'la liga' } }, profile.attributes)
 
+        sentence = "Naked Harbour (Finnish: Vuosaari) is a 2012 Finnish drama film directed by Aku Louhimies."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { '2012 finnish drama film' }, 'directed_by': { 'aku louhimies' } }, profile.attributes)
+
+    def test_extract_VALUE_NP(self):
+        """
+        Test extracting values that are noun phrases.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = """VR Kanojo (VR カノジョ) is a virtual reality social simulation game made by Illusion, released in February 2017
+                      for the HTC Vive and Oculus Rift on Microsoft Windows PCs."""
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'virtual reality social simulation game' }, 'made_by': { 'illusion' }, 'released_in': { 'february 2017' },
+                           'released_for': { 'htc vive', 'oculus rift on microsoft windows pcs' } }, profile.attributes)
+
     def test_extract_VALUE_POS(self):
         """
         Test that if a value has a possessive, the object and subject are returned together and separately.
@@ -526,6 +543,21 @@ class TestLinguisticExtractor(unittest.TestCase):
         self.assertEqual({ 'is': { 'earth', 'earth \'s largest and most populous continent', 'largest and most populous continent' }, 'located_in': { 'eastern', 'northern hemispheres' } }, profile.attributes)
 
         # general tagged as JJ by the POS tagger
+        sentence = "Paul Charles François Adrien Henri Dieudonné Thiébault (14 December 1769, Berlin - 14 October 1846, Paris) was a general who fought in Napoleon I's army."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'fought_in': { 'napoleon i', 'army', 'napoleon i \'s army' } }, profile.attributes)
+
+    def test_extract_ENT_with_PRP(self):
+        """
+        Test that I is considered to be as part of the entity when it follows one.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "World War I, often abbreviated as WW I or WW1, also known as the First World War or the Great War, was an international conflict that began on 28 July 1914 and ended on 11 November 1918."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'abbreviated_as': { 'ww i', 'ww1' }, 'known_as': { 'first world war', 'great war' }, 'was': { 'international conflict' }, 'began_on': { '28 july 1914' }, 'ended_on': { '11 november 1918' } }, profile.attributes)
+
         sentence = "Paul Charles François Adrien Henri Dieudonné Thiébault (14 December 1769, Berlin - 14 October 1846, Paris) was a general who fought in Napoleon I's army."
         profile = extractor.extract(sentence)
         self.assertEqual({ 'fought_in': { 'napoleon i', 'army', 'napoleon i \'s army' } }, profile.attributes)
@@ -625,6 +657,10 @@ class TestLinguisticExtractor(unittest.TestCase):
         sentence = """EMEA is a shorthand designation meaning Europe, the Middle East and Africa"""
         profile = extractor.extract(sentence)
         self.assertEqual({ 'is': { 'shorthand designation' }, 'meaning': { 'europe', 'middle east', 'africa' } }, profile.attributes)
+
+        sentence = "Alexandra Talomaa (born 1975) is a Swedish songwriter who has written songs for A-Teens, Anders Fernette (previously Johansson), Backstreet Boys, Darin, Westlife and others."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'swedish songwriter' }, 'written': { 'songs' }, 'written_for': { 'a-teens', 'anders fernette', 'backstreet boys', 'darin', 'westlife', 'others' } }, profile.attributes)
 
     def test_extract_VALUES_IN_between(self):
         """
