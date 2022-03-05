@@ -78,6 +78,19 @@ class LinguisticExtractor(Extractor):
 
         The complete attribute therefore has a name, optional modifiers and a prepositional phrase attribute.
 
+        .. warn:
+
+            **Known issues**
+
+            - In order to handle entities with prepositions, such as *United/NNP States/NNPS of/IN America/NNP*, the grammar misses prepositional attributes.
+              For example, in the phrase *competing in Formula One with McLaren*, the entity is taken to be Formula One with McLaren.
+              The correct parse should be two attributes: the driver competes in Formula 1 and competes with McLaren.
+              TODO: Add parse
+
+            - The grammar struggles with sub-clauses because it assumes that verb gerunds are modifiers.
+              This means that the grammar correctly extracts the relation ``'plays_as': 'attacking midfielder'`` from phrases such as *plays/VBZ as/IN an/DT attacking/VBG midfielder/NN*.
+              However, the grammar does not extract a relation from the phrase *painting/VBG landscapes/NNS or/CC vedute/NN*.
+
         :param grammar: The grammar with which to extract attributes.
                         The grammar must have a way to extract entities (``ENT``), attributes (``ATTR``) and prepositional attributes (``PPATR``), and attribute names (``NAME``) and values (``VALUE``).
         :type grammar: str
