@@ -47,16 +47,21 @@ class LinguisticExtractor(Extractor):
 
         The grammar assumes that a pattern involving two numbers and a proper noun in various formats represents a date (*14/CD May/NNP 2017/CD*).
 
+        **Modifier** (``MOD: <JJ.*|RB.*>+ (<CC|,><JJ.*|RB.*>+)*``)
+
+        A modifier is a list of adjectives (*Brazilian/JJ professional/JJ*) or adverbs (*[known] simply/RB [as]*) that modify something else.
+        There may be more than one such modifier, all separated by coordinating conjunctions or commas.
+
         **Entity**
         (``ENT: <CD>? <NNP.*> (<IN>? <CD|NNP.*>)*``)
 
         An entity can start with (*1860/CD Munich/NNP*) or end with a number (*Schalke/NNP 04/CD*), but it must always include at least one proper noun.
         Entities may have a preposition (*United/NNP States/NP of/IN America/NP*) but never at the start or at the end.
 
-        **Modifier** (``MOD: <JJ.*|RB.*>+ (<CC|,><JJ.*|RB.*>+)*``)
+        **Noun phrase**
+        (``NP: { <MOD|VBG>* <NN.*>+ }``)
 
-        A modifier is a list of adjectives (*Brazilian/JJ professional/JJ*) or adverbs (*[known] simply/RB [as]*) that modify something else.
-        There may be more than one such modifier, all separated by coordinating conjunctions or commas.
+        A noun phrase is a sequence of nouns (*football/NN team/NN*) possibly preceded by modifiers.
 
         **Attribute name** (``NAME: <VB.*>``)
 
@@ -106,7 +111,7 @@ class LinguisticExtractor(Extractor):
                   DATE: { (<CD> <NNP> <CD>|<NNP> <CD> <,> <CD>) }
                   ENT: { <CD>? <NNP.*> (<IN>? <CD|NNP.*>)* }
                   MOD: { <JJ.*|RB.*>+ (<CC|,><JJ.*|RB.*>+)* }
-                  NP: { <MOD>? <VBG>? <NN.*>+ }
+                  NP: { <MOD|VBG>* <NN.*>+ }
                   NAME: { <VB.*> }
                   VALUE: { <NP|ENT|DATE>+ }
                   VALUES: { <IN>? (<DT>?<VALUE><CC|,>*)+ }
