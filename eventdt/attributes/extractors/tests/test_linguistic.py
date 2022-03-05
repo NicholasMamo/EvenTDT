@@ -265,6 +265,14 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'is': { 'u.s. magistrate judge' }, 'is_of': { 'united states district court' }, 'is_for': { 'northern district of california' } }, profile.attributes)
 
+        sentence = "The 2004 Kansas Jayhawks football team represented the University of Kansas in the 2004 NCAA Division I-A football season."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'represented': { 'university of kansas' }, 'represented_in': { '2004 ncaa division i-a football season' } }, profile.attributes)
+
+        sentence = "Giuseppe Tartini was an Italian Baroque composer and violinist born in the Republic of Venice."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'was': { 'italian baroque composer', 'violinist' }, 'born_in': { 'republic of venice' } }, profile.attributes)
+
     def test_extract_ENT_with_MOD(self):
         """
         Test that an entity may be preceded by a modifier.
@@ -313,6 +321,56 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'is': { 'french politician' }, 'served_as': { 'president' }, 'served_of': { 'france' }, 'served_from': { '2012' }, 'served_to': { '2017'} }, profile.attributes)
 
+    def test_extract_VALUE_ENT_NP_head(self):
+        """
+        Test that when extracting values, if an entity is preceded by noun phrases, only the entity is retained.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Lucas Tolentino Coelho de Lima known as Lucas Paquetá, is a Brazilian professional footballer who plays as an attacking midfielder for Ligue 1 club Lyon and the Brazil national team."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'known_as': { 'lucas paquetá' }, 'is': { 'brazilian professional footballer' }, 'plays_as': { 'attacking midfielder' }, 'plays_for': { 'lyon', 'brazil national team' } }, profile.attributes)
+
+        sentence = "Spalacopsis stolata is a species of beetle in the family Cerambycidae."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'species' }, 'is_of': { 'beetle' }, 'is_in': { 'cerambycidae' } }, profile.attributes)
+
+        sentence = "Memphis Depay, also known simply as Memphis, is a Dutch professional footballer and rapper who plays as a forward for French football club Lyon and the Netherlands national team."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'known_as': { 'memphis' }, 'is': { 'dutch professional footballer', 'rapper' }, 'plays_as': { 'forward' }, 'plays_for': { 'lyon', 'netherlands national team' } }, profile.attributes)
+
+        sentence = "Tinotenda \"Tino\" Kadewere is a Zimbabwean professional footballer who plays for Ligue 1 side Lyon and the Zimbabwe national team as a striker."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'zimbabwean professional footballer' }, 'plays_as': { 'striker' }, 'plays_for': { 'lyon', 'zimbabwe national team' } }, profile.attributes)
+
+        sentence = "Thiago Henrique Mendes Ribeiro is a Brazilian professional footballer who plays as a central midfielder for French club Lyon."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'brazilian professional footballer' }, 'plays_as': { 'central midfielder' }, 'plays_for': { 'lyon' } }, profile.attributes)
+
+        sentence = "Jason Grégory Marianne Denayer is a Belgian professional footballer who plays as a centre-back for French club Lyon and the Belgium national side."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'belgian professional footballer' }, 'plays_as': { 'centre-back' }, 'plays_for': { 'lyon', 'belgium national side' } }, profile.attributes)
+
+        sentence = "Romelu Menama Lukaku Bolingoli is a Belgian professional footballer who plays as a striker for Serie A club Inter Milan and the Belgium national team."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'belgian professional footballer' }, 'plays_as': { 'striker' }, 'plays_for': { 'inter milan', 'belgium national team' } }, profile.attributes)
+
+        sentence = "Lautaro Javier Martínez is an Argentine professional footballer who plays as a striker for Italian club Inter Milan and the Argentina national team."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'argentine professional footballer' }, 'plays_as': { 'striker' }, 'plays_for': { 'inter milan', 'argentina national team' } }, profile.attributes)
+
+    def test_extract_VALUE_JJ_NP(self):
+        """
+        Test that when extracting values, if a value has an adjective, both the adjective and the noun phrase are retained.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Granada Club de Fútbol, S.A.D., known simply as Granada, is a Spanish football club in the city of Granada, in the autonomous community of Andalusia that plays in La Liga."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'known_as': { 'granada' }, 'is': { 'spanish football club' }, 'is_in': { 'city', 'autonomous community' }, 'is_of': { 'granada', 'andalusia' }, 'plays_in': { 'la liga' } }, profile.attributes)
+
     def test_extract_VALUES_CC_and(self):
         """
         Test extracting attributes which have _and_ conjunctions.
@@ -327,6 +385,10 @@ class TestLinguisticExtractor(unittest.TestCase):
         sentence = "Memphis Depay plays as a forward and midfielder."
         profile = extractor.extract(sentence)
         self.assertEqual({ 'plays_as': { 'forward', 'midfielder' } }, profile.attributes)
+
+        sentence = "Joseph Robinette Biden Jr. is an American politician and the president-elect of the United States."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'american politician', 'president-elect' }, 'is_of': { 'united states' } }, profile.attributes)
 
     def test_extract_VALUES_CC_or(self):
         """
@@ -397,6 +459,10 @@ class TestLinguisticExtractor(unittest.TestCase):
         sentence = "Virginia, officially the Commonwealth of Virginia, is a state in the Mid-Atlantic and Southeastern regions of the United States, between the Atlantic Coast and the Appalachian Mountains."
         profile = extractor.extract(sentence)
         self.assertEqual({ 'is': { 'state' }, 'is_in': { 'mid-atlantic and southeastern regions' }, 'is_of': { 'united states' }, 'is_between': { 'atlantic coast', 'appalachian mountains' } }, profile.attributes)
+
+        sentence = "Wright Inlet is an ice-filled inlet receding westward between Cape Little and Cape Wheeler along the east coast of Palmer Land."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'ice-filled inlet receding westward' }, 'is_between': { 'cape little', 'cape wheeler' }, 'is_along': { 'east coast' }, 'is_of': { 'palmer land' } }, profile.attributes)
 
     def test_extract_VALUES_IN_appended_to_name(self):
         """
@@ -472,66 +538,12 @@ class TestLinguisticExtractor(unittest.TestCase):
                            'was_upon': { 'united states' }, 'was_against': { 'naval base' }, 'was_at': { 'pearl harbor in honolulu', 'territory of hawaii' },
                            'was_before': { '08:00' }, 'was_on': { 'sunday , december 7 , 1941' } }, profile.attributes)
 
-    def test_extract_real_examples(self):
+    def test_extract_misc(self):
         """
         Test extracting attributes from real example strings.
-
-        Some mistakes, such as in Lautaro Martinez's example, are due to NLTK's incorrect tagging.
         """
 
         extractor = LinguisticExtractor()
-
-        sentence = "Lucas Tolentino Coelho de Lima known as Lucas Paquetá, is a Brazilian professional footballer who plays as an attacking midfielder for Ligue 1 club Lyon and the Brazil national team."
-        profile = extractor.extract(sentence)
-        self.assertEqual({ 'known_as': { 'lucas paquetá' }, 'is': { 'brazilian professional footballer' }, 'plays_as': { 'attacking midfielder' }, 'plays_for': { 'lyon', 'brazil national team' } }, profile.attributes)
-
-        sentence = "Memphis Depay, also known simply as Memphis, is a Dutch professional footballer and rapper who plays as a forward for French football club Lyon and the Netherlands national team."
-        profile = extractor.extract(sentence)
-        self.assertEqual({ 'known_as': { 'memphis' }, 'is': { 'dutch professional footballer', 'rapper' }, 'plays_as': { 'forward' }, 'plays_for': { 'lyon', 'netherlands national team' } }, profile.attributes)
-
-        sentence = "Tinotenda \"Tino\" Kadewere is a Zimbabwean professional footballer who plays for Ligue 1 side Lyon and the Zimbabwe national team as a striker."
-        profile = extractor.extract(sentence)
-        self.assertEqual({ 'is': { 'zimbabwean professional footballer' }, 'plays_as': { 'striker' }, 'plays_for': { 'lyon', 'zimbabwe national team' } }, profile.attributes)
-
-        sentence = "Thiago Henrique Mendes Ribeiro is a Brazilian professional footballer who plays as a central midfielder for French club Lyon."
-        profile = extractor.extract(sentence)
-        self.assertEqual({ 'is': { 'brazilian professional footballer' }, 'plays_as': { 'central midfielder' }, 'plays_for': { 'lyon' } }, profile.attributes)
-
-        sentence = "Jason Grégory Marianne Denayer is a Belgian professional footballer who plays as a centre-back for French club Lyon and the Belgium national side."
-        profile = extractor.extract(sentence)
-        self.assertEqual({ 'is': { 'belgian professional footballer' }, 'plays_as': { 'centre-back' }, 'plays_for': { 'lyon', 'belgium national side' } }, profile.attributes)
-
-        sentence = "Romelu Menama Lukaku Bolingoli is a Belgian professional footballer who plays as a striker for Serie A club Inter Milan and the Belgium national team."
-        profile = extractor.extract(sentence)
-        self.assertEqual({ 'is': { 'belgian professional footballer' }, 'plays_as': { 'striker' }, 'plays_for': { 'inter milan', 'belgium national team' } }, profile.attributes)
-
-        sentence = "Lautaro Javier Martínez is an Argentine professional footballer who plays as a striker for Italian club Inter Milan and the Argentina national team."
-        profile = extractor.extract(sentence)
-        self.assertEqual({ 'is': { 'argentine professional footballer' }, 'plays_as': { 'striker' }, 'plays_for': { 'inter milan', 'argentina national team' } }, profile.attributes)
-
-        sentence = "Joseph Robinette Biden Jr. is an American politician and the president-elect of the United States."
-        profile = extractor.extract(sentence)
-        self.assertEqual({ 'is': { 'american politician', 'president-elect' }, 'is_of': { 'united states' } }, profile.attributes)
-
-        sentence = "Giuseppe Tartini was an Italian Baroque composer and violinist born in the Republic of Venice."
-        profile = extractor.extract(sentence)
-        self.assertEqual({ 'was': { 'italian baroque composer', 'violinist' }, 'born_in': { 'republic of venice' } }, profile.attributes)
-
-        sentence = "Spalacopsis stolata is a species of beetle in the family Cerambycidae."
-        profile = extractor.extract(sentence)
-        self.assertEqual({ 'is': { 'species' }, 'is_of': { 'beetle' }, 'is_in': { 'cerambycidae' } }, profile.attributes)
-
-        sentence = "Wright Inlet is an ice-filled inlet receding westward between Cape Little and Cape Wheeler along the east coast of Palmer Land."
-        profile = extractor.extract(sentence)
-        self.assertEqual({ 'is': { 'ice-filled inlet receding westward' }, 'is_between': { 'cape little', 'cape wheeler' }, 'is_along': { 'east coast' }, 'is_of': { 'palmer land' } }, profile.attributes)
-
-        sentence = "The 2004 Kansas Jayhawks football team represented the University of Kansas in the 2004 NCAA Division I-A football season."
-        profile = extractor.extract(sentence)
-        self.assertEqual({ 'represented': { 'university of kansas' }, 'represented_in': { '2004 ncaa division i-a football season' } }, profile.attributes)
-
-        sentence = "Granada Club de Fútbol, S.A.D., known simply as Granada, is a Spanish football club in the city of Granada, in the autonomous community of Andalusia that plays in La Liga."
-        profile = extractor.extract(sentence)
-        self.assertEqual({ 'known_as': { 'granada' }, 'is': { 'spanish football club' }, 'is_in': { 'city', 'autonomous community' }, 'is_of': { 'granada', 'andalusia' }, 'plays_in': { 'la liga' } }, profile.attributes)
 
     def test_unsupported(self):
         """
