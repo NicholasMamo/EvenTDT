@@ -57,7 +57,7 @@ class LinguisticExtractor(Extractor):
         A modifier may also be a single number.
 
         **Entity**
-        (``ENT: <CD>? <NNP.*> (<IN><NNP.*>|<CD|NNP.*>)*; <MOD>+ <ENT>`` }
+        (``ENT: <CD>? <NNP.*> (<IN><NNP.*|PRP>|<CD|NNP.*|PRP>)*; <MOD>+ <ENT>`` }
 
         An entity can start with (*1860/CD Munich/NNP*) or end with a number (*Schalke/NNP 04/CD*), but it must always include at least one proper noun.
         Entities may have a preposition (*United/NNP States/NP of/IN America/NP*) but never at the start or at the end.
@@ -119,7 +119,7 @@ class LinguisticExtractor(Extractor):
                   DATE: { (<CD> <NNP> <CD>|<NNP> <CD> <,> <CD>) }
                   DATE: { <NNP> <,> <DATE> }
                   MOD: { <CD>?<JJ.*|RB.*>+ (<CC|,><CD>?<JJ.*|RB.*>+)* }
-                  ENT: { <CD>? <NNP.*> (<IN><NNP.*>|<CD|NNP.*>)* }
+                  ENT: { <CD>? <NNP.*> (<IN><NNP.*|PRP>|<CD|NNP.*|PRP>)* }
                   ENT: { <MOD>+ <ENT> }
                   NP: { <MOD|VBG>* <NN.*>+ }
                   NAME: { <VB.*> }

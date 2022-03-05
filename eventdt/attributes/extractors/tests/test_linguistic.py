@@ -255,6 +255,17 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'be': { 'french politician' }, 'serve_as': { 'president' }, 'serve_of': { 'france' }, 'serve_from': { '2012' }, 'serve_to': { '2017'} }, profile.attributes)
 
+    def test_extract_from_parentheses(self):
+        """
+        Test that the attributes may be extracted from parentheses (if the POS tagger does not mislabel them).
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Dale Owen Bennett (born 6 January 1990) is an English professional footballer, who played as a defender."
+        profile = extractor.extract(sentence, remove_parentheses=False)
+        self.assertEqual({ 'born': { '6 january 1990' }, 'is': { 'english professional footballer' }, 'played_as': { 'defender' } }, profile.attributes)
+
     def test_extract_DATE_format_1(self):
         """
         Test extracting a date in the format DD MM YYYY.
@@ -385,7 +396,22 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'is': { 'transcontinental country' }, 'spanning': { 'western europe', 'overseas regions', 'territories' }, 'spanning_in': { 'americas', 'atlantic', 'pacific', 'indian oceans' } }, profile.attributes)
 
-    def test_extract_NAME_gerund(self):
+    def test_extract_ENT_with_PRP(self):
+        """
+        Test that I is considered to be as part of the entity when it follows one.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "World War I, often abbreviated as WW I or WW1, also known as the First World War or the Great War, was an international conflict that began on 28 July 1914 and ended on 11 November 1918."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'abbreviated_as': { 'ww i', 'ww1' }, 'known_as': { 'first world war', 'great war' }, 'was': { 'international conflict' }, 'began_on': { '28 july 1914' }, 'ended_on': { '11 november 1918' } }, profile.attributes)
+
+        sentence = "Paul Charles François Adrien Henri Dieudonné Thiébault (14 December 1769, Berlin - 14 October 1846, Paris) was a general who fought in Napoleon I's army."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'fought_in': { 'napoleon i', 'army', 'napoleon i \'s army' } }, profile.attributes)
+
+    def test_extract_NAME_VBG(self):
         """
         Test that an attribute name may be a gerund.
         """
@@ -395,6 +421,17 @@ class TestLinguisticExtractor(unittest.TestCase):
         sentence = "Emmanuel Jean-Michel Frédéric Macron is a French politician who has been serving as the president of France since 14 May 2017."
         profile = extractor.extract(sentence, name='Emmanuel Macron')
         self.assertEqual({ 'is': { 'french politician' }, 'serving_as': { 'president' }, 'serving_of': { 'france' }, 'serving_since': { '14 may 2017' } }, profile.attributes)
+
+    def test_extract_NAME_VBD(self):
+        """
+        Test that an attribute name may be in the past.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Dale Owen Bennett (born 6 January 1990) is an English professional footballer, who played as a defender."
+        profile = extractor.extract(sentence, remove_parentheses=False)
+        self.assertEqual({ 'born': { '6 january 1990' }, 'is': { 'english professional footballer' }, 'played_as': { 'defender' } }, profile.attributes)
 
     def test_extract_VALUE_DATE(self):
         """
@@ -436,6 +473,11 @@ class TestLinguisticExtractor(unittest.TestCase):
         sentence = "Spalacopsis stolata is a species of beetle in the family Cerambycidae."
         profile = extractor.extract(sentence)
         self.assertEqual({ 'is': { 'species' }, 'is_of': { 'beetle' }, 'is_in': { 'cerambycidae' } }, profile.attributes)
+
+        # incorrect tagging of 'band/VBP'
+        sentence = '"I Want Out" is a song by English rockabilly band Matchbox featuring Kirsty MacColl.'
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'song' }, 'is_by': { 'english' }, 'band': { 'matchbox' }, 'featuring': { 'kirsty maccoll' } }, profile.attributes)
 
         sentence = "Memphis Depay, also known simply as Memphis, is a Dutch professional footballer and rapper who plays as a forward for French football club Lyon and the Netherlands national team."
         profile = extractor.extract(sentence)
@@ -480,10 +522,13 @@ class TestLinguisticExtractor(unittest.TestCase):
         extractor = LinguisticExtractor()
 
         sentence = "Asia (/ˈeɪʒə, ˈeɪʃə/ (audio speaker iconlisten)) is Earth's largest and most populous continent, located primarily in the Eastern and Northern Hemispheres."
-        self.assertEqual("Asia is Earth's largest and most populous continent, located primarily in the Eastern and Northern Hemispheres.", extractor._remove_parentheses(sentence))
-
-        profile = extractor.extract(sentence, remove_parentheses=True)
+        profile = extractor.extract(sentence)
         self.assertEqual({ 'is': { 'earth', 'earth \'s largest and most populous continent', 'largest and most populous continent' }, 'located_in': { 'eastern', 'northern hemispheres' } }, profile.attributes)
+
+        # general tagged as JJ by the POS tagger
+        sentence = "Paul Charles François Adrien Henri Dieudonné Thiébault (14 December 1769, Berlin - 14 October 1846, Paris) was a general who fought in Napoleon I's army."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'fought_in': { 'napoleon i', 'army', 'napoleon i \'s army' } }, profile.attributes)
 
     def test_extract_VALUES_CC_and(self):
         """
@@ -563,6 +608,23 @@ class TestLinguisticExtractor(unittest.TestCase):
         sentence = "Memphis Depay plays as a forward, winger and midfielder."
         profile = extractor.extract(sentence)
         self.assertEqual({ 'plays_as': { 'forward', 'winger', 'midfielder' } }, profile.attributes)
+
+    def test_extract_VALUES_commas(self):
+        """
+        Test extracting attributes which have commas.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = """Donetsk, formerly known as Aleksandrovka, Yuzivka (or Hughesovka), Stalin and Stalino,
+                      is an industrial city in eastern Ukraine located on the Kalmius River in the disputed area of Donetsk Oblast."""
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'known_as': { 'aleksandrovka', 'yuzivka', 'stalin', 'stalino' }, 'is': { 'industrial city' },
+                           'is_in': { 'eastern ukraine' }, 'located_on': { 'kalmius river' }, 'located_in': { 'disputed area' }, 'located_of': { 'donetsk oblast' } }, profile.attributes)
+
+        sentence = """EMEA is a shorthand designation meaning Europe, the Middle East and Africa"""
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'shorthand designation' }, 'meaning': { 'europe', 'middle east', 'africa' } }, profile.attributes)
 
     def test_extract_VALUES_IN_between(self):
         """
@@ -658,11 +720,6 @@ class TestLinguisticExtractor(unittest.TestCase):
         """
 
         extractor = LinguisticExtractor()
-
-        sentence = """Donetsk, formerly known as Aleksandrovka, Yuzivka (or Hughesovka), Stalin and Stalino,
-                      is an industrial city in eastern Ukraine located on the Kalmius River in the disputed area of Donetsk Oblast."""
-        profile = extractor.extract(sentence)
-        # print(str(profile))
 
     def test_unsupported(self):
         """
