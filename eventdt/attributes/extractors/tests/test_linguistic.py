@@ -147,12 +147,12 @@ class TestLinguisticExtractor(unittest.TestCase):
         extractor = LinguisticExtractor(lemmatize=False)
         sentence = "François Gérard Georges Nicolas Hollande is a French politician who served as president of France from 2012 to 2017."
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'is': { 'french politician' }, 'served_as': { 'president' }, 'served_of': { 'france from 2012' } }, profile.attributes)
+        self.assertEqual({ 'is': { 'french politician' }, 'served_as': { 'president' }, 'served_of': { 'france' }, 'served_from': { '2012' }, 'served_to': { '2017'} }, profile.attributes)
 
         extractor = LinguisticExtractor(lemmatize=True)
         sentence = "François Gérard Georges Nicolas Hollande is a French politician who served as president of France from 2012 to 2017."
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'be': { 'french politician' }, 'serve_as': { 'president' }, 'serve_of': { 'france from 2012' } }, profile.attributes)
+        self.assertEqual({ 'be': { 'french politician' }, 'serve_as': { 'president' }, 'serve_of': { 'france' }, 'serve_from': { '2012' }, 'serve_to': { '2017'} }, profile.attributes)
 
     def test_extract_DATE_format_1(self):
         """
