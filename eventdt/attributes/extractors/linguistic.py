@@ -56,12 +56,13 @@ class LinguisticExtractor(Extractor):
         A modifier may also be a single number.
 
         **Entity**
-        (``ENT: <CD>? <NNP.*> (<IN>? <CD|NNP.*>)*``)
-        (``ENT: <CD>? <NNP.*> (<IN><NNP.*>|<CD|NNP.*>)*``)
+        (``ENT: <CD>? <NNP.*> (<IN><NNP.*>|<CD|NNP.*>)*; ENT: { <MOD>+ <ENT>`` }
 
         An entity can start with (*1860/CD Munich/NNP*) or end with a number (*Schalke/NNP 04/CD*), but it must always include at least one proper noun.
         Entities may have a preposition (*United/NNP States/NP of/IN America/NP*) but never at the start or at the end.
         Moreover, a preposition can only be followed by a proper noun, not a number, avoiding phrases like *[served as president of] France/NNP from/IN 2012/CD to/TO 2017/CD* being misconstrued as an entity.
+
+        An entity may also have its own modifiers, as in the name *Indian/JJ Oceans/NNP*.
 
         **Noun phrase**
         (``NP: { <MOD|VBG>* <NN.*>+ }``)
@@ -110,12 +111,11 @@ class LinguisticExtractor(Extractor):
         :type lemmatize: bool
         """
 
-        # TODO: Add support for ENT as adjectives ("_Ligue 1_ club Lyon")
-
         grammar = grammar or """
                   DATE: { (<CD> <NNP> <CD>|<NNP> <CD> <,> <CD>) }
                   MOD: { <CD>?<JJ.*|RB.*>+ (<CC|,><CD>?<JJ.*|RB.*>+)* }
                   ENT: { <CD>? <NNP.*> (<IN><NNP.*>|<CD|NNP.*>)* }
+                  ENT: { <MOD>+ <ENT> }
                   NP: { <MOD|VBG>* <NN.*>+ }
                   NAME: { <VB.*> }
                   VALUE: { <NP|ENT|DATE>+ }

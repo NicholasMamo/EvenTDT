@@ -182,7 +182,7 @@ class TestLinguisticExtractor(unittest.TestCase):
         """
 
         extractor = LinguisticExtractor()
-        
+
         sentence = "The eurozone, officially called the euro area, is a monetary union of 19 member states of the European Union (EU) that have adopted the euro as their primary currency and sole legal tender."
         profile = extractor.extract(sentence)
         self.assertEqual({ 'called': { 'euro area' }, 'is': { 'monetary union' }, 'is_of': { '19 member states', 'european union' }, 'adopted': { 'euro' } }, profile.attributes)
@@ -249,6 +249,17 @@ class TestLinguisticExtractor(unittest.TestCase):
         sentence = "Sallie Kim is currently a U.S. Magistrate Judge of the United States District Court for the Northern District of California."
         profile = extractor.extract(sentence)
         self.assertEqual({ 'is': { 'u.s. magistrate judge' }, 'is_of': { 'united states district court' }, 'is_for': { 'northern district of california' } }, profile.attributes)
+
+    def test_extract_ENT_with_MOD(self):
+        """
+        Test that an entity may be preceded by a modifier.
+        """
+
+        extractor = LinguisticExtractor()
+        
+        sentence = "France, officially the French Republic, is a transcontinental country spanning Western Europe and overseas regions and territories in the Americas and the Atlantic, Pacific and Indian Oceans."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'transcontinental country' }, 'spanning': { 'western europe', 'overseas regions', 'territories' }, 'spanning_in': { 'americas', 'atlantic', 'pacific', 'indian oceans' } }, profile.attributes)
 
     def test_extract_NAME_gerund(self):
         """
