@@ -73,9 +73,10 @@ class LinguisticExtractor(Extractor):
 
         An attribute name is formed by any verb (*plays/VBZ*), including past participles (*driven/VBN*).
 
-        **Attribute value** (``VALUE: { <NP|ENT|DATE>+ }``)
+        **Attribute value** (``VALUE: { <NP|ENT|CD|DATE>+ }``)
 
-        The attribute value can be either a noun phrase (*Brazilian/JJ professional/JJ footballer/NN*), an entity (*Lyon/ENT*), a date, or several at once (*(Ligue 1)/ENT (club/NN)/NP Lyon/ENT*).
+        The attribute value can be either a noun phrase (*Brazilian/JJ professional/JJ footballer/NN*), an entity (*Lyon/ENT*), a number (*since/IN 2012/CD*), or a date (*[born on] October/NNP 28/CD ,/, 1955/CD*).
+        It may also be several at once (*(Ligue 1)/ENT (club/NN)/NP Lyon/ENT*).
 
         **Value list** (``VALUES: <IN>? (<DT>?<VALUE><CC|,>*)+``)
 
@@ -118,8 +119,8 @@ class LinguisticExtractor(Extractor):
                   ENT: { <MOD>+ <ENT> }
                   NP: { <MOD|VBG>* <NN.*>+ }
                   NAME: { <VB.*> }
-                  VALUE: { <NP|ENT|DATE>+ }
                   VALUES: { <IN>? (<DT>?<VALUE><CC|,>*)+ }
+                  VALUE: { <NP|ENT|CD|DATE>+ }
                   ATTR: { <NAME> <MOD>? <VALUES>+ }
         """
         self.parser = nltk.RegexpParser(grammar)

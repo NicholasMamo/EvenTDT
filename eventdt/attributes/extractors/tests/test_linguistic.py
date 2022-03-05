@@ -209,17 +209,6 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'is': { 'german professional footballer' }, 'plays_as': { 'winger' }, 'plays_for': { '1860 munich' } }, profile.attributes)
 
-    def test_extract_ENT_number_only(self):
-        """
-        Test that a number on its own does not constitute an entity.
-        """
-
-        extractor = LinguisticExtractor()
-
-        sentence = "Fabian Greilinger is a German professional footballer who plays as a winger for 1860."
-        profile = extractor.extract(sentence)
-        self.assertEqual({ 'is': { 'german professional footballer' }, 'plays_as': { 'winger' } }, profile.attributes)
-
     def test_extract_ENT_has_number(self):
         """
         Test extracting an attribute value when it is an entity that has a number in the middle.
@@ -256,7 +245,7 @@ class TestLinguisticExtractor(unittest.TestCase):
         """
 
         extractor = LinguisticExtractor()
-        
+
         sentence = "France, officially the French Republic, is a transcontinental country spanning Western Europe and overseas regions and territories in the Americas and the Atlantic, Pacific and Indian Oceans."
         profile = extractor.extract(sentence)
         self.assertEqual({ 'is': { 'transcontinental country' }, 'spanning': { 'western europe', 'overseas regions', 'territories' }, 'spanning_in': { 'americas', 'atlantic', 'pacific', 'indian oceans' } }, profile.attributes)
@@ -271,6 +260,32 @@ class TestLinguisticExtractor(unittest.TestCase):
         sentence = "Emmanuel Jean-Michel Frédéric Macron is a French politician who has been serving as the president of France since 14 May 2017."
         profile = extractor.extract(sentence, name='Emmanuel Macron')
         self.assertEqual({ 'is': { 'french politician' }, 'serving_as': { 'president' }, 'serving_of': { 'france' }, 'serving_since': { '14 may 2017' } }, profile.attributes)
+
+    def test_extract_VALUE_DATE(self):
+        """
+        Test that a date is a valid attribute value.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "William Henry Gates III (born on October 28, 1955) is an American business magnate, software developer, investor, author, and philanthropist."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'born_on': { 'october 28 , 1955' }, 'is': { 'american business magnate', 'software developer', 'investor', 'author', 'philanthropist' } }, profile.attributes)
+
+        sentence = "Nicolas Paul Stéphane Sarközy de Nagy-Bocsa is a French politician who served as President of France from 16 May 2007 until 15 May 2012."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'french politician' }, 'served_as': { 'president of france' }, 'served_from': { '16 may 2007' }, 'served_until': { '15 may 2012' } }, profile.attributes)
+
+    def test_extract_VALUE_CD(self):
+        """
+        Test that a number is a valid attribute value.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "François Gérard Georges Nicolas Hollande is a French politician who served as president of France from 2012 to 2017."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'french politician' }, 'served_as': { 'president' }, 'served_of': { 'france' }, 'served_from': { '2012' }, 'served_to': { '2017'} }, profile.attributes)
 
     def test_extract_VALUES_and(self):
         """
