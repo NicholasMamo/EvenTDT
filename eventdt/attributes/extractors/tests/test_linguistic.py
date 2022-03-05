@@ -187,6 +187,21 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'were': { 'landing operations', 'associated airborne operations' }, 'were_on': { 'tuesday , 6 june 1944' }, 'were_of': { 'allied invasion', 'normandy in operation overlord during world war ii' } }, profile.attributes)
 
+    def test_extract_DATE_TIME(self):
+        """
+        Text extracting a date that has a time acts like a number.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = """The attack on Pearl Harbor was a surprise military strike by the Imperial Japanese Navy Air Service
+                      upon the United States against the naval base at Pearl Harbor in Honolulu, Territory of Hawaii,
+                      just before 08:00, on Sunday, December 7, 1941."""
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'was': { 'surprise military strike' }, 'was_by': { 'imperial japanese navy air service' },
+                           'was_upon': { 'united states' }, 'was_against': { 'naval base' }, 'was_at': { 'pearl harbor in honolulu', 'territory of hawaii' },
+                           'was_before': { '08:00' }, 'was_on': { 'sunday , december 7 , 1941' } }, profile.attributes)
+
     def test_extract_MOD_starts_with_number(self):
         """
         Test that a modifier may start with a number.
@@ -441,6 +456,21 @@ class TestLinguisticExtractor(unittest.TestCase):
         sentence = "The eurozone, officially called the euro area, is a monetary union of 19 member states of the European Union (EU) that have adopted the euro as their primary currency and sole legal tender."
         profile = extractor.extract(sentence)
         self.assertEqual({ 'called': { 'euro area' }, 'is': { 'monetary union' }, 'is_of': { '19 member states', 'european union' }, 'adopted': { 'euro' } }, profile.attributes)
+
+    def test_extract_VALUES_have_modifiers(self):
+        """
+        Text that all list of values may have their own modifiers.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = """The attack on Pearl Harbor was a surprise military strike by the Imperial Japanese Navy Air Service
+                      upon the United States against the naval base at Pearl Harbor in Honolulu, Territory of Hawaii,
+                      just before 08:00, on Sunday, December 7, 1941."""
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'was': { 'surprise military strike' }, 'was_by': { 'imperial japanese navy air service' },
+                           'was_upon': { 'united states' }, 'was_against': { 'naval base' }, 'was_at': { 'pearl harbor in honolulu', 'territory of hawaii' },
+                           'was_before': { '08:00' }, 'was_on': { 'sunday , december 7 , 1941' } }, profile.attributes)
 
     def test_extract_real_examples(self):
         """

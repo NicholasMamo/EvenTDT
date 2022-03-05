@@ -86,9 +86,9 @@ class LinguisticExtractor(Extractor):
 
         Before the list of values, there may be a preposition, which modifies the relationship between the attribute and its values; a footballer does not simply play but *plays/VBZ for/IN*.
 
-        **Attribute** (``ATTR: <NAME> <MOD>? <VALUES>``)
+        **Attribute** (``ATTR: <NAME> (<MOD>? <VALUES>)+``)
 
-        The complete attribute therefore has a name, optional modifiers and a prepositional phrase attribute.
+        The complete attribute therefore has a name and a list of values, each of which may have modifiers.
 
         .. warn:
 
@@ -122,7 +122,7 @@ class LinguisticExtractor(Extractor):
                   NAME: { <VB.*> }
                   VALUE: { <NP|ENT|CD|DATE>+ }
                   VALUES: { <IN|TO>? (<DT|PRP$>?<VALUE><CC|,>*)+ }
-                  ATTR: { <NAME> <MOD>? <VALUES>+ }
+                  ATTR: { <NAME> (<MOD>? <VALUES>)+ }
         """
         self.parser = nltk.RegexpParser(grammar)
         self.lemmatizer = nltk.WordNetLemmatizer() if lemmatize else None
