@@ -78,10 +78,10 @@ class LinguisticExtractor(Extractor):
         The attribute value can be either a noun phrase (*Brazilian/JJ professional/JJ footballer/NN*), an entity (*Lyon/ENT*), a number (*since/IN 2012/CD*), or a date (*[born on] October/NNP 28/CD ,/, 1955/CD*).
         It may also be several at once (*(Ligue 1)/ENT (club/NN)/NP Lyon/ENT*).
 
-        **Value list** (``VALUES: <IN>? (<DT>?<VALUE><CC|,>*)+``)
+        **Value list** (``VALUES: <IN|TO>? (<DT|PRP$>?<VALUE><CC|,>*)+``)
 
         Each attribute can have several values (*[is an] (VALUE American/JJ business/NN magnate/NN),/, (VALUE software/NN developer/NN) and/CC (VALUE investor/NN)*)
-        The attribute value may take an article just before the value (*is/VBZ a/DT footballer/NN*).
+        The attribute value may take a determiner (*is/VBZ a/DT footballer/NN*) or possessive pronoun (*[adopted the euro as] their/PRP$ primary/JJ currency/NN*) just before the value.
         The prepositional attribute accepts several such values as long as they are separated by coordinating conjunctions (*and*, *or*) or commas.
 
         Before the list of values, there may be a preposition, which modifies the relationship between the attribute and its values; a footballer does not simply play but *plays/VBZ for/IN*.
@@ -119,8 +119,8 @@ class LinguisticExtractor(Extractor):
                   ENT: { <MOD>+ <ENT> }
                   NP: { <MOD|VBG>* <NN.*>+ }
                   NAME: { <VB.*> }
-                  VALUES: { <IN>? (<DT>?<VALUE><CC|,>*)+ }
                   VALUE: { <NP|ENT|CD|DATE>+ }
+                  VALUES: { <IN|TO>? (<DT|PRP$>?<VALUE><CC|,>*)+ }
                   ATTR: { <NAME> <MOD>? <VALUES>+ }
         """
         self.parser = nltk.RegexpParser(grammar)
@@ -154,8 +154,8 @@ class LinguisticExtractor(Extractor):
             for _ATTR in ATTR:
                 NAME, VALUES = self._to_attributes(_ATTR)
                 for _VALUES in VALUES:
-                    IN = self._get_preposition(_VALUES)
-                    name = f"{NAME}_{ IN }" if IN else NAME
+                    PP = self._get_preposition(_VALUES)
+                    name = f"{NAME}_{ PP }" if PP else NAME
                     profile.attributes[name] = profile.attributes.get(name) or set()
                     attributes = self._get_attribute(_VALUES)
                     for attribute in attributes:
@@ -226,7 +226,7 @@ class LinguisticExtractor(Extractor):
         """
 
         text, pos = PPATR.flatten()[0]
-        return text if pos == 'IN' else None
+        return text if pos in ('IN', 'TO') else None
 
     def _get_attribute(self, PPATR):
         """

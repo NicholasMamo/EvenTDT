@@ -409,6 +409,28 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'is': { 'american businessman', 'investor', 'co-founder', 'executive chairman', 'chief technology officer', 'former chief executive officer' }, 'is_of': { 'oracle corporation' } }, profile.attributes)
 
+    def test_extract_VALUES_TO(self):
+        """
+        Test that an attribute value may have *to* as a preposition.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "World War II or the Second World War, often abbreviated as WWII or WW2, was a global war that lasted from 1939 to 1945."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'abbreviated_as': { 'wwii', 'ww2' }, 'was': { 'global war' }, 'lasted_from': { '1939' }, 'lasted_to': { '1945' } }, profile.attributes)
+
+    def test_extract_VALUES_PRP(self):
+        """
+        Test that a value may have a personal pronoun instead of a determiner.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "The eurozone, officially called the euro area, is a monetary union of 19 member states of the European Union (EU) that have adopted the euro as their primary currency and sole legal tender."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'called': { 'euro area' }, 'is': { 'monetary union' }, 'is_of': { '19 member states', 'european union' }, 'adopted': { 'euro' } }, profile.attributes)
+
     def test_extract_real_examples(self):
         """
         Test extracting attributes from real example strings.
