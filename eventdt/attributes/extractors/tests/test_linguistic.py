@@ -117,6 +117,18 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'is': { 'protein' }, 'encoded_by': { 'slfn11 gene' } }, profile.attributes)
 
+        sentence = "Anthidium eremicum is a species of bee in the family Megachilidae, the leaf-cutter, carder, or mason bees.[1][2]"
+        clean = extractor._remove_references(sentence)
+        self.assertEqual("Anthidium eremicum is a species of bee in the family Megachilidae, the leaf-cutter, carder, or mason bees.", clean)
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'species' }, 'is_of': { 'bee' }, 'is_in': { 'megachilidae', 'leaf-cutter', 'carder', 'mason bees' } }, profile.attributes)
+
+        sentence = "Kraussaria angulifera is a species of grasshopper in the family Acrididae found in Africa.[1][2]"
+        clean = extractor._remove_references(sentence)
+        self.assertEqual("Kraussaria angulifera is a species of grasshopper in the family Acrididae found in Africa.", clean)
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'species' }, 'is_of': { 'grasshopper' }, 'is_in': { 'acrididae' }, 'found_in': { 'africa' } }, profile.attributes)
+
     def test_remove_parentheses_original(self):
         """
         Test that removing the parentheses reconstructs the sentence with overwriting the original string.
@@ -783,9 +795,18 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'plays_as': { 'forward', 'winger', 'midfielder' }, 'plays_for': { 'lyon' } }, profile.attributes)
 
-        sentence = "Memphis Depay plays as a forward, winger and midfielder for Lyon with boots."
+        sentence = "Olympique Lyonnais (French pronunciation: ​[ɔlɛ̃pik ljɔnɛ]), commonly referred to as simply Lyon (French pronunciation: ​[ljɔ̃]) or OL, is a French professional football club based in Lyon in Auvergne-Rhône-Alpes."
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'plays_as': { 'forward', 'winger', 'midfielder' }, 'plays_for': { 'lyon' }, 'plays_with': { 'boots' } }, profile.attributes)
+        self.assertEqual({ 'is': { 'french professional football club' }, 'based_in': { 'lyon in auvergne-rhône-alpes' } }, profile.attributes)
+
+        # Known as *Saint-Étienne* missed because the POS tagger identifies an end of a sentence after *A.S.S.E.*.
+        sentence = "Association Sportive de Saint-Étienne Loire (French pronunciation: ​[sɛ̃t‿etjɛn lwaʁ]), commonly known as A.S.S.E. (French pronunciation: ​[a.ɛs.ɛs.ø]) or simply Saint-Étienne, is a professional football club based in Saint-Étienne in Auvergne-Rhône-Alpes, France."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'known_as': { 'a.s.s.e' }, 'is': { 'professional football club' }, 'based_in': { 'saint-étienne in auvergne-rhône-alpes', 'france' } }, profile.attributes)
+
+        sentence = "Brighton & Hove Albion Football Club (/ˈbraɪtən ... ˈhoʊv/), commonly referred to simply as Brighton, is an English professional football club based in the city of Brighton and Hove."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'english professional football club' }, 'based_in': { 'city' }, 'based_of': { 'brighton', 'hove' } }, profile.attributes)
 
     def test_extract_VALUES_split(self):
         """
@@ -873,3 +894,15 @@ class TestLinguisticExtractor(unittest.TestCase):
         sentence = "Virginia, officially the Commonwealth of Virginia, is a state in the Mid-Atlantic and Southeastern regions of the United States, between the Atlantic Coast and the Appalachian Mountains."
         profile = extractor.extract(sentence)
         # self.assertEqual({ 'is': { 'state' }, 'is_in': { 'mid-atlantic regions', 'southeastern regions' }, 'is_of': { 'united states' }, 'is_between': { 'atlantic coast', 'appalachian mountains' } }, profile.attributes)
+
+        """
+        To add support for ``referred_to``, add support for multiple ``IN`` or ``TO`` in ``VALUES``, but which opens a pandora's box.
+
+        To add support for *Lyon*, as opposed to *simply Lyon*, disallow ``MOD`` from ``ENT``, which would, however, also reject **Indian Ocean**.
+        Alternatively, only keep the modifier if it is a proper noun.
+
+        To add support for *Lyon*, as opposed to *Lyon in Auvergne-Rhône-Alpes*, disallow ``IN`` in ``ENT``, but which would then reject *United States of America*.
+        """
+        sentence = "Olympique Lyonnais (French pronunciation: ​[ɔlɛ̃pik ljɔnɛ]), commonly referred to as simply Lyon (French pronunciation: ​[ljɔ̃]) or OL, is a French professional football club based in Lyon in Auvergne-Rhône-Alpes."
+        profile = extractor.extract(sentence)
+        # self.assertEqual({ 'referred_to': { 'lyon', 'ol' } 'is': { 'french professional football club' }, 'based_in': { 'lyon', 'auvergne-rhône-alpes' } }, profile.attributes)
