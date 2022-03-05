@@ -36,6 +36,87 @@ class TestLinguisticExtractor(unittest.TestCase):
         extractor = LinguisticExtractor(grammar)
         self.assertEqual(grammar, extractor.parser._grammar)
 
+    def test_remove_references_original(self):
+        """
+        Test that removing references does not alter the original text.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Open Data Science Conference, or ODSC, is an annual event held in Boston,[1] San Francisco, Brazil, London, and India.[2] "
+        clean = extractor._remove_references(sentence)
+        self.assertEqual("Open Data Science Conference, or ODSC, is an annual event held in Boston,[1] San Francisco, Brazil, London, and India.[2] ", sentence)
+        profile = extractor.extract(sentence)
+        self.assertEqual("Open Data Science Conference, or ODSC, is an annual event held in Boston,[1] San Francisco, Brazil, London, and India.[2] ", sentence)
+        self.assertEqual({ 'is': { 'annual event' }, 'held_in': { 'boston', 'san francisco', 'brazil', 'london', 'india' } }, profile.attributes)
+
+    def test_remove_references_none(self):
+        """
+        Test that if the text has no references, the sentence remains unchanged.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Maximilian Beister (born 6 September 1990) is a German professional footballer who plays as a forward for FC Ingolstadt 04."
+        clean = extractor._remove_references(sentence)
+        self.assertEqual(sentence, clean)
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'german professional footballer' }, 'plays_as': { 'forward' }, 'plays_for': { 'fc ingolstadt 04' } }, profile.attributes)
+
+    def test_remove_references_alphabetical(self):
+        """
+        Test that a sentence with alphabetical references has none after removing them.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = """Pyotr Mironovich Masherov[a] (né Mashero; 26 February [O.S. 13 February] 1919 – 4 October 1980) was a Soviet partisan, statesman, and one of the leaders of the Belarusian resistance during World War II who governed the Byelorussian Soviet Socialist Republic as First Secretary of the Communist Party of Byelorussia from 1965 until his death in 1980."""
+        clean = extractor._remove_references(sentence)
+        self.assertEqual(sentence.replace('[a]', ''), clean)
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'was': { 'soviet partisan', 'statesman', 'one' }, 'was_of': { 'leaders', 'belarusian resistance' },
+                           'was_during': { 'world war ii' }, 'governed': { 'byelorussian soviet socialist republic as first secretary' },
+                           'governed_of': { 'communist party of byelorussia' }, 'governed_from': { '1965' }, 'governed_until': { 'death' }, 'governed_in': { '1980' } }, profile.attributes)
+
+    def test_remove_references(self):
+        """
+        Test that a sentence with one reference has none after removing them.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Ernestine Tahedl (born 1940)[1] is a Canadian painter."
+        clean = extractor._remove_references(sentence)
+        self.assertEqual("Ernestine Tahedl (born 1940) is a Canadian painter.", clean)
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'canadian painter' } }, profile.attributes)
+
+    def test_remove_references_multiple(self):
+        """
+        Test removing multiple references from the same sentence.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Jack Nasher (born 1979 in Korbach; Jack Lord Nasher-Awakemian)[1] is a bestselling author, negotiation advisor,[2] and a professor at Munich Business School.[3]"
+        clean = extractor._remove_references(sentence)
+        self.assertEqual("Jack Nasher (born 1979 in Korbach; Jack Lord Nasher-Awakemian) is a bestselling author, negotiation advisor, and a professor at Munich Business School.", clean)
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'bestselling author', 'negotiation advisor', 'professor' }, 'is_at': { 'munich business school' } }, profile.attributes)
+
+    def test_remove_references_adjacent(self):
+        """
+        Test removing adjacent references.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Schlafen family member 11 is a protein that in humans is encoded by the SLFN11 gene.[3][4]"
+        clean = extractor._remove_references(sentence)
+        self.assertEqual("Schlafen family member 11 is a protein that in humans is encoded by the SLFN11 gene.", clean)
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'protein' }, 'encoded_by': { 'slfn11 gene' } }, profile.attributes)
+
     def test_remove_parentheses_original(self):
         """
         Test that removing the parentheses reconstructs the sentence with overwriting the original string.
@@ -661,6 +742,10 @@ class TestLinguisticExtractor(unittest.TestCase):
         sentence = "Alexandra Talomaa (born 1975) is a Swedish songwriter who has written songs for A-Teens, Anders Fernette (previously Johansson), Backstreet Boys, Darin, Westlife and others."
         profile = extractor.extract(sentence)
         self.assertEqual({ 'is': { 'swedish songwriter' }, 'written': { 'songs' }, 'written_for': { 'a-teens', 'anders fernette', 'backstreet boys', 'darin', 'westlife', 'others' } }, profile.attributes)
+
+        sentence = "Marginella cleryi is a species of sea snail, a marine gastropod mollusk in the family Marginellidae, the margin snails."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'species' }, 'is_of': { 'sea snail', 'marine gastropod mollusk' }, 'is_in': { 'marginellidae', 'margin snails' } }, profile.attributes)
 
     def test_extract_VALUES_IN_between(self):
         """

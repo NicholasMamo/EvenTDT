@@ -155,6 +155,7 @@ class LinguisticExtractor(Extractor):
         profile = Profile(*args, **kwargs)
 
         text = self._remove_parentheses(text) if remove_parentheses else text
+        text = self._remove_references(text)
 
         sentences = nltk.sent_tokenize(text)
         for sentence in sentences:
@@ -205,10 +206,34 @@ class LinguisticExtractor(Extractor):
         clean = pattern.sub(' ', clean)
 
         # remove spaces before punctuation
-        pattern = re.compile('\s([.,\/#!$%\^&\*;:{}=\-_`~()])')
+        pattern = re.compile('\s([.,\/!\^\*;:}_~)])')
         clean = pattern.sub('\g<1>', clean)
 
         return clean
+
+    def _remove_references(self, text):
+        """
+        Remove references from the given text.
+
+        :param text: The text to clean.
+        :type text: str
+
+        :return: The cleaned text.
+        :rtype: str
+        """
+
+        pattern = re.compile('\[[a-z0-9]+\]')
+        text = pattern.sub('', text)
+
+        # collapse multiple spaces into one
+        pattern = re.compile('\s+')
+        text = pattern.sub(' ', text)
+
+        # remove spaces before punctuation
+        pattern = re.compile('\s([.,\/!\^\*;:}_~)])')
+        text = pattern.sub('\g<1>', text)
+
+        return text
 
     def _parse(self, sentence):
         """
@@ -284,7 +309,7 @@ class LinguisticExtractor(Extractor):
         :return: The attribute value in the subtree.
         :rtype: :class:`nltk.tree.Tree`
         """
-        
+
         return [ _subtree for _subtree in VALUES.subtrees()
                  if _subtree.label() == 'VALUE' ]
 
