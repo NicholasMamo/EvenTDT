@@ -287,7 +287,7 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'is': { 'french politician' }, 'served_as': { 'president' }, 'served_of': { 'france' }, 'served_from': { '2012' }, 'served_to': { '2017'} }, profile.attributes)
 
-    def test_extract_VALUES_and(self):
+    def test_extract_VALUES_CC_and(self):
         """
         Test extracting attributes which have _and_ conjunctions.
         """
@@ -302,7 +302,7 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'plays_as': { 'forward', 'midfielder' } }, profile.attributes)
 
-    def test_extract_VALUES_or(self):
+    def test_extract_VALUES_CC_or(self):
         """
         Test extracting attributes which have _or_ conjunctions.
         """
@@ -317,7 +317,7 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'plays_as': { 'forward', 'midfielder' } }, profile.attributes)
 
-    def test_extract_VALUES_multiple_conjunctions(self):
+    def test_extract_VALUES_multiple_CC(self):
         """
         Test extracting attributes which have multiple conjunctions.
         """
@@ -336,7 +336,7 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'is': { 'transcontinental country' }, 'spanning': { 'western europe', 'overseas regions', 'territories' }, 'spanning_in': { 'americas', 'atlantic', 'pacific', 'indian oceans' } }, profile.attributes)
 
-    def test_extract_VALUES_multiple_conjunctions_with_oxford_comma(self):
+    def test_extract_VALUES_multiple_CC_with_oxford_comma(self):
         """
         Test extracting attributes which have multiple conjunctions.
         """
@@ -347,7 +347,7 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'is': { 'american business magnate', 'software developer', 'investor', 'author', 'philanthropist' } }, profile.attributes)
 
-    def test_extract_VALUES_conjunctions(self):
+    def test_extract_VALUES_CC(self):
         """
         Test extracting attributes which have conjunctions.
         """
@@ -362,7 +362,17 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'plays_as': { 'forward', 'winger', 'midfielder' } }, profile.attributes)
 
-    def test_extract_VALUES_prepositions_appended_to_name(self):
+    def test_extract_VALUES_IN_between(self):
+        """
+        Test that when extracting a list of values with 'between' as the preposition, two values are extracted.
+        """
+
+        extractor = LinguisticExtractor()
+        sentence = "Virginia, officially the Commonwealth of Virginia, is a state in the Mid-Atlantic and Southeastern regions of the United States, between the Atlantic Coast and the Appalachian Mountains."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'state' }, 'is_in': { 'mid-atlantic and southeastern regions' }, 'is_of': { 'united states' }, 'is_between': { 'atlantic coast', 'appalachian mountains' } }, profile.attributes)
+
+    def test_extract_VALUES_IN_appended_to_name(self):
         """
         Test that when extracting attributes with prepositions, the preposition is appended to the name.
         """
@@ -373,7 +383,7 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'plays_as': { 'forward', 'winger', 'midfielder' } }, profile.attributes)
 
-    def test_extract_VALUES_prepositions_separate(self):
+    def test_extract_VALUES_IN_separate(self):
         """
         Test that when an attribute has several prepositions, the values are stored separately.
         """
@@ -440,14 +450,9 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'is': { 'american politician', 'president-elect' }, 'is_of': { 'united states' } }, profile.attributes)
 
-        sentence = "Sigismondo Benini (18th century) was an Italian painter of the Baroque period, active in Lombardy, painting landscapes or vedute."
+        sentence = "Giuseppe Tartini was an Italian Baroque composer and violinist born in the Republic of Venice."
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'was': { 'italian painter' }, 'was_of': { 'baroque period' } }, profile.attributes)
-
-        sentence = "Lando Norris is a Belgian-British racing driver currently competing in Formula One with McLaren, racing under the British flag."
-        profile = extractor.extract(sentence)
-        # TODO: Unsupported
-        # self.assertEqual({ 'is': { 'belgian-british racing driver' }, 'competing_in': { 'formula one' }, 'competing_with': { 'mclaren' }, 'racing_under': { 'british flag' } }, profile.attributes)
+        self.assertEqual({ 'was': { 'italian baroque composer', 'violinist' }, 'born_in': { 'republic of venice' } }, profile.attributes)
 
         sentence = "Spalacopsis stolata is a species of beetle in the family Cerambycidae."
         profile = extractor.extract(sentence)
