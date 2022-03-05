@@ -47,10 +47,13 @@ class LinguisticExtractor(Extractor):
 
         The grammar assumes that a pattern involving two numbers and a proper noun in various formats represents a date (*14/CD May/NNP 2017/CD*).
 
-        **Modifier** (``MOD: <JJ.*|RB.*>+ (<CC|,><JJ.*|RB.*>+)*``)
+        **Modifier** (``MOD: <CD>?<JJ.*|RB.*>+ (<CC|,><CD>?<JJ.*|RB.*>+)*``)
 
         A modifier is a list of adjectives (*Brazilian/JJ professional/JJ*) or adverbs (*[known] simply/RB [as]*) that modify something else.
         There may be more than one such modifier, all separated by coordinating conjunctions or commas.
+
+        Each modifier may start with a number (*19/CD member/NN states/NNS*), but it may not appear among adjectives or adverbs.
+        A modifier may also be a single number.
 
         **Entity**
         (``ENT: <CD>? <NNP.*> (<IN>? <CD|NNP.*>)*``)
@@ -111,7 +114,7 @@ class LinguisticExtractor(Extractor):
 
         grammar = grammar or """
                   DATE: { (<CD> <NNP> <CD>|<NNP> <CD> <,> <CD>) }
-                  MOD: { <JJ.*|RB.*>+ (<CC|,><JJ.*|RB.*>+)* }
+                  MOD: { <CD>?<JJ.*|RB.*>+ (<CC|,><CD>?<JJ.*|RB.*>+)* }
                   ENT: { <CD>? <NNP.*> (<IN><NNP.*>|<CD|NNP.*>)* }
                   NP: { <MOD|VBG>* <NN.*>+ }
                   NAME: { <VB.*> }

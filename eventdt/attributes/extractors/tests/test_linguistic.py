@@ -176,6 +176,17 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'born_on': { 'october 28 , 1955' }, 'is': { 'american business magnate', 'software developer', 'investor', 'author', 'philanthropist' } }, profile.attributes)
 
+    def test_extract_MOD_starts_with_number(self):
+        """
+        Test that a modifier may start with a number.
+        """
+
+        extractor = LinguisticExtractor()
+        
+        sentence = "The eurozone, officially called the euro area, is a monetary union of 19 member states of the European Union (EU) that have adopted the euro as their primary currency and sole legal tender."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'called': { 'euro area' }, 'is': { 'monetary union' }, 'is_of': { '19 member states', 'european union' }, 'adopted': { 'euro' } }, profile.attributes)
+
     def test_extract_ENT_ends_number(self):
         """
         Test extracting an attribute value when it is an entity that ends with a number.
@@ -250,7 +261,7 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence, name='Emmanuel Macron')
         self.assertEqual({ 'is': { 'french politician' }, 'serving_as': { 'president' }, 'serving_of': { 'france' }, 'serving_since': { '14 may 2017' } }, profile.attributes)
 
-    def test_extract_PPATR_and(self):
+    def test_extract_VALUES_and(self):
         """
         Test extracting attributes which have _and_ conjunctions.
         """
@@ -265,7 +276,7 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'plays_as': { 'forward', 'midfielder' } }, profile.attributes)
 
-    def test_extract_PPATR_or(self):
+    def test_extract_VALUES_or(self):
         """
         Test extracting attributes which have _or_ conjunctions.
         """
@@ -280,7 +291,7 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'plays_as': { 'forward', 'midfielder' } }, profile.attributes)
 
-    def test_extract_PPATR_multiple_conjunctions(self):
+    def test_extract_VALUES_multiple_conjunctions(self):
         """
         Test extracting attributes which have multiple conjunctions.
         """
@@ -295,7 +306,11 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'is': { 'capital', 'special municipality' }, 'is_of': { 'taiwan' } }, profile.attributes)
 
-    def test_extract_PPATR_multiple_conjunctions_with_oxford_comma(self):
+        sentence = "France, officially the French Republic, is a transcontinental country spanning Western Europe and overseas regions and territories in the Americas and the Atlantic, Pacific and Indian Oceans."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'transcontinental country' }, 'spanning': { 'western europe', 'overseas regions', 'territories' }, 'spanning_in': { 'americas', 'atlantic', 'pacific', 'indian oceans' } }, profile.attributes)
+
+    def test_extract_VALUES_multiple_conjunctions_with_oxford_comma(self):
         """
         Test extracting attributes which have multiple conjunctions.
         """
@@ -306,7 +321,7 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'is': { 'american business magnate', 'software developer', 'investor', 'author', 'philanthropist' } }, profile.attributes)
 
-    def test_extract_PPATR_conjunctions(self):
+    def test_extract_VALUES_conjunctions(self):
         """
         Test extracting attributes which have conjunctions.
         """
@@ -321,7 +336,7 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'plays_as': { 'forward', 'winger', 'midfielder' } }, profile.attributes)
 
-    def test_extract_PPATR_prepositions_appended_to_name(self):
+    def test_extract_VALUES_prepositions_appended_to_name(self):
         """
         Test that when extracting attributes with prepositions, the preposition is appended to the name.
         """
@@ -332,7 +347,7 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'plays_as': { 'forward', 'winger', 'midfielder' } }, profile.attributes)
 
-    def test_extract_PPATR_prepositions_separate(self):
+    def test_extract_VALUES_prepositions_separate(self):
         """
         Test that when an attribute has several prepositions, the values are stored separately.
         """
@@ -347,7 +362,7 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'plays_as': { 'forward', 'winger', 'midfielder' }, 'plays_for': { 'lyon' }, 'plays_with': { 'boots' } }, profile.attributes)
 
-    def test_extract_PPATR_split(self):
+    def test_extract_VALUES_split(self):
         """
         Test that when multiple attributes with the same name but split over different phrases, both are added to the same.
         """
