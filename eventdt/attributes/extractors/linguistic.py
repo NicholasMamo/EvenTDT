@@ -56,7 +56,7 @@ class LinguisticExtractor(Extractor):
         A modifier may also be a single number.
 
         **Entity**
-        (``ENT: <CD>? <NNP.*> (<IN><NNP.*>|<CD|NNP.*>)*; { <MOD>+ <ENT>`` }
+        (``ENT: <CD>? <NNP.*> (<IN><NNP.*>|<CD|NNP.*>)*; <MOD>+ <ENT>`` }
 
         An entity can start with (*1860/CD Munich/NNP*) or end with a number (*Schalke/NNP 04/CD*), but it must always include at least one proper noun.
         Entities may have a preposition (*United/NNP States/NP of/IN America/NP*) but never at the start or at the end.
@@ -73,10 +73,12 @@ class LinguisticExtractor(Extractor):
 
         An attribute name is formed by any verb (*plays/VBZ*), including past participles (*driven/VBN*).
 
-        **Attribute value** (``VALUE: { <NP|ENT|CD|DATE>+ }``)
+        **Attribute value** (``VALUE: <NP|ENT|CD|DATE>+; <VALUE> (<POS> <VALUE>)``)
 
         The attribute value can be either a noun phrase (*Brazilian/JJ professional/JJ footballer/NN*), an entity (*Lyon/ENT*), a number (*since/IN 2012/CD*), or a date (*[born on] October/NNP 28/CD ,/, 1955/CD*).
         It may also be several at once (*(Ligue 1)/ENT (club/NN)/NP Lyon/ENT*).
+
+        A value may also have a possessive, in which case the subject and object are returned together and separately.
 
         **Value list** (``VALUES: <IN|TO>? (<DT|PRP$>?<VALUE><CC|,>*)+``)
 
@@ -121,6 +123,7 @@ class LinguisticExtractor(Extractor):
                   NP: { <MOD|VBG>* <NN.*>+ }
                   NAME: { <VB.*> }
                   VALUE: { <NP|ENT|CD|DATE>+ }
+                  VALUE: { <VALUE> (<POS> <VALUE>) }
                   VALUES: { <IN|TO>? (<DT|PRP$>?<VALUE><CC|,>*)+ }
                   ATTR: { <NAME> (<MOD>? <VALUES>)+ }
         """

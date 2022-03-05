@@ -371,6 +371,19 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'known_as': { 'granada' }, 'is': { 'spanish football club' }, 'is_in': { 'city', 'autonomous community' }, 'is_of': { 'granada', 'andalusia' }, 'plays_in': { 'la liga' } }, profile.attributes)
 
+    def test_extract_VALUE_POS(self):
+        """
+        Test that if a value has a possessive, the object and subject are returned together and separately.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Asia (/ˈeɪʒə, ˈeɪʃə/ (audio speaker iconlisten)) is Earth's largest and most populous continent, located primarily in the Eastern and Northern Hemispheres."
+        self.assertEqual("Asia  is Earth's largest and most populous continent, located primarily in the Eastern and Northern Hemispheres.", extractor._remove_parentheses(sentence))
+
+        profile = extractor.extract(sentence, remove_parentheses=True)
+        self.assertEqual({ 'is': { 'earth', 'earth \'s largest and most populous continent', 'largest and most populous continent' }, 'located_in': { 'eastern', 'northern hemispheres' } }, profile.attributes)
+
     def test_extract_VALUES_CC_and(self):
         """
         Test extracting attributes which have _and_ conjunctions.
