@@ -46,7 +46,7 @@ class TestLinguisticExtractor(unittest.TestCase):
         sentence = "Open Data Science Conference, or ODSC, is an annual event held in Boston,[1] San Francisco, Brazil, London, and India.[2] "
         clean = extractor._remove_references(sentence)
         self.assertEqual("Open Data Science Conference, or ODSC, is an annual event held in Boston,[1] San Francisco, Brazil, London, and India.[2] ", sentence)
-        profile = extractor.extract(sentence)
+        profile = extractor.extract(sentence, verbose=True)
         self.assertEqual("Open Data Science Conference, or ODSC, is an annual event held in Boston,[1] San Francisco, Brazil, London, and India.[2] ", sentence)
         self.assertEqual({ 'is': { 'annual event' }, 'held_in': { 'boston', 'san francisco', 'brazil', 'london', 'india' } }, profile.attributes)
 
