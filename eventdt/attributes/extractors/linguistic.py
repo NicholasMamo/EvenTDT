@@ -66,9 +66,10 @@ class LinguisticExtractor(Extractor):
         An entity may also have its own modifiers, as in the name *Indian/JJ Oceans/NNP*.
 
         **Noun phrase**
-        (``NP: { <MOD|VBG>* <NN.*>+ }``)
+        (``NP: <MOD|VBG>* <NN.*>+; <ENT> <NP>``)
 
         A noun phrase is a sequence of nouns (*football/NN team/NN*) possibly preceded by modifiers.
+        A noun phrase may also be preceded by an entity (*France/NT national/JJ team/NN*).
 
         **Attribute name** (``NAME: <VB.*>``)
 
@@ -123,6 +124,7 @@ class LinguisticExtractor(Extractor):
                   ENT: { <CD>? <NNP.*> (<IN><NNP.*|PRP>|<CD|NNP.*|PRP>)* }
                   ENT: { <MOD>+ <ENT> }
                   NP: { <MOD|VBG>* <NN.*>+ }
+                  NP: { <ENT> <NP> }
                   NAME: { <VB.*> }
                   VALUE: { <NP|ENT|CD|DATE>+ }
                   VALUE: { <VALUE> (<POS> <VALUE>) }
@@ -327,7 +329,7 @@ class LinguisticExtractor(Extractor):
         """
 
         value = [ ]
-        head = VALUE[-1] if (type(VALUE[-1]) is nltk.tree.Tree and VALUE[-1].label() == 'ENT') else VALUE
+        head = VALUE[-1] if (type(VALUE[-1]) is nltk.tree.Tree and VALUE[-1].label() in ('ENT', 'NP')) else VALUE
         for text, pos in head.leaves():
             value.append(text)
         return (' '.join(value).lower())

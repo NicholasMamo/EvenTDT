@@ -46,7 +46,7 @@ class TestLinguisticExtractor(unittest.TestCase):
         sentence = "Open Data Science Conference, or ODSC, is an annual event held in Boston,[1] San Francisco, Brazil, London, and India.[2] "
         clean = extractor._remove_references(sentence)
         self.assertEqual("Open Data Science Conference, or ODSC, is an annual event held in Boston,[1] San Francisco, Brazil, London, and India.[2] ", sentence)
-        profile = extractor.extract(sentence, verbose=True)
+        profile = extractor.extract(sentence)
         self.assertEqual("Open Data Science Conference, or ODSC, is an annual event held in Boston,[1] San Francisco, Brazil, London, and India.[2] ", sentence)
         self.assertEqual({ 'is': { 'annual event' }, 'held_in': { 'boston', 'san francisco', 'brazil', 'london', 'india' } }, profile.attributes)
 
@@ -177,7 +177,7 @@ class TestLinguisticExtractor(unittest.TestCase):
         sentence = "The eurozone, officially called the euro area, is a monetary union of 19 member states of the European Union (EU) that have adopted the euro (€) as their primary currency and sole legal tender."
         self.assertEqual("The eurozone, officially called the euro area, is a monetary union of 19 member states of the European Union that have adopted the euro as their primary currency and sole legal tender.", extractor._remove_parentheses(sentence))
         profile = extractor.extract(sentence, remove_parentheses=True)
-        self.assertEqual({ 'called': { 'euro area' }, 'is': { 'monetary union' }, 'is_of': { '19 member states', 'european union' }, 'adopted': { 'euro' }, 'adopted_as': { 'primary currency', 'sole legal tender' } }, profile.attributes)
+        self.assertEqual({ 'called': { 'euro area' }, 'is': { 'monetary union' }, 'is_of': { 'member states', 'european union' }, 'adopted': { 'euro' }, 'adopted_as': { 'primary currency', 'sole legal tender' } }, profile.attributes)
 
         sentence = "Kyiv (/ˈkiːjɪv/ KEE-yiv,[10] /kiːv/ KEEV[11]) or Kiev (/ˈkiːɛv/ KEE-ev;[12][13] Ukrainian: Київ, romanized: Kyiv, pronounced [ˈkɪjiu̯] (audio speaker iconlisten)) is the capital and most populous city of Ukraine."
         self.assertEqual("Kyiv or Kiev is the capital and most populous city of Ukraine.", extractor._remove_parentheses(sentence))
@@ -414,7 +414,7 @@ class TestLinguisticExtractor(unittest.TestCase):
                       upon the United States against the naval base at Pearl Harbor in Honolulu, Territory of Hawaii,
                       just before 08:00, on Sunday, December 7, 1941."""
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'was': { 'surprise military strike' }, 'was_by': { 'imperial japanese navy air service' },
+        self.assertEqual({ 'was': { 'military strike' }, 'was_by': { 'imperial japanese navy air service' },
                            'was_upon': { 'united states' }, 'was_against': { 'naval base' }, 'was_at': { 'pearl harbor in honolulu', 'territory of hawaii' },
                            'was_before': { '08:00' }, 'was_on': { 'sunday , december 7 , 1941' } }, profile.attributes)
 
@@ -427,7 +427,7 @@ class TestLinguisticExtractor(unittest.TestCase):
 
         sentence = "The eurozone, officially called the euro area, is a monetary union of 19 member states of the European Union (EU) that have adopted the euro as their primary currency and sole legal tender."
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'called': { 'euro area' }, 'is': { 'monetary union' }, 'is_of': { '19 member states', 'european union' }, 'adopted': { 'euro' }, 'adopted_as': { 'primary currency', 'sole legal tender' } }, profile.attributes)
+        self.assertEqual({ 'called': { 'euro area' }, 'is': { 'monetary union' }, 'is_of': { 'member states', 'european union' }, 'adopted': { 'euro' }, 'adopted_as': { 'primary currency', 'sole legal tender' } }, profile.attributes)
 
     def test_extract_ENT_ends_number(self):
         """
@@ -621,7 +621,7 @@ class TestLinguisticExtractor(unittest.TestCase):
         sentence = """VR Kanojo (VR カノジョ) is a virtual reality social simulation game made by Illusion, released in February 2017
                       for the HTC Vive and Oculus Rift on Microsoft Windows PCs."""
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'is': { 'virtual reality social simulation game' }, 'made_by': { 'illusion' }, 'released_in': { 'february 2017' },
+        self.assertEqual({ 'is': { 'social simulation game' }, 'made_by': { 'illusion' }, 'released_in': { 'february 2017' },
                            'released_for': { 'htc vive', 'oculus rift on microsoft windows pcs' } }, profile.attributes)
 
     def test_extract_VALUE_POS(self):
@@ -771,7 +771,7 @@ class TestLinguisticExtractor(unittest.TestCase):
 
         sentence = "Wright Inlet is an ice-filled inlet receding westward between Cape Little and Cape Wheeler along the east coast of Palmer Land."
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'is': { 'ice-filled inlet receding westward' }, 'is_between': { 'cape little', 'cape wheeler' }, 'is_along': { 'east coast' }, 'is_of': { 'palmer land' } }, profile.attributes)
+        self.assertEqual({ 'is': { 'receding westward' }, 'is_between': { 'cape little', 'cape wheeler' }, 'is_along': { 'east coast' }, 'is_of': { 'palmer land' } }, profile.attributes)
 
     def test_extract_VALUES_IN_appended_to_name(self):
         """
@@ -839,7 +839,7 @@ class TestLinguisticExtractor(unittest.TestCase):
 
         sentence = "The eurozone, officially called the euro area, is a monetary union of 19 member states of the European Union (EU) that have adopted the euro as their primary currency and sole legal tender."
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'called': { 'euro area' }, 'is': { 'monetary union' }, 'is_of': { '19 member states', 'european union' }, 'adopted': { 'euro' }, 'adopted_as': { 'primary currency', 'sole legal tender' } }, profile.attributes)
+        self.assertEqual({ 'called': { 'euro area' }, 'is': { 'monetary union' }, 'is_of': { 'member states', 'european union' }, 'adopted': { 'euro' }, 'adopted_as': { 'primary currency', 'sole legal tender' } }, profile.attributes)
 
     def test_extract_VALUES_have_modifiers(self):
         """
@@ -852,7 +852,7 @@ class TestLinguisticExtractor(unittest.TestCase):
                       upon the United States against the naval base at Pearl Harbor in Honolulu, Territory of Hawaii,
                       just before 08:00, on Sunday, December 7, 1941."""
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'was': { 'surprise military strike' }, 'was_by': { 'imperial japanese navy air service' },
+        self.assertEqual({ 'was': { 'military strike' }, 'was_by': { 'imperial japanese navy air service' },
                            'was_upon': { 'united states' }, 'was_against': { 'naval base' }, 'was_at': { 'pearl harbor in honolulu', 'territory of hawaii' },
                            'was_before': { '08:00' }, 'was_on': { 'sunday , december 7 , 1941' } }, profile.attributes)
 
