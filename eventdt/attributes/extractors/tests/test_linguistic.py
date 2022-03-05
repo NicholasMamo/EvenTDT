@@ -84,7 +84,7 @@ class TestLinguisticExtractor(unittest.TestCase):
         sentence = "The eurozone, officially called the euro area, is a monetary union of 19 member states of the European Union (EU) that have adopted the euro (€) as their primary currency and sole legal tender."
         self.assertEqual("The eurozone, officially called the euro area, is a monetary union of 19 member states of the European Union that have adopted the euro as their primary currency and sole legal tender.", extractor._remove_parentheses(sentence))
         profile = extractor.extract(sentence, remove_parentheses=True)
-        self.assertEqual({ 'called': { 'euro area' }, 'is': { 'monetary union' }, 'is_of': { '19 member states', 'european union' }, 'adopted': { 'euro' } }, profile.attributes)
+        self.assertEqual({ 'called': { 'euro area' }, 'is': { 'monetary union' }, 'is_of': { '19 member states', 'european union' }, 'adopted': { 'euro' }, 'adopted_as': { 'primary currency', 'sole legal tender' } }, profile.attributes)
 
         sentence = "Kyiv (/ˈkiːjɪv/ KEE-yiv,[10] /kiːv/ KEEV[11]) or Kiev (/ˈkiːɛv/ KEE-ev;[12][13] Ukrainian: Київ, romanized: Kyiv, pronounced [ˈkɪjiu̯] (audio speaker iconlisten)) is the capital and most populous city of Ukraine."
         self.assertEqual("Kyiv or Kiev is the capital and most populous city of Ukraine.", extractor._remove_parentheses(sentence))
@@ -334,7 +334,7 @@ class TestLinguisticExtractor(unittest.TestCase):
 
         sentence = "The eurozone, officially called the euro area, is a monetary union of 19 member states of the European Union (EU) that have adopted the euro as their primary currency and sole legal tender."
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'called': { 'euro area' }, 'is': { 'monetary union' }, 'is_of': { '19 member states', 'european union' }, 'adopted': { 'euro' } }, profile.attributes)
+        self.assertEqual({ 'called': { 'euro area' }, 'is': { 'monetary union' }, 'is_of': { '19 member states', 'european union' }, 'adopted': { 'euro' }, 'adopted_as': { 'primary currency', 'sole legal tender' } }, profile.attributes)
 
     def test_extract_ENT_ends_number(self):
         """
@@ -733,7 +733,7 @@ class TestLinguisticExtractor(unittest.TestCase):
 
         sentence = "The eurozone, officially called the euro area, is a monetary union of 19 member states of the European Union (EU) that have adopted the euro as their primary currency and sole legal tender."
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'called': { 'euro area' }, 'is': { 'monetary union' }, 'is_of': { '19 member states', 'european union' }, 'adopted': { 'euro' } }, profile.attributes)
+        self.assertEqual({ 'called': { 'euro area' }, 'is': { 'monetary union' }, 'is_of': { '19 member states', 'european union' }, 'adopted': { 'euro' }, 'adopted_as': { 'primary currency', 'sole legal tender' } }, profile.attributes)
 
     def test_extract_VALUES_have_modifiers(self):
         """

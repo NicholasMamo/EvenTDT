@@ -81,7 +81,7 @@ class LinguisticExtractor(Extractor):
 
         A value may also have a possessive, in which case the subject and object are returned together and separately.
 
-        **Value list** (``VALUES: <IN|TO>? (<DT|PRP$>?<VALUE><CC|,>*)+``)
+        **Value list** (``VALUES: <IN|TO>? (<DT|PRP\$>?<VALUE><CC|,>*)+``)
 
         Each attribute can have several values (*[is an] (VALUE American/JJ business/NN magnate/NN),/, (VALUE software/NN developer/NN) and/CC (VALUE investor/NN)*)
         The attribute value may take a determiner (*is/VBZ a/DT footballer/NN*) or possessive pronoun (*[adopted the euro as] their/PRP$ primary/JJ currency/NN*) just before the value.
@@ -125,7 +125,7 @@ class LinguisticExtractor(Extractor):
                   NAME: { <VB.*> }
                   VALUE: { <NP|ENT|CD|DATE>+ }
                   VALUE: { <VALUE> (<POS> <VALUE>) }
-                  VALUES: { <IN|TO>? (<DT|PRP$>?<VALUE><CC|,>*)+ }
+                  VALUES: { <IN|TO>? (<DT|PRP\$>?<VALUE><CC|,>*)+ }
                   ATTR: { <NAME> (<MOD>? <VALUES>)+ }
         """
         self.parser = nltk.RegexpParser(grammar)
