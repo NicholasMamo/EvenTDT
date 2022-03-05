@@ -176,6 +176,17 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'born_on': { 'october 28 , 1955' }, 'is': { 'american business magnate', 'software developer', 'investor', 'author', 'philanthropist' } }, profile.attributes)
 
+    def test_extract_DATE_format_3(self):
+        """
+        Test extracting a date in the format dd, DD MM YYYY.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "The Normandy landings were the landing operations and associated airborne operations on Tuesday, 6 June 1944 of the Allied invasion of Normandy in Operation Overlord during World War II."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'were': { 'landing operations', 'associated airborne operations' }, 'were_on': { 'tuesday , 6 june 1944' }, 'were_of': { 'allied invasion', 'normandy in operation overlord during world war ii' } }, profile.attributes)
+
     def test_extract_MOD_starts_with_number(self):
         """
         Test that a modifier may start with a number.

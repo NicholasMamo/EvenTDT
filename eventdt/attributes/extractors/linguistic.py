@@ -43,7 +43,7 @@ class LinguisticExtractor(Extractor):
         If a grammar is not given, a default grammar is used instead:
 
         **DATE**
-        (``DATE: <CD> <NNP> <CD>|<NNP> <CD> <,> <CD>``)
+        (``DATE: (<CD> <NNP> <CD>|<NNP> <CD> <,> <CD>); <NNP> <,> <DATE>``)
 
         The grammar assumes that a pattern involving two numbers and a proper noun in various formats represents a date (*14/CD May/NNP 2017/CD*).
 
@@ -56,7 +56,7 @@ class LinguisticExtractor(Extractor):
         A modifier may also be a single number.
 
         **Entity**
-        (``ENT: <CD>? <NNP.*> (<IN><NNP.*>|<CD|NNP.*>)*; ENT: { <MOD>+ <ENT>`` }
+        (``ENT: <CD>? <NNP.*> (<IN><NNP.*>|<CD|NNP.*>)*; { <MOD>+ <ENT>`` }
 
         An entity can start with (*1860/CD Munich/NNP*) or end with a number (*Schalke/NNP 04/CD*), but it must always include at least one proper noun.
         Entities may have a preposition (*United/NNP States/NP of/IN America/NP*) but never at the start or at the end.
@@ -114,6 +114,7 @@ class LinguisticExtractor(Extractor):
 
         grammar = grammar or """
                   DATE: { (<CD> <NNP> <CD>|<NNP> <CD> <,> <CD>) }
+                  DATE: { <NNP> <,> <DATE> }
                   MOD: { <CD>?<JJ.*|RB.*>+ (<CC|,><CD>?<JJ.*|RB.*>+)* }
                   ENT: { <CD>? <NNP.*> (<IN><NNP.*>|<CD|NNP.*>)* }
                   ENT: { <MOD>+ <ENT> }
