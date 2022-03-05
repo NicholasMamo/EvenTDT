@@ -107,7 +107,7 @@ class LinguisticExtractor(Extractor):
               However, the grammar does not extract a relation from the phrase *painting/VBG landscapes/NNS or/CC vedute/NN*.
 
         :param grammar: The grammar with which to extract attributes.
-                        The grammar must have a way to extract entities (``ENT``), attributes (``ATTR``) and prepositional attributes (``PPATR``), and attribute names (``NAME``) and values (``VALUE``).
+                        The grammar must have a way to extract entities (``ENT``), attributes (``ATTR``), the list of values (``VALUES``), and attribute names (``NAME``) and values (``VALUE``).
         :type grammar: str
         :param lemmatize: A boolean indicating whether to lemmatize a verb or not.
                           Lemmatization helps reduce the impact of conjugation and sentence structure on the attributes, such as whether the sentence uses the passive or active voice.
@@ -250,42 +250,42 @@ class LinguisticExtractor(Extractor):
         :type ATTR: :class:`nltk.tree.Tree`
 
         :return: The attribute as a tuple, with the first value being the name and the second being the value.
-                 The attribute values are returned as lists of ``PPATR`` subtrees.
+                 The attribute values are returned as lists of ``VALUES`` subtrees.
         :rtype: tuple of str and list :class:`nltk.tree.Tree`
         """
 
         name = [ component for component in ATTR.subtrees() if component.label() == 'NAME' ][0]
         name = [ self.lemmatizer.lemmatize(text, pos='v') if self.lemmatizer else text
                  for text, pos in name.leaves() ]
-        PPATR = [ component for component in ATTR.subtrees() if component.label() == 'VALUES' ]
-        return ('_'.join(name).lower(), PPATR)
+        VALUES = [ component for component in ATTR.subtrees() if component.label() == 'VALUES' ]
+        return ('_'.join(name).lower(), VALUES)
 
-    def _get_preposition(self, PPATR):
+    def _get_preposition(self, VALUES):
         """
         Extract the preposition from the given ATTR subtree, or ``None`` if the subtree doesn't have one.
 
-        :param PPATR: The subtree from where to extract the preposition.
-        :type PPATR: :class:`nltk.tree.Tree`
+        :param VALUES: The subtree from where to extract the preposition.
+        :type VALUES: :class:`nltk.tree.Tree`
 
         :return: The first preposition (with label ``IN``) in the subtree or ``None`` if there is no preposition.
         :rtype: str or None
         """
 
-        text, pos = PPATR.flatten()[0]
+        text, pos = VALUES.flatten()[0]
         return text if pos in ('IN', 'TO') else None
 
-    def _get_attribute(self, PPATR):
+    def _get_attribute(self, VALUES):
         """
         Extract the attribute subtree from the given subtree.
 
-        :param PPATR: The subtree from where to extract the attribute value.
-        :type PPATR: :class:`nltk.tree.Tree`
+        :param VALUES: The subtree from where to extract the attribute value.
+        :type VALUES: :class:`nltk.tree.Tree`
 
         :return: The attribute value in the subtree.
         :rtype: :class:`nltk.tree.Tree`
         """
 
-        return [ _subtree for _subtree in PPATR.subtrees() if _subtree.label() == 'VALUE' ]
+        return [ _subtree for _subtree in VALUES.subtrees() if _subtree.label() == 'VALUE' ]
 
     def _attribute_value(self, VALUE):
         """
