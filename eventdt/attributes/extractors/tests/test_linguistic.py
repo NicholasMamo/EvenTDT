@@ -36,6 +36,107 @@ class TestLinguisticExtractor(unittest.TestCase):
         extractor = LinguisticExtractor(grammar)
         self.assertEqual(grammar, extractor.parser._grammar)
 
+    def test_remove_parentheses_original(self):
+        """
+        Test that removing the parentheses reconstructs the sentence with overwriting the original string.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Pope Francis (Latin: Franciscus; Italian: Francesco; Spanish: Francisco; born Jorge Mario Bergoglio,[b] 17 December 1936) is the head of the Catholic Church and sovereign of the Vatican City State since 2013."
+        clean = extractor._remove_parentheses(sentence)
+        self.assertEqual("Pope Francis (Latin: Franciscus; Italian: Francesco; Spanish: Francisco; born Jorge Mario Bergoglio,[b] 17 December 1936) is the head of the Catholic Church and sovereign of the Vatican City State since 2013.", sentence)
+        profile = extractor.extract(sentence, remove_parentheses=True)
+        self.assertEqual("Pope Francis (Latin: Franciscus; Italian: Francesco; Spanish: Francisco; born Jorge Mario Bergoglio,[b] 17 December 1936) is the head of the Catholic Church and sovereign of the Vatican City State since 2013.", sentence)
+        self.assertEqual({ 'is': { 'head' }, 'is_of': { 'catholic church', 'sovereign', 'vatican city state' }, 'is_since':{ '2013' } }, profile.attributes)
+
+    def test_remove_parentheses_none(self):
+        """
+        Test that a text without parentheses is unchanged when removing parentheses.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Europe is a continent, also recognised as part of Eurasia, located entirely in the Northern Hemisphere and mostly in the Eastern Hemisphere."
+        self.assertEqual(sentence, extractor._remove_parentheses(sentence))
+        profile = extractor.extract(sentence, remove_parentheses=True)
+        self.assertEqual({ 'is': { 'continent' }, 'recognised_as': { 'part' }, 'recognised_of': { 'eurasia' }, 'located_in': { 'northern hemisphere', 'eastern hemisphere' } }, profile.attributes)
+
+    def test_remove_parentheses(self):
+        """
+        Test that a text with parentheses is cleaned.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Kylian Mbappé Lottin (born 20 December 1998) is a French professional footballer who plays as a forward for Ligue 1 club Paris Saint-Germain and the France national team."
+        self.assertEqual("Kylian Mbappé Lottin is a French professional footballer who plays as a forward for Ligue 1 club Paris Saint-Germain and the France national team.", extractor._remove_parentheses(sentence))
+        profile = extractor.extract(sentence, remove_parentheses=True)
+        self.assertEqual({ 'is': { 'french professional footballer' }, 'plays_as': { 'forward' }, 'plays_for': { 'paris saint-germain', 'france national team' } }, profile.attributes)
+
+    def test_remove_parentheses_multiple(self):
+        """
+        Test that when a text includes multiple parentheses, all of them are removed.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "The eurozone, officially called the euro area, is a monetary union of 19 member states of the European Union (EU) that have adopted the euro (€) as their primary currency and sole legal tender."
+        self.assertEqual("The eurozone, officially called the euro area, is a monetary union of 19 member states of the European Union that have adopted the euro as their primary currency and sole legal tender.", extractor._remove_parentheses(sentence))
+        profile = extractor.extract(sentence, remove_parentheses=True)
+        self.assertEqual({ 'called': { 'euro area' }, 'is': { 'monetary union' }, 'is_of': { '19 member states', 'european union' }, 'adopted': { 'euro' } }, profile.attributes)
+
+        sentence = "Kyiv (/ˈkiːjɪv/ KEE-yiv,[10] /kiːv/ KEEV[11]) or Kiev (/ˈkiːɛv/ KEE-ev;[12][13] Ukrainian: Київ, romanized: Kyiv, pronounced [ˈkɪjiu̯] (audio speaker iconlisten)) is the capital and most populous city of Ukraine."
+        self.assertEqual("Kyiv or Kiev is the capital and most populous city of Ukraine.", extractor._remove_parentheses(sentence))
+        profile = extractor.extract(sentence, remove_parentheses=True)
+        self.assertEqual({ 'is': { 'capital', 'most populous city' }, 'is_of': { 'ukraine' } }, profile.attributes)
+
+    def test_remove_parentheses_phonemes(self):
+        """
+        Test that a text with parentheses containing phonemes are removed.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Kyiv (/ˈkiːjɪv/ KEE-yiv,[10] /kiːv/ KEEV[11]) or Kiev (/ˈkiːɛv/ KEE-ev;[12][13] Ukrainian: Київ, romanized: Kyiv, pronounced [ˈkɪjiu̯] (audio speaker iconlisten)) is the capital and most populous city of Ukraine."
+        self.assertEqual("Kyiv or Kiev is the capital and most populous city of Ukraine.", extractor._remove_parentheses(sentence))
+        profile = extractor.extract(sentence, remove_parentheses=True)
+        self.assertEqual({ 'is': { 'capital', 'most populous city' }, 'is_of': { 'ukraine' } }, profile.attributes)
+
+    def test_remove_parentheses_keep(self):
+        """
+        Test that if parentheses are kept, they really aren't deleted.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Anne, Princess Royal KG, KT, GCVO, QSO, CD (Anne Elizabeth Alice Louise; born 15 August 1950), is the second child and only daughter of Queen Elizabeth II and Prince Philip, Duke of Edinburgh."
+        profile = extractor.extract(sentence, remove_parentheses=True)
+        self.assertEqual({ 'is': { 'second child', 'only daughter' }, 'is_of': { 'queen elizabeth ii', 'prince philip', 'duke of edinburgh' } }, profile.attributes)
+
+        sentence = "Anne, Princess Royal KG, KT, GCVO, QSO, CD (Anne Elizabeth Alice Louise; born 15 August 1950), is the second child and only daughter of Queen Elizabeth II and Prince Philip, Duke of Edinburgh."
+        profile = extractor.extract(sentence, remove_parentheses=False)
+        self.assertEqual({ 'born': { '15 august 1950' }, 'is': { 'second child', 'only daughter' }, 'is_of': { 'queen elizabeth ii', 'prince philip', 'duke of edinburgh' } }, profile.attributes)
+
+    def test_remove_parentheses_nested(self):
+        """
+        Test that if a text has nested parameters, all of them are removed.
+
+        Note that *Eastern* is tagged as a proper noun and is thus separate from the complete phrase, *Eastern and Northern Hemispheres*.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Asia (/ˈeɪʒə, ˈeɪʃə/ (audio speaker iconlisten)) is Earth's largest and most populous continent, located primarily in the Eastern and Northern Hemispheres."
+        self.assertEqual("Asia is Earth's largest and most populous continent, located primarily in the Eastern and Northern Hemispheres.", extractor._remove_parentheses(sentence))
+        profile = extractor.extract(sentence, remove_parentheses=True)
+        self.assertEqual({ 'is': { 'earth', 'earth \'s largest and most populous continent', 'largest and most populous continent' }, 'located_in': { 'eastern', 'northern hemispheres' } }, profile.attributes)
+
+        sentence = "Lionel Andrés Messi (Spanish pronunciation: [ljoˈnel anˈdɾes ˈmesi] (audio speaker iconlisten); born 24 June 1987), also known as Leo Messi, is an Argentine professional footballer who plays as a forward for Ligue 1 club Paris Saint-Germain and captains the Argentina national team."
+        self.assertEqual("Lionel Andrés Messi, also known as Leo Messi, is an Argentine professional footballer who plays as a forward for Ligue 1 club Paris Saint-Germain and captains the Argentina national team.", extractor._remove_parentheses(sentence))
+        profile = extractor.extract(sentence, remove_parentheses=True)
+        self.assertEqual({ 'known_as': { 'leo messi' }, 'is': { 'argentine professional footballer' }, 'plays_as': { 'forward' }, 'plays_for': { 'paris saint-germain' }, 'captains': { 'argentina national team' } }, profile.attributes)
+
     def test_extract_returns_profile(self):
         """
         Test that when extracting attributes, the function always returns a profile.
@@ -173,7 +274,7 @@ class TestLinguisticExtractor(unittest.TestCase):
         extractor = LinguisticExtractor()
 
         sentence = "William Henry Gates III (born on October 28, 1955) is an American business magnate, software developer, investor, author, and philanthropist."
-        profile = extractor.extract(sentence)
+        profile = extractor.extract(sentence, remove_parentheses=False)
         self.assertEqual({ 'born_on': { 'october 28 , 1955' }, 'is': { 'american business magnate', 'software developer', 'investor', 'author', 'philanthropist' } }, profile.attributes)
 
     def test_extract_DATE_format_3(self):
@@ -303,7 +404,7 @@ class TestLinguisticExtractor(unittest.TestCase):
         extractor = LinguisticExtractor()
 
         sentence = "William Henry Gates III (born on October 28, 1955) is an American business magnate, software developer, investor, author, and philanthropist."
-        profile = extractor.extract(sentence)
+        profile = extractor.extract(sentence, remove_parentheses=False)
         self.assertEqual({ 'born_on': { 'october 28 , 1955' }, 'is': { 'american business magnate', 'software developer', 'investor', 'author', 'philanthropist' } }, profile.attributes)
 
         sentence = "Nicolas Paul Stéphane Sarközy de Nagy-Bocsa is a French politician who served as President of France from 16 May 2007 until 15 May 2012."
@@ -379,7 +480,7 @@ class TestLinguisticExtractor(unittest.TestCase):
         extractor = LinguisticExtractor()
 
         sentence = "Asia (/ˈeɪʒə, ˈeɪʃə/ (audio speaker iconlisten)) is Earth's largest and most populous continent, located primarily in the Eastern and Northern Hemispheres."
-        self.assertEqual("Asia  is Earth's largest and most populous continent, located primarily in the Eastern and Northern Hemispheres.", extractor._remove_parentheses(sentence))
+        self.assertEqual("Asia is Earth's largest and most populous continent, located primarily in the Eastern and Northern Hemispheres.", extractor._remove_parentheses(sentence))
 
         profile = extractor.extract(sentence, remove_parentheses=True)
         self.assertEqual({ 'is': { 'earth', 'earth \'s largest and most populous continent', 'largest and most populous continent' }, 'located_in': { 'eastern', 'northern hemispheres' } }, profile.attributes)
@@ -557,6 +658,11 @@ class TestLinguisticExtractor(unittest.TestCase):
         """
 
         extractor = LinguisticExtractor()
+
+        sentence = """Donetsk, formerly known as Aleksandrovka, Yuzivka (or Hughesovka), Stalin and Stalino,
+                      is an industrial city in eastern Ukraine located on the Kalmius River in the disputed area of Donetsk Oblast."""
+        profile = extractor.extract(sentence)
+        # print(str(profile))
 
     def test_unsupported(self):
         """

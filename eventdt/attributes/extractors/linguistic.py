@@ -9,6 +9,7 @@ This extractor assumes that the text is about a single entity and therefore does
 """
 
 import os
+import re
 import sys
 
 path = os.path.dirname(__file__)
@@ -130,7 +131,7 @@ class LinguisticExtractor(Extractor):
         self.parser = nltk.RegexpParser(grammar)
         self.lemmatizer = nltk.WordNetLemmatizer() if lemmatize else None
 
-    def extract(self, text, verbose=False, *args, **kwargs):
+    def extract(self, text, remove_parentheses=True, verbose=False, *args, **kwargs):
         """
         Extract attributes from the given text.
         This function assumes that the text is about a single entity and therefore does not seek to confirm who the attributes are discussing.
@@ -139,6 +140,10 @@ class LinguisticExtractor(Extractor):
 
         :param text: The text from where to extract attributes.
         :type text: str
+        :param remove_parentheses: A boolean indicating whether to remove parentheses before extracting attributes.
+                                   Since parentheses can include different types of phrases, they are difficult to parse.
+                                   Furthermore, parentheses may appear anywhere, making it difficult to design a grammar around them.
+        :type remove_parentheses: bool
         :param verbose: A boolean indicating whether to print the tree as a way of debugging.
         :type verbose: bool
 
@@ -148,6 +153,8 @@ class LinguisticExtractor(Extractor):
         """
 
         profile = Profile(*args, **kwargs)
+
+        text = self._remove_parentheses(text) if remove_parentheses else text
 
         sentences = nltk.sent_tokenize(text)
         for sentence in sentences:
@@ -167,6 +174,41 @@ class LinguisticExtractor(Extractor):
                         profile.attributes[name].add(self._attribute_value(attribute))
 
         return profile
+
+    def _remove_parentheses(self, text):
+        """
+        Remove parentheses from the given text.
+
+        :param text: The text to clean.
+        :type text: str
+
+        :return: The cleaned text.
+        :rtype: str
+        """
+
+        clean = ""
+
+        parenthesis = "" # the current parenthesis container
+        depth = 0 # the parenthesis depth (for nested parentheses)
+        for char in text:
+            if char == '(':
+                depth += 1
+
+            if not depth:
+                clean += char
+
+            if char == ')':
+                depth -= 1
+
+        # collapse multiple spaces into one
+        pattern = re.compile('\s+')
+        clean = pattern.sub(' ', clean)
+
+        # remove spaces before punctuation
+        pattern = re.compile('\s([.,\/#!$%\^&\*;:{}=\-_`~()])')
+        clean = pattern.sub('\g<1>', clean)
+
+        return clean
 
     def _parse(self, sentence):
         """
