@@ -423,3 +423,35 @@ class TestLinguisticExtractor(unittest.TestCase):
         sentence = "Granada Club de Fútbol, S.A.D., known simply as Granada, is a Spanish football club in the city of Granada, in the autonomous community of Andalusia that plays in La Liga."
         profile = extractor.extract(sentence)
         self.assertEqual({ 'known_as': { 'granada' }, 'is': { 'spanish football club' }, 'is_in': { 'city', 'autonomous community' }, 'is_of': { 'granada', 'andalusia' }, 'plays_in': { 'la liga' } }, profile.attributes)
+
+    def test_unsupported(self):
+        """
+        A graveyard of sentences that are not parsed completely and correctly.
+        These are unsupported phrases in grammar.
+        """
+
+        extractor = LinguisticExtractor()
+
+        """
+        To add support, remove gerunds (VBG) from noun phrases.
+        However, this would break phrases like *attacking midfielder*.
+        """
+        sentence = "Sigismondo Benini (18th century) was an Italian painter of the Baroque period, active in Lombardy, painting landscapes or vedute."
+        profile = extractor.extract(sentence)
+        # self.assertEqual({ 'was': { 'italian painter' }, 'was_of': { 'baroque period' }, 'active_in': { 'lombardy' }, 'painting': { 'landscapes', 'vedute' } }, profile.attributes)
+
+        """
+        To add support, disallow prepositions (IN) from entities, which would then break phrases such as *United States of America*.
+        """
+        sentence = "Lando Norris is a Belgian-British racing driver currently competing in Formula One with McLaren, racing under the British flag."
+        profile = extractor.extract(sentence)
+        # self.assertEqual({ 'is': { 'belgian-british racing driver' }, 'competing_in': { 'formula one' }, 'competing_with': { 'mclaren' }, 'racing_under': { 'british flag' } }, profile.attributes)
+
+        """
+        To add support, either remove coordinating conjunctions (CC) and commas from modifiers.
+        Or, preferably, separate adjectives into groups (split on coordinating conjunctions and commas) and attach them separately to the head noun.
+        However, this would lead to plural nouns (*mid-atlantic regions*, *southeastern regions*).
+        """
+        sentence = "Virginia, officially the Commonwealth of Virginia, is a state in the Mid-Atlantic and Southeastern regions of the United States, between the Atlantic Coast and the Appalachian Mountains."
+        profile = extractor.extract(sentence)
+        # self.assertEqual({ 'is': { 'state' }, 'is_in': { 'mid-atlantic regions', 'southeastern regions' }, 'is_of': { 'united states' }, 'is_between': { 'atlantic coast', 'appalachian mountains' } }, profile.attributes)
