@@ -25,195 +25,203 @@ class TestVector(unittest.TestCase):
         Test providing an empty constructor.
         """
 
-        v = Vector()
-        self.assertEqual({ }, v.dimensions)
+        vector = Vector()
+        self.assertEqual({ }, vector.dimensions)
 
     def test_constructor(self):
         """
         Test providing the dimensions to the vector constructor.
         """
 
-        v = Vector({"x": 2, "y": 1})
-        self.assertEqual({"x": 2, "y": 1}, v.dimensions)
+        vector = Vector({"x": 2, "y": 1})
+        self.assertEqual({"x": 2, "y": 1}, vector.dimensions)
 
     def test_dimensions(self):
         """
         Test setting and getting dimensions.
         """
 
-        v = Vector({"x": 2, "y": 1})
-        del v.dimensions["x"]
-        self.assertEqual({"y": 1}, v.dimensions)
+        vector = Vector({"x": 2, "y": 1})
+        del vector.dimensions["x"]
+        self.assertEqual({"y": 1}, vector.dimensions)
 
-        v.dimensions["x"] = 1
-        self.assertEqual({"x": 1, "y": 1}, v.dimensions)
+        vector.dimensions["x"] = 1
+        self.assertEqual({"x": 1, "y": 1}, vector.dimensions)
 
     def test_normalization(self):
         """
         Test normalizing vectors.
         """
 
-        v = Vector({"x": 3, "y": 1.2, "z": -2})
-        v.normalize()
-        self.assertEqual({ "x": 0.789474, "y": 0.315789, "z": -0.526316 }, { key: round(value, 6) for key, value in v.dimensions.items() })
+        vector = Vector({"x": 3, "y": 1.2, "z": -2})
+        vector.normalize()
+        self.assertEqual({ "x": 0.789474, "y": 0.315789, "z": -0.526316 }, { key: round(value, 6) for key, value in vector.dimensions.items() })
 
     def test_double_normalization(self):
         """
         Test that normalizing the same vector twice returns the same vector as when normalized once.
         """
 
-        v = Vector({"x": 3, "y": 1.2, "z": -2})
-        v.normalize()
-        w = v.copy()
+        vector = Vector({"x": 3, "y": 1.2, "z": -2})
+        vector.normalize()
+        w = vector.copy()
         w.normalize()
-        self.assertEqual(v.dimensions, w.dimensions)
+        self.assertEqual(vector.dimensions, w.dimensions)
 
     def test_normalize_empty_vector(self):
         """
         Test that when normalizing an empty vector, the resulting vector is also empty.
         """
 
-        v = Vector({ })
-        v.normalize()
-        self.assertEqual({ }, v.dimensions)
+        vector = Vector({ })
+        vector.normalize()
+        self.assertEqual({ }, vector.dimensions)
 
     def test_normalize_zero_length_vector(self):
         """
         Test that when normalizing a vector with a zero length, the resulting vector is also empty.
         """
 
-        v = Vector({ 'x': 0 })
-        v.normalize()
-        self.assertEqual({ 'x': 0 }, v.dimensions)
+        vector = Vector({ 'x': 0 })
+        vector.normalize()
+        self.assertEqual({ 'x': 0 }, vector.dimensions)
 
     def test_get_dimension(self):
         """
         Test that when getting the value of a dimension, the correct value is returned.
         """
 
-        v = Vector({ 'x': 1 })
-        self.assertEqual(1, v.dimensions['x'])
+        vector = Vector({ 'x': 1 })
+        self.assertEqual(1, vector.dimensions['x'])
 
     def test_get_non_existent_dimension(self):
         """
         Test that when getting the value of a dimension that does not exist, 0 is returned.
         """
 
-        v = Vector({ })
-        self.assertEqual(0, v.dimensions['x'])
+        vector = Vector({ })
+        self.assertEqual(0, vector.dimensions['x'])
 
     def test_vector_space_initialization(self):
         """
         Test that when providing no dimensions, an empty vector space is created.
         """
 
-        v = Vector()
-        self.assertEqual({ }, v.dimensions)
-        self.assertEqual(0, v.dimensions['x'])
-        v.dimensions['x'] = 10
-        self.assertEqual({ 'x': 10 }, v.dimensions)
-        self.assertEqual(10, v.dimensions['x'])
+        vector = Vector()
+        self.assertEqual({ }, vector.dimensions)
+        self.assertEqual(0, vector.dimensions['x'])
+        vector.dimensions['x'] = 10
+        self.assertEqual({ 'x': 10 }, vector.dimensions)
+        self.assertEqual(10, vector.dimensions['x'])
 
     def test_dimensions_vector_space(self):
         """
         Test that dimensions are created as a vector space.
         """
 
-        v = Vector()
-        self.assertEqual(VectorSpace, type(v.dimensions))
+        vector = Vector()
+        self.assertEqual(VectorSpace, type(vector.dimensions))
 
     def test_empty_dict_dimensions_vector_space(self):
         """
         Test that dimensions are created as a vector space when given as an empty dictionary.
         """
 
-        v = Vector({ })
-        self.assertEqual(VectorSpace, type(v.dimensions))
+        vector = Vector({ })
+        self.assertEqual(VectorSpace, type(vector.dimensions))
 
     def test_non_empty_dict_dimensions_vector_space(self):
         """
         Test that dimensions are created as a vector space when given as a non-empty dictionary.
         """
 
-        v = Vector({ 'x': 10 })
-        self.assertEqual(VectorSpace, type(v.dimensions))
+        vector = Vector({ 'x': 10 })
+        self.assertEqual(VectorSpace, type(vector.dimensions))
 
     def test_normalize_vector_space(self):
         """
         Test that when a vector is normalized, its dimensions ae a vecto space.
         """
 
-        v = Vector({ 'x': 10 })
-        self.assertEqual(VectorSpace, type(v.dimensions))
-        v.normalize()
-        self.assertEqual(VectorSpace, type(v.dimensions))
+        vector = Vector({ 'x': 10 })
+        self.assertEqual(VectorSpace, type(vector.dimensions))
+        vector.normalize()
+        self.assertEqual(VectorSpace, type(vector.dimensions))
 
     def test_copy(self):
         """
         Test copying.
         """
 
-        v = Vector({ 'x': 3 })
-        n = v.copy()
+        vector = Vector({ 'x': 3 })
+        copy = vector.copy()
 
-        self.assertEqual(v.dimensions, n.dimensions)
+        self.assertEqual(vector.dimensions, copy.dimensions)
 
-        v.dimensions['x'] = 2
-        self.assertEqual(2, v.dimensions['x'])
-        self.assertEqual(3, n.dimensions['x'])
-        v.dimensions['x'] = 3
+        vector.dimensions['x'] = 2
+        self.assertEqual(2, vector.dimensions['x'])
+        self.assertEqual(3, copy.dimensions['x'])
+        vector.dimensions['x'] = 3
 
     def test_copy_attributes(self):
         """
         Test that the attributes are also copied.
         """
 
-        v = Vector({ 'x': 3 }, { 'y': True })
-        n = v.copy()
+        vector = Vector({ 'x': 3 }, { 'y': True })
+        copy = vector.copy()
 
-        self.assertEqual(v.attributes, n.attributes)
+        self.assertEqual(vector.attributes, copy.attributes)
 
     def test_copy_attributes_original(self):
         """
-        Test that changing the copy's attributes does not affect the original's.
+        Test that changing the copy's attributes does not affect the original's, and vice-versa.
         """
 
-        v = Vector({ 'x': 3 }, { 'y': True })
-        n = v.copy()
+        vector = Vector({ 'x': 3 }, { 'y': True, 'z': False })
+        copy = vector.copy()
 
-        n.attributes['y'] = False
-        self.assertFalse(n.attributes['y'])
-        self.assertTrue(v.attributes['y'])
+        copy.attributes['y'] = False
+        self.assertFalse(copy.attributes['y'])
+        self.assertTrue(vector.attributes['y'])
+
+        vector.attributes['z'] = True
+        self.assertFalse(copy.attributes['z'])
+        self.assertTrue(vector.attributes['z'])
 
     def test_copy_dimensions_original(self):
         """
-        Test that changing the copy's dimensions does not affect the original's.
+        Test that changing the copy's dimensions does not affect the original's, and vice-versa.
         """
 
-        v = Vector({ 'x': 3 }, { 'y': True })
-        n = v.copy()
+        vector = Vector({ 'x': 3 }, { 'y': True })
+        copy = vector.copy()
 
-        n.dimensions['x'] = 2
-        self.assertEqual(2, n.dimensions['x'])
-        self.assertEqual(3, v.dimensions['x'])
+        copy.dimensions['x'] = 2
+        self.assertEqual(2, copy.dimensions['x'])
+        self.assertEqual(3, vector.dimensions['x'])
+
+        vector.dimensions['x'] = 4
+        self.assertEqual(2, copy.dimensions['x'])
+        self.assertEqual(4, vector.dimensions['x'])
 
     def test_export(self):
         """
         Test exporting and importing vectors.
         """
 
-        v = Vector({ 'x': 3 })
-        e = v.to_array()
-        self.assertEqual(v.attributes, Vector.from_array(e).attributes)
-        self.assertEqual(v.dimensions, Vector.from_array(e).dimensions)
-        self.assertEqual(v.__dict__, Vector.from_array(e).__dict__)
+        vector = Vector({ 'x': 3 })
+        e = vector.to_array()
+        self.assertEqual(vector.attributes, Vector.from_array(e).attributes)
+        self.assertEqual(vector.dimensions, Vector.from_array(e).dimensions)
+        self.assertEqual(vector.__dict__, Vector.from_array(e).__dict__)
 
     def test_export_attributes(self):
         """
         Test that exporting and importing vectors includes attributes.
         """
 
-        v = Vector({ 'x': 3 }, { "y": True })
-        e = v.to_array()
-        self.assertEqual(v.attributes, Vector.from_array(e).attributes)
-        self.assertEqual(v.__dict__, Vector.from_array(e).__dict__)
+        vector = Vector({ 'x': 3 }, { "y": True })
+        e = vector.to_array()
+        self.assertEqual(vector.attributes, Vector.from_array(e).attributes)
+        self.assertEqual(vector.__dict__, Vector.from_array(e).__dict__)

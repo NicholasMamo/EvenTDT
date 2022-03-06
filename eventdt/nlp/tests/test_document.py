@@ -161,6 +161,57 @@ class TestDocument(unittest.TestCase):
         self.assertEqual(document.dimensions, copy.dimensions)
         self.assertEqual(document.attributes, copy.attributes)
 
+    def test_copy_attributes_original(self):
+        """
+        Test that changing the copy's attributes does not affect the original's, and vice-versa.
+        """
+
+        now = time.time()
+        document = Document('this is a pipe', { 'pipe': 1 }, attributes={ 'timestamp': now })
+        copy = document.copy()
+
+        then = time.time()
+        copy.attributes['timestamp'] = then
+        self.assertEqual(then, copy.attributes['timestamp'])
+        self.assertTrue(now, document.attributes['timestamp'])
+
+        now = time.time()
+        document.attributes['timestamp'] = now
+        self.assertEqual(then, copy.attributes['timestamp'])
+        self.assertEqual(now, document.attributes['timestamp'])
+
+    def test_copy_dimensions_original(self):
+        """
+        Test that changing the copy's dimensions does not affect the original's, and vice-versa.
+        """
+
+        document = Document('this is a pipe', { 'pipe': 1 }, attributes={ 'timestamp': time.time() })
+        copy = document.copy()
+
+        copy.dimensions['pipe'] = 2
+        self.assertEqual(2, copy.dimensions['pipe'])
+        self.assertEqual(1, document.dimensions['pipe'])
+
+        document.dimensions['pipe'] = 3
+        self.assertEqual(2, copy.dimensions['pipe'])
+        self.assertEqual(3, document.dimensions['pipe'])
+
+    def test_copy_text_original(self):
+        """
+        Test that changing the copy's text does not affect the original's, and vice-versa.
+        """
+
+        document = Document('this is a pipe', { 'pipe': 1 }, attributes={ 'timestamp': time.time() })
+        copy = document.copy()
+
+        copy.text = 'this is a cigar'
+        self.assertEqual('this is a cigar', copy.text)
+        self.assertEqual('this is a pipe', document.text)
+
+        document.text = 'this is nothing'
+        self.assertEqual('this is a cigar', copy.text)
+        self.assertEqual('this is nothing', document.text)
+
     def test_copy_true(self):
         """
         Test that when copying a document, changes to the copy do not affect the original.
