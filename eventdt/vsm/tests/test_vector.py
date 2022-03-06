@@ -173,10 +173,29 @@ class TestVector(unittest.TestCase):
 
         self.assertEqual(v.attributes, n.attributes)
 
-        v.attributes['y'] = False
-        self.assertFalse(v.attributes['y'])
-        self.assertTrue(n.attributes['y'])
-        v.attributes['y'] = True
+    def test_copy_attributes_original(self):
+        """
+        Test that changing the copy's attributes does not affect the original's.
+        """
+
+        v = Vector({ 'x': 3 }, { 'y': True })
+        n = v.copy()
+
+        n.attributes['y'] = False
+        self.assertFalse(n.attributes['y'])
+        self.assertTrue(v.attributes['y'])
+
+    def test_copy_dimensions_original(self):
+        """
+        Test that changing the copy's dimensions does not affect the original's.
+        """
+
+        v = Vector({ 'x': 3 }, { 'y': True })
+        n = v.copy()
+
+        n.dimensions['x'] = 2
+        self.assertEqual(2, n.dimensions['x'])
+        self.assertEqual(3, v.dimensions['x'])
 
     def test_export(self):
         """

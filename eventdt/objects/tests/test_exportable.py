@@ -44,7 +44,6 @@ class TestExportable(unittest.TestCase):
         vector.attributes['y'] = False
         self.assertFalse(vector.attributes['y'])
         self.assertTrue(copy.attributes['y'])
-        vector.attributes['y'] = True
 
     def test_encode_empty_dict(self):
         """

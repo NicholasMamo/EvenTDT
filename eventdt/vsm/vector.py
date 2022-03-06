@@ -110,17 +110,6 @@ class Vector(Attributable, Exportable):
 
         self.dimensions = vector_math.normalize(self).dimensions
 
-    def copy(self):
-        """
-        Create a copy of the :class:`~Vector`.
-        The copy has the same :class:`~VectorSpace` dimensions and attributes.
-
-        :return: A copy of this :class:`~Vector` instance.
-        :rtype: :class:`~Vector`
-        """
-
-        return Vector(self.dimensions.copy(), self.attributes.copy())
-
     def to_array(self):
         """
         Export the :class:`~Vector` as ``dict``.
@@ -136,8 +125,8 @@ class Vector(Attributable, Exportable):
 
         return {
             'class': str(Vector),
-            'attributes': self.attributes,
-            'dimensions': self.dimensions,
+            'attributes': dict(self.attributes),
+            'dimensions': dict(self.dimensions),
         }
 
     @staticmethod
@@ -157,4 +146,4 @@ class Vector(Attributable, Exportable):
         :rtype: :class:`~Vector`
         """
 
-        return Vector(dimensions=array.get('dimensions'), attributes=array.get('attributes'))
+        return Vector(dimensions=dict(array.get('dimensions')), attributes=dict(array.get('attributes')))
