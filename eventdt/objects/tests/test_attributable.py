@@ -75,6 +75,22 @@ class TestAttributable(unittest.TestCase):
         attributable.b = 10
         self.assertEqual(None, attributable.attributes.get('b'))
 
+    def test_get_attribute_underscores_attributeerror(self):
+        """
+        Test that getting an attribute that starts with two underscores raises an ``AttributeError``.
+        """
+
+        attributable = Attributable()
+        self.assertRaises(AttributeError, attributable.__getattr__, '__deepcopy__')
+
+    def test_get_attribute_underscores(self):
+        """
+        Test that getting an attribute that starts with two underscores can be accessed from the ``attributes`` dictionary.
+        """
+
+        attributable = Attributable({ '__deepcopy__': 'hello' })
+        self.assertEqual('hello', attributable.attributes['__deepcopy__'])
+
     def test_get_attribute_as_property_from_derived_classes(self):
         """
         Test that attributes can be accessed as properties even in derived classes.

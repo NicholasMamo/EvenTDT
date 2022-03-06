@@ -38,6 +38,10 @@ class Attributable(object):
         :rtype: any or None
         """
 
+        # fixes deepcopy recursing infinitely; attributes starting with two underscores can still be accessed but directly from the ``attributes`` dict 
+        if name.startswith('__'):
+            raise AttributeError(name)
+
         return self.attributes.get(name)
 
     @property
