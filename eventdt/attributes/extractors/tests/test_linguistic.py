@@ -75,8 +75,8 @@ class TestLinguisticExtractor(unittest.TestCase):
         self.assertEqual(sentence.replace('[a]', ''), clean)
         profile = extractor.extract(sentence)
         self.assertEqual({ 'was': { 'soviet partisan', 'statesman', 'one' }, 'was_of': { 'leaders', 'belarusian resistance' },
-                           'was_during': { 'world war ii' }, 'governed': { 'byelorussian soviet socialist republic as first secretary' },
-                           'governed_of': { 'communist party of byelorussia' }, 'governed_from': { '1965' }, 'governed_until': { 'death' }, 'governed_in': { '1980' } }, profile.attributes)
+                           'was_during': { 'world war ii' }, 'governed': { 'byelorussian soviet socialist republic'}, 'governed_as': { 'first secretary' },
+                           'governed_of': { 'communist party', 'byelorussia' }, 'governed_from': { '1965' }, 'governed_until': { 'death' }, 'governed_in': { '1980' } }, profile.attributes)
 
     def test_remove_references(self):
         """
@@ -205,11 +205,11 @@ class TestLinguisticExtractor(unittest.TestCase):
 
         sentence = "Anne, Princess Royal KG, KT, GCVO, QSO, CD (Anne Elizabeth Alice Louise; born 15 August 1950), is the second child and only daughter of Queen Elizabeth II and Prince Philip, Duke of Edinburgh."
         profile = extractor.extract(sentence, remove_parentheses=True)
-        self.assertEqual({ 'is': { 'second child', 'only daughter' }, 'is_of': { 'queen elizabeth ii', 'prince philip', 'duke of edinburgh' } }, profile.attributes)
+        self.assertEqual({ 'is': { 'second child', 'only daughter' }, 'is_of': { 'queen elizabeth ii', 'prince philip', 'duke', 'edinburgh' } }, profile.attributes)
 
         sentence = "Anne, Princess Royal KG, KT, GCVO, QSO, CD (Anne Elizabeth Alice Louise; born 15 August 1950), is the second child and only daughter of Queen Elizabeth II and Prince Philip, Duke of Edinburgh."
         profile = extractor.extract(sentence, remove_parentheses=False)
-        self.assertEqual({ 'born': { '15 august 1950' }, 'is': { 'second child', 'only daughter' }, 'is_of': { 'queen elizabeth ii', 'prince philip', 'duke of edinburgh' } }, profile.attributes)
+        self.assertEqual({ 'born': { '15 august 1950' }, 'is': { 'second child', 'only daughter' }, 'is_of': { 'queen elizabeth ii', 'prince philip', 'duke', 'edinburgh' } }, profile.attributes)
 
     def test_remove_parentheses_nested(self):
         """
@@ -401,7 +401,8 @@ class TestLinguisticExtractor(unittest.TestCase):
 
         sentence = "The Normandy landings were the landing operations and associated airborne operations on Tuesday, 6 June 1944 of the Allied invasion of Normandy in Operation Overlord during World War II."
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'were': { 'landing operations', 'associated airborne operations' }, 'were_on': { 'tuesday , 6 june 1944' }, 'were_of': { 'allied invasion', 'normandy in operation overlord during world war ii' } }, profile.attributes)
+        self.assertEqual({ 'were': { 'landing operations', 'associated airborne operations' }, 'were_on': { 'tuesday , 6 june 1944' }, 'were_of': { 'allied invasion', 'normandy' },
+                           'were_in': { 'operation overlord' }, 'were_during': { 'world war ii' } }, profile.attributes)
 
     def test_extract_DATE_TIME(self):
         """
@@ -415,7 +416,7 @@ class TestLinguisticExtractor(unittest.TestCase):
                       just before 08:00, on Sunday, December 7, 1941."""
         profile = extractor.extract(sentence)
         self.assertEqual({ 'was': { 'military strike' }, 'was_by': { 'imperial japanese navy air service' },
-                           'was_upon': { 'united states' }, 'was_against': { 'naval base' }, 'was_at': { 'pearl harbor in honolulu', 'territory of hawaii' },
+                           'was_upon': { 'united states' }, 'was_against': { 'naval base' }, 'was_at': { 'pearl harbor' }, 'was_in': { 'territory', 'honolulu' }, 'was_of': { 'hawaii' },
                            'was_before': { '08:00' }, 'was_on': { 'sunday , december 7 , 1941' } }, profile.attributes)
 
     def test_extract_MOD_starts_with_number(self):
@@ -471,23 +472,19 @@ class TestLinguisticExtractor(unittest.TestCase):
 
         sentence = "Donald John Trump is the 45th and current president of the United States of America."
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'is': { '45th and current president' }, 'is_of': { 'united states of america' } }, profile.attributes)
-
-        sentence = "Donald John Trump is the 45th, latest and current president of the United States of America."
-        profile = extractor.extract(sentence)
-        self.assertEqual({ 'is': { '45th , latest and current president' }, 'is_of': { 'united states of america' } }, profile.attributes)
+        self.assertEqual({ 'is': { '45th and current president' }, 'is_of': { 'united states', 'america' } }, profile.attributes)
 
         sentence = "Sallie Kim is currently a U.S. Magistrate Judge of the United States District Court for the Northern District of California."
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'is': { 'u.s. magistrate judge' }, 'is_of': { 'united states district court' }, 'is_for': { 'northern district of california' } }, profile.attributes)
+        self.assertEqual({ 'is': { 'u.s. magistrate judge' }, 'is_of': { 'united states district court', 'california' }, 'is_for': { 'northern district' } }, profile.attributes)
 
         sentence = "The 2004 Kansas Jayhawks football team represented the University of Kansas in the 2004 NCAA Division I-A football season."
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'represented': { 'university of kansas' }, 'represented_in': { '2004 ncaa division i-a football season' } }, profile.attributes)
+        self.assertEqual({ 'represented': { 'university' }, 'represented_of': { 'kansas' }, 'represented_in': { '2004 ncaa division i-a football season' } }, profile.attributes)
 
         sentence = "Giuseppe Tartini was an Italian Baroque composer and violinist born in the Republic of Venice."
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'was': { 'italian baroque composer', 'violinist' }, 'born_in': { 'republic of venice' } }, profile.attributes)
+        self.assertEqual({ 'was': { 'italian baroque composer', 'violinist' }, 'born_in': { 'republic' }, 'born_of': { 'venice' } }, profile.attributes)
 
     def test_extract_ENT_with_MOD(self):
         """
@@ -535,7 +532,7 @@ class TestLinguisticExtractor(unittest.TestCase):
 
         sentence = "Nicolas Paul Stéphane Sarközy de Nagy-Bocsa is a French politician who served as President of France from 16 May 2007 until 15 May 2012."
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'is': { 'french politician' }, 'served_as': { 'president of france' }, 'served_from': { '16 may 2007' }, 'served_until': { '15 may 2012' } }, profile.attributes)
+        self.assertEqual({ 'is': { 'french politician' }, 'served_as': { 'president' }, 'served_of': { 'france' }, 'served_from': { '16 may 2007' }, 'served_until': { '15 may 2012' } }, profile.attributes)
 
     def test_extract_VALUE_CD(self):
         """
@@ -622,7 +619,7 @@ class TestLinguisticExtractor(unittest.TestCase):
                       for the HTC Vive and Oculus Rift on Microsoft Windows PCs."""
         profile = extractor.extract(sentence)
         self.assertEqual({ 'is': { 'social simulation game' }, 'made_by': { 'illusion' }, 'released_in': { 'february 2017' },
-                           'released_for': { 'htc vive', 'oculus rift on microsoft windows pcs' } }, profile.attributes)
+                           'released_for': { 'htc vive', 'oculus rift' }, 'released_on': { 'microsoft windows pcs' } }, profile.attributes)
 
     def test_extract_VALUE_POS(self):
         """
@@ -797,16 +794,20 @@ class TestLinguisticExtractor(unittest.TestCase):
 
         sentence = "Olympique Lyonnais (French pronunciation: ​[ɔlɛ̃pik ljɔnɛ]), commonly referred to as simply Lyon (French pronunciation: ​[ljɔ̃]) or OL, is a French professional football club based in Lyon in Auvergne-Rhône-Alpes."
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'is': { 'french professional football club' }, 'based_in': { 'lyon in auvergne-rhône-alpes' } }, profile.attributes)
+        self.assertEqual({ 'is': { 'french professional football club' }, 'based_in': { 'lyon', 'auvergne-rhône-alpes' } }, profile.attributes)
 
         # Known as *Saint-Étienne* missed because the POS tagger identifies an end of a sentence after *A.S.S.E.*.
         sentence = "Association Sportive de Saint-Étienne Loire (French pronunciation: ​[sɛ̃t‿etjɛn lwaʁ]), commonly known as A.S.S.E. (French pronunciation: ​[a.ɛs.ɛs.ø]) or simply Saint-Étienne, is a professional football club based in Saint-Étienne in Auvergne-Rhône-Alpes, France."
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'known_as': { 'a.s.s.e' }, 'is': { 'professional football club' }, 'based_in': { 'saint-étienne in auvergne-rhône-alpes', 'france' } }, profile.attributes)
+        self.assertEqual({ 'known_as': { 'a.s.s.e' }, 'is': { 'professional football club' }, 'based_in': { 'saint-étienne', 'auvergne-rhône-alpes', 'france' } }, profile.attributes)
 
         sentence = "Brighton & Hove Albion Football Club (/ˈbraɪtən ... ˈhoʊv/), commonly referred to simply as Brighton, is an English professional football club based in the city of Brighton and Hove."
         profile = extractor.extract(sentence)
         self.assertEqual({ 'is': { 'english professional football club' }, 'based_in': { 'city' }, 'based_of': { 'brighton', 'hove' } }, profile.attributes)
+
+        sentence = "Lando Norris is a Belgian-British racing driver currently competing in Formula One with McLaren, racing under the British flag."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'belgian-british racing driver' }, 'competing_in': { 'formula one' }, 'competing_with': { 'mclaren' }, 'racing_under': { 'british flag' } }, profile.attributes)
 
     def test_extract_VALUES_split(self):
         """
@@ -853,7 +854,7 @@ class TestLinguisticExtractor(unittest.TestCase):
                       just before 08:00, on Sunday, December 7, 1941."""
         profile = extractor.extract(sentence)
         self.assertEqual({ 'was': { 'military strike' }, 'was_by': { 'imperial japanese navy air service' },
-                           'was_upon': { 'united states' }, 'was_against': { 'naval base' }, 'was_at': { 'pearl harbor in honolulu', 'territory of hawaii' },
+                           'was_upon': { 'united states' }, 'was_against': { 'naval base' }, 'was_at': { 'pearl harbor' }, 'was_in': { 'territory', 'honolulu' }, 'was_of': { 'hawaii' },
                            'was_before': { '08:00' }, 'was_on': { 'sunday , december 7 , 1941' } }, profile.attributes)
 
     def test_extract_misc(self):
@@ -880,11 +881,11 @@ class TestLinguisticExtractor(unittest.TestCase):
         # self.assertEqual({ 'was': { 'italian painter' }, 'was_of': { 'baroque period' }, 'active_in': { 'lombardy' }, 'painting': { 'landscapes', 'vedute' } }, profile.attributes)
 
         """
-        To add support, disallow prepositions (IN) from entities, which would then break phrases such as *United States of America*.
+        To add support, allow prepositions (IN) from entities, but which would break  phrases such as *competing in Formula One with McLaren*.
         """
-        sentence = "Lando Norris is a Belgian-British racing driver currently competing in Formula One with McLaren, racing under the British flag."
-        profile = extractor.extract(sentence)
-        # self.assertEqual({ 'is': { 'belgian-british racing driver' }, 'competing_in': { 'formula one' }, 'competing_with': { 'mclaren' }, 'racing_under': { 'british flag' } }, profile.attributes)
+        sentence = "Anne, Princess Royal KG, KT, GCVO, QSO, CD (Anne Elizabeth Alice Louise; born 15 August 1950), is the second child and only daughter of Queen Elizabeth II and Prince Philip, Duke of Edinburgh."
+        profile = extractor.extract(sentence, remove_parentheses=True)
+        # self.assertEqual({ 'is': { 'second child', 'only daughter' }, 'is_of': { 'queen elizabeth ii', 'prince philip', 'duke of edinburgh' } }, profile.attributes)
 
         """
         To add support, either remove coordinating conjunctions (CC) and commas from modifiers.
@@ -894,6 +895,10 @@ class TestLinguisticExtractor(unittest.TestCase):
         sentence = "Virginia, officially the Commonwealth of Virginia, is a state in the Mid-Atlantic and Southeastern regions of the United States, between the Atlantic Coast and the Appalachian Mountains."
         profile = extractor.extract(sentence)
         # self.assertEqual({ 'is': { 'state' }, 'is_in': { 'mid-atlantic regions', 'southeastern regions' }, 'is_of': { 'united states' }, 'is_between': { 'atlantic coast', 'appalachian mountains' } }, profile.attributes)
+
+        sentence = "Donald John Trump is the 45th and current president of the United States of America."
+        profile = extractor.extract(sentence)
+        # self.assertEqual({ 'is': { '45th and current president' }, 'is_of': { 'united states of america' } }, profile.attributes)
 
         """
         To add support for ``referred_to``, add support for multiple ``IN`` or ``TO`` in ``VALUES``, but which opens a pandora's box.

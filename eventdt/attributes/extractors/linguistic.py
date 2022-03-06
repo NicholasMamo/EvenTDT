@@ -57,12 +57,9 @@ class LinguisticExtractor(Extractor):
         There may be more than one such modifier, all separated by coordinating conjunctions or commas.
 
         **Entity**
-        (``ENT: <CD>? <NNP.*> (<IN><NNP.*|PRP>|<CD|NNP.*|PRP>)*; <MOD>+ <ENT>`` }
+        (``ENT: <CD>? <NNP.*> (<CD|NNP.*|PRP>)*; <MOD>+ <ENT>`` }
 
         An entity can start with (*1860/CD Munich/NNP*) or end with a number (*Schalke/NNP 04/CD*), but it must always include at least one proper noun.
-        Entities may have a preposition (*United/NNP States/NP of/IN America/NP*) but never at the start or at the end.
-        Moreover, a preposition can only be followed by a proper noun, not a number, avoiding phrases like *[served as president of] France/NNP from/IN 2012/CD to/TO 2017/CD* being misconstrued as an entity.
-
         An entity may also have its own modifiers, as in the name *Indian/JJ Oceans/NNP*.
 
         **Noun phrase**
@@ -98,10 +95,9 @@ class LinguisticExtractor(Extractor):
 
             **Known issues**
 
-            - In order to handle entities with prepositions, such as *United/NNP States/NNPS of/IN America/NNP*, the grammar misses prepositional attributes.
-              For example, in the phrase *competing in Formula One with McLaren*, the entity is taken to be Formula One with McLaren.
-              The correct parse should be two attributes: the driver competes in Formula 1 and competes with McLaren.
-              TODO: Add parse
+            - The grammar does not handle entities with prepositions in them, such as *United/NNP States/NNPS of/IN America/NNP*, for two reasons.
+              First, anecdotally there is often little harm in splitting entities with prepositions; someone can be the president of *United/NNP States/NNPS* and of *America/NNP*.
+              Second, it allows the :class:`~LinguisticExtractor` to extract attributes in-between entities, as in the phrase *competing/VBG in/IN Formula/NNP One/NNP with/IN McLaren/NNP*.
 
             - The grammar struggles with sub-clauses because it assumes that verb gerunds are modifiers.
               This means that the grammar correctly extracts the relation ``'plays_as': 'attacking midfielder'`` from phrases such as *plays/VBZ as/IN an/DT attacking/VBG midfielder/NN*.
@@ -121,7 +117,7 @@ class LinguisticExtractor(Extractor):
                   DATE: { <NNP> <,> <DATE> }
                   MOD: { <CD>?<JJ.*|RB.*>+ }
                   MOD: { <MOD> (<CC|,> <MOD>)+ }
-                  ENT: { <CD>? <NNP.*> (<IN><NNP.*|PRP>|<CD|NNP.*|PRP>)* }
+                  ENT: { <CD>? <NNP.*> (<CD|NNP.*|PRP>)* }
                   ENT: { <MOD>+ <ENT> }
                   NP: { <MOD|VBG>* <NN.*>+ }
                   NP: { <ENT> <NP> }
