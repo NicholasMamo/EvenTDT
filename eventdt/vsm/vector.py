@@ -4,6 +4,7 @@ A :class:`~Vector` is made up of dimensions in the :class:`~VectorSpace` which m
 Therefore the :class:`~VectorSpace` is one of the most important classes in EvenTDT because it is the basis for a lot of the vector-related functionality.
 """
 
+import copy
 import os
 import sys
 
@@ -125,8 +126,8 @@ class Vector(Attributable, Exportable):
 
         return {
             'class': str(Vector),
-            'attributes': dict(self.attributes),
-            'dimensions': dict(self.dimensions),
+            'attributes': copy.deepcopy(self.attributes),
+            'dimensions': copy.deepcopy(self.dimensions),
         }
 
     @staticmethod
@@ -146,4 +147,5 @@ class Vector(Attributable, Exportable):
         :rtype: :class:`~Vector`
         """
 
-        return Vector(dimensions=dict(array.get('dimensions')), attributes=dict(array.get('attributes')))
+        return Vector(dimensions=copy.deepcopy(array.get('dimensions')),
+                      attributes=copy.deepcopy(array.get('attributes')))

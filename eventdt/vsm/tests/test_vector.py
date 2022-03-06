@@ -189,6 +189,22 @@ class TestVector(unittest.TestCase):
         self.assertFalse(copy.attributes['z'])
         self.assertTrue(vector.attributes['z'])
 
+    def test_copy_nested_attributes_original(self):
+        """
+        Test that changing the copy's nested attributes does not affect the original's, and vice-versa.
+        """
+
+        vector = Vector({ 'x': 3 }, { 'y': { 'a': True }, 'z': { 'b': False } })
+        copy = vector.copy()
+
+        copy.attributes['y']['a'] = False
+        self.assertFalse(copy.attributes['y']['a'])
+        self.assertTrue(vector.attributes['y']['a'])
+
+        vector.attributes['z']['b'] = True
+        self.assertFalse(copy.attributes['z']['b'])
+        self.assertTrue(vector.attributes['z']['b'])
+
     def test_copy_dimensions_original(self):
         """
         Test that changing the copy's dimensions does not affect the original's, and vice-versa.

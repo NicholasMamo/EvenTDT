@@ -12,6 +12,7 @@ However, more generally you would follow these two steps:
    This automatically transforms tokens into :class:`~vsm.vector.Vector` dimensions and create a :class:`~nlp.document.Document` for you.
 """
 
+import copy
 import math
 import os
 import sys
@@ -105,8 +106,8 @@ class Document(Vector):
         :rtype: :class:`~vector.nlp.document.Document`
         """
 
-        return Document(text=array.get('text'), dimensions=array.get('dimensions'),
-                        attributes=array.get('attributes'))
+        return Document(text=array.get('text'), dimensions=copy.deepcopy(array.get('dimensions')),
+                        attributes=copy.deepcopy(array.get('attributes')))
 
     @staticmethod
     def concatenate(*args, tokenizer, scheme=None, **kwargs):

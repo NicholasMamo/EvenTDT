@@ -4,6 +4,7 @@ The :class:`~attributes.profile.Profile` is a simple container for these attribu
 """
 
 from collections.abc import Iterable
+import copy
 import os
 import sys
 
@@ -102,7 +103,7 @@ class Profile(Attributable, Exportable):
             'class': str(Profile),
             'name': self.name,
             'text': self.text,
-            'attributes': dict(self.attributes)
+            'attributes': copy.deepcopy(self.attributes)
         }
 
     @staticmethod
@@ -123,7 +124,8 @@ class Profile(Attributable, Exportable):
         :rtype: :class:`~Profile`
         """
 
-        return Profile(name=array.get('name'), text=array.get('text'), attributes=dict(array.get('attributes')))
+        return Profile(name=array.get('name'), text=array.get('text'),
+                       attributes=copy.deepcopy(array.get('attributes')))
 
     def __str__(self):
         """

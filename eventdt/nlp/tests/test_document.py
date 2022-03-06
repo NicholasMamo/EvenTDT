@@ -180,6 +180,25 @@ class TestDocument(unittest.TestCase):
         self.assertEqual(then, copy.attributes['timestamp'])
         self.assertEqual(now, document.attributes['timestamp'])
 
+    def test_copy_nested_attributes_original(self):
+        """
+        Test that changing the copy's nested attributes does not affect the original's, and vice-versa.
+        """
+
+        now = time.time()
+        document = Document('this is a pipe', { 'pipe': 1 }, attributes={ 'timestamp': { 'start': now } })
+        copy = document.copy()
+
+        then = time.time()
+        copy.attributes['timestamp']['start'] = then
+        self.assertEqual(then, copy.attributes['timestamp']['start'])
+        self.assertTrue(now, document.attributes['timestamp']['start'])
+
+        now = time.time()
+        document.attributes['timestamp']['start'] = now
+        self.assertEqual(then, copy.attributes['timestamp']['start'])
+        self.assertEqual(now, document.attributes['timestamp']['start'])
+
     def test_copy_dimensions_original(self):
         """
         Test that changing the copy's dimensions does not affect the original's, and vice-versa.

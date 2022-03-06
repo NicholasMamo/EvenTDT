@@ -410,6 +410,22 @@ class TestProfile(unittest.TestCase):
         self.assertFalse(copy.attributes['z'])
         self.assertTrue(profile.attributes['z'])
 
+    def test_copy_nested_attributes_original(self):
+        """
+        Test that changing the copy's nested attributes does not affect the original's, and vice-versa.
+        """
+
+        profile = Profile(text='Source text', attributes={ 'y': { 'a': True }, 'z': { 'b': False } })
+        copy = profile.copy()
+
+        copy.attributes['y']['a'] = False
+        self.assertFalse(copy.attributes['y']['a'])
+        self.assertTrue(profile.attributes['y']['a'])
+
+        profile.attributes['z']['b'] = True
+        self.assertFalse(copy.attributes['z']['b'])
+        self.assertTrue(profile.attributes['z']['b'])
+
     def test_copy_text_original(self):
         """
         Test that changing the copy's text does not affect the original's, and vice-versa.
