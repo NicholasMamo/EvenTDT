@@ -254,6 +254,42 @@ class TestLinguisticExtractor(unittest.TestCase):
         extractor = LinguisticExtractor()
         self.assertEqual('profile name', extractor.extract('', name='profile name').name)
 
+    def test_extract_with_text(self):
+        """
+        Test that the extractor creates a profile with the source text stored.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Post Scriptum (abbreviated as PS) is a tactical first-person shooter video game set during the Second World War (specifically during the Battle of France, Operation Overlord, and Operation Market Garden) developed by British[2] studio Periscope Games."
+        profile = extractor.extract(sentence, remove_parentheses=False)
+        self.assertEqual(sentence, profile.text)
+        self.assertEqual({ 'abbreviated_as': { 'ps' }, 'is': { 'tactical first-person shooter video game' }, 'set_during': { 'second world war' }, 'developed_by': { 'periscope games' } }, profile.attributes)
+
+    def test_extract_with_parentheses(self):
+        """
+        Test that the extractor creates a profile with the original source text, including parentheses.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Post Scriptum (abbreviated as PS) is a tactical first-person shooter video game set during the Second World War (specifically during the Battle of France, Operation Overlord, and Operation Market Garden) developed by British[2] studio Periscope Games."
+        profile = extractor.extract(sentence, remove_parentheses=True)
+        self.assertEqual(sentence, profile.text)
+        self.assertEqual({ 'is': { 'tactical first-person shooter video game' }, 'set_during': { 'second world war' }, 'developed_by': { 'periscope games' } }, profile.attributes)
+
+    def test_extract_with_references(self):
+        """
+        Test that the extractor creates a profile with the original source text, including references.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "John Alston Moorehead (February 19, 1882 – August 18, 1931)[1] was an American college football player and coach."
+        profile = extractor.extract(sentence)
+        self.assertEqual(sentence, profile.text)
+        self.assertEqual({ 'was': { 'american college football player', 'coach' } }, profile.attributes)
+
     def test_extract_lowercase_keys(self):
         """
         Test that when extracting attributes, all keys are in lowercase.
@@ -755,6 +791,10 @@ class TestLinguisticExtractor(unittest.TestCase):
         sentence = "Marginella cleryi is a species of sea snail, a marine gastropod mollusk in the family Marginellidae, the margin snails."
         profile = extractor.extract(sentence)
         self.assertEqual({ 'is': { 'species' }, 'is_of': { 'sea snail', 'marine gastropod mollusk' }, 'is_in': { 'marginellidae', 'margin snails' } }, profile.attributes)
+
+        sentence = "Baitutan (Chinese: 白兔潭镇; pinyin: bái-tù-tán zhèn) is a town in the northern east of Liling City, Hunan, China."
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'town' }, 'is_in': { 'northern east' }, 'is_of': { 'liling city', 'hunan', 'china' } }, profile.attributes)
 
     def test_extract_VALUES_IN_between(self):
         """

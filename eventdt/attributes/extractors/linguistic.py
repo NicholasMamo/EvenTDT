@@ -152,7 +152,7 @@ class LinguisticExtractor(Extractor):
         :rtype: :class:`~attributes.profile.Profile`
         """
 
-        profile = Profile(*args, **kwargs)
+        profile = Profile(text=text, *args, **kwargs)
 
         text = self._remove_parentheses(text) if remove_parentheses else text
         text = self._remove_references(text)
