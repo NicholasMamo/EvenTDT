@@ -44,6 +44,16 @@ class Exportable(ABC):
 
         pass
 
+    def copy(self):
+        """
+        Create a copy of the :class:`~Exportable` instance.
+
+        :return: A copy of this :class:`~Exportable` instance.
+        :rtype: :class:`~Exportable`
+        """
+
+        return self.from_array(self.to_array())
+
     @staticmethod
     def encode(data):
         """

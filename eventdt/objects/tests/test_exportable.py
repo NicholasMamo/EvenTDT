@@ -20,6 +20,32 @@ class TestExportable(unittest.TestCase):
     Test the :class:`~objects.exportable.Exportable` class.
     """
 
+    def test_copy(self):
+        """
+        Test that a copy has the exact same values as the original.
+        """
+
+        vector = Vector({ 'x': 3 }, { 'y': True })
+        copy = vector.copy()
+
+        self.assertEqual(copy.attributes, vector.attributes)
+        self.assertEqual(copy.dimensions, vector.dimensions)
+
+    def test_copy_change(self):
+        """
+        Test that changing a copy does not affect the original.
+        """
+
+        vector = Vector({ 'x': 3 }, { 'y': True })
+        copy = vector.copy()
+
+        self.assertEqual(vector.attributes, copy.attributes)
+
+        vector.attributes['y'] = False
+        self.assertFalse(vector.attributes['y'])
+        self.assertTrue(copy.attributes['y'])
+        vector.attributes['y'] = True
+
     def test_encode_empty_dict(self):
         """
         Test that when encoding an empty dictionary, another empty dictionary is returned.
@@ -104,6 +130,7 @@ class TestExportable(unittest.TestCase):
         v = [ Vector({ 'a': 1 }, { 'b': 2 }),
               Vector({ 'c': 3 }, { 'd': 4 }) ]
         data = { 'a': v, 'e': 5 }
+
         self.assertEqual({
             'a': [
                 { 'class': "<class 'vsm.vector.Vector'>", 'attributes': { 'b': 2 }, 'dimensions': { 'a': 1 }},
