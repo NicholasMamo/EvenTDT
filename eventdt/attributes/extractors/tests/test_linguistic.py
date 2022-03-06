@@ -140,7 +140,7 @@ class TestLinguisticExtractor(unittest.TestCase):
         cleaned = extractor._remove_references(sentence)
         self.assertEqual("Valletta is the southernmost capital of Europe, and at just 0.61 square kilometres (0.24 sq mi), it is the European Union's smallest capital city.", cleaned)
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'is': { 'southernmost capital', 'european union \'s smallest capital city', 'european union', 'smallest capital city' }, 'is_of': { 'europe' }, 'is_at': { 'just 0.61 square kilometres' } }, profile.attributes)
+        self.assertEqual({ 'is': { 'southernmost capital', 'european union \'s smallest capital city' }, 'is_of': { 'europe' }, 'is_at': { 'just 0.61 square kilometres' } }, profile.attributes)
 
     def test_remove_parentheses_original(self):
         """
@@ -236,7 +236,7 @@ class TestLinguisticExtractor(unittest.TestCase):
         sentence = "Asia (/ˈeɪʒə, ˈeɪʃə/ (audio speaker iconlisten)) is Earth's largest and most populous continent, located primarily in the Eastern and Northern Hemispheres."
         self.assertEqual("Asia is Earth's largest and most populous continent, located primarily in the Eastern and Northern Hemispheres.", extractor._remove_parentheses(sentence))
         profile = extractor.extract(sentence, remove_parentheses=True)
-        self.assertEqual({ 'is': { 'earth', 'earth \'s largest and most populous continent', 'largest and most populous continent' }, 'located_in': { 'eastern', 'northern hemispheres' } }, profile.attributes)
+        self.assertEqual({ 'is': { 'earth \'s largest and most populous continent' }, 'located_in': { 'eastern', 'northern hemispheres' } }, profile.attributes)
 
         sentence = "Lionel Andrés Messi (Spanish pronunciation: [ljoˈnel anˈdɾes ˈmesi] (audio speaker iconlisten); born 24 June 1987), also known as Leo Messi, is an Argentine professional footballer who plays as a forward for Ligue 1 club Paris Saint-Germain and captains the Argentina national team."
         self.assertEqual("Lionel Andrés Messi, also known as Leo Messi, is an Argentine professional footballer who plays as a forward for Ligue 1 club Paris Saint-Germain and captains the Argentina national team.", extractor._remove_parentheses(sentence))
@@ -672,19 +672,19 @@ class TestLinguisticExtractor(unittest.TestCase):
 
     def test_extract_VALUE_POS(self):
         """
-        Test that if a value has a possessive, the object and subject are returned together and separately.
+        Test that if a value has a possessive, the object and subject are returned together.
         """
 
         extractor = LinguisticExtractor()
 
         sentence = "Asia (/ˈeɪʒə, ˈeɪʃə/ (audio speaker iconlisten)) is Earth's largest and most populous continent, located primarily in the Eastern and Northern Hemispheres."
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'is': { 'earth', 'earth \'s largest and most populous continent', 'largest and most populous continent' }, 'located_in': { 'eastern', 'northern hemispheres' } }, profile.attributes)
+        self.assertEqual({ 'is': { 'earth \'s largest and most populous continent' }, 'located_in': { 'eastern', 'northern hemispheres' } }, profile.attributes)
 
         # general tagged as JJ by the POS tagger
         sentence = "Paul Charles François Adrien Henri Dieudonné Thiébault (14 December 1769, Berlin - 14 October 1846, Paris) was a general who fought in Napoleon I's army."
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'fought_in': { 'napoleon i', 'army', 'napoleon i \'s army' } }, profile.attributes)
+        self.assertEqual({ 'fought_in': { 'napoleon i \'s army' } }, profile.attributes)
 
     def test_extract_ENT_with_PRP(self):
         """
@@ -699,7 +699,7 @@ class TestLinguisticExtractor(unittest.TestCase):
 
         sentence = "Paul Charles François Adrien Henri Dieudonné Thiébault (14 December 1769, Berlin - 14 October 1846, Paris) was a general who fought in Napoleon I's army."
         profile = extractor.extract(sentence)
-        self.assertEqual({ 'fought_in': { 'napoleon i', 'army', 'napoleon i \'s army' } }, profile.attributes)
+        self.assertEqual({ 'fought_in': { 'napoleon i \'s army' } }, profile.attributes)
 
     def test_extract_VALUES_CC_and(self):
         """

@@ -18,6 +18,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 import nltk
+from nltk.tree import ParentedTree
 
 from attributes import Profile
 from attributes.extractors import Extractor
@@ -310,8 +311,9 @@ class LinguisticExtractor(Extractor):
         :rtype: :class:`nltk.tree.Tree`
         """
 
-        return [ _subtree for _subtree in VALUES.subtrees()
-                 if _subtree.label() == 'VALUE' ]
+        tree = ParentedTree.convert(VALUES)
+        return [ _subtree for _subtree in tree.subtrees()
+                 if _subtree.label() == 'VALUE' and _subtree.parent().label() != 'VALUE' ]
 
     def _attribute_value(self, VALUE):
         """
@@ -325,8 +327,9 @@ class LinguisticExtractor(Extractor):
         :rtype: str
         """
 
+
         value = [ ]
-        head = VALUE[-1] if (type(VALUE[-1]) is nltk.tree.Tree and VALUE[-1].label() in ('ENT', 'NP')) else VALUE
+        head = VALUE[-1] if (type(VALUE[-1]) in (nltk.tree.Tree, nltk.tree.ParentedTree) and VALUE[-1].label() in ('ENT', 'NP')) else VALUE
         for text, pos in head.leaves():
             value.append(text)
         return (' '.join(value).lower())
