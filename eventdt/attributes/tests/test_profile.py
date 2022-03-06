@@ -59,6 +59,23 @@ class TestProfile(unittest.TestCase):
         profile = Profile('profile name')
         self.assertEqual('profile name', profile.name)
 
+    def test_init_default_text_empty(self):
+        """
+        Test that by default, the text is empty.
+        """
+
+        profile = Profile()
+        self.assertEqual(str, type(profile.text))
+        self.assertEqual('', profile.text)
+
+    def test_init_text(self):
+        """
+        Test that when initializing a profile with a text, it is saved.
+        """
+
+        profile = Profile(text='profile text')
+        self.assertEqual('profile text', profile.text)
+
     def test_attributes_overwrite(self):
         """
         Test that setting the attributes overwrites the previous attributes.
@@ -350,7 +367,7 @@ class TestProfile(unittest.TestCase):
         Test exporting and importing :class:`~attributes.profile.Profile`.
         """
 
-        profile = Profile('Test entity', { 'x': 3 })
+        profile = Profile('Test entity', 'Source text', { 'x': 3 })
         exported = profile.to_array()
         self.assertEqual(profile.attributes, Profile.from_array(exported).attributes)
         self.assertEqual(profile.__dict__, Profile.from_array(exported).__dict__)
@@ -361,7 +378,18 @@ class TestProfile(unittest.TestCase):
         """
 
         name = 'Test entity'
-        profile = Profile(name, { 'x': 3 })
+        profile = Profile(name=name, attributes={ 'x': 3 })
         exported = profile.to_array()
         self.assertEqual(name, Profile.from_array(exported).name)
+        self.assertEqual(profile.__dict__, Profile.from_array(exported).__dict__)
+
+    def test_export_text(self):
+        """
+        Test that exporting and importing :class:`~attributes.profile.Profile` includes the text.
+        """
+
+        text = 'Source text'
+        profile = Profile(text=text, attributes={ 'x': 3 })
+        exported = profile.to_array()
+        self.assertEqual(text, Profile.from_array(exported).text)
         self.assertEqual(profile.__dict__, Profile.from_array(exported).__dict__)
