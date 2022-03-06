@@ -393,3 +393,53 @@ class TestProfile(unittest.TestCase):
         exported = profile.to_array()
         self.assertEqual(text, Profile.from_array(exported).text)
         self.assertEqual(profile.__dict__, Profile.from_array(exported).__dict__)
+
+    def test_copy_attributes_original(self):
+        """
+        Test that changing the copy's attributes does not affect the original's, and vice-versa.
+        """
+
+        profile = Profile(text='Source text', attributes={ 'y': True, 'z': False })
+        copy = profile.copy()
+
+        copy.attributes['y'] = False
+        self.assertFalse(copy.attributes['y'])
+        self.assertTrue(profile.attributes['y'])
+
+        profile.attributes['z'] = True
+        self.assertFalse(copy.attributes['z'])
+        self.assertTrue(profile.attributes['z'])
+
+    def test_copy_text_original(self):
+        """
+        Test that changing the copy's text does not affect the original's, and vice-versa.
+        """
+
+        text = 'Source text'
+        profile = Profile(text=text, attributes={ 'x': 3 })
+        copy = profile.copy()
+
+        copy.text = 'lorem ipsum'
+        self.assertEqual('lorem ipsum', copy.text)
+        self.assertEqual(text, profile.text)
+
+        profile.text = 'dolor sit amet'
+        self.assertEqual('lorem ipsum', copy.text)
+        self.assertEqual('dolor sit amet', profile.text)
+
+    def test_copy_name_original(self):
+        """
+        Test that changing the copy's name does not affect the original's, and vice-versa.
+        """
+
+        name = 'Source'
+        profile = Profile(name=name, attributes={ 'x': 3 })
+        copy = profile.copy()
+
+        copy.name = 'lorem ipsum'
+        self.assertEqual('lorem ipsum', copy.name)
+        self.assertEqual(name, profile.name)
+
+        profile.name = 'dolor sit amet'
+        self.assertEqual('lorem ipsum', copy.name)
+        self.assertEqual('dolor sit amet', profile.name)

@@ -102,7 +102,7 @@ class Profile(Attributable, Exportable):
             'class': str(Profile),
             'name': self.name,
             'text': self.text,
-            'attributes': self.attributes
+            'attributes': dict(self.attributes)
         }
 
     @staticmethod
@@ -123,7 +123,7 @@ class Profile(Attributable, Exportable):
         :rtype: :class:`~Profile`
         """
 
-        return Profile(name=array.get('name'), text=array.get('text'), attributes=array.get('attributes'))
+        return Profile(name=array.get('name'), text=array.get('text'), attributes=dict(array.get('attributes')))
 
     def __str__(self):
         """
