@@ -222,7 +222,7 @@ class LinguisticExtractor(Extractor):
         :rtype: str
         """
 
-        pattern = re.compile('\[[a-z0-9]+\]')
+        pattern = re.compile('\[[a-z0-9\s]+\]')
         text = pattern.sub('', text)
 
         # collapse multiple spaces into one

@@ -129,6 +129,19 @@ class TestLinguisticExtractor(unittest.TestCase):
         profile = extractor.extract(sentence)
         self.assertEqual({ 'is': { 'species' }, 'is_of': { 'grasshopper' }, 'is_in': { 'acrididae' }, 'found_in': { 'africa' } }, profile.attributes)
 
+    def test_remove_references_with_note(self):
+        """
+        Test that new lines are still separated by a space when removing references.
+        """
+
+        extractor = LinguisticExtractor()
+
+        sentence = "Valletta is the southernmost capital of Europe,[5][note 1] and at just 0.61 square kilometres (0.24 sq mi), it is the European Union's smallest capital city.[6][7]"
+        cleaned = extractor._remove_references(sentence)
+        self.assertEqual("Valletta is the southernmost capital of Europe, and at just 0.61 square kilometres (0.24 sq mi), it is the European Union's smallest capital city.", cleaned)
+        profile = extractor.extract(sentence)
+        self.assertEqual({ 'is': { 'southernmost capital', 'european union \'s smallest capital city', 'european union', 'smallest capital city' }, 'is_of': { 'europe' }, 'is_at': { 'just 0.61 square kilometres' } }, profile.attributes)
+
     def test_remove_parentheses_original(self):
         """
         Test that removing the parentheses reconstructs the sentence with overwriting the original string.
