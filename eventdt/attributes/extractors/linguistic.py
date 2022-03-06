@@ -75,10 +75,10 @@ class LinguisticExtractor(Extractor):
 
         **Attribute value** (``VALUE: <NP|ENT|CD|DATE>+; <VALUE> (<POS> <VALUE>)``)
 
-        The attribute value can be either a noun phrase (*Brazilian/JJ professional/JJ footballer/NN*), an entity (*Lyon/ENT*), a number (*since/IN 2012/CD*), or a date (*[born on] October/NNP 28/CD ,/, 1955/CD*).
+        The attribute value can be either a noun phrase (*Brazilian/JJ professional/JJ footballer/NN*), an entity (*Lyon/ENT*), a number (*since/IN 2012/CD*) or a time (*since/IN 08:00/CD*), or a date (*[born on] October/NNP 28/CD ,/, 1955/CD*).
         It may also be several at once (*(Ligue 1)/ENT (club/NN)/NP Lyon/ENT*).
 
-        A value may also have a possessive, in which case the subject and object are returned together and separately.
+        A value may also have a possessive, in which case the subject and object are returned together.
 
         **Value list** (``VALUES: <IN|TO>? (<DT|PRP\$>?<MOD>?<VALUE><CC|,>*)+``)
 
@@ -180,6 +180,11 @@ class LinguisticExtractor(Extractor):
     def _remove_parentheses(self, text):
         """
         Remove parentheses from the given text.
+
+        .. note::
+
+            The function does not use a regular expression since parentheses can be—and often are—nested.
+            The complexity remains :math:`O(n)`, where :math:`n` is the number of characters in the text
 
         :param text: The text to clean.
         :type text: str
