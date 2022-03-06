@@ -79,13 +79,14 @@ class LinguisticExtractor(Extractor):
 
         A value may also have a possessive, in which case the subject and object are returned together and separately.
 
-        **Value list** (``VALUES: <IN|TO>? (<DT|PRP\$>?<VALUE><CC|,>*)+``)
+        **Value list** (``VALUES: <IN|TO>? (<DT|PRP\$>?<MOD>?<VALUE><CC|,>*)+``)
 
         Each attribute can have several values (*[is an] (VALUE American/JJ business/NN magnate/NN),/, (VALUE software/NN developer/NN) and/CC (VALUE investor/NN)*)
         The attribute value may take a determiner (*is/VBZ a/DT footballer/NN*) or possessive pronoun (*[adopted the euro as] their/PRP$ primary/JJ currency/NN*) just before the value.
         The prepositional attribute accepts several such values as long as they are separated by coordinating conjunctions (*and*, *or*) or commas.
 
         Before the list of values, there may be a preposition, which modifies the relationship between the attribute and its values; a footballer does not simply play but *plays/VBZ for/IN*.
+        There may also be a list of modifiers, but which are not considered a part of the value itself.
 
         **Attribute** (``ATTR: <NAME> (<MOD>? <VALUES>)+``)
 
@@ -124,7 +125,7 @@ class LinguisticExtractor(Extractor):
                   NAME: { <VB.*> }
                   VALUE: { <NP|ENT|CD|DATE>+ }
                   VALUE: { <VALUE> (<POS> <VALUE>) }
-                  VALUES: { <IN|TO>? (<DT|PRP\$>?<VALUE><CC|,>*)+ }
+                  VALUES: { <TO>? <IN>? (<DT|PRP\$>?<MOD>?<VALUE><CC|,>*)+ }
                   ATTR: { <NAME> (<MOD>? <VALUES>)+ }
         """
         self.parser = nltk.RegexpParser(grammar)
