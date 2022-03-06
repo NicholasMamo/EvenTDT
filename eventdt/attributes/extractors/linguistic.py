@@ -57,10 +57,10 @@ class LinguisticExtractor(Extractor):
         There may be more than one such modifier, all separated by coordinating conjunctions or commas.
 
         **Entity**
-        (``ENT: <CD>? <NNP.*> (<CD|NNP.*|PRP>)*; <MOD>+ <ENT>`` }
+        (``ENT: <CD>? <NNP.*> (<CD|NNP.*|PRP>)*; <JJ>+ <ENT>`` }
 
         An entity can start with (*1860/CD Munich/NNP*) or end with a number (*Schalke/NNP 04/CD*), but it must always include at least one proper noun.
-        An entity may also have its own modifiers, as in the name *Indian/JJ Oceans/NNP*.
+        An entity may also have its own modifiers, as in the name *Indian/JJ Oceans/NNP*, but they may only be adjectives, not adverbs.
 
         **Noun phrase**
         (``NP: <MOD|VBG>* <NN.*>+; <ENT> <NP>``)
@@ -115,10 +115,10 @@ class LinguisticExtractor(Extractor):
         grammar = grammar or """
                   DATE: { (<CD> <NNP> <CD>|<NNP> <CD> <,> <CD>) }
                   DATE: { <NNP> <,> <DATE> }
+                  ENT: { <CD>? <NNP.*> (<CD|NNP.*|PRP>)* }
+                  ENT: { <JJ>+ <ENT> }
                   MOD: { <CD>?<JJ.*|RB.*>+ }
                   MOD: { <MOD> (<CC|,> <MOD>)+ }
-                  ENT: { <CD>? <NNP.*> (<CD|NNP.*|PRP>)* }
-                  ENT: { <MOD>+ <ENT> }
                   NP: { <MOD|VBG>* <NN.*>+ }
                   NP: { <ENT> <NP> }
                   NAME: { <VB.*> }

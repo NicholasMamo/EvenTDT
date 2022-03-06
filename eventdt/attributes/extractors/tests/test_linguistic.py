@@ -793,8 +793,8 @@ class TestLinguisticExtractor(unittest.TestCase):
         self.assertEqual({ 'plays_as': { 'forward', 'winger', 'midfielder' }, 'plays_for': { 'lyon' } }, profile.attributes)
 
         sentence = "Olympique Lyonnais (French pronunciation: ​[ɔlɛ̃pik ljɔnɛ]), commonly referred to as simply Lyon (French pronunciation: ​[ljɔ̃]) or OL, is a French professional football club based in Lyon in Auvergne-Rhône-Alpes."
-        profile = extractor.extract(sentence)
-        self.assertEqual({ 'is': { 'french professional football club' }, 'based_in': { 'lyon', 'auvergne-rhône-alpes' } }, profile.attributes)
+        profile = extractor.extract(sentence, name='Olympique Lyonnais')
+        self.assertEqual({ 'is': { 'french professional football club' }, 'referred_to': { 'lyon', 'ol' }, 'based_in': { 'lyon', 'auvergne-rhône-alpes' } }, profile.attributes)
 
         # Known as *Saint-Étienne* missed because the POS tagger identifies an end of a sentence after *A.S.S.E.*.
         sentence = "Association Sportive de Saint-Étienne Loire (French pronunciation: ​[sɛ̃t‿etjɛn lwaʁ]), commonly known as A.S.S.E. (French pronunciation: ​[a.ɛs.ɛs.ø]) or simply Saint-Étienne, is a professional football club based in Saint-Étienne in Auvergne-Rhône-Alpes, France."
