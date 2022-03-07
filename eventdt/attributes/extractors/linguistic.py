@@ -39,7 +39,7 @@ class LinguisticExtractor(Extractor):
     :vartype: :class:`nltk.WordNetLemmatizer` or ``None``.
     """
 
-    def __init__(self, grammar=None, lemmatize=False):
+    def __init__(self, grammar=None, head_only=False, lemmatize=False):
         """
         Create the linguistic extractor with an optional grammar.
         If a grammar is not given, a default grammar is used instead:
@@ -49,7 +49,18 @@ class LinguisticExtractor(Extractor):
 
         The grammar assumes that a pattern involving two numbers and a proper noun in various formats represents a date (*14/CD May/NNP 2017/CD*).
 
-        **Modifier** (``MOD: <CD>?<JJ.*|RB.*>+; <MOD> (<CC|,> <MOD>)+``)
+        **Entity**
+        (``ENT: <CD>? <NNP.*> (<CD|NNP.*|PRP>)*; <JJ>+ <ENT>``)
+
+        An entity can start with (*1860/CD Munich/NNP*) or end with a number (*Schalke/NNP 04/CD*), but it must always include at least one proper noun.
+        An entity may also have its own modifiers, as in the name *Indian/JJ Oceans/NNP*, but they may only be adjectives, not adverbs.
+
+        .. note::
+
+            When configured to extract the head only, adjectives are not considered part of the entity.
+            The rule, then, becomes ``ENT: <CD>? <NNP.*> (<CD|NNP.*|PRP>)*``.
+
+        **Modifier** (``MOD: <CD>?<JJ.*|RB.*>+; <MOD> (<CC|,>? <MOD>); <ENT> <MOD|POS>``)
 
         A modifier is a list of adjectives (*Brazilian/JJ professional/JJ*) or adverbs (*[known] simply/RB [as]*) that modify something else.
         Each modifier may start with a number (*19/CD member/NN states/NNS*), but it may not appear among adjectives or adverbs.
@@ -57,30 +68,29 @@ class LinguisticExtractor(Extractor):
 
         There may be more than one such modifier, all separated by coordinating conjunctions or commas.
 
-        **Entity**
-        (``ENT: <CD>? <NNP.*> (<CD|NNP.*|PRP>)*; <JJ>+ <ENT>`` }
-
-        An entity can start with (*1860/CD Munich/NNP*) or end with a number (*Schalke/NNP 04/CD*), but it must always include at least one proper noun.
-        An entity may also have its own modifiers, as in the name *Indian/JJ Oceans/NNP*, but they may only be adjectives, not adverbs.
-
         **Noun phrase**
         (``NP: <MOD|VBG>* <NN.*>+; <ENT> <NP>``)
 
         A noun phrase is a sequence of nouns (*football/NN team/NN*) possibly preceded by modifiers.
         A noun phrase may also be preceded by an entity (*France/NT national/JJ team/NN*).
 
+        .. note::
+
+            When configured to extract the head only, modifiers are not considered part of the noun phrase.
+            The rule, then, becomes ``NP: <VBG>? <NN.*>+; <ENT> <NP>``.
+
         **Attribute name** (``NAME: <VB.*>``)
 
         An attribute name is formed by any verb (*plays/VBZ*), including past participles (*driven/VBN*).
 
-        **Attribute value** (``VALUE: <NP|ENT|CD|DATE>+; <VALUE> (<POS> <VALUE>)``)
+        **Attribute value** (``VALUE: <NP|ENT|CD|DATE>+``)
 
         The attribute value can be either a noun phrase (*Brazilian/JJ professional/JJ footballer/NN*), an entity (*Lyon/ENT*), a number (*since/IN 2012/CD*) or a time (*since/IN 08:00/CD*), or a date (*[born on] October/NNP 28/CD ,/, 1955/CD*).
         It may also be several at once (*(Ligue 1)/ENT (club/NN)/NP Lyon/ENT*).
 
         A value may also have a possessive, in which case the subject and object are returned together.
 
-        **Value list** (``VALUES: <IN|TO>? (<DT|PRP\$>?<MOD>?<VALUE><CC|,>*)+``)
+        **Value list** (``VALUES: <TO>? <IN>? (<DT|PRP\$>?<MOD>*<VALUE><CC|,>*)+``)
 
         Each attribute can have several values (*[is an] (VALUE American/JJ business/NN magnate/NN),/, (VALUE software/NN developer/NN) and/CC (VALUE investor/NN)*)
         The attribute value may take a determiner (*is/VBZ a/DT footballer/NN*) or possessive pronoun (*[adopted the euro as] their/PRP$ primary/JJ currency/NN*) just before the value.
@@ -88,6 +98,7 @@ class LinguisticExtractor(Extractor):
 
         Before the list of values, there may be a preposition, which modifies the relationship between the attribute and its values; a footballer does not simply play but *plays/VBZ for/IN*.
         There may also be a list of modifiers, but which are not considered a part of the value itself.
+        This is a last resort to resolve the values
 
         **Attribute** (``ATTR: <NAME> (<MOD>? <VALUES>)+``)
 
@@ -108,27 +119,31 @@ class LinguisticExtractor(Extractor):
         :param grammar: The grammar with which to extract attributes.
                         The grammar must have a way to extract entities (``ENT``), attributes (``ATTR``), the list of values (``VALUES``), and attribute names (``NAME``) and values (``VALUE``).
         :type grammar: str
+        :param head_only: A boolean indicating whether to extract only the head of the value.
+                          The head of the value is a noun phrase (not the head noun) or an entity stripped of adjectives or other modifiers.
+        :type head_only: bool
         :param lemmatize: A boolean indicating whether to lemmatize a verb or not.
                           Lemmatization helps reduce the impact of conjugation and sentence structure on the attributes, such as whether the sentence uses the passive or active voice.
                           However, it also eliminates the tense, which means that past attributes have the same name as present or future attributes.
         :type lemmatize: bool
         """
 
-        grammar = grammar or """
-                  DATE: { (<CD> <NNP> <CD>|<NNP> <CD> <,> <CD>) }
-                  DATE: { <NNP> <,> <DATE> }
-                  ENT: { <CD>? <NNP.*> (<CD|NNP.*|PRP>)* }
-                  ENT: { <JJ>+ <ENT> }
-                  MOD: { <CD>?<JJ.*|RB.*>+ }
-                  MOD: { <MOD> (<CC|,> <MOD>)+ }
-                  NP: { <MOD|VBG>* <NN.*>+ }
-                  NP: { <ENT> <NP> }
-                  NAME: { <VB.*> }
-                  VALUE: { <NP|ENT|CD|DATE>+ }
-                  VALUE: { <VALUE> (<POS> <VALUE>) }
-                  VALUES: { <TO>? <IN>? (<DT|PRP\$>?<MOD>?<VALUE><CC|,>*)+ }
-                  ATTR: { <NAME> (<MOD>? <VALUES>)+ }
-        """
+        if not grammar:
+            grammar = ""
+            grammar += "DATE: { (<CD> <NNP> <CD>|<NNP> <CD> <,> <CD>) }\n"
+            grammar += "DATE: { <NNP> <,> <DATE> }\n"
+            grammar += "ENT: { <CD>? <NNP.*> (<CD|NNP.*|PRP>)* }\n"
+            grammar += "" if head_only else "ENT: { <JJ>+ <ENT> }\n"
+            grammar += "MOD: { <CD>?<JJ.*|RB.*>+ }\n"
+            grammar += "MOD: { <MOD> (<CC|,>? <MOD>) }\n"
+            grammar += "MOD: { <ENT> <MOD|POS> }\n"
+            grammar += "NP: { <VBG>? <NN.*>+ }\n" if head_only else "NP: { <MOD|VBG>* <NN.*>+ }\n"
+            grammar += "NP: { <ENT> <NP> }\n"
+            grammar += "NAME: { <VB.*> }\n"
+            grammar += "VALUE: { <NP|ENT|CD|DATE>+ }\n"
+            grammar += "VALUES: { <TO>? <IN>? (<DT|PRP\$>?<MOD>*<VALUE><CC|,>*)+ }\n"
+            grammar += "ATTR: { <NAME> (<MOD>? <VALUES>)+ }\n"
+
         self.parser = nltk.RegexpParser(grammar)
         self.lemmatizer = nltk.WordNetLemmatizer() if lemmatize else None
 
@@ -332,9 +347,10 @@ class LinguisticExtractor(Extractor):
         :rtype: str
         """
 
-
         value = [ ]
+
         head = VALUE[-1] if (type(VALUE[-1]) in (nltk.tree.Tree, nltk.tree.ParentedTree) and VALUE[-1].label() in ('ENT', 'NP')) else VALUE
         for text, pos in head.leaves():
             value.append(text)
+
         return (' '.join(value).lower())
