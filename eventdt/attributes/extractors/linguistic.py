@@ -60,7 +60,7 @@ class LinguisticExtractor(Extractor):
             When configured to extract the head only, adjectives are not considered part of the entity.
             The rule, then, becomes ``ENT: <CD>? <NNP.*> (<CD|NNP.*|PRP>)*``.
 
-        **Modifier** (``MOD: <CD>?<JJ.*|RB.*>+; <MOD> (<CC|,>? <MOD>); <ENT> <MOD|POS>``)
+        **Modifier** (``MOD: <CD>?<JJ.*|RB.*>+; <MOD> (<CC|,>? <MOD>); <ENT|NP> <MOD|POS>``)
 
         A modifier is a list of adjectives (*Brazilian/JJ professional/JJ*) or adverbs (*[known] simply/RB [as]*) that modify something else.
         Each modifier may start with a number (*19/CD member/NN states/NNS*), but it may not appear among adjectives or adverbs.
@@ -137,7 +137,7 @@ class LinguisticExtractor(Extractor):
             grammar += "" if head_only else "ENT: { <JJ>+ <ENT> }\n"
             grammar += "MOD: { <CD>?<JJ.*|RB.*>+ }\n"
             grammar += "MOD: { <MOD> (<CC|,>? <MOD>) }\n"
-            grammar += "MOD: { <ENT> <MOD|POS> }\n"
+            grammar += "MOD: { <ENT|NP> <MOD|POS> }\n"
             grammar += "NP: { <VBG>? <NN.*>+ }\n" if head_only else "NP: { <MOD|VBG>* <NN.*>+ }\n"
             grammar += "NP: { <ENT> <NP> }\n"
             grammar += "NP: { <NP> <MOD> <NP> }\n"
