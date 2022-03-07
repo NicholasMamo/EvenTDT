@@ -69,10 +69,11 @@ class LinguisticExtractor(Extractor):
         There may be more than one such modifier, all separated by coordinating conjunctions or commas.
 
         **Noun phrase**
-        (``NP: <MOD|VBG>* <NN.*>+; <ENT> <NP>``)
+        (``NP: <MOD|VBG>* <NN.*>+; <ENT> <NP>; <NP> <MOD> <NP>``)
 
         A noun phrase is a sequence of nouns (*football/NN team/NN*) possibly preceded by modifiers.
         A noun phrase may also be preceded by an entity (*France/NT national/JJ team/NN*).
+        Furthermore, two noun phrases separated by a modifier are interpreted as one noun phrase.
 
         .. note::
 
@@ -139,6 +140,7 @@ class LinguisticExtractor(Extractor):
             grammar += "MOD: { <ENT> <MOD|POS> }\n"
             grammar += "NP: { <VBG>? <NN.*>+ }\n" if head_only else "NP: { <MOD|VBG>* <NN.*>+ }\n"
             grammar += "NP: { <ENT> <NP> }\n"
+            grammar += "NP: { <NP> <MOD> <NP> }\n"
             grammar += "NAME: { <VB.*> }\n"
             grammar += "VALUE: { <NP|ENT|CD|DATE>+ }\n"
             grammar += "VALUES: { <TO>? <IN>? (<DT|PRP\$>?<MOD>*<VALUE><CC|,>*)+ }\n"

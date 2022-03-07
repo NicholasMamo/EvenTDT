@@ -531,7 +531,7 @@ class TestLinguisticExtractor(unittest.TestCase):
                            'was_before': { '08:00' }, 'was_on': { 'sunday , december 7 , 1941' } },
                          LinguisticExtractor(head_only=False).extract(sentence).attributes)
         # 'surprise' incorrectly labelled as a noun/NN
-        self.assertEqual({ 'was': { 'surprise', 'strike' }, 'was_by': { 'imperial japanese navy air service' },
+        self.assertEqual({ 'was': { 'surprise military strike' }, 'was_by': { 'imperial japanese navy air service' },
                            'was_upon': { 'united states' }, 'was_against': { 'base' }, 'was_at': { 'pearl harbor' }, 'was_in': { 'territory', 'honolulu' }, 'was_of': { 'hawaii' },
                            'was_before': { '08:00' }, 'was_on': { 'sunday , december 7 , 1941' } },
                          LinguisticExtractor(head_only=True).extract(sentence).attributes)
@@ -765,7 +765,7 @@ class TestLinguisticExtractor(unittest.TestCase):
                            'released_for': { 'htc vive', 'oculus rift' }, 'released_on': { 'microsoft windows pcs' } },
                          LinguisticExtractor(head_only=False).extract(sentence).attributes)
         # reality tagged as a noun/NN, not as an adjective /JJ
-        self.assertEqual({ 'is': { 'simulation game', 'reality' }, 'made_by': { 'illusion' }, 'released_in': { 'february 2017' },
+        self.assertEqual({ 'is': { 'reality social simulation game' }, 'made_by': { 'illusion' }, 'released_in': { 'february 2017' },
                            'released_for': { 'htc vive', 'oculus rift' }, 'released_on': { 'microsoft windows pcs' } },
                          LinguisticExtractor(head_only=True).extract(sentence).attributes)
 
@@ -1045,7 +1045,7 @@ class TestLinguisticExtractor(unittest.TestCase):
                            'was_upon': { 'united states' }, 'was_against': { 'naval base' }, 'was_at': { 'pearl harbor' }, 'was_in': { 'territory', 'honolulu' }, 'was_of': { 'hawaii' },
                            'was_before': { '08:00' }, 'was_on': { 'sunday , december 7 , 1941' } },
                          LinguisticExtractor(head_only=False).extract(sentence).attributes)
-        self.assertEqual({ 'was': { 'surprise', 'strike' }, 'was_by': { 'imperial japanese navy air service' },
+        self.assertEqual({ 'was': { 'surprise military strike' }, 'was_by': { 'imperial japanese navy air service' },
                            'was_upon': { 'united states' }, 'was_against': { 'base' }, 'was_at': { 'pearl harbor' }, 'was_in': { 'territory', 'honolulu' }, 'was_of': { 'hawaii' },
                            'was_before': { '08:00' }, 'was_on': { 'sunday , december 7 , 1941' } },
                          LinguisticExtractor(head_only=True).extract(sentence).attributes)
@@ -1054,8 +1054,6 @@ class TestLinguisticExtractor(unittest.TestCase):
         """
         Test extracting attributes from real example strings.
         """
-
-        extractor = LinguisticExtractor()
 
     def test_unsupported(self):
         """
