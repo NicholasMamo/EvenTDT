@@ -82,13 +82,23 @@ class SimulatedFileReader(FileReader):
         self.sample = sample
 
     @FileReader.reading
-    async def read(self):
+    async def read(self, max_lines=-1, max_time=-1, *args, **kwargs):
         """
         Read the file and add each line as a dictionary to the queue.
+
+        :param max_lines: The maximum number of lines to read.
+                          If the number is negative, it is ignored.
+        :type max_lines: int
+        :param max_time: The maximum time in seconds to spend reading from the file.
+                         The time is taken from tweets' timestamps.
+                         If the number is negative, it is ignored.
+        :type max_time: int
 
         :return: The number of tweets read from the file.
         :rtype: int
         """
+
+        await super(SimulatedFileReader, self).read(*args, **kwargs)
 
         read = 0
 
@@ -115,10 +125,10 @@ class SimulatedFileReader(FileReader):
             """
             If the maximum number of lines, or the time, has been exceeded, stop reading.
             """
-            if self.max_lines >= 0 and i >= self.max_lines:
+            if max_lines >= 0 and i >= max_lines:
                 break
 
-            if self.max_time >= 0 and created_at - first >= self.max_time:
+            if max_time >= 0 and created_at - first >= max_time:
                 break
 
             """
