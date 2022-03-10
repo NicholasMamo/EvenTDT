@@ -41,15 +41,13 @@ class StaggeredFileReader(FileReader):
     :vartype sample: int or float
     """
 
-    def __init__(self, queue, f, rate=1, sample=1, *args, **kwargs):
+    def __init__(self, queue, rate=1, sample=1, *args, **kwargs):
         """
         Create the :class:`~twitter.file.staggered_reader.StaggeredFileReader` with the file from where to read tweets and the :class:`~queues.Queue` where to store them.
         The ``rate`` and ``sample`` are extra parameters in addition to the :class:`~twitter.file.FileReader`'s parameters.
 
         :param queue: The queue to which to add the tweets.
         :type queue: :class:`~queues.Queue`
-        :param f: The opened file from where to read the tweets.
-        :type f: file
         :param rate: The number of lines to read per second.
         :type rate: float
         :param sample: The fraction of tweets to read.
@@ -65,7 +63,7 @@ class StaggeredFileReader(FileReader):
         :raises ValueError: When the sampling rate is not between 0 and 1.
         """
 
-        super(StaggeredFileReader, self).__init__(queue, f, *args, **kwargs)
+        super(StaggeredFileReader, self).__init__(queue, *args, **kwargs)
 
         """
         Validate the inputs.
@@ -83,10 +81,12 @@ class StaggeredFileReader(FileReader):
         self.sample = sample
 
     @FileReader.reading
-    async def read(self, max_lines=-1, max_time=-1, *args, **kwargs):
+    async def read(self, file, max_lines=-1, max_time=-1, *args, **kwargs):
         """
         Read the file and add each line as a dictionary to the queue.
 
+        :param file: The opened file from where to read the tweets.
+        :type file: file
         :param max_lines: The maximum number of lines to read.
                           If the number is negative, it is ignored.
         :type max_lines: int
@@ -99,14 +99,13 @@ class StaggeredFileReader(FileReader):
         :rtype: int
         """
 
-        await super(StaggeredFileReader, self).read(*args, **kwargs)
+        await super(StaggeredFileReader, self).read(file, *args, **kwargs)
 
         read = 0
 
         """
         Extract the timestamp from the first tweet, then reset the file pointer.
         """
-        file = self.file
         pos = file.tell()
         line = file.readline()
         if not line:

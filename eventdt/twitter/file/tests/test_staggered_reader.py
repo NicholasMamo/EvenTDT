@@ -32,7 +32,7 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
-            self.assertRaises(ValueError, StaggeredFileReader, Queue(), f, rate=0.1)
+            self.assertRaises(ValueError, StaggeredFileReader, Queue(), rate=0.1)
 
     def test_float_rate(self):
         """
@@ -41,7 +41,7 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
-            self.assertTrue(StaggeredFileReader(Queue(), f, rate=1.0))
+            self.assertTrue(StaggeredFileReader(Queue(), rate=1.0))
 
     def test_integer_rate(self):
         """
@@ -50,7 +50,7 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
-            self.assertTrue(StaggeredFileReader(Queue(), f, rate=1))
+            self.assertTrue(StaggeredFileReader(Queue(), rate=1))
 
     def test_zero_rate(self):
         """
@@ -59,7 +59,7 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
-            self.assertRaises(ValueError, StaggeredFileReader, Queue(), f, rate=0)
+            self.assertRaises(ValueError, StaggeredFileReader, Queue(), rate=0)
 
     def test_negative_rate(self):
         """
@@ -68,7 +68,7 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
-            self.assertRaises(ValueError, StaggeredFileReader, Queue(), f, rate=-1)
+            self.assertRaises(ValueError, StaggeredFileReader, Queue(), rate=-1)
 
     async def test_floating_point_skip_lines(self):
         """
@@ -77,9 +77,9 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
-            reader = StaggeredFileReader(Queue(), f, rate=100)
+            reader = StaggeredFileReader(Queue(), rate=100)
             with self.assertRaises(ValueError):
-                await reader.read(skip_lines=0.1)
+                await reader.read(f, skip_lines=0.1)
 
     async def test_float_skip_lines(self):
         """
@@ -88,8 +88,8 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
-            reader = StaggeredFileReader(Queue(), f, rate=100)
-            self.assertTrue(await reader.read(skip_lines=1.0))
+            reader = StaggeredFileReader(Queue(), rate=100)
+            self.assertTrue(await reader.read(f, skip_lines=1.0))
 
     async def test_integer_skip_lines(self):
         """
@@ -98,8 +98,8 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
-            reader = StaggeredFileReader(Queue(), f, rate=100)
-            self.assertTrue(await reader.read(skip_lines=1))
+            reader = StaggeredFileReader(Queue(), rate=100)
+            self.assertTrue(await reader.read(f, skip_lines=1))
 
     async def test_negative_skip_lines(self):
         """
@@ -108,9 +108,9 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
-            reader = StaggeredFileReader(Queue(), f, rate=100)
+            reader = StaggeredFileReader(Queue(), rate=100)
             with self.assertRaises(ValueError):
-                await reader.read(skip_lines=-1)
+                await reader.read(f, skip_lines=-1)
 
     async def test_zero_skip_lines(self):
         """
@@ -119,8 +119,8 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
-            reader = StaggeredFileReader(Queue(), f, rate=100)
-            self.assertTrue(await reader.read(skip_lines=0))
+            reader = StaggeredFileReader(Queue(), rate=100)
+            self.assertTrue(await reader.read(f, skip_lines=0))
 
     async def test_positive_skip_lines(self):
         """
@@ -129,8 +129,8 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
-            reader = StaggeredFileReader(Queue(), f, rate=100)
-            self.assertTrue(await reader.read(skip_lines=1))
+            reader = StaggeredFileReader(Queue(), rate=100)
+            self.assertTrue(await reader.read(f, skip_lines=1))
 
     async def test_negative_skip_time(self):
         """
@@ -139,9 +139,9 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
-            reader = StaggeredFileReader(Queue(), f, rate=100)
+            reader = StaggeredFileReader(Queue(), rate=100)
             with self.assertRaises(ValueError):
-                await reader.read(skip_time=-1)
+                await reader.read(f, skip_time=-1)
 
     async def test_zero_skip_time(self):
         """
@@ -150,8 +150,8 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
-            reader = StaggeredFileReader(Queue(), f, rate=100)
-            self.assertTrue(await reader.read(skip_time=0))
+            reader = StaggeredFileReader(Queue(), rate=100)
+            self.assertTrue(await reader.read(f, skip_time=0))
 
     async def test_positive_skip_time(self):
         """
@@ -160,8 +160,8 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
-            reader = StaggeredFileReader(Queue(), f, rate=100)
-            self.assertTrue(await reader.read(skip_time=1))
+            reader = StaggeredFileReader(Queue(), rate=100)
+            self.assertTrue(await reader.read(f, skip_time=1))
 
     def test_init_default_sample(self):
         """
@@ -170,7 +170,7 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
-            reader = StaggeredFileReader(Queue(), f)
+            reader = StaggeredFileReader(Queue())
             self.assertEqual(1, reader.sample)
 
     def test_init_float_sample(self):
@@ -180,7 +180,7 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
-            self.assertTrue(StaggeredFileReader(Queue(), f, sample=1.0))
+            self.assertTrue(StaggeredFileReader(Queue(), sample=1.0))
 
     def test_init_integer_sample(self):
         """
@@ -189,7 +189,7 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
-            self.assertTrue(StaggeredFileReader(Queue(), f, sample=1))
+            self.assertTrue(StaggeredFileReader(Queue(), sample=1))
 
     def test_init_negative_sample(self):
         """
@@ -198,7 +198,7 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
-            self.assertRaises(ValueError, StaggeredFileReader, Queue(), f, sample=-1)
+            self.assertRaises(ValueError, StaggeredFileReader, Queue(), sample=-1)
 
     def test_init_zero_sample(self):
         """
@@ -207,7 +207,7 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
-            self.assertTrue(StaggeredFileReader(Queue(), f, sample=1))
+            self.assertTrue(StaggeredFileReader(Queue(), sample=1))
 
     def test_init_float_sample(self):
         """
@@ -216,7 +216,7 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
-            self.assertTrue(StaggeredFileReader(Queue(), f, sample=0.5))
+            self.assertTrue(StaggeredFileReader(Queue(), sample=0.5))
 
     async def test_read(self):
         """
@@ -226,9 +226,9 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=100)
+            reader = StaggeredFileReader(queue, rate=100)
             self.assertEqual(0, queue.length())
-            await reader.read()
+            await reader.read(f)
             self.assertEqual(100, queue.length())
 
     async def test_read_skip_no_lines(self):
@@ -239,8 +239,8 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=100)
-            await reader.read(skip_lines=0)
+            reader = StaggeredFileReader(queue, rate=100)
+            await reader.read(f, skip_lines=0)
             self.assertEqual(100, queue.length())
 
     async def test_read_skip_lines(self):
@@ -251,8 +251,8 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=100)
-            await reader.read(skip_lines=100)
+            reader = StaggeredFileReader(queue, rate=100)
+            await reader.read(f, skip_lines=100)
             self.assertEqual(500, queue.length())
 
     async def test_read_skip_all_lines(self):
@@ -263,8 +263,8 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=100)
-            await reader.read(skip_lines=100)
+            reader = StaggeredFileReader(queue, rate=100)
+            await reader.read(f, skip_lines=100)
             self.assertEqual(0, queue.length())
 
     async def test_read_skip_excess_lines(self):
@@ -275,8 +275,8 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=100)
-            await reader.read(skip_lines=101)
+            reader = StaggeredFileReader(queue, rate=100)
+            await reader.read(f, skip_lines=101)
             self.assertEqual(0, queue.length())
 
     async def test_read_skip_no_time(self):
@@ -287,8 +287,8 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=100)
-            await reader.read(skip_time=0)
+            reader = StaggeredFileReader(queue, rate=100)
+            await reader.read(f, skip_time=0)
             self.assertEqual(100, queue.length())
 
     async def test_read_skip_lines(self):
@@ -313,8 +313,8 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
                     file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=100)
-            await reader.read(skip_time=1)
+            reader = StaggeredFileReader(queue, rate=100)
+            await reader.read(f, skip_time=1)
             self.assertEqual(100 - skipped, queue.length())
 
     async def test_read_skip_all_time(self):
@@ -336,8 +336,8 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=100)
-            await reader.read(skip_time=skip)
+            reader = StaggeredFileReader(queue, rate=100)
+            await reader.read(f, skip_time=skip)
             self.assertEqual(5, queue.length()) # 5 tweets in the last second
 
     async def test_read_skip_excess_time(self):
@@ -359,8 +359,8 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
             file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=100)
-            await reader.read(skip_time=skip + 1)
+            reader = StaggeredFileReader(queue, rate=100)
+            await reader.read(f, skip_time=skip + 1)
             self.assertEqual(0, queue.length())
 
     async def test_read_return_read_lines(self):
@@ -371,8 +371,8 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=100)
-            read = await reader.read()
+            reader = StaggeredFileReader(queue, rate=100)
+            read = await reader.read(f)
             self.assertEqual(100, read)
 
     async def test_read_return_equals_queue_length(self):
@@ -383,8 +383,8 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=100)
-            read = await reader.read()
+            reader = StaggeredFileReader(queue, rate=100)
+            read = await reader.read(f)
             self.assertEqual(queue.length(), read)
 
     async def test_read_sample_all(self):
@@ -395,8 +395,8 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=20, sample=1)
-            read = await reader.read()
+            reader = StaggeredFileReader(queue, rate=20, sample=1)
+            read = await reader.read(f)
             self.assertEqual(100, read)
 
     async def test_read_sample_none(self):
@@ -407,8 +407,8 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=20, sample=0)
-            read = await reader.read()
+            reader = StaggeredFileReader(queue, rate=20, sample=0)
+            read = await reader.read(f)
             self.assertEqual(0, read)
 
     async def test_read_sample(self):
@@ -419,14 +419,14 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=20, sample=0.5)
-            read = await reader.read()
+            reader = StaggeredFileReader(queue, rate=20, sample=0.5)
+            read = await reader.read(f)
             self.assertEqual(50, read)
 
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=20, sample=(1/3))
-            read = await reader.read()
+            reader = StaggeredFileReader(queue, rate=20, sample=(1/3))
+            read = await reader.read(f)
             self.assertEqual(33, read)
 
     async def test_read_sample_not_adjacent(self):
@@ -440,8 +440,8 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
 
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=20, sample=0.5)
-            read = await reader.read()
+            reader = StaggeredFileReader(queue, rate=20, sample=0.5)
+            read = await reader.read(f)
             self.assertEqual(50, read)
             self.assertEqual(tweets[1::2], queue.queue)
 
@@ -453,9 +453,9 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=100)
+            reader = StaggeredFileReader(queue, rate=100)
             start = time.time()
-            await reader.read()
+            await reader.read(f)
             self.assertTrue(0.9 <= round(time.time() - start, 2) <= 1.1)
             self.assertEqual(100, queue.length())
 
@@ -467,8 +467,8 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=100)
-            await reader.read(max_lines=100)
+            reader = StaggeredFileReader(queue, rate=100)
+            await reader.read(f, max_lines=100)
             self.assertEqual(100, queue.length())
 
     async def test_max_lines_zero(self):
@@ -479,8 +479,8 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=100)
-            await reader.read(max_lines=0)
+            reader = StaggeredFileReader(queue, rate=100)
+            await reader.read(f, max_lines=0)
             self.assertEqual(0, queue.length())
 
     async def test_max_lines_all(self):
@@ -491,8 +491,8 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=100)
-            await reader.read(max_lines=100)
+            reader = StaggeredFileReader(queue, rate=100)
+            await reader.read(f, max_lines=100)
             self.assertEqual(100, queue.length())
 
     async def test_max_lines_excess(self):
@@ -503,8 +503,8 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=100)
-            await reader.read(max_lines=1200)
+            reader = StaggeredFileReader(queue, rate=100)
+            await reader.read(f, max_lines=1200)
             self.assertEqual(100, queue.length())
 
     async def test_max_lines_with_skip(self):
@@ -523,8 +523,8 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
 
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=100, sample=0.2)
-            await reader.read(max_lines=100)
+            reader = StaggeredFileReader(queue, rate=100, sample=0.2)
+            await reader.read(f, max_lines=100)
             self.assertEqual(20, queue.length())
             self.assertEqual(start, extract_timestamp(queue.head()))
             self.assertEqual(end, extract_timestamp(queue.tail()))
@@ -546,8 +546,8 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
             file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=100)
-            await reader.read(max_time=1)
+            reader = StaggeredFileReader(queue, rate=100)
+            await reader.read(f, max_time=1)
             self.assertEqual(2, queue.length()) # 2 tweets in the first second
             self.assertEqual(start, extract_timestamp(queue.head()))
             self.assertEqual(start, extract_timestamp(queue.tail()))
@@ -560,8 +560,8 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=100)
-            await reader.read(max_time=0)
+            reader = StaggeredFileReader(queue, rate=100)
+            await reader.read(f, max_time=0)
             self.assertEqual(0, queue.length())
 
     async def test_max_time_all(self):
@@ -581,8 +581,8 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
             file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=100)
-            await reader.read(max_time=end - start + 1)
+            reader = StaggeredFileReader(queue, rate=100)
+            await reader.read(f, max_time=end - start + 1)
             self.assertEqual(100, queue.length())
 
     async def test_max_time_excess(self):
@@ -602,8 +602,8 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
             file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=100)
-            await reader.read(max_time=end - start + 2)
+            reader = StaggeredFileReader(queue, rate=100)
+            await reader.read(f, max_time=end - start + 2)
             self.assertEqual(100, queue.length())
 
     async def test_skip_retweets(self):
@@ -614,8 +614,8 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=100, skip_retweets=True)
-            await reader.read()
+            reader = StaggeredFileReader(queue, rate=100, skip_retweets=True)
+            await reader.read(f)
             self.assertTrue(queue.length())
             self.assertTrue(all( not is_retweet(tweet) for tweet in queue.queue ))
 
@@ -639,8 +639,8 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=100, skip_retweets=False)
-            await reader.read()
+            reader = StaggeredFileReader(queue, rate=100, skip_retweets=False)
+            await reader.read(f)
             self.assertTrue(queue.length())
             self.assertTrue(any( is_retweet(tweet) for tweet in queue.queue ))
 
@@ -661,8 +661,8 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=1000, skip_unverified=True)
-            await reader.read()
+            reader = StaggeredFileReader(queue, rate=1000, skip_unverified=True)
+            await reader.read(f)
             self.assertTrue(queue.length())
             self.assertTrue(all( is_verified(tweet) for tweet in queue.queue ))
 
@@ -686,8 +686,8 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=1000, skip_unverified=False)
-            await reader.read()
+            reader = StaggeredFileReader(queue, rate=1000, skip_unverified=False)
+            await reader.read(f)
             self.assertTrue(queue.length())
             self.assertTrue(any( is_verified(tweet) for tweet in queue.queue ))
 
@@ -708,8 +708,8 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             queue = Queue()
-            reader = StaggeredFileReader(queue, f, rate=1000, skip_retweets=True, skip_unverified=False)
-            await reader.read()
+            reader = StaggeredFileReader(queue, rate=1000, skip_retweets=True, skip_unverified=False)
+            await reader.read(f)
             self.assertTrue(queue.length())
             self.assertTrue(not any( is_retweet(tweet) for tweet in queue.queue ))
             self.assertTrue(any( is_verified(tweet) for tweet in queue.queue ))
