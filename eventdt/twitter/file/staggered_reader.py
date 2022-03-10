@@ -50,17 +50,6 @@ class StaggeredFileReader(FileReader):
         :type queue: :class:`~queues.Queue`
         :param f: The opened file from where to read the tweets.
         :type f: file
-        :param max_lines: The maximum number of lines to read.
-                          If the number is negative, it is ignored.
-        :type max_lines: int
-        :param max_time: The maximum time in seconds to spend reading from the file.
-                         The time is taken from tweets' timestamps.
-                         If the number is negative, it is ignored.
-        :type max_time: int
-        :param skip_lines: The number of lines to skip from the beginning of the file.
-        :type skip_lines: int
-        :param skip_time: The number of seconds to skip from the beginning of the file.
-        :type skip_time: int
         :param rate: The number of lines to read per second.
         :type rate: float
         :param sample: The fraction of tweets to read.
@@ -94,13 +83,23 @@ class StaggeredFileReader(FileReader):
         self.sample = sample
 
     @FileReader.reading
-    async def read(self):
+    async def read(self, max_lines=-1, max_time=-1, *args, **kwargs):
         """
         Read the file and add each line as a dictionary to the queue.
+
+        :param max_lines: The maximum number of lines to read.
+                          If the number is negative, it is ignored.
+        :type max_lines: int
+        :param max_time: The maximum time in seconds to spend reading from the file.
+                         The time is taken from tweets' timestamps.
+                         If the number is negative, it is ignored.
+        :type max_time: int
 
         :return: The number of tweets read from the file.
         :rtype: int
         """
+
+        await super(StaggeredFileReader, self).read(*args, **kwargs)
 
         read = 0
 
@@ -126,11 +125,11 @@ class StaggeredFileReader(FileReader):
             """
             If the maximum number of lines, or time, has been exceeded, stop reading.
             """
-            if self.max_lines >= 0 and i >= self.max_lines:
+            if max_lines >= 0 and i >= max_lines:
                 break
 
             tweet = json.loads(line)
-            if self.max_time >= 0 and extract_timestamp(tweet) - first >= self.max_time:
+            if max_time >= 0 and extract_timestamp(tweet) - first >= max_time:
                 break
 
             """
