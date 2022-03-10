@@ -661,9 +661,9 @@ def stream_process(comm, loop, queue, file, skip_time=0, sample=1, speed=1, max_
         return await reader.read()
 
     with open(file, 'r') as f:
-        reader = SimulatedFileReader(queue, f, skip_time=skip_time, sample=sample, speed=speed, max_time=max_time,
+        reader = SimulatedFileReader(queue, f, sample=sample, speed=speed,
                                                skip_retweets=skip_retweets, skip_unverified=skip_unverified)
-        comm['read'] = loop.run_until_complete(read(reader))
+        comm['read'] = loop.run_until_complete(read(reader, skip_time=skip_time, max_time=max_time))
 
     logger.info("Streaming ended")
 
