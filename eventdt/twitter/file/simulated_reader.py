@@ -44,15 +44,13 @@ class SimulatedFileReader(FileReader):
     :vartype sample: int or float
     """
 
-    def __init__(self, queue, f, speed=1, sample=1, *args, **kwargs):
+    def __init__(self, queue, speed=1, sample=1, *args, **kwargs):
         """
         Create the :class:`~twitter.file.simulated_reader.SimulatedFileReader` with the file from where to read tweets and the :class:`~queues.Queue` where to store them.
         The ``speed`` is an extra parameter in addition to the :class:`~twitter.file.FileReader`'s parameters.
 
         :param queue: The queue to which to add the tweets.
         :type queue: :class:`~queues.Queue`
-        :param f: The opened file from where to read the tweets.
-        :type f: file
         :param speed: The reading speed, considered to be a function of time.
                       If it is set to 0.5, for example, the event progresses at half the speed.
                       If it is set to 2, the event progresses at double the speed.
@@ -67,7 +65,7 @@ class SimulatedFileReader(FileReader):
         :raises ValueError: When the sampling rate is not between 0 and 1.
         """
 
-        super(SimulatedFileReader, self).__init__(queue, f, *args, **kwargs)
+        super(SimulatedFileReader, self).__init__(queue, *args, **kwargs)
 
         """
         Validate the inputs.
@@ -82,10 +80,12 @@ class SimulatedFileReader(FileReader):
         self.sample = sample
 
     @FileReader.reading
-    async def read(self, max_lines=-1, max_time=-1, *args, **kwargs):
+    async def read(self, file, max_lines=-1, max_time=-1, *args, **kwargs):
         """
         Read the file and add each line as a dictionary to the queue.
 
+        :param file: The opened file from where to read the tweets.
+        :type file: file
         :param max_lines: The maximum number of lines to read.
                           If the number is negative, it is ignored.
         :type max_lines: int
@@ -98,14 +98,13 @@ class SimulatedFileReader(FileReader):
         :rtype: int
         """
 
-        await super(SimulatedFileReader, self).read(*args, **kwargs)
+        await super(SimulatedFileReader, self).read(file, *args, **kwargs)
 
         read = 0
 
         """
         Extract the timestamp from the first tweet, then reset the file pointer.
         """
-        file = self.file
         pos = file.tell()
         line = file.readline()
         if not line:
