@@ -641,7 +641,7 @@ def stream_process(comm, loop, queue, file, skip_time=0, sample=1, speed=1, max_
     :type skip_retweets: bool
     """
 
-    async def read(reader):
+    async def read(reader, *args, **kwargs):
         """
         Read the file.
 
@@ -658,7 +658,7 @@ def stream_process(comm, loop, queue, file, skip_time=0, sample=1, speed=1, max_
 
         signal.signal(signal.SIGINT, sigint_handler)
 
-        return await reader.read()
+        return await reader.read(*args, **kwargs)
 
     with open(file, 'r') as f:
         reader = SimulatedFileReader(queue, sample=sample, speed=speed,
