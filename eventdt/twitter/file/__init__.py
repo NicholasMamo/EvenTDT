@@ -40,8 +40,6 @@ class FileReader(ABC):
 
     :ivar queue: The queue to which to add tweets.
     :vartype queue: :class:`~queues.Queue`
-    :ivar ~.file: The opened file pointer from where to read the tweets.
-    :vartype ~.file: file
     :ivar active: A boolean indicating whether the reader is still reading data.
     :vartype active: bool
     :ivar stopped: A boolean indicating whether the consumer has finished processing.
@@ -52,16 +50,13 @@ class FileReader(ABC):
     :vartype skip_unverified: bool
     """
 
-    def __init__(self, queue, f,
-                 skip_unverified=False, skip_retweets=False):
+    def __init__(self, queue, skip_unverified=False, skip_retweets=False):
         """
         Create the file reader with the :class:`~queues.Queue` where to add tweets and the file from where to read them.
         The ``max_lines`` and ``max_time`` parameters can be used to read only a part of the corpus.
 
         :param queue: The queue to which to add the tweets.
         :type queue: :class:`~queues.Queue`
-        :param f: The opened file from where to read the tweets.
-        :type f: file
         :param skip_unverified: A boolean indicating whether to skip tweets by unverified authors.
         :type skip_unverified: bool
         :param skip_retweets: A boolean indicating whether to skip retweets.
@@ -73,7 +68,6 @@ class FileReader(ABC):
         """
 
         self.queue = queue
-        self.file = f
         self.active = False
         self.stopped = True
         self.skip_retweets = skip_retweets
@@ -127,7 +121,7 @@ class FileReader(ABC):
         valid = valid and (not self.skip_unverified or is_verified(tweet))
         return valid
 
-    def skip(self, lines, time):
+    def skip(self, file, lines, time):
         """
         Skip a number of lines from the file.
         This virtually just reads lines without storing them, but moving the file pointer.
@@ -136,6 +130,8 @@ class FileReader(ABC):
 
             The number of lines and seconds that are skipped depend on the largest number.
 
+        :param file: The opened file from where to skip the tweets.
+        :type file: file
         :param lines: The number of lines to skip.
         :type lines: int
         :param time: The number of seconds to skip from the beginning of the file.
@@ -154,8 +150,6 @@ class FileReader(ABC):
 
         if time < 0:
             raise ValueError(f"The number of seconds to skip cannot be negative; received {time}")
-
-        file = self.file
 
         """
         Extract the timestamp from the first tweet, then reset the file pointer.
@@ -192,10 +186,12 @@ class FileReader(ABC):
         file.seek(pos)
 
     @abstractmethod
-    async def read(self, max_lines=-1, max_time=-1, skip_lines=0, skip_time=0):
+    async def read(self, file, max_lines=-1, max_time=-1, skip_lines=0, skip_time=0):
         """
         Read the file and add each line as a dictionary to the queue.
 
+        :param file: The opened file from where to read the tweets.
+        :type file: file
         :param max_lines: The maximum number of lines to read.
                           If the number is negative, it is ignored.
         :type max_lines: int
@@ -212,7 +208,7 @@ class FileReader(ABC):
         :rtype: int
         """
 
-        self.skip(skip_lines, skip_time)
+        self.skip(file, skip_lines, skip_time)
 
     def stop(self):
         """
