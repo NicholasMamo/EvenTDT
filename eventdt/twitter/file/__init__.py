@@ -42,13 +42,6 @@ class FileReader(ABC):
     :vartype queue: :class:`~queues.Queue`
     :ivar ~.file: The opened file pointer from where to read the tweets.
     :vartype ~.file: file
-    :ivar max_lines: The maximum number of lines to read.
-                     If the number is negative, it is ignored.
-    :vartype max_lines: int
-    :ivar max_time: The maximum time in seconds to spend reading from the file.
-                    The time is taken from tweets' timestamps.
-                    If the number is negative, it is ignored.
-    :vartype max_time: int
     :ivar active: A boolean indicating whether the reader is still reading data.
     :vartype active: bool
     :ivar stopped: A boolean indicating whether the consumer has finished processing.
@@ -59,7 +52,7 @@ class FileReader(ABC):
     :vartype skip_unverified: bool
     """
 
-    def __init__(self, queue, f, max_lines=-1, max_time=-1, skip_lines=0, skip_time=0,
+    def __init__(self, queue, f,
                  skip_unverified=False, skip_retweets=False):
         """
         Create the file reader with the :class:`~queues.Queue` where to add tweets and the file from where to read them.
@@ -69,17 +62,6 @@ class FileReader(ABC):
         :type queue: :class:`~queues.Queue`
         :param f: The opened file from where to read the tweets.
         :type f: file
-        :param max_lines: The maximum number of lines to read.
-                          If the number is negative, it is ignored.
-        :type max_lines: int
-        :param max_time: The maximum time in seconds to spend reading from the file.
-                         The time is taken from tweets' timestamps.
-                         If the number is negative, it is ignored.
-        :type max_time: int
-        :param skip_lines: The number of lines to skip from the beginning of the file.
-        :type skip_lines: int
-        :param skip_time: The number of seconds to skip from the beginning of the file.
-        :type skip_time: int
         :param skip_unverified: A boolean indicating whether to skip tweets by unverified authors.
         :type skip_unverified: bool
         :param skip_retweets: A boolean indicating whether to skip retweets.
@@ -92,26 +74,10 @@ class FileReader(ABC):
 
         self.queue = queue
         self.file = f
-        self.max_lines = max_lines
-        self.max_time = max_time
         self.active = False
         self.stopped = True
         self.skip_retweets = skip_retweets
         self.skip_unverified = skip_unverified
-
-        """
-        Validate the inputs.
-        """
-        if skip_lines % 1:
-            raise ValueError(f"The number of lines to skip must be an integer; received {skip_lines}")
-
-        if skip_lines < 0:
-            raise ValueError(f"The number of lines to skip cannot be negative; received {skip_lines}")
-
-        if skip_time < 0:
-            raise ValueError(f"The number of seconds to skip cannot be negative; received {skip_time}")
-
-        self.skip(skip_lines, skip_time)
 
     @staticmethod
     def reading(f):
@@ -177,6 +143,18 @@ class FileReader(ABC):
         :type time: int
         """
 
+        """
+        Validate the inputs.
+        """
+        if lines % 1:
+            raise ValueError(f"The number of lines to skip must be an integer; received {lines}")
+
+        if lines < 0:
+            raise ValueError(f"The number of lines to skip cannot be negative; received {lines}")
+
+        if time < 0:
+            raise ValueError(f"The number of seconds to skip cannot be negative; received {time}")
+
         file = self.file
 
         """
@@ -214,15 +192,27 @@ class FileReader(ABC):
         file.seek(pos)
 
     @abstractmethod
-    async def read(self):
+    async def read(self, max_lines=-1, max_time=-1, skip_lines=0, skip_time=0):
         """
         Read the file and add each line as a dictionary to the queue.
+
+        :param max_lines: The maximum number of lines to read.
+                          If the number is negative, it is ignored.
+        :type max_lines: int
+        :param max_time: The maximum time in seconds to spend reading from the file.
+                         The time is taken from tweets' timestamps.
+                         If the number is negative, it is ignored.
+        :type max_time: int
+        :param skip_lines: The number of lines to skip from the beginning of the file.
+        :type skip_lines: int
+        :param skip_time: The number of seconds to skip from the beginning of the file.
+        :type skip_time: int
 
         :return: The number of tweets read from the file.
         :rtype: int
         """
 
-        pass
+        self.skip(skip_lines, skip_time)
 
     def stop(self):
         """
