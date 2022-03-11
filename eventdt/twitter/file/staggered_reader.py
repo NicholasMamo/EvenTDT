@@ -105,17 +105,15 @@ class StaggeredFileReader(FileReader):
         :rtype: int
         """
 
-        read = 0
-        sample = 0 # the sampling progress: when it reaches or exceeds 1, the reader reads the next tweet and resets it to the remainder
-        start = time.time()
+        # the sampling progress: when it reaches or exceeds 1, the reader reads the next tweet and resets it to the remainder
+        read, first, sample = 0, None, 0
 
         files = [ file ] if type(file) is str else file
-        first = self._first(files)
         for file in files:
             # stop reading if the reader has been stopped
             if not self.active:
                 return read
-            
+
             if file.endswith('.tar.gz'):
                 with tarfile.open(file) as archive:
                     for member in archive:
@@ -124,44 +122,16 @@ class StaggeredFileReader(FileReader):
                             with archive.extractfile(member) as _file:
                                 skipped_lines, skipped_time = self.skip(_file, skip_lines, skip_time)
                                 skip_lines, skip_time = max(skip_lines - skipped_lines, 0), max(skip_time - skipped_time, 0)
-                                read, sample = await self._read_more(_file, read, first, start, sample, max_lines=max_lines, max_time=max_time)
+                                read, first, sample = await self._read_more(_file, read, first, sample, max_lines=max_lines, max_time=max_time)
             else:
                 with open(file) as _file:
                     skipped_lines, skipped_time = self.skip(_file, skip_lines, skip_time)
                     skip_lines, skip_time = max(skip_lines - skipped_lines, 0), max(skip_time - skipped_time, 0)
-                    read, sample = await self._read_more(_file, read, first, start, sample, max_lines=max_lines, max_time=max_time)
+                    read, first, sample = await self._read_more(_file, read, first, sample, max_lines=max_lines, max_time=max_time)
 
         return read
 
-    def _first(self, files):
-        """
-        Get the timestamp of the first tweet in the given file or files.
-
-        :param files: The list of file paths from where to read the tweets.
-                     If ``.tar.gz`` files are provided, the function looks for ``sample.json`` or ``event.json`` files.
-        :type files: list of str
-
-        :return: The timestamp of the first tweet in the given file or files.
-        :rtype: str or list of str
-        """
-
-        for file in files:
-            if file.endswith('.tar.gz'):
-                with tarfile.open(file) as archive:
-                    for member in archive:
-                        if member.name.endswith('/event.json') or member.name.endswith('/sample.json'):
-                            logger.info(f"{file}: {member.name}")
-                            with archive.extractfile(member) as _file:
-                                for line in _file:
-                                    tweet = json.loads(line)
-                                    return extract_timestamp(tweet)
-            else:
-                with open(file) as _file:
-                    for line in _file:
-                        tweet = json.loads(line)
-                        return extract_timestamp(tweet)
-
-    async def _read_more(self, file, read, first, start, sample, max_lines=-1, max_time=-1):
+    async def _read_more(self, file, read, first, sample, max_lines=-1, max_time=-1):
         """
         Perform the actual reading from the opened file.
 
@@ -171,8 +141,6 @@ class StaggeredFileReader(FileReader):
         :type read: int
         :param first: The timestamp of the first tweet in the list of files, used to regulate the simulated stream.
         :type first: int
-        :param start: The timestamp when the reading started, used to regulate the simulated stream.
-        :type start: int
         :param sample: The current sampling fraction.
         :type sample: float
         :param max_lines: The maximum number of lines to read.
@@ -183,7 +151,7 @@ class StaggeredFileReader(FileReader):
                          If the number is negative, it is ignored.
         :type max_time: int
 
-        :return: A tuple including the number of tweets read from the file and the current sampling fraction.
+        :return: A tuple including the number of tweets read from the file, the timestamp of the first tweet and the current sampling fraction.
         :rtype: tuple
         """
 
@@ -196,14 +164,14 @@ class StaggeredFileReader(FileReader):
 
             # if the maximum number of lines, or time, has been exceeded, stop reading
             if max_lines >= 0 and read >= max_lines:
-                return read, sample
+                break
 
             if max_time >= 0 and created_at - first >= max_time:
-                return read, sample
+                break
 
                 # if the reader has been interrupted, stop reading
             if not self.active:
-                return read, sample
+                break
 
             # only add a tweet if it is valid
             if self.valid(tweet):
@@ -218,7 +186,7 @@ class StaggeredFileReader(FileReader):
                     read += 1
 
             """
-            If there is a limit on the number of lines to read per minute, sleep a bit.
+            If there is a limit on the number of lines to read per second, sleep a bit.
             The calculation considers how long reading the tweet took.
             """
             elapsed = time.time() - start
@@ -227,4 +195,4 @@ class StaggeredFileReader(FileReader):
                 if sleep > 0:
                     time.sleep(sleep)
 
-        return read, sample
+        return read, first, sample
