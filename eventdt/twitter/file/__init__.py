@@ -161,39 +161,24 @@ class FileReader(ABC):
         """
         line = file.readline()
         if not line:
-            return
+            return skipped_lines, skipped_time
         start = extract_timestamp(json.loads(line))
         file.seek(0)
 
-        """
-        Skip a number of lines first.
-        """
-        if lines >= 0:
-            for i in range(int(lines)):
-                line = file.readline()
-                if not line:
-                    break
-                skipped_lines += 1
-
-        """
-        Skip a number of seconds from the file.
-        Once a line that should not be skipped is skipped, the read is rolled back.
-        """
         pos = file.tell()
         line = file.readline()
-        if not line:
-            return
-        next = json.loads(line)
-        while extract_timestamp(next) - start < time:
+        while line:
+            tweet = json.loads(line)
+            elapsed = extract_timestamp(tweet) - start
+            skipped_lines, skipped_time = skipped_lines + 1, elapsed
+            if elapsed >= time and skipped_lines > lines:
+                file.seek(pos)
+                skipped_lines, skipped_time = skipped_lines - 1, elapsed
+                return skipped_lines, skipped_time
             pos = file.tell()
             line = file.readline()
-            if not line:
-                break
-            next = json.loads(line)
 
-        file.seek(pos) # roll back
-
-        return skipped_lines, extract_timestamp(next) - start
+        return skipped_lines, skipped_time
 
     @abstractmethod
     async def read(self, file, max_lines=-1, max_time=-1, skip_lines=0, skip_time=0):

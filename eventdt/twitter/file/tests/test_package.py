@@ -75,9 +75,10 @@ class TestFileReader(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(0, lines)
             self.assertEqual(0, time)
 
+
     async def test_skip_floating_point_skip_lines(self):
         """
-        Test that when creating a staggered file reader with a floating point number of lines to skip, a ValueError is raised.
+        Test that when creating a simulated file reader with a floating point number of lines to skip, a ValueError is raised.
         """
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
@@ -88,7 +89,7 @@ class TestFileReader(unittest.IsolatedAsyncioTestCase):
 
     async def test_skip_float_skip_lines(self):
         """
-        Test that when creating a staggered file reader with a rounded float number of lines to skip, no ValueError is raised.
+        Test that when creating a simulated file reader with a rounded float number of lines to skip, no ValueError is raised.
         """
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
@@ -98,17 +99,19 @@ class TestFileReader(unittest.IsolatedAsyncioTestCase):
 
     async def test_skip_integer_skip_lines(self):
         """
-        Test that when creating a staggered file reader with an integer number of lines to skip, no ValueError is raised.
+        Test that when creating a simulated file reader with an integer number of lines to skip, no ValueError is raised.
         """
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             reader = SimulatedFileReader(Queue(), speed=100)
-            self.assertTrue(await reader.read(f, skip_lines=1))
+            read = await reader.read(f, skip_lines=1)
+            self.assertTrue(read)
+            self.assertEqual(99, read)
 
     async def test_skip_negative_skip_lines(self):
         """
-        Test that when creating a staggered file reader with a negative number of lines to skip, a ValueError is raised.
+        Test that when creating a simulated file reader with a negative number of lines to skip, a ValueError is raised.
         """
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
@@ -119,27 +122,31 @@ class TestFileReader(unittest.IsolatedAsyncioTestCase):
 
     async def test_skip_zero_skip_lines(self):
         """
-        Test that when creating a staggered file reader that skips no lines, no ValueError is raised.
+        Test that when creating a simulated file reader that skips no lines, no ValueError is raised.
         """
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             reader = SimulatedFileReader(Queue(), speed=100)
-            self.assertTrue(await reader.read(f, skip_lines=0))
+            read = await reader.read(f, skip_lines=0)
+            self.assertTrue(read)
+            self.assertEqual(100, read)
 
     async def test_skip_positive_skip_lines(self):
         """
-        Test that when creating a staggered file reader that skips a positive number of lines, no ValueError is raised.
+        Test that when creating a simulated file reader that skips a positive number of lines, no ValueError is raised.
         """
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             reader = SimulatedFileReader(Queue(), speed=100)
-            self.assertTrue(await reader.read(f, skip_lines=1))
+            read = await reader.read(f, skip_lines=10)
+            self.assertTrue(read)
+            self.assertEqual(90, read)
 
     async def test_skip_negative_skip_time(self):
         """
-        Test that when creating a staggered file reader with a negative number of seconds to skip, a ValueError is raised.
+        Test that when creating a simulated file reader with a negative number of seconds to skip, a ValueError is raised.
         """
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
@@ -150,20 +157,29 @@ class TestFileReader(unittest.IsolatedAsyncioTestCase):
 
     async def test_skip_zero_skip_time(self):
         """
-        Test that when creating a staggered file reader that skips no time, no ValueError is raised.
+        Test that when creating a simulated file reader that skips no time, no ValueError is raised.
         """
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
         with open(file, 'r') as f:
             reader = SimulatedFileReader(Queue(), speed=100)
-            self.assertTrue(await reader.read(f, skip_time=0))
+            read = await reader.read(f, skip_time=0)
+            self.assertTrue(read)
+            self.assertEqual(100, read)
 
     async def test_skip_positive_skip_time(self):
         """
-        Test that when creating a staggered file reader that skips a positive number of seconds, no ValueError is raised.
+        Test that when creating a simulated file reader that skips a positive number of seconds, no ValueError is raised.
         """
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
+
+        with open(file, 'r') as f:
+            lines = f.readlines()
+            timestamps = [ extract_timestamp(json.loads(line)) for line in lines ]
+
         with open(file, 'r') as f:
             reader = SimulatedFileReader(Queue(), speed=100)
-            self.assertTrue(await reader.read(f, skip_time=1))
+            read = await reader.read(f, skip_time=2)
+            self.assertTrue(read)
+            self.assertTrue(all( timestamp - timestamps[0] >= 2 for timestamp in timestamps[-read:] ))
