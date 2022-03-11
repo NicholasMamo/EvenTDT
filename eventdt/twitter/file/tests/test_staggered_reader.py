@@ -561,3 +561,148 @@ class TestStaggeredFileReader(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(queue.length())
         self.assertTrue(not any( is_retweet(tweet) for tweet in queue.queue ))
         self.assertTrue(any( is_verified(tweet) for tweet in queue.queue ))
+
+    async def test_read_multiple_files_all_tweets(self):
+        """
+        Test that when reading from multiple files, all tweets are returned.
+        """
+
+        files = [ 'eventdt/tests/corpora/CRYCHE-50-1.json', 'eventdt/tests/corpora/CRYCHE-50-2.json' ]
+        ids = [ ]
+        for file in files:
+            with open(file) as _file:
+                ids.extend([ json.loads(line)['id_str'] for line in _file.readlines() ])
+
+        queue = Queue()
+        reader = StaggeredFileReader(queue, rate=100)
+        read = await reader.read(files)
+        self.assertEqual(len(ids), read)
+        self.assertEqual(len(ids), queue.length())
+        self.assertEqual(ids, [ tweet['id_str'] for tweet in queue.dequeue_all() ])
+
+    async def test_read_multiple_files_order(self):
+        """
+        Test that when reading from multiple files, all tweets are returned in the original order.
+        """
+
+        files = [ 'eventdt/tests/corpora/CRYCHE-50-2.json', 'eventdt/tests/corpora/CRYCHE-50-1.json' ]
+        ids = [ ]
+        for file in files:
+            with open(file) as _file:
+                ids.extend([ json.loads(line)['id_str'] for line in _file.readlines() ])
+
+        queue = Queue()
+        reader = StaggeredFileReader(queue, rate=100)
+        read = await reader.read(files)
+        self.assertEqual(len(ids), read)
+        self.assertEqual(len(ids), queue.length())
+        self.assertEqual(ids, [ tweet['id_str'] for tweet in queue.dequeue_all() ])
+
+    async def test_read_multiple_files_sample_adjacent_files(self):
+        """
+        Test that sampling continues across multiple files.
+        """
+
+        files = [ 'eventdt/tests/corpora/CRYCHE-50-1.json', 'eventdt/tests/corpora/CRYCHE-50-2.json' ]
+        ids = [ ]
+        for file in files:
+            with open(file) as _file:
+                ids.extend([ json.loads(line)['id_str'] for line in _file.readlines() ])
+
+        queue = Queue()
+        reader = StaggeredFileReader(queue, rate=100, sample=1/3)
+        read = await reader.read(files)
+        self.assertEqual(len(ids[2::3]), queue.length())
+        self.assertEqual(ids[2::3], [ tweet['id_str'] for tweet in queue.dequeue_all() ])
+
+    async def test_read_multiple_files_max_lines_first_file(self):
+        """
+        Test that when reading a maximum number of lines that only cover the first file, the second file is not read.
+        """
+
+        files = [ 'eventdt/tests/corpora/CRYCHE-50-1.json', 'eventdt/tests/corpora/CRYCHE-50-2.json' ]
+        ids = [ ]
+        for file in files:
+            with open(file) as _file:
+                ids.extend([ json.loads(line)['id_str'] for line in _file.readlines() ])
+
+        queue = Queue()
+        reader = StaggeredFileReader(queue, rate=100)
+        read = await reader.read(files, max_lines=50)
+        self.assertEqual(50, read)
+        self.assertEqual(50, queue.length())
+        self.assertEqual(ids[:50], [ tweet['id_str'] for tweet in queue.dequeue_all() ])
+
+    async def test_read_multiple_files_max_lines_continues(self):
+        """
+        Test that when reading a maximum number of lines that overflow into adjacent files, reading continues in the second file.
+        """
+
+        files = [ 'eventdt/tests/corpora/CRYCHE-50-1.json', 'eventdt/tests/corpora/CRYCHE-50-2.json' ]
+        ids = [ ]
+        for file in files:
+            with open(file) as _file:
+                ids.extend([ json.loads(line)['id_str'] for line in _file.readlines() ])
+
+        queue = Queue()
+        reader = StaggeredFileReader(queue, rate=100)
+        read = await reader.read(files, max_lines=70)
+        self.assertEqual(70, read)
+        self.assertEqual(70, queue.length())
+        self.assertEqual(ids[:70], [ tweet['id_str'] for tweet in queue.dequeue_all() ])
+
+    async def test_read_multiple_files_max_time_continues(self):
+        """
+        Test that when reading for a maximum number of seconds that overflows into adjacent files, reading continues in the second file.
+        """
+
+        files = [ 'eventdt/tests/corpora/CRYCHE-50-1.json', 'eventdt/tests/corpora/CRYCHE-50-2.json' ]
+        created_at = [ ]
+        for file in files:
+            with open(file) as _file:
+                created_at.extend([ extract_timestamp(json.loads(line)) for line in _file.readlines() ])
+
+        queue = Queue()
+        reader = StaggeredFileReader(queue, rate=100)
+        # there is a transition at the 70th tweet
+        read = await reader.read(files, max_time=created_at[70] - created_at[0])
+        self.assertEqual(70, read)
+        self.assertEqual(70, queue.length())
+        self.assertEqual(created_at[:70], [ extract_timestamp(tweet) for tweet in queue.dequeue_all() ])
+
+    async def test_read_multiple_files_skip_lines_adjacent_files(self):
+        """
+        Test that when skipping a number of lines that overflows into adjacent files, skipping continues in the second file.
+        """
+
+        files = [ 'eventdt/tests/corpora/CRYCHE-50-1.json', 'eventdt/tests/corpora/CRYCHE-50-2.json' ]
+        ids = [ ]
+        for file in files:
+            with open(file) as _file:
+                ids.extend([ json.loads(line)['id_str'] for line in _file.readlines() ])
+
+        queue = Queue()
+        reader = StaggeredFileReader(queue, rate=100)
+        read = await reader.read(files, skip_lines=70)
+        self.assertEqual(30, read)
+        self.assertEqual(30, queue.length())
+        self.assertEqual(ids[-30:], [ tweet['id_str'] for tweet in queue.dequeue_all() ])
+
+    async def test_read_multiple_files_skip_time_adjacent_files(self):
+        """
+        Test that when skipping a maximum number of seconds that overflows into adjacent files, skipping continues in the second file.
+        """
+
+        files = [ 'eventdt/tests/corpora/CRYCHE-50-1.json', 'eventdt/tests/corpora/CRYCHE-50-2.json' ]
+        created_at = [ ]
+        for file in files:
+            with open(file) as _file:
+                created_at.extend([ extract_timestamp(json.loads(line)) for line in _file.readlines() ])
+
+        queue = Queue()
+        reader = StaggeredFileReader(queue, rate=100)
+        # there is a transition at the 70th tweet
+        read = await reader.read(files, skip_time=created_at[70] - created_at[0])
+        self.assertEqual(30, read)
+        self.assertEqual(30, queue.length())
+        self.assertEqual(created_at[-30:], [ extract_timestamp(tweet) for tweet in queue.dequeue_all() ])
