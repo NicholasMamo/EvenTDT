@@ -190,8 +190,8 @@ class FileReader(ABC):
         """
         Read the file and add each line as a dictionary to the queue.
 
-        :param file: The path to the file from where to read the tweets.
-        :type file: str
+        :param file: The file path or a list of file paths from where to read the tweets.
+        :type file: str or list of str
         :param max_lines: The maximum number of lines to read.
                           If the number is negative, it is ignored.
         :type max_lines: int
