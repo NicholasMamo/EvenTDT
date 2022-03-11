@@ -75,6 +75,41 @@ class TestFileReader(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(0, lines)
             self.assertEqual(0, time)
 
+    async def test_skip_lines_greatest(self):
+        """
+        Test that when the number of lines to skip is greater than the number of seconds, the number of lines are skipped.
+        """
+
+        file = 'eventdt/tests/corpora/CRYCHE-100.json'
+
+        with open(file, 'r') as f:
+            lines = f.readlines()
+            timestamps = [ extract_timestamp(json.loads(line)) for line in lines ]
+            to_skip = len([ timestamp for timestamp in timestamps if timestamp - timestamps[0] < 2 ])
+
+        with open(file, 'r') as f:
+            reader = SimulatedFileReader(Queue(), speed=100)
+            read = await reader.read(f, skip_lines=to_skip + 10, skip_time=2)
+            self.assertEqual(100 - (to_skip + 10), read)
+            self.assertTrue(all( timestamp - timestamps[0] >= 2 for timestamp in timestamps[-read:] ))
+
+    async def test_skip_time_greatest(self):
+        """
+        Test that when the number of seconds to skip is greater than the number of lines, the number of seconds are skipped.
+        """
+
+        file = 'eventdt/tests/corpora/CRYCHE-100.json'
+
+        with open(file, 'r') as f:
+            lines = f.readlines()
+            timestamps = [ extract_timestamp(json.loads(line)) for line in lines ]
+            to_skip = len([ timestamp for timestamp in timestamps if timestamp - timestamps[0] < 2 ])
+
+        with open(file, 'r') as f:
+            reader = SimulatedFileReader(Queue(), speed=100)
+            read = await reader.read(f, skip_lines=to_skip - 5, skip_time=2)
+            self.assertEqual(100 - to_skip, read)
+            self.assertTrue(all( timestamp - timestamps[0] >= 2 for timestamp in timestamps[-read:] ))
 
     async def test_skip_floating_point_skip_lines(self):
         """

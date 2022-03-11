@@ -144,9 +144,7 @@ class FileReader(ABC):
 
         skipped_lines, skipped_time = 0, 0
 
-        """
-        Validate the inputs.
-        """
+        # validate the inputs
         if lines % 1:
             raise ValueError(f"The number of lines to skip must be an integer; received {lines}")
 
@@ -156,25 +154,32 @@ class FileReader(ABC):
         if time < 0:
             raise ValueError(f"The number of seconds to skip cannot be negative; received {time}")
 
-        """
-        Extract the timestamp from the first tweet, then reset the file pointer.
-        """
+        # extract the timestamp from the first tweet, then reset the file pointer
         line = file.readline()
         if not line:
             return skipped_lines, skipped_time
         start = extract_timestamp(json.loads(line))
         file.seek(0)
 
+        # keep a record of the position in the file
         pos = file.tell()
         line = file.readline()
         while line:
             tweet = json.loads(line)
             elapsed = extract_timestamp(tweet) - start
             skipped_lines, skipped_time = skipped_lines + 1, elapsed
+
+            """
+            Tweets start at time ``n``, so skipping 1 second means skipping all tweets at time ``n``.
+            That is why the inequality looks for greater and equal values for time, but greater values for lines.
+            When too many tweets have been skipped, roll back to the previous tweet.
+            """
             if elapsed >= time and skipped_lines > lines:
                 file.seek(pos)
                 skipped_lines, skipped_time = skipped_lines - 1, elapsed
                 return skipped_lines, skipped_time
+
+            # read the next line
             pos = file.tell()
             line = file.readline()
 
