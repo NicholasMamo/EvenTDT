@@ -229,7 +229,7 @@ The full list of accepted arguments:
     - ``-e --event``                *<Required>* The event file or a list of event files to consume; can be JSON files or ``.tar.gz`` archives with `sample.json` or `event.json` files inside.
     - ``-c --consumer``             *<Required>* The consumer to use: :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`, :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`, :class:`~queues.consumers.print_consumer.PrintConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer`, :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`.
     - ``-u --understanding``        *<Optional>* The understanding file used to understand the event.
-    - ``-o --output``               *<Optional>* The output file where to save the timeline, defaults to the ``.out`` directory relative to the event file.
+    - ``-o --output``               *<Required>* The output file where to save the timeline, defaults to the ``.out`` directory relative to the event file.
     - ``--no-cache``                *<Optional>* If specified, the cached understanding is not used, but new understanding is generated.
     - ``--sample``                  *<Optional>* The systematic sampling rate when reading the corpus [0–1]; defaults to 1, which reads all tweets.
     - ``--speed``                   *<Optional>* The speed at which the file is consumed, defaults to 1, which is real-time speed.
@@ -291,7 +291,7 @@ def setup_args():
         - ``-e --event``                *<Required>* The event file or a list of event files to consume; can be JSON files or ``.tar.gz`` archives with `sample.json` or `event.json` files inside.
         - ``-c --consumer``             *<Required>* The consumer to use: :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`, :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`, :class:`~queues.consumers.print_consumer.PrintConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer`, :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`.
         - ``-u --understanding``        *<Optional>* The understanding file used to understand the event.
-        - ``-o --output``               *<Optional>* The output file where to save the timeline, defaults to the ``.out`` directory relative to the event file.
+        - ``-o --output``               *<Required>* The output file where to save the timeline, defaults to the ``.out`` directory relative to the event file.
         - ``--no-cache``                *<Optional>* If specified, the cached understanding is not used, but new understanding is generated.
         - ``--sample``                  *<Optional>* The systematic sampling rate when reading the corpus [0–1]; defaults to 1, which reads all tweets.
         - ``--speed``                   *<Optional>* The speed at which the file is consumed, defaults to 1, which is real-time speed.
@@ -333,8 +333,8 @@ def setup_args():
                         help='<Required> The consumer to use: `ELDConsumer`, `FIREConsumer`, `FUEGOConsumer`, `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.')
     parser.add_argument('-u', '--understanding', type=str, required=False,
                         help='<Optional> The understanding file used to understand the event.')
-    parser.add_argument('-o', '--output', type=str, required=False,
-                        help='<Optional> The output file where to save the timeline, defaults to the `.out` directory relative to the event file.')
+    parser.add_argument('-o', '--output', type=str, required=True,
+                        help='<Required> The output file where to save the timeline, defaults to the `.out` directory relative to the event file.')
     parser.add_argument('--no-cache', action="store_true",
                         help='<Optional> If specified, the cached understanding is not used, but new understanding is generated.')
     parser.add_argument('--sample', type=float, required=False, default=1,
@@ -393,7 +393,6 @@ def main():
     """
 
     args = setup_args()
-    filename = os.path.basename(args.event)
 
     """
     Get the meta arguments.
@@ -460,8 +459,7 @@ def main():
     """
     Set up the output directory and save the timeline.
     """
-    out = args['output'] or os.path.join(os.path.dirname(args['event']), '.out', filename)
-    tools.save(out, timeline)
+    tools.save(args['output'], timeline)
     logger.info("Event period ended")
 
     asyncio.get_event_loop().close()
