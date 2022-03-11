@@ -735,3 +735,42 @@ class TestSimulatedFileReader(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(30, read)
         self.assertEqual(30, queue.length())
         self.assertEqual(created_at[-30:], [ extract_timestamp(tweet) for tweet in queue.dequeue_all() ])
+
+    async def test_read_tar_event(self):
+        """
+        Test reading an event file from a ``.tar.gz`` file.
+        """
+
+        file = 'eventdt/tests/corpora/CRYCHE.tar.gz'
+
+        queue = Queue()
+        reader = SimulatedFileReader(queue, speed=100)
+        read = await reader.read(file)
+        self.assertEqual(100, read)
+        self.assertEqual(100, queue.length())
+
+    async def test_read_tar_sample(self):
+        """
+        Test reading a sample file from a ``.tar.gz`` file.
+        """
+
+        file = 'eventdt/tests/corpora/sample.tar.gz'
+
+        queue = Queue()
+        reader = SimulatedFileReader(queue, speed=100)
+        read = await reader.read(file)
+        self.assertEqual(100, read)
+        self.assertEqual(100, queue.length())
+
+    async def test_read_tar_skip(self):
+        """
+        Test that when reading a ``.tar.gz`` file, skipping is still applied.
+        """
+
+        file = 'eventdt/tests/corpora/CRYCHE.tar.gz'
+
+        queue = Queue()
+        reader = SimulatedFileReader(queue, speed=100)
+        read = await reader.read(file, skip_lines=40)
+        self.assertEqual(60, read)
+        self.assertEqual(60, queue.length())
