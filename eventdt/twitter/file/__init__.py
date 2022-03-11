@@ -190,8 +190,8 @@ class FileReader(ABC):
         """
         Read the file and add each line as a dictionary to the queue.
 
-        :param file: The opened file from where to read the tweets.
-        :type file: file
+        :param file: The path to the file from where to read the tweets.
+        :type file: str
         :param max_lines: The maximum number of lines to read.
                           If the number is negative, it is ignored.
         :type max_lines: int
@@ -208,7 +208,7 @@ class FileReader(ABC):
         :rtype: int
         """
 
-        self.skip(file, skip_lines, skip_time)
+        pass
 
     def stop(self):
         """
