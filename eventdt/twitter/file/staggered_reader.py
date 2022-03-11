@@ -6,15 +6,16 @@ For this reason, it is most opportune when the :ref:`consumer's <consumers>` per
 """
 
 import json
-
 import os
 import sys
+import tarfile
 import time
 
 path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
+from logger import logger
 from twitter import *
 from twitter.file import FileReader
 
@@ -86,6 +87,7 @@ class StaggeredFileReader(FileReader):
         Read the file and add each line as a dictionary to the queue.
 
         :param file: The file path or a list of file paths from where to read the tweets.
+                     If ``.tar.gz`` files are provided, the function looks for ``sample.json`` or ``event.json`` files.
         :type file: str or list of str
         :param max_lines: The maximum number of lines to read.
                           If the number is negative, it is ignored.
@@ -105,52 +107,120 @@ class StaggeredFileReader(FileReader):
 
         read = 0
         sample = 0 # the sampling progress: when it reaches or exceeds 1, the reader reads the next tweet and resets it to the remainder
-        first = None
+        start = time.time()
 
         files = [ file ] if type(file) is str else file
+        first = self._first(files)
         for file in files:
-            with open(file) as _file:
-                skipped_lines, skipped_time = self.skip(_file, skip_lines, skip_time)
-                skip_lines, skip_time = max(skip_lines - skipped_lines, 0), max(skip_time - skipped_time, 0)
-
-                # go through each line and add it to the queue
-                for i, line in enumerate(_file):
-                    start = time.time()
-                    tweet = json.loads(line)
-                    created_at = extract_timestamp(tweet)
-                    first = first or created_at
-
-                    # if the maximum number of lines, or time, has been exceeded, stop reading
-                    if max_lines >= 0 and read >= max_lines:
-                        return read
-
-                    if max_time >= 0 and created_at - first >= max_time:
-                        return read
-
-                        # if the reader has been interrupted, stop reading
-                    if not self.active:
-                        return read
-
-                    # only add a tweet if it is valid
-                    if self.valid(tweet):
-                        """
-                        The increment is the sampling interval, but the reader only reads a tweet if the sampling weight reaches 1.
-                        If the sampling interval is 0.5, the sampling weight reaches 1 at every other tweet, so the reader will read every other tweet.
-                        """
-                        sample += self.sample
-                        if sample >= 1: # if it's time to read a new tweet, read one
-                            sample -= 1 # keep the remainder
-                            self.queue.enqueue(tweet)
-                            read += 1
-
-                    """
-                    If there is a limit on the number of lines to read per minute, sleep a bit.
-                    The calculation considers how long reading the tweet took.
-                    """
-                    elapsed = time.time() - start
-                    if self.rate > 0:
-                        sleep = 1/self.rate - elapsed
-                        if sleep > 0:
-                            time.sleep(sleep)
+            if file.endswith('.tar.gz'):
+                with tarfile.open(file) as archive:
+                    for member in archive:
+                        if member.name.endswith('/event.json') or member.name.endswith('/sample.json'):
+                            logger.info(f"{file}: {member.name}")
+                            with archive.extractfile(member) as _file:
+                                skipped_lines, skipped_time = self.skip(_file, skip_lines, skip_time)
+                                skip_lines, skip_time = max(skip_lines - skipped_lines, 0), max(skip_time - skipped_time, 0)
+                                read, sample = await self._read_more(_file, read, first, start, sample, max_lines=max_lines, max_time=max_time)
+            else:
+                with open(file) as _file:
+                    skipped_lines, skipped_time = self.skip(_file, skip_lines, skip_time)
+                    skip_lines, skip_time = max(skip_lines - skipped_lines, 0), max(skip_time - skipped_time, 0)
+                    read, sample = await self._read_more(_file, read, first, start, sample, max_lines=max_lines, max_time=max_time)
 
         return read
+
+    def _first(self, files):
+        """
+        Get the timestamp of the first tweet in the given file or files.
+
+        :param files: The list of file paths from where to read the tweets.
+                     If ``.tar.gz`` files are provided, the function looks for ``sample.json`` or ``event.json`` files.
+        :type files: list of str
+
+        :return: The timestamp of the first tweet in the given file or files.
+        :rtype: str or list of str
+        """
+
+        for file in files:
+            if file.endswith('.tar.gz'):
+                with tarfile.open(file) as archive:
+                    for member in archive:
+                        if member.name.endswith('/event.json') or member.name.endswith('/sample.json'):
+                            logger.info(f"{file}: {member.name}")
+                            with archive.extractfile(member) as _file:
+                                for line in _file:
+                                    tweet = json.loads(line)
+                                    return extract_timestamp(tweet)
+            else:
+                with open(file) as _file:
+                    for line in _file:
+                        tweet = json.loads(line)
+                        return extract_timestamp(tweet)
+
+    async def _read_more(self, file, read, first, start, sample, max_lines=-1, max_time=-1):
+        """
+        Perform the actual reading from the opened file.
+
+        :param file: The opened file from where to skip the tweets.
+        :type file: file
+        :param read: The number of tweets read so far.
+        :type read: int
+        :param first: The timestamp of the first tweet in the list of files, used to regulate the simulated stream.
+        :type first: int
+        :param start: The timestamp when the reading started, used to regulate the simulated stream.
+        :type start: int
+        :param sample: The current sampling fraction.
+        :type sample: float
+        :param max_lines: The maximum number of lines to read.
+                          If the number is negative, it is ignored.
+        :type max_lines: int
+        :param max_time: The maximum time in seconds to spend reading from the file.
+                         The time is taken from tweets' timestamps.
+                         If the number is negative, it is ignored.
+        :type max_time: int
+
+        :return: A tuple including the number of tweets read from the file and the current sampling fraction.
+        :rtype: tuple
+        """
+
+        # go through each line and add it to the queue
+        for i, line in enumerate(file):
+            start = time.time()
+            tweet = json.loads(line)
+            created_at = extract_timestamp(tweet)
+            first = first or created_at
+
+            # if the maximum number of lines, or time, has been exceeded, stop reading
+            if max_lines >= 0 and read >= max_lines:
+                return read, sample
+
+            if max_time >= 0 and created_at - first >= max_time:
+                return read, sample
+
+                # if the reader has been interrupted, stop reading
+            if not self.active:
+                return read, sample
+
+            # only add a tweet if it is valid
+            if self.valid(tweet):
+                """
+                The increment is the sampling interval, but the reader only reads a tweet if the sampling weight reaches 1.
+                If the sampling interval is 0.5, the sampling weight reaches 1 at every other tweet, so the reader will read every other tweet.
+                """
+                sample += self.sample
+                if sample >= 1: # if it's time to read a new tweet, read one
+                    sample -= 1 # keep the remainder
+                    self.queue.enqueue(tweet)
+                    read += 1
+
+            """
+            If there is a limit on the number of lines to read per minute, sleep a bit.
+            The calculation considers how long reading the tweet took.
+            """
+            elapsed = time.time() - start
+            if self.rate > 0:
+                sleep = 1/self.rate - elapsed
+                if sleep > 0:
+                    time.sleep(sleep)
+
+        return read, sample
