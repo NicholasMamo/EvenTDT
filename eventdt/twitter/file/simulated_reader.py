@@ -80,12 +80,12 @@ class SimulatedFileReader(FileReader):
         self.sample = sample
 
     @FileReader.reading
-    async def read(self, file, max_lines=-1, max_time=-1, *args, **kwargs):
+    async def read(self, file, max_lines=-1, max_time=-1, skip_lines=0, skip_time=0):
         """
         Read the file and add each line as a dictionary to the queue.
 
-        :param file: The opened file from where to read the tweets.
-        :type file: file
+        :param file: The path to the file from where to read the tweets.
+        :type file: str
         :param max_lines: The maximum number of lines to read.
                           If the number is negative, it is ignored.
         :type max_lines: int
@@ -93,69 +93,59 @@ class SimulatedFileReader(FileReader):
                          The time is taken from tweets' timestamps.
                          If the number is negative, it is ignored.
         :type max_time: int
+        :param skip_lines: The number of lines to skip from the beginning of the file.
+        :type skip_lines: int
+        :param skip_time: The number of seconds to skip from the beginning of the file.
+        :type skip_time: int
 
         :return: The number of tweets read from the file.
         :rtype: int
         """
 
-        await super(SimulatedFileReader, self).read(file, *args, **kwargs)
-
         read = 0
-
-        """
-        Extract the timestamp from the first tweet, then reset the file pointer.
-        """
-        pos = file.tell()
-        line = file.readline()
-        if not line:
-            return
-        first = extract_timestamp(json.loads(line))
-        file.seek(pos)
-
-        """
-        Go through each line and add it to the queue.
-        """
         sample = 0 # the sampling progress: when it reaches or exceeds 1, the reader reads the next tweet and resets it to the remainder
-        start = time.time()
-        for i, line in enumerate(file):
-            tweet = json.loads(line)
-            created_at = extract_timestamp(tweet)
+        first = None
 
-            """
-            If the maximum number of lines, or the time, has been exceeded, stop reading.
-            """
-            if max_lines >= 0 and i >= max_lines:
-                break
+        with open(file) as _file:
+            self.skip(_file, skip_lines, skip_time)
 
-            if max_time >= 0 and created_at - first >= max_time:
-                break
+            # go through each line and add it to the queue
+            start = time.time()
+            for i, line in enumerate(_file):
+                tweet = json.loads(line)
+                created_at = extract_timestamp(tweet)
+                first = first or created_at
 
-            """
-            If the tweet is 'in the future', stop reading until the reader catches up.
-            It is only after it catches up that the tweet is added to the queue.
-            """
-            elapsed = time.time() - start
-            if (created_at - first) / self.speed > elapsed and self.active:
-                await asyncio.sleep((created_at - first) / self.speed - elapsed)
 
-            """
-            If the reader has been interrupted, stop reading.
-            """
-            if not self.active:
-                break
+                # if the maximum number of lines, or the time, has been exceeded, stop reading
+                if max_lines >= 0 and i >= max_lines:
+                    break
 
-            """
-            Only add a tweet if it is valid.
-            """
-            if self.valid(tweet):
+                if max_time >= 0 and created_at - first >= max_time:
+                    break
+
                 """
-                The increment is the sampling interval, but the reader only reads a tweet if the sampling weight reaches 1.
-                If the sampling interval is 0.5, the sampling weight reaches 1 at every other tweet, so the reader will read every other tweet.
+                If the tweet is 'in the future', stop reading until the reader catches up.
+                It is only after it catches up that the tweet is added to the queue.
                 """
-                sample += self.sample
-                if sample >= 1: # if it's time to read a new tweet, read one
-                    sample -= 1 # keep the remainder
-                    self.queue.enqueue(tweet)
-                    read += 1
+                elapsed = time.time() - start
+                if (created_at - first) / self.speed > elapsed and self.active:
+                    await asyncio.sleep((created_at - first) / self.speed - elapsed)
+
+                # if the reader has been interrupted, stop reading
+                if not self.active:
+                    break
+
+                # only add a tweet if it is valid
+                if self.valid(tweet):
+                    """
+                    The increment is the sampling interval, but the reader only reads a tweet if the sampling weight reaches 1.
+                    If the sampling interval is 0.5, the sampling weight reaches 1 at every other tweet, so the reader will read every other tweet.
+                    """
+                    sample += self.sample
+                    if sample >= 1: # if it's time to read a new tweet, read one
+                        sample -= 1 # keep the remainder
+                        self.queue.enqueue(tweet)
+                        read += 1
 
         return read
