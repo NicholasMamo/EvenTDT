@@ -112,6 +112,10 @@ class StaggeredFileReader(FileReader):
         files = [ file ] if type(file) is str else file
         first = self._first(files)
         for file in files:
+            # stop reading if the reader has been stopped
+            if not self.active:
+                return read
+            
             if file.endswith('.tar.gz'):
                 with tarfile.open(file) as archive:
                     for member in archive:
