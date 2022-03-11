@@ -84,8 +84,8 @@ class SimulatedFileReader(FileReader):
         """
         Read the file and add each line as a dictionary to the queue.
 
-        :param file: The path to the file from where to read the tweets.
-        :type file: str
+        :param file: The file path or a list of file paths from where to read the tweets.
+        :type file: str or list of str
         :param max_lines: The maximum number of lines to read.
                           If the number is negative, it is ignored.
         :type max_lines: int
@@ -106,46 +106,48 @@ class SimulatedFileReader(FileReader):
         sample = 0 # the sampling progress: when it reaches or exceeds 1, the reader reads the next tweet and resets it to the remainder
         first = None
 
-        with open(file) as _file:
-            self.skip(_file, skip_lines, skip_time)
+        files = [ file ] if type(file) is str else file
+        for file in files:
+            with open(file) as _file:
+                skipped_lines, skipped_time = self.skip(_file, skip_lines, skip_time)
+                skip_lines, skip_time = max(skip_lines - skipped_lines, 0), max(skip_time - skipped_time, 0)
 
-            # go through each line and add it to the queue
-            start = time.time()
-            for i, line in enumerate(_file):
-                tweet = json.loads(line)
-                created_at = extract_timestamp(tweet)
-                first = first or created_at
+                # go through each line and add it to the queue
+                start = time.time()
+                for i, line in enumerate(_file):
+                    tweet = json.loads(line)
+                    created_at = extract_timestamp(tweet)
+                    first = first or created_at
 
+                    # if the maximum number of lines, or the time, has been exceeded, stop reading
+                    if max_lines >= 0 and read >= max_lines:
+                        return read
 
-                # if the maximum number of lines, or the time, has been exceeded, stop reading
-                if max_lines >= 0 and i >= max_lines:
-                    break
+                    if max_time >= 0 and created_at - first >= max_time:
+                        return read
 
-                if max_time >= 0 and created_at - first >= max_time:
-                    break
-
-                """
-                If the tweet is 'in the future', stop reading until the reader catches up.
-                It is only after it catches up that the tweet is added to the queue.
-                """
-                elapsed = time.time() - start
-                if (created_at - first) / self.speed > elapsed and self.active:
-                    await asyncio.sleep((created_at - first) / self.speed - elapsed)
-
-                # if the reader has been interrupted, stop reading
-                if not self.active:
-                    break
-
-                # only add a tweet if it is valid
-                if self.valid(tweet):
                     """
-                    The increment is the sampling interval, but the reader only reads a tweet if the sampling weight reaches 1.
-                    If the sampling interval is 0.5, the sampling weight reaches 1 at every other tweet, so the reader will read every other tweet.
+                    If the tweet is 'in the future', stop reading until the reader catches up.
+                    It is only after it catches up that the tweet is added to the queue.
                     """
-                    sample += self.sample
-                    if sample >= 1: # if it's time to read a new tweet, read one
-                        sample -= 1 # keep the remainder
-                        self.queue.enqueue(tweet)
-                        read += 1
+                    elapsed = time.time() - start
+                    if (created_at - first) / self.speed > elapsed and self.active:
+                        await asyncio.sleep((created_at - first) / self.speed - elapsed)
+
+                    # if the reader has been interrupted, stop reading
+                    if not self.active:
+                        return read
+
+                    # only add a tweet if it is valid
+                    if self.valid(tweet):
+                        """
+                        The increment is the sampling interval, but the reader only reads a tweet if the sampling weight reaches 1.
+                        If the sampling interval is 0.5, the sampling weight reaches 1 at every other tweet, so the reader will read every other tweet.
+                        """
+                        sample += self.sample
+                        if sample >= 1: # if it's time to read a new tweet, read one
+                            sample -= 1 # keep the remainder
+                            self.queue.enqueue(tweet)
+                            read += 1
 
         return read
