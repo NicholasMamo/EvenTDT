@@ -137,7 +137,12 @@ class FileReader(ABC):
         :param time: The number of seconds to skip from the beginning of the file.
                      The time is taken from tweets' timestamps.
         :type time: int
+
+        :return: The number of lines and seconds skipped.
+        :rtype: tuple
         """
+
+        skipped_lines, skipped_time = 0, 0
 
         """
         Validate the inputs.
@@ -165,7 +170,10 @@ class FileReader(ABC):
         """
         if lines >= 0:
             for i in range(int(lines)):
-                file.readline()
+                line = file.readline()
+                if not line:
+                    break
+                skipped_lines += 1
 
         """
         Skip a number of seconds from the file.
@@ -183,7 +191,9 @@ class FileReader(ABC):
                 break
             next = json.loads(line)
 
-        file.seek(pos)
+        file.seek(pos) # roll back
+
+        return skipped_lines, extract_timestamp(next) - start
 
     @abstractmethod
     async def read(self, file, max_lines=-1, max_time=-1, skip_lines=0, skip_time=0):
