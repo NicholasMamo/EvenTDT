@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 
 """
-The consume tool receives an event file and consumes it with one of the given consumers.
-This consumer is split into two asynchronous tasks.
-The first task reads the file, and the second consumes it.
+The consume tool receives one or more files and consumes them.
+This tool's processing is split into two asynchronous tasks: one that reads the file, and another that consumes it.
 
 All dataset files are expected to contain one tweet on every line, encoded as JSON strings.
 This is the standard output from the :mod:`~tools.collect` tool.
@@ -19,7 +18,18 @@ However, you can provide your own ``--output`` value.
     --consumer PrintConsumer \\
     --output data/event/timelines/event.json
 
-However, you can also add parameters to change how the tool reads files.
+You can also provide several files.
+Files can be either explicit JSON files or ``.tar.gz`` archives.
+In the latter case, the tool only considers `sample.json` or `event.json` files.
+
+.. code-block:: bash
+
+    ./tools/consume.py \\
+    --event data/CRYCHE/event.json data/SOUARS/event.json \\
+    --consumer PrintConsumer \\
+    --output data/event/timelines/event.json
+
+You can also add parameters to change how the tool reads files.
 For example, the ``--speed`` parameter changes how fast the consumer should read files.
 A value of 1 (default) reads the file in real-time.
 Reduce the speed to give more time for the consumer to process tweets, or speed it up for faster results.
@@ -216,7 +226,7 @@ If you provide splits, the ``timeline`` key is replaced with a list of timelines
 
 The full list of accepted arguments:
 
-    - ``-e --event``                *<Required>* The event file to consume.
+    - ``-e --event``                *<Required>* The event file or a list of event files to consume; can be JSON files or ``.tar.gz`` archives with `sample.json` or `event.json` files inside.
     - ``-c --consumer``             *<Required>* The consumer to use: :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`, :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`, :class:`~queues.consumers.print_consumer.PrintConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer`, :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`.
     - ``-u --understanding``        *<Optional>* The understanding file used to understand the event.
     - ``-o --output``               *<Optional>* The output file where to save the timeline, defaults to the ``.out`` directory relative to the event file.
@@ -278,7 +288,7 @@ def setup_args():
 
     Accepted arguments:
 
-        - ``-e --event``                *<Required>* The event file to consume.
+        - ``-e --event``                *<Required>* The event file or a list of event files to consume; can be JSON files or ``.tar.gz`` archives with `sample.json` or `event.json` files inside.
         - ``-c --consumer``             *<Required>* The consumer to use: :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`, :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`, :class:`~queues.consumers.print_consumer.PrintConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer`, :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`.
         - ``-u --understanding``        *<Optional>* The understanding file used to understand the event.
         - ``-o --output``               *<Optional>* The output file where to save the timeline, defaults to the ``.out`` directory relative to the event file.
@@ -317,8 +327,8 @@ def setup_args():
     Parameters that define how the corpus should be collected.
     """
 
-    parser.add_argument('-e', '--event', type=str, required=True,
-                        help='<Required> The event file to consume.')
+    parser.add_argument('-e', '--event', nargs='+', required=True,
+                        help='<Required> The event file or a list of event files to consume; can be JSON files or `.tar.gz` archives with `sample.json` or `event.json` files inside.')
     parser.add_argument('-c', '--consumer', type=consumer, required=True,
                         help='<Required> The consumer to use: `ELDConsumer`, `FIREConsumer`, `FUEGOConsumer`, `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.')
     parser.add_argument('-u', '--understanding', type=str, required=False,
