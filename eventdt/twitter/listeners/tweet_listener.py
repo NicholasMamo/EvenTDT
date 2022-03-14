@@ -10,7 +10,7 @@ Tweet objects include a lot of attributes, which may not always be required and 
 Therefore this listener also supports attribute filtering, which removes needless data from tweets before saving them to file.
 """
 
-from tweepy.streaming import StreamListener
+import tweepy
 
 import json
 import os
@@ -24,7 +24,7 @@ if path not in sys.path:
 from logger import logger
 from twitter import *
 
-class TweetListener(StreamListener):
+class TweetListener(tweepy.Stream):
     """
     The :class:`~twitter.listeners.tweet_listener.TweetListener` handles the tweets that the stream sends.
     It does not configure the stream, but only processes the tweets it sends.
@@ -61,7 +61,7 @@ class TweetListener(StreamListener):
     :vartype collected: int
     """
 
-    def __init__(self, f, retweets=True, max_time=3600, attributes=None):
+    def __init__(self, f, auth=None, retweets=True, max_time=3600, attributes=None, *args, **kwargs):
         """
         Create the listener.
         Simultaneously set the file and the list of tweets.
@@ -69,6 +69,9 @@ class TweetListener(StreamListener):
 
         :param f: The opened file pointer where to write the tweets.
         :type f: file
+        :param auth: The OAuth handler to connect with Twitter's API.
+                     Only used with the Twitter APIv1.1.
+        :type auth: :class:`tweepy.OAuthHandler`
         :param retweets: A boolean indicating whether to collect retweets or not.
         :type retweets: bool
         :param max_time: The maximum time in seconds to spend receiving tweets.
@@ -78,6 +81,9 @@ class TweetListener(StreamListener):
                            If ``None`` is given, the entire tweet objects are saved.
         :type attributes: list of str or None
         """
+
+        if auth:
+            super(TweetListener, self).__init__(auth.consumer_key, auth.consumer_secret, auth.access_token, auth.access_token_secret)
 
         self.file = f
         self.tweets = [ ]
@@ -129,7 +135,7 @@ class TweetListener(StreamListener):
         tweet = json.loads(data)
         if 'id' in tweet or ('data' in tweet and 'id' in tweet['data']):
             if self.retweets or not is_retweet(tweet):
-                tweet = self.filter(tweet)
+                tweet = self.validate(tweet)
                 self.tweets.append(json.dumps(tweet) + "\n")
 
             """
@@ -146,11 +152,12 @@ class TweetListener(StreamListener):
                 return True
             else:
                 self.flush()
+                self.disconnect()
                 return False
 
-    def filter(self, tweet):
+    def validate(self, tweet):
         """
-        Filter the given tweet using the attributes specified when creating the :class:`~twitter.listeners.tweet_listener.TweetListener`.
+        Validate the given tweet using the attributes specified when creating the :class:`~twitter.listeners.tweet_listener.TweetListener`.
         If no attributes were given, the tweet's attributes are all retained.
 
         :param tweet: The tweet attributes as a dictionary.

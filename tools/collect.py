@@ -389,9 +389,8 @@ def collect(auth, track, filename, max_time, lang=None, no_retweets=False, v2=Fa
 
     try:
         with open(filename, 'a') as file:
-            listener = TweetListener(file, max_time=max_time, retweets=(not no_retweets), *args, **kwargs)
-
             if v2:
+                listener = TweetListener(file, max_time=max_time, retweets=(not no_retweets), *args, **kwargs)
                 stream = Streamv2(auth)
                 rules = setup_rules(track, lang=lang, no_retweets=no_retweets)
                 logger.info(rules)
@@ -401,11 +400,11 @@ def collect(auth, track, filename, max_time, lang=None, no_retweets=False, v2=Fa
             else:
                 start = time.time()
                 lang = [ 'en' ] if lang is None else [ lang ]
-                stream = Stream(auth, listener)
+                listener = TweetListener(file, auth=auth, max_time=max_time, retweets=(not no_retweets))
                 if track:
-                    stream.filter(track=track, languages=lang)
+                    listener.filter(track=track, languages=lang)
                 else:
-                    stream.sample(languages=lang)
+                    listener.sample(languages=lang)
 
             collected += listener.collected # add the number of collected tweets when the listener stops collecting tweets
     except (Exception) as e:

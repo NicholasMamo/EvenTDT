@@ -6,7 +6,7 @@ Therefore the :class:`~twitter.listeners.queued_tweet_listener.QueuedTweetListen
 """
 
 from datetime import datetime
-from tweepy.streaming import StreamListener
+import tweepy
 
 import json
 import os
@@ -20,7 +20,7 @@ if path not in sys.path:
 from logger import logger
 from twitter import *
 
-class QueuedTweetListener(StreamListener):
+class QueuedTweetListener(tweepy.Stream):
     """
     The :class:`~twitter.listeners.queued_tweet_listener.QueuedTweetListener` handles the tweets that the stream sends.
     It does not configure the stream, but only processes the tweets it sends.
@@ -48,14 +48,25 @@ class QueuedTweetListener(StreamListener):
     :vartype attributes: list of str or None
     """
 
-    def __init__(self, queue, retweets=True, max_time=3600, attributes=None):
+    def __init__(self, queue, auth=None, retweets=True, max_time=3600, attributes=None):
         """
         Create the listener.
         Simultaneously set the queue.
         By default, the stream continues processing for an hour.
 
+        :param consumer_key: The consumer key with which to connect with the stream.
+        :type consumer_key: str
+        :param consumer_secret: The consumer secret with which to connect with the stream.
+        :type consumer_secret: str
+        :param access_token: The access token with which to validate the identity.
+        :type access_token: str
+        :param access_token_secret: The access token secret with which to validate the identity.
+        :type access_token_secret: str
         :param queue: The queue to which to add incoming tweets.
         :type queue: :class:`~queues.Queue`
+        :param auth: The OAuth handler to connect with Twitter's API.
+                     Only used with the Twitter APIv1.1.
+        :type auth: :class:`tweepy.OAuthHandler`
         :param retweets: A boolean indicating whether to collect retweets or not.
         :type retweets: bool
         :param max_time: The maximum time in seconds to spend reading the file.
@@ -64,6 +75,9 @@ class QueuedTweetListener(StreamListener):
                            If ``None`` is given, the entire tweet objects are saved.
         :type attributes: list of str or None
         """
+
+        if auth:
+            super(QueuedTweetListener, self).__init__(auth.consumer_key, auth.consumer_secret, auth.access_token, auth.access_token_secret)
 
         self.queue = queue
         self.max_time = max_time
@@ -94,18 +108,23 @@ class QueuedTweetListener(StreamListener):
             if self.retweets or not is_retweet(tweet):
                 self.queue.enqueue(tweet)
 
-            tweet = self.filter(tweet)
+            tweet = self.validate(tweet)
 
             """
             Stop listening if the time limit has been exceeded.
             To stop listening, the function returns `False`
             """
             current = time.time()
-            return current - self.start < self.max_time
+            if current - self.start < self.max_time:
+                return True
+            else:
+                self.flush()
+                self.disconnect()
+                return False
 
-    def filter(self, tweet):
+    def validate(self, tweet):
         """
-        Filter the given tweet using the attributes.
+        Validate the given tweet using the attributes.
         If no attributes are given, the tweet's attributes are all retained.
 
         :param tweet: The tweet attributes as a dictionary.
