@@ -37,6 +37,7 @@ apd_tests() {
 
 	echo -e "${HIGHLIGHT}Extrapolators${DEFAULT}"
 	python3 -m unittest eventdt.apd.postprocessors.tests.test_extrapolator
+	python3 -m unittest eventdt.apd.extrapolators.external.tests.test_wikipedia_attribute_extrapolator
 	python3 -m unittest eventdt.apd.extrapolators.external.tests.test_wikipedia_extrapolator
 
 	echo -e "${HIGHLIGHT}Postprocessors${DEFAULT}"
