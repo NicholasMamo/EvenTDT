@@ -131,7 +131,7 @@ class WikipediaExtrapolator(Extrapolator):
         :type participants: list of str
 
         :return: The new participants and their scores.
-        :rtype: list of str
+        :rtype: dict
         """
 
         extrapolated = { }
