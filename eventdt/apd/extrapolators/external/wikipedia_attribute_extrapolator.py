@@ -25,19 +25,19 @@ class WikipediaAttributeExtrapolator(Extrapolator):
     Understanding, here, means what makes a participant a participant.
     The class uses the :class:`~attributes.extractors.linguistic.LinguisticExtractor` to create profiles of resolved participants and looks for other participants with similar attributes.
 
-    :ivar prune: The minimum number of times that an attribute must appear for the class to retain it.
-                 The algorithm prunes attributes that occur fewer times.
-                 By default, a threshold of 1 retains all attributes.
+    :ivar prune: The threshold at which attributes are removed.
+                 If an attribute appears this many times or fewer, the extrapolator removes it.
+                 By default, a threshold of 0 retains all attributes.
     :vartype prune: int
     """
 
-    def __init__(self, prune=1):
+    def __init__(self, prune=0):
         """
         Create the :class:`~WikipediaAttributeExtrapolator`.
 
-        :param prune: The minimum number of times that an attribute must appear for the class to retain it.
-                      The algorithm prunes attributes that occur fewer times.
-                      By default, a threshold of 1 retains all attributes.
+        :param prune: The threshold at which attributes are removed.
+                      If an attribute appears this many times or fewer, the extrapolator removes it.
+                      By default, a threshold of 0 retains all attributes.
         :type prune: int
         """
 
@@ -68,8 +68,10 @@ class WikipediaAttributeExtrapolator(Extrapolator):
         participants = list(participants.values()) if type(participants) is dict else participants
 
         resolved = self._build_profiles(participants)
+        resolved = self._prune(resolved)
         candidates = self._generate_candidates(resolved)
-        extrapolated = self._score_and_rank(resolved, candidates)
+        candidaes = self._trim(candidates, resolved)
+        extrapolated = self._score_and_rank(candidates, resolved)
 
         return extrapolated
 
@@ -89,6 +91,29 @@ class WikipediaAttributeExtrapolator(Extrapolator):
 
         return { title: Profile(name=title) for title in titles }
 
+    def _prune(self, profiles):
+        """
+        Prune the attributes from the given profiles.
+
+        This function removes attributes that appear below the given threshold.
+        The function only considers attribute names, not values, when calculating the frequency.
+
+        :param profiles: The profiles to prune.
+                         The dictionary should have the profile names (the article titles) as keys, and the profiles as values.
+        :type profiles: dict
+
+        :return: Copies of the profiles with infrequent attributes removed.
+                 Each profile is returned as a dictionary, with the profile names as keys and their scores as values.
+        :rtype: dict
+
+        :raises ValueError: If the number of profiles is lower than the prune threshold, which would remove all attributes.
+        """
+
+        if self.prune and self.prune >= len(profiles):
+            raise ValueError(f"The number of profiles ({ len(profiles) }) is less than the prune threshold ({ self.prune }) and will remove all attributes")
+
+        return { name: profile.copy() for name, profile in profiles.items() }
+
     def _generate_candidates(self, participants):
         """
         Generate a list of candidates from the resolved participants.
@@ -103,19 +128,40 @@ class WikipediaAttributeExtrapolator(Extrapolator):
 
         return { }
 
-    def _score_and_rank(self, reference, candidates):
+    def _trim(self, candidates, reference):
+        """
+        Trim the attributes the candidates that do not appear in the reference profiles.
+
+        :param profiles: The profiles to trim.
+                         The dictionary should have the profile names (the article titles) as keys, and the profiles as values.
+        :type profiles: list of :class:`~attributes.profile.Profile`
+        :param reference: The reference profiles against which to trim the profiles.
+                          The dictionary should have the profile names (the article titles) as keys, and the profiles as values.
+        :type reference: dict
+
+        :return: Copies of the profiles with only the attributes that appear in the reference profiles.
+                 Each profile is returned as a dictionary, with the profile names as keys and their scores as values.
+        :rtype: dict
+        """
+
+        if reference:
+            return { name: profile.copy() for name, profile in candidates.items() }
+        else:
+            return { name: Profile(name=profile.name, text=profile.text) for name, profile in candidates.items() }
+
+    def _score_and_rank(self, candidates, reference):
         """
         Score the given profiles by comparing them with the reference profiles.
 
         The comparison calculates the Jaccard similarity between each profile and all other reference profiles.
         The final score of a profile is its average similarity with all other reference profiles
 
-        :param reference: The reference profiles against which to calculate the score of the candidates.
-                          The dictionary should have the profile names (the article titles) as keys, and the profiles as values.
-        :type reference: dict
         :param candidates: The profiles for which to calculate the score, representing candidates.
                            The dictionary should have the profile names (the article titles) as keys, and the profiles as values.
         :type candidates: dict
+        :param reference: The reference profiles against which to calculate the score of the candidates.
+                          The dictionary should have the profile names (the article titles) as keys, and the profiles as values.
+        :type reference: dict
 
         :return: The scores for each candidate profile as a dictionary, with the profile names as keys and their scores as values.
         :rtype: dict
