@@ -21,19 +21,54 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
     Test the implementation and results of the Wikipedia attribute extrapolator.
     """
 
-    def test_init_default_prune(self):
+    def test_init_prune_default(self):
         """
         Test that the default pruning value is 0 and accepts all attributes.
         """
 
         self.assertEqual(0, WikipediaAttributeExtrapolator().prune)
 
-    def test_init_save_prune(self):
+    def test_init_prune_save(self):
         """
         Test that the extrapolator saves the given prune value.
         """
 
         self.assertEqual(2, WikipediaAttributeExtrapolator(prune=2).prune)
+
+    def test_init_prune_negative(self):
+        """
+        Test that the extrapolator raises a ``ValueError`` if the prune value is negative.
+        """
+
+        self.assertRaises(ValueError, WikipediaAttributeExtrapolator, prune=-1)
+
+    def test_init_prune_float(self):
+        """
+        Test that the extrapolator raises a ``ValueError`` if the prune value is a floating point number.
+        """
+
+        self.assertRaises(ValueError, WikipediaAttributeExtrapolator, prune=1.1)
+
+    def test_init_prune_float_integer(self):
+        """
+        Test that the extrapolator does not raise a ``ValueError`` if the prune value is a rounded floating point number.
+        """
+
+        self.assertTrue(WikipediaAttributeExtrapolator(prune=1.0))
+
+    def test_init_prune_integer(self):
+        """
+        Test that the extrapolator does not raise a ``ValueError`` if the prune value is an integer.
+        """
+
+        self.assertTrue(WikipediaAttributeExtrapolator(prune=1))
+
+    def test_init_prune_zero(self):
+        """
+        Test that the extrapolator does not raise a ``ValueError`` if the prune value is zero.
+        """
+
+        self.assertTrue(WikipediaAttributeExtrapolator(prune=0))
 
     def test_extract_none(self):
         """

@@ -42,7 +42,11 @@ class WikipediaAttributeExtrapolator(Extrapolator):
                       If an attribute appears this many times or fewer, the extrapolator removes it.
                       By default, a threshold of 0 retains all attributes.
         :type prune: int
+        :raises ValueError: If the prune value is not zero or a natural number.
         """
+
+        if prune < 0 or prune % 1:
+            raise ValueError(f"The prune value must be zero or a natural number; receivedd { prune }")
 
         self.prune = prune
 
