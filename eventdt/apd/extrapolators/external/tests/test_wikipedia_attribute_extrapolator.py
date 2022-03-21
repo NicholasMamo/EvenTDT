@@ -268,14 +268,15 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         Test that when pruning, the original candidates are not changed.
         """
 
-        profiles = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
-                                       name='Nevada', text='Nevada is a state in the West of the United States of America') }
+        profiles = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_of': { 'united states', 'america' } },
+                                       name='Nevada', text='Nevada is a state of the United States of America'),
+                     'Alaska': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
+                                       name='Hawaii', text='Nevada is a state in the Western United States') }
 
         original = profiles['Nevada'].copy()
-        extrapolator = WikipediaAttributeExtrapolator()
+        extrapolator = WikipediaAttributeExtrapolator(prune=1)
         pruned = extrapolator._prune(profiles)
-        # TODO: Uncomment after implementing
-        # self.assertNotEqual(original.attributes, pruned['Nevada'].attributes)
+        self.assertNotEqual(original.attributes, pruned['Nevada'].attributes)
         self.assertEqual(original.attributes, profiles['Nevada'].attributes)
 
     def test_prune_all_profiles(self):
@@ -291,13 +292,28 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         self.assertEqual(len(profiles), len(pruned))
         self.assertEqual(profiles.keys(), pruned.keys())
 
-    def test_prune_zero(self):
+    def test_prune_none(self):
         """
         Test that pruning with no profiles raises no ``ValueError`` if the prune value is zero.
         """
 
         extrapolator = WikipediaAttributeExtrapolator(prune=0)
         self.assertEqual({ }, extrapolator._prune({ }))
+
+    def test_prune_zero(self):
+        """
+        Test that pruning with a prune value of zero returns all profiles unchanged.
+        """
+
+        profiles = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_of': { 'united states', 'america' } },
+                                       name='Nevada', text='Nevada is a state of the United States of America'),
+                     'Alaska': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
+                                       name='Hawaii', text='Nevada is a state in the Western United States') }
+
+        extrapolator = WikipediaAttributeExtrapolator(prune=0)
+        pruned = extrapolator._prune(profiles)
+        self.assertTrue(all( set(profiles[name].attributes) == set(pruned[name].attributes)
+                             for name in profiles ))
 
     def test_prune_few_profiles(self):
         """
@@ -309,6 +325,21 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
 
         extrapolator = WikipediaAttributeExtrapolator(prune=1)
         self.assertRaises(ValueError, extrapolator._prune, profiles)
+
+    def test_prune_frequency(self):
+        """
+        Test that pruning, the remaining attributes have a frequency higher than the prune value.
+        """
+
+        profiles = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_of': { 'united states', 'america' } },
+                                       name='Nevada', text='Nevada is a state of the United States of America'),
+                     'Alaska': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
+                                       name='Hawaii', text='Nevada is a state in the Western United States') }
+
+        extrapolator = WikipediaAttributeExtrapolator(prune=1)
+        pruned = extrapolator._prune(profiles)
+        freq = extrapolator._attribute_frequency(pruned)
+        self.assertTrue(all( value > extrapolator.prune for value in freq.values() ))
 
     def test_all_attributes_from_empty(self):
         """
