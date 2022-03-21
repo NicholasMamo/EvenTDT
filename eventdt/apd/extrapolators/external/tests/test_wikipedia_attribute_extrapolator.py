@@ -295,6 +295,49 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         extrapolator = WikipediaAttributeExtrapolator(prune=1)
         self.assertRaises(ValueError, extrapolator._prune, profiles)
 
+    def test_all_attributes_from_empty(self):
+        """
+        Test that extracting attributes from an empty dictionary returns no attributes.
+        """
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertEqual(set(), extrapolator._all_attributes({ }))
+
+    def test_all_attributes_return_set(self):
+        """
+        Test that extracting attributes returns a set.
+        """
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertEqual(set, type(extrapolator._all_attributes({ })))
+
+    def test_all_attributes_all_from_one(self):
+        """
+        Test that extracting attributes from one profile returns all attributes in that profile.
+        """
+
+        profiles = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_of': { 'united states', 'america' } },
+                                       name='Nevada', text='Nevada is a state of the United States of America') }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertEqual(set(profiles['Nevada'].attributes), extrapolator._all_attributes(profiles))
+
+    def test_all_attributes_from_multiple(self):
+        """
+        Test that extracting attributes from several profiles returns all profiles.
+        """
+
+        profiles = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_of': { 'united states', 'america' } },
+                                       name='Nevada', text='Nevada is a state of the United States of America'),
+                     'Alaska': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
+                                                     name='Hawaii', text='Nevada is a state in the Western United States') }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        attributes = extrapolator._all_attributes(profiles)
+        self.assertTrue(all( any(attribute in profile.attributes for profile in profiles.values())
+                             for attribute in attributes ))
+        self.assertTrue(all( attribute in attributes for profile in profiles.values() for attribute in profile.attributes ))
+
     def test_generate_candidates_none(self):
         """
         Test that when generating candidates from an empty list of participants, the function returns an empty dictionary.

@@ -126,6 +126,20 @@ class WikipediaAttributeExtrapolator(Extrapolator):
 
         return { name: profile.copy() for name, profile in profiles.items() }
 
+    def _all_attributes(self, profiles):
+        """
+        Extract the set of all attributes from the profiles.
+
+        :param profiles: The profiles from where to extract attributes.
+                         The dictionary should have the profile names (the article titles) as keys, and the profiles as values.
+        :type profiles: dict
+
+        :return: A set of attribute names in the profiles.
+        :rtype: set of str
+        """
+
+        return set([ attribute for profile in profiles.values() for attribute in profile.attributes ])
+
     def _generate_candidates(self, participants):
         """
         Generate a list of candidates from the resolved participants.
