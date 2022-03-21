@@ -20,7 +20,7 @@ if path not in sys.path:
 from ..extrapolator import Extrapolator
 from attributes import Profile
 from attributes.extractors import LinguisticExtractor
-from wikinterface import text
+from wikinterface import links, text
 
 class WikipediaAttributeExtrapolator(Extrapolator):
     """
@@ -73,7 +73,7 @@ class WikipediaAttributeExtrapolator(Extrapolator):
         resolved = self._build_profiles(participants)
         resolved = self._prune(resolved)
         candidates = self._generate_candidates(resolved)
-        candidaes = self._trim(candidates, resolved)
+        candidates = self._trim(candidates, resolved)
         extrapolated = self._score_and_rank(candidates, resolved)
 
         return extrapolated
@@ -83,7 +83,7 @@ class WikipediaAttributeExtrapolator(Extrapolator):
         Build attribute profiles from the given Wikipedia articles.
 
         For each article, the function returns a :class:`~attributes.profile.Profile`.
-        The profile considers only the first sentence of the article, since it usually refers unambiguously to the article's concept.
+        The profile considers only the first sentence of the article, since it usually refers unambiguously to the article's subject.
 
         :param titles: The Wikipedia article titles.
         :type titles: list of str
@@ -95,7 +95,7 @@ class WikipediaAttributeExtrapolator(Extrapolator):
         profiles = { title: Profile(name=title) for title in titles }
 
         extractor = LinguisticExtractor()
-        definitions = text.collect(titles)
+        definitions = text.collect(titles, introduction_only=True)
         definitions = { title: nltk.sent_tokenize(text)[0] if text else text
                         for title, text in definitions.items() }
         profiles.update({ title: extractor.extract(text, name=title)
@@ -173,6 +173,8 @@ class WikipediaAttributeExtrapolator(Extrapolator):
         """
         Generate a list of candidates from the resolved participants.
 
+        The function looks for outgoing links using Wikipedia and builds profiles for them.
+
         :param participants: A list of resolved or extrapolated participants from which to generate candidates.
         :type participants: list of str
 
@@ -181,7 +183,13 @@ class WikipediaAttributeExtrapolator(Extrapolator):
         :rtype: dict
         """
 
-        return { }
+        profiles = { }
+
+        related = links.collect(participants, separate=True, introduction_only=False)
+        related = [ link for links in related.values() for link in links ]
+        profiles = self._build_profiles(related)
+
+        return profiles
 
     def _trim(self, candidates, reference):
         """

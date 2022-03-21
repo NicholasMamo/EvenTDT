@@ -488,10 +488,8 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         Test that when generating candidates from an empty list of participants, the function returns an empty dictionary.
         """
 
-        resolved = { 'Nevada': 'Nevada', 'New York': 'New York (state)' }
-
         extrapolator = WikipediaAttributeExtrapolator()
-        candidates = extrapolator._generate_candidates(resolved.values())
+        candidates = extrapolator._generate_candidates([ ])
         self.assertEqual({ }, candidates)
 
     def test_generate_candidates_returns_dict(self):
@@ -499,10 +497,10 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         Test that when generating candidates, the function returns an empty dictionary.
         """
 
-        resolved = { 'Nevada': 'Nevada', 'New York': 'New York (state)' }
+        resolved = { 'Katie Shanahan': 'Katie Shanahan' }
 
         extrapolator = WikipediaAttributeExtrapolator()
-        candidates = extrapolator._generate_candidates(resolved.values())
+        candidates = extrapolator._generate_candidates(list(resolved.values()))
         self.assertEqual(dict, type(candidates))
 
     def test_generate_candidates_title_key(self):
@@ -510,10 +508,10 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         Test that when generating candidates, the page titles are the keys.
         """
 
-        resolved = { 'Nevada': 'Nevada', 'New York': 'New York (state)' }
+        resolved = { 'Nevada': 'Nevada', 'Alaska': 'Alaska' }
 
         extrapolator = WikipediaAttributeExtrapolator()
-        candidates = extrapolator._generate_candidates(resolved.values())
+        candidates = extrapolator._generate_candidates(list(resolved.values()))
         self.assertTrue(all( str == type(key) for key in candidates.keys() ))
 
     def test_generate_candidates_profile_value(self):
@@ -521,11 +519,33 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         Test that when generating candidates, the profiles are the values.
         """
 
-        resolved = { 'Nevada': 'Nevada', 'New York': 'New York (state)' }
+        resolved = { 'Suneh': 'Suneh' }
 
         extrapolator = WikipediaAttributeExtrapolator()
-        candidates = extrapolator._generate_candidates(resolved.values())
+        candidates = extrapolator._generate_candidates(list(resolved.values()))
         self.assertTrue(all( Profile == type(value) for value in candidates.values() ))
+
+    def test_generate_candidates_introduction_links(self):
+        """
+        Test that when generating candidates, the function collects links from the introduction.
+        """
+
+        resolved = { 'Odozana floccosa': 'Odozana floccosa' }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        candidates = extrapolator._generate_candidates(list(resolved.values()))
+        self.assertTrue(all( link in candidates for link in { 'Moth', 'Arctiinae (moth)', 'Francis Walker (entomologist)', 'Panama', 'Tefé' } ))
+
+    def test_generate_candidates_non_introduction_links(self):
+        """
+        Test that when generating candidates, the function collects links from parts that are not in the introduction.
+        """
+
+        resolved = { 'Odozana floccosa': 'Odozana floccosa' }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        candidates = extrapolator._generate_candidates(list(resolved.values()))
+        self.assertTrue(all( link in candidates for link in { 'Animalia', 'Arthropoda', 'Insecta', 'Lepidoptera', 'Erebidae', 'Odozana' } ))
 
     def test_trim_candidates_none(self):
         """
