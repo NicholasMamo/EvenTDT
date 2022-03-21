@@ -119,7 +119,6 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
 
         extrapolator = WikipediaAttributeExtrapolator(prune=0)
         self.assertEqual({ }, extrapolator.extrapolate([ ]))
-        self.assertEqual({ }, extrapolator.extrapolate({ }))
 
     def test_extrapolate_from_list(self):
         """
