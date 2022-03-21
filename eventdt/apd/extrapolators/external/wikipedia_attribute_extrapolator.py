@@ -87,6 +87,7 @@ class WikipediaAttributeExtrapolator(Extrapolator):
         candidates = self._generate_candidates(list(resolved))
         candidates = self._trim(candidates, resolved)
         extrapolated = self._score_and_rank(candidates, resolved)
+        # TODO: Remove duplicates
 
         return extrapolated
 
@@ -228,9 +229,9 @@ class WikipediaAttributeExtrapolator(Extrapolator):
         freq = { link: links.count(link) for link in links }
         return sorted(freq.keys(), key=freq.get, reverse=True)
 
-    def _trim(self, candidates, reference):
+    def _trim(self, profiles, reference):
         """
-        Trim the attributes the candidates that do not appear in the reference profiles.
+        Trim the attributes that do not appear in the reference profiles from the given profiles.
 
         :param profiles: The profiles to trim.
                          The dictionary should have the profile names (the article titles) as keys, and the profiles as values.
@@ -244,10 +245,16 @@ class WikipediaAttributeExtrapolator(Extrapolator):
         :rtype: dict
         """
 
-        if reference:
-            return { name: profile.copy() for name, profile in candidates.items() }
-        else:
-            return { name: Profile(name=profile.name, text=profile.text) for name, profile in candidates.items() }
+        profiles = { name: profile.copy() for name, profile in profiles.items() }
+
+        attributes = self._all_attributes(reference)
+
+        # update the profile attributes
+        for profile in profiles.values():
+            profile.attributes = { attr: value for attr, value in profile.attributes.items()
+                                               if attr in attributes }
+
+        return profiles
 
     def _score_and_rank(self, candidates, reference):
         """

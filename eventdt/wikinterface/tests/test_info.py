@@ -79,6 +79,15 @@ class TestInfo(unittest.TestCase):
         type = info.types(page)
         self.assertEqual(info.ArticleType.CATEGORY, type[page])
 
+    def test_get_type_help(self):
+        """
+        Test getting the type of a template page returns the correct type.
+        """
+
+        page = 'Template:Olympique Lyonnais squad'
+        type = info.types(page)
+        self.assertEqual(info.ArticleType.TEMPLATE, type[page])
+
     def test_get_type_list(self):
         """
         Test getting the type of a page that is a list of articles.
