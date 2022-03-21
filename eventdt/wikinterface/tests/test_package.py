@@ -42,6 +42,29 @@ class TestWikinterface(unittest.TestCase):
         self.assertTrue('Striker (association football)' in pages)
         self.assertFalse('Forward (association football)' in pages)
 
+    def test_revert_redirects_multiple(self):
+        """
+        Test that when reverting multiple redirections, the original source is returned.
+        """
+
+        """
+        Create the test data.
+        """
+        redirects = [
+            {'from': 'Transgender rights', 'to': 'Legal status of transgender people'},
+            {'from': 'Legal status of transgender people', 'to': 'Legal rights of trans people'}
+        ]
+        results = {
+            'Legal rights of trans people': ''
+        }
+
+        """
+        Revert the redirections.
+        """
+
+        pages = revert_redirects(results, redirects, with_redirects=False)
+        self.assertTrue('Transgender rights' in pages)
+
     def test_revert_redirects_with_keep(self):
         """
         Test that when reverting redirections and keeping those redirections, the redirections are retained.

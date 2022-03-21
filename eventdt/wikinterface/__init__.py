@@ -103,14 +103,16 @@ def revert_redirects(results, redirects, with_redirects=True):
     """
     targets = { redirect["to"]: redirect["from"] for redirect in redirects }
 
-    for page in results:
+    for target in results:
         # if a page was redirected, 'redirect' it back
-        if page in targets:
-            pages[targets[page]] = pages[page]
+        while target in targets:
+            pages[targets[target]] = pages[target]
 
             # only delete pages if we don't have a list of pages to keep or if the page does not appear in the list
             if not with_redirects:
-                del pages[page]
+                del pages[target]
+
+            target = targets[target]
 
     """
     In some cases, two pages may redirect to the same page.
