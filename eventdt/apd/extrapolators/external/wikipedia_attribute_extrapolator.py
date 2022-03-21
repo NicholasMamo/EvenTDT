@@ -104,10 +104,13 @@ class WikipediaAttributeExtrapolator(Extrapolator):
         :rtype: dict
         """
 
+        # create the empty profiles in case some pages are missing
         profiles = { title: Profile(name=title) for title in titles }
 
         extractor = LinguisticExtractor()
         definitions = text.collect(titles, introduction_only=True)
+        definitions = { title: text for title, text in definitions.items()
+                                    if title in titles }
         definitions = { title: nltk.sent_tokenize(text)[0] if text else text
                         for title, text in definitions.items() }
         profiles.update({ title: extractor.extract(text, name=title)

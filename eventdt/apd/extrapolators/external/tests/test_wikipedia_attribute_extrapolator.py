@@ -285,6 +285,32 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         profiles = extrapolator._build_profiles(list(resolved.values()))
         self.assertTrue(all( profile.text for profile in profiles.values() ))
 
+    def test_build_profiles_ignores_redirects(self):
+        """
+        Test that building profiles ignores redirects and returns only the original titles.
+        """
+
+        resolved = { 'Education in Alaska': 'Education in Alaska' }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        profiles = extrapolator._build_profiles(list(resolved.values()))
+        self.assertEqual(set(resolved.keys()), set(profiles.keys()))
+        self.assertFalse('Alaska' in profiles)
+
+    def test_build_profiles_redirects_with_attributes(self):
+        """
+        Test that building profiles of pages that redirects still returns a profile with attributes from the redirect target.
+        """
+
+        extrapolator = WikipediaAttributeExtrapolator()
+
+        resolved = { 'Alaska': 'Alaska' }
+        target = extrapolator._build_profiles(list(resolved.values()))
+
+        resolved = { 'Education in Alaska': 'Education in Alaska' }
+        source = extrapolator._build_profiles(list(resolved.values()))
+        self.assertEqual(target['Alaska'].attributes, source['Education in Alaska'].attributes)
+
     def test_prune_none(self):
         """
         Test that pruning no profiles returns another empty dictionary.
