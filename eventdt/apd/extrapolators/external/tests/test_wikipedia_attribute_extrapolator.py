@@ -645,6 +645,31 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         # infobox links
         self.assertTrue(all( link in candidates for link in { 'Animalia', 'Arthropoda', 'Insecta', 'Lepidoptera', 'Erebidae', 'Odozana' } ))
 
+    def test_generate_candidates_retain_top_links(self):
+        """
+        Test that when generating candidates with a limited number of links, only the top links are retained.
+        """
+
+        resolved = { 'Pyre': 'Pyre (video game)', 'Transistor': 'Transistor (video game)', 'Bastion': 'Bastion (video game)' }
+
+        extrapolator = WikipediaAttributeExtrapolator(fetch=25)
+        candidates = extrapolator._generate_candidates(list(resolved.values()))
+        self.assertTrue('Supergiant Games' in candidates)
+        self.assertTrue('Hades (video game)' in candidates)
+        self.assertTrue('Greg Kasavin' in candidates)
+        self.assertTrue('Darren Korb' in candidates)
+
+    def test_generate_candidates_correct_fetch(self):
+        """
+        Test that when generating candidates with a limited number of links, the correct number of links are retained.
+        """
+
+        resolved = { 'Pyre': 'Pyre (video game)', 'Transistor': 'Transistor (video game)', 'Bastion': 'Bastion (video game)' }
+
+        extrapolator = WikipediaAttributeExtrapolator(fetch=25)
+        candidates = extrapolator._generate_candidates(list(resolved.values()))
+        self.assertEqual(extrapolator.fetch, len(candidates))
+
     def test_rank_links_none(self):
         """
         Test that ranking no links returns another empty list.

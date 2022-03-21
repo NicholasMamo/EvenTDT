@@ -206,8 +206,9 @@ class WikipediaAttributeExtrapolator(Extrapolator):
         related = [ link for links in related.values() for link in links ]
 
         # fetch the link types and retain only normal pages
-        types = info.types(set(related))
+        types = info.types(list(related))
         related = [ page for page in related if types[page] == info.ArticleType.NORMAL ]
+        related = self._rank_links(related)[:self.fetch]
 
         # build the profiles
         profiles = self._build_profiles(related)
