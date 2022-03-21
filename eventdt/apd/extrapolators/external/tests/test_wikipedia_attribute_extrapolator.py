@@ -128,7 +128,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         # TODO: Make the test more robust and grounded
 
         extrapolator = WikipediaAttributeExtrapolator()
-        extrapolated = extrapolator.extrapolate([ 'Nevada', 'New York (state)' ])
+        extrapolated = extrapolator.extrapolate([ 'David Preiss' ])
         self.assertEqual(dict, type(extrapolated))
 
     def test_extrapolate_from_dict(self):
@@ -139,7 +139,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         # TODO: Make the test more robust and grounded
 
         extrapolator = WikipediaAttributeExtrapolator()
-        extrapolated = extrapolator.extrapolate({ 'Nevada': 'Nevada', 'New York': 'New York (state)' })
+        extrapolated = extrapolator.extrapolate({ 'Heinrich Gärtner': 'Heinrich Gärtner (cinematographer)' })
         self.assertEqual(dict, type(extrapolated))
 
     def test_extrapolate_returns_dict(self):
@@ -148,7 +148,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         """
 
         extrapolator = WikipediaAttributeExtrapolator()
-        extrapolated = extrapolator.extrapolate({ 'Nevada': 'Nevada', 'New York': 'New York (state)' })
+        extrapolated = extrapolator.extrapolate({ 'Max Mollar': 'Max Mollar' })
         self.assertEqual(dict, type(extrapolated))
 
     def test_extrapolate_title_key(self):
@@ -157,7 +157,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         """
 
         extrapolator = WikipediaAttributeExtrapolator()
-        extrapolated = extrapolator.extrapolate({ 'Nevada': 'Nevada', 'New York': 'New York (state)' })
+        extrapolated = extrapolator.extrapolate({ 'Matin Balsini': 'Matin Balsini' })
         self.assertTrue(all( str == type(key) for key in extrapolated.keys() ))
 
     def test_extrapolate_score_value(self):
@@ -166,7 +166,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         """
 
         extrapolator = WikipediaAttributeExtrapolator()
-        extrapolated = extrapolator.extrapolate({ 'Nevada': 'Nevada', 'New York': 'New York (state)' })
+        extrapolated = extrapolator.extrapolate({ 'Elachista illectella': 'Elachista illectella' })
         self.assertTrue(all( float == type(value) for value in extrapolated.values() ))
 
     def test_build_profiles_none(self):
