@@ -263,6 +263,21 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         self.assertTrue(all( profiles[name].name == pruned[name].name for name in pruned ))
         self.assertTrue(all( profiles[name].text == pruned[name].text for name in pruned ))
 
+    def test_prune_original_unchanged(self):
+        """
+        Test that when pruning, the original candidates are not changed.
+        """
+
+        profiles = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
+                                       name='Nevada', text='Nevada is a state in the West of the United States of America') }
+
+        original = profiles['Nevada'].copy()
+        extrapolator = WikipediaAttributeExtrapolator()
+        pruned = extrapolator._prune(profiles)
+        # TODO: Uncomment after implementing
+        # self.assertNotEqual(original.attributes, pruned['Nevada'].attributes)
+        self.assertEqual(original.attributes, profiles['Nevada'].attributes)
+
     def test_prune_all_profiles(self):
         """
         Test that pruning returns all profiles.
@@ -330,13 +345,112 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         profiles = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_of': { 'united states', 'america' } },
                                        name='Nevada', text='Nevada is a state of the United States of America'),
                      'Alaska': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
-                                                     name='Hawaii', text='Nevada is a state in the Western United States') }
+                                       name='Hawaii', text='Nevada is a state in the Western United States') }
 
         extrapolator = WikipediaAttributeExtrapolator()
         attributes = extrapolator._all_attributes(profiles)
         self.assertTrue(all( any(attribute in profile.attributes for profile in profiles.values())
                              for attribute in attributes ))
         self.assertTrue(all( attribute in attributes for profile in profiles.values() for attribute in profile.attributes ))
+
+    def test_attribute_frequency_from_empty(self):
+        """
+        Test that calculating the attribute frequency from no profiles returns an empty dictionary.
+        """
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertEqual({ }, extrapolator._attribute_frequency({ }))
+
+    def test_attribute_frequency_return_dict(self):
+        """
+        Test that calculating the attribute frequency returns a dictionary.
+        """
+
+        profiles = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_of': { 'united states', 'america' } },
+                                       name='Nevada', text='Nevada is a state of the United States of America') }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertEqual(dict, type(extrapolator._attribute_frequency(profiles)))
+
+    def test_attribute_frequency_attribute_key(self):
+        """
+        Test that calculating the attribute frequency returns the attributes as keys.
+        """
+
+        profiles = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_of': { 'united states', 'america' } },
+                                       name='Nevada', text='Nevada is a state of the United States of America') }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        freq = extrapolator._attribute_frequency(profiles)
+        self.assertTrue(all( str == type(key) for key in freq.keys() ))
+
+    def test_attribute_frequency_frequency_value(self):
+        """
+        Test that calculating the attribute frequency returns integers as values.
+        """
+
+        profiles = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_of': { 'united states', 'america' } },
+                                       name='Nevada', text='Nevada is a state of the United States of America') }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        freq = extrapolator._attribute_frequency(profiles)
+        self.assertTrue(all( int == type(value) for value in freq.values() ))
+
+    def test_attribute_frequency_all_attributes(self):
+        """
+        Test that calculating the attribute frequency returns one value for all attribute.
+        """
+
+        profiles = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_of': { 'united states', 'america' } },
+                                       name='Nevada', text='Nevada is a state of the United States of America') }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        attributes = extrapolator._all_attributes(profiles)
+        freq = extrapolator._attribute_frequency(profiles)
+        self.assertEqual(attributes, set(freq))
+
+    def test_attribute_frequency_positive(self):
+        """
+        Test that calculating the attribute frequency returns a positive, non-zero score for all attributes.
+        """
+
+        profiles = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_of': { 'united states', 'america' } },
+                                       name='Nevada', text='Nevada is a state of the United States of America'),
+                     'Alaska': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
+                                       name='Hawaii', text='Nevada is a state in the Western United States') }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        freq = extrapolator._attribute_frequency(profiles)
+        self.assertTrue(all( _freq > 0 for _freq in freq.values() ))
+
+    def test_attribute_frequency_one_profile(self):
+        """
+        Test that calculating the attribute frequency from one profile returns a dictionary with all values 1.
+        """
+
+        profiles = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_of': { 'united states', 'america' } },
+                                       name='Nevada', text='Nevada is a state of the United States of America') }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        freq = extrapolator._attribute_frequency(profiles)
+        self.assertEqual(set(profiles['Nevada'].attributes), set(freq))
+        self.assertTrue(all( _freq == 1 for _freq in freq.values() ))
+
+    def test_attribute_frequency_several_profiles(self):
+        """
+        Test that calculating the attribute frequency from several profiles returns the correct scores.
+        """
+
+        profiles = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_of': { 'united states', 'america' } },
+                                       name='Nevada', text='Nevada is a state of the United States of America'),
+                     'Alaska': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
+                                       name='Hawaii', text='Nevada is a state in the Western United States') }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        freq = extrapolator._attribute_frequency(profiles)
+        self.assertEqual(2, freq['is'])
+        self.assertEqual(1, freq['is_of'])
+        self.assertEqual(1, freq['is_in'])
 
     def test_generate_candidates_none(self):
         """
@@ -464,6 +578,23 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         self.assertTrue(all( candidates[name] != trimmed[name] for name in trimmed ))
         self.assertTrue(all( candidates[name].name == trimmed[name].name for name in trimmed ))
         self.assertTrue(all( candidates[name].text == trimmed[name].text for name in trimmed ))
+
+    def test_trim_original_unchanged(self):
+        """
+        Test that when trimming, the original candidates are not changed.
+        """
+
+        candidates = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
+                                         name='Nevada', text='Nevada is a state in the West of the United States of America') }
+        reference = { 'Hawaii': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
+                                        name='Hawaii', text='Nevada is a state in the Western United States') }
+
+        original = candidates['Nevada'].copy()
+        extrapolator = WikipediaAttributeExtrapolator()
+        trimmed = extrapolator._trim(candidates, reference)
+        # TODO: Uncomment after implementing
+        # self.assertNotEqual(original.attributes, trimmed['Nevada'].attributes)
+        self.assertEqual(original.attributes, candidates['Nevada'].attributes)
 
     def test_trim_all_candidates(self):
         """

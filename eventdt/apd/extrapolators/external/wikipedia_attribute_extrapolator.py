@@ -140,6 +140,23 @@ class WikipediaAttributeExtrapolator(Extrapolator):
 
         return set([ attribute for profile in profiles.values() for attribute in profile.attributes ])
 
+    def _attribute_frequency(self, profiles):
+        """
+        Count the frequency of attributes in all profiles.
+
+        :param profiles: The profiles from where to count attribute frequency.
+                         The dictionary should have the profile names (the article titles) as keys, and the profiles as values.
+        :type profiles: dict
+
+        :return: A dictionary with attribute names as keys and their profile frequency as values.
+        :rtype: dict
+        """
+
+        freq = dict.fromkeys(self._all_attributes(profiles), 0)
+        freq = { attribute: sum( attribute in profile.attributes for profile in profiles.values())
+                 for attribute in freq }
+        return freq
+
     def _generate_candidates(self, participants):
         """
         Generate a list of candidates from the resolved participants.
