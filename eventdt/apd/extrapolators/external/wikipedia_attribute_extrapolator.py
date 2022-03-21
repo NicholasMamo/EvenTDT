@@ -34,7 +34,7 @@ class WikipediaAttributeExtrapolator(Extrapolator):
     :vartype prune: int
     """
 
-    def __init__(self, prune=0):
+    def __init__(self, prune=0, fetch=200):
         """
         Create the :class:`~WikipediaAttributeExtrapolator`.
 
@@ -42,13 +42,21 @@ class WikipediaAttributeExtrapolator(Extrapolator):
                       If an attribute appears this many times or fewer, the extrapolator removes it.
                       By default, a threshold of 0 retains all attributes.
         :type prune: int
+        :param fetch: The maximum number of candidates to fetch.
+        :type fetch: int
+
         :raises ValueError: If the prune value is not zero or a natural number.
+        :raises ValueError: If the fetch value is not a natural number.
         """
 
         if prune < 0 or prune % 1:
-            raise ValueError(f"The prune value must be zero or a natural number; receivedd { prune }")
+            raise ValueError(f"The prune value must be zero or a natural number; received { prune }")
+
+        if fetch < 1 or fetch % 1:
+            raise ValueError(f"The fetch value must be zero or a natural number; received { fetch }")
 
         self.prune = prune
+        self.fetch = fetch
 
     def extrapolate(self, participants, *args, **kwargs):
         """

@@ -70,6 +70,48 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
 
         self.assertTrue(WikipediaAttributeExtrapolator(prune=0))
 
+    def test_init_fetch_save(self):
+        """
+        Test that the extrapolator saves the given fetch value.
+        """
+
+        self.assertEqual(100, WikipediaAttributeExtrapolator(fetch=100).fetch)
+
+    def test_init_fetch_negative(self):
+        """
+        Test that the extrapolator raises a ``ValueError`` if the fetch value is negative.
+        """
+
+        self.assertRaises(ValueError, WikipediaAttributeExtrapolator, fetch=-100)
+
+    def test_init_fetch_float(self):
+        """
+        Test that the extrapolator raises a ``ValueError`` if the fetch value is a floating point number.
+        """
+
+        self.assertRaises(ValueError, WikipediaAttributeExtrapolator, fetch=100.5)
+
+    def test_init_fetch_float_integer(self):
+        """
+        Test that the extrapolator does not raise a ``ValueError`` if the fetch value is a rounded floating point number.
+        """
+
+        self.assertTrue(WikipediaAttributeExtrapolator(fetch=100.0))
+
+    def test_init_fetch_integer(self):
+        """
+        Test that the extrapolator does not raise a ``ValueError`` if the fetch value is an integer.
+        """
+
+        self.assertTrue(WikipediaAttributeExtrapolator(fetch=100))
+
+    def test_init_fetch_zero(self):
+        """
+        Test that the extrapolator raises a ``ValueError`` if the fetch value is zero.
+        """
+
+        self.assertRaises(ValueError, WikipediaAttributeExtrapolator, fetch=0)
+
     def test_extract_none(self):
         """
         Test that building a profile from an empty list of participants returns an empty dictionary.
