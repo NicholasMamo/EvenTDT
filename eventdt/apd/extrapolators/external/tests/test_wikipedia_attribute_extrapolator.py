@@ -3,6 +3,8 @@ Test the functionality of the Wikipedia attribute extrapolator.
 """
 
 import os
+import random
+import string
 import sys
 import unittest
 
@@ -99,9 +101,6 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         profiles = extrapolator._build_profiles([ ])
         self.assertEqual({ }, profiles)
 
-        profiles = extrapolator._build_profiles({ })
-        self.assertEqual({ }, profiles)
-
     def test_build_profiles_from_list(self):
         """
         Test that building a profile from a list constructs profiles for each element.
@@ -121,7 +120,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         resolved = { 'Nevada': 'Nevada', 'New York': 'New York (state)' }
 
         extrapolator = WikipediaAttributeExtrapolator()
-        profiles = extrapolator._build_profiles(resolved.values())
+        profiles = extrapolator._build_profiles(list(resolved.values()))
         self.assertEqual(dict, type(profiles))
 
     def test_build_profiles_title_key(self):
@@ -132,7 +131,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         resolved = { 'Nevada': 'Nevada', 'New York': 'New York (state)' }
 
         extrapolator = WikipediaAttributeExtrapolator()
-        profiles = extrapolator._build_profiles(resolved.values())
+        profiles = extrapolator._build_profiles(list(resolved.values()))
         self.assertTrue(all( str == type(key) for key in profiles.keys() ))
         self.assertEqual(list(resolved.values()), list(profiles.keys()))
 
@@ -144,7 +143,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         resolved = { 'Nevada': 'Nevada', 'New York': 'New York (state)' }
 
         extrapolator = WikipediaAttributeExtrapolator()
-        profiles = extrapolator._build_profiles(resolved.values())
+        profiles = extrapolator._build_profiles(list(resolved.values()))
         self.assertTrue(all(Profile == type(value) for value in profiles.values()))
 
     def test_build_profiles_all_titles(self):
@@ -155,9 +154,36 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         resolved = { 'Nevada': 'Nevada', 'New York': 'New York (state)' }
 
         extrapolator = WikipediaAttributeExtrapolator()
-        profiles = extrapolator._build_profiles(resolved.values())
+        profiles = extrapolator._build_profiles(list(resolved.values()))
         self.assertTrue(all( title in profiles.keys() for title in resolved.values() ))
         self.assertTrue(all( title in resolved.values() for title in profiles.keys() ))
+
+    def test_build_profiles_nonexistent_page(self):
+        """
+        Test that building a profile for a page that doesn't exist still returns a profile.
+        """
+
+        title = ''.join( random.choice(string.ascii_letters) for i in range(20))
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        profiles = extrapolator._build_profiles([ title ])
+        self.assertEqual(title, profiles[title].name)
+        self.assertEqual('', profiles[title].text)
+        self.assertEqual({ }, profiles[title].attributes)
+
+    def test_build_profiles_first_sentence(self):
+        """
+        Test that building a profile uses only the text from the first sentence.
+        """
+
+        resolved = { 'Alaska': 'Alaska' }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        profiles = extrapolator._build_profiles(list(resolved.values()))
+        self.assertEqual('Alaska', profiles['Alaska'].name)
+        self.assertEqual("Alaska ( (listen); Aleut: Alax̂sxax̂; Inupiaq: Alaasikaq; Alutiiq: Alas'kaaq; Yup'ik: Alaskaq; Tlingit: Anáaski) is a state located in the Western United States on the northwest extremity of North America.",
+                         profiles['Alaska'].text)
+        self.assertEqual({ 'is': { 'state' }, 'located_in': { 'western united states' }, 'located_on': { 'northwest extremity' }, 'located_of': { 'north america' } }, profiles['Alaska'].attributes)
 
     def test_build_profiles_with_name(self):
         """
@@ -167,8 +193,19 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         resolved = { 'Nevada': 'Nevada', 'New York': 'New York (state)' }
 
         extrapolator = WikipediaAttributeExtrapolator()
-        profiles = extrapolator._build_profiles(resolved.values())
+        profiles = extrapolator._build_profiles(list(resolved.values()))
         self.assertTrue(all( profile.name == title for title, profile in profiles.items() ))
+
+    def test_build_profiles_with_text(self):
+        """
+        Test that building a profile returns a profile with the title as the profile's name.
+        """
+
+        resolved = { 'Nevada': 'Nevada', 'New York': 'New York (state)' }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        profiles = extrapolator._build_profiles(list(resolved.values()))
+        self.assertTrue(all( profile.text for profile in profiles.values() ))
 
     def test_prune_none(self):
         """

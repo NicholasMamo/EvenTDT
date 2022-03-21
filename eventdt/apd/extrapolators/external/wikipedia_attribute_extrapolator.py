@@ -9,6 +9,7 @@ The extrapolator revolves closely around the :class:`~attributes.extractors.ling
     Both the :class:`~apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver` and the :class:`~apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver` return participants as Wikipedia concepts.
 """
 
+import nltk
 import os
 import sys
 
@@ -16,8 +17,10 @@ path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
-from attributes import Profile
 from ..extrapolator import Extrapolator
+from attributes import Profile
+from attributes.extractors import LinguisticExtractor
+from wikinterface import text
 
 class WikipediaAttributeExtrapolator(Extrapolator):
     """
@@ -89,7 +92,16 @@ class WikipediaAttributeExtrapolator(Extrapolator):
         :rtype: dict
         """
 
-        return { title: Profile(name=title) for title in titles }
+        profiles = { title: Profile(name=title) for title in titles }
+
+        extractor = LinguisticExtractor()
+        definitions = text.collect(titles)
+        definitions = { title: nltk.sent_tokenize(text)[0] if text else text
+                        for title, text in definitions.items() }
+        profiles.update({ title: extractor.extract(text, name=title)
+                          for title, text in definitions.items() })
+
+        return profiles
 
     def _prune(self, profiles):
         """
