@@ -36,6 +36,7 @@ class ArticleType(Enum):
     MISSING = 2
     LIST = 3
     HELP = 4
+    CATEGORY = 5
 
 def types(titles, undo_redirects=True):
     """
@@ -118,6 +119,10 @@ def types(titles, undo_redirects=True):
 
                 if title.lower().startswith("help:"):
                     _types[title] = ArticleType.HELP
+                    continue
+
+                if title.lower().startswith("category:"):
+                    _types[title] = ArticleType.CATEGORY
                     continue
 
                 _types[title] = ArticleType.NORMAL

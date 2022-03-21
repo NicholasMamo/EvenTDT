@@ -70,6 +70,15 @@ class TestInfo(unittest.TestCase):
         type = info.types(page)
         self.assertEqual(info.ArticleType.HELP, type[page])
 
+    def test_get_type_help(self):
+        """
+        Test getting the type of a help page returns the correct type.
+        """
+
+        page = 'Category:Moths described in 1864'
+        type = info.types(page)
+        self.assertEqual(info.ArticleType.CATEGORY, type[page])
+
     def test_get_type_list(self):
         """
         Test getting the type of a page that is a list of articles.
