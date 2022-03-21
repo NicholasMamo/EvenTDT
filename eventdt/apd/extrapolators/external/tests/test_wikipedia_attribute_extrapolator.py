@@ -542,6 +542,59 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         # infobox links
         self.assertTrue(all( link in candidates for link in { 'Animalia', 'Arthropoda', 'Insecta', 'Lepidoptera', 'Erebidae', 'Odozana' } ))
 
+    def test_rank_links_none(self):
+        """
+        Test that ranking no links returns another empty list.
+        """
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertEqual([ ], extrapolator._rank_links([ ]))
+
+    def test_rank_links_all(self):
+        """
+        Test that ranking links returns all links.
+        """
+
+        links = [ 'Animalia', 'Arthropoda', 'Insecta', 'Lepidoptera', 'Erebidae', 'Odozana' ]
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        ranked = extrapolator._rank_links(links)
+        self.assertEqual(set(links), set(ranked))
+
+    def test_rank_links_unique(self):
+        """
+        Test that ranking links returns no duplicates.
+        """
+
+        links = [ 'Animalia', 'Arthropoda', 'Insecta', 'Insecta', 'Lepidoptera', 'Erebidae', 'Odozana' ]
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        ranked = extrapolator._rank_links(links)
+        self.assertEqual(sorted(list(set(ranked))), sorted(ranked))
+
+    def test_rank_links_original_unchanged(self):
+        """
+        Test that ranking links does not change the original list.
+        """
+
+        links = [ 'Animalia', 'Arthropoda', 'Insecta', 'Lepidoptera', 'Erebidae', 'Odozana' ]
+        original = list(links)
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        ranked = extrapolator._rank_links(links)
+        self.assertEqual(original, links)
+
+    def test_rank_links_descending_order(self):
+        """
+        Test that ranking links returns the list in descending order of frequency.
+        """
+
+        links = [ 'Animalia', 'Insecta', 'Arthropoda', 'Arthropoda', 'Insecta', 'Arthropoda' ]
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        ranked = extrapolator._rank_links(links)
+        self.assertEqual([ 'Arthropoda', 'Insecta', 'Animalia' ], ranked)
+
     def test_generate_candidates_normal_articles(self):
         """
         Test that when generating candidates, the function collects links from the introduction.

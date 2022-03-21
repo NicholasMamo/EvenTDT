@@ -186,13 +186,31 @@ class WikipediaAttributeExtrapolator(Extrapolator):
 
         profiles = { }
 
+        # keep the links separate and then flatten them to retain duplicate links
         related = links.collect(participants, separate=True, introduction_only=False)
         related = [ link for links in related.values() for link in links ]
-        types = info.types(related)
-        related = [ page for page in related if types[page] == info.ArticleType.NORMAL ]
-        profiles = self._build_profiles(related)
 
+        # fetch the link types and retain only normal pages
+        types = info.types(set(related))
+        related = [ page for page in related if types[page] == info.ArticleType.NORMAL ]
+
+        # build the profiles
+        profiles = self._build_profiles(related)
         return profiles
+
+    def _rank_links(self, links):
+        """
+        Rank links in descending order of popularity.
+
+        :param links: The list of links to rank, which may include duplicates.
+        :type links: list of str
+
+        :return: The links without duplicates and sorted in descending order of frequency.
+        :rtype: list of str
+        """
+
+        freq = { link: links.count(link) for link in links }
+        return sorted(freq.keys(), key=freq.get, reverse=True)
 
     def _trim(self, candidates, reference):
         """
