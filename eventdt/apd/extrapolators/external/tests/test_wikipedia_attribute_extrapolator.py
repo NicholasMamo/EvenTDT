@@ -14,6 +14,7 @@ if path not in sys.path:
 
 from apd.extrapolators.external.wikipedia_attribute_extrapolator import WikipediaAttributeExtrapolator
 from attributes import Profile
+import wikinterface
 
 class TestWikipediaAttributeExtrapolator(unittest.TestCase):
     """
@@ -508,7 +509,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         Test that when generating candidates, the page titles are the keys.
         """
 
-        resolved = { 'Nevada': 'Nevada', 'Alaska': 'Alaska' }
+        resolved = { 'Matanuska-Susitna Valley': 'Matanuska-Susitna Valley' }
 
         extrapolator = WikipediaAttributeExtrapolator()
         candidates = extrapolator._generate_candidates(list(resolved.values()))
@@ -525,18 +526,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         candidates = extrapolator._generate_candidates(list(resolved.values()))
         self.assertTrue(all( Profile == type(value) for value in candidates.values() ))
 
-    def test_generate_candidates_introduction_links(self):
-        """
-        Test that when generating candidates, the function collects links from the introduction.
-        """
-
-        resolved = { 'Odozana floccosa': 'Odozana floccosa' }
-
-        extrapolator = WikipediaAttributeExtrapolator()
-        candidates = extrapolator._generate_candidates(list(resolved.values()))
-        self.assertTrue(all( link in candidates for link in { 'Moth', 'Arctiinae (moth)', 'Francis Walker (entomologist)', 'Panama', 'Tefé' } ))
-
-    def test_generate_candidates_non_introduction_links(self):
+    def test_generate_candidates_all_links(self):
         """
         Test that when generating candidates, the function collects links from parts that are not in the introduction.
         """
@@ -545,7 +535,24 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
 
         extrapolator = WikipediaAttributeExtrapolator()
         candidates = extrapolator._generate_candidates(list(resolved.values()))
+
+        # introduction links
+        self.assertTrue(all( link in candidates for link in { 'Moth', 'Arctiinae (moth)', 'Francis Walker (entomologist)', 'Panama', 'Tefé' } ))
+
+        # infobox links
         self.assertTrue(all( link in candidates for link in { 'Animalia', 'Arthropoda', 'Insecta', 'Lepidoptera', 'Erebidae', 'Odozana' } ))
+
+    def test_generate_candidates_normal_articles(self):
+        """
+        Test that when generating candidates, the function collects links from the introduction.
+        """
+
+        resolved = { 'Odozana floccosa': 'Odozana floccosa' }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        candidates = extrapolator._generate_candidates(list(resolved.values()))
+        types = wikinterface.info.types(list(candidates))
+        self.assertTrue(all( type == wikinterface.info.ArticleType.NORMAL for type in types.values() ))
 
     def test_trim_candidates_none(self):
         """

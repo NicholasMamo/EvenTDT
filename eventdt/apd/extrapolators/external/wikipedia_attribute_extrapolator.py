@@ -20,7 +20,7 @@ if path not in sys.path:
 from ..extrapolator import Extrapolator
 from attributes import Profile
 from attributes.extractors import LinguisticExtractor
-from wikinterface import links, text
+from wikinterface import info, links, text
 
 class WikipediaAttributeExtrapolator(Extrapolator):
     """
@@ -174,6 +174,7 @@ class WikipediaAttributeExtrapolator(Extrapolator):
         Generate a list of candidates from the resolved participants.
 
         The function looks for outgoing links using Wikipedia and builds profiles for them.
+        It only considers as candidates normal pages, removing help pages and other types of pages.
 
         :param participants: A list of resolved or extrapolated participants from which to generate candidates.
         :type participants: list of str
@@ -187,6 +188,8 @@ class WikipediaAttributeExtrapolator(Extrapolator):
 
         related = links.collect(participants, separate=True, introduction_only=False)
         related = [ link for links in related.values() for link in links ]
+        types = info.types(related)
+        related = [ page for page in related if types[page] == info.ArticleType.NORMAL ]
         profiles = self._build_profiles(related)
 
         return profiles
