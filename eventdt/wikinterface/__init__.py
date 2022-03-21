@@ -69,7 +69,7 @@ def construct_url(parameters=None):
 
     return url
 
-def revert_redirects(results, redirects):
+def revert_redirects(results, redirects, with_redirects=True):
     """
     Wikipedia contains automatic redirections.
     For example, `Messi` redirects to `Lionel Messi`.
@@ -85,6 +85,11 @@ def revert_redirects(results, redirects):
     :param redirects: The redirects provided by Wikipedia.
                       This dictionary has keys 'from' and 'to'.
     :type redirects: dict
+    :param with_redirects: A boolean indicating whether to keep the redirects.
+                           This parameter is used to fix a bug in which a redirect removes a page that should be retained.
+                           For example, both *Alaska* and *Education in Alaska* map to *Alaska*, and reversing the redirection would remove *Alaska*.
+                           If set to ``True``, *Alaska* is kept and *Education in Alaska* is added.
+    :type with_redirects: bool
 
     :return: A new dictionary with redirections.
     :rtype: dict
@@ -99,12 +104,13 @@ def revert_redirects(results, redirects):
     targets = { redirect["to"]: redirect["from"] for redirect in redirects }
 
     for page in results:
-        """
-        If a page was redirected, 'redirect' it back.
-        """
+        # if a page was redirected, 'redirect' it back
         if page in targets:
             pages[targets[page]] = pages[page]
-            del pages[page]
+
+            # only delete pages if we don't have a list of pages to keep or if the page does not appear in the list
+            if not with_redirects:
+                del pages[page]
 
     """
     In some cases, two pages may redirect to the same page.

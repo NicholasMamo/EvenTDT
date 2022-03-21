@@ -133,7 +133,7 @@ def types(titles, undo_redirects=True):
         Put the original page titles as keys.
         This is useful in case there were any redirects.
         """
-        _types = revert_redirects(_types, redirects) if undo_redirects else _types
+        _types = revert_redirects(_types, redirects, with_redirects=True) if undo_redirects else _types
 
     return _types
 

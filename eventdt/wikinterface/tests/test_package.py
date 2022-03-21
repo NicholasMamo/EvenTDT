@@ -19,7 +19,7 @@ class TestWikinterface(unittest.TestCase):
 
     def test_revert_redirects(self):
         """
-        Test that when reverting redirections, the resolved page is not included.
+        Test that when reverting redirections, the redirected page is not included.
         """
 
         """
@@ -37,10 +37,33 @@ class TestWikinterface(unittest.TestCase):
         Revert the redirections.
         """
 
-        pages = revert_redirects(results, redirects)
+        pages = revert_redirects(results, redirects, with_redirects=False)
         self.assertTrue('Inside forward' in pages)
         self.assertTrue('Striker (association football)' in pages)
-        self.assertTrue('Forward (association football)' in pages)
+        self.assertFalse('Forward (association football)' in pages)
+
+    def test_revert_redirects_with_keep(self):
+        """
+        Test that when reverting redirections and keeping those redirections, the redirections are retained.
+        """
+
+        """
+        Create the test data.
+        """
+        redirects = [
+            { 'from': 'Education in Alaska' , 'to': 'Alaska' },
+        ]
+        results = {
+            'Alaska': ''
+        }
+
+        """
+        Revert the redirections.
+        """
+
+        pages = revert_redirects(results, redirects, with_redirects=True)
+        self.assertTrue('Alaska' in pages)
+        self.assertTrue('Education in Alaska' in pages)
 
     def test_construct_url_without_parameters(self):
         """
