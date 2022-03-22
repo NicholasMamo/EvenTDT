@@ -283,3 +283,27 @@ class WikipediaAttributeExtrapolator(Extrapolator):
         scores = { candidate: 0 for candidate in candidates }
         scores = { candidate: score for candidate, score in scores.items() if score > 0 }
         return scores
+
+    def _jaccard(self, p1, p2):
+        """
+        Calculate the Jaccard similarity between the two profiles.
+
+        Jaccard similarity is symmetric and bound between 0 and 1.
+        An attribute in the first profile matches an attribute in the second profile if at least one of the values is common to both profiles.
+
+        :param p1: The first profile to calculate similarity for.
+        :type p1: :class:`~attributes.profile.Profile`
+        :param p2: The second profile to calculate similarity for.
+        :type p2: :class:`~attributes.profile.Profile`
+
+        :return: The Jaccard similarity between the two profiles.
+        :rtype: float
+        """
+
+        # if neither profile has attributes, the Jaccard similarity is taken to be zero
+        attr = self._all_attributes({ 'p1': p1, 'p2': p2 })
+        if not attr:
+            return 0
+
+        matching = p1.matching(p2, policy=any)
+        return len(matching)/len(attr)

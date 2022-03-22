@@ -990,9 +990,131 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
 
         # TODO: Implement after scoring
 
-    def test_score_and_rank_all_candidates(self):
+    def test_jaccard_return_float(self):
         """
-        Test that when scoring and ranking candidates, all candidates with a positive score are returned.
+        Test that the Jaccard similarity returns a floating point or integer value.
         """
 
-        # TODO: Implement after scoring
+        extrapolator = WikipediaAttributeExtrapolator()
+
+        p1, p2 = Profile(), Profile()
+        self.assertEqual(int, type(extrapolator._jaccard(p1, p2)))
+
+        p1 = Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
+                     name='Nevada', text='Nevada is a state in the West of the United States of America')
+        p2 = Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
+                     name='Hawaii', text='Nevada is a state in the Western United States')
+        self.assertEqual(float, type(extrapolator._jaccard(p1, p2)))
+
+    def test_jaccard_empty_profiles(self):
+        """
+        Test that calculating the Jaccard similarity of two empty profiles returns a score of zero.
+        """
+
+        p1, p2 = Profile(), Profile()
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertEqual(0, extrapolator._jaccard(p1, p2))
+
+    def test_jaccard_empty_profile(self):
+        """
+        Test that the Jaccard similarity between one empty and one non-empty profile returns a score of zero.
+        """
+
+        p1 = Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
+                     name='Nevada', text='Nevada is a state in the West of the United States of America')
+        p2 = Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
+                     name='Hawaii', text='Nevada is a state in the Western United States')
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertEqual(0, extrapolator._jaccard(p1, Profile()))
+        self.assertEqual(0, extrapolator._jaccard(Profile(), p2))
+
+    def test_jaccard_symmetric(self):
+        """
+        Test that the Jaccard similarity is symmetric.
+        """
+
+        p1 = Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
+                     name='Nevada', text='Nevada is a state in the West of the United States of America')
+        p2 = Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
+                     name='Hawaii', text='Hawaii is a state in the Western United States')
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertEqual(extrapolator._jaccard(p1, p2), extrapolator._jaccard(p2, p1))
+
+    def test_jaccard_lower_bound(self):
+        """
+        Test that the lower-bound of the Jaccard similarity is zero.
+        """
+
+        p1 = Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
+                     name='Nevada', text='Nevada is a state in the West of the United States of America')
+        p2 = Profile(attributes={ 'is': { 'multinational retail company' }, 'based_in': { 'cape town', 'south africa' } },
+                     name='Pep (store)', text='Pep is a multinational retail company based in Cape Town, South Africa.')
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertEqual(0, extrapolator._jaccard(p1, p2))
+
+    def test_jaccard_upper_bound(self):
+        """
+        Test that the upper-bound of the Jaccard similarity is one.
+        """
+
+        p1 = Profile(attributes={ 'is': { 'state' }, 'is_of': { 'united states', 'america' } },
+                     name='Nevada', text='Nevada is a state of the United States of America')
+        p2 = Profile(attributes={ 'is': { 'state' }, 'is_of': { 'united states', 'america' } },
+                     name='Hawaii', text='Hawaii is a state of the United States of America')
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertEqual(1, extrapolator._jaccard(p1, p2))
+
+    def test_jaccard_same_profile(self):
+        """
+        Test that the Jaccard similarity of a profile with itself is one.
+        """
+
+        p1 = Profile(attributes={ 'is': { 'state' }, 'is_of': { 'united states', 'america' } },
+                     name='Nevada', text='Nevada is a state of the United States of America')
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertEqual(1, extrapolator._jaccard(p1, p1))
+
+    def test_jaccard_calculation(self):
+        """
+        Test that the Jaccard similarity calculation is correct.
+        """
+
+        p1 = Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
+                     name='Nevada', text='Nevada is a state in the West of the United States of America')
+        p2 = Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
+                     name='Hawaii', text='Hawaii is a state in the Western United States')
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertEqual(1/3, extrapolator._jaccard(p1, p2))
+
+    def test_jaccard_calculation_any(self):
+        """
+        Test that the Jaccard similarity calculation matches using the ``any`` policy.
+        """
+
+        p1 = Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
+                     name='Nevada', text='Nevada is a state in the West of the United States of America')
+        p2 = Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west', 'united states' } },
+                     name='Hawaii', text='Hawaii is a state in the Western United States')
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertEqual(2/3, extrapolator._jaccard(p1, p2))
+
+    def test_jaccard_calculation_all_attributes(self):
+        """
+        Test that the Jaccard similarity calculation uses all attributes, including those that are not common.
+        """
+
+        p1 = Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
+                     name='Nevada', text='Nevada is a state in the West of the United States of America')
+        p2 = Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
+                     name='Hawaii', text='Hawaii is a state in the Western United States')
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertEqual(1/3, extrapolator._jaccard(p1, p2))
