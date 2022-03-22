@@ -87,8 +87,10 @@ class WikipediaAttributeExtrapolator(Extrapolator):
         candidates = self._generate_candidates(list(resolved))
         candidates = self._trim(candidates, resolved)
         scores = self._score_and_rank(candidates, resolved)
-        # TODO: Keep positive scores only
-        # TODO: Remove duplicates
+        extrapolated = { candidate: score for candidate, score in scores.items()
+                                          if score > 0 }
+        extrapolated = { candidate: score for candidate, score in extrapolated.items()
+                                          if candidate not in participants }
 
         return extrapolated
 

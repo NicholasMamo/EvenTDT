@@ -125,8 +125,6 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         Test that when extrapolating with a list of participants, the extrapolator returns a dictionary.
         """
 
-        # TODO: Make the test more robust and grounded
-
         extrapolator = WikipediaAttributeExtrapolator()
         extrapolated = extrapolator.extrapolate([ 'David Preiss' ])
         self.assertEqual(dict, type(extrapolated))
@@ -135,8 +133,6 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         """
         Test that when extrapolating with a dictionary of participants, the extrapolator uses the values and returns a dictionary.
         """
-
-        # TODO: Make the test more robust and grounded
 
         extrapolator = WikipediaAttributeExtrapolator()
         extrapolated = extrapolator.extrapolate({ 'Heinrich Gärtner': 'Heinrich Gärtner (cinematographer)' })
@@ -162,12 +158,67 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
 
     def test_extrapolate_score_value(self):
         """
-        Test that extrapolating returns the candidate scores as values.
+        Test that extrapolating returns the extrapolated participant scores as values.
         """
 
         extrapolator = WikipediaAttributeExtrapolator()
         extrapolated = extrapolator.extrapolate({ 'Elachista illectella': 'Elachista illectella' })
         self.assertTrue(all( float == type(value) for value in extrapolated.values() ))
+
+    def test_extrapolate_positive_scores(self):
+        """
+        Test that extrapolating returns only extrapolated participants if their score is not zero.
+        """
+
+        resolved = { 'Pyre': 'Pyre (video game)', 'Transistor': 'Transistor (video game)', 'Bastion': 'Bastion (video game)' }
+
+        extrapolator = WikipediaAttributeExtrapolator(fetch=100, prune=1)
+        extrapolated = extrapolator.extrapolate(resolved)
+        self.assertGreater(min(extrapolated.values()), 0)
+        self.assertTrue(all( score > 0 for score in extrapolated.values()))
+
+    def test_extrapolate_ranked(self):
+        """
+        Test that extrapolating returns the candidates in descending order of score.
+        """
+
+        resolved = { 'Wisconsin': 'Wisconsin', 'Wyoming': 'Wyoming' }
+
+        extrapolator = WikipediaAttributeExtrapolator(fetch=100, prune=1)
+        extrapolated = extrapolator.extrapolate(resolved)
+        self.assertTrue(all( list(extrapolated.values())[i] >= list(extrapolated.values())[i+1]
+                             for i in range(len(extrapolated) - 1) ))
+
+    def test_extrapolate_no_duplicates(self):
+        """
+        Test that extrapolating returns no duplicates.
+        """
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        extrapolated = extrapolator.extrapolate({ 'Elachista illectella': 'Elachista illectella' })
+        self.assertEqual(sorted(list(set(extrapolated))), sorted(extrapolated))
+
+    def test_extrapolate_no_participants(self):
+        """
+        Test that extrapolating returns none of the original candidates.
+        """
+
+        resolved = { 'Rodez AF': 'Rodez AF' }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        extrapolated = extrapolator.extrapolate(resolved)
+        self.assertFalse('Rodez AF' in extrapolated)
+
+    def test_extrapolate_sensible(self):
+        """
+        Test that extrapolating returns a sensible list of extrapolated participants.
+        """
+
+        resolved = { 'Pyre': 'Pyre (video game)', 'Transistor': 'Transistor (video game)', 'Bastion': 'Bastion (video game)' }
+
+        extrapolator = WikipediaAttributeExtrapolator(fetch=100)
+        extrapolated = extrapolator.extrapolate(resolved)
+        self.assertTrue('Hades (video game)' in extrapolated)
 
     def test_build_profiles_none(self):
         """
