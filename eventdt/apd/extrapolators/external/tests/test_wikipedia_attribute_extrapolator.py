@@ -349,7 +349,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
 
     def test_build_profiles_redirects_with_attributes(self):
         """
-        Test that building profiles of pages that redirects still returns a profile with attributes from the redirect target.
+        Test that building profiles of pages that redirect still returns a profile with attributes from the redirect target.
         """
 
         extrapolator = WikipediaAttributeExtrapolator()

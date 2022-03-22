@@ -170,3 +170,77 @@ class TestWikipediaAttributePostprocessor(unittest.TestCase):
         self.assertEqual(title, profiles[title].name)
         self.assertEqual('', profiles[title].text)
         self.assertEqual({ }, profiles[title].attributes)
+
+    def test_build_profiles_first_sentence(self):
+        """
+        Test that building a profile uses only the text from the first sentence.
+        """
+
+        participants = [ 'Alaska' ]
+
+        postprocessor = WikipediaAttributePostprocessor()
+        profiles = postprocessor._build_profiles(participants)
+        self.assertEqual('Alaska', profiles['Alaska'].name)
+        self.assertEqual("Alaska ( (listen); Aleut: Alax̂sxax̂; Inupiaq: Alaasikaq; Alutiiq: Alas'kaaq; Yup'ik: Alaskaq; Tlingit: Anáaski) is a state located in the Western United States on the northwest extremity of North America.",
+                         profiles['Alaska'].text)
+        self.assertEqual({ 'is': { 'state' }, 'located_in': { 'western united states' }, 'located_on': { 'northwest extremity' }, 'located_of': { 'north america' } }, profiles['Alaska'].attributes)
+
+    def test_build_profiles_with_name(self):
+        """
+        Test that building a profile returns a profile with the title as the profile's name.
+        """
+
+        participants = [ 'Nevada', 'New York (state)' ]
+
+        postprocessor = WikipediaAttributePostprocessor()
+        profiles = postprocessor._build_profiles(participants)
+        self.assertTrue(all( profile.name == title for title, profile in profiles.items() ))
+
+    def test_build_profiles_with_text(self):
+        """
+        Test that building a profile returns a profile with the title as the profile's name.
+        """
+
+        participants = [ 'Nevada', 'New York (state)' ]
+
+        postprocessor = WikipediaAttributePostprocessor()
+        profiles = postprocessor._build_profiles(participants)
+        self.assertTrue(all( profile.text for profile in profiles.values() ))
+
+    def test_build_profiles_ignores_redirects(self):
+        """
+        Test that building profiles ignores redirects and returns only the original titles.
+        """
+
+        participants = [ 'Education in Alaska' ]
+
+        postprocessor = WikipediaAttributePostprocessor()
+        profiles = postprocessor._build_profiles(participants)
+        self.assertEqual(set(participants), set(profiles.keys()))
+        self.assertFalse('Alaska' in profiles)
+
+    def test_build_profiles_redirects_with_attributes(self):
+        """
+        Test that building profiles of pages that redirect still returns a profile with attributes from the redirect target.
+        """
+
+        postprocessor = WikipediaAttributePostprocessor()
+
+        participants = [ 'Alaska' ]
+        target = postprocessor._build_profiles(participants)
+
+        participants = [ 'Education in Alaska' ]
+        source = postprocessor._build_profiles(participants)
+        self.assertEqual(target['Alaska'].attributes, source['Education in Alaska'].attributes)
+
+    def test_build_profiles_with_parentheses(self):
+        """
+        Test that building profiles retains text in parentheses.
+        """
+
+        postprocessor = WikipediaAttributePostprocessor()
+
+        participants = [ 'Jennet Conant' ]
+        profiles = postprocessor._build_profiles(participants)
+        self.assertEqual({ 'born': { 'july 15 , 1959' }, 'is': { 'american non-fiction author', 'journalist' } },
+                         profiles['Jennet Conant'].attributes)

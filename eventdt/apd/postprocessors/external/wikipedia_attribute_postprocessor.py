@@ -8,6 +8,7 @@ The profile describes participants in terms of their attributes.
     Therefore Wikipedia-based resolvers and extrapolators make for good candidates before post-processing.
 """
 
+import nltk
 import os
 import sys
 
@@ -18,6 +19,7 @@ if path not in sys.path:
 from ..postprocessor import Postprocessor
 from attributes import Profile
 from attributes.extractors import LinguisticExtractor
+from wikinterface import info, text
 
 class WikipediaAttributePostprocessor(Postprocessor):
     """
@@ -67,4 +69,14 @@ class WikipediaAttributePostprocessor(Postprocessor):
         """
 
         # create the empty profiles in case some pages are missing
-        return { title: Profile(name=title) for title in titles }
+        profiles = { title: Profile(name=title) for title in titles }
+
+        definitions = text.collect(titles, introduction_only=True)
+        definitions = { title: text for title, text in definitions.items()
+                                    if title in titles }
+        definitions = { title: nltk.sent_tokenize(text)[0] if text else text
+                        for title, text in definitions.items() }
+        profiles.update({ title: self.extractor.extract(text, name=title, remove_parentheses=False)
+                          for title, text in definitions.items() })
+
+        return profiles
