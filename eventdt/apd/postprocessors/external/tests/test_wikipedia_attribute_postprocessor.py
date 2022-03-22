@@ -14,11 +14,21 @@ if path not in sys.path:
 
 from apd.postprocessors.external.wikipedia_attribute_postprocessor import WikipediaAttributePostprocessor
 from attributes import Profile
+from attributes.extractors import LinguisticExtractor
 
 class TestWikipediaAttributePostprocessor(unittest.TestCase):
     """
     Test the functionality of the :class:`~apd.postprocessors.wikipedia_attribute_postprocessor.WikipediaAttributePostprocessor`.
     """
+
+    def test_init_with_extractor(self):
+        """
+        Test that the constructor creates an extractor.
+        """
+
+        postprocessor = WikipediaAttributePostprocessor()
+        self.assertTrue(postprocessor.extractor)
+        self.assertEqual(LinguisticExtractor, type(postprocessor.extractor))
 
     def test_postprocess_none(self):
         """

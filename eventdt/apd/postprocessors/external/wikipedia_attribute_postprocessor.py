@@ -17,12 +17,23 @@ if path not in sys.path:
 
 from ..postprocessor import Postprocessor
 from attributes import Profile
+from attributes.extractors import LinguisticExtractor
 
 class WikipediaAttributePostprocessor(Postprocessor):
     """
     The :class:`~WikipediaAttributePostprocessor` assumes that all participants map to Wikipedia articles.
     It uses the definition sentence, the first one in the article, to build a :class:`~attributes.profile.Profile` with attributes for each participant.
+
+    :ivar extractor: The extractor to use to build profiles.
+    :vartype extractor: :class:`~attributes.extractors.linguistic.LinguisticExtractor`
     """
+
+    def __init__(self, *args, **kwargs):
+        """
+        Initialize the postprocessor with an extractor.
+        """
+
+        self.extractor = LinguisticExtractor()
 
     def postprocess(self, participants, *args, **kwargs):
         """
