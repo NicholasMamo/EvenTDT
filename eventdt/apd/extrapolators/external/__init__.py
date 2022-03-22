@@ -5,3 +5,4 @@ For example, a corpus may be too small, or too biased, to capture all of the eve
 """
 
 from .wikipedia_extrapolator import WikipediaExtrapolator
+from .wikipedia_attribute_extrapolator import WikipediaAttributeExtrapolator
