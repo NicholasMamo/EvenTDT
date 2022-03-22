@@ -86,7 +86,8 @@ class WikipediaAttributeExtrapolator(Extrapolator):
         resolved = self._prune(resolved)
         candidates = self._generate_candidates(list(resolved))
         candidates = self._trim(candidates, resolved)
-        extrapolated = self._score_and_rank(candidates, resolved)
+        scores = self._score_and_rank(candidates, resolved)
+        # TODO: Keep positive scores only
         # TODO: Remove duplicates
 
         return extrapolated
@@ -281,7 +282,12 @@ class WikipediaAttributeExtrapolator(Extrapolator):
         """
 
         scores = { candidate: 0 for candidate in candidates }
-        scores = { candidate: score for candidate, score in scores.items() if score > 0 }
+        if reference:
+            scores = { candidate: sum( self._jaccard(profile, other) for other in reference.values() ) / len(reference)
+                       for candidate, profile in candidates.items() }
+
+        ranked = sorted(scores, key=scores.get, reverse=True)
+        scores = { candidate: scores[candidate] for candidate in ranked }
         return scores
 
     def _jaccard(self, p1, p2):

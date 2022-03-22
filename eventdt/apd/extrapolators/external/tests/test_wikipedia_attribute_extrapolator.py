@@ -374,7 +374,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         profiles = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_of': { 'united states', 'america' } },
                                        name='Nevada', text='Nevada is a state of the United States of America'),
                      'Alaska': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
-                                       name='Hawaii', text='Nevada is a state in the Western United States') }
+                                       name='Alaska', text='Alaska is a state in the Western United States') }
 
         original = profiles['Nevada'].copy()
         extrapolator = WikipediaAttributeExtrapolator(prune=1)
@@ -411,7 +411,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         profiles = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_of': { 'united states', 'america' } },
                                        name='Nevada', text='Nevada is a state of the United States of America'),
                      'Alaska': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
-                                       name='Hawaii', text='Nevada is a state in the Western United States') }
+                                       name='Hawaii', text='Hawaii is a state in the Western United States') }
 
         extrapolator = WikipediaAttributeExtrapolator(prune=0)
         pruned = extrapolator._prune(profiles)
@@ -437,7 +437,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         profiles = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_of': { 'united states', 'america' } },
                                        name='Nevada', text='Nevada is a state of the United States of America'),
                      'Alaska': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
-                                       name='Hawaii', text='Nevada is a state in the Western United States') }
+                                       name='Hawaii', text='Hawaii is a state in the Western United States') }
 
         extrapolator = WikipediaAttributeExtrapolator(prune=1)
         pruned = extrapolator._prune(profiles)
@@ -479,7 +479,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         profiles = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_of': { 'united states', 'america' } },
                                        name='Nevada', text='Nevada is a state of the United States of America'),
                      'Alaska': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
-                                       name='Hawaii', text='Nevada is a state in the Western United States') }
+                                       name='Hawaii', text='Hawaii is a state in the Western United States') }
 
         extrapolator = WikipediaAttributeExtrapolator()
         attributes = extrapolator._all_attributes(profiles)
@@ -551,7 +551,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         profiles = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_of': { 'united states', 'america' } },
                                        name='Nevada', text='Nevada is a state of the United States of America'),
                      'Alaska': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
-                                       name='Hawaii', text='Nevada is a state in the Western United States') }
+                                       name='Hawaii', text='Hawaii is a state in the Western United States') }
 
         extrapolator = WikipediaAttributeExtrapolator()
         freq = extrapolator._attribute_frequency(profiles)
@@ -578,7 +578,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         profiles = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_of': { 'united states', 'america' } },
                                        name='Nevada', text='Nevada is a state of the United States of America'),
                      'Alaska': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
-                                       name='Hawaii', text='Nevada is a state in the Western United States') }
+                                       name='Hawaii', text='Hawaii is a state in the Western United States') }
 
         extrapolator = WikipediaAttributeExtrapolator()
         freq = extrapolator._attribute_frequency(profiles)
@@ -740,7 +740,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         """
 
         reference = { 'Hawaii': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
-                                        name='Hawaii', text='Nevada is a state in the Western United States') }
+                                        name='Hawaii', text='Hawaii is a state in the Western United States') }
 
         extrapolator = WikipediaAttributeExtrapolator()
         self.assertEqual({ }, extrapolator._trim({ }, reference))
@@ -768,7 +768,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         candidates = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
                                          name='Nevada', text='Nevada is a state in the West of the United States of America') }
         reference = { 'Hawaii': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
-                                        name='Hawaii', text='Nevada is a state in the Western United States') }
+                                        name='Hawaii', text='Hawaii is a state in the Western United States') }
 
         extrapolator = WikipediaAttributeExtrapolator()
         self.assertEqual(dict, type(extrapolator._trim(candidates, reference)))
@@ -781,7 +781,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         candidates = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
                                          name='Nevada', text='Nevada is a state in the West of the United States of America') }
         reference = { 'Hawaii': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
-                                        name='Hawaii', text='Nevada is a state in the Western United States') }
+                                        name='Hawaii', text='Hawaii is a state in the Western United States') }
 
         extrapolator = WikipediaAttributeExtrapolator()
         trimmed = extrapolator._trim(candidates, reference)
@@ -795,7 +795,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         candidates = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
                                          name='Nevada', text='Nevada is a state in the West of the United States of America') }
         reference = { 'Hawaii': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
-                                        name='Hawaii', text='Nevada is a state in the Western United States') }
+                                        name='Hawaii', text='Hawaii is a state in the Western United States') }
 
         extrapolator = WikipediaAttributeExtrapolator()
         trimmed = extrapolator._trim(candidates, reference)
@@ -809,7 +809,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         candidates = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
                                          name='Nevada', text='Nevada is a state in the West of the United States of America') }
         reference = { 'Hawaii': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
-                                        name='Hawaii', text='Nevada is a state in the Western United States') }
+                                        name='Hawaii', text='Hawaii is a state in the Western United States') }
 
         extrapolator = WikipediaAttributeExtrapolator()
         trimmed = extrapolator._trim(candidates, reference)
@@ -825,7 +825,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         candidates = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
                                          name='Nevada', text='Nevada is a state in the West of the United States of America') }
         reference = { 'Hawaii': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
-                                        name='Hawaii', text='Nevada is a state in the Western United States') }
+                                        name='Hawaii', text='Hawaii is a state in the Western United States') }
 
         original = candidates['Nevada'].copy()
         extrapolator = WikipediaAttributeExtrapolator()
@@ -841,7 +841,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         candidates = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
                                          name='Nevada', text='Nevada is a state in the West of the United States of America') }
         reference = { 'Hawaii': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
-                                        name='Hawaii', text='Nevada is a state in the Western United States') }
+                                        name='Hawaii', text='Hawaii is a state in the Western United States') }
 
         extrapolator = WikipediaAttributeExtrapolator()
         trimmed = extrapolator._trim(candidates, reference)
@@ -855,7 +855,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         candidates = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
                                          name='Nevada', text='Nevada is a state in the West of the United States of America') }
         reference = { 'Hawaii': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
-                                        name='Hawaii', text='Nevada is a state in the Western United States') }
+                                        name='Hawaii', text='Hawaii is a state in the Western United States') }
 
         extrapolator = WikipediaAttributeExtrapolator()
         trimmed = extrapolator._trim(candidates, reference)
@@ -871,7 +871,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         candidates = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
                                          name='Nevada', text='Nevada is a state in the West of the United States of America') }
         reference = { 'Hawaii': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
-                                        name='Hawaii', text='Nevada is a state in the Western United States') }
+                                        name='Hawaii', text='Hawaii is a state in the Western United States') }
 
         extrapolator = WikipediaAttributeExtrapolator()
         trimmed = extrapolator._trim(candidates, reference)
@@ -890,7 +890,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         candidates = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
                                          name='Nevada', text='Nevada is a state in the West of the United States of America') }
         reference = { 'Hawaii': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
-                                        name='Hawaii', text='Nevada is a state in the Western United States') }
+                                        name='Hawaii', text='Hawaii is a state in the Western United States') }
 
         extrapolator = WikipediaAttributeExtrapolator()
         trimmed = extrapolator._trim(candidates, reference)
@@ -900,18 +900,15 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
 
     def test_score_and_rank_reference_none(self):
         """
-        Test that when scoring candidates from an empty list of reference participants, the function returns an empty dictionary.
-        This is because the scores should be zero.
+        Test that when scoring candidates from an empty list of reference participants, the function returns the candidates with a score of zero.
         """
 
         candidates = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
                                          name='Nevada', text='Nevada is a state in the West of the United States of America') }
-        reference = { 'Hawaii': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
-                                        name='Hawaii', text='Nevada is a state in the Western United States') }
 
         extrapolator = WikipediaAttributeExtrapolator()
         scores = extrapolator._score_and_rank(candidates, { })
-        self.assertEqual({ }, scores)
+        self.assertEqual({ 'Nevada': 0 }, scores)
 
     def test_score_and_rank_candidates_none(self):
         """
@@ -921,7 +918,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         candidates = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
                                          name='Nevada', text='Nevada is a state in the West of the United States of America') }
         reference = { 'Hawaii': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
-                                        name='Hawaii', text='Nevada is a state in the Western United States') }
+                                        name='Hawaii', text='Hawaii is a state in the Western United States') }
 
         extrapolator = WikipediaAttributeExtrapolator()
         scores = extrapolator._score_and_rank({ }, reference)
@@ -935,7 +932,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         candidates = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
                                          name='Nevada', text='Nevada is a state in the West of the United States of America') }
         reference = { 'Hawaii': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
-                                        name='Hawaii', text='Nevada is a state in the Western United States') }
+                                        name='Hawaii', text='Hawaii is a state in the Western United States') }
 
         extrapolator = WikipediaAttributeExtrapolator()
         scores = extrapolator._score_and_rank(candidates, reference)
@@ -949,7 +946,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         candidates = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
                                          name='Nevada', text='Nevada is a state in the West of the United States of America') }
         reference = { 'Hawaii': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
-                                        name='Hawaii', text='Nevada is a state in the Western United States') }
+                                        name='Hawaii', text='Hawaii is a state in the Western United States') }
 
         extrapolator = WikipediaAttributeExtrapolator()
         scores = extrapolator._score_and_rank(candidates, reference)
@@ -963,7 +960,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         candidates = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
                                          name='Nevada', text='Nevada is a state in the West of the United States of America') }
         reference = { 'Hawaii': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
-                                        name='Hawaii', text='Nevada is a state in the Western United States') }
+                                        name='Hawaii', text='Hawaii is a state in the Western United States') }
 
         extrapolator = WikipediaAttributeExtrapolator()
         scores = extrapolator._score_and_rank(candidates, reference)
@@ -977,7 +974,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         candidates = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
                                          name='Nevada', text='Nevada is a state in the West of the United States of America') }
         reference = { 'Hawaii': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
-                                        name='Hawaii', text='Nevada is a state in the Western United States') }
+                                        name='Hawaii', text='Hawaii is a state in the Western United States') }
 
         extrapolator = WikipediaAttributeExtrapolator()
         scores = extrapolator._score_and_rank(candidates, reference)
@@ -988,7 +985,109 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         Test that when scoring and ranking candidates, all candidates with a positive score are returned.
         """
 
-        # TODO: Implement after scoring
+        candidates = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
+                                         name='Nevada', text='Nevada is a state in the West of the United States of America') }
+        reference = { 'Hawaii': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
+                                        name='Hawaii', text='Hawaii is a state in the Western United States') }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        scores = extrapolator._score_and_rank(candidates, reference)
+        self.assertTrue(all( candidate in scores for candidate in candidates ))
+
+    def test_score_and_rank_mean_jaccard(self):
+        """
+        Test that when scoring and ranking candidates, the function returns the mean Jaccard similarity.
+        """
+
+        candidates = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
+                                         name='Nevada', text='Nevada is a state in the West of the United States of America'),
+                       'Alaska': Profile(attributes={ 'is': { 'state' }, 'located_in': { 'western united states' }, 'located_on': { 'northwest extremity' }, 'located_of': { 'north america' } },
+                                         name='Alaska', text='Alaska is a state located in the Western United States on the northwest extremity of North America.') }
+        reference = { 'Hawaii': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
+                                        name='Hawaii', text='Hawaii is a state in the Western United States'),
+                      'Wisconsin': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'upper midwestern united states' } },
+                                           name='Wisconsin', text='Wisconsin is a state in the upper Midwestern United States.') }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        scores = extrapolator._score_and_rank(candidates, reference)
+        self.assertEqual((extrapolator._jaccard(candidates['Nevada'], reference['Hawaii']) + extrapolator._jaccard(candidates['Nevada'], reference['Wisconsin']))/2, scores['Nevada'])
+        self.assertEqual((extrapolator._jaccard(candidates['Alaska'], reference['Hawaii']) + extrapolator._jaccard(candidates['Alaska'], reference['Wisconsin']))/2, scores['Alaska'])
+
+    def test_score_and_rank_descending_order(self):
+        """
+        Test that when scoring and ranking candidates, the candidates are returned in descending order of score.
+        """
+
+        candidates = { 'Alaska': Profile(attributes={ 'is': { 'state' }, 'located_in': { 'western united states' }, 'located_on': { 'northwest extremity' }, 'located_of': { 'north america' } },
+                                         name='Alaska', text='Alaska is a state located in the Western United States on the northwest extremity of North America.'),
+                       'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
+                                         name='Nevada', text='Nevada is a state in the West of the United States of America'),
+                       'Hawaii': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
+                                         name='Hawaii', text='Hawaii is a state in the Western United States') }
+        reference = { 'Wisconsin': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'upper midwestern united states' } },
+                                           name='Wisconsin', text='Wisconsin is a state in the upper Midwestern United States.'),
+                      'Wyoming': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'mountain west subregion' }, 'is_of': { 'united states' } },
+                                         name='Wyoming', text='Wyoming is a state in the Mountain West subregion of the United States') }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        scores = extrapolator._score_and_rank(candidates, reference)
+        self.assertTrue(all( list(scores.values())[i] >= list(scores.values())[i+1]
+                             for i in range(len(scores) - 1) ))
+
+    def test_score_and_rank_one_reference(self):
+        """
+        Test that when scoring and ranking candidates with one reference profile, the calculation is identical to simple Jaccard similarity.
+        """
+
+        candidates = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
+                                         name='Nevada', text='Nevada is a state in the West of the United States of America'),
+                       'Alaska': Profile(attributes={ 'is': { 'state' }, 'located_in': { 'western united states' }, 'located_on': { 'northwest extremity' }, 'located_of': { 'north america' } },
+                                         name='Alaska', text='Alaska is a state located in the Western United States on the northwest extremity of North America.'),
+                       'Wisconsin': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'upper midwestern united states' } },
+                                            name='Wisconsin', text='Wisconsin is a state in the upper Midwestern United States.') }
+        reference = { 'Hawaii': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
+                                        name='Hawaii', text='Hawaii is a state in the Western United States') }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        scores = extrapolator._score_and_rank(candidates, reference)
+        self.assertTrue(all( extrapolator._jaccard(candidates[candidate], list(reference.values())[0]) == scores[candidate]
+                             for candidate in scores ))
+
+    def test_score_and_rank_lower_bound(self):
+        """
+        Test that when scoring and ranking candidates, the lower bound of scores is zero.
+        """
+
+        candidates = { 'Alaska': Profile(attributes={ 'is': { 'state' }, 'located_in': { 'western united states' }, 'located_on': { 'northwest extremity' }, 'located_of': { 'north america' } },
+                                         name='Alaska', text='Alaska is a state located in the Western United States on the northwest extremity of North America.'),
+                       'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
+                                         name='Nevada', text='Nevada is a state in the West of the United States of America'),
+                       'Pep (store)': Profile(attributes={ 'is': { 'multinational retail company' }, 'based_in': { 'cape town', 'south africa' } },
+                                              name='Pep (store)', text='Pep is a multinational retail company based in Cape Town, South Africa.') }
+        reference = { 'Wisconsin': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'upper midwestern united states' } },
+                                           name='Wisconsin', text='Wisconsin is a state in the upper Midwestern United States.'),
+                      'Wyoming': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'mountain west subregion' }, 'is_of': { 'united states' } },
+                                         name='Wyoming', text='Wyoming is a state in the Mountain West subregion of the United States') }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        scores = extrapolator._score_and_rank(candidates, reference)
+        self.assertEqual(0, min(scores.values()))
+
+    def test_score_and_rank_upper_bound(self):
+        """
+        Test that when scoring and ranking candidates, the upper bound of scores is one.
+        """
+
+        candidates = { 'Alaska': Profile(attributes={ 'is': { 'state' }, 'located_in': { 'western united states' }, 'located_on': { 'northwest extremity' }, 'located_of': { 'north america' } },
+                                         name='Alaska', text='Alaska is a state located in the Western United States on the northwest extremity of North America.'),
+                       'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
+                                         name='Nevada', text='Nevada is a state in the West of the United States of America') }
+        reference = { 'Wyoming': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states' } },
+                                         name='Wyoming', text='Wyoming is a state in the Mountain West subregion of the United States') }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        scores = extrapolator._score_and_rank(candidates, reference)
+        self.assertEqual(1, max(scores.values()))
 
     def test_jaccard_return_float(self):
         """
@@ -1003,7 +1102,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         p1 = Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
                      name='Nevada', text='Nevada is a state in the West of the United States of America')
         p2 = Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
-                     name='Hawaii', text='Nevada is a state in the Western United States')
+                     name='Hawaii', text='Hawaii is a state in the Western United States')
         self.assertEqual(float, type(extrapolator._jaccard(p1, p2)))
 
     def test_jaccard_empty_profiles(self):
@@ -1024,7 +1123,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         p1 = Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
                      name='Nevada', text='Nevada is a state in the West of the United States of America')
         p2 = Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
-                     name='Hawaii', text='Nevada is a state in the Western United States')
+                     name='Hawaii', text='Hawaii is a state in the Western United States')
 
         extrapolator = WikipediaAttributeExtrapolator()
         self.assertEqual(0, extrapolator._jaccard(p1, Profile()))
