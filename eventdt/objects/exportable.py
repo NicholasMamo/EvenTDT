@@ -80,7 +80,7 @@ class Exportable(ABC):
                     if type(data[key]) in [ dict, list, set ]:
                         data[key] = Exportable.encode(data.get(key))
                     else:
-                        data[key] = data.get(key).to_array()
+                        data[key] = Exportable.encode(data.get(key).to_array())
         elif type(data) is list:
             # case 2: when a list is given, encode all items since some may represent an object
             for i, item in enumerate(data):
@@ -90,13 +90,13 @@ class Exportable(ABC):
                     if type(item) in [ dict, list, set ]:
                         data[i] = Exportable.encode(item)
                     else:
-                        data[i] = item.to_array()
+                        data[i] = Exportable.encode(item.to_array())
         elif type(data) is set:
             # case 3: when a set is given, encode it as a list (sets are not serializable)
             return Exportable.encode(list(data))
         else:
             # case 4: if any other object is given, try to encode it
-            data = data.to_array()
+            data = Exportable.encode(data.to_array())
 
         return data
 

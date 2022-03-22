@@ -11,9 +11,10 @@ path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
+from attributes import Profile
 from objects.exportable import Exportable
-from vsm.vector import Vector
 from nlp.weighting.tfidf import TFIDF
+from vsm.vector import Vector
 
 class TestExportable(unittest.TestCase):
     """
@@ -177,6 +178,24 @@ class TestExportable(unittest.TestCase):
 
         v = Vector({ 'a': 1 }, { 'b': 2 })
         self.assertEqual(v.to_array(), Exportable.encode(v))
+
+    def test_encode_object_with_set(self):
+        """
+        Test that when encoding an object, its array is encoded again, thus encoding sets.
+        """
+
+        to_encode =  { 'postprocessed':
+            [{'participant': 'Anfield (suburb)',
+              'details': Profile(name='Anfield (suburb)',
+                         text='Anfield is a suburb of Liverpool, England, in the Liverpool City Council ward of Anfield.',
+                         attributes={'is': {'suburb'}, 'is_of': {'england', 'anfield', 'liverpool'}, 'is_in': {'liverpool city council ward'}}), 'rank': 1}] }
+
+        encoded = Exportable.encode(to_encode)
+        self.assertEqual(dict, type(encoded))
+        self.assertTrue('attributes' in encoded['postprocessed'][0]['details'])
+        self.assertEqual([ 'is', 'is_of', 'is_in' ], list(encoded['postprocessed'][0]['details']['attributes'].keys()))
+        self.assertTrue(all( list == type(value) for value in encoded['postprocessed'][0]['details']['attributes'].values() ))
+        self.assertTrue(json.dumps(encoded))
 
     def test_decode_empty_dict(self):
         """
