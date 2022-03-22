@@ -4,4 +4,5 @@ These post-processors are useful when resolution or extrapolation maps participa
 In these cases, the extra information can be used to post-process participants.
 """
 
+from .wikipedia_attribute_postprocessor import WikipediaAttributePostprocessor
 from .wikipedia_postprocessor import WikipediaPostprocessor
