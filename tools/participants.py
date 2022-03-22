@@ -56,6 +56,7 @@ Accepted arguments:
     - ``--resolver-threshold``            *<Optional>* The threshold to use when resolving candidates (used only with the `WikipediaNameResolver` and `WikipediaSearchResolver`).
     - ``--extrapolator-threshold``        *<Optional>* The threshold to use when extrapolating candidates (used only with the `WikipediaExtrapolator`); defaults to 0.
     - ``--extrapolator-prune``            *<Optional>* The frequency at or below which an attribute is pruned when extrapolating candidates (used only with the `WikipediaAttributeExtrapolator`); defaults to 0.
+    - ``--extrapolator-fetch``            *<Optional>* The number of candidates to fetch when extrapolating candidates (used only with the `WikipediaAttributeExtrapolator`); defaults to 200.
     - ``--scheme``                        *<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
     - ``--postprocessor-remove-accents``  *<Optional>* Remove accents when post-processing participants (used only with the `WikipediaPostprocessor`).
     - ``--postprocessor-remove-brackets`` *<Optional>* Remove brackets when post-processing participants (used only with the `WikipediaPostprocessor`).
@@ -117,6 +118,7 @@ def setup_args():
         - ``--resolver-threshold``            *<Optional>* The threshold to use when resolving candidates (used only with the `WikipediaNameResolver` and `WikipediaSearchResolver`); defaults to 0.
         - ``--extrapolator-threshold``        *<Optional>* The threshold to use when extrapolating candidates (used only with the `WikipediaExtrapolator`); defaults to 0.
         - ``--extrapolator-prune``            *<Optional>* The frequency at or below which an attribute is pruned when extrapolating candidates (used only with the `WikipediaAttributeExtrapolator`); defaults to 0.
+        - ``--extrapolator-fetch``            *<Optional>* The number of candidates to fetch when extrapolating candidates (used only with the `WikipediaAttributeExtrapolator`); defaults to 200.
         - ``--scheme``                        *<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
         - ``--postprocessor-remove-accents``  *<Optional>* Remove accents when post-processing participants (used only with the `WikipediaPostprocessor`).
         - ``--postprocessor-remove-brackets`` *<Optional>* Remove brackets when post-processing participants (used only with the `WikipediaPostprocessor`).
@@ -154,6 +156,8 @@ def setup_args():
                         help='<Optional> The threshold to use when extrapolating candidates (used only with the `WikipediaExtrapolator`); defaults to 0.')
     parser.add_argument('--extrapolator-prune', required=False, default=0, type=int,
                         help='<Optional> The frequency at or below which an attribute is pruned when extrapolating candidates (used only with the `WikipediaAttributeExtrapolator`); defaults to 0.')
+    parser.add_argument('--extrapolator-fetch', required=False, default=200, type=int,
+                        help='<Optional> The number of candidates to fetch when extrapolating candidates (used only with the `WikipediaAttributeExtrapolator`); defaults to 200.')
     parser.add_argument('--scheme', required=False, default=None,
                         help='<Optional> The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).')
     parser.add_argument('--postprocessor-remove-accents', required=False, action='store_true',

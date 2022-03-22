@@ -601,6 +601,14 @@ class TestAPD(unittest.TestCase):
         extrapolator = apd.create_extrapolator(WikipediaAttributeExtrapolator, extrapolator_prune=2)
         self.assertEqual(2, extrapolator.prune)
 
+    def test_create_extrapolator_wikipedia_attribute_extrapolator_fetch(self):
+        """
+        Test creating the `WikipediaAttributeExtrapolator` with a custom fetch value.
+        """
+
+        extrapolator = apd.create_extrapolator(WikipediaAttributeExtrapolator, extrapolator_fetch=100)
+        self.assertEqual(100, extrapolator.fetch)
+
     def test_create_postprocessor_postprocessor(self):
         """
         Test that when creating the base `Postprocessor`, it is created correctly.
