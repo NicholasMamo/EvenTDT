@@ -42,6 +42,7 @@ apd_tests() {
 
 	echo -e "${HIGHLIGHT}Postprocessors${DEFAULT}"
 	python3 -m unittest eventdt.apd.postprocessors.tests.test_postprocessor
+	python3 -m unittest eventdt.apd.postprocessors.external.tests.test_wikipedia_attribute_postprocessor
 	python3 -m unittest eventdt.apd.postprocessors.external.tests.test_wikipedia_postprocessor
 
 	echo -e "${HIGHLIGHT}Participant detectors${DEFAULT}"
