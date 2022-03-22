@@ -830,8 +830,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         original = candidates['Nevada'].copy()
         extrapolator = WikipediaAttributeExtrapolator()
         trimmed = extrapolator._trim(candidates, reference)
-        # TODO: Uncomment after implementing
-        # self.assertNotEqual(original.attributes, trimmed['Nevada'].attributes)
+        self.assertNotEqual(original.attributes, trimmed['Nevada'].attributes)
         self.assertEqual(original.attributes, candidates['Nevada'].attributes)
 
     def test_trim_all_candidates(self):
@@ -847,6 +846,57 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         extrapolator = WikipediaAttributeExtrapolator()
         trimmed = extrapolator._trim(candidates, reference)
         self.assertEqual(candidates.keys(), trimmed.keys())
+
+    def test_trim_attributes_in_reference(self):
+        """
+        Test that trimming retains only attributes that appear in the reference profiles.
+        """
+
+        candidates = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
+                                         name='Nevada', text='Nevada is a state in the West of the United States of America') }
+        reference = { 'Hawaii': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
+                                        name='Hawaii', text='Nevada is a state in the Western United States') }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        trimmed = extrapolator._trim(candidates, reference)
+        self.assertTrue(all( any( attribute in ref.attributes for ref in reference.values() )
+                             for candidate in trimmed.values()
+                             for attribute in candidate.attributes ))
+
+    def test_trim_attributes_not_in_reference(self):
+        """
+        Test that trimming removes attributes that do not appear in the reference profiles.
+        """
+
+        candidates = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
+                                         name='Nevada', text='Nevada is a state in the West of the United States of America') }
+        reference = { 'Hawaii': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
+                                        name='Hawaii', text='Nevada is a state in the Western United States') }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        trimmed = extrapolator._trim(candidates, reference)
+
+        # the original attributes are either retained or not in the reference profiles
+        self.assertTrue(all( attribute in trimmed[candidate].attributes or
+                                not any( attribute in ref.attributes for ref in reference.values() )
+                             for candidate in candidates
+                             for attribute in candidates[candidate].attributes ))
+
+    def test_trim_attribute_values_unchanged(self):
+        """
+        Test that trimming does not change the attribute values.
+        """
+
+        candidates = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
+                                         name='Nevada', text='Nevada is a state in the West of the United States of America') }
+        reference = { 'Hawaii': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
+                                        name='Hawaii', text='Nevada is a state in the Western United States') }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        trimmed = extrapolator._trim(candidates, reference)
+        self.assertTrue(all( candidates[candidate].attributes[attribute] == trimmed[candidate].attributes[attribute]
+                             for candidate in candidates
+                             for attribute in trimmed[candidate].attributes ))
 
     def test_score_and_rank_reference_none(self):
         """

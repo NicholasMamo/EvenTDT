@@ -233,6 +233,12 @@ class WikipediaAttributeExtrapolator(Extrapolator):
         """
         Trim the attributes that do not appear in the reference profiles from the given profiles.
 
+        Trimming makes the comparison between profiles fairer.
+        Intuitively, it does not make sense to penalize candidate profiles for having attributes that are not present in the reference profiles.
+        The attributes in candidate profiles may be valid and relevant despite not being in the reference profiles.
+        If we do not remove them, we could needlessly punish candidates for having comprehensive definitions.
+        Without knowing whether they are valid, it is safer to exclude those attributes.
+
         :param profiles: The profiles to trim.
                          The dictionary should have the profile names (the article titles) as keys, and the profiles as values.
         :type profiles: list of :class:`~attributes.profile.Profile`
