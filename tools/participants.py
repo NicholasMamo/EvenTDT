@@ -55,6 +55,7 @@ Accepted arguments:
     - ``--filter-threshold``              *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`); defaults to 0.
     - ``--resolver-threshold``            *<Optional>* The threshold to use when resolving candidates (used only with the `WikipediaNameResolver` and `WikipediaSearchResolver`).
     - ``--extrapolator-threshold``        *<Optional>* The threshold to use when extrapolating candidates (used only with the `WikipediaExtrapolator`); defaults to 0.
+    - ``--extrapolator-prune``            *<Optional>* The frequency at or below which an attribute is pruned when extrapolating candidates (used only with the `WikipediaAttributeExtrapolator`); defaults to 0.
     - ``--scheme``                        *<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
     - ``--postprocessor-remove-accents``  *<Optional>* Remove accents when post-processing participants (used only with the `WikipediaPostprocessor`).
     - ``--postprocessor-remove-brackets`` *<Optional>* Remove brackets when post-processing participants (used only with the `WikipediaPostprocessor`).
@@ -115,6 +116,7 @@ def setup_args():
         - ``--filter-threshold``              *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`); defaults to 0.
         - ``--resolver-threshold``            *<Optional>* The threshold to use when resolving candidates (used only with the `WikipediaNameResolver` and `WikipediaSearchResolver`); defaults to 0.
         - ``--extrapolator-threshold``        *<Optional>* The threshold to use when extrapolating candidates (used only with the `WikipediaExtrapolator`); defaults to 0.
+        - ``--extrapolator-prune``            *<Optional>* The frequency at or below which an attribute is pruned when extrapolating candidates (used only with the `WikipediaAttributeExtrapolator`); defaults to 0.
         - ``--scheme``                        *<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
         - ``--postprocessor-remove-accents``  *<Optional>* Remove accents when post-processing participants (used only with the `WikipediaPostprocessor`).
         - ``--postprocessor-remove-brackets`` *<Optional>* Remove brackets when post-processing participants (used only with the `WikipediaPostprocessor`).
@@ -149,7 +151,9 @@ def setup_args():
     parser.add_argument('--resolver-threshold', required=False, default=0, type=float,
                         help='<Optional> The threshold to use when resolving candidates (used only with the `WikipediaNameResolver` and `WikipediaSearchResolver`); defaults to 0.')
     parser.add_argument('--extrapolator-threshold', required=False, default=0, type=float,
-                        help='<Optional> The threshold to use when extrapolating candidates (used only with the `WikipediaExtrapolator`); defaults to 0..')
+                        help='<Optional> The threshold to use when extrapolating candidates (used only with the `WikipediaExtrapolator`); defaults to 0.')
+    parser.add_argument('--extrapolator-prune', required=False, default=0, type=int,
+                        help='<Optional> The frequency at or below which an attribute is pruned when extrapolating candidates (used only with the `WikipediaAttributeExtrapolator`); defaults to 0.')
     parser.add_argument('--scheme', required=False, default=None,
                         help='<Optional> The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).')
     parser.add_argument('--postprocessor-remove-accents', required=False, action='store_true',
@@ -443,6 +447,9 @@ def create_extrapolator(extrapolator, *args, **kwargs):
 
         scheme = tools.load(_kwargs.pop('scheme'))['tfidf']
         return extrapolator(tokenizer=tokenizer, corpus=_kwargs.pop('file'), scheme=scheme, **_kwargs)
+
+    if extrapolator.__name__ == WikipediaAttributeExtrapolator.__name__:
+        return extrapolator(**_kwargs)
 
     return extrapolator()
 

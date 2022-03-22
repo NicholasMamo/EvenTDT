@@ -590,10 +590,16 @@ class TestAPD(unittest.TestCase):
         Test creating the `WikipediaAttributeExtrapolator`.
         """
 
-        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-        scheme = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
         extrapolator = apd.create_extrapolator(WikipediaAttributeExtrapolator)
         self.assertEqual(WikipediaAttributeExtrapolator, type(extrapolator))
+
+    def test_create_extrapolator_wikipedia_attribute_extrapolator_prune(self):
+        """
+        Test creating the `WikipediaAttributeExtrapolator` with a custom prune value.
+        """
+
+        extrapolator = apd.create_extrapolator(WikipediaAttributeExtrapolator, extrapolator_prune=2)
+        self.assertEqual(2, extrapolator.prune)
 
     def test_create_postprocessor_postprocessor(self):
         """
