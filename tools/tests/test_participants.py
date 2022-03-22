@@ -554,17 +554,6 @@ class TestAPD(unittest.TestCase):
         scheme = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
         extrapolator = apd.create_extrapolator(WikipediaExtrapolator, file=file, scheme=scheme, filter_threshold=0.2, resolver_threshold=0.5, extrapolator_threshold=0.8)
         self.assertEqual(WikipediaExtrapolator, type(extrapolator))
-        self.assertEqual(0.5, extrapolator.threshold)
-
-    def test_create_extrapolator_wikipedia_extrapolator_ignores_other_thresholds(self):
-        """
-        Test that when creating a `WikipediaExtrapolator`, it only considers the `extrapolator_threshold` parameter.
-        """
-
-        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-        scheme = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
-        extrapolator = apd.create_extrapolator(WikipediaExtrapolator, file=file, scheme=scheme, filter_threshold=0.2, resolver_threshold=0.5, extrapolator_threshold=0.8)
-        self.assertEqual(WikipediaExtrapolator, type(extrapolator))
         self.assertEqual(0.8, extrapolator.threshold)
 
     def test_create_extrapolator_wikipedia_extrapolator_without_scheme(self):
@@ -595,6 +584,16 @@ class TestAPD(unittest.TestCase):
         extrapolator = apd.create_extrapolator(WikipediaExtrapolator, file=file, scheme=scheme, threshold=0)
         self.assertEqual(WikipediaExtrapolator, type(extrapolator))
         self.assertEqual(apd.tokenizer, extrapolator.tokenizer)
+
+    def test_create_extrapolator_wikipedia_attribute_extrapolator(self):
+        """
+        Test creating the `WikipediaAttributeExtrapolator`.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        scheme = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        extrapolator = apd.create_extrapolator(WikipediaAttributeExtrapolator)
+        self.assertEqual(WikipediaAttributeExtrapolator, type(extrapolator))
 
     def test_create_postprocessor_postprocessor(self):
         """
