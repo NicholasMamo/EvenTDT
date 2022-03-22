@@ -32,6 +32,11 @@ class WikipediaAttributeExtrapolator(Extrapolator):
                  If an attribute appears this many times or fewer, the extrapolator removes it.
                  By default, a threshold of 0 retains all attributes.
     :vartype prune: int
+    :ivar fetch: The maximum number of candidates to fetch.
+    :vartype fetch: int
+    :ivar extractor: The extractor to use to build profiles.
+                     By default, the extractor extracts only the head noun or entity.
+    :vartype extractor: :class:`~attributes.extractors.linguistic.LinguisticExtractor`
     """
 
     def __init__(self, prune=0, fetch=200):
@@ -57,6 +62,7 @@ class WikipediaAttributeExtrapolator(Extrapolator):
 
         self.prune = prune
         self.fetch = fetch
+        self.extractor = LinguisticExtractor(head_only=True)
 
     def extrapolate(self, participants, *args, **kwargs):
         """
@@ -111,13 +117,12 @@ class WikipediaAttributeExtrapolator(Extrapolator):
         # create the empty profiles in case some pages are missing
         profiles = { title: Profile(name=title) for title in titles }
 
-        extractor = LinguisticExtractor()
         definitions = text.collect(titles, introduction_only=True)
         definitions = { title: text for title, text in definitions.items()
                                     if title in titles }
         definitions = { title: nltk.sent_tokenize(text)[0] if text else text
                         for title, text in definitions.items() }
-        profiles.update({ title: extractor.extract(text, name=title)
+        profiles.update({ title: self.extractor.extract(text, name=title)
                           for title, text in definitions.items() })
 
         return profiles
