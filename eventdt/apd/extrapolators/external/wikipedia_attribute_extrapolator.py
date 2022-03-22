@@ -39,7 +39,7 @@ class WikipediaAttributeExtrapolator(Extrapolator):
     :vartype extractor: :class:`~attributes.extractors.linguistic.LinguisticExtractor`
     """
 
-    def __init__(self, prune=0, fetch=200):
+    def __init__(self, prune=0, fetch=200, *args, **kwargs):
         """
         Create the :class:`~WikipediaAttributeExtrapolator`.
 
