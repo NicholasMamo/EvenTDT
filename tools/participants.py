@@ -645,6 +645,7 @@ def postprocessor(method):
 
         #. :class:`~apd.postprocessor.Postprocessor`
         #. :class:`~apd.postprocessor.external.WikipediaPostprocessor`
+        #. :class:`~apd.postprocessor.external.WikipediaAttributePostprocessor`
 
     :param method: The postprocessor string.
     :type method: str
@@ -656,6 +657,7 @@ def postprocessor(method):
     methods = {
         'postprocessor': Postprocessor,
         'wikipediapostprocessor': WikipediaPostprocessor,
+        'wikipediaattributepostprocessor': WikipediaAttributePostprocessor,
     }
 
     if method.lower() in methods:

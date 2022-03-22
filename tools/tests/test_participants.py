@@ -687,6 +687,16 @@ class TestAPD(unittest.TestCase):
         postprocessor = apd.create_postprocessor(WikipediaPostprocessor, surname_only=False)
         self.assertFalse(postprocessor.surname_only)
 
+    def test_create_postprocessor_wikipedia_attribute_postprocessor(self):
+        """
+        Test creating the `WikipediaAttributePostprocessor`.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        scheme = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        postprocessor = apd.create_postprocessor(WikipediaAttributePostprocessor, file=file, scheme=scheme, threshold=0)
+        self.assertEqual(WikipediaAttributePostprocessor, type(postprocessor))
+
     def test_rank_copy(self):
         """
         Test that when ranking participants, the original term dictionary is not changed.
