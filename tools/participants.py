@@ -50,7 +50,7 @@ Accepted arguments:
     - ``--filter``                        *<Optional>* The filter to use to filter candidate participants; supported: `Filter`, `RankFilter`, `ThresholdFilter`; defaults to no filter.
     - ``--resolver``                      *<Optional>* The resolver to use to resolve candidate participants; supported: `Resolver`, `TokenResolver`, `WikipediaNameResolver`, `WikipediaSearchResolver`; defaults to no filter.
     - ``--extrapolator``                  *<Optional>* The extrapolator to use to extrapolate participants; supported: `Extrapolator`, `WikipediaExtrapolator`, `WikipediaAttributeExtrapolator`; defaults to no extrapolator.
-    - ``--postprocessor``                 *<Optional>* The post-processor to use to post-process participants; supported: `Postprocessor`, `WikiPostprocessor`; defaults to no post-processor.
+    - ``--postprocessor``                 *<Optional>* The post-processor to use to post-process participants; supported: `Postprocessor`, `WikipediaPostprocessor`; defaults to no post-processor.
     - ``-k --keep``                       *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
     - ``--filter-threshold``              *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`); defaults to 0.
     - ``--resolver-threshold``            *<Optional>* The threshold to use when resolving candidates (used only with the `WikipediaNameResolver` and `WikipediaSearchResolver`).
@@ -112,7 +112,7 @@ def setup_args():
         - ``--filter``                        *<Optional>* The filter to use to filter candidate participants; supported: `Filter`, `RankFilter`, `ThresholdFilter`; defaults to no filter.
         - ``--resolver``                      *<Optional>* The resolver to use to resolve candidate participants; supported: `Resolver`, `TokenResolver`, `WikipediaNameResolver`, `WikipediaSearchResolver`; defaults to no resolver.
         - ``--extrapolator``                  *<Optional>* The extrapolator to use to extrapolate participants; supported: `Extrapolator`, `WikipediaExtrapolator`, `WikipediaAttributeExtrapolator`; defaults to no extrapolator.
-        - ``--postprocessor``                 *<Optional>* The post-processor to use to post-process participants; supported: `Postprocessor`, `WikiPostprocessor`; defaults to no post-processor.
+        - ``--postprocessor``                 *<Optional>* The post-processor to use to post-process participants; supported: `Postprocessor`, `WikipediaPostprocessor`; defaults to no post-processor.
         - ``-k --keep``                       *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
         - ``--filter-threshold``              *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`); defaults to 0.
         - ``--resolver-threshold``            *<Optional>* The threshold to use when resolving candidates (used only with the `WikipediaNameResolver` and `WikipediaSearchResolver`); defaults to 0.
@@ -145,7 +145,7 @@ def setup_args():
     parser.add_argument('--extrapolator', type=extrapolator, required=False, default=None,
                         help='<Optional> The extrapolator to use to extrapolate participants; supported: `Extrapolator`, `WikipediaExtrapolator`, `WikipediaAttributeExtrapolator`; defaults to no extrapolator.')
     parser.add_argument('--postprocessor', type=postprocessor, required=False, default=None,
-                        help='<Optional> The post-processor to use to post-process participants; supported: `Postprocessor`, `WikiPostprocessor`; defaults to no post-processor.')
+                        help='<Optional> The post-processor to use to post-process participants; supported: `Postprocessor`, `WikipediaPostprocessor`; defaults to no post-processor.')
     parser.add_argument('-k', '--keep', required=False, type=int,
                         help='<Optional> The number of candidates to retain when filtering candidates (used only with the `RankFilter`).')
     parser.add_argument('--filter-threshold', required=False, default=0, type=float,
@@ -644,7 +644,7 @@ def postprocessor(method):
     The accepted classes are:
 
         #. :class:`~apd.postprocessor.Postprocessor`
-        #. :class:`~apd.postprocessor.external.Postprocessor`
+        #. :class:`~apd.postprocessor.external.WikipediaPostprocessor`
 
     :param method: The postprocessor string.
     :type method: str
