@@ -107,6 +107,10 @@ class WikipediaAttributeExtrapolator(Extrapolator):
         For each article, the function returns a :class:`~attributes.profile.Profile`.
         The profile considers only the first sentence of the article, since it usually refers unambiguously to the article's subject.
 
+        .. note:
+
+            The function builds profiles in bulk, rather than one-by-one, to minimize the number of requests and maximize throughput.
+
         :param titles: The Wikipedia article titles.
         :type titles: list of str
 

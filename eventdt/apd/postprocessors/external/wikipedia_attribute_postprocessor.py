@@ -16,6 +16,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from ..postprocessor import Postprocessor
+from attributes import Profile
 
 class WikipediaAttributePostprocessor(Postprocessor):
     """
@@ -23,4 +24,36 @@ class WikipediaAttributePostprocessor(Postprocessor):
     It uses the definition sentence, the first one in the article, to build a :class:`~attributes.profile.Profile` with attributes for each participant.
     """
 
-    pass
+    def postprocess(self, participants, *args, **kwargs):
+        """
+        Post-process the given participants.
+
+        :param participants: The participants to postprocess.
+        :type participants: list of str
+
+        :return: The postprocessed participants, a mapping from the original participants to their post-processed version.
+        :rtype: dict
+        """
+
+        return self._build_profiles(participants)
+
+    def _build_profiles(self, titles):
+        """
+        Build attribute profiles from the given Wikipedia articles.
+
+        For each article, the function returns a :class:`~attributes.profile.Profile`.
+        The profile considers only the first sentence of the article, since it usually refers unambiguously to the article's subject.
+
+        .. note:
+
+            The function builds profiles in bulk, rather than one-by-one, to minimize the number of requests and maximize throughput.
+
+        :param titles: The Wikipedia article titles.
+        :type titles: list of str
+
+        :return: A dictionary with the Wikipedia titles as keys and the corresponding :class:`~attributes.profile.Profile` instances as values.
+        :rtype: dict
+        """
+
+        # create the empty profiles in case some pages are missing
+        return { title: Profile(name=title) for title in titles }
