@@ -72,33 +72,30 @@ class Exportable(ABC):
         data = copy.deepcopy(data)
 
         if type(data) is dict:
-            """
-            The first case is when a dictionary is given and all keys need to be encoded because some may represent an object.
-            """
+            # case 1: when a dictionary is given, encode all keys since some may represent an object
             for key in data:
                 try:
                     data[key] = json.loads(json.dumps(data.get(key)))
                 except TypeError:
-                    if type(data[key]) in [ dict, list ]:
+                    if type(data[key]) in [ dict, list, set ]:
                         data[key] = Exportable.encode(data.get(key))
                     else:
                         data[key] = data.get(key).to_array()
         elif type(data) is list:
-            """
-            The second case is when a list is given and all items need to be encoded because some may represent an object.
-            """
+            # case 2: when a list is given, encode all items since some may represent an object
             for i, item in enumerate(data):
                 try:
                     data[i] = json.loads(json.dumps(item))
                 except TypeError:
-                    if type(item) in [ dict, list ]:
+                    if type(item) in [ dict, list, set ]:
                         data[i] = Exportable.encode(item)
                     else:
                         data[i] = item.to_array()
+        elif type(data) is set:
+            # case 3: when a set is given, encode it as a list (sets are not serializable)
+            return Exportable.encode(list(data))
         else:
-            """
-            The third case is when an object is given and it can be encoded.
-            """
+            # case 4: if any other object is given, try to encode it
             data = data.to_array()
 
         return data

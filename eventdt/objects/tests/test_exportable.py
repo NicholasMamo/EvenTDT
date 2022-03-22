@@ -60,6 +60,14 @@ class TestExportable(unittest.TestCase):
         data = { 'a': 1, 'b': [ 1, 2 ] }
         self.assertEqual(data, Exportable.encode({ 'a': 1, 'b': [ 1, 2 ] }))
 
+    def test_encode_primitive_dict_with_set(self):
+        """
+        Test that when encoding a dictionary with a set as values, the sets are encoded as a list.
+        """
+
+        data = { 'a': { 1, 2 } }
+        self.assertEqual({ 'a': [ 1, 2 ] }, Exportable.encode(data))
+
     def test_encode_primitive_recursive_dict(self):
         """
         Test that when encoding a dictionary with primitive values stored recursively, the same dictionary is returned.
@@ -100,6 +108,22 @@ class TestExportable(unittest.TestCase):
 
         data = [ 1, 2 ]
         self.assertEqual(data, Exportable.encode(data))
+
+    def test_encode_primitive_list_with_set(self):
+        """
+        Test that when encoding a list with a set, the sets are encoded as a list.
+        """
+
+        data = [ { 1, 2 } ]
+        self.assertEqual([ [ 1, 2 ] ], Exportable.encode(data))
+
+    def test_encode_primitive_set(self):
+        """
+        Test that when encoding a set of primitives, they are encoded as a list.
+        """
+
+        data = { 1, 2 }
+        self.assertEqual(list(data), Exportable.encode(data))
 
     def test_encode_vector_list(self):
         """
