@@ -149,7 +149,7 @@ class FUEGOConsumer(Consumer):
 
         super(FUEGOConsumer, self).__init__(queue, *args, **kwargs)
 
-        self.tokenizer = Tokenizer(stopwords=stopwords.words('english'),
+        self.tokenizer = Tokenizer(stopwords=stopwords.words('english'), stem=True,
                                    normalize_words=True, character_normalization_count=3,
                                    remove_unicode_entities=True)
         self.scheme = scheme or TF()
