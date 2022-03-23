@@ -22,43 +22,7 @@ class TestPackage(unittest.TestCase):
     Test the functionality of the tweet package-level functions.
     """
 
-    def acceptable_mention(self, text):
-        """
-        Check whether any mentions in the given text are acceptable.
-        This happens when the mention is not actually a mention, but just an @, or an @ linking to a broken handle.
-
-        :param text: The text to check for validity.
-        :type text: str
-
-        :return: A boolean indicating whether any mentions are acceptable.
-                 If at least one is acceptable, the function returns True, essentially ending the test for the tweet.
-        :rtype: bool
-        """
-
-        wrong_pattern = re.compile("@[0-9,\\s…]")
-        no_space_pattern = re.compile("[^\\s]@")
-        end_pattern = re.compile('@$')
-
-        """
-        Allow for some manual validation.
-        """
-        not_accounts = [ 'real_realestsounds', 'nevilleiesta', 'naija927', 'naijafm92.7', 'manchesterunited', 'ManchesterUnited',
-                         'clintasena', 'Maksakal88', 'Aubamayeng7', 'JustWenginIt', 'marcosrojo5', 'btsportsfootball',
-                         'Nsibirwahall', 'YouTubeより', 'juniorpepaseed', 'Mezieblog', 'UtdAlamin', 'spurs_vincente',
-                         '@sports_sell', '@Coast2CoastFM', '@Scottangus12' ]
-        if '@' in text:
-            if '@@' in text or ' @ ' in text or '@&gt;' in text or any(account in text for account in not_accounts):
-                return True
-            if end_pattern.findall(text):
-                return True
-            if no_space_pattern.findall(text):
-                return True
-            if wrong_pattern.findall(text):
-                return True
-
-        return False
-
-    def test_timestamp_ms_date(self):
+    def test_extract_timestamp_timestamp_ms_date(self):
         """
         Test that the timestamp date is the same and correct for all tweets in the corpus.
         """
@@ -73,7 +37,7 @@ class TestPackage(unittest.TestCase):
                 self.assertEqual(12, date.hour)
                 self.assertTrue(date.minute in range(45, 50))
 
-    def test_timestamp_created_at_date(self):
+    def test_extract_timestamp_timestamp_created_at_date(self):
         """
         Test that the timestamp date is the same and correct for all tweets in the corpus.
         In this test, the millisecond timestamp is removed so the created-at date is used instead.
@@ -94,7 +58,7 @@ class TestPackage(unittest.TestCase):
                 self.assertEqual(12, date.hour)
                 self.assertTrue(date.minute in range(45, 50))
 
-    def test_timestamp_ms_equal_created_at(self):
+    def test_extract_timestamp_timestamp_ms_equal_created_at(self):
         """
         Test that the timestamp extracted from the milli-seconds is equal to the timestamp from the created-at field.
         """
@@ -114,7 +78,7 @@ class TestPackage(unittest.TestCase):
                 timestamp_ms = twitter.extract_timestamp(tweet)
                 self.assertEqual(created_at, timestamp_ms)
 
-    def test_timestamp_no_fields(self):
+    def test_extract_timestamp_timestamp_no_fields(self):
         """
         Test that when there are no valid fields, a KeyError is raised.
         """
@@ -337,9 +301,9 @@ class TestPackage(unittest.TestCase):
         if not found:
             logger.warning('Trivial test')
 
-    def test_not_verified_retweet(self):
+    def test_is_verified_not_verified_retweet(self):
         """
-        Test that when checking whether a retweet is from a verified author, the retweeting author is checked
+        Test that when checking whether a retweet is from a verified author, the retweeting author is checked.
         """
 
         found = False
@@ -369,6 +333,42 @@ class TestPackage(unittest.TestCase):
 
         if not found:
             logger.warning('Trivial test')
+
+    def is_acceptable_mention(self, text):
+        """
+        Check whether any mentions in the given text are acceptable.
+        This happens when the mention is not actually a mention, but just an @, or an @ linking to a broken handle.
+
+        :param text: The text to check for validity.
+        :type text: str
+
+        :return: A boolean indicating whether any mentions are acceptable.
+                 If at least one is acceptable, the function returns True, essentially ending the test for the tweet.
+        :rtype: bool
+        """
+
+        wrong_pattern = re.compile("@[0-9,\\s…]")
+        no_space_pattern = re.compile("[^\\s]@")
+        end_pattern = re.compile('@$')
+
+        """
+        Allow for some manual validation.
+        """
+        not_accounts = [ 'real_realestsounds', 'nevilleiesta', 'naija927', 'naijafm92.7', 'manchesterunited', 'ManchesterUnited',
+                         'clintasena', 'Maksakal88', 'Aubamayeng7', 'JustWenginIt', 'marcosrojo5', 'btsportsfootball',
+                         'Nsibirwahall', 'YouTubeより', 'juniorpepaseed', 'Mezieblog', 'UtdAlamin', 'spurs_vincente',
+                         '@sports_sell', '@Coast2CoastFM', '@Scottangus12' ]
+        if '@' in text:
+            if '@@' in text or ' @ ' in text or '@&gt;' in text or any(account in text for account in not_accounts):
+                return True
+            if end_pattern.findall(text):
+                return True
+            if no_space_pattern.findall(text):
+                return True
+            if wrong_pattern.findall(text):
+                return True
+
+        return False
 
     def test_expand_mentions(self):
         """
@@ -501,7 +501,7 @@ class TestPackage(unittest.TestCase):
 
                 cleaned = twitter.expand_mentions(text, original)
 
-                if self.acceptable_mention(cleaned) or no_space_pattern.findall(text):
+                if self.is_acceptable_mention(cleaned) or no_space_pattern.findall(text):
                     continue
 
                 self.assertFalse('@' in cleaned)
@@ -518,7 +518,7 @@ class TestPackage(unittest.TestCase):
                 text = twitter.full_text(tweet)
                 text = twitter.expand_mentions(text, tweet)
 
-                if self.acceptable_mention(text):
+                if self.is_acceptable_mention(text):
                     continue
 
                 self.assertFalse('@' in text)
