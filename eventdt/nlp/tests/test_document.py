@@ -2,6 +2,7 @@
 Run unit tests on the :class:`~nlp.document.Document` class.
 """
 
+import json
 import os
 import sys
 import time
@@ -12,7 +13,9 @@ if path not in sys.path:
     sys.path.append(path)
 
 from document import Document
+from objects import Exportable
 from tokenizer import Tokenizer
+import twitter
 from weighting.tf import TF
 
 class TestDocument(unittest.TestCase):
@@ -149,6 +152,111 @@ class TestDocument(unittest.TestCase):
 
         document = Document('this is not a pipe')
         self.assertEqual('this is not a pipe', str(document))
+
+    def test_from_dict_full_text(self):
+        """
+        Test that creating a tweet from a dictionary uses the full text.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                document = Document.from_dict(tweet)
+                self.assertEqual(twitter.expand_mentions(twitter.full_text(tweet), tweet), document.text)
+
+    def test_from_dict_expanded_mentions(self):
+        """
+        Test that creating a tweet from a dictionary expands mentions.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                document = Document.from_dict(tweet)
+                self.assertEqual(twitter.expand_mentions(twitter.full_text(tweet), tweet), document.text)
+
+    def test_from_dict_no_dimensions(self):
+        """
+        Test that creating a tweet from a dictionary without dimensions instantiates a document without dimensions.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                document = Document.from_dict(tweet)
+                self.assertEqual({ }, document.dimensions)
+
+    def test_from_dict_with_dimensions(self):
+        """
+        Test that creating a document from a dictionary with dimensions stores the dimensions.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'idf.json'), 'r') as f:
+            data = json.loads(f.readline())
+            scheme = Exportable.decode(data)['tfidf']
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                text = twitter.expand_mentions(twitter.full_text(tweet), tweet)
+                dimensions = scheme.create(Tokenizer(stem=True).tokenize(text), text=text).dimensions
+                document = Document.from_dict(tweet, dimensions=dimensions)
+                self.assertEqual(dimensions, document.dimensions)
+
+    def test_from_dict_timestamp(self):
+        """
+        Test that creating a document from a dictionary saves the timestamp as an attribute.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                document = Document.from_dict(tweet)
+                self.assertEqual(twitter.timestamp(tweet), document.timestamp)
+
+    def test_from_dict_is_retweet(self):
+        """
+        Test that creating a document from a dictionary saves a boolean indicating whether the tweet is a retweet.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                document = Document.from_dict(tweet)
+                self.assertEqual(twitter.is_retweet(tweet), document.is_retweet)
+
+    def test_from_dict_is_reply(self):
+        """
+        Test that creating a document from a dictionary saves a boolean indicating whether the tweet is a reply.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                document = Document.from_dict(tweet)
+                self.assertEqual(twitter.is_reply(tweet), document.is_reply)
+
+    def test_from_dict_is_quote(self):
+        """
+        Test that creating a document from a dictionary saves a boolean indicating whether the tweet is a quote.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                document = Document.from_dict(tweet)
+                self.assertEqual(twitter.is_quote(tweet), document.is_quote)
+
+    def test_from_dict_is_verified(self):
+        """
+        Test that creating a document from a dictionary saves a boolean indicating whether the tweet is by a verified author.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                document = Document.from_dict(tweet)
+                self.assertEqual(twitter.is_verified(tweet), document.is_verified)
 
     def test_copy(self):
         """

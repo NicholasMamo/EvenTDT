@@ -21,6 +21,7 @@ path = os.path.join(os.path.dirname(__file__), '..')
 if path not in sys.path:
     sys.path.insert(1, path)
 
+import twitter
 from vsm import Vector
 
 class Document(Vector):
@@ -95,6 +96,26 @@ class Document(Vector):
         return array
 
     @staticmethod
+    def from_dict(tweet, dimensions=None):
+        """
+        Create a document representation of the tweet in the given dict.
+        The document has the full text with mentions expanded.
+
+        :param tweet: The dictionary representation of a tweet.
+        :type tweet: dict
+        :param dimensions: The document's dimensions; if not given, the document has no dimensions.
+        :type dimensions: dict or None
+
+        :return: A new :class:`~vector.nlp.document.Document` with the tweet details as attributes.
+        :rtype: :class:`~vector.nlp.document.Document`
+        """
+
+        return Document(text=twitter.expand_mentions(twitter.full_text(tweet), tweet), dimensions=dimensions,
+                        attributes={ 'timestamp': twitter.timestamp(tweet), 'is_retweet': twitter.is_retweet(tweet),
+                                     'is_reply': twitter.is_reply(tweet), 'is_quote': twitter.is_quote(tweet),
+                                     'is_verified': twitter.is_verified(tweet) })
+
+    @staticmethod
     def from_array(array):
         """
         Create an instance of the document from the given associative array.
@@ -102,7 +123,7 @@ class Document(Vector):
         :param array: The associative array with the attributes to create the document.
         :type array: dict
 
-        :return: A new instance of an object with the same attributes stored in the object.
+        :return: A new instance of the document with the same attributes stored in the object.
         :rtype: :class:`~vector.nlp.document.Document`
         """
 
