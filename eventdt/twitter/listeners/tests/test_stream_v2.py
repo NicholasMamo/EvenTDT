@@ -25,6 +25,20 @@ class TestStreamv2(unittest.TestCase):
     Test the functionality of the Streamv2 class.
     """
 
+    def test_init_deletes_all_rules(self):
+        """
+        Test that initializing the stream deletes all rules.
+        """
+
+        auth = BearerTokenAuth(conf.ACCOUNTS[2]['CONSUMER_KEY'], conf.ACCOUNTS[2]['CONSUMER_SECRET'])
+        stream = Streamv2(auth)
+        rules = [{ 'value': 'olympique lyonnais lang:en' , 'tag': 'test'}]
+        stream.set_rules(rules)
+        self.assertTrue(stream.get_all_rules())
+
+        stream = Streamv2(auth)
+        self.assertEqual([ ], stream.get_all_rules())
+
     def test_get_all_rules_list(self):
         """
         Test that initially, all the rules are empty.

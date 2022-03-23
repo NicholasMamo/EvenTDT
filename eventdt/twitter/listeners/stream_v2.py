@@ -38,6 +38,7 @@ class Streamv2():
         """
 
         self.auth = auth
+        self.delete_all_rules()
 
     def connect(self, listener):
         """
