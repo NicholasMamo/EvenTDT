@@ -343,7 +343,7 @@ class FUEGOConsumer(Consumer):
         filtered = [ ]
 
         for item in tweets:
-            tweet = item.attributes['tweet'] if type(item) is Document else item
+            tweet = item.tweet if type(item) is Document else item
             if self._validate_tweet(tweet):
                 filtered.append(item)
 
@@ -440,17 +440,14 @@ class FUEGOConsumer(Consumer):
         """
         for item in tweets:
             tweet = item.attributes['tweet'] if type(item) is Document else item
-            text = twitter.full_text(tweet)
-            text = twitter.expand_mentions(text, tweet)
 
-            """
-            Create the document and save the tweet in it.
-            """
-            document = self.scheme.create(self.tokenizer.tokenize(text), text=text)
-            document.text = text
+            # extract the dimensions of the document
+            text = twitter.expand_mentions(twitter.full_text(tweet), tweet)
+            dimensions = self.scheme.create(self.tokenizer.tokenize(text), text=text).dimensions
+
+            # create the document from the tweet and save the tweet in it
+            document = Document.from_dict(tweet, dimensions=dimensions)
             document.attributes['id'] = tweet.get('id')
-            document.attributes['timestamp'] = twitter.extract_timestamp(tweet)
-            document.attributes['tweet'] = tweet
             document.normalize()
             documents.append(document)
 
@@ -477,7 +474,7 @@ class FUEGOConsumer(Consumer):
         if type(documents) is not list:
             raise ValueError(f"Expected a list of documents; received { type(documents) }")
 
-        timestamps = [ document.attributes['timestamp'] for document in documents ]
+        timestamps = [ document.timestamp for document in documents ]
         return max(timestamps)
 
     def _update_cache(self, documents, cache, timestamp):
@@ -501,7 +498,7 @@ class FUEGOConsumer(Consumer):
         cache = list(cache) # create a shallow copy
         cache.extend(documents) # add all documents to the cache
         cache = [ document for document in cache
-                           if document.attributes['timestamp'] > timestamp - self.tdt.window_size ]
+                           if document.timestamp > timestamp - self.tdt.window_size ]
         return cache
 
     def _update_volume(self, documents):
@@ -516,7 +513,7 @@ class FUEGOConsumer(Consumer):
 
         for document in documents:
             damping = self._damp(document)
-            timestamp = document.attributes['timestamp']
+            timestamp = document.timestamp
             volume = self.volume.get(timestamp) or 0
             self.volume.add(timestamp, volume + damping)
 
@@ -534,7 +531,7 @@ class FUEGOConsumer(Consumer):
 
         for document in documents:
             damping = self._damp(document)
-            timestamp = document.attributes['timestamp']
+            timestamp = document.timestamp
             nutrition = self.nutrition.get(timestamp) or { }
             for dimension, magnitude in document.dimensions.items():
                 nutrition[dimension] = nutrition.get(dimension, 0) + magnitude * damping
@@ -558,7 +555,7 @@ class FUEGOConsumer(Consumer):
         # NOTE: Deprecated
 
         for document in documents:
-            timestamp = document.attributes['timestamp']
+            timestamp = document.timestamp
             correlations = self.correlations.get(timestamp) or { } # the stored correlations
 
             # NOTE: The correlations are written as follows so that 1 can be replaced with another value, such as a damping factor
@@ -641,18 +638,13 @@ class FUEGOConsumer(Consumer):
         :rtype: float
         """
 
-        """
-        If the tweet is not a retweet, apply no damping.
-        """
-        tweet = document.attributes['tweet']
-        if 'retweeted_status' not in tweet:
+        # if the tweet is not a retweet, apply no damping
+        if not document.is_retweet:
             return 1
 
-        """
-        If the tweet is a retweet, apply damping proportional to the difference between the time it took to retweet it.
-        """
-        retweet = tweet['retweeted_status']
-        diff = twitter.extract_timestamp(tweet) - twitter.extract_timestamp(retweet)
+        # if the tweet is a retweet, apply damping proportional to the difference between the time it took to retweet it
+        retweet = document.tweet['retweeted_status']
+        diff = document.timestamp - twitter.extract_timestamp(retweet)
         return math.exp(- self.damping * diff / 60)
 
     def _track(self, topics, timestamp):
