@@ -547,7 +547,7 @@ class ELDConsumer(Consumer):
         :raises ValueError: When there are no documents to consider.
         """
 
-        timestamps = [ document.attributes['timestamp'] for document in documents ]
+        timestamps = [ document.timestamp for document in documents ]
         return max(timestamps)
 
     def _create_checkpoint(self, timestamp):
@@ -575,9 +575,9 @@ class ELDConsumer(Consumer):
         The rest of the documents are re-added to the buffer.
         """
         documents = self.buffer.dequeue_all()
-        documents = sorted(documents, key=lambda document: document.attributes['timestamp'])
-        self.buffer.enqueue(*[ document for document in documents if document.attributes['timestamp'] > timestamp ])
-        documents = [ document for document in documents if document.attributes['timestamp'] <= timestamp ]
+        documents = sorted(documents, key=lambda document: document.timestamp)
+        self.buffer.enqueue(*[ document for document in documents if document.timestamp > timestamp ])
+        documents = [ document for document in documents if document.timestamp <= timestamp ]
 
         """
         If there are documents, concatenate them and rescale the dimensions between 0 and 1.
@@ -721,7 +721,7 @@ class ELDConsumer(Consumer):
         """
         Mark the cluster as having been checked.
         """
-        cluster.attributes['last_checked'] = timestamp
+        cluster.last_checked = timestamp
 
         """
         Create a pseudo-checkpoint from the cluster's documents.
