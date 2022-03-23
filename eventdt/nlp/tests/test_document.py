@@ -258,6 +258,17 @@ class TestDocument(unittest.TestCase):
                 document = Document.from_dict(tweet)
                 self.assertEqual(twitter.is_verified(tweet), document.is_verified)
 
+    def test_from_dict_with_tweet(self):
+        """
+        Test that creating a document from a dictionary saves the tweet as an attribute.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                document = Document.from_dict(tweet)
+                self.assertEqual(tweet, document.tweet)
+
     def test_copy(self):
         """
         Test that when copying a document, the text, dimensions and attributes are identical.
