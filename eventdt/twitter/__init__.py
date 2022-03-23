@@ -6,6 +6,16 @@ At the package-level there are functions to help with general processing tasks.
 from dateutil.parser import parse
 import re
 
+def timestamp(tweet):
+    """
+    An alias to the :func:`~twitter.extract_timestamp` function.
+
+    :param tweet: The tweet from which to extract the timestamp.
+    :type tweet: dict
+    """
+
+    return extract_timestamp(tweet)
+
 def extract_timestamp(tweet):
     """
     Get the timestamp from the given tweet.
