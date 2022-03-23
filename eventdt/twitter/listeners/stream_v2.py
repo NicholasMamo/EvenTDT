@@ -28,6 +28,11 @@ class Streamv2():
     The API endpoint from where to stream tweets.
     """
 
+    SAMPLE_URL = """https://api.twitter.com/2/tweets/sample/stream"""
+    """
+    The API endpoint from where to sample tweets.
+    """
+
     def __init__(self, auth):
         """
         Initialize the stream with the bearer token authentication.
@@ -40,15 +45,17 @@ class Streamv2():
         self.auth = auth
         self.delete_all_rules()
 
-    def connect(self, listener):
+    def connect(self, listener, sample=False):
         """
         Connect with the stream, invoking the listener whenever it receives a tweet.
 
         :param listener: The tweet listener, which will process incoming tweets.
         :type listener: :class:`~tweepy.streaming.StreamListener`
+        :param sample: A boolean indicating whether to collect a sample of tweets or filter tweets.
+        :type sample: bool
         """
 
-        response = requests.get(self.STREAM_URL, auth=self.auth, stream=True)
+        response = requests.get(self.SAMPLE_URL if sample else self.STREAM_URL, auth=self.auth, stream=True)
 
         """
         Keep collecting tweets until the listener decides to stop.
