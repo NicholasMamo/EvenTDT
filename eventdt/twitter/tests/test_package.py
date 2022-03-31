@@ -22,6 +22,22 @@ class TestPackage(unittest.TestCase):
     Test the functionality of the tweet package-level functions.
     """
 
+    def test_version_v1(self):
+        """
+        Test that the version of all tweets collected using version 1.1 of the Twitter API is 1.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            self.assertTrue(all( 1 == twitter.version(json.loads(line)) for line in f ))
+
+    def test_version_v2(self):
+        """
+        Test that the version of all tweets collected using version 2 of the Twitter API is 2.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            self.assertTrue(all( 2 == twitter.version(json.loads(line)) for line in f ))
+
     def test_extract_timestamp_timestamp_ms_date(self):
         """
         Test that the timestamp date is the same and correct for all tweets in the corpus.

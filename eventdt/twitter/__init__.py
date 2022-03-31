@@ -6,6 +6,22 @@ At the package-level there are functions to help with general processing tasks.
 from dateutil.parser import parse
 import re
 
+def version(tweet):
+    """
+    Get the version with which the tweet was collected.
+
+    :param tweet: The tweet from which to extract the API version.
+    :type tweet: dict
+
+    :return: The version of the API with which the tweet was collected.
+    :rtype: int
+    """
+
+    if 'data' in tweet:
+        return 2
+
+    return 1
+
 def timestamp(tweet):
     """
     An alias to the :func:`~twitter.extract_timestamp` function.
