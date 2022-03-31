@@ -141,7 +141,17 @@ def is_reply(tweet):
     :rtype: bool
     """
 
-    return tweet['in_reply_to_status_id_str'] is not None
+    if version(tweet) == 1:
+        return tweet['in_reply_to_status_id_str'] is not None
+    else:
+        if is_retweet(tweet):
+            referenced = [ referenced for referenced in tweet['data']['referenced_tweets']
+                                      if referenced['type'] == 'retweeted' ][0]
+            tweet = [ _tweet for _tweet in tweet['includes']['tweets']
+                             if _tweet['id'] == referenced['id'] ][0]
+
+        return any( referenced['type'] == 'replied_to' for referenced in tweet.get('data', tweet)
+                   .get('referenced_tweets', [ ]) )
 
 def is_verified(tweet):
     """

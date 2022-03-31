@@ -425,6 +425,36 @@ class TestPackage(unittest.TestCase):
         if not found:
             logger.warning('Trivial test')
 
+    def test_is_reply_v2_all_not_replies(self):
+        """
+        Test that when checking for replies, the function returns ``True`` only if the tweet is a reply.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    referenced = [ referenced for referenced in tweet['data']['referenced_tweets']
+                                              if referenced['type'] == 'retweeted' ][0]
+                    original = [ _tweet for _tweet in tweet['includes']['tweets']
+                                        if _tweet['id'] == referenced['id'] ][0]
+                    if any( referenced['type'] == 'replied_to' for referenced in original.get('referenced_tweets', [ ]) ):
+                        found = True
+                        self.assertTrue(twitter.is_reply(tweet))
+                    else:
+                        self.assertFalse(twitter.is_reply(tweet))
+                else:
+                    if any( referenced['type'] == 'replied_to' for referenced in tweet.get('data', tweet)
+                               .get('referenced_tweets', [ ]) ):
+                        found = True
+                        self.assertTrue(twitter.is_reply(tweet))
+                    else:
+                        self.assertFalse(twitter.is_reply(tweet))
+
+        if not found:
+            logger.warning('Trivial test')
+
     def test_is_reply_allows_mentions(self):
         """
         Test that when checking for replies, just because the tweet includes a mention does not make it a reply.
