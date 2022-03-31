@@ -74,6 +74,21 @@ class TestPackage(unittest.TestCase):
                 self.assertEqual(12, date.hour)
                 self.assertTrue(date.minute in range(45, 50))
 
+    def test_extract_timestamp_v2_timestamp_created_at_date(self):
+        """
+        Test that the timestamp date is the same and correct for all tweets in the corpus.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                date = datetime.fromtimestamp(twitter.extract_timestamp(tweet))
+                self.assertEqual(2022, date.year)
+                self.assertEqual(3, date.month)
+                self.assertEqual(23, date.day)
+                self.assertTrue(date.hour in { 15, 16 })
+                self.assertTrue(date.minute in { 58, 59, 0 })
+
     def test_extract_timestamp_timestamp_ms_equal_created_at(self):
         """
         Test that the timestamp extracted from the milli-seconds is equal to the timestamp from the created-at field.

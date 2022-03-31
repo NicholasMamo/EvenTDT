@@ -49,12 +49,15 @@ def extract_timestamp(tweet):
     :raises KeyError: When no timestamp field can be found.
     """
 
-    if 'timestamp_ms' in tweet:
-        timestamp_ms = int(tweet["timestamp_ms"])
-        timestamp_ms = timestamp_ms - timestamp_ms % 1000
-        return timestamp_ms / 1000.
-    elif 'created_at' in tweet:
-        return parse(tweet['created_at']).timestamp()
+    if version(tweet) == 1:
+        if 'timestamp_ms' in tweet:
+            timestamp_ms = int(tweet["timestamp_ms"])
+            timestamp_ms = timestamp_ms - timestamp_ms % 1000
+            return timestamp_ms / 1000.
+        elif 'created_at' in tweet:
+            return parse(tweet['created_at']).timestamp()
+    else:
+        return parse(tweet['data']['created_at']).timestamp()
 
     raise KeyError("Neither the 'timestamp_ms' attribute, nor the 'created_at' attribute could be found in the tweet.")
 
