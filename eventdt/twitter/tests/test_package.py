@@ -369,10 +369,7 @@ class TestPackage(unittest.TestCase):
                 # if the tweet is marked as a quote but a quoted tweet isn't referenced from the top-level tweet, it must be a retweeted quote
                 if not any( referenced['type'] == 'quoted' for referenced in tweet['data'].get('referenced_tweets', { }) ) and twitter.is_quote(tweet):
                     self.assertTrue(twitter.is_retweet(tweet))
-                    referenced = [ referenced for referenced in tweet['data']['referenced_tweets']
-                                              if referenced['type'] == 'retweeted' ][0]
-                    original = [ _tweet for _tweet in tweet['includes']['tweets']
-                                        if _tweet['id'] == referenced['id'] ][0]
+                    original = twitter.original(tweet)
                     self.assertTrue(any( referenced['type'] == 'quoted' for referenced in original.get('referenced_tweets', { }) ))
 
         if not found:
@@ -484,10 +481,7 @@ class TestPackage(unittest.TestCase):
             for line in f:
                 tweet = json.loads(line)
                 if twitter.is_retweet(tweet):
-                    referenced = [ referenced for referenced in tweet['data']['referenced_tweets']
-                                              if referenced['type'] == 'retweeted' ][0]
-                    original = [ _tweet for _tweet in tweet['includes']['tweets']
-                                        if _tweet['id'] == referenced['id'] ][0]
+                    original = twitter.original(tweet)
                     if any( referenced['type'] == 'replied_to' for referenced in original.get('referenced_tweets', [ ]) ):
                         found = True
                         self.assertTrue(twitter.is_reply(tweet))
