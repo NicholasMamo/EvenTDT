@@ -242,6 +242,55 @@ class TestPackage(unittest.TestCase):
         if not found:
             logger.warning('Trivial test')
 
+    def test_original_not_retweet(self):
+        """
+        Test that getting the original tweet of a tweet that is not a retweet returns the same object.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if not twitter.is_retweet(tweet):
+                    self.assertEqual(tweet, twitter.original(tweet))
+
+    def test_original_retweet(self):
+        """
+        Test that getting the original tweet of a retweet returns the retweeted object.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    self.assertEqual(tweet['retweeted_status'], twitter.original(tweet))
+
+    def test_original_not_retweet(self):
+        """
+        Test that getting the original tweet of a tweet that is not a retweet returns the same object.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if not twitter.is_retweet(tweet):
+                    self.assertEqual(tweet['data'], twitter.original(tweet))
+
+    def test_original_retweet(self):
+        """
+        Test that getting the original tweet of a retweet returns the retweeted object.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    referenced = [ referenced for referenced in tweet['data']['referenced_tweets']
+                                              if referenced['type'] == 'retweeted' ][0]
+                    original = [ _tweet for _tweet in tweet['includes']['tweets']
+                                        if _tweet['id'] == referenced['id'] ][0]
+
+                    self.assertEqual(original, twitter.original(tweet))
+
     def test_is_retweet_v2(self):
         """
         Test that when checking for retweets of APIv2 tweets, the function returns ``True`` only if the tweet is a retweet.

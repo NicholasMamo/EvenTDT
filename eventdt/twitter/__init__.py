@@ -105,6 +105,28 @@ def is_retweet(tweet):
     else:
         return any( referenced['type'] == 'retweeted' for referenced in tweet['data'].get('referenced_tweets', [ ]) )
 
+def original(tweet):
+    """
+    Get the original tweet (the one that was retweeted).
+
+    :param tweet: The tweet to check.
+    :type tweet: dict
+
+    :return: The original tweet.
+    :rtype: dict
+    """
+
+    if version(tweet) == 1:
+        return tweet["retweeted_status"] if is_retweet(tweet) else tweet
+    else:
+        if is_retweet(tweet):
+            referenced = [ referenced for referenced in tweet['data']['referenced_tweets']
+                                      if referenced['type'] == 'retweeted' ][0]
+            return [ _tweet for _tweet in tweet['includes']['tweets']
+                            if _tweet['id'] == referenced['id'] ][0]
+        else:
+            return tweet['data']
+
 def is_quote(tweet):
     """
     Check whether the given tweet is a quoted status.
