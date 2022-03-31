@@ -78,7 +78,7 @@ def full_text(tweet):
     :rtype: str
     """
 
-    while "retweeted_status" in tweet:
+    while is_retweet(tweet):
         tweet = tweet["retweeted_status"]
 
     if "extended_tweet" in tweet:
@@ -100,7 +100,10 @@ def is_retweet(tweet):
     :rtype: bool
     """
 
-    return 'retweeted_status' in tweet
+    if version(tweet) == 1:
+        return 'retweeted_status' in tweet
+    else:
+        return any( referenced['type'] == 'retweeted' for referenced in tweet['data'].get('referenced_tweets', { }) )
 
 def is_quote(tweet):
     """
