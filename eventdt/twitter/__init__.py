@@ -103,7 +103,7 @@ def is_retweet(tweet):
     if version(tweet) == 1:
         return 'retweeted_status' in tweet
     else:
-        return any( referenced['type'] == 'retweeted' for referenced in tweet['data'].get('referenced_tweets', { }) )
+        return any( referenced['type'] == 'retweeted' for referenced in tweet['data'].get('referenced_tweets', [ ]) )
 
 def is_quote(tweet):
     """
@@ -117,7 +117,17 @@ def is_quote(tweet):
     :rtype: bool
     """
 
-    return 'quoted_status' in tweet
+    if version(tweet) == 1:
+        return 'quoted_status' in tweet
+    else:
+        if is_retweet(tweet):
+            referenced = [ referenced for referenced in tweet['data']['referenced_tweets']
+                                      if referenced['type'] == 'retweeted' ][0]
+            tweet = [ _tweet for _tweet in tweet['includes']['tweets']
+                             if _tweet['id'] == referenced['id'] ][0]
+
+        return any( referenced['type'] == 'quoted' for referenced in tweet.get('data', tweet)
+                   .get('referenced_tweets', [ ]) )
 
 def is_reply(tweet):
     """

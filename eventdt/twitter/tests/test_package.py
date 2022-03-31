@@ -304,6 +304,68 @@ class TestPackage(unittest.TestCase):
         if not found:
             logger.warning('Trivial test')
 
+    def test_is_quote_v2(self):
+        """
+        Test that when checking for quotes, the function returns ``True`` only if the tweet is a quoted tweet.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if any( referenced['type'] == 'quoted' for referenced in tweet['data'].get('referenced_tweets', { }) ):
+                    found = True
+                    self.assertTrue(twitter.is_quote(tweet))
+
+                # if the tweet is marked as a quote but a quoted tweet isn't referenced from the top-level tweet, it must be a retweeted quote
+                if not any( referenced['type'] == 'quoted' for referenced in tweet['data'].get('referenced_tweets', { }) ) and twitter.is_quote(tweet):
+                    self.assertTrue(twitter.is_retweet(tweet))
+                    referenced = [ referenced for referenced in tweet['data']['referenced_tweets']
+                                              if referenced['type'] == 'retweeted' ][0]
+                    original = [ _tweet for _tweet in tweet['includes']['tweets']
+                                        if _tweet['id'] == referenced['id'] ][0]
+                    self.assertTrue(any( referenced['type'] == 'quoted' for referenced in original.get('referenced_tweets', { }) ))
+
+        if not found:
+            logger.warning('Trivial test')
+
+    def test_is_quote_v2_only_one(self):
+        """
+        Test that APIv2 tweets may only include one quoted tweet.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+
+                if twitter.is_quote(tweet):
+                    if twitter.is_retweet(tweet):
+                        referenced = [ referenced for referenced in tweet['data']['referenced_tweets']
+                                                  if referenced['type'] == 'retweeted' ][0]
+                        original = [ _tweet for _tweet in tweet['includes']['tweets']
+                                            if _tweet['id'] == referenced['id'] ][0]
+                        quoted = [ referenced for referenced in original['referenced_tweets']
+                                               if referenced['type'] == 'quoted' ]
+                        self.assertEqual(1, len(quoted))
+                    else:
+                        quoted = [ referenced for referenced in tweet['data']['referenced_tweets']
+                                               if referenced['type'] == 'quoted' ]
+                        self.assertEqual(1, len(quoted))
+
+    def test_is_quote_v2_has_matching_id(self):
+        """
+        Test that APIv2 quoted tweets include a tweet with a matching referenced ID.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                # if a tweet is a quote but it has been retweeted, the top-level tweet will only refer to it as a retweet
+                if twitter.is_quote(tweet) and not twitter.is_retweet(tweet):
+                    quoted = [ referenced for referenced in tweet['data']['referenced_tweets']
+                                           if referenced['type'] == 'quoted' ][0]
+                    self.assertTrue(any( referenced['id'] == quoted['id'] for referenced in tweet['includes']['tweets'] ))
+
     def test_is_quote_retweet(self):
         """
         Test that when checking for quotes, if the quote is retweeted, the function returns ``True``.
@@ -320,6 +382,27 @@ class TestPackage(unittest.TestCase):
                 elif not 'quoted_status' in tweet and not 'retweeted_status' in tweet:
                     self.assertFalse(twitter.is_quote(tweet))
                     self.assertFalse(twitter.is_retweet(tweet))
+
+        if not found:
+            logger.warning('Trivial test')
+
+    def test_is_quote_v2_retweet(self):
+        """
+        Test that when checking for quotes, if the quote is retweeted, the function returns ``True`` for both checks.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    id = [ referenced['id'] for referenced in tweet['data']['referenced_tweets']
+                                      if referenced['type'] == 'retweeted' ][0]
+                    original = [ _tweet for _tweet in tweet['includes']['tweets']
+                                        if _tweet['id'] == id ][0]
+                    if any( referenced['type'] == 'quoted' for referenced in original.get('referenced_tweets', [ ]) ):
+                        found = True
+                        self.assertTrue(twitter.is_quote(tweet))
 
         if not found:
             logger.warning('Trivial test')
