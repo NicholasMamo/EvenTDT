@@ -130,6 +130,26 @@ def urls(tweet):
         urls = tweet.get('data', tweet).get('entities', { }).get('urls', [ ])
     return [ url['expanded_url'] for url in urls ]
 
+def hashtags(tweet):
+    """
+    Extract the hashtags from the given tweet.
+
+    :param tweet: The tweet from which to extract hashtags.
+    :type tweet: dict
+
+    :return: A list of hashtags.
+    :rtype: list of str
+    """
+
+    if version(tweet) == 1:
+        tweet = original(tweet) if is_retweet(tweet) else tweet
+        hashtags = tweet.get('extended_tweet', tweet).get('entities', { }).get('hashtags', [ ])
+        return [ hashtag['text'] for hashtag in hashtags ]
+    else:
+        tweet = original(tweet) if is_retweet(tweet) else tweet
+        hashtags = tweet.get('data', tweet).get('entities', { }).get('hashtags', [ ])
+        return [ hashtag['tag'] for hashtag in hashtags ]
+
 def is_retweet(tweet):
     """
     Check whether the given tweet is a retweet.
