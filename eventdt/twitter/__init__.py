@@ -117,7 +117,9 @@ def original(tweet):
     """
 
     if version(tweet) == 1:
-        return tweet["retweeted_status"] if is_retweet(tweet) else tweet
+        while is_retweet(tweet):
+            tweet = tweet["retweeted_status"]
+        return tweet
     else:
         if is_retweet(tweet):
             referenced = [ referenced for referenced in tweet['data']['referenced_tweets']

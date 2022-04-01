@@ -264,7 +264,7 @@ class TestPackage(unittest.TestCase):
                 if twitter.is_retweet(tweet):
                     self.assertEqual(tweet['retweeted_status'], twitter.original(tweet))
 
-    def test_original_not_retweet(self):
+    def test_original_v2_not_retweet(self):
         """
         Test that getting the original tweet of a tweet that is not a retweet returns the same object.
         """
@@ -275,7 +275,7 @@ class TestPackage(unittest.TestCase):
                 if not twitter.is_retweet(tweet):
                     self.assertEqual(tweet['data'], twitter.original(tweet))
 
-    def test_original_retweet(self):
+    def test_original_v2_retweet(self):
         """
         Test that getting the original tweet of a retweet returns the retweeted object.
         """
