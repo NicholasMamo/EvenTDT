@@ -203,7 +203,7 @@ class TestDocument(unittest.TestCase):
                 document = Document.from_dict(tweet, dimensions=dimensions)
                 self.assertEqual(dimensions, document.dimensions)
 
-    def test_from_dict_timestamp(self):
+    def test_from_dict_with_timestamp(self):
         """
         Test that creating a document from a dictionary saves the timestamp as an attribute.
         """
@@ -214,9 +214,9 @@ class TestDocument(unittest.TestCase):
                 document = Document.from_dict(tweet)
                 self.assertEqual(twitter.timestamp(tweet), document.timestamp)
 
-    def test_from_dict_timestamp(self):
+    def test_from_dict_with_lang(self):
         """
-        Test that creating a document from a dictionary saves the timestamp as an attribute.
+        Test that creating a document from a dictionary saves the language as an attribute.
         """
 
         with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
@@ -224,6 +224,17 @@ class TestDocument(unittest.TestCase):
                 tweet = json.loads(line)
                 document = Document.from_dict(tweet)
                 self.assertEqual(twitter.lang(tweet), document.lang)
+
+    def test_from_dict_with_urls(self):
+        """
+        Test that creating a document from a dictionary saves the tweet's URLs as an attribute.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                document = Document.from_dict(tweet)
+                self.assertEqual(twitter.urls(tweet), document.urls)
 
     def test_from_dict_is_retweet(self):
         """
