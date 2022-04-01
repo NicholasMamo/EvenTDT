@@ -379,6 +379,7 @@ class TestPackage(unittest.TestCase):
                 if not twitter.is_quote(tweet) and not twitter.is_retweet(tweet):
                     urls = tweet.get('data', tweet).get('entities', { }).get('urls', [ ])
                     urls = [ url['expanded_url'] for url in urls ]
+                    urls = [ url for url in urls if not url.endswith('/photo/1') ]
                     self.assertEqual(urls, twitter.urls(tweet))
 
     def test_urls_from_extended(self):
@@ -419,6 +420,7 @@ class TestPackage(unittest.TestCase):
                 if twitter.is_quote(tweet) and not twitter.is_retweet(tweet):
                     urls = tweet.get('data', tweet).get('entities', { }).get('urls', [ ])
                     urls = [ url['expanded_url'] for url in urls ]
+                    urls = [ url for url in urls if not url.endswith('/photo/1') ]
                     self.assertEqual(urls, twitter.urls(tweet))
 
     def test_urls_from_retweets(self):
@@ -447,7 +449,18 @@ class TestPackage(unittest.TestCase):
                     original = twitter.original(tweet)
                     urls = original.get('entities', { }).get('urls', [ ])
                     urls = [ url['expanded_url'] for url in urls ]
+                    urls = [ url for url in urls if not url.endswith('/photo/1') ]
                     self.assertEqual(urls, twitter.urls(tweet))
+
+    def test_urls_v2_no_media(self):
+        """
+        Test that extracting URLs does not return media URLs.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                self.assertFalse(any( re.search("\/photo\/\\d$", url) for url in twitter.urls(tweet) ))
 
     def test_urls_from_quoted_retweet(self):
         """
@@ -475,6 +488,7 @@ class TestPackage(unittest.TestCase):
                     original = twitter.original(tweet)
                     urls = original.get('entities', { }).get('urls', [ ])
                     urls = [ url['expanded_url'] for url in urls ]
+                    urls = [ url for url in urls if not url.endswith('/photo/1') ]
                     self.assertEqual(urls, twitter.urls(tweet))
 
     def test_hashtags_returns_list(self):
