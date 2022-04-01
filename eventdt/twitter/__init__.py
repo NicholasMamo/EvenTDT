@@ -229,7 +229,7 @@ def is_verified(tweet):
     :rtype: bool
     """
 
-    return tweet['user']['verified']
+    return author(tweet)['verified']
 
 def expand_mentions(text, tweet):
     """
