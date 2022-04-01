@@ -214,6 +214,17 @@ class TestDocument(unittest.TestCase):
                 document = Document.from_dict(tweet)
                 self.assertEqual(twitter.timestamp(tweet), document.timestamp)
 
+    def test_from_dict_timestamp(self):
+        """
+        Test that creating a document from a dictionary saves the timestamp as an attribute.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                document = Document.from_dict(tweet)
+                self.assertEqual(twitter.lang(tweet), document.lang)
+
     def test_from_dict_is_retweet(self):
         """
         Test that creating a document from a dictionary saves a boolean indicating whether the tweet is a retweet.
