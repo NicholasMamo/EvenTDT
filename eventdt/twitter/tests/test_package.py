@@ -40,6 +40,36 @@ class TestPackage(unittest.TestCase):
         with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
             self.assertTrue(all( 2 == twitter.version(json.loads(line)) for line in f ))
 
+    def test_lang(self):
+        """
+        Test getting the language matches with the tweets' language.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                self.assertEqual('en', twitter.lang(tweet))
+
+    def test_lang_v2(self):
+        """
+        Test getting the language matches with the tweets' language.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                self.assertEqual(tweet['data']['lang'], twitter.lang(tweet))
+
+    def test_lang_returns_str(self):
+        """
+        Test getting the language returns a string.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                self.assertEqual(str, type(twitter.lang(tweet)))
+
     def test_extract_timestamp_timestamp_ms_date(self):
         """
         Test that the timestamp date is the same and correct for all tweets in the corpus.

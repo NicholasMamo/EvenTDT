@@ -22,12 +22,28 @@ def version(tweet):
 
     return 1
 
+def lang(tweet):
+    """
+    Extract the language from the given tweet.
+
+    :param tweet: The tweet from which to extract the language.
+    :type tweet: dict
+
+    :return: The tweet's language.
+    :rtype: str
+    """
+
+    return tweet.get('data', tweet)['lang']
+
 def timestamp(tweet):
     """
     An alias to the :func:`~twitter.extract_timestamp` function.
 
     :param tweet: The tweet from which to extract the timestamp.
     :type tweet: dict
+
+    :return: The timestamp of the tweet.
+    :rtype: int
     """
 
     return extract_timestamp(tweet)
