@@ -236,6 +236,17 @@ class TestDocument(unittest.TestCase):
                 document = Document.from_dict(tweet)
                 self.assertEqual(twitter.urls(tweet), document.urls)
 
+    def test_from_dict_with_hashtags(self):
+        """
+        Test that creating a document from a dictionary saves the tweet's hashtags as an attribute.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                document = Document.from_dict(tweet)
+                self.assertEqual(twitter.hashtags(tweet), document.hashtags)
+
     def test_from_dict_is_retweet(self):
         """
         Test that creating a document from a dictionary saves a boolean indicating whether the tweet is a retweet.
