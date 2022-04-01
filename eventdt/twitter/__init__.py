@@ -91,7 +91,6 @@ def full_text(tweet):
 def is_retweet(tweet):
     """
     Check whether the given tweet is a retweet.
-    A tweet is a retweet if it has a ``retweeted_status`` key.
 
     :param tweet: The tweet to check.
     :type tweet: dict
@@ -132,7 +131,6 @@ def original(tweet):
 def is_quote(tweet):
     """
     Check whether the given tweet is a quoted status.
-    A tweet is a quoted status if it has a ``quoted_status`` key.
 
     :param tweet: The tweet to check.
     :type tweet: dict
@@ -171,7 +169,7 @@ def quoted(tweet):
         references = [ referenced['id'] for referenced in tweet.get('data', tweet).get('referenced_tweets')
                                         if referenced['type'] == 'quoted' ][0]
         referenced = [ included for included in tweet['includes']['tweets']
-                                if included['id'] == references ]
+                                if included['id'] == references ][0]
         return referenced
 
 def is_reply(tweet):
@@ -192,6 +190,28 @@ def is_reply(tweet):
         tweet = original(tweet) if is_retweet(tweet) else tweet
         return any( referenced['type'] == 'replied_to' for referenced in tweet.get('data', tweet)
                    .get('referenced_tweets', [ ]) )
+
+def author(tweet, user_id=None):
+    """
+    Get the author object of the given tweet.
+    If a user ID is given, the function returns the corresponding author; otherwise, it returns the author of the top-level tweet.
+
+    :raises KeyError: If there is no user with the given ID.
+    """
+
+    if version(tweet) == 1:
+        if not user_id:
+            return tweet['user']
+        else:
+            authors = { tweet['user']['id_str']: tweet['user'] }
+            if is_retweet(tweet):
+                authors.update({ original(tweet)['user']['id_str']: original(tweet)['user'] })
+            if is_quote(tweet):
+                authors.update({ quoted(tweet)['user']['id_str']: quoted(tweet)['user'] })
+            return authors[user_id]
+    elif version(tweet) == 2:
+        authors = { user['id']: user for user in tweet['includes']['users'] }
+        return authors[user_id] if user_id else authors[tweet['data']['author_id']]
 
 def is_verified(tweet):
     """

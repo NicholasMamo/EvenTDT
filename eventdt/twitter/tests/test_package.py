@@ -4,7 +4,9 @@ Test the functionality of the tweet package-level functions.
 
 import json
 import os
+import random
 import re
+import string
 import sys
 import unittest
 
@@ -476,7 +478,7 @@ class TestPackage(unittest.TestCase):
                     references = [ referenced['id'] for referenced in tweet.get('data', tweet)['referenced_tweets']
                                                     if referenced['type'] == 'quoted' ][0]
                     referenced = [ included for included in tweet['includes']['tweets']
-                                            if included['id'] == references ]
+                                            if included['id'] == references ][0]
                     self.assertEqual(referenced, twitter.quoted(tweet))
 
     def test_quoted_v2_retweet(self):
@@ -550,6 +552,142 @@ class TestPackage(unittest.TestCase):
 
         if not found:
             logger.warning('Trivial test')
+
+    def test_author_unknown_id(self):
+        """
+        Test that getting the author with an unknown ID raises a ``KeyError``.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                self.assertRaises(KeyError, twitter.author, tweet, ''.join(random.choice(string.digits)))
+
+    def test_author_not_retweet(self):
+        """
+        Test that getting the author of a tweet that is not a retweet simply returns the author of the original tweet.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if not twitter.is_retweet(tweet):
+                    self.assertEqual(tweet['user'], twitter.author(tweet))
+
+    def test_author_retweeted(self):
+        """
+        Test that getting the author of a retweet when specifying the original author's ID returns the original status' author.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    self.assertEqual(twitter.original(tweet)['user'], twitter.author(tweet, twitter.original(tweet)['user']['id_str']))
+
+    def test_author_retweeted_without_id(self):
+        """
+        Test that getting the author of a retweet without providing a user ID returns the retweeting author.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    self.assertEqual(tweet['user'], twitter.author(tweet))
+
+    def test_author_quoted(self):
+        """
+        Test that getting the author of a quoted tweet when specifying the original author's ID returns the original status' author.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_quote(tweet):
+                    self.assertEqual(tweet['quoted_status']['user'], twitter.author(tweet, tweet['quoted_status']['user']['id_str']))
+
+    def test_author_quoted_without_id(self):
+        """
+        Test that getting the author of a retweet without providing a user ID returns the retweeting author.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_quote(tweet):
+                    self.assertEqual(tweet['user'], twitter.author(tweet))
+
+    def test_author_v2_unknown_id(self):
+        """
+        Test that getting the author with an unknown ID raises a KeyError.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                self.assertRaises(KeyError, twitter.author, tweet, ''.join(random.choice(string.digits)))
+
+    def test_author_v2_not_retweet(self):
+        """
+        Test that getting the author of a tweet that is not a retweet simply returns the author of the original tweet.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if not twitter.is_retweet(tweet):
+                    authors = { user['id']: user for user in tweet['includes']['users'] }
+                    self.assertEqual(authors[tweet['data']['author_id']], twitter.author(tweet))
+
+    def test_author_v2_retweeted(self):
+        """
+        Test that getting the author of a retweet when specifying the original author's ID returns the original status' author.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    authors = { user['id']: user for user in tweet['includes']['users'] }
+                    self.assertEqual(authors[twitter.original(tweet)['author_id']], twitter.author(tweet, twitter.original(tweet)['author_id']))
+
+    def test_author_v2_retweeted_without_id(self):
+        """
+        Test that getting the author of a retweet without providing a user ID returns the retweeting author.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    authors = { user['id']: user for user in tweet['includes']['users'] }
+                    self.assertEqual(authors[tweet['data']['author_id']], twitter.author(tweet))
+
+    def test_author_v2_quoted(self):
+        """
+        Test that getting the author of a quoted tweet when specifying the original author's ID returns the original status' author.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_quote(tweet) and not twitter.is_retweet(tweet):
+                    authors = { user['id']: user for user in tweet['includes']['users'] }
+                    self.assertEqual(authors[twitter.quoted(tweet)['author_id']],
+                                     twitter.author(tweet, twitter.quoted(tweet)['author_id']))
+
+    def test_author_v2_quoted_without_id(self):
+        """
+        Test that getting the author of a retweet without providing a user ID returns the retweeting author.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_quote(tweet) and not twitter.is_retweet(tweet):
+                    authors = { user['id']: user for user in tweet['includes']['users'] }
+                    self.assertEqual(authors[twitter.original(tweet)['author_id']], twitter.author(tweet))
 
     def test_is_verified(self):
         """
