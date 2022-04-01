@@ -111,6 +111,25 @@ def full_text(tweet):
 
     return text
 
+def urls(tweet):
+    """
+    Extract the URLs from the given tweet.
+
+    :param tweet: The tweet from which to extract URLs.
+    :type tweet: dict
+
+    :return: A list of expanded URLs.
+    :rtype: list of str
+    """
+
+    if version(tweet) == 1:
+        tweet = original(tweet) if is_retweet(tweet) else tweet
+        urls = tweet.get('extended_tweet', tweet).get('entities', { }).get('urls', [ ])
+    else:
+        tweet = original(tweet) if is_retweet(tweet) else tweet
+        urls = tweet.get('data', tweet).get('entities', { }).get('urls', [ ])
+    return [ url['expanded_url'] for url in urls ]
+
 def is_retweet(tweet):
     """
     Check whether the given tweet is a retweet.

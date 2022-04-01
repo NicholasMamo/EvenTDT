@@ -344,6 +344,139 @@ class TestPackage(unittest.TestCase):
         if not found:
             logger.warning('Trivial test')
 
+    def test_urls_returns_list(self):
+        """
+        Test that extracting URLs from a tweet returns a list.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                self.assertEqual(list, type(twitter.urls(tweet)))
+                self.assertTrue(all( str == type(url) for url in twitter.urls(tweet) ))
+
+    def test_urls_from_normal_tweet(self):
+        """
+        Test that extracting URLs from a normal tweet returns the URLs from the original tweet, not the retweet.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if not twitter.is_quote(tweet) and not twitter.is_retweet(tweet):
+                    urls = tweet.get('extended_tweet', tweet).get('entities', { }).get('urls', [ ])
+                    urls = [ url['expanded_url'] for url in urls ]
+                    self.assertEqual(urls, twitter.urls(tweet))
+
+    def test_urls_v2_from_normal_tweet(self):
+        """
+        Test that extracting URLs from a normal tweet returns the URLs from the original tweet, not the retweet.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if not twitter.is_quote(tweet) and not twitter.is_retweet(tweet):
+                    urls = tweet.get('data', tweet).get('entities', { }).get('urls', [ ])
+                    urls = [ url['expanded_url'] for url in urls ]
+                    self.assertEqual(urls, twitter.urls(tweet))
+
+    def test_urls_from_extended(self):
+        """
+        Test that extracting URLs looks for URLs in the extended version of a tweet if one exists.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                original = twitter.original(tweet) if twitter.is_retweet(tweet) else tweet
+                if 'extended_tweet' in original:
+                    urls = original.get('extended_tweet', original).get('entities', { }).get('urls', [ ])
+                    urls = [ url['expanded_url'] for url in urls ]
+                    self.assertEqual(urls, twitter.urls(tweet))
+
+    def test_urls_from_quoted_tweet(self):
+        """
+        Test that extracting URLs from a quoted tweet returns the URLs from the new tweet, not the quoted tweet.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_quote(tweet) and not twitter.is_retweet(tweet):
+                    urls = tweet.get('extended_tweet', tweet).get('entities', { }).get('urls', [ ])
+                    urls = [ url['expanded_url'] for url in urls ]
+                    self.assertEqual(urls, twitter.urls(tweet))
+
+    def test_urls_v2_from_quoted_tweet(self):
+        """
+        Test that extracting URLs from a quoted tweet returns the URLs from the new tweet, not the quoted tweet.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_quote(tweet) and not twitter.is_retweet(tweet):
+                    urls = tweet.get('data', tweet).get('entities', { }).get('urls', [ ])
+                    urls = [ url['expanded_url'] for url in urls ]
+                    self.assertEqual(urls, twitter.urls(tweet))
+
+    def test_urls_from_retweets(self):
+        """
+        Test that extracting URLs from a retweet returns the URLs from the original tweet, not the retweet.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    original = twitter.original(tweet)
+                    urls = original.get('extended_tweet', original).get('entities', { }).get('urls', [ ])
+                    urls = [ url['expanded_url'] for url in urls ]
+                    self.assertEqual(urls, twitter.urls(tweet))
+
+    def test_urls_v2_from_retweets(self):
+        """
+        Test that extracting URLs from a retweet returns the URLs from the original tweet, not the retweet.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    original = twitter.original(tweet)
+                    urls = original.get('entities', { }).get('urls', [ ])
+                    urls = [ url['expanded_url'] for url in urls ]
+                    self.assertEqual(urls, twitter.urls(tweet))
+
+    def test_urls_from_quoted_retweet(self):
+        """
+        Test that extracting URLs from a quoted retweet returns the URLs from the new tweet, not the quoted tweet.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_quote(tweet) and twitter.is_retweet(tweet):
+                    original = twitter.original(tweet)
+                    urls = original.get('extended_tweet', original).get('entities', { }).get('urls', [ ])
+                    urls = [ url['expanded_url'] for url in urls ]
+                    self.assertEqual(urls, twitter.urls(tweet))
+
+    def test_urls_v2_from_quoted_retweet(self):
+        """
+                    Test that extracting URLs from a quoted retweet returns the URLs from the new tweet, not the quoted tweet.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_quote(tweet) and twitter.is_retweet(tweet):
+                    original = twitter.original(tweet)
+                    urls = original.get('entities', { }).get('urls', [ ])
+                    urls = [ url['expanded_url'] for url in urls ]
+                    self.assertEqual(urls, twitter.urls(tweet))
+
     def test_is_retweet(self):
         """
         Test that when checking for retweets, the function returns ``True`` only if the ``retweeted_status`` key is set.
