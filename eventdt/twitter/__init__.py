@@ -253,27 +253,38 @@ def expand_mentions(text, tweet):
     :raises ValueError: When the tweet is not given and the mentions should be replaced.
     """
 
-    """
-    Create a mapping between user mentions and their display names.
-    User mentions can appear in:
+    if version(tweet) == 1:
+        """
+        Create a mapping between user mentions and their display names.
+        User mentions can appear in:
 
-        #. The base tweet,
-        #. The retweeted tweet, and
-        #. The quoted status.
-    """
-    mentions = { }
-    mentions.update({ f"@{ mention['screen_name'] }": mention['name']
-                      for mention in tweet['entities']['user_mentions'] })
-    mentions.update({ f"@{ mention['screen_name'] }": mention['name']
-                      for mention in tweet.get('extended_tweet', { }).get('entities', { }).get('user_mentions', { }) })
-    mentions.update({ f"@{ mention['screen_name'] }": mention['name']
-                      for mention in tweet.get('retweeted_status', { }).get('entities', { }).get('user_mentions', { }) })
-    mentions.update({ f"@{ mention['screen_name'] }": mention['name']
-                      for mention in tweet.get('retweeted_status', { }).get('extended_tweet', { }).get('entities', { }).get('user_mentions', { }) })
-    mentions.update({ f"@{ mention['screen_name'] }": mention['name']
-                      for mention in tweet.get('quoted_status', { }).get('entities', { }).get('user_mentions', { }) })
-    mentions.update({ f"@{ mention['screen_name'] }": mention['name']
-                      for mention in tweet.get('quoted_status', { }).get('extended_tweet', { }).get('entities', { }).get('user_mentions', { }) })
+            #. The base tweet,
+            #. The retweeted tweet, and
+            #. The quoted status.
+        """
+        mentions = { }
+        mentions.update({ f"@{ mention['screen_name'] }": mention['name']
+                          for mention in tweet['entities']['user_mentions'] })
+        mentions.update({ f"@{ mention['screen_name'] }": mention['name']
+                          for mention in tweet.get('extended_tweet', { }).get('entities', { }).get('user_mentions', { }) })
+        mentions.update({ f"@{ mention['screen_name'] }": mention['name']
+                          for mention in tweet.get('retweeted_status', { }).get('entities', { }).get('user_mentions', { }) })
+        mentions.update({ f"@{ mention['screen_name'] }": mention['name']
+                          for mention in tweet.get('retweeted_status', { }).get('extended_tweet', { }).get('entities', { }).get('user_mentions', { }) })
+        mentions.update({ f"@{ mention['screen_name'] }": mention['name']
+                          for mention in tweet.get('quoted_status', { }).get('entities', { }).get('user_mentions', { }) })
+        mentions.update({ f"@{ mention['screen_name'] }": mention['name']
+                          for mention in tweet.get('quoted_status', { }).get('extended_tweet', { }).get('entities', { }).get('user_mentions', { }) })
+    else:
+        mentions = { }
+        mentions.update({ f"@{ mention['username'] }": [ user['name'] for user in tweet['includes']['users']
+                                                                      if user['username'] == mention['username'] ][0]
+                          for mention in tweet['data'].get('entities', { }).get('mentions', [ ]) })
+        # Mentions in referenced tweets are not expanded
+        # mentions.update({ f"@{ mention['username'] }": [ user['name'] for user in tweet['includes']['users']
+        #                                                               if user['username'] == mention['username'] ][0]
+        #                   for included in tweet['includes'].get('tweets', [ ])
+        #                   for mention in included.get('entities', { }).get('mentions', [ ]) })
 
     # fix a pesky bug where some people have an empty name
     mentions = { handle: name for handle, name in mentions.items() if name }

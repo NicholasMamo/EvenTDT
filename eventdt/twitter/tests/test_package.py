@@ -1024,16 +1024,16 @@ class TestPackage(unittest.TestCase):
             for i, line in enumerate(f):
                 tweet = json.loads(line)
                 original = tweet
-                while "retweeted_status" in tweet:
-                    tweet = tweet["retweeted_status"]
+                while twitter.is_retweet(tweet):
+                    tweet = twitter.original(tweet)
 
                 if "extended_tweet" in tweet:
                     text = tweet["extended_tweet"].get("full_text", tweet.get("text", ""))
                 else:
                     text = tweet.get("text", "")
 
-                if "quoted_status" in tweet:
-                    tweet = tweet['quoted_status']
+                if twitter.is_quote(tweet):
+                    tweet = twitter.quoted(tweet)
                     if "extended_tweet" in tweet:
                         text += ' ' + tweet["extended_tweet"].get("full_text", tweet.get("text", ""))
                     else:
@@ -1045,6 +1045,31 @@ class TestPackage(unittest.TestCase):
                     continue
 
                 self.assertFalse('@' in cleaned)
+
+    def test_expand_mentions_v2_all(self):
+        """
+        Test that after replacing mentions, there are no '@' symbols.
+        """
+
+        no_space_pattern = re.compile("[^\\s]@")
+
+        corpus = os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json')
+        with open(corpus) as f:
+            for i, line in enumerate(f):
+                tweet = json.loads(line)
+                original = tweet
+                text = twitter.full_text(tweet)
+
+                cleaned = twitter.expand_mentions(text, original)
+
+                acceptable = { '1506646715029667843', # not a whole world
+                               '1506646740182708224' } # Russian?
+                if self.is_acceptable_mention(cleaned) or tweet['data']['id'] in acceptable or no_space_pattern.findall(text):
+                    continue
+
+                # mentions in the original tweet do not have user information, so they cannot be expanded
+                self.assertTrue('@' not in cleaned or sum( len(included['entities'].get('mentions', [ ]))
+                                                           for included in tweet['includes'].get('tweets', [ ]) ))
 
     def test_expand_mentions_none(self):
         """
