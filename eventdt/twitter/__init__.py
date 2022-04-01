@@ -78,13 +78,20 @@ def full_text(tweet):
     :rtype: str
     """
 
-    while is_retweet(tweet):
-        tweet = tweet["retweeted_status"]
-
-    if "extended_tweet" in tweet:
-        text = tweet["extended_tweet"].get("full_text", tweet.get("text", ""))
+    if version(tweet) == 1:
+        while is_retweet(tweet):
+            tweet = original(tweet)
     else:
-        text = tweet.get("text", "")
+        # this function assumes there can only be one referenced tweet that is a retweet (tested in `test_package`)
+        tweet = original(tweet) if is_retweet(tweet) else tweet
+
+    if version(tweet) == 1:
+        if "extended_tweet" in tweet:
+            text = tweet["extended_tweet"].get("full_text", tweet.get("text", ""))
+        else:
+            text = tweet.get("text", "")
+    else:
+        text = tweet.get('data', tweet)['text']
 
     return text
 

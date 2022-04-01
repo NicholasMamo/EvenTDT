@@ -141,8 +141,28 @@ class TestPackage(unittest.TestCase):
                     """
                     Make an exception for a special case.
                     """
-                    if not ('retweeted_status' in tweet):
+                    if not twitter.is_retweet(tweet):
                         self.assertFalse(text.endswith('…'))
+
+        if not found:
+            logger.warning('Trivial test')
+
+    def test_full_text_v2_ellipsis(self):
+        """
+        Test that when the text has an ellipsis, the full text is retrieved.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if '…' in tweet['data']['text']:
+                    found = True
+                    text = twitter.full_text(tweet)
+
+                    allowed = ( '1506646719215575045', '1506646731815288832', '1506646736013602818',
+                                '1506646756955934726', '1506646761154441221', '1506646773741195272' ) # these tweets have an ellipsis written by the author
+                    self.assertTrue(not text.endswith('…') or tweet['data']['id'] in allowed)
 
         if not found:
             logger.warning('Trivial test')
@@ -156,12 +176,10 @@ class TestPackage(unittest.TestCase):
         with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             for line in f:
                 tweet = json.loads(line)
-                if 'retweeted_status' in tweet:
-                    timestamp = tweet['timestamp_ms']
-                    tweet = tweet['retweeted_status']
-                    tweet['timestamp_ms'] = timestamp
+                if twitter.is_retweet(tweet):
+                    tweet = twitter.original(tweet)
 
-                if 'quoted_status' in tweet:
+                if twitter.is_quote(tweet):
                     found = True
                     text = twitter.full_text(tweet)
 
@@ -173,29 +191,74 @@ class TestPackage(unittest.TestCase):
         if not found:
             logger.warning('Trivial test')
 
+    def test_full_text_v2_quoted(self):
+        """
+        Test that when the tweet is a quote, the text is used, not the quoted tweet's text.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    tweet = twitter.original(tweet)
+
+                if twitter.is_quote(tweet):
+                    found = True
+                    text = twitter.full_text(tweet)
+
+                    self.assertEqual(tweet.get('data', tweet).get('text'), text)
+
+        if not found:
+            logger.warning('Trivial test')
+
     def test_full_text_retweeted(self):
         """
-        Test that when the tweet is a quote, the retweet's text is used.
+        Test that when the tweet is a retweet, the retweet's text is used.
         """
 
         found = False
         with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             for line in f:
                 tweet = json.loads(line)
-                if 'retweeted_status' in tweet:
+                if twitter.is_retweet(tweet):
                     found = True
                     text = twitter.full_text(tweet)
 
-                    retweet = tweet['retweeted_status']
-                    if 'extended_tweet' in retweet:
-                        self.assertEqual(retweet["extended_tweet"].get("full_text", retweet.get("text", "")), text)
+                    tweet = twitter.original(tweet)
+                    if 'extended_tweet' in tweet:
+                        self.assertEqual(tweet["extended_tweet"].get("full_text", tweet.get("text", "")), text)
                     else:
-                        self.assertEqual(retweet.get('text'), text)
+                        self.assertEqual(tweet.get('text'), text)
 
                     """
-                    Tweets shouldn't start with 'RT'.
+                    Tweets shouldn't start with 'RT @'.
                     """
-                    self.assertFalse(text.startswith('RT'))
+                    self.assertFalse(text.startswith('RT @'))
+
+        if not found:
+            logger.warning('Trivial test')
+
+    def test_full_text_v2_retweeted(self):
+        """
+        Test that when the tweet is a retweet, the retweet's text is used.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    found = True
+                    text = twitter.full_text(tweet)
+
+                    tweet = twitter.original(tweet)
+                    self.assertEqual(tweet.get('data', tweet).get('text'), text)
+
+                    """
+                    Tweets shouldn't start with 'RT @'.
+                    """
+                    self.assertFalse(text.startswith('RT @'))
 
         if not found:
             logger.warning('Trivial test')
@@ -209,7 +272,7 @@ class TestPackage(unittest.TestCase):
         with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             for line in f:
                 tweet = json.loads(line)
-                if not 'retweeted_status' in tweet and not 'quoted_status' in tweet:
+                if not twitter.is_retweet(tweet) and not twitter.is_quote(tweet):
                     found = True
                     text = twitter.full_text(tweet)
 
@@ -222,6 +285,31 @@ class TestPackage(unittest.TestCase):
                     There should be no ellipsis in the text now.
                     """
                     self.assertFalse(text.endswith('…'))
+
+        if not found:
+            logger.warning('Trivial test')
+
+    def test_full_text_v2_normal(self):
+        """
+        Test that when the tweet is not a quote or retweet, the full text is used.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if not twitter.is_retweet(tweet) and not twitter.is_quote(tweet):
+                    found = True
+                    text = twitter.full_text(tweet)
+
+                    self.assertEqual(tweet.get('data', tweet).get('text'), text)
+
+                    """
+                    There should be no ellipsis in the text now.
+                    """
+                    allowed = ( '1506646719215575045', '1506646731815288832', '1506646736013602818',
+                                '1506646756955934726', '1506646761154441221', '1506646773741195272' ) # these tweets have an ellipsis written by the author
+                    self.assertTrue(not text.endswith('…') or tweet['data']['id'] in allowed)
 
         if not found:
             logger.warning('Trivial test')
