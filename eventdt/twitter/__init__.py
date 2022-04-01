@@ -148,6 +148,32 @@ def is_quote(tweet):
         return any( referenced['type'] == 'quoted' for referenced in tweet.get('data', tweet)
                    .get('referenced_tweets', [ ]) )
 
+def quoted(tweet):
+    """
+    Get the original, quoted status.
+
+    :param tweet: The tweet to check.
+    :type tweet: dict
+
+    :return: The quoted status.
+    :rtype: dict
+
+    :raises KeyError: If the tweet contains no quoted status.
+    :raises KeyError: If the quoted tweet is retweeted, and thus only a reference to it exists.
+    """
+
+    if version(tweet) == 1:
+        return tweet['quoted_status']
+    else:
+        if is_retweet(tweet):
+            raise KeyError("The quoted tweet is retweeted and thus only a reference to it exists.")
+
+        references = [ referenced['id'] for referenced in tweet.get('data', tweet).get('referenced_tweets')
+                                        if referenced['type'] == 'quoted' ][0]
+        referenced = [ included for included in tweet['includes']['tweets']
+                                if included['id'] == references ]
+        return referenced
+
 def is_reply(tweet):
     """
     Check whether the given tweet is a reply to another tweet.
@@ -171,6 +197,10 @@ def is_verified(tweet):
     """
     Check whether the given tweet's author is verified.
     Verified authors have a ``verified`` key set to ``true``.
+
+    .. note::
+
+        If the tweet is a retweet, the function checks whether the retweeting author is verified, not the author of the original tweet.
 
     :param tweet: The tweet to check.
     :type tweet: dict

@@ -453,6 +453,43 @@ class TestPackage(unittest.TestCase):
         if not found:
             logger.warning('Trivial test')
 
+    def test_quoted(self):
+        """
+        Test that when getting quoted tweets, the function returns the quoted tweet.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_quote(tweet):
+                    self.assertEqual(tweet['quoted_status'], twitter.quoted(tweet))
+
+    def test_quoted_v2_not_retweet(self):
+        """
+        Test that when getting quoted tweets that are not retweeted, the function returns the quoted tweet.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_quote(tweet) and not twitter.is_retweet(tweet):
+                    references = [ referenced['id'] for referenced in tweet.get('data', tweet)['referenced_tweets']
+                                                    if referenced['type'] == 'quoted' ][0]
+                    referenced = [ included for included in tweet['includes']['tweets']
+                                            if included['id'] == references ]
+                    self.assertEqual(referenced, twitter.quoted(tweet))
+
+    def test_quoted_v2_retweet(self):
+        """
+        Test that when getting retweeted quoted tweets, the function raises a ``KeyError``
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_quote(tweet) and twitter.is_retweet(tweet):
+                    self.assertRaises(KeyError, twitter.quoted, tweet)
+
     def test_is_reply_all_not_replies(self):
         """
         Test that when checking for replies, the function returns ``True`` only if the ``in_reply_to_status_id_str`` key is not None.
