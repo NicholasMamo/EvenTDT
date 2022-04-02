@@ -1321,7 +1321,8 @@ class TestPackage(unittest.TestCase):
                             "screen_name": "NicholasMamo",
                             "name": "Nicholas Mamo",
                         } ]
-                    }
+                    },
+                  'id_str': random.randint(0, 100)
                 }
         self.assertEqual("Python visualization library Multiplex: It looks amazing, great job  Nicholas Mamo", twitter.expand_mentions(text, tweet))
 
@@ -1337,7 +1338,8 @@ class TestPackage(unittest.TestCase):
                             "screen_name": "NicholasMamo",
                             "name": "Nicholas Mamo",
                         } ]
-                    }
+                    },
+                  'id_str': random.randint(0, 100)
                 }
         self.assertEqual("Python visualization library Multiplex: It looks amazing, great job  Nicholas Mamo", twitter.expand_mentions(text, tweet))
 
@@ -1353,7 +1355,8 @@ class TestPackage(unittest.TestCase):
                             "screen_name": "NicholasMamo",
                             "name": "Nicholas Mamo",
                         } ]
-                    }
+                    },
+                  'id_str': random.randint(0, 100)
                 }
         self.assertEqual("Python visualization library Multiplex by Nicholas Mamo: It looks amazing, great job  Nicholas Mamo", twitter.expand_mentions(text, tweet))
 
@@ -1372,7 +1375,8 @@ class TestPackage(unittest.TestCase):
                             "screen_name": "Quantum_Stat",
                             "name": "Quantum Stat",
                         } ]
-                    }
+                    },
+                  'id_str': random.randint(0, 100)
                 }
         self.assertEqual("RT Quantum Stat: Python visualization library Multiplex: It looks amazing, great job  Nicholas Mamo", twitter.expand_mentions(text, tweet))
 
@@ -1388,7 +1392,8 @@ class TestPackage(unittest.TestCase):
                             "screen_name": "NicholasMamo",
                             "name": "Nicholas Mamo",
                         } ]
-                    }
+                    },
+                  'id_str': random.randint(0, 100)
                 }
         self.assertEqual("RT @Quantum_Stat: Python visualization library Multiplex: It looks amazing, great job  Nicholas Mamo", twitter.expand_mentions(text, tweet))
 
@@ -1407,7 +1412,8 @@ class TestPackage(unittest.TestCase):
                             "screen_name": "Quantum_Stat",
                             "name": "Quantum Stat",
                         } ]
-                    }
+                    },
+                  'id_str': random.randint(0, 100)
                 }
         self.assertEqual("RT Quantum Stat: From the latest Quantum Stat newsletter: Python visualization library Multiplex: It looks amazing, great job  Nicholas Mamo", twitter.expand_mentions(text, tweet))
 

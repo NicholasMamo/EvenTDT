@@ -22,10 +22,10 @@ def version(tweet):
     :rtype: int
     """
 
-    if 'data' in tweet:
-        return 2
+    if 'id_str' in tweet:
+        return 1
 
-    return 1
+    return 2
 
 def lang(tweet):
     """
@@ -174,7 +174,7 @@ def is_retweet(tweet):
     if version(tweet) == 1:
         return 'retweeted_status' in tweet
     else:
-        return any( referenced['type'] == 'retweeted' for referenced in tweet['data'].get('referenced_tweets', [ ]) )
+        return any( referenced['type'] == 'retweeted' for referenced in tweet.get('data', tweet).get('referenced_tweets', [ ]) )
 
 def original(tweet):
     """
