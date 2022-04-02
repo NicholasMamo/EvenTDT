@@ -41,5 +41,7 @@ class AnnotationExtractor(Extractor):
         candidates = [ ]
 
         with open(corpus) as f:
-            candidates = [ [ ] for line in f ]
+            for line in f:
+                tweet = json.loads(line)
+                candidates.append(twitter.annotations(tweet))
         return candidates

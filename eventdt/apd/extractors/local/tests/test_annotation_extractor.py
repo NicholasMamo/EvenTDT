@@ -22,7 +22,7 @@ class TestAnnotationExtractor(unittest.TestCase):
     Test the implementation and results of the :class:`~apd.extractors.local.annotation_extractor.AnnotationExtractor`.
     """
 
-    def test_entity_extractor_returns_list_of_lists(self):
+    def test_extract_returns_list_of_lists(self):
         """
         Test the annotation extractor returns a list of lists.
         """
@@ -35,7 +35,7 @@ class TestAnnotationExtractor(unittest.TestCase):
         self.assertTrue(all( list == type(candidate_list) for candidate_list in candidates ))
         self.assertTrue(all( str == type(candidate) for candidate_list in candidates for candidate in candidate_list ))
 
-    def test_empty_corpus(self):
+    def test_extract_from_empty_corpus(self):
         """
         Test that the annotation extractor returns an empty list from an empty corpus.
         """
@@ -45,7 +45,7 @@ class TestAnnotationExtractor(unittest.TestCase):
         candidates = extractor.extract(path)
         self.assertEqual([ ], candidates)
 
-    def test_return_length(self):
+    def test_extract_from_all_tweets(self):
         """
         Test that the annotation extractor returns as many candidate sets as the number of documents given.
         """
@@ -57,3 +57,31 @@ class TestAnnotationExtractor(unittest.TestCase):
         extractor = AnnotationExtractor()
         candidates = extractor.extract(path)
         self.assertEqual(expected, len(candidates))
+
+    def test_extract_entities_in_tweets(self):
+        """
+        Test that all extracted entities appear in the tweets.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'LEIMUNv2.json')
+        extractor = AnnotationExtractor()
+        candidates = extractor.extract(path)
+
+        with open(path) as f:
+            for i, line in enumerate(f):
+                tweet = json.loads(line)
+                self.assertTrue(all( candidate in twitter.full_text(tweet) for candidate in candidates[i] ))
+
+    def test_extract_all_annotations(self):
+        """
+        Test that the annotation extractor returns all annotations.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'LEIMUNv2.json')
+        extractor = AnnotationExtractor()
+        candidates = extractor.extract(path)
+
+        with open(path) as f:
+            for i, line in enumerate(f):
+                tweet = json.loads(line)
+                self.assertEqual(twitter.annotations(tweet), candidates[i])
