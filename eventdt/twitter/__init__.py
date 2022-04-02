@@ -87,6 +87,19 @@ def extract_timestamp(tweet):
 
     raise KeyError("Neither the 'timestamp_ms' attribute, nor the 'created_at' attribute could be found in the tweet.")
 
+def text(tweet):
+    """
+    An alias to the :func:`~twitter.full_text` function.
+
+    :param tweet: The tweet from which to extract the text.
+    :type tweet: dict
+
+    :return: The full text of the tweet.
+    :rtype: str
+    """
+
+    return full_text(tweet)
+
 def full_text(tweet):
     """
     Extract the full text from the tweet.
@@ -97,7 +110,7 @@ def full_text(tweet):
     If the tweet has an ``extended_tweet`` attribute, then the ``full_text`` may be set there.
     Otherwise, the function defaults to using the ``text``.
 
-    :param tweet: The tweet from which to extract the timestamp.
+    :param tweet: The tweet from which to extract the text.
     :type tweet: dict
 
     :return: The full text of the tweet.

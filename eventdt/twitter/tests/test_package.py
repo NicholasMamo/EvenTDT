@@ -155,6 +155,26 @@ class TestPackage(unittest.TestCase):
             self.assertFalse('created_at' in tweet)
             self.assertRaises(KeyError, twitter.extract_timestamp, tweet)
 
+    def test_text_alias_full_text(self):
+        """
+        Test that the ``text`` function acts as an alias to the ``full_text`` function.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                self.assertEqual(twitter.full_text(tweet), twitter.text(tweet))
+
+    def test_text_v2_alias_full_text(self):
+        """
+        Test that the ``text`` function acts as an alias to the ``full_text`` function.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                self.assertEqual(twitter.full_text(tweet), twitter.text(tweet))
+
     def test_full_text_ellipsis(self):
         """
         Test that when the text has an ellipsis, the full text is retrieved.

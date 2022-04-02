@@ -437,6 +437,7 @@ def create_extrapolator(extrapolator, *args, **kwargs):
     :rtype: :class:`~apd.extrapolators.extrapolator.Extrapolator`
     """
 
+    # TODO: The `scheme` might overwrite the `extrapolator_scheme`
     _kwargs = tools.remove_prefix('extrapolator_', **kwargs)
 
     if not extrapolator:
