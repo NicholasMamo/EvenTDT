@@ -1216,7 +1216,7 @@ class TestPackage(unittest.TestCase):
             for line in f:
                 tweet = json.loads(line)
                 if not twitter.is_retweet(tweet) and not twitter.is_quote(tweet):
-                    self.assertEqual(tweet['user']['favourites_count'], twitter.user_favorites(tweet))
+                    self.assertEqual(twitter.author(tweet)['favourites_count'], twitter.user_favorites(tweet))
 
     def test_user_favorites_retweet(self):
         """
@@ -1227,7 +1227,7 @@ class TestPackage(unittest.TestCase):
             for line in f:
                 tweet = json.loads(line)
                 if twitter.is_retweet(tweet):
-                    self.assertEqual(tweet['user']['favourites_count'], twitter.user_favorites(tweet))
+                    self.assertEqual(twitter.author(tweet)['favourites_count'], twitter.user_favorites(tweet))
                     self.assertNotEqual(twitter.original(tweet)['user']['favourites_count'], twitter.user_favorites(tweet))
 
     def test_user_favorites_quoted(self):
@@ -1240,7 +1240,7 @@ class TestPackage(unittest.TestCase):
             for line in f:
                 tweet = json.loads(line)
                 if twitter.is_quote(tweet):
-                    self.assertEqual(tweet['user']['favourites_count'], twitter.user_favorites(tweet))
+                    self.assertEqual(twitter.author(tweet)['favourites_count'], twitter.user_favorites(tweet))
                     if twitter.author(twitter.quoted(tweet))['id_str'] != twitter.author(tweet)['id_str']:
                         found = True
                         self.assertNotEqual(twitter.quoted(tweet)['user']['favourites_count'], twitter.user_favorites(tweet))
@@ -1277,7 +1277,7 @@ class TestPackage(unittest.TestCase):
             for line in f:
                 tweet = json.loads(line)
                 if not twitter.is_retweet(tweet) and not twitter.is_quote(tweet):
-                    self.assertEqual(tweet['user']['statuses_count'], twitter.user_statuses(tweet))
+                    self.assertEqual(twitter.author(tweet)['statuses_count'], twitter.user_statuses(tweet))
 
     def test_user_statuses_v2_normal_tweet(self):
         """
@@ -1299,7 +1299,7 @@ class TestPackage(unittest.TestCase):
             for line in f:
                 tweet = json.loads(line)
                 if twitter.is_retweet(tweet):
-                    self.assertEqual(tweet['user']['statuses_count'], twitter.user_statuses(tweet))
+                    self.assertEqual(twitter.author(tweet)['statuses_count'], twitter.user_statuses(tweet))
                     self.assertNotEqual(twitter.original(tweet)['user']['statuses_count'], twitter.user_statuses(tweet))
 
     def test_user_statuses_v2_retweet(self):
@@ -1323,7 +1323,7 @@ class TestPackage(unittest.TestCase):
             for line in f:
                 tweet = json.loads(line)
                 if twitter.is_quote(tweet):
-                    self.assertEqual(tweet['user']['statuses_count'], twitter.user_statuses(tweet))
+                    self.assertEqual(twitter.author(tweet)['statuses_count'], twitter.user_statuses(tweet))
                     if twitter.author(twitter.quoted(tweet))['id_str'] != twitter.author(tweet)['id_str']:
                         found = True
                         self.assertNotEqual(twitter.quoted(tweet)['user']['statuses_count'], twitter.user_statuses(tweet))
@@ -1374,7 +1374,7 @@ class TestPackage(unittest.TestCase):
             for line in f:
                 tweet = json.loads(line)
                 if not twitter.is_retweet(tweet) and not twitter.is_quote(tweet):
-                    self.assertEqual(tweet['user']['followers_count'], twitter.user_followers(tweet))
+                    self.assertEqual(twitter.author(tweet)['followers_count'], twitter.user_followers(tweet))
 
     def test_user_followers_v2_normal_tweet(self):
         """
@@ -1396,7 +1396,7 @@ class TestPackage(unittest.TestCase):
             for line in f:
                 tweet = json.loads(line)
                 if twitter.is_retweet(tweet):
-                    self.assertEqual(tweet['user']['followers_count'], twitter.user_followers(tweet))
+                    self.assertEqual(twitter.author(tweet)['followers_count'], twitter.user_followers(tweet))
                     self.assertNotEqual(twitter.original(tweet)['user']['followers_count'], twitter.user_followers(tweet))
 
     def test_user_followers_v2_retweet(self):
@@ -1420,7 +1420,7 @@ class TestPackage(unittest.TestCase):
             for line in f:
                 tweet = json.loads(line)
                 if twitter.is_quote(tweet):
-                    self.assertEqual(tweet['user']['followers_count'], twitter.user_followers(tweet))
+                    self.assertEqual(twitter.author(tweet)['followers_count'], twitter.user_followers(tweet))
                     if twitter.author(twitter.quoted(tweet))['id_str'] != twitter.author(tweet)['id_str']:
                         found = True
                         self.assertNotEqual(twitter.quoted(tweet)['user']['followers_count'], twitter.user_followers(tweet))
@@ -1442,6 +1442,102 @@ class TestPackage(unittest.TestCase):
                         self.assertNotEqual(twitter.author(tweet, twitter.quoted(tweet)['author_id'])['public_metrics']['followers_count'],
                                             twitter.user_followers(tweet))
 
+    def test_user_description_returns_str_or_none(self):
+        """
+        Test that getting the description returns a string or ``None``.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                description = twitter.user_description(tweet)
+                self.assertTrue(description is None or type(description) == str)
+
+    def test_user_description_v2_returns_str_or_none(self):
+        """
+        Test that getting the description returns a string or ``None`.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                description = twitter.user_description(tweet)
+                self.assertTrue(description is None or type(description) == str)
+
+    def test_user_description_normal_tweet(self):
+        """
+        Test that getting the description returns the correct description.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if not twitter.is_retweet(tweet) and not twitter.is_quote(tweet):
+                    self.assertEqual(twitter.author(tweet)['description'], twitter.user_description(tweet))
+
+    def test_user_description_v2_normal_tweet(self):
+        """
+        Test that getting the description returns the correct description.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if not twitter.is_retweet(tweet) and not twitter.is_quote(tweet):
+                    self.assertEqual(twitter.author(tweet)['description'], twitter.user_description(tweet))
+
+    def test_user_description_retweet(self):
+        """
+        Test that getting the description from a retweet returns the retweeting author's followers.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    self.assertEqual(twitter.author(tweet)['description'], twitter.user_description(tweet))
+                    self.assertNotEqual(twitter.original(tweet)['user']['followers_count'], twitter.user_description(tweet))
+
+    def test_user_description_v2_retweet(self):
+        """
+        Test that getting the description from a retweet returns the retweeting author's followers.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    self.assertEqual(twitter.author(tweet)['description'], twitter.user_description(tweet))
+
+    def test_user_description_quoted(self):
+        """
+        Test that getting the description from a quoted tweet returns the quoting author's followers.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_quote(tweet):
+                    self.assertEqual(twitter.author(tweet)['description'], twitter.user_description(tweet))
+                    if twitter.author(twitter.quoted(tweet))['id_str'] != twitter.author(tweet)['id_str']:
+                        found = True
+                        self.assertNotEqual(twitter.quoted(tweet)['user']['followers_count'], twitter.user_description(tweet))
+
+        if not found:
+            logger.warning('Trivial test')
+
+    def test_user_description_v2_quoted(self):
+        """
+        Test that getting the description from a quoted tweet returns the quoting author's followers.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_quote(tweet):
+                    self.assertEqual(twitter.author(tweet)['description'], twitter.user_description(tweet))
+
     def test_is_verified(self):
         """
         Test that when checking whether the tweet is from a verified author, the function returns ``True`` only if the author is verified.
@@ -1451,7 +1547,7 @@ class TestPackage(unittest.TestCase):
         with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             for line in f:
                 tweet = json.loads(line)
-                if tweet['user']['verified']:
+                if twitter.author(tweet)['verified']:
                     found = True
                     self.assertTrue(twitter.is_verified(tweet))
                 else:

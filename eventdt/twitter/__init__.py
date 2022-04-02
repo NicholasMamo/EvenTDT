@@ -360,6 +360,23 @@ def user_followers(tweet):
     else:
         return author(tweet)['public_metrics']['followers_count']
 
+def user_description(tweet):
+    """
+    Get the profile description of the tweet's author.
+
+    .. note::
+
+        If the tweet is a retweet, the function retrieves retweeting author's description, not the description of the original tweet's author.
+
+    :param tweet: The tweet to check.
+    :type tweet: dict
+
+    :return: The number of followers of the author of the tweet.
+    :rtype: str or None
+    """
+
+    return author(tweet)['description']
+
 def is_verified(tweet):
     """
     Check whether the given tweet's author is verified.
