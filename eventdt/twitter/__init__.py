@@ -6,7 +6,7 @@ At the package-level there are functions to help with general processing tasks.
 from dateutil.parser import parse
 import re
 
-MEDIA_URL = re.compile("\/photo\/\\d$")
+MEDIA_URL = re.compile("\/(photo|video)\/\\d$")
 """
 The pattern used to search for media URLs in APIv2 tweets.
 """
@@ -119,6 +119,9 @@ def full_text(tweet):
 def urls(tweet):
     """
     Extract the URLs from the given tweet.
+    The function does not return media URLs.
+
+    For APIv1.1 tweets, the function looks for URLs in the extended tweet and in the original tweet.
 
     :param tweet: The tweet from which to extract URLs.
     :type tweet: dict
@@ -129,13 +132,13 @@ def urls(tweet):
 
     if version(tweet) == 1:
         tweet = original(tweet) if is_retweet(tweet) else tweet
-        urls = tweet.get('extended_tweet', tweet).get('entities', { }).get('urls', [ ])
+        urls = tweet.get('extended_tweet', tweet).get('entities', { }).get('urls', [ ]) + tweet.get('entities', { }).get('urls', [ ])
     else:
         tweet = original(tweet) if is_retweet(tweet) else tweet
         urls = tweet.get('data', tweet).get('entities', { }).get('urls', [ ])
     urls = [ url['expanded_url'] for url in urls ]
     urls = [ url for url in urls if not MEDIA_URL.search(url) ]
-    return urls
+    return list(set(urls))
 
 def hashtags(tweet):
     """

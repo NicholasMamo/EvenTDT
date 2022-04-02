@@ -355,6 +355,39 @@ class TestPackage(unittest.TestCase):
                 self.assertEqual(list, type(twitter.urls(tweet)))
                 self.assertTrue(all( str == type(url) for url in twitter.urls(tweet) ))
 
+    def test_urls_v2_returns_list(self):
+        """
+        Test that extracting URLs from a tweet returns a list.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                self.assertEqual(list, type(twitter.urls(tweet)))
+                self.assertTrue(all( str == type(url) for url in twitter.urls(tweet) ))
+
+    def test_urls_no_duplicates(self):
+        """
+        Test that extracting URLs from a tweet returns no duplicates.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                urls = twitter.urls(tweet)
+                self.assertEqual(sorted(list(set(urls))), sorted(urls))
+
+    def test_urls_v2_no_duplicates(self):
+        """
+        Test that extracting URLs from a tweet returns no duplicates.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                urls = twitter.urls(tweet)
+                self.assertEqual(sorted(list(set(urls))), sorted(urls))
+
     def test_urls_from_normal_tweet(self):
         """
         Test that extracting URLs from a normal tweet returns the URLs from the original tweet, not the retweet.
@@ -364,9 +397,10 @@ class TestPackage(unittest.TestCase):
             for line in f:
                 tweet = json.loads(line)
                 if not twitter.is_quote(tweet) and not twitter.is_retweet(tweet):
-                    urls = tweet.get('extended_tweet', tweet).get('entities', { }).get('urls', [ ])
+                    urls = (tweet.get('extended_tweet', tweet).get('entities', { }).get('urls', [ ]) +
+                            tweet.get('entities', { }).get('urls', [ ]))
                     urls = [ url['expanded_url'] for url in urls ]
-                    self.assertEqual(urls, twitter.urls(tweet))
+                    self.assertEqual(list(set(urls)), twitter.urls(tweet))
 
     def test_urls_v2_from_normal_tweet(self):
         """
@@ -379,8 +413,8 @@ class TestPackage(unittest.TestCase):
                 if not twitter.is_quote(tweet) and not twitter.is_retweet(tweet):
                     urls = tweet.get('data', tweet).get('entities', { }).get('urls', [ ])
                     urls = [ url['expanded_url'] for url in urls ]
-                    urls = [ url for url in urls if not url.endswith('/photo/1') ]
-                    self.assertEqual(urls, twitter.urls(tweet))
+                    urls = [ url for url in urls if not url.endswith('/photo/1') and not url.endswith('/video/1') ]
+                    self.assertEqual(list(set(urls)), twitter.urls(tweet))
 
     def test_urls_from_extended(self):
         """
@@ -392,9 +426,10 @@ class TestPackage(unittest.TestCase):
                 tweet = json.loads(line)
                 original = twitter.original(tweet) if twitter.is_retweet(tweet) else tweet
                 if 'extended_tweet' in original:
-                    urls = original.get('extended_tweet', original).get('entities', { }).get('urls', [ ])
+                    urls = (original.get('extended_tweet', original).get('entities', { }).get('urls', [ ]) +
+                            original.get('entities', { }).get('urls', [ ]))
                     urls = [ url['expanded_url'] for url in urls ]
-                    self.assertEqual(urls, twitter.urls(tweet))
+                    self.assertEqual(list(set(urls)), twitter.urls(tweet))
 
     def test_urls_from_quoted_tweet(self):
         """
@@ -405,9 +440,10 @@ class TestPackage(unittest.TestCase):
             for line in f:
                 tweet = json.loads(line)
                 if twitter.is_quote(tweet) and not twitter.is_retweet(tweet):
-                    urls = tweet.get('extended_tweet', tweet).get('entities', { }).get('urls', [ ])
+                    urls = (tweet.get('extended_tweet', tweet).get('entities', { }).get('urls', [ ]) +
+                            tweet.get('entities', { }).get('urls', [ ]))
                     urls = [ url['expanded_url'] for url in urls ]
-                    self.assertEqual(urls, twitter.urls(tweet))
+                    self.assertEqual(list(set(urls)), twitter.urls(tweet))
 
     def test_urls_v2_from_quoted_tweet(self):
         """
@@ -420,8 +456,8 @@ class TestPackage(unittest.TestCase):
                 if twitter.is_quote(tweet) and not twitter.is_retweet(tweet):
                     urls = tweet.get('data', tweet).get('entities', { }).get('urls', [ ])
                     urls = [ url['expanded_url'] for url in urls ]
-                    urls = [ url for url in urls if not url.endswith('/photo/1') ]
-                    self.assertEqual(urls, twitter.urls(tweet))
+                    urls = [ url for url in urls if not url.endswith('/photo/1') and not url.endswith('/video/1') ]
+                    self.assertEqual(list(set(urls)), twitter.urls(tweet))
 
     def test_urls_from_retweets(self):
         """
@@ -433,9 +469,10 @@ class TestPackage(unittest.TestCase):
                 tweet = json.loads(line)
                 if twitter.is_retweet(tweet):
                     original = twitter.original(tweet)
-                    urls = original.get('extended_tweet', original).get('entities', { }).get('urls', [ ])
+                    urls = (original.get('extended_tweet', original).get('entities', { }).get('urls', [ ]) +
+                            original.get('entities', { }).get('urls', [ ]))
                     urls = [ url['expanded_url'] for url in urls ]
-                    self.assertEqual(urls, twitter.urls(tweet))
+                    self.assertEqual(list(set(urls)), twitter.urls(tweet))
 
     def test_urls_v2_from_retweets(self):
         """
@@ -449,8 +486,18 @@ class TestPackage(unittest.TestCase):
                     original = twitter.original(tweet)
                     urls = original.get('entities', { }).get('urls', [ ])
                     urls = [ url['expanded_url'] for url in urls ]
-                    urls = [ url for url in urls if not url.endswith('/photo/1') ]
-                    self.assertEqual(urls, twitter.urls(tweet))
+                    urls = [ url for url in urls if not url.endswith('/photo/1') and not url.endswith('/video/1') ]
+                    self.assertEqual(list(set(urls)), twitter.urls(tweet))
+
+    def test_urls_no_media(self):
+        """
+        Test that extracting URLs does not return media URLs.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                self.assertFalse(any( re.search("\/photo\/\\d$", url) for url in twitter.urls(tweet) ))
 
     def test_urls_v2_no_media(self):
         """
@@ -460,7 +507,20 @@ class TestPackage(unittest.TestCase):
         with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
             for line in f:
                 tweet = json.loads(line)
-                self.assertFalse(any( re.search("\/photo\/\\d$", url) for url in twitter.urls(tweet) ))
+                self.assertFalse(any( url.endswith('/photo/1') or url.endswith('/video/1') for url in twitter.urls(tweet) ))
+
+    def test_urls_v2_normal_tweets_no_media(self):
+        """
+        Test that extracting URLs from tweets that are not retweeted should have all URLs but not media.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if not twitter.is_retweet(tweet):
+                    urls = tweet.get('data', tweet).get('entities', { }).get('urls', [ ])
+                    media = tweet.get('includes', tweet).get('media', [ ])
+                    self.assertEqual(len(urls) - len(media), len(twitter.urls(tweet)))
 
     def test_urls_from_quoted_retweet(self):
         """
@@ -472,13 +532,14 @@ class TestPackage(unittest.TestCase):
                 tweet = json.loads(line)
                 if twitter.is_quote(tweet) and twitter.is_retweet(tweet):
                     original = twitter.original(tweet)
-                    urls = original.get('extended_tweet', original).get('entities', { }).get('urls', [ ])
+                    urls = (original.get('extended_tweet', original).get('entities', { }).get('urls', [ ]) +
+                            original.get('entities', { }).get('urls', [ ]))
                     urls = [ url['expanded_url'] for url in urls ]
-                    self.assertEqual(urls, twitter.urls(tweet))
+                    self.assertEqual(list(set(urls)), twitter.urls(tweet))
 
     def test_urls_v2_from_quoted_retweet(self):
         """
-                    Test that extracting URLs from a quoted retweet returns the URLs from the new tweet, not the quoted tweet.
+        Test that extracting URLs from a quoted retweet returns the URLs from the new tweet, not the quoted tweet.
         """
 
         with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
@@ -488,8 +549,36 @@ class TestPackage(unittest.TestCase):
                     original = twitter.original(tweet)
                     urls = original.get('entities', { }).get('urls', [ ])
                     urls = [ url['expanded_url'] for url in urls ]
-                    urls = [ url for url in urls if not url.endswith('/photo/1') ]
-                    self.assertEqual(urls, twitter.urls(tweet))
+                    urls = [ url for url in urls if not url.endswith('/photo/1') and not url.endswith('/video/1') ]
+                    self.assertEqual(list(set(urls)), twitter.urls(tweet))
+
+    def test_urls_quoted_at_least_one(self):
+        """
+        Test that quoted tweets always have at least one URL (the original tweet).
+        This is required by the ELD consumer.
+        """
+
+        # NOTE: Not tested due to inconsistencies in the APIv1.1 tweets.
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for i, line in enumerate(f):
+                tweet = json.loads(line)
+                if twitter.is_quote(tweet):
+                    tweet = twitter.original(tweet) if twitter.is_retweet(tweet) else tweet
+                    # self.assertGreaterEqual(len(twitter.urls(tweet)), 1)
+
+    def test_urls_v2_quoted_at_least_one(self):
+        """
+        Test that quoted tweets always have at least one URL (the original tweet).
+        This is required by the ELD consumer.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_quote(tweet):
+                    self.assertGreaterEqual(len(twitter.urls(tweet)), 1)
+                    self.assertTrue(any( re.search('/status/', url) for url in twitter.urls(tweet) ))
 
     def test_hashtags_returns_list(self):
         """
