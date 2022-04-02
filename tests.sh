@@ -15,6 +15,7 @@ apd_tests() {
 
 	echo -e "${HIGHLIGHT}Extractors${DEFAULT}"
 	python3 -m unittest eventdt.apd.extractors.local.tests.test_twitterner_entity_extractor
+	python3 -m unittest eventdt.apd.extractors.local.tests.test_annotation_extractor
 	python3 -m unittest eventdt.apd.extractors.local.tests.test_entity_extractor
 	python3 -m unittest eventdt.apd.extractors.local.tests.test_token_extractor
 
