@@ -1176,6 +1176,67 @@ class TestPackage(unittest.TestCase):
                     authors = { user['id']: user for user in tweet['includes']['users'] }
                     self.assertEqual(authors[twitter.original(tweet)['author_id']], twitter.author(tweet))
 
+    def test_user_favorites_returns_int(self):
+        """
+        Test that getting the number of user favorites returns an integer.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                self.assertEqual(int, type(twitter.user_favorites(tweet)))
+
+    def test_user_favorites_raises_NotImplementedError(self):
+        """
+        Test that getting the number of user favorites from an APIv2 tweet raises a ``NotImplementedError``.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                self.assertRaises(NotImplementedError, twitter.user_favorites, tweet)
+
+    def test_user_favorites_normal_tweet(self):
+        """
+        Test that getting the number of user favorites returns the correct number.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if not twitter.is_retweet(tweet) and not twitter.is_quote(tweet):
+                    self.assertEqual(tweet['user']['favourites_count'], twitter.user_favorites(tweet))
+
+    def test_user_favorites_retweet(self):
+        """
+        Test that getting the number of user favorites from a retweet returns the retweeting author's favourites.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    self.assertEqual(tweet['user']['favourites_count'], twitter.user_favorites(tweet))
+                    self.assertNotEqual(twitter.original(tweet)['user']['favourites_count'], twitter.user_favorites(tweet))
+
+    def test_user_favorites_quoted(self):
+        """
+        Test that getting the number of user favorites from a quoted tweet returns the quoting author's favourites.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_quote(tweet):
+                    self.assertEqual(tweet['user']['favourites_count'], twitter.user_favorites(tweet))
+                    if twitter.author(twitter.quoted(tweet))['id_str'] != twitter.author(tweet)['id_str']:
+                        found = True
+                        self.assertNotEqual(twitter.quoted(tweet)['user']['favourites_count'], twitter.user_favorites(tweet))
+
+        if not found:
+            logger.warning('Trivial test')
+
     def test_is_verified(self):
         """
         Test that when checking whether the tweet is from a verified author, the function returns ``True`` only if the author is verified.

@@ -1,6 +1,11 @@
 """
 The Twitter package is used to facilitate collecting, reading and processing tweet corpora.
 At the package-level there are functions to help with general processing tasks.
+
+.. note::
+
+    The user-level functions always return the user who tweeted, quoted or retweeted a tweet—not the original author of those tweets.
+    Conversely, tweet-level functions return content from a mix of the original and modified tweets.
 """
 
 from dateutil.parser import parse
@@ -284,6 +289,32 @@ def author(tweet, user_id=None):
     elif version(tweet) == 2:
         authors = { user['id']: user for user in tweet['includes']['users'] }
         return authors[user_id] if user_id else authors[tweet['data']['author_id']]
+
+def user_favorites(tweet):
+    """
+    Get the number of tweets favorited by the author of the tweet.
+
+    .. note::
+
+        If the tweet is a retweet, the function checks whether the retweeting author is verified, not the author of the original tweet.
+
+    .. warning::
+
+        APIv2 tweets currently do not include the number of tweets liked by the author.
+
+    :param tweet: The tweet to check.
+    :type tweet: dict
+
+    :return: The number of tweets favorited by the author of the tweet.
+    :rtype: int
+
+    :raises NotImplementedError: When trying to retrieve the number of tweets favorited by the author from an APIv2 tweet.
+    """
+
+    if version(tweet) == 1:
+        return author(tweet)['favourites_count']
+    else:
+        raise NotImplementedError("Favorites counts are not provided in APIv2 tweets.")
 
 def is_verified(tweet):
     """
