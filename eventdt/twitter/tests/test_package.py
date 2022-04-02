@@ -1345,6 +1345,103 @@ class TestPackage(unittest.TestCase):
                         self.assertNotEqual(twitter.author(tweet, twitter.quoted(tweet)['author_id'])['public_metrics']['tweet_count'],
                                             twitter.user_statuses(tweet))
 
+    def test_user_followers_returns_int(self):
+        """
+        Test that getting the number of user followers returns an integer.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                self.assertEqual(int, type(twitter.user_followers(tweet)))
+
+    def test_user_followers_v2_returns_int(self):
+        """
+        Test that getting the number of user followers returns an integer.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                self.assertEqual(int, type(twitter.user_followers(tweet)))
+
+    def test_user_followers_normal_tweet(self):
+        """
+        Test that getting the number of user followers returns the correct number.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if not twitter.is_retweet(tweet) and not twitter.is_quote(tweet):
+                    self.assertEqual(tweet['user']['followers_count'], twitter.user_followers(tweet))
+
+    def test_user_followers_v2_normal_tweet(self):
+        """
+        Test that getting the number of user followers returns the correct number.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if not twitter.is_retweet(tweet) and not twitter.is_quote(tweet):
+                    self.assertEqual(twitter.author(tweet)['public_metrics']['followers_count'], twitter.user_followers(tweet))
+
+    def test_user_followers_retweet(self):
+        """
+        Test that getting the number of user followers from a retweet returns the retweeting author's followers.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    self.assertEqual(tweet['user']['followers_count'], twitter.user_followers(tweet))
+                    self.assertNotEqual(twitter.original(tweet)['user']['followers_count'], twitter.user_followers(tweet))
+
+    def test_user_followers_v2_retweet(self):
+        """
+        Test that getting the number of user followers from a retweet returns the retweeting author's followers.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    self.assertEqual(twitter.author(tweet)['public_metrics']['followers_count'], twitter.user_followers(tweet))
+
+    def test_user_followers_quoted(self):
+        """
+        Test that getting the number of user followers from a quoted tweet returns the quoting author's followers.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_quote(tweet):
+                    self.assertEqual(tweet['user']['followers_count'], twitter.user_followers(tweet))
+                    if twitter.author(twitter.quoted(tweet))['id_str'] != twitter.author(tweet)['id_str']:
+                        found = True
+                        self.assertNotEqual(twitter.quoted(tweet)['user']['followers_count'], twitter.user_followers(tweet))
+
+        if not found:
+            logger.warning('Trivial test')
+
+    def test_user_followers_v2_quoted(self):
+        """
+        Test that getting the number of user followers from a quoted tweet returns the quoting author's followers.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_quote(tweet):
+                    self.assertEqual(twitter.author(tweet)['public_metrics']['followers_count'], twitter.user_followers(tweet))
+                    if not twitter.is_retweet(tweet) and twitter.quoted(tweet)['author_id'] != twitter.author(tweet)['id']:
+                        self.assertNotEqual(twitter.author(tweet, twitter.quoted(tweet)['author_id'])['public_metrics']['followers_count'],
+                                            twitter.user_followers(tweet))
+
     def test_is_verified(self):
         """
         Test that when checking whether the tweet is from a verified author, the function returns ``True`` only if the author is verified.

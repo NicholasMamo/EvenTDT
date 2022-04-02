@@ -340,6 +340,26 @@ def user_statuses(tweet):
     else:
         return author(tweet)['public_metrics']['tweet_count']
 
+def user_followers(tweet):
+    """
+    Get the number of followers of the author of the tweet.
+
+    .. note::
+
+        If the tweet is a retweet, the function retrieves the number of followers of the retweeting author, not of the author of the original tweet.
+
+    :param tweet: The tweet to check.
+    :type tweet: dict
+
+    :return: The number of followers of the author of the tweet.
+    :rtype: int
+    """
+
+    if version(tweet) == 1:
+        return author(tweet)['followers_count']
+    else:
+        return author(tweet)['public_metrics']['followers_count']
+
 def is_verified(tweet):
     """
     Check whether the given tweet's author is verified.
