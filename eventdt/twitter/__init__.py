@@ -165,6 +165,30 @@ def hashtags(tweet):
         hashtags = tweet.get('data', tweet).get('entities', { }).get('hashtags', [ ])
         return [ hashtag['tag'] for hashtag in hashtags ]
 
+def annotations(tweet):
+    """
+    Extract the annotations from the given tweet.
+
+    .. warning::
+
+        Only APIv2 tweets include annotations.
+
+    :param tweet: The tweet from which to extract hashtags.
+    :type tweet: dict
+
+    :return: A list of entities.
+    :rtype: list of str
+
+    :raises NotImplementedError: When trying to retrieve the annotation from an APIv1.1 tweet.
+    """
+
+    if version(tweet) == 1:
+        raise NotImplementedError("Annotations are only provided in APIv2 tweets.")
+    else:
+        tweet = original(tweet) if is_retweet(tweet) else tweet
+        annotations = tweet.get('data', tweet).get('entities', { }).get('annotations', [ ])
+        return [ annotation['normalized_text'] for annotation in annotations ]
+
 def is_retweet(tweet):
     """
     Check whether the given tweet is a retweet.

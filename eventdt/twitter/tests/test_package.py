@@ -713,6 +713,81 @@ class TestPackage(unittest.TestCase):
                     hashtags = [ hashtag['tag'] for hashtag in hashtags ]
                     self.assertEqual(hashtags, twitter.hashtags(tweet))
 
+    def test_annotations_raises_NotImplementedError(self):
+        """
+        Test that extracting hashtags from an APIv1.1 tweet raises a ``NotImplementedError``.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                self.assertRaises(NotImplementedError, twitter.annotations, tweet)
+
+    def test_annotations_v2_returns_list(self):
+        """
+        Test that extracting hashtags from a tweet returns a list.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                self.assertEqual(list, type(twitter.annotations(tweet)))
+                self.assertTrue(all( str == type(annotation) for annotation in twitter.annotations(tweet) ))
+
+    def test_annotations_v2_from_normal_tweet(self):
+        """
+        Test that extracting annotations from a normal tweet returns the annotations from the original tweet, not the retweet.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if not twitter.is_quote(tweet) and not twitter.is_retweet(tweet):
+                    annotations = tweet.get('data', tweet).get('entities', { }).get('annotations', [ ])
+                    annotations = [ annotation['normalized_text'] for annotation in annotations ]
+                    self.assertEqual(annotations, twitter.annotations(tweet))
+
+    def test_annotations_v2_from_quoted_tweet(self):
+        """
+        Test that extracting annotations from a quoted tweet returns the annotations from the new tweet, not the quoted tweet.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_quote(tweet) and not twitter.is_retweet(tweet):
+                    annotations = tweet.get('data', tweet).get('entities', { }).get('annotations', [ ])
+                    annotations = [ annotation['normalized_text'] for annotation in annotations ]
+                    self.assertEqual(annotations, twitter.annotations(tweet))
+
+    def test_annotations_v2_from_retweets(self):
+        """
+        Test that extracting annotations from a retweet returns the annotations from the original tweet, not the retweet.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    original = twitter.original(tweet)
+                    annotations = original.get('entities', { }).get('annotations', [ ])
+                    annotations = [ annotation['normalized_text'] for annotation in annotations ]
+                    self.assertEqual(annotations, twitter.annotations(tweet))
+
+    def test_annotations_v2_from_quoted_retweet(self):
+        """
+        Test thatannotations URLs from a quoted retweet returns the annotations from the new tweet, not the quoted tweet.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_quote(tweet) and twitter.is_retweet(tweet):
+                    original = twitter.original(tweet)
+                    annotations = original.get('entities', { }).get('annotations', [ ])
+                    annotations = [ annotation['normalized_text'] for annotation in annotations ]
+                    self.assertEqual(annotations, twitter.annotations(tweet))
+
     def test_is_retweet(self):
         """
         Test that when checking for retweets, the function returns ``True`` only if the ``retweeted_status`` key is set.
