@@ -300,7 +300,7 @@ def user_favorites(tweet):
 
     .. note::
 
-        If the tweet is a retweet, the function checks whether the retweeting author is verified, not the author of the original tweet.
+        If the tweet is a retweet, the function retrieves the number of tweets favorited by the retweeting author, not by the author of the original tweet.
 
     .. warning::
 
@@ -319,6 +319,26 @@ def user_favorites(tweet):
         return author(tweet)['favourites_count']
     else:
         raise NotImplementedError("Favorites counts are not provided in APIv2 tweets.")
+
+def user_statuses(tweet):
+    """
+    Get the number of tweets published by the author of the tweet.
+
+    .. note::
+
+        If the tweet is a retweet, the function retrieves the number of tweets published by the retweeting author, not by the author of the original tweet.
+
+    :param tweet: The tweet to check.
+    :type tweet: dict
+
+    :return: The number of tweets published by the author of the tweet.
+    :rtype: int
+    """
+
+    if version(tweet) == 1:
+        return author(tweet)['statuses_count']
+    else:
+        return author(tweet)['public_metrics']['tweet_count']
 
 def is_verified(tweet):
     """

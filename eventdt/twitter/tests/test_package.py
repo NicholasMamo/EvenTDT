@@ -1248,6 +1248,103 @@ class TestPackage(unittest.TestCase):
         if not found:
             logger.warning('Trivial test')
 
+    def test_user_statuses_returns_int(self):
+        """
+        Test that getting the number of user statuses returns an integer.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                self.assertEqual(int, type(twitter.user_statuses(tweet)))
+
+    def test_user_statuses_v2_returns_int(self):
+        """
+        Test that getting the number of user statuses returns an integer.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                self.assertEqual(int, type(twitter.user_statuses(tweet)))
+
+    def test_user_statuses_normal_tweet(self):
+        """
+        Test that getting the number of user statuses returns the correct number.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if not twitter.is_retweet(tweet) and not twitter.is_quote(tweet):
+                    self.assertEqual(tweet['user']['statuses_count'], twitter.user_statuses(tweet))
+
+    def test_user_statuses_v2_normal_tweet(self):
+        """
+        Test that getting the number of user statuses returns the correct number.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if not twitter.is_retweet(tweet) and not twitter.is_quote(tweet):
+                    self.assertEqual(twitter.author(tweet)['public_metrics']['tweet_count'], twitter.user_statuses(tweet))
+
+    def test_user_statuses_retweet(self):
+        """
+        Test that getting the number of user statuses from a retweet returns the retweeting author's favourites.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    self.assertEqual(tweet['user']['statuses_count'], twitter.user_statuses(tweet))
+                    self.assertNotEqual(twitter.original(tweet)['user']['statuses_count'], twitter.user_statuses(tweet))
+
+    def test_user_statuses_v2_retweet(self):
+        """
+        Test that getting the number of user statuses from a retweet returns the retweeting author's favourites.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    self.assertEqual(twitter.author(tweet)['public_metrics']['tweet_count'], twitter.user_statuses(tweet))
+
+    def test_user_statuses_quoted(self):
+        """
+        Test that getting the number of user statuses from a quoted tweet returns the quoting author's favourites.
+        """
+
+        found = False
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_quote(tweet):
+                    self.assertEqual(tweet['user']['statuses_count'], twitter.user_statuses(tweet))
+                    if twitter.author(twitter.quoted(tweet))['id_str'] != twitter.author(tweet)['id_str']:
+                        found = True
+                        self.assertNotEqual(twitter.quoted(tweet)['user']['statuses_count'], twitter.user_statuses(tweet))
+
+        if not found:
+            logger.warning('Trivial test')
+
+    def test_user_statuses_v2_quoted(self):
+        """
+        Test that getting the number of user statuses from a quoted tweet returns the quoting author's favourites.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_quote(tweet):
+                    self.assertEqual(twitter.author(tweet)['public_metrics']['tweet_count'], twitter.user_statuses(tweet))
+                    if not twitter.is_retweet(tweet) and twitter.quoted(tweet)['author_id'] != twitter.author(tweet)['id']:
+                        self.assertNotEqual(twitter.author(tweet, twitter.quoted(tweet)['author_id'])['public_metrics']['tweet_count'],
+                                            twitter.user_statuses(tweet))
+
     def test_is_verified(self):
         """
         Test that when checking whether the tweet is from a verified author, the function returns ``True`` only if the author is verified.
