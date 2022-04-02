@@ -38,4 +38,8 @@ class AnnotationExtractor(Extractor):
         :rtype: list of list of str
         """
 
-        pass
+        candidates = [ ]
+
+        with open(corpus) as f:
+            candidates = [ [ ] for line in f ]
+        return candidates

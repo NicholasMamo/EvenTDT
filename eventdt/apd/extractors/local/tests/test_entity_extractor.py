@@ -17,9 +17,9 @@ from nlp.document import Document
 from nlp.tokenizer import Tokenizer
 import twitter
 
-class TestExtractors(unittest.TestCase):
+class TestEntityExtractor(unittest.TestCase):
     """
-    Test the implementation and results of the different extractors.
+    Test the implementation and results of the entity extractor.
     """
 
     def test_entity_extractor(self):
