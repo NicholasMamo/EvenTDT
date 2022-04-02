@@ -274,6 +274,7 @@ def author(tweet, user_id=None):
     If a user ID is given, the function returns the corresponding author; otherwise, it returns the author of the top-level tweet.
 
     :raises KeyError: If there is no user with the given ID.
+    :raises KeyError: If the tweet object does not include users.
     """
 
     if version(tweet) == 1:
@@ -287,6 +288,9 @@ def author(tweet, user_id=None):
                 authors.update({ quoted(tweet)['user']['id_str']: quoted(tweet)['user'] })
             return authors[user_id]
     elif version(tweet) == 2:
+        if 'includes' not in tweet:
+            raise KeyError("The included users must be provided in the tweet object")
+
         authors = { user['id']: user for user in tweet['includes']['users'] }
         return authors[user_id] if user_id else authors[tweet['data']['author_id']]
 

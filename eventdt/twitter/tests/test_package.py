@@ -1050,6 +1050,17 @@ class TestPackage(unittest.TestCase):
                 tweet = json.loads(line)
                 self.assertRaises(KeyError, twitter.author, tweet, ''.join(random.choice(string.digits)))
 
+    def test_author_unknown_no_includes(self):
+        """
+        Test that getting the author from a tweet without the `includes` key raises a ``KeyError``.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    self.assertRaises(KeyError, twitter.author, twitter.original(tweet))
+
     def test_author_not_retweet(self):
         """
         Test that getting the author of a tweet that is not a retweet simply returns the author of the original tweet.
