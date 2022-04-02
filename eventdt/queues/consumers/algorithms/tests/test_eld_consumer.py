@@ -73,7 +73,7 @@ class TestELDConsumer(unittest.TestCase):
 
         queue = Queue()
         consumer = ELDConsumer(queue, 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             queue.enqueue(*tweets)
@@ -89,7 +89,7 @@ class TestELDConsumer(unittest.TestCase):
 
         queue = Queue()
         consumer = ELDConsumer(queue, 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             queue.enqueue(*tweets)
@@ -110,7 +110,7 @@ class TestELDConsumer(unittest.TestCase):
 
         queue = Queue()
         consumer = ELDConsumer(queue, 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             queue.enqueue(*tweets)
@@ -133,7 +133,7 @@ class TestELDConsumer(unittest.TestCase):
 
         queue = Queue()
         consumer = ELDConsumer(queue, 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             queue.enqueue(*tweets)
@@ -240,7 +240,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             count = len(tweets)
@@ -254,7 +254,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             count = len(tweets)
@@ -268,7 +268,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             count = len(tweets)
@@ -282,7 +282,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             count = len(tweets)
@@ -339,7 +339,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             count = len(tweets)
@@ -353,7 +353,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
 
@@ -377,7 +377,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             filtered = consumer._filter_tweets(tweets)
@@ -389,7 +389,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60, scheme=TF())
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = [ Document('', attributes={ 'tweet': tweet }) for tweet in tweets ]
@@ -405,7 +405,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             tweet = json.loads(f.readline())
             document = consumer._to_documents([ tweet ])[0]
             self.assertEqual(tweet['id'], document.attributes['id'])
@@ -417,7 +417,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             for line in f:
                 tweet = json.loads(line)
                 if '…' in tweet['text']:
@@ -435,7 +435,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             for line in f:
                 tweet = json.loads(line)
                 if 'retweeted_status' in tweet:
@@ -457,7 +457,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             for line in f:
                 tweet = json.loads(line)
                 if 'retweeted_status' in tweet:
@@ -480,7 +480,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             for line in f:
                 tweet = json.loads(line)
                 if not 'retweeted_status' in tweet and not 'quoted_status' in tweet:
@@ -502,10 +502,13 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             for line in f:
                 tweet = json.loads(line)
                 document = consumer._to_documents([ tweet ])[0]
+                if not document.dimensions:
+                    continue
+                
                 self.assertEqual(1, round(vector_math.magnitude(document), 10))
 
     def test_to_documents_documents(self):
@@ -514,7 +517,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60, TF())
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -526,7 +529,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60, TF())
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = [ Document('', attributes={ 'tweet': tweet}) for tweet in tweets ]
@@ -547,7 +550,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -559,7 +562,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)[::-1]
@@ -572,7 +575,7 @@ class TestELDConsumer(unittest.TestCase):
 
         consumer = ELDConsumer(Queue(), 60)
         self.assertEqual({ }, consumer.store.all())
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             line = f.readline()
             tweet = json.loads(line)
             documents = consumer._to_documents([ tweet ])
@@ -589,7 +592,7 @@ class TestELDConsumer(unittest.TestCase):
 
         consumer = ELDConsumer(Queue(), 60)
         self.assertEqual({ }, consumer.store.all())
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             line = f.readline()
             tweet = json.loads(line)
             timestamp = twitter.extract_timestamp(tweet)
@@ -602,7 +605,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             line = f.readline()
             tweet = json.loads(line)
             documents = consumer._to_documents([ tweet ])
@@ -617,7 +620,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -633,7 +636,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -647,7 +650,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -669,15 +672,16 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
             consumer.buffer.enqueue(*documents)
             timestamp = twitter.extract_timestamp(tweets[0])
+            will_be_removed = [ document for document in documents if document.timestamp == timestamp ]
             self.assertEqual(len(tweets), consumer.buffer.length())
             consumer._create_checkpoint(timestamp)
-            self.assertEqual(len(tweets) - 100, consumer.buffer.length())
+            self.assertEqual(len(tweets) - len(will_be_removed), consumer.buffer.length())
 
     def test_create_checkpoint_reorders_buffer(self):
         """
@@ -685,7 +689,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -701,7 +705,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -755,7 +759,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -780,7 +784,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             line = f.readline()
             tweet = json.loads(line)
             documents = consumer._to_documents([ tweet ])
@@ -796,7 +800,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             line = f.readline()
             tweet = json.loads(line)
             documents = consumer._to_documents([ tweet ])
@@ -812,7 +816,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60, sets=10)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             line = f.readline()
             tweet = json.loads(line)
             documents = consumer._to_documents([ tweet ])
@@ -829,7 +833,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60, sets=10)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             line = f.readline()
             tweet = json.loads(line)
             documents = consumer._to_documents([ tweet ])
@@ -855,7 +859,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60, sets=10)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -871,7 +875,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60, min_size=3)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -884,7 +888,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60, min_size=3)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -897,7 +901,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60, min_size=3)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -910,7 +914,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60, min_size=0, cooldown=10)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -923,7 +927,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60, min_size=0, cooldown=10)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -936,7 +940,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60, min_size=0, cooldown=10)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -949,7 +953,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60, min_size=0, cooldown=10)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -962,7 +966,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -975,7 +979,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -988,7 +992,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -1001,7 +1005,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -1014,7 +1018,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -1027,7 +1031,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -1050,7 +1054,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             tweets = [ tweet for tweet in tweets if not tweet['entities']['urls'] ]
@@ -1064,7 +1068,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -1078,7 +1082,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             tweets = [ tweet for tweet in tweets if len(tweet['entities']['urls']) == 1 ]
@@ -1094,7 +1098,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             no_url_tweets = [ tweet for tweet in tweets if not len(tweet['entities']['urls']) ]
@@ -1110,7 +1114,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             tweets = [ tweet for tweet in tweets if len(tweet['entities']['urls']) == 2 ]
@@ -1124,7 +1128,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -1139,7 +1143,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -1155,7 +1159,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -1171,7 +1175,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -1187,7 +1191,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -1205,7 +1209,7 @@ class TestELDConsumer(unittest.TestCase):
 
         clusters = [ ]
         consumer = ELDConsumer(Queue(), 60, min_size=3, max_intra_similarity=0.8)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -1232,7 +1236,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 30, min_burst=0)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             line = f.readline()
             tweet = json.loads(line)
             documents = consumer._to_documents([ tweet ])
@@ -1243,7 +1247,7 @@ class TestELDConsumer(unittest.TestCase):
             self.assertEqual(documents[0].dimensions.keys(), consumer.store.get(timestamp).keys())
 
             """
-            Create a new cluster with a sligtly different tweet.
+            Create a new cluster with a slightly different tweet.
             The function should return some of the different dimensions as breaking terms.
             """
             document = documents[0].copy()
@@ -1251,7 +1255,7 @@ class TestELDConsumer(unittest.TestCase):
             cluster = Cluster(document)
             terms = consumer._detect_topics(cluster, timestamp + 60)
             self.assertEqual([ 'pipe' ], list(terms))
-            self.assertEqual(0.5, terms.get('pipe'))
+            self.assertEqual(1, terms.get('pipe'))
 
     def test_detect_topics_dict(self):
         """
@@ -1259,7 +1263,7 @@ class TestELDConsumer(unittest.TestCase):
         """
 
         consumer = ELDConsumer(Queue(), 30, min_burst=0)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             line = f.readline()
             tweet = json.loads(line)
             documents = consumer._to_documents([ tweet ])
