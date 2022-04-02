@@ -45,7 +45,7 @@ Accepted arguments:
     - ``-f --file``                       *<Required>* The input corpus from where to extract participants.
     - ``-o --output``                     *<Required>* The path to the file where to store the extracted participants.
     - ``-m --model``                      *<Optional>* The type of model to use; supported: `ELDParticipantDetector`; defaults to a normal participant detector.
-    - ``--extractor``                     *<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.
+    - ``--extractor``                     *<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `AnnotationExtractor`, `TokenExtractor`, `TwitterNEREntityExtractor`.
     - ``--scorer``                        *<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
     - ``--filter``                        *<Optional>* The filter to use to filter candidate participants; supported: `Filter`, `RankFilter`, `ThresholdFilter`; defaults to no filter.
     - ``--resolver``                      *<Optional>* The resolver to use to resolve candidate participants; supported: `Resolver`, `TokenResolver`, `WikipediaNameResolver`, `WikipediaSearchResolver`; defaults to no filter.
@@ -107,7 +107,7 @@ def setup_args():
         - ``-f --file``                       *<Required>* The input corpus from where to extract participants.
         - ``-o --output``                     *<Required>* The path to the file where to store the extracted participants.
         - ``-m --model``                      *<Optional>* The type of model to use; supported: `ELDParticipantDetector`; defaults to a normal participant detector.
-        - ``--extractor``                     *<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.
+        - ``--extractor``                     *<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `AnnotationExtractor`, `TokenExtractor`, `TwitterNEREntityExtractor`.
         - ``--scorer``                        *<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
         - ``--filter``                        *<Optional>* The filter to use to filter candidate participants; supported: `Filter`, `RankFilter`, `ThresholdFilter`; defaults to no filter.
         - ``--resolver``                      *<Optional>* The resolver to use to resolve candidate participants; supported: `Resolver`, `TokenResolver`, `WikipediaNameResolver`, `WikipediaSearchResolver`; defaults to no resolver.
@@ -135,7 +135,7 @@ def setup_args():
     parser.add_argument('-m', '--model', type=model, required=False, default=ParticipantDetector,
                         help='<Optional> The type of model to use; supported: `ELDParticipantDetector`; defaults to a normal participant detector.')
     parser.add_argument('--extractor', type=extractor, required=False, default=None,
-                        help='<Optional> The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `TokenExtractor`, `TwitterNEREntityExtractor`.')
+                        help='<Optional> The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `AnnotationExtractor`, `TokenExtractor`, `TwitterNEREntityExtractor`.')
     parser.add_argument('--scorer', type=scorer, required=False, default=None,
                         help='<Optional> The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.')
     parser.add_argument('--filter', type=filter, required=False, default=None,
@@ -502,6 +502,7 @@ def extractor(method):
     Convert the given string into an extractor class.
     The accepted classes are:
 
+        #. :class:`~apd.extractors.local.AnnotationExtractor`
         #. :class:`~apd.extractors.local.EntityExtractor`
         #. :class:`~apd.extractors.local.TokenExtractor`
         #. :class:`~apd.extractors.local.TwitterNEREntityExtractor`
@@ -514,6 +515,7 @@ def extractor(method):
     """
 
     methods = {
+        'annotationextractor': AnnotationExtractor,
         'entityextractor': EntityExtractor,
         'tokenextractor': TokenExtractor,
     }

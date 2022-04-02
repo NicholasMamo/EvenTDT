@@ -235,9 +235,18 @@ class TestAPD(unittest.TestCase):
         extractor = apd.create_extractor(None)
         self.assertEqual(None, extractor)
 
+    def test_create_extractor_annotation_extractor(self):
+        """
+        Test that when the AnnotationExtractor is provided, an AnnotationExtractor is returned.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        extractor = apd.create_extractor(AnnotationExtractor)
+        self.assertEqual(AnnotationExtractor, type(extractor))
+
     def test_create_extractor_entity_extractor(self):
         """
-        Test that when the EntityExtractor is provided, the default EntityExtractor is returned.
+        Test that when the EntityExtractor is provided, an EntityExtractor is returned.
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
