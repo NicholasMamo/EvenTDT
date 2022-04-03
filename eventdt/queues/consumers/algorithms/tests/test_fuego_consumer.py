@@ -415,7 +415,21 @@ class TestFUEGOConsumer(unittest.TestCase):
             tweets = [ json.loads(line) for line in lines ]
             count = len(tweets)
             tweets = consumer._filter_tweets(tweets)
-            self.assertTrue(all(tweet['lang'] == 'en' for tweet in tweets))
+            self.assertTrue(all(twitter.lang(tweet) == 'en' for tweet in tweets))
+            self.assertGreater(count, len(tweets))
+
+    def test_filter_tweets_v2_english(self):
+        """
+        Test that when filtering a list of tweets, only English tweets are returned.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertTrue(all(twitter.lang(tweet) == 'en' for tweet in tweets))
             self.assertGreater(count, len(tweets))
 
     def test_filter_tweets_hashtags(self):
@@ -429,7 +443,21 @@ class TestFUEGOConsumer(unittest.TestCase):
             tweets = [ json.loads(line) for line in lines ]
             count = len(tweets)
             tweets = consumer._filter_tweets(tweets)
-            self.assertTrue(all(len(tweet['entities']['hashtags']) <= 2 for tweet in tweets))
+            self.assertTrue(all(len(twitter.hashtags(tweet)) <= 2 for tweet in tweets))
+            self.assertGreater(count, len(tweets))
+
+    def test_filter_tweets_v2_hashtags(self):
+        """
+        Test that when filtering tweets, all returned tweets have no more than 2 hashtags.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertTrue(all(len(twitter.hashtags(tweet)) <= 2 for tweet in tweets))
             self.assertGreater(count, len(tweets))
 
     def test_filter_tweets_no_favourites(self):
@@ -458,8 +486,24 @@ class TestFUEGOConsumer(unittest.TestCase):
             count = len(tweets)
             tweets = consumer._filter_tweets(tweets)
             for tweet in tweets:
-                self.assertTrue((tweet['user']['followers_count'] / tweet['user']['statuses_count'] >= 1./1000.) or
-                                tweet['retweeted_status']['user']['followers_count'] / tweet['retweeted_status']['user']['statuses_count'] >= 1./1000.)
+                self.assertTrue((not twitter.is_retweet(tweet) and twitter.user_followers(tweet) / twitter.user_statuses(tweet) >= 1./1000.) or
+                                 twitter.is_retweet(tweet) and twitter.user_followers(twitter.original(tweet))  / twitter.user_statuses(twitter.original(tweet)) >= 1./1000.)
+            self.assertGreater(count, len(tweets))
+
+    def test_filter_tweets_v2_follower_ratio(self):
+        """
+        Test that when filtering tweets, all users have at least one follower for every thousand tweets they've published.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            for tweet in tweets:
+                self.assertTrue((not twitter.is_retweet(tweet) and twitter.user_followers(tweet) / twitter.user_statuses(tweet) >= 1./1000.) or
+                                 twitter.is_retweet(tweet) and twitter.user_followers(tweet, twitter.original(tweet)['author_id'])  / twitter.user_statuses(tweet, twitter.original(tweet)['author_id']) >= 1./1000.)
             self.assertGreater(count, len(tweets))
 
     def test_filter_tweets_follower_ratio_no_statuses(self):
@@ -475,8 +519,26 @@ class TestFUEGOConsumer(unittest.TestCase):
             tweets = [ json.loads(line) for line in lines ]
             count = len(tweets)
             tweets = consumer._filter_tweets(tweets)
-            self.assertTrue(all( tweet['user']['statuses_count'] or
-                                 ('retweeted_status' in tweet and tweet['retweeted_status']['user']['statuses_count'])
+            self.assertTrue(all( not twitter.is_retweet(tweet) and twitter.user_statuses(tweet) or
+                                 twitter.is_retweet(tweet) and twitter.user_statuses(tweet)
+                                 for tweet in tweets ))
+            self.assertGreater(count, len(tweets))
+
+    def test_filter_tweets_v2_follower_ratio_no_statuses(self):
+        """
+        Test that when filtering tweets, all users have at least one status.
+        It's possible that a user has no statuses, which is weird.
+        Not sure how that happens, possibly a short delay in updating the user profile.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertTrue(all( not twitter.is_retweet(tweet) and twitter.user_statuses(tweet) or
+                                 twitter.is_retweet(tweet) and twitter.user_statuses(tweet, twitter.original(tweet)['author_id'])
                                  for tweet in tweets ))
             self.assertGreater(count, len(tweets))
 
@@ -490,7 +552,20 @@ class TestFUEGOConsumer(unittest.TestCase):
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             filtered = consumer._filter_tweets(tweets)
-            self.assertTrue(all( len(tweet['entities']['urls']) == 0 for tweet in filtered ))
+            self.assertTrue(all( len(twitter.urls(tweet)) == 0 for tweet in filtered ))
+            self.assertGreater(len(tweets), len(filtered))
+
+    def test_filter_tweets_v2_urls(self):
+        """
+        Test that when filtering tweets, none of the retained ones have URLs in them.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            filtered = consumer._filter_tweets(tweets)
+            self.assertTrue(all( len(twitter.urls(tweet)) == 0 for tweet in filtered ))
             self.assertGreater(len(tweets), len(filtered))
 
     def test_filter_tweets_removes_quotes(self):
@@ -500,6 +575,18 @@ class TestFUEGOConsumer(unittest.TestCase):
 
         consumer = FUEGOConsumer(Queue())
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            filtered = consumer._filter_tweets(tweets)
+            self.assertFalse(any( twitter.is_quote(tweet) for tweet in filtered ))
+
+    def test_filter_tweets_v2_removes_quotes(self):
+        """
+        Test that when filtering tweets, quotes are automatically filtered.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             filtered = consumer._filter_tweets(tweets)
@@ -516,10 +603,27 @@ class TestFUEGOConsumer(unittest.TestCase):
             tweets = [ json.loads(line) for line in lines ]
             count = len(tweets)
             tweets = consumer._filter_tweets(tweets)
-            self.assertTrue(all( len(tweet['entities']['urls']) == 0 or
-                                 len(tweet['entities']['urls']) == 1 and twitter.is_quote(tweet)
+            self.assertTrue(all( len(twitter.urls(tweet)) == 0 or
+                                 len(twitter.urls(tweet)) == 1 and twitter.is_quote(tweet)
                                 for tweet in tweets ))
             self.assertTrue(any('media' in tweet['entities'] and len(tweet['entities']['media']) for tweet in tweets))
+            self.assertGreater(count, len(tweets))
+
+    def test_filter_tweets_v2_urls_not_media(self):
+        """
+        Test that when filtering tweets, tweets with media are retained.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertTrue(all( len(twitter.urls(tweet)) == 0 or
+                                 len(twitter.urls(tweet)) == 1 and twitter.is_quote(tweet)
+                                for tweet in tweets ))
+            self.assertTrue(any('media' in tweet['includes'] and len(tweet['includes']['media']) for tweet in tweets))
             self.assertGreater(count, len(tweets))
 
     def test_filter_tweets_bio(self):
@@ -534,7 +638,24 @@ class TestFUEGOConsumer(unittest.TestCase):
             count = len(tweets)
             tweets = consumer._filter_tweets(tweets)
             for tweet in tweets:
-                self.assertTrue(tweet['user']['description'] or tweet['retweeted_status']['user']['description'])
+                self.assertTrue(not twitter.is_retweet(tweet) and twitter.user_description(tweet) or
+                                twitter.is_retweet(tweet) and twitter.user_description(twitter.original(tweet)))
+            self.assertGreater(count, len(tweets))
+
+    def test_filter_tweets_v2_bio(self):
+        """
+        Test that when filtering tweets, their authors must have a non-empty biography.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            for tweet in tweets:
+                self.assertTrue(not twitter.is_retweet(tweet) and twitter.user_description(tweet) or
+                                twitter.is_retweet(tweet) and twitter.user_description(tweet, twitter.original(tweet)['author_id']))
             self.assertGreater(count, len(tweets))
 
     def test_filter_tweets_repeat(self):
@@ -544,6 +665,30 @@ class TestFUEGOConsumer(unittest.TestCase):
 
         consumer = FUEGOConsumer(Queue())
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+
+            """
+            The first time, the number of tweets should decrease.
+            """
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertGreater(count, len(tweets))
+
+            """
+            The second time, the number of tweets should remain the same.
+            """
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertEqual(count, len(tweets))
+
+    def test_filter_tweets_repeat(self):
+        """
+        Test that when filtering tweets twice, the second time has no effect.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
 
@@ -573,6 +718,18 @@ class TestFUEGOConsumer(unittest.TestCase):
             filtered = consumer._filter_tweets(tweets)
             self.assertTrue(all(tweet in tweets for tweet in filtered))
 
+    def test_filter_tweets_v2_unchanged(self):
+        """
+        Test that when filtering tweets, the tweet data does not change.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            filtered = consumer._filter_tweets(tweets)
+            self.assertTrue(all(tweet in tweets for tweet in filtered))
+
     def test_filter_tweets_document(self):
         """
         Test that when filtering a list of documents, the function looks for the tweet in the attributes.
@@ -587,9 +744,25 @@ class TestFUEGOConsumer(unittest.TestCase):
             tweets = consumer._filter_tweets(tweets)
             documents = consumer._filter_tweets(documents)
             self.assertEqual(len(tweets), len(documents))
-            self.assertTrue(all( document.attributes['tweet'] in tweets for document in documents ))
+            self.assertTrue(all( document.tweet in tweets for document in documents ))
 
-    def test_filter_retweets(self):
+    def test_filter_tweets_v2_document(self):
+        """
+        Test that when filtering a list of documents, the function looks for the tweet in the attributes.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            documents = [ Document('', attributes={ 'tweet': tweet }) for tweet in tweets ]
+
+            tweets = consumer._filter_tweets(tweets)
+            documents = consumer._filter_tweets(documents)
+            self.assertEqual(len(tweets), len(documents))
+            self.assertTrue(all( document.tweet in tweets for document in documents ))
+
+    def test_filter_tweets_retweets(self):
         """
         Test that if the tweet is a retweet, the original tweet is filtered, not the retweet.
         In other words, the validation of the retweet is the same as the validation of the original tweet.
@@ -603,14 +776,14 @@ class TestFUEGOConsumer(unittest.TestCase):
             tweets = [ json.loads(line) for line in lines ]
             count = len(tweets)
             for tweet in tweets:
-                if 'retweeted_status' in tweet:
-                    self.assertEqual(consumer._validate_tweet(tweet['retweeted_status']), consumer._validate_tweet(tweet))
+                if twitter.is_retweet(tweet):
+                    self.assertEqual(consumer._validate_tweet(twitter.original(tweet)), consumer._validate_tweet(tweet))
                     trivial = False
 
         if trivial:
             logger.warning("Trivial test")
 
-    def test_filter_replies(self):
+    def test_filter_tweets_replies(self):
         """
         Test that if the tweet is a reply, it is filtered out.
         """
@@ -623,14 +796,34 @@ class TestFUEGOConsumer(unittest.TestCase):
             tweets = [ json.loads(line) for line in lines ]
             count = len(tweets)
             for tweet in tweets:
-                if tweet['in_reply_to_status_id_str'] is not None:
+                if twitter.is_reply(tweet):
                     self.assertFalse(consumer._validate_tweet(tweet))
                     trivial = False
 
         if trivial:
             logger.warning("Trivial test")
 
-    def test_filter_reply_retweet(self):
+    def test_filter_tweets_v2_replies(self):
+        """
+        Test that if the tweet is a reply, it is filtered out.
+        """
+
+        trivial = True
+
+        consumer = FUEGOConsumer(Queue())
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            for tweet in tweets:
+                if twitter.is_reply(tweet):
+                    self.assertFalse(consumer._validate_tweet(tweet))
+                    trivial = False
+
+        if trivial:
+            logger.warning("Trivial test")
+
+    def test_filter_tweets_reply_retweet(self):
         """
         Test that if the tweet is a retweet of a reply, it is filtered out.
         """
@@ -643,12 +836,32 @@ class TestFUEGOConsumer(unittest.TestCase):
             tweets = [ json.loads(line) for line in lines ]
             count = len(tweets)
             for tweet in tweets:
-                if 'retweeted_status' in tweet and tweet['retweeted_status']['in_reply_to_status_id_str'] is not None:
+                if twitter.is_retweet(tweet) and twitter.is_reply(tweet):
                     self.assertFalse(consumer._validate_tweet(tweet))
                     trivial = False
 
         if trivial:
             logger.warning("Trivial test")
+
+    def test_filter_tweets_v2_reply_retweet(self):
+        """
+        Test that if the tweet is a retweet of a reply, it is filtered out.
+        """
+
+        trivial = True
+
+        consumer = FUEGOConsumer(Queue())
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            for tweet in tweets:
+                if twitter.is_retweet(tweet) and twitter.is_reply(tweet):
+                    self.assertFalse(consumer._validate_tweet(tweet))
+                    trivial = False
+
+        if trivial:
+            logger.warning("Trivial test (test_filter_tweets_v2_reply_retweet)")
 
     def test_to_documents_tweet(self):
         """
@@ -659,7 +872,40 @@ class TestFUEGOConsumer(unittest.TestCase):
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             tweet = json.loads(f.readline())
             document = consumer._to_documents([ tweet ])[0]
-            self.assertEqual(tweet['id'], document.attributes['id'])
+            self.assertEqual(tweet, document.tweet)
+
+    def test_to_documents_v2_tweet(self):
+        """
+        Test that when creating a document from a tweet, the tweet is saved as an attribute.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            tweet = json.loads(f.readline())
+            document = consumer._to_documents([ tweet ])[0]
+            self.assertEqual(tweet, document.tweet)
+
+    def test_to_documents_id(self):
+        """
+        Test that when creating a document from a tweet, the tweet ID is saved as an attribute.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            tweet = json.loads(f.readline())
+            document = consumer._to_documents([ tweet ])[0]
+            self.assertEqual(tweet['id_str'], document.id)
+
+    def test_to_documents_v2_id(self):
+        """
+        Test that when creating a document from a tweet, the tweet ID is saved as an attribute.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            tweet = json.loads(f.readline())
+            document = consumer._to_documents([ tweet ])[0]
+            self.assertEqual(tweet['data']['id'], document.id)
 
     def test_to_documents_split_dash(self):
         """
@@ -2122,12 +2368,43 @@ class TestFUEGOConsumer(unittest.TestCase):
 
             tweets = { } # retweets where the keys are the delay in retweeting
             for document in documents:
-                if 'retweeted_status' in document.attributes['tweet']:
-                    diff = twitter.extract_timestamp(document.attributes['tweet']) - twitter.extract_timestamp(document.attributes['tweet']['retweeted_status'])
+                if twitter.is_retweet(document.tweet):
+                    diff = twitter.extract_timestamp(document.tweet) - twitter.extract_timestamp(twitter.original(document.tweet))
                     tweets[diff] = document
 
             trivial = True
-            # sort the tweets in ascending order of difference
+            # sort the tweets in ascending order of time difference (the delay until the retweet)
+            tweets = sorted(tweets.items(), key=lambda tweet: tweet[0])
+            tweets = [ tweet[1] for tweet in tweets ]
+            self.assertTrue(len(tweets) > 2)
+            for i in range(0, len(tweets) - 1):
+                recent, older = consumer._damp(tweets[i]), consumer._damp(tweets[i + 1])
+                self.assertGreaterEqual(recent, older)
+                if recent > older:
+                    trivial = False
+
+            if trivial:
+                logger.warning("Trivial test")
+
+    def test_damp_v2_recency(self):
+        """
+        Test that the damping factor of a recent retweet is higher than that of an older retweet.
+        """
+
+        consumer = FUEGOConsumer(Queue())
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            documents = consumer._to_documents(tweets)
+
+            tweets = { } # retweets where the keys are the delay in retweeting
+            for document in documents:
+                if twitter.is_retweet(document.tweet):
+                    diff = twitter.extract_timestamp(document.tweet) - twitter.extract_timestamp(twitter.original(document.tweet))
+                    tweets[diff] = document
+
+            trivial = True
+            # sort the tweets in ascending order of time difference (the delay until the retweet)
             tweets = sorted(tweets.items(), key=lambda tweet: tweet[0])
             tweets = [ tweet[1] for tweet in tweets ]
             self.assertTrue(len(tweets) > 2)

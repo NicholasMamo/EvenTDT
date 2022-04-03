@@ -10,6 +10,7 @@ This allows for more accurate results in real-time.
     For a combination of document-pivot and feature-pivot approaches, see the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`.
 """
 
+import copy
 from enum import Enum
 import math
 import os
@@ -385,8 +386,8 @@ class FUEGOConsumer(Consumer):
         :rtype: str
         """
 
-        while twitter.is_retweet(tweet):
-            tweet = tweet['retweeted_status'] if 'retweeted_status' in tweet else tweet
+        original = tweet
+        tweet = twitter.original(tweet) if twitter.is_retweet(tweet) else tweet
 
         if twitter.is_reply(tweet):
             return False
@@ -394,25 +395,33 @@ class FUEGOConsumer(Consumer):
         if twitter.is_quote(tweet):
             return False
 
-        if not tweet['lang'] == 'en':
+        if not twitter.lang(tweet) == 'en':
             return False
 
-        if len(tweet['entities']['hashtags']) > 2:
+        if len(twitter.hashtags(tweet)) > 2:
             return False
 
-        if tweet['user']['favourites_count'] == 0:
+        # filter out tweets with URLs (excluding media)
+        if len(twitter.urls(tweet)):
             return False
 
-        if not tweet['user']['statuses_count'] or tweet['user']['followers_count'] / tweet['user']['statuses_count'] < 1e-3:
+        if twitter.version(tweet) == 1 and twitter.user_favorites(tweet) == 0:
             return False
 
-        # filter out tweets with URLs
-        urls = tweet['entities']['urls']
-        if len(urls):
-            return False
+        if twitter.version(tweet) == 1:
+            if not twitter.user_statuses(tweet) or twitter.user_followers(tweet) / twitter.user_statuses(tweet) < 1e-3:
+                return False
 
-        if not tweet['user']['description']:
-            return False
+            if not twitter.user_description(tweet):
+                return False
+        else:
+            author_id = tweet.get('data', tweet)['author_id']
+            if (not twitter.user_statuses(original, author_id) or
+                twitter.user_followers(original, author_id) / twitter.user_statuses(original, author_id) < 1e-3):
+                return False
+
+            if not twitter.user_description(original, author_id):
+                return False
 
         return True
 
@@ -439,7 +448,7 @@ class FUEGOConsumer(Consumer):
         However, if the tweet is a plain retweet, get the full text.
         """
         for item in tweets:
-            tweet = item.attributes['tweet'] if type(item) is Document else item
+            tweet = item.tweet if type(item) is Document else item
 
             # extract the dimensions of the document
             text = twitter.expand_mentions(twitter.full_text(tweet), tweet)
@@ -447,7 +456,6 @@ class FUEGOConsumer(Consumer):
 
             # create the document from the tweet and save the tweet in it
             document = Document.from_dict(tweet, dimensions=dimensions)
-            document.attributes['id'] = tweet.get('id')
             document.normalize()
             documents.append(document)
 
@@ -643,8 +651,8 @@ class FUEGOConsumer(Consumer):
             return 1
 
         # if the tweet is a retweet, apply damping proportional to the difference between the time it took to retweet it
-        retweet = document.tweet['retweeted_status']
-        diff = document.timestamp - twitter.extract_timestamp(retweet)
+        original = twitter.original(document.tweet)
+        diff = document.timestamp - twitter.extract_timestamp(original)
         return math.exp(- self.damping * diff / 60)
 
     def _track(self, topics, timestamp):
