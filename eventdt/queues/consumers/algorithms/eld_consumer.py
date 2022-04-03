@@ -525,8 +525,8 @@ class ELDConsumer(Consumer):
             """
             tokens = self.tokenizer.tokenize(text)
             document = item if type(item) is Document else Document(text, tokens, scheme=self.scheme)
-            document.attributes['id'] = tweet.get('id')
-            document.attributes['urls'] = len(tweet['entities']['urls'])
+            document.attributes['id'] = twitter.id(tweet)
+            document.attributes['urls'] = len(twitter.urls(tweet))
             document.attributes['timestamp'] = twitter.extract_timestamp(tweet)
             document.attributes['tweet'] = tweet
             document.normalize()

@@ -557,8 +557,20 @@ class TestELDConsumer(unittest.TestCase):
         with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             tweet = json.loads(f.readline())
             document = consumer._to_documents([ tweet ])[0]
-            self.assertEqual(tweet['id'], document.attributes['id'])
-            self.assertEqual(len(tweet['entities']['urls']), document.attributes['urls'])
+            self.assertEqual(twitter.id(tweet), document.attributes['id'])
+            self.assertEqual(len(twitter.urls(tweet)), document.attributes['urls'])
+
+    def test_to_documents_v2_tweet(self):
+        """
+        Test that when creating a document from a tweet, the tweet is saved as an attribute.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
+            tweet = json.loads(f.readline())
+            document = consumer._to_documents([ tweet ])[0]
+            self.assertEqual(twitter.id(tweet), document.attributes['id'])
+            self.assertEqual(len(twitter.urls(tweet)), document.attributes['urls'])
 
     def test_to_documents_ellipsis(self):
         """
@@ -1206,7 +1218,7 @@ class TestELDConsumer(unittest.TestCase):
         with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
-            tweets = [ tweet for tweet in tweets if not tweet['entities']['urls'] ]
+            tweets = [ tweet for tweet in tweets if not twitter.urls(tweet) ]
             documents = consumer._to_documents(tweets)
             clusters = [ Cluster(documents[:3]) ]
             self.assertEqual(clusters, consumer._filter_clusters(clusters, 10))
@@ -1234,7 +1246,7 @@ class TestELDConsumer(unittest.TestCase):
         with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
-            tweets = [ tweet for tweet in tweets if len(tweet['entities']['urls']) == 1 ]
+            tweets = [ tweet for tweet in tweets if len(twitter.urls(tweet)) == 1 ]
             documents = consumer._to_documents(tweets)
             clusters = [ Cluster(documents[:50]) ]
             self.assertEqual(clusters, consumer._filter_clusters(clusters, 10))
@@ -1250,8 +1262,8 @@ class TestELDConsumer(unittest.TestCase):
         with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
-            no_url_tweets = [ tweet for tweet in tweets if not len(tweet['entities']['urls']) ]
-            url_tweets = [ tweet for tweet in tweets if len(tweet['entities']['urls']) == 2 ]
+            no_url_tweets = [ tweet for tweet in tweets if not len(twitter.urls(tweet)) ]
+            url_tweets = [ tweet for tweet in tweets if len(twitter.urls(tweet)) == 2 ]
             no_url_documents = consumer._to_documents(no_url_tweets)
             url_documents = consumer._to_documents(url_tweets)
             clusters = [ Cluster(no_url_documents[:50] + url_documents[:50]) ]
@@ -1266,7 +1278,7 @@ class TestELDConsumer(unittest.TestCase):
         with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
-            tweets = [ tweet for tweet in tweets if len(tweet['entities']['urls']) == 2 ]
+            tweets = [ tweet for tweet in tweets if len(twitter.urls(tweet)) == 2 ]
             documents = consumer._to_documents(tweets)
             clusters = [ Cluster(documents[:50]) ]
             self.assertEqual([ ], consumer._filter_clusters(clusters, 10))
