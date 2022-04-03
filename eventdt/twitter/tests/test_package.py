@@ -1487,7 +1487,21 @@ class TestPackage(unittest.TestCase):
                 tweet = json.loads(line)
                 if twitter.is_retweet(tweet):
                     self.assertEqual(twitter.author(tweet)['favourites_count'], twitter.user_favorites(tweet))
-                    self.assertNotEqual(twitter.original(tweet)['user']['favourites_count'], twitter.user_favorites(tweet))
+                    self.assertNotEqual(twitter.author(twitter.original(tweet))['favourites_count'], twitter.user_favorites(tweet))
+
+    def test_user_favorites_retweet_with_id(self):
+        """
+        Test that getting the number of user favorites from a retweet with the original author's ID returns the original author's favourites.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    self.assertNotEqual(twitter.author(tweet)['favourites_count'],
+                                        twitter.user_favorites(tweet, twitter.original(tweet)['user']['id']))
+                    self.assertEqual(twitter.author(twitter.original(tweet))['favourites_count'],
+                                        twitter.user_favorites(tweet, twitter.original(tweet)['user']['id']))
 
     def test_user_favorites_quoted(self):
         """
@@ -1506,6 +1520,21 @@ class TestPackage(unittest.TestCase):
 
         if not found:
             logger.warning('Trivial test')
+
+    def test_user_favorites_quoted_with_id(self):
+        """
+        Test that getting the number of user favorites from a quoted tweet with the original author's ID returns the original author's favourites.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_quote(tweet):
+                    if twitter.author(twitter.quoted(tweet))['id_str'] != twitter.author(tweet)['id_str']:
+                        self.assertNotEqual(twitter.author(tweet)['favourites_count'],
+                                            twitter.user_favorites(tweet, twitter.quoted(tweet)['user']['id']))
+                        self.assertEqual(twitter.author(twitter.quoted(tweet))['favourites_count'],
+                                            twitter.user_favorites(tweet, twitter.quoted(tweet)['user']['id']))
 
     def test_user_statuses_returns_int(self):
         """

@@ -344,7 +344,7 @@ def author(tweet, user_id=None):
                 authors.update({ original(tweet)['user']['id_str']: original(tweet)['user'] })
             if is_quote(tweet):
                 authors.update({ quoted(tweet)['user']['id_str']: quoted(tweet)['user'] })
-            return authors[user_id]
+            return authors[str(user_id)]
     elif version(tweet) == 2:
         if 'includes' not in tweet:
             raise KeyError("The included users must be provided in the tweet object")
@@ -352,13 +352,13 @@ def author(tweet, user_id=None):
         authors = { user['id']: user for user in tweet['includes']['users'] }
         return authors[user_id] if user_id else authors[tweet['data']['author_id']]
 
-def user_favorites(tweet):
+def user_favorites(tweet, user_id=None):
     """
     Get the number of tweets favorited by the author of the tweet.
 
     .. note::
 
-        If the tweet is a retweet, the function retrieves the number of tweets favorited by the retweeting author, not by the author of the original tweet.
+        By default, if the tweet is a retweet, the function retrieves the number of tweets favorited by the retweeting author, not by the author of the original tweet.
 
     .. warning::
 
@@ -366,6 +366,9 @@ def user_favorites(tweet):
 
     :param tweet: The tweet to check.
     :type tweet: dict
+    :param user_id: The ID of the user whose favorites to extract.
+                    Use this parameter to extract information about retweet or quote tweet authors from APIv2 tweets.
+    :type user_id: str
 
     :return: The number of tweets favorited by the author of the tweet.
     :rtype: int
@@ -374,7 +377,7 @@ def user_favorites(tweet):
     """
 
     if version(tweet) == 1:
-        return author(tweet)['favourites_count']
+        return author(tweet, user_id)['favourites_count']
     else:
         raise NotImplementedError("Favorites counts are not provided in APIv2 tweets.")
 
