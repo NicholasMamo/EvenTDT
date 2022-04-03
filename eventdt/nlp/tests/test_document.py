@@ -203,16 +203,27 @@ class TestDocument(unittest.TestCase):
                 document = Document.from_dict(tweet, dimensions=dimensions)
                 self.assertEqual(dimensions, document.dimensions)
 
-    def test_from_dict_with_timestamp(self):
+    def test_from_dict_with_id(self):
         """
-        Test that creating a document from a dictionary saves the timestamp as an attribute.
+        Test that creating a document from a dictionary saves the tweet ID as an attribute.
         """
 
         with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             for line in f:
                 tweet = json.loads(line)
                 document = Document.from_dict(tweet)
-                self.assertEqual(twitter.timestamp(tweet), document.timestamp)
+                self.assertEqual(twitter.id(tweet), document.id)
+
+    def test_from_dict_v2_with_id(self):
+        """
+        Test that creating a document from a dictionary saves the tweet ID as an attribute.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                document = Document.from_dict(tweet)
+                self.assertEqual(twitter.id(tweet), document.id)
 
     def test_from_dict_with_lang(self):
         """
@@ -225,12 +236,56 @@ class TestDocument(unittest.TestCase):
                 document = Document.from_dict(tweet)
                 self.assertEqual(twitter.lang(tweet), document.lang)
 
+    def test_from_dict_v2_with_lang(self):
+        """
+        Test that creating a document from a dictionary saves the language as an attribute.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                document = Document.from_dict(tweet)
+                self.assertEqual(twitter.lang(tweet), document.lang)
+
+    def test_from_dict_with_timestamp(self):
+        """
+        Test that creating a document from a dictionary saves the timestamp as an attribute.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                document = Document.from_dict(tweet)
+                self.assertEqual(twitter.timestamp(tweet), document.timestamp)
+
+    def test_from_dict_v2_with_timestamp(self):
+        """
+        Test that creating a document from a dictionary saves the timestamp as an attribute.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                document = Document.from_dict(tweet)
+                self.assertEqual(twitter.timestamp(tweet), document.timestamp)
+
     def test_from_dict_with_urls(self):
         """
         Test that creating a document from a dictionary saves the tweet's URLs as an attribute.
         """
 
         with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                document = Document.from_dict(tweet)
+                self.assertEqual(twitter.urls(tweet), document.urls)
+
+    def test_from_dict_v2_with_urls(self):
+        """
+        Test that creating a document from a dictionary saves the tweet's URLs as an attribute.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
             for line in f:
                 tweet = json.loads(line)
                 document = Document.from_dict(tweet)
@@ -247,12 +302,34 @@ class TestDocument(unittest.TestCase):
                 document = Document.from_dict(tweet)
                 self.assertEqual(twitter.hashtags(tweet), document.hashtags)
 
+    def test_from_dict_v2_with_hashtags(self):
+        """
+        Test that creating a document from a dictionary saves the tweet's hashtags as an attribute.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                document = Document.from_dict(tweet)
+                self.assertEqual(twitter.hashtags(tweet), document.hashtags)
+
     def test_from_dict_is_retweet(self):
         """
         Test that creating a document from a dictionary saves a boolean indicating whether the tweet is a retweet.
         """
 
         with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                document = Document.from_dict(tweet)
+                self.assertEqual(twitter.is_retweet(tweet), document.is_retweet)
+
+    def test_from_dict_v2_is_retweet(self):
+        """
+        Test that creating a document from a dictionary saves a boolean indicating whether the tweet is a retweet.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
             for line in f:
                 tweet = json.loads(line)
                 document = Document.from_dict(tweet)
@@ -269,12 +346,34 @@ class TestDocument(unittest.TestCase):
                 document = Document.from_dict(tweet)
                 self.assertEqual(twitter.is_reply(tweet), document.is_reply)
 
+    def test_from_dict_v2_is_reply(self):
+        """
+        Test that creating a document from a dictionary saves a boolean indicating whether the tweet is a reply.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                document = Document.from_dict(tweet)
+                self.assertEqual(twitter.is_reply(tweet), document.is_reply)
+
     def test_from_dict_is_quote(self):
         """
         Test that creating a document from a dictionary saves a boolean indicating whether the tweet is a quote.
         """
 
         with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                document = Document.from_dict(tweet)
+                self.assertEqual(twitter.is_quote(tweet), document.is_quote)
+
+    def test_from_dict_v2_is_quote(self):
+        """
+        Test that creating a document from a dictionary saves a boolean indicating whether the tweet is a quote.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
             for line in f:
                 tweet = json.loads(line)
                 document = Document.from_dict(tweet)
@@ -291,12 +390,34 @@ class TestDocument(unittest.TestCase):
                 document = Document.from_dict(tweet)
                 self.assertEqual(twitter.is_verified(tweet), document.is_verified)
 
+    def test_from_dict_v2_is_verified(self):
+        """
+        Test that creating a document from a dictionary saves a boolean indicating whether the tweet is by a verified author.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                document = Document.from_dict(tweet)
+                self.assertEqual(twitter.is_verified(tweet), document.is_verified)
+
     def test_from_dict_with_tweet(self):
         """
         Test that creating a document from a dictionary saves the tweet as an attribute.
         """
 
         with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                document = Document.from_dict(tweet)
+                self.assertEqual(tweet, document.tweet)
+
+    def test_from_dict_v2_with_tweet(self):
+        """
+        Test that creating a document from a dictionary saves the tweet as an attribute.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
             for line in f:
                 tweet = json.loads(line)
                 document = Document.from_dict(tweet)

@@ -111,7 +111,7 @@ class Document(Vector):
         """
 
         return Document(text=twitter.expand_mentions(twitter.text(tweet), tweet), dimensions=dimensions,
-                        attributes={ 'lang': twitter.lang(tweet), 'timestamp': twitter.timestamp(tweet),
+                        attributes={ 'id': twitter.id(tweet), 'lang': twitter.lang(tweet), 'timestamp': twitter.timestamp(tweet),
                                      'urls': twitter.urls(tweet), 'hashtags': twitter.hashtags(tweet),
                                      'is_retweet': twitter.is_retweet(tweet), 'is_reply': twitter.is_reply(tweet), 'is_quote': twitter.is_quote(tweet),
                                      'is_verified': twitter.is_verified(tweet), 'tweet': tweet })
