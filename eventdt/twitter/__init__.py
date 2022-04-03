@@ -99,7 +99,7 @@ def extract_timestamp(tweet):
         elif 'created_at' in tweet:
             return parse(tweet['created_at']).timestamp()
     else:
-        return parse(tweet['data']['created_at']).timestamp()
+        return parse(tweet.get('data', tweet)['created_at']).timestamp()
 
     raise KeyError("Neither the 'timestamp_ms' attribute, nor the 'created_at' attribute could be found in the tweet.")
 

@@ -2,6 +2,7 @@
 Test the functionality of the tweet package-level functions.
 """
 
+from dateutil.parser import parse
 import json
 import os
 import random
@@ -284,6 +285,39 @@ class TestPackage(unittest.TestCase):
             self.assertFalse('timestamp_ms' in tweet)
             self.assertFalse('created_at' in tweet)
             self.assertRaises(KeyError, twitter.extract_timestamp, tweet)
+
+    def test_extract_timestamp_v2_normal_tweet(self):
+        """
+        Test extracting the timestamp from a normal tweet.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if not twitter.is_retweet(tweet) and not twitter.is_quote(tweet):
+                    self.assertEqual(twitter.timestamp(tweet), parse(tweet['data']['created_at']).timestamp())
+
+    def test_extract_timestamp_v2_retweet(self):
+        """
+        Test extracting the timestamp from a retweet.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    self.assertEqual(twitter.timestamp(twitter.original(tweet)), parse(twitter.original(tweet)['created_at']).timestamp())
+
+    def test_extract_timestamp_v2_quote(self):
+        """
+        Test extracting the timestamp from a quoted tweet.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_quote(tweet) and not twitter.is_retweet(tweet):
+                    self.assertEqual(twitter.timestamp(twitter.quoted(tweet)), parse(twitter.quoted(tweet)['created_at']).timestamp())
 
     def test_text_alias_full_text(self):
         """
