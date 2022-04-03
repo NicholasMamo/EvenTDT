@@ -326,6 +326,11 @@ def author(tweet, user_id=None):
     Get the author object of the given tweet.
     If a user ID is given, the function returns the corresponding author; otherwise, it returns the author of the top-level tweet.
 
+    :param tweet: The tweet whose author to extract.
+    :type tweet: dict
+    :param user_id: The ID of the user to extract.
+    :type user_id: str
+
     :raises KeyError: If there is no user with the given ID.
     :raises KeyError: If the tweet object does not include users.
     """
