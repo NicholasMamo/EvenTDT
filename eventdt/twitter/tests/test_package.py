@@ -40,6 +40,136 @@ class TestPackage(unittest.TestCase):
         with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
             self.assertTrue(all( 2 == twitter.version(json.loads(line)) for line in f ))
 
+    def test_id_returns_string(self):
+        """
+        Test that getting the ID from a tweet returns a string.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                self.assertEqual(str, type(twitter.id(tweet)))
+
+    def test_id_v2_returns_string(self):
+        """
+        Test that getting the ID from a tweet returns a string.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                self.assertEqual(str, type(twitter.id(tweet)))
+
+    def test_id_normal_tweet(self):
+        """
+        Test that getting the ID from a normal tweet returns the top-level ID.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if not twitter.is_retweet(tweet) and not twitter.is_quote(tweet):
+                    self.assertEqual(tweet['id_str'], twitter.id(tweet))
+
+    def test_id_v2_normal_tweet(self):
+        """
+        Test that getting the ID from a normal tweet returns the top-level ID.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if not twitter.is_retweet(tweet) and not twitter.is_quote(tweet):
+                    self.assertEqual(str(tweet['data']['id']), twitter.id(tweet))
+
+    def test_id_retweet(self):
+        """
+        Test that getting the ID from a retweet returns the top-level ID.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    self.assertEqual(tweet['id_str'], twitter.id(tweet))
+
+    def test_id_v2_retweet(self):
+        """
+        Test that getting the ID from a retweet returns the top-level ID.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    self.assertEqual(str(tweet['data']['id']), twitter.id(tweet))
+
+    def test_id_quote(self):
+        """
+        Test that getting the ID from a quoted tweet returns the top-level ID.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_quote(tweet):
+                    self.assertEqual(tweet['id_str'], twitter.id(tweet))
+
+    def test_id_v2_quote(self):
+        """
+        Test that getting the ID from a quoted tweet returns the top-level ID.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_quote(tweet):
+                    self.assertEqual(str(tweet['data']['id']), twitter.id(tweet))
+
+    def test_id_from_retweet(self):
+        """
+        Test that getting the ID from the retweet object returns the retweet's ID.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    self.assertEqual(twitter.original(tweet)['id_str'], twitter.id(twitter.original(tweet)))
+
+    def test_id_v2_from_retweet(self):
+        """
+        Test that getting the ID from the retweet object returns the retweet's ID.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_retweet(tweet):
+                    self.assertEqual(str(twitter.original(tweet)['id']), twitter.id(twitter.original(tweet)))
+
+    def test_id_from_quote(self):
+        """
+        Test that getting the ID from the quoted status object returns the quoted status' ID.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_quote(tweet):
+                    self.assertEqual(twitter.quoted(tweet)['id_str'], twitter.id(twitter.quoted(tweet)))
+
+    def test_id_v2_from_quote(self):
+        """
+        Test that getting the ID from the quoted status object returns the quoted status' ID.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                if twitter.is_quote(tweet) and not twitter.is_retweet(tweet):
+                    self.assertEqual(str(twitter.quoted(tweet)['id']), twitter.id(twitter.quoted(tweet)))
+
     def test_lang(self):
         """
         Test getting the language matches with the tweets' language.

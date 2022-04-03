@@ -18,7 +18,7 @@ The pattern used to search for media URLs in APIv2 tweets.
 
 def version(tweet):
     """
-    Get the version with which the tweet was collected.
+    Get the Twitter API version with which the tweet was collected.
 
     :param tweet: The tweet from which to extract the API version.
     :type tweet: dict
@@ -31,6 +31,22 @@ def version(tweet):
         return 1
 
     return 2
+
+def id(tweet):
+    """
+    Get the tweet's ID.
+
+    :param tweet: The tweet from which to extract the ID.
+    :type tweet: dict
+
+    :return: The tweet's ID as a string.
+    :rtype: str
+    """
+
+    if version(tweet) == 1:
+        return tweet['id_str']
+    else:
+        return str(tweet.get('data', tweet)['id'])
 
 def lang(tweet):
     """
