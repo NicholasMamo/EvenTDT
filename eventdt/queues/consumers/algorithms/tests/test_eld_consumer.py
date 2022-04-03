@@ -245,7 +245,21 @@ class TestELDConsumer(unittest.TestCase):
             tweets = [ json.loads(line) for line in lines ]
             count = len(tweets)
             tweets = consumer._filter_tweets(tweets)
-            self.assertTrue(all(tweet['lang'] == 'en' for tweet in tweets))
+            self.assertTrue(all(twitter.lang(tweet) == 'en' for tweet in tweets))
+            self.assertGreater(count, len(tweets))
+
+    def test_filter_tweets_v2_english(self):
+        """
+        Test that when filtering a list of tweets, only English tweets are returned.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertTrue(all(twitter.lang(tweet) == 'en' for tweet in tweets))
             self.assertGreater(count, len(tweets))
 
     def test_filter_tweets_hashtags(self):
@@ -259,7 +273,21 @@ class TestELDConsumer(unittest.TestCase):
             tweets = [ json.loads(line) for line in lines ]
             count = len(tweets)
             tweets = consumer._filter_tweets(tweets)
-            self.assertTrue(all(len(tweet['entities']['hashtags']) <= 2 for tweet in tweets))
+            self.assertTrue(all(len(twitter.hashtags(tweet)) <= 2 for tweet in tweets))
+            self.assertGreater(count, len(tweets))
+
+    def test_filter_tweets_v2_hashtags(self):
+        """
+        Test that when filtering tweets, all returned tweets have no more than 2 hashtags.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertTrue(all(len(twitter.hashtags(tweet)) <= 2 for tweet in tweets))
             self.assertGreater(count, len(tweets))
 
     def test_filter_tweets_no_favourites(self):
@@ -273,7 +301,7 @@ class TestELDConsumer(unittest.TestCase):
             tweets = [ json.loads(line) for line in lines ]
             count = len(tweets)
             tweets = consumer._filter_tweets(tweets)
-            self.assertTrue(all(tweet['user']['favourites_count'] > 0 for tweet in tweets))
+            self.assertTrue(all(twitter.user_favorites(tweet) > 0 for tweet in tweets))
             self.assertGreater(count, len(tweets))
 
     def test_filter_tweets_follower_ratio(self):
@@ -287,7 +315,21 @@ class TestELDConsumer(unittest.TestCase):
             tweets = [ json.loads(line) for line in lines ]
             count = len(tweets)
             tweets = consumer._filter_tweets(tweets)
-            self.assertTrue(all(tweet['user']['followers_count'] / tweet['user']['statuses_count'] >= 1./1000. for tweet in tweets))
+            self.assertTrue(all(twitter.user_followers(tweet) / twitter.user_statuses(tweet) >= 1./1000. for tweet in tweets))
+            self.assertGreater(count, len(tweets))
+
+    def test_filter_tweets_v2_follower_ratio(self):
+        """
+        Test that when filtering tweets, all users have at least one follower for every thousand tweets they've published.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertTrue(all(twitter.user_followers(tweet) / twitter.user_statuses(tweet) >= 1./1000. for tweet in tweets))
             self.assertGreater(count, len(tweets))
 
     def test_filter_tweets_urls(self):
@@ -301,8 +343,22 @@ class TestELDConsumer(unittest.TestCase):
             tweets = [ json.loads(line) for line in lines ]
             count = len(tweets)
             tweets = consumer._filter_tweets(tweets)
-            self.assertTrue(all( len(tweet['entities']['urls']) <= 1 or
-                                 len(tweet['entities']['urls']) <= 2 and twitter.is_quote(tweet)
+            self.assertTrue(all( len(twitter.urls(tweet)) <= 1 or twitter.is_quote(tweet)
+                                for tweet in tweets ))
+            self.assertGreater(count, len(tweets))
+
+    def test_filter_tweets_v2_urls(self):
+        """
+        Test that when filtering tweets, they can have no more than one URL unless they are quotes.
+        """
+
+        consumer = ELDConsumer(Queue())
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertTrue(all( len(twitter.urls(tweet)) <= 1 or twitter.is_quote(tweet)
                                 for tweet in tweets ))
             self.assertGreater(count, len(tweets))
 
@@ -316,8 +372,23 @@ class TestELDConsumer(unittest.TestCase):
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             filtered = consumer._filter_tweets(tweets)
-            self.assertTrue(all( len(tweet['entities']['urls']) <= 1 or
-                                 len(tweet['entities']['urls']) <= 2 and twitter.is_quote(tweet)
+            self.assertTrue(all( len(twitter.urls(tweet)) <= 1 or
+                                 len(twitter.urls(tweet)) <= 2 and twitter.is_quote(tweet)
+                                for tweet in filtered ))
+            self.assertGreater(len(tweets), len(filtered))
+
+    def test_filter_tweets_v2_urls_quoted(self):
+        """
+        Test that when filtering tweets, none of the retained ones have URLs in them.
+        """
+
+        consumer = ELDConsumer(Queue())
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            filtered = consumer._filter_tweets(tweets)
+            self.assertTrue(all( len(twitter.urls(tweet)) <= 1 or
+                                 len(twitter.urls(tweet)) <= 2 and twitter.is_quote(tweet)
                                 for tweet in filtered ))
             self.assertGreater(len(tweets), len(filtered))
 
@@ -328,6 +399,18 @@ class TestELDConsumer(unittest.TestCase):
 
         consumer = ELDConsumer(Queue())
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            filtered = consumer._filter_tweets(tweets)
+            self.assertTrue(any( twitter.is_quote(tweet) for tweet in filtered ))
+
+    def test_filter_tweets__v2_keeps_quotes(self):
+        """
+        Test that when filtering tweets, quotes are not automatically filtered.
+        """
+
+        consumer = ELDConsumer(Queue())
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             filtered = consumer._filter_tweets(tweets)
@@ -344,7 +427,21 @@ class TestELDConsumer(unittest.TestCase):
             tweets = [ json.loads(line) for line in lines ]
             count = len(tweets)
             tweets = consumer._filter_tweets(tweets)
-            self.assertTrue(all(tweet['user']['description'] for tweet in tweets))
+            self.assertTrue(all(twitter.user_description(tweet) for tweet in tweets))
+            self.assertGreater(count, len(tweets))
+
+    def test_filter_tweets_v2_bio(self):
+        """
+        Test that when filtering tweets, their authors must have a non-empty biography.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertTrue(all(twitter.user_description(tweet) for tweet in tweets))
             self.assertGreater(count, len(tweets))
 
     def test_filter_tweets_repeat(self):
@@ -354,6 +451,30 @@ class TestELDConsumer(unittest.TestCase):
 
         consumer = ELDConsumer(Queue(), 60)
         with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+
+            """
+            The first time, the number of tweets should decrease.
+            """
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertGreater(count, len(tweets))
+
+            """
+            The second time, the number of tweets should remain the same.
+            """
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertEqual(count, len(tweets))
+
+    def test_filter_tweets_v2_repeat(self):
+        """
+        Test that when filtering tweets twice, the second time has no effect.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
 
@@ -383,6 +504,18 @@ class TestELDConsumer(unittest.TestCase):
             filtered = consumer._filter_tweets(tweets)
             self.assertTrue(all(tweet in tweets for tweet in filtered))
 
+    def test_filter_tweets_v2_unchanged(self):
+        """
+        Test that when filtering tweets, the tweet data does not change.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            filtered = consumer._filter_tweets(tweets)
+            self.assertTrue(all(tweet in tweets for tweet in filtered))
+
     def test_filter_tweets_document(self):
         """
         Test that when filtering a list of documents, the function looks for the tweet in the attributes.
@@ -390,6 +523,22 @@ class TestELDConsumer(unittest.TestCase):
 
         consumer = ELDConsumer(Queue(), 60, scheme=TF())
         with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            documents = [ Document('', attributes={ 'tweet': tweet }) for tweet in tweets ]
+
+            tweets = consumer._filter_tweets(tweets)
+            documents = consumer._filter_tweets(documents)
+            self.assertEqual(len(tweets), len(documents))
+            self.assertTrue(all( document.attributes['tweet'] in tweets for document in documents ))
+
+    def test_filter_tweets_v2_document(self):
+        """
+        Test that when filtering a list of documents, the function looks for the tweet in the attributes.
+        """
+
+        consumer = ELDConsumer(Queue(), 60, scheme=TF())
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = [ Document('', attributes={ 'tweet': tweet }) for tweet in tweets ]
@@ -508,7 +657,7 @@ class TestELDConsumer(unittest.TestCase):
                 document = consumer._to_documents([ tweet ])[0]
                 if not document.dimensions:
                     continue
-                
+
                 self.assertEqual(1, round(vector_math.magnitude(document), 10))
 
     def test_to_documents_documents(self):

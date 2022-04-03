@@ -471,25 +471,25 @@ class ELDConsumer(Consumer):
         :rtype: str
         """
 
-        if not tweet['lang'] == 'en':
+        if not twitter.lang(tweet) == 'en':
             return False
 
-        if len(tweet['entities']['hashtags']) > 2:
+        if len(twitter.hashtags(tweet)) > 2:
             return False
 
-        if tweet['user']['favourites_count'] == 0:
+        if twitter.version(tweet) == 1 and twitter.user_favorites(tweet) == 0:
             return False
 
-        if tweet['user']['followers_count'] / tweet['user']['statuses_count'] < 1e-3:
+        if twitter.user_followers(tweet) / twitter.user_statuses(tweet) < 1e-3:
             return False
 
         # filter out URLs, but allow one URL in quoted tweets (referring to the quoted tweet)
-        urls = tweet['entities']['urls']
+        urls = twitter.urls(tweet)
         if (len(urls) > 1 and not twitter.is_quote(tweet) # non-quote tweets may only have one URL
             or len(urls) > 2 and twitter.is_quote(tweet)): # quote tweets may only have two URLs (the quoted tweet and another link)
             return False
 
-        if not tweet['user']['description']:
+        if not twitter.user_description(tweet):
             return False
 
         return True
