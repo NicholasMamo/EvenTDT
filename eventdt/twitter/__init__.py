@@ -404,25 +404,28 @@ def user_statuses(tweet, user_id=None):
     else:
         return author(tweet, user_id)['public_metrics']['tweet_count']
 
-def user_followers(tweet):
+def user_followers(tweet, user_id=None):
     """
     Get the number of followers of the author of the tweet.
 
     .. note::
 
-        If the tweet is a retweet, the function retrieves the number of followers of the retweeting author, not of the author of the original tweet.
+        By default, if the tweet is a retweet, the function retrieves the number of followers of the retweeting author, not of the author of the original tweet.
 
     :param tweet: The tweet to check.
     :type tweet: dict
+    :param user_id: The ID of the user whose followers to extract.
+                    Use this parameter to extract information about retweet or quote tweet authors from APIv2 tweets.
+    :type user_id: str
 
     :return: The number of followers of the author of the tweet.
     :rtype: int
     """
 
     if version(tweet) == 1:
-        return author(tweet)['followers_count']
+        return author(tweet, user_id)['followers_count']
     else:
-        return author(tweet)['public_metrics']['followers_count']
+        return author(tweet, user_id)['public_metrics']['followers_count']
 
 def user_description(tweet):
     """
