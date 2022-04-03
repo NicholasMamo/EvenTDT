@@ -381,25 +381,28 @@ def user_favorites(tweet, user_id=None):
     else:
         raise NotImplementedError("Favorites counts are not provided in APIv2 tweets.")
 
-def user_statuses(tweet):
+def user_statuses(tweet, user_id=None):
     """
     Get the number of tweets published by the author of the tweet.
 
     .. note::
 
-        If the tweet is a retweet, the function retrieves the number of tweets published by the retweeting author, not by the author of the original tweet.
+        By default, if the tweet is a retweet, the function retrieves the number of tweets published by the retweeting author, not by the author of the original tweet.
 
     :param tweet: The tweet to check.
     :type tweet: dict
+    :param user_id: The ID of the user whose statuses to extract.
+                    Use this parameter to extract information about retweet or quote tweet authors from APIv2 tweets.
+    :type user_id: str
 
     :return: The number of tweets published by the author of the tweet.
     :rtype: int
     """
 
     if version(tweet) == 1:
-        return author(tweet)['statuses_count']
+        return author(tweet, user_id)['statuses_count']
     else:
-        return author(tweet)['public_metrics']['tweet_count']
+        return author(tweet, user_id)['public_metrics']['tweet_count']
 
 def user_followers(tweet):
     """
