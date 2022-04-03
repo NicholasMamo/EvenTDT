@@ -335,6 +335,28 @@ class TestDocument(unittest.TestCase):
                 document = Document.from_dict(tweet)
                 self.assertEqual(twitter.hashtags(tweet), document.hashtags)
 
+    def test_from_dict_without_annotations(self):
+        """
+        Test that creating a document from an APIv1.1 tweet dictionary does not save the tweet's annotations as an attribute.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                document = Document.from_dict(tweet)
+                self.assertFalse(document.annotations)
+
+    def test_from_dict_v2_with_annotations(self):
+        """
+        Test that creating a document from an APIv2 tweet dictionary saves the tweet's annotations as an attribute.
+        """
+
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            for line in f:
+                tweet = json.loads(line)
+                document = Document.from_dict(tweet)
+                self.assertEqual(twitter.annotations(tweet), document.annotations)
+
     def test_from_dict_is_retweet(self):
         """
         Test that creating a document from a dictionary saves a boolean indicating whether the tweet is a retweet.
