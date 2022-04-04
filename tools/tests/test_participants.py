@@ -618,6 +618,27 @@ class TestAPD(unittest.TestCase):
         extrapolator = apd.create_extrapolator(WikipediaAttributeExtrapolator, extrapolator_fetch=100)
         self.assertEqual(100, extrapolator.fetch)
 
+    def test_create_extrapolator_wikipedia_attribute_extrapolator_head_only(self):
+        """
+        Test creating the `WikipediaAttributeExtrapolator` with a custom setting to keep only the head noun or named entity.
+        """
+
+        resolved = { 'Alaska': 'Alaska' }
+
+        extrapolator = apd.create_extrapolator(WikipediaAttributeExtrapolator, extrapolator_head_only=True)
+        profiles = extrapolator._build_profiles(list(resolved.values()))
+        self.assertEqual('Alaska', profiles['Alaska'].name)
+        self.assertEqual("Alaska ( (listen); Aleut: Alax̂sxax̂; Inupiaq: Alaasikaq; Alutiiq: Alas'kaaq; Yup'ik: Alaskaq; Tlingit: Anáaski) is a state located in the Western United States on the northwest extremity of North America.",
+                         profiles['Alaska'].text)
+        self.assertEqual({ 'is': { 'state' }, 'located_in': { 'western united states' }, 'located_on': { 'extremity' }, 'located_of': { 'north america' } }, profiles['Alaska'].attributes)
+
+        extrapolator = apd.create_extrapolator(WikipediaAttributeExtrapolator, extrapolator_head_only=False)
+        profiles = extrapolator._build_profiles(list(resolved.values()))
+        self.assertEqual('Alaska', profiles['Alaska'].name)
+        self.assertEqual("Alaska ( (listen); Aleut: Alax̂sxax̂; Inupiaq: Alaasikaq; Alutiiq: Alas'kaaq; Yup'ik: Alaskaq; Tlingit: Anáaski) is a state located in the Western United States on the northwest extremity of North America.",
+                         profiles['Alaska'].text)
+        self.assertEqual({ 'is': { 'state' }, 'located_in': { 'western united states' }, 'located_on': { 'northwest extremity' }, 'located_of': { 'north america' } }, profiles['Alaska'].attributes)
+
     def test_create_postprocessor_postprocessor(self):
         """
         Test that when creating the base `Postprocessor`, it is created correctly.

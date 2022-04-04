@@ -55,6 +55,7 @@ Accepted arguments:
     - ``--filter-threshold``              *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`); defaults to 0.
     - ``--resolver-threshold``            *<Optional>* The threshold to use when resolving candidates (used only with the `WikipediaNameResolver` and `WikipediaSearchResolver`).
     - ``--extrapolator-threshold``        *<Optional>* The threshold to use when extrapolating candidates (used only with the `WikipediaExtrapolator`); defaults to 0.
+    - ``--extrapolator-head-only``        *<Optional>* A boolean indicating whether to keep only the head nouns or named entities of attribute values (used only with the `WikipediaAttributeExtrapolator`).
     - ``--extrapolator-prune``            *<Optional>* The frequency at or below which an attribute is pruned when extrapolating candidates (used only with the `WikipediaAttributeExtrapolator`); defaults to 0.
     - ``--extrapolator-fetch``            *<Optional>* The number of candidates to fetch when extrapolating candidates (used only with the `WikipediaAttributeExtrapolator`); defaults to 200.
     - ``--scheme``                        *<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
@@ -117,6 +118,7 @@ def setup_args():
         - ``--filter-threshold``              *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`); defaults to 0.
         - ``--resolver-threshold``            *<Optional>* The threshold to use when resolving candidates (used only with the `WikipediaNameResolver` and `WikipediaSearchResolver`); defaults to 0.
         - ``--extrapolator-threshold``        *<Optional>* The threshold to use when extrapolating candidates (used only with the `WikipediaExtrapolator`); defaults to 0.
+        - ``--extrapolator-head-only``        *<Optional>* A boolean indicating whether to keep only the head nouns or named entities of attribute values (used only with the `WikipediaAttributeExtrapolator`).
         - ``--extrapolator-prune``            *<Optional>* The frequency at or below which an attribute is pruned when extrapolating candidates (used only with the `WikipediaAttributeExtrapolator`); defaults to 0.
         - ``--extrapolator-fetch``            *<Optional>* The number of candidates to fetch when extrapolating candidates (used only with the `WikipediaAttributeExtrapolator`); defaults to 200.
         - ``--scheme``                        *<Optional>* The TF-IDF scheme to use when creating documents (used only with the `ELDParticipantDetector` model).
@@ -154,6 +156,8 @@ def setup_args():
                         help='<Optional> The threshold to use when resolving candidates (used only with the `WikipediaNameResolver` and `WikipediaSearchResolver`); defaults to 0.')
     parser.add_argument('--extrapolator-threshold', required=False, default=0, type=float,
                         help='<Optional> The threshold to use when extrapolating candidates (used only with the `WikipediaExtrapolator`); defaults to 0.')
+    parser.add_argument('--extrapolator-head-only', required=False, action='store_true',
+                        help='<Optional> A boolean indicating whether to keep only the head nouns or named entities of attribute values (used only with the `WikipediaAttributeExtrapolator`).')
     parser.add_argument('--extrapolator-prune', required=False, default=0, type=int,
                         help='<Optional> The frequency at or below which an attribute is pruned when extrapolating candidates (used only with the `WikipediaAttributeExtrapolator`); defaults to 0.')
     parser.add_argument('--extrapolator-fetch', required=False, default=200, type=int,
