@@ -112,6 +112,27 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
 
         self.assertRaises(ValueError, WikipediaAttributeExtrapolator, fetch=0)
 
+    def test_init_head_only_save(self):
+        """
+        Test that the extrapolator saves the given setting to keep only the head of the attribute value.
+        """
+
+        resolved = { 'Alaska': 'Alaska' }
+
+        extrapolator = WikipediaAttributeExtrapolator(head_only=True)
+        profiles = extrapolator._build_profiles(list(resolved.values()))
+        self.assertEqual('Alaska', profiles['Alaska'].name)
+        self.assertEqual("Alaska ( (listen); Aleut: Alax̂sxax̂; Inupiaq: Alaasikaq; Alutiiq: Alas'kaaq; Yup'ik: Alaskaq; Tlingit: Anáaski) is a state located in the Western United States on the northwest extremity of North America.",
+                         profiles['Alaska'].text)
+        self.assertEqual({ 'is': { 'state' }, 'located_in': { 'western united states' }, 'located_on': { 'extremity' }, 'located_of': { 'north america' } }, profiles['Alaska'].attributes)
+
+        extrapolator = WikipediaAttributeExtrapolator(head_only=False)
+        profiles = extrapolator._build_profiles(list(resolved.values()))
+        self.assertEqual('Alaska', profiles['Alaska'].name)
+        self.assertEqual("Alaska ( (listen); Aleut: Alax̂sxax̂; Inupiaq: Alaasikaq; Alutiiq: Alas'kaaq; Yup'ik: Alaskaq; Tlingit: Anáaski) is a state located in the Western United States on the northwest extremity of North America.",
+                         profiles['Alaska'].text)
+        self.assertEqual({ 'is': { 'state' }, 'located_in': { 'western united states' }, 'located_on': { 'northwest extremity' }, 'located_of': { 'north america' } }, profiles['Alaska'].attributes)
+
     def test_extract_none(self):
         """
         Test that building a profile from an empty list of participants returns an empty dictionary.

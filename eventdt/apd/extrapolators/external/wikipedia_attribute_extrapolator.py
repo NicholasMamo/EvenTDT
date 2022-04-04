@@ -39,7 +39,7 @@ class WikipediaAttributeExtrapolator(Extrapolator):
     :vartype extractor: :class:`~attributes.extractors.linguistic.LinguisticExtractor`
     """
 
-    def __init__(self, prune=0, fetch=200, *args, **kwargs):
+    def __init__(self, prune=0, fetch=200, head_only=True, *args, **kwargs):
         """
         Create the :class:`~WikipediaAttributeExtrapolator`.
 
@@ -49,6 +49,8 @@ class WikipediaAttributeExtrapolator(Extrapolator):
         :type prune: int
         :param fetch: The maximum number of candidates to fetch.
         :type fetch: int
+        :param head_only: A boolean indicating whether to keep only the head nouns or named entities of attribute values.
+        :type head_only: bool
 
         :raises ValueError: If the prune value is not zero or a natural number.
         :raises ValueError: If the fetch value is not a natural number.
@@ -62,7 +64,7 @@ class WikipediaAttributeExtrapolator(Extrapolator):
 
         self.prune = prune
         self.fetch = fetch
-        self.extractor = LinguisticExtractor(head_only=True)
+        self.extractor = LinguisticExtractor(head_only=head_only)
 
     def extrapolate(self, participants, *args, **kwargs):
         """
