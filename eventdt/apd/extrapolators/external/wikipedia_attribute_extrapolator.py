@@ -85,7 +85,7 @@ class WikipediaAttributeExtrapolator(Extrapolator):
         :rtype: dict
         """
 
-        extrapolated = [ ]
+        extrapolated = { }
         participants = list(participants.values()) if type(participants) is dict else participants
 
         resolved = self._build_profiles(participants)
@@ -143,7 +143,7 @@ class WikipediaAttributeExtrapolator(Extrapolator):
         :type profiles: dict
 
         :return: Copies of the profiles with infrequent attributes removed.
-                 Each profile is returned as a dictionary, with the profile names as keys and their scores as values.
+                 Each profile is returned as a dictionary, with the profile names as keys and their profiles as values.
         :rtype: dict
 
         :raises ValueError: If the number of profiles is lower than the prune threshold, which would remove all attributes.
