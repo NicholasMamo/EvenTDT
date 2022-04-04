@@ -505,9 +505,13 @@ def expand_mentions(text, tweet):
     else:
         mentions = { }
         mentions.update({ f"@{ mention['username'] }": [ user['name'] for user in tweet['includes']['users']
-                                                                      if user['username'] == mention['username'] ][0]
+                                                                      if user['username'] == mention['username'] ]
                           for mention in tweet['data'].get('entities', { }).get('mentions', [ ]) })
-        # Mentions in referenced tweets are not expanded
+
+        # Fixes an error about the user being unavailable because Twitter has suspended them by the time the tweet is collected
+        mentions = { username: names[0] for username, names in mentions.items() if len(names) }
+
+        # Mentions in referenced tweets are not expanded because information about them is unavailable
         # mentions.update({ f"@{ mention['username'] }": [ user['name'] for user in tweet['includes']['users']
         #                                                               if user['username'] == mention['username'] ][0]
         #                   for included in tweet['includes'].get('tweets', [ ])
