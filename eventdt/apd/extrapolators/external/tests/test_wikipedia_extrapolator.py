@@ -86,50 +86,6 @@ class TestWikipediaExtrapolator(unittest.TestCase):
         extrapolator = WikipediaExtrapolator(TF(), Tokenizer(), path)
         self.assertEqual(('C', 'X'), extrapolator._most_central_edge(graph))
 
-    def test_year_check(self):
-        """
-        Test that when checking for a year, the function returns a boolean.
-        """
-
-        path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
-        article = 'Youssouf Koné (footballer, born 1995)'
-        extrapolator = WikipediaExtrapolator(TF(), Tokenizer(), path)
-        self.assertTrue(extrapolator._has_year(article))
-
-    def test_year_check_range(self):
-        """
-        Test that when checking for a year in a range, the function returns `True`.
-        """
-
-        path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
-        article = '2019–20 Premier League'
-        extrapolator = WikipediaExtrapolator(TF(), Tokenizer(), path)
-        self.assertTrue(extrapolator._has_year(article))
-
-        article = '2019-20 Premier League'
-        extrapolator = WikipediaExtrapolator(TF(), Tokenizer(), path)
-        self.assertTrue(extrapolator._has_year(article))
-
-    def test_year_check_short_number(self):
-        """
-        Test that when checking for a year with a short number, the function does not detect a year.
-        """
-
-        path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
-        article = 'Area 51'
-        extrapolator = WikipediaExtrapolator(TF(), Tokenizer(), path)
-        self.assertFalse(extrapolator._has_year(article))
-
-    def test_year_check_long_number(self):
-        """
-        Test that when checking for a year with a long number, the function does not detect a year.
-        """
-
-        path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
-        article = '1234567890'
-        extrapolator = WikipediaExtrapolator(TF(), Tokenizer(), path)
-        self.assertFalse(extrapolator._has_year(article))
-
     def test_remove_brackets(self):
         """
         Test that when removing brackets, they are completely removed.

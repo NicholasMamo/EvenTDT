@@ -73,3 +73,35 @@ class TestPackage(unittest.TestCase):
 
         sentence = "Lionel Andrés Messi (Spanish pronunciation: [ljoˈnel anˈdɾes ˈmesi] (audio speaker iconlisten); born 24 June 1987), also known as Leo Messi, is an Argentine professional footballer who plays as a forward for Ligue 1 club Paris Saint-Germain and captains the Argentina national team."
         self.assertEqual("Lionel Andrés Messi, also known as Leo Messi, is an Argentine professional footballer who plays as a forward for Ligue 1 club Paris Saint-Germain and captains the Argentina national team.", nlp.remove_parentheses(sentence))
+
+    def test_has_year(self):
+        """
+        Test that when checking for a year, the function returns a boolean.
+        """
+
+        text = 'Youssouf Koné (footballer, born 1995)'
+        self.assertEqual(bool, type(nlp.has_year(text)))
+
+    def test_has_year_range(self):
+        """
+        Test that when checking for a year in a range, the function returns `True`.
+        """
+
+        text = '2019–20 Premier League'
+        self.assertTrue(nlp.has_year(text))
+
+    def test_has_year_short_number(self):
+        """
+        Test that when checking for a year with a short number, the function does not detect a year.
+        """
+
+        text = 'Area 51'
+        self.assertFalse(nlp.has_year(text))
+
+    def test_has_year_long_number(self):
+        """
+        Test that when checking for a year with a long number, the function does not detect a year.
+        """
+
+        text = '1234567890'
+        self.assertFalse(nlp.has_year(text))

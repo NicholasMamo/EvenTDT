@@ -51,3 +51,17 @@ def remove_parentheses(text):
     clean = pattern.sub('\g<1>', clean)
 
     return clean
+
+def has_year(text):
+    """
+    Check whether the given text has a year in it.
+
+    :param text: The text of the article.
+    :type text: str
+
+    :return: A boolean indicating whether the text includes a year in it.
+    :rtype: bool
+    """
+
+    year_pattern = re.compile("\\b[0-9]{4}\\b")
+    return len(year_pattern.findall(text)) > 0

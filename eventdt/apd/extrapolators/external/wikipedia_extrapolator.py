@@ -45,6 +45,7 @@ import nltk
 from nltk.corpus import stopwords, words
 
 from ..extrapolator import Extrapolator
+import nlp
 from nlp.document import Document
 from nlp.tokenizer import Tokenizer
 import twitter
@@ -149,7 +150,7 @@ class WikipediaExtrapolator(Extrapolator):
         """
         first_level = links.collect(participants, introduction_only=False, separate=True)
         link_frequency = self._link_frequency(first_level)
-        link_frequency = { link: frequency for link, frequency in link_frequency.items() if not self._has_year(self._remove_brackets(link)) }
+        link_frequency = { link: frequency for link, frequency in link_frequency.items() if not nlp.has_year(self._remove_brackets(link)) }
         link_frequency = { link: frequency for link, frequency in link_frequency.items() if not link.startswith('List of') }
         link_frequency = sorted(link_frequency.keys(), key=lambda link: link_frequency.get(link), reverse=True)
         frequent_links = link_frequency[:self.first_level_links]
@@ -167,7 +168,7 @@ class WikipediaExtrapolator(Extrapolator):
         """
         second_level = links.collect(frequent_links, introduction_only=False, separate=True)
         link_frequency = self._link_frequency(second_level)
-        link_frequency = { link: frequency for link, frequency in link_frequency.items() if not self._has_year(self._remove_brackets(link)) }
+        link_frequency = { link: frequency for link, frequency in link_frequency.items() if not nlp.has_year(self._remove_brackets(link)) }
         link_frequency = { link: frequency for link, frequency in link_frequency.items() if not link.startswith('List of') }
         if link_frequency:
             cutoff = sorted(link_frequency.values(), reverse=True)[self.second_level_links - 1] if len(link_frequency) >= self.second_level_links else max(link_frequency.values())
@@ -197,7 +198,7 @@ class WikipediaExtrapolator(Extrapolator):
         extrapolated = [ node for partition in partitions for node in partition ]
         extrapolated = [ participant for participant in extrapolated if participant not in participants ]
         extrapolated = [ participant for participant in extrapolated if participant.strip().lower() not in words.words() ]
-        extrapolated = [ participant for participant in extrapolated if not self._has_year(participant) ]
+        extrapolated = [ participant for participant in extrapolated if not nlp.has_year(participant) ]
 
         """
         Calculate a score for each candidate participant, retaining those having a score that exceeds the threshold.
@@ -211,20 +212,6 @@ class WikipediaExtrapolator(Extrapolator):
         extrapolated = { participant: score for participant, score in extrapolated.items() if score >= self.threshold }
         extrapolated = dict(sorted(extrapolated.items(), key=lambda participant: participant[1], reverse=True))
         return extrapolated
-
-    def _has_year(self, title):
-        """
-        Check whether the given title has a year in it.
-
-        :param title: The title of the article.
-        :type title: str
-
-        :return: A boolean indicating whether the title includes a year in it.
-        :rtype: bool
-        """
-
-        year_pattern = re.compile("\\b[0-9]{4}\\b")
-        return len(year_pattern.findall(title)) > 0
 
     def _remove_brackets(self, text):
         """
