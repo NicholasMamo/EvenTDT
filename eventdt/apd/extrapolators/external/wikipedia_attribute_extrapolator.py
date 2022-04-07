@@ -92,7 +92,7 @@ class WikipediaAttributeExtrapolator(Extrapolator):
 
         resolved = self._build_profiles(participants)
         resolved = self._prune(resolved)
-        candidates = self._generate_candidates(list(resolved))
+        candidates = self._generate_candidates(list(participants))
         candidates = self._trim(candidates, resolved)
         scores = self._score_and_rank(candidates, resolved)
         extrapolated = { candidate: score for candidate, score in scores.items()
@@ -199,6 +199,41 @@ class WikipediaAttributeExtrapolator(Extrapolator):
                  for attribute in freq }
         return freq
 
+    def _remove_duplicates(self, profiles, policy=any, reverse=False):
+        """
+        Remove duplicate participant profiles by checking whether a profile shares its attribute values with any other.
+
+        The function is used to diversify the seed set and avoid overfitting.
+
+        :param profiles: The profiles to de-duplicate.
+                         The dictionary should have the profile names (the article titles) as keys, and the profiles as values.
+        :type profiles: dict
+        :param policy: The policy with which to de-duplicate profiles.
+                       If the policy is `all`, the function considers two profiles to be duplicates if they share all attributes and all attribute values.
+                       If the policy is `any`, the function considers two profiles to be duplicates if they share all attributes and at least one value in each attribute.
+        :type policy: function
+        :param reverse: A boolean indicating whether to remove the profiles.
+                        If set to ``True``, the tail of the participants are more likely to be retained, and vice-versa.
+                        Thus, setting the parameter to ``True`` can help reduce the bias.
+        :type reverse: bool
+
+        :return: A new dictionary of profiles with no duplicates.
+                 The dictionary has the profile names (the article titles) as keys, and the profiles as values.
+        :rtype: dict
+        """
+
+        deduplicated = { }
+
+        profiles = { name: profile.copy() for name, profile in profiles.items() }
+
+        for name, profile in list(profiles.items())[::(-1 if reverse else 1)]:
+            is_duplicate = any([ set(profile.matching(other, policy=policy)) == set(self._all_attributes({ profile.name: profile, other.name: other }))
+                                 for other in deduplicated.values() ])
+            if not is_duplicate:
+                deduplicated[name] = profile
+
+        return { name: profile for name, profile in list(deduplicated.items())[::-1] } if reverse else deduplicated
+
     def _generate_candidates(self, participants):
         """
         Generate a list of candidates from the resolved participants.
@@ -255,7 +290,7 @@ class WikipediaAttributeExtrapolator(Extrapolator):
 
         :param profiles: The profiles to trim.
                          The dictionary should have the profile names (the article titles) as keys, and the profiles as values.
-        :type profiles: list of :class:`~attributes.profile.Profile`
+        :type profiles: dict
         :param reference: The reference profiles against which to trim the profiles.
                           The dictionary should have the profile names (the article titles) as keys, and the profiles as values.
         :type reference: dict

@@ -658,6 +658,196 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         self.assertEqual(1, freq['is_of'])
         self.assertEqual(1, freq['is_in'])
 
+    def test_remove_duplicates_none(self):
+        """
+        Test that removing duplicates from an empty dictionary of profiles returns another empty dictionary.
+        """
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertEqual({ }, extrapolator._remove_duplicates({ }))
+
+    def test_remove_duplicates_returns_dict(self):
+        """
+        Test that removing duplicates returns a dictionary.
+        """
+
+        profiles = { 'Mason Holgate': Profile(attributes={ 'is': { 'footballer' }, 'plays_as': { 'centre-back' }, 'plays_for': { 'everton' } },
+                                              name='Mason Holgate', text='Mason Anthony Holgate (born 22 October 1996) is an English professional footballer who plays as a centre-back for Premier League club Everton.'),
+                     'Jarrad Branthwaite': Profile(attributes={ 'is': { 'footballer' }, 'plays_as': { 'centre-back', 'left-back' }, 'plays_for': { 'everton' } },
+                                                   name='Jarrad Branthwaite', text='Jarrad Paul Branthwaite (born 27 June 2002) is an English footballer who plays as a centre-back and left-back for Premier League club Everton.'), }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertEqual(dict, type(extrapolator._remove_duplicates(profiles)))
+
+    def test_remove_duplicates_title_key(self):
+        """
+        Test that removing duplicates returns the profile names as keys.
+        """
+
+        profiles = { 'Mason Holgate': Profile(attributes={ 'is': { 'footballer' }, 'plays_as': { 'centre-back' }, 'plays_for': { 'everton' } },
+                                              name='Mason Holgate', text='Mason Anthony Holgate (born 22 October 1996) is an English professional footballer who plays as a centre-back for Premier League club Everton.'),
+                     'Jarrad Branthwaite': Profile(attributes={ 'is': { 'footballer' }, 'plays_as': { 'centre-back', 'left-back' }, 'plays_for': { 'everton' } },
+                                                   name='Jarrad Branthwaite', text='Jarrad Paul Branthwaite (born 27 June 2002) is an English footballer who plays as a centre-back and left-back for Premier League club Everton.'), }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        deduplicated = extrapolator._remove_duplicates(profiles)
+        self.assertTrue(all( str == type(key) for key in deduplicated.keys() ))
+
+    def test_remove_duplicates_profile_value(self):
+        """
+        Test that removing duplicates returns the profiles as values.
+        """
+
+        profiles = { 'Mason Holgate': Profile(attributes={ 'is': { 'footballer' }, 'plays_as': { 'centre-back' }, 'plays_for': { 'everton' } },
+                                              name='Mason Holgate', text='Mason Anthony Holgate (born 22 October 1996) is an English professional footballer who plays as a centre-back for Premier League club Everton.'),
+                     'Jarrad Branthwaite': Profile(attributes={ 'is': { 'footballer' }, 'plays_as': { 'centre-back', 'left-back' }, 'plays_for': { 'everton' } },
+                                                   name='Jarrad Branthwaite', text='Jarrad Paul Branthwaite (born 27 June 2002) is an English footballer who plays as a centre-back and left-back for Premier League club Everton.'), }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        deduplicated = extrapolator._remove_duplicates(profiles)
+        self.assertTrue(all( Profile == type(value) for value in deduplicated.values() ))
+
+    def test_remove_duplicates_original_unchanged(self):
+        """
+        Test that removing duplicates does not change the original profiles.
+        """
+
+        profiles = { 'Mason Holgate': Profile(attributes={ 'is': { 'footballer' }, 'plays_as': { 'centre-back' }, 'plays_for': { 'everton' } },
+                                              name='Mason Holgate', text='Mason Anthony Holgate (born 22 October 1996) is an English professional footballer who plays as a centre-back for Premier League club Everton.'),
+                     'Jarrad Branthwaite': Profile(attributes={ 'is': { 'footballer' }, 'plays_as': { 'centre-back', 'left-back' }, 'plays_for': { 'everton' } },
+                                                   name='Jarrad Branthwaite', text='Jarrad Paul Branthwaite (born 27 June 2002) is an English footballer who plays as a centre-back and left-back for Premier League club Everton.'), }
+
+        original = { name: profile.copy() for name, profile in profiles.items() }
+        extrapolator = WikipediaAttributeExtrapolator()
+        extrapolator._remove_duplicates(profiles)
+        self.assertTrue(all( _original.attributes == _profile.attributes for _original, _profile in zip(original.values(), profiles.values()) ))
+
+    def test_remove_duplicates_deduplicated_unchanged(self):
+        """
+        Test that the deduplicated profiles have their attributes unchanged.
+        """
+
+        profiles = { 'Mason Holgate': Profile(attributes={ 'is': { 'footballer' }, 'plays_as': { 'centre-back' }, 'plays_for': { 'everton' } },
+                                              name='Mason Holgate', text='Mason Anthony Holgate (born 22 October 1996) is an English professional footballer who plays as a centre-back for Premier League club Everton.'),
+                     'Jarrad Branthwaite': Profile(attributes={ 'is': { 'footballer' }, 'plays_as': { 'centre-back', 'left-back' }, 'plays_for': { 'everton' } },
+                                                   name='Jarrad Branthwaite', text='Jarrad Paul Branthwaite (born 27 June 2002) is an English footballer who plays as a centre-back and left-back for Premier League club Everton.'), }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        deduplicated = extrapolator._remove_duplicates(profiles)
+        self.assertTrue(all( _deduplicated.attributes == profiles[name].attributes for name, _deduplicated in deduplicated.items() ))
+
+    def test_remove_duplicates_order(self):
+        """
+        Test that removing duplicates retains the same order as in the original profiles.
+        """
+
+        profiles = { 'Mason Holgate': Profile(attributes={ 'is': { 'footballer' }, 'plays_as': { 'centre-back' }, 'plays_for': { 'everton' } },
+                                              name='Mason Holgate', text='Mason Anthony Holgate (born 22 October 1996) is an English professional footballer who plays as a centre-back for Premier League club Everton.'),
+                     'Jarrad Branthwaite': Profile(attributes={ 'is': { 'footballer' }, 'plays_as': { 'centre-back', 'left-back' }, 'plays_for': { 'everton' } },
+                                                   name='Jarrad Branthwaite', text='Jarrad Paul Branthwaite (born 27 June 2002) is an English footballer who plays as a centre-back and left-back for Premier League club Everton.'),
+                     'Michael Keane': Profile(attributes={ 'is': { 'footballer' }, 'plays_as': { 'right-back' }, 'plays_for': { 'everton' } },
+                                              name='Michael Keane', text='Michael Keane is an English footballer who plays as a right-back for Premier League club Everton.') }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        deduplicated = extrapolator._remove_duplicates(profiles)
+        deduplicated = list(deduplicated)
+        self.assertTrue(all( list(profiles).index(deduplicated[i]) < list(profiles).index(deduplicated[i + 1]) for i in range(len(deduplicated) - 1) ))
+
+    def test_remove_duplicates_policy_all(self):
+        """
+        Test that removing duplicates with the policy `all` only removes profiles if they have exactly the same values.
+        """
+
+        profiles = { 'Mason Holgate': Profile(attributes={ 'is': { 'footballer' }, 'plays_as': { 'centre-back' }, 'plays_for': { 'everton' } },
+                                              name='Mason Holgate', text='Mason Anthony Holgate (born 22 October 1996) is an English professional footballer who plays as a centre-back for Premier League club Everton.'),
+                     'Jarrad Branthwaite': Profile(attributes={ 'is': { 'footballer' }, 'plays_as': { 'centre-back', 'left-back' }, 'plays_for': { 'everton' } },
+                                                   name='Jarrad Branthwaite', text='Jarrad Paul Branthwaite (born 27 June 2002) is an English footballer who plays as a centre-back and left-back for Premier League club Everton.'),
+                     'Michael Keane': Profile(attributes={ 'is': { 'footballer' }, 'plays_as': { 'right-back' }, 'plays_for': { 'everton' } },
+                                              name='Michael Keane', text='Michael Keane is an English footballer who plays as a right-back for Premier League club Everton.') }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        deduplicated = extrapolator._remove_duplicates(profiles, policy=all)
+        self.assertEqual({ 'Mason Holgate', 'Jarrad Branthwaite', 'Michael Keane' }, set(deduplicated))
+
+    def test_remove_duplicates_policy_any(self):
+        """
+        Test that removing duplicates with the policy `any` only removes profiles if they have at least one matching value for each attribute.
+        """
+
+        profiles = { 'Mason Holgate': Profile(attributes={ 'is': { 'footballer' }, 'plays_as': { 'centre-back' }, 'plays_for': { 'everton' } },
+                                              name='Mason Holgate', text='Mason Anthony Holgate (born 22 October 1996) is an English professional footballer who plays as a centre-back for Premier League club Everton.'),
+                     'Jarrad Branthwaite': Profile(attributes={ 'is': { 'footballer' }, 'plays_as': { 'centre-back', 'left-back' }, 'plays_for': { 'everton' } },
+                                                   name='Jarrad Branthwaite', text='Jarrad Paul Branthwaite (born 27 June 2002) is an English footballer who plays as a centre-back and left-back for Premier League club Everton.'),
+                     'Michael Keane': Profile(attributes={ 'is': { 'footballer' }, 'plays_as': { 'right-back' }, 'plays_for': { 'everton' } },
+                                              name='Michael Keane', text='Michael Keane is an English footballer who plays as a right-back for Premier League club Everton.') }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        deduplicated = extrapolator._remove_duplicates(profiles, policy=any)
+        self.assertEqual({ 'Mason Holgate', 'Michael Keane' }, set(deduplicated))
+
+    def test_remove_duplicates_policy_any_subsumes_all(self):
+        """
+        Test that removing duplicates with the policy `all` returns fewer profiles than with the policy `any`.
+        """
+
+        profiles = { 'Mason Holgate': Profile(attributes={ 'is': { 'footballer' }, 'plays_as': { 'centre-back' }, 'plays_for': { 'everton' } },
+                                              name='Mason Holgate', text='Mason Anthony Holgate (born 22 October 1996) is an English professional footballer who plays as a centre-back for Premier League club Everton.'),
+                     'Jarrad Branthwaite': Profile(attributes={ 'is': { 'footballer' }, 'plays_as': { 'centre-back', 'left-back' }, 'plays_for': { 'everton' } },
+                                                   name='Jarrad Branthwaite', text='Jarrad Paul Branthwaite (born 27 June 2002) is an English footballer who plays as a centre-back and left-back for Premier League club Everton.'),
+                     'Michael Keane': Profile(attributes={ 'is': { 'footballer' }, 'plays_as': { 'right-back' }, 'plays_for': { 'everton' } },
+                                              name='Michael Keane', text='Michael Keane is an English footballer who plays as a right-back for Premier League club Everton.') }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        deduplicated_any = extrapolator._remove_duplicates(profiles, policy=any)
+        deduplicated_all = extrapolator._remove_duplicates(profiles, policy=all)
+        self.assertTrue(all( name in deduplicated_all for name in deduplicated_any ))
+
+    def test_remove_duplicates_missing_attribute(self):
+        """
+        Test that when removing duplicates, if two profiles have different attributes, both are retained.
+        """
+
+        profiles = { 'Mason Holgate': Profile(attributes={ 'is': { 'footballer' }, 'plays_as': { 'centre-back' }, },
+                                              name='Mason Holgate', text='Mason Anthony Holgate (born 22 October 1996) is an English professional footballer who plays as a centre-back for Premier League club Everton.'),
+                     'Jarrad Branthwaite': Profile(attributes={ 'is': { 'footballer' }, 'plays_as': { 'centre-back' }, 'plays_for': { 'everton' } },
+                                                   name='Jarrad Branthwaite', text='Jarrad Paul Branthwaite (born 27 June 2002) is an English footballer who plays as a centre-back and left-back for Premier League club Everton.') }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        deduplicated = extrapolator._remove_duplicates(profiles, policy=any)
+        self.assertEqual(set(profiles), set(deduplicated))
+
+    def test_remove_duplicates_reverse(self):
+        """
+        Test that removing duplicates in reverse starts checking for duplicates from the back.
+        """
+
+        profiles = { 'Mason Holgate': Profile(attributes={ 'is': { 'footballer' }, 'plays_as': { 'centre-back' }, 'plays_for': { 'everton' } },
+                                              name='Mason Holgate', text='Mason Anthony Holgate (born 22 October 1996) is an English professional footballer who plays as a centre-back for Premier League club Everton.'),
+                     'Jarrad Branthwaite': Profile(attributes={ 'is': { 'footballer' }, 'plays_as': { 'centre-back', 'left-back' }, 'plays_for': { 'everton' } },
+                                                   name='Jarrad Branthwaite', text='Jarrad Paul Branthwaite (born 27 June 2002) is an English footballer who plays as a centre-back and left-back for Premier League club Everton.'),
+                     'Michael Keane': Profile(attributes={ 'is': { 'footballer' }, 'plays_as': { 'right-back' }, 'plays_for': { 'everton' } },
+                                              name='Michael Keane', text='Michael Keane is an English footballer who plays as a right-back for Premier League club Everton.') }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        deduplicated = extrapolator._remove_duplicates(profiles, reverse=True)
+        self.assertEqual({ 'Jarrad Branthwaite', 'Michael Keane' }, set(deduplicated.keys()))
+
+    def test_remove_duplicates_reverse_returns_same_order(self):
+        """
+        Test that removing duplicates in reverse still returns profiles in the original order.
+        """
+
+        profiles = { 'Mason Holgate': Profile(attributes={ 'is': { 'footballer' }, 'plays_as': { 'centre-back' }, 'plays_for': { 'everton' } },
+                                              name='Mason Holgate', text='Mason Anthony Holgate (born 22 October 1996) is an English professional footballer who plays as a centre-back for Premier League club Everton.'),
+                     'Jarrad Branthwaite': Profile(attributes={ 'is': { 'footballer' }, 'plays_as': { 'centre-back', 'left-back' }, 'plays_for': { 'everton' } },
+                                                   name='Jarrad Branthwaite', text='Jarrad Paul Branthwaite (born 27 June 2002) is an English footballer who plays as a centre-back and left-back for Premier League club Everton.'),
+                     'Michael Keane': Profile(attributes={ 'is': { 'footballer' }, 'plays_as': { 'right-back' }, 'plays_for': { 'everton' } },
+                                              name='Michael Keane', text='Michael Keane is an English footballer who plays as a right-back for Premier League club Everton.') }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        deduplicated = extrapolator._remove_duplicates(profiles, reverse=True)
+        self.assertEqual([ 'Jarrad Branthwaite', 'Michael Keane' ], list(deduplicated.keys()))
+
     def test_generate_candidates_none(self):
         """
         Test that when generating candidates from an empty list of participants, the function returns an empty dictionary.
@@ -1152,7 +1342,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
 
         candidates = { 'Alaska': Profile(attributes={ 'is': { 'state' }, 'located_in': { 'western united states' }, 'located_on': { 'northwest extremity' }, 'located_of': { 'north america' } },
                                          name='Alaska', text='Alaska is a state located in the Western United States on the northwest extremity of North America.'),
-                       'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
+                       'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states' } },
                                          name='Nevada', text='Nevada is a state in the West of the United States of America') }
         reference = { 'Wyoming': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states' } },
                                          name='Wyoming', text='Wyoming is a state in the Mountain West subregion of the United States') }
