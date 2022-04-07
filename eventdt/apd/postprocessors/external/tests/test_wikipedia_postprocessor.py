@@ -161,33 +161,6 @@ class TestWikipediaPostprocessor(unittest.TestCase):
         participants = [ 'Ronaldo (Brazilian footballer)', 'Moussa Dembélé (French footballer)' ]
         self.assertEqual({ 'Ronaldo (Brazilian footballer)': 'Ronaldo', 'Moussa Dembélé (French footballer)': 'Dembele' }, postprocessor.postprocess(participants))
 
-    def test_remove_brackets(self):
-        """
-        Test that participants with brackets lose them when the parameter is set.
-        """
-
-        postprocessor = WikipediaPostprocessor(remove_brackets=True)
-        participants = [ 'Apple (Company)' ]
-        self.assertEqual({ 'Apple (Company)': 'Apple' }, postprocessor.postprocess(participants))
-
-    def test_no_remove_brackets(self):
-        """
-        Test that participants with brackets retain them when the parameter is not set.
-        """
-
-        postprocessor = WikipediaPostprocessor(remove_brackets=False)
-        participants = [ 'Apple (Company)' ]
-        self.assertEqual({ 'Apple (Company)': 'Apple (Company)' }, postprocessor.postprocess(participants))
-
-    def test_remove_brackets_no_brackets(self):
-        """
-        Test that participants without brackets are returned as given.
-        """
-
-        postprocessor = WikipediaPostprocessor(remove_brackets=True)
-        participants = [ 'Apple Inc.' ]
-        self.assertEqual({ 'Apple Inc.': 'Apple Inc.' }, postprocessor.postprocess(participants))
-
     def test_remove_french_accents(self):
         """
         Test that French accents are removed from French participant names.

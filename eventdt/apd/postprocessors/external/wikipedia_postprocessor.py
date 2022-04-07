@@ -23,6 +23,7 @@ path = os.path.join(os.path.dirname(__file__), '..', '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
+import nlp
 from nlp.document import Document
 from nlp.tokenizer import Tokenizer
 
@@ -111,7 +112,7 @@ class WikipediaPostprocessor(Postprocessor):
         """
         Remove the brackets if need be.
         """
-        postprocessed = [ self._remove_brackets(participant) for participant in postprocessed ] if self.remove_brackets else postprocessed
+        postprocessed = [ nlp.remove_parentheses(participant) for participant in postprocessed ] if self.remove_brackets else postprocessed
 
         """
         Remove the accents if need be.
@@ -134,27 +135,13 @@ class WikipediaPostprocessor(Postprocessor):
         :rtype: str
         """
 
-        name = self._remove_brackets(participant)
+        name = nlp.remove_parentheses(participant)
         surname = ' '.join(name.split()[1:])
         if (surname and surname not in words.words() and
             surname.lower() not in words.words()):
             return surname.strip()
 
         return name.strip()
-
-    def _remove_brackets(self, participant):
-        """
-        Remove the accents from the given participant.
-
-        :param participant: The participant whose brackets will be removed.
-        :type participant: str
-
-        :return: The participant without any brackets.
-        :rtype: str
-        """
-
-        bracket_pattern = re.compile("\(.*?\)")
-        return bracket_pattern.sub(' ', participant).strip()
 
     def _remove_accents(self, participant):
         """
