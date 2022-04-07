@@ -108,6 +108,8 @@ ml_tests() {
 }
 
 nlp_tests() {
+	python3 -m unittest eventdt.nlp.tests.test_package
+
 	echo -e "${HIGHLIGHT}Term-weighting schemes${DEFAULT}"
 	python3 -m unittest eventdt.nlp.weighting.local_schemes.tests.test_boolean
 	python3 -m unittest eventdt.nlp.weighting.local_schemes.tests.test_tf
