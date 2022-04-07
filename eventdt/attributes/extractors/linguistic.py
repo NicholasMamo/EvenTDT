@@ -22,6 +22,7 @@ from nltk.tree import ParentedTree
 
 from attributes import Profile
 from attributes.extractors import Extractor
+import nlp
 
 class LinguisticExtractor(Extractor):
     """
@@ -172,7 +173,7 @@ class LinguisticExtractor(Extractor):
 
         profile = Profile(text=text, *args, **kwargs)
 
-        text = self._remove_parentheses(text) if remove_parentheses else text
+        text = nlp.remove_parentheses(text) if remove_parentheses else text
         text = self._remove_references(text)
 
         sentences = nltk.sent_tokenize(text)
@@ -193,46 +194,6 @@ class LinguisticExtractor(Extractor):
                         profile.attributes[name].add(self._attribute_value(attribute))
 
         return profile
-
-    def _remove_parentheses(self, text):
-        """
-        Remove parentheses from the given text.
-
-        .. note::
-
-            The function does not use a regular expression since parentheses can be—and often are—nested.
-            The complexity remains :math:`O(n)`, where :math:`n` is the number of characters in the text
-
-        :param text: The text to clean.
-        :type text: str
-
-        :return: The cleaned text.
-        :rtype: str
-        """
-
-        clean = ""
-
-        parenthesis = "" # the current parenthesis container
-        depth = 0 # the parenthesis depth (for nested parentheses)
-        for char in text:
-            if char == '(':
-                depth += 1
-
-            if not depth:
-                clean += char
-
-            if char == ')':
-                depth -= 1
-
-        # collapse multiple spaces into one
-        pattern = re.compile('\s+')
-        clean = pattern.sub(' ', clean)
-
-        # remove spaces before punctuation
-        pattern = re.compile('\s([.,\/!\^\*;:}_~)])')
-        clean = pattern.sub('\g<1>', clean)
-
-        return clean
 
     def _remove_references(self, text):
         """
