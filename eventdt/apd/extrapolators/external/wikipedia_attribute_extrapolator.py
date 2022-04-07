@@ -92,6 +92,7 @@ class WikipediaAttributeExtrapolator(Extrapolator):
 
         resolved = self._build_profiles(participants)
         resolved = self._prune(resolved)
+        resolved = self._remove_duplicates(resolved, policy=any, reverse=True)
         candidates = self._generate_candidates(list(participants))
         candidates = self._trim(candidates, resolved)
         scores = self._score_and_rank(candidates, resolved)
