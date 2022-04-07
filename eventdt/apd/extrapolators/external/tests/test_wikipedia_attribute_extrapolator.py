@@ -1275,11 +1275,12 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
                      name='Hawaii', text='Hawaii is a state in the Western United States')
 
         extrapolator = WikipediaAttributeExtrapolator()
-        self.assertEqual(2/3, extrapolator._jaccard(p1, p2))
+        # similarities: is: 1; is_in: 0.5; is_of: 0; average: 0.5
+        self.assertEqual(1/2, extrapolator._jaccard(p1, p2))
 
     def test_jaccard_calculation_all_attributes(self):
         """
-        Test that the Jaccard similarity calculation uses all attributes, including those that are not common.
+        Test that the Jaccard similarity calculation uses all attribute values, including those that are not common.
         """
 
         p1 = Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
@@ -1289,3 +1290,93 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
 
         extrapolator = WikipediaAttributeExtrapolator()
         self.assertEqual(1/3, extrapolator._jaccard(p1, p2))
+
+    def test_jaccard_attr_return_float(self):
+        """
+        Test that the Jaccard similarity returns a floating point or integer value.
+        """
+
+        a1, a2 = { 'player', 'rapper' }, { 'player' }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertEqual(float, type(extrapolator._jaccard_attr(a1, a2)))
+
+    def test_jaccard_attr_empty_attributes(self):
+        """
+        Test that calculating the Jaccard similarity of two empty attribute value sets returns a score of zero.
+        """
+
+        a1, a2 = set({ }), set({ })
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertEqual(0, extrapolator._jaccard_attr(a1, a2))
+
+    def test_jaccard_attr_empty_profile(self):
+        """
+        Test that the Jaccard similarity between one empty and one non-empty attribute value set returns a score of zero.
+        """
+
+        a1, a2 = { }, { }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertEqual(0, extrapolator._jaccard_attr(a1, a2))
+
+    def test_jaccard_attr_symmetric(self):
+        """
+        Test that the Jaccard similarity is symmetric.
+        """
+
+        a1, a2 = { 'player', 'rapper' }, { }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertEqual(0, extrapolator._jaccard_attr(a1, a2))
+
+    def test_jaccard_attr_lower_bound(self):
+        """
+        Test that the lower-bound of the Jaccard similarity is zero.
+        """
+
+        a1, a2 = { 'player', 'rapper' }, { 'manager' }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertEqual(0, extrapolator._jaccard_attr(a1, a2))
+
+    def test_jaccard_attr_upper_bound(self):
+        """
+        Test that the upper-bound of the Jaccard similarity is one.
+        """
+
+        a1, a2 = { 'player', 'manager' }, { 'player', 'manager' }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertEqual(1, extrapolator._jaccard_attr(a1, a2))
+
+    def test_jaccard_attr_same_attributes(self):
+        """
+        Test that the Jaccard similarity of an attribute value set with itself is one.
+        """
+
+        a1 = { 'player', 'manager' }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertEqual(1, extrapolator._jaccard_attr(a1, a1))
+
+    def test_jaccard_attr_calculation(self):
+        """
+        Test that the Jaccard similarity calculation is correct.
+        """
+
+        a1, a2 = { 'player', 'manager', 'coach' }, { 'player' }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertEqual(1/3, extrapolator._jaccard_attr(a1, a2))
+
+    def test_jaccard_attr_calculation_all_values(self):
+        """
+        Test that the Jaccard similarity calculation uses all values, including those that are not common.
+        """
+
+        a1, a2 = { 'player', 'rapper' }, { 'player' }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertEqual(1/2, extrapolator._jaccard_attr(a1, a2))

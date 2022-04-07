@@ -308,7 +308,7 @@ class WikipediaAttributeExtrapolator(Extrapolator):
         Calculate the Jaccard similarity between the two profiles.
 
         Jaccard similarity is symmetric and bound between 0 and 1.
-        An attribute in the first profile matches an attribute in the second profile if at least one of the values is common to both profiles.
+        In case one or both profiles have more than one value for an attribute, the function calculates Jaccard similarity between their values.
 
         :param p1: The first profile to calculate similarity for.
         :type p1: :class:`~attributes.profile.Profile`
@@ -319,10 +319,37 @@ class WikipediaAttributeExtrapolator(Extrapolator):
         :rtype: float
         """
 
+        """
+        .. note::
+
+            After trimming, both profiles, the participant and the candidate, will have only the acceptable, pruned attributes.
+            Therefore we can assume that all attributes are valid, and the participant and the candidate must agree on all of them.
+            That is why, at the end, the function divides by the number of all attributes.
+        """
+
         # if neither profile has attributes, the Jaccard similarity is taken to be zero
         attr = self._all_attributes({ 'p1': p1, 'p2': p2 })
         if not attr:
             return 0
 
-        matching = p1.matching(p2, policy=any)
-        return len(matching)/len(attr)
+        # if an attribute does not appear in both profiles, the Jaccard similarity will be 0 anyway, so we skip the attribute if it does not appear in both
+        scores = [ self._jaccard_attr(p1.attributes[_attr], p2.attributes[_attr]) for _attr in p1.common(p2) ]
+        return sum(scores)/len(attr)
+
+    def _jaccard_attr(self, a1, a2):
+        """
+        Calculate the Jaccard similarity of two attribute value sets.
+
+        :param a1: The first attribute value set with which to calculate similarity.
+        :type a1: set of str
+        :param a2: The second attribute value set with which to calculate similarity.
+        :type a2: set of str
+
+        :return: The Jaccard similarity between the two attribute value sets.
+        :rtype: float
+        """
+
+        if not a1 or not a2:
+            return 0
+
+        return len(a1.intersection(a2))/len(a1.union(a2))
