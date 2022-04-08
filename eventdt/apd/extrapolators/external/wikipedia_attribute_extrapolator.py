@@ -20,6 +20,7 @@ if path not in sys.path:
 from ..extrapolator import Extrapolator
 from attributes import Profile
 from attributes.extractors import LinguisticExtractor
+import nlp
 from wikinterface import info, links, text
 
 class WikipediaAttributeExtrapolator(Extrapolator):
@@ -254,7 +255,8 @@ class WikipediaAttributeExtrapolator(Extrapolator):
 
         # keep the links separate and then flatten them to retain duplicate links
         related = links.collect(participants, separate=True, introduction_only=False)
-        related = [ link for links in related.values() for link in links ]
+        related = [ link for _links in related.values() for link in set(_links) ]
+        related = [ link for link in related if not nlp.has_year(nlp.remove_parentheses(link)) ]
 
         # fetch the link types and retain only normal pages
         types = info.types(list(related))

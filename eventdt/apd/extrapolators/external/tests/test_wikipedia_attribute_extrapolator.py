@@ -14,6 +14,7 @@ if path not in sys.path:
 
 from apd.extrapolators.external.wikipedia_attribute_extrapolator import WikipediaAttributeExtrapolator
 from attributes import Profile
+import nlp
 import wikinterface
 
 class TestWikipediaAttributeExtrapolator(unittest.TestCase):
@@ -930,6 +931,28 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         extrapolator = WikipediaAttributeExtrapolator(fetch=25)
         candidates = extrapolator._generate_candidates(list(resolved.values()))
         self.assertEqual(extrapolator.fetch, len(candidates))
+
+    def test_generate_candidates_no_years(self):
+        """
+        Test that when generating candidates, none have a year in the title.
+        """
+
+        resolved = [ 'Massimiliano Allegri', 'Álvaro Morata' ]
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        candidates = extrapolator._generate_candidates(resolved)
+        self.assertTrue(not any( nlp.has_year(nlp.remove_parentheses(candidate)) for candidate in candidates ))
+
+    def test_generate_candidates_disambiguation_years(self):
+        """
+        Test that when generating candidates, years in disambiguations can exist.
+        """
+
+        resolved = [ 'Massimiliano Allegri', 'Álvaro Morata' ]
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        candidates = extrapolator._generate_candidates(resolved)
+        self.assertTrue(any( nlp.has_year(candidate) and not nlp.has_year(nlp.remove_parentheses(candidate)) for candidate in candidates ))
 
     def test_rank_links_none(self):
         """
