@@ -61,11 +61,12 @@ class LinguisticExtractor(Extractor):
             When configured to extract the head only, adjectives are not considered part of the entity.
             The rule, then, becomes ``ENT: <CD>? <NNP.*> (<CD|NNP.*|PRP>)*``.
 
-        **Modifier** (``MOD: <CD>?<JJ.*|RB.*>+; <MOD> (<CC|,|TO>? <MOD>)+; <ENT|NP> <MOD|POS>``)
+        **Modifier** (``MOD: <CD><IN><DT>; <CD>?<JJ.*|RB.*>+; <MOD> (<CC|,|TO>? <MOD>)+; <ENT|NP> <MOD|POS>``)
 
         A modifier is a list of adjectives (*Brazilian/JJ professional/JJ*) or adverbs (*[known] simply/RB [as]*) that modify something else.
         Each modifier may start with a number (*19/CD member/NN states/NNS*), but it may not appear among adjectives or adverbs.
         A modifier may also be a single number.
+        The first rule (``<CD><IN><DT>``) captures the phrase "one of the".
 
         There may be more than one such modifier, all separated by coordinating conjunctions or commas.
 
@@ -136,6 +137,7 @@ class LinguisticExtractor(Extractor):
             grammar += "DATE: { <NNP> <,> <DATE> }\n"
             grammar += "ENT: { <CD>? <NNP.*> (<CD|NNP.*|PRP>)* }\n"
             grammar += "" if head_only else "ENT: { <JJ>+ <ENT> }\n"
+            grammar += "MOD: { <CD><IN><DT> }\n"
             grammar += "MOD: { <CD>?<JJ.*|RB.*>+ }\n"
             grammar += "MOD: { <MOD> (<CC|,|TO>? <MOD>)+ }\n"
             grammar += "MOD: { <ENT|NP> <MOD|POS> }\n"

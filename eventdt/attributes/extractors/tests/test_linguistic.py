@@ -81,11 +81,11 @@ class TestLinguisticExtractor(unittest.TestCase):
         clean = extractor._remove_references(sentence)
         self.assertEqual(sentence.replace('[a]', ''), clean)
 
-        self.assertEqual({ 'was': { 'soviet partisan', 'statesman', 'one' }, 'was_of': { 'leaders', 'belarusian resistance' },
+        self.assertEqual({ 'was': { 'soviet partisan', 'statesman', 'one of the leaders' }, 'was_of': { 'belarusian resistance' },
                            'was_during': { 'world war ii' }, 'governed': { 'byelorussian soviet socialist republic'}, 'governed_as': { 'first secretary' },
                            'governed_of': { 'communist party', 'byelorussia' }, 'governed_from': { '1965' }, 'governed_until': { 'death' }, 'governed_in': { '1980' } },
                          LinguisticExtractor(head_only=False).extract(sentence).attributes)
-        self.assertEqual({ 'was': { 'partisan', 'statesman', 'one' }, 'was_of': { 'leaders', 'resistance' },
+        self.assertEqual({ 'was': { 'partisan', 'statesman', 'leaders' }, 'was_of': { 'resistance' },
                            'was_during': { 'world war ii' }, 'governed': { 'socialist republic'}, 'governed_as': { 'first secretary' },
                            'governed_of': { 'communist party', 'byelorussia' }, 'governed_from': { '1965' }, 'governed_until': { 'death' }, 'governed_in': { '1980' } },
                          LinguisticExtractor(head_only=True).extract(sentence).attributes)
@@ -444,6 +444,23 @@ class TestLinguisticExtractor(unittest.TestCase):
         self.assertEqual({ 'is': { 'daily newspaper' } },
                          LinguisticExtractor(head_only=False).extract(sentence).attributes)
         self.assertEqual({ 'is': { 'broadsheet daily newspaper' } },
+                         LinguisticExtractor(head_only=True).extract(sentence).attributes)
+
+    def test_extract_MOD_one_of(self):
+        """
+        Test that the phrase "one of the" is considered a modifier.
+        """
+
+        sentence = "Quebec ( kə-BEK, sometimes  kwə-BEK; French: Québec [kebɛk] (listen)) is one of the thirteen provinces and territories of Canada."
+        self.assertEqual({ 'is': { 'one of the thirteen provinces', 'territories' }, 'is_of': { 'canada' } },
+                         LinguisticExtractor(head_only=False).extract(sentence).attributes)
+        self.assertEqual({ 'is': { 'provinces', 'territories' }, 'is_of': { 'canada' } },
+                         LinguisticExtractor(head_only=True).extract(sentence).attributes)
+
+        sentence = "The small forward (SF), also known as the three, is one of the five positions in a regulation basketball game."
+        self.assertEqual({ 'known_as': { 'three' }, 'is': { 'positions' }, 'is_in': { 'regulation basketball game' } },
+                         LinguisticExtractor(head_only=False).extract(sentence).attributes)
+        self.assertEqual({ 'known_as': { 'three' }, 'is': { 'positions' }, 'is_in': { 'regulation basketball game' } },
                          LinguisticExtractor(head_only=True).extract(sentence).attributes)
 
     def test_extract_ENT_ends_number(self):
@@ -956,17 +973,6 @@ class TestLinguisticExtractor(unittest.TestCase):
         """
 
         extractor = LinguisticExtractor()
-
-        """
-        To add support, add the rule MOD: { <CD><IN> }.
-        However, this would break phrases '... from 1965 until his death in ...', as '1965 until' would be considered a MOD.
-        Alternatively, look for 'one of' using a function.
-        """
-        sentence = "Quebec ( kə-BEK, sometimes  kwə-BEK; French: Québec [kebɛk] (listen)) is one of the thirteen provinces and territories of Canada."
-        # self.assertEqual({ 'is': { 'thirteen provinces', 'territories' }, 'is_of': { 'canada' } },
-        #                  LinguisticExtractor(head_only=False).extract(sentence, verbose=True).attributes)
-        # self.assertEqual({ 'is': { 'provinces', 'territories' }, 'is_of': { 'canada' } },
-        #                  LinguisticExtractor(head_only=True).extract(sentence).attributes)
 
         """
         To add support, remove gerunds (VBG) from noun phrases.
