@@ -424,6 +424,28 @@ class TestLinguisticExtractor(unittest.TestCase):
         self.assertEqual({ 'called': { 'area' }, 'is': { 'union' }, 'is_of': { 'member states', 'european union' }, 'adopted': { 'euro' }, 'adopted_as': { 'currency', 'tender' } },
                          LinguisticExtractor(head_only=True).extract(sentence).attributes)
 
+    def test_extract_MOD_with_IN(self):
+        """
+        Test that a modifier may include a preposition if it combines two modifiers.
+        """
+
+        sentence = "The People's Party of Canada (French: Parti populaire du Canada, PPC) is a right-wing to far-right  federal political party in Canada."
+        self.assertEqual({ 'is': { 'right-wing to far-right federal political party' }, 'is_in': { 'canada' } },
+                         LinguisticExtractor(head_only=False).extract(sentence).attributes)
+        self.assertEqual({ 'is': { 'party' }, 'is_in': { 'canada' } },
+                         LinguisticExtractor(head_only=True).extract(sentence).attributes)
+
+    def test_extract_MOD_several(self):
+        """
+        Test that a modifier may have more than two components.
+        """
+
+        sentence = "The National Post is a Canadian, English-language, conservative broadsheet daily newspaper."
+        self.assertEqual({ 'is': { 'daily newspaper' } },
+                         LinguisticExtractor(head_only=False).extract(sentence).attributes)
+        self.assertEqual({ 'is': { 'broadsheet daily newspaper' } },
+                         LinguisticExtractor(head_only=True).extract(sentence).attributes)
+
     def test_extract_ENT_ends_number(self):
         """
         Test extracting an attribute value when it is an entity that ends with a number.
@@ -927,11 +949,6 @@ class TestLinguisticExtractor(unittest.TestCase):
                            'was_before': { '08:00' }, 'was_on': { 'sunday , december 7 , 1941' } },
                          LinguisticExtractor(head_only=True).extract(sentence).attributes)
 
-    def test_extract_misc(self):
-        """
-        Test extracting attributes from real example strings.
-        """
-
     def test_unsupported(self):
         """
         A graveyard of sentences that are not parsed completely and correctly.
@@ -939,6 +956,17 @@ class TestLinguisticExtractor(unittest.TestCase):
         """
 
         extractor = LinguisticExtractor()
+
+        """
+        To add support, add the rule MOD: { <CD><IN> }.
+        However, this would break phrases '... from 1965 until his death in ...', as '1965 until' would be considered a MOD.
+        Alternatively, look for 'one of' using a function.
+        """
+        sentence = "Quebec ( kə-BEK, sometimes  kwə-BEK; French: Québec [kebɛk] (listen)) is one of the thirteen provinces and territories of Canada."
+        # self.assertEqual({ 'is': { 'thirteen provinces', 'territories' }, 'is_of': { 'canada' } },
+        #                  LinguisticExtractor(head_only=False).extract(sentence, verbose=True).attributes)
+        # self.assertEqual({ 'is': { 'provinces', 'territories' }, 'is_of': { 'canada' } },
+        #                  LinguisticExtractor(head_only=True).extract(sentence).attributes)
 
         """
         To add support, remove gerunds (VBG) from noun phrases.
