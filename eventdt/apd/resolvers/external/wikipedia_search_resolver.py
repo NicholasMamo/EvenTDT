@@ -113,7 +113,7 @@ class WikipediaSearchResolver(Resolver):
             They are only removed temporarily to check if the non-bracket part has a year in it.
             In this way, the information about pages and their text can be collected.
             """
-            pages = search.collect(candidate, limit=5)
+            pages = search.collect(candidate, limit=10)
             pages = [ page for page in pages if not self._has_year(self._remove_brackets(page)) ]
 
             """
