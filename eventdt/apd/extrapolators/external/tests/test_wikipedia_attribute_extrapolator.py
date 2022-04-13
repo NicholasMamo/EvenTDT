@@ -242,6 +242,19 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         extrapolated = extrapolator.extrapolate(resolved)
         self.assertTrue('Hades (video game)' in extrapolated)
 
+    def test_extrapolate_one_resolved(self):
+        """
+        Test that extrapolating with just one resolved participant returns participants.
+        """
+
+        resolved = { 'Pyre': 'Pyre (video game)' }
+
+        extrapolator = WikipediaAttributeExtrapolator(fetch=100)
+        extrapolated = extrapolator.extrapolate(resolved)
+        self.assertTrue(extrapolated)
+        self.assertGreater(len(extrapolated), 0)
+        self.assertTrue(all( score > 0 for score in extrapolated.values() ))
+
     def test_build_profiles_none(self):
         """
         Test that building a profile for no candidates returns a dictionary.
@@ -1453,6 +1466,79 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         extrapolator = WikipediaAttributeExtrapolator()
         scores = extrapolator._score_and_rank(candidates, reference)
         self.assertEqual(1, max(scores.values()))
+
+    def test_score_and_rank_with_links_lower_bound(self):
+        """
+        Test that when scoring and ranking candidates with links, the lower bound of scores is zero.
+        """
+
+        candidates = { 'Alaska': Profile(attributes={ 'is': { 'state' }, 'located_in': { 'western united states' }, 'located_on': { 'northwest extremity' }, 'located_of': { 'north america' } },
+                                         name='Alaska', text='Alaska is a state located in the Western United States on the northwest extremity of North America.'),
+                       'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states', 'america' } },
+                                         name='Nevada', text='Nevada is a state in the West of the United States of America'),
+                       'Pep (store)': Profile(attributes={ 'is': { 'multinational retail company' }, 'based_in': { 'cape town', 'south africa' } },
+                                              name='Pep (store)', text='Pep is a multinational retail company based in Cape Town, South Africa.') }
+        reference = { 'Wisconsin': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'upper midwestern united states' } },
+                                           name='Wisconsin', text='Wisconsin is a state in the upper Midwestern United States.'),
+                      'Wyoming': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'mountain west subregion' }, 'is_of': { 'united states' } },
+                                         name='Wyoming', text='Wyoming is a state in the Mountain West subregion of the United States') }
+
+        links = [ 'Alaska', 'Alaska', 'Nevada' ]
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        scores = extrapolator._score_and_rank(candidates, reference)
+        self.assertEqual(0, min(scores.values()))
+
+    def test_score_and_rank_with_links_upper_bound(self):
+        """
+        Test that when scoring and ranking candidates with links, the upper bound of scores is one.
+        """
+
+        candidates = { 'Alaska': Profile(attributes={ 'is': { 'state' }, 'located_in': { 'western united states' }, 'located_on': { 'northwest extremity' }, 'located_of': { 'north america' } },
+                                         name='Alaska', text='Alaska is a state located in the Western United States on the northwest extremity of North America.'),
+                       'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states' } },
+                                         name='Nevada', text='Nevada is a state in the West of the United States of America') }
+        reference = { 'Wyoming': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states' } },
+                                         name='Wyoming', text='Wyoming is a state in the Mountain West subregion of the United States') }
+
+        links = [ 'Nevada', 'Alaska', 'Nevada' ]
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        scores = extrapolator._score_and_rank(candidates, reference, links)
+        self.assertEqual(1, max(scores.values()))
+
+    def test_score_and_rank_candidate_without_links(self):
+        """
+        Test that when scoring and ranking a candidate with no incoming links, they get a score of zero.
+        """
+
+        candidates = { 'Alaska': Profile(attributes={ 'is': { 'state' }, 'located_in': { 'western united states' }, 'located_on': { 'northwest extremity' }, 'located_of': { 'north america' } },
+                                         name='Alaska', text='Alaska is a state located in the Western United States on the northwest extremity of North America.'),
+                       'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states' } },
+                                         name='Nevada', text='Nevada is a state in the West of the United States of America') }
+        reference = { 'Wyoming': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states' } },
+                                         name='Wyoming', text='Wyoming is a state in the Mountain West subregion of the United States') }
+
+        links = [ 'Nevada', 'Nevada' ]
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        scores = extrapolator._score_and_rank(candidates, reference, links)
+        self.assertEqual(0, scores['Alaska'])
+
+    def test_score_and_rank_empty_links(self):
+        """
+        Test that when scoring and ranking candidates with an empty set of links, the scores are the same as if there are no links.
+        """
+
+        candidates = { 'Alaska': Profile(attributes={ 'is': { 'state' }, 'located_in': { 'western united states' }, 'located_on': { 'northwest extremity' }, 'located_of': { 'north america' } },
+                                         name='Alaska', text='Alaska is a state located in the Western United States on the northwest extremity of North America.'),
+                       'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states' } },
+                                         name='Nevada', text='Nevada is a state in the West of the United States of America') }
+        reference = { 'Wyoming': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'west' }, 'is_of': { 'united states' } },
+                                         name='Wyoming', text='Wyoming is a state in the Mountain West subregion of the United States') }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertEqual(extrapolator._score_and_rank(candidates, reference), extrapolator._score_and_rank(candidates, reference, [ ]))
 
     def test_jaccard_return_float(self):
         """

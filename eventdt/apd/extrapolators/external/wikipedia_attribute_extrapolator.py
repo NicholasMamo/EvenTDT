@@ -9,6 +9,7 @@ The extrapolator revolves closely around the :class:`~attributes.extractors.ling
     Both the :class:`~apd.resolvers.external.wikipedia_name_resolver.WikipediaNameResolver` and the :class:`~apd.resolvers.external.wikipedia_search_resolver.WikipediaSearchResolver` return participants as Wikipedia concepts.
 """
 
+import math
 import nltk
 import os
 import sys
@@ -97,7 +98,7 @@ class WikipediaAttributeExtrapolator(Extrapolator):
         candidates = self._rank_links(outgoing)[:self.fetch]
         candidates = self._build_profiles(candidates)
         candidates = self._trim(candidates, resolved)
-        scores = self._score_and_rank(candidates, resolved)
+        scores = self._score_and_rank(candidates, resolved, outgoing)
         extrapolated = { candidate: score for candidate, score in scores.items()
                                           if score > 0 }
         extrapolated = { candidate: score for candidate, score in extrapolated.items()
@@ -331,7 +332,7 @@ class WikipediaAttributeExtrapolator(Extrapolator):
 
         return profiles
 
-    def _score_and_rank(self, candidates, reference):
+    def _score_and_rank(self, candidates, reference, links=None):
         """
         Score the given profiles by comparing them with the reference profiles.
 
@@ -344,15 +345,25 @@ class WikipediaAttributeExtrapolator(Extrapolator):
         :param reference: The reference profiles against which to calculate the score of the candidates.
                           The dictionary should have the profile names (the article titles) as keys, and the profiles as values.
         :type reference: dict
+        :param links: The list of outgoing links from the resolved participants, generated using the :func:`~apd.extrapolators.external.wikipedia_attribute_extrapolator.WikipediaAttributeExtrapolator._collect_links`.
+                      If given, the candidates' scores are weighted by the number of incoming links from resolved participants.
+        :type links: list of str
 
         :return: The scores for each candidate profile as a dictionary, with the profile names as keys and their scores as values.
         :rtype: dict
         """
 
         scores = { candidate: 0 for candidate in candidates }
+
+        # if reference profiles are provided, compare each candidate profile with them
         if reference:
             scores = { candidate: sum( self._jaccard(profile, other) for other in reference.values() ) / len(reference)
                        for candidate, profile in candidates.items() }
+
+        # if a list of links are given, weight the scores by the candidate's popularity
+        freq = { link: links.count(link) for link in links } if links else None
+        if freq and max(freq.values()) > 1:
+            scores = { candidate: score * math.log(freq.get(candidate, 1))/math.log(max(freq.values())) for candidate, score in scores.items() }
 
         ranked = sorted(scores, key=scores.get, reverse=True)
         scores = { candidate: scores[candidate] for candidate in ranked }
