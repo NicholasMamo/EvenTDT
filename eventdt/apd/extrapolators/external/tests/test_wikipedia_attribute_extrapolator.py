@@ -659,6 +659,97 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         self.assertEqual(1, freq['is_of'])
         self.assertEqual(1, freq['is_in'])
 
+    def test_is_irregular_return_bool(self):
+        """
+        Test that checking whether an attribute always has unique values returns a boolean.
+        """
+
+        profiles = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_of': { 'united states', 'america' } },
+                                       name='Nevada', text='Nevada is a state of the United States of America'),
+                     'Alaska': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
+                                       name='Hawaii', text='Hawaii is a state in the Western United States') }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertEqual(bool, type(extrapolator._is_irregular(profiles, 'is')))
+
+    def test_is_irregular_empty(self):
+        """
+        Test that checking whether an attribute always has unique values returns ``True`` when given an empty set of profiles.
+        """
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertTrue(extrapolator._is_irregular({ }, 'is'))
+
+    def test_is_irregular_nonexistent_attribute(self):
+        """
+        Test that checking whether an attribute always has unique values returns ``True`` when given an an attribute that doesn't exist.
+        """
+
+        profiles = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_of': { 'united states', 'america' } },
+                                       name='Nevada', text='Nevada is a state of the United States of America'),
+                     'Alaska': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
+                                       name='Alaska', text='Alaska is a state in the Western United States') }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertTrue(extrapolator._is_irregular(profiles, 'is_at'))
+
+    def test_is_irregular_appears_once(self):
+        """
+        Test that checking whether an attribute that appears once has unique values returns ``True``.
+        """
+
+        profiles = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_of': { 'united states', 'america' } },
+                                       name='Nevada', text='Nevada is a state of the United States of America'),
+                     'Alaska': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
+                                       name='Alaska', text='Alaska is a state in the Western United States') }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertTrue(extrapolator._is_irregular(profiles, 'is_of'))
+
+    def test_is_irregular_some_repetition_if_false(self):
+        """
+        Test that if an attribute has repeated values, checking if the values are unique returns ``False``.
+        """
+
+        profiles = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_of': { 'united states', 'america' } },
+                                       name='Nevada', text='Nevada is a state of the United States of America'),
+                     'Alaska': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
+                                       name='Alaska', text='Alaska is a state in the Western United States') }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertFalse(extrapolator._is_irregular(profiles, 'is'))
+
+    def test_is_irregular_no_repetition_if_true(self):
+        """
+        Test that if an attribute has no repeated values, checking if the values are unique returns ``True``.
+        """
+
+        profiles = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_of': { 'united states', 'america' } },
+                                       name='Nevada', text='Nevada is a state of the United States of America'),
+                     'Alaska': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
+                                       name='Alaska', text='Alaska is a state in the Western United States'),
+                     'Hawaii': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
+                                       name='Hawaii', text='Hawaii is a state in the Western United States') }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertTrue(extrapolator._is_irregular(profiles, 'is_of'))
+        self.assertFalse(extrapolator._is_irregular(profiles, 'is_in'))
+
+    def test_is_irregular_profiles_with_attribute(self):
+        """
+        Test that checking whether an attribute has repeated values only looks in profiles that have the value.
+        """
+
+        profiles = { 'Nevada': Profile(attributes={ 'is': { 'state' }, 'is_of': { 'united states', 'america' } },
+                                       name='Nevada', text='Nevada is a state of the United States of America'),
+                     'Alaska': Profile(attributes={ 'is': { 'state' } },
+                                       name='Alaska', text='Alaska is a state in the Western United States'),
+                     'Hawaii': Profile(attributes={ 'is': { 'state' }, 'is_in': { 'western united states' } },
+                                       name='Hawaii', text='Hawaii is a state in the Western United States') }
+
+        extrapolator = WikipediaAttributeExtrapolator()
+        self.assertTrue(extrapolator._is_irregular(profiles, 'is_in'))
+
     def test_remove_duplicates_none(self):
         """
         Test that removing duplicates from an empty dictionary of profiles returns another empty dictionary.

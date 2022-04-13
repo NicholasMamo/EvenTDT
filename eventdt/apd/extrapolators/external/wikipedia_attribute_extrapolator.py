@@ -200,6 +200,25 @@ class WikipediaAttributeExtrapolator(Extrapolator):
                  for attribute in freq }
         return freq
 
+    def _is_irregular(self, profiles, attr):
+        """
+        Test whether the given attribute has a different value in each profile.
+
+        :param profiles: The profiles from where to look for attribute values.
+                         The dictionary should have the profile names (the article titles) as keys, and the profiles as values.
+        :type profiles: dict
+        :param attr: The attribute to lookf or.
+        :type attr: str
+        """
+
+        # only retain profiles that have the attribute
+        profiles = [ profile for profile in profiles.values() if profile.attributes.get(attr) ]
+
+        # use frozen sets since they can be hashed
+        values = [ frozenset(profile.attributes.get(attr)) for profile in profiles ]
+
+        return len(set(values)) == len(values)
+
     def _remove_duplicates(self, profiles, policy=any, reverse=False):
         """
         Remove duplicate participant profiles by checking whether a profile shares its attribute values with any other.
