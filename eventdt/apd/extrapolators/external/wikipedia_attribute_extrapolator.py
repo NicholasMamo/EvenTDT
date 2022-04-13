@@ -159,13 +159,13 @@ class WikipediaAttributeExtrapolator(Extrapolator):
 
         # calculate attribute frequency and remove infrequent attributes
         freq = self._attribute_frequency(profiles)
-        freq = { attr for attr, _freq in freq.items()
-                      if _freq > self.prune }
+        attrs = { attr for attr, _freq in freq.items()
+                       if _freq > self.prune }
 
         # update the profile attributes
         for profile in profiles.values():
             profile.attributes = { attr: value for attr, value in profile.attributes.items()
-                                               if attr in freq }
+                                               if attr in attrs }
 
         return profiles
 
