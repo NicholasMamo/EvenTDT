@@ -940,49 +940,38 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         deduplicated = extrapolator._remove_duplicates(profiles, reverse=True)
         self.assertEqual([ 'Jarrad Branthwaite', 'Michael Keane' ], list(deduplicated.keys()))
 
-    def test_generate_candidates_none(self):
+    def test_collect_links_none(self):
         """
         Test that when generating candidates from an empty list of participants, the function returns an empty dictionary.
         """
 
         extrapolator = WikipediaAttributeExtrapolator()
-        candidates = extrapolator._generate_candidates([ ])
-        self.assertEqual({ }, candidates)
+        candidates = extrapolator._collect_links([ ])
+        self.assertEqual([ ], candidates)
 
-    def test_generate_candidates_returns_dict(self):
+    def test_collect_links_returns_list(self):
         """
-        Test that when generating candidates, the function returns an empty dictionary.
+        Test that when generating candidates, the function returns a list.
         """
 
         resolved = { 'Katie Shanahan': 'Katie Shanahan' }
 
         extrapolator = WikipediaAttributeExtrapolator()
-        candidates = extrapolator._generate_candidates(list(resolved.values()))
-        self.assertEqual(dict, type(candidates))
+        candidates = extrapolator._collect_links(list(resolved.values()))
+        self.assertEqual(list, type(candidates))
 
-    def test_generate_candidates_title_key(self):
+    def test_collect_links_str(self):
         """
-        Test that when generating candidates, the page titles are the keys.
+        Test that when generating candidates, the list of links are all strings.
         """
 
         resolved = { 'Matanuska-Susitna Valley': 'Matanuska-Susitna Valley' }
 
         extrapolator = WikipediaAttributeExtrapolator()
-        candidates = extrapolator._generate_candidates(list(resolved.values()))
-        self.assertTrue(all( str == type(key) for key in candidates.keys() ))
+        candidates = extrapolator._collect_links(list(resolved.values()))
+        self.assertTrue(all( str == type(link) for link in candidates ))
 
-    def test_generate_candidates_profile_value(self):
-        """
-        Test that when generating candidates, the profiles are the values.
-        """
-
-        resolved = { 'Suneh': 'Suneh' }
-
-        extrapolator = WikipediaAttributeExtrapolator()
-        candidates = extrapolator._generate_candidates(list(resolved.values()))
-        self.assertTrue(all( Profile == type(value) for value in candidates.values() ))
-
-    def test_generate_candidates_all_links(self):
+    def test_collect_links_all_links(self):
         """
         Test that when generating candidates, the function collects links from parts that are not in the introduction.
         """
@@ -990,7 +979,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         resolved = { 'Odozana floccosa': 'Odozana floccosa' }
 
         extrapolator = WikipediaAttributeExtrapolator()
-        candidates = extrapolator._generate_candidates(list(resolved.values()))
+        candidates = extrapolator._collect_links(list(resolved.values()))
 
         # introduction links
         self.assertTrue(all( link in candidates for link in { 'Moth', 'Arctiinae (moth)', 'Francis Walker (entomologist)', 'Panama', 'Tefé' } ))
@@ -998,7 +987,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         # infobox links
         self.assertTrue(all( link in candidates for link in { 'Animalia', 'Arthropoda', 'Insecta', 'Lepidoptera', 'Erebidae', 'Odozana' } ))
 
-    def test_generate_candidates_retain_top_links(self):
+    def test_collect_links_retain_top_links(self):
         """
         Test that when generating candidates with a limited number of links, only the top links are retained.
         """
@@ -1006,24 +995,24 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         resolved = { 'Pyre': 'Pyre (video game)', 'Transistor': 'Transistor (video game)', 'Bastion': 'Bastion (video game)' }
 
         extrapolator = WikipediaAttributeExtrapolator(fetch=25)
-        candidates = extrapolator._generate_candidates(list(resolved.values()))
+        candidates = extrapolator._collect_links(list(resolved.values()))
         self.assertTrue('Supergiant Games' in candidates)
         self.assertTrue('Hades (video game)' in candidates)
         self.assertTrue('Greg Kasavin' in candidates)
         self.assertTrue('Darren Korb' in candidates)
 
-    def test_generate_candidates_correct_fetch(self):
+    def test_collect_links_includes_duplicates(self):
         """
-        Test that when generating candidates with a limited number of links, the correct number of links are retained.
+        Test that when generating candidates, the list of links may include duplicates.
         """
 
         resolved = { 'Pyre': 'Pyre (video game)', 'Transistor': 'Transistor (video game)', 'Bastion': 'Bastion (video game)' }
 
         extrapolator = WikipediaAttributeExtrapolator(fetch=25)
-        candidates = extrapolator._generate_candidates(list(resolved.values()))
-        self.assertEqual(extrapolator.fetch, len(candidates))
+        candidates = extrapolator._collect_links(list(resolved.values()))
+        self.assertTrue(any( candidates.count(candidate) > 1 for candidate in candidates ))
 
-    def test_generate_candidates_no_years(self):
+    def test_collect_links_no_years(self):
         """
         Test that when generating candidates, none have a year in the title.
         """
@@ -1031,10 +1020,10 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         resolved = [ 'Massimiliano Allegri', 'Álvaro Morata' ]
 
         extrapolator = WikipediaAttributeExtrapolator()
-        candidates = extrapolator._generate_candidates(resolved)
+        candidates = extrapolator._collect_links(resolved)
         self.assertTrue(not any( nlp.has_year(nlp.remove_parentheses(candidate)) for candidate in candidates ))
 
-    def test_generate_candidates_disambiguation_years(self):
+    def test_collect_links_disambiguation_years(self):
         """
         Test that when generating candidates, years in disambiguations can exist.
         """
@@ -1042,7 +1031,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         resolved = [ 'Massimiliano Allegri', 'Álvaro Morata' ]
 
         extrapolator = WikipediaAttributeExtrapolator()
-        candidates = extrapolator._generate_candidates(resolved)
+        candidates = extrapolator._collect_links(resolved)
         self.assertTrue(any( nlp.has_year(candidate) and not nlp.has_year(nlp.remove_parentheses(candidate)) for candidate in candidates ))
 
     def test_rank_links_none(self):
@@ -1098,7 +1087,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         ranked = extrapolator._rank_links(links)
         self.assertEqual([ 'Arthropoda', 'Insecta', 'Animalia' ], ranked)
 
-    def test_generate_candidates_normal_articles(self):
+    def test_collect_links_normal_articles(self):
         """
         Test that when generating candidates, the function collects links from the introduction.
         """
@@ -1106,7 +1095,7 @@ class TestWikipediaAttributeExtrapolator(unittest.TestCase):
         resolved = { 'Odozana floccosa': 'Odozana floccosa' }
 
         extrapolator = WikipediaAttributeExtrapolator()
-        candidates = extrapolator._generate_candidates(list(resolved.values()))
+        candidates = extrapolator._collect_links(list(resolved.values()))
         types = wikinterface.info.types(list(candidates))
         self.assertTrue(all( type == wikinterface.info.ArticleType.NORMAL for type in types.values() ))
 

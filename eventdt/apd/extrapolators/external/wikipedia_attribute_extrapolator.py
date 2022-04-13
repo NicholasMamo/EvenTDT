@@ -93,7 +93,9 @@ class WikipediaAttributeExtrapolator(Extrapolator):
 
         resolved = self._build_profiles(participants)
         resolved = self._prune(resolved)
-        candidates = self._generate_candidates(list(participants))
+        outgoing = self._collect_links(list(participants))
+        candidates = self._rank_links(outgoing)[:self.fetch]
+        candidates = self._build_profiles(candidates)
         candidates = self._trim(candidates, resolved)
         scores = self._score_and_rank(candidates, resolved)
         extrapolated = { candidate: score for candidate, score in scores.items()
@@ -254,9 +256,10 @@ class WikipediaAttributeExtrapolator(Extrapolator):
 
         return { name: profile for name, profile in list(deduplicated.items())[::-1] } if reverse else deduplicated
 
-    def _generate_candidates(self, participants):
+    def _collect_links(self, participants):
         """
-        Generate a list of candidates from the resolved participants.
+        Generate a list of outgoing links from the resolved participants.
+        These links later become candidate participants.
 
         The function looks for outgoing links using Wikipedia and builds profiles for them.
         It only considers as candidates normal pages, removing help pages and other types of pages.
@@ -264,9 +267,9 @@ class WikipediaAttributeExtrapolator(Extrapolator):
         :param participants: A list of resolved or extrapolated participants from which to generate candidates.
         :type participants: list of str
 
-        :return: The candidates as a dictionary.
-                 The keys are the Wikipedia article titles and the values are the corresponding :class:`~attributes.profile.Profile` instances.
-        :rtype: dict
+        :return: A list of outgoing links, which may include duplicates.
+                 Duplicate links are used to rank links by popularity.
+        :rtype: list of str
         """
 
         profiles = { }
@@ -279,11 +282,7 @@ class WikipediaAttributeExtrapolator(Extrapolator):
         # fetch the link types and retain only normal pages
         types = info.types(list(related))
         related = [ page for page in related if types[page] == info.ArticleType.NORMAL ]
-        related = self._rank_links(related)[:self.fetch]
-
-        # build the profiles
-        profiles = self._build_profiles(related)
-        return profiles
+        return related
 
     def _rank_links(self, links):
         """
