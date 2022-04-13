@@ -148,7 +148,7 @@ class WikipediaExtrapolator(Extrapolator):
         Get the first-level links.
         Then, filter the links to retain only those in the top 100, and those that do not have a year in them.
         """
-        first_level = links.collect(participants, introduction_only=False, separate=True)
+        first_level = links.collect(list(set(participants)), introduction_only=False, separate=True)
         link_frequency = self._link_frequency(first_level)
         link_frequency = { link: frequency for link, frequency in link_frequency.items() if not nlp.has_year(self._remove_brackets(link)) }
         link_frequency = { link: frequency for link, frequency in link_frequency.items() if not link.startswith('List of') }
