@@ -272,7 +272,7 @@ class WikipediaAttributeExtrapolator(Extrapolator):
         profiles = { }
 
         # keep the links separate and then flatten them to retain duplicate links
-        related = links.collect(participants, separate=True, introduction_only=False)
+        related = links.collect(list(set(participants)), separate=True, introduction_only=False)
         related = [ link for _links in related.values() for link in set(_links) ]
         related = [ link for link in related if not nlp.has_year(nlp.remove_parentheses(link)) ]
 
