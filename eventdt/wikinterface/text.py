@@ -44,7 +44,7 @@ def collect(titles, introduction_only=False):
     When there are many page titles, the GET parameters could become far too long.
     Therefore in such cases, stagger the process.
     """
-    if len(urllib.parse.quote('|'.join(titles))) > 1024:
+    if len(urllib.parse.quote('|'.join(titles))) > 1024 or len(titles) > 50:
         for i in range(0, math.ceil(len(titles) / stagger)):
             subset = collect(titles[(i * stagger):((i + 1) * stagger)],
                              introduction_only=introduction_only)
