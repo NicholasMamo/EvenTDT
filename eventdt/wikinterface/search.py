@@ -16,7 +16,7 @@ def collect(terms, limit=10):
     :param terms: The search term or terms.
     :type terms: list of str or str
     :param limit: The number of search results to return.
-                  
+
                   .. note::
 
                     Although Wikipedia limits the results to 50, the collector can fetch more.
@@ -42,6 +42,7 @@ def collect(terms, limit=10):
         raise ValueError(f"An integer must be requested, received {limit}")
 
     terms = terms if type(terms) is list else [ terms ]
+    terms = [ term for term in terms if term ]
 
     if not len(terms):
         return articles
