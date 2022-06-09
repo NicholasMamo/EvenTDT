@@ -143,7 +143,7 @@ def pk(items, gold, k=None):
     else:
         return precision(items[:k], gold)
 
-def average_precision(items, gold, ranked_only=True):
+def average_precision(items, gold, ranked_only=False):
     """
     Calculate the average precision of the given items by evaluating the order.
     The higher the relevant items, the higher the average precision.
