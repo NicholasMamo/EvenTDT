@@ -143,7 +143,7 @@ def pk(items, gold, k=None):
     else:
         return precision(items[:k], gold)
 
-def average_precision(items, gold):
+def average_precision(items, gold, ranked_only=True):
     """
     Calculate the average precision of the given items by evaluating the order.
     The higher the relevant items, the higher the average precision.
@@ -160,6 +160,8 @@ def average_precision(items, gold):
     :type items: list
     :param gold: The gold standard items.
     :type gold: list or set
+    :param ranked_only: A boolean indicating whether to take the average precision in the ranking, or whether to divide by the ground truth items.
+    :type ranked_only: bool
 
     :return: The average precision value, bound between 0 and 1.
     :rtype: float
@@ -167,7 +169,10 @@ def average_precision(items, gold):
 
     ap = 0
     items, gold = unique(items), unique(gold)
-    captured = set(items).intersection(set(gold)) # the number of gold items that were actually captured in the ranking
+    if ranked_only:
+        captured = set(items).intersection(set(gold)) # the number of gold items that were actually captured in the ranking
+    else:
+        captured = gold
     _pk = pk(items, gold)
     for k, item in enumerate(items):
         ap += _pk[k + 1] if is_precise(item, gold) else 0
