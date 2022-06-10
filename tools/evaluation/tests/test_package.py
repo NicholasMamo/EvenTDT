@@ -443,6 +443,20 @@ class TestPackage(unittest.TestCase):
 
         self.assertEqual(1, round(average_precision([ 'A', 'D', 'E' ], [ 'A', 'D', 'E' ]), 10))
 
+    def test_average_precision_missing_ranked_only(self):
+        """
+        Test that when a ground truth item is missing but the average precision is calculated only for captured items, the calculation ignores missed ground truth items.
+        """
+
+        self.assertEqual((1 + 2/3)/2, average_precision([ 'A', 'B', 'E' ], [ 'A', 'D', 'E' ], ranked_only=True))
+
+    def test_average_precision_missing_ground_truth(self):
+        """
+        Test that when a ground truth item is missing and the average precision is calculated for the entire ground truth, the calculation does not ignore missed ground truth items.
+        """
+
+        self.assertEqual((1 + 2/3)/3, average_precision([ 'A', 'B', 'E' ], [ 'A', 'D', 'E' ], ranked_only=False))
+
     def test_recall_empty(self):
         """
         Test that the recall is 0 when the items and the gold set are empty.

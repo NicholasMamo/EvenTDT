@@ -160,7 +160,7 @@ def average_precision(items, gold, ranked_only=False):
     :type items: list
     :param gold: The gold standard items.
     :type gold: list or set
-    :param ranked_only: A boolean indicating whether to take the average precision in the ranking, or whether to divide by the ground truth items.
+    :param ranked_only: A boolean indicating whether to exclude missing ground truth items, or whether to divide by the entire ground truth.
     :type ranked_only: bool
 
     :return: The average precision value, bound between 0 and 1.
@@ -169,10 +169,8 @@ def average_precision(items, gold, ranked_only=False):
 
     ap = 0
     items, gold = unique(items), unique(gold)
-    if ranked_only:
-        captured = set(items).intersection(set(gold)) # the number of gold items that were actually captured in the ranking
-    else:
-        captured = set(gold)
+    # the first condition is the number of gold items that were actually captured in the ranking
+    captured = set(items).intersection(set(gold)) if ranked_only else set(gold)
     _pk = pk(items, gold)
     for k, item in enumerate(items):
         ap += _pk[k + 1] if is_precise(item, gold) else 0
