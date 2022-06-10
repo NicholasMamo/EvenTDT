@@ -172,7 +172,7 @@ def average_precision(items, gold, ranked_only=False):
     if ranked_only:
         captured = set(items).intersection(set(gold)) # the number of gold items that were actually captured in the ranking
     else:
-        captured = gold
+        captured = set(gold)
     _pk = pk(items, gold)
     for k, item in enumerate(items):
         ap += _pk[k + 1] if is_precise(item, gold) else 0
