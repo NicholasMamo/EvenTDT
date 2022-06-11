@@ -109,6 +109,7 @@ The full list of accepted arguments:
 """
 
 import argparse
+from networkx.algorithms.community import quality
 import os
 import sys
 
@@ -206,6 +207,7 @@ def extract(extractor, n, *args, **kwargs):
     concepts = extractor.cluster(n, *args, **kwargs)
     concepts = [ list(concept) for concept in concepts ]
     concepts = sorted(concepts, key=len, reverse=True)
+    logger.info(f"Modularity: { quality.modularity(extractor.graph, concepts) }")
     return concepts
 
 def method(method):
