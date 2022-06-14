@@ -24,7 +24,18 @@ class TestTFScorer(unittest.TestCase):
     Test the implementation and results of the TF scorer.
     """
 
-    def test_tf_scorer(self):
+    def test_init_normalize_scores_default(self):
+        """
+        Test that by default, the TF scorer does not normalize scores.
+        """
+
+        scorer = TFScorer()
+        self.assertFalse(scorer.normalize_scores)
+
+        scorer = TFScorer(normalize_scores=True)
+        self.assertTrue(scorer.normalize_scores)
+
+    def test_score(self):
         """
         Test the basic functionality of the TF scorer.
         """
@@ -36,6 +47,7 @@ class TestTFScorer(unittest.TestCase):
         scores = scorer.score(candidates, normalize_scores=False)
         candidates = scorer._fold(candidates)
         chelsea = sum([ candidate_set.count('chelsea') for candidate_set in candidates ])
+        self.assertGreater(chelsea, 0)
         self.assertEqual(chelsea, scores.get('chelsea', 0))
 
     def test_score_candidates_unchanged(self):
@@ -94,7 +106,7 @@ class TestTFScorer(unittest.TestCase):
 
         path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
         extractor = TokenExtractor()
-        scorer = TFScorer()
+        scorer = TFScorer(normalize_scores=True)
         candidates = extractor.extract(path)
         scores = scorer.score(candidates)
         self.assertTrue(all( score <= 1 for score in scores.values() ))
@@ -118,9 +130,9 @@ class TestTFScorer(unittest.TestCase):
 
         path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
         extractor = TokenExtractor()
-        scorer = TFScorer()
+        scorer = TFScorer(normalize_scores=False)
         candidates = extractor.extract(path)
-        scores = scorer.score(candidates, normalize_scores=False)
+        scores = scorer.score(candidates)
         self.assertTrue(all( score >= 1 for score in scores.values() ))
         self.assertTrue(all( score % 1 == 0 for score in scores.values() ))
 
@@ -131,8 +143,8 @@ class TestTFScorer(unittest.TestCase):
 
         path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
         extractor = TokenExtractor()
-        scorer = TFScorer()
+        scorer = TFScorer(normalize_scores=False)
         candidates = extractor.extract(path)
         self.assertTrue(any( score == candidate_set.count(candidate)
                              for candidate_set in candidates
-                             for candidate, score in scorer.score([ candidate_set ], normalize_scores=False).items() ))
+                             for candidate, score in scorer.score([ candidate_set ]).items() ))
