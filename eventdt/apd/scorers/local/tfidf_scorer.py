@@ -71,20 +71,3 @@ class TFIDFScorer(Scorer):
                 scores[candidate] = scores.get(candidate, 0) + candidate_set.count(candidate) * math.log(self.documents / self.idf.get(candidate, 1), 10)
 
         return self._normalize(scores) if self.normalize_scores else scores
-
-    def _normalize(self, scores, *args, **kwargs):
-        """
-        Normalize the scores.
-        The function rescales them between 0 and 1, where 1 is the maximum score of the candidates.
-
-        :param scores: The candidate participants and the number of times that they appeared.
-        :type scores: dict
-
-        :return: A dictionary of candidate participants and their associated, normalized scores.
-        :rtype: dict
-        """
-
-        max_score = max(scores.values()) if len(scores) > 0 else 1
-        scores = { candidate: score / max_score for candidate, score in scores.items() }
-
-        return scores

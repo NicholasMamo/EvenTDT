@@ -64,13 +64,16 @@ class Scorer(ABC):
     def _normalize(self, scores, *args, **kwargs):
         """
         Normalize the scores.
-        The default function returns the scores as it founds them.
+        The function rescales them between 0 and 1, where 1 is the maximum score of the candidates.
 
-        :param scores: A list of candidate participants and their scores.
+        :param scores: The candidate participants and the number of times that they appeared.
         :type scores: dict
 
-        :return: A dictionary of candidate participants and their associated scores.
+        :return: A dictionary of candidate participants and their associated, normalized scores.
         :rtype: dict
         """
+
+        max_score = max(scores.values()) if len(scores) > 0 else 1
+        scores = { candidate: score / max_score for candidate, score in scores.items() }
 
         return scores
