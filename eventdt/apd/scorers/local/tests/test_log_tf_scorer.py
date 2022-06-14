@@ -24,6 +24,17 @@ class TestLogTFScorer(unittest.TestCase):
     Test the implementation and results of the logarithmic TF scorer.
     """
 
+    def test_init_normalize_scores_default(self):
+        """
+        Test that by default, the logarithmic TF scorer does not normalize scores.
+        """
+
+        scorer = LogTFScorer()
+        self.assertFalse(scorer.normalize_scores)
+
+        scorer = LogTFScorer(normalize_scores=True)
+        self.assertTrue(scorer.normalize_scores)
+
     def test_log_tf_scorer(self):
         """
         Test the basic functionality of the logarithmic TF scorer.
@@ -31,11 +42,12 @@ class TestLogTFScorer(unittest.TestCase):
 
         path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
         extractor = TokenExtractor()
-        scorer = LogTFScorer()
+        scorer = LogTFScorer(normalize_scores=False)
         candidates = extractor.extract(path)
-        scores = scorer.score(candidates, normalize_scores=False)
+        scores = scorer.score(candidates)
         candidates = scorer._fold(candidates)
         chelsea = sum([ candidate_set.count('chelsea') for candidate_set in candidates ])
+        self.assertGreater(chelsea, 0)
         self.assertEqual(math.log(chelsea + 1, 10), scores.get('chelsea', 0))
 
     def test_score_candidates_unchanged(self):
@@ -94,7 +106,7 @@ class TestLogTFScorer(unittest.TestCase):
 
         path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
         extractor = TokenExtractor()
-        scorer = LogTFScorer()
+        scorer = LogTFScorer(normalize_scores=True)
         candidates = extractor.extract(path)
         scores = scorer.score(candidates)
         self.assertTrue(all( score <= 1 for score in scores.values() ))
@@ -118,9 +130,9 @@ class TestLogTFScorer(unittest.TestCase):
 
         path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
         extractor = TokenExtractor()
-        scorer = LogTFScorer()
+        scorer = LogTFScorer(normalize_scores=False)
         candidates = extractor.extract(path)
-        scores = scorer.score(candidates, normalize_scores=False)
+        scores = scorer.score(candidates)
         self.assertTrue(all( score >= math.log(1 + 1, 10) for score in scores.values() ))
 
     def test_repeated_tokens(self):
@@ -130,12 +142,12 @@ class TestLogTFScorer(unittest.TestCase):
 
         path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
         extractor = TokenExtractor()
-        scorer = LogTFScorer()
+        scorer = LogTFScorer(normalize_scores=False)
         candidates = extractor.extract(path)
         candidates = scorer._fold(candidates)
         self.assertTrue(all( score == math.log(candidate_set.count(candidate) + 1, 10)
                              for candidate_set in candidates
-                             for candidate, score in scorer.score([ candidate_set ], normalize_scores=False).items() ))
+                             for candidate, score in scorer.score([ candidate_set ]).items() ))
 
     def test_logarithm_base(self):
         """
