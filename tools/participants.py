@@ -52,6 +52,7 @@ Accepted arguments:
     - ``--extrapolator``                  *<Optional>* The extrapolator to use to extrapolate participants; supported: `Extrapolator`, `WikipediaExtrapolator`, `WikipediaAttributeExtrapolator`; defaults to no extrapolator.
     - ``--postprocessor``                 *<Optional>* The post-processor to use to post-process participants; supported: `Postprocessor`, `WikipediaPostprocessor`; defaults to no post-processor.
     - ``-k --keep``                       *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
+    - ``--normalize-scores``              *<Optional>* A boolean indicating whether to normalize the extractor's scores.
     - ``--filter-threshold``              *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`); defaults to 0.
     - ``--resolver-threshold``            *<Optional>* The threshold to use when resolving candidates (used only with the `WikipediaNameResolver` and `WikipediaSearchResolver`).
     - ``--extrapolator-threshold``        *<Optional>* The threshold to use when extrapolating candidates (used only with the `WikipediaExtrapolator`); defaults to 0.
@@ -115,6 +116,7 @@ def setup_args():
         - ``--extrapolator``                  *<Optional>* The extrapolator to use to extrapolate participants; supported: `Extrapolator`, `WikipediaExtrapolator`, `WikipediaAttributeExtrapolator`; defaults to no extrapolator.
         - ``--postprocessor``                 *<Optional>* The post-processor to use to post-process participants; supported: `Postprocessor`, `WikipediaPostprocessor`; defaults to no post-processor.
         - ``-k --keep``                       *<Optional>* The number of candidates to retain when filtering candidates (used only with the `RankFilter`).
+        - ``--normalize-scores``              *<Optional>* A boolean indicating whether to normalize the extractor's scores.
         - ``--filter-threshold``              *<Optional>* The score threshold to use when filtering candidates (used only with the `ThresholdFilter`); defaults to 0.
         - ``--resolver-threshold``            *<Optional>* The threshold to use when resolving candidates (used only with the `WikipediaNameResolver` and `WikipediaSearchResolver`); defaults to 0.
         - ``--extrapolator-threshold``        *<Optional>* The threshold to use when extrapolating candidates (used only with the `WikipediaExtrapolator`); defaults to 0.
@@ -150,6 +152,8 @@ def setup_args():
                         help='<Optional> The post-processor to use to post-process participants; supported: `Postprocessor`, `WikipediaPostprocessor`; defaults to no post-processor.')
     parser.add_argument('-k', '--keep', required=False, type=int,
                         help='<Optional> The number of candidates to retain when filtering candidates (used only with the `RankFilter`).')
+    parser.add_argument('--normalize-scores', required=False, action='store_true',
+                        help="<Optional> A boolean indicating whether to normalize the extractor's scores.")
     parser.add_argument('--filter-threshold', required=False, default=0, type=float,
                         help='<Optional> The score threshold to use when filtering candidates (used only with the `ThresholdFilter`); defaults to 0.')
     parser.add_argument('--resolver-threshold', required=False, default=0, type=float,

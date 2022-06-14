@@ -628,16 +628,16 @@ class TestAPD(unittest.TestCase):
         extrapolator = apd.create_extrapolator(WikipediaAttributeExtrapolator, extrapolator_head_only=True)
         profiles = extrapolator._build_profiles(list(resolved.values()))
         self.assertEqual('Alaska', profiles['Alaska'].name)
-        self.assertEqual("Alaska ( (listen); Aleut: Alax̂sxax̂; Inupiaq: Alaasikaq; Alutiiq: Alas'kaaq; Yup'ik: Alaskaq; Tlingit: Anáaski) is a state located in the Western United States on the northwest extremity of North America.",
+        self.assertEqual("Alaska ( (listen) ə-LAS-kə; Aleut: Alax̂sxax̂; Inupiaq: Alaasikaq; Alutiiq: Alas'kaaq; Yup'ik: Alaskaq; Tlingit: Anáaski) is a U.S. state located in the Western United States on the northwest extremity of North America.",
                          profiles['Alaska'].text)
-        self.assertEqual({ 'is': { 'state' }, 'located_in': { 'western united states' }, 'located_on': { 'extremity' }, 'located_of': { 'north america' } }, profiles['Alaska'].attributes)
+        self.assertEqual({ 'is': { 'u.s. state' }, 'located_in': { 'western united states' }, 'located_on': { 'extremity' }, 'located_of': { 'north america' } }, profiles['Alaska'].attributes)
 
         extrapolator = apd.create_extrapolator(WikipediaAttributeExtrapolator, extrapolator_head_only=False)
         profiles = extrapolator._build_profiles(list(resolved.values()))
         self.assertEqual('Alaska', profiles['Alaska'].name)
-        self.assertEqual("Alaska ( (listen); Aleut: Alax̂sxax̂; Inupiaq: Alaasikaq; Alutiiq: Alas'kaaq; Yup'ik: Alaskaq; Tlingit: Anáaski) is a state located in the Western United States on the northwest extremity of North America.",
+        self.assertEqual("Alaska ( (listen) ə-LAS-kə; Aleut: Alax̂sxax̂; Inupiaq: Alaasikaq; Alutiiq: Alas'kaaq; Yup'ik: Alaskaq; Tlingit: Anáaski) is a U.S. state located in the Western United States on the northwest extremity of North America.",
                          profiles['Alaska'].text)
-        self.assertEqual({ 'is': { 'state' }, 'located_in': { 'western united states' }, 'located_on': { 'northwest extremity' }, 'located_of': { 'north america' } }, profiles['Alaska'].attributes)
+        self.assertEqual({ 'is': { 'u.s. state' }, 'located_in': { 'western united states' }, 'located_on': { 'northwest extremity' }, 'located_of': { 'north america' } }, profiles['Alaska'].attributes)
 
     def test_create_postprocessor_postprocessor(self):
         """
