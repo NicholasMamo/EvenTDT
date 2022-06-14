@@ -24,6 +24,17 @@ class TestDFScorer(unittest.TestCase):
     Test the implementation and results of the DF scorer.
     """
 
+    def test_init_normalize_scores_default(self):
+        """
+        Test that by default, the DF scorer does not normalize scores.
+        """
+
+        scorer = DFScorer()
+        self.assertFalse(scorer.normalize_scores)
+
+        scorer = DFScorer(normalize_scores=True)
+        self.assertTrue(scorer.normalize_scores)
+
     def test_df_scorer(self):
         """
         Test the basic functionality of the DF scorer.
@@ -36,6 +47,7 @@ class TestDFScorer(unittest.TestCase):
         scores = scorer.score(candidates, normalize_scores=False)
         candidates = scorer._fold(candidates)
         chelsea = sum([ True if 'chelsea' in candidate_set else False for candidate_set in candidates ])
+        self.assertGreater(chelsea, 0)
         self.assertEqual(chelsea, scores.get('chelsea', 0))
 
     def test_score_candidates_unchanged(self):
@@ -94,7 +106,7 @@ class TestDFScorer(unittest.TestCase):
 
         path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
         extractor = TokenExtractor()
-        scorer = DFScorer()
+        scorer = DFScorer(normalize_scores=True)
         candidates = extractor.extract(path)
         scores = scorer.score(candidates)
         self.assertTrue(all( score <= 1 for score in scores.values() ))
@@ -118,9 +130,9 @@ class TestDFScorer(unittest.TestCase):
 
         path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
         extractor = TokenExtractor()
-        scorer = DFScorer()
+        scorer = DFScorer(normalize_scores=False)
         candidates = extractor.extract(path)
-        scores = scorer.score(candidates, normalize_scores=False)
+        scores = scorer.score(candidates)
         self.assertTrue(all( score >= 1 for score in scores.values() ))
         self.assertTrue(all( score % 1 == 0 for score in scores.values() ))
 
@@ -131,6 +143,6 @@ class TestDFScorer(unittest.TestCase):
 
         path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
         extractor = TokenExtractor()
-        scorer = DFScorer()
+        scorer = DFScorer(normalize_scores=False)
         candidates = extractor.extract(path)
-        self.assertTrue(all( score == 1 for candidate_set in candidates for score in scorer.score([ candidate_set ], normalize_scores=False).values() ))
+        self.assertTrue(all( score == 1 for candidate_set in candidates for score in scorer.score([ candidate_set ]).values() ))
