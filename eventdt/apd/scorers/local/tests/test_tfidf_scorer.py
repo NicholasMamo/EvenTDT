@@ -24,7 +24,7 @@ class TestTFIDFScorer(unittest.TestCase):
     Test the implementation and results of the TF-IDF scorer.
     """
 
-    def test_high_value(self):
+    def test_init_high_value(self):
         """
         Test that the IDF raises an error when the highest IDF value is higher than the number of documents.
         """
@@ -32,7 +32,7 @@ class TestTFIDFScorer(unittest.TestCase):
         idf = { 'a': 3, 'b': 1 }
         self.assertRaises(ValueError, TFIDFScorer, idf, 2)
 
-    def test_negative_value(self):
+    def test_init_negative_value(self):
         """
         Test that the IDF raises an error when any IDF value is negative.
         """
@@ -40,13 +40,26 @@ class TestTFIDFScorer(unittest.TestCase):
         idf = { 'a': 3, 'b': -1 }
         self.assertRaises(ValueError, TFIDFScorer, idf, 3)
 
-    def test_negative_documents(self):
+    def test_init_negative_documents(self):
         """
         Test that the IDF raises an error when the number of documents is negative.
         """
 
         idf = { 'a': 3, 'b': 1 }
         self.assertRaises(ValueError, TFIDFScorer, idf, -1)
+
+    def test_init_normalize_scores_default(self):
+        """
+        Test that by default, the TF scorer does not normalize scores.
+        """
+
+        idf = { 'a': 3, 'b': 1 }
+
+        scorer = TFIDFScorer(idf, 3)
+        self.assertFalse(scorer.normalize_scores)
+
+        scorer = TFIDFScorer(idf, 3, normalize_scores=True)
+        self.assertTrue(scorer.normalize_scores)
 
     def test_tfidf_scorer(self):
         """
@@ -124,7 +137,7 @@ class TestTFIDFScorer(unittest.TestCase):
 
         path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
         extractor = TokenExtractor()
-        scorer = TFIDFScorer({ 'chelsea': 10 }, 100)
+        scorer = TFIDFScorer({ 'chelsea': 10 }, 100, normalize_scores=True)
         candidates = extractor.extract(path)
         scores = scorer.score(candidates)
         self.assertTrue(all( score <= 1 for score in scores.values() ))
@@ -143,14 +156,14 @@ class TestTFIDFScorer(unittest.TestCase):
 
     def test_normalization(self):
         """
-        Test that when normalization is enabled, the returned scores are integers.
+        Test that when normalization is disabled, the returned scores are integers.
         """
 
         path = os.path.join(os.path.dirname(__file__), '..', '..',  '..', '..', 'tests', 'corpora', 'CRYCHE-100.json')
         extractor = TokenExtractor()
-        scorer = TFIDFScorer({ 'chelsea': 10 }, 100)
+        scorer = TFIDFScorer({ 'chelsea': 10 }, 100, normalize_scores=False)
         candidates = extractor.extract(path)
-        scores = scorer.score(candidates, normalize_scores=False)
+        scores = scorer.score(candidates)
         self.assertTrue(all( score >= 1 for score in scores.values() ))
         self.assertTrue(all( score % 1 == 0 for score in scores.values() ))
 
@@ -170,6 +183,6 @@ class TestTFIDFScorer(unittest.TestCase):
         corpus = [ Document(post, tokenizer.tokenize(post)) for post in posts ]
 
         extractor = TokenExtractor(tokenizer=tokenizer)
-        scorer = TFIDFScorer({ 'erdogan': 3, 'threats': 2 }, 10)
-        scores = scorer.score([ tokenizer.tokenize(post) for post in posts ], normalize_scores=False)
+        scorer = TFIDFScorer({ 'erdogan': 3, 'threats': 2 }, 10, normalize_scores=False)
+        scores = scorer.score([ tokenizer.tokenize(post) for post in posts ])
         self.assertEqual(2 * math.log(10 / 3, 10), scores.get('erdogan'))

@@ -20,7 +20,7 @@ class TFIDFScorer(Scorer):
     :vartype ~.documents: int
     """
 
-    def __init__(self, idf, documents):
+    def __init__(self, idf, documents, *args, **kwargs):
         """
         Create the term-weighting scheme with the IDF table and the number of documents in that scheme.
 
@@ -44,18 +44,16 @@ class TFIDFScorer(Scorer):
         if documents < 0:
             raise ValueError("The number of documents in the IDF must be non-negative")
 
+        super().__init__(*args, **kwargs)
         self.idf = idf
         self.documents = documents
 
-    def score(self, candidates, normalize_scores=True, *args, **kwargs):
+    def score(self, candidates, *args, **kwargs):
         """
         Score the given candidates based on their relevance within the corpus.
 
         :param candidates: A list of candidate praticipants separated by document that were found in them earlier.
         :type candidates: list
-        :param normalize_scores: A boolean indicating whether the scores should be normalized.
-                                 Here, normalization means rescaling between 0 and 1.
-        :type normalize_scores: bool
 
         :return: A dictionary of participants and their associated scores.
         :rtype: dict
@@ -72,7 +70,7 @@ class TFIDFScorer(Scorer):
             for candidate in list(set(candidate_set)):
                 scores[candidate] = scores.get(candidate, 0) + candidate_set.count(candidate) * math.log(self.documents / self.idf.get(candidate, 1), 10)
 
-        return self._normalize(scores) if normalize_scores else scores
+        return self._normalize(scores) if self.normalize_scores else scores
 
     def _normalize(self, scores, *args, **kwargs):
         """
