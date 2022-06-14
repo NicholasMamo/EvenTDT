@@ -368,7 +368,7 @@ def create_scorer(scorer, *args, **kwargs):
     :rtype: :class:`~apd.scorers.scorer.Scorer`
     """
 
-    return scorer() if scorer else scorer
+    return scorer(*args, **kwargs) if scorer else scorer
 
 def create_filter(filter, keep=None, *args, **kwargs):
     """

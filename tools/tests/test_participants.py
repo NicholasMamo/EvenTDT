@@ -227,6 +227,27 @@ class TestAPD(unittest.TestCase):
         self.assertEqual(Extrapolator, type(detector.extrapolator))
         self.assertEqual(Postprocessor, type(detector.postprocessor))
 
+    def test_create_detector_normalize_scores(self):
+        """
+        Test that when creating a detector with score normalization, the detector normalizes scores.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+
+        detector = apd.create_detector(ParticipantDetector, TokenExtractor, TFScorer, RankFilter,
+                                       TokenResolver, Extrapolator, Postprocessor, keep=10e5, file=file)
+        self.assertEqual(TFScorer, type(detector.scorer))
+        self.assertFalse(detector.scorer.normalize_scores)
+        _, _, filtered, _, _, _ = detector.detect(corpus=file)
+        self.assertTrue(all( score >= 1 for score in filtered.values() ))
+
+        detector = apd.create_detector(ParticipantDetector, TokenExtractor, TFScorer, RankFilter,
+                                       TokenResolver, Extrapolator, Postprocessor, keep=10e5, normalize_scores=True, file=file)
+        self.assertEqual(TFScorer, type(detector.scorer))
+        self.assertTrue(detector.scorer.normalize_scores)
+        _, _, filtered, _, _, _ = detector.detect(corpus=file)
+        self.assertTrue(all( score <= 1 for score in filtered.values() ))
+
     def test_create_extractor_none(self):
         """
         Test that when no extractor is provided, the default extractor is returned.
