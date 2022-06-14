@@ -17,26 +17,29 @@ class Scorer(ABC):
     The :func:`~apd.scorers.scorer.Scorer.score` function returns a dictionary of candidate participants and their scores.
     The scores may be normalized to make them comparable.
     This can be a simple rescaling function.
+
+    :ivar normalize_scores: A boolean indicating whether the scores should be normalized, or rescaled between 0 and 1.
+    :vartype normalize_scores: bool
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, normalize_scores=False, *args, **kwargs):
         """
         Initialize the scorer.
+
+        :param normalize_scores: A boolean indicating whether the scores should be normalized, or rescaled between 0 and 1.
+        :type normalize_scores: bool
         """
 
-        pass
+        self.normalize_scores = normalize_scores
 
     @abstractmethod
-    def score(self, candidates, normalize_scores=True, *args, **kwargs):
+    def score(self, candidates, *args, **kwargs):
         """
         Score the candidate participants that were found in the corpus.
 
         :param candidates: A list of candidate praticipants separated by the document in which they appeared.
                            The input candidates should be the product of a :class:`~apd.extractors.extractor.Extractor` process.
         :type candidates: list
-        :param normalize_scores: A boolean indicating whether the scores should be normalized.
-                                 Here, normalization means rescaling between 0 and 1.
-        :type normalize_scores: bool
 
         :return: A dictionary of candidate participants and their associated scores.
         :rtype: dict
