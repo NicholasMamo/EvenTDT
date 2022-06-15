@@ -227,7 +227,7 @@ If you provide splits, the ``timeline`` key is replaced with a list of timelines
 The full list of accepted arguments:
 
     - ``-e --event``                *<Required>* The event file or a list of event files to consume; can be JSON files or ``.tar.gz`` archives with `sample.json` or `event.json` files inside.
-    - ``-c --consumer``             *<Required>* The consumer to use: :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`, :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`, :class:`~queues.consumers.print_consumer.PrintConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer`, :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`.
+    - ``-c --consumer``             *<Required>* The consumer to use: :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`, :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.algorithms.fuego_consumer.UELDConsumer` (or :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`), :class:`~queues.consumers.print_consumer.PrintConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer`, :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`.
     - ``-u --understanding``        *<Optional>* The understanding file used to understand the event.
     - ``-o --output``               *<Required>* The output file where to save the timeline, defaults to the ``.out`` directory relative to the event file.
     - ``--no-cache``                *<Optional>* If specified, the cached understanding is not used, but new understanding is generated.
@@ -244,15 +244,15 @@ The full list of accepted arguments:
     - ``--with-default-split``      *<Optional>* A boolean indicating whether to use a default split, for all documents that belong to no stream (used only if splits are given).
     - ``--periodicity``             *<Optional>* The periodicity in seconds of the consumer, defaults to 60 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer` and :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`).
     - ``--scheme``                  *<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used.
-    - ``--min-volume``              *<Optional>* The minimum volume to consider the stream to be active and look for breaking terms (used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`); defaults to 10.
+    - ``--min-volume``              *<Optional>* The minimum volume to consider the stream to be active and look for breaking terms (used by the :class:`~queues.consumers.algorithms.fuego_consumer.UELDConsumer`); defaults to 10.
     - ``--min-size``                *<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
     - ``--min-burst``               *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer` and the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`).
     - ``--threshold``               *<Optional>* The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
-    - ``--threshold-type``          *<Optional>* The type of dynamic volume threshold to use with the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`: `MEAN` (default), `MOVING_MEAN` or `MEAN_STDEV`.
+    - ``--threshold-type``          *<Optional>* The type of dynamic volume threshold to use with the :class:`~queues.consumers.algorithms.fuego_consumer.UELDConsumer`: `MEAN` (default), `MOVING_MEAN` or `MEAN_STDEV`.
     - ``--post-rate``               *<Optional>* The minimum increase in posting rate to accept a sliding time-window as representing a breaking topic, defaults to 1.7 (used by the :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`).
     - ``--max-intra-similarity``    *<Optional>* The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
-    - ``--burst-start``             *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`).
-    - ``--burst-end``               *<Optional>* The maximum burst to stop considering a term to be breaking, defaults to 0.2 (used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`).
+    - ``--burst-start``             *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the :class:`~queues.consumers.algorithms.fuego_consumer.UELDConsumer`).
+    - ``--burst-end``               *<Optional>* The maximum burst to stop considering a term to be breaking, defaults to 0.2 (used by the :class:`~queues.consumers.algorithms.fuego_consumer.UELDConsumer`).
     - ``--freeze-period``           *<Optional>* The freeze period of clusters, defaults to 20 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer` and the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`).
     - ``--log-nutrition``           *<Optional>* Take the logarithm of nutrition (used by the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`).
 """
@@ -290,7 +290,7 @@ def setup_args():
     Accepted arguments:
 
         - ``-e --event``                *<Required>* The event file or a list of event files to consume; can be JSON files or ``.tar.gz`` archives with `sample.json` or `event.json` files inside.
-        - ``-c --consumer``             *<Required>* The consumer to use: :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`, :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`, :class:`~queues.consumers.print_consumer.PrintConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer`, :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`.
+        - ``-c --consumer``             *<Required>* The consumer to use: :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`, :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.algorithms.fuego_consumer.UELDConsumer` (or :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`), :class:`~queues.consumers.print_consumer.PrintConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer`, :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`.
         - ``-u --understanding``        *<Optional>* The understanding file used to understand the event.
         - ``-o --output``               *<Required>* The output file where to save the timeline, defaults to the ``.out`` directory relative to the event file.
         - ``--no-cache``                *<Optional>* If specified, the cached understanding is not used, but new understanding is generated.
@@ -307,15 +307,15 @@ def setup_args():
         - ``--with-default-split``      *<Optional>* A boolean indicating whether to use a default split, for all documents that belong to no stream (used only if splits are given).
         - ``--periodicity``             *<Optional>* The periodicity in seconds of the consumer, defaults to 60 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer` and :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`).
         - ``--scheme``                  *<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used. This can be overwritten if there is event understanding.
-        - ``--min-volume``              *<Optional>* The minimum volume to consider the stream to be active and look for breaking terms (used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`); defaults to 10.
+        - ``--min-volume``              *<Optional>* The minimum volume to consider the stream to be active and look for breaking terms (used by the :class:`~queues.consumers.algorithms.fuego_consumer.UELDConsumer`); defaults to 10.
         - ``--min-size``                *<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
         - ``--min-burst``               *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer` and the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`).
         - ``--threshold``               *<Optional>* The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.
-        - ``--threshold-type``          *<Optional>* The type of dynamic volume threshold to use with the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`: `MEAN` (default), `MOVING_MEAN` or `MEAN_STDEV`.
+        - ``--threshold-type``          *<Optional>* The type of dynamic volume threshold to use with the :class:`~queues.consumers.algorithms.fuego_consumer.UELDConsumer`: `MEAN` (default), `MOVING_MEAN` or `MEAN_STDEV`.
         - ``--post-rate``               *<Optional>* The minimum increase in posting rate to accept a sliding time-window as representing a breaking topic, defaults to 1.7 (used by the :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`).
         - ``--max-intra-similarity``    *<Optional>* The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.
-        - ``--burst-start``             *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`).
-        - ``--burst-end``               *<Optional>* The maximum burst to stop considering a term to be breaking, defaults to 0.2 (used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`).
+        - ``--burst-start``             *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the :class:`~queues.consumers.algorithms.fuego_consumer.UELDConsumer`).
+        - ``--burst-end``               *<Optional>* The maximum burst to stop considering a term to be breaking, defaults to 0.2 (used by the :class:`~queues.consumers.algorithms.fuego_consumer.UELDConsumer`).
         - ``--freeze-period``           *<Optional>* The freeze period of clusters in seconds, defaults to 20 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer` and the `ELDConsumer`).
         - ``--log-nutrition``           *<Optional>* Take the logarithm of nutrition (used by the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`).
 
@@ -332,7 +332,7 @@ def setup_args():
     parser.add_argument('-e', '--event', nargs='+', required=True,
                         help='<Required> The event file or a list of event files to consume; can be JSON files or `.tar.gz` archives with `sample.json` or `event.json` files inside.')
     parser.add_argument('-c', '--consumer', type=consumer, required=True,
-                        help='<Required> The consumer to use: `ELDConsumer`, `FIREConsumer`, `FUEGOConsumer`, `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.')
+                        help='<Required> The consumer to use: `ELDConsumer`, `FIREConsumer`, `UELDConsumer` (or `FUEGOConsumer`), `PrintConsumer`, `StatConsumer`, `ZhaoConsumer`.')
     parser.add_argument('-u', '--understanding', type=str, required=False,
                         help='<Optional> The understanding file used to understand the event.')
     parser.add_argument('-o', '--output', type=str, required=True,
@@ -366,7 +366,7 @@ def setup_args():
     parser.add_argument('--scheme', type=scheme, required=False, default=None,
                         help="""<Optional> If specified, the path to the term-weighting scheme file. If it is not specified, the term frequency scheme is used instead. This can be overwritten if there is event understanding.""")
     parser.add_argument('--min-volume', type=float, required=False, default=10,
-                        help='<Optional> The minimum volume to consider the stream to be active and look for breaking terms (used by the `FUEGOConsumer`); defaults to 10.')
+                        help='<Optional> The minimum volume to consider the stream to be active and look for breaking terms (used by the `UELDConsumer`); defaults to 10.')
     parser.add_argument('--min-size', type=int, required=False, default=3,
                         help='<Optional> The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.')
     parser.add_argument('--min-burst', type=float, required=False, default=0.5,
@@ -374,15 +374,15 @@ def setup_args():
     parser.add_argument('--threshold', type=float, required=False, default=0.5,
                         help='<Optional> The minimum similarity between a tweet and a cluster to add the tweet to the cluster, defaults to 0.5.')
     parser.add_argument('--threshold-type', type=threshold, required=False, default='mean',
-                        help='<Optional> The type of dynamic volume threshold to use with the `FUEGOConsumer`: `MEAN` (default), `MOVING_MEAN` or `MEAN_STDEV`.')
+                        help='<Optional> The type of dynamic volume threshold to use with the `UELDConsumer`: `MEAN` (default), `MOVING_MEAN` or `MEAN_STDEV`.')
     parser.add_argument('--post-rate', type=float, required=False, default=1.7,
                         help='<Optional> The minimum increase in posting rate to accept a sliding time-window as representing a breaking topic, defaults to 1.7 (used by the `ZhaoConsumer`).')
     parser.add_argument('--max-intra-similarity', type=float, required=False, default=0.8,
                         help='<Optional> The maximum intra-similarity of documents in a cluster to consider it as a candidate topic, defaults to 0.8.')
     parser.add_argument('--burst-start', type=float, required=False, default=0.5,
-                        help='<Optional> The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the `FUEGOConsumer`).')
+                        help='<Optional> The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the `UELDConsumer`).')
     parser.add_argument('--burst-end', type=float, required=False, default=0.2,
-                        help='<Optional> The maximum burst to stop considering a term to be breaking, defaults to 0.2 (used by the `FUEGOConsumer`).')
+                        help='<Optional> The maximum burst to stop considering a term to be breaking, defaults to 0.2 (used by the `UELDConsumer`).')
     parser.add_argument('--freeze-period', type=int, required=False, default=20,
                         help='<Optional> The freeze period of clusters, defaults to 20 seconds (used by the `FIREConsumer` and the `ELDConsumer`).')
     parser.add_argument('--log-nutrition', action='store_true',
@@ -768,7 +768,7 @@ def create_consumer(consumer, queue, filters=None, splits=None, threshold_type=N
     :type splits: list of list of str
     :param filters: A list of tokens which must be in a tweet for it to be processed.
     :type filters: list of str
-    :param threshold_type: The threshold type that the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer` should use.
+    :param threshold_type: The threshold type that the :class:`~queues.consumers.algorithms.fuego_consumer.UELDConsumer` should use.
     :type threshold_type: :class:`~queues.consumers.algorithms.fuego_consumer.DynamicThreshold`
     :param with_default_split: A boolean indicating whether to use a default split, for all documents that belong to no stream (used only if splits are given)
     :type with_default_split: bool
@@ -777,7 +777,7 @@ def create_consumer(consumer, queue, filters=None, splits=None, threshold_type=N
     :rtype: :class:`~queues.consumers.Consumer`
     """
 
-    kwargs['threshold'] = threshold_type if consumer.__name__ == 'FUEGOConsumer' else kwargs.get('threshold')
+    kwargs['threshold'] = threshold_type if consumer.__name__ in { 'FUEGOConsumer', 'UELDConsumer' } else kwargs.get('threshold')
 
     if filters:
         return TokenFilterConsumer(queue, filters, consumer, *args, **kwargs)
@@ -794,8 +794,10 @@ def consumer(consumer):
 
         #. :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`,
         #. :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`,
+        #. :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`,
         #. :class:`~queues.consumers.print_consumer.PrintConsumer`,
         #. :class:`~queues.consumers.stat_consumer.StatConsumer`, and
+        #. :class:`~queues.consumers.algorithms.fuego_consumer.UELDConsumer`,
         #. :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`
 
     :param consumer: The consumer string.
@@ -813,6 +815,7 @@ def consumer(consumer):
         'fuegoconsumer': FUEGOConsumer,
         'printconsumer': PrintConsumer,
         'statconsumer': StatConsumer,
+        'ueldconsumer': FUEGOConsumer,
         'zhaoconsumer': ZhaoConsumer,
     }
 
@@ -912,7 +915,7 @@ def threshold(threshold_type):
     :param threshold_type: The name of the threshold to use: `MEAN`, `MOVING_MEAN` or `MEAN_STDEV`
     :type threshold_type: str
 
-    :return: An actual threshold type that can be parsed by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`.
+    :return: An actual threshold type that can be parsed by the :class:`~queues.consumers.algorithms.fuego_consumer.UELDConsumer`.
     :rtype: :class:`~queues.consumers.algorithms.fuego_consumer.DynamicThreshold`
     """
 
