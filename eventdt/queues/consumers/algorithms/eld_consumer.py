@@ -193,7 +193,7 @@ class ELDConsumer(Consumer):
         self.store = MemoryNutritionStore()
         self.buffer = Queue()
 
-        self.tokenizer = Tokenizer(stopwords=stopwords.words('english'),
+        self.tokenizer = Tokenizer(stopwords=stopwords.words('english'), stem=True,
                                    normalize_words=True, character_normalization_count=3,
                                    remove_unicode_entities=True)
         self.clustering = TemporalNoKMeans(threshold=threshold, freeze_period=freeze_period, store_frozen=False)
