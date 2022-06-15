@@ -4,6 +4,7 @@ Test the functionality of the print consumer.
 
 import asyncio
 import json
+import logging
 import os
 import sys
 import unittest
@@ -15,22 +16,15 @@ if path not in sys.path:
 from logger import logger
 from queues import Queue
 from queues.consumers import PrintConsumer
-logger.set_logging_level(logger.LogLevel.WARNING)
 
-class TestPrintConsumer(unittest.TestCase):
+logger.set_logging_level(logger.LogLevel.WARNING)
+logging.getLogger('asyncio').setLevel(logging.ERROR) # disable task length outputs
+
+class TestPrintConsumer(unittest.IsolatedAsyncioTestCase):
     """
     Test the implementation of the print consumer.
     """
 
-    def async_test(f):
-        def wrapper(*args, **kwargs):
-            coro = asyncio.coroutine(f)
-            future = coro(*args, **kwargs)
-            loop = asyncio.get_event_loop()
-            loop.run_until_complete(future)
-        return wrapper
-
-    @async_test
     async def test_run_returns_consumed_tweets(self):
         """
         Test that at the end, the print consumer returns the number of consumed tweets.

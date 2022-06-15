@@ -4,6 +4,7 @@ Test the functionality of the filter consumer.
 
 import asyncio
 import json
+import logging
 import os
 import sys
 import unittest
@@ -20,19 +21,12 @@ from queues.consumers.filter_consumer import DummyFilterConsumer
 from summarization.timeline import Timeline
 
 logger.set_logging_level(logger.LogLevel.WARNING)
+logging.getLogger('asyncio').setLevel(logging.ERROR) # disable task length outputs
 
-class TestFilterConsumer(unittest.TestCase):
+class TestFilterConsumer(unittest.IsolatedAsyncioTestCase):
     """
     Test the implementation of the filter consumer.
     """
-
-    def async_test(f):
-        def wrapper(*args, **kwargs):
-            coro = asyncio.coroutine(f)
-            future = coro(*args, **kwargs)
-            loop = asyncio.get_event_loop()
-            loop.run_until_complete(future)
-        return wrapper
 
     def test_init_list_filters(self):
         """
@@ -81,7 +75,6 @@ class TestFilterConsumer(unittest.TestCase):
         consumer = DummyFilterConsumer(Queue(), filters, ZhaoConsumer, periodicity=10)
         self.assertEqual(10, consumer.consumer.periodicity)
 
-    @async_test
     async def test_run_starts_consumers(self):
         """
         Test that when running the filter consumer, it also runs its own consumer.
@@ -111,7 +104,6 @@ class TestFilterConsumer(unittest.TestCase):
         self.assertFalse(consumer.consumer.active)
         self.assertTrue(consumer.consumer.stopped)
 
-    @async_test
     async def test_run_stops_consumers(self):
         """
         Test that it is only after the filter consumer finishes that running stops its consumer.
@@ -141,7 +133,6 @@ class TestFilterConsumer(unittest.TestCase):
         self.assertFalse(consumer.consumer.active)
         self.assertTrue(consumer.consumer.stopped)
 
-    @async_test
     async def test_run_returns_consumed(self):
         """
         Test that at the end, the filter consumer returns the number of consumed tweets.
@@ -168,7 +159,6 @@ class TestFilterConsumer(unittest.TestCase):
         self.assertEqual(dict, type(output))
         self.assertTrue('consumed' in output)
 
-    @async_test
     async def test_run_returns_consumed_after_filter(self):
         """
         Test that at the end, when the filter consumer returns the number of consumed tweets, the count includes only filtered tweets.
@@ -196,7 +186,6 @@ class TestFilterConsumer(unittest.TestCase):
         self.assertTrue('consumed' in output)
         self.assertEqual(500, output['consumed'])
 
-    @async_test
     async def test_run_returns_timeline(self):
         """
         Test that when running the filter consumer, it returns the timeline from its own consumers.
@@ -227,7 +216,6 @@ class TestFilterConsumer(unittest.TestCase):
         self.assertTrue('timeline' in output)
         self.assertEqual(Timeline, type(output['timeline']))
 
-    @async_test
     async def test_stop_stops_consumers(self):
         """
         Test that when stopping the filter consumer, it also stops its child consumer.

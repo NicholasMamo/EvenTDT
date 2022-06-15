@@ -4,6 +4,7 @@ Test the functionality of the token filter consumer.
 
 import asyncio
 import json
+import logging
 import os
 import re
 import sys
@@ -25,19 +26,12 @@ import twitter
 from vsm import vector_math
 
 logger.set_logging_level(logger.LogLevel.WARNING)
+logging.getLogger('asyncio').setLevel(logging.ERROR) # disable task length outputs
 
-class TestTokenFilterConsumer(unittest.TestCase):
+class TestTokenFilterConsumer(unittest.IsolatedAsyncioTestCase):
     """
     Test the implementation of the token filter consumer.
     """
-
-    def async_test(f):
-        def wrapper(*args, **kwargs):
-            coro = asyncio.coroutine(f)
-            future = coro(*args, **kwargs)
-            loop = asyncio.get_event_loop()
-            loop.run_until_complete(future)
-        return wrapper
 
     def test_init_custom_tokenizer(self):
         """
@@ -146,7 +140,6 @@ class TestTokenFilterConsumer(unittest.TestCase):
         self.assertTrue(consumer.consumer.tokenizer.normalize_words)
         self.assertEqual(3, consumer.consumer.tokenizer.character_normalization_count)
 
-    @async_test
     async def test_run_filters(self):
         """
         Test that when running, the downstream consumer receives filtered tweets.
@@ -188,7 +181,6 @@ class TestTokenFilterConsumer(unittest.TestCase):
         for document in documents:
             self.assertTrue(any( token in document.dimensions for token in filters ))
 
-    @async_test
     async def test_run_returns_consumed_after_filter(self):
         """
         Test that at the end, when the filter consumer returns the number of consumed tweets, the count includes only filtered tweets.
@@ -216,7 +208,6 @@ class TestTokenFilterConsumer(unittest.TestCase):
         self.assertTrue('consumed' in output)
         self.assertGreater(500, output['consumed'])
 
-    @async_test
     async def test_run_returns_timeline(self):
         """
         Test that when running the filter consumer, it returns the timeline from its own consumers.

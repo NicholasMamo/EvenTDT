@@ -4,6 +4,7 @@ Test the functionality of the Zhao et al. consumer.
 
 import asyncio
 import json
+import logging
 import os
 import sys
 import unittest
@@ -18,18 +19,12 @@ from queues.consumers.algorithms import ZhaoConsumer
 from summarization.timeline import Timeline
 from vsm import vector_math
 
-class TestZhaoConsumer(unittest.TestCase):
+logging.getLogger('asyncio').setLevel(logging.ERROR) # disable task length outputs
+
+class TestZhaoConsumer(unittest.IsolatedAsyncioTestCase):
     """
     Test the implementation of the Zhao et al. consumer.
     """
-
-    def async_test(f):
-        def wrapper(*args, **kwargs):
-            coro = asyncio.coroutine(f)
-            future = coro(*args, **kwargs)
-            loop = asyncio.get_event_loop()
-            loop.run_until_complete(future)
-        return wrapper
 
     def test_init_name(self):
         """
@@ -84,7 +79,6 @@ class TestZhaoConsumer(unittest.TestCase):
         consumer = ZhaoConsumer(Queue(), 60, post_rate=1.9)
         self.assertEqual(1.9, consumer.tdt.post_rate)
 
-    @async_test
     async def test_run_returns(self):
         """
         Test that at the end, the Zhao consumer returns the number of consumed, filtered and skipped tweets, and a timeline.

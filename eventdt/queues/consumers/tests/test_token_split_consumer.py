@@ -4,6 +4,7 @@ Test the functionality of the token split consumer.
 
 import asyncio
 import json
+import logging
 import os
 import re
 import sys
@@ -25,19 +26,12 @@ import twitter
 from vsm import vector_math
 
 logger.set_logging_level(logger.LogLevel.WARNING)
+logging.getLogger('asyncio').setLevel(logging.ERROR) # disable task length outputs
 
-class TestTokenSplitConsumer(unittest.TestCase):
+class TestTokenSplitConsumer(unittest.IsolatedAsyncioTestCase):
     """
     Test the implementation of the token split consumer.
     """
-
-    def async_test(f):
-        def wrapper(*args, **kwargs):
-            coro = asyncio.coroutine(f)
-            future = coro(*args, **kwargs)
-            loop = asyncio.get_event_loop()
-            loop.run_until_complete(future)
-        return wrapper
 
     def test_init_name(self):
         """
@@ -223,7 +217,6 @@ class TestTokenSplitConsumer(unittest.TestCase):
         consumer = TokenSplitConsumer(Queue(), splits, ZhaoConsumer, periodicity=10)
         self.assertTrue(all( 10 == _consumer.consumer.periodicity for _consumer in consumer.consumers ))
 
-    @async_test
     async def test_run_returns_timelines(self):
         """
         Test that when running the split consumer, it returns the timelines and other data from its consumers.
@@ -253,7 +246,6 @@ class TestTokenSplitConsumer(unittest.TestCase):
         self.assertEqual({ 'split.consumed', 'filter.consumed', 'consumed', 'filtered', 'skipped', 'timeline' }, set(results.keys()))
         self.assertTrue(all( type(timeline) is Timeline for timeline in results['timeline'] ))
 
-    @async_test
     async def test_run_consumed_(self):
         """
         Test that when running the split consumer, the returned document includes a ``consume`` key with one value for each split.
@@ -380,7 +372,6 @@ class TestTokenSplitConsumer(unittest.TestCase):
         if trivial:
             logger.warning("Trivial test")
 
-    @async_test
     async def test_run_correct_streams(self):
         """
         Test that when running, the consumers receive the right tweets.
@@ -433,7 +424,6 @@ class TestTokenSplitConsumer(unittest.TestCase):
             for document in documents:
                 self.assertTrue(any( token in document.dimensions for token in split ))
 
-    @async_test
     async def test_run_multiple_streams(self):
         """
         Test that when running, the consumer may send a tweet to multiple consumers.

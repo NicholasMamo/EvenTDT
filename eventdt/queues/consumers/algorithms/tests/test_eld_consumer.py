@@ -4,6 +4,7 @@ Test the functionality of the ELD consumer.
 
 import asyncio
 import json
+import logging
 import os
 import sys
 import unittest
@@ -21,18 +22,12 @@ from vsm import vector_math
 from vsm.clustering import Cluster
 import twitter
 
-class TestELDConsumer(unittest.TestCase):
+logging.getLogger('asyncio').setLevel(logging.ERROR) # disable task length outputs
+
+class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
     """
     Test the implementation of the ELD consumer.
     """
-
-    def async_test(f):
-        def wrapper(*args, **kwargs):
-            coro = asyncio.coroutine(f)
-            future = coro(*args, **kwargs)
-            loop = asyncio.get_event_loop()
-            loop.run_until_complete(future)
-        return wrapper
 
     def test_init_name(self):
         """
@@ -65,7 +60,6 @@ class TestELDConsumer(unittest.TestCase):
         self.assertEqual(Queue, type(consumer.buffer))
         self.assertEqual(0, consumer.buffer.length())
 
-    @async_test
     async def test_construct_idf_documents(self):
         """
         Test that when constructing the IDF, it uses all documents.
@@ -81,7 +75,6 @@ class TestELDConsumer(unittest.TestCase):
             scheme = await consumer._construct_idf(1)
             self.assertEqual(len(lines), scheme.global_scheme.documents)
 
-    @async_test
     async def test_construct_idf_terms(self):
         """
         Test that when constructing the IDF, the correct terms are registered.
@@ -102,7 +95,6 @@ class TestELDConsumer(unittest.TestCase):
 
             self.assertEqual(terms, set(scheme.global_scheme.idf))
 
-    @async_test
     async def test_construct_idf_counts(self):
         """
         Test that when constructing the IDF, the correct term counts are registered.
@@ -125,7 +117,6 @@ class TestELDConsumer(unittest.TestCase):
                 count = len([ document for document in documents if term in document.dimensions ])
                 self.assertEqual(count, scheme.global_scheme.idf[term])
 
-    @async_test
     async def test_construct_idf_buffer(self):
         """
         Test that when constructing the IDF, the documents are added to the buffer.
@@ -144,7 +135,6 @@ class TestELDConsumer(unittest.TestCase):
             for document, buffered in zip(documents, consumer.buffer.queue):
                 self.assertEqual(document.text, buffered.text)
 
-    @async_test
     async def test_run_returns(self):
         """
         Test that at the end, the ELD consumer returns the number of consumed, filtered and skipped tweets, and a timeline.
@@ -174,7 +164,6 @@ class TestELDConsumer(unittest.TestCase):
         self.assertTrue(output['filtered'])
         self.assertEqual(Timeline, type(output['timeline']))
 
-    @async_test
     async def test_run_returns_consumed_greater_than_filtered(self):
         """
         Test that at the end, the number of filtered tweets is less than the number of consumed tweets.
@@ -200,7 +189,6 @@ class TestELDConsumer(unittest.TestCase):
         self.assertEqual(dict, type(output))
         self.assertLess(output['filtered'], output['consumed'])
 
-    @async_test
     async def test_run_returns_consumed_greater_than_skipped(self):
         """
         Test that at the end, the number of skipped tweets is less than the number of consumed tweets.

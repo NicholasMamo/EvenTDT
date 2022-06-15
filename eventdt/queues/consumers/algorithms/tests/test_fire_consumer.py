@@ -4,6 +4,7 @@ Test the functionality of the FIRE consumer.
 
 import asyncio
 import json
+import logging
 import os
 import sys
 import unittest
@@ -21,20 +22,14 @@ from summarization.timeline import Timeline
 from vsm import vector_math
 from vsm.clustering import Cluster
 import twitter
-logger.set_logging_level(logger.LogLevel.WARNING)
 
-class TestFIREConsumer(unittest.TestCase):
+logger.set_logging_level(logger.LogLevel.WARNING)
+logging.getLogger('asyncio').setLevel(logging.ERROR) # disable task length outputs
+
+class TestFIREConsumer(unittest.IsolatedAsyncioTestCase):
     """
     Test the implementation of the FIRE consumer.
     """
-
-    def async_test(f):
-        def wrapper(*args, **kwargs):
-            coro = asyncio.coroutine(f)
-            future = coro(*args, **kwargs)
-            loop = asyncio.get_event_loop()
-            loop.run_until_complete(future)
-        return wrapper
 
     def test_init_name(self):
         """
@@ -56,7 +51,6 @@ class TestFIREConsumer(unittest.TestCase):
         self.assertEqual(60, consumer.periodicity)
         self.assertEqual(TF, type(consumer.scheme))
 
-    @async_test
     async def test_run_returns(self):
         """
         Test that at the end, the FIRE consumer returns the number of consumed, filtered and skipped tweets, and a timeline.
@@ -86,7 +80,6 @@ class TestFIREConsumer(unittest.TestCase):
         self.assertTrue(output['filtered'])
         self.assertEqual(Timeline, type(output['timeline']))
 
-    @async_test
     async def test_run_returns_consumed_greater_than_filtered(self):
         """
         Test that at the end, the number of filtered tweets is less than the number of consumed tweets.
@@ -126,7 +119,7 @@ class TestFIREConsumer(unittest.TestCase):
         """
 
         consumer = FIREConsumer(Queue(), 60, scheme=TF())
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             count = len(tweets)
@@ -140,7 +133,7 @@ class TestFIREConsumer(unittest.TestCase):
         """
 
         consumer = FIREConsumer(Queue(), 60, scheme=TF())
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             count = len(tweets)
@@ -154,7 +147,7 @@ class TestFIREConsumer(unittest.TestCase):
         """
 
         consumer = FIREConsumer(Queue(), 60, scheme=TF())
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             count = len(tweets)
@@ -168,7 +161,7 @@ class TestFIREConsumer(unittest.TestCase):
         """
 
         consumer = FIREConsumer(Queue(), 60, scheme=TF())
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             count = len(tweets)
@@ -182,7 +175,7 @@ class TestFIREConsumer(unittest.TestCase):
         """
 
         consumer = FIREConsumer(Queue(), 60, scheme=TF())
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
 
@@ -206,7 +199,7 @@ class TestFIREConsumer(unittest.TestCase):
         """
 
         consumer = FIREConsumer(Queue(), 60, scheme=TF())
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             filtered = consumer._filter_tweets(tweets)
@@ -218,7 +211,7 @@ class TestFIREConsumer(unittest.TestCase):
         """
 
         consumer = FIREConsumer(Queue(), 60, scheme=TF())
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = [ Document('', attributes={ 'tweet': tweet }) for tweet in tweets ]
@@ -234,7 +227,7 @@ class TestFIREConsumer(unittest.TestCase):
         """
 
         consumer = FIREConsumer(Queue(), 60, TF())
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
             tweet = json.loads(f.readline())
             document = consumer._to_documents([ tweet ])[0]
             self.assertEqual(tweet, document.attributes['tweet'])
@@ -245,7 +238,7 @@ class TestFIREConsumer(unittest.TestCase):
         """
 
         consumer = FIREConsumer(Queue(), 60, TF())
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
             for line in f:
                 tweet = json.loads(line)
                 if '…' in tweet['text']:
@@ -263,7 +256,7 @@ class TestFIREConsumer(unittest.TestCase):
         """
 
         consumer = FIREConsumer(Queue(), 60, TF())
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
             for line in f:
                 tweet = json.loads(line)
                 if 'retweeted_status' in tweet:
@@ -285,7 +278,7 @@ class TestFIREConsumer(unittest.TestCase):
         """
 
         consumer = FIREConsumer(Queue(), 60, TF())
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
             for line in f:
                 tweet = json.loads(line)
                 if 'retweeted_status' in tweet:
@@ -308,7 +301,7 @@ class TestFIREConsumer(unittest.TestCase):
         """
 
         consumer = FIREConsumer(Queue(), 60, TF())
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
             for line in f:
                 tweet = json.loads(line)
                 if not 'retweeted_status' in tweet and not 'quoted_status' in tweet:
@@ -330,10 +323,13 @@ class TestFIREConsumer(unittest.TestCase):
         """
 
         consumer = FIREConsumer(Queue(), 60, TF())
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
             for line in f:
                 tweet = json.loads(line)
                 document = consumer._to_documents([ tweet ])[0]
+                if not document.dimensions:
+                    continue
+
                 self.assertEqual(1, round(vector_math.magnitude(document), 10))
 
     def test_to_documents_documents(self):
@@ -342,7 +338,7 @@ class TestFIREConsumer(unittest.TestCase):
         """
 
         consumer = FIREConsumer(Queue(), 60, TF())
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -362,7 +358,7 @@ class TestFIREConsumer(unittest.TestCase):
         """
 
         consumer = FIREConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -374,7 +370,7 @@ class TestFIREConsumer(unittest.TestCase):
         """
 
         consumer = FIREConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)[::-1]
@@ -430,7 +426,7 @@ class TestFIREConsumer(unittest.TestCase):
         """
 
         consumer = FIREConsumer(Queue(), 60, scheme=TF())
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -455,7 +451,7 @@ class TestFIREConsumer(unittest.TestCase):
         """
 
         consumer = FIREConsumer(Queue(), 60, scheme=TF())
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -469,7 +465,7 @@ class TestFIREConsumer(unittest.TestCase):
 
         consumer = FIREConsumer(Queue(), 60, scheme=TF())
         self.assertEqual({ }, consumer.store.all())
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
             line = f.readline()
             tweet = json.loads(line)
             documents = consumer._to_documents([ tweet ])
@@ -484,7 +480,7 @@ class TestFIREConsumer(unittest.TestCase):
 
         consumer = FIREConsumer(Queue(), 60, scheme=TF())
         self.assertEqual({ }, consumer.store.all())
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
             line = f.readline()
             tweet = json.loads(line)
             timestamp = twitter.extract_timestamp(tweet)
@@ -497,7 +493,7 @@ class TestFIREConsumer(unittest.TestCase):
         """
 
         consumer = FIREConsumer(Queue(), 60, scheme=TF())
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
             line = f.readline()
             tweet = json.loads(line)
             documents = consumer._to_documents([ tweet ])
@@ -511,7 +507,7 @@ class TestFIREConsumer(unittest.TestCase):
         """
 
         consumer = FIREConsumer(Queue(), 60, TF())
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
@@ -536,7 +532,7 @@ class TestFIREConsumer(unittest.TestCase):
         """
 
         consumer = FIREConsumer(Queue(), 60, scheme=TF())
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
             line = f.readline()
             tweet = json.loads(line)
             documents = consumer._to_documents([ tweet ])
@@ -551,7 +547,7 @@ class TestFIREConsumer(unittest.TestCase):
         """
 
         consumer = FIREConsumer(Queue(), 60, scheme=TF())
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
             line = f.readline()
             tweet = json.loads(line)
             documents = consumer._to_documents([ tweet ])
@@ -566,7 +562,7 @@ class TestFIREConsumer(unittest.TestCase):
         """
 
         consumer = FIREConsumer(Queue(), 60, scheme=TF(), sets=10)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
             line = f.readline()
             tweet = json.loads(line)
             documents = consumer._to_documents([ tweet ])
@@ -582,7 +578,7 @@ class TestFIREConsumer(unittest.TestCase):
         """
 
         consumer = FIREConsumer(Queue(), 60, scheme=TF(), sets=10)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
             line = f.readline()
             tweet = json.loads(line)
             documents = consumer._to_documents([ tweet ])
@@ -655,7 +651,7 @@ class TestFIREConsumer(unittest.TestCase):
         """
 
         consumer = FIREConsumer(Queue(), 60, scheme=TF(), sets=10)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
             line = f.readline()
             tweet = json.loads(line)
             documents = consumer._to_documents([ tweet ])
@@ -680,7 +676,7 @@ class TestFIREConsumer(unittest.TestCase):
         """
 
         consumer = FIREConsumer(Queue(), 60, scheme=TF(), sets=10)
-        with open(os.path.join(os.path.dirname(__file__), 'corpus.json'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json')) as f:
             line = f.readline()
             tweet = json.loads(line)
             documents = consumer._to_documents([ tweet ])

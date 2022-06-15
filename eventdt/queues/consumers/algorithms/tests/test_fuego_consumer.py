@@ -5,6 +5,7 @@ Test the functionality of the FUEGO consumer.
 import asyncio
 import copy
 import json
+import logging
 import os
 import re
 import statistics
@@ -34,19 +35,12 @@ from vsm import vector_math, Vector
 from vsm.clustering import Cluster
 
 logger.set_logging_level(logger.LogLevel.WARNING)
+logging.getLogger('asyncio').setLevel(logging.ERROR) # disable task length outputs
 
-class TestFUEGOConsumer(unittest.TestCase):
+class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
     """
     Test the implementation of the FUEGO consumer.
     """
-
-    def async_test(f):
-        def wrapper(*args, **kwargs):
-            coro = asyncio.coroutine(f)
-            future = coro(*args, **kwargs)
-            loop = asyncio.get_event_loop()
-            loop.run_until_complete(future)
-        return wrapper
 
     def test_init_name(self):
         """
@@ -272,7 +266,6 @@ class TestFUEGOConsumer(unittest.TestCase):
         self.assertTrue(consumer.summarization)
         self.assertEqual(DGS, type(consumer.summarization))
 
-    @async_test
     async def test_construct_idf_documents(self):
         """
         Test that when constructing the IDF, it uses all documents.
@@ -288,7 +281,6 @@ class TestFUEGOConsumer(unittest.TestCase):
             scheme = await consumer._construct_idf(1)
             self.assertEqual(len(lines), scheme.global_scheme.documents)
 
-    @async_test
     async def test_construct_idf_terms(self):
         """
         Test that when constructing the IDF, the correct terms are registered.
@@ -309,7 +301,6 @@ class TestFUEGOConsumer(unittest.TestCase):
 
             self.assertEqual(terms, set(scheme.global_scheme.idf))
 
-    @async_test
     async def test_construct_idf_counts(self):
         """
         Test that when constructing the IDF, the correct term counts are registered.
@@ -332,7 +323,6 @@ class TestFUEGOConsumer(unittest.TestCase):
                 count = len([ document for document in documents if term in document.dimensions ])
                 self.assertEqual(count, scheme.global_scheme.idf[term])
 
-    @async_test
     async def test_run_returns(self):
         """
         Test that at the end, the FUEGO consumer returns the number of consumed, filtered and skipped tweets, and a timeline.
@@ -366,7 +356,6 @@ class TestFUEGOConsumer(unittest.TestCase):
         self.assertTrue(output['filtered'])
         self.assertEqual(Timeline, type(output['timeline']))
 
-    @async_test
     async def test_run_returns_consumed_greater_than_filtered(self):
         """
         Test that at the end, the number of filtered tweets is less than the number of consumed tweets.

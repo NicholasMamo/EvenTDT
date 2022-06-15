@@ -4,6 +4,7 @@ Test the functionality of the split consumer.
 
 import asyncio
 import json
+import logging
 import os
 import sys
 import unittest
@@ -20,19 +21,12 @@ from queues.consumers.split_consumer import DummySplitConsumer
 from summarization.timeline import Timeline
 
 logger.set_logging_level(logger.LogLevel.WARNING)
+logging.getLogger('asyncio').setLevel(logging.ERROR) # disable task length outputs
 
-class TestSplitConsumer(unittest.TestCase):
+class TestSplitConsumer(unittest.IsolatedAsyncioTestCase):
     """
     Test the implementation of the split consumer.
     """
-
-    def async_test(f):
-        def wrapper(*args, **kwargs):
-            coro = asyncio.coroutine(f)
-            future = coro(*args, **kwargs)
-            loop = asyncio.get_event_loop()
-            loop.run_until_complete(future)
-        return wrapper
 
     def test_init_name(self):
         """
@@ -122,7 +116,6 @@ class TestSplitConsumer(unittest.TestCase):
         self.assertEqual(splits + [ '*' ], consumer.splits)
         self.assertEqual(len(splits) + 1, len(consumer.consumers))
 
-    @async_test
     async def test_run_starts_consumers(self):
         """
         Test that when running the split consumer, it also runs its child consumers.
@@ -152,7 +145,6 @@ class TestSplitConsumer(unittest.TestCase):
         self.assertTrue(all( not _consumer.active for _consumer in consumer.consumers ))
         self.assertTrue(all( _consumer.stopped for _consumer in consumer.consumers ))
 
-    @async_test
     async def test_run_stops_consumers(self):
         """
         Test that it is only after the split consumer finishes that running stops the consumers.
@@ -182,7 +174,6 @@ class TestSplitConsumer(unittest.TestCase):
         self.assertTrue(all( not _consumer.active for _consumer in consumer.consumers ))
         self.assertTrue(all( _consumer.stopped for _consumer in consumer.consumers ))
 
-    @async_test
     async def test_run_returns_timelines(self):
         """
         Test that when running the split consumer, it returns the timelines and other data from its consumers.
@@ -212,7 +203,6 @@ class TestSplitConsumer(unittest.TestCase):
         self.assertEqual({ 'split.consumed', 'consumed', 'filtered', 'skipped', 'timeline' }, set(results.keys()))
         self.assertTrue(all( type(timeline) is Timeline for timeline in results['timeline'] ))
 
-    @async_test
     async def test_run_consumed_(self):
         """
         Test that when running the split consumer, the returned document includes a ``consume`` key with one value for each split.
@@ -243,7 +233,6 @@ class TestSplitConsumer(unittest.TestCase):
         self.assertTrue(all( len(splits) == len(results[key]) for key in results ))
         self.assertEqual(len(splits), len(results['consumed']))
 
-    @async_test
     async def test_stop_stops_consumers(self):
         """
         Test that when stopping the split consumer, it also stops its child consumers.
