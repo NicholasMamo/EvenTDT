@@ -72,6 +72,7 @@ class TokenFilterConsumer(FilterConsumer):
         super(TokenFilterConsumer, self).__init__(queue, filters, consumer, matches,
                                                   scheme=scheme, *args, **kwargs) # save the scheme in the downstream consumer
 
+        # NOTE: The tokenizer is not passed on to the consumers, which may have specific requirements on how to pre-process tweets
         self.tokenizer = tokenizer or Tokenizer(stopwords=stopwords.words('english'),
                                                 normalize_words=True, character_normalization_count=3,
                                                 remove_unicode_entities=True, stem=True)
