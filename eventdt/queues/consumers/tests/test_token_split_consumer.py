@@ -602,6 +602,118 @@ class TestTokenSplitConsumer(unittest.IsolatedAsyncioTestCase):
             for document in documents:
                 self.assertTrue(any( token in document.dimensions for token in split ))
 
+    async def test_run_correct_streams_documents(self):
+        """
+        Test that when running, tweets are sent to the right stream.
+        This is the same test as the one before but from a different perspective.
+        """
+
+        """
+        Create the consumer with a TF-IDF scheme.
+        """
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
+            idf = Exportable.decode(json.loads(f.readline()))['tfidf']
+
+        """
+        Create an empty queue.
+        Use it to create a split consumer and set it running.
+        Wait a second so that the buffered consumer (ZhaoConsumer) finds nothing and goes to sleep.
+        """
+        queue = Queue()
+        splits = [ [ 'chelsea', 'cfc' ], [ 'crystal' , 'palac' ] ]
+        consumer = TokenSplitConsumer(queue, splits, ZhaoConsumer, matches=any, scheme=idf, periodicity=300) # 5 minutes periodicity so that the queue is never emptied
+        running = asyncio.ensure_future(consumer.run(max_inactivity=3))
+        await asyncio.sleep(0.1)
+
+        """
+        Load all tweets into the queue.
+        """
+        all_documents = [ ]
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
+            for line in f:
+                tweet = json.loads(line)
+                queue.enqueue(tweet)
+                all_documents.append(consumer._preprocess(tweet))
+
+        """
+        Wait some time for the consumer passes on its tweets to the downstream consumers, and then for those consumers to move the tweets from the queue to the buffer.
+        Then, stop the consumers before they process any tweets.
+        """
+        await asyncio.sleep(0.5)
+        consumer.stop()
+
+        """
+        Wait for the consumer to finish.
+        """
+        results = (await asyncio.gather(running))[0]
+        self.assertEqual(2, len(consumer.consumers))
+        self.assertTrue(sum( _consumer.buffer.length() for _consumer in consumer.consumers )) # documents go from the queue into the buffer since it's a buffered consumer
+
+        """
+        Ensure that the documents were partitioned properly.
+        """
+        for document in all_documents:
+            for i, split in enumerate(splits):
+                if any( keyword in document.dimensions for keyword in split ):
+                    self.assertTrue(any( document.id == other.id for other in consumer.consumers[i].buffer.queue ))
+
+    async def test_run_discards_documents(self):
+        """
+        Test that when running, the consumer discards tweets that do not satisfy any stream.
+        """
+
+        """
+        Create the consumer with a TF-IDF scheme.
+        """
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')) as f:
+            idf = Exportable.decode(json.loads(f.readline()))['tfidf']
+
+        """
+        Create an empty queue.
+        Use it to create a split consumer and set it running.
+        Wait a second so that the buffered consumer (ZhaoConsumer) finds nothing and goes to sleep.
+        """
+        queue = Queue()
+        splits = [ [ 'chelsea', 'cfc' ], [ 'crystal' , 'palac' ] ]
+        consumer = TokenSplitConsumer(queue, splits, ZhaoConsumer, matches=any, scheme=idf, periodicity=300) # 5 minutes periodicity so that the queue is never emptied
+        running = asyncio.ensure_future(consumer.run(max_inactivity=3))
+        await asyncio.sleep(0.1)
+
+        """
+        Load all tweets into the queue.
+        """
+        all_documents = [ ]
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json')) as f:
+            for line in f:
+                tweet = json.loads(line)
+                queue.enqueue(tweet)
+                all_documents.append(consumer._preprocess(tweet))
+
+        """
+        Wait some time for the consumer passes on its tweets to the downstream consumers, and then for those consumers to move the tweets from the queue to the buffer.
+        Then, stop the consumers before they process any tweets.
+        """
+        await asyncio.sleep(0.5)
+        consumer.stop()
+
+        """
+        Wait for the consumer to finish.
+        """
+        results = (await asyncio.gather(running))[0]
+        self.assertEqual(2, len(consumer.consumers))
+        self.assertTrue(sum( _consumer.buffer.length() for _consumer in consumer.consumers )) # documents go from the queue into the buffer since it's a buffered consumer
+
+        """
+        Ensure that the documents were partitioned properly.
+        """
+        streamed = [ document for _consumer in consumer.consumers
+                              for document in _consumer.buffer.queue ]
+        for document in all_documents:
+            for i, split in enumerate(splits):
+                if all( not keyword in document.dimensions for keyword in split ):
+                    self.assertFalse(not any( document.id == other.id for other in consumer.consumers[i].buffer.queue ))
+                    self.assertTrue(not document in streamed)
+
     async def test_run_multiple_streams(self):
         """
         Test that when running, the consumer may send a tweet to multiple consumers.
