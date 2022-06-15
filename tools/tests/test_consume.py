@@ -401,11 +401,11 @@ class TestConsume(unittest.TestCase):
             data = json.loads(f.readline())
             scheme = Exportable.decode(data)['tfidf']
 
-        consumer = consume.create_consumer(StatConsumer, Queue(), scheme=scheme, splits=splits, splits_with_default=False, periodicity=20)
+        consumer = consume.create_consumer(StatConsumer, Queue(), scheme=scheme, splits=splits, with_default_split=False, periodicity=20)
         self.assertEqual(len(splits), len(consumer.splits))
         self.assertEqual(len(splits), len(consumer.consumers))
 
-        consumer = consume.create_consumer(StatConsumer, Queue(), scheme=scheme, splits=splits, splits_with_default=True, periodicity=20)
+        consumer = consume.create_consumer(StatConsumer, Queue(), scheme=scheme, splits=splits, with_default_split=True, periodicity=20)
         self.assertEqual(len(splits) + 1, len(consumer.splits))
         self.assertEqual(len(splits) + 1, len(consumer.consumers))
         self.assertEqual('*', consumer.splits[-1])

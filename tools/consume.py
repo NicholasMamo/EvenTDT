@@ -241,7 +241,7 @@ The full list of accepted arguments:
     - ``--filters``                 *<Optional>* The path to a file containing filters for the consumer, filtering the stream based on the tokens in tweets. If given, the tool expects a CSV file, where each line contains one token.
     - ``--filters-keep``            *<Optional>* The number of filter keywords to retain, most useful when reading keywords from the output of the :mod:`~tools.terms` or :mod:`~tools.bootstrap` tools, defaults to all keywords.
     - ``--splits``                  *<Optional>* The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split, or a JSON file created by the :mod:`~tools.concepts` tool.
-    - ``--splits-with-default``     *<Optional>* A boolean indicating whether to use a default split, for all documents that belong to no stream (used only if splits are given).
+    - ``--with-default-split``      *<Optional>* A boolean indicating whether to use a default split, for all documents that belong to no stream (used only if splits are given).
     - ``--periodicity``             *<Optional>* The periodicity in seconds of the consumer, defaults to 60 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer` and :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`).
     - ``--scheme``                  *<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used.
     - ``--min-volume``              *<Optional>* The minimum volume to consider the stream to be active and look for breaking terms (used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`); defaults to 10.
@@ -304,7 +304,7 @@ def setup_args():
         - ``--filters``                 *<Optional>* The path to a file containing filters for the consumer, filtering the stream based on the tokens in tweets. If given, the tool expects a CSV file, where each line contains one token.
         - ``--filters-keep``            *<Optional>* The number of filter keywords to retain, most useful when reading keywords from the output of the :mod:`~tools.terms` or :mod:`~tools.bootstrap` tools, defaults to all keywords.
         - ``--splits``                  *<Optional>* The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split, or a JSON file created by the :mod:`~tools.concepts` tool.
-        - ``--splits-with-default``     *<Optional>* A boolean indicating whether to use a default split, for all documents that belong to no stream (used only if splits are given).
+        - ``--with-default-split``      *<Optional>* A boolean indicating whether to use a default split, for all documents that belong to no stream (used only if splits are given).
         - ``--periodicity``             *<Optional>* The periodicity in seconds of the consumer, defaults to 60 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer` and :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`).
         - ``--scheme``                  *<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used. This can be overwritten if there is event understanding.
         - ``--min-volume``              *<Optional>* The minimum volume to consider the stream to be active and look for breaking terms (used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer`); defaults to 10.
@@ -359,7 +359,7 @@ def setup_args():
                         help='<Optional> The number of filter keywords to retain, most useful when reading keywords from the output of the `terms` or `bootstrap` tools, defaults to all keywords.')
     parser.add_argument('--splits', required=False, default=None,
                         help='<Optional> The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split, or a JSON file created by the :mod:`~tools.concepts` tool.')
-    parser.add_argument('--splits-with-default', required=False, action='store_true',
+    parser.add_argument('--with-default-split', required=False, action='store_true',
                         help='<Optional> A boolean indicating whether to use a default split, for all documents that belong to no stream (used only if splits are given.')
     parser.add_argument('--periodicity', type=int, required=False, default=60,
                         help='<Optional> The periodicity in seconds of the consumer, defaults to 60 seconds (used by the `FIREConsumer`, `StatConsumer` and `ZhaoConsumer`).')
@@ -754,7 +754,7 @@ def consume_process(comm, loop, consumer, max_inactivity):
     comm.update(loop.run_until_complete(consume(consumer, max_inactivity)))
     logger.info("Consumption ended")
 
-def create_consumer(consumer, queue, filters=None, splits=None, threshold_type=None, splits_with_default=False, *args, **kwargs):
+def create_consumer(consumer, queue, filters=None, splits=None, threshold_type=None, with_default_split=False, *args, **kwargs):
     """
     Create a consumer.
     If splits are given, the function creates a :class:`~queues.consumers.token_split_consumer.TokenSplitConsumer`.
@@ -770,8 +770,8 @@ def create_consumer(consumer, queue, filters=None, splits=None, threshold_type=N
     :type filters: list of str
     :param threshold_type: The threshold type that the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer` should use.
     :type threshold_type: :class:`~queues.consumers.algorithms.fuego_consumer.DynamicThreshold`
-    :param splits_with_default: A boolean indicating whether to use a default split, for all documents that belong to no stream (used only if splits are given)
-    :type splits_with_default: bool
+    :param with_default_split: A boolean indicating whether to use a default split, for all documents that belong to no stream (used only if splits are given)
+    :type with_default_split: bool
 
     :return: A consumer with the given parameters.
     :rtype: :class:`~queues.consumers.Consumer`
@@ -783,7 +783,7 @@ def create_consumer(consumer, queue, filters=None, splits=None, threshold_type=N
         return TokenFilterConsumer(queue, filters, consumer, *args, **kwargs)
 
     if splits:
-        return TokenSplitConsumer(queue, splits, consumer, has_default=splits_with_default, *args, **kwargs)
+        return TokenSplitConsumer(queue, splits, consumer, has_default=with_default_split, *args, **kwargs)
 
     return consumer(queue, *args, **kwargs)
 
