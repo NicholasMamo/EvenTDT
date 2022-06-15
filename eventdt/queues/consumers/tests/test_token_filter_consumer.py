@@ -18,7 +18,7 @@ from nlp import Document, Tokenizer
 from nlp.weighting import TF, TFIDF
 from objects.exportable import Exportable
 from queues import Queue
-from queues.consumers.algorithms import ELDConsumer, ZhaoConsumer
+from queues.consumers.algorithms import FUEGOConsumer, ELDConsumer, ZhaoConsumer
 from queues.consumers.token_filter_consumer import TokenFilterConsumer
 from summarization.timeline import Timeline
 import twitter
@@ -131,6 +131,20 @@ class TestTokenFilterConsumer(unittest.TestCase):
 
         consumer = TokenFilterConsumer(Queue(), filters, ZhaoConsumer, periodicity=10)
         self.assertEqual(10, consumer.consumer.periodicity)
+
+    def test_init_consumers_default(self):
+        """
+        Test the default configuration of the downstream consumers.
+        This is a sanity check to ensure that by default, the first and second-level consumers have the same configurations.
+        """
+
+        filters = [ (0, 50), (50, 100) ]
+        consumer = TokenFilterConsumer(Queue(), filters, FUEGOConsumer)
+        self.assertTrue(consumer.consumer.tokenizer.stem)
+        self.assertTrue(consumer.consumer.tokenizer.stopwords)
+        self.assertTrue(consumer.consumer.tokenizer.remove_unicode_entities)
+        self.assertTrue(consumer.consumer.tokenizer.normalize_words)
+        self.assertEqual(3, consumer.consumer.tokenizer.character_normalization_count)
 
     @async_test
     async def test_run_filters(self):

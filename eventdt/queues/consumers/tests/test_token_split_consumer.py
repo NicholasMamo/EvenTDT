@@ -141,6 +141,20 @@ class TestTokenSplitConsumer(unittest.TestCase):
         self.assertTrue(all( type(_consumer) == TokenFilterConsumer for _consumer in consumer.consumers ))
         self.assertTrue(all( type(_consumer.consumer) == ELDConsumer for _consumer in consumer.consumers ))
 
+    def test_init_consumers_default(self):
+        """
+        Test the default configuration of the downstream consumers.
+        This is a sanity check to ensure that by default, the first and second-level consumers have the same configurations.
+        """
+
+        splits = [ [ 'yellow', 'card' ], [ 'foul', 'tackl' ] ]
+        consumer = TokenSplitConsumer(Queue(), splits, ELDConsumer)
+        self.assertTrue(all( _consumer.consumer.tokenizer.stem for _consumer in consumer.consumers ))
+        self.assertTrue(all( _consumer.consumer.tokenizer.stopwords for _consumer in consumer.consumers ))
+        self.assertTrue(all( _consumer.consumer.tokenizer.remove_unicode_entities for _consumer in consumer.consumers ))
+        self.assertTrue(all( _consumer.consumer.tokenizer.normalize_words for _consumer in consumer.consumers ))
+        self.assertTrue(all( 3 == _consumer.consumer.tokenizer.character_normalization_count for _consumer in consumer.consumers ))
+
     def test_create_token_filter_with_scheme(self):
         """
         Test that the token filter consumers inherit the token split consumer's scheme.
