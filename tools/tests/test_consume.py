@@ -368,8 +368,7 @@ class TestConsume(unittest.TestCase):
         consumer = consume.create_consumer(StatConsumer, Queue(), scheme=scheme, splits=splits, freeze_period=10)
         self.assertEqual(TokenSplitConsumer, type(consumer))
         self.assertEqual(len(splits), len(consumer.consumers))
-        self.assertTrue(all( TokenFilterConsumer == type(consumer) for consumer in consumer.consumers ))
-        self.assertTrue(all( StatConsumer == type(consumer.consumer) for consumer in consumer.consumers ))
+        self.assertTrue(all( StatConsumer == type(_consumer) for _consumer in consumer.consumers ))
 
         """
         FIRE consumer
@@ -378,8 +377,7 @@ class TestConsume(unittest.TestCase):
                                            min_size=5, max_intra_similarity=0.9, freeze_period=10)
         self.assertEqual(TokenSplitConsumer, type(consumer))
         self.assertEqual(len(splits), len(consumer.consumers))
-        self.assertTrue(all( TokenFilterConsumer == type(consumer) for consumer in consumer.consumers ))
-        self.assertTrue(all( FIREConsumer == type(consumer.consumer) for consumer in consumer.consumers ))
+        self.assertTrue(all( FIREConsumer == type(_consumer) for _consumer in consumer.consumers ))
 
         """
         ELD consumer
@@ -388,8 +386,29 @@ class TestConsume(unittest.TestCase):
                                            min_size=5, max_intra_similarity=0.9, freeze_period=10)
         self.assertEqual(TokenSplitConsumer, type(consumer))
         self.assertEqual(len(splits), len(consumer.consumers))
-        self.assertTrue(all( TokenFilterConsumer == type(consumer) for consumer in consumer.consumers ))
-        self.assertTrue(all( ELDConsumer == type(consumer.consumer) for consumer in consumer.consumers ))
+        self.assertTrue(all( ELDConsumer == type(_consumer) for _consumer in consumer.consumers ))
+
+    def test_create_consumer_with_splits_default(self):
+        """
+        Test that when creating a consumer with splits and a default stream, an extra stream is created.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '../../eventdt/tests/corpora/consume/splits.csv')
+        splits = consume.splits(file)
+
+        idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        with open(idf) as f:
+            data = json.loads(f.readline())
+            scheme = Exportable.decode(data)['tfidf']
+
+        consumer = consume.create_consumer(StatConsumer, Queue(), scheme=scheme, splits=splits, splits_with_default=False, periodicity=20)
+        self.assertEqual(len(splits), len(consumer.splits))
+        self.assertEqual(len(splits), len(consumer.consumers))
+
+        consumer = consume.create_consumer(StatConsumer, Queue(), scheme=scheme, splits=splits, splits_with_default=True, periodicity=20)
+        self.assertEqual(len(splits) + 1, len(consumer.splits))
+        self.assertEqual(len(splits) + 1, len(consumer.consumers))
+        self.assertEqual('*', consumer.splits[-1])
 
     def test_create_consumer_with_splits_routing(self):
         """
@@ -408,20 +427,20 @@ class TestConsume(unittest.TestCase):
         Stat consumer
         """
         consumer = consume.create_consumer(StatConsumer, Queue(), scheme=scheme, splits=splits, periodicity=20)
-        self.assertTrue(all( 20 == consumer.consumer.periodicity for consumer in consumer.consumers ))
+        self.assertTrue(all( 20 == _consumer.periodicity for _consumer in consumer.consumers ))
 
         """
         Zhao consumer - default
         """
         consumer = consume.create_consumer(ZhaoConsumer, Queue(), scheme=scheme, splits=splits)
-        self.assertTrue(all( 1.7 == consumer.consumer.tdt.post_rate for consumer in consumer.consumers ))
+        self.assertTrue(all( 1.7 == _consumer.tdt.post_rate for _consumer in consumer.consumers ))
 
         """
         Zhao consumer - custom
         """
         consumer = consume.create_consumer(ZhaoConsumer, Queue(), scheme=scheme, splits=splits, periodicity=1, post_rate=2.1)
-        self.assertTrue(all( 1 == consumer.consumer.periodicity for consumer in consumer.consumers ))
-        self.assertTrue(all( 2.1 == consumer.consumer.tdt.post_rate for consumer in consumer.consumers ))
+        self.assertTrue(all( 1 == _consumer.periodicity for _consumer in consumer.consumers ))
+        self.assertTrue(all( 2.1 == _consumer.tdt.post_rate for _consumer in consumer.consumers ))
 
         """
         FIRE consumer
@@ -430,12 +449,12 @@ class TestConsume(unittest.TestCase):
                                            max_intra_similarity=0.9, min_burst=0.1, periodicity=20, threshold=0.8,
                                            min_volume=50, burst_start=0.7, burst_end=0.4, freeze_period=10,
                                            log_nutrition=True)
-        self.assertTrue(all( FIREConsumer == type(consumer.consumer) for consumer in consumer.consumers ))
-        self.assertTrue(all( 5 == consumer.consumer.min_size for consumer in consumer.consumers ))
-        self.assertTrue(all( 20 == consumer.consumer.periodicity for consumer in consumer.consumers ))
-        self.assertTrue(all( scheme == consumer.consumer.scheme for consumer in consumer.consumers ))
-        self.assertTrue(all( 10 == consumer.consumer.clustering.freeze_period for consumer in consumer.consumers ))
-        self.assertTrue(all( 0.8 == consumer.consumer.clustering.threshold for consumer in consumer.consumers ))
+        self.assertTrue(all( FIREConsumer == type(_consumer) for _consumer in consumer.consumers ))
+        self.assertTrue(all( 5 == _consumer.min_size for _consumer in consumer.consumers ))
+        self.assertTrue(all( 20 == _consumer.periodicity for _consumer in consumer.consumers ))
+        self.assertTrue(all( scheme == _consumer.scheme for _consumer in consumer.consumers ))
+        self.assertTrue(all( 10 == _consumer.clustering.freeze_period for _consumer in consumer.consumers ))
+        self.assertTrue(all( 0.8 == _consumer.clustering.threshold for _consumer in consumer.consumers ))
 
         """
         ELD consumer
@@ -444,13 +463,13 @@ class TestConsume(unittest.TestCase):
                                            min_size=5, min_burst=0.1, max_intra_similarity=0.9, threshold=0.8,
                                            periodicity=20, min_volume=50, burst_start=0.7, burst_end=0.4,
                                            freeze_period=10, log_nutrition=True)
-        self.assertTrue(all( 5 == consumer.consumer.min_size for consumer in consumer.consumers ))
-        self.assertTrue(all( 0.1 == consumer.consumer.min_burst for consumer in consumer.consumers ))
-        self.assertTrue(all( 0.9 == consumer.consumer.max_intra_similarity for consumer in consumer.consumers ))
-        self.assertTrue(all( scheme == consumer.consumer.scheme for consumer in consumer.consumers ))
-        self.assertTrue(all( 10 == consumer.consumer.clustering.freeze_period for consumer in consumer.consumers ))
-        self.assertTrue(all( 0.8 == consumer.consumer.clustering.threshold for consumer in consumer.consumers ))
-        self.assertTrue(all( consumer.consumer.log_nutrition for consumer in consumer.consumers ))
+        self.assertTrue(all( 5 == _consumer.min_size for _consumer in consumer.consumers ))
+        self.assertTrue(all( 0.1 == _consumer.min_burst for _consumer in consumer.consumers ))
+        self.assertTrue(all( 0.9 == _consumer.max_intra_similarity for _consumer in consumer.consumers ))
+        self.assertTrue(all( scheme == _consumer.scheme for _consumer in consumer.consumers ))
+        self.assertTrue(all( 10 == _consumer.clustering.freeze_period for _consumer in consumer.consumers ))
+        self.assertTrue(all( 0.8 == _consumer.clustering.threshold for _consumer in consumer.consumers ))
+        self.assertTrue(all( _consumer.log_nutrition for _consumer in consumer.consumers ))
 
         """
         FUEGO consumer
@@ -459,11 +478,11 @@ class TestConsume(unittest.TestCase):
                                            min_size=5, min_burst=0.1, max_intra_similarity=0.9, threshold_type=DynamicThreshold.MEAN_STDEV,
                                            periodicity=20, min_volume=50, burst_start=0.7, burst_end=0.4,
                                            freeze_period=10, log_nutrition=True)
-        self.assertTrue(all( scheme == consumer.consumer.scheme for consumer in consumer.consumers ))
-        self.assertTrue(all( 50 == consumer.consumer.min_volume for consumer in consumer.consumers ))
-        self.assertTrue(all( 0.7 == consumer.consumer.burst_start for consumer in consumer.consumers ))
-        self.assertTrue(all( 0.4 == consumer.consumer.burst_end for consumer in consumer.consumers ))
-        self.assertTrue(all( DynamicThreshold.MEAN_STDEV == consumer.consumer.threshold for consumer in consumer.consumers ))
+        self.assertTrue(all( scheme == _consumer.scheme for _consumer in consumer.consumers ))
+        self.assertTrue(all( 50 == _consumer.min_volume for _consumer in consumer.consumers ))
+        self.assertTrue(all( 0.7 == _consumer.burst_start for _consumer in consumer.consumers ))
+        self.assertTrue(all( 0.4 == _consumer.burst_end for _consumer in consumer.consumers ))
+        self.assertTrue(all( DynamicThreshold.MEAN_STDEV == _consumer.threshold for _consumer in consumer.consumers ))
 
     def test_create_consumer_with_filters(self):
         """

@@ -754,7 +754,7 @@ def consume_process(comm, loop, consumer, max_inactivity):
     comm.update(loop.run_until_complete(consume(consumer, max_inactivity)))
     logger.info("Consumption ended")
 
-def create_consumer(consumer, queue, filters=None, splits=None, threshold_type=None,  *args, **kwargs):
+def create_consumer(consumer, queue, filters=None, splits=None, threshold_type=None, splits_with_default=False, *args, **kwargs):
     """
     Create a consumer.
     If splits are given, the function creates a :class:`~queues.consumers.token_split_consumer.TokenSplitConsumer`.
@@ -770,6 +770,8 @@ def create_consumer(consumer, queue, filters=None, splits=None, threshold_type=N
     :type filters: list of str
     :param threshold_type: The threshold type that the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer` should use.
     :type threshold_type: :class:`~queues.consumers.algorithms.fuego_consumer.DynamicThreshold`
+    :param splits_with_default: A boolean indicating whether to use a default split, for all documents that belong to no stream (used only if splits are given)
+    :type splits_with_default: bool
 
     :return: A consumer with the given parameters.
     :rtype: :class:`~queues.consumers.Consumer`
@@ -781,7 +783,7 @@ def create_consumer(consumer, queue, filters=None, splits=None, threshold_type=N
         return TokenFilterConsumer(queue, filters, consumer, *args, **kwargs)
 
     if splits:
-        return TokenSplitConsumer(queue, splits, consumer, *args, **kwargs)
+        return TokenSplitConsumer(queue, splits, consumer, has_default=splits_with_default, *args, **kwargs)
 
     return consumer(queue, *args, **kwargs)
 
