@@ -55,12 +55,13 @@ class TestSplitConsumer(unittest.TestCase):
 
     def test_init_tuple_splits(self):
         """
-        Test that the split consumer accepts a tuple of splits.
+        Test that the split consumer accepts a tuple of splits but converts them to lists.
         """
 
         splits = ( (0, 50), (50, 100) )
         consumer = DummySplitConsumer(Queue(), splits, PrintConsumer)
         self.assertEqual(2, len(consumer.consumers))
+        self.assertEqual(list, type(consumer.splits))
 
     def test_init_primitive_splits_raises_ValueError(self):
         """

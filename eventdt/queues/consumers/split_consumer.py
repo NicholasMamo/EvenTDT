@@ -92,7 +92,7 @@ class SplitConsumer(Consumer):
         if type(splits) not in [ list, tuple ]:
             raise ValueError(f"Expected a list or tuple of splits; received { type(splits) }")
 
-        self.splits = splits
+        self.splits = list(splits)
         self.consumers = self._consumers(consumer, splits, *args, **kwargs)
 
     async def run(self, wait=0, max_inactivity=-1, *args, **kwargs):
