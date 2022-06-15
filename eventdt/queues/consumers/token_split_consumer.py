@@ -128,7 +128,7 @@ class TokenSplitConsumer(SplitConsumer):
         # NOTE: The TokenFilterConsumer consumer will accept or reject tweets
         return True
 
-    def _consumers(self, consumer, splits, *args, **kwargs):
+    def _consumers(self, consumer, *args, **kwargs):
         """
         Create the consumers which will receive the tweets from each stream.
 
@@ -136,9 +136,6 @@ class TokenSplitConsumer(SplitConsumer):
 
         :param consumer: The type of :class:`~queues.consumers.Consumer` to create.
         :type consumer: type
-        :param splits: The splits corresponding to the created consumers.
-                       This is used to generate a name for each child consumer.
-        :type splits: list or tuple
 
         :return: A number of consumers, equivalent to the given number.
                  All consumers are identical to each other, but have their own :class:`~queues.Queue`.
@@ -149,4 +146,4 @@ class TokenSplitConsumer(SplitConsumer):
         return [ TokenFilterConsumer(Queue(), split, consumer, name=str(split),
                                      matches=self.matches, tokenizer=self.tokenizer,
                                      *args, **kwargs)
-                 for split in splits ]
+                 for split in self.splits ]
