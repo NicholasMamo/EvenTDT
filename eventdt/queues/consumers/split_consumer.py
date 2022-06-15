@@ -187,10 +187,21 @@ class SplitConsumer(Consumer):
             items = self.queue.dequeue_all()
             items = [ self._preprocess(item) for item in items ]
             for item in items:
+                has_been_consumed = False
                 for i, (split, consumer) in enumerate(zip(self.splits, self.consumers)):
-                    if self._satisfies(item, split):
+                    # split the default stream
+                    if self.has_default and split == '*':
+                        continue
+
+                    if  self._satisfies(item, split):
                         consumed[i] += 1
                         consumer.queue.enqueue(item)
+                        has_been_consumed = True
+
+                if self.has_default and not has_been_consumed:
+                    index = self.splits.index('*') # find the default stream
+                    default = self.consumers[index].queue.enqueue(item)
+                    consumed[i] += 1
 
         self.stop()
         return { 'split.consumed': consumed }
