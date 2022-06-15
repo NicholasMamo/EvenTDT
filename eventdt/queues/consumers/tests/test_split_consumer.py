@@ -102,6 +102,26 @@ class TestSplitConsumer(unittest.TestCase):
         consumer = DummySplitConsumer(Queue(), splits, ZhaoConsumer, periodicity=10)
         self.assertTrue(all( 10 == _consumer.periodicity for _consumer in consumer.consumers ))
 
+    def test_init_no_has_default(self):
+        """
+        Test that by default, only the given streams are created.
+        """
+
+        splits = [ (0, 50), (50, 100) ]
+        consumer = DummySplitConsumer(Queue(), splits, PrintConsumer, has_default=False)
+        self.assertEqual(splits, consumer.splits)
+        self.assertEqual(len(splits), len(consumer.consumers))
+
+    def test_init_has_default(self):
+        """
+        Test that if the consumer has a default stream, an extra split is created.
+        """
+
+        splits = [ (0, 50), (50, 100) ]
+        consumer = DummySplitConsumer(Queue(), splits, PrintConsumer, has_default=True)
+        self.assertEqual(splits + [ '*' ], consumer.splits)
+        self.assertEqual(len(splits) + 1, len(consumer.consumers))
+
     @async_test
     async def test_run_starts_consumers(self):
         """

@@ -62,12 +62,14 @@ class SplitConsumer(Consumer):
     :ivar splits: A list of splits, or conditions that determine into which queue a tweet goes.
                   The type of the splits depends on what the :func:`~queues.consumers.split_consumer.SplitConsumer._satisfies` function looks for.
     :vartype splits: list
+    :ivar has_default: A boolean indicating whether to create a default stream to handle tweets that satisfy no split.
+    :vartype has_default: bool
     :ivar consumers: The consumers that will receive the tweets from the different splits.
                      Each consumer corresponds to one split.
     :vartype consumers: list of :class:`~queues.consumers.Consumer`
     """
 
-    def __init__(self, queue, splits, consumer, name=None, *args, **kwargs):
+    def __init__(self, queue, splits, consumer, has_default=False, name=None, *args, **kwargs):
         """
         Initialize the consumer with its :class:`~queues.Queue`.
 
@@ -81,6 +83,8 @@ class SplitConsumer(Consumer):
         :param splits: A list of splits, or conditions that determine into which queue a tweet goes.
                        The type of the splits depends on what the :func:`~queues.consumers.split_consumer.SplitConsumer._satisfies` function looks for.
         :type splits: list or tuple
+        :param has_default: A boolean indicating whether to create a default stream to handle tweets that satisfy no split.
+        :type has_default: bool
         :param consumer: The type of :class:`~queues.consumers.Consumer` to create for each split.
         :type consumer: type
         :param name: The consumer's name.
@@ -92,8 +96,9 @@ class SplitConsumer(Consumer):
         if type(splits) not in [ list, tuple ]:
             raise ValueError(f"Expected a list or tuple of splits; received { type(splits) }")
 
-        self.splits = list(splits)
         self.consumers = self._consumers(consumer, splits, *args, **kwargs)
+        self.splits = list(splits) + ([ '*' ] if has_default else [ ])
+        self.has_default = has_default
 
     async def run(self, wait=0, max_inactivity=-1, *args, **kwargs):
         """
