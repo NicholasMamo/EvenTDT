@@ -7,7 +7,7 @@ source variables.sh
 source venv/bin/activate
 
 usage() {
-	echo -e "${HIGHLIGHT}Usage: sh $0 [-t <apd|ate|base|nlp|queue|summarization|tdt|twitter|vector|wikipedia>]"${DEFAULT};
+	echo -e "${HIGHLIGHT}Usage: sh $0 [-t <apd|ate|base|modeling|ml|nlp|queue|summarization|tdt|twitter|vector|wikipedia>]"${DEFAULT};
 }
 
 apd_tests() {
@@ -99,6 +99,11 @@ base_tests() {
 
 	echo -e "${HIGHLIGHT}Ordered Enum${DEFAULT}"
 	python3 -m unittest eventdt.objects.tests.test_ordered_enum
+}
+
+modeling_tests() {
+	echo -e "${HIGHLIGHT}Event modeling${DEFAULT}"
+	python3 -m unittest eventdt.modeling.tests.test_package
 }
 
 ml_tests() {
@@ -275,6 +280,9 @@ then
 			;;
 		base)
 			base_tests
+			;;
+		modeling)
+			modeling_tests
 			;;
 		ml)
 			ml_tests
