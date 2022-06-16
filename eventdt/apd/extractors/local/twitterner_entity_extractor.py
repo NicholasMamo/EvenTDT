@@ -73,7 +73,7 @@ class TwitterNEREntityExtractor(Extractor):
 
         candidates = [ ]
 
-        try:
+        if os.path.exists(corpus):
             with open(corpus) as f:
                 for line in f:
                     tweet = json.loads(line)
@@ -85,8 +85,7 @@ class TwitterNEREntityExtractor(Extractor):
 
                     candidates.append([ " ".join(tokens[start:end])
                                         for (start, end, type) in entities ])
-        except Exception as e:
-            # this block only used to test with TwitterNER's example
+        else:
             tokens = tokenizeRawTweetText(corpus)
             entities = TwitterNEREntityExtractor.ner.get_entities(tokens)
 
