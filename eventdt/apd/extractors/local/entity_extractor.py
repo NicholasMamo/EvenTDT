@@ -63,19 +63,30 @@ class EntityExtractor(Extractor):
 
         candidates = [ ]
 
-        with open(corpus) as f:
-            for line in f:
-                candidates.append([ ])
-                tweet = json.loads(line)
-                text = twitter.full_text(tweet)
-                text = twitter.expand_mentions(text, tweet)
+        if os.path.exists(corpus):
+            with open(corpus) as f:
+                for line in f:
+                    candidates.append([ ])
+                    tweet = json.loads(line)
+                    text = twitter.full_text(tweet)
+                    text = twitter.expand_mentions(text, tweet)
 
-                # split the document into sentences, and extract the named entities from each sentence
-                sentences = nltk.sent_tokenize(text)
-                for sentence in sentences:
-                    chunks = self._extract_entities(sentence)
-                    named_entities = self._combine_adjacent_entities(chunks)
-                    candidates[-1].extend(named_entities)
+                    # split the document into sentences, and extract the named entities from each sentence
+                    sentences = nltk.sent_tokenize(text)
+                    for sentence in sentences:
+                        chunks = self._extract_entities(sentence)
+                        named_entities = self._combine_adjacent_entities(chunks)
+                        candidates[-1].extend(named_entities)
+        else:
+            candidates.append([ ])
+            text = corpus
+
+            # split the text into sentences, and extract the named entities from each sentence
+            sentences = nltk.sent_tokenize(text)
+            for sentence in sentences:
+                chunks = self._extract_entities(sentence)
+                named_entities = self._combine_adjacent_entities(chunks)
+                candidates[-1].extend(named_entities)
 
         return candidates
 

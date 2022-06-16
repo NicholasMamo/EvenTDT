@@ -137,7 +137,7 @@ class TestEntityExtractor(unittest.TestCase):
         candidates = extractor.extract(path)
         self.assertEqual([ "Bayern Munich", "Chelsea", "Callum" ], candidates[0])
 
-    def test_extract_from_text(self):
+    def test_extract_in_text(self):
         """
         Test that the entity extractor's named entities do appear in the corresponding tweet.
         """
@@ -153,3 +153,13 @@ class TestEntityExtractor(unittest.TestCase):
                 text = twitter.expand_mentions(text, tweet)
 
                 self.assertTrue(all( candidate in text or '\n' in text for candidate in candidates[i] ))
+
+    def test_extract_from_text(self):
+        """
+        Test that the entity extractor extracts named entities from the text if it is not a valid path.
+        """
+
+        extractor = EntityExtractor()
+        candidates = extractor.extract("Uvalde is a city and the county seat of Uvalde County, Texas, United States.")
+        self.assertEqual(1, len(candidates))
+        self.assertEqual([ "Uvalde", "Uvalde County", "Texas", "United States" ], candidates[0])
