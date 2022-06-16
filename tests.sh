@@ -104,6 +104,7 @@ base_tests() {
 modeling_tests() {
 	echo -e "${HIGHLIGHT}Event modeling${DEFAULT}"
 	python3 -m unittest eventdt.modeling.tests.test_package
+	python3 -m unittest eventdt.modeling.modelers.tests.test_package
 }
 
 ml_tests() {

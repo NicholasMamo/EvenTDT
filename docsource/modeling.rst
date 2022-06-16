@@ -10,3 +10,12 @@
    :members:
    :private-members:
    :special-members:
+
+==============
+Event modelers
+==============
+
+.. automodule:: modeling.modelers
+  :members:
+  :private-members:
+  :special-members:

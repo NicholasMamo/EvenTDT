@@ -13,7 +13,7 @@ for path in paths:
     if path not in sys.path:
         sys.path.append(path)
 
-from modeling import *
+from modeling import EventModel
 from summarization.timeline import Timeline
 
 class TestPackage(unittest.TestCase):
@@ -21,7 +21,7 @@ class TestPackage(unittest.TestCase):
     Test the functionality of the package functions.
     """
 
-    def test_event_model_init_empty(self):
+    def test_init_empty(self):
         """
         Test that by default, the event model still stores the `five Ws and one H`.
         """
@@ -29,7 +29,7 @@ class TestPackage(unittest.TestCase):
         model = EventModel()
         self.assertEqual({ 'who', 'what', 'where', 'when', 'why', 'how' }, set(model.attributes.keys()))
 
-    def test_event_model_init_with_attributes(self):
+    def test_init_with_attributes(self):
         """
         Test that the event model accepts additional attributes in additional to the `five Ws and one H`.
         """
@@ -37,7 +37,7 @@ class TestPackage(unittest.TestCase):
         model = EventModel(attributes={ 'version': 1 })
         self.assertEqual({ 'version', 'who', 'what', 'where', 'when', 'why', 'how' }, set(model.attributes.keys()))
 
-    def test_event_model_init_no_overwrite(self):
+    def test_init_no_overwrite(self):
         """
         Test that the event model does not overwrite any attributes.
         """
@@ -46,7 +46,7 @@ class TestPackage(unittest.TestCase):
         self.assertEqual('Truman', model.who)
         self.assertEqual(1, model.version)
 
-    def test_event_model_copy(self):
+    def test_copy(self):
         """
         Test that copying the event model includes all attributes.
         """
@@ -62,7 +62,7 @@ class TestPackage(unittest.TestCase):
         self.assertEqual(model.why, copy.why)
         self.assertEqual(model.how, copy.how)
 
-    def test_event_model_copy_attributes(self):
+    def test_copy_attributes(self):
         """
         Test that the attributes are also copied.
         """
@@ -72,7 +72,7 @@ class TestPackage(unittest.TestCase):
         copy = model.copy()
         self.assertEqual(model.attributes, copy.attributes)
 
-    def test_event_model_copy_attributes_original(self):
+    def test_copy_attributes_original(self):
         """
         Test that changing the copy's attributes does not affect the original's, and vice-versa.
         """
@@ -89,7 +89,7 @@ class TestPackage(unittest.TestCase):
         self.assertEqual('Harry Truman', copy.who)
         self.assertEqual('Harry S. Truman', model.who)
 
-    def test_event_model_copy_nested_attributes_original(self):
+    def test_copy_nested_attributes_original(self):
         """
         Test that changing the copy's nested attributes does not affect the original's, and vice-versa.
         """
@@ -106,7 +106,7 @@ class TestPackage(unittest.TestCase):
         self.assertEqual(2, copy.version['version'])
         self.assertEqual(2.2, model.version['version'])
 
-    def test_event_model_export(self):
+    def test_export(self):
         """
         Test exporting and importing an event model.
         """
@@ -118,7 +118,7 @@ class TestPackage(unittest.TestCase):
         self.assertEqual(model.attributes, EventModel.from_array(exported).attributes)
         self.assertEqual(model.__dict__, EventModel.from_array(exported).__dict__)
 
-    def test_event_model_export_attributes(self):
+    def test_export_attributes(self):
         """
         Test that exporting and importing event models includes attributes.
         """
@@ -129,24 +129,3 @@ class TestPackage(unittest.TestCase):
 
         self.assertEqual(model.attributes, EventModel.from_array(exported).attributes)
         self.assertEqual(model.__dict__, EventModel.from_array(exported).__dict__)
-
-    def test_event_modeler_all_nodes(self):
-        """
-        Test that the event modeler returns one event model for each node in a timeline.
-        """
-
-        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'), 'r') as f:
-            timeline = Timeline.from_array(json.loads(''.join(f.readlines()))['timeline'])
-            modeler = DummyEventModeler()
-            self.assertEqual(len(timeline.nodes), len(modeler.model(timeline)))
-
-    def test_event_modeler_returns_event_models(self):
-        """
-        Test that the event modeler returns a list of event models.
-        """
-
-        with open(os.path.join(os.path.dirname(__file__), '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'), 'r') as f:
-            timeline = Timeline.from_array(json.loads(''.join(f.readlines()))['timeline'])
-            modeler = DummyEventModeler()
-            self.assertEqual(list, type(modeler.model(timeline)))
-            self.assertTrue(all( EventModel == type(model) for model in modeler.model(timeline) ))
