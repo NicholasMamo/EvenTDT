@@ -23,6 +23,7 @@ Welcome to EvenTDT's documentation!
    consumers
    ml
    ate
+   modeling
    other
 
 Indices and tables
