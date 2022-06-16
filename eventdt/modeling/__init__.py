@@ -2,6 +2,7 @@
 The event modeling package contains classes and functions that make it easier to formally represent events.
 """
 
+from abc import ABC, abstractmethod
 import copy
 import os
 import sys
@@ -79,3 +80,10 @@ class EventModel(Attributable, Exportable):
         return EventModel(who=attributes.get('who'), what=attributes.get('what'), where=attributes.get('where'),
                           when=attributes.get('when'), why=attributes.get('why'), how=attributes.get('how'),
                           attributes=copy.deepcopy(attributes))
+
+class EventModeler(ABC):
+    """
+    The :class:`~modeling.EventModeler` receives :class:`~summarization.timeline.Timeline <timelines>` and builds one :class:`~modeling.EventModel` for each node in it.
+    """
+
+    pass
