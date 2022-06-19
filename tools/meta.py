@@ -130,7 +130,7 @@ def pprint_tar(archive, force_count):
     details = { 'understanding': { }, 'event': { }, 'sample': { } }
 
     tar = tarfile.open(archive, "r:gz")
-    files = [ 'meta.json', 'understanding.json', 'event.json', 'sample.json' ]
+    files = [ 'meta.json', 'json.meta', 'understanding.json', 'event.json', 'sample.json' ]
 
     # try to load the details from the meta.json file
     for member in tar.getmembers():
@@ -141,7 +141,7 @@ def pprint_tar(archive, force_count):
             file = tar.extractfile(member)
 
             # read the meta.json file differently from the others
-            if basename == 'meta.json':
+            if basename == 'meta.json' or basename == 'json.meta':
                 content = json.loads(file.read())
                 details['sample'] = details.get('sample', { })
                 details['understanding'] = details.get('understanding', { })
