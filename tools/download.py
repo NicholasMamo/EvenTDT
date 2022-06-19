@@ -159,7 +159,7 @@ def download(file, output, auth):
             read = False
             while not read:
                 try:
-                    statuses = api.statuses_lookup(_ids)
+                    statuses = api.lookup_statuses(_ids)
                     statuses = [ status._json for status in statuses ]
 
                     # sort the statuses in the same order as in the original list
@@ -172,8 +172,8 @@ def download(file, output, auth):
                     for status in statuses:
                         outfile.write(f"{ json.dumps(status)}\n")
                     read = True
-                except tweepy.error.RateLimitError:
-                    logger.warning("Rate limit reached")
+                except tweepy.errors.HTTPException as e:
+                    logger.warning(e)
                     time.sleep(60)
 
             # print progress updates regularly
