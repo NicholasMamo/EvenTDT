@@ -11,7 +11,7 @@ To run this tool, use the following:
     ./tools/download.py \\
     --file data/shareable.txt \\
     --output data/output.json \\
-    --meta meta/output.json
+    --meta meta/output.meta.json
 
 .. note::
 
@@ -23,7 +23,7 @@ The full list of accepted arguments:
     - ``-f --file``                          *<Required>* The shareable corpus created by the :mod:`~tools.collect` tool.
     - ``-o --output``                        *<Required>* The file where to save the downloaded corpus.
     - ``-a --account``                       *<Optional>* The account to use to collect the corpus with, as an index of the configuration's accounts. Defaults to the first account.
-    - ``--meta``                             *<Optional>* The file where to save the meta data, defaults to [--file].meta.
+    - ``--meta``                             *<Optional>* The file where to save the meta data, defaults to [--file].meta.json.
 """
 
 import argparse
@@ -55,7 +55,7 @@ def setup_args():
         - ``-f --file``                          *<Required>* The shareable corpus created by the :mod:`~tools.collect` tool.
         - ``-o --output``                        *<Required>* The file where to save the downloaded corpus.
         - ``-a --account``                       *<Optional>* The account to use to collect the corpus with, as an index of the configuration's accounts. Defaults to the first account.
-        - ``--meta``                             *<Optional>* The file where to save the meta data, defaults to [--file].meta.
+        - ``--meta``                             *<Optional>* The file where to save the meta data, defaults to [--file].meta.json.
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
@@ -71,7 +71,7 @@ def setup_args():
                         default=0, required=False,
                         help='<Optional> The account to use to collect the corpus with, as an index of the configuration\'s accounts. Defaults to the first account.')
     parser.add_argument('--meta', type=str, required=False,
-                        help='<Optional> The file where to save the meta data, defaults to [--file].meta.')
+                        help='<Optional> The file where to save the meta data, defaults to [--file].meta.json.')
 
     args = parser.parse_args()
     return args
@@ -91,7 +91,7 @@ def main():
     retrieved, irretrievable = download(args.file, args.output, auth)
     end = time.time()
 
-    meta = args.meta or f"{ args.output }.meta"
+    meta = args.meta or f"{ os.path.splitext(os.path.basename(args.output))[0] }.meta.json"
     pcmd['meta'] = meta
     pcmd['retrieved'], pcmd['irretrievable'] = retrieved, irretrievable
     pcmd['start'] = start
