@@ -91,7 +91,7 @@ def main():
     retrieved, irretrievable = download(args.file, args.output, auth)
     end = time.time()
 
-    meta = args.meta or f"{ os.path.splitext(os.path.basename(args.output))[0] }.meta.json"
+    meta = args.meta or f"{ os.path.splitext(args.output)[0] }.meta.json"
     pcmd['meta'] = meta
     pcmd['retrieved'], pcmd['irretrievable'] = retrieved, irretrievable
     pcmd['start'] = start
