@@ -52,6 +52,7 @@ The output is a JSON file with the following structure:
             "_timestamp": 1622367124.775234,
             "_cmd": "./tools/concepts.py --correlations data/correlations.json --output data/concepts.json --concepts 3 --percentile 0.95"
         },
+        "modularity": 0.7,
         "concepts": [
             [
                 "offsid",
@@ -167,9 +168,11 @@ def main():
 
     extractor = create_extractor(args.method, **vars(args)) # create the extractor
     concepts = extract(extractor, args.concepts, **vars(args)) # extract the concepts
+    modularity = quality.modularity(extractor.graph, concepts) # calculate the modularity
+    logger.info(f"Modularity: { modularity }")
 
     # save the meta data and concepts to file
-    tools.save(args.output, { 'cmd': cmd, 'pcmd': pcmd, 'concepts': concepts })
+    tools.save(args.output, { 'cmd': cmd, 'pcmd': pcmd, 'concepts': concepts, 'modularity': modularity })
 
 def create_extractor(_type, correlations, *args, **kwargs):
     """
@@ -207,7 +210,6 @@ def extract(extractor, n, *args, **kwargs):
     concepts = extractor.cluster(n, *args, **kwargs)
     concepts = [ list(concept) for concept in concepts ]
     concepts = sorted(concepts, key=len, reverse=True)
-    logger.info(f"Modularity: { quality.modularity(extractor.graph, concepts) }")
     return concepts
 
 def method(method):
