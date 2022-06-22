@@ -13,6 +13,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from objects import Attributable, Exportable
+import nlp
 
 class Profile(Attributable, Exportable):
     """
@@ -84,6 +85,32 @@ class Profile(Attributable, Exportable):
                 _matching.add(attribute)
 
         return _matching
+
+    def type(self):
+        """
+        Get the type of entity that the profile represents.
+
+        The function uses a combination of heuristics.
+        If the profile has an attribute that starts with `born`, for example, the function assumes that the profile represents a person.
+
+        The function also assumes that the profile was created from a Wikipedia definition sentence.
+        The assumption thus requires that the first words name the entity.
+
+        :return: The type of named entity that the profile represents.
+                 The types can be one of NLTK's, namely _PERSON_, _GPE_ or _ORGANIZATION_.
+                 The function returns `None` if the profile could not be resolved to a type.
+        :rtype: str or None
+        """
+
+        if any( attribute.startswith('born') for attribute in self.attributes ):
+            return "PERSON"
+
+        entities = nlp.entities(self.text)
+        for entity, _type in entities:
+            if self.text.startswith(entity):
+                return _type
+
+        return None
 
     def to_array(self):
         """

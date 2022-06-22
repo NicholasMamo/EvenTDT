@@ -12,6 +12,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from attributes.profile import Profile
+from attributes.extractors import LinguisticExtractor
 
 class TestProfile(unittest.TestCase):
     """
@@ -361,6 +362,71 @@ class TestProfile(unittest.TestCase):
         p1, p2 = Profile(attributes={ 'plays_as': [ 'striker' ] }), Profile(attributes={ 'plays_as': [ 'striker', 'defender' ] })
         self.assertEqual({ 'plays_as' }, p1.matching(p2, policy=any))
         self.assertEqual(set(), p1.matching(p2, policy=all))
+
+    def test_type_returns_str(self):
+        """
+        Test that the type of a profile is returned as a string.
+        """
+
+        text = "Max Emilian Verstappen (born 30 September 1997) is a Belgian-Dutch[2] racing driver and the 2021 Formula One World Champion."
+        profile = LinguisticExtractor().extract(text)
+        self.assertEqual(str, type(profile.type()))
+
+    def test_type_empty_profile(self):
+        """
+        Test that an empty profile has no type.
+        """
+
+        profile = Profile()
+        self.assertEqual(None, profile.type())
+
+    def test_type_born_heuristic(self):
+        """
+        Test that a profile that has a `born` attribute automatically gets the type of a person.
+        """
+
+        profile = Profile(attributes={ 'born': [ '1958' ] })
+        self.assertEqual("PERSON", profile.type())
+
+    def test_type_born_PRP_heuristic(self):
+        """
+        Test that a profile that has a `born` attribute automatically gets the type of a person.
+        """
+
+        profile = Profile(attributes={ 'born_in': [ 'louisiana' ] })
+        self.assertEqual("PERSON", profile.type())
+
+    def test_type_from_text(self):
+        """
+        Test that if no heuristics apply, the profile's type is determined from the text.
+        """
+
+        text = "Max Emilian Verstappen (born 30 September 1997) is a Belgian-Dutch[2] racing driver and the 2021 Formula One World Champion."
+        profile = LinguisticExtractor().extract(text)
+        self.assertTrue('born' not in profile.attributes)
+        self.assertEqual('PERSON', profile.type())
+
+        text = "Salzburg (Austrian German: [ˈsaltsbʊʁk], German: [ˈzaltsbʊʁk] (listen);[note 1] literally \"Salt-Mountain\"; Austro-Bavarian: Soizbuag) is the fourth-largest city in Austria."
+        profile = LinguisticExtractor().extract(text)
+        self.assertEqual('GPE', profile.type())
+
+    def test_type_not_start(self):
+        """
+        Test that if no heuristics apply and the profile's text does not start with a recognized named entity, but the named entity appears later, it inherits the found type.
+        """
+
+        text = "Red Bull Racing, also simply known as Red Bull or RBR and competing as Oracle Red Bull Racing, is a Formula One racing team, racing under an Austrian licence and based in the United Kingdom."
+        profile = LinguisticExtractor().extract(text)
+        self.assertEqual("ORGANIZATION", profile.type())
+
+    def test_type_unknown(self):
+        """
+        Test that if no heuristics apply and the profile's text does not start with a recognized named entity, its type is taken to be `None`.
+        """
+
+        text = "The GP2 Series was a form of open wheel motor racing introduced in 2005 following the discontinuation of the long-term Formula One feeder series, Formula 3000."
+        profile = LinguisticExtractor().extract(text)
+        self.assertEqual(None, profile.type())
 
     def test_export(self):
         """
