@@ -13,6 +13,7 @@ if path not in sys.path:
 
 from attributes.profile import Profile
 from attributes.extractors import LinguisticExtractor
+import nlp
 
 class TestProfile(unittest.TestCase):
     """
@@ -551,6 +552,114 @@ class TestProfile(unittest.TestCase):
         for text in corpus:
             profile = LinguisticExtractor().extract(text)
             self.assertEqual(profile.is_organization(), (profile.type() == "ORGANIZATION"))
+
+    def test_filter_returns_profile(self):
+        """
+        Test that filtering a profile returns another profile.
+        """
+
+        text = "Salzburg (Austrian German: [ˈsaltsbʊʁk], German: [ˈzaltsbʊʁk] (listen);[note 1] literally \"Salt-Mountain\"; Austro-Bavarian: Soizbuag) is the fourth-largest city in Austria."
+        profile = LinguisticExtractor().extract(text)
+        self.assertEqual(Profile, type(profile.filter("PERSON")))
+
+    def test_filter_returns_copy(self):
+        """
+        Test that filtering a profile returns a copy.
+        """
+
+        text = "Salzburg (Austrian German: [ˈsaltsbʊʁk], German: [ˈzaltsbʊʁk] (listen);[note 1] literally \"Salt-Mountain\"; Austro-Bavarian: Soizbuag) is the fourth-largest city in Austria."
+        profile = LinguisticExtractor().extract(text)
+
+        filtered = profile.filter("GSP")
+        self.assertFalse(profile == filtered)
+
+        profile.attributes['is_in'] = { 'austria', 'europe' }
+        self.assertEqual({ 'austria' }, filtered.is_in)
+
+        filtered.attributes['is_in'] = { 'Austria' }
+        self.assertEqual({ 'austria', 'europe' }, profile.is_in)
+
+    def test_filter_empty_profile(self):
+        """
+        Test that filtering an empty profile returns another empty profile
+        """
+
+        profile = Profile()
+        filtered = profile.filter("PERSON")
+        self.assertEqual({ }, filtered.attributes)
+
+    def test_filter_unknown_type(self):
+        """
+        Test that filtering a profile with an unknown type of named entity returns an empty profile.
+        """
+
+        text = "Salzburg (Austrian German: [ˈsaltsbʊʁk], German: [ˈzaltsbʊʁk] (listen);[note 1] literally \"Salt-Mountain\"; Austro-Bavarian: Soizbuag) is the fourth-largest city in Austria."
+        profile = LinguisticExtractor().extract(text)
+        filtered = profile.filter("UNKNOWN")
+        self.assertEqual({ }, filtered.attributes)
+
+    def test_filter_no_empty_attributes(self):
+        """
+        Test that filtering a profile removes any attribute that has no values.
+        """
+
+        text = "Salzburg (Austrian German: [ˈsaltsbʊʁk], German: [ˈzaltsbʊʁk] (listen);[note 1] literally \"Salt-Mountain\"; Austro-Bavarian: Soizbuag) is the fourth-largest city in Austria."
+        profile = LinguisticExtractor().extract(text)
+        filtered = profile.filter("GSP")
+
+        self.assertTrue('is_in' in profile.attributes)
+        self.assertTrue('is_in' in filtered.attributes)
+
+        self.assertTrue('is' in profile.attributes)
+        self.assertFalse('is' in filtered.attributes)
+
+    def test_filter_folds_cases(self):
+        """
+        Test that when filtering, the profile performs case-insensitive checks.
+        """
+
+        text = "Salzburg (Austrian German: [ˈsaltsbʊʁk], German: [ˈzaltsbʊʁk] (listen);[note 1] literally \"Salt-Mountain\"; Austro-Bavarian: Soizbuag) is the fourth-largest city in Austria."
+        profile = LinguisticExtractor().extract(text)
+        filtered = profile.filter("GSP")
+        self.assertTrue(any( 'Austria' == entity for entity, _ in nlp.entities(text) ))
+        self.assertEqual({ 'austria' }, filtered.is_in)
+
+    def test_filter_several_types(self):
+        """
+        Test that providing several types of named entities returns all attribute values with the given types.
+        """
+
+        text = "Feyenoord Rotterdam is a Dutch professional football club in Rotterdam, which plays in the Eredivisie, the top tier in Dutch football."
+        profile = LinguisticExtractor().extract(text)
+        filtered = profile.filter([ "ORGANIZATION", "GPE" ])
+        self.assertEqual({ 'plays_in', 'is_in' }, set(filtered.attributes.keys()))
+        self.assertEqual({ 'eredivisie' }, filtered.plays_in)
+        self.assertEqual({ 'rotterdam' }, filtered.is_in)
+
+    def test_filter_correct_type(self):
+        """
+        Test that when filtering, all retained values have the correct type.
+
+        Note that the opposite is not necessarily true: named entities may appear in the text without being attribute values.
+        """
+
+        text = "Olympique Lyonnais, commonly referred to as simply Lyon or OL, is a French professional football club based in Lyon in Auvergne-Rhône-Alpes."
+        profile = LinguisticExtractor().extract(text)
+        entities = nlp.entities(text, entity_type="GPE")
+        entities = [ entity.lower() for entity, _ in entities ]
+        filtered = profile.filter("GPE")
+        self.assertTrue(all( value in entities for values in filtered.attributes.values()
+                                               for value in values ))
+
+    def test_filter_only_correct_values(self):
+        """
+        Test that when an attribute has multiple values, but only a subset are of a certain named entity type, only they are returned.
+        """
+
+        text = "Feyenoord Rotterdam is a Dutch professional football club in Rotterdam, which plays in the Eredivisie, the top tier in Dutch football."
+        profile = LinguisticExtractor().extract(text)
+        filtered = profile.filter("ORGANIZATION")
+        self.assertEqual({ 'eredivisie' }, filtered.plays_in)
 
     def test_export(self):
         """

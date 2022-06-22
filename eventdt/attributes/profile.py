@@ -142,6 +142,33 @@ class Profile(Attributable, Exportable):
 
         return self.type() == "ORGANIZATION"
 
+    def filter(self, netype):
+        """
+        Filter the profile's attributes to retain only those attributes and values that match the given named entity type.
+
+        :param netype: The type of named entity to extract, possibly more than one.
+                       The function accepts the same types as NLTK, namely _PERSON_, _GPE_ or _GSP_, or _ORGANIZATION_.
+        :type netype: str or list of str
+
+        :return: A new profile filtered to retain only those attributes and values that have the desired named entity type.
+        :rtype: :class:`~attributes.profile.Profile`
+        """
+
+        profile = self.copy()
+
+        netype = [ netype ] if type(netype) is str else netype
+        entities = nlp.entities(self.text) # fetch all named entities and filter them later
+        entities = [ entity for entity, _type in entities if _type in netype ]
+        entities = [ entity.lower() for entity in entities ]
+
+        # filter the copied profile
+        profile.attributes = { attribute: { value for value in values
+                                                  if value.lower() in entities }
+                                          for attribute, values in profile.attributes.items()  }
+        profile.attributes = { attribute: values for attribute, values in profile.attributes.items()
+                                                 if values } # remove empty attributes
+        return profile
+
     def to_array(self):
         """
         Export the :class:`~Profile` as ``dict``.
