@@ -21,7 +21,7 @@ def entities(text, entity_type=None):
     :param text: The text from which to extract named entities.
     :type text: str
     :param entity_type: The type of named entity to extract.
-                        The function accepts the same types as NLTK, namely _PERSON_, _GPE_ or _ORGANIZATION_.
+                        The function accepts the same types as NLTK, namely _PERSON_, _GPE_ or _GSP_, or _ORGANIZATION_.
                         If no type is given, the function returns all named entities irrespective of type.
     :type entity_type: str
 

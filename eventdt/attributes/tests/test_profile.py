@@ -469,47 +469,6 @@ class TestProfile(unittest.TestCase):
             profile = LinguisticExtractor().extract(text)
             self.assertEqual(profile.is_person(), (profile.type() == "PERSON"))
 
-    def test_is_gpe_returns_bool(self):
-        """
-        Test that the function to check whether a profile represents a GPE returns a boolean.
-        """
-
-        text = "Max Emilian Verstappen (born 30 September 1997) is a Belgian-Dutch[2] racing driver and the 2021 Formula One World Champion."
-        profile = LinguisticExtractor().extract(text)
-        self.assertEqual(bool, type(profile.is_gpe()))
-
-    def test_is_gpe_true(self):
-        """
-        Test that the function to check whether a profile represents a GPE returns `True` if the profile represents a GPE.
-        """
-
-        text = "Salzburg (Austrian German: [ˈsaltsbʊʁk], German: [ˈzaltsbʊʁk] (listen);[note 1] literally \"Salt-Mountain\"; Austro-Bavarian: Soizbuag) is the fourth-largest city in Austria."
-        profile = LinguisticExtractor().extract(text)
-        self.assertTrue(profile.is_gpe())
-
-    def test_is_gpe_false(self):
-        """
-        Test that the function to check whether a profile represents a GPE returns `False` if the profile does not represent a GPE.
-        """
-
-        text = "Red Bull Racing, also simply known as Red Bull or RBR and competing as Oracle Red Bull Racing, is a Formula One racing team, racing under an Austrian licence and based in the United Kingdom."
-        profile = LinguisticExtractor().extract(text)
-        self.assertFalse(profile.is_gpe())
-
-    def test_is_gpe_same_as_type(self):
-        """
-        Test that the function to check whether a profile represents a GPE returns the same output as the type function.
-        """
-
-        corpus = [ "Red Bull Racing, also simply known as Red Bull or RBR and competing as Oracle Red Bull Racing, is a Formula One racing team, racing under an Austrian licence and based in the United Kingdom.",
-                   "Max Emilian Verstappen (born 30 September 1997) is a Belgian-Dutch[2] racing driver and the 2021 Formula One World Champion.",
-                   "The GP2 Series was a form of open wheel motor racing introduced in 2005 following the discontinuation of the long-term Formula One feeder series, Formula 3000.",
-                   "Salzburg (Austrian German: [ˈsaltsbʊʁk], German: [ˈzaltsbʊʁk] (listen);[note 1] literally \"Salt-Mountain\"; Austro-Bavarian: Soizbuag) is the fourth-largest city in Austria." ]
-
-        for text in corpus:
-            profile = LinguisticExtractor().extract(text)
-            self.assertEqual(profile.is_gpe(), (profile.type() == "GPE"))
-
     def test_is_location_returns_bool(self):
         """
         Test that the function to check whether a profile represents a location returns a boolean.
@@ -545,11 +504,12 @@ class TestProfile(unittest.TestCase):
         corpus = [ "Red Bull Racing, also simply known as Red Bull or RBR and competing as Oracle Red Bull Racing, is a Formula One racing team, racing under an Austrian licence and based in the United Kingdom.",
                    "Max Emilian Verstappen (born 30 September 1997) is a Belgian-Dutch[2] racing driver and the 2021 Formula One World Champion.",
                    "The GP2 Series was a form of open wheel motor racing introduced in 2005 following the discontinuation of the long-term Formula One feeder series, Formula 3000.",
-                   "Salzburg (Austrian German: [ˈsaltsbʊʁk], German: [ˈzaltsbʊʁk] (listen);[note 1] literally \"Salt-Mountain\"; Austro-Bavarian: Soizbuag) is the fourth-largest city in Austria." ]
+                   "Salzburg (Austrian German: [ˈsaltsbʊʁk], German: [ˈzaltsbʊʁk] (listen);[note 1] literally \"Salt-Mountain\"; Austro-Bavarian: Soizbuag) is the fourth-largest city in Austria.",
+                   "Austria, officially the Republic of Austria, is a landlocked country in the southern part of Central Europe, situated at Eastern Alps." ]
 
         for text in corpus:
             profile = LinguisticExtractor().extract(text)
-            self.assertEqual(profile.is_location(), (profile.type() == "GPE"))
+            self.assertEqual(profile.is_location(), (profile.type() == "GPE" or profile.type() == "GSP"))
 
     def test_is_organization_returns_bool(self):
         """

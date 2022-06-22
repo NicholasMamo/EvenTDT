@@ -122,26 +122,15 @@ class Profile(Attributable, Exportable):
 
         return self.type() == "PERSON"
 
-    def is_gpe(self):
-        """
-        Check whether the profile represents a geo-political entity.
-
-        :return: A boolean indicating whether the profile represents a geo-political entity.
-        :rtype: bool
-        """
-
-        return self.type() == "GPE"
-
     def is_location(self):
         """
         Check whether the profile represents a location.
-        This function is an alias to the :func:`~attributes.profile.Profile.is_gpe` function.
 
         :return: A boolean indicating whether the profile represents a location.
         :rtype: bool
         """
 
-        return self.is_gpe()
+        return self.type() == "GPE" or self.type() == "GSP"
 
     def is_organization(self):
         """
