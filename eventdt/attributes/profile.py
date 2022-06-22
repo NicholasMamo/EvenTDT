@@ -112,6 +112,47 @@ class Profile(Attributable, Exportable):
 
         return None
 
+    def is_person(self):
+        """
+        Check whether the profile represents a person.
+
+        :return: A boolean indicating whether the profile represents a person.
+        :rtype: bool
+        """
+
+        return self.type() == "PERSON"
+
+    def is_gpe(self):
+        """
+        Check whether the profile represents a geo-political entity.
+
+        :return: A boolean indicating whether the profile represents a geo-political entity.
+        :rtype: bool
+        """
+
+        return self.type() == "GPE"
+
+    def is_location(self):
+        """
+        Check whether the profile represents a location.
+        This function is an alias to the :func:`~attributes.profile.Profile.is_gpe` function.
+
+        :return: A boolean indicating whether the profile represents a location.
+        :rtype: bool
+        """
+
+        return self.is_gpe()
+
+    def is_organization(self):
+        """
+        Check whether the profile represents an organization.
+
+        :return: A boolean indicating whether the profile represents an organization.
+        :rtype: bool
+        """
+
+        return self.type() == "ORGANIZATION"
+
     def to_array(self):
         """
         Export the :class:`~Profile` as ``dict``.
