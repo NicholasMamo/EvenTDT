@@ -13,13 +13,17 @@ import re
 from .document import Document
 from .tokenizer import Tokenizer
 
-def entities(text):
+def entities(text, entity_type=None):
     """
     Extract the named entities from the given text.
     The function uses NLTK to extract entities.
 
     :param text: The text from which to extract named entities.
     :type text: str
+    :param entity_type: The type of named entity to extract.
+                        The function accepts the same types as NLTK, namely _PERSON_, _GPE_ or _ORGANIZATION_.
+                        If no type is given, the function returns all named entities irrespective of type.
+    :type entity_type: str
 
     :return: A list of named entities and their types.
     :rtype: list of tuple
@@ -35,7 +39,11 @@ def entities(text):
         chunks = nltk.ne_chunk(pos_tags, binary=False)
         entities.extend(_combine_adjacent_entities(chunks))
 
-    return entities
+    if not entity_type:
+        return entities
+
+    return [ (entity, _type) for entity, _type in entities
+                             if _type == entity_type.upper() ]
 
 def _combine_adjacent_entities(chunks):
     """

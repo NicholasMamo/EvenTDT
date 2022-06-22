@@ -43,6 +43,13 @@ class TestPackage(unittest.TestCase):
         text = ''
         self.assertEqual([ ], nlp.entities(text))
 
+    def test_entities_no_named_entities(self):
+        """
+        Test that if a string has no named entities, the function returns an empty list.
+        """
+
+        self.assertEqual([ ], nlp.entities("I'm heading home"))
+
     def test_entities_all(self):
         """
         Test that extracting entities returns all of them.
@@ -90,7 +97,7 @@ class TestPackage(unittest.TestCase):
         Test that adjacent entities with the same type that NLTK captures separetly are combined.
         """
 
-        text = """Max Emilian Verstappen (born 30 September 1997) is a Belgian-Dutch[2] racing driver and the 2021 Formula One World Champion."""
+        text = """Max Emilian Verstappen (born 30 September 1997) is a Belgian-Dutch racing driver and the 2021 Formula One World Champion."""
         # NOTE: NLTK splits 'Max' from 'Emilian Verstappen'
         self.assertTrue(any( 'Max Emilian Verstappen' == entity for entity, _ in nlp.entities(text) ))
 
@@ -103,6 +110,54 @@ class TestPackage(unittest.TestCase):
                  It is officially named Land Salzburg to distinguish it from its eponymous capital — the city of Salzburg.
                  For centuries, it was an independent Prince-Bishopric of the Holy Roman Empire."""
         self.assertTrue(all( entity_type in [ 'PERSON', 'ORGANIZATION', 'GPE' ] for _, entity_type in nlp.entities(text) ))
+
+    def test_entities_no_type(self):
+        """
+        Test that when extracting entities, if no type is given, the function returns all types.
+        """
+
+        text = """Salzburg is a state (Land) of the modern Republic of Austria.
+                 It is officially named Land Salzburg to distinguish it from its eponymous capital — the city of Salzburg.
+                 For centuries, it was an independent Prince-Bishopric of the Holy Roman Empire."""
+        self.assertTrue(any( entity_type == 'PERSON' for _, entity_type in nlp.entities(text) ))
+        self.assertTrue(any( entity_type == 'GPE' for _, entity_type in nlp.entities(text) ))
+        self.assertTrue(any( entity_type == 'ORGANIZATION' for _, entity_type in nlp.entities(text) ))
+
+    def test_entities_filter_by_type(self):
+        """
+        Test that when an entity type is given, all returned named entities have the given type.
+        """
+
+        text = """Salzburg is a state (Land) of the modern Republic of Austria.
+                 It is officially named Land Salzburg to distinguish it from its eponymous capital — the city of Salzburg.
+                 For centuries, it was an independent Prince-Bishopric of the Holy Roman Empire."""
+
+        self.assertTrue(all( entity_type == 'PERSON' for _, entity_type in nlp.entities(text, entity_type='PERSON') ))
+        self.assertTrue(all( entity_type == 'GPE' for _, entity_type in nlp.entities(text, entity_type='GPE') ))
+        self.assertTrue(all( entity_type == 'ORGANIZATION' for _, entity_type in nlp.entities(text, entity_type='ORGANIZATION') ))
+
+    def test_entities_type_case_insensitive(self):
+        """
+        Test that the given entity type is case insensitive.
+        """
+
+        text = """Salzburg is a state (Land) of the modern Republic of Austria.
+                 It is officially named Land Salzburg to distinguish it from its eponymous capital — the city of Salzburg.
+                 For centuries, it was an independent Prince-Bishopric of the Holy Roman Empire."""
+
+        self.assertTrue(all( entity_type == 'PERSON' for _, entity_type in nlp.entities(text, entity_type='person') ))
+        self.assertTrue(all( entity_type == 'GPE' for _, entity_type in nlp.entities(text, entity_type='gpe') ))
+        self.assertTrue(all( entity_type == 'ORGANIZATION' for _, entity_type in nlp.entities(text, entity_type='Organization') ))
+
+    def test_entities_unknown_type(self):
+        """
+        Test that filtering named entities by an unknown type returns an empty list of named entities.
+        """
+
+        text = """Salzburg is a state (Land) of the modern Republic of Austria.
+                 It is officially named Land Salzburg to distinguish it from its eponymous capital — the city of Salzburg.
+                 For centuries, it was an independent Prince-Bishopric of the Holy Roman Empire."""
+        self.assertEqual([ ], nlp.entities(text, entity_type='LOCATION'))
 
     def test_remove_parentheses_original(self):
         """
