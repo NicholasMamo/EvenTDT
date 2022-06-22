@@ -17,6 +17,93 @@ class TestPackage(unittest.TestCase):
     Run unit tests on the :mod:`~nlp` package functions.
     """
 
+    def test_entities_returns_list(self):
+        """
+        Test that extracting entities returns a list.
+        """
+
+        text = 'Red Bull Racing, also simply known as Red Bull or RBR and competing as Oracle Red Bull Racing, is a Formula One racing team, racing under an Austrian licence and based in the United Kingdom.'
+        self.assertEqual(list, type(nlp.entities(text)))
+
+    def test_entities_strings(self):
+        """
+        Test that extracting entities returns a list of tuples, containing named entities and their types.
+        """
+
+        text = 'Red Bull Racing, also simply known as Red Bull or RBR and competing as Oracle Red Bull Racing, is a Formula One racing team, racing under an Austrian licence and based in the United Kingdom.'
+        self.assertTrue(all( tuple == type(ne) for ne in nlp.entities(text) ))
+        self.assertTrue(all( str == type(entity) and str == type(entity_type)
+                             for entity, entity_type in nlp.entities(text) ))
+
+    def test_entities_empty(self):
+        """
+        Test that extracting entities from an empty string returns an empty list.
+        """
+
+        text = ''
+        self.assertEqual([ ], nlp.entities(text))
+
+    def test_entities_all(self):
+        """
+        Test that extracting entities returns all of them.
+        """
+
+        text = 'Red Bull Racing, also simply known as Red Bull or RBR and competing as Oracle Red Bull Racing, is a Formula One racing team, racing under an Austrian licence and based in the United Kingdom.'
+        self.assertTrue(any( entity == 'Red Bull' for entity, _ in nlp.entities(text) ))
+        self.assertTrue(any( entity == 'Oracle Red Bull Racing' for entity, _ in nlp.entities(text) ))
+
+    def test_entities_multiple_sentences(self):
+        """
+        Test that extracting entities returns all entities from all sentences.
+        """
+
+        text = """Red Bull Racing, also simply known as Red Bull or RBR and competing as Oracle Red Bull Racing, is a Formula One racing team, racing under an Austrian licence and based in the United Kingdom.
+                  It is one of two Formula One teams owned by beverage company Red Bull GmbH, the other being Scuderia AlphaTauri (previously Scuderia Toro Rosso)."""
+        self.assertTrue(any( entity == 'Red Bull' for entity, _ in nlp.entities(text) ))
+        self.assertTrue(any( entity == 'Oracle Red Bull Racing' for entity, _ in nlp.entities(text) ))
+        self.assertTrue(any( entity == 'Red Bull GmbH' for entity, _ in nlp.entities(text) ))
+        self.assertTrue(any( entity == 'Scuderia AlphaTauri' for entity, _ in nlp.entities(text) ))
+
+    def test_entities_repeated(self):
+        """
+        Test that extracting entities returns repeated ones multiple times.
+        """
+
+        text = """Salzburg is a state (Land) of the modern Republic of Austria.
+                 It is officially named Land Salzburg to distinguish it from its eponymous capital — the city of Salzburg.
+                 For centuries, it was an independent Prince-Bishopric of the Holy Roman Empire."""
+        self.assertEqual(2, len([ entity for entity, entity_type in nlp.entities(text)
+                                         if entity == 'Salzburg' ]))
+
+    def test_entities_in_text(self):
+        """
+        Test that all retrieved entities appear in the text.
+        """
+
+        text = """Salzburg is a state (Land) of the modern Republic of Austria.
+                 It is officially named Land Salzburg to distinguish it from its eponymous capital — the city of Salzburg.
+                 For centuries, it was an independent Prince-Bishopric of the Holy Roman Empire."""
+        self.assertTrue(all( entity in text for entity, _ in nlp.entities(text) ))
+
+    def test_entities_adjacent(self):
+        """
+        Test that adjacent entities with the same type that NLTK captures separetly are combined.
+        """
+
+        text = """Max Emilian Verstappen (born 30 September 1997) is a Belgian-Dutch[2] racing driver and the 2021 Formula One World Champion."""
+        # NOTE: NLTK splits 'Max' from 'Emilian Verstappen'
+        self.assertTrue(any( 'Max Emilian Verstappen' == entity for entity, _ in nlp.entities(text) ))
+
+    def test_entities_known_type(self):
+        """
+        Test that all entities have a known type.
+        """
+
+        text = """Salzburg is a state (Land) of the modern Republic of Austria.
+                 It is officially named Land Salzburg to distinguish it from its eponymous capital — the city of Salzburg.
+                 For centuries, it was an independent Prince-Bishopric of the Holy Roman Empire."""
+        self.assertTrue(all( entity_type in [ 'PERSON', 'ORGANIZATION', 'GPE' ] for _, entity_type in nlp.entities(text) ))
+
     def test_remove_parentheses_original(self):
         """
         Test that removing the parentheses reconstructs the sentence with overwriting the original string.
