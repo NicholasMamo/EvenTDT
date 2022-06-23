@@ -60,6 +60,7 @@ class UnderstandingModeler(EventModeler):
     def when(self, node):
         """
         Identify When the given event is taking place.
+        The function simply reuses the node's `created_at` attribute.
 
         :param node: A node on the timeline.
         :type node: :class:`~summarization.timeline.nodes.Node`
@@ -68,7 +69,7 @@ class UnderstandingModeler(EventModeler):
         :rtype: list
         """
 
-        return [ ]
+        return [ node.created_at ]
 
     def why(self, node):
         """
