@@ -210,3 +210,5 @@ class DummyEventModeler(EventModeler):
         """
 
         return None
+
+from .understanding_modeler import UnderstandingModeler
