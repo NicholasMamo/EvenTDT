@@ -130,7 +130,7 @@ class Profile(Attributable, Exportable):
         :rtype: bool
         """
 
-        return self.type() == "GPE" or self.type() == "GSP"
+        return self.type() in [ "GPE", "GSP", "LOCATION"]
 
     def is_organization(self):
         """
@@ -147,7 +147,7 @@ class Profile(Attributable, Exportable):
         Filter the profile's attributes to retain only those attributes and values that match the given named entity type.
 
         :param netype: The type of named entity to extract, possibly more than one.
-                       The function accepts the same types as NLTK, namely _PERSON_, _GPE_ or _GSP_, or _ORGANIZATION_.
+                       The function accepts the same types as NLTK, namely _PERSON_, _GPE_, _GSP_ or _LOCATION, or _ORGANIZATION_.
         :type netype: str or list of str
 
         :return: A new profile filtered to retain only those attributes and values that have the desired named entity type.

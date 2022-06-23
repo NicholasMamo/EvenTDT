@@ -506,11 +506,12 @@ class TestProfile(unittest.TestCase):
                    "Max Emilian Verstappen (born 30 September 1997) is a Belgian-Dutch[2] racing driver and the 2021 Formula One World Champion.",
                    "The GP2 Series was a form of open wheel motor racing introduced in 2005 following the discontinuation of the long-term Formula One feeder series, Formula 3000.",
                    "Salzburg (Austrian German: [ˈsaltsbʊʁk], German: [ˈzaltsbʊʁk] (listen);[note 1] literally \"Salt-Mountain\"; Austro-Bavarian: Soizbuag) is the fourth-largest city in Austria.",
-                   "Austria, officially the Republic of Austria, is a landlocked country in the southern part of Central Europe, situated at Eastern Alps." ]
+                   "Austria, officially the Republic of Austria, is a landlocked country in the southern part of Central Europe, situated at Eastern Alps.",
+                   "Southern United States is an area of the United States." ]
 
         for text in corpus:
             profile = LinguisticExtractor().extract(text)
-            self.assertEqual(profile.is_location(), (profile.type() == "GPE" or profile.type() == "GSP"))
+            self.assertEqual(profile.is_location(), (profile.type() == "GPE" or profile.type() == "GSP" or profile.type() == "LOCATION"))
 
     def test_is_organization_returns_bool(self):
         """
@@ -645,7 +646,7 @@ class TestProfile(unittest.TestCase):
 
         text = "Olympique Lyonnais, commonly referred to as simply Lyon or OL, is a French professional football club based in Lyon in Auvergne-Rhône-Alpes."
         profile = LinguisticExtractor().extract(text)
-        entities = nlp.entities(text, entity_type="GPE")
+        entities = nlp.entities(text, netype="GPE")
         entities = [ entity.lower() for entity, _ in entities ]
         filtered = profile.filter("GPE")
         self.assertTrue(all( value in entities for values in filtered.attributes.values()
