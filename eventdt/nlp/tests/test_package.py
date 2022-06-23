@@ -11,6 +11,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 import nlp
+from wikinterface import text as wikitext
 
 class TestPackage(unittest.TestCase):
     """
@@ -180,6 +181,21 @@ class TestPackage(unittest.TestCase):
                   as well as the 12th most populous city in North America with 1,434,625 residents in 2020."""
         self.assertEqual(set(nlp.entities(text, netype='GPE') + nlp.entities(text, netype='LOCATION')),
                          set(nlp.entities(text, netype=['GPE', 'LOCATION'])))
+
+    def test_entities_known_types(self):
+        """
+        Test that all named types can be handled by the `entities` function.
+        """
+
+        types = [ 'PERSON', 'ORGANIZATION', 'FACILITY', 'GPE', 'GSP', 'LOCATION' ]
+
+        text = wikitext.collect('United States', introduction_only=False)['United States']
+        entities = nlp.entities(text)
+        self.assertTrue(all( _type in types for _, _type in entities ))
+
+        text = wikitext.collect('United Kingdom', introduction_only=False)['United Kingdom']
+        entities = nlp.entities(text)
+        self.assertTrue(all( _type in types for _, _type in entities ))
 
     def test_remove_parentheses_original(self):
         """

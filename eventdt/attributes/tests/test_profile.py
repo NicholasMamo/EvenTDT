@@ -552,7 +552,7 @@ class TestProfile(unittest.TestCase):
 
         for text in corpus:
             profile = LinguisticExtractor().extract(text)
-            self.assertEqual(profile.is_organization(), (profile.type() == "ORGANIZATION"))
+            self.assertEqual(profile.is_organization(), (profile.type() in [ "ORGANIZATION", "FACILITY" ]))
 
     def test_filter_returns_profile(self):
         """

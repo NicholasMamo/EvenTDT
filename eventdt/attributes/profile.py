@@ -140,7 +140,7 @@ class Profile(Attributable, Exportable):
         :rtype: bool
         """
 
-        return self.type() == "ORGANIZATION"
+        return self.type() in [ "ORGANIZATION", "FACILITY" ]
 
     def filter(self, netype):
         """
