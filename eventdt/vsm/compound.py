@@ -5,7 +5,6 @@ Differently from a :class:`~vsm.clustering.cluster.Cluster`, however, the :class
 Instead, it only stores the accumulation of the documents and the number of documents inside of it.
 
 The class is used by applications that do not need a comprehensive list of vectors.
-If a single
 """
 
 import os
