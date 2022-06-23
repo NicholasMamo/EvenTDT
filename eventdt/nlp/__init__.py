@@ -13,23 +13,27 @@ import re
 from .document import Document
 from .tokenizer import Tokenizer
 
-def entities(text, entity_type=None):
+def entities(text, netype=None):
     """
     Extract the named entities from the given text.
     The function uses NLTK to extract entities.
 
     :param text: The text from which to extract named entities.
     :type text: str
-    :param entity_type: The type of named entity to extract.
-                        The function accepts the same types as NLTK, namely _PERSON_, _GPE_ or _GSP_, or _ORGANIZATION_.
+    :param netype: One or more types of named entity to extract.
+                        The function accepts the same types as NLTK, namely _PERSON_, _GPE_, _LOCATION_ or _GSP_, or _ORGANIZATION_.
                         If no type is given, the function returns all named entities irrespective of type.
-    :type entity_type: str
+    :type netype: str or list of str
 
     :return: A list of named entities and their types.
     :rtype: list of tuple
     """
 
     entities = [ ]
+
+    # pre-process the named entity types
+    netypes = [ netype ] if type(netype) is str else netype
+    netypes = [ netype.upper() for netype in netypes ] if netype else netype
 
     # split the text into sentences, and extract the named entities from each sentence
     sentences = nltk.sent_tokenize(text)
@@ -39,11 +43,11 @@ def entities(text, entity_type=None):
         chunks = nltk.ne_chunk(pos_tags, binary=False)
         entities.extend(_combine_adjacent_entities(chunks))
 
-    if not entity_type:
+    if not netypes:
         return entities
 
     return [ (entity, _type) for entity, _type in entities
-                             if _type == entity_type.upper() ]
+                             if _type in netypes ]
 
 def _combine_adjacent_entities(chunks):
     """
@@ -66,7 +70,7 @@ def _combine_adjacent_entities(chunks):
     If a chunk is an entity, then start building a named entity.
     This is interrupted whenever a chunk is not an entity, or if it has a different type.
     """
-    entity, entity_type = [ ], None
+    entity, netype = [ ], None
     for chunk in chunks:
         if type(chunk) is nltk.tree.Tree:
             """
@@ -74,24 +78,24 @@ def _combine_adjacent_entities(chunks):
             This means adding the sequence to the list of named entities, and resetting the memory.
             """
             label = chunk.label()
-            if label != entity_type:
-                named_entities.append((' '.join(entity).strip(), entity_type))
-                entity, entity_type = [], None
+            if label != netype:
+                named_entities.append((' '.join(entity).strip(), netype))
+                entity, netype = [], None
 
             # add the tokens to the named entity sequence
-            entity_type = label
+            netype = label
             named_entity_tokens = [ pair[0] for pair in chunk ]
             entity.extend(named_entity_tokens)
         else:
-            named_entities.append((' '.join(entity).strip(), entity_type))
-            entity, entity_type = [], None
+            named_entities.append((' '.join(entity).strip(), netype))
+            entity, netype = [], None
 
     """
     Save the last named entity.
     Filter out named entities that have no length.
     """
-    named_entities.append((' '.join(entity).strip(), entity_type))
-    named_entities = [ (entity, entity_type) for (entity, entity_type) in named_entities if len(entity) ]
+    named_entities.append((' '.join(entity).strip(), netype))
+    named_entities = [ (entity, netype) for (entity, netype) in named_entities if len(entity) ]
 
     return named_entities
 

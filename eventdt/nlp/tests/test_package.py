@@ -32,8 +32,8 @@ class TestPackage(unittest.TestCase):
 
         text = 'Red Bull Racing, also simply known as Red Bull or RBR and competing as Oracle Red Bull Racing, is a Formula One racing team, racing under an Austrian licence and based in the United Kingdom.'
         self.assertTrue(all( tuple == type(ne) for ne in nlp.entities(text) ))
-        self.assertTrue(all( str == type(entity) and str == type(entity_type)
-                             for entity, entity_type in nlp.entities(text) ))
+        self.assertTrue(all( str == type(entity) and str == type(netype)
+                             for entity, netype in nlp.entities(text) ))
 
     def test_entities_empty(self):
         """
@@ -79,7 +79,7 @@ class TestPackage(unittest.TestCase):
         text = """Salzburg is a state (Land) of the modern Republic of Austria.
                  It is officially named Land Salzburg to distinguish it from its eponymous capital — the city of Salzburg.
                  For centuries, it was an independent Prince-Bishopric of the Holy Roman Empire."""
-        self.assertEqual(2, len([ entity for entity, entity_type in nlp.entities(text)
+        self.assertEqual(2, len([ entity for entity, netype in nlp.entities(text)
                                          if entity == 'Salzburg' ]))
 
     def test_entities_in_text(self):
@@ -109,7 +109,7 @@ class TestPackage(unittest.TestCase):
         text = """Salzburg is a state (Land) of the modern Republic of Austria.
                  It is officially named Land Salzburg to distinguish it from its eponymous capital — the city of Salzburg.
                  For centuries, it was an independent Prince-Bishopric of the Holy Roman Empire."""
-        self.assertTrue(all( entity_type in [ 'PERSON', 'ORGANIZATION', 'GPE' ] for _, entity_type in nlp.entities(text) ))
+        self.assertTrue(all( netype in [ 'PERSON', 'ORGANIZATION', 'GPE' ] for _, netype in nlp.entities(text) ))
 
     def test_entities_no_type(self):
         """
@@ -119,9 +119,9 @@ class TestPackage(unittest.TestCase):
         text = """Salzburg is a state (Land) of the modern Republic of Austria.
                  It is officially named Land Salzburg to distinguish it from its eponymous capital — the city of Salzburg.
                  For centuries, it was an independent Prince-Bishopric of the Holy Roman Empire."""
-        self.assertTrue(any( entity_type == 'PERSON' for _, entity_type in nlp.entities(text) ))
-        self.assertTrue(any( entity_type == 'GPE' for _, entity_type in nlp.entities(text) ))
-        self.assertTrue(any( entity_type == 'ORGANIZATION' for _, entity_type in nlp.entities(text) ))
+        self.assertTrue(any( netype == 'PERSON' for _, netype in nlp.entities(text) ))
+        self.assertTrue(any( netype == 'GPE' for _, netype in nlp.entities(text) ))
+        self.assertTrue(any( netype == 'ORGANIZATION' for _, netype in nlp.entities(text) ))
 
     def test_entities_filter_by_type(self):
         """
@@ -132,9 +132,9 @@ class TestPackage(unittest.TestCase):
                  It is officially named Land Salzburg to distinguish it from its eponymous capital — the city of Salzburg.
                  For centuries, it was an independent Prince-Bishopric of the Holy Roman Empire."""
 
-        self.assertTrue(all( entity_type == 'PERSON' for _, entity_type in nlp.entities(text, entity_type='PERSON') ))
-        self.assertTrue(all( entity_type == 'GPE' for _, entity_type in nlp.entities(text, entity_type='GPE') ))
-        self.assertTrue(all( entity_type == 'ORGANIZATION' for _, entity_type in nlp.entities(text, entity_type='ORGANIZATION') ))
+        self.assertTrue(all( netype == 'PERSON' for _, netype in nlp.entities(text, netype='PERSON') ))
+        self.assertTrue(all( netype == 'GPE' for _, netype in nlp.entities(text, netype='GPE') ))
+        self.assertTrue(all( netype == 'ORGANIZATION' for _, netype in nlp.entities(text, netype='ORGANIZATION') ))
 
     def test_entities_type_case_insensitive(self):
         """
@@ -145,9 +145,9 @@ class TestPackage(unittest.TestCase):
                  It is officially named Land Salzburg to distinguish it from its eponymous capital — the city of Salzburg.
                  For centuries, it was an independent Prince-Bishopric of the Holy Roman Empire."""
 
-        self.assertTrue(all( entity_type == 'PERSON' for _, entity_type in nlp.entities(text, entity_type='person') ))
-        self.assertTrue(all( entity_type == 'GPE' for _, entity_type in nlp.entities(text, entity_type='gpe') ))
-        self.assertTrue(all( entity_type == 'ORGANIZATION' for _, entity_type in nlp.entities(text, entity_type='Organization') ))
+        self.assertTrue(all( netype == 'PERSON' for _, netype in nlp.entities(text, netype='person') ))
+        self.assertTrue(all( netype == 'GPE' for _, netype in nlp.entities(text, netype='gpe') ))
+        self.assertTrue(all( netype == 'ORGANIZATION' for _, netype in nlp.entities(text, netype='Organization') ))
 
     def test_entities_unknown_type(self):
         """
@@ -157,7 +157,29 @@ class TestPackage(unittest.TestCase):
         text = """Salzburg is a state (Land) of the modern Republic of Austria.
                  It is officially named Land Salzburg to distinguish it from its eponymous capital — the city of Salzburg.
                  For centuries, it was an independent Prince-Bishopric of the Holy Roman Empire."""
-        self.assertEqual([ ], nlp.entities(text, entity_type='LOCATION'))
+        self.assertEqual([ ], nlp.entities(text, netype='LOCATION'))
+
+    def test_entities_several_types(self):
+        """
+        Test that extracting entities with several types returns all types.
+        """
+
+        text = """San Antonio, officially the City of San Antonio, is the seventh-most populous city in the United States,
+                  second largest city in the Southern United States, and the second-most populous city in Texas
+                  as well as the 12th most populous city in North America with 1,434,625 residents in 2020."""
+        self.assertTrue(any( netype == 'GPE' for _, netype in nlp.entities(text, netype=['GPE', 'LOCATION']) ))
+        self.assertTrue(any( netype == 'LOCATION' for _, netype in nlp.entities(text, netype=['GPE', 'LOCATION']) ))
+
+    def test_entities_several_types_separate(self):
+        """
+        Test that extracting entities with several types is identical to extracting each type separately.
+        """
+
+        text = """San Antonio, officially the City of San Antonio, is the seventh-most populous city in the United States,
+                  second largest city in the Southern United States, and the second-most populous city in Texas
+                  as well as the 12th most populous city in North America with 1,434,625 residents in 2020."""
+        self.assertEqual(set(nlp.entities(text, netype='GPE') + nlp.entities(text, netype='LOCATION')),
+                         set(nlp.entities(text, netype=['GPE', 'LOCATION'])))
 
     def test_remove_parentheses_original(self):
         """
