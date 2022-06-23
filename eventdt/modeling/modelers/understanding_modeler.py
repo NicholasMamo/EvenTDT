@@ -16,7 +16,22 @@ from modeling.modelers import EventModeler
 class UnderstandingModeler(EventModeler):
     """
     The :class:`~modeling.modelers.understanding_modeler.UnderstandingModeler` receives understanding and uses it to model events.
+
+    :ivar participants: The participants that are used to understand the Who and the Where.
+                        The class expects participants to be :class:`~attributes.profile.Profile` instances.
+    :vartype participants: list of :class:`attributes.profile.Profile`
     """
+
+    def __init__(self, participants=None):
+        """
+        Initialize the :class:`~modeling.modelers.understanding_modeler.UnderstandingModeler` with understanding.
+
+        :param participants: The participants that are used to understand the Who and the Where.
+                             The class expects participants to be :class:`~attributes.profile.Profile` instances.
+        :type participants: list of :class:`attributes.profile.Profile`
+        """
+
+        self.participants = participants or [ ]
 
     def who(self, node):
         """
