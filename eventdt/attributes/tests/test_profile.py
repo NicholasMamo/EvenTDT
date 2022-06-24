@@ -429,6 +429,19 @@ class TestProfile(unittest.TestCase):
         profile = LinguisticExtractor().extract(text)
         self.assertEqual(None, profile.type())
 
+    def test_type_in_name(self):
+        """
+        Test that if the text starts with a determiner or, more generally, if the text does not start with the name of the concept, the function looks in the name to assign a type.
+        """
+
+        text = "The GP2 Series was a form of open wheel motor racing introduced in 2005 following the discontinuation of the long-term Formula One feeder series, Formula 3000."
+        profile = LinguisticExtractor().extract(text, name="GP2 Series")
+        self.assertEqual("ORGANIZATION", profile.type())
+
+        text = "The Circuit Gilles Villeneuve (also spelled Circuit Gilles-Villeneuve in French) is a 4.361 km (2.710 mi) motor racing circuit in Montreal, Quebec, Canada."
+        profile = LinguisticExtractor().extract(text, name="Circuit Gilles Villeneuve")
+        self.assertEqual("ORGANIZATION", profile.type())
+
     def test_is_person_returns_bool(self):
         """
         Test that the function to check whether a profile represents a person returns a boolean.

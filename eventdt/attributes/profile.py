@@ -94,7 +94,7 @@ class Profile(Attributable, Exportable):
         If the profile has an attribute that starts with `born`, for example, the function assumes that the profile represents a person.
 
         The function also assumes that the profile was created from a Wikipedia definition sentence.
-        The assumption thus requires that the first words name the entity.
+        The assumption thus requires that the profile has a name that appears in the definition sentence, or that the text's first words mention the entity.
 
         :return: The type of named entity that the profile represents.
                  The types can be one of NLTK's, namely _PERSON_, _GPE_ or _ORGANIZATION_.
@@ -107,7 +107,7 @@ class Profile(Attributable, Exportable):
 
         entities = nlp.entities(self.text)
         for entity, _type in entities:
-            if self.text.startswith(entity):
+            if self.name == entity or self.text.startswith(entity):
                 return _type
 
         return None
