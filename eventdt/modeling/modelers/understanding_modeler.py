@@ -51,7 +51,7 @@ class UnderstandingModeler(EventModeler):
         participants = participants or [ ]
         participants = [ participant.copy() for participant in participants ]
         for participant in participants:
-            participant.name = nlp.remove_parentheses(participant.name)
+            participant.name = nlp.remove_parentheses(participant.name).strip()
         return { participant.name: participant for participant in participants }
 
     def who(self, node):

@@ -41,6 +41,7 @@ class TestUnderstandingModeler(unittest.TestCase):
             "George Russell (racing driver)": "George William Russell (/rʌsəl/; born 15 February 1998) is a British racing driver currently competing in Formula One for Mercedes.",
             "Circuit Gilles Villeneuve": "The Circuit Gilles Villeneuve (also spelled Circuit Gilles-Villeneuve in French) is a 4.361 km (2.710 mi) motor racing circuit in Montreal, Quebec, Canada.",
             "Montreal": "Montreal (/ˌmʌntriˈɔːl/ (listen) MUN-tree-AWL; officially Montréal, French: [mɔ̃ʁeal] (listen)) is the second-most populous city in Canada and most populous city in the Canadian province of Quebec.",
+            "Quebec (Canada)": "Quebec (/kəˈbɛk/ kə-BEK, sometimes /kwəˈbɛk/ kwə-BEK; French: Québec [kebɛk] (listen))[8] is one of the thirteen provinces and territories of Canada.",
             "Canada": "Canada is a country in North America.",
         }
 
@@ -75,6 +76,7 @@ class TestUnderstandingModeler(unittest.TestCase):
         modeler = UnderstandingModeler(participants=participants.values())
         self.assertTrue(any( '(' in participant.name and not '(' in copy.name
                              for participant, copy in zip(participants.values(), modeler.participants.values()) ))
+        self.assertTrue(all( participant.name.strip() == participant.name for participant in modeler.participants.values() ))
 
     def test_init_copies_participants(self):
         """
