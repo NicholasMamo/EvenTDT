@@ -123,9 +123,28 @@ class TestUnderstandingModeler(unittest.TestCase):
         participants = self.mock_participants()
         modeler = UnderstandingModeler(participants=participants.values())
         models = modeler.model(timeline)
-        self.assertEqual([ 'Max Verstappen' ], models[0].who)
+        self.assertEqual({ participants['Max Verstappen'].name },
+                         { participant.name for participant in models[0].who })
 
-    def test_who_matches_participants(self):
+    def test_who_count_participants(self):
+        """
+        Test that the Who correctly identifies participants in the text.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="He's done it! Max Verstappen wins the Grand Prix."),
+            Document(text="Max Verstappen wins the first Grand Prix of the season."),
+            Document(text="France's Pierre Gasly finishes second despite slow start."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual({ participants['Max Verstappen'].name },
+                         { participant.name for participant in models[0].who })
+
+    def test_who_unrecognized_participants(self):
         """
         Test that if no participant matches the Who, the function returns an empty list.
         """
