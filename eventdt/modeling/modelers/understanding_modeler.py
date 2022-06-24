@@ -44,7 +44,8 @@ class UnderstandingModeler(EventModeler):
         :type participants: list of :class:`attributes.profile.Profile`
 
         :return: A copy of the participants, with parentheses removed from their names.
-        :rtype: list of :class:`attributes.profile.Profile`
+                 The function stores the participants as a dictionary with the names as keys and the profiles as values.
+        :rtype: dict
         """
 
         participants = participants or [ ]
@@ -57,6 +58,8 @@ class UnderstandingModeler(EventModeler):
         """
         Identify Who is participating in the given event.
 
+        A participant is a person or an organization that appears in at least half of the documents in the node.
+
         :param node: A node on the timeline.
         :type node: :class:`~summarization.timeline.nodes.Node`
 
@@ -64,7 +67,22 @@ class UnderstandingModeler(EventModeler):
         :rtype: list
         """
 
-        return [ ]
+        _who = { } # the document frequency of each participant
+
+        for document in node.get_all_documents():
+            found = [ ] # the list of participants found in this document's text
+            for participant, profile in self.participants.items():
+                # TODO: skip participants that are locations
+                # TODO: look for `known_as` in text
+                if profile.name in document.text:
+                    found.append(participant)
+
+            for participant in set(found):
+                _who[participant] = _who.get(participant, 0) + 1
+
+        _who = [ participant for participant, frequency in _who.items()
+                             if frequency >= (len(node.get_all_documents()) / 2) ]
+        return [ self.participants[participant] for participant in _who ]
 
     def what(self, node):
         """

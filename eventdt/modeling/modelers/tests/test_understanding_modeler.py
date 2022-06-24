@@ -14,8 +14,10 @@ for path in paths:
         sys.path.append(path)
 
 from attributes.extractors import LinguisticExtractor
+from attributes import Profile
 from modeling import EventModel
 from modeling.modelers import UnderstandingModeler
+from nlp import Document
 from summarization.timeline import Timeline
 from summarization.timeline.nodes import DocumentNode
 
@@ -27,6 +29,9 @@ class TestUnderstandingModeler(unittest.TestCase):
     def mock_participants(self):
         """
         Create a list of mock participants that represent the Who and the Where.
+
+        :return: A dictionary with the participant names as keys and the profiles as values.
+        :rtype: dict
         """
 
         corpus = {
@@ -39,7 +44,7 @@ class TestUnderstandingModeler(unittest.TestCase):
         }
 
         extractor = LinguisticExtractor()
-        return [ extractor.extract(text, name=name) for name, text in corpus.items() ]
+        return { name: extractor.extract(text, name=name) for name, text in corpus.items() }
 
     def test_init_saves_participants(self):
         """
@@ -47,8 +52,8 @@ class TestUnderstandingModeler(unittest.TestCase):
         """
 
         participants = self.mock_participants()
-        modeler = UnderstandingModeler(participants=participants)
-        for participant, copy in zip(participants, modeler.participants.values()):
+        modeler = UnderstandingModeler(participants=participants.values())
+        for participant, copy in zip(participants.values(), modeler.participants.values()):
             self.assertEqual(participant.attributes, copy.attributes)
 
     def test_init_saves_participants_as_dicts(self):
@@ -57,7 +62,7 @@ class TestUnderstandingModeler(unittest.TestCase):
         """
 
         participants = self.mock_participants()
-        modeler = UnderstandingModeler(participants=participants)
+        modeler = UnderstandingModeler(participants=participants.values())
         self.assertEqual(dict, type(modeler.participants))
 
     def test_init_preprocesses_participants(self):
@@ -66,9 +71,9 @@ class TestUnderstandingModeler(unittest.TestCase):
         """
 
         participants = self.mock_participants()
-        modeler = UnderstandingModeler(participants=participants)
+        modeler = UnderstandingModeler(participants=participants.values())
         self.assertTrue(any( '(' in participant.name and not '(' in copy.name
-                             for participant, copy in zip(participants, modeler.participants.values()) ))
+                             for participant, copy in zip(participants.values(), modeler.participants.values()) ))
 
     def test_init_copies_participants(self):
         """
@@ -76,17 +81,113 @@ class TestUnderstandingModeler(unittest.TestCase):
         """
 
         participants = self.mock_participants()
-        participant = participants[0]
+        participant = participants['Max Verstappen']
         original = participant.copy()
 
-        modeler = UnderstandingModeler(participants=participants)
-        copy = list(modeler.participants.values())[0]
+        modeler = UnderstandingModeler(participants=participants.values())
+        copy = modeler.participants['Max Verstappen']
 
         copy.attributes['test'] = { True }
         self.assertFalse('test' in participant.attributes)
 
         participant.attributes['test'] = { False }
         self.assertTrue(copy.test)
+
+    def test_who_returns_list(self):
+        """
+        Test that the Who returns a list of profiles.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="He's done it! Max Verstappen wins the Grand Prix.")
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual(list, type(models))
+        self.assertTrue(all( list == type(model.who) for model in models ))
+        self.assertTrue(all( Profile == type(profile) for model in models for profile in model.who ))
+
+    def test_who_matches_participants(self):
+        """
+        Test that the Who correctly identifies participants in the text.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="He's done it! Max Verstappen wins the Grand Prix.")
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual([ 'Max Verstappen' ], models[0].who)
+
+    def test_who_matches_participants(self):
+        """
+        Test that if no participant matches the Who, the function returns an empty list.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="He's done it! Yuki Tsunoda wins the Grand Prix.")
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual([ ], models[0].who)
+
+    def test_who_threshold_inclusive(self):
+        """
+        Test that the Who's 50% threshold is inclusive.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="He's done it! Max Verstappen wins the Grand Prix."),
+            Document(text="The Dutch wins the first Grand Prix of the season.")
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual(participants['Max Verstappen'].name, models[0].who[0].name)
+
+    def test_who_repeated_participant(self):
+        """
+        Test that if a participant appears multiple times in one document, it is only counted once.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="Max Verstappen's done it! Max Verstappen wins the Grand Prix."),
+            Document(text="The Dutch wins the first Grand Prix of the season."),
+            Document(text="The inaugural Grand Prix is over, and it goes Dutch.")
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual([ ], models[0].who)
+
+    def test_who_multiple(self):
+        """
+        Test that a model's Who may have several participants.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="He's done it! Max Verstappen wins the Grand Prix, Pierre Gasly the runner-up."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual({ participants['Max Verstappen'].name, participants['Pierre Gasly'].name },
+                         { participant.name for participant in models[0].who })
 
     def test_when_uses_created_at(self):
         """
