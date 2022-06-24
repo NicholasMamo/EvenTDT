@@ -12,6 +12,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from modeling.modelers import EventModeler
+import nlp
 
 class UnderstandingModeler(EventModeler):
     """
@@ -31,7 +32,24 @@ class UnderstandingModeler(EventModeler):
         :type participants: list of :class:`attributes.profile.Profile`
         """
 
-        self.participants = participants or [ ]
+        self.participants = self._preprocess_participants(participants)
+
+    def _preprocess_participants(self, participants):
+        """
+        Pre-process the participants, which includes removing parentheses from their names to facilitate matching later on.
+
+        :param participants: The participants that are used to understand the Who and the Where.
+        :type participants: list of :class:`attributes.profile.Profile`
+
+        :return: A copy of the participants, with parentheses removed from their names.
+        :rtype: list of :class:`attributes.profile.Profile`
+        """
+
+        participants = participants or [ ]
+        participants = [ participant.copy() for participant in participants ]
+        for participant in participants:
+            participant.name = nlp.remove_parentheses(participant.name)
+        return participants
 
     def who(self, node):
         """

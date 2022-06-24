@@ -47,7 +47,36 @@ class TestUnderstandingModeler(unittest.TestCase):
 
         participants = self.mock_participants()
         modeler = UnderstandingModeler(participants=participants)
-        self.assertEqual(participants, modeler.participants)
+        for participant, copy in zip(participants, modeler.participants):
+            self.assertEqual(participant.attributes, copy.attributes)
+
+    def test_init_preprocesses_participants(self):
+        """
+        Test that on initialization, the class pre-processes the participants if given.
+        """
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants)
+        self.assertTrue(any( '(' in participant.name and not '(' in copy.name
+                             for participant, copy in zip(participants, modeler.participants) ))
+
+    def test_init_copies_participants(self):
+        """
+        Test that on initialization, the class makes a copy of the participants if given.
+        """
+
+        participants = self.mock_participants()
+        participant = participants[0]
+        original = participant.copy()
+
+        modeler = UnderstandingModeler(participants=participants)
+        copy = modeler.participants[0]
+
+        copy.attributes['test'] = { True }
+        self.assertFalse('test' in participant.attributes)
+
+        participant.attributes['test'] = { False }
+        self.assertTrue(copy.test)
 
     def test_when_uses_created_at(self):
         """
