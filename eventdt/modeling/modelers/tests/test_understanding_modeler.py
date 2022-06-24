@@ -126,8 +126,7 @@ class TestUnderstandingModeler(unittest.TestCase):
         participants = self.mock_participants()
         modeler = UnderstandingModeler(participants=participants.values())
         models = modeler.model(timeline)
-        self.assertEqual({ participants['Max Verstappen'].name },
-                         { participant.name for participant in models[0].who })
+        self.assertEqual({ 'Max Verstappen' }, { participant.name for participant in models[0].who })
 
     def test_who_count_participants(self):
         """
@@ -144,8 +143,7 @@ class TestUnderstandingModeler(unittest.TestCase):
         participants = self.mock_participants()
         modeler = UnderstandingModeler(participants=participants.values())
         models = modeler.model(timeline)
-        self.assertEqual({ participants['Max Verstappen'].name },
-                         { participant.name for participant in models[0].who })
+        self.assertEqual({ 'Max Verstappen' }, { participant.name for participant in models[0].who })
 
     def test_who_unrecognized_participants(self):
         """
@@ -176,7 +174,7 @@ class TestUnderstandingModeler(unittest.TestCase):
         participants = self.mock_participants()
         modeler = UnderstandingModeler(participants=participants.values())
         models = modeler.model(timeline)
-        self.assertEqual(participants['Max Verstappen'].name, models[0].who[0].name)
+        self.assertEqual('Max Verstappen', models[0].who[0].name)
 
     def test_who_repeated_participant(self):
         """
@@ -208,7 +206,23 @@ class TestUnderstandingModeler(unittest.TestCase):
         participants = self.mock_participants()
         modeler = UnderstandingModeler(participants=participants.values())
         models = modeler.model(timeline)
-        self.assertEqual({ participants['Max Verstappen'].name, participants['Pierre Gasly'].name },
+        self.assertEqual({ 'Max Verstappen', 'Pierre Gasly' },
+                         { participant.name for participant in models[0].who })
+
+    def test_who_with_parentheses(self):
+        """
+        Test that identifying the Who ignores parentheses.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="He's done it! Max Verstappen wins the Grand Prix, George Russell the runner-up."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual({ 'Max Verstappen', 'George Russell' },
                          { participant.name for participant in models[0].who })
 
     def test_where_returns_list(self):
@@ -241,8 +255,7 @@ class TestUnderstandingModeler(unittest.TestCase):
         participants = self.mock_participants()
         modeler = UnderstandingModeler(participants=participants.values())
         models = modeler.model(timeline)
-        self.assertEqual({ participants['Montreal'].name },
-                         { participant.name for participant in models[0].where })
+        self.assertEqual({ 'Montreal' }, { participant.name for participant in models[0].where })
 
     def test_where_count_participants(self):
         """
@@ -259,8 +272,7 @@ class TestUnderstandingModeler(unittest.TestCase):
         participants = self.mock_participants()
         modeler = UnderstandingModeler(participants=participants.values())
         models = modeler.model(timeline)
-        self.assertEqual({ participants['Montreal'].name },
-                         { participant.name for participant in models[0].where })
+        self.assertEqual({ 'Montreal' }, { participant.name for participant in models[0].where })
 
     def test_where_unrecognized_participants(self):
         """
@@ -291,7 +303,7 @@ class TestUnderstandingModeler(unittest.TestCase):
         participants = self.mock_participants()
         modeler = UnderstandingModeler(participants=participants.values())
         models = modeler.model(timeline)
-        self.assertEqual(participants['Montreal'].name, models[0].where[0].name)
+        self.assertEqual('Montreal', models[0].where[0].name)
 
     def test_where_repeated_participant(self):
         """
@@ -323,8 +335,23 @@ class TestUnderstandingModeler(unittest.TestCase):
         participants = self.mock_participants()
         modeler = UnderstandingModeler(participants=participants.values())
         models = modeler.model(timeline)
-        self.assertEqual({ participants['Montreal'].name, participants['Canada'].name },
+        self.assertEqual({ 'Montreal', 'Canada' },
                          { participant.name for participant in models[0].where })
+
+    def test_where_with_parentheses(self):
+        """
+        Test that identifying the Where ignores parentheses.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="Yuki Tsunoda finishes first in Quebec."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual({ 'Quebec' }, { participant.name for participant in models[0].where })
 
     def test_when_uses_created_at(self):
         """
