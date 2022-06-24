@@ -20,7 +20,9 @@ class UnderstandingModeler(EventModeler):
 
     :ivar participants: The participants that are used to understand the Who and the Where.
                         The class expects participants to be :class:`~attributes.profile.Profile` instances.
-    :vartype participants: list of :class:`attributes.profile.Profile`
+                        Internally, participants are stored as a dictionary, with the name as the key and the profile as the value.
+                        This allows the :func:`~modeling.modelers.understanding_modeler.UnderstandingModeler.who` and :func:`~modeling.modelers.understanding_modeler.UnderstandingModeler.where` functions to return full profiles, not just names.
+    :vartype participants: dict
     """
 
     def __init__(self, participants=None):
@@ -49,7 +51,7 @@ class UnderstandingModeler(EventModeler):
         participants = [ participant.copy() for participant in participants ]
         for participant in participants:
             participant.name = nlp.remove_parentheses(participant.name)
-        return participants
+        return { participant.name: participant for participant in participants }
 
     def who(self, node):
         """
