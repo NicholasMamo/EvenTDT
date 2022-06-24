@@ -101,6 +101,8 @@ class UnderstandingModeler(EventModeler):
         """
         Identify Where the given event is taking place.
 
+        A participant is a location that appears in at least half of the documents in the node.
+
         :param node: A node on the timeline.
         :type node: :class:`~summarization.timeline.nodes.Node`
 
@@ -108,7 +110,21 @@ class UnderstandingModeler(EventModeler):
         :rtype: list
         """
 
-        return [ ]
+        _where = { } # the document frequency of each participant
+
+        for document in node.get_all_documents():
+            found = [ ] # the list of participants found in this document's text
+            for participant, profile in self.participants.items():
+                # TODO: consider only participants that are locations
+                if profile.name in document.text:
+                    found.append(participant)
+
+            for participant in set(found):
+                _where[participant] = _where.get(participant, 0) + 1
+
+        _where = [ participant for participant, frequency in _where.items()
+                             if frequency >= (len(node.get_all_documents()) / 2) ]
+        return [ self.participants[participant] for participant in _where ]
 
     def when(self, node):
         """

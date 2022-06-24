@@ -41,6 +41,7 @@ class TestUnderstandingModeler(unittest.TestCase):
             "George Russell (racing driver)": "George William Russell (/rʌsəl/; born 15 February 1998) is a British racing driver currently competing in Formula One for Mercedes.",
             "Circuit Gilles Villeneuve": "The Circuit Gilles Villeneuve (also spelled Circuit Gilles-Villeneuve in French) is a 4.361 km (2.710 mi) motor racing circuit in Montreal, Quebec, Canada.",
             "Montreal": "Montreal (/ˌmʌntriˈɔːl/ (listen) MUN-tree-AWL; officially Montréal, French: [mɔ̃ʁeal] (listen)) is the second-most populous city in Canada and most populous city in the Canadian province of Quebec.",
+            "Canada": "Canada is a country in North America.",
         }
 
         extractor = LinguisticExtractor()
@@ -207,6 +208,121 @@ class TestUnderstandingModeler(unittest.TestCase):
         models = modeler.model(timeline)
         self.assertEqual({ participants['Max Verstappen'].name, participants['Pierre Gasly'].name },
                          { participant.name for participant in models[0].who })
+
+    def test_where_returns_list(self):
+        """
+        Test that the Where returns a list of profiles.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="Uneventful Montreal Grand Prix ends with a Dutch flair.")
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual(list, type(models))
+        self.assertTrue(all( list == type(model.where) for model in models ))
+        self.assertTrue(all( Profile == type(profile) for model in models for profile in model.where ))
+
+    def test_where_matches_participants(self):
+        """
+        Test that the Where correctly identifies participants in the text.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="Uneventful Montreal Grand Prix ends with a Dutch flair.")
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual({ participants['Montreal'].name },
+                         { participant.name for participant in models[0].where })
+
+    def test_where_count_participants(self):
+        """
+        Test that the Where correctly identifies participants in the text.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="Uneventful Montreal Grand Prix ends with a Dutch flair."),
+            Document(text="Max Verstappen wins the Montreal Grand Prix."),
+            Document(text="France's Pierre Gasly finishes second despite slow start."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual({ participants['Montreal'].name },
+                         { participant.name for participant in models[0].where })
+
+    def test_where_unrecognized_participants(self):
+        """
+        Test that if no participant matches the Where, the function returns an empty list.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="He's done it! Yuki Tsunoda wins the Imola Grand Prix.")
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual([ ], models[0].where)
+
+    def test_where_threshold_inclusive(self):
+        """
+        Test that the Where's 50% threshold is inclusive.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="Uneventful Montreal Grand Prix ends with a Dutch flair."),
+            Document(text="The Dutch wins the first Grand Prix of the season.")
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual(participants['Montreal'].name, models[0].where[0].name)
+
+    def test_where_repeated_participant(self):
+        """
+        Test that if a participant appears multiple times in one document, it is only counted once.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="Montreal regales! Max Verstappen wins the Montreal Grand Prix."),
+            Document(text="The Dutch wins the first Grand Prix of the season."),
+            Document(text="The inaugural Grand Prix is over, and it goes Dutch.")
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual([ ], models[0].where)
+
+    def test_where_multiple(self):
+        """
+        Test that a model's Where may have several participants.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="It's all over in Canada. The Montreal Grand Prix goes to the Dutch leader."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual({ participants['Montreal'].name, participants['Canada'].name },
+                         { participant.name for participant in models[0].where })
 
     def test_when_uses_created_at(self):
         """
