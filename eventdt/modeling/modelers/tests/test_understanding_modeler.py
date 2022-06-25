@@ -414,6 +414,21 @@ class TestUnderstandingModeler(unittest.TestCase):
         self.assertEqual({ 'Max Verstappen' }, { participant.name for participant in models[0].who })
         self.assertTrue(all( participant.is_person() or participant.is_organization() for participant in models[0].who ))
 
+    def test_who_entity_subset(self):
+        """
+        Test that identifying the Who maps named entities that appear in the text and as a substring of a participant.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="Canada: Carlos wins the Grand Prix."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual({ 'Carlos Sainz Jr.' }, { participant.name for participant in models[0].who })
+
     def test_where_returns_list(self):
         """
         Test that the Where returns a list of profiles.
