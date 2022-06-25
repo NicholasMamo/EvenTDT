@@ -225,6 +225,22 @@ class TestUnderstandingModeler(unittest.TestCase):
         self.assertEqual({ 'Max Verstappen', 'George Russell' },
                          { participant.name for participant in models[0].who })
 
+    def test_who_case_fold_checks(self):
+        """
+        Test that identifying the Who ignores the case.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="max verstappen wins the grand prix, george russell the runner-up."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual({ 'Max Verstappen', 'George Russell' },
+                         { participant.name for participant in models[0].who })
+
     def test_where_returns_list(self):
         """
         Test that the Where returns a list of profiles.
@@ -352,6 +368,22 @@ class TestUnderstandingModeler(unittest.TestCase):
         modeler = UnderstandingModeler(participants=participants.values())
         models = modeler.model(timeline)
         self.assertEqual({ 'Quebec' }, { participant.name for participant in models[0].where })
+
+    def test_where_case_fold_checks(self):
+        """
+        Test that identifying the Where ignores the case.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="it's all over in canada as the montreal grand prix goes to the dutch leader."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual({ 'Montreal', 'Canada' },
+                         { participant.name for participant in models[0].where })
 
     def test_when_uses_created_at(self):
         """
