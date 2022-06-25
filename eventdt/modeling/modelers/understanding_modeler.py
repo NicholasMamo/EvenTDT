@@ -90,8 +90,9 @@ class UnderstandingModeler(EventModeler):
         :rtype: list
         """
 
-        _who = { } # the document frequency of each participant
+        _who = [ ]
 
+        freq = { } # the document frequency of each participant
         for document in node.get_all_documents():
             found = [ ] # the list of participants found in this document's text
             entities = { entity: False for entity, _ in nlp.entities(document.text, netype=[ "PERSON", "ORGANIZATION", "FACILITY" ]) } # values indicate whether we could match the entity to a participant
@@ -114,11 +115,14 @@ class UnderstandingModeler(EventModeler):
 
             # increment each found participant's document frequency
             for participant in set(found):
-                _who[participant] = _who.get(participant, 0) + 1
+                freq[participant] = freq.get(participant, 0) + 1
 
-        _who = [ participant for participant, frequency in _who.items()
+        # filter infrequent participants
+        freq = [ participant for participant, frequency in freq.items()
                              if frequency >= (len(node.get_all_documents()) / 2) ]
-        return [ self.participants[participant] for participant in _who ]
+
+        _who = [ self.participants[participant] for participant in freq if participant in self.participants ]
+        return _who
 
     def what(self, node):
         """
@@ -146,8 +150,9 @@ class UnderstandingModeler(EventModeler):
         :rtype: list
         """
 
-        _where = { } # the document frequency of each participant
+        _where = [ ]
 
+        freq = { } # the document frequency of each participant
         for document in node.get_all_documents():
             found = [ ] # the list of participants found in this document's text
             entities = { entity: False for entity, _ in nlp.entities(document.text, netype=[ "GPE", "LOCATION", "GSP" ]) } # values indicate whether we could match the entity to a participant
@@ -167,12 +172,13 @@ class UnderstandingModeler(EventModeler):
 
             # increment each found participant's document frequency
             for participant in set(found):
-                _where[participant] = _where.get(participant, 0) + 1
+                freq[participant] = freq.get(participant, 0) + 1
 
 
-        _where = [ participant for participant, frequency in _where.items()
+        freq = [ participant for participant, frequency in freq.items()
                              if frequency >= (len(node.get_all_documents()) / 2) ]
-        return [ self.participants[participant] for participant in _where ]
+        _where = [ self.participants[participant] for participant in freq ]
+        return _where
 
     def when(self, node):
         """
