@@ -76,7 +76,7 @@ class UnderstandingModeler(EventModeler):
 
         for document in node.get_all_documents():
             found = [ ] # the list of participants found in this document's text
-            entities = [ entity for entity, _ in nlp.entities(document.text, netype=[ "PERSON", "ORGANIZATION", "FACILITY" ]) ]
+            entities = { entity: False for entity, _ in nlp.entities(document.text, netype=[ "PERSON", "ORGANIZATION", "FACILITY" ]) } # values indicate whether we could match the entity to a participant
             for participant, profile in self.participants.items():
                 if profile.is_location():
                     continue
@@ -132,7 +132,7 @@ class UnderstandingModeler(EventModeler):
 
         for document in node.get_all_documents():
             found = [ ] # the list of participants found in this document's text
-            entities = [ entity for entity, _ in nlp.entities(document.text, netype=[ "GPE", "LOCATION", "GSP" ]) ]
+            entities = { entity: False for entity, _ in nlp.entities(document.text, netype=[ "GPE", "LOCATION", "GSP" ]) } # values indicate whether we could match the entity to a participant
             for participant, profile in self.participants.items():
                 if not profile.is_location():
                     continue
