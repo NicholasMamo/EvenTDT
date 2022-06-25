@@ -176,7 +176,7 @@ The output is a JSON file with the following structure, although additional data
             "filters_keep": null,
             "splits": null,
             "threshold": 0.5,
-            "threshold": "MEAN",
+            "threshold_type": "MEAN",
             "post_rate": 1.7,
             "understanding": "data/event/understanding.json"
         },
@@ -208,7 +208,7 @@ The output is a JSON file with the following structure, although additional data
             "filters_keep": null,
             "splits": null,
             "threshold": 0.5,
-            "threshold": "MEAN",
+            "threshold_type": "MEAN",
             "post_rate": 1.7,
             "understanding": "data/event/understanding.json"
         },

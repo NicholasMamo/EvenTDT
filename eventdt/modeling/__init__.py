@@ -3,6 +3,7 @@ The event modeling package contains classes and functions that make it easier to
 """
 
 import copy
+from datetime import datetime
 import os
 import sys
 
@@ -79,3 +80,28 @@ class EventModel(Attributable, Exportable):
         return EventModel(who=attributes.get('who'), what=attributes.get('what'), where=attributes.get('where'),
                           when=attributes.get('when'), why=attributes.get('why'), how=attributes.get('how'),
                           attributes=copy.deepcopy(attributes))
+
+    def __str__(self):
+        """
+        Get the string representation of the model.
+        This function returns the set attributes of the `five Ws and one H`.
+
+        :return: The string representation of the summary.
+        :rtype: str
+        """
+
+        _str = ''
+
+        _str += f"Who: { self.who }\n" if self.who else ''
+        _str += f"What: { self.what }\n" if self.what else ''
+        _str += f"Where: { self.where }\n" if self.where else ''
+
+        if type(self.when) is list:
+            _str += f"When: { [ datetime.fromtimestamp(when) for when in self.when ] }\n" if self.when else ''
+        else:
+            _str += f"When: { datetime.fromtimestamp(self.when) }\n" if self.when else ''
+
+        _str += f"Why: { self.why }\n" if self.why else ''
+        _str += f"How: { self.how }\n" if self.how else ''
+
+        return _str
