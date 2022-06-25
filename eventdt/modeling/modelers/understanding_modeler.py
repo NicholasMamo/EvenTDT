@@ -11,6 +11,7 @@ path = os.path.join(os.path.dirname(__file__), '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
+from attributes import Profile
 from modeling.modelers import EventModeler
 import nlp
 
@@ -110,8 +111,12 @@ class UnderstandingModeler(EventModeler):
                     if (entity.lower() in profile.name.lower() or
                         any( entity.lower() in reference for reference in profile.attributes.get('known_as', [ ]) )):
                         found.append(participant)
+                        entities[entity] = True # mark the entity as having been matched to a participant
 
-                # TODO: handle other common named entities that match nothing else
+            # handle other common named entities that appear in the text but do not match a participant
+            for entity, matched in entities.items():
+                if self.with_ner and not matched:
+                    found.append(entity.lower())
 
             # increment each found participant's document frequency
             for participant in set(found):
@@ -121,7 +126,11 @@ class UnderstandingModeler(EventModeler):
         freq = [ participant for participant, frequency in freq.items()
                              if frequency >= (len(node.get_all_documents()) / 2) ]
 
-        _who = [ self.participants[participant] for participant in freq if participant in self.participants ]
+        # map the participants back to profiles, or create new profiles if they are named entities
+        _who = [ self.participants[participant] for participant in freq
+                                                if participant in self.participants ]
+        _who.extend([ Profile(name=participant) for participant in freq
+                                                if participant not in self.participants and self.with_ner ])
         return _who
 
     def what(self, node):

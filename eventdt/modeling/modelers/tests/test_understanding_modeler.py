@@ -17,6 +17,7 @@ from attributes.extractors import LinguisticExtractor
 from attributes import Profile
 from modeling import EventModel
 from modeling.modelers import UnderstandingModeler
+import nlp
 from nlp import Document
 from summarization.timeline import Timeline
 from summarization.timeline.nodes import DocumentNode
@@ -440,6 +441,51 @@ class TestUnderstandingModeler(unittest.TestCase):
         modeler = UnderstandingModeler(participants=participants.values())
         models = modeler.model(timeline)
         self.assertEqual({ 'Carlos Sainz Jr.' }, { participant.name for participant in models[0].who })
+
+    def test_who_with_ner(self):
+        """
+        Test that identifying the Who with NER returns participants that do not appear in the understanding.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="In Canada, the Canadian Grand Prix ends without much fanfare."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values(), with_ner=True)
+        models = modeler.model(timeline)
+        self.assertEqual({ 'grand prix' }, { participant.name for participant in models[0].who })
+
+    def test_who_with_ner_only_unresolved(self):
+        """
+        Test that identifying the Who with NER only returns named entities that do not resolve to a participant from the understanding.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="Canada: Carlos wins the Grand Prix followed by Verstappen."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values(), with_ner=True)
+        models = modeler.model(timeline)
+        self.assertEqual({ 'Carlos Sainz Jr.', 'Max Verstappen', 'grand prix' }, { participant.name for participant in models[0].who })
+
+    def test_who_with_ner_only_persons_and_organizations(self):
+        """
+        Test that identifying the Who with NER only returns persons and organizations.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="In Canada, Hamilton and Leclerc repeat the Spain double in the today's Grand Prix."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values(), with_ner=True)
+        models = modeler.model(timeline)
+        self.assertEqual({ 'hamilton', 'leclerc', 'grand prix' }, { participant.name for participant in models[0].who })
 
     def test_where_returns_list(self):
         """
