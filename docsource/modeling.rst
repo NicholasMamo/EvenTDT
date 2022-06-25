@@ -19,3 +19,11 @@ Event modelers
   :members:
   :private-members:
   :special-members:
+
+Understanding Modeler
+---------------------
+
+.. automodule:: modeling.modelers.understanding_modeler
+  :members:
+  :private-members:
+  :special-members:
