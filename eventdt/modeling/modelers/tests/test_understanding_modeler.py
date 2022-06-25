@@ -398,6 +398,22 @@ class TestUnderstandingModeler(unittest.TestCase):
         models = modeler.model(timeline)
         self.assertEqual(set(), { participant.name for participant in models[0].who })
 
+    def test_who_type_mix(self):
+        """
+        Test that identifying the Who accepts only persons or locations even when there are locations.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="Quebec, Canada: Max Verstappen wins the Montreal Grand Prix."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual({ 'Max Verstappen' }, { participant.name for participant in models[0].who })
+        self.assertTrue(all( participant.is_person() or participant.is_organization() for participant in models[0].who ))
+
     def test_where_returns_list(self):
         """
         Test that the Where returns a list of profiles.
@@ -602,9 +618,9 @@ class TestUnderstandingModeler(unittest.TestCase):
         self.assertEqual({ 'Montreal', 'Canada' },
                          { participant.name for participant in models[0].where })
 
-    def test_where_accepts_persons(self):
+    def test_where_rejects_persons(self):
         """
-        Test that identifying the Where accepts persons.
+        Test that identifying the Where rejects persons.
         """
 
         timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
@@ -618,9 +634,9 @@ class TestUnderstandingModeler(unittest.TestCase):
         models = modeler.model(timeline)
         self.assertEqual(set( ), { participant.name for participant in models[0].where })
 
-    def test_where_accepts_organizations(self):
+    def test_where_rejects_organizations(self):
         """
-        Test that identifying the Where accepts organizations.
+        Test that identifying the Where rejects organizations.
         """
 
         timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
@@ -633,14 +649,30 @@ class TestUnderstandingModeler(unittest.TestCase):
         models = modeler.model(timeline)
         self.assertEqual(set( ), { participant.name for participant in models[0].where })
 
-    def test_where_rejects_locations(self):
+    def test_where_accepts_locations(self):
         """
-        Test that identifying the Where rejects locations.
+        Test that identifying the Where accepts locations.
         """
 
         timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
         timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
             Document(text="Quebec, Canada: everything set for the Montreal Grand Prix."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual({ 'Quebec', 'Canada', 'Montreal' }, { participant.name for participant in models[0].where })
+        self.assertTrue(all( participant.is_location() for participant in models[0].where ))
+
+    def test_where_type_mix(self):
+        """
+        Test that identifying the Where accepts only locations even when there are several types of participants.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="Quebec, Canada: Max Verstappen wins the Montreal Grand Prix."),
         ]))
 
         participants = self.mock_participants()
