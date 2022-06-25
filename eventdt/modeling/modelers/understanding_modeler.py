@@ -82,7 +82,7 @@ class UnderstandingModeler(EventModeler):
 
                 # check for the participant's name or aliases in the text
                 if (profile.name.lower() in document.text.lower() or
-                    any( reference in document.text.lower() for reference in profile.attributes.get('known_as', [ ]) )):
+                    any( reference.lower() in document.text.lower() for reference in profile.attributes.get('known_as', [ ]) )):
                     found.append(participant)
 
             # increment each found participant's document frequency
