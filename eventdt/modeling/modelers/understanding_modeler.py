@@ -132,6 +132,7 @@ class UnderstandingModeler(EventModeler):
 
         for document in node.get_all_documents():
             found = [ ] # the list of participants found in this document's text
+            entities = [ entity for entity, _ in nlp.entities(document.text, netype=[ "GPE", "LOCATION", "GSP" ]) ]
             for participant, profile in self.participants.items():
                 if not profile.is_location():
                     continue
@@ -139,12 +140,17 @@ class UnderstandingModeler(EventModeler):
                 if profile.name.lower() in document.text.lower():
                     found.append(participant)
 
+                # check for entities that are subsets of the entity or its aliases
+                for entity in entities:
+                    if entity.lower() in profile.name.lower():
+                        found.append(participant)
+
+                # TODO: handle other common named entities that match nothing else
+
             # increment each found participant's document frequency
             for participant in set(found):
                 _where[participant] = _where.get(participant, 0) + 1
 
-            # TODO: check for entities that are subsets of the entity or its aliases
-            # TODO: handle other common named entities that match nothing else
 
         _where = [ participant for participant, frequency in _where.items()
                              if frequency >= (len(node.get_all_documents()) / 2) ]

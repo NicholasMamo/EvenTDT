@@ -41,6 +41,7 @@ class TestUnderstandingModeler(unittest.TestCase):
             "George Russell (racing driver)": "George William Russell (/rʌsəl/; born 15 February 1998) is a British racing driver currently competing in Formula One for Mercedes.",
             "FIA": "The Fédération Internationale de l'Automobile (FIA; English: International Automobile Federation) is an association established on 20 June 1904 to represent the interests of motoring organisations and motor car users.",
             "Circuit Gilles Villeneuve": "The Circuit Gilles Villeneuve (also spelled Circuit Gilles-Villeneuve in French) is a 4.361 km (2.710 mi) motor racing circuit in Montreal, Quebec, Canada.",
+            "Circuit de Monaco": "Circuit de Monaco is a 3.337 km (2.074 mi) street circuit laid out on the city streets of Monte Carlo and La Condamine around the harbour of the Principality of Monaco.",
             "Montreal": "Montreal (/ˌmʌntriˈɔːl/ (listen) MUN-tree-AWL; officially Montréal, French: [mɔ̃ʁeal] (listen)) is the second-most populous city in Canada and most populous city in the Canadian province of Quebec.",
             "Quebec (Canada)": "Quebec (/kəˈbɛk/ kə-BEK, sometimes /kwəˈbɛk/ kwə-BEK; French: Québec [kebɛk] (listen))[8] is one of the thirteen provinces and territories of Canada.",
             "Canada": "Canada is a country in North America.",
@@ -695,6 +696,21 @@ class TestUnderstandingModeler(unittest.TestCase):
         models = modeler.model(timeline)
         self.assertEqual({ 'Quebec', 'Canada', 'Montreal' }, { participant.name for participant in models[0].where })
         self.assertTrue(all( participant.is_location() for participant in models[0].where ))
+
+    def test_where_entity_subset(self):
+        """
+        Test that identifying the Where maps named entities that appear in the text and as a substring of a participant.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="Monaco: Carlos wins the Grand Prix."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual({ 'Circuit de Monaco' }, { participant.name for participant in models[0].where })
 
     def test_when_uses_created_at(self):
         """
