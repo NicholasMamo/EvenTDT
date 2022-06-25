@@ -39,6 +39,7 @@ class TestUnderstandingModeler(unittest.TestCase):
             "Pierre Gasly": "Pierre Gasly (French pronunciation: ​[pjɛʁ ɡasli]; born 7 February 1996) is a French racing driver, currently competing in Formula One under the French flag, racing for Scuderia AlphaTauri.",
             "Carlos Sainz Jr.": "Carlos Sainz Vázquez de Castro (Spanish pronunciation: [ˈkaɾlos ˈsajnθ ˈβaθkeθ ðe ˈkastɾo] (listen); born 1 September 1994), otherwise known as Carlos Sainz Jr. or simply Carlos Sainz[a], is a Spanish racing driver currently competing in Formula One for Scuderia Ferrari.",
             "George Russell (racing driver)": "George William Russell (/rʌsəl/; born 15 February 1998) is a British racing driver currently competing in Formula One for Mercedes.",
+            "FIA": "The Fédération Internationale de l'Automobile (FIA; English: International Automobile Federation) is an association established on 20 June 1904 to represent the interests of motoring organisations and motor car users.",
             "Circuit Gilles Villeneuve": "The Circuit Gilles Villeneuve (also spelled Circuit Gilles-Villeneuve in French) is a 4.361 km (2.710 mi) motor racing circuit in Montreal, Quebec, Canada.",
             "Montreal": "Montreal (/ˌmʌntriˈɔːl/ (listen) MUN-tree-AWL; officially Montréal, French: [mɔ̃ʁeal] (listen)) is the second-most populous city in Canada and most populous city in the Canadian province of Quebec.",
             "Quebec (Canada)": "Quebec (/kəˈbɛk/ kə-BEK, sometimes /kwəˈbɛk/ kwə-BEK; French: Québec [kebɛk] (listen))[8] is one of the thirteen provinces and territories of Canada.",
@@ -348,6 +349,54 @@ class TestUnderstandingModeler(unittest.TestCase):
         modeler = UnderstandingModeler(participants=participants.values())
         models = modeler.model(timeline)
         self.assertEqual({ 'Carlos Sainz Jr.' }, { participant.name for participant in models[0].who })
+
+    def test_who_accepts_persons(self):
+        """
+        Test that identifying the Who accepts persons.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="Carlos Sainz crashes out with engine failure."),
+            Document(text="Max Verstappen wins the grand prix, George Russell the runner-up."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual({ 'Carlos Sainz Jr.', 'Max Verstappen', 'George Russell' }, { participant.name for participant in models[0].who })
+        self.assertTrue(all( participant.is_person() for participant in models[0].who ))
+
+    def test_who_accepts_organizations(self):
+        """
+        Test that identifying the Who accepts organizations.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="FIA outlines rule changes ahead of new season."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual({ 'FIA' }, { participant.name for participant in models[0].who })
+        self.assertTrue(all( participant.is_organization() for participant in models[0].who ))
+
+    def test_who_rejects_locations(self):
+        """
+        Test that identifying the Who rejects locations.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="Quebec, Canada: everything set for the Montreal Grand Prix."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual(set(), { participant.name for participant in models[0].who })
 
     def test_where_returns_list(self):
         """
