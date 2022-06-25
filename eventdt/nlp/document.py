@@ -30,8 +30,8 @@ class Document(Vector):
     The only big change is the ``text`` instance variable.
     Since a :class:`~nlp.document.Document` is represented as a :class:`~vsm.vector.Vector`, the ``text`` records the original text that generated the :class:`~nlp.document.Document`.
 
-    :ivar text: The document's original text.
-    :vartype text: str
+    :ivar ~.text: The document's original text.
+    :vartype ~.text: str
     """
 
     def __init__(self, text='', dimensions=None, scheme=None, *args, **kwargs):

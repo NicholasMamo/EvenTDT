@@ -23,8 +23,8 @@ class Profile(Attributable, Exportable):
 
     :ivar name: The name of the entity that the profile represents.
     :vartype name: str
-    :ivar text: The text from which the profile was created.
-    :vartype text: str
+    :ivar ~.text: The text from which the profile was created.
+    :vartype ~.text: str
     """
 
     def __init__(self, name=None, text=None, *args, **kwargs):
