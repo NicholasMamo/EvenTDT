@@ -487,6 +487,24 @@ class TestUnderstandingModeler(unittest.TestCase):
         models = modeler.model(timeline)
         self.assertEqual({ 'hamilton', 'leclerc', 'grand prix' }, { participant.name for participant in models[0].who })
 
+    def test_who_with_ner_no_participants(self):
+        """
+        Test that identifying the Where with NER returns all persons and orgaizations if there are no participants.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        document = Document(text="In Canada, Hamilton and Leclerc repeat the Spain double in the today's Grand Prix.")
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [ document ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(with_ner=True)
+        entities = nlp.entities(document.text, netype=[ 'PERSON', 'ORGANIZATION', 'FACILITY' ])
+
+        models = modeler.model(timeline)
+        entities = { entity.lower() for entity, _ in entities }
+        who = { participant.name for participant in models[0].who }
+        self.assertEqual(entities, who)
+
     def test_where_returns_list(self):
         """
         Test that the Where returns a list of profiles.
@@ -771,7 +789,7 @@ class TestUnderstandingModeler(unittest.TestCase):
 
     def test_where_with_ner(self):
         """
-        Test that identifying the Who with NER returns participants that do not appear in the understanding.
+        Test that identifying the Where with NER returns participants that do not appear in the understanding.
         """
 
         timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
@@ -786,7 +804,7 @@ class TestUnderstandingModeler(unittest.TestCase):
 
     def test_where_with_ner_only_unresolved(self):
         """
-        Test that identifying the Who with NER only returns named entities that do not resolve to a participant from the understanding.
+        Test that identifying the Where with NER only returns named entities that do not resolve to a participant from the understanding.
         """
 
         timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
@@ -801,7 +819,7 @@ class TestUnderstandingModeler(unittest.TestCase):
 
     def test_where_with_ner_only_locations(self):
         """
-        Test that identifying the Who with NER only returns locations.
+        Test that identifying the Where with NER only returns locations.
         """
 
         timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
@@ -813,6 +831,24 @@ class TestUnderstandingModeler(unittest.TestCase):
         modeler = UnderstandingModeler(participants=participants.values(), with_ner=True)
         models = modeler.model(timeline)
         self.assertEqual({ 'spain', 'Canada' }, { participant.name for participant in models[0].where })
+
+    def test_where_with_ner_no_participants(self):
+        """
+        Test that identifying the Where with NER returns all locations if there are no participants.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        document = Document(text="In Canada, Hamilton and Leclerc repeat the Spain double in the today's Grand Prix.")
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [ document ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(with_ner=True)
+        entities = nlp.entities(document.text, netype=[ 'GPE', 'GSP', "LOCATION" ])
+
+        models = modeler.model(timeline)
+        entities = { entity.lower() for entity, _ in entities }
+        where = { location.name for location in models[0].where }
+        self.assertEqual(entities, where)
 
     def test_when_uses_created_at(self):
         """
