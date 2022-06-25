@@ -37,7 +37,7 @@ class TestUnderstandingModeler(unittest.TestCase):
         corpus = {
             "Max Verstappen": "Max Emilian Verstappen (born 30 September 1997) is a Belgian-Dutch racing driver and the 2021 Formula One World Champion.",
             "Pierre Gasly": "Pierre Gasly (French pronunciation: ​[pjɛʁ ɡasli]; born 7 February 1996) is a French racing driver, currently competing in Formula One under the French flag, racing for Scuderia AlphaTauri.",
-            "Lance Stroll": "Lance Strulovitch,[2] (born 29 October 1998) better known as Lance Stroll, is a Canadian-Belgian[3] racing driver competing under the Canadian flag in Formula One.",
+            "Lance Strulovitch": "Lance Strulovitch,[2] (born 29 October 1998) better known as Lance Stroll, is a Canadian-Belgian[3] racing driver competing under the Canadian flag in Formula One.",
             "George Russell (racing driver)": "George William Russell (/rʌsəl/; born 15 February 1998) is a British racing driver currently competing in Formula One for Mercedes.",
             "Circuit Gilles Villeneuve": "The Circuit Gilles Villeneuve (also spelled Circuit Gilles-Villeneuve in French) is a 4.361 km (2.710 mi) motor racing circuit in Montreal, Quebec, Canada.",
             "Montreal": "Montreal (/ˌmʌntriˈɔːl/ (listen) MUN-tree-AWL; officially Montréal, French: [mɔ̃ʁeal] (listen)) is the second-most populous city in Canada and most populous city in the Canadian province of Quebec.",
@@ -255,6 +255,39 @@ class TestUnderstandingModeler(unittest.TestCase):
         models = modeler.model(timeline)
         self.assertEqual({ 'Max Verstappen', 'George Russell' },
                          { participant.name for participant in models[0].who })
+
+    def test_who_checks_known_as(self):
+        """
+        Test that identifying the Who also uses the `known_as` attribute if it exists.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="Lance Stroll crashes out with engine failure."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual({ 'Lance Strulovitch' }, { participant.name for participant in models[0].who })
+
+    def test_who_known_as_like_name(self):
+        """
+        Test that identifying the Who, mentions of the `known_as` attribute are treated exactly the same as if the full name is mentioned.
+        In other words, they count to the 50% threshold too.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="Lance Stroll crashes out with engine failure."),
+            Document(text="Max Verstappen wins the grand prix, George Russell the runner-up."),
+            Document(text="Engine failure marks Lance Strulovitch's Grand Prix."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual({ 'Lance Strulovitch' }, { participant.name for participant in models[0].who })
 
     def test_where_returns_list(self):
         """

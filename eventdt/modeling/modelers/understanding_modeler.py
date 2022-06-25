@@ -73,8 +73,8 @@ class UnderstandingModeler(EventModeler):
             found = [ ] # the list of participants found in this document's text
             for participant, profile in self.participants.items():
                 # TODO: skip participants that are locations
-                # TODO: look for `known_as` in text
-                if profile.name.lower() in document.text.lower():
+                if (profile.name.lower() in document.text.lower() or
+                    any( reference in document.text.lower() for reference in profile.attributes.get('known_as', [ ]) )):
                     found.append(participant)
 
             for participant in set(found):
