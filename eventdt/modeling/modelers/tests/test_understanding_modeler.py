@@ -98,6 +98,17 @@ class TestUnderstandingModeler(unittest.TestCase):
         participant.attributes['test'] = { False }
         self.assertTrue(copy.test)
 
+    def test_init_with_ner(self):
+        """
+        Test that on initialization, the class saves the preference of whether to use NER to identify participants, in addition to the understanding.
+        """
+
+        modeler = UnderstandingModeler(with_ner=False)
+        self.assertFalse(modeler.with_ner)
+
+        modeler = UnderstandingModeler(with_ner=True)
+        self.assertTrue(modeler.with_ner)
+
     def test_who_returns_list(self):
         """
         Test that the Who returns a list of profiles.

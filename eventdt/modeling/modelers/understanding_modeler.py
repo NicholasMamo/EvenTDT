@@ -28,18 +28,23 @@ class UnderstandingModeler(EventModeler):
                         Internally, participants are stored as a dictionary, with the name as the key and the profile as the value.
                         This allows the :func:`~modeling.modelers.understanding_modeler.UnderstandingModeler.who` and :func:`~modeling.modelers.understanding_modeler.UnderstandingModeler.where` functions to return full profiles, not just names.
     :vartype participants: dict
+    :ivar with_ner: A boolean indicating whether to use NER to identify common named entities that do not appear in the understanding.
+    :vartype with_ner: bool
     """
 
-    def __init__(self, participants=None):
+    def __init__(self, participants=None, with_ner=False):
         """
         Initialize the :class:`~modeling.modelers.understanding_modeler.UnderstandingModeler` with understanding.
 
         :param participants: The participants that are used to understand the Who and the Where.
                              The class expects participants to be :class:`~attributes.profile.Profile` instances.
         :type participants: list of :class:`attributes.profile.Profile`
+        :param with_ner: A boolean indicating whether to use NER to identify common named entities that do not appear in the understanding.
+        :type with_ner: bool
         """
 
         self.participants = self._preprocess_participants(participants)
+        self.with_ner = with_ner
 
     def _preprocess_participants(self, participants):
         """
