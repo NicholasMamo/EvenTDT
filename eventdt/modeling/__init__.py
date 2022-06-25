@@ -11,6 +11,7 @@ path = os.path.join(os.path.dirname(__file__), '..')
 if path not in sys.path:
     sys.path.append(path)
 
+from attributes import Profile
 from objects import Attributable, Exportable
 
 class EventModel(Attributable, Exportable):
@@ -92,14 +93,16 @@ class EventModel(Attributable, Exportable):
 
         _str = ''
 
-        _str += f"Who: { self.who }\n" if self.who else ''
-        _str += f"What: { self.what }\n" if self.what else ''
-        _str += f"Where: { self.where }\n" if self.where else ''
+        who = self.who if type(self.who) is list else [ self.who ]
+        _str += f"Who: { [ _who.name if type(_who) is Profile else str(_who) for _who in who ] }\n" if self.who else ''
 
-        if type(self.when) is list:
-            _str += f"When: { [ datetime.fromtimestamp(when) for when in self.when ] }\n" if self.when else ''
-        else:
-            _str += f"When: { datetime.fromtimestamp(self.when) }\n" if self.when else ''
+        _str += f"What: { self.what }\n" if self.what else ''
+
+        where = self.where if type(self.where) is list else [ self.where ]
+        _str += f"Where: { [ _who.name if type(_who) is Profile else str(_who) for _who in where ] }\n" if self.where else ''
+
+        when = self.when if type(self.when) is list else [ self.when ]
+        _str += f"When: { [ datetime.fromtimestamp(when) for when in self.when ] }\n" if self.when else ''
 
         _str += f"Why: { self.why }\n" if self.why else ''
         _str += f"How: { self.how }\n" if self.how else ''
