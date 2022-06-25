@@ -17,6 +17,19 @@ import nlp
 class UnderstandingModeler(EventModeler):
     """
     The :class:`~modeling.modelers.understanding_modeler.UnderstandingModeler` receives understanding and uses it to model events.
+    The class understands the Who and the Where based on the following policies:
+
+    #. The Who may only represent persons or organizations, and the Where only locations.
+       See the :func:`~attributes.profile.Profile.type` function for more details on types.
+
+    #. To associate a participant with the Who or the Where, it must appear in at least 50% of documents.
+       The class interprets appearances as either observing the participant's name or, in the case of persons, aliases (the `known_as` attribute) in the documents' text.
+       All matches are case-insensitive.
+
+    #. The class also accepts that a participant appears in a document if any named entities in the text are a substring of the particpant or, in the case of persons, its aliases.
+
+    #. If the ``with_ner`` parameter is set to ``True``, the function also considers other named entities that match no participants.
+       All such named entities must satisfy the other rules: they must be persons or organizations to represent the Who, or locations to represent the Where, and they must appear in at least 50% of the documents.
 
     .. note::
 
