@@ -18,6 +18,11 @@ class UnderstandingModeler(EventModeler):
     """
     The :class:`~modeling.modelers.understanding_modeler.UnderstandingModeler` receives understanding and uses it to model events.
 
+    .. note::
+
+        The class uses NLTK's NLP module, which often confuses persons with organizations.
+        In reality, the distinction does not matter much as the class accepts both as the Who.
+
     :ivar participants: The participants that are used to understand the Who and the Where.
                         The class expects participants to be :class:`~attributes.profile.Profile` instances.
                         Internally, participants are stored as a dictionary, with the name as the key and the profile as the value.

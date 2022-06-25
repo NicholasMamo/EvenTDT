@@ -37,7 +37,7 @@ class TestUnderstandingModeler(unittest.TestCase):
         corpus = {
             "Max Verstappen": "Max Emilian Verstappen (born 30 September 1997) is a Belgian-Dutch racing driver and the 2021 Formula One World Champion.",
             "Pierre Gasly": "Pierre Gasly (French pronunciation: ​[pjɛʁ ɡasli]; born 7 February 1996) is a French racing driver, currently competing in Formula One under the French flag, racing for Scuderia AlphaTauri.",
-            "Lance Strulovitch": "Lance Strulovitch,[2] (born 29 October 1998) better known as Lance Stroll, is a Canadian-Belgian[3] racing driver competing under the Canadian flag in Formula One.",
+            "Carlos Sainz Jr.": "Carlos Sainz Vázquez de Castro (Spanish pronunciation: [ˈkaɾlos ˈsajnθ ˈβaθkeθ ðe ˈkastɾo] (listen); born 1 September 1994), otherwise known as Carlos Sainz Jr. or simply Carlos Sainz[a], is a Spanish racing driver currently competing in Formula One for Scuderia Ferrari.",
             "George Russell (racing driver)": "George William Russell (/rʌsəl/; born 15 February 1998) is a British racing driver currently competing in Formula One for Mercedes.",
             "Circuit Gilles Villeneuve": "The Circuit Gilles Villeneuve (also spelled Circuit Gilles-Villeneuve in French) is a 4.361 km (2.710 mi) motor racing circuit in Montreal, Quebec, Canada.",
             "Montreal": "Montreal (/ˌmʌntriˈɔːl/ (listen) MUN-tree-AWL; officially Montréal, French: [mɔ̃ʁeal] (listen)) is the second-most populous city in Canada and most populous city in the Canadian province of Quebec.",
@@ -308,13 +308,28 @@ class TestUnderstandingModeler(unittest.TestCase):
 
         timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
         timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
-            Document(text="Lance Stroll crashes out with engine failure."),
+            Document(text="Carlos Sainz crashes out with engine failure."),
         ]))
 
         participants = self.mock_participants()
         modeler = UnderstandingModeler(participants=participants.values())
         models = modeler.model(timeline)
-        self.assertEqual({ 'Lance Strulovitch' }, { participant.name for participant in models[0].who })
+        self.assertEqual({ 'Carlos Sainz Jr.' }, { participant.name for participant in models[0].who })
+
+    def test_who_checks_known_as_case_folds(self):
+        """
+        Test that identifying the Who also uses the `known_as` attribute if it exists, and it folds the case.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="carlos sainz crashes out with engine failure"),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual({ 'Carlos Sainz Jr.' }, { participant.name for participant in models[0].who })
 
     def test_who_known_as_like_name(self):
         """
@@ -324,15 +339,15 @@ class TestUnderstandingModeler(unittest.TestCase):
 
         timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
         timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
-            Document(text="Lance Stroll crashes out with engine failure."),
+            Document(text="Carlos Sainz crashes out with engine failure."),
             Document(text="Max Verstappen wins the grand prix, George Russell the runner-up."),
-            Document(text="Engine failure marks Lance Strulovitch's Grand Prix."),
+            Document(text="Engine failure marks Carlos Sainz Jr.'s Grand Prix."),
         ]))
 
         participants = self.mock_participants()
         modeler = UnderstandingModeler(participants=participants.values())
         models = modeler.model(timeline)
-        self.assertEqual({ 'Lance Strulovitch' }, { participant.name for participant in models[0].who })
+        self.assertEqual({ 'Carlos Sainz Jr.' }, { participant.name for participant in models[0].who })
 
     def test_where_returns_list(self):
         """
