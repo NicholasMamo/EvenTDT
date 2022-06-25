@@ -128,14 +128,59 @@ class TestUnderstandingModeler(unittest.TestCase):
         models = modeler.model(timeline)
         self.assertTrue(all( [ ] == model.who for model in models ))
 
-    def test_who_matches_participants(self):
+    def test_who_matches_participants_beginning(self):
         """
-        Test that the Who correctly identifies participants in the text.
+        Test that the Who correctly identifies participants at the beginning of the text.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="Max Verstappen wins the Grand Prix.")
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual({ 'Max Verstappen' }, { participant.name for participant in models[0].who })
+
+    def test_who_matches_participants_middle(self):
+        """
+        Test that the Who correctly identifies participants in the middle of the text.
         """
 
         timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
         timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
             Document(text="He's done it! Max Verstappen wins the Grand Prix.")
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual({ 'Max Verstappen' }, { participant.name for participant in models[0].who })
+
+    def test_who_matches_participants_end(self):
+        """
+        Test that the Who correctly identifies participants at the end of the text.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="The second Grand Prix of the season goes for Max Verstappen.")
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual({ 'Max Verstappen' }, { participant.name for participant in models[0].who })
+
+    def test_who_matches_possessives(self):
+        """
+        Test that the Who correctly identifies participants in the text even when used in possessives.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="He's done it! Max Verstappen's lead extended with latest Grand Prix.")
         ]))
 
         participants = self.mock_participants()
@@ -321,14 +366,59 @@ class TestUnderstandingModeler(unittest.TestCase):
         models = modeler.model(timeline)
         self.assertTrue(all( [ ] == model.where for model in models ))
 
-    def test_where_matches_participants(self):
+    def test_where_matches_participants_beginning(self):
         """
-        Test that the Where correctly identifies participants in the text.
+        Test that the Where correctly identifies participants at the beginning of the text.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="Montreal Grand Prix ends with a Dutch flair.")
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual({ 'Montreal' }, { participant.name for participant in models[0].where })
+
+    def test_where_matches_participants_middle(self):
+        """
+        Test that the Where correctly identifies participants in the middle of the text.
         """
 
         timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
         timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
             Document(text="Uneventful Montreal Grand Prix ends with a Dutch flair.")
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual({ 'Montreal' }, { participant.name for participant in models[0].where })
+
+    def test_where_matches_participants_end(self):
+        """
+        Test that the Where correctly identifies participants at the beginning of the text.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="Dutch flair in Montreal.")
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual({ 'Montreal' }, { participant.name for participant in models[0].where })
+
+    def test_where_matches_possessives(self):
+        """
+        Test that the Where correctly identifies participants in the text even when used in possessives.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="Uneventful Montreal's Grand Prix ends with a Dutch flair.")
         ]))
 
         participants = self.mock_participants()
