@@ -602,6 +602,53 @@ class TestUnderstandingModeler(unittest.TestCase):
         self.assertEqual({ 'Montreal', 'Canada' },
                          { participant.name for participant in models[0].where })
 
+    def test_where_accepts_persons(self):
+        """
+        Test that identifying the Where accepts persons.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="Carlos Sainz crashes out with engine failure."),
+            Document(text="Max Verstappen wins the grand prix, George Russell the runner-up."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual(set( ), { participant.name for participant in models[0].where })
+
+    def test_where_accepts_organizations(self):
+        """
+        Test that identifying the Where accepts organizations.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="FIA outlines rule changes ahead of new season."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual(set( ), { participant.name for participant in models[0].where })
+
+    def test_where_rejects_locations(self):
+        """
+        Test that identifying the Where rejects locations.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="Quebec, Canada: everything set for the Montreal Grand Prix."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual({ 'Quebec', 'Canada', 'Montreal' }, { participant.name for participant in models[0].where })
+        self.assertTrue(all( participant.is_location() for participant in models[0].where ))
+
     def test_when_uses_created_at(self):
         """
         Test that extracting the When simply uses the node's `created_at` attribute.

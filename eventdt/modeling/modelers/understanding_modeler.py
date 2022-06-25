@@ -124,10 +124,13 @@ class UnderstandingModeler(EventModeler):
         for document in node.get_all_documents():
             found = [ ] # the list of participants found in this document's text
             for participant, profile in self.participants.items():
-                # TODO: consider only participants that are locations
+                if not profile.is_location():
+                    continue
+
                 if profile.name.lower() in document.text.lower():
                     found.append(participant)
 
+            # increment each found participant's document frequency
             for participant in set(found):
                 _where[participant] = _where.get(participant, 0) + 1
 
