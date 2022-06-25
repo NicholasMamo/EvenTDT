@@ -769,6 +769,51 @@ class TestUnderstandingModeler(unittest.TestCase):
         models = modeler.model(timeline)
         self.assertEqual({ 'Circuit de Monaco' }, { participant.name for participant in models[0].where })
 
+    def test_where_with_ner(self):
+        """
+        Test that identifying the Who with NER returns participants that do not appear in the understanding.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="In Spain, the Grand Prix ends without much fanfare."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values(), with_ner=True)
+        models = modeler.model(timeline)
+        self.assertEqual({ 'spain' }, { participant.name for participant in models[0].where })
+
+    def test_where_with_ner_only_unresolved(self):
+        """
+        Test that identifying the Who with NER only returns named entities that do not resolve to a participant from the understanding.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="Spain: Carlos wins the Grand Prix followed by Verstappen, like they did in Canada."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values(), with_ner=True)
+        models = modeler.model(timeline)
+        self.assertEqual({ 'spain', 'Canada' }, { participant.name for participant in models[0].where })
+
+    def test_where_with_ner_only_locations(self):
+        """
+        Test that identifying the Who with NER only returns locations.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="In Canada, Hamilton and Leclerc repeat the Spain double in the today's Grand Prix."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values(), with_ner=True)
+        models = modeler.model(timeline)
+        self.assertEqual({ 'spain', 'Canada' }, { participant.name for participant in models[0].where })
+
     def test_when_uses_created_at(self):
         """
         Test that extracting the When simply uses the node's `created_at` attribute.

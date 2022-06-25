@@ -176,17 +176,26 @@ class UnderstandingModeler(EventModeler):
                 for entity in entities:
                     if entity.lower() in profile.name.lower():
                         found.append(participant)
+                        entities[entity] = True
 
-                # TODO: handle other common named entities that match nothing else
+            # handle other common named entities that appear in the text but do not match a participant
+            for entity, matched in entities.items():
+                if self.with_ner and not matched:
+                    found.append(entity.lower())
 
             # increment each found participant's document frequency
             for participant in set(found):
                 freq[participant] = freq.get(participant, 0) + 1
 
-
+        # filter infrequent participants
         freq = [ participant for participant, frequency in freq.items()
                              if frequency >= (len(node.get_all_documents()) / 2) ]
-        _where = [ self.participants[participant] for participant in freq ]
+
+        # map the participants back to profiles, or create new profiles if they are named entities
+        _where = [ self.participants[participant] for participant in freq
+                                                if participant in self.participants ]
+        _where.extend([ Profile(name=participant) for participant in freq
+                                                if participant not in self.participants and self.with_ner ])
         return _where
 
     def when(self, node):
