@@ -113,6 +113,21 @@ class TestUnderstandingModeler(unittest.TestCase):
         self.assertTrue(all( list == type(model.who) for model in models ))
         self.assertTrue(all( Profile == type(profile) for model in models for profile in model.who ))
 
+    def test_who_no_participants(self):
+        """
+        Test that when there are no participants, the Who returns nothing.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="He's done it! Max Verstappen wins the Grand Prix.")
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler()
+        models = modeler.model(timeline)
+        self.assertTrue(all( [ ] == model.who for model in models ))
+
     def test_who_matches_participants(self):
         """
         Test that the Who correctly identifies participants in the text.
@@ -257,6 +272,21 @@ class TestUnderstandingModeler(unittest.TestCase):
         self.assertEqual(list, type(models))
         self.assertTrue(all( list == type(model.where) for model in models ))
         self.assertTrue(all( Profile == type(profile) for model in models for profile in model.where ))
+
+    def test_where_no_participants(self):
+        """
+        Test that when there are no participants, the Where returns nothing.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="Uneventful Montreal Grand Prix ends with a Dutch flair.")
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler()
+        models = modeler.model(timeline)
+        self.assertTrue(all( [ ] == model.where for model in models ))
 
     def test_where_matches_participants(self):
         """
