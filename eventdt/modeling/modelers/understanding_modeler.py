@@ -37,6 +37,8 @@ class UnderstandingModeler(EventModeler):
         The class uses NLTK's NLP module, which often confuses persons with organizations.
         In reality, the distinction does not matter much as the class accepts both as the Who.
 
+    :ivar concepts: A list of concepts, or lists of terms, that represent subjects, or What happens.
+    :vartype concepts: list of list of str
     :ivar participants: The participants that are used to understand the Who and the Where.
                         The class expects participants to be :class:`~attributes.profile.Profile` instances.
                         Internally, participants are stored as a dictionary, with the name as the key and the profile as the value.
@@ -46,10 +48,12 @@ class UnderstandingModeler(EventModeler):
     :vartype with_ner: bool
     """
 
-    def __init__(self, participants=None, with_ner=False):
+    def __init__(self, concepts=None, participants=None, with_ner=False):
         """
         Initialize the :class:`~modeling.modelers.understanding_modeler.UnderstandingModeler` with understanding.
 
+        :param concepts: A list of concepts, or lists of terms, that represent subjects, or What happens.
+        :type concepts: list of list of str
         :param participants: The participants that are used to understand the Who and the Where.
                              The class expects participants to be :class:`~attributes.profile.Profile` instances.
         :type participants: list of :class:`attributes.profile.Profile`
@@ -57,6 +61,7 @@ class UnderstandingModeler(EventModeler):
         :type with_ner: bool
         """
 
+        self.concepts = concepts or [ ]
         self.participants = self._preprocess_participants(participants)
         self.with_ner = with_ner
 

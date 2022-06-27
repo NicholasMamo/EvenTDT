@@ -27,6 +27,20 @@ class TestUnderstandingModeler(unittest.TestCase):
     Test the functionality of the :class:`~modeling.modelers.understanding_modeler.UnderstandingModeler` class.
     """
 
+    def mock_concepts(self):
+        """
+        Create a list of mock concepts that represent the What.
+
+        :return: A list of concepts, each of which is a list of strings.
+        :rtype: list of list of string
+        """
+
+        return [
+            [ 'engine', 'failure' ],
+            [ 'win' ],
+            [ 'tyre', 'pit', 'stop' ]
+        ]
+
     def mock_participants(self):
         """
         Create a list of mock participants that represent the Who and the Where.
@@ -50,6 +64,23 @@ class TestUnderstandingModeler(unittest.TestCase):
 
         extractor = LinguisticExtractor()
         return { name: extractor.extract(text, name=name) for name, text in corpus.items() }
+
+    def test_init_saves_concepts(self):
+        """
+        Test that on initialization, the class saves the concepts if given.
+        """
+
+        concepts = self.mock_concepts()
+        modeler = UnderstandingModeler(concepts=concepts)
+        self.assertEqual(concepts, modeler.concepts)
+
+    def test_init_saves_no_concepts(self):
+        """
+        Test that on initialization, the class creates an empty list if no concepts are given.
+        """
+
+        modeler = UnderstandingModeler()
+        self.assertEqual([ ], modeler.concepts)
 
     def test_init_saves_participants(self):
         """
