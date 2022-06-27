@@ -4,6 +4,7 @@ Instead of understanding topics retrospectively to model them, the :class:`~mode
 The class applies that understanding to model events.
 """
 
+import json
 import os
 import sys
 
@@ -142,6 +143,9 @@ class UnderstandingModeler(EventModeler):
         """
         Identify What subject, action or change the given event represents.
 
+        The function looks for terms in the documents' dimensions.
+        If a concept's terms appear in at least half of the documents, the concept is assigned as the What.
+
         :param node: A node on the timeline.
         :type node: :class:`~summarization.timeline.nodes.Node`
 
@@ -149,7 +153,28 @@ class UnderstandingModeler(EventModeler):
         :rtype: list
         """
 
-        return [ ]
+        _what = [ ]
+
+        freq = { } # the document frequency of each concept
+        for document in node.get_all_documents():
+            found = [ ] # the list of concepts found in this document's dimensions
+
+            # try to match a concept's terms with the document's dimensions
+            for concept in self.concepts:
+                if any(term.lower() in [ dimension.lower() for dimension in document.dimensions ]
+                       for term in concept):
+                    found.append(json.dumps(concept))
+
+            # increment each found concept's's document frequency
+            for concept in set(found):
+                freq[concept] = freq.get(concept, 0) + 1
+
+        # filter infrequent concepts
+        freq = [ concept for concept, frequency in freq.items()
+                         if frequency >= (len(node.get_all_documents()) / 2) ]
+        _what = [ json.loads(concept) for concept in freq ]
+
+        return _what
 
     def where(self, node):
         """

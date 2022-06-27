@@ -168,6 +168,18 @@ class TestUnderstandingModeler(unittest.TestCase):
             Document(text="He's done it! Max Verstappen wins the Grand Prix.")
         ]))
 
+        modeler = UnderstandingModeler()
+        models = modeler.model(timeline)
+        self.assertTrue(all( [ ] == model.who for model in models ))
+
+    def test_who_no_documents(self):
+        """
+        Test that when there are no documents, the Who returns nothing.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [ ]))
+
         participants = self.mock_participants()
         modeler = UnderstandingModeler()
         models = modeler.model(timeline)
@@ -536,6 +548,251 @@ class TestUnderstandingModeler(unittest.TestCase):
         who = { participant.name for participant in models[0].who }
         self.assertEqual(entities, who)
 
+    def test_what_returns_list(self):
+        """
+        Test that the What returns a list of concepts.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        document = Document(dimensions=[ 'leclerc', 'engine' ])
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [ document ]))
+
+        concepts = self.mock_concepts()
+        modeler = UnderstandingModeler(concepts=concepts)
+        models = modeler.model(timeline)
+
+        self.assertTrue(models[0].what)
+        self.assertEqual(list, type(models[0].what))
+        self.assertTrue(all( list == type(concept) for concept in models[0].what ))
+
+    def test_what_no_concepts(self):
+        """
+        Test that the What returns an empty list when it has no concepts.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        document = Document(dimensions=[ 'leclerc', 'engine' ])
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [ document ]))
+
+        modeler = UnderstandingModeler()
+        models = modeler.model(timeline)
+        self.assertEqual([ ], models[0].what)
+
+    def test_what_no_documents(self):
+        """
+        Test that the What returns an empty list when it has no documents.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [ ]))
+
+        concepts = self.mock_concepts()
+        modeler = UnderstandingModeler(concepts=concepts)
+        models = modeler.model(timeline)
+        self.assertEqual([ ], models[0].what)
+
+    def test_what_in_concepts(self):
+        """
+        Test that whatever the What returns exists is a given concept.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        document = Document(dimensions=[ 'leclerc', 'win', 'failure', 'engine' ])
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [ document ]))
+
+        concepts = self.mock_concepts()
+        modeler = UnderstandingModeler(concepts=concepts)
+        models = modeler.model(timeline)
+        self.assertTrue(all( concept in concepts for concept in models[0].what ))
+
+    def test_what_ignores_text(self):
+        """
+        Test that the What ignores the text and only looks for terms in the dimensions.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        document = Document("Leclerc crashes out with engine failure")
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [ document ]))
+
+        concepts = self.mock_concepts()
+        modeler = UnderstandingModeler(concepts=concepts)
+        models = modeler.model(timeline)
+        self.assertEqual([ ], models[0].what)
+
+    def test_what_counts_terms(self):
+        """
+        Test that the What correctly counts the number of concepts that appear in documents.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        documents = [
+            Document(dimensions=[ 'engine', 'failure' ]),
+            Document(dimensions=[ 'pit', 'stop', 'engine', 'failure' ]),
+            Document(dimensions=[ 'leclerc' ]),
+        ]
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), documents))
+
+        concepts = self.mock_concepts()
+        modeler = UnderstandingModeler(concepts=concepts)
+        models = modeler.model(timeline)
+        self.assertEqual([[ 'engine', 'failure' ]], models[0].what)
+
+    def test_what_counts_document_frequency(self):
+        """
+        Test that the What counts the document frequency of concepts to decide the subject.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        documents = [
+            Document(dimensions=[ 'engine', 'failure', 'engine', 'failure' ]),
+            Document(dimensions=[ 'pit', 'stop' ]),
+            Document(dimensions=[ 'leclerc' ]),
+        ]
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), documents))
+
+        concepts = self.mock_concepts()
+        modeler = UnderstandingModeler(concepts=concepts)
+        models = modeler.model(timeline)
+        self.assertEqual([ ], models[0].what)
+
+    def test_what_subset_of_concept(self):
+        """
+        Test that a few words are enough to capture a concept, as opposed to needing all terms to be present.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        documents = [
+            Document(dimensions=[ 'engine' ]),
+            Document(dimensions=[ 'pit', 'stop', 'failure' ]),
+            Document(dimensions=[ 'leclerc' ]),
+        ]
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), documents))
+
+        concepts = self.mock_concepts()
+        modeler = UnderstandingModeler(concepts=concepts)
+        models = modeler.model(timeline)
+        self.assertEqual([[ 'engine', 'failure' ]], models[0].what)
+
+    def test_what_allows_mixed_terms(self):
+        """
+        Test that different words from the same concept contribute to the concept's score.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        documents = [
+            Document(dimensions=[ 'failure' ]),
+            Document(dimensions=[ 'pit', 'stop', 'engine' ]),
+            Document(dimensions=[ 'leclerc' ]),
+        ]
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), documents))
+
+        concepts = self.mock_concepts()
+        modeler = UnderstandingModeler(concepts=concepts)
+        models = modeler.model(timeline)
+        self.assertEqual([[ 'engine', 'failure' ]], models[0].what)
+
+    def test_what_threshold_inclusive(self):
+        """
+        Test that the 50% threshold is inclusive when identifying the What.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        documents = [
+            Document(dimensions=[ 'failure' ]),
+            Document(dimensions=[ 'pit', 'stop', 'engine' ]),
+            Document(dimensions=[ 'leclerc' ]),
+            Document(dimensions=[ 'win', 'grand', 'prix' ]),
+        ]
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), documents))
+
+        concepts = self.mock_concepts()
+        modeler = UnderstandingModeler(concepts=concepts)
+        models = modeler.model(timeline)
+        self.assertEqual([[ 'engine', 'failure' ]], models[0].what)
+
+    def test_what_multiple_concepts(self):
+        """
+        Test that multiple concepts can be identified in one node.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        documents = [
+            Document(dimensions=[ 'failure' ]),
+            Document(dimensions=[ 'pit', 'stop', 'engine' ]),
+            Document(dimensions=[ 'leclerc', 'win' ]),
+            Document(dimensions=[ 'win', 'grand', 'prix' ]),
+        ]
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), documents))
+
+        concepts = self.mock_concepts()
+        modeler = UnderstandingModeler(concepts=concepts)
+        models = modeler.model(timeline)
+        self.assertEqual(2, len(models[0].what))
+        self.assertTrue([ 'engine', 'failure' ] in models[0].what)
+        self.assertTrue([ 'win' ] in models[0].what)
+
+    def test_what_unrecognized_terms(self):
+        """
+        Test that unrecognized terms are excluded from the What.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        documents = [
+            Document(dimensions=[ 'hamilton' ]),
+            Document(dimensions=[ 'leclerc', 'hamilton' ]),
+            Document(dimensions=[ 'leclerc', 'hamilton' ]),
+            Document(dimensions=[ 'hamilton' ]),
+        ]
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), documents))
+
+        concepts = self.mock_concepts()
+        modeler = UnderstandingModeler(concepts=concepts)
+        models = modeler.model(timeline)
+        self.assertEqual([ ], models[0].what)
+
+    def test_what_case_insensitive(self):
+        """
+        Test that extracting the What performs case-insensitive checks.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        documents = [
+            Document(dimensions=[ 'FAILURE' ]),
+            Document(dimensions=[ 'PIT', 'STOP', 'ENGINE' ]),
+            Document(dimensions=[ 'LECLERC', 'WIN' ]),
+            Document(dimensions=[ 'WIN', 'GRAND', 'PRIX' ]),
+        ]
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), documents))
+
+        concepts = self.mock_concepts()
+        modeler = UnderstandingModeler(concepts=concepts)
+        models = modeler.model(timeline)
+        self.assertEqual(2, len(models[0].what))
+        self.assertTrue([ 'engine', 'failure' ] in models[0].what)
+        self.assertTrue([ 'win' ] in models[0].what)
+
+    def test_what_case_insensitive_reverse(self):
+        """
+        Test that extracting the What performs case-insensitive checks.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        documents = [
+            Document(dimensions=[ 'failure' ]),
+            Document(dimensions=[ 'pit', 'stop', 'engine' ]),
+            Document(dimensions=[ 'leclerc', 'win' ]),
+            Document(dimensions=[ 'win', 'grand', 'prix' ]),
+        ]
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), documents))
+
+        concepts = self.mock_concepts()
+        concepts = [ [ term.upper() for term in concept ] for concept in concepts ]
+        modeler = UnderstandingModeler(concepts=concepts)
+        models = modeler.model(timeline)
+        self.assertEqual(2, len(models[0].what))
+        self.assertTrue([ 'ENGINE', 'FAILURE' ] in models[0].what)
+        self.assertTrue([ 'WIN' ] in models[0].what)
+
     def test_where_returns_list(self):
         """
         Test that the Where returns a list of profiles.
@@ -562,6 +819,19 @@ class TestUnderstandingModeler(unittest.TestCase):
         timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
             Document(text="Uneventful Montreal Grand Prix ends with a Dutch flair.")
         ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler()
+        models = modeler.model(timeline)
+        self.assertTrue(all( [ ] == model.where for model in models ))
+
+    def test_where_no_documents(self):
+        """
+        Test that when there are no documents, the Where returns nothing.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [ ]))
 
         participants = self.mock_participants()
         modeler = UnderstandingModeler()
