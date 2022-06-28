@@ -1,4 +1,5 @@
 __pycache__
+*.sublime-project
 data
 docs/*
 !docs/.gitignore
