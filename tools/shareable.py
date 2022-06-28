@@ -151,7 +151,7 @@ def write(file, output):
          open(output, 'w') as outfile:
         for line in infile:
             tweet = json.loads(line)
-            outfile.write(f"{ tweet['id_str'] }\n")
+            outfile.write(f"{ twitter.id(tweet) }\n")
 
 if __name__ == "__main__":
     main()

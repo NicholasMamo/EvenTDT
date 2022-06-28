@@ -199,3 +199,31 @@ class TestShareable(unittest.TestCase):
                 outids.append(line.strip())
 
         self.assertEqual(inids, outids)
+
+    def test_write_corpus_v2_same_order(self):
+        """
+        Test that when making a Twitter APIv2 corpus shareable, the tweets are saved in the correct order.
+        """
+
+        file = 'eventdt/tests/corpora/LEIMUNv2.json'
+        output = 'tools/tests/.out/shareable.json'
+
+        """
+        Collect the IDs in the input file.
+        """
+        inids = [ ]
+        with open(file, 'r') as infile:
+            for line in infile:
+                inids.append(twitter.id(json.loads(line)))
+
+        """
+        Tokenize the corpus and again collect the lines in the shareable corpus.
+        """
+        tools.save(output, {})
+        tool.write(file, output)
+        outids = [ ]
+        with open(output, 'r') as outfile:
+            for line in outfile:
+                outids.append(line.strip())
+
+        self.assertEqual(inids, outids)
