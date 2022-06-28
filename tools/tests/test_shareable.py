@@ -5,6 +5,7 @@ Test the functionality of the tokenizer tool.
 import json
 import os
 import sys
+import tarfile
 import unittest
 
 from datetime import datetime
@@ -18,6 +19,7 @@ for path in paths:
 
 from eventdt.objects import Exportable
 from eventdt.summarization.timeline import Timeline
+from eventdt import twitter
 import shareable as tool
 import tools
 
@@ -49,6 +51,110 @@ class TestShareable(unittest.TestCase):
 
         file = 'eventdt/tests/corpora/timelines/#ParmaMilan-streams.json'
         self.assertTrue(tool.is_timeline(file))
+
+    def test_write_archive_correct_folder_structure(self):
+        """
+        Test that writing an archive re-creates the folder structure.
+        """
+
+        file = 'eventdt/tests/corpora/#AjaxRoma.tar.gz'
+        output = 'tools/tests/.out/'
+
+        tool.write_archive(file, output)
+        self.assertTrue(os.path.exists('tools/tests/.out/#AjaxRoma'))
+        self.assertTrue(os.path.exists('tools/tests/.out/#AjaxRoma/.cache'))
+
+    def test_write_archive_ignores_filename(self):
+        """
+        Test that writing an archive re-creates the folder structure by ignoring any filename in the output path.
+        """
+
+        file = 'eventdt/tests/corpora/#AjaxRoma.tar.gz'
+        output = 'tools/tests/.out/#AjaxRoma.json'
+
+        tool.write_archive(file, output)
+        self.assertTrue(os.path.exists('tools/tests/.out/#AjaxRoma'))
+        self.assertTrue(os.path.exists('tools/tests/.out/#AjaxRoma/.cache'))
+
+    def test_write_archive_all_files(self):
+        """
+        Test that writing an archive re-creates the folder structure with all files.
+        """
+
+        file = 'eventdt/tests/corpora/#AjaxRoma.tar.gz'
+        output = 'tools/tests/.out/'
+
+        tool.write_archive(file, output)
+        self.assertTrue(os.path.exists('tools/tests/.out/#AjaxRoma'))
+        self.assertTrue(os.path.exists('tools/tests/.out/#AjaxRoma/event.json'))
+        self.assertTrue(os.path.exists('tools/tests/.out/#AjaxRoma/understanding.json'))
+        self.assertTrue(os.path.exists('tools/tests/.out/#AjaxRoma/meta.json'))
+        self.assertTrue(os.path.exists('tools/tests/.out/#AjaxRoma/.cache'))
+        self.assertTrue(os.path.exists('tools/tests/.out/#AjaxRoma/.cache/understanding.json'))
+
+    def test_write_archive_event_IDs(self):
+        """
+        Test that writing an archive saves the tweet IDs correctly.
+        """
+
+        file = 'eventdt/tests/corpora/#AjaxRoma.tar.gz'
+        output = 'tools/tests/.out/'
+
+        tool.write_archive(file, output)
+
+        with tarfile.open(file) as archive:
+            for member in archive:
+                path, filename = os.path.split(member.name)
+                if filename == 'event.json':
+                    with archive.extractfile(member) as _file:
+                        inids = [ twitter.id(json.loads(line)) for line in _file ]
+
+        with open('tools/tests/.out/#AjaxRoma/event.json', 'r') as _file:
+            outids = [ line.strip() for line in _file ]
+
+        self.assertEqual(inids, outids)
+
+    def test_write_archive_understanding_IDs(self):
+        """
+        Test that writing an archive saves the tweet IDs correctly.
+        """
+
+        file = 'eventdt/tests/corpora/#AjaxRoma.tar.gz'
+        output = 'tools/tests/.out/'
+
+        tool.write_archive(file, output)
+
+        with tarfile.open(file) as archive:
+            for member in archive:
+                path, filename = os.path.split(member.name)
+                if filename == 'understanding.json' and '.cache' not in path:
+                    with archive.extractfile(member) as _file:
+                        inids = [ twitter.id(json.loads(line)) for line in _file ]
+
+        with open('tools/tests/.out/#AjaxRoma/understanding.json', 'r') as _file:
+            outids = [ line.strip() for line in _file ]
+
+        self.assertEqual(inids, outids)
+
+    def test_write_archive_meta_file(self):
+        """
+        Test that writing an archive reproduces the meta file identically.
+        """
+
+        file = 'eventdt/tests/corpora/#AjaxRoma.tar.gz'
+        output = 'tools/tests/.out/'
+
+        tool.write_archive(file, output)
+
+        with tarfile.open(file) as archive:
+            for member in archive:
+                path, filename = os.path.split(member.name)
+                if filename == 'meta.json':
+                    with archive.extractfile(member) as _file:
+                        meta = json.loads(_file.readline())
+
+        with open('tools/tests/.out/#AjaxRoma/meta.json', 'r') as _file:
+            self.assertEqual(meta, json.loads(_file.readline()))
 
     def test_write_timeline_single(self):
         """
