@@ -173,6 +173,21 @@ def is_file(string):
     pattern = re.compile('.*\..*')
     return pattern.match(string)
 
+def meta_file(file):
+    """
+    Get the filename for a meta file with the same name as the given string.
+
+    :param file: The name of the given file, or a path to it.
+    :type file: str
+
+    :return: The filename of the meta file, with the same path as the given file.
+    :rtype: str
+    """
+
+    path = os.path.split(file)[0]
+    name, ext = os.path.splitext(file)
+    return os.path.join(path, f"{ name }.meta{ ext }")
+
 def remove_prefix(prefix, **kwargs):
     """
     Remove the given prefix from the keyword arguments.

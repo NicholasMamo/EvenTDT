@@ -64,6 +64,35 @@ class TestPackage(unittest.TestCase):
 
         self.assertTrue(tools.is_file('data/file.tar.gz'))
 
+    def test_meta_file_empty_string(self):
+        """
+        Test that getting the meta filename of an empty string returns an empty `.meta.` file.
+        Most importantly, it shouldn't crash.
+        """
+
+        self.assertEqual('.meta', tools.meta_file(''))
+
+    def test_meta_file_no_path(self):
+        """
+        Test that getting the meta filename of a string with no path simply returns a new filename.
+        """
+
+        self.assertEqual('event.meta.json', tools.meta_file('event.json'))
+
+    def test_meta_file_with_path(self):
+        """
+        Test that getting the meta filename of a string with a path keeps the path.
+        """
+
+        self.assertEqual('/path/to/event.meta.json', tools.meta_file('/path/to/event.json'))
+
+    def test_meta_file_with_extension(self):
+        """
+        Test that getting the meta filename of a string retains the original extension.
+        """
+
+        self.assertEqual('/path/to/event.meta.txt', tools.meta_file('/path/to/event.txt'))
+
     def test_remove_prefix_empty(self):
         """
         Test that if the prefix is empty, the kwargs are unchanged.
