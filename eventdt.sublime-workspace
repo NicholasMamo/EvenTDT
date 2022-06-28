@@ -7,6 +7,64 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "tools/shareable.py",
+			"settings":
+			{
+				"buffer_size": 3563,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			},
+			"undo_stack":
+			[
+				[
+					25,
+					1,
+					"insert",
+					{
+						"characters": "\n\n"
+					},
+					"AgAAACcKAAAAAAAAKAoAAAAAAAAAAAAAKAoAAAAAAAApCgAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAnCgAAAAAAACcKAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					27,
+					1,
+					"insert",
+					{
+						"characters": "todo"
+					},
+					"BAAAACgKAAAAAAAAKQoAAAAAAAAAAAAAKQoAAAAAAAAqCgAAAAAAAAAAAAAqCgAAAAAAACsKAAAAAAAAAAAAACsKAAAAAAAALAoAAAAAAAAAAAAA",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAoCgAAAAAAACgKAAAAAAAAAAAAAAAAAAA"
+				],
+				[
+					28,
+					1,
+					"delete_word",
+					{
+						"forward": false
+					},
+					"AQAAACgKAAAAAAAAKAoAAAAAAAAEAAAAdG9kbw",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAsCgAAAAAAACwKAAAAAAAAAAAAAAAA8L8"
+				],
+				[
+					29,
+					2,
+					"left_delete",
+					null,
+					"AgAAACcKAAAAAAAAJwoAAAAAAAABAAAACiYKAAAAAAAAJgoAAAAAAAABAAAACg",
+					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAoCgAAAAAAACgKAAAAAAAAAAAAAAAA8L8"
+				]
+			]
+		},
+		{
+			"file": "tools/tests/test_shareable.py",
+			"settings":
+			{
+				"buffer_size": 2152,
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -19,6 +77,90 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"install pa",
+				"Package Control: Install Package"
+			],
+			[
+				"1",
+				"Go to 1self Dashboard"
+			],
+			[
+				"pack",
+				"Package Control: Remove Package"
+			],
+			[
+				"package",
+				"Package Control: Remove Package"
+			],
+			[
+				"diff",
+				"Git: Diff All Files (Ignore Whitespace)"
+			],
+			[
+				"key ",
+				"Preferences: Key Bindings"
+			],
+			[
+				"pretty",
+				"Pretty JSON: Format JSON"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"scheme",
+				"UI: Select Color Scheme"
+			],
+			[
+				"theme",
+				"UI: Select Color Scheme"
+			],
+			[
+				"select theme",
+				"UI: Select Theme"
+			],
+			[
+				"install ",
+				"Package Control: Install Package"
+			],
+			[
+				"p",
+				"Package Control: Install Package"
+			],
+			[
+				"split",
+				"File: Split View"
+			],
+			[
+				"view",
+				"View: Toggle Minimap"
+			],
+			[
+				"side",
+				"View: Toggle Side Bar"
+			],
+			[
+				"add",
+				"Git: Add All"
+			],
+			[
+				"ackage",
+				"Package Control: Install Package"
+			],
+			[
+				"packa",
+				"Package Control: Install Package"
+			],
+			[
+				"package control",
+				"Package Control: Install Package"
+			],
+			[
+				"package con",
+				"Install Package Control"
+			],
 			[
 				"git",
 				"Set Syntax: Git Config"
@@ -48,12 +190,22 @@
 	],
 	"file_history":
 	[
+		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/cluster_node.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/vsm/clustering/cluster.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/topical_cluster_node.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/__init__.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/tests/test_understanding_modeler.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/understanding_modeler.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/timelines/#ParmaMilan-streams.json",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/idf.json",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/document_node.py",
+		"/home/nicholas/GitHub/EvenTDT/.gitignore",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/scorers/local/log_df_scorer.py"
 	],
 	"find":
 	{
-		"height": 24.0
+		"height": 23.0
 	},
 	"find_in_files":
 	{
@@ -67,6 +219,8 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"The file where to save the shareable corpus.",
+			"entities",
 			"retired",
 			"Retired",
 			"      "
@@ -91,12 +245,75 @@
 		{
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "tools/shareable.py",
+					"selected": true,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3563,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2598,
+								2598
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 517.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"stack_multiselect": false,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "tools/tests/test_shareable.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2152,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 154.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"stack_multiselect": false,
+					"type": "text"
+				}
 			]
 		}
 	],
 	"incremental_find":
 	{
-		"height": 24.0
+		"height": 23.0
 	},
 	"input":
 	{
@@ -129,11 +346,15 @@
 	{
 		"height": 0.0
 	},
+	"output.git":
+	{
+		"height": 102.0
+	},
 	"pinned_build_system": "",
 	"project": "eventdt.sublime-project",
 	"replace":
 	{
-		"height": 44.0
+		"height": 42.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -142,6 +363,34 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"clustenro",
+				"eventdt/summarization/timeline/nodes/cluster_node.py"
+			],
+			[
+				"nodeinit",
+				"eventdt/summarization/timeline/nodes/__init__.py"
+			],
+			[
+				"node",
+				"eventdt/summarization/timeline/nodes/topical_cluster_node.py"
+			],
+			[
+				"testsharea",
+				"tools/tests/test_shareable.py"
+			],
+			[
+				"share",
+				"tools/shareable.py"
+			],
+			[
+				"testund",
+				"eventdt/modeling/modelers/tests/test_understanding_modeler.py"
+			],
+			[
+				"understand",
+				"eventdt/modeling/modelers/understanding_modeler.py"
+			],
 			[
 				"close",
 				"eventdt/apd/scorers/local/log_df_scorer.py"
@@ -155,12 +404,16 @@
 	},
 	"select_project":
 	{
-		"height": 0.0,
+		"height": 500.0,
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"",
+				"~/GitHub/EvenTDT/eventdt.sublime-project"
+			]
 		],
-		"width": 0.0
+		"width": 380.0
 	},
 	"select_symbol":
 	{
@@ -175,7 +428,7 @@
 	"settings":
 	{
 	},
-	"show_minimap": true,
+	"show_minimap": false,
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,

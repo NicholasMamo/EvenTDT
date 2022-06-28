@@ -76,16 +76,14 @@ def main():
     Main program loop.
     """
 
-    """
-    Set up the arguments and prepare the data directory.
-    """
+    # set up the arguments and prepare the data directory.
     args = setup_args()
     cmd = tools.meta(args)
     pcmd = tools.meta(args)
     tools.save(args.output, { }) # to create the directory if it doesn't exist
     write(args.file, args.output)
 
-    meta = args.meta or f"{ args.output }.meta"
+    meta = args.meta or tools.meta_file(args.output)
     pcmd['meta'] = meta
     tools.save(meta, { 'cmd': cmd, 'pcmd': pcmd })
 
