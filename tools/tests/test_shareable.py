@@ -24,6 +24,30 @@ class TestShareable(unittest.TestCase):
     Test the functionality of the shareabl tool.
     """
 
+    def test_is_timeline_false(self):
+        """
+        Test that when providing a path to a tweet corpus, the function detects it as one.
+        """
+
+        file = 'eventdt/tests/corpora/CRYCHE-100.json'
+        self.assertFalse(tool.is_timeline(file))
+
+    def test_is_timeline_true(self):
+        """
+        Test that when providing a path to a timeline, the function detects it as one.
+        """
+
+        file = 'eventdt/tests/corpora/timelines/CRYCHE.json'
+        self.assertTrue(tool.is_timeline(file))
+
+    def test_is_timeline_streamed(self):
+        """
+        Test that when providing a path to a streamed timeline, the function detects it as one.
+        """
+
+        file = 'eventdt/tests/corpora/timelines/#ParmaMilan-streams.json'
+        self.assertTrue(tool.is_timeline(file))
+
     def test_write_corpus_same_lines(self):
         """
         Test that when tokenizing a corpus, the same number of lines are outputted.
