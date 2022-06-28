@@ -7,3 +7,4 @@ config/conf.py
 notebooks
 venv
 temp
+tools/tests/.out
