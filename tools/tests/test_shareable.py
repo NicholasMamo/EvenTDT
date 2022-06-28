@@ -16,6 +16,8 @@ for path in paths:
     if path not in sys.path:
         sys.path.append(path)
 
+from eventdt.objects import Exportable
+from eventdt.summarization.timeline import Timeline
 import shareable as tool
 import tools
 
@@ -48,9 +50,103 @@ class TestShareable(unittest.TestCase):
         file = 'eventdt/tests/corpora/timelines/#ParmaMilan-streams.json'
         self.assertTrue(tool.is_timeline(file))
 
+    def test_write_timeline_single(self):
+        """
+        Test that when making a single timeline shareable, the output also contains just one timeline, not a list.
+        """
+
+        file = 'eventdt/tests/corpora/timelines/TOTLEI.json'
+        output = 'tools/tests/.out/shareable.json'
+
+        with open(file, 'r') as infile:
+            timeline = Exportable.decode(json.loads(infile.readline()))['timeline']
+            self.assertEqual(Timeline.__name__, type(timeline).__name__)
+
+        tools.save(output, {})
+        tool.write_timeline(file, output)
+        with open(output, 'r') as outfile:
+            timeline = Exportable.decode(json.loads(outfile.readline()))['timeline']
+            self.assertEqual(Timeline.__name__, type(timeline).__name__)
+            
+    def test_write_timeline_single_same_tweets(self):
+        """
+        Test that when making a timeline shareable, the same tweets are kept.
+        """
+
+        file = 'eventdt/tests/corpora/timelines/TOTLEI.json'
+        output = 'tools/tests/.out/shareable.json'
+
+        with open(file, 'r') as infile:
+            timeline = Exportable.decode(json.loads(infile.readline()))['timeline']
+            ids = [ document.id for node in timeline.nodes for document in node.get_all_documents() ]
+
+        tools.save(output, {})
+        tool.write_timeline(file, output)
+        with open(output, 'r') as outfile:
+            timeline = Exportable.decode(json.loads(outfile.readline()))['timeline']
+            _ids = [ document.id for node in timeline.nodes for document in node.get_all_documents() ]
+
+        self.assertEqual(ids, _ids)
+
+    def test_write_timeline_multiple(self):
+        """
+        Test that when making multiple timelines shareable, the output also contains just multiple timelines as a list.
+        """
+
+        file = 'eventdt/tests/corpora/timelines/#ParmaMilan-streams.json'
+        output = 'tools/tests/.out/shareable.json'
+
+        with open(file, 'r') as infile:
+            timeline = Exportable.decode(json.loads(infile.readline()))['timeline']
+            self.assertEqual(list, type(timeline))
+            self.assertTrue(all( Timeline.__name__ == type(_timeline).__name__ for _timeline in timeline ))
+
+        tools.save(output, {})
+        tool.write_timeline(file, output)
+        with open(output, 'r') as outfile:
+            timeline = Exportable.decode(json.loads(outfile.readline()))['timeline']
+            self.assertEqual(list, type(timeline))
+            self.assertTrue(all( Timeline.__name__ == type(_timeline).__name__ for _timeline in timeline ))
+
+    def test_write_timeline_multiple_same_tweets(self):
+        """
+        Test that when making multiple timelines shareable, the same tweets are kept and in the same order.
+        """
+
+        file = 'eventdt/tests/corpora/timelines/#ParmaMilan-streams.json'
+        output = 'tools/tests/.out/shareable.json'
+
+        with open(file, 'r') as infile:
+            timelines = Exportable.decode(json.loads(infile.readline()))['timeline']
+            ids = [ document.id for timeline in timelines for node in timeline.nodes for document in node.get_all_documents() ]
+
+        tools.save(output, {})
+        tool.write_timeline(file, output)
+        with open(output, 'r') as outfile:
+            timelines = Exportable.decode(json.loads(outfile.readline()))['timeline']
+            _ids = [ document.id for timeline in timelines for node in timeline.nodes for document in node.get_all_documents() ]
+
+        self.assertEqual(ids, _ids)
+
+    def test_write_timeline_no_tweets(self):
+        """
+        Test that when making a timeline shareable, the tweets themselves aren't kept—only the IDs.
+        """
+
+        file = 'eventdt/tests/corpora/timelines/TOTLEI.json'
+        output = 'tools/tests/.out/shareable.json'
+
+        tools.save(output, {})
+        tool.write_timeline(file, output)
+        with open(output, 'r') as outfile:
+            timeline = Exportable.decode(json.loads(outfile.readline()))['timeline']
+            self.assertTrue(all( document.tweet == { 'id': str(document.id) }
+                                 for node in timeline.nodes
+                                 for document in node.get_all_documents() ))
+
     def test_write_corpus_same_lines(self):
         """
-        Test that when tokenizing a corpus, the same number of lines are outputted.
+        Test that when making a corpus shareable, the same number of lines are outputted.
         """
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'
@@ -78,7 +174,7 @@ class TestShareable(unittest.TestCase):
 
     def test_write_corpus_same_order(self):
         """
-        Test that when tokenizing a corpus, the tweets are saved in the correct order.
+        Test that when making a corpus shareable, the tweets are saved in the correct order.
         """
 
         file = 'eventdt/tests/corpora/CRYCHE-100.json'

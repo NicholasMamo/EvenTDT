@@ -44,7 +44,9 @@ sys.path.insert(-1, root)
 sys.path.insert(-1, lib)
 
 from logger import logger
+from objects import Exportable
 import tools
+import twitter
 
 def setup_args():
     """
@@ -84,7 +86,7 @@ def main():
     tools.save(args.output, { }) # to create the directory if it doesn't exist
 
     if is_timeline(args.file):
-        pass
+        write_timeline(args.file, args.output)
     else:
         write(args.file, args.output)
 
@@ -107,6 +109,33 @@ def is_timeline(file):
         line = infile.readline()
         data = json.loads(line)
         return 'timeline' in data
+
+def write_timeline(file, output):
+    """
+    Make the given timeline shareable, replacing all tweets with IDs instead.
+
+    :param file: The path to the original timeline.
+    :type file: str
+    :param output: The path where to write the new, anonymized timeline.
+    :type output: str
+    """
+
+    with open(file, 'r') as infile, \
+         open(output, 'w') as outfile:
+        line = infile.readline()
+        data = Exportable.decode(json.loads(line))
+        timelines = data['timeline'] if type(data['timeline']) is list else [ data['timeline'] ]
+
+        # go through each document in each node in every timeline and anonymize it
+        for timeline in timelines:
+            for node in timeline.nodes:
+                for document in node.get_all_documents():
+                    if document.tweet:
+                        document.attributes['tweet'] = { 'id': twitter.id(document.tweet) }
+
+        # keep the original structure of the timeline, whether one timeline or a list
+        data['timeline'] = timelines if type(data['timeline']) is list else timelines[0]
+        outfile.write(json.dumps(Exportable.encode(data)))
 
 def write(file, output):
     """
