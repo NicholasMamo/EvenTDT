@@ -16,11 +16,14 @@ for path in paths:
         sys.path.append(path)
 
 import consume
+from logger import logger
 from objects.exportable import Exportable
 from queues import Queue
 from queues.consumers import StatConsumer, TokenFilterConsumer, TokenSplitConsumer
 from queues.consumers.algorithms import *
 from queues.consumers.algorithms.fuego_consumer import DynamicThreshold
+
+logger.set_logging_level(logger.LogLevel.WARNING)
 
 class TestConsume(unittest.TestCase):
     """
@@ -333,6 +336,7 @@ class TestConsume(unittest.TestCase):
         self.assertEqual(5, consumer.min_size)
         self.assertEqual(0.1, consumer.min_burst)
         self.assertEqual(0.9, consumer.max_intra_similarity)
+        self.assertEqual(900, consumer.window_size)
         self.assertEqual(0.8, consumer.clustering.threshold)
         self.assertEqual(scheme, consumer.scheme)
         self.assertTrue(consumer.log_nutrition)
@@ -388,6 +392,24 @@ class TestConsume(unittest.TestCase):
         self.assertEqual(TokenSplitConsumer, type(consumer))
         self.assertEqual(len(splits), len(consumer.consumers))
         self.assertTrue(all( ELDConsumer == type(_consumer) for _consumer in consumer.consumers ))
+
+        """
+        FUEGO consumer
+        """
+        consumer = consume.create_consumer(FUEGOConsumer, Queue(), scheme=scheme, splits=splits,
+                                           min_size=5, max_intra_similarity=0.9, freeze_period=10)
+        self.assertEqual(TokenSplitConsumer, type(consumer))
+        self.assertEqual(len(splits), len(consumer.consumers))
+        self.assertTrue(all( FUEGOConsumer == type(_consumer) for _consumer in consumer.consumers ))
+
+        """
+        UELD consumer
+        """
+        consumer = consume.create_consumer(UELDConsumer, Queue(), scheme=scheme, splits=splits,
+                                           min_size=5, max_intra_similarity=0.9, freeze_period=10)
+        self.assertEqual(TokenSplitConsumer, type(consumer))
+        self.assertEqual(len(splits), len(consumer.consumers))
+        self.assertTrue(all( UELDConsumer == type(_consumer) for _consumer in consumer.consumers ))
 
     def test_create_consumer_with_splits_default(self):
         """
@@ -460,10 +482,11 @@ class TestConsume(unittest.TestCase):
         """
         ELD consumer
         """
-        consumer = consume.create_consumer(ELDConsumer, Queue(), scheme=scheme, splits=splits,
+        consumer = consume.create_consumer(ELDConsumer, Queue(), scheme=scheme, splits=splits, window_size=90,
                                            min_size=5, min_burst=0.1, max_intra_similarity=0.9, threshold=0.8,
                                            periodicity=20, min_volume=50, burst_start=0.7, burst_end=0.4,
                                            freeze_period=10, log_nutrition=True)
+        self.assertTrue(all( 90 == _consumer.window_size for _consumer in consumer.consumers ))
         self.assertTrue(all( 5 == _consumer.min_size for _consumer in consumer.consumers ))
         self.assertTrue(all( 0.1 == _consumer.min_burst for _consumer in consumer.consumers ))
         self.assertTrue(all( 0.9 == _consumer.max_intra_similarity for _consumer in consumer.consumers ))
@@ -487,7 +510,7 @@ class TestConsume(unittest.TestCase):
         self.assertTrue(all( DynamicThreshold.MEAN_STDEV == _consumer.threshold for _consumer in consumer.consumers ))
 
         """
-        UELD consumer
+        UELD consumer, alias for the FUEGO consumer
         """
         consumer = consume.create_consumer(UELDConsumer, Queue(), scheme=scheme, splits=splits, threshold=0.8, window_size=900,
                                            min_size=5, min_burst=0.1, max_intra_similarity=0.9, threshold_type=DynamicThreshold.MEAN_STDEV,
@@ -585,13 +608,14 @@ class TestConsume(unittest.TestCase):
         """
         ELD consumer
         """
-        consumer = consume.create_consumer(ELDConsumer, Queue(), scheme=scheme, filters=filters,
+        consumer = consume.create_consumer(ELDConsumer, Queue(), scheme=scheme, filters=filters, window_size=90,
                                            min_size=5, min_burst=0.1, max_intra_similarity=0.9, threshold=0.8,
                                            periodicity=20, min_volume=50, burst_start=0.7, burst_end=0.4, freeze_period=10,
                                            log_nutrition=True, threshold_type=DynamicThreshold.MEAN_STDEV)
         self.assertEqual(5, consumer.consumer.min_size)
         self.assertEqual(0.1, consumer.consumer.min_burst)
         self.assertEqual(0.9, consumer.consumer.max_intra_similarity)
+        self.assertEqual(90, consumer.consumer.window_size)
         self.assertEqual(scheme, consumer.consumer.scheme)
         self.assertEqual(0.8, consumer.consumer.clustering.threshold)
         self.assertEqual(10, consumer.consumer.clustering.freeze_period)
@@ -612,7 +636,7 @@ class TestConsume(unittest.TestCase):
         self.assertEqual(DynamicThreshold.MEAN_STDEV, consumer.consumer.threshold)
 
         """
-        UELD consumer
+        UELD consumer, alias for the FUEGO consumer
         """
         consumer = consume.create_consumer(UELDConsumer, Queue(), scheme=scheme, filters=filters,
                                            min_size=5, min_burst=0.1, max_intra_similarity=0.9, threshold=0.8, window_size=900,
