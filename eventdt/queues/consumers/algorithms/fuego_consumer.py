@@ -149,10 +149,6 @@ class FUEGOConsumer(Consumer):
         """
 
         super(FUEGOConsumer, self).__init__(queue, *args, **kwargs)
-        logger.info(f"Window size:      { window_size }")
-        logger.info(f"Burst:            [{ burst_start }, { burst_end }]")
-        logger.info(f"Minimum volume:   { min_volume }")
-        logger.info(f"Threshold:        { threshold }")
 
         self.tokenizer = Tokenizer(stopwords=stopwords.words('english'), stem=True,
                                    normalize_words=True, character_normalization_count=3,
@@ -175,13 +171,24 @@ class FUEGOConsumer(Consumer):
         self.nutrition = MemoryNutritionStore()
         self.correlations = MemoryNutritionStore()
         self.tdt = SlidingELD(self.nutrition, window_size=window_size, windows=windows)
-        self.burst_start = burst_start
-        self.burst_end = burst_end
+        self.burst_start, self.burst_end = burst_start, burst_end
         self.min_volume = min_volume
         self.threshold = threshold
 
         # summarization
         self.summarization = DGS()
+
+        self.parameters()
+
+    def parameters(self):
+        """
+        Log the consumer's parameters.
+        """
+
+        logger.info(f"Window size:      { self.tdt.window_size }")
+        logger.info(f"Burst:            [{ self.burst_start }, { self.burst_end }]")
+        logger.info(f"Minimum volume:   { self.min_volume }")
+        logger.info(f"Threshold:        { self.threshold }")
 
     async def understand(self, max_inactivity=-1, *args, **kwargs):
         """

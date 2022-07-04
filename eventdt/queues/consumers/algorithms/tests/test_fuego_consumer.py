@@ -34,8 +34,8 @@ import twitter
 from vsm import vector_math, Vector
 from vsm.clustering import Cluster
 
-logger.set_logging_level(logger.LogLevel.WARNING)
 logging.getLogger('asyncio').setLevel(logging.ERROR) # disable task length outputs
+logger.set_logging_level(logger.LogLevel.WARNING)
 
 class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
     """

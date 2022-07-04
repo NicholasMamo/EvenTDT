@@ -180,9 +180,6 @@ class ELDConsumer(Consumer):
         # NOTE: 1 second cooldown is very low. Maybe this parameter isn't needed.
 
         super(ELDConsumer, self).__init__(queue, *args, **kwargs)
-        logger.info(f"Window size:      { window_size }")
-        logger.info(f"Freeze period:    { freeze_period }")
-        logger.info(f"Cluster size:     { min_size }")
 
         self.window_size = window_size
         self.scheme = scheme
@@ -207,6 +204,17 @@ class ELDConsumer(Consumer):
                                     remove_hashtags=True, split_hashtags=True,
                                     remove_retweet_prefix=True)
         self.summarization = DGS()
+
+        self.parameters()
+
+    def parameters(self):
+        """
+        Log the consumer's main parameters.
+        """
+
+        logger.info(f"Window size:      { self.window_size }")
+        logger.info(f"Freeze period:    { self.clustering.freeze_period }")
+        logger.info(f"Cluster size:     { self.min_size }")
 
     async def understand(self, max_inactivity=-1, *args, **kwargs):
         """
