@@ -133,7 +133,7 @@ class ELDConsumer(Consumer):
 
     def __init__(self, queue, window_size=30, scheme=None,
                  threshold=0.5, freeze_period=20, min_size=3, cooldown=1, max_intra_similarity=0.8,
-                 sets=10, min_burst=0.5, log_nutrition=False, *args, **kwargs):
+                 sets=10, min_burst=0.5, log_nutrition=False, verbose=True, *args, **kwargs):
         """
         Create the consumer with a queue.
         Simultaneously create a nutrition store and the topic detection algorithm container.
@@ -175,6 +175,8 @@ class ELDConsumer(Consumer):
         :param log_nutrition: A boolean indicating whether the log of the nutrition should be taken before creating checkpoints.
                               This minimizes the domination of some terms, which leads to other important terms always having a high burst.
         :type log_nutrition: bool
+        :param verbose: A boolean indicating whether to log the consumer's main parameters.
+        :type verbose: bool
         """
 
         # NOTE: 1 second cooldown is very low. Maybe this parameter isn't needed.
@@ -205,7 +207,8 @@ class ELDConsumer(Consumer):
                                     remove_retweet_prefix=True)
         self.summarization = DGS()
 
-        self.parameters()
+        if verbose:
+            self.parameters()
 
     def parameters(self):
         """

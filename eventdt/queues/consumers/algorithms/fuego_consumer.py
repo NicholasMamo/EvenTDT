@@ -109,7 +109,7 @@ class FUEGOConsumer(Consumer):
 
     def __init__(self, queue, scheme=None, damping=0.5,
                  window_size=60, windows=5, burst_start=0.5, burst_end=0.2, min_volume=15,
-                 threshold=DynamicThreshold.MEAN, *args, **kwargs):
+                 threshold=DynamicThreshold.MEAN, verbose=True, *args, **kwargs):
         """
         Create the consumer with a queue.
 
@@ -142,6 +142,8 @@ class FUEGOConsumer(Consumer):
         :type min_volume: float
         :param threshold: The type of dynamic threshold to use.
         :type threshold: :class:`~queues.consumers.algorithms.fuego_consumer.DynamicThreshold`
+        :param verbose: A boolean indicating whether to log the consumer's main parameters.
+        :type verbose: bool
 
         :raises ValueError: When the damping factor is negative.
         :raises ValueError: When the burst start parameter is not between -1 and 1.
@@ -178,11 +180,12 @@ class FUEGOConsumer(Consumer):
         # summarization
         self.summarization = DGS()
 
-        self.parameters()
+        if verbose:
+            self.parameters()
 
     def parameters(self):
         """
-        Log the consumer's parameters.
+        Log the consumer's main parameters.
         """
 
         logger.info(f"Window size:      { self.tdt.window_size }")
