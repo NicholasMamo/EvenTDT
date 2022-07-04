@@ -238,7 +238,13 @@ class SplitConsumer(Consumer):
         :rtype: list of :class:`~queues.consumers.Consumer`
         """
 
-        return [ consumer(Queue(), name=str(split), *args, **kwargs) for split in self.splits ]
+        _consumers = [ ]
+
+        for i, split in enumerate(self.splits):
+            verbose = (i == 0) # only print the parameters for the first consumer since it's assumed all have the same set
+            _consumers.append(consumer(Queue(), name=str(split), verbose=verbose, *args, **kwargs))
+
+        return _consumers
 
     def _preprocess(self, tweet):
         """
