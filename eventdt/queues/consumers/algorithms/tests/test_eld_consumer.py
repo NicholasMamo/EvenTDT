@@ -13,6 +13,7 @@ path = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..')
 if path not in sys.path:
     sys.path.append(path)
 
+from logger import logger
 from queues import Queue
 from queues.consumers.algorithms import ELDConsumer
 from nlp.document import Document
@@ -23,6 +24,7 @@ from vsm.clustering import Cluster
 import twitter
 
 logging.getLogger('asyncio').setLevel(logging.ERROR) # disable task length outputs
+logger.set_logging_level(logger.LogLevel.WARNING)
 
 class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
     """

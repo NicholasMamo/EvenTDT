@@ -180,6 +180,9 @@ class ELDConsumer(Consumer):
         # NOTE: 1 second cooldown is very low. Maybe this parameter isn't needed.
 
         super(ELDConsumer, self).__init__(queue, *args, **kwargs)
+        logger.info(f"Window size:      { window_size }")
+        logger.info(f"Freeze period:    { freeze_period }")
+        logger.info(f"Cluster size:     { min_size }")
 
         self.window_size = window_size
         self.scheme = scheme

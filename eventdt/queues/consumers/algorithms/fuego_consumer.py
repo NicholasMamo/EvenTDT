@@ -149,6 +149,10 @@ class FUEGOConsumer(Consumer):
         """
 
         super(FUEGOConsumer, self).__init__(queue, *args, **kwargs)
+        logger.info(f"Window size:      { window_size }")
+        logger.info(f"Burst:            [{ burst_start }, { burst_end }]")
+        logger.info(f"Minimum volume:   { min_volume }")
+        logger.info(f"Threshold:        { threshold }")
 
         self.tokenizer = Tokenizer(stopwords=stopwords.words('english'), stem=True,
                                    normalize_words=True, character_normalization_count=3,
