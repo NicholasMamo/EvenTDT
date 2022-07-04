@@ -3,65 +3,19 @@
 	{
 		"selected_items":
 		[
+			[
+				"is",
+				"is_file"
+			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "tools/shareable.py",
+			"file": "eventdt/apd/resolvers/external/wikipedia_search_resolver.py",
 			"settings":
 			{
-				"buffer_size": 3563,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			},
-			"undo_stack":
-			[
-				[
-					25,
-					1,
-					"insert",
-					{
-						"characters": "\n\n"
-					},
-					"AgAAACcKAAAAAAAAKAoAAAAAAAAAAAAAKAoAAAAAAAApCgAAAAAAAAAAAAA",
-					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAnCgAAAAAAACcKAAAAAAAAAAAAAAAA8L8"
-				],
-				[
-					27,
-					1,
-					"insert",
-					{
-						"characters": "todo"
-					},
-					"BAAAACgKAAAAAAAAKQoAAAAAAAAAAAAAKQoAAAAAAAAqCgAAAAAAAAAAAAAqCgAAAAAAACsKAAAAAAAAAAAAACsKAAAAAAAALAoAAAAAAAAAAAAA",
-					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAoCgAAAAAAACgKAAAAAAAAAAAAAAAAAAA"
-				],
-				[
-					28,
-					1,
-					"delete_word",
-					{
-						"forward": false
-					},
-					"AQAAACgKAAAAAAAAKAoAAAAAAAAEAAAAdG9kbw",
-					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAsCgAAAAAAACwKAAAAAAAAAAAAAAAA8L8"
-				],
-				[
-					29,
-					2,
-					"left_delete",
-					null,
-					"AgAAACcKAAAAAAAAJwoAAAAAAAABAAAACiYKAAAAAAAAJgoAAAAAAAABAAAACg",
-					"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAoCgAAAAAAACgKAAAAAAAAAAAAAAAA8L8"
-				]
-			]
-		},
-		{
-			"file": "tools/tests/test_shareable.py",
-			"settings":
-			{
-				"buffer_size": 2152,
+				"buffer_size": 10503,
 				"line_ending": "Unix"
 			}
 		}
@@ -77,6 +31,50 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"remove pa",
+				"Package Control: Remove Package"
+			],
+			[
+				"disable",
+				"Package Control: Disable Package"
+			],
+			[
+				"packa",
+				"Package Control: Remove Package"
+			],
+			[
+				"pretti",
+				"Pretty JSON: Format JSON Lines"
+			],
+			[
+				"pret",
+				"Pretty JSON: Format JSON"
+			],
+			[
+				"prett",
+				"Pretty JSON: Format JSON"
+			],
+			[
+				"",
+				"Bookmarks: Select All"
+			],
+			[
+				"pretty",
+				"Pretty JSON: Format JSON"
+			],
+			[
+				"git:",
+				"Git: Gui"
+			],
+			[
+				"prettif",
+				"Pretty JSON: Format JSON Lines"
+			],
+			[
+				"split",
+				"File: Split View"
+			],
 			[
 				"install pa",
 				"Package Control: Install Package"
@@ -100,10 +98,6 @@
 			[
 				"key ",
 				"Preferences: Key Bindings"
-			],
-			[
-				"pretty",
-				"Pretty JSON: Format JSON"
 			],
 			[
 				"install",
@@ -130,10 +124,6 @@
 				"Package Control: Install Package"
 			],
 			[
-				"split",
-				"File: Split View"
-			],
-			[
 				"view",
 				"View: Toggle Minimap"
 			],
@@ -147,10 +137,6 @@
 			],
 			[
 				"ackage",
-				"Package Control: Install Package"
-			],
-			[
-				"packa",
 				"Package Control: Install Package"
 			],
 			[
@@ -186,20 +172,46 @@
 	},
 	"expanded_folders":
 	[
-		"/home/nicholas/GitHub/EvenTDT"
+		"/home/nicholas/GitHub/EvenTDT",
+		"/home/nicholas/GitHub/EvenTDT/tools"
 	],
 	"file_history":
 	[
+		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/resolvers/external/wikipedia_search_resolver.py",
+		"/home/nicholas/DATA/c3-apd/#BritishGP-2022/participants-annotations-extrapolated-baseline.json",
+		"/home/nicholas/DATA/c3-apd/#BritishGP-2022/participants-twitterner-extrapolated.json",
+		"/home/nicholas/DATA/c3-apd/#BritishGP-2022/participants-twitterner-extrapolated-baseline.json",
+		"/home/nicholas/DATA/c3-apd/#BritishGP-2022/participants-ner-extrapolated.json",
+		"/home/nicholas/DATA/c3-apd/#BritishGP-2022/participants-ner-extrapolated-baseline.json",
+		"/home/nicholas/DATA/c3-apd/#BritishGP-2022/participants-annotations-extrapolated.json",
+		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_shareable.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/shareable.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/fuego_consumer.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/consume.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/__init__.py",
+		"/home/nicholas/GitHub/EvenTDT/venv/lib/python3.8/site-packages/urllib3/util/queue.py",
+		"/run/user/1000/gvfs/sftp:host=vps-storage,user=memonick/data/phd-data/fuego-sampled/meta/#HUNFRA-v3-b0.8-r0.08-grouped.csv.meta",
+		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_package.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/__init__.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/twitter/__init__.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/twitter/file/simulated_reader.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/twitter/listeners/tweet_listener.py",
+		"/home/nicholas/GitHub/EvenTDT/.gitignore",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/tests/test_timeline.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/tests/.out/shareable.json",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/timelines/TOTLEI.json",
+		"/home/nicholas/GitHub/EvenTDT/temp/shared.json",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/timelines/CRYCHE.json",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/timelines/#ParmaMilan-streams.json",
+		"/home/nicholas/GitHub/EvenTDT/tools/meta.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/cluster_node.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/vsm/clustering/cluster.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/topical_cluster_node.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/tests/test_understanding_modeler.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/understanding_modeler.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/timelines/#ParmaMilan-streams.json",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/idf.json",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/document_node.py",
-		"/home/nicholas/GitHub/EvenTDT/.gitignore",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/scorers/local/log_df_scorer.py"
 	],
@@ -219,6 +231,57 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"%",
+			"participant",
+			"postpro",
+			"participant",
+			"        ",
+			"postprocesse",
+			"participant",
+			"filtered",
+			"participant",
+			"        ",
+			"postprocessed",
+			"participant",
+			"            \"",
+			"scored",
+			"participant",
+			"max-inac",
+			"max_",
+			"asyncio",
+			", defaults to [--file].meta",
+			"event",
+			"tarfile",
+			"file",
+			"event",
+			"{archive}:",
+			"member.name",
+			"member.",
+			"event",
+			"args.output",
+			"args.file",
+			"write_timeline",
+			"info",
+			"file",
+			"os.path.join(args.output, path)",
+			"tool, or a timeline generated",
+			"The file where to save the shareable corpus.",
+			"split",
+			"Timeline,",
+			"Timeline",
+			"info",
+			"CRYCHE",
+			"tokenizing",
+			"pass",
+			"documents",
+			"twitter",
+			"line",
+			"json",
+			".json",
+			"basename",
+			"logger",
+			"\n    ",
+			".\n",
 			"The file where to save the shareable corpus.",
 			"entities",
 			"retired",
@@ -247,43 +310,12 @@
 			[
 				{
 					"buffer": 0,
-					"file": "tools/shareable.py",
+					"file": "eventdt/apd/resolvers/external/wikipedia_search_resolver.py",
 					"selected": true,
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3563,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2598,
-								2598
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 517.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"stack_multiselect": false,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "tools/tests/test_shareable.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2152,
+						"buffer_size": 10503,
 						"regions":
 						{
 						},
@@ -301,10 +333,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 154.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 0,
 					"stack_multiselect": false,
 					"type": "text"
 				}
@@ -348,7 +380,7 @@
 	},
 	"output.git":
 	{
-		"height": 102.0
+		"height": 275.0
 	},
 	"pinned_build_system": "",
 	"project": "eventdt.sublime-project",
@@ -363,6 +395,74 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"searchresolve",
+				"eventdt/apd/resolvers/external/wikipedia_search_resolver.py"
+			],
+			[
+				"fueg",
+				"eventdt/queues/consumers/algorithms/fuego_consumer.py"
+			],
+			[
+				"consume",
+				"tools/consume.py"
+			],
+			[
+				"queueini",
+				"eventdt/queues/__init__.py"
+			],
+			[
+				"queue",
+				"venv/lib/python3.8/site-packages/urllib3/util/queue.py"
+			],
+			[
+				"toolstestpac",
+				"tools/tests/test_package.py"
+			],
+			[
+				"toolsinit",
+				"tools/__init__.py"
+			],
+			[
+				"twitterinit",
+				"eventdt/twitter/__init__.py"
+			],
+			[
+				"simul",
+				"eventdt/twitter/file/simulated_reader.py"
+			],
+			[
+				"filreader",
+				"eventdt/twitter/file/simulated_reader.py"
+			],
+			[
+				"twitterlist",
+				"eventdt/twitter/listeners/tweet_listener.py"
+			],
+			[
+				"timeline",
+				"eventdt/summarization/timeline/tests/test_timeline.py"
+			],
+			[
+				"twitterini",
+				"eventdt/twitter/__init__.py"
+			],
+			[
+				"timecryche",
+				"eventdt/tests/corpora/timelines/CRYCHE.json"
+			],
+			[
+				"parmami",
+				"eventdt/tests/corpora/timelines/#ParmaMilan-streams.json"
+			],
+			[
+				"toolstestpack",
+				"tools/tests/test_package.py"
+			],
+			[
+				"meta",
+				"tools/meta.py"
+			],
 			[
 				"clustenro",
 				"eventdt/summarization/timeline/nodes/cluster_node.py"
