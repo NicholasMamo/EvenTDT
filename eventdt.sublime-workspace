@@ -12,12 +12,211 @@
 	"buffers":
 	[
 		{
-			"file": "eventdt/apd/resolvers/external/wikipedia_search_resolver.py",
+			"file": "tools/consume.py",
 			"settings":
 			{
-				"buffer_size": 10503,
+				"buffer_size": 48907,
+				"encoding": "UTF-8",
 				"line_ending": "Unix"
-			}
+			},
+			"undo_stack":
+			[
+				[
+					25,
+					1,
+					"insert",
+					{
+						"characters": "size"
+					},
+					"BQAAAH4uAAAAAAAAfy4AAAAAAAAAAAAAfy4AAAAAAAB/LgAAAAAAAAsAAABwZXJpb2RpY2l0eX8uAAAAAAAAgC4AAAAAAAAAAAAAgC4AAAAAAACBLgAAAAAAAAAAAACBLgAAAAAAAIIuAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAfi4AAAAAAACJLgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					26,
+					1,
+					"insert",
+					{
+						"characters": " of"
+					},
+					"AwAAAIIuAAAAAAAAgy4AAAAAAAAAAAAAgy4AAAAAAACELgAAAAAAAAAAAACELgAAAAAAAIUuAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAgi4AAAAAAACCLgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					27,
+					1,
+					"insert",
+					{
+						"characters": " the"
+					},
+					"BAAAAIUuAAAAAAAAhi4AAAAAAAAAAAAAhi4AAAAAAACHLgAAAAAAAAAAAACHLgAAAAAAAIguAAAAAAAAAAAAAIguAAAAAAAAiS4AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAhS4AAAAAAACFLgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					28,
+					1,
+					"insert",
+					{
+						"characters": " time"
+					},
+					"BQAAAIkuAAAAAAAAii4AAAAAAAAAAAAAii4AAAAAAACLLgAAAAAAAAAAAACLLgAAAAAAAIwuAAAAAAAAAAAAAIwuAAAAAAAAjS4AAAAAAAAAAAAAjS4AAAAAAACOLgAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAiS4AAAAAAACJLgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					29,
+					1,
+					"insert",
+					{
+						"characters": " window,"
+					},
+					"CAAAAI4uAAAAAAAAjy4AAAAAAAAAAAAAjy4AAAAAAACQLgAAAAAAAAAAAACQLgAAAAAAAJEuAAAAAAAAAAAAAJEuAAAAAAAAki4AAAAAAAAAAAAAki4AAAAAAACTLgAAAAAAAAAAAACTLgAAAAAAAJQuAAAAAAAAAAAAAJQuAAAAAAAAlS4AAAAAAAAAAAAAlS4AAAAAAACWLgAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAji4AAAAAAACOLgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					30,
+					1,
+					"insert",
+					{
+						"characters": " used"
+					},
+					"BQAAAJYuAAAAAAAAly4AAAAAAAAAAAAAly4AAAAAAACYLgAAAAAAAAAAAACYLgAAAAAAAJkuAAAAAAAAAAAAAJkuAAAAAAAAmi4AAAAAAAAAAAAAmi4AAAAAAACbLgAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAli4AAAAAAACWLgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					31,
+					1,
+					"insert",
+					{
+						"characters": " by"
+					},
+					"AwAAAJsuAAAAAAAAnC4AAAAAAAAAAAAAnC4AAAAAAACdLgAAAAAAAAAAAACdLgAAAAAAAJ4uAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAmy4AAAAAAACbLgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					32,
+					1,
+					"insert",
+					{
+						"characters": " real-time"
+					},
+					"CgAAAJ4uAAAAAAAAny4AAAAAAAAAAAAAny4AAAAAAACgLgAAAAAAAAAAAACgLgAAAAAAAKEuAAAAAAAAAAAAAKEuAAAAAAAAoi4AAAAAAAAAAAAAoi4AAAAAAACjLgAAAAAAAAAAAACjLgAAAAAAAKQuAAAAAAAAAAAAAKQuAAAAAAAApS4AAAAAAAAAAAAApS4AAAAAAACmLgAAAAAAAAAAAACmLgAAAAAAAKcuAAAAAAAAAAAAAKcuAAAAAAAAqC4AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAni4AAAAAAACeLgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					33,
+					1,
+					"insert",
+					{
+						"characters": " systems"
+					},
+					"CAAAAKguAAAAAAAAqS4AAAAAAAAAAAAAqS4AAAAAAACqLgAAAAAAAAAAAACqLgAAAAAAAKsuAAAAAAAAAAAAAKsuAAAAAAAArC4AAAAAAAAAAAAArC4AAAAAAACtLgAAAAAAAAAAAACtLgAAAAAAAK4uAAAAAAAAAAAAAK4uAAAAAAAAry4AAAAAAAAAAAAAry4AAAAAAACwLgAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAqC4AAAAAAACoLgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					37,
+					1,
+					"insert",
+					{
+						"characters": "in"
+					},
+					"AgAAAIMuAAAAAAAAhC4AAAAAAAAAAAAAhC4AAAAAAACFLgAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAgy4AAAAAAACDLgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					38,
+					1,
+					"insert",
+					{
+						"characters": " seconds"
+					},
+					"CAAAAIUuAAAAAAAAhi4AAAAAAAAAAAAAhi4AAAAAAACHLgAAAAAAAAAAAACHLgAAAAAAAIguAAAAAAAAAAAAAIguAAAAAAAAiS4AAAAAAAAAAAAAiS4AAAAAAACKLgAAAAAAAAAAAACKLgAAAAAAAIsuAAAAAAAAAAAAAIsuAAAAAAAAjC4AAAAAAAAAAAAAjC4AAAAAAACNLgAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAhS4AAAAAAACFLgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					39,
+					1,
+					"insert",
+					{
+						"characters": " "
+					},
+					"AQAAAI0uAAAAAAAAji4AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAjS4AAAAAAACNLgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					42,
+					1,
+					"insert",
+					{
+						"characters": "algorithms"
+					},
+					"CwAAALQuAAAAAAAAtS4AAAAAAAAAAAAAtS4AAAAAAAC1LgAAAAAAAAcAAABzeXN0ZW1ztS4AAAAAAAC2LgAAAAAAAAAAAAC2LgAAAAAAALcuAAAAAAAAAAAAALcuAAAAAAAAuC4AAAAAAAAAAAAAuC4AAAAAAAC5LgAAAAAAAAAAAAC5LgAAAAAAALouAAAAAAAAAAAAALouAAAAAAAAuy4AAAAAAAAAAAAAuy4AAAAAAAC8LgAAAAAAAAAAAAC8LgAAAAAAAL0uAAAAAAAAAAAAAL0uAAAAAAAAvi4AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAuy4AAAAAAAC0LgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					44,
+					1,
+					"left_delete",
+					null,
+					"AQAAAL4uAAAAAAAAvi4AAAAAAAAbAAAAIGluIHNlY29uZHMgb2YgdGhlIGNvbnN1bWVy",
+					"AQAAAAAAAAABAAAAvi4AAAAAAADZLgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					58,
+					1,
+					"paste",
+					null,
+					"AgAAAJVJAAAAAAAA8UkAAAAAAAAAAAAA8UkAAAAAAADxSQAAAAAAAEIAAABUaGUgcGVyaW9kaWNpdHkgaW4gc2Vjb25kcyBvZiB0aGUgY29uc3VtZXIsIGRlZmF1bHRzIHRvIDYwIHNlY29uZHM",
+					"AQAAAAAAAAABAAAAlUkAAAAAAADXSQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					75,
+					13,
+					"delete_word",
+					{
+						"forward": false
+					},
+					"DQAAAG1lAAAAAAAAbWUAAAAAAAAHAAAAc2Vjb25kc2plAAAAAAAAamUAAAAAAAADAAAANjAgZ2UAAAAAAABnZQAAAAAAAAMAAAB0byBeZQAAAAAAAF5lAAAAAAAACQAAAGRlZmF1bHRzIFxlAAAAAAAAXGUAAAAAAAACAAAALCBUZQAAAAAAAFRlAAAAAAAACAAAAGNvbnN1bWVyUGUAAAAAAABQZQAAAAAAAAQAAAB0aGUgTWUAAAAAAABNZQAAAAAAAAMAAABvZiBFZQAAAAAAAEVlAAAAAAAACAAAAHNlY29uZHMgQmUAAAAAAABCZQAAAAAAAAMAAABpbiA2ZQAAAAAAADZlAAAAAAAADAAAAHBlcmlvZGljaXR5IDJlAAAAAAAAMmUAAAAAAAAEAAAAVGhlIDBlAAAAAAAAMGUAAAAAAAACAAAAPiA",
+					"AQAAAAAAAAABAAAAdGUAAAAAAAB0ZQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					76,
+					1,
+					"insert",
+					{
+						"characters": ">"
+					},
+					"AQAAADBlAAAAAAAAMWUAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAMGUAAAAAAAAwZQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					77,
+					1,
+					"insert",
+					{
+						"characters": " "
+					},
+					"AQAAADFlAAAAAAAAMmUAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAMWUAAAAAAAAxZQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					78,
+					1,
+					"paste",
+					null,
+					"AQAAADJlAAAAAAAAjmUAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAMmUAAAAAAAAyZQAAAAAAAAAAAAAAAPC/"
+				]
+			]
+		},
+		{
+			"file": "eventdt/queues/consumers/algorithms/fuego_consumer.py",
+			"settings":
+			{
+				"buffer_size": 43310,
+				"line_ending": "Unix"
+			},
+			"undo_stack":
+			[
+			]
 		}
 	],
 	"build_system": "",
@@ -217,7 +416,7 @@
 	],
 	"find":
 	{
-		"height": 23.0
+		"height": 44.0
 	},
 	"find_in_files":
 	{
@@ -231,6 +430,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"The periodicity in seconds of the consumer, defaults to 60 seconds ",
 			"%",
 			"participant",
 			"postpro",
@@ -310,20 +510,19 @@
 			[
 				{
 					"buffer": 0,
-					"file": "eventdt/apd/resolvers/external/wikipedia_search_resolver.py",
-					"selected": true,
+					"file": "tools/consume.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 10503,
+						"buffer_size": 48907,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								25864,
+								25864
 							]
 						],
 						"settings":
@@ -333,7 +532,39 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 4536.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"stack_multiselect": false,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "eventdt/queues/consumers/algorithms/fuego_consumer.py",
+					"selected": true,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 43310,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5956,
+								5958
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1052.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -395,6 +626,14 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"fuegoc",
+				"eventdt/queues/consumers/algorithms/fuego_consumer.py"
+			],
+			[
+				"cnsume",
+				"tools/consume.py"
+			],
 			[
 				"searchresolve",
 				"eventdt/apd/resolvers/external/wikipedia_search_resolver.py"

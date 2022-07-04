@@ -47,7 +47,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
         consumer = ELDConsumer(queue, 60, scheme=TF())
         self.assertEqual(queue, consumer.queue)
         self.assertEqual(0, consumer.queue.length())
-        self.assertEqual(60, consumer.time_window)
+        self.assertEqual(60, consumer.window_size)
         self.assertEqual(TF, type(consumer.scheme))
 
     def test_create_consumer_buffer_empty(self):

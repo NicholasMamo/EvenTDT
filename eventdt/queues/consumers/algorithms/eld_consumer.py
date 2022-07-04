@@ -91,8 +91,8 @@ class ELDConsumer(Consumer):
 
     Summarization uses the :class:`~summarization.algorithms.dgs.DGS` algorithm, which was developed as part of ELD.
 
-    :ivar time_window: The size of the window after which checkpoints are created.
-    :vartype time_window: int
+    :ivar window_size: The size of the window after which checkpoints are created.
+    :vartype window_size: int
     :ivar ~.scheme: The term-weighting scheme used to create documents.
     :vartype ~.scheme: :class:`~nlp.weighting.TermWeightingScheme`
     :ivar min_size: The minimum size of a cluster to be considered valid.
@@ -131,7 +131,7 @@ class ELDConsumer(Consumer):
     :vartype cleaner: :class:`~nlp.cleaners.tweet_cleaner.TweetCleaner`
     """
 
-    def __init__(self, queue, time_window=30, scheme=None,
+    def __init__(self, queue, window_size=30, scheme=None,
                  threshold=0.5, freeze_period=20, min_size=3, cooldown=1, max_intra_similarity=0.8,
                  sets=10, min_burst=0.5, log_nutrition=False, *args, **kwargs):
         """
@@ -147,8 +147,8 @@ class ELDConsumer(Consumer):
 
         :param queue: The queue that is consumed.
         :type queue: :class:`~queues.Queue`
-        :param time_window: The size of the window after which checkpoints are created.
-        :type time_window: int
+        :param window_size: The size of the window after which checkpoints are created.
+        :type window_size: int
         :param scheme: The term-weighting scheme that is used to create dimensions.
                        If ``None`` is given, the :class:`~nlp.weighting.tf.TF` term-weighting scheme is used.
         :type scheme: None or :class:`~nlp.weighting.TermWeightingScheme`
@@ -181,7 +181,7 @@ class ELDConsumer(Consumer):
 
         super(ELDConsumer, self).__init__(queue, *args, **kwargs)
 
-        self.time_window = time_window
+        self.window_size = window_size
         self.scheme = scheme
         self.sets = sets
         self.min_size = min_size
@@ -369,8 +369,8 @@ class ELDConsumer(Consumer):
                 This is because when there are backlogs, an iteration can take longer than a time window.
                 In this way, all time windows are of equal length.
                 """
-                while latest_timestamp - last_checkpoint >= self.time_window:
-                    last_checkpoint += self.time_window
+                while latest_timestamp - last_checkpoint >= self.window_size:
+                    last_checkpoint += self.window_size
                     self._create_checkpoint(last_checkpoint)
 
                 """
@@ -378,12 +378,12 @@ class ELDConsumer(Consumer):
                 That is, the implementation skips all of those that are late.
                 """
                 overdue = [ document for document in documents
-                                     if latest_timestamp - document.attributes['timestamp'] >= self.time_window ]
+                                     if latest_timestamp - document.attributes['timestamp'] >= self.window_size ]
                 skipped += len(overdue)
                 if len(overdue) > 10:
-                    logger.warning(f"""{ datetime.fromtimestamp(latest_timestamp - self.time_window).ctime() }: Skipping { len(overdue) } tweets""")
+                    logger.warning(f"""{ datetime.fromtimestamp(latest_timestamp - self.window_size).ctime() }: Skipping { len(overdue) } tweets""")
                 documents = [ document for document in documents
-                                       if latest_timestamp - document.attributes['timestamp'] < self.time_window ]
+                                       if latest_timestamp - document.attributes['timestamp'] < self.window_size ]
 
                 """
                 Cluster the documents that remain and filter the clusters.
@@ -622,7 +622,7 @@ class ELDConsumer(Consumer):
         :type timestamp: int
         """
 
-        until = timestamp - self.time_window * self.sets
+        until = timestamp - self.window_size * self.sets
         if until > 0:
             self.store.remove(*self.store.until(until))
 
@@ -733,8 +733,8 @@ class ELDConsumer(Consumer):
         Calculate the burst for all the terms in the cluster's pseudo-checkpoint.
         The last sets are used.
         """
-        since = timestamp - self.time_window * self.sets
-        until = timestamp - self.time_window
+        since = timestamp - self.window_size * self.sets
+        until = timestamp - self.window_size
         return self.tdt.detect(checkpoint, min_burst=self.min_burst,
                                since=since, until=until)
 
