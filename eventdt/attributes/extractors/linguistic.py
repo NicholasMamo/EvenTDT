@@ -54,7 +54,7 @@ class LinguisticExtractor(Extractor):
         (``ENT: <CD>? <NNP.*> (<CD|NNP.*|PRP>)*; <JJ>+ <ENT>``)
 
         An entity can start with (*1860/CD Munich/NNP*) or end with a number (*Schalke/NNP 04/CD*), but it must always include at least one proper noun.
-        An entity may also have its own modifiers, as in the name *Indian/JJ Oceans/NNP*, but they may only be adjectives, not adverbs.
+        Unless the grammar is in head-only mode, an entity may also have its own modifiers, as in the name *Indian/JJ Oceans/NNP*, but they may only be adjectives, not adverbs.
 
         .. note::
 
