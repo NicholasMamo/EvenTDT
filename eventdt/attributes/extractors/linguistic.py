@@ -64,7 +64,7 @@ class LinguisticExtractor(Extractor):
         **Modifier** (``MOD: <CD><IN><DT>; <CD>?<JJ.*|RB.*>+; <MOD> (<CC|,|TO>? <MOD>)+; <ENT|NP> <MOD|POS>``)
 
         A modifier is a list of adjectives (*Brazilian/JJ professional/JJ*) or adverbs (*[known] simply/RB [as]*) that modify something else.
-        Each modifier may start with a number (*19/CD member/NN states/NNS*), but it may not appear among adjectives or adverbs.
+        Each modifier may start with a number, but it may not appear among adjectives or adverbs.
         A modifier may also be a single number.
         The first rule (``<CD><IN><DT>``) captures the phrase "one of the".
 
@@ -74,7 +74,7 @@ class LinguisticExtractor(Extractor):
         (``NP: <MOD|VBG>* <NN.*>+; <ENT> <NP>; <NP> <MOD> <NP>``)
 
         A noun phrase is a sequence of nouns (*football/NN team/NN*) possibly preceded by modifiers.
-        A noun phrase may also be preceded by an entity (*France/NT national/JJ team/NN*).
+        A noun phrase may also be preceded by an entity (*France/NNP national/JJ team/NN*).
         Furthermore, two noun phrases separated by a modifier are interpreted as one noun phrase.
 
         .. note::
