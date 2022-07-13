@@ -46,7 +46,7 @@ class LinguisticExtractor(Extractor):
         If a grammar is not given, a default grammar is used instead:
 
         **DATE**
-        (``DATE: (<CD> <NNP> <CD>|<NNP> <CD> <,> <CD>); <NNP> <,> <DATE>``)
+        (``DATE: <CD> <NNP> <CD>; <NNP> <CD> <,> <CD>; <NNP> <,> <DATE>``)
 
         The grammar assumes that a pattern involving two numbers and a proper noun in various formats represents a date (*14/CD May/NNP 2017/CD*).
 
@@ -133,7 +133,8 @@ class LinguisticExtractor(Extractor):
 
         if not grammar:
             grammar = ""
-            grammar += "DATE: { (<CD> <NNP> <CD>|<NNP> <CD> <,> <CD>) }\n"
+            grammar += "DATE: { <CD> <NNP> <CD> }\n"
+            grammar += "DATE: { <NNP> <CD> <,> <CD> }\n"
             grammar += "DATE: { <NNP> <,> <DATE> }\n"
             grammar += "ENT: { <CD>? <NNP.*> (<CD|NNP.*|PRP>)* }\n"
             grammar += "" if head_only else "ENT: { <JJ>+ <ENT> }\n"
