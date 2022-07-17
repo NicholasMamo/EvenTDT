@@ -725,6 +725,13 @@ class Entropy(Extractor):
 
         return - sum( p * math.log(p, self.base) for p in probabilities )
 
+class EFICF(EFIDF):
+    """
+    An alias class for the :class:`~ate.application.event.EFIDF`.
+    """
+
+    pass
+
 class EvATE(EFIDFEntropy):
     """
     An alias class for the :class:`~ate.application.event.EFIDFEntropy`.
