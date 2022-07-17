@@ -30,4 +30,5 @@ It takes as inputs instances of the classes and calls them one after the other.
 """
 
 from .participant_detector import ParticipantDetector
+from .depict_participant_detector import DEPICTParticipantDetector
 from .eld_participant_detector import ELDParticipantDetector
