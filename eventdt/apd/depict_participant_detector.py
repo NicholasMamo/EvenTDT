@@ -25,6 +25,7 @@ for path in paths:
     if path not in sys.path:
         sys.path.append(path)
 
+from logger import logger
 from participant_detector import ParticipantDetector
 from extractors.local import AnnotationExtractor
 from scorers.local import TFScorer
@@ -101,16 +102,23 @@ class DEPICTParticipantDetector(ParticipantDetector):
         :type extrapolator_fetch: int
         """
 
+        # set up the parameters
+        if not filter or not resolver or not extrapolator:
+            logger.info("DEPICT configuration")
 
         if not filter:
             keep = keep or 50
+            logger.info(f"  Filter: filtering top { keep } named entities")
 
         if not resolver:
             resolver_threshold = resolver_threshold or 0.1
+            logger.info(f"  Resolver: resolving named entities with a score > { resolver_threshold }")
 
         if not extrapolator:
             prune = extrapolator_prune or 1
+            logger.info(f"  Extrapolator: pruning attributes that appear { prune } or fewer times")
             fetch = extrapolator_fetch or 200
+            logger.info(f"  Extrapolator: fetching { fetch } outgoing links from resolved participants")
 
         """
         Tokenize the corpus.
