@@ -31,6 +31,13 @@ ELD Participant Detector
    :members:
    :special-members:
 
+DEPICT Participant Detector
+------------------------
+
+.. automodule:: apd.depict_participant_detector
+   :members:
+   :special-members:
+
 Extractors
 ==========
 

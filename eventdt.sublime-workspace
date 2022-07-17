@@ -11,293 +11,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "eventdt/attributes/extractors/linguistic.py",
-			"redo_stack":
-			[
-				[
-					390,
-					1,
-					"left_delete",
-					null,
-					"AQAAACIiAAAAAAAAIyIAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAIiIAAAAAAAAiIgAAAAAAAAAAAAAAAPC/"
-				]
-			],
-			"settings":
-			{
-				"buffer_size": 15583,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			},
-			"undo_stack":
-			[
-				[
-					50,
-					1,
-					"paste",
-					null,
-					"AgAAAGoeAAAAAAAAax4AAAAAAAAAAAAAax4AAAAAAABrHgAAAAAAAAEAAAB8",
-					"AQAAAAAAAAABAAAAah4AAAAAAABrHgAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					53,
-					1,
-					"paste",
-					null,
-					"AQAAADoeAAAAAAAAhR4AAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAah4AAAAAAABqHgAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					57,
-					1,
-					"left_delete",
-					null,
-					"AQAAAFoeAAAAAAAAWh4AAAAAAAABAAAAKA",
-					"AQAAAAAAAAABAAAAWx4AAAAAAABbHgAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					62,
-					1,
-					"left_delete",
-					null,
-					"AQAAAGkeAAAAAAAAaR4AAAAAAAAVAAAAfDxOTlA+IDxDRD4gPCw+IDxDRD4p",
-					"AQAAAAAAAAABAAAAaR4AAAAAAAB+HgAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					67,
-					1,
-					"left_delete",
-					null,
-					"AQAAAI8eAAAAAAAAjx4AAAAAAAARAAAAKDxDRD4gPE5OUD4gPENEPnw",
-					"AQAAAAAAAAABAAAAoB4AAAAAAACPHgAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					70,
-					1,
-					"left_delete",
-					null,
-					"AQAAAKIeAAAAAAAAoh4AAAAAAAABAAAAKQ",
-					"AQAAAAAAAAABAAAAox4AAAAAAACjHgAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					76,
-					1,
-					"left_delete",
-					null,
-					"AQAAAKoHAAAAAAAAqgcAAAAAAAABAAAAKA",
-					"AQAAAAAAAAABAAAAqwcAAAAAAACrBwAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					79,
-					1,
-					"left_delete",
-					null,
-					"AQAAALkHAAAAAAAAuQcAAAAAAAABAAAAfA",
-					"AQAAAAAAAAABAAAAugcAAAAAAAC6BwAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					80,
-					1,
-					"insert",
-					{
-						"characters": " "
-					},
-					"AQAAALkHAAAAAAAAugcAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAuQcAAAAAAAC5BwAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					81,
-					1,
-					"left_delete",
-					null,
-					"AQAAALkHAAAAAAAAuQcAAAAAAAABAAAAIA",
-					"AQAAAAAAAAABAAAAugcAAAAAAAC6BwAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					82,
-					1,
-					"insert",
-					{
-						"characters": ";"
-					},
-					"AQAAALkHAAAAAAAAugcAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAuQcAAAAAAAC5BwAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					83,
-					1,
-					"insert",
-					{
-						"characters": " "
-					},
-					"AQAAALoHAAAAAAAAuwcAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAugcAAAAAAAC6BwAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					87,
-					1,
-					"left_delete",
-					null,
-					"AQAAAM4HAAAAAAAAzgcAAAAAAAABAAAAKQ",
-					"AQAAAAAAAAABAAAAzwcAAAAAAADPBwAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					118,
-					1,
-					"insert",
-					{
-						"characters": "Unless"
-					},
-					"BwAAAG4JAAAAAAAAbwkAAAAAAAAAAAAAbwkAAAAAAABvCQAAAAAAAAEAAABBbwkAAAAAAABwCQAAAAAAAAAAAABwCQAAAAAAAHEJAAAAAAAAAAAAAHEJAAAAAAAAcgkAAAAAAAAAAAAAcgkAAAAAAABzCQAAAAAAAAAAAABzCQAAAAAAAHQJAAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAbgkAAAAAAABvCQAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					119,
-					1,
-					"insert",
-					{
-						"characters": " the"
-					},
-					"BAAAAHQJAAAAAAAAdQkAAAAAAAAAAAAAdQkAAAAAAAB2CQAAAAAAAAAAAAB2CQAAAAAAAHcJAAAAAAAAAAAAAHcJAAAAAAAAeAkAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAdAkAAAAAAAB0CQAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					120,
-					1,
-					"insert",
-					{
-						"characters": " grammar"
-					},
-					"CAAAAHgJAAAAAAAAeQkAAAAAAAAAAAAAeQkAAAAAAAB6CQAAAAAAAAAAAAB6CQAAAAAAAHsJAAAAAAAAAAAAAHsJAAAAAAAAfAkAAAAAAAAAAAAAfAkAAAAAAAB9CQAAAAAAAAAAAAB9CQAAAAAAAH4JAAAAAAAAAAAAAH4JAAAAAAAAfwkAAAAAAAAAAAAAfwkAAAAAAACACQAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAeAkAAAAAAAB4CQAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					121,
-					1,
-					"insert",
-					{
-						"characters": " is"
-					},
-					"AwAAAIAJAAAAAAAAgQkAAAAAAAAAAAAAgQkAAAAAAACCCQAAAAAAAAAAAACCCQAAAAAAAIMJAAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAgAkAAAAAAACACQAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					122,
-					1,
-					"insert",
-					{
-						"characters": " h"
-					},
-					"AgAAAIMJAAAAAAAAhAkAAAAAAAAAAAAAhAkAAAAAAACFCQAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAgwkAAAAAAACDCQAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					123,
-					1,
-					"left_delete",
-					null,
-					"AQAAAIQJAAAAAAAAhAkAAAAAAAABAAAAaA",
-					"AQAAAAAAAAABAAAAhQkAAAAAAACFCQAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					124,
-					1,
-					"insert",
-					{
-						"characters": "in"
-					},
-					"AgAAAIQJAAAAAAAAhQkAAAAAAAAAAAAAhQkAAAAAAACGCQAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAhAkAAAAAAACECQAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					125,
-					1,
-					"insert",
-					{
-						"characters": " -"
-					},
-					"AgAAAIYJAAAAAAAAhwkAAAAAAAAAAAAAhwkAAAAAAACICQAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAhgkAAAAAAACGCQAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					126,
-					1,
-					"left_delete",
-					null,
-					"AQAAAIcJAAAAAAAAhwkAAAAAAAABAAAALQ",
-					"AQAAAAAAAAABAAAAiAkAAAAAAACICQAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					127,
-					1,
-					"insert",
-					{
-						"characters": "`"
-					},
-					"AQAAAIcJAAAAAAAAiAkAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAhwkAAAAAAACHCQAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					128,
-					1,
-					"left_delete",
-					null,
-					"AQAAAIcJAAAAAAAAhwkAAAAAAAABAAAAYA",
-					"AQAAAAAAAAABAAAAiAkAAAAAAACICQAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					129,
-					1,
-					"insert",
-					{
-						"characters": "head-only"
-					},
-					"CQAAAIcJAAAAAAAAiAkAAAAAAAAAAAAAiAkAAAAAAACJCQAAAAAAAAAAAACJCQAAAAAAAIoJAAAAAAAAAAAAAIoJAAAAAAAAiwkAAAAAAAAAAAAAiwkAAAAAAACMCQAAAAAAAAAAAACMCQAAAAAAAI0JAAAAAAAAAAAAAI0JAAAAAAAAjgkAAAAAAAAAAAAAjgkAAAAAAACPCQAAAAAAAAAAAACPCQAAAAAAAJAJAAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAhwkAAAAAAACHCQAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					130,
-					1,
-					"insert",
-					{
-						"characters": " mode,"
-					},
-					"BgAAAJAJAAAAAAAAkQkAAAAAAAAAAAAAkQkAAAAAAACSCQAAAAAAAAAAAACSCQAAAAAAAJMJAAAAAAAAAAAAAJMJAAAAAAAAlAkAAAAAAAAAAAAAlAkAAAAAAACVCQAAAAAAAAAAAACVCQAAAAAAAJYJAAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAkAkAAAAAAACQCQAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					131,
-					1,
-					"insert",
-					{
-						"characters": " a"
-					},
-					"AgAAAJYJAAAAAAAAlwkAAAAAAAAAAAAAlwkAAAAAAACYCQAAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAAlgkAAAAAAACWCQAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					272,
-					1,
-					"insert",
-					{
-						"characters": "P"
-					},
-					"AgAAAEkOAAAAAAAASg4AAAAAAAAAAAAASg4AAAAAAABKDgAAAAAAAAEAAABU",
-					"AQAAAAAAAAABAAAASg4AAAAAAABJDgAAAAAAAAAAAAAAAPC/"
-				],
-				[
-					277,
-					1,
-					"insert",
-					{
-						"characters": "N"
-					},
-					"AQAAAEkOAAAAAAAASg4AAAAAAAAAAAAA",
-					"AQAAAAAAAAABAAAASQ4AAAAAAABJDgAAAAAAAAAAAAAAAPC/"
-				]
-			]
-		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -457,7 +170,9 @@
 	],
 	"file_history":
 	[
+		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/extrapolators/external/wikipedia_attribute_extrapolator.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/attributes/extractors/tests/test_linguistic.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/attributes/extractors/linguistic.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/participants.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/split_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/participant_detector.py",
@@ -511,7 +226,7 @@
 	},
 	"find_in_files":
 	{
-		"height": 0.0,
+		"height": 122.0,
 		"where_history":
 		[
 		]
@@ -521,6 +236,50 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"\t",
+			"\t&\t\\\\",
+			"\\t",
+			"(\\n|$)",
+			"\t",
+			"%",
+			"(.*(\\n|$)){9}",
+			"(.*(\\n|$)){3}",
+			"%",
+			"(.*(\\n|$)){3}",
+			"\t",
+			"(.*(\\n|$)){10}",
+			"(.*(\\n|$)){9}",
+			"(.*(\\n|$)){3}",
+			"(.*(\\n|$)){9}",
+			"(.*(\\n|$)){3}",
+			"(.*\\n){3}",
+			"(\\n){3}",
+			"(\\n){2}",
+			"_",
+			"NLTK",
+			"%",
+			"\\ac{NLTK}",
+			"\t",
+			" ",
+			"%",
+			"\t",
+			"0.",
+			".",
+			"0.",
+			", ",
+			"Formula One",
+			"One",
+			"-2022",
+			"2022",
+			"2022\t&",
+			"-2022",
+			"\t",
+			"#",
+			"\n",
+			"#",
+			"-2022",
+			"\t",
+			"lyon",
 			"france national",
 			"lyon",
 			"<JJ>+ <ENT>",
@@ -597,9 +356,19 @@
 		"highlight": true,
 		"in_selection": false,
 		"preserve_case": false,
-		"regex": false,
+		"regex": true,
 		"replace_history":
 		[
+			"\\t&\\t",
+			"\\t\\\\\\\\\\n",
+			"\\\\\\n",
+			"\\t&\\t",
+			"\\t",
+			"\\\\t",
+			"\\\\%",
+			"\\%",
+			"\\n",
+			"\\%"
 		],
 		"reverse": false,
 		"scrollbar_highlights": true,
@@ -614,38 +383,6 @@
 		{
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "eventdt/attributes/extractors/linguistic.py",
-					"selected": true,
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 15583,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								8739,
-								8739
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1706.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"stack_multiselect": false,
-					"type": "text"
-				}
 			]
 		}
 	],
@@ -692,7 +429,7 @@
 	"project": "eventdt.sublime-project",
 	"replace":
 	{
-		"height": 42.0
+		"height": 80.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -701,6 +438,14 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"linguis",
+				"eventdt/attributes/extractors/tests/test_linguistic.py"
+			],
+			[
+				"attributeex",
+				"eventdt/apd/extrapolators/external/wikipedia_attribute_extrapolator.py"
+			],
 			[
 				"testlinguist",
 				"eventdt/attributes/extractors/tests/test_linguistic.py"

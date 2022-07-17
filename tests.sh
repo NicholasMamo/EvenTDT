@@ -49,6 +49,7 @@ apd_tests() {
 	echo -e "${HIGHLIGHT}Participant detectors${DEFAULT}"
 	python3 -m unittest eventdt.apd.tests.test_ner_participant_detector
 	python3 -m unittest eventdt.apd.tests.test_eld_participant_detector
+	python3 -m unittest eventdt.apd.tests.test_depict_participant_detector
 }
 
 ate_tests() {
