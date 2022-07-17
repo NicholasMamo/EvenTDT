@@ -858,6 +858,33 @@ class TestEvent(unittest.TestCase):
         for candidate in candidates:
             self.assertEqual(0, terms[candidate])
 
+    def test_evate_same_as_ef_idf_entropy(self):
+        """
+        Test that the EvATE scores are the same as EF-IDF-Entropy's.
+        """
+
+        idf_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'CRYCHE.json'),
+                      os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVNAP.json'),
+                      os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'LIVMUN.json'),
+                      os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', 'MUNARS.json') ]
+        idfs = [ os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'CRYCHE.json'),
+                 os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'LIVNAP.json'),
+                 os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'LIVMUN.json'),
+                 os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf_wo_rt', 'MUNARS.json') ]
+
+        """
+        Calculate the EF-IDF manually.
+        """
+        with open(idf_path, 'r') as f:
+            idf = Exportable.decode(json.loads(''.join(f.readlines())))['tfidf']
+
+        extractor = event.EFIDFEntropy(idf, base=2)
+        terms = extractor.extract(timelines, idfs)
+
+        extractor = event.EvATE(idf, base=2)
+        self.assertEqual(terms, extractor.extract(timelines, idfs))
+
     def test_variability_no_idfs(self):
         """
         Test that the variability raises a ValueError when no IDFs are given.

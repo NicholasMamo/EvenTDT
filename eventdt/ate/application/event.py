@@ -724,3 +724,10 @@ class Entropy(Extractor):
         probabilities = [ p for p in probabilities if p ]
 
         return - sum( p * math.log(p, self.base) for p in probabilities )
+
+class EvATE(EFIDFEntropy):
+    """
+    An alias class for the :class:`~ate.application.event.EFIDFEntropy`.
+    """
+
+    pass
