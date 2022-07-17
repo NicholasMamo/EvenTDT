@@ -668,8 +668,8 @@ def reranker_params(params):
 
     prefix = 'reranker_'
     reranker_params = { 'reranker': params.get('reranker') } if 'reranker' in params else { }
-    reranker_params.update({ param[len(prefix):]: value for param, value in params.items() if param.startswith(prefix) })
-    return reranker_params
+    reranker_params.update({ param: value for param, value in params.items() if param.startswith(prefix) })
+    return tools.remove_prefix(prefix, **reranker_params)
 
 if __name__ == "__main__":
     main()
