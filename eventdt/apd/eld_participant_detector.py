@@ -49,7 +49,7 @@ class ELDParticipantDetector(ParticipantDetector):
     """
 
     def __init__(self, scheme=None, corpus=None, extractor=None, scorer=None, filter=None,
-                 resolver=None, extrapolator=None, postprocessor=None, *args, **kwargs):
+                 resolver=None, extrapolator=None, postprocessor=None, tokenizer=None, *args, **kwargs):
         """
         Create the ELD participant detector.
         Any parameter that is not given uses the default configuration.
@@ -85,14 +85,16 @@ class ELDParticipantDetector(ParticipantDetector):
                               This component modifies the found participants.
                               If it is not given, it defaults to the :class:`~apd.postprocessors.external.wikipedia_postprocessor.WikipediaPostprocessor`.
         :type postprocessor: None or :class:`~apd.postprocessors.postprocessor.Postprocessor`
+        :param tokenizer: A common tokenizer used by all extractors, resolvers and extrapolators.
+        :type tokenizer: :class:`~nlp.tokenizer.Tokenizer`
         """
 
         """
         Tokenize the corpus.
         """
-        tokenizer = Tokenizer(stopwords=stopwords.words('english'),
-                              normalize_words=True, character_normalization_count=3,
-                              remove_unicode_entities=True)
+        tokenizer = tokenizer or Tokenizer(stopwords=stopwords.words('english'),
+                                           normalize_words=True, character_normalization_count=3,
+                                           remove_unicode_entities=True, stem=True)
 
         """
         Set up the ELD participant detector.
