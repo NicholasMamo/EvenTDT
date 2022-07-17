@@ -241,28 +241,28 @@ When re-ranking, the tool saves three sets of terms: the terms extracted by the 
 The full list of accepted arguments:
 
     - ``-f --files``            *<Required>* The input corpora from where to extract domain-specific terms.
-    - ``-m --method``           *<Required>* The method to use to extract domain-specific terms; supported: :class:`TF <ate.stat.tf.TFExtractor>`, :class:`TFIDF <ate.stat.tfidf.TFIDFExtractor>`, :class:`Rank <ate.stat.corpus.rank.RankExtractor>`, :class:`Specificity <ate.stat.corpus.specificity.SpecificityExtractor>`, :class:`TFDCF <ate.stat.corpus.tfdcf.TFDCFExtractor>`, :class:`EF <ate.application.event.EF>`, :class:`LogEF <ate.application.event.LogEF>`, :class:`EF-IDF <ate.application.event.EFIDF>`.
+    - ``-m --method``           *<Required>* The method to use to extract domain-specific terms; supported: :class:`TF <ate.stat.tf.TFExtractor>`, :class:`TFIDF <ate.stat.tfidf.TFIDFExtractor>`, :class:`Rank <ate.stat.corpus.rank.RankExtractor>`, :class:`Specificity <ate.stat.corpus.specificity.SpecificityExtractor>`, :class:`TFDCF <ate.stat.corpus.tfdcf.TFDCFExtractor>`, :class:`EF <ate.application.event.EF>`, :class:`LogEF <ate.application.event.LogEF>`, :class:`EFICF <ate.application.event.EFICF>` (or :class:`EFIDF <ate.application.event.EFIDF>`), :class:`EvATE <ate.application.event.EvATE>` (or :class:`EFICFEntropy <ate.application.event.EFICFEntropy>` or :class:`EFIDFEntropy <ate.application.event.EFIDFEntropy>`).
     - ``-o --output``           *<Required>* The path to the file where to store the extracted terms.
     - ``--keep``                *<Optional>* The number of terms to return, ordered in descending order of score; defaults to all terms.
-    - ``--normalized``           *<Optional>* Normalize the scores between 0 and 1.
-    - ``--tfidf``               *<Optional>* The TF-IDF scheme to use to extract terms (used only with the :class:`~ate.stat.tfidf.TFIDFExtractor` and the :class:`~ate.application.event.EFIDF` methods).
+    - ``--normalized``          *<Optional>* Normalize the scores between 0 and 1.
+    - ``--tfidf``               *<Optional>* The TF-IDF scheme to use to extract terms (used only with the :class:`~ate.stat.tfidf.TFIDFExtractor`, the :class:`~ate.application.event.EFICF` (or :class:`~ate.application.event.EFIDF`), and :class:`~ate.application.event.EvATE` (or :class:`~ate.application.event.EFICFEntropy` or :class:`~ate.application.event.EFIDFEntropy`) methods).
     - ``--general``             *<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the :class:`~ate.stat.corpus.rank.RankExtractor`, :class:`~ate.stat.corpus.specificity.SpecificityExtractor` and :class:`~ate.stat.corpus.tfdcf.TFDCFExtractor` methods).
     - ``--cutoff``              *<Optional>* The minimum term frequency to consider when ranking terms (used only with the :class:`~ate.stat.corpus.rank.RankExtractor` method).
-    - ``--base``                *<Optional>* The logarithmic base (used only with the :class:`LogEF <ate.application.event.LogEF>`, :class:`~ate.application.event.EFIDF` and :class:`~ate.application.event.EFIDFEntropy` methods).
-    - ``--idfs``                *<Optional>* The IDF files to use to calculate entropy (used only with the :class:`~ate.application.event.EFIDFEntropy` method)
+    - ``--base``                *<Optional>* The logarithmic base (used only with the :class:`LogEF <ate.application.event.LogEF>`, :class:`~ate.application.event.EFICF` (or :class:`~ate.application.event.EFIDF`) and :class:`~ate.application.event.EvATE` (or :class:`~ate.application.event.EFICFEntropy` or :class:`~ate.application.event.EFIDFEntropy`) methods).
+    - ``--idfs``                *<Optional>* The IDF files to use to calculate entropy (used only with the :class:`~ate.application.event.EvATE` (or :class:`~ate.application.event.EFICFEntropy` or :class:`~ate.application.event.EFIDFEntropy`) methods).
 
 When using a re-ranker, these arguments are also accepted:
 
-    - ``--reranker``            *<Optional>* The method to use to re-rank the terms extracted by the base method; supported :class:`TF <ate.stat.tf.TFExtractor>`, :class:`TFIDF <ate.stat.tfidf.TFIDFExtractor>`, :class:`Rank <ate.stat.corpus.rank.RankExtractor>`, :class:`Specificity <ate.stat.corpus.specificity.SpecificityExtractor>`, :class:`TFDCF <ate.stat.corpus.tfdcf.TFDCFExtractor>`, :class:`EF <ate.application.event.EF>`, :class:`LogEF <ate.application.event.LogEF>`, :class:`EF-IDF <ate.application.event.EFIDF>`, :class:`EF-IDF-Entropy <ate.application.event.EFIDFEntropy>`.
+    - ``--reranker``            *<Optional>* The method to use to re-rank the terms extracted by the base method; supported :class:`TF <ate.stat.tf.TFExtractor>`, :class:`TFIDF <ate.stat.tfidf.TFIDFExtractor>`, :class:`Rank <ate.stat.corpus.rank.RankExtractor>`, :class:`Specificity <ate.stat.corpus.specificity.SpecificityExtractor>`, :class:`TFDCF <ate.stat.corpus.tfdcf.TFDCFExtractor>`, :class:`EF <ate.application.event.EF>`, :class:`LogEF <ate.application.event.LogEF>`, :class:`EFICF <ate.application.event.EFICF>` (or :class:`EFIDF <ate.application.event.EFIDF>`), :class:`EvATE <ate.application.event.EvATE>` (or :class:`EFICFEntropy <ate.application.event.EFICFEntropy>` or :class:`EFIDFEntropy <ate.application.event.EFIDFEntropy>`).
     - ``--reranker-mode``       *<Optional>* The re-ranking mode; supported: normal (default), multiply, harmonic [mean].
     - ``--reranker-files``      *<Optional>* The corpora to use to calculate the new, re-ranked score for terms.
     - ``--reranker-keep``       *<Optional>* The number of terms to return, ordered in descending order of score; defaults to all terms.
-    - ``--reranker-normalized``  *<Optional>* Normalize the scores between 0 and 1.
-    - ``--reranker-tfidf``      *<Optional>* The TF-IDF scheme to use to extract terms (used only with the :class:`~ate.stat.tfidf.TFIDFExtractor` and the :class:`~ate.application.event.EFIDF` methods).
+    - ``--reranker-normalized`` *<Optional>* Normalize the scores between 0 and 1.
+    - ``--reranker-tfidf``      *<Optional>* The TF-IDF scheme to use to extract terms (used only with the :class:`~ate.stat.tfidf.TFIDFExtractor`, the :class:`~ate.application.event.EFICF` (or :class:`~ate.application.event.EFIDF`), and :class:`~ate.application.event.EvATE` (or :class:`~ate.application.event.EFICFEntropy` or :class:`~ate.application.event.EFIDFEntropy`) methods).
     - ``--reranker-general``    *<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the :class:`~ate.stat.corpus.rank.RankExtractor`, :class:`~ate.stat.corpus.specificity.SpecificityExtractor` and :class:`~ate.stat.corpus.tfdcf.TFDCFExtractor` methods).
     - ``--reranker-cutoff``     *<Optional>* The minimum term frequency to consider when ranking terms (used only with the :class:`~ate.stat.corpus.rank.RankExtractor` method).
-    - ``--reranker-base``       *<Optional>* The logarithmic base (used only with the :class:`LogEF <ate.application.event.LogEF>`, :class:`~ate.application.event.EFIDF` and :class:`~ate.application.event.EFIDFEntropy` methods).
-    - ``--reranker-idfs``       *<Optional>* The IDF files to use to calculate entropy (used only with the :class:`~ate.application.event.EFIDFEntropy` method)
+    - ``--reranker-base``       *<Optional>* The logarithmic base (used only with the :class:`LogEF <ate.application.event.LogEF>`, :class:`~ate.application.event.EFICF` (or :class:`~ate.application.event.EFIDF`) and :class:`~ate.application.event.EvATE` (or :class:`~ate.application.event.EFICFEntropy` or :class:`~ate.application.event.EFIDFEntropy`) methods).
+    - ``--reranker-idfs``       *<Optional>* The IDF files to use to calculate entropy (used only with the :class:`~ate.application.event.EvATE` (or :class:`~ate.application.event.EFICFEntropy` or :class:`~ate.application.event.EFIDFEntropy`) methods).
 """
 
 import argparse
@@ -279,7 +279,7 @@ sys.path.insert(-1, lib)
 import tools
 from logger import logger
 from ate import linguistic
-from ate.application import EF, LogEF, EFIDF, EFIDFEntropy
+from ate.application import *
 from ate.stat import TFExtractor, TFIDFExtractor
 from ate.stat.corpus import RankExtractor, SpecificityExtractor, TFDCFExtractor
 
@@ -291,26 +291,26 @@ def setup_args():
     Accepted arguments:
 
         - ``-f --files``            *<Required>* The input corpora from where to extract domain-specific terms.
-        - ``-m --method``           *<Required>* The method to use to extract domain-specific terms; supported: :class:`TF <ate.stat.tf.TFExtractor>`, :class:`TFIDF <ate.stat.tfidf.TFIDFExtractor>`, :class:`Rank <ate.stat.corpus.rank.RankExtractor>`, :class:`Specificity <ate.stat.corpus.specificity.SpecificityExtractor>`, :class:`TFDCF <ate.stat.corpus.tfdcf.TFDCFExtractor>`, :class:`EF <ate.application.event.EF>`, :class:`LogEF <ate.application.event.LogEF>`, :class:`EF-IDF <ate.application.event.EFIDF>`.
+        - ``-m --method``           The method to use to extract domain-specific terms; supported: :class:`TF <ate.stat.tf.TFExtractor>`, :class:`TFIDF <ate.stat.tfidf.TFIDFExtractor>`, :class:`Rank <ate.stat.corpus.rank.RankExtractor>`, :class:`Specificity <ate.stat.corpus.specificity.SpecificityExtractor>`, :class:`TFDCF <ate.stat.corpus.tfdcf.TFDCFExtractor>`, :class:`EF <ate.application.event.EF>`, :class:`LogEF <ate.application.event.LogEF>`, :class:`EFICF <ate.application.event.EFICF>` (or :class:`EFIDF <ate.application.event.EFIDF>`), :class:`EvATE <ate.application.event.EvATE>` (or :class:`EFICFEntropy <ate.application.event.EFICFEntropy>` or :class:`EFIDFEntropy <ate.application.event.EFIDFEntropy>`).
         - ``-o --output``           *<Required>* The path to the file where to store the extracted terms.
         - ``--keep``                *<Optional>* The number of terms to return, ordered in descending order of score; defaults to all terms.
-        - ``--normalized``           *<Optional>* Normalize the scores between 0 and 1.
-        - ``--tfidf``               *<Optional>* The TF-IDF scheme to use to extract terms (used only with the :class:`~ate.stat.tfidf.TFIDFExtractor` and the :class:`~ate.application.event.EFIDF` methods).
+        - ``--normalized``          *<Optional>* Normalize the scores between 0 and 1.
+        - ``--tfidf``               *<Optional>* The TF-IDF scheme to use to extract terms (used only with the :class:`~ate.stat.tfidf.TFIDFExtractor`, the :class:`~ate.application.event.EFICF` (or :class:`~ate.application.event.EFIDF`), and :class:`~ate.application.event.EvATE` (or :class:`~ate.application.event.EFICFEntropy` or :class:`~ate.application.event.EFIDFEntropy`) methods).
         - ``--general``             *<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the :class:`~ate.stat.corpus.rank.RankExtractor`, :class:`~ate.stat.corpus.specificity.SpecificityExtractor` and :class:`~ate.stat.corpus.tfdcf.TFDCFExtractor` methods).
         - ``--cutoff``              *<Optional>* The minimum term frequency to consider when ranking terms (used only with the :class:`~ate.stat.corpus.rank.RankExtractor` method).
         - ``--base``                *<Optional>* The logarithmic base (used only with the :class:`LogEF <ate.application.event.LogEF>`, :class:`~ate.application.event.EFIDF` and :class:`~ate.application.event.EFIDFEntropy` methods).
-        - ``--idfs``                *<Optional>* The IDF files to use to calculate entropy (used only with the :class:`~ate.application.event.EFIDFEntropy` method)
+        - ``--idfs``                *<Optional>* The IDF files to use to calculate entropy (used only with the :class:`~ate.application.event.EvATE` (or :class:`~ate.application.event.EFICFEntropy` or :class:`~ate.application.event.EFIDFEntropy`) methods).
 
-        - ``--reranker``            *<Optional>* The method to use to re-rank the terms extracted by the base method; supported :class:`TF <ate.stat.tf.TFExtractor>`, :class:`TFIDF <ate.stat.tfidf.TFIDFExtractor>`, :class:`Rank <ate.stat.corpus.rank.RankExtractor>`, :class:`Specificity <ate.stat.corpus.specificity.SpecificityExtractor>`, :class:`TFDCF <ate.stat.corpus.tfdcf.TFDCFExtractor>`, :class:`EF <ate.application.event.EF>`, :class:`LogEF <ate.application.event.LogEF>`, :class:`EF-IDF <ate.application.event.EFIDF>`, :class:`EF-IDF-Entropy <ate.application.event.EFIDFEntropy>`.
+        - ``--reranker``            *<Optional>* The method to use to re-rank the terms extracted by the base method; supported :class:`TF <ate.stat.tf.TFExtractor>`, :class:`TFIDF <ate.stat.tfidf.TFIDFExtractor>`, :class:`Rank <ate.stat.corpus.rank.RankExtractor>`, :class:`Specificity <ate.stat.corpus.specificity.SpecificityExtractor>`, :class:`TFDCF <ate.stat.corpus.tfdcf.TFDCFExtractor>`, :class:`EF <ate.application.event.EF>`, :class:`LogEF <ate.application.event.LogEF>`, :class:`EFICF <ate.application.event.EFICF>` (or :class:`EFIDF <ate.application.event.EFIDF>`), :class:`EvATE <ate.application.event.EvATE>` (or :class:`EFICFEntropy <ate.application.event.EFICFEntropy>` or :class:`EFIDFEntropy <ate.application.event.EFIDFEntropy>`).
         - ``--reranker-mode``       *<Optional>* The re-ranking mode; supported: normal (default), multiply, harmonic [mean].
         - ``--reranker-files``      *<Optional>* The corpora to use to calculate the new, re-ranked score for terms.
         - ``--reranker-keep``       *<Optional>* The number of terms to return, ordered in descending order of score; defaults to all terms.
-        - ``--reranker-normalized``  *<Optional>* Normalize the scores between 0 and 1.
-        - ``--reranker-tfidf``      *<Optional>* The TF-IDF scheme to use to extract terms (used only with the :class:`~ate.stat.tfidf.TFIDFExtractor` and the :class:`~ate.application.event.EFIDF` methods).
+        - ``--reranker-normalized`` *<Optional>* Normalize the scores between 0 and 1.
+        - ``--reranker-tfidf``      *<Optional>* The TF-IDF scheme to use to extract terms (used only with the :class:`~ate.stat.tfidf.TFIDFExtractor`, the :class:`~ate.application.event.EFICF` (or :class:`~ate.application.event.EFIDF`), and :class:`~ate.application.event.EvATE` (or :class:`~ate.application.event.EFICFEntropy` or :class:`~ate.application.event.EFIDFEntropy`) methods).
         - ``--reranker-general``    *<Optional>* A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the :class:`~ate.stat.corpus.rank.RankExtractor`, :class:`~ate.stat.corpus.specificity.SpecificityExtractor` and :class:`~ate.stat.corpus.tfdcf.TFDCFExtractor` methods).
         - ``--reranker-cutoff``     *<Optional>* The minimum term frequency to consider when ranking terms (used only with the :class:`~ate.stat.corpus.rank.RankExtractor` method).
         - ``--reranker-base``       *<Optional>* The logarithmic base (used only with the :class:`LogEF <ate.application.event.LogEF>`, :class:`~ate.application.event.EFIDF` and :class:`~ate.application.event.EFIDFEntropy` methods).
-        - ``--reranker-idfs``       *<Optional>* The IDF files to use to calculate entropy (used only with the :class:`~ate.application.event.EFIDFEntropy` method)
+        - ``--reranker-idfs``       *<Optional>* The IDF files to use to calculate entropy (used only with the :class:`~ate.application.event.EvATE` (or :class:`~ate.application.event.EFICFEntropy` or :class:`~ate.application.event.EFIDFEntropy`) methods).
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
@@ -319,23 +319,23 @@ def setup_args():
     parser.add_argument('-f', '--files', nargs='+', required=True,
                         help='<Required> The input corpora from where to extract domain-specific terms.')
     parser.add_argument('-m', '--method', type=method, required=True,
-                        help='<Required> The method to use to extract domain-specific terms; supported: `TF`, `TFIDF`, `Rank`, `Specificity`, `TFDCF`, `EF`, `LogEF`, `EF-IDF`.')
+                        help='<Required> The method to use to extract domain-specific terms; supported: `TF`, `TFIDF`, `Rank`, `Specificity`, `TFDCF`, `EF`, `LogEF`, `EFICF` (or `EFIDF`), `EvATE` (or `EFICFEnropy` or `EFIDFEntropy`).')
     parser.add_argument('-o', '--output', type=str, required=True,
                         help='<Required> The path to the file where to store the extracted terms.')
     parser.add_argument('--keep', type=int, required=False, help='<Optional> The number of terms to return, ordered in descending order of score; defaults to all terms.')
     parser.add_argument('--normalized', action="store_true", required=False, help='<Optional> Normalize the scores between 0 and 1.')
-    parser.add_argument('--tfidf', required=False, help='<Optional> The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).')
+    parser.add_argument('--tfidf', required=False, help='<Optional> The TF-IDF scheme to use to extract terms (used only with the `TFIDF`, `EFICF` (or `EFIDF`) and `EvATE` (or `EFICFEntropy` or `EFIDFEntropy`) methods).')
     parser.add_argument('--general', nargs='+', required=False,
-                        help='<Optional> A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `Rank`, `Specificity` and `TF-DCF` methods).')
+                        help='<Optional> A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `Rank`, `Specificity` and `TFDCF` methods).')
     parser.add_argument('--cutoff', type=int, default=1, required=False,
                         help='<Optional> The minimum term frequency to consider when ranking terms (used only with the `Rank` method).')
     parser.add_argument('--base', type=int, default=None, required=False,
-                        help='<Optional> The logarithmic base (used only with the `LogEF`, `EF-IDF` and `EF-IDF-Entropy` methods).')
+                        help='<Optional> The logarithmic base (used only with the `LogEF`, `EFICF` (or `EFIDF`) and `EvATE` (or `EFICFEntropy` or `EFIDFEntropy`) methods).')
     parser.add_argument('--idfs', nargs='+', required=False,
-                        help='<Optional> The IDF files to use to calculate entropy (used only with the `EF-IDF-Entropy` method).')
+                        help='<Optional> The IDF files to use to calculate entropy (used only with the `EvATE` (or `EFICFEntropy` or `EFIDFEntropy`) method).')
 
     parser.add_argument('--reranker', type=method, required=False,
-                        help='<Optional> The method to use to re-rank the terms extracted by the base method; supported `TF`, `TFIDF`, `Rank`, `Specificity`, `TFDCF`, `EF`, `LogEF`, `EF-IDF`.')
+                        help='<Optional> The method to use to re-rank the terms extracted by the base method; supported `TF`, `TFIDF`, `Rank`, `Specificity`, `TFDCF`, `EF`, `LogEF`, `EFICF` (or `EFIDF`), `EvATE` (or `EFICFEnropy` or `EFIDFEntropy`).')
     parser.add_argument('--reranker-mode', type=str, required=False,
                         choices=[ 'normal', 'multiply', 'harmonic' ], default='normal',
                         help='<Optional> The re-ranking mode; supported: normal (default), multiply, harmonic [mean].')
@@ -346,15 +346,15 @@ def setup_args():
     parser.add_argument('--reranker-normalized', action='store_true',
                         help='<Optional> Normalize the scores between 0 and 1.')
     parser.add_argument('--reranker-tfidf', required=False,
-                        help='<Optional> The TF-IDF scheme to use to extract terms (used only with the `TF-IDF` method).')
+                        help='<Optional> The TF-IDF scheme to use to extract terms (used only with the `TFIDF`, `EFICF` (or `EFIDF`) and `EvATE` (or `EFICFEntropy` or `EFIDFEntropy`) methods).')
     parser.add_argument('--reranker-general', nargs='+', required=False,
-                        help='<Optional> A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `Rank`, `Specificity` and `TF-DCF` methods).')
+                        help='<Optional> A path or paths to general corpora used for comparison with the domain-specific corpora (used only with the `Rank`, `Specificity` and `TFDCF` methods).')
     parser.add_argument('--reranker-cutoff', type=int, default=1, required=False,
                         help='<Optional> The minimum term frequency to consider when ranking terms (used only with the `Rank` method).')
     parser.add_argument('--reranker-base', type=int, default=None, required=False,
-                        help='<Optional> The logarithmic base (used only with the `LogEF`, `EF-IDF` and `EF-IDF-Entropy` methods).')
+                        help='<Optional> The logarithmic base (used only with the `LogEF`, `EFICF` (or `EFIDF`) and `EvATE` (or `EFICFEntropy` or `EFIDFEntropy`) methods).')
     parser.add_argument('--reranker-idfs', nargs='+', required=False,
-                        help='<Optional> The IDF files to use to calculate entropy (used only with the `EF-IDF-Entropy` method).')
+                        help='<Optional> The IDF files to use to calculate entropy (used only with the `EvATE` (or `EFICFEntropy` or `EFIDFEntropy`) method).')
 
     args = parser.parse_args()
     return args
@@ -399,14 +399,14 @@ def create_extractor(method, tfidf=None, general=None, cutoff=None, base=None):
     :param method: The class type of the method to instantiate.
     :type method: :class:`~ate.extractor.Extractor`
     :param tfidf: The path to a file containing the TF-IDF scheme.
-                  It is required with the :func:`~ate.stat.tfidf.TFIDFExtractor` and :class:`~ate.application.event.EFIDF`.
+                  It is required with the :class:`~ate.stat.tfidf.TFIDFExtractor`, the :class:`~ate.application.event.EFICF` (or :class:`~ate.application.event.EFIDF`), and :class:`~ate.application.event.EvATE` (or :class:`~ate.application.event.EFICFEntropy` or :class:`~ate.application.event.EFIDFEntropy`) methods.
     :type tfidf: None or str
     :param general: A path, or paths, to files containing general corpora.
                     This parameter is required for the :class:`~ate.stat.corpus.tfdcf.TFDCFExtractor`, :class:`~ate.stat.corpus.specificity.SpecificityExtractor` and :class:`~ate.stat.corpus.rank.RankExtractor`.
     :type general: None or str or list of str
     :param cutoff: The cut-off to use with the :class:`~ate.stat.corpus.rank.RankExtractor`.
     :type cutoff: None or int
-    :param base: The logarithmic base to use with the :class:`~ate.application.event.EFIDF`.
+    :param base: The logarithmic base to use with the :class:`LogEF <ate.application.event.LogEF>`, :class:`~ate.application.event.EFICF` (or :class:`~ate.application.event.EFIDF`) and :class:`~ate.application.event.EvATE` (or :class:`~ate.application.event.EFICFEntropy` or :class:`~ate.application.event.EFIDFEntropy`) methods.
     :type base: None or float
 
     :return: The created extractor.
@@ -436,16 +436,16 @@ def create_extractor(method, tfidf=None, general=None, cutoff=None, base=None):
     elif method == LogEF:
         base = int(base) if base else base
         return method(base=base) if base else method()
-    elif method == EFIDF:
+    elif method in [ EFICF, EFIDF ]:
         if tfidf is None:
-            parser.error("The TF-IDF scheme is required with the EF-IDF method.")
+            parser.error(f"The TF-IDF scheme is required with the { method.__name__ } method.")
 
         tfidf = tools.load(tfidf)['tfidf']
         base = int(base) if base else base
         return method(tfidf, base=base)
-    elif method == EFIDFEntropy:
+    elif method in [ EvATE, EFICFEntropy, EFIDFEntropy ]:
         if tfidf is None:
-            parser.error("The TF-IDF scheme is required with the EF-IDF-Entropy method.")
+            parser.error(f"The TF-IDF scheme is required with the { method.__name__ } method.")
 
         tfidf = tools.load(tfidf)['tfidf']
         base = int(base) if base else base
@@ -469,7 +469,7 @@ def extract(extractor, files, candidates=None, keep=None, normalized=False, idfs
     :type keep: int or None
     :param normalized: A boolean indicating whether to normalize the scores between 0 and 1.
     :type normalized: bool
-    :param idfs: The IDF files, used by some extractors (:class:`~ate.application.event.EFIDFEntropy`) as part of the extraction.
+    :param idfs: The IDF files to use to calculate entropy (used only with the :class:`~ate.application.event.EvATE` (or :class:`~ate.application.event.EFICFEntropy` or :class:`~ate.application.event.EFIDFEntropy`) methods).
     :type idfs: str or list of str
 
     :return: A list of terms, each as a dictionary including its:
@@ -481,9 +481,9 @@ def extract(extractor, files, candidates=None, keep=None, normalized=False, idfs
     """
 
     if not files:
-        parser.error("One or more files are always required.")
+        parser.error("One or more files from which to extract terms are required.")
 
-    if type(extractor) == EFIDFEntropy:
+    if type(extractor) in [ EvATE, EFICFEntropy, EFIDFEntropy ]:
         terms = extractor.extract(files, idfs=idfs, candidates=candidates)
     else:
         terms = extractor.extract(files, candidates=candidates)
@@ -622,8 +622,8 @@ def method(method):
         #. :class:`~ate.stat.corpus.tfdcf.TFDCFExtractor`
         #. :class:`~ate.application.event.EF`
         #. :class:`~ate.application.event.LogEF`
-        #. :class:`~ate.application.event.EFIDF`
-        #. :class:`~ate.application.event.EFIDFEntropy`
+        #. :class:`~ate.application.event.EFICF` (or :class:`~ate.application.event.EFIDF`)
+        #. :class:`~ate.application.event.EvATE` (or :class:`~ate.application.event.EFICFEntropy` or :class:`~ate.application.event.EFIDFEntropy`)
 
     :param method: The method string.
     :type method: str
@@ -642,7 +642,10 @@ def method(method):
         'tfdcf': TFDCFExtractor,
         'ef': EF,
         'logef': LogEF,
+        'eficf': EFICF,
         'efidf': EFIDF,
+        'evate': EvATE,
+        'eficfentropy': EFICFEntropy,
         'efidfentropy': EFIDFEntropy,
     }
 

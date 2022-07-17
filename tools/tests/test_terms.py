@@ -17,7 +17,7 @@ for path in paths:
         sys.path.append(path)
 
 from tools import terms
-from ate.application import LogEF, EF, EFIDF, EFIDFEntropy, Entropy
+from ate.application import *
 from ate.stat import TFExtractor, TFIDFExtractor
 
 class TestTerms(unittest.TestCase):
@@ -231,6 +231,13 @@ class TestTerms(unittest.TestCase):
 
         self.assertRaises(SystemExit, terms.create_extractor, EFIDF)
 
+    def test_create_extractor_eficf_missing_idf(self):
+        """
+        Test that when the TF-IDF scheme is not given for the EF-ICF, a SystemExit is raised.
+        """
+
+        self.assertRaises(SystemExit, terms.create_extractor, EFICF)
+
     def test_extract_efidf_with_incorrect_corpora(self):
         """
         Test that when the EF-IDF receives incorrect corpus types, it raises a ValueError.
@@ -239,6 +246,16 @@ class TestTerms(unittest.TestCase):
         idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
         path = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf', 'LIVMUN.json')
         extractor = terms.create_extractor(EFIDF, tfidf=idf)
+        self.assertRaises(ValueError, extractor.extract, path)
+
+    def test_extract_eficf_with_incorrect_corpora(self):
+        """
+        Test that when the EF-ICF receives incorrect corpus types, it raises a ValueError.
+        """
+
+        idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        path = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf', 'LIVMUN.json')
+        extractor = terms.create_extractor(EFICF, tfidf=idf)
         self.assertRaises(ValueError, extractor.extract, path)
 
     def test_extract_efidf_results(self):
@@ -284,6 +301,20 @@ class TestTerms(unittest.TestCase):
 
         self.assertRaises(SystemExit, terms.create_extractor, EFIDFEntropy)
 
+    def test_create_extractor_eficfentropy_missing_idf(self):
+        """
+        Test that when the TF-IDF scheme is not given to the EF-ICF-Entropy extractor, a SystemExit is raised.
+        """
+
+        self.assertRaises(SystemExit, terms.create_extractor, EFICFEntropy)
+
+    def test_create_extractor_evate_missing_idf(self):
+        """
+        Test that when the TF-IDF scheme is not given to the EvATEextractor, a SystemExit is raised.
+        """
+
+        self.assertRaises(SystemExit, terms.create_extractor, EvATE)
+
     def test_extract_efidfentropy_with_incorrect_corpora(self):
         """
         Test that when the EF-IDF-Entropy extractor receives incorrect corpus types, it raises a ValueError.
@@ -292,6 +323,26 @@ class TestTerms(unittest.TestCase):
         idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
         path = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf', 'LIVMUN.json')
         extractor = terms.create_extractor(EFIDFEntropy, tfidf=idf)
+        self.assertRaises(ValueError, extractor.extract, path, path)
+
+    def test_extract_eficfentropy_with_incorrect_corpora(self):
+        """
+        Test that when the EF-ICF-Entropy extractor receives incorrect corpus types, it raises a ValueError.
+        """
+
+        idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        path = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf', 'LIVMUN.json')
+        extractor = terms.create_extractor(EFICFEntropy, tfidf=idf)
+        self.assertRaises(ValueError, extractor.extract, path, path)
+
+    def test_extract_evate_with_incorrect_corpora(self):
+        """
+        Test that when the EvATE extractor receives incorrect corpus types, it raises a ValueError.
+        """
+
+        idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        path = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf', 'LIVMUN.json')
+        extractor = terms.create_extractor(EvATE, tfidf=idf)
         self.assertRaises(ValueError, extractor.extract, path, path)
 
     def test_extract_efidfentropy_with_unequal_corpora(self):
@@ -304,6 +355,30 @@ class TestTerms(unittest.TestCase):
         timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
         idfs = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf_wo_rt', f"{ event }.json") for event in events[:len(events) - 1] ]
         extractor = terms.create_extractor(EFIDFEntropy, tfidf=idf)
+        self.assertRaises(ValueError, extractor.extract, timelines, idfs=idfs)
+
+    def test_extract_eficfentropy_with_unequal_corpora(self):
+        """
+        Test that when the EF-ICF-Entropy extractor receives a different number of timelines and IDFs, it raises a ValueError.
+        """
+
+        idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+        idfs = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf_wo_rt', f"{ event }.json") for event in events[:len(events) - 1] ]
+        extractor = terms.create_extractor(EFICFEntropy, tfidf=idf)
+        self.assertRaises(ValueError, extractor.extract, timelines, idfs=idfs)
+
+    def test_extract_evate_with_unequal_corpora(self):
+        """
+        Test that when the EvATE extractor receives a different number of timelines and IDFs, it raises a ValueError.
+        """
+
+        idf = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        events = [ 'CRYCHE', 'LIVMUN', 'LIVNAP', 'MUNARS' ]
+        timelines = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', f"{ event }.json") for event in events ]
+        idfs = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf_wo_rt', f"{ event }.json") for event in events[:len(events) - 1] ]
+        extractor = terms.create_extractor(EvATE, tfidf=idf)
         self.assertRaises(ValueError, extractor.extract, timelines, idfs=idfs)
 
     def test_extract_efidfentropy_results(self):
