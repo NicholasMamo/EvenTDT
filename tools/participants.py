@@ -331,7 +331,8 @@ def create_model(model, extractor, scorer, filter, resolver, extrapolator, postp
         scheme = tools.load(scheme)['tfidf']
         return model(scheme=scheme, extractor=extractor,
                      scorer=scorer, filter=filter, resolver=resolver,
-                     extrapolator=extrapolator, postprocessor=postprocessor, corpus=kwargs.get('file'), *args, **kwargs)
+                     extrapolator=extrapolator, postprocessor=postprocessor,
+                     corpus=kwargs.get('file'), tokenizer=tokenizer, *args, **kwargs)
     elif model.__name__ == ParticipantDetector.__name__:
         extractor = extractor or local.EntityExtractor(*args, **kwargs)
         scorer = scorer or TFScorer(*args, **kwargs)
