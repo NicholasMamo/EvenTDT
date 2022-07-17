@@ -49,7 +49,8 @@ class DEPICTParticipantDetector(ParticipantDetector):
     """
 
     def __init__(self, scheme=None, corpus=None, extractor=None, scorer=None, filter=None,
-                 resolver=None, extrapolator=None, postprocessor=None, *args, **kwargs):
+                 resolver=None, extrapolator=None, postprocessor=None, tokenizer=None,
+                 keep=None, resolver_threshold=None, extrapolator_prune=None, extrapolator_fetch=None, *args, **kwargs):
         """
         Create the DEPICT participant detector.
         Any parameter that is not given uses the default configuration.
@@ -85,23 +86,47 @@ class DEPICTParticipantDetector(ParticipantDetector):
                               This component modifies the found participants.
                               If it is not given, it defaults to the :class:`~apd.postprocessors.external.wikipedia_attribute_postprocessor.WikipediaAttributePostprocessor`.
         :type postprocessor: None or :class:`~apd.postprocessors.postprocessor.Postprocessor`
+        :param tokenizer: A common tokenizer used by all extractors, resolvers and extrapolators.
+        :type tokenizer: :class:`~nlp.tokenizer.Tokenizer`
+
+        :param keep: The number of candidates to retain when filtering.
+        :type keep: int
+        :param resolver_threshold: The similarity threshold beyond which candidate participants are resolved.
+        :type resolver_threshold: float
+        :param extrapolator_prune: The threshold at which attributes are removed when extrapolating.
+                                   If an attribute appears this many times or fewer, the extrapolator removes it.
+                                   By default, a threshold of 0 retains all attributes.
+        :type extrapolator_prune: int
+        :param extrapolator_fetch: The maximum number of candidates to fetch when extrapolating.
+        :type extrapolator_fetch: int
         """
+
+
+        if not filter:
+            keep = keep or 50
+
+        if not resolver:
+            resolver_threshold = resolver_threshold or 0.1
+
+        if not extrapolator:
+            prune = extrapolator_prune or 1
+            fetch = extrapolator_fetch or 200
 
         """
         Tokenize the corpus.
         """
-        tokenizer = Tokenizer(stopwords=stopwords.words('english'),
-                              normalize_words=True, character_normalization_count=3,
-                              remove_unicode_entities=True)
+        tokenizer = tokenizer or Tokenizer(stopwords=stopwords.words('english'),
+                                           normalize_words=True, character_normalization_count=3,
+                                           remove_unicode_entities=True, stem=True)
 
         """
         Set up the DEPICT participant detector.
         """
         extractor = extractor or AnnotationExtractor(*args, **kwargs)
         scorer = scorer or TFScorer(*args, **kwargs)
-        filter = filter or RankFilter(keep=50, *args, **kwargs)
-        resolver = resolver or WikipediaSearchResolver(scheme, tokenizer, 0.1, corpus, *args, **kwargs)
-        extrapolator = extrapolator or WikipediaAttributeExtrapolator(prune=1, fetch=200, head_only=True, *args, **kwargs)
+        filter = filter or RankFilter(keep=keep, *args, **kwargs)
+        resolver = resolver or WikipediaSearchResolver(scheme, tokenizer, resolver_threshold, corpus, *args, **kwargs)
+        extrapolator = extrapolator or WikipediaAttributeExtrapolator(prune=prune, fetch=fetch, head_only=True, *args, **kwargs)
         postprocessor = postprocessor or WikipediaAttributePostprocessor(*args, **kwargs)
 
         super().__init__(extractor, scorer, filter, resolver, extrapolator, postprocessor)

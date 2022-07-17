@@ -26,17 +26,14 @@ from extrapolators.external import WikipediaExtrapolator
 from postprocessors import Postprocessor
 from postprocessors.external import WikipediaPostprocessor
 
-from nlp.document import Document
 from nlp.tokenizer import Tokenizer
-from objects.exportable import Exportable
-from vsm import vector_math
 
 class TestELDParticipantDetector(unittest.TestCase):
     """
     Test the implementation and results of the ELD participant detector.
     """
 
-    def test_custom_extractor(self):
+    def test_init_custom_extractor(self):
         """
         Test that when a custom extractor is given, it is used.
         """
@@ -45,7 +42,7 @@ class TestELDParticipantDetector(unittest.TestCase):
         apd = ELDParticipantDetector(extractor=EntityExtractor(), corpus=path)
         self.assertEqual(EntityExtractor, type(apd.extractor))
 
-    def test_custom_scorer(self):
+    def test_init_custom_scorer(self):
         """
         Test that when a custom scorer is given, it is used.
         """
@@ -54,7 +51,7 @@ class TestELDParticipantDetector(unittest.TestCase):
         apd = ELDParticipantDetector(scorer=LogTFScorer(), corpus=path)
         self.assertEqual(LogTFScorer, type(apd.scorer))
 
-    def test_custom_filter(self):
+    def test_init_custom_filter(self):
         """
         Test that when a custom filter is given, it is used.
         """
@@ -63,7 +60,7 @@ class TestELDParticipantDetector(unittest.TestCase):
         apd = ELDParticipantDetector(filter=ThresholdFilter(0.5), corpus=path)
         self.assertEqual(ThresholdFilter, type(apd.filter))
 
-    def test_custom_resolver(self):
+    def test_init_custom_resolver(self):
         """
         Test that when a custom resolver is given, it is used.
         """
@@ -72,7 +69,7 @@ class TestELDParticipantDetector(unittest.TestCase):
         apd = ELDParticipantDetector(resolver=Resolver(), corpus=path)
         self.assertEqual(Resolver, type(apd.resolver))
 
-    def test_custom_extrapolator(self):
+    def test_init_custom_extrapolator(self):
         """
         Test that when a custom extrapolator is given, it is used.
         """
@@ -81,7 +78,7 @@ class TestELDParticipantDetector(unittest.TestCase):
         apd = ELDParticipantDetector(extrapolator=Extrapolator(), corpus=path)
         self.assertEqual(Extrapolator, type(apd.extrapolator))
 
-    def test_custom_postprocessor(self):
+    def test_init_custom_postprocessor(self):
         """
         Test that when a custom postprocessor is given, it is used.
         """
@@ -90,7 +87,17 @@ class TestELDParticipantDetector(unittest.TestCase):
         apd = ELDParticipantDetector(postprocessor=Postprocessor(), corpus=path)
         self.assertEqual(Postprocessor, type(apd.postprocessor))
 
-    def test_default_configuration(self):
+    def test_init_custom_tokenizer(self):
+        """
+        Test that when a custom tokenizer is given, it is used.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '..', '..',  'tests', 'corpora', 'empty.json')
+        apd = ELDParticipantDetector(tokenizer=Tokenizer(stem=False), corpus=path)
+        self.assertFalse(apd.resolver.tokenizer.stem)
+        self.assertFalse(apd.extrapolator.tokenizer.stem)
+
+    def test_init_default_configuration(self):
         """
         Test the default configuration of the ELD participant detector.
         """
@@ -105,7 +112,7 @@ class TestELDParticipantDetector(unittest.TestCase):
         self.assertEqual(WikipediaExtrapolator, type(apd.extrapolator))
         self.assertEqual(WikipediaPostprocessor, type(apd.postprocessor))
 
-    def test_default_configuration_with_overload(self):
+    def test_init_default_configuration_with_overload(self):
         """
         Test the default configuration of the ELD participant detector when overloading certain components.
         """

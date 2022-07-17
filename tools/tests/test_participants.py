@@ -273,6 +273,20 @@ class TestAPD(unittest.TestCase):
         self.assertEqual(Extrapolator, type(detector.extrapolator))
         self.assertEqual(Postprocessor, type(detector.postprocessor))
 
+    def test_create_detector_depict_participant_detector_override_parameters(self):
+        """
+        Test that when creating the `DEPICTParticipantDetector`, certain parameters can be overriden.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        scheme = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        detector = apd.create_detector(DEPICTParticipantDetector, extractor=None, scorer=None, filter=None,
+                                       resolver=None, extrapolator=None, postprocessor=None, scheme=scheme, file=file,
+                                       keep=20, resolver_threshold=0.05, extrapolator_prune=2, extrapolator_fetch=100)
+        self.assertEqual(0.05, detector.resolver.threshold)
+        self.assertEqual(2, detector.extrapolator.prune)
+        self.assertEqual(100, detector.extrapolator.fetch)
+
     def test_create_detector_normalize_scores(self):
         """
         Test that when creating a detector with score normalization, the detector normalizes scores.
