@@ -17,7 +17,7 @@ for path in paths:
 
 import tools
 from tools import participants as apd
-from eventdt.apd import ELDParticipantDetector, ParticipantDetector
+from eventdt.apd import DEPICTParticipantDetector, ELDParticipantDetector, ParticipantDetector
 from eventdt.apd.extractors import *
 from eventdt.apd.scorers import *
 from eventdt.apd.filters import *
@@ -208,22 +208,68 @@ class TestAPD(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
-        self.assertRaises(ValueError, apd.create_detector, ParticipantDetector, EntityExtractor, TFScorer, ThresholdFilter, Resolver, Extrapolator, Postprocessor, file=file)
+        self.assertRaises(ValueError, apd.create_detector, ELDParticipantDetector, EntityExtractor, TFScorer, ThresholdFilter, Resolver, Extrapolator, Postprocessor, file=file)
 
     def test_create_detector_eld_participant_detector_override(self):
         """
-        Test that when creating the `ELDParticipantDetector`, the components can be overriden..
+        Test that when creating the `ELDParticipantDetector`, the components can be overriden.
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
         scheme = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
-        detector = apd.create_detector(ParticipantDetector, TokenExtractor, DFScorer, ThresholdFilter,
+        detector = apd.create_detector(ELDParticipantDetector, TokenExtractor, DFScorer, ThresholdFilter,
                                        TokenResolver, Extrapolator, Postprocessor,
                                        filter_threshold=0.2, scheme=scheme, file=file)
         self.assertEqual(TokenExtractor, type(detector.extractor))
         self.assertEqual(DFScorer, type(detector.scorer))
         self.assertEqual(ThresholdFilter, type(detector.filter))
         self.assertEqual(0.2, detector.filter.threshold)
+        self.assertEqual(Extrapolator, type(detector.extrapolator))
+        self.assertEqual(Postprocessor, type(detector.postprocessor))
+
+    def test_create_detector_depict_participant_detector_missing_scheme(self):
+        """
+        Test that when using the `DEPICTParticipantDetector` without a TF-IDF scheme, a ValueError is raised.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        self.assertRaises(ValueError, apd.create_detector, ELDParticipantDetector, EntityExtractor, TFScorer, ThresholdFilter, Resolver, Extrapolator, Postprocessor, file=file)
+
+    def test_create_detector_depict_participant_detector_default(self):
+        """
+        Test the default settings of the `DEPICTParticipantDetector`.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        scheme = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        detector = apd.create_detector(DEPICTParticipantDetector, extractor=None, scorer=None, filter=None,
+                                       resolver=None, extrapolator=None, postprocessor=None, scheme=scheme, file=file)
+        self.assertEqual(AnnotationExtractor.__name__, type(detector.extractor).__name__)
+        self.assertEqual(TFScorer.__name__, type(detector.scorer).__name__)
+        self.assertEqual(RankFilter.__name__, type(detector.filter).__name__)
+        self.assertEqual(50, detector.filter.keep)
+        self.assertEqual(WikipediaSearchResolver.__name__, type(detector.resolver).__name__)
+        self.assertEqual(0.1, detector.resolver.threshold)
+        self.assertEqual(WikipediaAttributeExtrapolator.__name__, type(detector.extrapolator).__name__)
+        self.assertEqual(1, detector.extrapolator.prune)
+        self.assertEqual(200, detector.extrapolator.fetch)
+        self.assertEqual(WikipediaAttributePostprocessor.__name__, type(detector.postprocessor).__name__)
+
+    def test_create_detector_depict_participant_detector_override(self):
+        """
+        Test that when creating the `DEPICTParticipantDetector`, the components can be overriden.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'understanding', 'CRYCHE-100.json')
+        scheme = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        detector = apd.create_detector(DEPICTParticipantDetector, TokenExtractor, DFScorer, ThresholdFilter,
+                                       TokenResolver, Extrapolator, Postprocessor,
+                                       filter_threshold=0.2, scheme=scheme, file=file)
+        self.assertEqual(TokenExtractor, type(detector.extractor))
+        self.assertEqual(DFScorer, type(detector.scorer))
+        self.assertEqual(ThresholdFilter, type(detector.filter))
+        self.assertEqual(0.2, detector.filter.threshold)
+        self.assertEqual(TokenResolver, type(detector.resolver))
         self.assertEqual(Extrapolator, type(detector.extrapolator))
         self.assertEqual(Postprocessor, type(detector.postprocessor))
 
@@ -649,16 +695,16 @@ class TestAPD(unittest.TestCase):
         extrapolator = apd.create_extrapolator(WikipediaAttributeExtrapolator, extrapolator_head_only=True)
         profiles = extrapolator._build_profiles(list(resolved.values()))
         self.assertEqual('Alaska', profiles['Alaska'].name)
-        self.assertEqual("Alaska ( (listen) ə-LAS-kə; Aleut: Alax̂sxax̂; Inupiaq: Alaasikaq; Alutiiq: Alas'kaaq; Yup'ik: Alaskaq; Tlingit: Anáaski) is a U.S. state located in the Western United States on the northwest extremity of North America.",
+        self.assertEqual("Alaska ( (listen) ə-LAS-kə; Aleut: Alax̂sxax̂; Inupiaq: Alaasikaq; Alutiiq: Alas'kaaq; Yup'ik: Alaskaq; Tlingit: Anáaski) is a state located in the Western United States on the northwest extremity of North America.",
                          profiles['Alaska'].text)
-        self.assertEqual({ 'is': { 'u.s. state' }, 'located_in': { 'western united states' }, 'located_on': { 'extremity' }, 'located_of': { 'north america' } }, profiles['Alaska'].attributes)
+        self.assertEqual({ 'is': { 'state' }, 'located_in': { 'western united states' }, 'located_on': { 'extremity' }, 'located_of': { 'north america' } }, profiles['Alaska'].attributes)
 
         extrapolator = apd.create_extrapolator(WikipediaAttributeExtrapolator, extrapolator_head_only=False)
         profiles = extrapolator._build_profiles(list(resolved.values()))
         self.assertEqual('Alaska', profiles['Alaska'].name)
-        self.assertEqual("Alaska ( (listen) ə-LAS-kə; Aleut: Alax̂sxax̂; Inupiaq: Alaasikaq; Alutiiq: Alas'kaaq; Yup'ik: Alaskaq; Tlingit: Anáaski) is a U.S. state located in the Western United States on the northwest extremity of North America.",
+        self.assertEqual("Alaska ( (listen) ə-LAS-kə; Aleut: Alax̂sxax̂; Inupiaq: Alaasikaq; Alutiiq: Alas'kaaq; Yup'ik: Alaskaq; Tlingit: Anáaski) is a state located in the Western United States on the northwest extremity of North America.",
                          profiles['Alaska'].text)
-        self.assertEqual({ 'is': { 'u.s. state' }, 'located_in': { 'western united states' }, 'located_on': { 'northwest extremity' }, 'located_of': { 'north america' } }, profiles['Alaska'].attributes)
+        self.assertEqual({ 'is': { 'state' }, 'located_in': { 'western united states' }, 'located_on': { 'northwest extremity' }, 'located_of': { 'north america' } }, profiles['Alaska'].attributes)
 
     def test_create_postprocessor_postprocessor(self):
         """

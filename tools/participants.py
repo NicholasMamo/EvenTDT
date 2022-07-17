@@ -44,7 +44,7 @@ Accepted arguments:
 
     - ``-f --file``                       *<Required>* The input corpus from where to extract participants.
     - ``-o --output``                     *<Required>* The path to the file where to store the extracted participants.
-    - ``-m --model``                      *<Optional>* The type of model to use; supported: `ELDParticipantDetector`; defaults to a normal participant detector.
+    - ``-m --model``                      *<Optional>* The type of model to use; supported: :class:`~apd.depict_participant_detector.DEPICTParticipantDetector`, :class:`~apd.eld_participant_detector.ELDParticipantDetector`; defaults to a standard participant detector.
     - ``--extractor``                     *<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `AnnotationExtractor`, `TokenExtractor`, `TwitterNEREntityExtractor`.
     - ``--scorer``                        *<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
     - ``--filter``                        *<Optional>* The filter to use to filter candidate participants; supported: `Filter`, `RankFilter`, `ThresholdFilter`; defaults to no filter.
@@ -80,7 +80,7 @@ sys.path.insert(-1, root)
 sys.path.insert(-1, lib)
 
 import tools
-from apd import ParticipantDetector, ELDParticipantDetector
+from apd import ParticipantDetector, DEPICTParticipantDetector, ELDParticipantDetector
 from apd.extractors import *
 from apd.scorers.local import *
 from apd.filters import Filter
@@ -108,7 +108,7 @@ def setup_args():
 
         - ``-f --file``                       *<Required>* The input corpus from where to extract participants.
         - ``-o --output``                     *<Required>* The path to the file where to store the extracted participants.
-        - ``-m --model``                      *<Optional>* The type of model to use; supported: `ELDParticipantDetector`; defaults to a normal participant detector.
+        - ``-m --model``                      *<Optional>* The type of model to use; supported: :class:`~apd.depict_participant_detector.DEPICTParticipantDetector`, :class:`~apd.eld_participant_detector.ELDParticipantDetector`; defaults to a standard participant detector.
         - ``--extractor``                     *<Optional>* The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `AnnotationExtractor`, `TokenExtractor`, `TwitterNEREntityExtractor`.
         - ``--scorer``                        *<Optional>* The scorer to use to score candidate participants; supported: `TFScorer` (default), `DFScorer`, `LogDFScorer`, `LogTFScorer`.
         - ``--filter``                        *<Optional>* The filter to use to filter candidate participants; supported: `Filter`, `RankFilter`, `ThresholdFilter`; defaults to no filter.
@@ -137,7 +137,7 @@ def setup_args():
     parser.add_argument('-o', '--output', type=str, required=True,
                         help='<Required> The path to the file where to store the extracted terms.')
     parser.add_argument('-m', '--model', type=model, required=False, default=ParticipantDetector,
-                        help='<Optional> The type of model to use; supported: `ELDParticipantDetector`; defaults to a normal participant detector.')
+                        help='<Optional> The type of model to use; supported: `DEPICTParticipantDetector`, `ELDParticipantDetector`; defaults to a standard participant detector.')
     parser.add_argument('--extractor', type=extractor, required=False, default=None,
                         help='<Optional> The extractor to use to extract candidate participants; supported: `EntityExtractor` (default), `AnnotationExtractor`, `TokenExtractor`, `TwitterNEREntityExtractor`.')
     parser.add_argument('--scorer', type=scorer, required=False, default=None,
@@ -325,9 +325,9 @@ def create_model(model, extractor, scorer, filter, resolver, extrapolator, postp
     :raises ValueError: When the TF-IDF scheme is not given.
     """
 
-    if model.__name__ == ELDParticipantDetector.__name__:
+    if model.__name__ in [ ELDParticipantDetector.__name__, DEPICTParticipantDetector.__name__ ]:
         if scheme is None:
-            raise ValueError("The TF-IDF scheme is required with the ELDParticipantDetector model.")
+            raise ValueError(f"The TF-IDF scheme is required with the `{ model.__name__ }` model.")
         scheme = tools.load(scheme)['tfidf']
         return model(scheme=scheme, extractor=extractor,
                      scorer=scorer, filter=filter, resolver=resolver,
@@ -493,6 +493,7 @@ def model(method):
     The accepted classes are:
 
         #. :class:`~apd.eld_participant_detector.ELDParticipantDetector`
+        #. :class:`~apd.depict_participant_detector.DEPICTParticipantDetector`
 
     :param method: The model string.
     :type method: str
@@ -503,6 +504,8 @@ def model(method):
 
     if method.lower() == 'eldparticipantdetector':
         return ELDParticipantDetector
+    if method.lower() == 'depictparticipantdetector':
+        return DEPICTParticipantDetector
 
     raise argparse.ArgumentTypeError(f"Invalid model: {method}")
 

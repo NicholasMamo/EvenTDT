@@ -24,6 +24,13 @@ class AnnotationExtractor(Extractor):
     The annotation extractor uses Twitter's own named entity annotations, extracting them from tweets and presenting them as candidate participants.
     """
 
+    def __init__(self, *args, **kwargs):
+        """
+        Initialize the extractor.
+        """
+
+        pass
+    
     def extract(self, corpus, *args, **kwargs):
         """
         Extract all the named entities from the corpus.

@@ -35,7 +35,7 @@ class EntityExtractor(Extractor):
     :vartype binary: bool
     """
 
-    def __init__(self, binary=True):
+    def __init__(self, binary=True, *args, **kwargs):
         """
         Create the extractor with the binary flag.
 
