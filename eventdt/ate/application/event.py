@@ -739,7 +739,7 @@ class EFICFEntropy(EFIDFEntropy):
 
     pass
 
-class EvATE(EFIDFEntropy):
+class EVATE(EFIDFEntropy):
     """
     An alias class for the :class:`~ate.application.event.EFIDFEntropy`.
     """

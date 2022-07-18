@@ -914,7 +914,7 @@ class TestEvent(unittest.TestCase):
 
     def test_evate_same_as_ef_idf_entropy(self):
         """
-        Test that EvATE's scores are the same as EF-IDF-Entropy's.
+        Test that EVATE's scores are the same as EF-IDF-Entropy's.
         """
 
         idf_path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'idf.json')
@@ -936,7 +936,7 @@ class TestEvent(unittest.TestCase):
         extractor = event.EFIDFEntropy(idf, base=2)
         terms = extractor.extract(timelines, idfs)
 
-        extractor = event.EvATE(idf, base=2)
+        extractor = event.EVATE(idf, base=2)
         self.assertEqual(terms, extractor.extract(timelines, idfs))
 
     def test_variability_no_idfs(self):
