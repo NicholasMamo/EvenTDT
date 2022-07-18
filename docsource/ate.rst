@@ -114,17 +114,29 @@ Logarithmic Event Frequency (EF)
    :members:
    :special-members:
 
-Event Frequency-Inverse Document Frequency (EF-IDF)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Event Frequency-Inverse Corpus Frequency (EF-ICF)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. autoclass:: ate.application.event.EFIDF
    :members:
    :special-members:
 
-Event Frequency-Inverse Document Frequency-Entropy (EF-IDF-Entropy)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. autoclass:: ate.application.event.EFICF
+   :members:
+   :special-members:
+
+EVent-Aware Term Extraction (EVATE)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. autoclass:: ate.application.event.EFIDFEntropy
+   :members:
+   :special-members:
+
+.. autoclass:: ate.application.event.EVATE
+   :members:
+   :special-members:
+
+.. autoclass:: ate.application.event.EFICFEntropy
    :members:
    :special-members:
 
