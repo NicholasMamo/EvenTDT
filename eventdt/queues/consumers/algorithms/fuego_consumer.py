@@ -952,7 +952,7 @@ class FUEGOConsumer(Consumer):
 
         return Cluster(vectors=node.topics).centroid
 
-class UELDConsumer(FUEGOConsumer):
+class SEERConsumer(FUEGOConsumer):
     """
     An alias class for the :class:`~queues.consumers.fuego_consumer.FUEGOConsumer`.
     """

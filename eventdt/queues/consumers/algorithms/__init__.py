@@ -12,5 +12,5 @@ To run these consumers, check out the :mod:`~tools.consume` tool.
 
 from .eld_consumer import ELDConsumer
 from .fire_consumer import FIREConsumer
-from .fuego_consumer import UELDConsumer, FUEGOConsumer
+from .fuego_consumer import SEERConsumer, FUEGOConsumer
 from .zhao_consumer import ZhaoConsumer
