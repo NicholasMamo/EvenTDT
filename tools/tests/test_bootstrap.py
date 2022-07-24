@@ -48,6 +48,22 @@ class TestBootstrap(unittest.TestCase):
             output = json.loads(''.join(f.readlines()))
             self.assertTrue(bootstrap.isOwn(output))
 
+    def test_is_own_terms_path(self):
+        """
+        Test that checking whether an output was produced by this tool returns true when given its own output.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "sample.json")
+        self.assertFalse(bootstrap.isOwn(file))
+
+    def test_is_own_bootstrap_path(self):
+        """
+        Test that checking whether an output was produced by this tool returns false when given another tool's output.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', "bootstrapped.json")
+        self.assertTrue(bootstrap.isOwn(file))
+
     def test_bootstrap_list(self):
         """
         Test that bootstrapping returns a list of keywords.
