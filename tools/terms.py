@@ -405,6 +405,20 @@ def isOwn(output):
 
     return 'terms' in output
 
+def load(output):
+    """
+    Load the terms from the given file.
+
+    :param output: A dictionary containing this tool's output.
+    :type output: dict
+
+    :return: A list of terms.
+    :rtype: list of str
+    """
+
+
+    return [ term['term'] for term in output['terms'] ]
+
 def create_extractor(method, tfidf=None, general=None, cutoff=None, base=None):
     """
     Instantiate the method based on the arguments that it accepts.
