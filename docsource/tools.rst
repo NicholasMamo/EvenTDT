@@ -88,7 +88,7 @@ Evaluation
 ATE
 ---
 
-.. automodule:: tools.evaluation.ate
+.. automodule:: tools.evaluation.terms
 
 =====
 Other
