@@ -48,6 +48,14 @@ class TestBootstrap(unittest.TestCase):
             output = json.loads(''.join(f.readlines()))
             self.assertTrue(bootstrap.isOwn(output))
 
+    def test_is_own_bootstrap_txt(self):
+        """
+        Test that checking whether an output was produced by this tool returns true when given its own output.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "gold.txt")
+        self.assertFalse(bootstrap.isOwn(file))
+
     def test_is_own_terms_path(self):
         """
         Test that checking whether an output was produced by this tool returns true when given its own output.
