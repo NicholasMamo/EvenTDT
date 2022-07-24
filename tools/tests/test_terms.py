@@ -25,6 +25,26 @@ class TestTerms(unittest.TestCase):
     Test the functionality of the terms tool.
     """
 
+    def test_is_own_terms(self):
+        """
+        Test that checking whether an output was produced by this tool returns true when given its own output.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "sample.json")
+        with open(file) as f:
+            output = json.loads(''.join(f.readlines()))
+            self.assertTrue(terms.isOwn(output))
+
+    def test_is_own_bootstrap(self):
+        """
+        Test that checking whether an output was produced by this tool returns false when given another tool's output.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', "bootstrapped.json")
+        with open(file) as f:
+            output = json.loads(''.join(f.readlines()))
+            self.assertFalse(terms.isOwn(output))
+
     def test_extract_no_files(self):
         """
         Test that when no files are given when extracting, a SystemExit is raised.

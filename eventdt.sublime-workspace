@@ -40,11 +40,10 @@
 	"buffers":
 	[
 		{
-			"file": "tools/consume.py",
+			"file": "tools/shareable.py",
 			"settings":
 			{
-				"buffer_size": 48907,
-				"encoding": "UTF-8",
+				"buffer_size": 7530,
 				"line_ending": "Unix"
 			}
 		}
@@ -208,6 +207,17 @@
 	],
 	"file_history":
 	[
+		"/home/nicholas/GitHub/EvenTDT/tools/to_tsv.py",
+		"/home/nicholas/GitHub/Embed2Detect/embed2detect/main.py",
+		"/home/nicholas/GitHub/Embed2Detect/embed2detect/event_word_extractor.py",
+		"/home/nicholas/GitHub/Embed2Detect/project_config.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/consume.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/tokenizer.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/tests/test_tokenizer.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/__init__.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/tdt/algorithms/__init__.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/fuego_consumer.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_consume.py",
 		"/home/nicholas/GitHub/EvenTDT/docsource/ate.rst",
 		"/home/nicholas/GitHub/EvenTDT/docsource/apd.rst",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/ate/application/event.py",
@@ -216,7 +226,6 @@
 		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_terms.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/ate/application/__init__.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/fuego_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/temp/event.json",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/tests/test_eld_participant_detector.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/depict_participant_detector.py",
@@ -224,7 +233,6 @@
 		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_participants.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/participants.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/eld_participant_detector.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/tokenizer.py",
 		"/home/nicholas/DATA/c3-apd/#CanadianGP-2022/temp.json",
 		"/home/nicholas/DATA/c3-apd/#CanadianGP-2022/participants-annotations-extrapolated.json",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/extrapolators/external/wikipedia_attribute_extrapolator.py",
@@ -250,9 +258,7 @@
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/eld_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/token_split_consumer.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/tests/test_fuego_consumer.py",
-		"/home/nicholas/GitHub/EvenTDT/tools/consume.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/tests/test_eld_consumer.py",
-		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_consume.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/logger/logger.py",
 		"/home/nicholas/DATA/c3-apd/#BritishGP-2022/participants-annotations-extrapolated-baseline.json",
 		"/home/nicholas/DATA/c3-apd/#BritishGP-2022/participants-twitterner-extrapolated.json",
@@ -305,6 +311,26 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"lib",
+			"resource_",
+			"data_analy",
+			"-",
+			"expand",
+			"timestamp",
+			"id",
+			"out_file",
+			"outfile",
+			"\\t",
+			"\\n",
+			"\t",
+			"U-ELD",
+			"SEERConsumer",
+			"ueld",
+			"test_ue",
+			"test_u",
+			"_ueld",
+			"ueld",
+			"UELD",
 			"IDF",
 			"Document",
 			"event",
@@ -412,27 +438,7 @@
 			"\\t",
 			"DEPICTParticipantDetector",
 			", ",
-			"ParticipantDetector",
-			"ELDParticipantDetector",
-			"eld_participant_detector",
-			"ELD",
-			"eld",
-			"ELD",
-			"eld",
-			"required",
-			"eldparticipant",
-			"`DEPICTParticipantDetector`, `ELDParticipantDetector`",
-			"fetch",
-			"prune",
-			"threshold",
-			"resolver",
-			"filter",
-			"apd",
-			"filter",
-			"50",
-			"WikipediaAttributeExtrapolator",
-			"external",
-			"WikipediaPostprocessor"
+			"ParticipantDetector"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -440,6 +446,11 @@
 		"regex": true,
 		"replace_history":
 		[
+			"\\t&\\t",
+			" \\\\\\\\ \\n",
+			"\\\\ \\n",
+			" & ",
+			"SEER",
 			"EVATE",
 			"    ",
 			"\\t&\\t",
@@ -468,20 +479,20 @@
 			[
 				{
 					"buffer": 0,
-					"file": "tools/consume.py",
+					"file": "tools/shareable.py",
 					"selected": true,
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 48907,
+						"buffer_size": 7530,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								3307,
+								3309
 							]
 						],
 						"settings":
@@ -491,7 +502,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2701.0,
+						"translation.y": 151.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -553,6 +564,30 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"share",
+				"tools/shareable.py"
+			],
+			[
+				"testtokenizer",
+				"eventdt/nlp/tests/test_tokenizer.py"
+			],
+			[
+				"tokei",
+				"eventdt/nlp/tokenizer.py"
+			],
+			[
+				"queuesconsumeralgo",
+				"eventdt/queues/consumers/algorithms/__init__.py"
+			],
+			[
+				"algorithmsinit",
+				"eventdt/tdt/algorithms/__init__.py"
+			],
+			[
+				"fuego",
+				"eventdt/queues/consumers/algorithms/fuego_consumer.py"
+			],
 			[
 				"consume",
 				"tools/consume.py"
@@ -790,10 +825,6 @@
 				"eventdt/queues/consumers/token_split_consumer.py"
 			],
 			[
-				"fuego",
-				"eventdt/queues/consumers/algorithms/fuego_consumer.py"
-			],
-			[
 				"logger",
 				"eventdt/logger/logger.py"
 			],
@@ -896,10 +927,6 @@
 			[
 				"testsharea",
 				"tools/tests/test_shareable.py"
-			],
-			[
-				"share",
-				"tools/shareable.py"
 			],
 			[
 				"testund",

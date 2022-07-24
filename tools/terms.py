@@ -392,6 +392,19 @@ def main():
     else:
         tools.save(args['output'], { 'cmd': cmd, 'pcmd': pcmd, 'terms': terms })
 
+def isOwn(output):
+    """
+    Check whether this tool produced the given output.
+
+    :param output: A dictionary containing the output of a tool.
+    :type output: dict
+
+    :return: A boolean indicating whether this tool produced the given output.
+    :rtype: bool
+    """
+
+    return 'terms' in output
+
 def create_extractor(method, tfidf=None, general=None, cutoff=None, base=None):
     """
     Instantiate the method based on the arguments that it accepts.
