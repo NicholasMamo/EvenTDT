@@ -2,6 +2,32 @@
 
 """
 A tool to formally model events extracted by the :mod:`~tools.consume` tool.
+
+To generate the formal event models, provide the input and output files.
+The input file should be a timeline or a list of timelines, one for each stream, generated with the :mod:`~tools.consume` tool.
+You can also specify a file where to store the metadata:
+
+.. code-block:: bash
+
+	./tools/concepts.py \\
+    --file data/timeline.json \\
+    --output data/models.json \\
+    --meta data/models.meta.json
+
+The output is a JSON file with one event model on each line:
+
+	{
+		"who": [ "Verstappen" ],
+		"what": [ "won", "race" ],
+		"where": [ "Spain" ],
+		"when": [ 1658688327 ]
+	}
+
+The full list of accepted arguments:
+
+    - ``-f --file``             *<Required>* A timeline file colleced using the :mod:`~tools.consume` tool.
+    - ``-o --output``           *<Required>* The file or directory where to save the event models.
+    - ``--meta``                *<Optional>* The file where to save the meta data.
 """
 
 import argparse
@@ -22,11 +48,22 @@ def setup_args():
 
     Accepted arguments:
 
+        - ``-f --file``             *<Required>* A timeline file colleced using the :mod:`~tools.consume` tool.
+        - ``-o --output``           *<Required>* The file or directory where to save the event models.
+        - ``--meta``                *<Optional>* The file where to save the meta data.
+
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
     """
 
     parser = argparse.ArgumentParser(description="Formally model timelines of events.")
+
+    parser.add_argument('-f', '--file', type=str, required=True,
+                        help='<Required> A timeline file colleced using the `consume` tool.')
+    parser.add_argument('-o', '--output', type=str, required=True,
+                        help='<Required> The file or directory where to save the event models.')
+    parser.add_argument('--meta', type=str, required=False,
+                        help='<Optional> The file where to save the meta data.')
 
     args = parser.parse_args()
     return args
@@ -40,6 +77,12 @@ def main():
 
     # get the meta arguments
     cmd, pcmd = tools.meta(args), tools.meta(args)
+
+    if args.meta:
+        tools.save(args.meta, { 'cmd': cmd, 'pcmd': pcmd })
+
+    models = model(args.file)
+    tools.save(args.output, models) # to create the directory if it doesn't exist
 
 def is_own(output):
     """
@@ -67,12 +110,12 @@ def load(output):
 
     return [ ]
 
-def model(timelines, *args, **kwargs):
+def model(file, *args, **kwargs):
 	"""
 	Formally model the given timelines.
 
-	:param timelines: A timeline, or a list of timelines.
-	:type timelines: :class:`~summarization.timeline.Timeline` or list of  :class:`~summarization.timeline.Timeline`
+	:param file: A path to the timeline file, generated using the :mod:`~tools.consume` tool.
+	:type file: str
 	
 	:return: A list of event models, one for each timeline.
     :rtype: list of :class:`~modeling.EventModel`
