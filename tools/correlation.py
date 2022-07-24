@@ -180,6 +180,23 @@ def isOwn(output):
 
     return 'correlations' in output
 
+def load(output):
+    """
+    Load the correlations from the given file.
+
+    :param output: A dictionary containing this tool's output or a path to it.
+    :type output: dict or str
+
+    :return: The correlations in the given output.
+    :rtype: dict
+    """
+
+    if tools.is_file(output):
+        with open(output) as file:
+            output = json.loads(''.join(file.readlines()))
+
+    return output['correlations']
+
 def load_terms(terms, max_terms=None):
     """
     Load the terms from the given list.

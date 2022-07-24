@@ -62,6 +62,30 @@ class TestCorrelation(unittest.TestCase):
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', "bootstrapped.json")
         self.assertFalse(correlation.isOwn(file))
 
+    def test_load_from_output(self):
+        """
+        Test that when loading terms from the output of the tool, they are loaded correctly.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', 'correlations.json')
+        with open(file) as f:
+            output = json.loads(''.join(f.readlines()))
+            _correlations = correlation.load(output)
+            original = output['correlations']
+        self.assertEqual(original, _correlations)
+
+    def test_load_from_path(self):
+        """
+        Test that when loading correlations from a filepath, they are loaded correctly.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', 'correlations.json')
+        with open(file) as f:
+            output = json.loads(''.join(f.readlines()))
+            original = output['correlations']
+        _correlations = correlation.load(file)
+        self.assertEqual(original, _correlations)
+
     def test_load_terms_all_terms(self):
         """
         Test that when loading terms and they are given explicitly, they are used.
