@@ -72,6 +72,12 @@ Topic Detection and Tracking
 
 .. automodule:: tools.consume
 
+==============
+Event Modeling
+==============
+
+.. automodule:: tools.model
+
 =============
 Summarization
 =============

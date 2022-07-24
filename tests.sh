@@ -191,14 +191,17 @@ tools_tests() {
 	echo -e "${HIGHLIGHT}Tools${DEFAULT}"
 	python3 -m unittest tools.tests.test_package
 
-	echo -e "${HIGHLIGHT}Bootstrap${DEFAULT}"
+	echo -e "${HIGHLIGHT}Bootstrapping${DEFAULT}"
 	python3 -m unittest tools.tests.test_bootstrap
 
-	echo -e "${HIGHLIGHT}Consumer${DEFAULT}"
-	python3 -m unittest tools.tests.test_consume
+	echo -e "${HIGHLIGHT}Collection${DEFAULT}"
+	python3 -m unittest tools.tests.test_collect
 
 	echo -e "${HIGHLIGHT}Concepts${DEFAULT}"
 	python3 -m unittest tools.tests.test_concepts
+
+	echo -e "${HIGHLIGHT}Consumer${DEFAULT}"
+	python3 -m unittest tools.tests.test_consume
 
 	echo -e "${HIGHLIGHT}Correlation${DEFAULT}"
 	python3 -m unittest tools.tests.test_correlation
@@ -206,17 +209,20 @@ tools_tests() {
 	echo -e "${HIGHLIGHT}IDF${DEFAULT}"
 	python3 -m unittest tools.tests.test_idf
 
+	echo -e "${HIGHLIGHT}Modeling${DEFAULT}"
+	python3 -m unittest tools.tests.test_model
+
 	echo -e "${HIGHLIGHT}Participants${DEFAULT}"
 	python3 -m unittest tools.tests.test_participants
+
+	echo -e "${HIGHLIGHT}Dataset sharing${DEFAULT}"
+	python3 -m unittest tools.tests.test_shareable
 
 	echo -e "${HIGHLIGHT}Summarization${DEFAULT}"
 	python3 -m unittest tools.tests.test_summarize
 
-	echo -e "${HIGHLIGHT}ATE${DEFAULT}"
+	echo -e "${HIGHLIGHT}Term extraction${DEFAULT}"
 	python3 -m unittest tools.tests.test_terms
-
-	echo -e "${HIGHLIGHT}Shareable${DEFAULT}"
-	python3 -m unittest tools.tests.test_shareable
 
 	echo -e "${HIGHLIGHT}Tokenizer${DEFAULT}"
 	python3 -m unittest tools.tests.test_tokenizer

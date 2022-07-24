@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"bootstr",
+				"bootstrapped-new"
+			],
+			[
+				"bootsr",
+				"bootstrap"
+			],
+			[
 				"EF",
 				"EFIDF"
 			],
@@ -39,14 +47,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "tools/shareable.py",
-			"settings":
-			{
-				"buffer_size": 7530,
-				"line_ending": "Unix"
-			}
-		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -60,12 +60,20 @@
 		"selected_items":
 		[
 			[
-				"split",
-				"File: Split View"
-			],
-			[
 				"pretti",
 				"Pretty JSON: Format JSON Lines"
+			],
+			[
+				"prett",
+				"Pretty JSON: Format JSON"
+			],
+			[
+				"theme",
+				"UI: Select Theme"
+			],
+			[
+				"split",
+				"File: Split View"
 			],
 			[
 				"remove pa",
@@ -81,10 +89,6 @@
 			],
 			[
 				"pret",
-				"Pretty JSON: Format JSON"
-			],
-			[
-				"prett",
 				"Pretty JSON: Format JSON"
 			],
 			[
@@ -133,10 +137,6 @@
 			],
 			[
 				"scheme",
-				"UI: Select Color Scheme"
-			],
-			[
-				"theme",
 				"UI: Select Color Scheme"
 			],
 			[
@@ -200,38 +200,60 @@
 	},
 	"expanded_folders":
 	[
-		"/home/nicholas/GitHub/EvenTDT",
-		"/home/nicholas/GitHub/EvenTDT/eventdt",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/apd",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/tests"
+		"/home/nicholas/GitHub/EvenTDT"
 	],
 	"file_history":
 	[
+		"/home/nicholas/GitHub/EvenTDT/docsource/tools.rst",
+		"/home/nicholas/GitHub/EvenTDT/tools/evaluation/terms.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/evaluation/tests/test_terms.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/correlation.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/evaluation/ate.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/ate/correlations.json",
+		"/home/nicholas/GitHub/EvenTDT/tools/bootstrap.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_summarize.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/summarize.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/ate/application/tests/test_event.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/ate/application/event.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/idf.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_idf.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/consume.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_consume.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/__init__.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/idf.json",
+		"/home/nicholas/GitHub/EvenTDT/tools/concepts.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_concepts.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/timelines/#ParmaMilan-streams.json",
+		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_bootstrap.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/participants.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_participants.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/terms.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_correlation.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_terms.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/__init__.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/ate/gold.txt",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/ate/empty.txt",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/bootstrapping/bootstrapped.json",
+		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_package.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/ate/sample.json",
+		"/home/nicholas/GitHub/EvenTDT/temp/sample.json",
+		"/home/nicholas/GitHub/EvenTDT/tools/shareable.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/to_tsv.py",
 		"/home/nicholas/GitHub/Embed2Detect/embed2detect/main.py",
 		"/home/nicholas/GitHub/Embed2Detect/embed2detect/event_word_extractor.py",
 		"/home/nicholas/GitHub/Embed2Detect/project_config.py",
-		"/home/nicholas/GitHub/EvenTDT/tools/consume.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/tokenizer.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/tests/test_tokenizer.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/tdt/algorithms/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/fuego_consumer.py",
-		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_consume.py",
 		"/home/nicholas/GitHub/EvenTDT/docsource/ate.rst",
 		"/home/nicholas/GitHub/EvenTDT/docsource/apd.rst",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/ate/application/event.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/ate/application/tests/test_event.py",
-		"/home/nicholas/GitHub/EvenTDT/tools/terms.py",
-		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_terms.py",
-		"/home/nicholas/GitHub/EvenTDT/tools/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/ate/application/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/temp/event.json",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/tests/test_eld_participant_detector.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/depict_participant_detector.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/tests/test_depict_participant_detector.py",
-		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_participants.py",
-		"/home/nicholas/GitHub/EvenTDT/tools/participants.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/eld_participant_detector.py",
 		"/home/nicholas/DATA/c3-apd/#CanadianGP-2022/temp.json",
 		"/home/nicholas/DATA/c3-apd/#CanadianGP-2022/participants-annotations-extrapolated.json",
@@ -267,11 +289,9 @@
 		"/home/nicholas/DATA/c3-apd/#BritishGP-2022/participants-ner-extrapolated-baseline.json",
 		"/home/nicholas/DATA/c3-apd/#BritishGP-2022/participants-annotations-extrapolated.json",
 		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_shareable.py",
-		"/home/nicholas/GitHub/EvenTDT/tools/shareable.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/venv/lib/python3.8/site-packages/urllib3/util/queue.py",
 		"/run/user/1000/gvfs/sftp:host=vps-storage,user=memonick/data/phd-data/fuego-sampled/meta/#HUNFRA-v3-b0.8-r0.08-grouped.csv.meta",
-		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_package.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/twitter/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/twitter/file/simulated_reader.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/twitter/listeners/tweet_listener.py",
@@ -281,7 +301,6 @@
 		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/timelines/TOTLEI.json",
 		"/home/nicholas/GitHub/EvenTDT/temp/shared.json",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/timelines/CRYCHE.json",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/timelines/#ParmaMilan-streams.json",
 		"/home/nicholas/GitHub/EvenTDT/tools/meta.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/cluster_node.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/vsm/clustering/cluster.py",
@@ -289,20 +308,20 @@
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/tests/test_understanding_modeler.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/understanding_modeler.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/idf.json",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/document_node.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/scorers/local/log_df_scorer.py"
 	],
 	"find":
 	{
-		"height": 23.0
+		"height": 44.0
 	},
 	"find_in_files":
 	{
 		"height": 122.0,
 		"where_history":
 		[
+			"",
+			"tools/*.py",
 			""
 		]
 	},
@@ -311,134 +330,134 @@
 		"case_sensitive": true,
 		"find_history":
 		[
-			"lib",
-			"resource_",
-			"data_analy",
-			"-",
-			"expand",
-			"timestamp",
-			"id",
-			"out_file",
-			"outfile",
-			"\\t",
-			"\\n",
-			"\t",
-			"U-ELD",
-			"SEERConsumer",
-			"ueld",
-			"test_ue",
-			"test_u",
-			"_ueld",
-			"ueld",
-			"UELD",
-			"IDF",
-			"Document",
-			"event",
-			"EvATE",
-			"param",
-			"EFIDFEntropy",
-			"EvATE",
-			"EFIDFEntropy",
-			"EF",
-			"F",
-			"EFIDF",
-			"The TF-IDF scheme to use to extract terms (used only with the :class:`~ate.stat.tfidf.TFIDFExtractor` and the :class:`~ate.application.event.EFIDF` methods).",
-			"-DCF",
-			"`TF-IDF`",
-			"TF-IDF",
-			"-",
-			"`EF-IDF-Entropy`",
-			"The IDF files to use to calculate entropy (used only with the :class:`~ate.application.event.EFIDFEntropy` method)",
-			"tfidf",
-			"TFIDF",
-			"tfidf",
-			"EF-ICF",
-			"The method to use to extract domain-specific terms; supported: `TF`, `TFIDF`, `Rank`, `Specificity`, `TFDCF`, `EF`, `LogEF`, `EF-ICF` (or `EF-IDF`)",
-			"help='<Required> The method to use to extract domain-specific terms; supported: `TF`, `TFIDF`, `Rank`, `Specificity`, `TFDCF`, `EF`, `LogEF`, `EF-ICF` (or `EF-IDF`)",
-			"`EF-IDF`",
-			":class:`~ate.application.event.EFIDFEntropy` method",
-			"EFIDFEntropy",
-			"normalized",
-			"normalized``           *",
-			"EFIDFEntropy",
-			" <",
-			"EFIDF",
-			"EFICF",
-			"-",
-			"EFICFEntropy",
-			"eficfentropy",
-			"D",
-			"EvATE",
-			"EFIDF",
-			"EvATE",
-			"evate",
-			"EFIDF",
-			"EvATE",
-			"evate",
-			"FUEGOConsumer",
-			"eficfentropy",
-			"test_default",
-			"test_",
-			"resolver",
-			"DEPICTParticipantDetector",
-			"test_custom",
-			"logger",
-			"Tokenizer",
-			"tokenizer",
-			"postprocessor",
-			"tokenizer",
-			"prune",
-			"threshold",
-			"resolver",
-			"filter",
-			"kobayashi",
-			"16510026049178714",
-			"extrapolated",
-			"16510026049178714",
-			"20833333333333334",
-			"24186750988410025",
-			"2692669271584538",
-			"29243280438100044",
-			"0",
-			"extrapolated",
-			"None",
-			"ivar",
-			"threshold",
-			"tokenizer",
-			"f\"",
-			"print",
-			"= ",
-			", ",
-			"keep",
-			"0",
-			"1",
-			"0",
-			"prune",
-			"keep",
-			"=",
-			"True",
-			"200",
-			"prune",
-			"50",
-			"apd.",
-			", type",
-			"Postprocessor",
-			"Extrapolator",
-			"TokenResolver",
-			"ThresholdFilter",
-			"DFScorer",
-			"TokenExtractor",
-			"..",
-			"WikipediaSearchResolver",
-			"filter",
-			"apd",
-			"[4]",
-			"/əˈlæskə/ ",
-			"Alaska ( (listen) ə-LAS-kə; Aleut: Alax̂sxax̂; Inupiaq: Alaasikaq; Alutiiq: Alas'kaaq; Yup'ik: Alaskaq; Tlingit: Anáaski) is a U.S. state located in the Western United States on the northwest extremity of North America.",
-			"\\t",
-			"DEPICTParticipantDetector",
-			", ",
-			"ParticipantDetector"
+			"ate",
+			"ATE",
+			"ate.py",
+			"evaluation/ate",
+			"load_",
+			"load_timeline",
+			"timeline",
+			"idf",
+			"timeline",
+			"self.assertEqual(original, _idf)",
+			"output['tfidf']",
+			"output",
+			"Exportable",
+			"original = output['timeline']",
+			"tools",
+			"consume",
+			"load_",
+			"timeline",
+			"append",
+			"CRYCHE",
+			"timeline",
+			"timelines",
+			".. warn",
+			"load_",
+			"timelines",
+			"consume",
+			"['idf",
+			"'idf",
+			"idf",
+			"tetirms",
+			"timeline",
+			"timelines', '#ParmaMilan-streams",
+			"consume",
+			"'idf'",
+			"timelines",
+			"concepts",
+			"load_",
+			"timelines",
+			"_timelines",
+			"timelines.load",
+			"concepts",
+			"ate",
+			"correlations",
+			"concepts",
+			"ate', \"concepts.json",
+			"ate",
+			"load_",
+			"seed",
+			"terms",
+			"boots",
+			"terms",
+			"term_file",
+			"load_",
+			"load_seed",
+			"is_filed",
+			"output",
+			"bootstrapping",
+			"output",
+			"bootstrapping",
+			"bootstrap",
+			"term",
+			"terms",
+			"term",
+			"terms",
+			"isOwn",
+			"terms",
+			"output",
+			"isOwn",
+			"json",
+			"_bootstrap",
+			"bootstrap",
+			"load_seed",
+			"tools.terms",
+			"terms",
+			"seeds",
+			"candidate_list",
+			"candidate_file",
+			"seed_file",
+			"seed_list",
+			"postprocessed",
+			"terms",
+			"correlations",
+			"_correlations",
+			"correlation.load",
+			"'ate', 'correlations",
+			"correlations",
+			"correlation",
+			"'ate', ",
+			"correlations",
+			"concept.load",
+			"correlation",
+			")\n",
+			"correlation",
+			"correlations",
+			"correlation",
+			"correlations",
+			"correlations.load",
+			"terms",
+			"sample",
+			"terms.isOwn",
+			"terms.",
+			"sample",
+			"own_bootstrap",
+			"own_terms",
+			"load_terms",
+			"ddafile",
+			"s[0]",
+			"terms = bootstrap.load(files)",
+			"files = [ ",
+			"correlation.load_terms",
+			"test_load_terms_",
+			"data",
+			"(self",
+			"output",
+			"string",
+			"output",
+			"f.readlines())",
+			"_terms = terms.load(files)",
+			"terms = ",
+			"correlation",
+			"with open(files[0]) as f:",
+			"files = [ ",
+			"files",
+			"test_load_terms",
+			"files = [ os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'seed.json') ]\n        terms = correlation.load_terms(files)\n        self.assertTrue(all( type(term) is str for term in terms ))\n        with open(files[0]) as f:\n            original = json.loads(''.join(f.readlines()))['terms']\n            original = [ term['term'] for term in original ]\n        self.assertEqual(len(original), len(terms))",
+			"data",
+			"term",
+			"terms"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -446,6 +465,7 @@
 		"regex": true,
 		"replace_history":
 		[
+			"is_own",
 			"\\t&\\t",
 			" \\\\\\\\ \\n",
 			"\\\\ \\n",
@@ -477,38 +497,6 @@
 		{
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "tools/shareable.py",
-					"selected": true,
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 7530,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3307,
-								3309
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 151.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"stack_multiselect": false,
-					"type": "text"
-				}
 			]
 		}
 	],
@@ -518,7 +506,7 @@
 	},
 	"input":
 	{
-		"height": 0.0
+		"height": 39.0
 	},
 	"layout":
 	{
@@ -565,6 +553,194 @@
 		"selected_items":
 		[
 			[
+				"correlat",
+				"tools/correlation.py"
+			],
+			[
+				"corerlations",
+				"eventdt/tests/corpora/ate/correlations.json"
+			],
+			[
+				"bootstra",
+				"tools/bootstrap.py"
+			],
+			[
+				"ate.py",
+				"tools/evaluation/ate.py"
+			],
+			[
+				"testsummar",
+				"tools/tests/test_summarize.py"
+			],
+			[
+				"summarize.",
+				"tools/summarize.py"
+			],
+			[
+				"testevent",
+				"eventdt/ate/application/tests/test_event.py"
+			],
+			[
+				"testidf",
+				"tools/tests/test_idf.py"
+			],
+			[
+				"idf",
+				"tools/idf.py"
+			],
+			[
+				"timelineinit",
+				"eventdt/summarization/timeline/__init__.py"
+			],
+			[
+				"testconsume",
+				"tools/tests/test_consume.py"
+			],
+			[
+				"consume",
+				"tools/consume.py"
+			],
+			[
+				"consu",
+				"tools/consume.py"
+			],
+			[
+				"idj",
+				"eventdt/tests/corpora/idf.json"
+			],
+			[
+				"testconsue",
+				"tools/tests/test_consume.py"
+			],
+			[
+				"testconce",
+				"tools/tests/test_concepts.py"
+			],
+			[
+				"parmamilan",
+				"eventdt/tests/corpora/timelines/#ParmaMilan-streams.json"
+			],
+			[
+				"concepts",
+				"tools/concepts.py"
+			],
+			[
+				"bootstr",
+				"tools/bootstrap.py"
+			],
+			[
+				"testconcep",
+				"tools/tests/test_concepts.py"
+			],
+			[
+				"testparti",
+				"tools/tests/test_participants.py"
+			],
+			[
+				"partici",
+				"tools/participants.py"
+			],
+			[
+				"testboots",
+				"tools/tests/test_bootstrap.py"
+			],
+			[
+				"correlation",
+				"tools/correlation.py"
+			],
+			[
+				"toolsinit",
+				"tools/__init__.py"
+			],
+			[
+				"ate/.txt",
+				"eventdt/tests/corpora/ate/gold.txt"
+			],
+			[
+				"ate/txt",
+				"eventdt/tests/corpora/ate/empty.txt"
+			],
+			[
+				"testterms",
+				"tools/tests/test_terms.py"
+			],
+			[
+				"terms",
+				"tools/terms.py"
+			],
+			[
+				"testboot",
+				"tools/tests/test_bootstrap.py"
+			],
+			[
+				"terms.",
+				"tools/terms.py"
+			],
+			[
+				"testpartici",
+				"tools/tests/test_participants.py"
+			],
+			[
+				"participant",
+				"tools/participants.py"
+			],
+			[
+				"corre",
+				"tools/correlation.py"
+			],
+			[
+				"testcorrela",
+				"tools/tests/test_correlation.py"
+			],
+			[
+				"concep",
+				"tools/concepts.py"
+			],
+			[
+				"testcorre",
+				"tools/tests/test_correlation.py"
+			],
+			[
+				"correla",
+				"tools/correlation.py"
+			],
+			[
+				"bootstrapped",
+				"eventdt/tests/corpora/bootstrapping/bootstrapped.json"
+			],
+			[
+				"testbootstr",
+				"tools/tests/test_bootstrap.py"
+			],
+			[
+				"toolstestpackag",
+				"tools/tests/test_package.py"
+			],
+			[
+				"tools",
+				"tools/__init__.py"
+			],
+			[
+				"sampl",
+				"eventdt/tests/corpora/ate/sample.json"
+			],
+			[
+				"sample",
+				"temp/sample.json"
+			],
+			[
+				"testcorrel",
+				"tools/tests/test_correlation.py"
+			],
+			[
+				"testboo",
+				"tools/tests/test_bootstrap.py"
+			],
+			[
+				"boots",
+				"tools/bootstrap.py"
+			],
+			[
 				"share",
 				"tools/shareable.py"
 			],
@@ -589,10 +765,6 @@
 				"eventdt/queues/consumers/algorithms/fuego_consumer.py"
 			],
 			[
-				"consume",
-				"tools/consume.py"
-			],
-			[
 				"ate",
 				"docsource/ate.rst"
 			],
@@ -601,24 +773,8 @@
 				"docsource/apd.rst"
 			],
 			[
-				"toolsinit",
-				"tools/__init__.py"
-			],
-			[
-				"testterms",
-				"tools/tests/test_terms.py"
-			],
-			[
 				"applicationin",
 				"eventdt/ate/application/__init__.py"
-			],
-			[
-				"testevent",
-				"eventdt/ate/application/tests/test_event.py"
-			],
-			[
-				"terms",
-				"tools/terms.py"
 			],
 			[
 				"fuegoc",
@@ -737,10 +893,6 @@
 				"eventdt/apd/tests/test_depict_participant_detector.py"
 			],
 			[
-				"testpartici",
-				"tools/tests/test_participants.py"
-			],
-			[
 				"apdinit",
 				"eventdt/apd/__init__.py"
 			],
@@ -801,10 +953,6 @@
 				"eventdt/attributes/extractors/linguistic.py"
 			],
 			[
-				"partici",
-				"tools/participants.py"
-			],
-			[
 				"eldconsumer",
 				"eventdt/queues/consumers/algorithms/eld_consumer.py"
 			],
@@ -831,10 +979,6 @@
 			[
 				"testeldcons",
 				"eventdt/queues/consumers/algorithms/tests/test_eld_consumer.py"
-			],
-			[
-				"testconsume",
-				"tools/tests/test_consume.py"
 			],
 			[
 				"fuegocons",
@@ -919,30 +1063,6 @@
 			[
 				"nodeinit",
 				"eventdt/summarization/timeline/nodes/__init__.py"
-			],
-			[
-				"node",
-				"eventdt/summarization/timeline/nodes/topical_cluster_node.py"
-			],
-			[
-				"testsharea",
-				"tools/tests/test_shareable.py"
-			],
-			[
-				"testund",
-				"eventdt/modeling/modelers/tests/test_understanding_modeler.py"
-			],
-			[
-				"understand",
-				"eventdt/modeling/modelers/understanding_modeler.py"
-			],
-			[
-				"close",
-				"eventdt/apd/scorers/local/log_df_scorer.py"
-			],
-			[
-				"timeline/",
-				"eventdt/summarization/timeline/__init__.py"
 			]
 		],
 		"width": 0.0
@@ -976,7 +1096,7 @@
 	"show_minimap": false,
 	"show_open_files": false,
 	"show_tabs": true,
-	"side_bar_visible": false,
+	"side_bar_visible": true,
 	"side_bar_width": 263.0,
 	"status_bar_visible": true,
 	"template_settings":
