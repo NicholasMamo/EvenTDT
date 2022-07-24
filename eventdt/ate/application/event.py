@@ -9,13 +9,16 @@ import sys
 
 paths = [ os.path.join(os.path.dirname(__file__), '..', '..'),
           os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tools') ]
-if path not in sys.path:
-    sys.path.append(path)
+for path in paths:
+    if path not in sys.path:
+        sys.path.append(path)
 
 from ate.bootstrapping import probability
 from ate.extractor import Extractor
 from objects.exportable import Exportable
-from tools import consume
+
+import tools
+from tools import consume, idf
 
 class EF(Extractor):
     """
@@ -88,21 +91,17 @@ class EF(Extractor):
         _timelines = [ ]
 
         for timeline in timelines:
-            if type(timeline) is str:
-                with open(timeline, 'r') as f:
-                    data = json.loads(''.join(f.readlines()))
-
-                    """
-                    Decode the timeline.
-                    """
-                    data = Exportable.decode(data)
-                    if 'timeline' not in data:
-                        raise ValueError(f"The event frequency extractor requires a timeline file, received { ', '.join(list(data.keys())) }")
-                    _timeline = data['timeline']
+            if tools.is_file(timeline):
+                if consume.is_own(timeline):
+                    _timeline  = consume.load(timeline)
                     if type(_timeline) is list:
                         _timelines.extend(_timeline)
                     else:
                         _timelines.append(_timeline)
+                else:
+                    with open(timeline) as f:
+                        data = json.loads(''.join(f.readlines()))
+                        raise ValueError(f"The event frequency extractor requires a timeline file, received { ', '.join(list(data.keys())) } in { timeline }")
             else:
                 _timelines.append(timeline)
 
@@ -436,20 +435,16 @@ class Variability(Extractor):
 
         _idfs = [ ]
 
-        for idf in idfs:
-            if type(idf) is str:
-                with open(idf, 'r') as f:
-                    data = json.loads(''.join(f.readlines()))
-
-                    """
-                    Decode the TF-IDF scheme.
-                    """
-                    data = Exportable.decode(data)
-                    if 'tfidf' not in data:
-                        raise ValueError(f"The variability extractor requires a TF-IDF file, received { ', '.join(list(data.keys())) }")
-                    _idfs.append(data['tfidf'])
+        for _idf in idfs:
+            if tools.is_file(_idf):
+                if idf.is_own(_idf):
+                    _idfs.append(idf.load(_idf))
+                else:
+                    with open(_idf) as f:
+                        data = json.loads(''.join(f.readlines()))
+                        raise ValueError(f"The variability extractor requires a TF-IDF file, received { ', '.join(list(data.keys())) } in { _idf }")
             else:
-                _idfs.append(idf)
+                _idfs.append(_idf)
 
         return _idfs
 
@@ -637,22 +632,19 @@ class Entropy(Extractor):
 
         _idfs = [ ]
 
-        for idf in idfs:
-            if type(idf) is str:
-                with open(idf, 'r') as f:
-                    data = json.loads(''.join(f.readlines()))
-
-                    """
-                    Decode the TF-IDF scheme.
-                    """
-                    data = Exportable.decode(data)
-                    if 'tfidf' not in data:
-                        raise ValueError(f"The entropy extractor requires a TF-IDF file, received { ', '.join(list(data.keys())) }")
-                    _idfs.append(data['tfidf'])
+        for _idf in idfs:
+            if tools.is_file(_idf):
+                if idf.is_own(_idf):
+                    _idfs.append(idf.load(_idf))
+                else:
+                    with open(_idf) as f:
+                        data = json.loads(''.join(f.readlines()))
+                        raise ValueError(f"The variability extractor requires a TF-IDF file, received { ', '.join(list(data.keys())) } in { _idf }")
             else:
-                _idfs.append(idf)
+                _idfs.append(_idf)
 
         return _idfs
+
 
     def _vocabulary(self, idfs):
         """
