@@ -500,7 +500,7 @@ def load(output):
     :type output: dict or str
 
     :return: The timelines in the given output.
-    :rtype: dict
+    :rtype: :class:`summarization.timeline.Timeline` or list of :class:`summarization.timeline.Timeline`
     """
 
     if tools.is_file(output):
