@@ -76,7 +76,7 @@ class TestConsume(unittest.TestCase):
 
     def test_load_from_output(self):
         """
-        Test that when loading terms from the output of the tool, they are loaded correctly.
+        Test that when loading timelines from the output of the tool, they are loaded correctly.
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', '#ParmaMilan-streams.json')

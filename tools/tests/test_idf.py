@@ -66,6 +66,30 @@ class TestIDF(unittest.TestCase):
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', "bootstrapped.json")
         self.assertFalse(idf.is_own(file))
 
+    def test_load_from_output(self):
+        """
+        Test that when loading the IDF from the output of the tool, they are loaded correctly.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        with open(file) as f:
+            output = json.loads(''.join(f.readlines()))
+            _idf = idf.load(output)
+            original = output['tfidf']
+        self.assertEqual(original, _idf)
+
+    def test_load_from_path(self):
+        """
+        Test that when loading the IDF from a filepath, they are loaded correctly.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        with open(file) as f:
+            output = json.loads(''.join(f.readlines()))
+            original = output['tfidf']
+        _idf = idf.load(file)
+        self.assertEqual(original, _idf)
+
     def test_construct_all_lines(self):
         """
         Test that when creating an IDF table, the number of documents is equal to the number of lines.

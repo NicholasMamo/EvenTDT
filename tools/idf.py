@@ -178,6 +178,23 @@ def is_own(output):
 
     return 'tfidf' in output
 
+def load(output):
+    """
+    Load the timelines from the given file.
+
+    :param output: A dictionary containing this tool's output or a path to it.
+    :type output: dict or str
+
+    :return: The timelines in the given output.
+    :rtype: dict
+    """
+
+    if tools.is_file(output):
+        with open(output) as file:
+            output = json.loads(''.join(file.readlines()))
+
+    return output['tfidf']
+
 def construct(file, remove_retweets=False, skip_unverified=False, *args, **kwargs):
     """
     Construct the TF-IDF scheme from the file.
