@@ -492,6 +492,23 @@ def is_own(output):
 
     return 'timeline' in output
 
+def load(output):
+    """
+    Load the timelines from the given file.
+
+    :param output: A dictionary containing this tool's output or a path to it.
+    :type output: dict or str
+
+    :return: The timelines in the given output.
+    :rtype: dict
+    """
+
+    if tools.is_file(output):
+        with open(output) as file:
+            output = json.loads(''.join(file.readlines()))
+
+    return output['timeline']
+
 def understand(understanding, consumer, sample, max_inactivity, skip_retweets, skip_unverified, scheme=None, *args, **kwargs):
     """
     Run the understanding process.

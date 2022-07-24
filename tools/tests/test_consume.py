@@ -74,6 +74,30 @@ class TestConsume(unittest.TestCase):
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', "bootstrapped.json")
         self.assertFalse(consume.is_own(file))
 
+    def test_load_from_output(self):
+        """
+        Test that when loading terms from the output of the tool, they are loaded correctly.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', '#ParmaMilan-streams.json')
+        with open(file) as f:
+            output = json.loads(''.join(f.readlines()))
+            timelines = consume.load(output)
+            original = output['timeline']
+        self.assertEqual(original, timelines)
+
+    def test_load_from_path(self):
+        """
+        Test that when loading timelines from a filepath, they are loaded correctly.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', '#ParmaMilan-streams.json')
+        with open(file) as f:
+            output = json.loads(''.join(f.readlines()))
+            original = output['timeline']
+        timelines = consume.load(file)
+        self.assertEqual(original, timelines)
+
     def test_filters_all_words(self):
         """
         Test that when loading the filter tokens, all words are returned.
