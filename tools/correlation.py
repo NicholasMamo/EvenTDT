@@ -198,7 +198,7 @@ def load(output):
 
     return output['correlations']
 
-def load_terms(terms, max_terms=None):
+def load_terms(files, max_terms=None):
     """
     Load the terms from the given list.
     If a list includes files, they are parsed accordingly:
@@ -206,9 +206,9 @@ def load_terms(terms, max_terms=None):
     - If the file is the output of the ``terms`` tool, all terms are loaded from it.
     - If the file is the output of the ``bootstrap`` tool, the seed words and the bootstrapped words are loaded from it.
 
-    :param terms: A list of terms, or the path to the file containing a list of terms for which to calculate the correlation.
+    :param files: A list of terms, or the path to the file containing a list of terms for which to calculate the correlation.
                   It can be the output from the ``terms`` and ``bootstrap`` tool.
-    :type terms: list of str
+    :type files: list of str
     :param max_terms: The maximum number of terms to keep.
                       The priority of the terms is the order in which they are given.
                       If ``None`` is given, all terms are retained.
@@ -225,28 +225,14 @@ def load_terms(terms, max_terms=None):
 
     _terms = [ ]
 
-    for term in terms:
-        if tools.is_file(term):
-            if terms.is_own()
-
-            with open(term) as f:
-                data = json.loads(''.join(f.readlines()))
-
-                """
-                Check if this is the output of a tool.
-                """
-                if 'cmd' in data or 'meta' in data:
-                    meta = data['pcmd'] if 'pcmd' in data else data['meta']
-                    if 'seed' in meta:
-                        _terms.extend(meta['seed'])
-                        if data['bootstrapped'] and type(data['bootstrapped'][0]) is str:
-                            _terms.extend(data['bootstrapped'])
-                        else:
-                            _terms.extend([ term['term'] for term in data['bootstrapped'] ])
-                    elif 'terms' in data:
-                        _terms.extend([ term['term'] for term in data['terms'] ])
+    for file in files:
+        if tools.is_file(file):
+            if terms.is_own(file):
+                _terms.extend(terms.load(file))
+            elif bootstrap.is_own(file):
+                _terms.extend(bootstrap.load(file))
         else:
-            _terms.append(term)
+            _terms.append(file)
 
     max_terms = max_terms if max_terms else len(_terms)
     return _terms[:max_terms]
