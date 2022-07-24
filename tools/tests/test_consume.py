@@ -30,7 +30,7 @@ class TestConsume(unittest.TestCase):
     Test the functionality of the consume tool.
     """
 
-    def test_is_own_concepts(self):
+    def test_is_own_timelines(self):
         """
         Test that checking whether an output was produced by this tool returns true when given its own output.
         """
@@ -58,7 +58,7 @@ class TestConsume(unittest.TestCase):
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "gold.txt")
         self.assertFalse(consume.is_own(file))
 
-    def test_is_own_concepts_path(self):
+    def test_is_own_timelines_path(self):
         """
         Test that checking whether an output was produced by this tool returns true when given its own output.
         """

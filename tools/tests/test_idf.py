@@ -22,6 +22,50 @@ class TestIDF(unittest.TestCase):
     Test the functionality of the IDF tool.
     """
 
+    def test_is_own_idf(self):
+        """
+        Test that checking whether an output was produced by this tool returns true when given its own output.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        with open(file) as f:
+            output = json.loads(''.join(f.readlines()))
+            self.assertTrue(idf.is_own(output))
+
+    def test_is_own_other(self):
+        """
+        Test that checking whether an output was produced by this tool returns false when given another tool's output.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', "bootstrapped.json")
+        with open(file) as f:
+            output = json.loads(''.join(f.readlines()))
+            self.assertFalse(idf.is_own(output))
+
+    def test_is_own_txt(self):
+        """
+        Test that checking whether an output was produced by this tool returns false when given another tool's output.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "gold.txt")
+        self.assertFalse(idf.is_own(file))
+
+    def test_is_own_idf_path(self):
+        """
+        Test that checking whether an output was produced by this tool returns true when given its own output.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
+        self.assertTrue(idf.is_own(file))
+
+    def test_is_own_other_path(self):
+        """
+        Test that checking whether an output was produced by this tool returns false when given another tool's output.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', "bootstrapped.json")
+        self.assertFalse(idf.is_own(file))
+
     def test_construct_all_lines(self):
         """
         Test that when creating an IDF table, the number of documents is equal to the number of lines.
