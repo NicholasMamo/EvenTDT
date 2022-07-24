@@ -63,9 +63,15 @@ def save(file, data):
     """
     Encode the data and save it.
     """
-    data = Exportable.encode(data)
-    with open(file, 'w') as f:
-        f.write(json.dumps(data))
+    if type(data) is list:
+        with open(file, 'w') as f:
+            for datum in data:
+                datum = Exportable.encode(datum)
+                f.write(json.dumps(datum) + "\n")
+    else:
+        data = Exportable.encode(data)
+        with open(file, 'w') as f:
+            f.write(json.dumps(data))
 
 def save_csv(file, data, headers=None, delimiter=','):
     """
