@@ -163,8 +163,9 @@ from objects.exportable import Exportable
 from summarization.algorithms import DGS, MMR
 from summarization.scorers import DomainScorer, TweetScorer
 from summarization.timeline.nodes import TopicalClusterNode
-from vsm.clustering import Cluster
 import tools
+from tools import terms, bootstrap
+from vsm.clustering import Cluster
 
 def setup_args():
     """
@@ -546,13 +547,13 @@ def tabulate(combined, headers):
 
     return table
 
-def load_terms(term_file, max_terms=None):
+def load_terms(file, max_terms=None):
     """
     Load the terms from the given term file.
     The function expects a file with one term word on each line.
 
-    :param term_file: The path to the term file.
-    :type term_file: str
+    :param file: The path to the term file.
+    :type file: str
     :param max_terms: The number of terms to retain.
                       If ``None`` is given, the function retains all terms.
     :type max_terms: None or int
@@ -568,11 +569,12 @@ def load_terms(term_file, max_terms=None):
 
     term_list = [ ]
 
-    with open(term_file, 'r') as f:
-        if tools.is_json(term_file):
-            term_list = Exportable.decode(json.loads(f.readline()))['terms']
-            term_list = [ term['term'] for term in term_list ]
-        else:
+    if terms.is_own(file):
+        term_list = terms.load(file)
+    elif bootstrap.is_own(file):
+        term_list = bootstrap.load(file)
+    else:
+        with open(file, 'r') as f:
             term_list.extend(f.readlines())
             term_list = [ word.strip() for word in term_list ]
 
