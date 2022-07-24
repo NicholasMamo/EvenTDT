@@ -220,6 +220,19 @@ def main():
 
     tools.save(args.output, { 'cmd': cmd, 'pcmd': pcmd, 'bootstrapped': bootstrapped })
 
+def isOwn(output):
+    """
+    Check whether this tool produced the given output.
+
+    :param output: A dictionary containing the output of a tool.
+    :type output: dict
+
+    :return: A boolean indicating whether this tool produced the given output.
+    :rtype: bool
+    """
+
+    return 'bootstrapped' in output
+
 def bootstrap(files, seed, method, iterations, keep, choose, candidates, *args, **kwargs):
     """
     Bootstrap the given seed set from the given files.
