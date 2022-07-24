@@ -225,6 +225,25 @@ def isOwn(output):
 
     return 'postprocessed' in output
 
+def load(output, which='postprocessed'):
+    """
+    Load the correlations from the given file.
+
+    :param output: A dictionary containing this tool's output or a path to it.
+    :type output: dict or str
+    :param which: The stage from which to extract participants: scored, filtered, resolved, extrapolated, postprocessed (default).
+    :type which: str
+
+    :return: The participants in the given output.
+    :rtype: dict
+    """
+
+    if tools.is_file(output):
+        with open(output) as file:
+            output = json.loads(''.join(file.readlines()))
+
+    return output[which]
+
 def create_detector(model, extractor, scorer, filter, resolver, extrapolator, postprocessor, *args, **kwargs):
     """
     Create all the components of the participant detector.

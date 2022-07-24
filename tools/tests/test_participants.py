@@ -69,6 +69,42 @@ class TestAPD(unittest.TestCase):
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', "bootstrapped.json")
         self.assertFalse(apd.isOwn(file))
 
+    def test_load_from_output(self):
+        """
+        Test that when loading participants from the output of the tool, they are loaded correctly.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'participants.json')
+        with open(file) as f:
+            output = json.loads(''.join(f.readlines()))
+            participants = apd.load(output)
+            original = output['postprocessed']
+        self.assertEqual(original, participants)
+
+    def test_load_from_path(self):
+        """
+        Test that when loading participants from a filepath, they are loaded correctly.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'participants.json')
+        with open(file) as f:
+            output = json.loads(''.join(f.readlines()))
+            original = output['postprocessed']
+        participants = apd.load(file)
+        self.assertEqual(original, participants)
+
+    def test_load_which(self):
+        """
+        Test that when loading participants from a certain stage from the output of the tool, they are loaded correctly.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'participants.json')
+        with open(file) as f:
+            output = json.loads(''.join(f.readlines()))
+            participants = apd.load(output, which='scored')
+            original = output['scored']
+        self.assertEqual(original, participants)
+
     def test_detect_rank_filter_subset(self):
         """
         Test that when using the rank filter, a subset of all participants are returned.
