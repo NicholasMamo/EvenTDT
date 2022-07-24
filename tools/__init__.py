@@ -170,8 +170,11 @@ def is_file(string):
     :rtype: str
     """
 
-    pattern = re.compile('.*\..*')
-    return pattern.match(string)
+    if type(string) is str:
+        pattern = re.compile('.*\..*')
+        return pattern.match(string)
+
+    return False
 
 def meta_file(file):
     """

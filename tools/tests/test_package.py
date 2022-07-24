@@ -35,6 +35,13 @@ class TestPackage(unittest.TestCase):
 
         self.assertFalse(tools.is_json('/path/to/file.txt'))
 
+    def test_is_file_dict(self):
+        """
+        Test that when given a dict, it is not recognized as a file path.
+        """
+
+        self.assertFalse(tools.is_file({ }))
+
     def test_is_file_string(self):
         """
         Test that when given a string, it is not recognized as a file path.
