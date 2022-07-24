@@ -164,7 +164,7 @@ from summarization.algorithms import DGS, MMR
 from summarization.scorers import DomainScorer, TweetScorer
 from summarization.timeline.nodes import TopicalClusterNode
 import tools
-from tools import terms, bootstrap
+from tools import consume, terms, bootstrap
 from vsm.clustering import Cluster
 
 def setup_args():
@@ -303,12 +303,10 @@ def load_timeline(file):
     :type file: str
 
     :return: The loaded timeline.
-    :rtype: :class:`~summarization.timeline.
+    :rtype: :class:`~summarization.timeline.Timeline`
     """
 
-    with open(file) as f:
-        data = json.loads(''.join(f.readlines()))
-        return Exportable.decode(data)['timeline']
+    return consume.load(file)
 
 def load_splits(file):
     """
