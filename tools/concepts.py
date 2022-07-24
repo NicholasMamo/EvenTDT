@@ -110,6 +110,7 @@ The full list of accepted arguments:
 """
 
 import argparse
+import json
 from networkx.algorithms.community import quality
 import os
 import sys
@@ -174,23 +175,6 @@ def main():
     # save the meta data and concepts to file
     tools.save(args.output, { 'cmd': cmd, 'pcmd': pcmd, 'concepts': concepts, 'modularity': modularity })
 
-def create_extractor(_type, correlations, *args, **kwargs):
-    """
-    Create the extractor that will be used to identify lexical concepts.
-    Any arguments or keyword arguments are passed on to the extractor's constructor.
-
-    :param _type: The type of extractor to create as returned by the :func:`~tools.concepts.method` function.
-    :type _type: type
-    :param correlations: The path to the file containing correlations between terms.
-    :type correlations: str
-
-    :return: A new extractor that can be used to extract lexical concepts.
-    :rtype: :class:`~ate.concepts.TermClusteringAlgorithm`
-    """
-
-    with open(correlations) as file:
-        return _type(file=file, *args, **kwargs)
-
 def isOwn(output):
     """
     Check whether this tool produced the given output.
@@ -207,6 +191,40 @@ def isOwn(output):
             output = json.loads(''.join(file.readlines()))
 
     return 'concepts' in output
+
+def load(output):
+    """
+    Load the correlations from the given file.
+
+    :param output: A dictionary containing this tool's output or a path to it.
+    :type output: dict or str
+
+    :return: The correlations in the given output.
+    :rtype: dict
+    """
+
+    if tools.is_file(output):
+        with open(output) as file:
+            output = json.loads(''.join(file.readlines()))
+
+    return output['concepts']
+
+def create_extractor(_type, correlations, *args, **kwargs):
+    """
+    Create the extractor that will be used to identify lexical concepts.
+    Any arguments or keyword arguments are passed on to the extractor's constructor.
+
+    :param _type: The type of extractor to create as returned by the :func:`~tools.concepts.method` function.
+    :type _type: type
+    :param correlations: The path to the file containing correlations between terms.
+    :type correlations: str
+
+    :return: A new extractor that can be used to extract lexical concepts.
+    :rtype: :class:`~ate.concepts.TermClusteringAlgorithm`
+    """
+
+    with open(correlations) as file:
+        return _type(file=file, *args, **kwargs)
 
 def extract(extractor, n, *args, **kwargs):
     """

@@ -26,7 +26,7 @@ class TestConcepts(unittest.TestCase):
     Test the functionality of the concepts tool.
     """
 
-    def test_is_own_correlations(self):
+    def test_is_own_concepts(self):
         """
         Test that checking whether an output was produced by this tool returns true when given its own output.
         """
@@ -45,6 +45,46 @@ class TestConcepts(unittest.TestCase):
         with open(file) as f:
             output = json.loads(''.join(f.readlines()))
             self.assertFalse(concepts.isOwn(output))
+
+    def test_is_own_concepts_path(self):
+        """
+        Test that checking whether an output was produced by this tool returns true when given its own output.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "concepts.json")
+        self.assertTrue(concepts.isOwn(file))
+
+    def test_is_own_other_path(self):
+        """
+        Test that checking whether an output was produced by this tool returns false when given another tool's output.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', "bootstrapped.json")
+        self.assertFalse(concepts.isOwn(file))
+
+    def test_load_from_output(self):
+        """
+        Test that when loading terms from the output of the tool, they are loaded correctly.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', 'concepts.json')
+        with open(file) as f:
+            output = json.loads(''.join(f.readlines()))
+            _concepts = concepts.load(output)
+            original = output['concepts']
+        self.assertEqual(original, _concepts)
+
+    def test_load_from_path(self):
+        """
+        Test that when loading concepts from a filepath, they are loaded correctly.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', 'concepts.json')
+        with open(file) as f:
+            output = json.loads(''.join(f.readlines()))
+            original = output['concepts']
+        _concepts = concepts.load(file)
+        self.assertEqual(original, _concepts)
 
     def test_create_extractor_returns_extractor(self):
         """
