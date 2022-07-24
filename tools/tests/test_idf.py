@@ -17,6 +17,8 @@ for path in paths:
 
 import idf
 
+from eventdt.objects import Exportable
+
 class TestIDF(unittest.TestCase):
     """
     Test the functionality of the IDF tool.
@@ -75,8 +77,8 @@ class TestIDF(unittest.TestCase):
         with open(file) as f:
             output = json.loads(''.join(f.readlines()))
             _idf = idf.load(output)
-            original = output['tfidf']
-        self.assertEqual(original, _idf)
+            original = Exportable.decode(output['tfidf'])
+        self.assertEqual(Exportable.encode(original), Exportable.encode(_idf))
 
     def test_load_from_path(self):
         """
@@ -86,9 +88,9 @@ class TestIDF(unittest.TestCase):
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'idf.json')
         with open(file) as f:
             output = json.loads(''.join(f.readlines()))
-            original = output['tfidf']
+            original = Exportable.decode(output['tfidf'])
         _idf = idf.load(file)
-        self.assertEqual(original, _idf)
+        self.assertEqual(Exportable.encode(original), Exportable.encode(_idf))
 
     def test_construct_all_lines(self):
         """

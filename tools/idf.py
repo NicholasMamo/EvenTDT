@@ -193,7 +193,7 @@ def load(output):
         with open(output) as file:
             output = json.loads(''.join(file.readlines()))
 
-    return output['tfidf']
+    return Exportable.decode(output['tfidf'])
 
 def construct(file, remove_retweets=False, skip_unverified=False, *args, **kwargs):
     """
