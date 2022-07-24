@@ -35,7 +35,15 @@ class TestTerms(unittest.TestCase):
             output = json.loads(''.join(f.readlines()))
             self.assertTrue(terms.isOwn(output))
 
-    def test_is_own_bootstrap(self):
+    def test_is_own_terms_txt(self):
+        """
+        Test that checking whether an output was produced by this tool returns true when given its own output.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "gold.txt")
+        self.assertFalse(terms.isOwn(file))
+
+    def test_is_own_other(self):
         """
         Test that checking whether an output was produced by this tool returns false when given another tool's output.
         """
@@ -53,7 +61,7 @@ class TestTerms(unittest.TestCase):
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "sample.json")
         self.assertTrue(terms.isOwn(file))
 
-    def test_is_own_bootstrap_path(self):
+    def test_is_own_other_path(self):
         """
         Test that checking whether an output was produced by this tool returns false when given another tool's output.
         """
