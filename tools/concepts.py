@@ -198,13 +198,13 @@ def is_own(output):
 
 def load(output):
     """
-    Load the correlations from the given file.
+    Load the concepts from the given file.
 
     :param output: A dictionary containing this tool's output or a path to it.
     :type output: dict or str
 
-    :return: The correlations in the given output.
-    :rtype: dict
+    :return: The concepts in the given output.
+    :rtype: list of str
     """
 
     if tools.is_file(output):
