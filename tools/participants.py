@@ -208,6 +208,23 @@ def main():
                                  'scored': scored, 'filtered': filtered,
                                  'resolved': resolved, 'extrapolated': extrapolated, 'postprocessed': postprocessed })
 
+def isOwn(output):
+    """
+    Check whether this tool produced the given output.
+
+    :param output: A dictionary containing the output of a tool or a path to it.
+    :type output: dict or str
+
+    :return: A boolean indicating whether this tool produced the given output.
+    :rtype: bool
+    """
+
+    if tools.is_file(output):
+        with open(output) as file:
+            output = json.loads(''.join(file.readlines()))
+
+    return 'postprocessed' in output
+
 def create_detector(model, extractor, scorer, filter, resolver, extrapolator, postprocessor, *args, **kwargs):
     """
     Create all the components of the participant detector.
