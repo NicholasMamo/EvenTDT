@@ -43,6 +43,14 @@ class TestAPD(unittest.TestCase):
             output = json.loads(''.join(f.readlines()))
             self.assertTrue(apd.is_own(output))
 
+    def test_is_own_txt(self):
+        """
+        Test that checking whether an output was produced by this tool returns false when given a text file.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "gold.tx")
+        self.assertFalse(apd.is_own(file))
+
     def test_is_own_other(self):
         """
         Test that checking whether an output was produced by this tool returns false when given another tool's output.

@@ -220,8 +220,11 @@ def is_own(output):
     """
 
     if tools.is_file(output):
-        with open(output) as file:
-            output = json.loads(''.join(file.readlines()))
+        if tools.is_json(output):
+            with open(output) as file:
+                output = json.loads(''.join(file.readlines()))
+        else:
+            return False
 
     return 'postprocessed' in output
 
