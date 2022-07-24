@@ -125,7 +125,6 @@ from ate.concepts import GNClustering
 import tools
 from logger import logger
 
-parser = argparse.ArgumentParser(description="Extract terms from domain-specific corpora.")
 def setup_args():
     """
     Set up and get the list of command-line arguments.
@@ -141,6 +140,8 @@ def setup_args():
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
     """
+
+    parser = argparse.ArgumentParser(description="Group terms into concepts.")
 
     parser.add_argument('-c', '--correlations', required=True,
                         help='<Required> The path to the file containing correlations between terms, generated using the ``correlation`` tool.')
