@@ -7,13 +7,15 @@ import math
 import os
 import sys
 
-path = os.path.join(os.path.dirname(__file__), '..', '..')
+paths = [ os.path.join(os.path.dirname(__file__), '..', '..'),
+          os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tools') ]
 if path not in sys.path:
     sys.path.append(path)
 
 from ate.bootstrapping import probability
 from ate.extractor import Extractor
 from objects.exportable import Exportable
+from tools import consume
 
 class EF(Extractor):
     """

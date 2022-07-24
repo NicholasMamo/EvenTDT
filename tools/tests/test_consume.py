@@ -83,8 +83,8 @@ class TestConsume(unittest.TestCase):
         with open(file) as f:
             output = json.loads(''.join(f.readlines()))
             timelines = consume.load(output)
-            original = output['timeline']
-        self.assertEqual(original, timelines)
+            original = Exportable.decode(output['timeline'])
+        self.assertEqual(Exportable.encode(original), Exportable.encode(timelines))
 
     def test_load_from_path(self):
         """
@@ -94,9 +94,9 @@ class TestConsume(unittest.TestCase):
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', '#ParmaMilan-streams.json')
         with open(file) as f:
             output = json.loads(''.join(f.readlines()))
-            original = output['timeline']
+            original = Exportable.decode(output['timeline'])
         timelines = consume.load(file)
-        self.assertEqual(original, timelines)
+        self.assertEqual(Exportable.encode(original), Exportable.encode(timelines))
 
     def test_filters_all_words(self):
         """

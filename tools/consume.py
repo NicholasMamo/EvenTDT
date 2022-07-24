@@ -507,7 +507,7 @@ def load(output):
         with open(output) as file:
             output = json.loads(''.join(file.readlines()))
 
-    return output['timeline']
+    return Exportable.decode(output['timeline'])
 
 def understand(understanding, consumer, sample, max_inactivity, skip_retweets, skip_unverified, scheme=None, *args, **kwargs):
     """
