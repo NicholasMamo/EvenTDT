@@ -52,6 +52,15 @@ class TestEvent(unittest.TestCase):
         extractor = event.EF()
         self.assertTrue(extractor.extract(path))
 
+    def test_ef_one_timeline_streams(self):
+        """
+        Test that when providing one timeline streamed, the algorithm extracts terms only from it.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', '#ParmaMilan-streams.json')
+        extractor = event.EF()
+        self.assertTrue(extractor.extract(path))
+
     def test_ef_multiple_timeline(self):
         """
         Test that when providing multiple timelines, the algorithm extracts terms from all of them.
@@ -110,7 +119,7 @@ class TestEvent(unittest.TestCase):
         Calculate the event frequency.
         """
         extractor = event.EF()
-        ef_terms = extractor.extract(path)
+        ef_terms = extractor.extract(paths)
 
         """
         Extract all terms from the timelines.
@@ -134,7 +143,42 @@ class TestEvent(unittest.TestCase):
         """
         self.assertEqual(all_terms, set(ef_terms))
 
-    def test_ef_all_terms(self):
+    def test_ef_all_streams(self):
+        """
+        Test that the event frequency includes all breaking terms from all streams.
+        """
+
+        path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'tests', 'corpora', 'timelines', '#ParmaMilan-streams.json')
+
+        """
+        Calculate the event frequency.
+        """
+        extractor = event.EF()
+        ef_terms = extractor.extract(path)
+
+        """
+        Extract all terms from the timelines.
+        """
+        all_terms = set()
+        with open(path, 'r') as f:
+            data = json.loads(''.join(f.readlines()))
+
+            """
+            Decode the timeline and extract all the terms in it.
+            """
+            timeline = Exportable.decode(data)['timeline']
+            terms = set( term for _timeline in timeline
+                              for node in _timeline.nodes
+                              for topic in node.topics
+                              for term in topic.dimensions )
+            all_terms = all_terms.union(terms)
+
+        """
+        Assert that all terms are in the event frequency.
+        """
+        self.assertEqual(all_terms, set(ef_terms))
+
+    def test_log_ef_all_terms(self):
         """
         Test that the event frequency includes all breaking terms.
         """

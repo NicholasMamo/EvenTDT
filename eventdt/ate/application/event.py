@@ -53,8 +53,9 @@ class EF(Extractor):
             """
             Extract all the topical terms from the timeline.
             """
-            timeline = self._load_timelines(timeline)[0]
-            terms = set( term for node in timeline.nodes
+            _timelines = self._load_timelines(timeline)
+            terms = set( term for timeline in _timelines
+                              for node in timeline.nodes
                               for topic in node.topics
                               for term in topic.dimensions )
 
@@ -95,7 +96,11 @@ class EF(Extractor):
                     data = Exportable.decode(data)
                     if 'timeline' not in data:
                         raise ValueError(f"The event frequency extractor requires a timeline file, received { ', '.join(list(data.keys())) }")
-                    _timelines.append(data['timeline'])
+                    _timeline = data['timeline']
+                    if type(_timeline) is list:
+                        _timelines.extend(_timeline)
+                    else:
+                        _timelines.append(_timeline)
             else:
                 _timelines.append(timeline)
 
