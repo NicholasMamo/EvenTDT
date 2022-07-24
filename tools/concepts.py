@@ -175,7 +175,7 @@ def main():
     # save the meta data and concepts to file
     tools.save(args.output, { 'cmd': cmd, 'pcmd': pcmd, 'concepts': concepts, 'modularity': modularity })
 
-def isOwn(output):
+def is_own(output):
     """
     Check whether this tool produced the given output.
 

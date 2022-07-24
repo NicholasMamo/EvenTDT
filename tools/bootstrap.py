@@ -221,7 +221,7 @@ def main():
 
     tools.save(args.output, { 'cmd': cmd, 'pcmd': pcmd, 'bootstrapped': bootstrapped })
 
-def isOwn(output):
+def is_own(output):
     """
     Check whether this tool produced the given output.
 
@@ -370,7 +370,7 @@ def load_seed(file, max_seed=None):
 
     seeds = [ ]
 
-    if terms.isOwn(file):
+    if terms.is_own(file):
         seeds = terms.load(file)
     else:
         with open(file, 'r') as f:
@@ -405,7 +405,7 @@ def load_candidates(file, max_candidates=None):
 
     candidates = [ ]
 
-    if terms.isOwn(file):
+    if terms.is_own(file):
         candidates = terms.load(file)
     else:
         with open(file, 'r') as f:

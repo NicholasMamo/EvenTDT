@@ -36,7 +36,7 @@ class TestBootstrap(unittest.TestCase):
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "sample.json")
         with open(file) as f:
             output = json.loads(''.join(f.readlines()))
-            self.assertFalse(bootstrap.isOwn(output))
+            self.assertFalse(bootstrap.is_own(output))
 
     def test_is_own_bootstrap(self):
         """
@@ -46,7 +46,7 @@ class TestBootstrap(unittest.TestCase):
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', "bootstrapped.json")
         with open(file) as f:
             output = json.loads(''.join(f.readlines()))
-            self.assertTrue(bootstrap.isOwn(output))
+            self.assertTrue(bootstrap.is_own(output))
 
     def test_is_own_bootstrap_txt(self):
         """
@@ -54,7 +54,7 @@ class TestBootstrap(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "gold.txt")
-        self.assertFalse(bootstrap.isOwn(file))
+        self.assertFalse(bootstrap.is_own(file))
 
     def test_is_own_terms_path(self):
         """
@@ -62,7 +62,7 @@ class TestBootstrap(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "sample.json")
-        self.assertFalse(bootstrap.isOwn(file))
+        self.assertFalse(bootstrap.is_own(file))
 
     def test_is_own_bootstrap_path(self):
         """
@@ -70,7 +70,7 @@ class TestBootstrap(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', "bootstrapped.json")
-        self.assertTrue(bootstrap.isOwn(file))
+        self.assertTrue(bootstrap.is_own(file))
 
     def test_load_bootstrapped(self):
         """

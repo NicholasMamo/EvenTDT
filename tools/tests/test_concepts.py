@@ -34,7 +34,7 @@ class TestConcepts(unittest.TestCase):
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "concepts.json")
         with open(file) as f:
             output = json.loads(''.join(f.readlines()))
-            self.assertTrue(concepts.isOwn(output))
+            self.assertTrue(concepts.is_own(output))
 
     def test_is_own_other(self):
         """
@@ -44,7 +44,7 @@ class TestConcepts(unittest.TestCase):
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', "bootstrapped.json")
         with open(file) as f:
             output = json.loads(''.join(f.readlines()))
-            self.assertFalse(concepts.isOwn(output))
+            self.assertFalse(concepts.is_own(output))
 
     def test_is_own_concepts_path(self):
         """
@@ -52,7 +52,7 @@ class TestConcepts(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "concepts.json")
-        self.assertTrue(concepts.isOwn(file))
+        self.assertTrue(concepts.is_own(file))
 
     def test_is_own_other_path(self):
         """
@@ -60,7 +60,7 @@ class TestConcepts(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', "bootstrapped.json")
-        self.assertFalse(concepts.isOwn(file))
+        self.assertFalse(concepts.is_own(file))
 
     def test_load_from_output(self):
         """

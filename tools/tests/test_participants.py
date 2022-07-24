@@ -41,7 +41,7 @@ class TestAPD(unittest.TestCase):
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', "participants.json")
         with open(file) as f:
             output = json.loads(''.join(f.readlines()))
-            self.assertTrue(apd.isOwn(output))
+            self.assertTrue(apd.is_own(output))
 
     def test_is_own_other(self):
         """
@@ -51,7 +51,7 @@ class TestAPD(unittest.TestCase):
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', "bootstrapped.json")
         with open(file) as f:
             output = json.loads(''.join(f.readlines()))
-            self.assertFalse(apd.isOwn(output))
+            self.assertFalse(apd.is_own(output))
 
     def test_is_own_participants_path(self):
         """
@@ -59,7 +59,7 @@ class TestAPD(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', "participants.json")
-        self.assertTrue(apd.isOwn(file))
+        self.assertTrue(apd.is_own(file))
 
     def test_is_own_other_path(self):
         """
@@ -67,7 +67,7 @@ class TestAPD(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', "bootstrapped.json")
-        self.assertFalse(apd.isOwn(file))
+        self.assertFalse(apd.is_own(file))
 
     def test_load_from_output(self):
         """

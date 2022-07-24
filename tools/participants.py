@@ -208,7 +208,7 @@ def main():
                                  'scored': scored, 'filtered': filtered,
                                  'resolved': resolved, 'extrapolated': extrapolated, 'postprocessed': postprocessed })
 
-def isOwn(output):
+def is_own(output):
     """
     Check whether this tool produced the given output.
 

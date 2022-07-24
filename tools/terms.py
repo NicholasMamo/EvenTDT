@@ -392,7 +392,7 @@ def main():
     else:
         tools.save(args['output'], { 'cmd': cmd, 'pcmd': pcmd, 'terms': terms })
 
-def isOwn(output):
+def is_own(output):
     """
     Check whether this tool produced the given output.
 

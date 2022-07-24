@@ -96,6 +96,7 @@ sys.path.insert(-1, root)
 sys.path.insert(-1, lib)
 
 import tools
+from tools import terms, bootstrap
 from ate.bootstrapping.probability import ChiBootstrapper, LogLikelihoodRatioBootstrapper, PMIBootstrapper
 from logger import logger
 
@@ -163,7 +164,7 @@ def main():
 
     tools.save(args.output, { 'cmd': cmd, 'pcmd': pcmd, 'correlations': correlations })
 
-def isOwn(output):
+def is_own(output):
     """
     Check whether this tool produced the given output.
 
@@ -226,6 +227,8 @@ def load_terms(terms, max_terms=None):
 
     for term in terms:
         if tools.is_file(term):
+            if terms.is_own()
+
             with open(term) as f:
                 data = json.loads(''.join(f.readlines()))
 

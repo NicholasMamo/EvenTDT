@@ -34,7 +34,7 @@ class TestCorrelation(unittest.TestCase):
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "correlations.json")
         with open(file) as f:
             output = json.loads(''.join(f.readlines()))
-            self.assertTrue(correlation.isOwn(output))
+            self.assertTrue(correlation.is_own(output))
 
     def test_is_own_other(self):
         """
@@ -44,7 +44,7 @@ class TestCorrelation(unittest.TestCase):
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', "bootstrapped.json")
         with open(file) as f:
             output = json.loads(''.join(f.readlines()))
-            self.assertFalse(correlation.isOwn(output))
+            self.assertFalse(correlation.is_own(output))
 
     def test_is_own_correlations_path(self):
         """
@@ -52,7 +52,7 @@ class TestCorrelation(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "correlations.json")
-        self.assertTrue(correlation.isOwn(file))
+        self.assertTrue(correlation.is_own(file))
 
     def test_is_own_other_path(self):
         """
@@ -60,7 +60,7 @@ class TestCorrelation(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', "bootstrapped.json")
-        self.assertFalse(correlation.isOwn(file))
+        self.assertFalse(correlation.is_own(file))
 
     def test_load_from_output(self):
         """

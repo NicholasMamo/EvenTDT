@@ -33,7 +33,7 @@ class TestTerms(unittest.TestCase):
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "sample.json")
         with open(file) as f:
             output = json.loads(''.join(f.readlines()))
-            self.assertTrue(terms.isOwn(output))
+            self.assertTrue(terms.is_own(output))
 
     def test_is_own_terms_txt(self):
         """
@@ -41,7 +41,7 @@ class TestTerms(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "gold.txt")
-        self.assertFalse(terms.isOwn(file))
+        self.assertFalse(terms.is_own(file))
 
     def test_is_own_other(self):
         """
@@ -51,7 +51,7 @@ class TestTerms(unittest.TestCase):
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', "bootstrapped.json")
         with open(file) as f:
             output = json.loads(''.join(f.readlines()))
-            self.assertFalse(terms.isOwn(output))
+            self.assertFalse(terms.is_own(output))
 
     def test_is_own_terms_path(self):
         """
@@ -59,7 +59,7 @@ class TestTerms(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "sample.json")
-        self.assertTrue(terms.isOwn(file))
+        self.assertTrue(terms.is_own(file))
 
     def test_is_own_other_path(self):
         """
@@ -67,7 +67,7 @@ class TestTerms(unittest.TestCase):
         """
 
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', "bootstrapped.json")
-        self.assertFalse(terms.isOwn(file))
+        self.assertFalse(terms.is_own(file))
 
     def test_load_extracted(self):
         """
