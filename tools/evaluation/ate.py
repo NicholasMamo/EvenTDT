@@ -95,7 +95,7 @@ sys.path.insert(-1, root)
 sys.path.insert(-1, lib)
 
 import tools
-from tools import evaluation
+from tools import bootstrap, evaluation, terms
 
 from nlp import Tokenizer
 
@@ -200,22 +200,11 @@ def load_terms(file, keep=None):
 
     _terms = [ ]
 
-    with open(file) as f:
-        data = json.loads(''.join(f.readlines()))
-
-        """
-        Check if this is the output of a tool.
-        """
-        if 'meta' in data or 'cmd' in data:
-            meta = data['meta'] if 'meta' in data else data['pcmd']
-            if 'seed' in meta:
-                _terms.extend(meta['seed'])
-                if data['bootstrapped'] and type(data['bootstrapped'][0]) is str:
-                    _terms.extend(data['bootstrapped'])
-                else:
-                    _terms.extend([ term['term'] for term in data['bootstrapped'] ])
-            elif 'terms' in data:
-                _terms.extend([ term['term'] for term in data['terms'] ])
+    if tools.is_file(file):
+        if terms.is_own(file):
+            _terms.extend(terms.load(file))
+        elif bootstrap.is_own(file):
+            _terms.extend(bootstrap.load(file))
 
     return _terms[:(keep or len(_terms))]
 
