@@ -26,6 +26,42 @@ class TestCorrelation(unittest.TestCase):
     Test the functionality of the correlation tool.
     """
 
+    def test_is_own_correlations(self):
+        """
+        Test that checking whether an output was produced by this tool returns true when given its own output.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "correlations.json")
+        with open(file) as f:
+            output = json.loads(''.join(f.readlines()))
+            self.assertTrue(correlation.isOwn(output))
+
+    def test_is_own_other(self):
+        """
+        Test that checking whether an output was produced by this tool returns false when given another tool's output.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', "bootstrapped.json")
+        with open(file) as f:
+            output = json.loads(''.join(f.readlines()))
+            self.assertFalse(correlation.isOwn(output))
+
+    def test_is_own_correlations_path(self):
+        """
+        Test that checking whether an output was produced by this tool returns true when given its own output.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "correlations.json")
+        self.assertTrue(correlation.isOwn(file))
+
+    def test_is_own_other_path(self):
+        """
+        Test that checking whether an output was produced by this tool returns false when given another tool's output.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', "bootstrapped.json")
+        self.assertFalse(correlation.isOwn(file))
+
     def test_load_terms_all_terms(self):
         """
         Test that when loading terms and they are given explicitly, they are used.
