@@ -104,6 +104,19 @@ class TestTerms(unittest.TestCase):
             original = [ term['term'] for term in original ]
         self.assertEqual(original, _terms)
 
+    def test_load_from_path(self):
+        """
+        Test that when loading terms from a filepath, they are loaded correctly.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', 'sample.json')
+        with open(file) as f:
+            output = json.loads(''.join(f.readlines()))
+            original = output['terms']
+            original = [ term['term'] for term in original ]
+        _terms = terms.load(file)
+        self.assertEqual(original, _terms)
+
     def test_extract_no_files(self):
         """
         Test that when no files are given when extracting, a SystemExit is raised.

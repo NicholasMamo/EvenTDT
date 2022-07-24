@@ -233,6 +233,28 @@ def isOwn(output):
 
     return 'bootstrapped' in output
 
+def load(output, with_seed=True):
+    """
+    Load the terms from the given file.
+
+    :param output: A dictionary containing this tool's output.
+    :type output: dict
+    :param with_seed: A boolean indicating whether to load the seed terms along with the bootstrapped terms.
+    :type with_seed: bool
+
+    :return: A list of terms.
+    :rtype: list of str
+    """
+
+
+    terms = [ ]
+
+    if with_seed:
+        meta = data['pcmd'] if 'pcmd' in data else data['meta']
+        terms.extend(meta['seed'])
+
+    return [ term['term'] for term in output['terms'] ]
+
 def bootstrap(files, seed, method, iterations, keep, choose, candidates, *args, **kwargs):
     """
     Bootstrap the given seed set from the given files.

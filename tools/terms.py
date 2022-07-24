@@ -413,13 +413,16 @@ def load(output):
     """
     Load the terms from the given file.
 
-    :param output: A dictionary containing this tool's output.
-    :type output: dict
+    :param output: A dictionary containing this tool's output or a path to it.
+    :type output: dict or str
 
     :return: A list of terms.
     :rtype: list of str
     """
 
+    if tools.is_file(output):
+        with open(output) as file:
+            output = json.loads(''.join(file.readlines()))
 
     return [ term['term'] for term in output['terms'] ]
 
