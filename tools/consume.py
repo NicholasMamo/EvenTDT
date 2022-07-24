@@ -472,6 +472,26 @@ def main():
 
     asyncio.get_event_loop().close()
 
+def is_own(output):
+    """
+    Check whether this tool produced the given output.
+
+    :param output: A dictionary containing the output of a tool or a path to it.
+    :type output: dict or str
+
+    :return: A boolean indicating whether this tool produced the given output.
+    :rtype: bool
+    """
+
+    if tools.is_file(output):
+        if tools.is_json(output):
+            with open(output) as file:
+                output = json.loads(''.join(file.readlines()))
+        else:
+            return False
+
+    return 'timeline' in output
+
 def understand(understanding, consumer, sample, max_inactivity, skip_retweets, skip_unverified, scheme=None, *args, **kwargs):
     """
     Run the understanding process.

@@ -21,7 +21,7 @@ from summarization.algorithms import MMR, DGS
 from summarization import Summary
 from summarization.timeline import Timeline
 from summarization.timeline.nodes import Node, TopicalClusterNode
-from tools import summarize
+from tools import bootstrap, summarize
 from vsm import Vector
 from vsm.clustering import Cluster
 
@@ -391,6 +391,15 @@ class TestSummarize(unittest.TestCase):
         """
         self.assertEqual(list, type(terms))
         self.assertTrue(len(terms))
+
+    def test_load_terms_from_bootstrapped(self):
+        """
+        Test that when loading the terms from the `bootstrap` tool's output, they are returned as a list.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'bootstrapped-new.json')
+        terms = summarize.load_terms(file)
+        self.assertEqual(bootstrap.load(file), summarize.load_terms(file))
 
     def test_load_terms_no_newlines(self):
         """

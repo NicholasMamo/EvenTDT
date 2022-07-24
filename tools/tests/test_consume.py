@@ -30,6 +30,50 @@ class TestConsume(unittest.TestCase):
     Test the functionality of the consume tool.
     """
 
+    def test_is_own_concepts(self):
+        """
+        Test that checking whether an output was produced by this tool returns true when given its own output.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', "#ParmaMilan-streams.json")
+        with open(file) as f:
+            output = json.loads(''.join(f.readlines()))
+            self.assertTrue(consume.is_own(output))
+
+    def test_is_own_other(self):
+        """
+        Test that checking whether an output was produced by this tool returns false when given another tool's output.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', "bootstrapped.json")
+        with open(file) as f:
+            output = json.loads(''.join(f.readlines()))
+            self.assertFalse(consume.is_own(output))
+
+    def test_is_own_txt(self):
+        """
+        Test that checking whether an output was produced by this tool returns false when given another tool's output.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "gold.txt")
+        self.assertFalse(consume.is_own(file))
+
+    def test_is_own_concepts_path(self):
+        """
+        Test that checking whether an output was produced by this tool returns true when given its own output.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', "#ParmaMilan-streams.json")
+        self.assertTrue(consume.is_own(file))
+
+    def test_is_own_other_path(self):
+        """
+        Test that checking whether an output was produced by this tool returns false when given another tool's output.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', "bootstrapped.json")
+        self.assertFalse(consume.is_own(file))
+
     def test_filters_all_words(self):
         """
         Test that when loading the filter tokens, all words are returned.
