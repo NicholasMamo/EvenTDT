@@ -45,6 +45,22 @@ class TestTerms(unittest.TestCase):
             output = json.loads(''.join(f.readlines()))
             self.assertFalse(terms.isOwn(output))
 
+    def test_is_own_terms_path(self):
+        """
+        Test that checking whether an output was produced by this tool returns true when given its own output.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "sample.json")
+        self.assertTrue(terms.isOwn(file))
+
+    def test_is_own_bootstrap_path(self):
+        """
+        Test that checking whether an output was produced by this tool returns false when given another tool's output.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', "bootstrapped.json")
+        self.assertFalse(terms.isOwn(file))
+
     def test_load_extracted(self):
         """
         Test that when loading terms from the output of the ``terms`` tool, the terms themselves are loaded.
@@ -71,7 +87,7 @@ class TestTerms(unittest.TestCase):
             _terms = terms.load(output)
             original = output['terms']
             original = [ term['term'] for term in original ]
-        
+
         self.assertTrue(all( type(term) is str for term in _terms ))
         self.assertEqual(len(original), len(_terms))
 
