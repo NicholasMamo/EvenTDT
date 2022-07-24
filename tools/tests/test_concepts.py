@@ -26,6 +26,26 @@ class TestConcepts(unittest.TestCase):
     Test the functionality of the concepts tool.
     """
 
+    def test_is_own_correlations(self):
+        """
+        Test that checking whether an output was produced by this tool returns true when given its own output.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "concepts.json")
+        with open(file) as f:
+            output = json.loads(''.join(f.readlines()))
+            self.assertTrue(concepts.isOwn(output))
+
+    def test_is_own_other(self):
+        """
+        Test that checking whether an output was produced by this tool returns false when given another tool's output.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', "bootstrapped.json")
+        with open(file) as f:
+            output = json.loads(''.join(f.readlines()))
+            self.assertFalse(concepts.isOwn(output))
+
     def test_create_extractor_returns_extractor(self):
         """
         Test that when creating an extractor, it actually returns an extractor.
