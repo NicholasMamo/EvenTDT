@@ -234,7 +234,7 @@ def isOwn(output):
     if tools.is_file(output):
         with open(output) as file:
             output = json.loads(''.join(file.readlines()))
-    
+
     return 'bootstrapped' in output
 
 def load(output, with_seed=True):
@@ -253,11 +253,18 @@ def load(output, with_seed=True):
 
     terms = [ ]
 
+    if tools.is_file(output):
+        with open(output) as file:
+            output = json.loads(''.join(file.readlines()))
+
     if with_seed:
-        meta = data['pcmd'] if 'pcmd' in data else data['meta']
+        meta = output['pcmd'] if 'pcmd' in output else output['meta']
         terms.extend(meta['seed'])
 
-    return [ term['term'] for term in output['terms'] ]
+    terms.extend([ term['term'] if type(term) is dict else term
+                   for term in output['bootstrapped'] ])
+
+    return terms
 
 def bootstrap(files, seed, method, iterations, keep, choose, candidates, *args, **kwargs):
     """

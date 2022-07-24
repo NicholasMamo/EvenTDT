@@ -64,6 +64,93 @@ class TestBootstrap(unittest.TestCase):
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', "bootstrapped.json")
         self.assertTrue(bootstrap.isOwn(file))
 
+    def test_load_bootstrapped(self):
+        """
+        Test that when loading bootstrapped output, the terms themselves are loaded.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'bootstrapped.json')
+        terms = bootstrap.load(file)
+        self.assertTrue(all( type(term) is str for term in terms ))
+        with open(file) as f:
+            data = json.loads(''.join(f.readlines()))
+            original = data['meta']['seed'] + data['bootstrapped']
+        self.assertEqual(len(original), len(terms))
+
+    def test_load_bootstrapped_order(self):
+        """
+        Test that when loading bootstrapped output, the seed terms are first, followed by the bootstrapped terms.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'bootstrapped.json')
+        terms = bootstrap.load(file)
+        with open(file) as f:
+            data = json.loads(''.join(f.readlines()))
+            original = data['meta']['seed'] + data['bootstrapped']
+        self.assertEqual(original, terms)
+
+    def test_load_bootstrapped_from_dict(self):
+        """
+        Test that when loading bootstrapped output from a dictionary, the terms are loaded correctly.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'bootstrapped.json')
+        with open(file) as f:
+            data = json.loads(''.join(f.readlines()))
+            terms = bootstrap.load(data)
+
+        self.assertEqual(bootstrap.load(file), terms)
+
+    def test_load_bootstrapped_new(self):
+        """
+        Test that when loading bootstrapped output, the terms themselves are loaded.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'bootstrapped-new.json')
+        terms = bootstrap.load(file)
+        self.assertTrue(all( type(term) is str for term in terms ))
+        with open(file) as f:
+            data = json.loads(''.join(f.readlines()))
+            original = data['pcmd']['seed'] + [ term['term'] for term in data['bootstrapped'] ]
+        self.assertEqual(len(original), len(terms))
+
+    def test_load_bootstrapped_new_order(self):
+        """
+        Test that when loading bootstrapped output, the seed terms are first, followed by the bootstrapped terms.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'bootstrapped-new.json')
+        terms = bootstrap.load(file)
+        with open(file) as f:
+            data = json.loads(''.join(f.readlines()))
+            original = data['pcmd']['seed'] + [ term['term'] for term in data['bootstrapped'] ]
+        self.assertEqual(original, terms)
+
+    def test_load_bootstrapped_new_from_dict(self):
+        """
+        Test that when loading bootstrapped output from a dictionary, the terms are loaded correctly.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'bootstrapped-new.json')
+        with open(file) as f:
+            data = json.loads(''.join(f.readlines()))
+            terms = bootstrap.load(data)
+
+        self.assertEqual(bootstrap.load(file), terms)
+
+    def test_load_bootstrapped_no_seed(self):
+        """
+        Test that when loading bootstrapped output without the seed terms, they are excluded.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', 'bootstrapped-new.json')
+        with open(file) as f:
+            data = json.loads(''.join(f.readlines()))
+            terms = bootstrap.load(data, with_seed=False)
+            original = [ term['term'] for term in data['bootstrapped'] ]
+
+        self.assertEqual(original, terms)
+
     def test_bootstrap_list(self):
         """
         Test that bootstrapping returns a list of keywords.
