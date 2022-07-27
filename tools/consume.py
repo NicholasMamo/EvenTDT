@@ -244,7 +244,7 @@ The full list of accepted arguments:
     - ``--with-default-split``      *<Optional>* A boolean indicating whether to use a default split, for all documents that belong to no stream (used only if splits are given).
     - ``--periodicity``             *<Optional>* The periodicity in seconds of the consumer, defaults to 60 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer` and :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`).
     - ``--window-size``             *<Optional>* The size in seconds of the time window, used by real-time algorithms, defaults to 60 seconds (used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer` and :class:`~queues.consumers.algorithms.fuego_consumer.SEERConsumer``).
-    - ``--scheme``                  *<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used.
+    - ``--scheme``                  *<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used. This can be overwritten if an `--understanding` corpus is provided; otherwise, a scheme can be created using the :mod:`~tools.idf` tool.
     - ``--min-volume``              *<Optional>* The minimum volume to consider the stream to be active and look for breaking terms (used by the :class:`~queues.consumers.algorithms.fuego_consumer.SEERConsumer`); defaults to 10.
     - ``--min-size``                *<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
     - ``--min-burst``               *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer` and the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`).
@@ -308,7 +308,7 @@ def setup_args():
         - ``--with-default-split``      *<Optional>* A boolean indicating whether to use a default split, for all documents that belong to no stream (used only if splits are given).
         - ``--periodicity``             *<Optional>* The periodicity in seconds of the consumer, defaults to 60 seconds (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer`, :class:`~queues.consumers.stat_consumer.StatConsumer` and :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`).
         - ``--window-size``             *<Optional>* The size in seconds of the time window, used by real-time algorithms, defaults to 60 seconds (used by the :class:`~queues.consumers.algorithms.fuego_consumer.FUEGOConsumer` and :class:`~queues.consumers.algorithms.fuego_consumer.SEERConsumer``).
-        - ``--scheme``                  *<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used. This can be overwritten if there is event understanding.
+        - ``--scheme``                  *<Optional>* If specified, the path to the :class:`~nlp.weighting.TermWeightingScheme` to use. If it is not specified, the :class:`~nlp.weighting.tf.TF` scheme is used. This can be overwritten if an `--understanding` corpus is provided; otherwise, a scheme can be created using the :mod:`~tools.idf` tool.
         - ``--min-volume``              *<Optional>* The minimum volume to consider the stream to be active and look for breaking terms (used by the :class:`~queues.consumers.algorithms.fuego_consumer.SEERConsumer`); defaults to 10.
         - ``--min-size``                *<Optional>* The minimum number of tweets in a cluster to consider it as a candidate topic, defaults to 3.
         - ``--min-burst``               *<Optional>* The minimum burst to accept a term to be breaking, defaults to 0.5 (used by the :class:`~queues.consumers.algorithms.fire_consumer.FIREConsumer` and the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer`).
@@ -368,7 +368,7 @@ def setup_args():
     parser.add_argument('--window-size', type=int, required=False, default=60,
                         help='<Optional> The size in seconds of the time window, used by real-time algorithms, defaults to 60 seconds (used by the `FUEGOConsumer` and `SEERConsumer`.')
     parser.add_argument('--scheme', type=scheme, required=False, default=None,
-                        help="""<Optional> If specified, the path to the term-weighting scheme file. If it is not specified, the term frequency scheme is used instead. This can be overwritten if there is event understanding.""")
+                        help="""<Optional> If specified, the path to the term-weighting scheme file. If it is not specified, the term frequency scheme is used instead. This can be overwritten if an `--understanding` corpus is provided; otherwise, a scheme can be created using the `idf` tool.""")
     parser.add_argument('--min-volume', type=float, required=False, default=10,
                         help='<Optional> The minimum volume to consider the stream to be active and look for breaking terms (used by the `SEERConsumer`); defaults to 10.')
     parser.add_argument('--min-size', type=int, required=False, default=3,
