@@ -17,6 +17,8 @@ from modeling import EventModel
 class EventModeler(ABC):
     """
     The :class:`~modeling.modelers.EventModeler` receives :class:`~summarization.timeline.Timeline <timelines>` and builds one :class:`~modeling.EventModel` for each node in it.
+    The class expects nodes because normally, the When is extracted from their creation time.
+    If only nodes are available, and not a timeline, the :func:`~modeling.modelers.EventModeler.model` function can be byassed and the other functions, such as :func:`~modeling.modelers.EventModeler.who`, called directly with the node.
     """
 
     def model(self, timeline):
