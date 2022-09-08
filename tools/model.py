@@ -13,7 +13,18 @@ You can also specify a file where to store the metadata:
     --file data/timeline.json \\
     --output data/models.json \\
     --meta data/models.meta.json \\
-    --model UnderstandingModeler
+    --modeler UnderstandingModeler
+
+The :class:`~modeling.modelers.understanding_modeler.UnderstandingModeler` accepts different types of understanding, which you can provide using the `--participants` argument:
+
+.. code-block:: bash
+
+    ./tools/concepts.py \\
+    --file data/timeline.json \\
+    --output data/models.json \\
+    --meta data/models.meta.json \\
+    --modeler UnderstandingModeler \\
+    --participants data/participants.json
 
 The output is a JSON file with one event model on each line:
 
@@ -28,8 +39,9 @@ The full list of accepted arguments:
 
     - ``-f --file``             *<Required>* A timeline or a list of timelines, collected using the :mod:`~tools.consume` tool, to model.
     - ``-o --output``           *<Required>* The file or directory where to save the event models.
-    - ``-m --model``            *<Required>* The modeler to use to generate models; supported: :class:`~modeling.modelers.understanding_modeler.UnderstandingModeler`.
+    - ``-m --modeler``          *<Required>* The modeler to use to generate models; supported: :class:`~modeling.modelers.understanding_modeler.UnderstandingModeler`.
     - ``--meta``                *<Optional>* The file where to save the meta data.
+    - ``--participants``        *<Optional>* A file containing a list of participants extracted using the :mod:`~tools.participants` tool.
 """
 
 import argparse
@@ -43,6 +55,7 @@ sys.path.insert(-1, root)
 sys.path.insert(-1, lib)
 
 import tools
+from tools import participants
 
 from modeling.modelers import UnderstandingModeler
 
@@ -54,8 +67,9 @@ def setup_args():
 
         - ``-f --file``             *<Required>* A timeline or a list of timelines collected using the :mod:`~tools.consume` tool, to model.
         - ``-o --output``           *<Required>* The file or directory where to save the event models.
-        - ``-m --model``            *<Required>* The modeler to use to generate models; supported: :class:`~modeling.modelers.understanding_modeler.UnderstandingModeler`.
+        - ``-m --modeler``          *<Required>* The modeler to use to generate models; supported: :class:`~modeling.modelers.understanding_modeler.UnderstandingModeler`.
         - ``--meta``                *<Optional>* The file where to save the meta data.
+        - ``--participants``        *<Optional>* A file containing a list of participants extracted using the :mod:`~tools.participants` tool.
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
@@ -67,10 +81,12 @@ def setup_args():
                         help='<Required> A timeline or a list of timelines, collected using the `consume` tool, to model.')
     parser.add_argument('-o', '--output', type=str, required=True,
                         help='<Required> The file or directory where to save the event models.')
-    parser.add_argument('-m', '--model', type=modeler, required=True,
+    parser.add_argument('-m', '--modeler', type=modeler, required=True,
                         help='<Required> The modeler to use to generate models; supported: `UnderstandingModeler`.')
     parser.add_argument('--meta', type=str, required=False,
                         help='<Optional> The file where to save the meta data.')
+    parser.add_argument('--participants', type=str, required=False,
+                        help='<Optional> A file containing a list of participants extracted using the `participants` tool.')
 
     args = parser.parse_args()
     return args
@@ -81,15 +97,24 @@ def main():
     """
 
     args = setup_args()
-    modeler = create_modeler(**vars(args)) # the model will be passed as one of the arguments
+    cmd, pcmd = tools.meta(args), tools.meta(args) # get the meta arguments
+    args = vars(args)
 
-    if args.meta:
-        cmd, pcmd = tools.meta(args), tools.meta(args) # get the meta arguments
-        cmd['model'], pcmd['model'] = str(type(modeler).__name__), str(type(modeler).__name__)
-        tools.save(args.meta, { 'cmd': cmd, 'pcmd': pcmd })
+    # load the participants
+    participants = tools.participants.load(args['participants']) if args['participants'] else [ ]
+    args['participants'], pcmd['participants'] = participants, participants
 
-    models = model(args.file)
-    tools.save(args.output, models) # to create the directory if it doesn't exist
+    # create the model; the type of the model will be passed as one of the arguments
+    modeler = create_modeler(**args)
+    cmd['modeler'], pcmd['modeler'] = str(type(modeler).__name__), str(type(modeler).__name__)
+
+    # model the timelines
+    models = model(args['file'])
+
+    # save the metadata and the output
+    if args['meta']:
+        tools.save(args['meta'], { 'cmd': cmd, 'pcmd': pcmd })
+    tools.save(args['output'], models)
 
 def is_own(output):
     """
@@ -149,19 +174,19 @@ def modeler(model):
 
     raise argparse.ArgumentTypeError(f"Invalid model: {method}")
 
-def create_modeler(model, *args, **kwargs):
+def create_modeler(modeler, *args, **kwargs):
     """
     Instantiate the modeler from the given class.
     Any arguments and keyword arguments are passed on to the constructor.
 
-    :param model: The class type of the modeler.
-    :type model:
+    :param modeler: The class type of the modeler.
+    :type modeler:
 
     :return: A new modeler.
     :rtype: :class:`~modeling.modelers.EventModeler`
     """
 
-    return model(*args, **kwargs)
+    return modeler(*args, **kwargs)
 
 if __name__ == "__main__":
     main()
