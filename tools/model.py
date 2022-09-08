@@ -32,7 +32,9 @@ The output is a JSON file with one event model on each line:
 		"who": [ "Verstappen" ],
 		"what": [ "won", "race" ],
 		"where": [ "Spain" ],
-		"when": [ 1658688327 ]
+		"when": [ 1658688327 ],
+        "why": [ ],
+        "how": [ ]
 	}
 
 The full list of accepted arguments:
