@@ -15,7 +15,7 @@ You can also specify a file where to store the metadata:
     --meta data/models.meta.json \\
     --modeler UnderstandingModeler
 
-The :class:`~modeling.modelers.understanding_modeler.UnderstandingModeler` accepts different types of understanding, which you can provide using the `--participants` argument:
+The :class:`~modeling.modelers.understanding_modeler.UnderstandingModeler` accepts different types of understanding, which you can provide using the `--participants` and `--concepts arguments:
 
 .. code-block:: bash
 
@@ -24,7 +24,8 @@ The :class:`~modeling.modelers.understanding_modeler.UnderstandingModeler` accep
     --output data/models.json \\
     --meta data/models.meta.json \\
     --modeler UnderstandingModeler \\
-    --participants data/participants.json
+    --participants data/participants.json \\
+    --concepts data/concepts.json \\
 
 The output is a JSON file with one event model on each line:
 
@@ -43,7 +44,8 @@ The full list of accepted arguments:
     - ``-o --output``           *<Required>* The file or directory where to save the event models.
     - ``-m --modeler``          *<Required>* The modeler to use to generate models; supported: :class:`~modeling.modelers.understanding_modeler.UnderstandingModeler`.
     - ``--meta``                *<Optional>* The file where to save the meta data.
-    - ``--participants``        *<Optional>* A file containing a list of participants extracted using the :mod:`~tools.participants` tool.
+    - ``--participants``        *<Optional>* A file containing a list of participants, symbolizing the Who and the Where, extracted using the :mod:`~tools.participants` tool.
+    - ``--concepts``            *<Optional>* A file containing a list of concepts, symbolizing the What, extracted using the :mod:`~tools.concepts` tool.
 """
 
 import argparse
@@ -57,7 +59,7 @@ sys.path.insert(-1, root)
 sys.path.insert(-1, lib)
 
 import tools
-from tools import participants
+from tools import concepts, participants
 
 from modeling.modelers import UnderstandingModeler
 
@@ -71,7 +73,8 @@ def setup_args():
         - ``-o --output``           *<Required>* The file or directory where to save the event models.
         - ``-m --modeler``          *<Required>* The modeler to use to generate models; supported: :class:`~modeling.modelers.understanding_modeler.UnderstandingModeler`.
         - ``--meta``                *<Optional>* The file where to save the meta data.
-        - ``--participants``        *<Optional>* A file containing a list of participants extracted using the :mod:`~tools.participants` tool.
+        - ``--participants``        *<Optional>* A file containing a list of participants, symbolizing the Who and the Where, extracted using the :mod:`~tools.participants` tool.
+        - ``--concepts``            *<Optional>* A file containing a list of concepts, symbolizing the What, extracted using the :mod:`~tools.concepts` tool.
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
@@ -88,7 +91,9 @@ def setup_args():
     parser.add_argument('--meta', type=str, required=False,
                         help='<Optional> The file where to save the meta data.')
     parser.add_argument('--participants', type=str, required=False,
-                        help='<Optional> A file containing a list of participants extracted using the `participants` tool.')
+                        help='<Optional> A file containing a list of participants, symbolizing the Who and the Where, extracted using the `participants` tool.')
+    parser.add_argument('--concepts', type=str, required=False,
+                        help='<Optional> A file containing a list of concepts, symbolizing the What, extracted using the `concepts` tool.')
 
     args = parser.parse_args()
     return args
@@ -105,6 +110,10 @@ def main():
     # load the participants
     participants = tools.participants.load(args['participants']) if args['participants'] else [ ]
     args['participants'], pcmd['participants'] = participants, participants
+
+    # load the concepts
+    concepts = tools.concepts.load(args['concepts']) if args['concepts'] else [ ]
+    args['concepts'], pcmd['concepts'] = concepts, concepts
 
     # create the model; the type of the model will be passed as one of the arguments
     modeler = create_modeler(**args)
