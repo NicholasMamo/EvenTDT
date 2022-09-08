@@ -509,6 +509,23 @@ def load(output):
 
     return Exportable.decode(output['timeline'])
 
+def load_splits(output):
+    """
+    Load the timelines' splits from the given file.
+
+    :param output: A dictionary containing this tool's output or a path to it.
+    :type output: dict or str
+
+    :return: The timelines in the given output.
+    :rtype: :class:`summarization.timeline.Timeline` or list of :class:`summarization.timeline.Timeline`
+    """
+
+    if tools.is_file(output):
+        with open(output) as file:
+            output = json.loads(''.join(file.readlines()))
+
+    return Exportable.decode(output['pcmd']['splits'])
+
 def understand(understanding, consumer, sample, max_inactivity, skip_retweets, skip_unverified, scheme=None, *args, **kwargs):
     """
     Run the understanding process.

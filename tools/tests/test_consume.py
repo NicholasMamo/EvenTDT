@@ -98,6 +98,30 @@ class TestConsume(unittest.TestCase):
         timelines = consume.load(file)
         self.assertEqual(Exportable.encode(original), Exportable.encode(timelines))
 
+    def test_load_splits_from_output(self):
+        """
+        Test that when loading the timelines' splits from the output of the tool, they are loaded correctly.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', '#ParmaMilan-streams.json')
+        with open(file) as f:
+            output = json.loads(''.join(f.readlines()))
+            splits = consume.load_splits(output)
+            original = Exportable.decode(output['pcmd']['splits'])
+        self.assertEqual(Exportable.encode(original), Exportable.encode(splits))
+
+    def test_load_splits_from_path(self):
+        """
+        Test that when loading the timelines' splits from a filepath, they are loaded correctly.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', '#ParmaMilan-streams.json')
+        with open(file) as f:
+            output = json.loads(''.join(f.readlines()))
+            original = Exportable.decode(output['pcmd']['splits'])
+        splits = consume.load_splits(file)
+        self.assertEqual(Exportable.encode(original), Exportable.encode(splits))
+
     def test_filters_all_words(self):
         """
         Test that when loading the filter tokens, all words are returned.
