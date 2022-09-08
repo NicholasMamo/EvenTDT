@@ -121,7 +121,7 @@ class UnderstandingModeler(EventModeler):
                 # check for entities that are subsets of the entity or its aliases
                 for entity in entities:
                     if (entity.lower() in profile.name.lower() or
-                        any( entity.lower() in reference for reference in profile.attributes.get('known_as', [ ]) )):
+                        any( entity.lower() in reference.lower() for reference in profile.attributes.get('known_as', [ ]) )):
                         found.append(participant)
                         entities[entity] = True # mark the entity as having been matched to a participant
 

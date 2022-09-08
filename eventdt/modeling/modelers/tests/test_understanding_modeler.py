@@ -519,6 +519,22 @@ class TestUnderstandingModeler(unittest.TestCase):
         models = modeler.model(timeline)
         self.assertEqual({ 'Carlos Sainz Jr.' }, { participant.name for participant in models[0].who })
 
+    def test_who_entity_subset_known_as_case_folds(self):
+        """
+        Test that identifying the Who maps named entities that appear in the text and as a substring of a participant, and it folds the case.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="Carlos Sainz crashes out with engine failure"), # extracts 'Carlos' as entity
+        ]))
+
+        participants = self.mock_participants()
+        participants['Carlos Sainz Jr.'].name = 'Sainz'
+        modeler = UnderstandingModeler(participants=participants.values())
+        models = modeler.model(timeline)
+        self.assertEqual({ 'Sainz' }, { participant.name for participant in models[0].who })
+
     def test_who_with_ner(self):
         """
         Test that identifying the Who with NER returns participants that do not appear in the understanding.
