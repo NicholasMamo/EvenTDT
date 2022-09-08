@@ -63,7 +63,7 @@ sys.path.insert(-1, root)
 sys.path.insert(-1, lib)
 
 import tools
-from tools import concepts, participants
+from tools import concepts, consume, participants
 
 from modeling.modelers import UnderstandingModeler
 
@@ -100,9 +100,9 @@ def setup_args():
                         help='<Optional> A file containing a list of participants, symbolizing the Who and the Where, extracted using the `participants` tool.')
     parser.add_argument('--concepts', type=str, required=False,
                         help='<Optional> A file containing a list of concepts, symbolizing the What, extracted using the `concepts` tool.')
-    parser.add_argument('--with-ner', type=bool, required=False, action='store_true',
+    parser.add_argument('--with-ner', required=False, action='store_true',
                         help='<Optional> Use NER to identify the Who and the Where in addition to the participants.')
-    parser.add_argument('--stream-override', type=bool, required=False, action='store_true',
+    parser.add_argument('--stream-override', required=False, action='store_true',
                         help='<Optional> Override the concepts and use the timeline\'s streams to identify the What; this parameters avoids linking an event to a stream without having burst.')
 
     args = parser.parse_args()
@@ -130,7 +130,7 @@ def main():
     cmd['modeler'], pcmd['modeler'] = str(type(modeler).__name__), str(type(modeler).__name__)
 
     # model the timelines
-    models = model(args['file'])
+    models = model(modeler, args['file'])
 
     # save the metadata and the output
     if args['meta']:
@@ -163,18 +163,28 @@ def load(output):
 
     return [ ]
 
-def model(file, *args, **kwargs):
-	"""
-	Formally model the given timelines.
+def model(modeler, files, *args, **kwargs):
+    """
+    Formally model the given timelines.
 
-	:param file: A path to the timeline file, generated using the :mod:`~tools.consume` tool.
-	:type file: str
-	
-	:return: A list of event models, one for each timeline.
+    :param files: A timeline or a list of timelines collected using the :mod:`~tools.consume` tool, to model.
+    :type files: list of str
+
+    :return: A list of event models, one for each node on the timeline.
     :rtype: list of :class:`~modeling.EventModel`
-	"""
+    """
 
-	return [ ]
+    models = [ ]
+
+    for file in files:
+        timelines = consume.load(file)
+        timelines = timelines if type(timelines) is list else [ timelines ]
+        splits = consume.load_splits(file) if len(timelines) > 0 else [ ]
+        for timeline in timelines:
+            _models = modeler.model(timeline)
+            models.extend(_models)
+
+    return models
 
 def modeler(model):
     """
