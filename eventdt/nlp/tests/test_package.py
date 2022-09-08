@@ -285,3 +285,52 @@ class TestPackage(unittest.TestCase):
 
         text = '1234567890'
         self.assertFalse(nlp.has_year(text))
+
+    def test_transliterate_returns_str(self):
+        """
+        Test that when transliterating strings, a string is returned.
+        """
+
+        text = 'Il joue très gros... Peut-être sa dernière chance'
+        self.assertEqual(str, type(nlp.transliterate(text)))
+
+    def test_transliterate_same_length(self):
+        """
+        Test that when transliterating strings, a string with the same length is returned.
+        """
+
+        text = 'Il joue très gros... Peut-être sa dernière chance'
+        self.assertEqual(len(text), len(nlp.transliterate(text)))
+
+    def test_transliterate_capitalization(self):
+        """
+        Test that when transliterating strings, capitalization is respected.
+        """
+
+        text = 'Être, c\'est beau'
+        self.assertEqual('Etre, c\'est beau', nlp.transliterate(text))
+
+    def test_transliterate_french_special_characters(self):
+        """
+        Test that when French special_characters are normalized, they are converted to the correct character.
+        """
+
+        text = 'Il joue très gros... Peut-être sa dernière chance'
+        self.assertEqual('Il joue tres gros... Peut-etre sa derniere chance', nlp.transliterate(text))
+
+    def test_transliterate_germanic_special_characters(self):
+        """
+        Test that when Germanic special_characters are normalized, they are converted to the correct character.
+        """
+
+        text = 'Så leker Özil äntligen'
+        self.assertEqual('Sa leker Ozil antligen', nlp.transliterate(text))
+
+    def test_transliterate_maltese_special_characters(self):
+        """
+        Test that when Maltese special_characters are normalized, they are converted to the correct character.
+        Note that this does not apply to Ħ/ħ.
+        """
+
+        text = 'Ċikku żar lil Ġanni il-Ħamrun'
+        self.assertEqual('Cikku zar lil Ganni il-Ħamrun', nlp.transliterate(text))

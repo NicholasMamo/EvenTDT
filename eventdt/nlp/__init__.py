@@ -9,6 +9,7 @@ EvenTDT provides functionality to make it easier to work with documents:
 
 import nltk
 import re
+import unicodedata
 
 from .document import Document
 from .tokenizer import Tokenizer
@@ -152,3 +153,10 @@ def has_year(text):
 
     year_pattern = re.compile("\\b[0-9]{4}\\b")
     return len(year_pattern.findall(text)) > 0
+
+def transliterate(text):
+    """
+    Transliterate the text, or remove any accents, replacing them with the closest character.
+    """
+
+    return ''.join((c for c in unicodedata.normalize('NFD', text) if unicodedata.category(c) != 'Mn'))
