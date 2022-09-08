@@ -47,6 +47,15 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "eventdt/twitter/__init__.py",
+			"settings":
+			{
+				"buffer_size": 18479,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -60,20 +69,20 @@
 		"selected_items":
 		[
 			[
-				"package",
-				"Package Control: Advanced Install Package"
-			],
-			[
-				"prettif",
-				"Pretty JSON: Format JSON Lines"
+				"prett",
+				"Pretty JSON: Format JSON"
 			],
 			[
 				"pretti",
 				"Pretty JSON: Format JSON Lines"
 			],
 			[
-				"prett",
-				"Pretty JSON: Format JSON"
+				"package",
+				"Package Control: Advanced Install Package"
+			],
+			[
+				"prettif",
+				"Pretty JSON: Format JSON Lines"
 			],
 			[
 				"theme",
@@ -204,6 +213,17 @@
 	],
 	"file_history":
 	[
+		"/home/nicholas/GitHub/EvenTDT/tools/bootstrap.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/terms.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/evaluation/terms.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/ate/stat/corpus/tests/test_rank.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/ate/stat/corpus/rank.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/attributes/extractors/linguistic.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/tokenized/sample-2.json",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/tokenized/sample-1.json",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/understanding_modeler.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/__init__.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/README.md",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/consume.py",
@@ -214,17 +234,13 @@
 		"/home/nicholas/GitHub/EvenTDT/temp/meta.json",
 		"/home/nicholas/GitHub/EvenTDT/tools/concepts.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/tests/test_understanding_modeler.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/understanding_modeler.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/tests.sh",
 		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_model.py",
 		"/home/nicholas/GitHub/EvenTDT/docsource/tools.rst",
-		"/home/nicholas/GitHub/EvenTDT/tools/evaluation/terms.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/evaluation/tests/test_terms.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/correlation.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/evaluation/ate.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/ate/correlations.json",
-		"/home/nicholas/GitHub/EvenTDT/tools/bootstrap.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_summarize.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/summarize.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/ate/application/tests/test_event.py",
@@ -239,7 +255,6 @@
 		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_bootstrap.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/participants.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_participants.py",
-		"/home/nicholas/GitHub/EvenTDT/tools/terms.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_correlation.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_terms.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/ate/gold.txt",
@@ -281,7 +296,6 @@
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/resolvers/resolver.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/postprocessors/postprocessor.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/__init__.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/attributes/extractors/linguistic.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/attributes/extractors/tests/test_linguistic.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/ner_participant_detector.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/split_consumer.py",
@@ -337,6 +351,34 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"\n",
+			"/home_students/nicholas/evaluation/data/elections/tokenized_verified/",
+			"/home_students/nicholas/evaluation/data/elections/tokenized_verified",
+			"\"practic\"",
+			"\\t",
+			"\\n",
+			"\\t",
+			"\\n",
+			"\\t",
+			"\\n",
+			"\\t",
+			"\\n",
+			"\\t",
+			"ParentedTree",
+			"level",
+			"depth",
+			"model",
+			" \n",
+			", node",
+			":param documents: The documents from which to extract ",
+			":param node: A node on the timeline.\n        :type node: :class:`~summarization.timeline.nodes.Node`",
+			"Timeline",
+			"timeline",
+			"one",
+			"timelines",
+			"Timeline",
+			"timeline",
+			"summarization",
 			"This can be overwritten if there is event understanding",
 			"scheme",
 			"idf",
@@ -436,35 +478,7 @@
 			"candidate_list",
 			"candidate_file",
 			"seed_file",
-			"seed_list",
-			"postprocessed",
-			"terms",
-			"correlations",
-			"_correlations",
-			"correlation.load",
-			"'ate', 'correlations",
-			"correlations",
-			"correlation",
-			"'ate', ",
-			"correlations",
-			"concept.load",
-			"correlation",
-			")\n",
-			"correlation",
-			"correlations",
-			"correlation",
-			"correlations",
-			"correlations.load",
-			"terms",
-			"sample",
-			"terms.isOwn",
-			"terms.",
-			"sample",
-			"own_bootstrap",
-			"own_terms",
-			"load_terms",
-			"ddafile",
-			"s[0]"
+			"seed_list"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -472,6 +486,16 @@
 		"regex": true,
 		"replace_history":
 		[
+			"\\t&\\t",
+			" \\\\\\\\\\n",
+			"\\t&\\t",
+			" \\\\\\\\\\n",
+			"\\t&\\t",
+			" \\\\\\\\\\n",
+			"\\t&\\t",
+			" \\\\\\\\\\n",
+			"\\\\\\\\\\n",
+			"\\t&\\t",
 			"is_own",
 			"\\t&\\t",
 			" \\\\\\\\ \\n",
@@ -504,6 +528,38 @@
 		{
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "eventdt/twitter/__init__.py",
+					"selected": true,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 18479,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6994,
+								7002
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2845.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"stack_multiselect": false,
+					"type": "text"
+				}
 			]
 		}
 	],
@@ -559,6 +615,54 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"twitterinit",
+				"eventdt/twitter/__init__.py"
+			],
+			[
+				"terms.",
+				"tools/terms.py"
+			],
+			[
+				"bootstra",
+				"tools/bootstrap.py"
+			],
+			[
+				"terms.py",
+				"tools/evaluation/terms.py"
+			],
+			[
+				"sample-2",
+				"eventdt/tests/corpora/tokenized/sample-2.json"
+			],
+			[
+				"sampl-1",
+				"eventdt/tests/corpora/tokenized/sample-1.json"
+			],
+			[
+				"sample-1",
+				"eventdt/tests/corpora/tokenized/sample-1.json"
+			],
+			[
+				"testrank",
+				"eventdt/ate/stat/corpus/tests/test_rank.py"
+			],
+			[
+				"rank",
+				"eventdt/ate/stat/corpus/rank.py"
+			],
+			[
+				"linguist",
+				"eventdt/attributes/extractors/linguistic.py"
+			],
+			[
+				"modelinit",
+				"eventdt/modeling/modelers/__init__.py"
+			],
+			[
+				"modeler",
+				"eventdt/modeling/modelers/understanding_modeler.py"
+			],
 			[
 				"consumersinit",
 				"eventdt/queues/consumers/__init__.py"
@@ -618,10 +722,6 @@
 			[
 				"corerlations",
 				"eventdt/tests/corpora/ate/correlations.json"
-			],
-			[
-				"bootstra",
-				"tools/bootstrap.py"
 			],
 			[
 				"ate.py",
@@ -718,10 +818,6 @@
 			[
 				"testboot",
 				"tools/tests/test_bootstrap.py"
-			],
-			[
-				"terms.",
-				"tools/terms.py"
 			],
 			[
 				"testpartici",
@@ -1030,46 +1126,6 @@
 			[
 				"testeldconsumer",
 				"eventdt/queues/consumers/algorithms/tests/test_eld_consumer.py"
-			],
-			[
-				"eldcons",
-				"eventdt/queues/consumers/algorithms/eld_consumer.py"
-			],
-			[
-				"cnsume",
-				"tools/consume.py"
-			],
-			[
-				"searchresolve",
-				"eventdt/apd/resolvers/external/wikipedia_search_resolver.py"
-			],
-			[
-				"fueg",
-				"eventdt/queues/consumers/algorithms/fuego_consumer.py"
-			],
-			[
-				"queueini",
-				"eventdt/queues/__init__.py"
-			],
-			[
-				"queue",
-				"venv/lib/python3.8/site-packages/urllib3/util/queue.py"
-			],
-			[
-				"toolstestpac",
-				"tools/tests/test_package.py"
-			],
-			[
-				"twitterinit",
-				"eventdt/twitter/__init__.py"
-			],
-			[
-				"simul",
-				"eventdt/twitter/file/simulated_reader.py"
-			],
-			[
-				"filreader",
-				"eventdt/twitter/file/simulated_reader.py"
 			]
 		],
 		"width": 0.0

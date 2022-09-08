@@ -25,7 +25,7 @@ The output is a JSON file with one event model on each line:
 
 The full list of accepted arguments:
 
-    - ``-f --file``             *<Required>* A timeline file colleced using the :mod:`~tools.consume` tool.
+    - ``-f --file``             *<Required>* A timeline or a list of timelines, collected using the :mod:`~tools.consume` tool, to model.
     - ``-o --output``           *<Required>* The file or directory where to save the event models.
     - ``--meta``                *<Optional>* The file where to save the meta data.
 """
@@ -48,7 +48,7 @@ def setup_args():
 
     Accepted arguments:
 
-        - ``-f --file``             *<Required>* A timeline file colleced using the :mod:`~tools.consume` tool.
+        - ``-f --file``             *<Required>* A timeline or a list of timelines collected using the :mod:`~tools.consume` tool, to model.
         - ``-o --output``           *<Required>* The file or directory where to save the event models.
         - ``--meta``                *<Optional>* The file where to save the meta data.
 
@@ -58,8 +58,8 @@ def setup_args():
 
     parser = argparse.ArgumentParser(description="Formally model timelines of events.")
 
-    parser.add_argument('-f', '--file', type=str, required=True,
-                        help='<Required> A timeline file colleced using the `consume` tool.')
+    parser.add_argument('-f', '--file', nargs='+', type=str, required=True,
+                        help='<Required> A timeline or a list of timelines, collected using the `consume` tool, to model.')
     parser.add_argument('-o', '--output', type=str, required=True,
                         help='<Required> The file or directory where to save the event models.')
     parser.add_argument('--meta', type=str, required=False,
