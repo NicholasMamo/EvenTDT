@@ -63,9 +63,6 @@ class TestModel(unittest.TestCase):
         Test that creating a modeler stores the NER preference.
         """
 
-        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "concepts.json")
-        concepts = clusters.load(file)
-
         modeler = model.create_modeler(UnderstandingModeler, with_ner=True)
         self.assertTrue(modeler.with_ner)
 
@@ -73,9 +70,6 @@ class TestModel(unittest.TestCase):
         """
         Test that creating a modeler stores the NER preference.
         """
-
-        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "concepts.json")
-        concepts = clusters.load(file)
 
         modeler = model.create_modeler(UnderstandingModeler, with_ner=False)
         self.assertFalse(modeler.with_ner)
@@ -117,3 +111,112 @@ class TestModel(unittest.TestCase):
                                     for timeline in consume.load(file)
                                     for node in timeline.nodes ]),
                          len(models))
+
+    def test_model_stream_override_false(self):
+        """
+        Test that when modeling timelines without overriding the What, certain models can have multiple What.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', "#ParmaMilan-simplified.json")
+
+        concepts = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "concepts.json")
+        concepts = clusters.load(concepts)
+        modeler = model.create_modeler(UnderstandingModeler, concepts=concepts)
+
+        models = model.model(modeler, [ file ], stream_override=False)
+        self.assertTrue(any( len(model.what) > 1 for model in models ))
+
+    def test_model_stream_override_false_all(self):
+        """
+        Test that when modeling timelines without overriding the What, all event models have, at least, one What (in case of a streamed timeline).
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', "#ParmaMilan-simplified.json")
+
+        concepts = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "concepts.json")
+        concepts = clusters.load(concepts)
+        modeler = model.create_modeler(UnderstandingModeler, concepts=concepts)
+
+        models = model.model(modeler, [ file ], stream_override=False)
+        self.assertTrue(all( model.what for model in models ))
+
+    def test_model_stream_override_true_returns_list_of_list(self):
+        """
+        Test that when modeling timelines and overriding the What, the models' what are returned as a list of list.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', "#ParmaMilan-simplified.json")
+
+        concepts = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "concepts.json")
+        concepts = clusters.load(concepts)
+        modeler = model.create_modeler(UnderstandingModeler, concepts=concepts)
+
+        models = model.model(modeler, [ file ], stream_override=False)
+        self.assertTrue(all( list is type(model.what) for model in models ))
+        self.assertTrue(all( list is type(concept) for model in models for concept in model.what ))
+
+    def test_model_stream_override_all(self):
+        """
+        Test that when modeling timelines and overriding the What, all models have exactly one topic.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', "#ParmaMilan-simplified.json")
+
+        concepts = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "concepts.json")
+        concepts = clusters.load(concepts)
+        modeler = model.create_modeler(UnderstandingModeler, concepts=concepts)
+
+        models = model.model(modeler, [ file ], stream_override=True)
+        self.assertTrue(all( model.what for model in models ))
+
+    def test_model_stream_override_true_returns_list_of_list(self):
+        """
+        Test that when modeling timelines and overriding the What, the models' what are returned as a list of list.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', "#ParmaMilan-simplified.json")
+
+        concepts = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "concepts.json")
+        concepts = clusters.load(concepts)
+        modeler = model.create_modeler(UnderstandingModeler, concepts=concepts)
+
+        models = model.model(modeler, [ file ], stream_override=True)
+        self.assertTrue(all( list is type(model.what) for model in models ))
+        self.assertTrue(all( list is type(concept) for model in models for concept in model.what ))
+
+    def test_model_stream_override_true(self):
+        """
+        Test that when modeling timelines and overriding the What, the event models are aligned with each timeline's topic.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', "#ParmaMilan-simplified.json")
+
+        concepts = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "concepts.json")
+        concepts = clusters.load(concepts)
+        modeler = model.create_modeler(UnderstandingModeler, concepts=concepts)
+
+        models = model.model(modeler, [ file ], stream_override=True)
+        splits = [ [ split ] for split, timeline in zip(consume.load_splits(file), consume.load(file))
+                             for node in timeline.nodes ]
+        what = [ model.what for model in models ]
+        self.assertEqual(splits, what)
+
+    def test_model_stream_override_true_subset(self):
+        """
+        Test that when modeling timelines and overriding the What, the event models' What is a subset of the original (non-overriden) event models' What. 
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'timelines', "#ParmaMilan-simplified.json")
+
+        concepts = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "concepts.json")
+        concepts = clusters.load(concepts)
+        modeler = model.create_modeler(UnderstandingModeler, concepts=concepts)
+
+        original = model.model(modeler, [ file ], stream_override=False)
+        original_what = [ json.dumps(sorted(model.what)) for model in original ]
+
+        override = model.model(modeler, [ file ], stream_override=True)
+        override_what = [ json.dumps(sorted(model.what)) for model in override ]
+
+        self.assertTrue(all( a[0] in b or 'EXCLUDED' in a[0]
+                             for a, b in zip(override_what, original_what) ))

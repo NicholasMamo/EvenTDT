@@ -130,7 +130,7 @@ def main():
     cmd['modeler'], pcmd['modeler'] = str(type(modeler).__name__), str(type(modeler).__name__)
 
     # model the timelines
-    models = model(modeler, args['file'])
+    models = model(modeler, args['file'], stream_override=args['stream_override'])
 
     # save the metadata and the output
     if args['meta']:
@@ -163,7 +163,7 @@ def load(output):
 
     return [ ]
 
-def model(modeler, files, *args, **kwargs):
+def model(modeler, files, stream_override=False):
     """
     Formally model the given timelines.
 
@@ -179,9 +179,14 @@ def model(modeler, files, *args, **kwargs):
     for file in files:
         timelines = consume.load(file)
         timelines = timelines if type(timelines) is list else [ timelines ]
-        splits = consume.load_splits(file) if len(timelines) > 0 else [ ]
-        for timeline in timelines:
+        splits = consume.load_splits(file) if len(timelines) > 1 else [ None ] * len(timelines)
+        for split, timeline in zip(splits, timelines):
             _models = modeler.model(timeline)
+
+            if stream_override:
+                for model in _models:
+                    model.what = [ split ]
+
             models.extend(_models)
 
     return models
