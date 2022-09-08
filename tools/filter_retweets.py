@@ -62,7 +62,13 @@ def main():
 
     # set up the arguments and prepare the data directory.
     args = setup_args()
-    cmd, pcmd = tools.meta(args), tools.meta(args)
+
+    with open(args.file) as file:
+        output = json.loads(''.join(file.readlines()))
+        cmd, pcmd = output['cmd'], output['pcmd']
+
+    cmd.update(tools.meta(args))
+    pcmd.update(tools.meta(args))
 
     timeline = clean(args.file)
     tools.save(args.output, { 'cmd': cmd, 'pcmd': pcmd, 'timeline': timeline })
