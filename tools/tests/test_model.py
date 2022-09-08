@@ -55,3 +55,25 @@ class TestModel(unittest.TestCase):
         modeler = model.create_modeler(UnderstandingModeler, concepts=concepts)
         self.assertEqual(len(concepts), len(modeler.concepts))
         self.assertEqual(concepts, modeler.concepts)
+
+    def test_create_modeler_with_NER(self):
+        """
+        Test that creating a modeler stores the NER preference.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "concepts.json")
+        concepts = clusters.load(file)
+
+        modeler = model.create_modeler(UnderstandingModeler, with_ner=True)
+        self.assertTrue(modeler.with_ner)
+
+    def test_create_modeler_without_NER(self):
+        """
+        Test that creating a modeler stores the NER preference.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "concepts.json")
+        concepts = clusters.load(file)
+
+        modeler = model.create_modeler(UnderstandingModeler, with_ner=False)
+        self.assertFalse(modeler.with_ner)

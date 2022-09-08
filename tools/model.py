@@ -15,7 +15,8 @@ You can also specify a file where to store the metadata:
     --meta data/models.meta.json \\
     --modeler UnderstandingModeler
 
-The :class:`~modeling.modelers.understanding_modeler.UnderstandingModeler` accepts different types of understanding, which you can provide using the `--participants` and `--concepts arguments:
+The :class:`~modeling.modelers.understanding_modeler.UnderstandingModeler` accepts different types of understanding, which you can provide using the `--participants` and `--concepts` arguments.
+In addition to the previously-generated understanding, you can also use NER to extract the Who and the Where using the `--with-ner` argument:
 
 .. code-block:: bash
 
@@ -26,6 +27,7 @@ The :class:`~modeling.modelers.understanding_modeler.UnderstandingModeler` accep
     --modeler UnderstandingModeler \\
     --participants data/participants.json \\
     --concepts data/concepts.json \\
+    --with-ner
 
 The output is a JSON file with one event model on each line:
 
@@ -46,6 +48,7 @@ The full list of accepted arguments:
     - ``--meta``                *<Optional>* The file where to save the meta data.
     - ``--participants``        *<Optional>* A file containing a list of participants, symbolizing the Who and the Where, extracted using the :mod:`~tools.participants` tool.
     - ``--concepts``            *<Optional>* A file containing a list of concepts, symbolizing the What, extracted using the :mod:`~tools.concepts` tool.
+    - ``--with-ner``            *<Optional>* Use NER to identify the Who and the Where in addition to the participants.
 """
 
 import argparse
@@ -75,6 +78,7 @@ def setup_args():
         - ``--meta``                *<Optional>* The file where to save the meta data.
         - ``--participants``        *<Optional>* A file containing a list of participants, symbolizing the Who and the Where, extracted using the :mod:`~tools.participants` tool.
         - ``--concepts``            *<Optional>* A file containing a list of concepts, symbolizing the What, extracted using the :mod:`~tools.concepts` tool.
+        - ``--with-ner``            *<Optional>* Use NER to identify the Who and the Where in addition to the participants.
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
@@ -94,6 +98,8 @@ def setup_args():
                         help='<Optional> A file containing a list of participants, symbolizing the Who and the Where, extracted using the `participants` tool.')
     parser.add_argument('--concepts', type=str, required=False,
                         help='<Optional> A file containing a list of concepts, symbolizing the What, extracted using the `concepts` tool.')
+    parser.add_argument('--with-ner', type=bool, required=False, action='store_true',
+                        help='<Optional> Use NER to identify the Who and the Where in addition to the participants.')
 
     args = parser.parse_args()
     return args
