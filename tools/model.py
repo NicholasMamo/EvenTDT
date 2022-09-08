@@ -185,7 +185,7 @@ def model(modeler, files, stream_override=False):
 
             if stream_override:
                 for model in _models:
-                    model.what = [ split ]
+                    model.attributes['what'] = [ split ]
 
             models.extend(_models)
 
