@@ -92,6 +92,7 @@ from logger import logger
 from nlp.cleaners import TweetCleaner
 from nlp.document import Document
 from nlp.tokenizer import Tokenizer
+from objects import Exportable
 import twitter
 
 tokenizer = Tokenizer(stem=True, split_hashtags=False, stopwords=list(stopwords.words("english")))
@@ -245,7 +246,7 @@ def load(output, which='postprocessed'):
         with open(output) as file:
             output = json.loads(''.join(file.readlines()))
 
-    return output[which]
+    return Exportable.decode(output[which])
 
 def create_detector(model, extractor, scorer, filter, resolver, extrapolator, postprocessor, *args, **kwargs):
     """

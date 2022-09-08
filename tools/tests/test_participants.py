@@ -24,6 +24,7 @@ from eventdt.apd.filters import *
 from eventdt.apd.resolvers import *
 from eventdt.apd.extrapolators import *
 from eventdt.apd.postprocessors import *
+from eventdt.attributes import Profile
 from eventdt.objects.exportable import Exportable
 from logger import logger
 logger.set_logging_level(logger.LogLevel.WARNING)
@@ -85,8 +86,8 @@ class TestAPD(unittest.TestCase):
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'participants.json')
         with open(file) as f:
             output = json.loads(''.join(f.readlines()))
-            participants = apd.load(output)
-            original = output['postprocessed']
+            participants = [ participant['participant'] for participant in apd.load(output) ]
+            original = [ participant['participant'] for participant in output['postprocessed'] ]
         self.assertEqual(original, participants)
 
     def test_load_from_path(self):
@@ -97,8 +98,8 @@ class TestAPD(unittest.TestCase):
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'participants.json')
         with open(file) as f:
             output = json.loads(''.join(f.readlines()))
-            original = output['postprocessed']
-        participants = apd.load(file)
+            original = [ participant['participant'] for participant in output['postprocessed'] ]
+        participants = [ participant['participant'] for participant in apd.load(file) ]
         self.assertEqual(original, participants)
 
     def test_load_which(self):
@@ -112,6 +113,18 @@ class TestAPD(unittest.TestCase):
             participants = apd.load(output, which='scored')
             original = output['scored']
         self.assertEqual(original, participants)
+
+    def test_load_with_profile(self):
+        """
+        Test that when loading participants, the profiles are decoded.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'participants.json')
+        with open(file) as f:
+            output = json.loads(''.join(f.readlines()))
+            participants = apd.load(output)
+
+        self.assertTrue(all( Profile.__name__ == type(participant['details']).__name__ for participant in participants ))
 
     def test_detect_rank_filter_subset(self):
         """
