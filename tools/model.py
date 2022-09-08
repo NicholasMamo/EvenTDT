@@ -49,6 +49,7 @@ The full list of accepted arguments:
     - ``--participants``        *<Optional>* A file containing a list of participants, symbolizing the Who and the Where, extracted using the :mod:`~tools.participants` tool.
     - ``--concepts``            *<Optional>* A file containing a list of concepts, symbolizing the What, extracted using the :mod:`~tools.concepts` tool.
     - ``--with-ner``            *<Optional>* Use NER to identify the Who and the Where in addition to the participants.
+    - ``--stream-override``     *<Optional>* Override the concepts and use the timeline's streams to identify the What; this parameters avoids linking an event to a stream without having burst.
 """
 
 import argparse
@@ -79,6 +80,7 @@ def setup_args():
         - ``--participants``        *<Optional>* A file containing a list of participants, symbolizing the Who and the Where, extracted using the :mod:`~tools.participants` tool.
         - ``--concepts``            *<Optional>* A file containing a list of concepts, symbolizing the What, extracted using the :mod:`~tools.concepts` tool.
         - ``--with-ner``            *<Optional>* Use NER to identify the Who and the Where in addition to the participants.
+        - ``--stream-override``     *<Optional>* Override the concepts and use the timeline's streams to identify the What; this parameters avoids linking an event to a stream without having burst.
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
@@ -100,6 +102,8 @@ def setup_args():
                         help='<Optional> A file containing a list of concepts, symbolizing the What, extracted using the `concepts` tool.')
     parser.add_argument('--with-ner', type=bool, required=False, action='store_true',
                         help='<Optional> Use NER to identify the Who and the Where in addition to the participants.')
+    parser.add_argument('--stream-override', type=bool, required=False, action='store_true',
+                        help='<Optional> Override the concepts and use the timeline\'s streams to identify the What; this parameters avoids linking an event to a stream without having burst.')
 
     args = parser.parse_args()
     return args
