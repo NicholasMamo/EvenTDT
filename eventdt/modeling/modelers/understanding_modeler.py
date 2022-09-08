@@ -49,7 +49,7 @@ class UnderstandingModeler(EventModeler):
     :vartype with_ner: bool
     """
 
-    def __init__(self, concepts=None, participants=None, with_ner=False):
+    def __init__(self, concepts=None, participants=None, with_ner=False, *args, **kwargs):
         """
         Initialize the :class:`~modeling.modelers.understanding_modeler.UnderstandingModeler` with understanding.
 
