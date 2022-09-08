@@ -16,10 +16,16 @@ for path in paths:
         sys.path.append(path)
 
 import model
-
-logger.set_logging_level(logger.LogLevel.WARNING)
+from eventdt.modeling.modelers import UnderstandingModeler
 
 class TestModel(unittest.TestCase):
     """
     Test the functionality of the model tool.
     """
+
+    def test_create_modeler_same_type(self):
+        """
+        Test that creating a modeler instantiates the correct type.
+        """
+
+        self.assertEqual(UnderstandingModeler, type(model.create_modeler(UnderstandingModeler)))
