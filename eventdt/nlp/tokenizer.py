@@ -36,8 +36,8 @@ path = os.path.join(os.path.dirname(__file__))
 if path not in sys.path:
     sys.path.insert(1, path)
 
+import nlp
 import re
-import unicodedata
 
 class Tokenizer(object):
     """
@@ -242,7 +242,7 @@ class Tokenizer(object):
         Split hashtags, casefold and remove accents.
         """
         text = self._split_hashtags(text) if self.split_hashtags else text
-        text = ''.join((c for c in unicodedata.normalize('NFD', text) if unicodedata.category(c) != 'Mn')) if self.normalize_special_characters else text
+        text = nlp.transliterate(text) if self.normalize_special_characters else text
 
         """
         Remove illegal components.
