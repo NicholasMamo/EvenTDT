@@ -112,6 +112,40 @@ class TestUnderstandingModeler(unittest.TestCase):
                              for participant, copy in zip(participants.values(), modeler.participants.values()) ))
         self.assertTrue(all( participant.name.strip() == participant.name for participant in modeler.participants.values() ))
 
+    def test_init_preprocesses_participants_converted_to_dicts(self):
+        """
+        Test that on initialization, the class pre-processes participant profiles if converted to dictionaries.
+        """
+
+        # convert the participants to a format similar to the participants tool's
+        participants = [ { 'participant': participant.name, 'details': participant } for participant in self.mock_participants().values() ]
+        modeler = UnderstandingModeler(participants=participants)
+        self.assertTrue(any( '(' in participant['details'].name and not '(' in copy.name
+                             for participant, copy in zip(participants, modeler.participants.values()) ))
+        self.assertTrue(all( participant.name.strip() == participant.name for participant in modeler.participants.values() ))
+
+    def test_init_preprocesses_participants_as_dict(self):
+        """
+        Test that on initialization, the class pre-processes participants if they are given as simple dictionaries without profiles.
+        """
+
+        # convert the participants to a format similar to the participants tool's
+        participants = [ { 'participant': participant.name } for participant in self.mock_participants().values() ]
+        modeler = UnderstandingModeler(participants=participants)
+        self.assertTrue(any( '(' in participant['participant'] and not '(' in copy.name
+                             for participant, copy in zip(participants, modeler.participants.values()) ))
+        self.assertTrue(all( participant.name.strip() == participant.name for participant in modeler.participants.values() ))
+
+    def test_init_preprocesses_participants_creates_profiles(self):
+        """
+        Test that on initialization, the class pre-processes participants and creates profiles for them even if they are given as simple dictionaries.
+        """
+
+        # convert the participants to a format similar to the participants tool's
+        participants = [ { 'participant': participant.name } for participant in self.mock_participants().values() ]
+        modeler = UnderstandingModeler(participants=participants)
+        self.assertTrue(all( Profile == type(participant) for participant in modeler.participants.values()))
+
     def test_init_copies_participants(self):
         """
         Test that on initialization, the class makes a copy of the participants if given.

@@ -56,8 +56,8 @@ class UnderstandingModeler(EventModeler):
         :param concepts: A list of concepts, or lists of terms, that represent subjects, or What happens.
         :type concepts: list of list of str
         :param participants: The participants that are used to understand the Who and the Where.
-                             The class expects participants to be :class:`~attributes.profile.Profile` instances.
-        :type participants: list of :class:`attributes.profile.Profile`
+                             The class expects participants to be :class:`~attributes.profile.Profile` instances but also accepts a list of participants from the :mod:`~tools.participants` tool.
+        :type participants: list of :class:`attributes.profile.Profile` or list of dict
         :param with_ner: A boolean indicating whether to use NER to identify common named entities that do not appear in the understanding.
         :type with_ner: bool
         """
@@ -71,7 +71,8 @@ class UnderstandingModeler(EventModeler):
         Pre-process the participants, which includes removing parentheses from their names to facilitate matching later on.
 
         :param participants: The participants that are used to understand the Who and the Where.
-        :type participants: list of :class:`attributes.profile.Profile`
+                             The class expects participants to be :class:`~attributes.profile.Profile` instances but also accepts a list of participants from the :mod:`~tools.participants` tool.
+        :type participants: list of :class:`attributes.profile.Profile` or list of dict
 
         :return: A copy of the participants, with parentheses removed from their names.
                  The function stores the participants as a dictionary with the names as keys and the profiles as values.
@@ -80,7 +81,12 @@ class UnderstandingModeler(EventModeler):
 
         participants = participants or [ ]
         participants = [ participant.copy() for participant in participants ]
-        for participant in participants:
+        for i, participant in enumerate(participants):
+            # convert the participant into a profile if it's not already one
+            if type(participant) is dict:
+                participant = participant['details'].copy() if 'details' in participant else Profile(name=participant['participant'])
+                participants[i] = participant
+
             participant.name = nlp.remove_parentheses(participant.name).strip()
         return { participant.name: participant for participant in participants }
 
