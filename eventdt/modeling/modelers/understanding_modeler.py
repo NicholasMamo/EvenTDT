@@ -205,12 +205,12 @@ class UnderstandingModeler(EventModeler):
                 if not profile.is_location():
                     continue
 
-                if profile.name.lower() in document.text.lower():
+                if nlp.transliterate(profile.name.lower()) in nlp.transliterate(document.text.lower()):
                     found.append(participant)
 
                 # check for entities that are subsets of the entity or its aliases
                 for entity in entities:
-                    if entity.lower() in profile.name.lower():
+                    if nlp.transliterate(entity.lower()) in nlp.transliterate(profile.name.lower()):
                         found.append(participant)
                         entities[entity] = True
 

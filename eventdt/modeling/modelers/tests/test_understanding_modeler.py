@@ -60,7 +60,7 @@ class TestUnderstandingModeler(unittest.TestCase):
             "Montreal": "Montreal (/ˌmʌntriˈɔːl/ (listen) MUN-tree-AWL; officially Montréal, French: [mɔ̃ʁeal] (listen)) is the second-most populous city in Canada and most populous city in the Canadian province of Quebec.",
             "Quebec (Canada)": "Quebec (/kəˈbɛk/ kə-BEK, sometimes /kwəˈbɛk/ kwə-BEK; French: Québec [kebɛk] (listen))[8] is one of the thirteen provinces and territories of Canada.",
             "Canada": "Canada is a country in North America.",
-            "Mogyoród": "Mogyoród is a small traditional village in Pest County, Hungary.",
+            "Mogyoród Hungary": "Mogyoród is a small traditional village in Pest County, Hungary.",
             "Nico Hülkenberg": "Nicolas Hülkenberg (German pronunciation: [ˈniːko ˈhʏlkənbɛɐ̯k], born 19 August 1987) is a German professional racing driver who currently serves as the reserve driver in Formula One for the Aston Martin F1 Team."
         }
 
@@ -1232,6 +1232,36 @@ class TestUnderstandingModeler(unittest.TestCase):
         entities = { entity.lower() for entity, _ in entities }
         where = { location.name for location in models[0].where }
         self.assertEqual(entities, where)
+
+    def test_where_transliterates_participants(self):
+        """
+        Test that identifying the Where transliterates participants.
+        This test addresses the first condition, which checks for the participant's name or aliases in the text.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        document = Document(text="In Mogyorod Hungary, the race is ready to start.")
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [ document ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values(), with_ner=False)
+        models = modeler.model(timeline)
+        self.assertTrue(models[0].where, [ participants['Mogyoród Hungary'] ])
+
+    def test_where_transliterates_entities(self):
+        """
+        Test that identifying the Where transliterates entities.
+        This test addresses the first condition and the second condition, which checks for entities that are subsets of the entity or its aliases.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        document = Document(text="In Mogyorod, the race is ready to start.")
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [ document ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values(), with_ner=False)
+        models = modeler.model(timeline)
+        self.assertTrue(models[0].where, [ participants['Mogyoród Hungary'] ])
 
     def test_when_uses_created_at(self):
         """
