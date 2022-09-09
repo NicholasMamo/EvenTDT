@@ -18,6 +18,7 @@ for path in paths:
 import model
 from eventdt.modeling import EventModel
 from eventdt.modeling.modelers import UnderstandingModeler
+from eventdt.objects import Exportable
 from tools import consume
 from tools import concepts as clusters
 from tools import participants as apd
@@ -26,6 +27,50 @@ class TestModel(unittest.TestCase):
     """
     Test the functionality of the model tool.
     """
+
+    def test_is_own_models(self):
+        """
+        Test that checking whether an output was produced by this tool returns true when given its own output.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'models', "#ParmaMilan.json")
+        with open(file) as f:
+            output = [ Exportable.decode(json.loads(line)) for line in f ]
+            self.assertTrue(model.is_own(output))
+
+    def test_is_own_other(self):
+        """
+        Test that checking whether an output was produced by this tool returns false when given another tool's output.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', "bootstrapped.json")
+        with open(file) as f:
+            output = json.loads(''.join(f.readlines()))
+            self.assertFalse(model.is_own(output))
+
+    def test_is_own_txt(self):
+        """
+        Test that checking whether an output was produced by this tool returns false when given a text file.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'ate', "gold.txt")
+        self.assertFalse(model.is_own(file))
+
+    def test_is_own_models_path(self):
+        """
+        Test that checking whether an output was produced by this tool returns true when given a path to a file containing its own output.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'models', "#ParmaMilan.json")
+        self.assertTrue(model.is_own(file))
+
+    def test_is_own_other_path(self):
+        """
+        Test that checking whether an output was produced by this tool returns false when given a path to a file containing another tool's output.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', "bootstrapped.json")
+        self.assertFalse(model.is_own(file))
 
     def test_create_modeler_same_type(self):
         """
