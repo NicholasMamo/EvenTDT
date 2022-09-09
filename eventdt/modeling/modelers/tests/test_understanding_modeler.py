@@ -60,6 +60,8 @@ class TestUnderstandingModeler(unittest.TestCase):
             "Montreal": "Montreal (/ˌmʌntriˈɔːl/ (listen) MUN-tree-AWL; officially Montréal, French: [mɔ̃ʁeal] (listen)) is the second-most populous city in Canada and most populous city in the Canadian province of Quebec.",
             "Quebec (Canada)": "Quebec (/kəˈbɛk/ kə-BEK, sometimes /kwəˈbɛk/ kwə-BEK; French: Québec [kebɛk] (listen))[8] is one of the thirteen provinces and territories of Canada.",
             "Canada": "Canada is a country in North America.",
+            "Mogyoród": "Mogyoród is a small traditional village in Pest County, Hungary.",
+            "Nico Hülkenberg": "Nicolas Hülkenberg (German pronunciation: [ˈniːko ˈhʏlkənbɛɐ̯k], born 19 August 1987) is a German professional racing driver who currently serves as the reserve driver in Formula One for the Aston Martin F1 Team."
         }
 
         extractor = LinguisticExtractor()
@@ -582,7 +584,7 @@ class TestUnderstandingModeler(unittest.TestCase):
 
     def test_who_with_ner_no_participants(self):
         """
-        Test that identifying the Where with NER returns all persons and orgaizations if there are no participants.
+        Test that identifying the Who with NER returns all persons and orgaizations if there are no participants.
         """
 
         timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
@@ -597,6 +599,36 @@ class TestUnderstandingModeler(unittest.TestCase):
         entities = { entity.lower() for entity, _ in entities }
         who = { participant.name for participant in models[0].who }
         self.assertEqual(entities, who)
+
+    def test_who_transliterates_participants(self):
+        """
+        Test that identifying the Who transliterates participants.
+        This test addresses the first condition, which checks for the participant's name or aliases in the text.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        document = Document(text="It seems likely that Nico Hulkenberg will remain a replacement")
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [ document ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values(), with_ner=False)
+        models = modeler.model(timeline)
+        self.assertTrue(models[0].who, [ participants['Nico Hülkenberg'] ])
+
+    def test_who_transliterates_entities(self):
+        """
+        Test that identifying the Who transliterates entities.
+        This test addresses the first condition and the second condition, which checks for entities that are subsets of the entity or its aliases.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        document = Document(text="It seems likely that Hulkenberg will remain a replacement")
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [ document ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values(), with_ner=False)
+        models = modeler.model(timeline)
+        self.assertTrue(models[0].who, [ participants['Nico Hülkenberg'] ])
 
     def test_what_returns_list(self):
         """

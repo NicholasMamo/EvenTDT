@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"asse",
+				"assertTrue"
+			],
+			[
 				"bootstr",
 				"bootstrapped-new"
 			],
@@ -48,13 +52,1754 @@
 	"buffers":
 	[
 		{
-			"file": "eventdt/twitter/__init__.py",
+			"file": "eventdt/modeling/modelers/understanding_modeler.py",
 			"settings":
 			{
-				"buffer_size": 18479,
+				"buffer_size": 13619,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
-			}
+			},
+			"undo_stack":
+			[
+				[
+					88,
+					1,
+					"insert",
+					{
+						"characters": ".lower"
+					},
+					"BgAAANsbAAAAAAAA3BsAAAAAAAAAAAAA3BsAAAAAAADdGwAAAAAAAAAAAADdGwAAAAAAAN4bAAAAAAAAAAAAAN4bAAAAAAAA3xsAAAAAAAAAAAAA3xsAAAAAAADgGwAAAAAAAAAAAADgGwAAAAAAAOEbAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA2xsAAAAAAADbGwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					89,
+					1,
+					"insert_snippet",
+					{
+						"contents": "($0)"
+					},
+					"AQAAAOEbAAAAAAAA4xsAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA4RsAAAAAAADhGwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					103,
+					1,
+					"insert",
+					{
+						"characters": "\nor"
+					},
+					"BQAAAGAbAAAAAAAAYRsAAAAAAAAAAAAAYRsAAAAAAABxGwAAAAAAAAAAAABxGwAAAAAAAHUbAAAAAAAAAAAAAHUbAAAAAAAAdhsAAAAAAAAAAAAAdhsAAAAAAAB3GwAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAYBsAAAAAAABgGwAAAAAAAAAAAAAAkHtA"
+				],
+				[
+					104,
+					2,
+					"left_delete",
+					null,
+					"AgAAAHYbAAAAAAAAdhsAAAAAAAABAAAAcnUbAAAAAAAAdRsAAAAAAAABAAAAbw",
+					"AQAAAAAAAAABAAAAdxsAAAAAAAB3GwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					105,
+					1,
+					"run_macro_file",
+					{
+						"file": "res://Packages/Default/Delete Line.sublime-macro"
+					},
+					"AQAAAGEbAAAAAAAAYRsAAAAAAAAVAAAAICAgICAgICAgICAgICAgICAgICAK",
+					"AQAAAAAAAAABAAAAdRsAAAAAAAB1GwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					107,
+					1,
+					"run_macro_file",
+					{
+						"file": "res://Packages/Default/Add Line Before.sublime-macro"
+					},
+					"AgAAADkbAAAAAAAAOhsAAAAAAAAAAAAAORsAAAAAAABJGwAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAORsAAAAAAAA5GwAAAAAAAAAAAAAAAAAA"
+				],
+				[
+					108,
+					1,
+					"insert",
+					{
+						"characters": "print"
+					},
+					"BQAAAEkbAAAAAAAAShsAAAAAAAAAAAAAShsAAAAAAABLGwAAAAAAAAAAAABLGwAAAAAAAEwbAAAAAAAAAAAAAEwbAAAAAAAATRsAAAAAAAAAAAAATRsAAAAAAABOGwAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAASRsAAAAAAABJGwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					109,
+					1,
+					"insert_snippet",
+					{
+						"contents": "($0)"
+					},
+					"AQAAAE4bAAAAAAAAUBsAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAThsAAAAAAABOGwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					110,
+					1,
+					"insert",
+					{
+						"characters": "entities"
+					},
+					"CAAAAE8bAAAAAAAAUBsAAAAAAAAAAAAAUBsAAAAAAABRGwAAAAAAAAAAAABRGwAAAAAAAFIbAAAAAAAAAAAAAFIbAAAAAAAAUxsAAAAAAAAAAAAAUxsAAAAAAABUGwAAAAAAAAAAAABUGwAAAAAAAFUbAAAAAAAAAAAAAFUbAAAAAAAAVhsAAAAAAAAAAAAAVhsAAAAAAABXGwAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAATxsAAAAAAABPGwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					116,
+					1,
+					"cut",
+					null,
+					"AQAAADkbAAAAAAAAORsAAAAAAAAgAAAAICAgICAgICAgICAgICAgIHByaW50KGVudGl0aWVzKQo",
+					"AQAAAAAAAAABAAAAVxsAAAAAAABXGwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					120,
+					1,
+					"paste",
+					null,
+					"AQAAABwZAAAAAAAAPBkAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAARRkAAAAAAABFGQAAAAAAAAAAAAAA8HFA"
+				],
+				[
+					125,
+					1,
+					"insert",
+					{
+						"characters": "\t"
+					},
+					"AQAAADsZAAAAAAAAPBkAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAOxkAAAAAAAA7GQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					126,
+					1,
+					"left_delete",
+					null,
+					"AQAAADsZAAAAAAAAOxkAAAAAAAABAAAAIA",
+					"AQAAAAAAAAABAAAAPBkAAAAAAAA8GQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					128,
+					1,
+					"left_delete",
+					null,
+					"AQAAACgZAAAAAAAAKBkAAAAAAAAEAAAAICAgIA",
+					"AQAAAAAAAAABAAAALBkAAAAAAAAsGQAAAAAAAAAAAAAAAFxA"
+				],
+				[
+					131,
+					1,
+					"insert",
+					{
+						"characters": "nlp."
+					},
+					"BAAAAC4ZAAAAAAAALxkAAAAAAAAAAAAALxkAAAAAAAAwGQAAAAAAAAAAAAAwGQAAAAAAADEZAAAAAAAAAAAAADEZAAAAAAAAMhkAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAALhkAAAAAAAAuGQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					134,
+					1,
+					"insert_snippet",
+					{
+						"contents": "($0)"
+					},
+					"AQAAADoZAAAAAAAAPBkAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAOhkAAAAAAAA6GQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					135,
+					1,
+					"insert",
+					{
+						"characters": "document.text"
+					},
+					"DQAAADsZAAAAAAAAPBkAAAAAAAAAAAAAPBkAAAAAAAA9GQAAAAAAAAAAAAA9GQAAAAAAAD4ZAAAAAAAAAAAAAD4ZAAAAAAAAPxkAAAAAAAAAAAAAPxkAAAAAAABAGQAAAAAAAAAAAABAGQAAAAAAAEEZAAAAAAAAAAAAAEEZAAAAAAAAQhkAAAAAAAAAAAAAQhkAAAAAAABDGQAAAAAAAAAAAABDGQAAAAAAAEQZAAAAAAAAAAAAAEQZAAAAAAAARRkAAAAAAAAAAAAARRkAAAAAAABGGQAAAAAAAAAAAABGGQAAAAAAAEcZAAAAAAAAAAAAAEcZAAAAAAAASBkAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAOxkAAAAAAAA7GQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					138,
+					1,
+					"run_macro_file",
+					{
+						"file": "res://Packages/Default/Delete Line.sublime-macro"
+					},
+					"AQAAABwZAAAAAAAAHBkAAAAAAAAvAAAAICAgICAgICAgICAgcHJpbnQobmxwLmVudGl0aWVzKGRvY3VtZW50LnRleHQpKQo",
+					"AQAAAAAAAAABAAAASBkAAAAAAABIGQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					146,
+					1,
+					"left_delete",
+					null,
+					"AQAAANsbAAAAAAAA2xsAAAAAAAAIAAAALmxvd2VyKCk",
+					"AQAAAAAAAAABAAAA2xsAAAAAAADjGwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					150,
+					1,
+					"insert",
+					{
+						"characters": ".lower"
+					},
+					"BgAAANsbAAAAAAAA3BsAAAAAAAAAAAAA3BsAAAAAAADdGwAAAAAAAAAAAADdGwAAAAAAAN4bAAAAAAAAAAAAAN4bAAAAAAAA3xsAAAAAAAAAAAAA3xsAAAAAAADgGwAAAAAAAAAAAADgGwAAAAAAAOEbAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA2xsAAAAAAADbGwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					151,
+					1,
+					"insert_snippet",
+					{
+						"contents": "($0)"
+					},
+					"AQAAAOEbAAAAAAAA4xsAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA4RsAAAAAAADhGwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					175,
+					1,
+					"insert",
+					{
+						"characters": "nlp.transliterate"
+					},
+					"EQAAAAUaAAAAAAAABhoAAAAAAAAAAAAABhoAAAAAAAAHGgAAAAAAAAAAAAAHGgAAAAAAAAgaAAAAAAAAAAAAAAgaAAAAAAAACRoAAAAAAAAAAAAACRoAAAAAAAAKGgAAAAAAAAAAAAAKGgAAAAAAAAsaAAAAAAAAAAAAAAsaAAAAAAAADBoAAAAAAAAAAAAADBoAAAAAAAANGgAAAAAAAAAAAAANGgAAAAAAAA4aAAAAAAAAAAAAAA4aAAAAAAAADxoAAAAAAAAAAAAADxoAAAAAAAAQGgAAAAAAAAAAAAAQGgAAAAAAABEaAAAAAAAAAAAAABEaAAAAAAAAEhoAAAAAAAAAAAAAEhoAAAAAAAATGgAAAAAAAAAAAAATGgAAAAAAABQaAAAAAAAAAAAAABQaAAAAAAAAFRoAAAAAAAAAAAAAFRoAAAAAAAAWGgAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAABRoAAAAAAAAFGgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					181,
+					1,
+					"insert_snippet",
+					{
+						"contents": "(${0:$SELECTION})"
+					},
+					"AgAAABYaAAAAAAAAFhoAAAAAAAAUAAAAcHJvZmlsZS5uYW1lLmxvd2VyKCkWGgAAAAAAACwaAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAFhoAAAAAAAAqGgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					191,
+					1,
+					"paste",
+					null,
+					"AgAAAHcaAAAAAAAAiBoAAAAAAAAAAAAAMBoAAAAAAABBGgAAAAAAAAAAAAA",
+					"AQAAAAAAAAACAAAAMBoAAAAAAAAwGgAAAAAAAAAAAAAAAPC/dxoAAAAAAAB3GgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					194,
+					1,
+					"insert_snippet",
+					{
+						"contents": "(${0:$SELECTION})"
+					},
+					"BAAAAEEaAAAAAAAAQRoAAAAAAAAVAAAAZG9jdW1lbnQudGV4dC5sb3dlcigpQRoAAAAAAABYGgAAAAAAAAAAAACbGgAAAAAAAJsaAAAAAAAAFQAAAGRvY3VtZW50LnRleHQubG93ZXIoKZsaAAAAAAAAshoAAAAAAAAAAAAA",
+					"AQAAAAAAAAACAAAAQRoAAAAAAABWGgAAAAAAAAAAAAAAAPC/mRoAAAAAAACuGgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					199,
+					1,
+					"paste",
+					null,
+					"AQAAAHUaAAAAAAAAhhoAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAdRoAAAAAAAB1GgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					201,
+					1,
+					"insert_snippet",
+					{
+						"contents": "(${0:$SELECTION})"
+					},
+					"AgAAAIYaAAAAAAAAhhoAAAAAAAARAAAAcmVmZXJlbmNlLmxvd2VyKCmGGgAAAAAAAJkaAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAhhoAAAAAAACXGgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					210,
+					1,
+					"paste",
+					null,
+					"AgAAAAwcAAAAAAAAHRwAAAAAAAAAAAAAxRsAAAAAAADWGwAAAAAAAAAAAAA",
+					"AQAAAAAAAAACAAAAxRsAAAAAAADFGwAAAAAAAAAAAAAAAPC/DBwAAAAAAAAMHAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					212,
+					1,
+					"insert_snippet",
+					{
+						"contents": "(${0:$SELECTION})"
+					},
+					"BAAAANYbAAAAAAAA1hsAAAAAAAAOAAAAZW50aXR5Lmxvd2VyKCnWGwAAAAAAAOYbAAAAAAAAAAAAADAcAAAAAAAAMBwAAAAAAAAOAAAAZW50aXR5Lmxvd2VyKCkwHAAAAAAAAEAcAAAAAAAAAAAAAA",
+					"AQAAAAAAAAACAAAA1hsAAAAAAADkGwAAAAAAAAAAAAAAAPC/LhwAAAAAAAA8HAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					218,
+					1,
+					"paste",
+					null,
+					"AQAAAOobAAAAAAAA+xsAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA6hsAAAAAAADqGwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					220,
+					1,
+					"insert_snippet",
+					{
+						"contents": "(${0:$SELECTION})"
+					},
+					"AgAAAPsbAAAAAAAA+xsAAAAAAAAUAAAAcHJvZmlsZS5uYW1lLmxvd2VyKCn7GwAAAAAAABEcAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA+xsAAAAAAAAPHAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					226,
+					1,
+					"insert_snippet",
+					{
+						"contents": "(${0:$SELECTION})"
+					},
+					"AgAAAFccAAAAAAAAVxwAAAAAAAARAAAAcmVmZXJlbmNlLmxvd2VyKClXHAAAAAAAAGocAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAVxwAAAAAAABoHAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					228,
+					1,
+					"paste",
+					null,
+					"AQAAAFccAAAAAAAAaBwAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAVxwAAAAAAABXHAAAAAAAAAAAAAAAAPC/"
+				]
+			]
+		},
+		{
+			"contents": "\"\"\"\nTest the functionality of the :class:`~modeling.modelers.understanding_modeler.UnderstandingModeler` class.\n\"\"\"\n\nfrom datetime import datetime\nimport json\nimport os\nimport sys\nimport unittest\n\npaths = [ os.path.join(os.path.dirname(__file__), '..', '..', '..') ]\nfor path in paths:\n    if path not in sys.path:\n        sys.path.append(path)\n\nfrom attributes.extractors import LinguisticExtractor\nfrom attributes import Profile\nfrom modeling import EventModel\nfrom modeling.modelers import UnderstandingModeler\nimport nlp\nfrom nlp import Document\nfrom summarization.timeline import Timeline\nfrom summarization.timeline.nodes import DocumentNode\n\nclass TestUnderstandingModeler(unittest.TestCase):\n    \"\"\"\n    Test the functionality of the :class:`~modeling.modelers.understanding_modeler.UnderstandingModeler` class.\n    \"\"\"\n\n    def mock_concepts(self):\n        \"\"\"\n        Create a list of mock concepts that represent the What.\n\n        :return: A list of concepts, each of which is a list of strings.\n        :rtype: list of list of string\n        \"\"\"\n\n        return [\n            [ 'engine', 'failure' ],\n            [ 'win' ],\n            [ 'tyre', 'pit', 'stop' ]\n        ]\n\n    def mock_participants(self):\n        \"\"\"\n        Create a list of mock participants that represent the Who and the Where.\n\n        :return: A dictionary with the participant names as keys and the profiles as values.\n        :rtype: dict\n        \"\"\"\n\n        corpus = {\n            \"Max Verstappen\": \"Max Emilian Verstappen (born 30 September 1997) is a Belgian-Dutch racing driver and the 2021 Formula One World Champion.\",\n            \"Pierre Gasly\": \"Pierre Gasly (French pronunciation: ​[pjɛʁ ɡasli]; born 7 February 1996) is a French racing driver, currently competing in Formula One under the French flag, racing for Scuderia AlphaTauri.\",\n            \"Carlos Sainz Jr.\": \"Carlos Sainz Vázquez de Castro (Spanish pronunciation: [ˈkaɾlos ˈsajnθ ˈβaθkeθ ðe ˈkastɾo] (listen); born 1 September 1994), otherwise known as Carlos Sainz Jr. or simply Carlos Sainz[a], is a Spanish racing driver currently competing in Formula One for Scuderia Ferrari.\",\n            \"George Russell (racing driver)\": \"George William Russell (/rʌsəl/; born 15 February 1998) is a British racing driver currently competing in Formula One for Mercedes.\",\n            \"FIA\": \"The Fédération Internationale de l'Automobile (FIA; English: International Automobile Federation) is an association established on 20 June 1904 to represent the interests of motoring organisations and motor car users.\",\n            \"Circuit Gilles Villeneuve\": \"The Circuit Gilles Villeneuve (also spelled Circuit Gilles-Villeneuve in French) is a 4.361 km (2.710 mi) motor racing circuit in Montreal, Quebec, Canada.\",\n            \"Circuit de Monaco\": \"Circuit de Monaco is a 3.337 km (2.074 mi) street circuit laid out on the city streets of Monte Carlo and La Condamine around the harbour of the Principality of Monaco.\",\n            \"Montreal\": \"Montreal (/ˌmʌntriˈɔːl/ (listen) MUN-tree-AWL; officially Montréal, French: [mɔ̃ʁeal] (listen)) is the second-most populous city in Canada and most populous city in the Canadian province of Quebec.\",\n            \"Quebec (Canada)\": \"Quebec (/kəˈbɛk/ kə-BEK, sometimes /kwəˈbɛk/ kwə-BEK; French: Québec [kebɛk] (listen))[8] is one of the thirteen provinces and territories of Canada.\",\n            \"Canada\": \"Canada is a country in North America.\",\n            \"Mogyoród\": \"Mogyoród is a small traditional village in Pest County, Hungary.\",\n            \"Nico Hülkenberg\": \"Nicolas Hülkenberg (German pronunciation: [ˈniːko ˈhʏlkənbɛɐ̯k], born 19 August 1987) is a German professional racing driver who currently serves as the reserve driver in Formula One for the Aston Martin F1 Team.\"\n        }\n\n        extractor = LinguisticExtractor()\n        return { name: extractor.extract(text, name=name) for name, text in corpus.items() }\n\n    def test_init_saves_concepts(self):\n        \"\"\"\n        Test that on initialization, the class saves the concepts if given.\n        \"\"\"\n\n        concepts = self.mock_concepts()\n        modeler = UnderstandingModeler(concepts=concepts)\n        self.assertEqual(concepts, modeler.concepts)\n\n    def test_init_saves_no_concepts(self):\n        \"\"\"\n        Test that on initialization, the class creates an empty list if no concepts are given.\n        \"\"\"\n\n        modeler = UnderstandingModeler()\n        self.assertEqual([ ], modeler.concepts)\n\n    def test_init_saves_participants(self):\n        \"\"\"\n        Test that on initialization, the class saves the participants if given.\n        \"\"\"\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        for participant, copy in zip(participants.values(), modeler.participants.values()):\n            self.assertEqual(participant.attributes, copy.attributes)\n\n    def test_init_saves_participants_as_dicts(self):\n        \"\"\"\n        Test that on initialization, the class saves the participants as dictionaries if given.\n        \"\"\"\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        self.assertEqual(dict, type(modeler.participants))\n\n    def test_init_preprocesses_participants(self):\n        \"\"\"\n        Test that on initialization, the class pre-processes the participants if given.\n        \"\"\"\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        self.assertTrue(any( '(' in participant.name and not '(' in copy.name\n                             for participant, copy in zip(participants.values(), modeler.participants.values()) ))\n        self.assertTrue(all( participant.name.strip() == participant.name for participant in modeler.participants.values() ))\n\n    def test_init_preprocesses_participants_converted_to_dicts(self):\n        \"\"\"\n        Test that on initialization, the class pre-processes participant profiles if converted to dictionaries.\n        \"\"\"\n\n        # convert the participants to a format similar to the participants tool's\n        participants = [ { 'participant': participant.name, 'details': participant } for participant in self.mock_participants().values() ]\n        modeler = UnderstandingModeler(participants=participants)\n        self.assertTrue(any( '(' in participant['details'].name and not '(' in copy.name\n                             for participant, copy in zip(participants, modeler.participants.values()) ))\n        self.assertTrue(all( participant.name.strip() == participant.name for participant in modeler.participants.values() ))\n\n    def test_init_preprocesses_participants_as_dict(self):\n        \"\"\"\n        Test that on initialization, the class pre-processes participants if they are given as simple dictionaries without profiles.\n        \"\"\"\n\n        # convert the participants to a format similar to the participants tool's\n        participants = [ { 'participant': participant.name } for participant in self.mock_participants().values() ]\n        modeler = UnderstandingModeler(participants=participants)\n        self.assertTrue(any( '(' in participant['participant'] and not '(' in copy.name\n                             for participant, copy in zip(participants, modeler.participants.values()) ))\n        self.assertTrue(all( participant.name.strip() == participant.name for participant in modeler.participants.values() ))\n\n    def test_init_preprocesses_participants_creates_profiles(self):\n        \"\"\"\n        Test that on initialization, the class pre-processes participants and creates profiles for them even if they are given as simple dictionaries.\n        \"\"\"\n\n        # convert the participants to a format similar to the participants tool's\n        participants = [ { 'participant': participant.name } for participant in self.mock_participants().values() ]\n        modeler = UnderstandingModeler(participants=participants)\n        self.assertTrue(all( Profile == type(participant) for participant in modeler.participants.values()))\n\n    def test_init_copies_participants(self):\n        \"\"\"\n        Test that on initialization, the class makes a copy of the participants if given.\n        \"\"\"\n\n        participants = self.mock_participants()\n        participant = participants['Max Verstappen']\n        original = participant.copy()\n\n        modeler = UnderstandingModeler(participants=participants.values())\n        copy = modeler.participants['Max Verstappen']\n\n        copy.attributes['test'] = { True }\n        self.assertFalse('test' in participant.attributes)\n\n        participant.attributes['test'] = { False }\n        self.assertTrue(copy.test)\n\n    def test_init_with_ner(self):\n        \"\"\"\n        Test that on initialization, the class saves the preference of whether to use NER to identify participants, in addition to the understanding.\n        \"\"\"\n\n        modeler = UnderstandingModeler(with_ner=False)\n        self.assertFalse(modeler.with_ner)\n\n        modeler = UnderstandingModeler(with_ner=True)\n        self.assertTrue(modeler.with_ner)\n\n    def test_who_returns_list(self):\n        \"\"\"\n        Test that the Who returns a list of profiles.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"He's done it! Max Verstappen wins the Grand Prix.\")\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual(list, type(models))\n        self.assertTrue(all( list == type(model.who) for model in models ))\n        self.assertTrue(all( Profile == type(profile) for model in models for profile in model.who ))\n\n    def test_who_no_participants(self):\n        \"\"\"\n        Test that when there are no participants, the Who returns nothing.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"He's done it! Max Verstappen wins the Grand Prix.\")\n        ]))\n\n        modeler = UnderstandingModeler()\n        models = modeler.model(timeline)\n        self.assertTrue(all( [ ] == model.who for model in models ))\n\n    def test_who_no_documents(self):\n        \"\"\"\n        Test that when there are no documents, the Who returns nothing.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [ ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler()\n        models = modeler.model(timeline)\n        self.assertTrue(all( [ ] == model.who for model in models ))\n\n    def test_who_matches_participants_beginning(self):\n        \"\"\"\n        Test that the Who correctly identifies participants at the beginning of the text.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"Max Verstappen wins the Grand Prix.\")\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual({ 'Max Verstappen' }, { participant.name for participant in models[0].who })\n\n    def test_who_matches_participants_middle(self):\n        \"\"\"\n        Test that the Who correctly identifies participants in the middle of the text.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"He's done it! Max Verstappen wins the Grand Prix.\")\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual({ 'Max Verstappen' }, { participant.name for participant in models[0].who })\n\n    def test_who_matches_participants_end(self):\n        \"\"\"\n        Test that the Who correctly identifies participants at the end of the text.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"The second Grand Prix of the season goes for Max Verstappen.\")\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual({ 'Max Verstappen' }, { participant.name for participant in models[0].who })\n\n    def test_who_matches_possessives(self):\n        \"\"\"\n        Test that the Who correctly identifies participants in the text even when used in possessives.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"He's done it! Max Verstappen's lead extended with latest Grand Prix.\")\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual({ 'Max Verstappen' }, { participant.name for participant in models[0].who })\n\n    def test_who_count_participants(self):\n        \"\"\"\n        Test that the Who correctly identifies participants in the text.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"He's done it! Max Verstappen wins the Grand Prix.\"),\n            Document(text=\"Max Verstappen wins the first Grand Prix of the season.\"),\n            Document(text=\"France's Pierre Gasly finishes second despite slow start.\"),\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual({ 'Max Verstappen' }, { participant.name for participant in models[0].who })\n\n    def test_who_unrecognized_participants(self):\n        \"\"\"\n        Test that if no participant matches the Who, the function returns an empty list.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"He's done it! Yuki Tsunoda wins the Grand Prix.\")\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual([ ], models[0].who)\n\n    def test_who_threshold_inclusive(self):\n        \"\"\"\n        Test that the Who's 50% threshold is inclusive.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"He's done it! Max Verstappen wins the Grand Prix.\"),\n            Document(text=\"The Dutch wins the first Grand Prix of the season.\")\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual('Max Verstappen', models[0].who[0].name)\n\n    def test_who_repeated_participant(self):\n        \"\"\"\n        Test that if a participant appears multiple times in one document, it is only counted once.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"Max Verstappen's done it! Max Verstappen wins the Grand Prix.\"),\n            Document(text=\"The Dutch wins the first Grand Prix of the season.\"),\n            Document(text=\"The inaugural Grand Prix is over, and it goes Dutch.\")\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual([ ], models[0].who)\n\n    def test_who_multiple(self):\n        \"\"\"\n        Test that a model's Who may have several participants.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"He's done it! Max Verstappen wins the Grand Prix, Pierre Gasly the runner-up.\"),\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual({ 'Max Verstappen', 'Pierre Gasly' },\n                         { participant.name for participant in models[0].who })\n\n    def test_who_with_parentheses(self):\n        \"\"\"\n        Test that identifying the Who ignores parentheses.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"He's done it! Max Verstappen wins the Grand Prix, George Russell the runner-up.\"),\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual({ 'Max Verstappen', 'George Russell' },\n                         { participant.name for participant in models[0].who })\n\n    def test_who_case_fold_checks(self):\n        \"\"\"\n        Test that identifying the Who ignores the case.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"max verstappen wins the grand prix, george russell the runner-up.\"),\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual({ 'Max Verstappen', 'George Russell' },\n                         { participant.name for participant in models[0].who })\n\n    def test_who_checks_known_as(self):\n        \"\"\"\n        Test that identifying the Who also uses the `known_as` attribute if it exists.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"Carlos Sainz crashes out with engine failure.\"),\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual({ 'Carlos Sainz Jr.' }, { participant.name for participant in models[0].who })\n\n    def test_who_checks_known_as_case_folds(self):\n        \"\"\"\n        Test that identifying the Who also uses the `known_as` attribute if it exists, and it folds the case.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"carlos sainz crashes out with engine failure\"),\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual({ 'Carlos Sainz Jr.' }, { participant.name for participant in models[0].who })\n\n    def test_who_known_as_like_name(self):\n        \"\"\"\n        Test that identifying the Who, mentions of the `known_as` attribute are treated exactly the same as if the full name is mentioned.\n        In other words, they count to the 50% threshold too.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"Carlos Sainz crashes out with engine failure.\"),\n            Document(text=\"Max Verstappen wins the grand prix, George Russell the runner-up.\"),\n            Document(text=\"Engine failure marks Carlos Sainz Jr.'s Grand Prix.\"),\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual({ 'Carlos Sainz Jr.' }, { participant.name for participant in models[0].who })\n\n    def test_who_accepts_persons(self):\n        \"\"\"\n        Test that identifying the Who accepts persons.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"Carlos Sainz crashes out with engine failure.\"),\n            Document(text=\"Max Verstappen wins the grand prix, George Russell the runner-up.\"),\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual({ 'Carlos Sainz Jr.', 'Max Verstappen', 'George Russell' }, { participant.name for participant in models[0].who })\n        self.assertTrue(all( participant.is_person() for participant in models[0].who ))\n\n    def test_who_accepts_organizations(self):\n        \"\"\"\n        Test that identifying the Who accepts organizations.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"FIA outlines rule changes ahead of new season.\"),\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual({ 'FIA' }, { participant.name for participant in models[0].who })\n        self.assertTrue(all( participant.is_organization() for participant in models[0].who ))\n\n    def test_who_rejects_locations(self):\n        \"\"\"\n        Test that identifying the Who rejects locations.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"Quebec, Canada: everything set for the Montreal Grand Prix.\"),\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual(set(), { participant.name for participant in models[0].who })\n\n    def test_who_type_mix(self):\n        \"\"\"\n        Test that identifying the Who accepts only persons or locations even when there are locations.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"Quebec, Canada: Max Verstappen wins the Montreal Grand Prix.\"),\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual({ 'Max Verstappen' }, { participant.name for participant in models[0].who })\n        self.assertTrue(all( participant.is_person() or participant.is_organization() for participant in models[0].who ))\n\n    def test_who_entity_subset(self):\n        \"\"\"\n        Test that identifying the Who maps named entities that appear in the text and as a substring of a participant.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"Canada: Carlos wins the Grand Prix.\"),\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual({ 'Carlos Sainz Jr.' }, { participant.name for participant in models[0].who })\n\n    def test_who_entity_subset_known_as_case_folds(self):\n        \"\"\"\n        Test that identifying the Who maps named entities that appear in the text and as a substring of a participant, and it folds the case.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"Carlos Sainz crashes out with engine failure\"), # extracts 'Carlos' as entity\n        ]))\n\n        participants = self.mock_participants()\n        participants['Carlos Sainz Jr.'].name = 'Sainz'\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual({ 'Sainz' }, { participant.name for participant in models[0].who })\n\n    def test_who_with_ner(self):\n        \"\"\"\n        Test that identifying the Who with NER returns participants that do not appear in the understanding.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"In Canada, the Canadian Grand Prix ends without much fanfare.\"),\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values(), with_ner=True)\n        models = modeler.model(timeline)\n        self.assertEqual({ 'grand prix' }, { participant.name for participant in models[0].who })\n\n    def test_who_with_ner_only_unresolved(self):\n        \"\"\"\n        Test that identifying the Who with NER only returns named entities that do not resolve to a participant from the understanding.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"Canada: Carlos wins the Grand Prix followed by Verstappen.\"),\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values(), with_ner=True)\n        models = modeler.model(timeline)\n        self.assertEqual({ 'Carlos Sainz Jr.', 'Max Verstappen', 'grand prix' }, { participant.name for participant in models[0].who })\n\n    def test_who_with_ner_only_persons_and_organizations(self):\n        \"\"\"\n        Test that identifying the Who with NER only returns persons and organizations.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"In Canada, Hamilton and Leclerc repeat the Spain double in the today's Grand Prix.\"),\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values(), with_ner=True)\n        models = modeler.model(timeline)\n        self.assertEqual({ 'hamilton', 'leclerc', 'grand prix' }, { participant.name for participant in models[0].who })\n\n    def test_who_with_ner_no_participants(self):\n        \"\"\"\n        Test that identifying the Who with NER returns all persons and orgaizations if there are no participants.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        document = Document(text=\"In Canada, Hamilton and Leclerc repeat the Spain double in the today's Grand Prix.\")\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [ document ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(with_ner=True)\n        entities = nlp.entities(document.text, netype=[ 'PERSON', 'ORGANIZATION', 'FACILITY' ])\n\n        models = modeler.model(timeline)\n        entities = { entity.lower() for entity, _ in entities }\n        who = { participant.name for participant in models[0].who }\n        self.assertEqual(entities, who)\n\n    def test_who_with_transliteration(self):\n        \"\"\"\n        Test that identifying the Who applies transliteration to all persons.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        document = Document(text=\"Nico\")\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [ document ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(with_ner=True)\n        entities = nlp.entities(document.text, netype=[ 'PERSON', 'ORGANIZATION', 'FACILITY' ])\n\n        models = modeler.model(timeline)\n        entities = { entity.lower() for entity, _ in entities }\n        who = { participant.name for participant in models[0].who }\n        self.assertEqual(entities, who)\n\n\n    def test_what_returns_list(self):\n        \"\"\"\n        Test that the What returns a list of concepts.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        document = Document(dimensions=[ 'leclerc', 'engine' ])\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [ document ]))\n\n        concepts = self.mock_concepts()\n        modeler = UnderstandingModeler(concepts=concepts)\n        models = modeler.model(timeline)\n\n        self.assertTrue(models[0].what)\n        self.assertEqual(list, type(models[0].what))\n        self.assertTrue(all( list == type(concept) for concept in models[0].what ))\n\n    def test_what_no_concepts(self):\n        \"\"\"\n        Test that the What returns an empty list when it has no concepts.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        document = Document(dimensions=[ 'leclerc', 'engine' ])\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [ document ]))\n\n        modeler = UnderstandingModeler()\n        models = modeler.model(timeline)\n        self.assertEqual([ ], models[0].what)\n\n    def test_what_no_documents(self):\n        \"\"\"\n        Test that the What returns an empty list when it has no documents.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [ ]))\n\n        concepts = self.mock_concepts()\n        modeler = UnderstandingModeler(concepts=concepts)\n        models = modeler.model(timeline)\n        self.assertEqual([ ], models[0].what)\n\n    def test_what_in_concepts(self):\n        \"\"\"\n        Test that whatever the What returns exists is a given concept.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        document = Document(dimensions=[ 'leclerc', 'win', 'failure', 'engine' ])\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [ document ]))\n\n        concepts = self.mock_concepts()\n        modeler = UnderstandingModeler(concepts=concepts)\n        models = modeler.model(timeline)\n        self.assertTrue(all( concept in concepts for concept in models[0].what ))\n\n    def test_what_ignores_text(self):\n        \"\"\"\n        Test that the What ignores the text and only looks for terms in the dimensions.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        document = Document(\"Leclerc crashes out with engine failure\")\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [ document ]))\n\n        concepts = self.mock_concepts()\n        modeler = UnderstandingModeler(concepts=concepts)\n        models = modeler.model(timeline)\n        self.assertEqual([ ], models[0].what)\n\n    def test_what_counts_terms(self):\n        \"\"\"\n        Test that the What correctly counts the number of concepts that appear in documents.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        documents = [\n            Document(dimensions=[ 'engine', 'failure' ]),\n            Document(dimensions=[ 'pit', 'stop', 'engine', 'failure' ]),\n            Document(dimensions=[ 'leclerc' ]),\n        ]\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), documents))\n\n        concepts = self.mock_concepts()\n        modeler = UnderstandingModeler(concepts=concepts)\n        models = modeler.model(timeline)\n        self.assertEqual([[ 'engine', 'failure' ]], models[0].what)\n\n    def test_what_counts_document_frequency(self):\n        \"\"\"\n        Test that the What counts the document frequency of concepts to decide the subject.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        documents = [\n            Document(dimensions=[ 'engine', 'failure', 'engine', 'failure' ]),\n            Document(dimensions=[ 'pit', 'stop' ]),\n            Document(dimensions=[ 'leclerc' ]),\n        ]\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), documents))\n\n        concepts = self.mock_concepts()\n        modeler = UnderstandingModeler(concepts=concepts)\n        models = modeler.model(timeline)\n        self.assertEqual([ ], models[0].what)\n\n    def test_what_subset_of_concept(self):\n        \"\"\"\n        Test that a few words are enough to capture a concept, as opposed to needing all terms to be present.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        documents = [\n            Document(dimensions=[ 'engine' ]),\n            Document(dimensions=[ 'pit', 'stop', 'failure' ]),\n            Document(dimensions=[ 'leclerc' ]),\n        ]\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), documents))\n\n        concepts = self.mock_concepts()\n        modeler = UnderstandingModeler(concepts=concepts)\n        models = modeler.model(timeline)\n        self.assertEqual([[ 'engine', 'failure' ]], models[0].what)\n\n    def test_what_allows_mixed_terms(self):\n        \"\"\"\n        Test that different words from the same concept contribute to the concept's score.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        documents = [\n            Document(dimensions=[ 'failure' ]),\n            Document(dimensions=[ 'pit', 'stop', 'engine' ]),\n            Document(dimensions=[ 'leclerc' ]),\n        ]\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), documents))\n\n        concepts = self.mock_concepts()\n        modeler = UnderstandingModeler(concepts=concepts)\n        models = modeler.model(timeline)\n        self.assertEqual([[ 'engine', 'failure' ]], models[0].what)\n\n    def test_what_threshold_inclusive(self):\n        \"\"\"\n        Test that the 50% threshold is inclusive when identifying the What.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        documents = [\n            Document(dimensions=[ 'failure' ]),\n            Document(dimensions=[ 'pit', 'stop', 'engine' ]),\n            Document(dimensions=[ 'leclerc' ]),\n            Document(dimensions=[ 'win', 'grand', 'prix' ]),\n        ]\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), documents))\n\n        concepts = self.mock_concepts()\n        modeler = UnderstandingModeler(concepts=concepts)\n        models = modeler.model(timeline)\n        self.assertEqual([[ 'engine', 'failure' ]], models[0].what)\n\n    def test_what_multiple_concepts(self):\n        \"\"\"\n        Test that multiple concepts can be identified in one node.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        documents = [\n            Document(dimensions=[ 'failure' ]),\n            Document(dimensions=[ 'pit', 'stop', 'engine' ]),\n            Document(dimensions=[ 'leclerc', 'win' ]),\n            Document(dimensions=[ 'win', 'grand', 'prix' ]),\n        ]\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), documents))\n\n        concepts = self.mock_concepts()\n        modeler = UnderstandingModeler(concepts=concepts)\n        models = modeler.model(timeline)\n        self.assertEqual(2, len(models[0].what))\n        self.assertTrue([ 'engine', 'failure' ] in models[0].what)\n        self.assertTrue([ 'win' ] in models[0].what)\n\n    def test_what_unrecognized_terms(self):\n        \"\"\"\n        Test that unrecognized terms are excluded from the What.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        documents = [\n            Document(dimensions=[ 'hamilton' ]),\n            Document(dimensions=[ 'leclerc', 'hamilton' ]),\n            Document(dimensions=[ 'leclerc', 'hamilton' ]),\n            Document(dimensions=[ 'hamilton' ]),\n        ]\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), documents))\n\n        concepts = self.mock_concepts()\n        modeler = UnderstandingModeler(concepts=concepts)\n        models = modeler.model(timeline)\n        self.assertEqual([ ], models[0].what)\n\n    def test_what_case_insensitive(self):\n        \"\"\"\n        Test that extracting the What performs case-insensitive checks.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        documents = [\n            Document(dimensions=[ 'FAILURE' ]),\n            Document(dimensions=[ 'PIT', 'STOP', 'ENGINE' ]),\n            Document(dimensions=[ 'LECLERC', 'WIN' ]),\n            Document(dimensions=[ 'WIN', 'GRAND', 'PRIX' ]),\n        ]\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), documents))\n\n        concepts = self.mock_concepts()\n        modeler = UnderstandingModeler(concepts=concepts)\n        models = modeler.model(timeline)\n        self.assertEqual(2, len(models[0].what))\n        self.assertTrue([ 'engine', 'failure' ] in models[0].what)\n        self.assertTrue([ 'win' ] in models[0].what)\n\n    def test_what_case_insensitive_reverse(self):\n        \"\"\"\n        Test that extracting the What performs case-insensitive checks.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        documents = [\n            Document(dimensions=[ 'failure' ]),\n            Document(dimensions=[ 'pit', 'stop', 'engine' ]),\n            Document(dimensions=[ 'leclerc', 'win' ]),\n            Document(dimensions=[ 'win', 'grand', 'prix' ]),\n        ]\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), documents))\n\n        concepts = self.mock_concepts()\n        concepts = [ [ term.upper() for term in concept ] for concept in concepts ]\n        modeler = UnderstandingModeler(concepts=concepts)\n        models = modeler.model(timeline)\n        self.assertEqual(2, len(models[0].what))\n        self.assertTrue([ 'ENGINE', 'FAILURE' ] in models[0].what)\n        self.assertTrue([ 'WIN' ] in models[0].what)\n\n    def test_where_returns_list(self):\n        \"\"\"\n        Test that the Where returns a list of profiles.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"Uneventful Montreal Grand Prix ends with a Dutch flair.\")\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual(list, type(models))\n        self.assertTrue(all( list == type(model.where) for model in models ))\n        self.assertTrue(all( Profile == type(profile) for model in models for profile in model.where ))\n\n    def test_where_no_participants(self):\n        \"\"\"\n        Test that when there are no participants, the Where returns nothing.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"Uneventful Montreal Grand Prix ends with a Dutch flair.\")\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler()\n        models = modeler.model(timeline)\n        self.assertTrue(all( [ ] == model.where for model in models ))\n\n    def test_where_no_documents(self):\n        \"\"\"\n        Test that when there are no documents, the Where returns nothing.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [ ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler()\n        models = modeler.model(timeline)\n        self.assertTrue(all( [ ] == model.where for model in models ))\n\n    def test_where_matches_participants_beginning(self):\n        \"\"\"\n        Test that the Where correctly identifies participants at the beginning of the text.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"Montreal Grand Prix ends with a Dutch flair.\")\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual({ 'Montreal' }, { participant.name for participant in models[0].where })\n\n    def test_where_matches_participants_middle(self):\n        \"\"\"\n        Test that the Where correctly identifies participants in the middle of the text.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"Uneventful Montreal Grand Prix ends with a Dutch flair.\")\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual({ 'Montreal' }, { participant.name for participant in models[0].where })\n\n    def test_where_matches_participants_end(self):\n        \"\"\"\n        Test that the Where correctly identifies participants at the beginning of the text.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"Dutch flair in Montreal.\")\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual({ 'Montreal' }, { participant.name for participant in models[0].where })\n\n    def test_where_matches_possessives(self):\n        \"\"\"\n        Test that the Where correctly identifies participants in the text even when used in possessives.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"Uneventful Montreal's Grand Prix ends with a Dutch flair.\")\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual({ 'Montreal' }, { participant.name for participant in models[0].where })\n\n    def test_where_count_participants(self):\n        \"\"\"\n        Test that the Where correctly identifies participants in the text.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"Uneventful Montreal Grand Prix ends with a Dutch flair.\"),\n            Document(text=\"Max Verstappen wins the Montreal Grand Prix.\"),\n            Document(text=\"France's Pierre Gasly finishes second despite slow start.\"),\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual({ 'Montreal' }, { participant.name for participant in models[0].where })\n\n    def test_where_unrecognized_participants(self):\n        \"\"\"\n        Test that if no participant matches the Where, the function returns an empty list.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"He's done it! Yuki Tsunoda wins the Imola Grand Prix.\")\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual([ ], models[0].where)\n\n    def test_where_threshold_inclusive(self):\n        \"\"\"\n        Test that the Where's 50% threshold is inclusive.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"Uneventful Montreal Grand Prix ends with a Dutch flair.\"),\n            Document(text=\"The Dutch wins the first Grand Prix of the season.\")\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual('Montreal', models[0].where[0].name)\n\n    def test_where_repeated_participant(self):\n        \"\"\"\n        Test that if a participant appears multiple times in one document, it is only counted once.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"Montreal regales! Max Verstappen wins the Montreal Grand Prix.\"),\n            Document(text=\"The Dutch wins the first Grand Prix of the season.\"),\n            Document(text=\"The inaugural Grand Prix is over, and it goes Dutch.\")\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual([ ], models[0].where)\n\n    def test_where_multiple(self):\n        \"\"\"\n        Test that a model's Where may have several participants.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"It's all over in Canada. The Montreal Grand Prix goes to the Dutch leader.\"),\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual({ 'Montreal', 'Canada' },\n                         { participant.name for participant in models[0].where })\n\n    def test_where_with_parentheses(self):\n        \"\"\"\n        Test that identifying the Where ignores parentheses.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"Yuki Tsunoda finishes first in Quebec.\"),\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual({ 'Quebec' }, { participant.name for participant in models[0].where })\n\n    def test_where_case_fold_checks(self):\n        \"\"\"\n        Test that identifying the Where ignores the case.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"it's all over in canada as the montreal grand prix goes to the dutch leader.\"),\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual({ 'Montreal', 'Canada' },\n                         { participant.name for participant in models[0].where })\n\n    def test_where_rejects_persons(self):\n        \"\"\"\n        Test that identifying the Where rejects persons.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"Carlos Sainz crashes out with engine failure.\"),\n            Document(text=\"Max Verstappen wins the grand prix, George Russell the runner-up.\"),\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual(set( ), { participant.name for participant in models[0].where })\n\n    def test_where_rejects_organizations(self):\n        \"\"\"\n        Test that identifying the Where rejects organizations.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"FIA outlines rule changes ahead of new season.\"),\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual(set( ), { participant.name for participant in models[0].where })\n\n    def test_where_accepts_locations(self):\n        \"\"\"\n        Test that identifying the Where accepts locations.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"Quebec, Canada: everything set for the Montreal Grand Prix.\"),\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual({ 'Quebec', 'Canada', 'Montreal' }, { participant.name for participant in models[0].where })\n        self.assertTrue(all( participant.is_location() for participant in models[0].where ))\n\n    def test_where_type_mix(self):\n        \"\"\"\n        Test that identifying the Where accepts only locations even when there are several types of participants.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"Quebec, Canada: Max Verstappen wins the Montreal Grand Prix.\"),\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual({ 'Quebec', 'Canada', 'Montreal' }, { participant.name for participant in models[0].where })\n        self.assertTrue(all( participant.is_location() for participant in models[0].where ))\n\n    def test_where_entity_subset(self):\n        \"\"\"\n        Test that identifying the Where maps named entities that appear in the text and as a substring of a participant.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"Monaco: Carlos wins the Grand Prix.\"),\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values())\n        models = modeler.model(timeline)\n        self.assertEqual({ 'Circuit de Monaco' }, { participant.name for participant in models[0].where })\n\n    def test_where_with_ner(self):\n        \"\"\"\n        Test that identifying the Where with NER returns participants that do not appear in the understanding.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"In Spain, the Grand Prix ends without much fanfare.\"),\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values(), with_ner=True)\n        models = modeler.model(timeline)\n        self.assertEqual({ 'spain' }, { participant.name for participant in models[0].where })\n\n    def test_where_with_ner_only_unresolved(self):\n        \"\"\"\n        Test that identifying the Where with NER only returns named entities that do not resolve to a participant from the understanding.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"Spain: Carlos wins the Grand Prix followed by Verstappen, like they did in Canada.\"),\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values(), with_ner=True)\n        models = modeler.model(timeline)\n        self.assertEqual({ 'spain', 'Canada' }, { participant.name for participant in models[0].where })\n\n    def test_where_with_ner_only_locations(self):\n        \"\"\"\n        Test that identifying the Where with NER only returns locations.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [\n            Document(text=\"In Canada, Hamilton and Leclerc repeat the Spain double in the today's Grand Prix.\"),\n        ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(participants=participants.values(), with_ner=True)\n        models = modeler.model(timeline)\n        self.assertEqual({ 'spain', 'Canada' }, { participant.name for participant in models[0].where })\n\n    def test_where_with_ner_no_participants(self):\n        \"\"\"\n        Test that identifying the Where with NER returns all locations if there are no participants.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        document = Document(text=\"In Canada, Hamilton and Leclerc repeat the Spain double in the today's Grand Prix.\")\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [ document ]))\n\n        participants = self.mock_participants()\n        modeler = UnderstandingModeler(with_ner=True)\n        entities = nlp.entities(document.text, netype=[ 'GPE', 'GSP', \"LOCATION\" ])\n\n        models = modeler.model(timeline)\n        entities = { entity.lower() for entity, _ in entities }\n        where = { location.name for location in models[0].where }\n        self.assertEqual(entities, where)\n\n    def test_when_uses_created_at(self):\n        \"\"\"\n        Test that extracting the When simply uses the node's `created_at` attribute.\n        \"\"\"\n\n        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)\n        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [ ]))\n\n        modeler = UnderstandingModeler()\n        models = modeler.model(timeline)\n        self.assertTrue(all( model.when[0] == node.created_at for model, node in zip(models, timeline.nodes) ))\n",
+			"file": "eventdt/modeling/modelers/tests/test_understanding_modeler.py",
+			"file_size": 55008,
+			"file_write_time": 133071339103906586,
+			"redo_stack":
+			[
+				[
+					400,
+					1,
+					"insert",
+					{
+						"characters": " Hulkenberg"
+					},
+					"CwAAACNwAAAAAAAAI3AAAAAAAAABAAAAZyJwAAAAAAAAInAAAAAAAAABAAAAciFwAAAAAAAAIXAAAAAAAAABAAAAZSBwAAAAAAAAIHAAAAAAAAABAAAAYh9wAAAAAAAAH3AAAAAAAAABAAAAbh5wAAAAAAAAHnAAAAAAAAABAAAAZR1wAAAAAAAAHXAAAAAAAAABAAAAaxxwAAAAAAAAHHAAAAAAAAABAAAAbBtwAAAAAAAAG3AAAAAAAAABAAAAdRpwAAAAAAAAGnAAAAAAAAABAAAASBlwAAAAAAAAGXAAAAAAAAABAAAAIA",
+					"AQAAAAAAAAABAAAAJHAAAAAAAAAkcAAAAAAAAAAAAAAAAPC/"
+				]
+			],
+			"settings":
+			{
+				"buffer_size": 55571,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			},
+			"undo_stack":
+			[
+				[
+					5,
+					1,
+					"insert",
+					{
+						"characters": "\n"
+					},
+					"AgAAAG8NAAAAAAAAcA0AAAAAAAAAAAAAcA0AAAAAAAB8DQAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAbw0AAAAAAABvDQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					6,
+					1,
+					"insert_snippet",
+					{
+						"contents": "\"$0\""
+					},
+					"AQAAAHwNAAAAAAAAfg0AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAfA0AAAAAAAB8DQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					7,
+					1,
+					"paste",
+					null,
+					"AQAAAH0NAAAAAAAAhQ0AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAfQ0AAAAAAAB9DQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					10,
+					1,
+					"insert",
+					{
+						"characters": ":"
+					},
+					"AQAAAIYNAAAAAAAAhw0AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAhg0AAAAAAACGDQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					11,
+					1,
+					"insert",
+					{
+						"characters": " "
+					},
+					"AQAAAIcNAAAAAAAAiA0AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAhw0AAAAAAACHDQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					12,
+					1,
+					"insert_snippet",
+					{
+						"contents": "\"$0\""
+					},
+					"AQAAAIgNAAAAAAAAig0AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAiA0AAAAAAACIDQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					13,
+					1,
+					"paste",
+					null,
+					"AQAAAIkNAAAAAAAAyQ0AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAiQ0AAAAAAACJDQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					17,
+					1,
+					"insert",
+					{
+						"characters": ","
+					},
+					"AQAAAMoNAAAAAAAAyw0AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAyg0AAAAAAADKDQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					18,
+					1,
+					"insert",
+					{
+						"characters": "\n"
+					},
+					"AgAAAMsNAAAAAAAAzA0AAAAAAAAAAAAAzA0AAAAAAADYDQAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAyw0AAAAAAADLDQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					19,
+					1,
+					"insert_snippet",
+					{
+						"contents": "\"$0\""
+					},
+					"AQAAANgNAAAAAAAA2g0AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA2A0AAAAAAADYDQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					20,
+					1,
+					"insert",
+					{
+						"characters": "Nico"
+					},
+					"BAAAANkNAAAAAAAA2g0AAAAAAAAAAAAA2g0AAAAAAADbDQAAAAAAAAAAAADbDQAAAAAAANwNAAAAAAAAAAAAANwNAAAAAAAA3Q0AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA2Q0AAAAAAADZDQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					21,
+					1,
+					"insert",
+					{
+						"characters": " "
+					},
+					"AQAAAN0NAAAAAAAA3g0AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA3Q0AAAAAAADdDQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					22,
+					1,
+					"paste",
+					null,
+					"AQAAAN4NAAAAAAAA6A0AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA3g0AAAAAAADeDQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					24,
+					1,
+					"insert",
+					{
+						"characters": ":"
+					},
+					"AQAAAOkNAAAAAAAA6g0AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA6Q0AAAAAAADpDQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					25,
+					1,
+					"insert",
+					{
+						"characters": " "
+					},
+					"AQAAAOoNAAAAAAAA6w0AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA6g0AAAAAAADqDQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					27,
+					1,
+					"insert_snippet",
+					{
+						"contents": "\"$0\""
+					},
+					"AQAAAOsNAAAAAAAA7Q0AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA6w0AAAAAAADrDQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					28,
+					1,
+					"paste",
+					null,
+					"AQAAAOwNAAAAAAAAwA4AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA7A0AAAAAAADsDQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					102,
+					2,
+					"run_macro_file",
+					{
+						"file": "res://Packages/Default/Add Line Before.sublime-macro"
+					},
+					"BAAAANhfAAAAAAAA2V8AAAAAAAAAAAAA2F8AAAAAAADgXwAAAAAAAAAAAADYXwAAAAAAANlfAAAAAAAAAAAAANhfAAAAAAAA4F8AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA+F8AAAAAAAD4XwAAAAAAAAAAAAAAqIVA"
+				],
+				[
+					103,
+					1,
+					"left_delete",
+					null,
+					"AgAAANxfAAAAAAAA3F8AAAAAAAAEAAAAICAgIN1fAAAAAAAA3V8AAAAAAAAIAAAAICAgICAgICA",
+					"AQAAAAAAAAABAAAA4F8AAAAAAADgXwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					104,
+					1,
+					"paste",
+					null,
+					"AQAAANxfAAAAAAAAh2IAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA3F8AAAAAAADcXwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					108,
+					1,
+					"insert",
+					{
+						"characters": "entity_subset_k"
+					},
+					"EAAAAOlfAAAAAAAA6l8AAAAAAAAAAAAA6l8AAAAAAADqXwAAAAAAABoAAABjaGVja3Nfa25vd25fYXNfY2FzZV9mb2xkc+pfAAAAAAAA618AAAAAAAAAAAAA618AAAAAAADsXwAAAAAAAAAAAADsXwAAAAAAAO1fAAAAAAAAAAAAAO1fAAAAAAAA7l8AAAAAAAAAAAAA7l8AAAAAAADvXwAAAAAAAAAAAADvXwAAAAAAAPBfAAAAAAAAAAAAAPBfAAAAAAAA8V8AAAAAAAAAAAAA8V8AAAAAAADyXwAAAAAAAAAAAADyXwAAAAAAAPNfAAAAAAAAAAAAAPNfAAAAAAAA9F8AAAAAAAAAAAAA9F8AAAAAAAD1XwAAAAAAAAAAAAD1XwAAAAAAAPZfAAAAAAAAAAAAAPZfAAAAAAAA918AAAAAAAAAAAAA918AAAAAAAD4XwAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA6V8AAAAAAAADYAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					109,
+					1,
+					"insert",
+					{
+						"characters": "ow"
+					},
+					"AgAAAPhfAAAAAAAA+V8AAAAAAAAAAAAA+V8AAAAAAAD6XwAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA+F8AAAAAAAD4XwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					110,
+					2,
+					"left_delete",
+					null,
+					"AgAAAPlfAAAAAAAA+V8AAAAAAAABAAAAd/hfAAAAAAAA+F8AAAAAAAABAAAAbw",
+					"AQAAAAAAAAABAAAA+l8AAAAAAAD6XwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					111,
+					1,
+					"insert",
+					{
+						"characters": "nown_as_case_fo"
+					},
+					"DwAAAPhfAAAAAAAA+V8AAAAAAAAAAAAA+V8AAAAAAAD6XwAAAAAAAAAAAAD6XwAAAAAAAPtfAAAAAAAAAAAAAPtfAAAAAAAA/F8AAAAAAAAAAAAA/F8AAAAAAAD9XwAAAAAAAAAAAAD9XwAAAAAAAP5fAAAAAAAAAAAAAP5fAAAAAAAA/18AAAAAAAAAAAAA/18AAAAAAAAAYAAAAAAAAAAAAAAAYAAAAAAAAAFgAAAAAAAAAAAAAAFgAAAAAAAAAmAAAAAAAAAAAAAAAmAAAAAAAAADYAAAAAAAAAAAAAADYAAAAAAAAARgAAAAAAAAAAAAAARgAAAAAAAABWAAAAAAAAAAAAAABWAAAAAAAAAGYAAAAAAAAAAAAAAGYAAAAAAAAAdgAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA+F8AAAAAAAD4XwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					112,
+					1,
+					"insert",
+					{
+						"characters": "lds"
+					},
+					"AwAAAAdgAAAAAAAACGAAAAAAAAAAAAAACGAAAAAAAAAJYAAAAAAAAAAAAAAJYAAAAAAAAApgAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAB2AAAAAAAAAHYAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					128,
+					1,
+					"insert",
+					{
+						"characters": " maps"
+					},
+					"BQAAAENgAAAAAAAARGAAAAAAAAAAAAAARGAAAAAAAABFYAAAAAAAAAAAAABFYAAAAAAAAEZgAAAAAAAAAAAAAEZgAAAAAAAAR2AAAAAAAAAAAAAAR2AAAAAAAABIYAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAQ2AAAAAAAABDYAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					129,
+					1,
+					"insert",
+					{
+						"characters": " named"
+					},
+					"BgAAAEhgAAAAAAAASWAAAAAAAAAAAAAASWAAAAAAAABKYAAAAAAAAAAAAABKYAAAAAAAAEtgAAAAAAAAAAAAAEtgAAAAAAAATGAAAAAAAAAAAAAATGAAAAAAAABNYAAAAAAAAAAAAABNYAAAAAAAAE5gAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAASGAAAAAAAABIYAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					130,
+					1,
+					"insert",
+					{
+						"characters": " entities"
+					},
+					"CQAAAE5gAAAAAAAAT2AAAAAAAAAAAAAAT2AAAAAAAABQYAAAAAAAAAAAAABQYAAAAAAAAFFgAAAAAAAAAAAAAFFgAAAAAAAAUmAAAAAAAAAAAAAAUmAAAAAAAABTYAAAAAAAAAAAAABTYAAAAAAAAFRgAAAAAAAAAAAAAFRgAAAAAAAAVWAAAAAAAAAAAAAAVWAAAAAAAABWYAAAAAAAAAAAAABWYAAAAAAAAFdgAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAATmAAAAAAAABOYAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					131,
+					1,
+					"insert",
+					{
+						"characters": " that"
+					},
+					"BQAAAFdgAAAAAAAAWGAAAAAAAAAAAAAAWGAAAAAAAABZYAAAAAAAAAAAAABZYAAAAAAAAFpgAAAAAAAAAAAAAFpgAAAAAAAAW2AAAAAAAAAAAAAAW2AAAAAAAABcYAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAV2AAAAAAAABXYAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					132,
+					1,
+					"insert",
+					{
+						"characters": " appear"
+					},
+					"BwAAAFxgAAAAAAAAXWAAAAAAAAAAAAAAXWAAAAAAAABeYAAAAAAAAAAAAABeYAAAAAAAAF9gAAAAAAAAAAAAAF9gAAAAAAAAYGAAAAAAAAAAAAAAYGAAAAAAAABhYAAAAAAAAAAAAABhYAAAAAAAAGJgAAAAAAAAAAAAAGJgAAAAAAAAY2AAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAXGAAAAAAAABcYAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					133,
+					1,
+					"insert",
+					{
+						"characters": " in"
+					},
+					"AwAAAGNgAAAAAAAAZGAAAAAAAAAAAAAAZGAAAAAAAABlYAAAAAAAAAAAAABlYAAAAAAAAGZgAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAY2AAAAAAAABjYAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					134,
+					1,
+					"insert",
+					{
+						"characters": " the"
+					},
+					"BAAAAGZgAAAAAAAAZ2AAAAAAAAAAAAAAZ2AAAAAAAABoYAAAAAAAAAAAAABoYAAAAAAAAGlgAAAAAAAAAAAAAGlgAAAAAAAAamAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAZmAAAAAAAABmYAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					135,
+					1,
+					"insert",
+					{
+						"characters": " text"
+					},
+					"BQAAAGpgAAAAAAAAa2AAAAAAAAAAAAAAa2AAAAAAAABsYAAAAAAAAAAAAABsYAAAAAAAAG1gAAAAAAAAAAAAAG1gAAAAAAAAbmAAAAAAAAAAAAAAbmAAAAAAAABvYAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAamAAAAAAAABqYAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					136,
+					1,
+					"insert",
+					{
+						"characters": " "
+					},
+					"AQAAAG9gAAAAAAAAcGAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAb2AAAAAAAABvYAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					137,
+					1,
+					"insert",
+					{
+						"characters": "and"
+					},
+					"AwAAAHBgAAAAAAAAcWAAAAAAAAAAAAAAcWAAAAAAAAByYAAAAAAAAAAAAAByYAAAAAAAAHNgAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAcGAAAAAAAABwYAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					138,
+					1,
+					"insert",
+					{
+						"characters": " a"
+					},
+					"AgAAAHNgAAAAAAAAdGAAAAAAAAAAAAAAdGAAAAAAAAB1YAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAc2AAAAAAAABzYAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					139,
+					1,
+					"insert",
+					{
+						"characters": " "
+					},
+					"AQAAAHVgAAAAAAAAdmAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAdWAAAAAAAAB1YAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					140,
+					1,
+					"left_delete",
+					null,
+					"AQAAAHVgAAAAAAAAdWAAAAAAAAABAAAAIA",
+					"AQAAAAAAAAABAAAAdmAAAAAAAAB2YAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					141,
+					1,
+					"insert",
+					{
+						"characters": "s"
+					},
+					"AQAAAHVgAAAAAAAAdmAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAdWAAAAAAAAB1YAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					142,
+					1,
+					"insert",
+					{
+						"characters": " a"
+					},
+					"AgAAAHZgAAAAAAAAd2AAAAAAAAAAAAAAd2AAAAAAAAB4YAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAdmAAAAAAAAB2YAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					143,
+					1,
+					"insert",
+					{
+						"characters": " st"
+					},
+					"AwAAAHhgAAAAAAAAeWAAAAAAAAAAAAAAeWAAAAAAAAB6YAAAAAAAAAAAAAB6YAAAAAAAAHtgAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAeGAAAAAAAAB4YAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					144,
+					1,
+					"left_delete",
+					null,
+					"AQAAAHpgAAAAAAAAemAAAAAAAAABAAAAdA",
+					"AQAAAAAAAAABAAAAe2AAAAAAAAB7YAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					145,
+					1,
+					"insert",
+					{
+						"characters": "s"
+					},
+					"AQAAAHpgAAAAAAAAe2AAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAemAAAAAAAAB6YAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					146,
+					1,
+					"left_delete",
+					null,
+					"AQAAAHpgAAAAAAAAemAAAAAAAAABAAAAcw",
+					"AQAAAAAAAAABAAAAe2AAAAAAAAB7YAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					147,
+					1,
+					"insert",
+					{
+						"characters": "ubstring"
+					},
+					"CAAAAHpgAAAAAAAAe2AAAAAAAAAAAAAAe2AAAAAAAAB8YAAAAAAAAAAAAAB8YAAAAAAAAH1gAAAAAAAAAAAAAH1gAAAAAAAAfmAAAAAAAAAAAAAAfmAAAAAAAAB/YAAAAAAAAAAAAAB/YAAAAAAAAIBgAAAAAAAAAAAAAIBgAAAAAAAAgWAAAAAAAAAAAAAAgWAAAAAAAACCYAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAemAAAAAAAAB6YAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					148,
+					1,
+					"insert",
+					{
+						"characters": " of"
+					},
+					"AwAAAIJgAAAAAAAAg2AAAAAAAAAAAAAAg2AAAAAAAACEYAAAAAAAAAAAAACEYAAAAAAAAIVgAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAgmAAAAAAAACCYAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					149,
+					1,
+					"insert",
+					{
+						"characters": " a"
+					},
+					"AgAAAIVgAAAAAAAAhmAAAAAAAAAAAAAAhmAAAAAAAACHYAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAhWAAAAAAAACFYAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					150,
+					1,
+					"insert",
+					{
+						"characters": " participant"
+					},
+					"DAAAAIdgAAAAAAAAiGAAAAAAAAAAAAAAiGAAAAAAAACJYAAAAAAAAAAAAACJYAAAAAAAAIpgAAAAAAAAAAAAAIpgAAAAAAAAi2AAAAAAAAAAAAAAi2AAAAAAAACMYAAAAAAAAAAAAACMYAAAAAAAAI1gAAAAAAAAAAAAAI1gAAAAAAAAjmAAAAAAAAAAAAAAjmAAAAAAAACPYAAAAAAAAAAAAACPYAAAAAAAAJBgAAAAAAAAAAAAAJBgAAAAAAAAkWAAAAAAAAAAAAAAkWAAAAAAAACSYAAAAAAAAAAAAACSYAAAAAAAAJNgAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAh2AAAAAAAACHYAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					157,
+					1,
+					"left_delete",
+					null,
+					"AQAAAJNgAAAAAAAAk2AAAAAAAAAwAAAAIGFsc28gdXNlcyB0aGUgYGtub3duX2FzYCBhdHRyaWJ1dGUgaWYgaXQgZXhpc3Rz",
+					"AQAAAAAAAAABAAAAk2AAAAAAAADDYAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					183,
+					1,
+					"insert",
+					{
+						"characters": "\npartici"
+					},
+					"CQAAAKFhAAAAAAAAomEAAAAAAAAAAAAAomEAAAAAAACqYQAAAAAAAAAAAACqYQAAAAAAAKthAAAAAAAAAAAAAKthAAAAAAAArGEAAAAAAAAAAAAArGEAAAAAAACtYQAAAAAAAAAAAACtYQAAAAAAAK5hAAAAAAAAAAAAAK5hAAAAAAAAr2EAAAAAAAAAAAAAr2EAAAAAAACwYQAAAAAAAAAAAACwYQAAAAAAALFhAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAoWEAAAAAAAChYQAAAAAAAAAAAAAAkHRA"
+				],
+				[
+					184,
+					1,
+					"insert_completion",
+					{
+						"completion": "participants",
+						"format": "text",
+						"keep_prefix": false,
+						"must_insert": false,
+						"trigger": "participants"
+					},
+					"AgAAAKphAAAAAAAAqmEAAAAAAAAHAAAAcGFydGljaaphAAAAAAAAtmEAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAsWEAAAAAAACxYQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					185,
+					1,
+					"cut",
+					null,
+					"AQAAAKJhAAAAAAAAomEAAAAAAAAVAAAAICAgICAgICBwYXJ0aWNpcGFudHMK",
+					"AQAAAAAAAAABAAAAtmEAAAAAAAC2YQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					187,
+					1,
+					"paste",
+					null,
+					"AQAAANNhAAAAAAAA6GEAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA02EAAAAAAADTYQAAAAAAAAAAAAAAAAAA"
+				],
+				[
+					189,
+					1,
+					"insert_snippet",
+					{
+						"contents": "[$0]"
+					},
+					"AQAAAOdhAAAAAAAA6WEAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA52EAAAAAAADnYQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					190,
+					1,
+					"insert_snippet",
+					{
+						"contents": "'$0'"
+					},
+					"AQAAAOhhAAAAAAAA6mEAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA6GEAAAAAAADoYQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					191,
+					1,
+					"insert",
+					{
+						"characters": "carlos"
+					},
+					"BgAAAOlhAAAAAAAA6mEAAAAAAAAAAAAA6mEAAAAAAADrYQAAAAAAAAAAAADrYQAAAAAAAOxhAAAAAAAAAAAAAOxhAAAAAAAA7WEAAAAAAAAAAAAA7WEAAAAAAADuYQAAAAAAAAAAAADuYQAAAAAAAO9hAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA6WEAAAAAAADpYQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					192,
+					1,
+					"delete_word",
+					{
+						"forward": false
+					},
+					"AQAAAOlhAAAAAAAA6WEAAAAAAAAGAAAAY2FybG9z",
+					"AQAAAAAAAAABAAAA72EAAAAAAADvYQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					193,
+					1,
+					"insert",
+					{
+						"characters": "Carlos"
+					},
+					"BgAAAOlhAAAAAAAA6mEAAAAAAAAAAAAA6mEAAAAAAADrYQAAAAAAAAAAAADrYQAAAAAAAOxhAAAAAAAAAAAAAOxhAAAAAAAA7WEAAAAAAAAAAAAA7WEAAAAAAADuYQAAAAAAAAAAAADuYQAAAAAAAO9hAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA6WEAAAAAAADpYQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					194,
+					1,
+					"insert",
+					{
+						"characters": " Sainz"
+					},
+					"BgAAAO9hAAAAAAAA8GEAAAAAAAAAAAAA8GEAAAAAAADxYQAAAAAAAAAAAADxYQAAAAAAAPJhAAAAAAAAAAAAAPJhAAAAAAAA82EAAAAAAAAAAAAA82EAAAAAAAD0YQAAAAAAAAAAAAD0YQAAAAAAAPVhAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA72EAAAAAAADvYQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					195,
+					1,
+					"insert",
+					{
+						"characters": " Jr."
+					},
+					"BAAAAPVhAAAAAAAA9mEAAAAAAAAAAAAA9mEAAAAAAAD3YQAAAAAAAAAAAAD3YQAAAAAAAPhhAAAAAAAAAAAAAPhhAAAAAAAA+WEAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA9WEAAAAAAAD1YQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					197,
+					1,
+					"insert",
+					{
+						"characters": ".name"
+					},
+					"BQAAAPthAAAAAAAA/GEAAAAAAAAAAAAA/GEAAAAAAAD9YQAAAAAAAAAAAAD9YQAAAAAAAP5hAAAAAAAAAAAAAP5hAAAAAAAA/2EAAAAAAAAAAAAA/2EAAAAAAAAAYgAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAA+2EAAAAAAAD7YQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					198,
+					1,
+					"insert",
+					{
+						"characters": " ="
+					},
+					"AgAAAABiAAAAAAAAAWIAAAAAAAAAAAAAAWIAAAAAAAACYgAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAAGIAAAAAAAAAYgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					199,
+					1,
+					"insert",
+					{
+						"characters": " "
+					},
+					"AQAAAAJiAAAAAAAAA2IAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAAmIAAAAAAAACYgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					201,
+					1,
+					"insert",
+					{
+						"characters": "Carlos"
+					},
+					"BgAAAANiAAAAAAAABGIAAAAAAAAAAAAABGIAAAAAAAAFYgAAAAAAAAAAAAAFYgAAAAAAAAZiAAAAAAAAAAAAAAZiAAAAAAAAB2IAAAAAAAAAAAAAB2IAAAAAAAAIYgAAAAAAAAAAAAAIYgAAAAAAAAliAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAA2IAAAAAAAADYgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					203,
+					1,
+					"insert_snippet",
+					{
+						"contents": "'${0:$SELECTION}'"
+					},
+					"AgAAAANiAAAAAAAAA2IAAAAAAAAGAAAAQ2FybG9zA2IAAAAAAAALYgAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAACWIAAAAAAAADYgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					212,
+					1,
+					"insert",
+					{
+						"characters": "C"
+					},
+					"AgAAAGZhAAAAAAAAZ2EAAAAAAAAAAAAAZ2EAAAAAAABnYQAAAAAAAAEAAABj",
+					"AQAAAAAAAAABAAAAZmEAAAAAAABnYQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					216,
+					1,
+					"insert",
+					{
+						"characters": "S"
+					},
+					"AgAAAG1hAAAAAAAAbmEAAAAAAAAAAAAAbmEAAAAAAABuYQAAAAAAAAEAAABz",
+					"AQAAAAAAAAABAAAAbWEAAAAAAABuYQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					231,
+					1,
+					"insert",
+					{
+						"characters": " #"
+					},
+					"AgAAAJVhAAAAAAAAlmEAAAAAAAAAAAAAlmEAAAAAAACXYQAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAlWEAAAAAAACVYQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					232,
+					1,
+					"insert",
+					{
+						"characters": " extracts"
+					},
+					"CQAAAJdhAAAAAAAAmGEAAAAAAAAAAAAAmGEAAAAAAACZYQAAAAAAAAAAAACZYQAAAAAAAJphAAAAAAAAAAAAAJphAAAAAAAAm2EAAAAAAAAAAAAAm2EAAAAAAACcYQAAAAAAAAAAAACcYQAAAAAAAJ1hAAAAAAAAAAAAAJ1hAAAAAAAAnmEAAAAAAAAAAAAAnmEAAAAAAACfYQAAAAAAAAAAAACfYQAAAAAAAKBhAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAl2EAAAAAAACXYQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					233,
+					1,
+					"insert",
+					{
+						"characters": " "
+					},
+					"AQAAAKBhAAAAAAAAoWEAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAoGEAAAAAAACgYQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					234,
+					1,
+					"insert_snippet",
+					{
+						"contents": "'$0'"
+					},
+					"AQAAAKFhAAAAAAAAo2EAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAoWEAAAAAAAChYQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					235,
+					1,
+					"insert",
+					{
+						"characters": "Carlos"
+					},
+					"BgAAAKJhAAAAAAAAo2EAAAAAAAAAAAAAo2EAAAAAAACkYQAAAAAAAAAAAACkYQAAAAAAAKVhAAAAAAAAAAAAAKVhAAAAAAAApmEAAAAAAAAAAAAApmEAAAAAAACnYQAAAAAAAAAAAACnYQAAAAAAAKhhAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAomEAAAAAAACiYQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					237,
+					1,
+					"insert",
+					{
+						"characters": " as"
+					},
+					"AwAAAKlhAAAAAAAAqmEAAAAAAAAAAAAAqmEAAAAAAACrYQAAAAAAAAAAAACrYQAAAAAAAKxhAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAqWEAAAAAAACpYQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					238,
+					1,
+					"insert",
+					{
+						"characters": " entity"
+					},
+					"BwAAAKxhAAAAAAAArWEAAAAAAAAAAAAArWEAAAAAAACuYQAAAAAAAAAAAACuYQAAAAAAAK9hAAAAAAAAAAAAAK9hAAAAAAAAsGEAAAAAAAAAAAAAsGEAAAAAAACxYQAAAAAAAAAAAACxYQAAAAAAALJhAAAAAAAAAAAAALJhAAAAAAAAs2EAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAArGEAAAAAAACsYQAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					243,
+					1,
+					"insert",
+					{
+						"characters": "c"
+					},
+					"AgAAACJiAAAAAAAAI2IAAAAAAAAAAAAAI2IAAAAAAAAjYgAAAAAAAAEAAABD",
+					"AQAAAAAAAAABAAAAImIAAAAAAAAjYgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					250,
+					1,
+					"insert",
+					{
+						"characters": "C"
+					},
+					"AgAAACJiAAAAAAAAI2IAAAAAAAAAAAAAI2IAAAAAAAAjYgAAAAAAAAEAAABj",
+					"AQAAAAAAAAABAAAAImIAAAAAAAAjYgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					252,
+					1,
+					"insert",
+					{
+						"characters": " Sains"
+					},
+					"BgAAAChiAAAAAAAAKWIAAAAAAAAAAAAAKWIAAAAAAAAqYgAAAAAAAAAAAAAqYgAAAAAAACtiAAAAAAAAAAAAACtiAAAAAAAALGIAAAAAAAAAAAAALGIAAAAAAAAtYgAAAAAAAAAAAAAtYgAAAAAAAC5iAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAKGIAAAAAAAAoYgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					253,
+					1,
+					"insert",
+					{
+						"characters": " J"
+					},
+					"AgAAAC5iAAAAAAAAL2IAAAAAAAAAAAAAL2IAAAAAAAAwYgAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAALmIAAAAAAAAuYgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					257,
+					3,
+					"left_delete",
+					null,
+					"AwAAAC9iAAAAAAAAL2IAAAAAAAABAAAASi5iAAAAAAAALmIAAAAAAAABAAAAIC1iAAAAAAAALWIAAAAAAAABAAAAcw",
+					"AQAAAAAAAAABAAAAMGIAAAAAAAAwYgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					258,
+					1,
+					"insert",
+					{
+						"characters": "z"
+					},
+					"AQAAAC1iAAAAAAAALmIAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAALWIAAAAAAAAtYgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					263,
+					4,
+					"left_delete",
+					null,
+					"BAAAAM9iAAAAAAAAz2IAAAAAAAABAAAALs5iAAAAAAAAzmIAAAAAAAABAAAAcs1iAAAAAAAAzWIAAAAAAAABAAAASsxiAAAAAAAAzGIAAAAAAAABAAAAIA",
+					"AQAAAAAAAAABAAAA0GIAAAAAAADQYgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					268,
+					1,
+					"delete_word",
+					{
+						"forward": false
+					},
+					"AQAAACJiAAAAAAAAImIAAAAAAAAHAAAAQ2FybG9zIA",
+					"AQAAAAAAAAABAAAAKWIAAAAAAAApYgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					272,
+					1,
+					"run_macro_file",
+					{
+						"file": "res://Packages/Default/Add Line.sublime-macro"
+					},
+					"AgAAAChiAAAAAAAAKWIAAAAAAAAAAAAAKWIAAAAAAAAxYgAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAImIAAAAAAAAiYgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					273,
+					1,
+					"insert",
+					{
+						"characters": "print"
+					},
+					"BQAAADFiAAAAAAAAMmIAAAAAAAAAAAAAMmIAAAAAAAAzYgAAAAAAAAAAAAAzYgAAAAAAADRiAAAAAAAAAAAAADRiAAAAAAAANWIAAAAAAAAAAAAANWIAAAAAAAA2YgAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAMWIAAAAAAAAxYgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					274,
+					1,
+					"insert_snippet",
+					{
+						"contents": "($0)"
+					},
+					"AQAAADZiAAAAAAAAOGIAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAANmIAAAAAAAA2YgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					275,
+					1,
+					"insert",
+					{
+						"characters": "participants"
+					},
+					"DAAAADdiAAAAAAAAOGIAAAAAAAAAAAAAOGIAAAAAAAA5YgAAAAAAAAAAAAA5YgAAAAAAADpiAAAAAAAAAAAAADpiAAAAAAAAO2IAAAAAAAAAAAAAO2IAAAAAAAA8YgAAAAAAAAAAAAA8YgAAAAAAAD1iAAAAAAAAAAAAAD1iAAAAAAAAPmIAAAAAAAAAAAAAPmIAAAAAAAA/YgAAAAAAAAAAAAA/YgAAAAAAAEBiAAAAAAAAAAAAAEBiAAAAAAAAQWIAAAAAAAAAAAAAQWIAAAAAAABCYgAAAAAAAAAAAABCYgAAAAAAAENiAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAN2IAAAAAAAA3YgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					276,
+					1,
+					"insert_snippet",
+					{
+						"contents": "[$0]"
+					},
+					"AQAAAENiAAAAAAAARWIAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAQ2IAAAAAAABDYgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					291,
+					1,
+					"run_macro_file",
+					{
+						"file": "res://Packages/Default/Delete Left Right.sublime-macro"
+					},
+					"AgAAAENiAAAAAAAAQ2IAAAAAAAABAAAAW0NiAAAAAAAAQ2IAAAAAAAABAAAAXQ",
+					"AQAAAAAAAAABAAAARGIAAAAAAABEYgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					292,
+					1,
+					"paste",
+					null,
+					"AQAAAENiAAAAAAAAV2IAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAQ2IAAAAAAABDYgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					295,
+					1,
+					"insert",
+					{
+						"characters": ".knownas"
+					},
+					"CAAAAFdiAAAAAAAAWGIAAAAAAAAAAAAAWGIAAAAAAABZYgAAAAAAAAAAAABZYgAAAAAAAFpiAAAAAAAAAAAAAFpiAAAAAAAAW2IAAAAAAAAAAAAAW2IAAAAAAABcYgAAAAAAAAAAAABcYgAAAAAAAF1iAAAAAAAAAAAAAF1iAAAAAAAAXmIAAAAAAAAAAAAAXmIAAAAAAABfYgAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAV2IAAAAAAABXYgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					296,
+					1,
+					"insert_completion",
+					{
+						"completion": "known_vs_paths",
+						"format": "text",
+						"keep_prefix": false,
+						"must_insert": false,
+						"trigger": "known_vs_paths"
+					},
+					"AgAAAFhiAAAAAAAAWGIAAAAAAAAHAAAAa25vd25hc1hiAAAAAAAAZmIAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAX2IAAAAAAABfYgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					297,
+					1,
+					"delete_word",
+					{
+						"forward": false
+					},
+					"AQAAAFhiAAAAAAAAWGIAAAAAAAAOAAAAa25vd25fdnNfcGF0aHM",
+					"AQAAAAAAAAABAAAAZmIAAAAAAABmYgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					298,
+					1,
+					"insert",
+					{
+						"characters": "known_as"
+					},
+					"CAAAAFhiAAAAAAAAWWIAAAAAAAAAAAAAWWIAAAAAAABaYgAAAAAAAAAAAABaYgAAAAAAAFtiAAAAAAAAAAAAAFtiAAAAAAAAXGIAAAAAAAAAAAAAXGIAAAAAAABdYgAAAAAAAAAAAABdYgAAAAAAAF5iAAAAAAAAAAAAAF5iAAAAAAAAX2IAAAAAAAAAAAAAX2IAAAAAAABgYgAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAWGIAAAAAAABYYgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					301,
+					1,
+					"run_macro_file",
+					{
+						"file": "res://Packages/Default/Delete Line.sublime-macro"
+					},
+					"AQAAACliAAAAAAAAKWIAAAAAAAA5AAAAICAgICAgICBwcmludChwYXJ0aWNpcGFudHNbJ0NhcmxvcyBTYWlueiBKci4nXS5rbm93bl9hcykK",
+					"AQAAAAAAAAABAAAAYGIAAAAAAABgYgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					309,
+					1,
+					"delete_word",
+					{
+						"forward": false
+					},
+					"AQAAALliAAAAAAAAuWIAAAAAAAAHAAAAQ2FybG9zIA",
+					"AQAAAAAAAAABAAAAwGIAAAAAAADAYgAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					321,
+					2,
+					"run_macro_file",
+					{
+						"file": "res://Packages/Default/Add Line Before.sublime-macro"
+					},
+					"BAAAABhvAAAAAAAAGW8AAAAAAAAAAAAAGG8AAAAAAAAgbwAAAAAAAAAAAAAYbwAAAAAAABlvAAAAAAAAAAAAABhvAAAAAAAAIG8AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAPW8AAAAAAAA9bwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					322,
+					1,
+					"insert",
+					{
+						"characters": "d"
+					},
+					"AgAAACBvAAAAAAAAIW8AAAAAAAAAAAAAIm8AAAAAAAAibwAAAAAAAAgAAAAgICAgICAgIA",
+					"AQAAAAAAAAABAAAAIG8AAAAAAAAgbwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					323,
+					2,
+					"left_delete",
+					null,
+					"AgAAACBvAAAAAAAAIG8AAAAAAAABAAAAZBxvAAAAAAAAHG8AAAAAAAAEAAAAICAgIA",
+					"AQAAAAAAAAABAAAAIW8AAAAAAAAhbwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					324,
+					1,
+					"insert",
+					{
+						"characters": "def"
+					},
+					"AwAAABxvAAAAAAAAHW8AAAAAAAAAAAAAHW8AAAAAAAAebwAAAAAAAAAAAAAebwAAAAAAAB9vAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAHG8AAAAAAAAcbwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					325,
+					1,
+					"insert",
+					{
+						"characters": " test_who_applies"
+					},
+					"EQAAAB9vAAAAAAAAIG8AAAAAAAAAAAAAIG8AAAAAAAAhbwAAAAAAAAAAAAAhbwAAAAAAACJvAAAAAAAAAAAAACJvAAAAAAAAI28AAAAAAAAAAAAAI28AAAAAAAAkbwAAAAAAAAAAAAAkbwAAAAAAACVvAAAAAAAAAAAAACVvAAAAAAAAJm8AAAAAAAAAAAAAJm8AAAAAAAAnbwAAAAAAAAAAAAAnbwAAAAAAAChvAAAAAAAAAAAAAChvAAAAAAAAKW8AAAAAAAAAAAAAKW8AAAAAAAAqbwAAAAAAAAAAAAAqbwAAAAAAACtvAAAAAAAAAAAAACtvAAAAAAAALG8AAAAAAAAAAAAALG8AAAAAAAAtbwAAAAAAAAAAAAAtbwAAAAAAAC5vAAAAAAAAAAAAAC5vAAAAAAAAL28AAAAAAAAAAAAAL28AAAAAAAAwbwAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAH28AAAAAAAAfbwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					329,
+					7,
+					"left_delete",
+					null,
+					"BwAAAC9vAAAAAAAAL28AAAAAAAABAAAAcy5vAAAAAAAALm8AAAAAAAABAAAAZS1vAAAAAAAALW8AAAAAAAABAAAAaSxvAAAAAAAALG8AAAAAAAABAAAAbCtvAAAAAAAAK28AAAAAAAABAAAAcCpvAAAAAAAAKm8AAAAAAAABAAAAcClvAAAAAAAAKW8AAAAAAAABAAAAYQ",
+					"AQAAAAAAAAABAAAAMG8AAAAAAAAwbwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					330,
+					1,
+					"insert",
+					{
+						"characters": "with_transliteratio"
+					},
+					"EwAAAClvAAAAAAAAKm8AAAAAAAAAAAAAKm8AAAAAAAArbwAAAAAAAAAAAAArbwAAAAAAACxvAAAAAAAAAAAAACxvAAAAAAAALW8AAAAAAAAAAAAALW8AAAAAAAAubwAAAAAAAAAAAAAubwAAAAAAAC9vAAAAAAAAAAAAAC9vAAAAAAAAMG8AAAAAAAAAAAAAMG8AAAAAAAAxbwAAAAAAAAAAAAAxbwAAAAAAADJvAAAAAAAAAAAAADJvAAAAAAAAM28AAAAAAAAAAAAAM28AAAAAAAA0bwAAAAAAAAAAAAA0bwAAAAAAADVvAAAAAAAAAAAAADVvAAAAAAAANm8AAAAAAAAAAAAANm8AAAAAAAA3bwAAAAAAAAAAAAA3bwAAAAAAADhvAAAAAAAAAAAAADhvAAAAAAAAOW8AAAAAAAAAAAAAOW8AAAAAAAA6bwAAAAAAAAAAAAA6bwAAAAAAADtvAAAAAAAAAAAAADtvAAAAAAAAPG8AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAKW8AAAAAAAApbwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					331,
+					1,
+					"insert",
+					{
+						"characters": "n)"
+					},
+					"AgAAADxvAAAAAAAAPW8AAAAAAAAAAAAAPW8AAAAAAAA+bwAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAPG8AAAAAAAA8bwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					332,
+					1,
+					"insert_snippet",
+					{
+						"contents": "($0)"
+					},
+					"AQAAAD5vAAAAAAAAQG8AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAPm8AAAAAAAA+bwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					333,
+					1,
+					"insert",
+					{
+						"characters": "self"
+					},
+					"BAAAAD9vAAAAAAAAQG8AAAAAAAAAAAAAQG8AAAAAAABBbwAAAAAAAAAAAABBbwAAAAAAAEJvAAAAAAAAAAAAAEJvAAAAAAAAQ28AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAP28AAAAAAAA/bwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					334,
+					1,
+					"delete_word",
+					{
+						"forward": false
+					},
+					"AQAAAD9vAAAAAAAAP28AAAAAAAAEAAAAc2VsZg",
+					"AQAAAAAAAAABAAAAQ28AAAAAAABDbwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					335,
+					1,
+					"run_macro_file",
+					{
+						"file": "res://Packages/Default/Delete Left Right.sublime-macro"
+					},
+					"AgAAAD5vAAAAAAAAPm8AAAAAAAABAAAAKD5vAAAAAAAAPm8AAAAAAAABAAAAKQ",
+					"AQAAAAAAAAABAAAAP28AAAAAAAA/bwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					336,
+					1,
+					"left_delete",
+					null,
+					"AQAAAD1vAAAAAAAAPW8AAAAAAAABAAAAKQ",
+					"AQAAAAAAAAABAAAAPm8AAAAAAAA+bwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					337,
+					1,
+					"insert_snippet",
+					{
+						"contents": "($0)"
+					},
+					"AQAAAD1vAAAAAAAAP28AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAPW8AAAAAAAA9bwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					338,
+					1,
+					"insert",
+					{
+						"characters": "self"
+					},
+					"BAAAAD5vAAAAAAAAP28AAAAAAAAAAAAAP28AAAAAAABAbwAAAAAAAAAAAABAbwAAAAAAAEFvAAAAAAAAAAAAAEFvAAAAAAAAQm8AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAPm8AAAAAAAA+bwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					340,
+					1,
+					"insert",
+					{
+						"characters": ":"
+					},
+					"AQAAAENvAAAAAAAARG8AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAQ28AAAAAAABDbwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					341,
+					1,
+					"insert",
+					{
+						"characters": "\n"
+					},
+					"AwAAAERvAAAAAAAARW8AAAAAAAAAAAAARW8AAAAAAABJbwAAAAAAAAAAAABJbwAAAAAAAE1vAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAARG8AAAAAAABEbwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					342,
+					1,
+					"insert_snippet",
+					{
+						"contents": "\"$0\""
+					},
+					"AQAAAE1vAAAAAAAAT28AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAATW8AAAAAAABNbwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					344,
+					1,
+					"insert",
+					{
+						"characters": "\""
+					},
+					"AQAAAE9vAAAAAAAAUG8AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAT28AAAAAAABPbwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					345,
+					1,
+					"insert",
+					{
+						"characters": "\n"
+					},
+					"AgAAAFBvAAAAAAAAUW8AAAAAAAAAAAAAUW8AAAAAAABZbwAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAUG8AAAAAAABQbwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					346,
+					1,
+					"insert_snippet",
+					{
+						"contents": "\"$0\""
+					},
+					"AQAAAFlvAAAAAAAAW28AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAWW8AAAAAAABZbwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					348,
+					1,
+					"insert",
+					{
+						"characters": "\""
+					},
+					"AQAAAFtvAAAAAAAAXG8AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAW28AAAAAAABbbwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					349,
+					1,
+					"run_macro_file",
+					{
+						"file": "res://Packages/Default/Add Line Before.sublime-macro"
+					},
+					"AQAAAFFvAAAAAAAAUm8AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAXG8AAAAAAABcbwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					350,
+					1,
+					"insert",
+					{
+						"characters": "Tes"
+					},
+					"AwAAAFFvAAAAAAAAUm8AAAAAAAAAAAAAUm8AAAAAAABTbwAAAAAAAAAAAABTbwAAAAAAAFRvAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAUW8AAAAAAABRbwAAAAAAAAAAAAAAAAAA"
+				],
+				[
+					351,
+					1,
+					"delete_word",
+					{
+						"forward": false
+					},
+					"AQAAAFFvAAAAAAAAUW8AAAAAAAADAAAAVGVz",
+					"AQAAAAAAAAABAAAAVG8AAAAAAABUbwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					352,
+					1,
+					"reindent",
+					null,
+					"AQAAAFFvAAAAAAAAVW8AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAUW8AAAAAAABRbwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					353,
+					1,
+					"insert",
+					{
+						"characters": "\tTest"
+					},
+					"BQAAAFVvAAAAAAAAWW8AAAAAAAAAAAAAWW8AAAAAAABabwAAAAAAAAAAAABabwAAAAAAAFtvAAAAAAAAAAAAAFtvAAAAAAAAXG8AAAAAAAAAAAAAXG8AAAAAAABdbwAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAVW8AAAAAAABVbwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					354,
+					1,
+					"insert",
+					{
+						"characters": " "
+					},
+					"AQAAAF1vAAAAAAAAXm8AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAXW8AAAAAAABdbwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					359,
+					1,
+					"insert",
+					{
+						"characters": "Who"
+					},
+					"BAAAAAVsAAAAAAAABmwAAAAAAAAAAAAABmwAAAAAAAAGbAAAAAAAAAUAAABXaGVyZQZsAAAAAAAAB2wAAAAAAAAAAAAAB2wAAAAAAAAIbAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAABWwAAAAAAAAKbAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					363,
+					1,
+					"insert",
+					{
+						"characters": "that"
+					},
+					"BAAAAFxvAAAAAAAAXW8AAAAAAAAAAAAAXW8AAAAAAABebwAAAAAAAAAAAABebwAAAAAAAF9vAAAAAAAAAAAAAF9vAAAAAAAAYG8AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAXG8AAAAAAABcbwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					364,
+					1,
+					"insert",
+					{
+						"characters": " identify"
+					},
+					"CQAAAGBvAAAAAAAAYW8AAAAAAAAAAAAAYW8AAAAAAABibwAAAAAAAAAAAABibwAAAAAAAGNvAAAAAAAAAAAAAGNvAAAAAAAAZG8AAAAAAAAAAAAAZG8AAAAAAABlbwAAAAAAAAAAAABlbwAAAAAAAGZvAAAAAAAAAAAAAGZvAAAAAAAAZ28AAAAAAAAAAAAAZ28AAAAAAABobwAAAAAAAAAAAABobwAAAAAAAGlvAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAYG8AAAAAAABgbwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					365,
+					1,
+					"insert",
+					{
+						"characters": " "
+					},
+					"AQAAAGlvAAAAAAAAam8AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAaW8AAAAAAABpbwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					366,
+					1,
+					"left_delete",
+					null,
+					"AQAAAGlvAAAAAAAAaW8AAAAAAAABAAAAIA",
+					"AQAAAAAAAAABAAAAam8AAAAAAABqbwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					367,
+					1,
+					"insert",
+					{
+						"characters": "ing"
+					},
+					"AwAAAGlvAAAAAAAAam8AAAAAAAAAAAAAam8AAAAAAABrbwAAAAAAAAAAAABrbwAAAAAAAGxvAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAaW8AAAAAAABpbwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					368,
+					1,
+					"insert",
+					{
+						"characters": " the"
+					},
+					"BAAAAGxvAAAAAAAAbW8AAAAAAAAAAAAAbW8AAAAAAABubwAAAAAAAAAAAABubwAAAAAAAG9vAAAAAAAAAAAAAG9vAAAAAAAAcG8AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAbG8AAAAAAABsbwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					369,
+					1,
+					"insert",
+					{
+						"characters": " Who"
+					},
+					"BAAAAHBvAAAAAAAAcW8AAAAAAAAAAAAAcW8AAAAAAABybwAAAAAAAAAAAABybwAAAAAAAHNvAAAAAAAAAAAAAHNvAAAAAAAAdG8AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAcG8AAAAAAABwbwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					370,
+					1,
+					"insert",
+					{
+						"characters": " with"
+					},
+					"BQAAAHRvAAAAAAAAdW8AAAAAAAAAAAAAdW8AAAAAAAB2bwAAAAAAAAAAAAB2bwAAAAAAAHdvAAAAAAAAAAAAAHdvAAAAAAAAeG8AAAAAAAAAAAAAeG8AAAAAAAB5bwAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAdG8AAAAAAAB0bwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					371,
+					1,
+					"insert",
+					{
+						"characters": " "
+					},
+					"AQAAAHlvAAAAAAAAem8AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAeW8AAAAAAAB5bwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					372,
+					1,
+					"delete_word",
+					{
+						"forward": false
+					},
+					"AQAAAHVvAAAAAAAAdW8AAAAAAAAFAAAAd2l0aCA",
+					"AQAAAAAAAAABAAAAem8AAAAAAAB6bwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					373,
+					1,
+					"insert",
+					{
+						"characters": "applies"
+					},
+					"BwAAAHVvAAAAAAAAdm8AAAAAAAAAAAAAdm8AAAAAAAB3bwAAAAAAAAAAAAB3bwAAAAAAAHhvAAAAAAAAAAAAAHhvAAAAAAAAeW8AAAAAAAAAAAAAeW8AAAAAAAB6bwAAAAAAAAAAAAB6bwAAAAAAAHtvAAAAAAAAAAAAAHtvAAAAAAAAfG8AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAdW8AAAAAAAB1bwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					374,
+					1,
+					"insert",
+					{
+						"characters": " transliteration"
+					},
+					"EAAAAHxvAAAAAAAAfW8AAAAAAAAAAAAAfW8AAAAAAAB+bwAAAAAAAAAAAAB+bwAAAAAAAH9vAAAAAAAAAAAAAH9vAAAAAAAAgG8AAAAAAAAAAAAAgG8AAAAAAACBbwAAAAAAAAAAAACBbwAAAAAAAIJvAAAAAAAAAAAAAIJvAAAAAAAAg28AAAAAAAAAAAAAg28AAAAAAACEbwAAAAAAAAAAAACEbwAAAAAAAIVvAAAAAAAAAAAAAIVvAAAAAAAAhm8AAAAAAAAAAAAAhm8AAAAAAACHbwAAAAAAAAAAAACHbwAAAAAAAIhvAAAAAAAAAAAAAIhvAAAAAAAAiW8AAAAAAAAAAAAAiW8AAAAAAACKbwAAAAAAAAAAAACKbwAAAAAAAItvAAAAAAAAAAAAAItvAAAAAAAAjG8AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAfG8AAAAAAAB8bwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					375,
+					1,
+					"insert",
+					{
+						"characters": " to"
+					},
+					"AwAAAIxvAAAAAAAAjW8AAAAAAAAAAAAAjW8AAAAAAACObwAAAAAAAAAAAACObwAAAAAAAI9vAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAjG8AAAAAAACMbwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					376,
+					1,
+					"insert",
+					{
+						"characters": " all"
+					},
+					"BAAAAI9vAAAAAAAAkG8AAAAAAAAAAAAAkG8AAAAAAACRbwAAAAAAAAAAAACRbwAAAAAAAJJvAAAAAAAAAAAAAJJvAAAAAAAAk28AAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAj28AAAAAAACPbwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					377,
+					1,
+					"insert",
+					{
+						"characters": " persons."
+					},
+					"CQAAAJNvAAAAAAAAlG8AAAAAAAAAAAAAlG8AAAAAAACVbwAAAAAAAAAAAACVbwAAAAAAAJZvAAAAAAAAAAAAAJZvAAAAAAAAl28AAAAAAAAAAAAAl28AAAAAAACYbwAAAAAAAAAAAACYbwAAAAAAAJlvAAAAAAAAAAAAAJlvAAAAAAAAmm8AAAAAAAAAAAAAmm8AAAAAAACbbwAAAAAAAAAAAACbbwAAAAAAAJxvAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAk28AAAAAAACTbwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					387,
+					1,
+					"insert",
+					{
+						"characters": "\n\n"
+					},
+					"BQAAAKhvAAAAAAAAqW8AAAAAAAAAAAAAqW8AAAAAAACxbwAAAAAAAAAAAACxbwAAAAAAALJvAAAAAAAAAAAAALJvAAAAAAAAum8AAAAAAAAAAAAAqW8AAAAAAACpbwAAAAAAAAgAAAAgICAgICAgIA",
+					"AQAAAAAAAAABAAAAqG8AAAAAAACobwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					388,
+					1,
+					"paste",
+					null,
+					"AQAAALJvAAAAAAAAXXIAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAsm8AAAAAAACybwAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					397,
+					1,
+					"insert",
+					{
+						"characters": "Nicol"
+					},
+					"BgAAABVwAAAAAAAAFnAAAAAAAAAAAAAAFnAAAAAAAAAWcAAAAAAAAFIAAABJbiBDYW5hZGEsIEhhbWlsdG9uIGFuZCBMZWNsZXJjIHJlcGVhdCB0aGUgU3BhaW4gZG91YmxlIGluIHRoZSB0b2RheSdzIEdyYW5kIFByaXguFnAAAAAAAAAXcAAAAAAAAAAAAAAXcAAAAAAAABhwAAAAAAAAAAAAABhwAAAAAAAAGXAAAAAAAAAAAAAAGXAAAAAAAAAacAAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAFXAAAAAAAABncAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					398,
+					1,
+					"insert",
+					{
+						"characters": " "
+					},
+					"AQAAABpwAAAAAAAAG3AAAAAAAAAAAAAA",
+					"AQAAAAAAAAABAAAAGnAAAAAAAAAacAAAAAAAAAAAAAAAAPC/"
+				],
+				[
+					399,
+					2,
+					"left_delete",
+					null,
+					"AgAAABpwAAAAAAAAGnAAAAAAAAABAAAAIBlwAAAAAAAAGXAAAAAAAAABAAAAbA",
+					"AQAAAAAAAAABAAAAG3AAAAAAAAAbcAAAAAAAAAAAAAAAAPC/"
+				]
+			]
 		}
 	],
 	"build_system": "",
@@ -69,12 +1814,12 @@
 		"selected_items":
 		[
 			[
-				"prett",
-				"Pretty JSON: Format JSON"
-			],
-			[
 				"pretti",
 				"Pretty JSON: Format JSON Lines"
+			],
+			[
+				"prett",
+				"Pretty JSON: Format JSON"
 			],
 			[
 				"package",
@@ -209,10 +1954,42 @@
 	},
 	"expanded_folders":
 	[
-		"/home/nicholas/GitHub/EvenTDT"
+		"/home/nicholas/GitHub/EvenTDT",
+		"/home/nicholas/GitHub/EvenTDT/tools"
 	],
 	"file_history":
 	[
+		"/home/nicholas/GitHub/EvenTDT/tools/model.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/__init__.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/objects/exportable.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/attributes/profile.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/__init__.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/tokenizer.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/__init__.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/tests/test_package.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/tests/test_tokenizer.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_model.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/ate/concepts.json",
+		"/home/nicholas/GitHub/EvenTDT/tools/filter_retweets.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/consume.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/timelines/#ParmaMilan-simplified.json",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/__init__.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/document_node.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/summarize.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/timelines/#ParmaMilan-streams.json",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/cluster_node.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/__init__.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/understanding_modeler.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_consume.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/timelines/LIVNAP.json",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/timelines/LIVMUN.json",
+		"/home/nicholas/GitHub/EvenTDT/tools/participants.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_participants.py",
+		"/home/nicholas/GitHub/EvenTDT/tools/concepts.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/eld_participant_detector.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/tests/test_understanding_modeler.py",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/participants.json",
+		"/home/nicholas/GitHub/EvenTDT/eventdt/twitter/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/bootstrap.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/terms.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/evaluation/terms.py",
@@ -221,40 +1998,25 @@
 		"/home/nicholas/GitHub/EvenTDT/eventdt/attributes/extractors/linguistic.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/tokenized/sample-2.json",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/tokenized/sample-1.json",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/understanding_modeler.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/__init__.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/README.md",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/__init__.py",
-		"/home/nicholas/GitHub/EvenTDT/tools/consume.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/collect.py",
-		"/home/nicholas/GitHub/EvenTDT/tools/model.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/shareable.py",
-		"/home/nicholas/GitHub/EvenTDT/tools/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/temp/meta.json",
-		"/home/nicholas/GitHub/EvenTDT/tools/concepts.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/modeling/modelers/tests/test_understanding_modeler.py",
 		"/home/nicholas/GitHub/EvenTDT/tests.sh",
-		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_model.py",
 		"/home/nicholas/GitHub/EvenTDT/docsource/tools.rst",
 		"/home/nicholas/GitHub/EvenTDT/tools/evaluation/tests/test_terms.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/correlation.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/evaluation/ate.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/ate/correlations.json",
 		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_summarize.py",
-		"/home/nicholas/GitHub/EvenTDT/tools/summarize.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/ate/application/tests/test_event.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/ate/application/event.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/idf.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_idf.py",
-		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_consume.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/idf.json",
 		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_concepts.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/timelines/#ParmaMilan-streams.json",
 		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_bootstrap.py",
-		"/home/nicholas/GitHub/EvenTDT/tools/participants.py",
-		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_participants.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_correlation.py",
 		"/home/nicholas/GitHub/EvenTDT/tools/tests/test_terms.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/ate/gold.txt",
@@ -267,8 +2029,6 @@
 		"/home/nicholas/GitHub/Embed2Detect/embed2detect/main.py",
 		"/home/nicholas/GitHub/Embed2Detect/embed2detect/event_word_extractor.py",
 		"/home/nicholas/GitHub/Embed2Detect/project_config.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/tokenizer.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/nlp/tests/test_tokenizer.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/tdt/algorithms/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/consumers/algorithms/fuego_consumer.py",
@@ -279,7 +2039,6 @@
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/tests/test_eld_participant_detector.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/depict_participant_detector.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/tests/test_depict_participant_detector.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/eld_participant_detector.py",
 		"/home/nicholas/DATA/c3-apd/#CanadianGP-2022/temp.json",
 		"/home/nicholas/DATA/c3-apd/#CanadianGP-2022/participants-annotations-extrapolated.json",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/extrapolators/external/wikipedia_attribute_extrapolator.py",
@@ -315,7 +2074,6 @@
 		"/home/nicholas/GitHub/EvenTDT/eventdt/queues/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/venv/lib/python3.8/site-packages/urllib3/util/queue.py",
 		"/run/user/1000/gvfs/sftp:host=vps-storage,user=memonick/data/phd-data/fuego-sampled/meta/#HUNFRA-v3-b0.8-r0.08-grouped.csv.meta",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/twitter/__init__.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/twitter/file/simulated_reader.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/twitter/listeners/tweet_listener.py",
 		"/home/nicholas/GitHub/EvenTDT/.gitignore",
@@ -325,16 +2083,14 @@
 		"/home/nicholas/GitHub/EvenTDT/temp/shared.json",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/tests/corpora/timelines/CRYCHE.json",
 		"/home/nicholas/GitHub/EvenTDT/tools/meta.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/cluster_node.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/vsm/clustering/cluster.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/topical_cluster_node.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/__init__.py",
-		"/home/nicholas/GitHub/EvenTDT/eventdt/summarization/timeline/nodes/document_node.py",
 		"/home/nicholas/GitHub/EvenTDT/eventdt/apd/scorers/local/log_df_scorer.py"
 	],
 	"find":
 	{
-		"height": 23.0
+		"height": 44.0
 	},
 	"find_in_files":
 	{
@@ -351,134 +2107,134 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"\n",
-			"/home_students/nicholas/evaluation/data/elections/tokenized_verified/",
-			"/home_students/nicholas/evaluation/data/elections/tokenized_verified",
-			"\"practic\"",
-			"\\t",
-			"\\n",
-			"\\t",
-			"\\n",
-			"\\t",
-			"\\n",
-			"\\t",
-			"\\n",
-			"\\t",
-			"ParentedTree",
-			"level",
-			"depth",
+			"print",
+			"stream_override",
+			"entity.lower()",
+			"document.text.lower()",
+			"decode",
+			"type",
+			"s",
+			"Tokenizer",
+			"t.tokenize(s)",
+			"test_normalize_",
+			"accent",
+			"unicodedata",
+			"a",
+			"original",
+			"loads",
+			"_what",
+			"set",
 			"model",
+			"split",
+			"override",
+			"True",
+			"models",
+			"assertEqual",
+			"False",
+			"any",
+			"file",
+			"Test that modeling",
+			"without overriding",
+			"UnderstandingModeler",
+			"timelines",
+			"a",
+			"consume",
+			"file",
+			"concepts",
+			"', ",
+			"ate",
+			"output",
+			"sum",
+			"construct_query",
+			"topics'",
+			"topics",
+			"DocumentNode",
+			"is_retweet(document)",
+			"write",
+			"file",
+			"The file or directory where to save the shareable corpus.",
+			"collect",
+			"tools.collect",
+			"original corpus collected",
+			"collected",
+			"corpus",
+			"retweet",
+			"timelines",
+			"not",
 			" \n",
-			", node",
-			":param documents: The documents from which to extract ",
-			":param node: A node on the timeline.\n        :type node: :class:`~summarization.timeline.nodes.Node`",
-			"Timeline",
-			"timeline",
-			"one",
-			"timelines",
-			"Timeline",
-			"timeline",
-			"summarization",
-			"This can be overwritten if there is event understanding",
-			"scheme",
-			"idf",
-			"Referencing",
-			"## ",
-			"Streamv2",
-			"data",
-			"dict",
-			"timelines",
-			"The original corpus collected by the :mod:`~tools.collect` tool, or an archive of files, or a timeline generated by the :mod:`~tools.consume` tool.",
-			"timeline",
 			"meta",
-			"--meta",
-			"concepts",
-			"data",
-			"correlations",
-			"parser",
-			"ATE",
-			"Modeling",
-			"Concepts",
-			"consume",
-			"ate",
-			"ATE",
-			"ate.py",
-			"evaluation/ate",
-			"load_",
-			"load_timeline",
+			"pcmd",
+			"consume.splits",
+			"test_splits",
+			"splits",
 			"timeline",
-			"idf",
-			"timeline",
-			"self.assertEqual(original, _idf)",
-			"output['tfidf']",
+			"timelines",
+			"consume.load",
+			"output['timeline",
 			"output",
+			"test_load",
+			"timeline",
+			"streams",
+			"splits'",
+			"splits",
+			"type=bool",
+			"bool",
+			"consume",
+			"file",
+			"streams",
+			"streams-as-the-what",
+			"assigning",
+			"identify the What",
+			"identify the What; ",
+			"assertTrue",
+			"True",
+			"concepts",
+			"assertEqual",
+			"to the participants.",
+			"concepts",
+			"str",
+			"with_ner",
+			"concepts",
+			"a list of concepts",
+			"a list of participants",
+			"len(",
+			"participants",
+			"concepts",
+			"clusters",
+			"participants",
+			"apd",
+			"participants",
+			"model",
+			"modeler",
+			"model",
+			"--model",
+			"model",
+			"details",
+			"normalize_special_characters",
+			"normalize_",
+			"normalize_special_characters",
+			"args.",
+			"participants",
+			"Required",
+			"True",
+			"output",
+			"profile",
+			"given",
+			"mock_participants",
+			"output",
+			"apd.load(output)",
+			"name",
+			"Profile",
 			"Exportable",
-			"original = output['timeline']",
-			"tools",
-			"consume",
-			"load_",
-			"timeline",
-			"append",
-			"CRYCHE",
-			"timeline",
-			"timelines",
-			".. warn",
-			"load_",
-			"timelines",
-			"consume",
-			"['idf",
-			"'idf",
-			"idf",
-			"tetirms",
-			"timeline",
-			"timelines', '#ParmaMilan-streams",
-			"consume",
-			"'idf'",
-			"timelines",
-			"concepts",
-			"load_",
-			"timelines",
-			"_timelines",
-			"timelines.load",
-			"concepts",
-			"ate",
-			"correlations",
-			"concepts",
-			"ate', \"concepts.json",
-			"ate",
-			"load_",
-			"seed",
-			"terms",
-			"boots",
-			"terms",
-			"term_file",
-			"load_",
-			"load_seed",
-			"is_filed",
-			"output",
-			"bootstrapping",
-			"output",
-			"bootstrapping",
-			"bootstrap",
-			"term",
-			"terms",
-			"term",
-			"terms",
-			"isOwn",
-			"terms",
-			"output",
-			"isOwn",
-			"json",
-			"_bootstrap",
-			"bootstrap",
-			"load_seed",
-			"tools.terms",
-			"terms",
-			"seeds",
-			"candidate_list",
-			"candidate_file",
-			"seed_file",
-			"seed_list"
+			"returns",
+			"detector",
+			"method",
+			"ELDParticipantDetector",
+			"eldparticipantdetector",
+			"method",
+			"Optional",
+			"model",
+			"ParticipantDetector"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -530,20 +2286,19 @@
 			[
 				{
 					"buffer": 0,
-					"file": "eventdt/twitter/__init__.py",
-					"selected": true,
+					"file": "eventdt/modeling/modelers/understanding_modeler.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 18479,
+						"buffer_size": 13619,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								6994,
-								7002
+								7272,
+								7272
 							]
 						],
 						"settings":
@@ -553,7 +2308,39 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2845.0,
+						"translation.y": 1150.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"stack_multiselect": false,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "eventdt/modeling/modelers/tests/test_understanding_modeler.py",
+					"selected": true,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 55571,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								28697,
+								28697
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 7869.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -616,6 +2403,186 @@
 		"selected_items":
 		[
 			[
+				"modelingini",
+				"eventdt/modeling/__init__.py"
+			],
+			[
+				"profile",
+				"eventdt/attributes/profile.py"
+			],
+			[
+				"exportab",
+				"eventdt/objects/exportable.py"
+			],
+			[
+				"toolsinit",
+				"tools/__init__.py"
+			],
+			[
+				"model.p",
+				"tools/model.py"
+			],
+			[
+				"testunde",
+				"eventdt/modeling/modelers/tests/test_understanding_modeler.py"
+			],
+			[
+				"underst",
+				"eventdt/modeling/modelers/understanding_modeler.py"
+			],
+			[
+				"testpackage nlp",
+				"eventdt/nlp/tests/test_package.py"
+			],
+			[
+				"testokn",
+				"eventdt/nlp/tests/test_tokenizer.py"
+			],
+			[
+				"nlpini",
+				"eventdt/nlp/__init__.py"
+			],
+			[
+				"tokeniz",
+				"eventdt/nlp/tokenizer.py"
+			],
+			[
+				"concepts",
+				"eventdt/tests/corpora/ate/concepts.json"
+			],
+			[
+				"consume",
+				"tools/consume.py"
+			],
+			[
+				"filter",
+				"tools/filter_retweets.py"
+			],
+			[
+				"simplif",
+				"eventdt/tests/corpora/timelines/#ParmaMilan-simplified.json"
+			],
+			[
+				"timeline",
+				"eventdt/summarization/timeline/__init__.py"
+			],
+			[
+				"summariz",
+				"tools/summarize.py"
+			],
+			[
+				"parmami",
+				"eventdt/tests/corpora/timelines/#ParmaMilan-streams.json"
+			],
+			[
+				"documentno",
+				"eventdt/summarization/timeline/nodes/document_node.py"
+			],
+			[
+				"node",
+				"eventdt/summarization/timeline/nodes/cluster_node.py"
+			],
+			[
+				"parmamilan",
+				"eventdt/tests/corpora/timelines/#ParmaMilan-streams.json"
+			],
+			[
+				"modelini",
+				"eventdt/modeling/modelers/__init__.py"
+			],
+			[
+				"und",
+				"eventdt/modeling/modelers/understanding_modeler.py"
+			],
+			[
+				"timelines/",
+				"eventdt/tests/corpora/timelines/LIVNAP.json"
+			],
+			[
+				"timeln.json",
+				"eventdt/tests/corpora/timelines/LIVMUN.json"
+			],
+			[
+				"testconsume",
+				"tools/tests/test_consume.py"
+			],
+			[
+				"consume.",
+				"tools/consume.py"
+			],
+			[
+				"mod",
+				"eventdt/modeling/modelers/understanding_modeler.py"
+			],
+			[
+				"partic",
+				"tools/participants.py"
+			],
+			[
+				"under",
+				"eventdt/modeling/modelers/understanding_modeler.py"
+			],
+			[
+				"unde",
+				"eventdt/modeling/modelers/understanding_modeler.py"
+			],
+			[
+				"testpa",
+				"tools/tests/test_participants.py"
+			],
+			[
+				"particip",
+				"eventdt/apd/eld_participant_detector.py"
+			],
+			[
+				"nlp/",
+				"eventdt/nlp/tokenizer.py"
+			],
+			[
+				"unders",
+				"eventdt/modeling/modelers/understanding_modeler.py"
+			],
+			[
+				"understand",
+				"eventdt/modeling/modelers/understanding_modeler.py"
+			],
+			[
+				"export",
+				"eventdt/objects/exportable.py"
+			],
+			[
+				"participants.js",
+				"eventdt/tests/corpora/participants.json"
+			],
+			[
+				"testparti",
+				"tools/tests/test_participants.py"
+			],
+			[
+				"partici",
+				"tools/participants.py"
+			],
+			[
+				"understa",
+				"eventdt/modeling/modelers/understanding_modeler.py"
+			],
+			[
+				"testmodel",
+				"tools/tests/test_model.py"
+			],
+			[
+				"modelersinit",
+				"eventdt/modeling/modelers/__init__.py"
+			],
+			[
+				"consum",
+				"tools/consume.py"
+			],
+			[
+				"model.py",
+				"tools/model.py"
+			],
+			[
 				"twitterinit",
 				"eventdt/twitter/__init__.py"
 			],
@@ -668,10 +2635,6 @@
 				"eventdt/queues/consumers/__init__.py"
 			],
 			[
-				"consume",
-				"tools/consume.py"
-			],
-			[
 				"collect",
 				"tools/collect.py"
 			],
@@ -684,28 +2647,12 @@
 				"tools/collect.py"
 			],
 			[
-				"toolsinit",
-				"tools/__init__.py"
-			],
-			[
 				"understandingmodel",
 				"eventdt/modeling/modelers/understanding_modeler.py"
 			],
 			[
-				"testmodel",
-				"eventdt/modeling/modelers/tests/test_understanding_modeler.py"
-			],
-			[
 				"modeling",
 				"eventdt/modeling/__init__.py"
-			],
-			[
-				"concepts",
-				"tools/concepts.py"
-			],
-			[
-				"consum",
-				"tools/consume.py"
 			],
 			[
 				"tests.sh",
@@ -752,10 +2699,6 @@
 				"eventdt/summarization/timeline/__init__.py"
 			],
 			[
-				"testconsume",
-				"tools/tests/test_consume.py"
-			],
-			[
 				"consu",
 				"tools/consume.py"
 			],
@@ -772,24 +2715,12 @@
 				"tools/tests/test_concepts.py"
 			],
 			[
-				"parmamilan",
-				"eventdt/tests/corpora/timelines/#ParmaMilan-streams.json"
-			],
-			[
 				"bootstr",
 				"tools/bootstrap.py"
 			],
 			[
 				"testconcep",
 				"tools/tests/test_concepts.py"
-			],
-			[
-				"testparti",
-				"tools/tests/test_participants.py"
-			],
-			[
-				"partici",
-				"tools/participants.py"
 			],
 			[
 				"testboots",
@@ -982,150 +2913,6 @@
 			[
 				"entity",
 				"eventdt/apd/extractors/local/entity_extractor.py"
-			],
-			[
-				"annota",
-				"eventdt/apd/extractors/local/annotation_extractor.py"
-			],
-			[
-				"twitnerenti",
-				"eventdt/apd/extractors/local/twitterner_entity_extractor.py"
-			],
-			[
-				"",
-				"eventdt/apd/depict_participant_detector.py"
-			],
-			[
-				"extrac",
-				"eventdt/ate/extractor.py"
-			],
-			[
-				"extractorsinit",
-				"eventdt/apd/extractors/local/__init__.py"
-			],
-			[
-				"extrapolators",
-				"eventdt/apd/extrapolators/external/__init__.py"
-			],
-			[
-				"extrapolator",
-				"eventdt/apd/extrapolators/__init__.py"
-			],
-			[
-				"resolver",
-				"eventdt/apd/resolvers/resolver.py"
-			],
-			[
-				"annotat",
-				"eventdt/apd/extractors/local/annotation_extractor.py"
-			],
-			[
-				"depictpart",
-				"eventdt/apd/depict_participant_detector.py"
-			],
-			[
-				"annotation",
-				"eventdt/apd/extractors/local/annotation_extractor.py"
-			],
-			[
-				"postpr",
-				"eventdt/apd/postprocessors/postprocessor.py"
-			],
-			[
-				"testdepict",
-				"eventdt/apd/tests/test_depict_participant_detector.py"
-			],
-			[
-				"apdinit",
-				"eventdt/apd/__init__.py"
-			],
-			[
-				"partic",
-				"tools/participants.py"
-			],
-			[
-				"searchresolv",
-				"eventdt/apd/resolvers/external/wikipedia_search_resolver.py"
-			],
-			[
-				"linguis",
-				"eventdt/attributes/extractors/linguistic.py"
-			],
-			[
-				"lingui",
-				"eventdt/attributes/extractors/tests/test_linguistic.py"
-			],
-			[
-				"wikiattri",
-				"eventdt/apd/extrapolators/external/wikipedia_attribute_extrapolator.py"
-			],
-			[
-				"wikipresolver",
-				"eventdt/apd/resolvers/external/wikipedia_search_resolver.py"
-			],
-			[
-				"extrapolatorsexternalini",
-				"eventdt/apd/extrapolators/external/__init__.py"
-			],
-			[
-				"nere",
-				"eventdt/apd/ner_participant_detector.py"
-			],
-			[
-				"rankfilter",
-				"eventdt/apd/filters/local/rank_filter.py"
-			],
-			[
-				"attributeex",
-				"eventdt/apd/extrapolators/external/wikipedia_attribute_extrapolator.py"
-			],
-			[
-				"participan",
-				"eventdt/apd/eld_participant_detector.py"
-			],
-			[
-				"testlinguist",
-				"eventdt/attributes/extractors/tests/test_linguistic.py"
-			],
-			[
-				"linguistic",
-				"eventdt/attributes/extractors/linguistic.py"
-			],
-			[
-				"eldconsumer",
-				"eventdt/queues/consumers/algorithms/eld_consumer.py"
-			],
-			[
-				"splic",
-				"eventdt/queues/consumers/split_consumer.py"
-			],
-			[
-				"testfuego",
-				"eventdt/queues/consumers/algorithms/tests/test_fuego_consumer.py"
-			],
-			[
-				"eldconsum",
-				"eventdt/queues/consumers/algorithms/eld_consumer.py"
-			],
-			[
-				"tokensplit",
-				"eventdt/queues/consumers/token_split_consumer.py"
-			],
-			[
-				"logger",
-				"eventdt/logger/logger.py"
-			],
-			[
-				"testeldcons",
-				"eventdt/queues/consumers/algorithms/tests/test_eld_consumer.py"
-			],
-			[
-				"fuegocons",
-				"eventdt/queues/consumers/algorithms/fuego_consumer.py"
-			],
-			[
-				"testeldconsumer",
-				"eventdt/queues/consumers/algorithms/tests/test_eld_consumer.py"
 			]
 		],
 		"width": 0.0
@@ -1159,7 +2946,7 @@
 	"show_minimap": false,
 	"show_open_files": false,
 	"show_tabs": true,
-	"side_bar_visible": true,
+	"side_bar_visible": false,
 	"side_bar_width": 263.0,
 	"status_bar_visible": true,
 	"template_settings":

@@ -114,14 +114,14 @@ class UnderstandingModeler(EventModeler):
                     continue
 
                 # check for the participant's name or aliases in the text
-                if (profile.name.lower() in document.text.lower() or
-                    any( reference.lower() in document.text.lower() for reference in profile.attributes.get('known_as', [ ]) )):
+                if (nlp.transliterate(profile.name.lower()) in nlp.transliterate(document.text.lower()) or
+                    any( nlp.transliterate(reference.lower()) in nlp.transliterate(document.text.lower()) for reference in profile.attributes.get('known_as', [ ]) )):
                     found.append(participant)
 
                 # check for entities that are subsets of the entity or its aliases
                 for entity in entities:
-                    if (entity.lower() in profile.name.lower() or
-                        any( entity.lower() in reference.lower() for reference in profile.attributes.get('known_as', [ ]) )):
+                    if (nlp.transliterate(entity.lower()) in nlp.transliterate(profile.name.lower()) or
+                        any( nlp.transliterate(entity.lower()) in nlp.transliterate(reference.lower()) for reference in profile.attributes.get('known_as', [ ]) )):
                         found.append(participant)
                         entities[entity] = True # mark the entity as having been matched to a participant
 
