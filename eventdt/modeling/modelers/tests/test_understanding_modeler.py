@@ -177,6 +177,29 @@ class TestUnderstandingModeler(unittest.TestCase):
         modeler = UnderstandingModeler(with_ner=True)
         self.assertTrue(modeler.with_ner)
 
+    def test_init_saves_threshold(self):
+        """
+        Test that on initialization, the class saves the threshold.
+        """
+
+        modeler = UnderstandingModeler(threshold=0.67)
+        self.assertEqual(0.67, modeler.threshold)
+
+    def test_init_threshold_0_exclusive(self):
+        """
+        Test that on initialization, the modeler rejects a threshold of 0.
+        """
+
+        self.assertRaises(ValueError, UnderstandingModeler, threshold=0)
+
+    def test_init_threshold_1_inclusive(self):
+        """
+        Test that on initialization, the modeler accepts a threshold of 1.
+        """
+
+        modeler = UnderstandingModeler(threshold=1)
+        self.assertEqual(1, modeler.threshold)
+
     def test_who_returns_list(self):
         """
         Test that the Who returns a list of profiles.

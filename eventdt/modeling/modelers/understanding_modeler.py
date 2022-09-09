@@ -47,9 +47,12 @@ class UnderstandingModeler(EventModeler):
     :vartype participants: dict
     :ivar with_ner: A boolean indicating whether to use NER to identify common named entities that do not appear in the understanding.
     :vartype with_ner: bool
+    :ivar threshold: The minimum appearance of a participant or a concept in an event to consider it relevant.
+                     The value must be greater than 0 (otherwise it would assign every participant and concept to every event) but not more than 1, and thus represents a percentage.
+    :vartype threshold: float
     """
 
-    def __init__(self, concepts=None, participants=None, with_ner=False, *args, **kwargs):
+    def __init__(self, concepts=None, participants=None, with_ner=False, threshold=0.5, *args, **kwargs):
         """
         Initialize the :class:`~modeling.modelers.understanding_modeler.UnderstandingModeler` with understanding.
 
@@ -60,11 +63,18 @@ class UnderstandingModeler(EventModeler):
         :type participants: list of :class:`attributes.profile.Profile` or list of dict
         :param with_ner: A boolean indicating whether to use NER to identify common named entities that do not appear in the understanding.
         :type with_ner: bool
+        :param threshold: The minimum appearance of a participant or a concept in an event to consider it relevant.
+                          The value must be greater than 0 (otherwise it would assign every participant and concept to every event) but not more than 1, and thus represents a percentage.
+        :type threshold: float
         """
+
+        if not 0 < threshold <= 1:
+            raise ValueError(f"The threshold must be greater than 0 and less than or equal to 1; received { threshold }")
 
         self.concepts = concepts or [ ]
         self.participants = self._preprocess_participants(participants)
         self.with_ner = with_ner
+        self.threshold = threshold
 
     def _preprocess_participants(self, participants):
         """
