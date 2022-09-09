@@ -350,6 +350,60 @@ class TestUnderstandingModeler(unittest.TestCase):
         participants = self.mock_participants()
         modeler = UnderstandingModeler(participants=participants.values())
         models = modeler.model(timeline)
+        self.assertEqual(1, len(models[0].who))
+        self.assertTrue(any( 'Max Verstappen' == model.name for model in models[0].who ))
+
+    def test_who_threshold_low(self):
+        """
+        Test that a low threshold accepts more participants.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="He's done it! Max Verstappen wins the Grand Prix."),
+            Document(text="Max Verstappen wins the first Grand Prix of the season."),
+            Document(text="France's Pierre Gasly finishes second despite slow start."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values(), threshold=0.3)
+        models = modeler.model(timeline)
+        self.assertEqual(2, len(models[0].who))
+        self.assertTrue(any( 'Max Verstappen' == model.name for model in models[0].who ))
+        self.assertTrue(any( 'Pierre Gasly' == model.name for model in models[0].who ))
+
+    def test_who_threshold_high(self):
+        """
+        Test that a high threshold accepts fewer participants.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="He's done it! Max Verstappen wins the Grand Prix."),
+            Document(text="Max Verstappen wins the first Grand Prix of the season."),
+            Document(text="France's Pierre Gasly finishes second despite slow start."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values(), threshold=0.8)
+        models = modeler.model(timeline)
+        self.assertEqual([ ], models[0].who)
+
+    def test_who_threshold_all(self):
+        """
+        Test that a high threshold accepts participants that appear in all documents.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="He's done it! Max Verstappen wins the Grand Prix."),
+            Document(text="Max Verstappen wins the first Grand Prix of the season."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values(), threshold=1)
+        models = modeler.model(timeline)
+        self.assertEqual(1, len(models[0].who))
         self.assertEqual('Max Verstappen', models[0].who[0].name)
 
     def test_who_repeated_participant(self):
@@ -813,7 +867,64 @@ class TestUnderstandingModeler(unittest.TestCase):
         concepts = self.mock_concepts()
         modeler = UnderstandingModeler(concepts=concepts)
         models = modeler.model(timeline)
-        self.assertEqual([[ 'engine', 'failure' ]], models[0].what)
+        self.assertEqual(1, len(models[0].what))
+        self.assertEqual([ 'engine', 'failure' ], models[0].what[0])
+
+    def test_what_threshold_low(self):
+        """
+        Test that a low threshold accepts more concepts.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        documents = [
+            Document(dimensions=[ 'failure' ]),
+            Document(dimensions=[ 'pit', 'stop', 'engine' ]),
+            Document(dimensions=[ 'leclerc', 'tyre' ]),
+        ]
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), documents))
+
+        concepts = self.mock_concepts()
+        modeler = UnderstandingModeler(concepts=concepts, threshold=0.3)
+        models = modeler.model(timeline)
+        self.assertEqual(2, len(models[0].what))
+        self.assertTrue([ 'engine', 'failure' ] in models[0].what)
+        self.assertTrue([ 'tyre', 'pit', 'stop' ] in models[0].what)
+
+    def test_what_threshold_high(self):
+        """
+        Test that a high threshold accepts fewer concepts.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        documents = [
+            Document(dimensions=[ 'failure' ]),
+            Document(dimensions=[ 'pit', 'stop', 'engine' ]),
+            Document(dimensions=[ 'leclerc', 'tyre' ]),
+        ]
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), documents))
+
+        concepts = self.mock_concepts()
+        modeler = UnderstandingModeler(concepts=concepts, threshold=0.8)
+        models = modeler.model(timeline)
+        self.assertEqual([ ], models[0].what)
+
+    def test_what_threshold_all(self):
+        """
+        Test that a high threshold accepts concepts that appear in all documents.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        documents = [
+            Document(dimensions=[ 'failure' ]),
+            Document(dimensions=[ 'pit', 'stop', 'engine' ]),
+        ]
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), documents))
+
+        concepts = self.mock_concepts()
+        modeler = UnderstandingModeler(concepts=concepts, threshold=1)
+        models = modeler.model(timeline)
+        self.assertEqual(1, len(models[0].what))
+        self.assertTrue([ 'engine', 'failure' ] in models[0].what)
 
     def test_what_multiple_concepts(self):
         """
@@ -1049,6 +1160,60 @@ class TestUnderstandingModeler(unittest.TestCase):
         participants = self.mock_participants()
         modeler = UnderstandingModeler(participants=participants.values())
         models = modeler.model(timeline)
+        self.assertEqual(1, len(models[0].where))
+        self.assertTrue(any( 'Montreal' == model.name for model in models[0].where ))
+
+    def test_where_threshold_low(self):
+        """
+        Test that a low threshold accepts more participants.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="He's done it! Max Verstappen wins the Grand Prix in Montreal."),
+            Document(text="Max Verstappen wins the Montreal Grand Prix."),
+            Document(text="France's Pierre Gasly finishes second in Canada despite slow start."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values(), threshold=0.3)
+        models = modeler.model(timeline)
+        self.assertEqual(2, len(models[0].where))
+        self.assertTrue(any( 'Montreal' == model.name for model in models[0].where ))
+        self.assertTrue(any( 'Canada' == model.name for model in models[0].where ))
+
+    def test_where_threshold_high(self):
+        """
+        Test that a high threshold accepts fewer participants.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="He's done it! Max Verstappen wins the Grand Prix in Montreal."),
+            Document(text="Max Verstappen wins the Montreal Grand Prix."),
+            Document(text="France's Pierre Gasly finishes second in Canada despite slow start."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values(), threshold=0.8)
+        models = modeler.model(timeline)
+        self.assertEqual([ ], models[0].where)
+
+    def test_where_threshold_all(self):
+        """
+        Test that a high threshold accepts participants that appear in all documents.
+        """
+
+        timeline = Timeline(DocumentNode, expiry=60, min_similarity=0.5)
+        timeline.nodes.append(DocumentNode(datetime.now().timestamp(), [
+            Document(text="He's done it! Max Verstappen wins the Grand Prix in Montreal."),
+            Document(text="Max Verstappen wins the Montreal Grand Prix."),
+        ]))
+
+        participants = self.mock_participants()
+        modeler = UnderstandingModeler(participants=participants.values(), threshold=1)
+        models = modeler.model(timeline)
+        self.assertEqual(1, len(models[0].where))
         self.assertEqual('Montreal', models[0].where[0].name)
 
     def test_where_repeated_participant(self):

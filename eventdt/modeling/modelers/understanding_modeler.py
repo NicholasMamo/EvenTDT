@@ -146,7 +146,7 @@ class UnderstandingModeler(EventModeler):
 
         # filter infrequent participants
         freq = [ participant for participant, frequency in freq.items()
-                             if frequency >= (len(node.get_all_documents()) / 2) ]
+                             if frequency >= (len(node.get_all_documents()) * self.threshold) ]
 
         # map the participants back to profiles, or create new profiles if they are named entities
         _who = [ self.participants[participant] for participant in freq
@@ -187,7 +187,7 @@ class UnderstandingModeler(EventModeler):
 
         # filter infrequent concepts
         freq = [ concept for concept, frequency in freq.items()
-                         if frequency >= (len(node.get_all_documents()) / 2) ]
+                         if frequency >= (len(node.get_all_documents()) * self.threshold) ]
         _what = [ json.loads(concept) for concept in freq ]
 
         return _what
@@ -235,7 +235,7 @@ class UnderstandingModeler(EventModeler):
 
         # filter infrequent participants
         freq = [ participant for participant, frequency in freq.items()
-                             if frequency >= (len(node.get_all_documents()) / 2) ]
+                             if frequency >= (len(node.get_all_documents()) * self.threshold) ]
 
         # map the participants back to profiles, or create new profiles if they are named entities
         _where = [ self.participants[participant] for participant in freq
