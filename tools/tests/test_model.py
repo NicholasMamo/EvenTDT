@@ -163,6 +163,29 @@ class TestModel(unittest.TestCase):
         modeler = model.create_modeler(UnderstandingModeler, with_ner=False)
         self.assertFalse(modeler.with_ner)
 
+    def test_create_modeler_with_threshold(self):
+        """
+        Test that creating a modeler stores the threshold.
+        """
+
+        modeler = model.create_modeler(UnderstandingModeler, threshold=0.3)
+        self.assertEqual(0.3, modeler.threshold)
+
+    def test_create_modeler_with_threshold_zero(self):
+        """
+        Test that creating a modeler with a threshold of zero rejects the input.
+        """
+
+        self.assertRaises(ValueError, model.create_modeler, UnderstandingModeler, threshold=0)
+
+    def test_create_modeler_with_threshold_one(self):
+        """
+        Test that creating a modeler with a threshold of one accepts the input.
+        """
+
+        modeler = model.create_modeler(UnderstandingModeler, threshold=1)
+        self.assertEqual(1, modeler.threshold)
+
     def test_model_returns_list_of_models(self):
         """
         Test that modeling a timeline returns a list of event models.

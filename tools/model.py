@@ -50,6 +50,7 @@ The full list of accepted arguments:
     - ``--concepts``            *<Optional>* A file containing a list of concepts, symbolizing the What, extracted using the :mod:`~tools.concepts` tool.
     - ``--with-ner``            *<Optional>* Use NER to identify the Who and the Where in addition to the participants.
     - ``--stream-override``     *<Optional>* Override the concepts and use the timeline's streams to identify the What; this parameters avoids linking an event to a stream without having burst.
+    - ``--threshold``           *<Optional>* The threshold to accept a participant as the Who or Where, or a concept as the What.
 """
 
 import argparse
@@ -84,6 +85,7 @@ def setup_args():
         - ``--concepts``            *<Optional>* A file containing a list of concepts, symbolizing the What, extracted using the :mod:`~tools.concepts` tool.
         - ``--with-ner``            *<Optional>* Use NER to identify the Who and the Where in addition to the participants.
         - ``--stream-override``     *<Optional>* Override the concepts and use the timeline's streams to identify the What; this parameters avoids linking an event to a stream without having burst.
+        - ``--threshold``           *<Optional>* The threshold to accept a participant as the Who or Where, or a concept as the What.
 
     :return: The command-line arguments.
     :rtype: :class:`argparse.Namespace`
@@ -107,6 +109,8 @@ def setup_args():
                         help='<Optional> Use NER to identify the Who and the Where in addition to the participants.')
     parser.add_argument('--stream-override', required=False, action='store_true',
                         help='<Optional> Override the concepts and use the timeline\'s streams to identify the What; this parameters avoids linking an event to a stream without having burst.')
+    parser.add_argument('--threshold', required=False, default=0.5, type=float,
+                        help='<Optional> The threshold to accept a participant as the Who or Where, or a concept as the What.')
 
     args = parser.parse_args()
     return args
