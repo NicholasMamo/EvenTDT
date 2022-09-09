@@ -72,6 +72,50 @@ class TestModel(unittest.TestCase):
         file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', "bootstrapped.json")
         self.assertFalse(model.is_own(file))
 
+    def test_is_own_returns_bool(self):
+        """
+        Test that checking whether an output was produced by this tool returns a boolean.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'bootstrapping', "bootstrapped.json")
+        self.assertEqual(bool, type(model.is_own(file)))
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'models', "#ParmaMilan.json")
+        self.assertEqual(bool, type(model.is_own(file)))
+
+    def test_load_from_output(self):
+        """
+        Test that when loading models from the output of the tool, they are loaded correctly.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'models', '#ParmaMilan.json')
+        with open(file) as f:
+            output = [ json.loads(line) for line in f ]
+            models = model.load(output)
+            original = [ Exportable.decode(line) for line in output ]
+        self.assertEqual(Exportable.encode(original), Exportable.encode(models)) # encode the pair again since they will be essentially-different objects
+
+    def test_load_from_path(self):
+        """
+        Test that when loading models from a filepath, they are loaded correctly.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'models', '#ParmaMilan.json')
+        with open(file) as f:
+            original = [ Exportable.decode(json.loads(line)) for line in f ]
+        models = model.load(file)
+        self.assertEqual(Exportable.encode(original), Exportable.encode(models)) # encode the pair again since they will be essentially-different objects
+
+    def test_load_returns_list_of_models(self):
+        """
+        Test that when loading models from a filepath, the function returns a list of models.
+        """
+
+        file = os.path.join(os.path.dirname(__file__), '..', '..', 'eventdt', 'tests', 'corpora', 'models', '#ParmaMilan.json')
+        models = model.load(file)
+        self.assertEqual(list, type(models))
+        self.assertTrue(all( EventModel.__name__ == type(model).__name__ for model in models ))
+
     def test_create_modeler_same_type(self):
         """
         Test that creating a modeler instantiates the correct type.

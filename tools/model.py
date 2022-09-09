@@ -166,13 +166,17 @@ def load(output):
     Load the event models from the given file.
 
     :param output: A dictionary containing this tool's output or a path to it.
-    :type output: dict or str
+    :type output: list of dict or str
 
     :return: The event models in the given output.
     :rtype: list of :class:`~modeling.EventModel`
     """
 
-    return [ ]
+    if tools.is_file(output):
+        with open(output) as file:
+            output = [ json.loads(line) for line in file ]
+
+    return [ Exportable.decode(line) for line in output ]
 
 def model(modeler, files, stream_override=False):
     """
