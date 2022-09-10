@@ -253,6 +253,7 @@ You can also filter the data (``--filters``) and generate multiple timelines by 
 The following parameters tweak different aspects of how the algorithms work:
 
     - ``--filtering``               *<Optional>* The filtering level used by the algorithms: `NONE`, `LENIENT`, `STRICT` (default); used by the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer` and the :class:`~queues.consumers.algorithms.eld_consumer.SEERConsumer`.
+    - ``--reporting``               *<Optional>* The reporting level, or the tweets retained by the algorithms: `ALL` (default), `ORIGINAL` (exclude retweets); used by the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer` and the :class:`~queues.consumers.algorithms.eld_consumer.SEERConsumer`.
 
 The following parameters tweak the :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`:
 
@@ -361,6 +362,8 @@ def setup_args():
     group = parser.add_argument_group('General', 'The following arguments let you tweak how the algorithms work:')
     group.add_argument('--filtering', type=filtering, required=False, default='STRICT',
                        help='<Optional> The filtering level used by the algorithms: `NONE`, `LENIENT`, `STRICT` (default); used by the `ELDConsumer` and the `SEERConsumer`.')
+    group.add_argument('--reporting', type=reporting, required=False, default='ALL',
+                       help='<Optional> The reporting level, or the tweets retained by the algorithms: `ALL` (default), `ORIGINAL` (exclude retweets); used by the `ELDConsumer` and the `SEERConsumer`.')
 
     group = parser.add_argument_group('Zhao et al. (2011)', 'The following arguments let you tweak how the algorithm by Zhao et al. (2011) works:')
     group.add_argument('--post-rate', type=float, required=False, default=1.7,
@@ -412,6 +415,7 @@ def main():
     pcmd['scheme'] = str(type(vars(args)['scheme']))
     pcmd['threshold_type'] = str(vars(args)['threshold_type'])
     pcmd['filtering'] = str(vars(args)['filtering'])
+    pcmd['reporting'] = str(vars(args)['reporting'])
 
     # load the filters and splits
     filter = filters(args.filters, args.filters_keep) if args.filters else [ ]
