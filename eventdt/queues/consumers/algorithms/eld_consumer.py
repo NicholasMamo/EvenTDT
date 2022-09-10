@@ -563,6 +563,7 @@ class ELDConsumer(Consumer):
             document.attributes['id'] = twitter.id(tweet)
             document.attributes['urls'] = len(twitter.urls(tweet))
             document.attributes['timestamp'] = twitter.extract_timestamp(tweet)
+            document.attributes['is_retweet'] = twitter.is_retweet(tweet)
             document.attributes['tweet'] = tweet
             document.normalize()
             documents.append(document)

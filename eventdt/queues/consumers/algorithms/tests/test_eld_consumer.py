@@ -895,6 +895,17 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(twitter.id(tweet), document.attributes['id'])
             self.assertEqual(len(twitter.urls(tweet)), document.attributes['urls'])
 
+    def test_to_documents_tweet(self):
+        """
+        Test that when creating a document from a tweet, an attribute stores whether it is a retweet.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
+            tweet = json.loads(f.readline())
+            document = consumer._to_documents([ tweet ])[0]
+            self.assertEqual(twitter.is_retweet(tweet), document.is_retweet)
+
     def test_to_documents_v2_tweet(self):
         """
         Test that when creating a document from a tweet, the tweet is saved as an attribute.
