@@ -194,6 +194,9 @@ class FUEGOConsumer(Consumer):
         logger.info(f"Burst:            [{ self.burst_start }, { self.burst_end }]")
         logger.info(f"Minimum volume:   { self.min_volume }")
         logger.info(f"Threshold:        { self.threshold }")
+        logger.info(f"Filtering:        { self.filtering }")
+        logger.info(f"Reporting:        { self.reporting }")
+        logger.info(f"Storage:          { self.storage }")
 
     async def understand(self, max_inactivity=-1, *args, **kwargs):
         """
