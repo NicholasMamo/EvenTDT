@@ -24,7 +24,7 @@ from nlp.weighting import TF
 from objects.exportable import Exportable
 from queues import Queue
 from queues.consumers.algorithms import FUEGOConsumer
-from queues.consumers.algorithms import DynamicThreshold, FilteringLevel, ReportingLevel
+from queues.consumers.algorithms import DynamicThreshold, FilteringLevel, ReportingLevel, StorageLevel
 from summarization import Summary
 from summarization.algorithms import DGS
 from summarization.timeline import Timeline
@@ -281,6 +281,17 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
 
         consumer = FUEGOConsumer(Queue(), reporting=ReportingLevel.ORIGINAL)
         self.assertEqual(ReportingLevel.ORIGINAL, consumer.reporting)
+
+    def test_init_storage(self):
+        """
+        Test setting the type of storage level when creating a consumer.
+        """
+
+        consumer = FUEGOConsumer(Queue(), storage=StorageLevel.TWEET)
+        self.assertEqual(StorageLevel.TWEET, consumer.storage)
+
+        consumer = FUEGOConsumer(Queue(), storage=StorageLevel.ATTRIBUTES)
+        self.assertEqual(StorageLevel.ATTRIBUTES, consumer.storage)
 
     def test_init_with_summarization(self):
         """
