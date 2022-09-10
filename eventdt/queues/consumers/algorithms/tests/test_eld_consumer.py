@@ -15,7 +15,7 @@ if path not in sys.path:
 
 from logger import logger
 from queues import Queue
-from queues.consumers.algorithms import ELDConsumer, FilteringLevel, ReportingLevel
+from queues.consumers.algorithms import ELDConsumer, FilteringLevel, ReportingLevel, StorageLevel
 from nlp.document import Document
 from nlp.weighting import TF
 from summarization.timeline import Timeline
@@ -64,6 +64,17 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
 
         consumer = ELDConsumer(Queue(), reporting=ReportingLevel.ORIGINAL)
         self.assertEqual(ReportingLevel.ORIGINAL, consumer.reporting)
+
+    def test_init_storage(self):
+        """
+        Test setting the type of storage level when creating a consumer.
+        """
+
+        consumer = ELDConsumer(Queue(), storage=StorageLevel.TWEET)
+        self.assertEqual(StorageLevel.TWEET, consumer.storage)
+
+        consumer = ELDConsumer(Queue(), storage=StorageLevel.ATTRIBUTES)
+        self.assertEqual(StorageLevel.ATTRIBUTES, consumer.storage)
 
     def test_create_consumer(self):
         """
