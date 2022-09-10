@@ -397,10 +397,10 @@ class FUEGOConsumer(Consumer):
         original = tweet
         tweet = twitter.original(tweet) if twitter.is_retweet(tweet) else tweet
 
-        if twitter.is_reply(tweet):
+        if twitter.is_reply(tweet) and self.filtering == FilteringLevel.STRICT:
             return False
 
-        if twitter.is_quote(tweet):
+        if twitter.is_quote(tweet)  and self.filtering == FilteringLevel.STRICT:
             return False
 
         if not twitter.lang(tweet) == 'en':
@@ -410,7 +410,7 @@ class FUEGOConsumer(Consumer):
             return False
 
         # filter out tweets with URLs (excluding media)
-        if len(twitter.urls(tweet)):
+        if len(twitter.urls(tweet)) and self.filtering == FilteringLevel.STRICT:
             return False
 
         if twitter.version(tweet) == 1 and twitter.user_favorites(tweet) == 0:

@@ -424,7 +424,21 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering a list of tweets, only English tweets are returned.
         """
 
-        consumer = FUEGOConsumer(Queue())
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertTrue(all(twitter.lang(tweet) == 'en' for tweet in tweets))
+            self.assertGreater(count, len(tweets))
+
+    def test_filter_tweets_lenient_english(self):
+        """
+        Test that when filtering a list of tweets leniently, only English tweets are returned.
+        """
+
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.LENIENT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -438,7 +452,21 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering a list of tweets, only English tweets are returned.
         """
 
-        consumer = FUEGOConsumer(Queue())
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertTrue(all(twitter.lang(tweet) == 'en' for tweet in tweets))
+            self.assertGreater(count, len(tweets))
+
+    def test_filter_tweets_lenient_v2_english(self):
+        """
+        Test that when filtering a list of tweets leniently, only English tweets are returned.
+        """
+
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.LENIENT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -452,7 +480,21 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering tweets, all returned tweets have no more than 2 hashtags.
         """
 
-        consumer = FUEGOConsumer(Queue())
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertTrue(all(len(twitter.hashtags(tweet)) <= 2 for tweet in tweets))
+            self.assertGreater(count, len(tweets))
+
+    def test_filter_tweets_lenient_hashtags(self):
+        """
+        Test that when filtering tweets leniently, all returned tweets have no more than 2 hashtags.
+        """
+
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.LENIENT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -466,7 +508,21 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering tweets, all returned tweets have no more than 2 hashtags.
         """
 
-        consumer = FUEGOConsumer(Queue())
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertTrue(all(len(twitter.hashtags(tweet)) <= 2 for tweet in tweets))
+            self.assertGreater(count, len(tweets))
+
+    def test_filter_tweets_lenient_v2_hashtags(self):
+        """
+        Test that when filtering tweets leniently, all returned tweets have no more than 2 hashtags.
+        """
+
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.LENIENT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -480,7 +536,21 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering tweets, all returned tweets' authors have favourited at least one tweet.
         """
 
-        consumer = FUEGOConsumer(Queue())
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertTrue(all(tweet['user']['favourites_count'] > 0 for tweet in tweets))
+            self.assertGreater(count, len(tweets))
+
+    def test_filter_tweets_lenient_no_favourites(self):
+        """
+        Test that when filtering tweets leniently, all returned tweets' authors have favourited at least one tweet.
+        """
+
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.LENIENT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -494,7 +564,23 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering tweets, all users have at least one follower for every thousand tweets they've published.
         """
 
-        consumer = FUEGOConsumer(Queue())
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            for tweet in tweets:
+                self.assertTrue((not twitter.is_retweet(tweet) and twitter.user_followers(tweet) / twitter.user_statuses(tweet) >= 1./1000.) or
+                                 twitter.is_retweet(tweet) and twitter.user_followers(twitter.original(tweet))  / twitter.user_statuses(twitter.original(tweet)) >= 1./1000.)
+            self.assertGreater(count, len(tweets))
+
+    def test_filter_tweets_lenient_follower_ratio(self):
+        """
+        Test that when filtering tweets leniently, all users have at least one follower for every thousand tweets they've published.
+        """
+
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.LENIENT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -510,7 +596,23 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering tweets, all users have at least one follower for every thousand tweets they've published.
         """
 
-        consumer = FUEGOConsumer(Queue())
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            for tweet in tweets:
+                self.assertTrue((not twitter.is_retweet(tweet) and twitter.user_followers(tweet) / twitter.user_statuses(tweet) >= 1./1000.) or
+                                 twitter.is_retweet(tweet) and twitter.user_followers(tweet, twitter.original(tweet)['author_id'])  / twitter.user_statuses(tweet, twitter.original(tweet)['author_id']) >= 1./1000.)
+            self.assertGreater(count, len(tweets))
+
+    def test_filter_tweets_lenient_v2_follower_ratio(self):
+        """
+        Test that when filtering tweets leniently, all users have at least one follower for every thousand tweets they've published.
+        """
+
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.LENIENT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -528,7 +630,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
         Not sure how that happens, possibly a short delay in updating the user profile.
         """
 
-        consumer = FUEGOConsumer(Queue())
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.STRICT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -546,7 +648,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
         Not sure how that happens, possibly a short delay in updating the user profile.
         """
 
-        consumer = FUEGOConsumer(Queue())
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.STRICT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -562,20 +664,33 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering tweets, none of the retained ones have URLs in them.
         """
 
-        consumer = FUEGOConsumer(Queue())
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.STRICT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             filtered = consumer._filter_tweets(tweets)
             self.assertTrue(all( len(twitter.urls(tweet)) == 0 for tweet in filtered ))
             self.assertGreater(len(tweets), len(filtered))
+
+    def test_filter_tweets_lenient_urls(self):
+        """
+        Test that when filtering tweets leniently, the retained ones may have URLs in them.
+        """
+
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.LENIENT)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            filtered = consumer._filter_tweets(tweets)
+            self.assertGreater(len(tweets), len(filtered))
+            self.assertTrue(any( len(twitter.urls(tweet)) > 0 for tweet in filtered ))
 
     def test_filter_tweets_strict_v2_urls(self):
         """
         Test that when filtering tweets, none of the retained ones have URLs in them.
         """
 
-        consumer = FUEGOConsumer(Queue())
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.STRICT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -583,36 +698,73 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
             self.assertTrue(all( len(twitter.urls(tweet)) == 0 for tweet in filtered ))
             self.assertGreater(len(tweets), len(filtered))
 
+    def test_filter_tweets_lenient_v2_urls(self):
+        """
+        Test that when filtering tweets leniently, the retained ones may have URLs in them.
+        """
+
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.LENIENT)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            filtered = consumer._filter_tweets(tweets)
+            self.assertGreater(len(tweets), len(filtered))
+            self.assertTrue(any( len(twitter.urls(tweet)) > 0 for tweet in filtered ))
+
     def test_filter_tweets_strict_removes_quotes(self):
         """
         Test that when filtering tweets, quotes are automatically filtered.
         """
 
-        consumer = FUEGOConsumer(Queue())
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.STRICT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             filtered = consumer._filter_tweets(tweets)
             self.assertFalse(any( twitter.is_quote(tweet) for tweet in filtered ))
 
+    def test_filter_tweets_lenient_keeps_quotes(self):
+        """
+        Test that when filtering tweets leniently, quotes are retained.
+        """
+
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.LENIENT)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            filtered = consumer._filter_tweets(tweets)
+            self.assertTrue(any( twitter.is_quote(tweet) for tweet in filtered ))
+
     def test_filter_tweets_strict_v2_removes_quotes(self):
         """
         Test that when filtering tweets, quotes are automatically filtered.
         """
 
-        consumer = FUEGOConsumer(Queue())
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.STRICT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             filtered = consumer._filter_tweets(tweets)
             self.assertFalse(any( twitter.is_quote(tweet) for tweet in filtered ))
 
+    def test_filter_tweets_lenient_v2_keeps_quotes(self):
+        """
+        Test that when filtering tweets leniently, quotes are retained.
+        """
+
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.LENIENT)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            filtered = consumer._filter_tweets(tweets)
+            self.assertTrue(any( twitter.is_quote(tweet) for tweet in filtered ))
+
     def test_filter_tweets_strict_urls_not_media(self):
         """
         Test that when filtering tweets, tweets with media are retained.
         """
 
-        consumer = FUEGOConsumer(Queue())
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.STRICT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -629,7 +781,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering tweets, tweets with media are retained.
         """
 
-        consumer = FUEGOConsumer(Queue())
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.STRICT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -646,7 +798,23 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering tweets, their authors must have a non-empty biography.
         """
 
-        consumer = FUEGOConsumer(Queue())
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            for tweet in tweets:
+                self.assertTrue(not twitter.is_retweet(tweet) and twitter.user_description(tweet) or
+                                twitter.is_retweet(tweet) and twitter.user_description(twitter.original(tweet)))
+            self.assertGreater(count, len(tweets))
+
+    def test_filter_tweets_lenient_bio(self):
+        """
+        Test that when filtering tweets leniently, their authors must have a non-empty biography.
+        """
+
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.LENIENT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -662,7 +830,23 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering tweets, their authors must have a non-empty biography.
         """
 
-        consumer = FUEGOConsumer(Queue())
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            for tweet in tweets:
+                self.assertTrue(not twitter.is_retweet(tweet) and twitter.user_description(tweet) or
+                                twitter.is_retweet(tweet) and twitter.user_description(tweet, twitter.original(tweet)['author_id']))
+            self.assertGreater(count, len(tweets))
+
+    def test_filter_tweets_lenient_v2_bio(self):
+        """
+        Test that when filtering tweets leniently, their authors must have a non-empty biography.
+        """
+
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.LENIENT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -678,7 +862,31 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering tweets twice, the second time has no effect.
         """
 
-        consumer = FUEGOConsumer(Queue())
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+
+            """
+            The first time, the number of tweets should decrease.
+            """
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertGreater(count, len(tweets))
+
+            """
+            The second time, the number of tweets should remain the same.
+            """
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertEqual(count, len(tweets))
+
+    def test_filter_tweets_lenient_repeat(self):
+        """
+        Test that when filtering tweets leniently twice, the second time has no effect.
+        """
+
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.LENIENT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -702,7 +910,31 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering tweets twice, the second time has no effect.
         """
 
-        consumer = FUEGOConsumer(Queue())
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+
+            """
+            The first time, the number of tweets should decrease.
+            """
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertGreater(count, len(tweets))
+
+            """
+            The second time, the number of tweets should remain the same.
+            """
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertEqual(count, len(tweets))
+
+    def test_filter_tweets_lenient_repeat(self):
+        """
+        Test that when filtering tweets leniently twice, the second time has no effect.
+        """
+
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.LENIENT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -726,7 +958,19 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering tweets, the tweet data does not change.
         """
 
-        consumer = FUEGOConsumer(Queue())
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            filtered = consumer._filter_tweets(tweets)
+            self.assertTrue(all(tweet in tweets for tweet in filtered))
+
+    def test_filter_tweets_lenient_unchanged(self):
+        """
+        Test that when filtering tweets leniently, the tweet data does not change.
+        """
+
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.LENIENT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -738,7 +982,19 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering tweets, the tweet data does not change.
         """
 
-        consumer = FUEGOConsumer(Queue())
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            filtered = consumer._filter_tweets(tweets)
+            self.assertTrue(all(tweet in tweets for tweet in filtered))
+
+    def test_filter_tweets_lenient_v2_unchanged(self):
+        """
+        Test that when filtering tweets leniently, the tweet data does not change.
+        """
+
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.LENIENT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -750,7 +1006,23 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering a list of documents, the function looks for the tweet in the attributes.
         """
 
-        consumer = FUEGOConsumer(Queue())
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            documents = [ Document('', attributes={ 'tweet': tweet }) for tweet in tweets ]
+
+            tweets = consumer._filter_tweets(tweets)
+            documents = consumer._filter_tweets(documents)
+            self.assertEqual(len(tweets), len(documents))
+            self.assertTrue(all( document.tweet in tweets for document in documents ))
+
+    def test_filter_tweets_lenient_document(self):
+        """
+        Test that when filtering a list of documents leniently, the function looks for the tweet in the attributes.
+        """
+
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.LENIENT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -766,7 +1038,23 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering a list of documents, the function looks for the tweet in the attributes.
         """
 
-        consumer = FUEGOConsumer(Queue())
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            documents = [ Document('', attributes={ 'tweet': tweet }) for tweet in tweets ]
+
+            tweets = consumer._filter_tweets(tweets)
+            documents = consumer._filter_tweets(documents)
+            self.assertEqual(len(tweets), len(documents))
+            self.assertTrue(all( document.tweet in tweets for document in documents ))
+
+    def test_filter_tweets_lenient_v2_document(self):
+        """
+        Test that when filtering a list of documents leniently, the function looks for the tweet in the attributes.
+        """
+
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.LENIENT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -785,7 +1073,28 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
 
         trivial = True
 
-        consumer = FUEGOConsumer(Queue())
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            for tweet in tweets:
+                if twitter.is_retweet(tweet):
+                    self.assertEqual(consumer._validate_tweet(twitter.original(tweet)), consumer._validate_tweet(tweet))
+                    trivial = False
+
+        if trivial:
+            logger.warning("Trivial test")
+
+    def test_filter_tweets_lenient_retweets(self):
+        """
+        Test that if the tweet is a retweet, the original tweet is filtered, not the retweet.
+        In other words, the validation of the retweet is the same as the validation of the original tweet.
+        """
+
+        trivial = True
+
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.LENIENT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -805,7 +1114,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
 
         trivial = True
 
-        consumer = FUEGOConsumer(Queue())
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.STRICT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -818,6 +1127,19 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
         if trivial:
             logger.warning("Trivial test")
 
+    def test_filter_tweets_lenient_replies(self):
+        """
+        Test that if the tweet is a reply, it is not filtered out.
+        """
+
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.LENIENT)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertTrue(any( twitter.is_reply(tweet) for tweet in tweets ))
+
     def test_filter_tweets_strict_v2_replies(self):
         """
         Test that if the tweet is a reply, it is filtered out.
@@ -825,7 +1147,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
 
         trivial = True
 
-        consumer = FUEGOConsumer(Queue())
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.STRICT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -838,6 +1160,19 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
         if trivial:
             logger.warning("Trivial test")
 
+    def test_filter_tweets_v2_lenient_replies(self):
+        """
+        Test that if the tweet is a reply, it is not filtered out.
+        """
+
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.LENIENT)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertTrue(any( twitter.is_reply(tweet) for tweet in tweets ))
+
     def test_filter_tweets_strict_reply_retweet(self):
         """
         Test that if the tweet is a retweet of a reply, it is filtered out.
@@ -845,7 +1180,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
 
         trivial = True
 
-        consumer = FUEGOConsumer(Queue())
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.STRICT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -858,6 +1193,20 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
         if trivial:
             logger.warning("Trivial test")
 
+    def no_test_filter_tweets_lenient_reply_retweet(self):
+        """
+        Test that if the tweet is a retweet of a reply, it is not filtered out.
+        Note: This test is disabled because every retweeted reply is filtered for other reasons.
+        """
+
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.LENIENT)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertTrue(any( twitter.is_retweet(tweet) and twitter.is_reply(tweet) for tweet in tweets ))
+
     def test_filter_tweets_strict_v2_reply_retweet(self):
         """
         Test that if the tweet is a retweet of a reply, it is filtered out.
@@ -865,7 +1214,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
 
         trivial = True
 
-        consumer = FUEGOConsumer(Queue())
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.STRICT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -877,6 +1226,19 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
 
         if trivial:
             logger.warning("Trivial test (test_filter_tweets_strict_v2_reply_retweet)")
+
+    def test_filter_tweets_lenient_v2_reply_retweet(self):
+        """
+        Test that if the tweet is a retweet of a reply, it is not filtered out.
+        """
+
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.LENIENT)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertTrue(any( twitter.is_retweet(tweet) and twitter.is_reply(tweet) for tweet in tweets ))
 
     def test_to_documents_tweet(self):
         """
