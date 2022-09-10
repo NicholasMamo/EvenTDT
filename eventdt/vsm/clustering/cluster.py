@@ -113,7 +113,8 @@ class Cluster(Attributable, Exportable):
         """
 
         current = self.to_array()
-        if not self._last or self._last != current:
+        if (not self._last             # if the centroid has never been calculated
+            or self._last != current): # or the array representation has changed
             self._last = current
             self.recalculate_centroid()
 
