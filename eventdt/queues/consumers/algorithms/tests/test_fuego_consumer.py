@@ -4160,7 +4160,9 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
             tweets = [ json.loads(line) for line in lines ]
             documents = consumer._to_documents(tweets)
 
-        self.assertTrue(not any( document.is_retweet for document in consumer._apply_reporting_level(documents) ))
+        filtered = consumer._apply_reporting_level(documents)
+        self.assertLess(len(filtered), len(documents))
+        self.assertTrue(not any( document.is_retweet for document in filtered ))
 
     def test_summarize_empty_node(self):
         """
