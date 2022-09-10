@@ -250,6 +250,10 @@ You can also filter the data (``--filters``) and generate multiple timelines by 
     - ``--splits``                  *<Optional>* The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split, or a JSON file created by the :mod:`~tools.concepts` tool.
     - ``--with-default-split``      *<Optional>* A boolean indicating whether to use a default split, for all documents that belong to no stream (used only if splits are given).
 
+The following parameters tweak different aspects of how the algorithms work:
+
+    - ``--filtering``               *<Optional>* The filtering level used by the algorithms: `NONE`, `LENIENT`, `STRICT` (default); used by the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer` and the :class:`~queues.consumers.algorithms.eld_consumer.SEERConsumer`.
+
 The following parameters tweak the :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`:
 
     - ``--post-rate``               *<Optional>* The minimum increase in posting rate to accept a sliding time-window as representing a breaking topic, defaults to 1.7.
@@ -354,6 +358,10 @@ def setup_args():
     group.add_argument('--with-default-split', required=False, action='store_true',
                        help='<Optional> A boolean indicating whether to use a default split, for all documents that belong to no stream (used only if splits are given.')
 
+    group = parser.add_argument_group('General', 'The following arguments let you tweak how the algorithms work:')
+    group.add_argument('--filtering', type=filtering, required=False, default='STRICT',
+                       help='<Optional> The filtering level used by the algorithms: `NONE`, `LENIENT`, `STRICT` (default); used by the `ELDConsumer` and the `SEERConsumer`.')
+
     group = parser.add_argument_group('Zhao et al. (2011)', 'The following arguments let you tweak how the algorithm by Zhao et al. (2011) works:')
     group.add_argument('--post-rate', type=float, required=False, default=1.7,
                        help='<Optional> The minimum increase in posting rate to accept a sliding time-window as representing a breaking topic, defaults to 1.7.')
@@ -403,6 +411,7 @@ def main():
     pcmd['consumer'] = str(vars(args)['consumer'])
     pcmd['scheme'] = str(type(vars(args)['scheme']))
     pcmd['threshold_type'] = str(vars(args)['threshold_type'])
+    pcmd['filtering'] = str(vars(args)['filtering'])
 
     # load the filters and splits
     filter = filters(args.filters, args.filters_keep) if args.filters else [ ]
