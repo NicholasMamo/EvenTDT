@@ -817,7 +817,7 @@ def create_consumer(consumer, queue, filters=None, splits=None, threshold_type=N
     :param filters: A list of tokens which must be in a tweet for it to be processed.
     :type filters: list of str
     :param threshold_type: The threshold type that the :class:`~queues.consumers.algorithms.fuego_consumer.SEERConsumer` should use.
-    :type threshold_type: :class:`~queues.consumers.algorithms.fuego_consumer.DynamicThreshold`
+    :type threshold_type: :class:`~queues.consumers.algorithms.DynamicThreshold`
     :param with_default_split: A boolean indicating whether to use a default split, for all documents that belong to no stream (used only if splits are given)
     :type with_default_split: bool
 
@@ -964,7 +964,7 @@ def threshold(threshold_type):
     :type threshold_type: str
 
     :return: An actual threshold type that can be parsed by the :class:`~queues.consumers.algorithms.fuego_consumer.SEERConsumer`.
-    :rtype: :class:`~queues.consumers.algorithms.fuego_consumer.DynamicThreshold`
+    :rtype: :class:`~queues.consumers.algorithms.DynamicThreshold`
     """
 
     return {
@@ -972,6 +972,23 @@ def threshold(threshold_type):
         'MOVING_MEAN': DynamicThreshold.MOVING_MEAN,
         'MEAN_STDEV': DynamicThreshold.MEAN_STDEV,
     }[threshold_type.upper()]
+
+def filtering(level):
+    """
+    Convert the given filtering level to an actual enumerable.
+
+    :param level: The name of the filtering level to use: `NONE`, `LENIENT` or `STRICT`
+    :type level: str
+
+    :return: A filtering level enumerable.
+    :rtype: :class:`~queues.consumers.algorithms.FilteringLevel`
+    """
+
+    return {
+        'NONE': FilteringLevel.NONE,
+        'LENIENT': FilteringLevel.LENIENT,
+        'STRICT': FilteringLevel.STRICT,
+    }[level.upper()]
 
 if __name__ == "__main__":
     main()
