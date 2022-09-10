@@ -26,7 +26,7 @@ class DynamicThreshold(Enum):
     MOVING_MEAN = 2
     MEAN_STDEV = 3
 
-class FilterLevel(Enum):
+class FilteringLevel(Enum):
     """
     The amount of filtering to apply on tweets.
     The actual interpretations, except for `NONE`, depends on the algorithms.

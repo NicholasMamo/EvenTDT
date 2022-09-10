@@ -29,7 +29,7 @@ from nlp.cleaners import TweetCleaner
 from nlp.weighting import TF, TFIDF
 from nlp.weighting.global_schemes import IDF
 from queues.consumers import Consumer
-from queues.consumers.algorithms import DynamicThreshold
+from queues.consumers.algorithms import DynamicThreshold, FilteringLevel
 from summarization import Summary
 from summarization.algorithms import DGS
 from summarization.timeline import Timeline
@@ -89,13 +89,15 @@ class FUEGOConsumer(Consumer):
     :vartype min_volume: float
     :ivar threshold: The type of dynamic threshold to use.
     :vartype threshold: :class:`~queues.consumers.algorithms.fuego_consumer.DynamicThreshold`
+    :ivar filtering:The amount of filtering to apply on tweets.
+    :vartype filtering: :class:`~queues.consumers.algorithms.FilteringLevel`
     :ivar summarization: The summarization algorithm to use.
     :vartype summarization: :class:`~summarization.algorithms.dgs.DGS`
     """
 
     def __init__(self, queue, scheme=None, damping=0.5,
                  window_size=60, windows=5, burst_start=0.5, burst_end=0.2, min_volume=15,
-                 threshold=DynamicThreshold.MEAN, verbose=True, *args, **kwargs):
+                 threshold=DynamicThreshold.MEAN, filtering=FilteringLevel.STRICT, verbose=True, *args, **kwargs):
         """
         Create the consumer with a queue.
 
@@ -127,7 +129,9 @@ class FUEGOConsumer(Consumer):
                            If the volume drops below this value, the consumer does not look for bursty terms.
         :type min_volume: float
         :param threshold: The type of dynamic threshold to use.
-        :type threshold: :class:`~queues.consumers.algorithms.fuego_consumer.DynamicThreshold`
+        :type threshold: :class:`~queues.consumers.algorithms.DynamicThreshold`
+        :param filtering:The amount of filtering to apply on tweets.
+        :type filtering: :class:`~queues.consumers.algorithms.FilteringLevel`
         :param verbose: A boolean indicating whether to log the consumer's main parameters.
         :type verbose: bool
 
@@ -162,6 +166,7 @@ class FUEGOConsumer(Consumer):
         self.burst_start, self.burst_end = burst_start, burst_end
         self.min_volume = min_volume
         self.threshold = threshold
+        self.filtering = filtering
 
         # summarization
         self.summarization = DGS()

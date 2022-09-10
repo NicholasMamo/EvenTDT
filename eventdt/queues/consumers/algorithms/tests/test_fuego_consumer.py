@@ -24,7 +24,7 @@ from nlp.weighting import TF
 from objects.exportable import Exportable
 from queues import Queue
 from queues.consumers.algorithms import FUEGOConsumer
-from queues.consumers.algorithms.fuego_consumer import DynamicThreshold
+from queues.consumers.algorithms import DynamicThreshold, FilteringLevel
 from summarization import Summary
 from summarization.algorithms import DGS
 from summarization.timeline import Timeline
@@ -256,6 +256,20 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
 
         consumer = FUEGOConsumer(Queue(), threshold=DynamicThreshold.MOVING_MEAN)
         self.assertEqual(DynamicThreshold.MOVING_MEAN, consumer.threshold)
+
+    def test_init_filtering(self):
+        """
+        Test setting the type of filtering level when creating a consumer.
+        """
+
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.NONE)
+        self.assertEqual(FilteringLevel.NONE, consumer.filtering)
+
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.LENIENT)
+        self.assertEqual(FilteringLevel.LENIENT, consumer.filtering)
+
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.STRICT)
+        self.assertEqual(FilteringLevel.STRICT, consumer.filtering)
 
     def test_init_with_summarization(self):
         """
