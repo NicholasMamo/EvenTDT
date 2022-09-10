@@ -2766,9 +2766,9 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
             documents = consumer._to_documents(tweets)
 
             for document in documents:
-                if 'retweeted_status' in document.attributes['tweet']:
+                if document.is_retweet:
                     # copy the timestamp of the retweet to the timestamp of the original tweet (doesn't work the other way round because timestamp_ms gets priority)
-                    document.attributes['tweet']['retweeted_status']['timestamp_ms'] = document.attributes['tweet']['timestamp_ms']
+                    document.published = document.timestamp
                     self.assertEqual(1, consumer._damp(document))
                     trivial = False
                     break
@@ -2838,6 +2838,68 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
             if trivial:
                 logger.warning("Trivial test")
 
+    def test_damp_recency_attributes(self):
+        """
+        Test that damping works even when the `ATTRIBUTES` storage strategy is used.
+        """
+
+        consumer = FUEGOConsumer(Queue(), storage=StorageLevel.ATTRIBUTES)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            documents = consumer._to_documents(tweets)
+
+            tweets = { } # retweets where the keys are the delay in retweeting
+            for document in documents:
+                if document.is_retweet:
+                    diff = document.timestamp - document.published
+                    tweets[diff] = document
+
+            trivial = True
+            # sort the tweets in ascending order of time difference (the delay until the retweet)
+            tweets = sorted(tweets.items(), key=lambda tweet: tweet[0])
+            tweets = [ tweet[1] for tweet in tweets ]
+            self.assertTrue(len(tweets) > 2)
+            for i in range(0, len(tweets) - 1):
+                recent, older = consumer._damp(tweets[i]), consumer._damp(tweets[i + 1])
+                self.assertGreaterEqual(recent, older)
+                if recent > older:
+                    trivial = False
+
+            if trivial:
+                logger.warning("Trivial test")
+
+    def test_damp_v2_recency_attributes(self):
+        """
+        Test that damping works even when the `ATTRIBUTES` storage strategy is used.
+        """
+
+        consumer = FUEGOConsumer(Queue(), storage=StorageLevel.ATTRIBUTES)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            documents = consumer._to_documents(tweets)
+
+            tweets = { } # retweets where the keys are the delay in retweeting
+            for document in documents:
+                if document.is_retweet:
+                    diff = document.timestamp - document.published
+                    tweets[diff] = document
+
+            trivial = True
+            # sort the tweets in ascending order of time difference (the delay until the retweet)
+            tweets = sorted(tweets.items(), key=lambda tweet: tweet[0])
+            tweets = [ tweet[1] for tweet in tweets ]
+            self.assertTrue(len(tweets) > 2)
+            for i in range(0, len(tweets) - 1):
+                recent, older = consumer._damp(tweets[i]), consumer._damp(tweets[i + 1])
+                self.assertGreaterEqual(recent, older)
+                if recent > older:
+                    trivial = False
+
+            if trivial:
+                logger.warning("Trivial test")
+
     def test_damp_example(self):
         """
         Test the damping factor of a retweet with a custom delay.
@@ -2852,10 +2914,10 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
             documents = consumer._to_documents(tweets)
 
             for document in documents:
-                if 'retweeted_status' in document.attributes['tweet']:
+                if document.is_retweet:
                     # copy the timestamp of the retweet to the timestamp of the original tweet (doesn't work the other way round because timestamp_ms gets priority)
                     # set the delay to one minute
-                    document.attributes['tweet']['retweeted_status']['timestamp_ms'] = float(document.attributes['tweet']['timestamp_ms']) - 60 * 1000
+                    document.published = float(document.timestamp) - 60
                     self.assertEqual(0.6065307, round(consumer._damp(document), 7))
                     trivial = False
                     break
@@ -2979,10 +3041,10 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
             documents = consumer._to_documents(tweets)
 
             for document in documents:
-                if 'retweeted_status' in document.attributes['tweet']:
+                if document.is_retweet:
                     # copy the timestamp of the retweet to the timestamp of the original tweet (doesn't work the other way round because timestamp_ms gets priority)
                     # set the delay to one minute
-                    document.attributes['tweet']['retweeted_status']['timestamp_ms'] = float(document.attributes['tweet']['timestamp_ms']) - 60 * 1000
+                    document.published = float(document.timestamp) - 60
                     self.assertEqual(0.1353353, round(consumer._damp(document), 7))
                     trivial = False
                     break

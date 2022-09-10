@@ -484,6 +484,13 @@ class FUEGOConsumer(Consumer):
             document = Document.from_dict(tweet, dimensions=dimensions)
             document.normalize()
 
+            """
+            The 'published' attribute signals the time when the original tweet was published.
+            If the tweet is a retweet, the 'published' attribute takes the timestamp of the first tweet.
+            If the tweet is original, the 'published' attribute is the same timestamp as that of the original tweet.
+            """
+            document.attributes['published'] = twitter.extract_timestamp(twitter.original(tweet)) if document.is_retweet else document.timestamp
+
             if self.storage == StorageLevel.ATTRIBUTES:
                 del document.attributes['tweet']
             
@@ -681,8 +688,7 @@ class FUEGOConsumer(Consumer):
             return 1
 
         # if the tweet is a retweet, apply damping proportional to the difference between the time it took to retweet it
-        original = twitter.original(document.tweet)
-        diff = document.timestamp - twitter.extract_timestamp(original)
+        diff = document.timestamp - document.published
         return math.exp(- self.damping * diff / 60)
 
     def _track(self, topics, timestamp):
