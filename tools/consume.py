@@ -413,13 +413,12 @@ def main():
     pcmd = tools.meta(args)
     cmd['consumer'] = str(vars(args)['consumer'])
     cmd['scheme'] = str(type(vars(args)['scheme']))
-    cmd['threshold_type'] = str(vars(args)['threshold_type'])
+    cmd['threshold_type'], pcmd['threshold_type'] = str(vars(args)['threshold_type']), str(vars(args)['threshold_type'])
     pcmd['consumer'] = str(vars(args)['consumer'])
     pcmd['scheme'] = str(type(vars(args)['scheme']))
-    pcmd['threshold_type'] = str(vars(args)['threshold_type'])
-    pcmd['filtering'] = str(vars(args)['filtering'])
-    pcmd['reporting'] = str(vars(args)['reporting'])
-    pcmd['storage'] = str(vars(args)['storage'])
+    cmd['filtering'], pcmd['filtering'] = str(vars(args)['filtering']), str(vars(args)['filtering'])
+    cmd['reporting'], pcmd['reporting'] = str(vars(args)['reporting']), str(vars(args)['reporting'])
+    cmd['storage'], pcmd['storage'] = str(vars(args)['storage']), str(vars(args)['storage'])
 
     # load the filters and splits
     filter = filters(args.filters, args.filters_keep) if args.filters else [ ]
@@ -547,7 +546,7 @@ def understand(understanding, consumer, sample, max_inactivity, skip_retweets, s
 
     .. note::
 
-        Understanding is sped up, on the assumption that processing is done retrospectively.
+        Understanding is sped up on the assumption that processing is done retrospectively.
 
     :param understanding: The path to the file containing the event's understanding.
     :type understanding: str
@@ -577,6 +576,11 @@ def understand(understanding, consumer, sample, max_inactivity, skip_retweets, s
     queue_manager = BaseManager()
     queue_manager.start()
     queue = queue_manager.Queue()
+
+    """
+    Do not create a filtered or split consumer for the understanding.
+    In fact, the consumer is as simple as it can be, without skipping any tweets.
+    """
     consumer = consumer(queue, scheme=scheme)
 
     """
