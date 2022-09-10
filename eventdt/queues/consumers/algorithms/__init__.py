@@ -56,6 +56,17 @@ class ReportingLevel(Enum):
     ALL = 1
     ORIGINAL = 2
 
+class StorageLevel(Enum):
+    """
+    How much information to store with documents about tweets.
+
+        - TWEET:      Store the original tweet and its attributes in documents.
+        - ATTRIBUTES: Only store the tweet's attributes, not the original tweet objects.
+    """
+
+    TWEET = 1
+    ATTRIBUTES = 2
+
 from .eld_consumer import ELDConsumer
 from .fire_consumer import FIREConsumer
 from .fuego_consumer import SEERConsumer, FUEGOConsumer
