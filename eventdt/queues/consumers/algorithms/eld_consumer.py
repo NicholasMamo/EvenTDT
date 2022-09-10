@@ -567,9 +567,15 @@ class ELDConsumer(Consumer):
             tokens = self.tokenizer.tokenize(text)
             document = item if type(item) is Document else Document(text, tokens, scheme=self.scheme)
             document.attributes['id'] = twitter.id(tweet)
-            document.attributes['urls'] = len(twitter.urls(tweet))
-            document.attributes['timestamp'] = twitter.extract_timestamp(tweet)
+            document.attributes['version'] = twitter.version(tweet)
+            document.attributes['lang'] = twitter.lang(tweet)
+            document.attributes['timestamp'] = twitter.timestamp(tweet)
+            document.attributes['urls'] = twitter.urls(tweet)
+            document.attributes['hashtags'] = twitter.hashtags(tweet)
             document.attributes['is_retweet'] = twitter.is_retweet(tweet)
+            document.attributes['is_reply'] = twitter.is_reply(tweet)
+            document.attributes['is_quote'] = twitter.is_quote(tweet)
+            document.attributes['is_verified'] = twitter.is_verified(tweet)
             document.attributes['tweet'] = tweet
             document.normalize()
             documents.append(document)
@@ -731,7 +737,7 @@ class ELDConsumer(Consumer):
         Filter clusters that have more than 1 url per tweet on average.
         """
         for cluster in filtered:
-            urls = [ document.attributes['urls'] for document in cluster.vectors ]
+            urls = [ len(document.attributes['urls']) for document in cluster.vectors ]
             if sum(urls)/cluster.size() > 1:
                 filtered.remove(cluster)
 
