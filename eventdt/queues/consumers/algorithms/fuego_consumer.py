@@ -11,7 +11,6 @@ This allows for more accurate results in real-time.
 """
 
 import copy
-from enum import Enum
 import math
 import os
 import statistics
@@ -30,6 +29,7 @@ from nlp.cleaners import TweetCleaner
 from nlp.weighting import TF, TFIDF
 from nlp.weighting.global_schemes import IDF
 from queues.consumers import Consumer
+from queues.consumers.algorithms import DynamicThreshold
 from summarization import Summary
 from summarization.algorithms import DGS
 from summarization.timeline import Timeline
@@ -39,20 +39,6 @@ from tdt.nutrition import MemoryNutritionStore
 import twitter
 from vsm import Vector
 from vsm.clustering import Cluster
-
-class DynamicThreshold(Enum):
-    """
-    The type of dynamic threshold to use.
-    Options:
-
-        - MEAN - The mean volume observed so far
-        - MOVING_MEAN - The mean volume from the previous $n$ windows
-        - MEAN_STDEV - One standard deviation above the mean volume observed so far
-    """
-
-    MEAN = 1
-    MOVING_MEAN = 2
-    MEAN_STDEV = 3
 
 class FUEGOConsumer(Consumer):
     """

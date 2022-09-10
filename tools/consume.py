@@ -281,7 +281,7 @@ from nlp.weighting import TermWeightingScheme
 from eventdt.queues import Queue
 from queues.consumers import *
 from queues.consumers.algorithms import *
-from queues.consumers.algorithms.fuego_consumer import DynamicThreshold
+from queues.consumers.algorithms import DynamicThreshold
 from twitter.file import SimulatedFileReader
 
 def setup_args():
