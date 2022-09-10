@@ -29,7 +29,7 @@ from nlp.cleaners import TweetCleaner
 from nlp.weighting import TF, TFIDF
 from nlp.weighting.global_schemes import IDF
 from queues.consumers import Consumer
-from queues.consumers.algorithms import DynamicThreshold, FilteringLevel
+from queues.consumers.algorithms import DynamicThreshold, FilteringLevel, ReportingLevel
 from summarization import Summary
 from summarization.algorithms import DGS
 from summarization.timeline import Timeline
@@ -91,13 +91,16 @@ class FUEGOConsumer(Consumer):
     :vartype threshold: :class:`~queues.consumers.algorithms.fuego_consumer.DynamicThreshold`
     :ivar filtering: The amount of filtering to apply on tweets.
     :vartype filtering: :class:`~queues.consumers.algorithms.FilteringLevel`
+    :ivar reporting: The reporting strategy, whether to retain all tweets or filter retweets.
+    :vartype reporting: :class:`~queues.consumers.algorithms.ReportingLevel`
     :ivar summarization: The summarization algorithm to use.
     :vartype summarization: :class:`~summarization.algorithms.dgs.DGS`
     """
 
     def __init__(self, queue, scheme=None, damping=0.5,
                  window_size=60, windows=5, burst_start=0.5, burst_end=0.2, min_volume=15,
-                 threshold=DynamicThreshold.MEAN, filtering=FilteringLevel.STRICT, verbose=True, *args, **kwargs):
+                 threshold=DynamicThreshold.MEAN, filtering=FilteringLevel.STRICT, reporting=ReportingLevel.ALL,
+                 verbose=True, *args, **kwargs):
         """
         Create the consumer with a queue.
 
@@ -132,6 +135,8 @@ class FUEGOConsumer(Consumer):
         :type threshold: :class:`~queues.consumers.algorithms.DynamicThreshold`
         :param filtering: The amount of filtering to apply on tweets.
         :type filtering: :class:`~queues.consumers.algorithms.FilteringLevel`
+        :param reporting: The reporting strategy, whether to retain all tweets or filter retweets.
+        :type reporting: :class:`~queues.consumers.algorithms.ReportingLevel`
         :param verbose: A boolean indicating whether to log the consumer's main parameters.
         :type verbose: bool
 
@@ -167,6 +172,7 @@ class FUEGOConsumer(Consumer):
         self.min_volume = min_volume
         self.threshold = threshold
         self.filtering = filtering
+        self.reporting = reporting
 
         # summarization
         self.summarization = DGS()
