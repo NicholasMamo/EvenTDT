@@ -437,18 +437,24 @@ class ELDConsumer(Consumer):
                 if timeline.nodes:
                     node = timeline.nodes[-1]
                     if node.expired(timeline.expiry, latest_timestamp) and not node.attributes.get('printed'):
-                        # TODO: go through all of this node's clusters and filter their documents according to the reporting strategy
                         summary_documents = self._score_documents(node.get_all_documents())[:20]
 
-                        """
-                        Generate a query from the topical keywords and use it to come up with a summary.
-                        """
+                        # generate a query from the topical keywords and use it to come up with a summary
                         query = Cluster(vectors=node.topics).centroid
                         summary = self.summarization.summarize(summary_documents, 280, query=query)
                         logger.info(f"{datetime.fromtimestamp(node.created_at).ctime()}: { str(self.cleaner.clean(str(summary))) }", process=str(self))
                         node.attributes['printed'] = True
 
-        # TODO: go through all of this node's clusters and filter their documents according to the reporting strategy
+                        #  any time a node expires, apply the reporting strategy to recent (frozen) clusters to immediately minimize memory use
+                        for node in timeline.nodes[-3:]:
+                            for cluster in node.clusters:
+                                cluster.vectors = self._apply_reporting_level(cluster.vectors) if cluster.frozen else cluster.vectors
+
+        # before returning, apply the reporting strategy to all clusters (frozen or not)
+        for node in timeline.nodes:
+            for cluster in node.clusters:
+                cluster.vectors = self._apply_reporting_level(cluster.vectors)
+
         return { 'consumed': consumed, 'filtered': filtered, 'skipped': skipped, 'timeline': timeline }
 
     def _filter_tweets(self, tweets):
@@ -869,3 +875,23 @@ class ELDConsumer(Consumer):
         lower = len(lower_pattern.findall(text))
 
         return 1 - upper/(upper + lower) if (upper + lower) else 0
+
+    def _apply_reporting_level(self, documents):
+        """
+        Apply the reporting level to the given documents.
+
+        - :mod:`~queues.consumers.algorithms.ReportingLevel.ALL`: return the documents unchanged.
+        - :mod:`~queues.consumers.algorithms.ReportingLevel.ORIGINAL`: if the documents are not all retweets, remove retweets.
+
+        :param documents: The list of documents to filter.
+        :type documents: list of :class:`~nlp.document.Document`
+
+        :return: A list of cleaned documents.
+        :rtype: lsit of :class:`~nlp.document.Document`
+        """
+
+        if self.reporting == ReportingLevel.ORIGINAL and not all( document.is_retweet for document in documents ):
+            return [ document for document in documents
+                              if not document.is_retweet ]
+
+        return documents
