@@ -326,6 +326,7 @@ class FUEGOConsumer(Consumer):
                 for term, (vector, cluster) in topics.items():
                     _documents = self._collect(term, cache) # collect the tweets mentioning the currently bursty term
                     cluster.vectors.extend(self._difference(_documents, cluster.vectors)) # add any tweets that are not already in the cluster to the cluster
+                    # TODO: filter the cluster's vectors based on the reporting level
 
             # if the timeline is not empty, try to summarize the latest node
             if timeline.nodes:

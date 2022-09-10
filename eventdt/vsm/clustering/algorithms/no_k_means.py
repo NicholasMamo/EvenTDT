@@ -175,6 +175,7 @@ class NoKMeans(ClusteringAlgorithm):
         """
 
         self.clusters.remove(cluster)
+        cluster.attributes['frozen'] = True
 
         if self.store_frozen:
             self.frozen_clusters.append(cluster)

@@ -251,6 +251,27 @@ class TestNoKMeans(unittest.TestCase):
         self.assertEqual(1, len(algo.clusters))
         self.assertEqual(1, len(algo.frozen_clusters))
 
+    def test_cluster_freeze_attribute(self):
+        """
+        Test that freezing a cluster also sets an attribute.
+        """
+
+        algo = NoKMeans(0.5, 1, store_frozen=True)
+
+        """
+        Create the test data.
+        """
+        documents = [
+            Document('', [ 'x', 'y' ]),
+            Document('', [ 'a', 'b', 'a', 'c' ]), Document('', [ 'a', 'b', 'a' ]),
+        ]
+        for document in documents:
+            document.normalize()
+
+        clusters = algo.cluster(documents)
+        self.assertTrue(all( cluster.frozen for cluster in algo.frozen_clusters ))
+        self.assertTrue(not any( cluster.frozen for cluster in algo.clusters ))
+
     def test_cluster_similar_vectors(self):
         """
         Test that similar vectors cluster together.

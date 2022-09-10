@@ -437,6 +437,7 @@ class ELDConsumer(Consumer):
                 if timeline.nodes:
                     node = timeline.nodes[-1]
                     if node.expired(timeline.expiry, latest_timestamp) and not node.attributes.get('printed'):
+                        # TODO: go through all of this node's clusters and filter their documents according to the reporting strategy
                         summary_documents = self._score_documents(node.get_all_documents())[:20]
 
                         """
@@ -447,6 +448,7 @@ class ELDConsumer(Consumer):
                         logger.info(f"{datetime.fromtimestamp(node.created_at).ctime()}: { str(self.cleaner.clean(str(summary))) }", process=str(self))
                         node.attributes['printed'] = True
 
+        # TODO: go through all of this node's clusters and filter their documents according to the reporting strategy
         return { 'consumed': consumed, 'filtered': filtered, 'skipped': skipped, 'timeline': timeline }
 
     def _filter_tweets(self, tweets):
