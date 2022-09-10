@@ -960,7 +960,7 @@ def threshold(threshold_type):
     """
     Convert the given threshold name to an actual threshold type.
 
-    :param threshold_type: The name of the threshold to use: `MEAN`, `MOVING_MEAN` or `MEAN_STDEV`
+    :param threshold_type: The name of the threshold to use: `MEAN`, `MOVING_MEAN` or `MEAN_STDEV`.
     :type threshold_type: str
 
     :return: An actual threshold type that can be parsed by the :class:`~queues.consumers.algorithms.fuego_consumer.SEERConsumer`.
@@ -977,7 +977,7 @@ def filtering(level):
     """
     Convert the given filtering level to an actual enumerable.
 
-    :param level: The name of the filtering level to use: `NONE`, `LENIENT` or `STRICT`
+    :param level: The name of the filtering level to use: `NONE`, `LENIENT` or `STRICT`.
     :type level: str
 
     :return: A filtering level enumerable.
@@ -988,6 +988,22 @@ def filtering(level):
         'NONE': FilteringLevel.NONE,
         'LENIENT': FilteringLevel.LENIENT,
         'STRICT': FilteringLevel.STRICT,
+    }[level.upper()]
+
+def reporting(level):
+    """
+    Convert the given reporting level to an actual enumerable.
+
+    :param level: The name of the reporting level to use: `ALL`, `ORIGINAL`.
+    :type level: str
+
+    :return: A reporting level enumerable.
+    :rtype: :class:`~queues.consumers.algorithms.ReportingLevel`
+    """
+
+    return {
+        'ALL': ReportingLevel.ALL,
+        'ORIGINAL': ReportingLevel.ORIGINAL,
     }[level.upper()]
 
 if __name__ == "__main__":
