@@ -480,6 +480,10 @@ class FUEGOConsumer(Consumer):
             # create the document from the tweet and save the tweet in it
             document = Document.from_dict(tweet, dimensions=dimensions)
             document.normalize()
+
+            if self.storage == StorageLevel.ATTRIBUTES:
+                del document.attributes['tweet']
+            
             documents.append(document)
 
         return documents
