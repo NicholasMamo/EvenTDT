@@ -326,7 +326,7 @@ class FUEGOConsumer(Consumer):
                 for term, (vector, cluster) in topics.items():
                     _documents = self._collect(term, cache) # collect the tweets mentioning the currently bursty term
                     cluster.vectors.extend(self._difference(_documents, cluster.vectors)) # add any tweets that are not already in the cluster to the cluster
-                    # TODO: filter the cluster's vectors based on the reporting level
+                    cluster.vectors = self._apply_reporting_level(cluster.vectors)
 
             # if the timeline is not empty, try to summarize the latest node
             if timeline.nodes:
@@ -908,6 +908,26 @@ class FUEGOConsumer(Consumer):
         _new = [ document for document in to_add if document not in current ]
         _new = list(dict.fromkeys(_new))
         return _new
+
+    def _apply_reporting_level(self, documents):
+        """
+        Apply the reporting level to the given documents.
+
+        - :mod:`~queues.consumers.algorithms.ReportingLevel.ALL`: return the documents unchanged.
+        - :mod:`~queues.consumers.algorithms.ReportingLevel.ORIGINAL`: if the documents are not all retweets, remove retweets.
+
+        :param documents: The list of documents to filter.
+        :type documents: list of :class:`~nlp.document.Document`
+
+        :return: A list of cleaned documents.
+        :rtype: lsit of :class:`~nlp.document.Document`
+        """
+
+        if self.reporting == ReportingLevel.ORIGINAL and not all( document.is_retweet for document in documents ):
+            return [ document for document in documents
+                              if not document.is_retweet ]
+
+        return documents
 
     def _summarize(self, node):
         """

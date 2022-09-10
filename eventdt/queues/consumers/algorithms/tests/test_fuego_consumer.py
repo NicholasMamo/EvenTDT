@@ -4059,6 +4059,109 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
         difference = consumer._difference(documents, [ ])
         self.assertEqual(string.ascii_uppercase, ''.join([ document.text for document in difference ]))
 
+    def test_apply_reporting_empty(self):
+        """
+        Test that applying the reporting level to an empty set of documents returns another empty set.
+        """
+
+        consumer = FUEGOConsumer(Queue(), reporting=ReportingLevel.ALL)
+        self.assertEqual([ ], consumer._apply_reporting_level([ ]))
+
+    def test_apply_reporting_all(self):
+        """
+        Test that applying the reporting level with the `ALL` strategy returns the same list of documents.
+        """
+
+        consumer = FUEGOConsumer(Queue(), reporting=ReportingLevel.ALL)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            documents = consumer._to_documents(tweets)
+
+        self.assertEqual(documents, consumer._apply_reporting_level(documents))
+
+    def test_apply_reporting_all_returns_list_of_documents(self):
+        """
+        Test that applying the reporting level with the `ALL` strategy returns a list of documents.
+        """
+
+        consumer = FUEGOConsumer(Queue(), reporting=ReportingLevel.ALL)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            documents = consumer._to_documents(tweets)
+
+        self.assertEqual(list, type(consumer._apply_reporting_level(documents)))
+        self.assertTrue(all( Document == type(document) for document in consumer._apply_reporting_level(documents) ))
+
+    def test_apply_reporting_original_returns_list_of_documents(self):
+        """
+        Test that applying the reporting level with the `ORIGINAL` strategy returns a list of documents.
+        """
+
+        consumer = FUEGOConsumer(Queue(), reporting=ReportingLevel.ORIGINAL)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            documents = consumer._to_documents(tweets)
+
+        self.assertEqual(list, type(consumer._apply_reporting_level(documents)))
+        self.assertTrue(all( Document == type(document) for document in consumer._apply_reporting_level(documents) ))
+
+    def test_apply_reporting_original_subset(self):
+        """
+        Test that applying the reporting level with the `ORIGINAL` strategy returns a subset of the original documents.
+        """
+
+        consumer = FUEGOConsumer(Queue(), reporting=ReportingLevel.ORIGINAL)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            documents = consumer._to_documents(tweets)
+
+        self.assertTrue(all( document in documents for document in consumer._apply_reporting_level(documents) ))
+
+    def test_apply_reporting_original_same_order(self):
+        """
+        Test that applying the reporting level with the `ORIGINAL` strategy returns the documents in the original order.
+        """
+
+        consumer = FUEGOConsumer(Queue(), reporting=ReportingLevel.ORIGINAL)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            documents = consumer._to_documents(tweets)
+
+        filtered = consumer._apply_reporting_level(documents)
+        self.assertTrue(all( documents.index(filtered[i]) < documents.index(filtered[i+1]) for i in  range(len(filtered) - 1) ))
+
+    def test_apply_reporting_original_only_retweets(self):
+        """
+        Test that applying the reporting level with the `ORIGINAL` strategy to a list of retweets returns the same documents.
+        """
+
+        consumer = FUEGOConsumer(Queue(), reporting=ReportingLevel.ORIGINAL)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            tweets = [ tweet for tweet in tweets if twitter.is_retweet(tweet) ]
+            documents = consumer._to_documents(tweets)
+
+        self.assertEqual(documents, consumer._apply_reporting_level(documents))
+
+    def test_apply_reporting_original_no_retweets(self):
+        """
+        Test that applying the reporting level with the `ORIGINAL` strategy returns no retweets if at least one document is not a retweet.
+        """
+
+        consumer = FUEGOConsumer(Queue(), reporting=ReportingLevel.ORIGINAL)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            documents = consumer._to_documents(tweets)
+
+        self.assertTrue(not any( document.is_retweet for document in consumer._apply_reporting_level(documents) ))
+
     def test_summarize_empty_node(self):
         """
         Test that when summarizing an empty node, the function returns an empty summary.
