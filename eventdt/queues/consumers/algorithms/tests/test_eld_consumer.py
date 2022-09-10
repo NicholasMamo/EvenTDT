@@ -895,17 +895,6 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(twitter.id(tweet), document.attributes['id'])
             self.assertEqual(len(twitter.urls(tweet)), len(document.attributes['urls']))
 
-    def test_to_documents_tweet(self):
-        """
-        Test that when creating a document from a tweet, an attribute stores whether it is a retweet.
-        """
-
-        consumer = ELDConsumer(Queue(), 60)
-        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
-            tweet = json.loads(f.readline())
-            document = consumer._to_documents([ tweet ])[0]
-            self.assertEqual(twitter.is_retweet(tweet), document.is_retweet)
-
     def test_to_documents_v2_tweet(self):
         """
         Test that when creating a document from a tweet, the tweet is saved as an attribute.
@@ -917,6 +906,228 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
             document = consumer._to_documents([ tweet ])[0]
             self.assertEqual(twitter.id(tweet), document.attributes['id'])
             self.assertEqual(len(twitter.urls(tweet)), len(document.attributes['urls']))
+
+    def test_to_documents_id(self):
+        """
+        Test that when creating a document from a tweet, an attribute stores its ID.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
+            tweets = [ json.loads(tweet) for tweet in f ]
+            documents = consumer._to_documents(tweets)
+            self.assertTrue(all( twitter.id(tweet) == document.id for tweet, document in zip(tweets, documents) ))
+
+    def test_to_documents_v2_id(self):
+        """
+        Test that when creating a document from a tweet, an attribute stores its ID.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
+            tweets = [ json.loads(tweet) for tweet in f ]
+            documents = consumer._to_documents(tweets)
+            self.assertTrue(all( twitter.id(tweet) == document.id for tweet, document in zip(tweets, documents) ))
+
+    def test_to_documents_version(self):
+        """
+        Test that when creating a document from a tweet, an attribute stores its version.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
+            tweets = [ json.loads(tweet) for tweet in f ]
+            documents = consumer._to_documents(tweets)
+            self.assertTrue(all( 1 == document.version for tweet, document in zip(tweets, documents) ))
+            self.assertTrue(all( twitter.version(tweet) == document.version for tweet, document in zip(tweets, documents) ))
+
+    def test_to_documents_v2_version(self):
+        """
+        Test that when creating a document from a tweet, an attribute stores its version.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
+            tweets = [ json.loads(tweet) for tweet in f ]
+            documents = consumer._to_documents(tweets)
+            self.assertTrue(all( 2 == document.version for tweet, document in zip(tweets, documents) ))
+            self.assertTrue(all( twitter.version(tweet) == document.version for tweet, document in zip(tweets, documents) ))
+
+    def test_to_documents_lang(self):
+        """
+        Test that when creating a document from a tweet, an attribute stores its language.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
+            tweets = [ json.loads(tweet) for tweet in f ]
+            documents = consumer._to_documents(tweets)
+            self.assertTrue(all( twitter.lang(tweet) == document.lang for tweet, document in zip(tweets, documents) ))
+
+    def test_to_documents_v2_lang(self):
+        """
+        Test that when creating a document from a tweet, an attribute stores its language.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
+            tweets = [ json.loads(tweet) for tweet in f ]
+            documents = consumer._to_documents(tweets)
+            self.assertTrue(all( twitter.lang(tweet) == document.lang for tweet, document in zip(tweets, documents) ))
+
+    def test_to_documents_timestamp(self):
+        """
+        Test that when creating a document from a tweet, an attribute stores its timestamp.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
+            tweets = [ json.loads(tweet) for tweet in f ]
+            documents = consumer._to_documents(tweets)
+            self.assertTrue(all( twitter.timestamp(tweet) == document.timestamp for tweet, document in zip(tweets, documents) ))
+
+    def test_to_documents_v2_timestamp(self):
+        """
+        Test that when creating a document from a tweet, an attribute stores its timestamp.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
+            tweets = [ json.loads(tweet) for tweet in f ]
+            documents = consumer._to_documents(tweets)
+            self.assertTrue(all( twitter.timestamp(tweet) == document.timestamp for tweet, document in zip(tweets, documents) ))
+
+    def test_to_documents_urls(self):
+        """
+        Test that when creating a document from a tweet, an attribute stores its URLs.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
+            tweets = [ json.loads(tweet) for tweet in f ]
+            documents = consumer._to_documents(tweets)
+            self.assertTrue(all( twitter.urls(tweet) == document.urls for tweet, document in zip(tweets, documents) ))
+
+    def test_to_documents_urls(self):
+        """
+        Test that when creating a document from a tweet, an attribute stores its URLs.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
+            tweets = [ json.loads(tweet) for tweet in f ]
+            documents = consumer._to_documents(tweets)
+            self.assertTrue(all( twitter.urls(tweet) == document.urls for tweet, document in zip(tweets, documents) ))
+
+    def test_to_documents_hashtags(self):
+        """
+        Test that when creating a document from a tweet, an attribute stores its hashtags.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
+            tweets = [ json.loads(tweet) for tweet in f ]
+            documents = consumer._to_documents(tweets)
+            self.assertTrue(all( twitter.hashtags(tweet) == document.hashtags for tweet, document in zip(tweets, documents) ))
+
+    def test_to_documents_hashtags(self):
+        """
+        Test that when creating a document from a tweet, an attribute stores its hashtags.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
+            tweets = [ json.loads(tweet) for tweet in f ]
+            documents = consumer._to_documents(tweets)
+            self.assertTrue(all( twitter.hashtags(tweet) == document.hashtags for tweet, document in zip(tweets, documents) ))
+
+    def test_to_documents_is_retweet(self):
+        """
+        Test that when creating a document from a tweet, an attribute stores whether it is a retweet.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
+            tweets = [ json.loads(tweet) for tweet in f ]
+            documents = consumer._to_documents(tweets)
+            self.assertTrue(all( twitter.is_retweet(tweet) == document.is_retweet for tweet, document in zip(tweets, documents) ))
+
+    def test_to_documents_v2_is_retweet(self):
+        """
+        Test that when creating a document from a tweet, an attribute stores whether it is a retweet.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
+            tweets = [ json.loads(tweet) for tweet in f ]
+            documents = consumer._to_documents(tweets)
+            self.assertTrue(all( twitter.is_retweet(tweet) == document.is_retweet for tweet, document in zip(tweets, documents) ))
+
+    def test_to_documents_is_reply(self):
+        """
+        Test that when creating a document from a tweet, an attribute stores whether it is a reply.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
+            tweets = [ json.loads(tweet) for tweet in f ]
+            documents = consumer._to_documents(tweets)
+            self.assertTrue(all( twitter.is_reply(tweet) == document.is_reply for tweet, document in zip(tweets, documents) ))
+
+    def test_to_documents_v2_is_reply(self):
+        """
+        Test that when creating a document from a tweet, an attribute stores whether it is a reply.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
+            tweets = [ json.loads(tweet) for tweet in f ]
+            documents = consumer._to_documents(tweets)
+            self.assertTrue(all( twitter.is_reply(tweet) == document.is_reply for tweet, document in zip(tweets, documents) ))
+
+    def test_to_documents_is_quote(self):
+        """
+        Test that when creating a document from a tweet, an attribute stores whether it is a quote.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
+            tweets = [ json.loads(tweet) for tweet in f ]
+            documents = consumer._to_documents(tweets)
+            self.assertTrue(all( twitter.is_quote(tweet) == document.is_quote for tweet, document in zip(tweets, documents) ))
+
+    def test_to_documents_v2_is_quote(self):
+        """
+        Test that when creating a document from a tweet, an attribute stores whether it is a quote.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
+            tweets = [ json.loads(tweet) for tweet in f ]
+            documents = consumer._to_documents(tweets)
+            self.assertTrue(all( twitter.is_quote(tweet) == document.is_quote for tweet, document in zip(tweets, documents) ))
+
+    def test_to_documents_is_verified(self):
+        """
+        Test that when creating a document from a tweet, an attribute stores whether it is a verified.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
+            tweets = [ json.loads(tweet) for tweet in f ]
+            documents = consumer._to_documents(tweets)
+            self.assertTrue(all( twitter.is_verified(tweet) == document.is_verified for tweet, document in zip(tweets, documents) ))
+
+    def test_to_documents_v2_is_verified(self):
+        """
+        Test that when creating a document from a tweet, an attribute stores whether it is a verified.
+        """
+
+        consumer = ELDConsumer(Queue(), 60)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
+            tweets = [ json.loads(tweet) for tweet in f ]
+            documents = consumer._to_documents(tweets)
+            self.assertTrue(all( twitter.is_verified(tweet) == document.is_verified for tweet, document in zip(tweets, documents) ))
 
     def test_to_documents_ellipsis(self):
         """
