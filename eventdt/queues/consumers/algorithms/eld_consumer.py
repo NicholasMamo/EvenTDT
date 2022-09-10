@@ -581,7 +581,8 @@ class ELDConsumer(Consumer):
             document.attributes['is_reply'] = twitter.is_reply(tweet)
             document.attributes['is_quote'] = twitter.is_quote(tweet)
             document.attributes['is_verified'] = twitter.is_verified(tweet)
-            document.attributes['tweet'] = tweet
+            if self.storage == StorageLevel.TWEET:
+                document.attributes['tweet'] = tweet
             document.normalize()
             documents.append(document)
 

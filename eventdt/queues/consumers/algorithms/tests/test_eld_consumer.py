@@ -894,29 +894,49 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(len(tweets), len(documents))
             self.assertTrue(all( document.attributes['tweet'] in tweets for document in documents ))
 
-    def test_to_documents_tweet(self):
+    def test_to_documents_storage_tweet(self):
         """
-        Test that when creating a document from a tweet, the tweet is saved as an attribute.
+        Test that when creating a document from a tweet with the `TWEET` storage strategy, the tweet is saved as an attribute.
         """
 
         consumer = ELDConsumer(Queue(), 60)
         with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
-            tweet = json.loads(f.readline())
-            document = consumer._to_documents([ tweet ])[0]
-            self.assertEqual(twitter.id(tweet), document.attributes['id'])
-            self.assertEqual(len(twitter.urls(tweet)), len(document.attributes['urls']))
+            tweets = [ json.loads(tweet) for tweet in f ]
+            documents = consumer._to_documents(tweets)
+            self.assertTrue(all( tweet == document.tweet for tweet, document in zip(tweets, documents) ))
 
-    def test_to_documents_v2_tweet(self):
+    def test_to_documents_storage_tweet_v2(self):
         """
-        Test that when creating a document from a tweet, the tweet is saved as an attribute.
+        Test that when creating a document from a tweet with the `TWEET` storage strategy, the tweet is saved as an attribute.
         """
 
         consumer = ELDConsumer(Queue(), 60)
         with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
-            tweet = json.loads(f.readline())
-            document = consumer._to_documents([ tweet ])[0]
-            self.assertEqual(twitter.id(tweet), document.attributes['id'])
-            self.assertEqual(len(twitter.urls(tweet)), len(document.attributes['urls']))
+            tweets = [ json.loads(tweet) for tweet in f ]
+            documents = consumer._to_documents(tweets)
+            self.assertTrue(all( tweet == document.tweet for tweet, document in zip(tweets, documents) ))
+
+    def test_to_documents_storage_attributes(self):
+        """
+        Test that when creating a document from a tweet with the `ATTRIBUTES` storage strategy, the tweet is saved as an attribute.
+        """
+
+        consumer = ELDConsumer(Queue(), storage=StorageLevel.ATTRIBUTES)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            tweets = [ json.loads(tweet) for tweet in f ]
+            documents = consumer._to_documents(tweets)
+            self.assertTrue(all( not document.tweet for document in documents ))
+
+    def test_to_documents_storage_attributes_v2(self):
+        """
+        Test that when creating a document from a tweet with the `ATTRIBUTES` storage strategy, the tweet is saved as an attribute.
+        """
+
+        consumer = ELDConsumer(Queue(), storage=StorageLevel.ATTRIBUTES)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            tweets = [ json.loads(tweet) for tweet in f ]
+            documents = consumer._to_documents(tweets)
+            self.assertTrue(all( not document.tweet for document in documents ))
 
     def test_to_documents_id(self):
         """
