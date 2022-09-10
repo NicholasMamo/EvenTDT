@@ -210,7 +210,7 @@ class TestCluster(unittest.TestCase):
         Test that when recalculating the centroid without changing the cluster, the '_last' instance variable does not change.
         """
 
-        v = [ Document("", [ ]), Document("", [ ]) ]
+        v = [ Document("", dimensions={ 'a': 10, 'b': 20 }), Document("", { 'c': 30, 'd': 40 }) ]
         c = Cluster(v)
         self.assertFalse(c._last)
 
