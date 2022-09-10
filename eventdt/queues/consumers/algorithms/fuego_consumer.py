@@ -89,7 +89,7 @@ class FUEGOConsumer(Consumer):
     :vartype min_volume: float
     :ivar threshold: The type of dynamic threshold to use.
     :vartype threshold: :class:`~queues.consumers.algorithms.fuego_consumer.DynamicThreshold`
-    :ivar filtering:The amount of filtering to apply on tweets.
+    :ivar filtering: The amount of filtering to apply on tweets.
     :vartype filtering: :class:`~queues.consumers.algorithms.FilteringLevel`
     :ivar summarization: The summarization algorithm to use.
     :vartype summarization: :class:`~summarization.algorithms.dgs.DGS`
@@ -130,7 +130,7 @@ class FUEGOConsumer(Consumer):
         :type min_volume: float
         :param threshold: The type of dynamic threshold to use.
         :type threshold: :class:`~queues.consumers.algorithms.DynamicThreshold`
-        :param filtering:The amount of filtering to apply on tweets.
+        :param filtering: The amount of filtering to apply on tweets.
         :type filtering: :class:`~queues.consumers.algorithms.FilteringLevel`
         :param verbose: A boolean indicating whether to log the consumer's main parameters.
         :type verbose: bool

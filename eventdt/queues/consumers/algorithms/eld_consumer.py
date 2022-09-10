@@ -130,7 +130,7 @@ class ELDConsumer(Consumer):
     :vartype summarization: :class:`~summarization.algorithms.dgs.DGS`
     :ivar cleaner: The cleaner used to make summaries more presentable.
     :vartype cleaner: :class:`~nlp.cleaners.tweet_cleaner.TweetCleaner`
-    :ivar filtering:The amount of filtering to apply on tweets.
+    :ivar filtering: The amount of filtering to apply on tweets.
     :vartype filtering: :class:`~queues.consumers.algorithms.FilteringLevel`
     """
 
@@ -178,7 +178,7 @@ class ELDConsumer(Consumer):
         :param log_nutrition: A boolean indicating whether the log of the nutrition should be taken before creating checkpoints.
                               This minimizes the domination of some terms, which leads to other important terms always having a high burst.
         :type log_nutrition: bool
-        :param filtering:The amount of filtering to apply on tweets.
+        :param filtering: The amount of filtering to apply on tweets.
         :type filtering: :class:`~queues.consumers.algorithms.FilteringLevel`
         :param verbose: A boolean indicating whether to log the consumer's main parameters.
         :type verbose: bool
@@ -484,6 +484,9 @@ class ELDConsumer(Consumer):
 
             #. The biography of the tweet's author cannot be empty because that is indicative of bots.
 
+        In lenient filtering mode, ELD accepts any number of URLs.
+        This mode addresses unspecified TDT, or detecting breaking news from a general sream, in which news outlets often report news using URLs.
+
         :param tweet: The tweet to validate.
         :type tweet: dict
 
@@ -508,8 +511,9 @@ class ELDConsumer(Consumer):
 
         # filter out URLs, but allow one URL in quoted tweets (referring to the quoted tweet)
         urls = twitter.urls(tweet)
-        if (len(urls) > 1 and not twitter.is_quote(tweet) # non-quote tweets may only have one URL
-            or len(urls) > 2 and twitter.is_quote(tweet)): # quote tweets may only have two URLs (the quoted tweet and another link)
+        if ((len(urls) > 1 and not twitter.is_quote(tweet) # non-quote tweets may only have one URL
+             or len(urls) > 2 and twitter.is_quote(tweet)) # quote tweets may only have two URLs (the quoted tweet and another link)
+             and self.filtering == FilteringLevel.STRICT): 
             return False
 
         if not twitter.user_description(tweet):

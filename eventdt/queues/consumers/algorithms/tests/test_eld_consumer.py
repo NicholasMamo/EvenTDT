@@ -255,7 +255,21 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering a list of tweets, only English tweets are returned.
         """
 
-        consumer = ELDConsumer(Queue(), 60)
+        consumer = ELDConsumer(Queue(), 60, filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertTrue(all(twitter.lang(tweet) == 'en' for tweet in tweets))
+            self.assertGreater(count, len(tweets))
+
+    def test_filter_tweets_lenient_english(self):
+        """
+        Test that when filtering a list of tweets leniently, only English tweets are returned.
+        """
+
+        consumer = ELDConsumer(Queue(), 60, filtering=FilteringLevel.LENIENT)
         with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -269,7 +283,21 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering a list of tweets, only English tweets are returned.
         """
 
-        consumer = ELDConsumer(Queue(), 60)
+        consumer = ELDConsumer(Queue(), 60, filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertTrue(all(twitter.lang(tweet) == 'en' for tweet in tweets))
+            self.assertGreater(count, len(tweets))
+
+    def test_filter_tweets_lenient_v2_english(self):
+        """
+        Test that when filtering a list of tweets leniently, only English tweets are returned.
+        """
+
+        consumer = ELDConsumer(Queue(), 60, filtering=FilteringLevel.LENIENT)
         with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -283,7 +311,21 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering tweets, all returned tweets have no more than 2 hashtags.
         """
 
-        consumer = ELDConsumer(Queue(), 60)
+        consumer = ELDConsumer(Queue(), 60, filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertTrue(all(len(twitter.hashtags(tweet)) <= 2 for tweet in tweets))
+            self.assertGreater(count, len(tweets))
+
+    def test_filter_tweets_lenient_hashtags(self):
+        """
+        Test that when filtering tweets leniently, all returned tweets have no more than 2 hashtags.
+        """
+
+        consumer = ELDConsumer(Queue(), 60, filtering=FilteringLevel.LENIENT)
         with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -297,7 +339,21 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering tweets, all returned tweets have no more than 2 hashtags.
         """
 
-        consumer = ELDConsumer(Queue(), 60)
+        consumer = ELDConsumer(Queue(), 60, filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertTrue(all(len(twitter.hashtags(tweet)) <= 2 for tweet in tweets))
+            self.assertGreater(count, len(tweets))
+
+    def test_filter_tweets_lenient_v2_hashtags(self):
+        """
+        Test that when filtering tweets leniently, all returned tweets have no more than 2 hashtags.
+        """
+
+        consumer = ELDConsumer(Queue(), 60, filtering=FilteringLevel.LENIENT)
         with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -311,7 +367,21 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering tweets, all returned tweets' authors have favourited at least one tweet.
         """
 
-        consumer = ELDConsumer(Queue(), 60)
+        consumer = ELDConsumer(Queue(), 60, filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertTrue(all(twitter.user_favorites(tweet) > 0 for tweet in tweets))
+            self.assertGreater(count, len(tweets))
+
+    def test_filter_tweets_lenient_no_favourites(self):
+        """
+        Test that when filtering tweets leniently, all returned tweets' authors have favourited at least one tweet.
+        """
+
+        consumer = ELDConsumer(Queue(), 60, filtering=FilteringLevel.LENIENT)
         with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -325,7 +395,21 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering tweets, all users have at least one follower for every thousand tweets they've published.
         """
 
-        consumer = ELDConsumer(Queue(), 60)
+        consumer = ELDConsumer(Queue(), 60, filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertTrue(all(twitter.user_followers(tweet) / twitter.user_statuses(tweet) >= 1./1000. for tweet in tweets))
+            self.assertGreater(count, len(tweets))
+
+    def test_filter_tweets_lenient_follower_ratio(self):
+        """
+        Test that when filtering tweets leniently, all users have at least one follower for every thousand tweets they've published.
+        """
+
+        consumer = ELDConsumer(Queue(), 60, filtering=FilteringLevel.LENIENT)
         with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -339,7 +423,21 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering tweets, all users have at least one follower for every thousand tweets they've published.
         """
 
-        consumer = ELDConsumer(Queue(), 60)
+        consumer = ELDConsumer(Queue(), 60, filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertTrue(all(twitter.user_followers(tweet) / twitter.user_statuses(tweet) >= 1./1000. for tweet in tweets))
+            self.assertGreater(count, len(tweets))
+
+    def test_filter_tweets_lenient_v2_follower_ratio(self):
+        """
+        Test that when filtering tweets leniently, all users have at least one follower for every thousand tweets they've published.
+        """
+
+        consumer = ELDConsumer(Queue(), 60, filtering=FilteringLevel.LENIENT)
         with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -353,14 +451,28 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering tweets, they can have no more than one URL unless they are quotes.
         """
 
-        consumer = ELDConsumer(Queue())
+        consumer = ELDConsumer(Queue(), filtering=FilteringLevel.STRICT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             count = len(tweets)
             tweets = consumer._filter_tweets(tweets)
-            self.assertTrue(all( len(twitter.urls(tweet)) <= 1 or twitter.is_quote(tweet)
+            self.assertTrue(all( len(twitter.urls(tweet)) <= 1 or (twitter.is_quote(tweet) and len(twitter.urls(tweet)) <= 2)
                                 for tweet in tweets ))
+            self.assertGreater(count, len(tweets))
+
+    def test_filter_tweets_lenient_urls(self):
+        """
+        Test that when filtering tweets leniently, they can have any number of URLs.
+        """
+
+        consumer = ELDConsumer(Queue(), filtering=FilteringLevel.LENIENT)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertTrue(any( len(twitter.urls(tweet)) >= 2 and not twitter.is_quote(tweet) for tweet in tweets ))
             self.assertGreater(count, len(tweets))
 
     def test_filter_tweets_strict_v2_urls(self):
@@ -368,7 +480,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering tweets, they can have no more than one URL unless they are quotes.
         """
 
-        consumer = ELDConsumer(Queue())
+        consumer = ELDConsumer(Queue(), filtering=FilteringLevel.STRICT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -378,12 +490,26 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
                                 for tweet in tweets ))
             self.assertGreater(count, len(tweets))
 
+    def test_filter_tweets_lenient_v2_urls(self):
+        """
+        Test that when filtering tweets leniently, they can have any number of URLs.
+        """
+
+        consumer = ELDConsumer(Queue(), filtering=FilteringLevel.LENIENT)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertTrue(any( len(twitter.urls(tweet)) >= 2 and not twitter.is_quote(tweet) for tweet in tweets ))
+            self.assertGreater(count, len(tweets))
+
     def test_filter_tweets_strict_urls_quoted(self):
         """
         Test that when filtering tweets, none of the retained ones have URLs in them.
         """
 
-        consumer = ELDConsumer(Queue())
+        consumer = ELDConsumer(Queue(), filtering=FilteringLevel.STRICT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -393,12 +519,25 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
                                 for tweet in filtered ))
             self.assertGreater(len(tweets), len(filtered))
 
+    def test_filter_tweets_lenient_urls_quoted(self):
+        """
+        Test that when filtering tweets leniently, the retained ones may have URLs in them.
+        """
+
+        consumer = ELDConsumer(Queue(), filtering=FilteringLevel.LENIENT)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            filtered = consumer._filter_tweets(tweets)
+            self.assertTrue(any( len(twitter.urls(tweet)) >= 2 and not twitter.is_quote(tweet) for tweet in tweets ))
+            self.assertGreater(len(tweets), len(filtered))
+
     def test_filter_tweets_strict_v2_urls_quoted(self):
         """
         Test that when filtering tweets, none of the retained ones have URLs in them.
         """
 
-        consumer = ELDConsumer(Queue())
+        consumer = ELDConsumer(Queue(), filtering=FilteringLevel.STRICT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -408,24 +547,61 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
                                 for tweet in filtered ))
             self.assertGreater(len(tweets), len(filtered))
 
+    def test_filter_tweets_lenient_v2_urls_quoted(self):
+        """
+        Test that when filtering tweets leniently, the retained ones may have URLs in them.
+        """
+
+        consumer = ELDConsumer(Queue(), filtering=FilteringLevel.LENIENT)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            filtered = consumer._filter_tweets(tweets)
+            self.assertTrue(any( len(twitter.urls(tweet)) >= 2 and not twitter.is_quote(tweet) for tweet in tweets ))
+            self.assertGreater(len(tweets), len(filtered))
+
     def test_filter_tweets_strict_keeps_quotes(self):
         """
         Test that when filtering tweets, quotes are not automatically filtered.
         """
 
-        consumer = ELDConsumer(Queue())
+        consumer = ELDConsumer(Queue(), filtering=FilteringLevel.STRICT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
             filtered = consumer._filter_tweets(tweets)
             self.assertTrue(any( twitter.is_quote(tweet) for tweet in filtered ))
 
-    def test_filter_tweets_strict__v2_keeps_quotes(self):
+    def test_filter_tweets_lenient_keeps_quotes(self):
+        """
+        Test that when filtering tweets leniently, quotes are not automatically filtered.
+        """
+
+        consumer = ELDConsumer(Queue(), filtering=FilteringLevel.LENIENT)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            filtered = consumer._filter_tweets(tweets)
+            self.assertTrue(any( twitter.is_quote(tweet) for tweet in filtered ))
+
+    def test_filter_tweets_strict_v2_keeps_quotes(self):
         """
         Test that when filtering tweets, quotes are not automatically filtered.
         """
 
-        consumer = ELDConsumer(Queue())
+        consumer = ELDConsumer(Queue(), filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            filtered = consumer._filter_tweets(tweets)
+            self.assertTrue(any( twitter.is_quote(tweet) for tweet in filtered ))
+
+    def test_filter_tweets_lenient_v2_keeps_quotes(self):
+        """
+        Test that when filtering tweets leniently, quotes are not automatically filtered.
+        """
+
+        consumer = ELDConsumer(Queue(), filtering=FilteringLevel.LENIENT)
         with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'samplev2.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -437,7 +613,21 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering tweets, their authors must have a non-empty biography.
         """
 
-        consumer = ELDConsumer(Queue(), 60)
+        consumer = ELDConsumer(Queue(), 60, filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertTrue(all(twitter.user_description(tweet) for tweet in tweets))
+            self.assertGreater(count, len(tweets))
+
+    def test_filter_tweets_lenient_bio(self):
+        """
+        Test that when filtering tweets leniently, their authors must have a non-empty biography.
+        """
+
+        consumer = ELDConsumer(Queue(), 60, filtering=FilteringLevel.LENIENT)
         with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -451,7 +641,21 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering tweets, their authors must have a non-empty biography.
         """
 
-        consumer = ELDConsumer(Queue(), 60)
+        consumer = ELDConsumer(Queue(), 60, filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertTrue(all(twitter.user_description(tweet) for tweet in tweets))
+            self.assertGreater(count, len(tweets))
+
+    def test_filter_tweets_lenient_v2_bio(self):
+        """
+        Test that when filtering tweets leniently, their authors must have a non-empty biography.
+        """
+
+        consumer = ELDConsumer(Queue(), 60, filtering=FilteringLevel.LENIENT)
         with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -465,7 +669,31 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering tweets twice, the second time has no effect.
         """
 
-        consumer = ELDConsumer(Queue(), 60)
+        consumer = ELDConsumer(Queue(), 60, filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+
+            """
+            The first time, the number of tweets should decrease.
+            """
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertGreater(count, len(tweets))
+
+            """
+            The second time, the number of tweets should remain the same.
+            """
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertEqual(count, len(tweets))
+
+    def test_filter_tweets_lenient_repeat(self):
+        """
+        Test that when filtering tweets leniently twice, the second time has no effect.
+        """
+
+        consumer = ELDConsumer(Queue(), 60, filtering=FilteringLevel.LENIENT)
         with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -489,7 +717,31 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering tweets twice, the second time has no effect.
         """
 
-        consumer = ELDConsumer(Queue(), 60)
+        consumer = ELDConsumer(Queue(), 60, filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+
+            """
+            The first time, the number of tweets should decrease.
+            """
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertGreater(count, len(tweets))
+
+            """
+            The second time, the number of tweets should remain the same.
+            """
+            count = len(tweets)
+            tweets = consumer._filter_tweets(tweets)
+            self.assertEqual(count, len(tweets))
+
+    def test_filter_tweets_lenient_v2_repeat(self):
+        """
+        Test that when filtering tweets leniently twice, the second time has no effect.
+        """
+
+        consumer = ELDConsumer(Queue(), 60, filtering=FilteringLevel.LENIENT)
         with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -513,7 +765,19 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering tweets, the tweet data does not change.
         """
 
-        consumer = ELDConsumer(Queue(), 60)
+        consumer = ELDConsumer(Queue(), 60, filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            filtered = consumer._filter_tweets(tweets)
+            self.assertTrue(all(tweet in tweets for tweet in filtered))
+
+    def test_filter_tweets_lenient_unchanged(self):
+        """
+        Test that when filtering tweets leniently, the tweet data does not change.
+        """
+
+        consumer = ELDConsumer(Queue(), 60, filtering=FilteringLevel.LENIENT)
         with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -525,7 +789,19 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering tweets, the tweet data does not change.
         """
 
-        consumer = ELDConsumer(Queue(), 60)
+        consumer = ELDConsumer(Queue(), 60, filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            filtered = consumer._filter_tweets(tweets)
+            self.assertTrue(all(tweet in tweets for tweet in filtered))
+
+    def test_filter_tweets_lenient_v2_unchanged(self):
+        """
+        Test that when filtering tweets leniently, the tweet data does not change.
+        """
+
+        consumer = ELDConsumer(Queue(), 60, filtering=FilteringLevel.LENIENT)
         with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -537,7 +813,23 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering a list of documents, the function looks for the tweet in the attributes.
         """
 
-        consumer = ELDConsumer(Queue(), 60, scheme=TF())
+        consumer = ELDConsumer(Queue(), 60, scheme=TF(), filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            documents = [ Document('', attributes={ 'tweet': tweet }) for tweet in tweets ]
+
+            tweets = consumer._filter_tweets(tweets)
+            documents = consumer._filter_tweets(documents)
+            self.assertEqual(len(tweets), len(documents))
+            self.assertTrue(all( document.attributes['tweet'] in tweets for document in documents ))
+
+    def test_filter_tweets_lenient_document(self):
+        """
+        Test that when filtering a list of documents leniently, the function looks for the tweet in the attributes.
+        """
+
+        consumer = ELDConsumer(Queue(), 60, scheme=TF(), filtering=FilteringLevel.LENIENT)
         with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/CRYCHE-500.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
@@ -553,7 +845,23 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
         Test that when filtering a list of documents, the function looks for the tweet in the attributes.
         """
 
-        consumer = ELDConsumer(Queue(), 60, scheme=TF())
+        consumer = ELDConsumer(Queue(), 60, scheme=TF(), filtering=FilteringLevel.STRICT)
+        with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            documents = [ Document('', attributes={ 'tweet': tweet }) for tweet in tweets ]
+
+            tweets = consumer._filter_tweets(tweets)
+            documents = consumer._filter_tweets(documents)
+            self.assertEqual(len(tweets), len(documents))
+            self.assertTrue(all( document.attributes['tweet'] in tweets for document in documents ))
+
+    def test_filter_tweets_lenient_v2_document(self):
+        """
+        Test that when filtering a list of documents leniently, the function looks for the tweet in the attributes.
+        """
+
+        consumer = ELDConsumer(Queue(), 60, scheme=TF(), filtering=FilteringLevel.LENIENT)
         with open(os.path.join(os.path.dirname(__file__), '../../../../tests/corpora/samplev2.json'), 'r') as f:
             lines = f.readlines()
             tweets = [ json.loads(line) for line in lines ]
