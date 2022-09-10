@@ -250,10 +250,11 @@ You can also filter the data (``--filters``) and generate multiple timelines by 
     - ``--splits``                  *<Optional>* The path to a file containing splits for the consumer, splitting the stream into multiple streams based on the tokens. If given, the tool expects a CSV file, where each line represents a split, or a JSON file created by the :mod:`~tools.concepts` tool.
     - ``--with-default-split``      *<Optional>* A boolean indicating whether to use a default split, for all documents that belong to no stream (used only if splits are given).
 
-The following parameters tweak different aspects of how the algorithms work:
+The following parameters tweak different aspects of how the algorithms work, how much memory they use, and what they return:
 
     - ``--filtering``               *<Optional>* The filtering level used by the algorithms: `NONE`, `LENIENT`, `STRICT` (default); used by the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer` and the :class:`~queues.consumers.algorithms.eld_consumer.SEERConsumer`.
     - ``--reporting``               *<Optional>* The reporting level, or the tweets retained by the algorithms: `ALL` (default), `ORIGINAL` (exclude retweets); used by the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer` and the :class:`~queues.consumers.algorithms.eld_consumer.SEERConsumer`.
+    - ``--storage``                 *<Optional>* How much information documents store and the algorithms return: `TWEET` (default), `ATTRIBUTES`; used by the :class:`~queues.consumers.algorithms.eld_consumer.ELDConsumer` and the :class:`~queues.consumers.algorithms.eld_consumer.SEERConsumer`.
 
 The following parameters tweak the :class:`~queues.consumers.algorithms.zhao_consumer.ZhaoConsumer`:
 
@@ -364,6 +365,8 @@ def setup_args():
                        help='<Optional> The filtering level used by the algorithms: `NONE`, `LENIENT`, `STRICT` (default); used by the `ELDConsumer` and the `SEERConsumer`.')
     group.add_argument('--reporting', type=reporting, required=False, default='ALL',
                        help='<Optional> The reporting level, or the tweets retained by the algorithms: `ALL` (default), `ORIGINAL` (exclude retweets); used by the `ELDConsumer` and the `SEERConsumer`.')
+    group.add_argument('--storage', type=storage, required=False, default='TWEET',
+                       help='<Optional> How much information documents store and the algorithms return: `TWEET` (default), `ATTRIBUTES`; used by the `ELDConsumer` and the `SEERConsumer`.')
 
     group = parser.add_argument_group('Zhao et al. (2011)', 'The following arguments let you tweak how the algorithm by Zhao et al. (2011) works:')
     group.add_argument('--post-rate', type=float, required=False, default=1.7,
@@ -416,6 +419,7 @@ def main():
     pcmd['threshold_type'] = str(vars(args)['threshold_type'])
     pcmd['filtering'] = str(vars(args)['filtering'])
     pcmd['reporting'] = str(vars(args)['reporting'])
+    pcmd['storage'] = str(vars(args)['storage'])
 
     # load the filters and splits
     filter = filters(args.filters, args.filters_keep) if args.filters else [ ]
