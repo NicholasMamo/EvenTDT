@@ -10,6 +10,7 @@ Although you can create a :class:`~vsm.clustering.cluster.Cluster` instance your
 """
 
 import importlib
+import json
 import os
 import sys
 
@@ -39,8 +40,9 @@ class Cluster(Attributable, Exportable):
     :ivar ~.centroid: The centroid of the cluster, representing the average vector in the cluster.
     :vartype ~.centroid: :class:`~vsm.vector.Vector`
     :ivar _last: A snapshot of the cluster the last time that its centroid was re-calculated.
-                 This variable is used so that the centroid is not re-calculated needlessly if the cluster's vector has not changed.
-    :vartype _last: dict
+                 This variable stores the hash of the cluster so that the centroid is not re-calculated needlessly if the cluster's vector has not changed.
+                 The hash is stored instead of a copy of the cluster to minimize memory usage.
+    :vartype _last: int
     """
 
     def __init__(self, vectors=None, *args, **kwargs):
@@ -112,11 +114,13 @@ class Cluster(Attributable, Exportable):
         :rtype: :class:`~vsm.vector.Vector`
         """
 
-        current = self.to_array()
-        if (not self._last             # if the centroid has never been calculated
-            or self._last != current): # or the array representation has changed
-            self._last = current
-            self.recalculate_centroid()
+        # convert the cluster to an immutable hash of the JSON-encoded array to detect whether the cluster has changed
+        current = hash(json.dumps(self.to_array()))
+
+        if (not self._last              # if the centroid has never been calculated
+            or self._last != current):  # or the cluster has changed since the last time the centroid was calculated
+            self._last = current        # record the current hash
+            self.recalculate_centroid() # and recalculate the centroid
 
         return self.__centroid
 

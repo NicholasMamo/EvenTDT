@@ -205,6 +205,40 @@ class TestCluster(unittest.TestCase):
         self.assertEqual(round(0.5/math.sqrt(1 ** 2 + 0.5 ** 2), 10), round(c.centroid.dimensions['b'], 10))
         self.assertEqual(1, round(vector_math.magnitude(c.centroid), 10))
 
+    def test_recalculate_centroid_unchanged_cluster(self):
+        """
+        Test that when recalculating the centroid without changing the cluster, the '_last' instance variable does not change.
+        """
+
+        v = [ Document("", [ ]), Document("", [ ]) ]
+        c = Cluster(v)
+        self.assertFalse(c._last)
+
+        c.centroid
+        self.assertTrue(c._last)
+        last = c._last
+
+        c.centroid
+        self.assertEqual(c._last, last)
+
+    def test_recalculate_centroid_changed_cluster(self):
+        """
+        Test that when recalculating the centroid after changing the cluster, the '_last' instance variable changes.
+        """
+
+        v = [ Document("", [ ]), Document("", [ ]) ]
+        c = Cluster(v)
+        self.assertFalse(c._last)
+
+        c.centroid
+        self.assertTrue(c._last)
+        last = c._last
+
+        v[0].dimensions = { 'a': 1 }
+
+        c.centroid
+        self.assertNotEqual(c._last, last)
+
     def test_set_vectors_none(self):
         """
         Test that setting vectors to ``None`` overwrites existing vectors.
