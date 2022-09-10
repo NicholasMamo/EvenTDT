@@ -34,6 +34,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 from queues.consumers import Consumer
+from queues.consumers.algorithms import FilteringLevel
 
 from apd.eld_participant_detector import ELDParticipantDetector
 from apd.extractors.local.entity_extractor import EntityExtractor
@@ -129,11 +130,13 @@ class ELDConsumer(Consumer):
     :vartype summarization: :class:`~summarization.algorithms.dgs.DGS`
     :ivar cleaner: The cleaner used to make summaries more presentable.
     :vartype cleaner: :class:`~nlp.cleaners.tweet_cleaner.TweetCleaner`
+    :ivar filtering:The amount of filtering to apply on tweets.
+    :vartype filtering: :class:`~queues.consumers.algorithms.FilteringLevel`
     """
 
     def __init__(self, queue, window_size=30, scheme=None,
                  threshold=0.5, freeze_period=20, min_size=3, cooldown=1, max_intra_similarity=0.8,
-                 sets=10, min_burst=0.5, log_nutrition=False, verbose=True, *args, **kwargs):
+                 sets=10, min_burst=0.5, log_nutrition=False, filtering=FilteringLevel.STRICT, verbose=True, *args, **kwargs):
         """
         Create the consumer with a queue.
         Simultaneously create a nutrition store and the topic detection algorithm container.
@@ -175,6 +178,8 @@ class ELDConsumer(Consumer):
         :param log_nutrition: A boolean indicating whether the log of the nutrition should be taken before creating checkpoints.
                               This minimizes the domination of some terms, which leads to other important terms always having a high burst.
         :type log_nutrition: bool
+        :param filtering:The amount of filtering to apply on tweets.
+        :type filtering: :class:`~queues.consumers.algorithms.FilteringLevel`
         :param verbose: A boolean indicating whether to log the consumer's main parameters.
         :type verbose: bool
         """
@@ -191,6 +196,7 @@ class ELDConsumer(Consumer):
         self.max_intra_similarity = max_intra_similarity
         self.min_burst = min_burst
         self.log_nutrition = log_nutrition
+        self.filtering = filtering
 
         self.store = MemoryNutritionStore()
         self.buffer = Queue()

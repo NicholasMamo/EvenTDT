@@ -15,7 +15,7 @@ if path not in sys.path:
 
 from logger import logger
 from queues import Queue
-from queues.consumers.algorithms import ELDConsumer
+from queues.consumers.algorithms import ELDConsumer, FilteringLevel
 from nlp.document import Document
 from nlp.weighting import TF
 from summarization.timeline import Timeline
@@ -39,6 +39,20 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
         name = 'Test Consumer'
         consumer = ELDConsumer(Queue(), 10, name=name)
         self.assertEqual(name, str(consumer))
+
+    def test_init_filtering(self):
+        """
+        Test setting the type of filtering level when creating a consumer.
+        """
+
+        consumer = ELDConsumer(Queue(), filtering=FilteringLevel.NONE)
+        self.assertEqual(FilteringLevel.NONE, consumer.filtering)
+
+        consumer = ELDConsumer(Queue(), filtering=FilteringLevel.LENIENT)
+        self.assertEqual(FilteringLevel.LENIENT, consumer.filtering)
+
+        consumer = ELDConsumer(Queue(), filtering=FilteringLevel.STRICT)
+        self.assertEqual(FilteringLevel.STRICT, consumer.filtering)
 
     def test_create_consumer(self):
         """
