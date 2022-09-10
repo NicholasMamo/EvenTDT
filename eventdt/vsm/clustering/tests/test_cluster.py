@@ -216,10 +216,11 @@ class TestCluster(unittest.TestCase):
 
         c.centroid
         self.assertTrue(c._last)
-        last = c._last
 
-        c.centroid
-        self.assertEqual(c._last, last)
+        for i in range(1000):
+            last = c._last
+            c.centroid
+            self.assertEqual(c._last, last)
 
     def test_recalculate_centroid_changed_cluster(self):
         """
