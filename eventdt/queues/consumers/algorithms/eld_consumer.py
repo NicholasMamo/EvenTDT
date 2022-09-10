@@ -491,6 +491,9 @@ class ELDConsumer(Consumer):
         :rtype: str
         """
 
+        if self.filtering == FilteringLevel.NONE:
+            return True
+
         if not twitter.lang(tweet) == 'en':
             return False
 

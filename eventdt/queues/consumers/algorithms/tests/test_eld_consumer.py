@@ -238,7 +238,19 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
         consumer = ELDConsumer(Queue(), 60)
         self.assertEqual([ ], consumer._filter_tweets([ ]))
 
-    def test_filter_tweets_english(self):
+    def test_filter_tweets_none(self):
+        """
+        Test that when filtering a list of tweets without actually filtering, all tweets are accepted.
+        """
+
+        consumer = ELDConsumer(Queue(), filtering=FilteringLevel.NONE)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            filtered = consumer._filter_tweets(tweets)
+            self.assertEqual(tweets, filtered)
+
+    def test_filter_tweets_strict_english(self):
         """
         Test that when filtering a list of tweets, only English tweets are returned.
         """
@@ -252,7 +264,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
             self.assertTrue(all(twitter.lang(tweet) == 'en' for tweet in tweets))
             self.assertGreater(count, len(tweets))
 
-    def test_filter_tweets_v2_english(self):
+    def test_filter_tweets_strict_v2_english(self):
         """
         Test that when filtering a list of tweets, only English tweets are returned.
         """
@@ -266,7 +278,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
             self.assertTrue(all(twitter.lang(tweet) == 'en' for tweet in tweets))
             self.assertGreater(count, len(tweets))
 
-    def test_filter_tweets_hashtags(self):
+    def test_filter_tweets_strict_hashtags(self):
         """
         Test that when filtering tweets, all returned tweets have no more than 2 hashtags.
         """
@@ -280,7 +292,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
             self.assertTrue(all(len(twitter.hashtags(tweet)) <= 2 for tweet in tweets))
             self.assertGreater(count, len(tweets))
 
-    def test_filter_tweets_v2_hashtags(self):
+    def test_filter_tweets_strict_v2_hashtags(self):
         """
         Test that when filtering tweets, all returned tweets have no more than 2 hashtags.
         """
@@ -294,7 +306,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
             self.assertTrue(all(len(twitter.hashtags(tweet)) <= 2 for tweet in tweets))
             self.assertGreater(count, len(tweets))
 
-    def test_filter_tweets_no_favourites(self):
+    def test_filter_tweets_strict_no_favourites(self):
         """
         Test that when filtering tweets, all returned tweets' authors have favourited at least one tweet.
         """
@@ -308,7 +320,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
             self.assertTrue(all(twitter.user_favorites(tweet) > 0 for tweet in tweets))
             self.assertGreater(count, len(tweets))
 
-    def test_filter_tweets_follower_ratio(self):
+    def test_filter_tweets_strict_follower_ratio(self):
         """
         Test that when filtering tweets, all users have at least one follower for every thousand tweets they've published.
         """
@@ -322,7 +334,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
             self.assertTrue(all(twitter.user_followers(tweet) / twitter.user_statuses(tweet) >= 1./1000. for tweet in tweets))
             self.assertGreater(count, len(tweets))
 
-    def test_filter_tweets_v2_follower_ratio(self):
+    def test_filter_tweets_strict_v2_follower_ratio(self):
         """
         Test that when filtering tweets, all users have at least one follower for every thousand tweets they've published.
         """
@@ -336,7 +348,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
             self.assertTrue(all(twitter.user_followers(tweet) / twitter.user_statuses(tweet) >= 1./1000. for tweet in tweets))
             self.assertGreater(count, len(tweets))
 
-    def test_filter_tweets_urls(self):
+    def test_filter_tweets_strict_urls(self):
         """
         Test that when filtering tweets, they can have no more than one URL unless they are quotes.
         """
@@ -351,7 +363,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
                                 for tweet in tweets ))
             self.assertGreater(count, len(tweets))
 
-    def test_filter_tweets_v2_urls(self):
+    def test_filter_tweets_strict_v2_urls(self):
         """
         Test that when filtering tweets, they can have no more than one URL unless they are quotes.
         """
@@ -366,7 +378,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
                                 for tweet in tweets ))
             self.assertGreater(count, len(tweets))
 
-    def test_filter_tweets_urls_quoted(self):
+    def test_filter_tweets_strict_urls_quoted(self):
         """
         Test that when filtering tweets, none of the retained ones have URLs in them.
         """
@@ -381,7 +393,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
                                 for tweet in filtered ))
             self.assertGreater(len(tweets), len(filtered))
 
-    def test_filter_tweets_v2_urls_quoted(self):
+    def test_filter_tweets_strict_v2_urls_quoted(self):
         """
         Test that when filtering tweets, none of the retained ones have URLs in them.
         """
@@ -396,7 +408,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
                                 for tweet in filtered ))
             self.assertGreater(len(tweets), len(filtered))
 
-    def test_filter_tweets_keeps_quotes(self):
+    def test_filter_tweets_strict_keeps_quotes(self):
         """
         Test that when filtering tweets, quotes are not automatically filtered.
         """
@@ -408,7 +420,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
             filtered = consumer._filter_tweets(tweets)
             self.assertTrue(any( twitter.is_quote(tweet) for tweet in filtered ))
 
-    def test_filter_tweets__v2_keeps_quotes(self):
+    def test_filter_tweets_strict__v2_keeps_quotes(self):
         """
         Test that when filtering tweets, quotes are not automatically filtered.
         """
@@ -420,7 +432,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
             filtered = consumer._filter_tweets(tweets)
             self.assertTrue(any( twitter.is_quote(tweet) for tweet in filtered ))
 
-    def test_filter_tweets_bio(self):
+    def test_filter_tweets_strict_bio(self):
         """
         Test that when filtering tweets, their authors must have a non-empty biography.
         """
@@ -434,7 +446,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
             self.assertTrue(all(twitter.user_description(tweet) for tweet in tweets))
             self.assertGreater(count, len(tweets))
 
-    def test_filter_tweets_v2_bio(self):
+    def test_filter_tweets_strict_v2_bio(self):
         """
         Test that when filtering tweets, their authors must have a non-empty biography.
         """
@@ -448,7 +460,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
             self.assertTrue(all(twitter.user_description(tweet) for tweet in tweets))
             self.assertGreater(count, len(tweets))
 
-    def test_filter_tweets_repeat(self):
+    def test_filter_tweets_strict_repeat(self):
         """
         Test that when filtering tweets twice, the second time has no effect.
         """
@@ -472,7 +484,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
             tweets = consumer._filter_tweets(tweets)
             self.assertEqual(count, len(tweets))
 
-    def test_filter_tweets_v2_repeat(self):
+    def test_filter_tweets_strict_v2_repeat(self):
         """
         Test that when filtering tweets twice, the second time has no effect.
         """
@@ -496,7 +508,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
             tweets = consumer._filter_tweets(tweets)
             self.assertEqual(count, len(tweets))
 
-    def test_filter_tweets_unchanged(self):
+    def test_filter_tweets_strict_unchanged(self):
         """
         Test that when filtering tweets, the tweet data does not change.
         """
@@ -508,7 +520,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
             filtered = consumer._filter_tweets(tweets)
             self.assertTrue(all(tweet in tweets for tweet in filtered))
 
-    def test_filter_tweets_v2_unchanged(self):
+    def test_filter_tweets_strict_v2_unchanged(self):
         """
         Test that when filtering tweets, the tweet data does not change.
         """
@@ -520,7 +532,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
             filtered = consumer._filter_tweets(tweets)
             self.assertTrue(all(tweet in tweets for tweet in filtered))
 
-    def test_filter_tweets_document(self):
+    def test_filter_tweets_strict_document(self):
         """
         Test that when filtering a list of documents, the function looks for the tweet in the attributes.
         """
@@ -536,7 +548,7 @@ class TestELDConsumer(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(len(tweets), len(documents))
             self.assertTrue(all( document.attributes['tweet'] in tweets for document in documents ))
 
-    def test_filter_tweets_v2_document(self):
+    def test_filter_tweets_strict_v2_document(self):
         """
         Test that when filtering a list of documents, the function looks for the tweet in the attributes.
         """
