@@ -391,6 +391,9 @@ class FUEGOConsumer(Consumer):
         :rtype: str
         """
 
+        if self.filtering == FilteringLevel.NONE:
+            return True
+
         original = tweet
         tweet = twitter.original(tweet) if twitter.is_retweet(tweet) else tweet
 

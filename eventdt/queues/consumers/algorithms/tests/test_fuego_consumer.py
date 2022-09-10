@@ -407,7 +407,19 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
         consumer = FUEGOConsumer(Queue())
         self.assertEqual([ ], consumer._filter_tweets([ ]))
 
-    def test_filter_tweets_english(self):
+    def test_filter_tweets_none(self):
+        """
+        Test that when filtering a list of tweets without actually filtering, all tweets are accepted.
+        """
+
+        consumer = FUEGOConsumer(Queue(), filtering=FilteringLevel.NONE)
+        with open(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'tests', 'corpora', 'CRYCHE-500.json'), 'r') as f:
+            lines = f.readlines()
+            tweets = [ json.loads(line) for line in lines ]
+            filtered = consumer._filter_tweets(tweets)
+            self.assertEqual(tweets, filtered)
+
+    def test_filter_tweets_strict_english(self):
         """
         Test that when filtering a list of tweets, only English tweets are returned.
         """
@@ -421,7 +433,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
             self.assertTrue(all(twitter.lang(tweet) == 'en' for tweet in tweets))
             self.assertGreater(count, len(tweets))
 
-    def test_filter_tweets_v2_english(self):
+    def test_filter_tweets_strict_v2_english(self):
         """
         Test that when filtering a list of tweets, only English tweets are returned.
         """
@@ -435,7 +447,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
             self.assertTrue(all(twitter.lang(tweet) == 'en' for tweet in tweets))
             self.assertGreater(count, len(tweets))
 
-    def test_filter_tweets_hashtags(self):
+    def test_filter_tweets_strict_hashtags(self):
         """
         Test that when filtering tweets, all returned tweets have no more than 2 hashtags.
         """
@@ -449,7 +461,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
             self.assertTrue(all(len(twitter.hashtags(tweet)) <= 2 for tweet in tweets))
             self.assertGreater(count, len(tweets))
 
-    def test_filter_tweets_v2_hashtags(self):
+    def test_filter_tweets_strict_v2_hashtags(self):
         """
         Test that when filtering tweets, all returned tweets have no more than 2 hashtags.
         """
@@ -463,7 +475,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
             self.assertTrue(all(len(twitter.hashtags(tweet)) <= 2 for tweet in tweets))
             self.assertGreater(count, len(tweets))
 
-    def test_filter_tweets_no_favourites(self):
+    def test_filter_tweets_strict_no_favourites(self):
         """
         Test that when filtering tweets, all returned tweets' authors have favourited at least one tweet.
         """
@@ -477,7 +489,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
             self.assertTrue(all(tweet['user']['favourites_count'] > 0 for tweet in tweets))
             self.assertGreater(count, len(tweets))
 
-    def test_filter_tweets_follower_ratio(self):
+    def test_filter_tweets_strict_follower_ratio(self):
         """
         Test that when filtering tweets, all users have at least one follower for every thousand tweets they've published.
         """
@@ -493,7 +505,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
                                  twitter.is_retweet(tweet) and twitter.user_followers(twitter.original(tweet))  / twitter.user_statuses(twitter.original(tweet)) >= 1./1000.)
             self.assertGreater(count, len(tweets))
 
-    def test_filter_tweets_v2_follower_ratio(self):
+    def test_filter_tweets_strict_v2_follower_ratio(self):
         """
         Test that when filtering tweets, all users have at least one follower for every thousand tweets they've published.
         """
@@ -509,7 +521,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
                                  twitter.is_retweet(tweet) and twitter.user_followers(tweet, twitter.original(tweet)['author_id'])  / twitter.user_statuses(tweet, twitter.original(tweet)['author_id']) >= 1./1000.)
             self.assertGreater(count, len(tweets))
 
-    def test_filter_tweets_follower_ratio_no_statuses(self):
+    def test_filter_tweets_strict_follower_ratio_no_statuses(self):
         """
         Test that when filtering tweets, all users have at least one status.
         It's possible that a user has no statuses, which is weird.
@@ -527,7 +539,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
                                  for tweet in tweets ))
             self.assertGreater(count, len(tweets))
 
-    def test_filter_tweets_v2_follower_ratio_no_statuses(self):
+    def test_filter_tweets_strict_v2_follower_ratio_no_statuses(self):
         """
         Test that when filtering tweets, all users have at least one status.
         It's possible that a user has no statuses, which is weird.
@@ -545,7 +557,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
                                  for tweet in tweets ))
             self.assertGreater(count, len(tweets))
 
-    def test_filter_tweets_urls(self):
+    def test_filter_tweets_strict_urls(self):
         """
         Test that when filtering tweets, none of the retained ones have URLs in them.
         """
@@ -558,7 +570,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
             self.assertTrue(all( len(twitter.urls(tweet)) == 0 for tweet in filtered ))
             self.assertGreater(len(tweets), len(filtered))
 
-    def test_filter_tweets_v2_urls(self):
+    def test_filter_tweets_strict_v2_urls(self):
         """
         Test that when filtering tweets, none of the retained ones have URLs in them.
         """
@@ -571,7 +583,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
             self.assertTrue(all( len(twitter.urls(tweet)) == 0 for tweet in filtered ))
             self.assertGreater(len(tweets), len(filtered))
 
-    def test_filter_tweets_removes_quotes(self):
+    def test_filter_tweets_strict_removes_quotes(self):
         """
         Test that when filtering tweets, quotes are automatically filtered.
         """
@@ -583,7 +595,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
             filtered = consumer._filter_tweets(tweets)
             self.assertFalse(any( twitter.is_quote(tweet) for tweet in filtered ))
 
-    def test_filter_tweets_v2_removes_quotes(self):
+    def test_filter_tweets_strict_v2_removes_quotes(self):
         """
         Test that when filtering tweets, quotes are automatically filtered.
         """
@@ -595,7 +607,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
             filtered = consumer._filter_tweets(tweets)
             self.assertFalse(any( twitter.is_quote(tweet) for tweet in filtered ))
 
-    def test_filter_tweets_urls_not_media(self):
+    def test_filter_tweets_strict_urls_not_media(self):
         """
         Test that when filtering tweets, tweets with media are retained.
         """
@@ -612,7 +624,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
             self.assertTrue(any('media' in tweet['entities'] and len(tweet['entities']['media']) for tweet in tweets))
             self.assertGreater(count, len(tweets))
 
-    def test_filter_tweets_v2_urls_not_media(self):
+    def test_filter_tweets_strict_v2_urls_not_media(self):
         """
         Test that when filtering tweets, tweets with media are retained.
         """
@@ -629,7 +641,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
             self.assertTrue(any('media' in tweet['includes'] and len(tweet['includes']['media']) for tweet in tweets))
             self.assertGreater(count, len(tweets))
 
-    def test_filter_tweets_bio(self):
+    def test_filter_tweets_strict_bio(self):
         """
         Test that when filtering tweets, their authors must have a non-empty biography.
         """
@@ -645,7 +657,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
                                 twitter.is_retweet(tweet) and twitter.user_description(twitter.original(tweet)))
             self.assertGreater(count, len(tweets))
 
-    def test_filter_tweets_v2_bio(self):
+    def test_filter_tweets_strict_v2_bio(self):
         """
         Test that when filtering tweets, their authors must have a non-empty biography.
         """
@@ -661,7 +673,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
                                 twitter.is_retweet(tweet) and twitter.user_description(tweet, twitter.original(tweet)['author_id']))
             self.assertGreater(count, len(tweets))
 
-    def test_filter_tweets_repeat(self):
+    def test_filter_tweets_strict_repeat(self):
         """
         Test that when filtering tweets twice, the second time has no effect.
         """
@@ -685,7 +697,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
             tweets = consumer._filter_tweets(tweets)
             self.assertEqual(count, len(tweets))
 
-    def test_filter_tweets_repeat(self):
+    def test_filter_tweets_strict_repeat(self):
         """
         Test that when filtering tweets twice, the second time has no effect.
         """
@@ -709,7 +721,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
             tweets = consumer._filter_tweets(tweets)
             self.assertEqual(count, len(tweets))
 
-    def test_filter_tweets_unchanged(self):
+    def test_filter_tweets_strict_unchanged(self):
         """
         Test that when filtering tweets, the tweet data does not change.
         """
@@ -721,7 +733,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
             filtered = consumer._filter_tweets(tweets)
             self.assertTrue(all(tweet in tweets for tweet in filtered))
 
-    def test_filter_tweets_v2_unchanged(self):
+    def test_filter_tweets_strict_v2_unchanged(self):
         """
         Test that when filtering tweets, the tweet data does not change.
         """
@@ -733,7 +745,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
             filtered = consumer._filter_tweets(tweets)
             self.assertTrue(all(tweet in tweets for tweet in filtered))
 
-    def test_filter_tweets_document(self):
+    def test_filter_tweets_strict_document(self):
         """
         Test that when filtering a list of documents, the function looks for the tweet in the attributes.
         """
@@ -749,7 +761,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(len(tweets), len(documents))
             self.assertTrue(all( document.tweet in tweets for document in documents ))
 
-    def test_filter_tweets_v2_document(self):
+    def test_filter_tweets_strict_v2_document(self):
         """
         Test that when filtering a list of documents, the function looks for the tweet in the attributes.
         """
@@ -765,7 +777,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(len(tweets), len(documents))
             self.assertTrue(all( document.tweet in tweets for document in documents ))
 
-    def test_filter_tweets_retweets(self):
+    def test_filter_tweets_strict_retweets(self):
         """
         Test that if the tweet is a retweet, the original tweet is filtered, not the retweet.
         In other words, the validation of the retweet is the same as the validation of the original tweet.
@@ -786,7 +798,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
         if trivial:
             logger.warning("Trivial test")
 
-    def test_filter_tweets_replies(self):
+    def test_filter_tweets_strict_replies(self):
         """
         Test that if the tweet is a reply, it is filtered out.
         """
@@ -806,7 +818,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
         if trivial:
             logger.warning("Trivial test")
 
-    def test_filter_tweets_v2_replies(self):
+    def test_filter_tweets_strict_v2_replies(self):
         """
         Test that if the tweet is a reply, it is filtered out.
         """
@@ -826,7 +838,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
         if trivial:
             logger.warning("Trivial test")
 
-    def test_filter_tweets_reply_retweet(self):
+    def test_filter_tweets_strict_reply_retweet(self):
         """
         Test that if the tweet is a retweet of a reply, it is filtered out.
         """
@@ -846,7 +858,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
         if trivial:
             logger.warning("Trivial test")
 
-    def test_filter_tweets_v2_reply_retweet(self):
+    def test_filter_tweets_strict_v2_reply_retweet(self):
         """
         Test that if the tweet is a retweet of a reply, it is filtered out.
         """
@@ -864,7 +876,7 @@ class TestFUEGOConsumer(unittest.IsolatedAsyncioTestCase):
                     trivial = False
 
         if trivial:
-            logger.warning("Trivial test (test_filter_tweets_v2_reply_retweet)")
+            logger.warning("Trivial test (test_filter_tweets_strict_v2_reply_retweet)")
 
     def test_to_documents_tweet(self):
         """
