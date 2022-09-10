@@ -17,9 +17,9 @@ class DynamicThreshold(Enum):
     The type of dynamic threshold to use.
     Options:
 
-        - MEAN:        The mean volume observed so far
-        - MOVING_MEAN: The mean volume from the previous $n$ windows
-        - MEAN_STDEV:  One standard deviation above the mean volume observed so far
+        - MEAN:        The mean volume observed so far.
+        - MOVING_MEAN: The mean volume from the previous $n$ windows.
+        - MEAN_STDEV:  One standard deviation above the mean volume observed so far.
     """
 
     MEAN = 1
@@ -41,6 +41,20 @@ class FilterLevel(Enum):
     NONE = 1
     LENIENT = 2
     STRICT = 3
+
+class ReportingLevel(Enum):
+    """
+    How to report about events.
+    Reporting level can be reduced in cases when a lot of data is expected.
+    When handling reduced data, the algorithms should ensure that they never empty nodes entirely.
+    Options:
+
+        - ALL:      Return all relevant tweets.
+        - ORIGINAL: Return all relevant tweets except retweets.
+    """
+
+    ALL = 1
+    ORIGINAL = 2
 
 from .eld_consumer import ELDConsumer
 from .fire_consumer import FIREConsumer
