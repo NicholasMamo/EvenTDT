@@ -994,7 +994,7 @@ def reporting(level):
     """
     Convert the given reporting level to an actual enumerable.
 
-    :param level: The name of the reporting level to use: `ALL`, `ORIGINAL`.
+    :param level: The name of the reporting level to use: `ALL` or `ORIGINAL`.
     :type level: str
 
     :return: A reporting level enumerable.
@@ -1004,6 +1004,22 @@ def reporting(level):
     return {
         'ALL': ReportingLevel.ALL,
         'ORIGINAL': ReportingLevel.ORIGINAL,
+    }[level.upper()]
+
+def storage(level):
+    """
+    Convert the given storage level to an actual enumerable.
+
+    :param level: The name of the storage level to use: `TWEET` or `ATTRIBUTES`.
+    :type level: str
+
+    :return: A storage level enumerable.
+    :rtype: :class:`~queues.consumers.algorithms.StorageLevel`
+    """
+
+    return {
+        'TWEET': StorageLevel.TWEET,
+        'ATTRIBUTES': StorageLevel.ATTRIBUTES,
     }[level.upper()]
 
 if __name__ == "__main__":
